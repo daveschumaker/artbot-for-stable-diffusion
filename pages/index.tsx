@@ -37,7 +37,8 @@ const Home: NextPage = () => {
       sampler: 'k_heun',
       cfg_scale: 9.0,
       steps: 32,
-      seed: ''
+      seed: '',
+      parentJobId: ''
     }
   )
 
@@ -116,6 +117,7 @@ const Home: NextPage = () => {
     if (loadEditPrompt().copyPrompt) {
       setShowAdvanced(true)
       setInput({ prompt: loadEditPrompt().prompt })
+      setInput({ parentJobId: loadEditPrompt().parentJobId })
       updatedCachedPrompt(loadEditPrompt().prompt)
       clearPrompt()
     }

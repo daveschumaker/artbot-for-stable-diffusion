@@ -1,19 +1,22 @@
 interface SavePrompt {
   copyPrompt: boolean
   prompt: string
+  parentJobId: string
 }
 
 let promptDetails: SavePrompt = {
   copyPrompt: false,
-  prompt: ''
+  prompt: '',
+  parentJobId: ''
 }
 
 // TODO: Restore other parameters relate to image
 // e.g., height, width, sampler, etc.
-export const savePrompt = ({ prompt = '' } = {}) => {
+export const savePrompt = ({ prompt = '', parentJobId = '' } = {}) => {
   promptDetails = {
     copyPrompt: true,
-    prompt
+    prompt,
+    parentJobId
   }
 }
 
@@ -24,7 +27,8 @@ export const loadEditPrompt = () => {
 export const clearPrompt = () => {
   promptDetails = {
     copyPrompt: false,
-    prompt: ''
+    prompt: '',
+    parentJobId: ''
   }
 }
 

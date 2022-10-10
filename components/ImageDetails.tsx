@@ -39,9 +39,13 @@ const ImageDetails = ({
     setShowDeleteModal(false)
   }
 
-  const handleCopyPromptClick = (imageDetails: { prompt?: string }) => {
+  const handleCopyPromptClick = (imageDetails: {
+    prompt?: string
+    parentJobId?: string
+  }) => {
     savePrompt({
-      prompt: imageDetails.prompt
+      prompt: imageDetails.prompt,
+      parentJobId: imageDetails.parentJobId
     })
 
     router.push(`/?edit=true`)

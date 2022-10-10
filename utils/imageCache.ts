@@ -125,8 +125,9 @@ export const createImageJob = async (imageParams: CreateImageJob) => {
     const { jobId } = data
     jobDetailsQueue.push(jobId)
 
+    imageParams.parentJobId = imageParams.parentJobId || jobId
+
     if (numImages > 1) {
-      imageParams.parentJobId = imageParams.parentJobId || jobId
       delete imageParams.numImages
 
       for (let i = 0; i < numImages - 1; i++) {
