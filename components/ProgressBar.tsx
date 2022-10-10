@@ -12,6 +12,14 @@ export default function ProgressBar({ done = false, time = 5 }) {
         return
       }
 
+      // Hacky method to show that an image is still waiting to be generated
+      // if we haven't seen a server response as of yet.
+      if (count * pctPerSecond >= 95) {
+        setWidth(95)
+        clearInterval(intervalId)
+        return
+      }
+
       if (count * pctPerSecond >= 100) {
         setWidth(100)
         clearInterval(intervalId)

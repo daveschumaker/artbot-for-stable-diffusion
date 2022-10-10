@@ -11,22 +11,22 @@
     "pm2:stop": "pm2 stop ecosystem.config.js"
   },
   "dependencies": {
-    "@types/react-lazyload": "^3.2.0",
-    "dexie": "^3.2.2",
-    "dexie-react-hooks": "^1.1.1",
+    "@types/react-lazyload": "3.2.0",
+    "dexie": "3.2.2",
+    "dexie-react-hooks": "1.1.1",
     "next": "12.3.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-lazyload": "^3.2.0"
+    "react-lazyload": "3.2.0"
   },
   "devDependencies": {
-    "@types/node": "18.8.2",
+    "@types/node": "18.8.3",
     "@types/react": "18.0.21",
     "@types/react-dom": "18.0.6",
     "autoprefixer": "^10.4.12",
-    "eslint": "8.24.0",
+    "eslint": "8.25.0",
     "eslint-config-next": "12.3.1",
-    "postcss": "^8.4.17",
+    "postcss": "8.4.17",
     "tailwindcss": "^3.1.8",
     "typescript": "4.8.4"
   }

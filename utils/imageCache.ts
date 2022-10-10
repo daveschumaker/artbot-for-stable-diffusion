@@ -8,6 +8,7 @@ import {
 
 export const initIndexedDb = () => {}
 
+let pendingCheckRequest = false
 export const checkImageJob = async (jobId: string) => {
   if (!jobId || !jobId?.trim()) {
     return {
@@ -16,6 +17,14 @@ export const checkImageJob = async (jobId: string) => {
     }
   }
 
+  if (pendingCheckRequest) {
+    return {
+      success: false,
+      status: 'Waiting for pending request...'
+    }
+  }
+
+  pendingCheckRequest = true
   const res = await fetch(`/artbot/api/check`, {
     method: 'POST',
     body: JSON.stringify({
@@ -27,9 +36,10 @@ export const checkImageJob = async (jobId: string) => {
   })
 
   const data = await res.json()
+  pendingCheckRequest = false
 
   return {
-    success: true,
+    success: data.success,
     jobId,
     ...data
   }
@@ -72,7 +82,15 @@ export const createImageJob = async (imageParams: CreateImageJob) => {
 
   if (jobId) {
     const jobDetails = await checkImageJob(jobId)
-    const { queue_position, wait_time } = jobDetails
+    const { success, queue_position, wait_time } = jobDetails
+
+    if (!success) {
+      return {
+        success: false,
+        jobId,
+        message: jobDetails?.message
+      }
+    }
 
     await db.pending.add({
       jobId,

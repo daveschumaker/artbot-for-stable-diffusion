@@ -28,9 +28,9 @@ const Home: NextPage = () => {
       prompt: '',
       height: 512,
       width: 512,
-      sampler: 'k_euler_a',
-      cfg_scale: 12.0,
-      steps: 64,
+      sampler: 'k_heun',
+      cfg_scale: 9.0,
+      steps: 32,
       seed: ''
     }
   )

@@ -25,7 +25,7 @@ export default async function handler(
   }
 
   if (isNaN(steps) || steps > 250 || steps < 1) {
-    steps = 64
+    steps = 32
   }
 
   if (isNaN(cfg_scale) || cfg_scale > 64 || cfg_scale < 1) {
@@ -33,7 +33,7 @@ export default async function handler(
   }
 
   if (!sampler) {
-    sampler = 'k_euler_a'
+    sampler = 'k_heun'
   }
 
   const params = {
@@ -68,6 +68,10 @@ export default async function handler(
         message
       })
     }
+
+    console.log(
+      `${new Date().toLocaleString()}: Generating image for jobId: ${id}`
+    )
 
     res.send({
       success: true,

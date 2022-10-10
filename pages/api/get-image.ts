@@ -38,8 +38,6 @@ export default async function handler(
     const data = await resp.json()
     const { generations } = data
 
-    console.log(`Image status:`, data)
-
     if (Array.isArray(generations)) {
       const [image] = generations
       const { img: base64String, seed } = image
