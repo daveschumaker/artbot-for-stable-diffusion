@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 
-import { allPendingJobs, getImageDetails } from '../utils/db'
+import {
+  allPendingJobs,
+  getImageDetails,
+  getPendingJobDetails
+} from '../utils/db'
 import ProgressBar from './ProgressBar'
 import { setHasNewImage } from '../utils/imageCache'
 import Spinner from './Spinner'
@@ -12,6 +16,9 @@ const PendingItem = ({ handleDeleteJob, jobDetails }) => {
 
   const [isComplete, setIsComplete] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
+  const [estimatedWait, setEstimatedWait] = useState(
+    jobDetails?.wait_time || ''
+  )
 
   const checkJobFinished = async () => {
     const jobFinished = await getImageDetails(jobDetails.jobId)
@@ -30,6 +37,19 @@ const PendingItem = ({ handleDeleteJob, jobDetails }) => {
       setIsProcessing(true)
     }
   }
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      if (isProcessing && jobDetails?.jobId) {
+        const updatedJobDetails = await getPendingJobDetails(jobDetails.jobId)
+        if (updatedJobDetails?.wait_time) {
+          setEstimatedWait(updatedJobDetails.wait_time)
+        }
+      }
+    }, 500)
+
+    return () => clearInterval(interval)
+  }, [isProcessing, jobDetails.jobId])
 
   useEffect(() => {
     fetchCurrentJob()
@@ -73,7 +93,9 @@ const PendingItem = ({ handleDeleteJob, jobDetails }) => {
           <div className="content-end">
             {!isComplete && isProcessing && (
               <div className="font-mono text-xs mt-2">
-                Estimated wait: {jobDetails.wait_time} seconds
+                {estimatedWait >= 1
+                  ? `Estimated time remaining: ${estimatedWait} seconds`
+                  : 'Estimating wait...'}
               </div>
             )}
             {!isComplete && (

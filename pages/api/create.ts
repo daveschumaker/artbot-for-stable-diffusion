@@ -19,7 +19,14 @@ export default async function handler(
   }
 
   const { height, width, apikey } = req.body
-  let { prompt, steps, cfg_scale, sampler, useTrusted } = req.body
+  let {
+    prompt,
+    steps,
+    cfg_scale,
+    sampler,
+    negative = '',
+    useTrusted
+  } = req.body
 
   if (!prompt || prompt?.length > 325) {
     prompt = prompt.substring(0, 325)
@@ -35,6 +42,12 @@ export default async function handler(
 
   if (!sampler) {
     sampler = 'k_heun'
+  }
+
+  negative = negative.trim()
+
+  if (negative) {
+    prompt += ' ### ' + negative
   }
 
   const params = {

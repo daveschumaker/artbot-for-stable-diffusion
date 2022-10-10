@@ -40,7 +40,8 @@ const Home: NextPage = () => {
       cfg_scale: 9.0,
       steps: 32,
       seed: '',
-      parentJobId: ''
+      parentJobId: '',
+      negative: ''
     }
   )
 
@@ -104,6 +105,12 @@ const Home: NextPage = () => {
       return
     }
 
+    if (!input?.prompt || input?.prompt.trim() === '') {
+      setHasError('Please enter a prompt to continue.')
+      setPending(false)
+      return
+    }
+
     const res = await createImageJob({
       ...input
     })
@@ -132,8 +139,11 @@ const Home: NextPage = () => {
   useEffect(() => {
     if (loadEditPrompt().copyPrompt) {
       setShowAdvanced(true)
-      setInput({ prompt: loadEditPrompt().prompt })
-      setInput({ parentJobId: loadEditPrompt().parentJobId })
+      setInput({
+        prompt: loadEditPrompt().prompt,
+        parentJobId: loadEditPrompt().parentJobId,
+        negative: loadEditPrompt().negative
+      })
       updatedCachedPrompt(loadEditPrompt().prompt)
       clearPrompt()
     }
@@ -230,25 +240,26 @@ const Home: NextPage = () => {
         </div>
       </div>
       {showAdvanced && (
-        <>
+        <div className="w-full">
           <div className="mb-2">
-            <div className="inline-block w-[124px]"># of images:</div>
-            <div className="inline-block w-[124px]">
-              <select
-                className="text-black w-full p-1 rounded-lg border border-slate-500"
-                name="numImages"
+            <div className="inline-block w-[160px]">Negative prompt:</div>
+            <div className="inline-block w-[160px] md:w-[320px]">
+              <input
+                type="text"
+                className="text-black w-full rounded-lg p-1 border border-slate-500"
+                name="negative"
                 onChange={handleChangeValue}
-                value={input.numImages}
-              >
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-              </select>
+                value={input.negative}
+              />
+            </div>
+            <div
+              className="inline-block w-[24px] bg-blue-500 hover:bg-blue-700 ml-2 text-center cursor-pointer"
+              onClick={() => setInput({ negative: '' })}
+            >
+              X
+            </div>
+            <div className="block w-full text-xs mt-1">
+              (Add words or phrases to demphasize from your desired image)
             </div>
           </div>
           <div className="mb-2">
@@ -312,11 +323,31 @@ const Home: NextPage = () => {
             >
               X
             </div>
-            <div className="block w-full text-xs">
+            <div className="block w-full text-xs mt-1">
               (Leave seed blank for random)
             </div>
           </div>
-        </>
+          <div className="mb-2">
+            <div className="inline-block w-[124px]"># of images:</div>
+            <div className="inline-block w-[124px]">
+              <select
+                className="text-black w-full p-1 rounded-lg border border-slate-500"
+                name="numImages"
+                onChange={handleChangeValue}
+                value={input.numImages}
+              >
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+              </select>
+            </div>
+          </div>
+        </div>
       )}
       <div className="mt-2">
         <h2 className="font-bold mb-2">Resources and tips</h2>

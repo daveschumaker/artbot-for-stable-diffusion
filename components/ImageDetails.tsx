@@ -17,6 +17,7 @@ interface ImageDetails {
   steps?: number
   sampler?: string
   seed: number
+  negative?: string
 }
 
 interface ImageDetailsProps {
@@ -42,10 +43,12 @@ const ImageDetails = ({
   const handleCopyPromptClick = (imageDetails: {
     prompt?: string
     parentJobId?: string
+    negative?: string
   }) => {
     savePrompt({
       prompt: imageDetails.prompt,
-      parentJobId: imageDetails.parentJobId
+      parentJobId: imageDetails.parentJobId,
+      negative: imageDetails.negative
     })
 
     router.push(`/?edit=true`)
@@ -90,8 +93,11 @@ const ImageDetails = ({
       )}
       <div className="pt-2 font-mono">{imageDetails.prompt}</div>
       <div className="font-mono text-xs mt-2">
-        Settings:
+        -- Settings --
         <ul>
+          {imageDetails.negative && (
+            <li>Negative prompt: {imageDetails.negative}</li>
+          )}
           <li>Sampler: {imageDetails.sampler}</li>
           <li>Seed: {imageDetails.seed}</li>
           <li>Steps: {imageDetails.steps}</li>

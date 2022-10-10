@@ -14,6 +14,10 @@ export const createNewImage = async (imageParams: CreateImageJob) => {
     useTrusted: useTrusted === 'true' ? true : false
   }
 
+  if (imageParams.negative) {
+    params.negative = imageParams.negative
+  }
+
   if (imageParams.seed) {
     params.seed = imageParams.seed
   }

@@ -125,11 +125,6 @@ export const createMultiImageJob = async () => {
   }
 }
 
-setInterval(() => {
-  createMultiImageJob()
-  fetchJobDetails()
-}, 500)
-
 export const createImageJob = async (imageParams: CreateImageJob) => {
   const { prompt } = imageParams
   let { numImages = 1 } = imageParams
@@ -241,6 +236,16 @@ export const getCurrentJob = async () => {
     }
   }
 
+  if (jobDetails?.success && !jobDetails?.done) {
+    await updatePendingJob(
+      firstJob.id,
+      Object.assign({}, firstJob, {
+        queue_position: jobDetails.queue_position,
+        wait_time: jobDetails.wait_time
+      })
+    )
+  }
+
   if (jobDetails?.done) {
     // @ts-ignore
     const imageDetails = await getPendingJobDetails(jobId)
@@ -276,3 +281,8 @@ export const getHasNewImage = () => {
 export const setHasNewImage = (bool: boolean) => {
   hasNewImage = bool
 }
+
+setInterval(() => {
+  createMultiImageJob()
+  fetchJobDetails()
+}, 500)

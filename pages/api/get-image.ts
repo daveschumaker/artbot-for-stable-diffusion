@@ -8,6 +8,8 @@ type Data = {
   seed?: number
 }
 
+let sessionImages = 0
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
@@ -41,6 +43,9 @@ export default async function handler(
     if (Array.isArray(generations)) {
       const [image] = generations
       const { img: base64String, seed } = image
+      sessionImages++
+
+      console.log(`Session images generated: ${sessionImages}`)
 
       return res.send({
         success: true,
