@@ -209,14 +209,14 @@ const Home: NextPage = () => {
                 onChange={handleChangeValue}
                 value={input.sampler}
               >
-                <option value="ddim">ddim</option>
+                <option value="DDIM">ddim</option>
                 <option value="k_dpm_2_a">k_dpm_2_a</option>
                 <option value="k_dpm_2">k_dpm_2</option>
                 <option value="k_euler_a">k_euler_a</option>
                 <option value="k_euler">k_euler</option>
                 <option value="k_heun">k_heun</option>
                 <option value="k_lms">k_lms</option>
-                <option value="plms">plms</option>
+                <option value="PLMS">plms</option>
               </select>
             </div>
           </div>
