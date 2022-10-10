@@ -52,10 +52,20 @@ const SettingsPage = () => {
             value={apiKey}
           />
         </div>
+        <div
+          className="inline-block w-[24px] bg-blue-500 hover:bg-blue-700 ml-2 text-center cursor-pointer"
+          onClick={() => {
+            setApiKey('')
+            localStorage.setItem('apikey', '')
+          }}
+        >
+          X
+        </div>
         <div className="block w-full text-xs mt-2">
-          (An API key gives higher priority access to the Stable Horde
-          distributed cluster, resulting in shorter image creation times. Leave
-          blank for an anonymous user ID. Register via{' '}
+          (Leave blank for anonymous access. An API key gives higher priority
+          access to the Stable Horde distributed cluster, resulting in shorter
+          image creation times. Leave blank for an anonymous user ID. Register
+          via{' '}
           <a
             href="https://stablehorde.net/"
             target="_blank"

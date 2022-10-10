@@ -7,6 +7,7 @@ type Data = {
   message?: string
   id?: string
   prompt?: string
+  status?: string
 }
 
 export default async function handler(
@@ -59,14 +60,22 @@ export default async function handler(
     })
 
     const data = await resp.json()
-    const { id, message }: GenerateResponse = data
+    const { id, message = '' }: GenerateResponse = data
+
+    if (message?.indexOf('No user matching sent API Key') >= 0) {
+      return res.send({
+        success: false,
+        status: 'INVALID_API_KEY'
+      })
+    }
 
     if (
       message === 'Horde has enterred maintenance mode. Please try again later.'
     ) {
       return res.send({
         success: false,
-        message
+        message,
+        status: 'HORDE_OFFLINE'
       })
     }
 

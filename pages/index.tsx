@@ -27,7 +27,7 @@ const Home: NextPage = () => {
 
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [pending, setPending] = useState(false)
-  const [hasError, setHasError] = useState(false)
+  const [hasError, setHasError] = useState('')
   const [input, setInput] = useReducer(
     (state: any, newState: any) => ({ ...state, ...newState }),
     {
@@ -111,8 +111,13 @@ const Home: NextPage = () => {
     if (res.success) {
       updatedCachedPrompt('')
       router.push('/pending')
+    } else if (res.status === 'INVALID_API_KEY') {
+      setHasError('Invalid API key sent to the server. Check your settings.')
+      setPending(false)
     } else {
-      setHasError(true)
+      setHasError(
+        'The server did not respond to the image request. Please try again shortly.'
+      )
       setPending(false)
     }
   }
@@ -177,8 +182,7 @@ const Home: NextPage = () => {
         />
         {hasError && (
           <div className="mt-2 mb-2 text-red-500 font-semibold">
-            Error: The server did not respond to the image request. Please try
-            again shortly.
+            Error: {hasError}
           </div>
         )}
         <div className="flex flex-row mt-4 w-full">

@@ -1,7 +1,7 @@
 import { CreateImageJob } from '../types'
 
 export const createNewImage = async (imageParams: CreateImageJob) => {
-  const apikey = localStorage.getItem('apikey') || '0000000000'
+  const apikey = localStorage.getItem('apikey')?.trim() || '0000000000'
   const useTrusted = localStorage.getItem('useTrusted') || false
 
   const params: CreateImageJob = {
@@ -27,7 +27,7 @@ export const createNewImage = async (imageParams: CreateImageJob) => {
   })
 
   const data = await res.json()
-  const { id: jobId, message } = data
+  const { id: jobId, message, status } = data
 
   if (jobId) {
     return {
@@ -37,7 +37,8 @@ export const createNewImage = async (imageParams: CreateImageJob) => {
   } else {
     return {
       success: false,
-      message
+      message,
+      status
     }
   }
 }

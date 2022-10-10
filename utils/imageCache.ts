@@ -41,6 +41,7 @@ export const checkImageJob = async (jobId: string) => {
   })
 
   const data = await res.json()
+
   const { status = '' } = data
   pendingCheckRequest = false
 
@@ -80,6 +81,17 @@ export const fetchJobDetails = async () => {
     if (status === 'NOT_FOUND') {
       jobDetailsQueue.shift()
       return
+    }
+
+    if (!success) {
+      const jobTimestamp = pendingJobDetails.timestamp / 1000
+      const timestamp = Date.now() / 1000
+
+      // Check if job is stale and remove it.
+      if (timestamp - jobTimestamp > 720) {
+        deletePendingJob(currentJobId)
+        jobDetailsQueue.shift()
+      }
     }
 
     if (success) {
@@ -164,7 +176,8 @@ export const createImageJob = async (imageParams: CreateImageJob) => {
 
   return {
     success: false,
-    message: data?.message ? data.message : 'Something unfortunate happened.'
+    message: data?.message ? data.message : 'Something unfortunate happened.',
+    status: data?.status
   }
 }
 
@@ -187,6 +200,7 @@ export const getImage = async (jobId: string) => {
   })
 
   const data = await res.json()
+  const { status = '', message = '' } = data
 
   if (data?.success) {
     return {
@@ -196,7 +210,9 @@ export const getImage = async (jobId: string) => {
     }
   } else {
     return {
-      success: false
+      success: false,
+      status,
+      message
     }
   }
 }

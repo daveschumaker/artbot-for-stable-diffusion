@@ -34,12 +34,14 @@ const PendingPage = () => {
     const timer2 = setTimeout(() => fetchPrompts(), 1000)
     const timer3 = setTimeout(() => fetchPrompts(), 1500)
     const timer4 = setTimeout(() => fetchPrompts(), 2500)
+    const timer5 = setTimeout(() => fetchPrompts(), 5000)
 
     return () => {
       clearTimeout(timer1)
       clearTimeout(timer2)
       clearTimeout(timer3)
       clearTimeout(timer4)
+      clearTimeout(timer5)
     }
   }, [])
 
