@@ -28,7 +28,21 @@ const SettingsPage = () => {
   return (
     <div>
       <div className="mb-2">
-        <div className="inline-block w-[100px]">API key:</div>
+        <div className="inline-block w-[220px]">Use Only Trusted Workers:</div>
+        <div className="inline-block w-[100px]">
+          <select
+            className="text-black w-full p-1 rounded-lg border border-slate-500"
+            name="numImages"
+            onChange={handleTrustedSelect}
+            value={useTrusted}
+          >
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+          </select>
+        </div>
+      </div>
+      <div className="mb-2">
+        <div className="inline-block w-[220px]">API key:</div>
         <div className="inline-block w-[160px]">
           <input
             type="text"
@@ -51,20 +65,6 @@ const SettingsPage = () => {
             stablehorde.net
           </a>
           . Stored in browser using LocalStorage. )
-        </div>
-      </div>
-      <div className="mb-2">
-        <div className="inline-block w-[180px]">Use Trusted Workers:</div>
-        <div className="inline-block w-[100px]">
-          <select
-            className="text-black w-full p-1 rounded-lg border border-slate-500"
-            name="numImages"
-            onChange={handleTrustedSelect}
-            value={useTrusted}
-          >
-            <option value="true">Yes</option>
-            <option value="false">No</option>
-          </select>
         </div>
       </div>
     </div>

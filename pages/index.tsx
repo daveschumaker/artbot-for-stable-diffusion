@@ -6,7 +6,12 @@ import { useRouter } from 'next/router'
 import { createImageJob } from '../utils/imageCache'
 import PageTitle from '../components/PageTitle'
 import { KeypressEvent } from '../types'
-import { clearPrompt, loadEditPrompt } from '../utils/promptUtils'
+import {
+  clearPrompt,
+  getCachedPrompt,
+  loadEditPrompt,
+  updatedCachedPrompt
+} from '../utils/promptUtils'
 
 interface InputTarget {
   name: string
@@ -52,6 +57,10 @@ const Home: NextPage = () => {
       localStorage.setItem('steps', event.target.value)
     }
 
+    if (inputName === 'prompt') {
+      updatedCachedPrompt(inputValue)
+    }
+
     setInput({ [inputName]: inputValue })
   }
 
@@ -91,6 +100,7 @@ const Home: NextPage = () => {
     })
 
     if (res.success) {
+      updatedCachedPrompt('')
       router.push('/pending')
     }
   }
@@ -131,13 +141,17 @@ const Home: NextPage = () => {
     if (localStorage.getItem('steps')) {
       setInput({ steps: localStorage.getItem('steps') })
     }
+
+    if (getCachedPrompt()) {
+      setInput({ prompt: getCachedPrompt() })
+    }
   }, [])
 
   return (
     <main>
       <PageTitle>Create new image</PageTitle>
       <div className="mt-2 mb-2">
-        <input
+        <textarea
           type="text"
           name="prompt"
           className="block bg-white p-2.5 w-full text-lg text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"

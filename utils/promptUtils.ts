@@ -27,3 +27,14 @@ export const clearPrompt = () => {
     prompt: ''
   }
 }
+
+// Caches prompt so that it can be restored when user switches between tabs
+let cachedPrompt = ''
+
+export const updatedCachedPrompt = (text: string) => {
+  cachedPrompt = text
+}
+
+export const getCachedPrompt = () => {
+  return cachedPrompt
+}
