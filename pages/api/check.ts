@@ -36,8 +36,9 @@ export default async function handler(
       ...data
     })
   } catch (err) {
-    console.log(`Error: Unable to check image generation status.`)
-    console.log(err)
+    console.log(
+      `${new Date().toLocaleString()}: Error: Unable to check image generation status for jobId: ${id}.`
+    )
     res.send({
       success: false
     })
