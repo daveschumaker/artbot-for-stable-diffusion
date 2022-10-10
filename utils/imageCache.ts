@@ -254,16 +254,18 @@ export const getCurrentJob = async () => {
     // @ts-ignore
     const imgDetails = await getImage(jobId)
 
-    await db.completed.add({
-      jobId,
-      ...imageDetails,
-      ...imgDetails,
-      timestamp: Date.now()
-    })
+    if (imgDetails?.success) {
+      await db.completed.add({
+        jobId,
+        ...imageDetails,
+        ...imgDetails,
+        timestamp: Date.now()
+      })
 
-    return {
-      success: true,
-      newImage: true
+      return {
+        success: true,
+        newImage: true
+      }
     }
   }
 

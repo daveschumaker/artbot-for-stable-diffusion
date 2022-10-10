@@ -6,6 +6,7 @@ type Data = {
   jobId?: string
   base64String?: string
   seed?: number
+  status?: string
 }
 
 let sessionImages = 0
@@ -44,6 +45,13 @@ export default async function handler(
       const [image] = generations
       const { img: base64String, seed } = image
       sessionImages++
+
+      if (!base64String) {
+        res.send({
+          success: false,
+          status: 'MISSING_BASE64'
+        })
+      }
 
       console.log(`Session images generated: ${sessionImages}`)
 
