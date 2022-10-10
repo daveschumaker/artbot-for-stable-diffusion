@@ -24,8 +24,8 @@ export default async function handler(
     prompt = prompt.substring(0, 325)
   }
 
-  if (isNaN(steps) || steps > 250 || steps < 1) {
-    steps = 32
+  if (isNaN(steps) || steps > 100 || steps < 1) {
+    steps = 100
   }
 
   if (isNaN(cfg_scale) || cfg_scale > 64 || cfg_scale < 1) {
@@ -40,10 +40,10 @@ export default async function handler(
     prompt,
     params: {
       sampler_name: sampler,
-      cfg_scale,
+      cfg_scale: Number(cfg_scale),
       height,
       width,
-      steps
+      steps: Number(steps)
     }
   }
 
@@ -68,6 +68,11 @@ export default async function handler(
         message
       })
     }
+	
+	if (!id) {
+		console.log('No id...', data)
+		console.log(params)
+	}
 
     console.log(
       `${new Date().toLocaleString()}: Generating image for jobId: ${id}`
