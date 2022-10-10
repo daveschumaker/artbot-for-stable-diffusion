@@ -18,7 +18,7 @@ export default async function handler(
   }
 
   const { height, width, apikey } = req.body
-  let { prompt, steps, cfg_scale, sampler } = req.body
+  let { prompt, steps, cfg_scale, sampler, useTrusted } = req.body
 
   if (!prompt || prompt?.length > 325) {
     prompt = prompt.substring(0, 325)
@@ -45,7 +45,7 @@ export default async function handler(
       width,
       steps: Number(steps)
     },
-	trusted_workers: false
+    trusted_workers: useTrusted
   }
 
   try {
@@ -69,11 +69,11 @@ export default async function handler(
         message
       })
     }
-	
-	if (!id) {
-		console.log('No id...', data)
-		console.log(params)
-	}
+
+    if (!id) {
+      console.log('No id...', data)
+      console.log(params)
+    }
 
     console.log(
       `${new Date().toLocaleString()}: Generating image for jobId: ${id}`

@@ -8,6 +8,7 @@ export interface CreateImageJob {
   apikey?: string
   seed?: number
   numImages?: number
+  useTrusted?: boolean
 }
 
 export interface GenerateResponse {

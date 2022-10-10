@@ -103,6 +103,8 @@ const multiImageJob = async ({
 
 export const createImageJob = async (imageParams: CreateImageJob) => {
   const apikey = localStorage.getItem('apikey') || '0000000000'
+  const useTrusted = localStorage.getItem('useTrusted') || false
+
   const { prompt } = imageParams
   let { numImages = 1 } = imageParams
 
@@ -124,7 +126,8 @@ export const createImageJob = async (imageParams: CreateImageJob) => {
     width: imageParams.width || 512,
     cfg_scale: imageParams.cfg_scale || '12.0',
     steps: imageParams.steps || 50,
-    sampler: imageParams.sampler || 'k_euler_a'
+    sampler: imageParams.sampler || 'k_euler_a',
+    useTrusted: useTrusted === 'true' ? true : false
   }
 
   if (imageParams.seed) {
