@@ -24,26 +24,34 @@ export default async function handler(
     })
   }
 
-  const resp = await fetch(
-    `https://stablehorde.net/api/v2/generate/status/${id}`,
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
+  try {
+    const resp = await fetch(
+      `https://stablehorde.net/api/v2/generate/status/${id}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
       }
-    }
-  )
+    )
 
-  const data = await resp.json()
+    const data = await resp.json()
 
-  const { generations } = data
-  const [image] = generations
-  const { img: base64String, seed } = image
+    const { generations } = data
+    const [image] = generations
+    const { img: base64String, seed } = image
 
-  res.send({
-    success: true,
-    jobId: id,
-    base64String,
-    seed
-  })
+    res.send({
+      success: true,
+      jobId: id,
+      base64String,
+      seed
+    })
+  } catch (err) {
+    console.log(`Error: Unable to fetch image.`)
+    console.log(err)
+    res.send({
+      success: false
+    })
+  }
 }

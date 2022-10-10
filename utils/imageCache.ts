@@ -91,7 +91,7 @@ export const createImageJob = async (imageParams: CreateImageJob) => {
 
   return {
     success: false,
-    message: 'Something unfortunate happened...'
+    message: data?.message ? data.message : 'Something unfortunate happened.'
   }
 }
 
@@ -115,10 +115,16 @@ export const getImage = async (jobId: string) => {
 
   const data = await res.json()
 
-  return {
-    success: true,
-    jobId,
-    ...data
+  if (data?.success) {
+    return {
+      success: true,
+      jobId,
+      ...data
+    }
+  } else {
+    return {
+      success: false
+    }
   }
 }
 

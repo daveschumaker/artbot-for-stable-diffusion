@@ -21,17 +21,25 @@ export default async function handler(
     })
   }
 
-  const resp = await fetch(
-    `https://stablehorde.net/api/v2/generate/check/${id}`,
-    {
-      method: 'GET'
-    }
-  )
+  try {
+    const resp = await fetch(
+      `https://stablehorde.net/api/v2/generate/check/${id}`,
+      {
+        method: 'GET'
+      }
+    )
 
-  const data = await resp.json()
+    const data = await resp.json()
 
-  res.send({
-    success: true,
-    ...data
-  })
+    res.send({
+      success: true,
+      ...data
+    })
+  } catch (err) {
+    console.log(`Error: Unable to check image generation status.`)
+    console.log(err)
+    res.send({
+      success: false
+    })
+  }
 }

@@ -47,30 +47,39 @@ export default async function handler(
     }
   }
 
-  const resp = await fetch(`https://stablehorde.net/api/v2/generate/async`, {
-    method: 'POST',
-    body: JSON.stringify(params),
-    headers: {
-      'Content-Type': 'application/json',
-      apikey: apikey
+  try {
+    const resp = await fetch(`https://stablehorde.net/api/v2/generate/async`, {
+      method: 'POST',
+      body: JSON.stringify(params),
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: apikey
+      }
+    })
+
+    const data = await resp.json()
+    const { id, message }: GenerateResponse = data
+
+    if (
+      message === 'Horde has enterred maintenance mode. Please try again later.'
+    ) {
+      return res.send({
+        success: false,
+        message
+      })
     }
-  })
 
-  const data = await resp.json()
-  const { id, message }: GenerateResponse = data
-
-  if (
-    message === 'Horde has enterred maintenance mode. Please try again later.'
-  ) {
+    res.send({
+      success: true,
+      id,
+      prompt
+    })
+  } catch (err) {
+    console.log(`Error: Unable to create image.`)
+    console.log(err)
     res.send({
       success: false,
-      message
+      message: 'Unable to create image. Please try again soon.'
     })
   }
-
-  res.send({
-    success: true,
-    id,
-    prompt
-  })
 }
