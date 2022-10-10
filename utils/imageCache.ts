@@ -41,6 +41,17 @@ export const checkImageJob = async (jobId: string) => {
   })
 
   const data = await res.json()
+  const { status = '' } = data
+  pendingCheckRequest = false
+
+  if (status === 'NOT_FOUND') {
+    await deletePendingJob(jobId)
+    return {
+      success: false,
+      status: 'NOT_FOUND'
+    }
+  }
+
   pendingCheckRequest = false
 
   return {
@@ -64,7 +75,12 @@ export const fetchJobDetails = async () => {
     const { id: tableId } = pendingJobDetails
 
     const jobDetailsFromApi = await checkImageJob(currentJobId)
-    const { success, queue_position, wait_time } = jobDetailsFromApi
+    const { success, queue_position, wait_time, status } = jobDetailsFromApi
+
+    if (status === 'NOT_FOUND') {
+      jobDetailsQueue.shift()
+      return
+    }
 
     if (success) {
       await updatePendingJob(

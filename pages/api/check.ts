@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 type Data = {
   success: boolean
+  status?: string
 }
 
 export default async function handler(
@@ -30,6 +31,17 @@ export default async function handler(
     )
 
     const data = await resp.json()
+    const { message = '' } = data
+
+    if (message.indexOf('not found') >= 0) {
+      console.log(
+        `${new Date().toLocaleString()}: Error: No pending job found for jobId: ${id}.`
+      )
+      return res.send({
+        success: false,
+        status: 'NOT_FOUND'
+      })
+    }
 
     res.send({
       success: true,
