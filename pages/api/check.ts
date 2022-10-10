@@ -30,6 +30,16 @@ export default async function handler(
       }
     )
 
+    if (resp.status === 404) {
+      console.log(
+        `${new Date().toLocaleString()}: Error: No pending job found for jobId: ${id}.`
+      )
+      return res.send({
+        success: false,
+        status: 'NOT_FOUND'
+      })
+    }
+
     const data = await resp.json()
     const { message = '' } = data
 
