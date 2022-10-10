@@ -59,7 +59,7 @@ const ImagePage = () => {
           />
         </div>
       )}
-      {!isInitialLoad && relatedImages.length > 0 && (
+      {!isInitialLoad && relatedImages.length > 1 && (
         <div className="border-0 border-t-2 border-dashed border-slate-500">
           <PageTitle>Related images</PageTitle>
           <div className="flex gap-y-2.5 flex-wrap gap-x-2.5">
