@@ -116,6 +116,7 @@ const Home: NextPage = () => {
     if (loadEditPrompt().copyPrompt) {
       setShowAdvanced(true)
       setInput({ prompt: loadEditPrompt().prompt })
+      updatedCachedPrompt(loadEditPrompt().prompt)
       clearPrompt()
     }
 
