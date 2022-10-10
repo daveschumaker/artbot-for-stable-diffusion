@@ -254,7 +254,7 @@ export const getCurrentJob = async () => {
     // @ts-ignore
     const imgDetails = await getImage(jobId)
 
-    if (imgDetails?.success) {
+    if (imgDetails?.success && imgDetails?.base64String) {
       await db.completed.add({
         jobId,
         ...imageDetails,
