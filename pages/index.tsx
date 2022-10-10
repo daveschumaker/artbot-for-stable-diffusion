@@ -25,6 +25,7 @@ const Home: NextPage = () => {
     (state: any, newState: any) => ({ ...state, ...newState }),
     {
       orientation: 'square',
+      numImages: 1,
       prompt: '',
       height: 512,
       width: 512,
@@ -189,17 +190,24 @@ const Home: NextPage = () => {
       </div>
       {showAdvanced && (
         <>
-          {/* <div className="mb-2">
-            <div className="inline-block w-[124px]"># of Images:</div>
-            <div className="inline-block w-[50px]">
-              <input
-                type="text"
-                className="w-full p-1 rounded-lg border border-slate-500"
-                onChange={(e) => setNumImages(e.target.value)}
-                value={numImages}
-              />
+          <div className="mb-2">
+            <div className="inline-block w-[124px]"># of images:</div>
+            <div className="inline-block w-[124px]">
+              <select
+                className="text-black w-full p-1 rounded-lg border border-slate-500"
+                name="numImages"
+                onChange={handleChangeValue}
+                value={input.numImages}
+              >
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+              </select>
             </div>
-          </div> */}
+          </div>
           <div className="mb-2">
             <div className="inline-block w-[124px]">Sampler:</div>
             <div className="inline-block w-[124px]">

@@ -5,6 +5,7 @@ import {
   deletePendingJob,
   getPendingJobDetails
 } from './db'
+import { sleep } from './sleep'
 
 export const initIndexedDb = () => {}
 
@@ -45,15 +46,76 @@ export const checkImageJob = async (jobId: string) => {
   }
 }
 
+const multiImageJob = async ({
+  numImages = 1,
+  idx = 0,
+  params,
+  apikey
+}: {
+  numImages: number
+  idx: number
+  params: CreateImageJob
+  apikey: string
+}) => {
+  if (idx >= numImages) {
+    // TODO: Really poor assumption, but right now, we will always assume this succeeds.
+    return {
+      success: true
+    }
+  }
+
+  const res = await fetch(`/artbot/api/create`, {
+    method: 'POST',
+    body: JSON.stringify(Object.assign({}, params, { apikey })),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+
+  const data = await res.json()
+  const { id: jobId } = data
+
+  if (jobId) {
+    const jobDetails = await checkImageJob(jobId)
+    const { success, queue_position, wait_time } = jobDetails
+
+    if (!success) {
+      return {
+        success: false,
+        jobId,
+        message: jobDetails?.message
+      }
+    }
+
+    await db.pending.add({
+      jobId,
+      timestamp: Date.now(),
+      queue_position,
+      wait_time,
+      ...params
+    })
+  }
+
+  setTimeout(() => {
+    multiImageJob({ numImages, idx: ++idx, params, apikey })
+  }, 250)
+}
+
 export const createImageJob = async (imageParams: CreateImageJob) => {
   const apikey = localStorage.getItem('apikey') || '0000000000'
   const { prompt } = imageParams
+  let { numImages = 1 } = imageParams
 
   if (!prompt || !prompt?.trim()) {
     return {
       success: false,
       status: 'Invalid prompt'
     }
+  }
+
+  // @ts-ignore
+  if (isNaN(numImages) || numImages < 1 || numImages > 8) {
+    numImages = 1
   }
 
   const params: CreateImageJob = {
@@ -67,6 +129,21 @@ export const createImageJob = async (imageParams: CreateImageJob) => {
 
   if (imageParams.seed) {
     params.seed = imageParams.seed
+  }
+
+  if (numImages > 1) {
+    multiImageJob({
+      numImages,
+      idx: 0,
+      params,
+      apikey
+    })
+
+    await sleep(numImages + 1 * 250)
+
+    return {
+      success: true
+    }
   }
 
   const res = await fetch(`/artbot/api/create`, {

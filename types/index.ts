@@ -7,6 +7,7 @@ export interface CreateImageJob {
   sampler?: string
   apikey?: string
   seed?: number
+  numImages?: number
 }
 
 export interface GenerateResponse {
