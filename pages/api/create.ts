@@ -44,7 +44,8 @@ export default async function handler(
       height,
       width,
       steps: Number(steps)
-    }
+    },
+	trusted_workers: false
   }
 
   try {

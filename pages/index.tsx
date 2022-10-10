@@ -154,8 +154,8 @@ const Home: NextPage = () => {
               onChange={handleOrientationSelect}
               value={input.orientation}
             >
-              <option value="landscape">Landscape (2:3)</option>
-              <option value="portrait">Portrait (3:2)</option>
+              <option value="landscape">Landscape (3:2)</option>
+              <option value="portrait">Portrait (2:3)</option>
               <option value="square">Square</option>
             </select>
           </div>
