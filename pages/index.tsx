@@ -12,6 +12,7 @@ import {
   loadEditPrompt,
   updatedCachedPrompt
 } from '../utils/promptUtils'
+import Link from 'next/link'
 
 interface InputTarget {
   name: string
@@ -294,18 +295,32 @@ const Home: NextPage = () => {
           </div>
         </>
       )}
-      {/* <div className="mt-2 mb-2">
-        <div className="inline-block">API key:</div>
-        <div className="inline-block">
-          <input
-            type="text"
-            name="apikey"
-            className="w-full p-1 border border-slate-500"
-            onChange={handleChangeValue}
-            value={input.apikey}
-          />
-        </div>
-      </div> */}
+      <div className="mt-2">
+        <h2 className="font-bold mb-2">Resources and tips</h2>
+        <ul>
+          <li>
+            <Link href="https://lexica.art/">
+              <a className="text-sm text-cyan-400" target="_blank">
+                Lexica - Prompt Search Engine
+              </a>
+            </Link>
+          </li>
+          <li>
+            <Link href="https://github.com/Maks-s/sd-akashic">
+              <a className="text-sm text-cyan-400" target="_blank">
+                Stable Diffusion Artist Studies
+              </a>
+            </Link>
+          </li>
+          <li>
+            <Link href="https://promptomania.com/stable-diffusion-prompt-builder/">
+              <a className="text-sm text-cyan-400" target="_blank">
+                Stable Diffusion Prompt Builder
+              </a>
+            </Link>
+          </li>
+        </ul>
+      </div>
     </main>
   )
 }
