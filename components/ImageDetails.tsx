@@ -58,6 +58,7 @@ const ImageDetails = ({
 
       delete cleanParams.base64String
       delete cleanParams.id
+      delete cleanParams.jobId
       delete cleanParams.queue_position
       delete cleanParams.seed
       delete cleanParams.success

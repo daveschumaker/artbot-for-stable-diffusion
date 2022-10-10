@@ -13,8 +13,9 @@ const PendingPage = () => {
   const fetchPrompts = async () => {
     const data = await allPendingJobs()
 
-    setPendingImages(data)
     setIsInitialLoad(false)
+    setPendingImages(data)
+    return data
   }
 
   const handleDeleteJob = async (jobId: string) => {
@@ -26,6 +27,20 @@ const PendingPage = () => {
 
   useEffect(() => {
     fetchPrompts()
+
+    // Ridiculously hacky way to check for multi images in the queue
+    // TODO: Fix me.
+    const timer1 = setTimeout(() => fetchPrompts(), 500)
+    const timer2 = setTimeout(() => fetchPrompts(), 1000)
+    const timer3 = setTimeout(() => fetchPrompts(), 1500)
+    const timer4 = setTimeout(() => fetchPrompts(), 2500)
+
+    return () => {
+      clearTimeout(timer1)
+      clearTimeout(timer2)
+      clearTimeout(timer3)
+      clearTimeout(timer4)
+    }
   }, [])
 
   return (

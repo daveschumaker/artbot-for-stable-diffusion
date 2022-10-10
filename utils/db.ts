@@ -19,6 +19,11 @@ export class MySubClassedDexie extends Dexie {
       completed: '++id, jobId, timestamp',
       pending: '++id, jobId,timestamp'
     })
+
+    this.version(2).stores({
+      completed: '++id, jobId, timestamp, parentJobId',
+      pending: '++id, jobId,timestamp, parentJobId'
+    })
   }
 }
 
@@ -32,12 +37,21 @@ export const fetchCompletedJobs = async () => {
   return await db?.completed?.orderBy('timestamp').reverse().toArray()
 }
 
+export const fetchRelatedImages = async (parentJobId: string) => {
+  return await db?.completed?.where({ parentJobId }).toArray()
+}
+
 export const getPendingJobDetails = async (jobId: string) => {
   return await db.pending
     .filter(function (job: { jobId: string }) {
       return job.jobId === jobId
     })
     .first()
+}
+
+// @ts-ignore
+export const updatePendingJob = async (tableId: number, updatedObject) => {
+  db.pending.update(tableId, updatedObject)
 }
 
 export const getImageDetails = async (jobId: string) => {

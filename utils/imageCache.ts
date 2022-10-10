@@ -3,11 +3,15 @@ import {
   allPendingJobs,
   db,
   deletePendingJob,
-  getPendingJobDetails
+  getPendingJobDetails,
+  updatePendingJob
 } from './db'
-import { sleep } from './sleep'
+import { createNewImage } from './imageUtils'
 
 export const initIndexedDb = () => {}
+
+const multiImageQueue: Array<CreateImageJob> = []
+const jobDetailsQueue: Array<string> = []
 
 let pendingCheckRequest = false
 export const checkImageJob = async (jobId: string) => {
@@ -46,65 +50,59 @@ export const checkImageJob = async (jobId: string) => {
   }
 }
 
-const multiImageJob = async ({
-  numImages = 1,
-  idx = 0,
-  params,
-  apikey
-}: {
-  numImages: number
-  idx: number
-  params: CreateImageJob
-  apikey: string
-}) => {
-  if (idx >= numImages) {
-    // TODO: Really poor assumption, but right now, we will always assume this succeeds.
-    return {
-      success: true
+export const fetchJobDetails = async () => {
+  const [currentJobId] = jobDetailsQueue
+
+  if (currentJobId) {
+    const pendingJobDetails = await getPendingJobDetails(currentJobId)
+
+    if (!pendingJobDetails) {
+      jobDetailsQueue.shift()
+      return
+    }
+
+    const { id: tableId } = pendingJobDetails
+
+    const jobDetailsFromApi = await checkImageJob(currentJobId)
+    const { success, queue_position, wait_time } = jobDetailsFromApi
+
+    if (success) {
+      await updatePendingJob(
+        tableId,
+        Object.assign({}, pendingJobDetails, {
+          queue_position,
+          wait_time
+        })
+      )
+
+      jobDetailsQueue.shift()
     }
   }
-
-  const res = await fetch(`/artbot/api/create`, {
-    method: 'POST',
-    body: JSON.stringify(Object.assign({}, params, { apikey })),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-
-  const data = await res.json()
-  const { id: jobId } = data
-
-  if (jobId) {
-    const jobDetails = await checkImageJob(jobId)
-    const { success, queue_position, wait_time } = jobDetails
-
-    if (!success) {
-      return {
-        success: false,
-        jobId,
-        message: jobDetails?.message
-      }
-    }
-
-    await db.pending.add({
-      jobId,
-      timestamp: Date.now(),
-      queue_position,
-      wait_time,
-      ...params
-    })
-  }
-
-  setTimeout(() => {
-    multiImageJob({ numImages, idx: ++idx, params, apikey })
-  }, 250)
 }
 
-export const createImageJob = async (imageParams: CreateImageJob) => {
-  const apikey = localStorage.getItem('apikey') || '0000000000'
-  const useTrusted = localStorage.getItem('useTrusted') || false
+let waitingForRes = false
+export const createMultiImageJob = async () => {
+  if (waitingForRes) {
+    return
+  }
 
+  const [nextJobParams] = multiImageQueue
+  if (nextJobParams) {
+    waitingForRes = true
+    const newImage = await createImageJob(nextJobParams)
+    if (newImage.success) {
+      multiImageQueue.shift()
+    }
+    waitingForRes = false
+  }
+}
+
+setInterval(() => {
+  createMultiImageJob()
+  fetchJobDetails()
+}, 500)
+
+export const createImageJob = async (imageParams: CreateImageJob) => {
   const { prompt } = imageParams
   let { numImages = 1 } = imageParams
 
@@ -120,70 +118,30 @@ export const createImageJob = async (imageParams: CreateImageJob) => {
     numImages = 1
   }
 
-  const params: CreateImageJob = {
-    prompt: imageParams.prompt,
-    height: imageParams.height || 512,
-    width: imageParams.width || 512,
-    cfg_scale: imageParams.cfg_scale || '12.0',
-    steps: imageParams.steps || 50,
-    sampler: imageParams.sampler || 'k_euler_a',
-    useTrusted: useTrusted === 'true' ? true : false
-  }
+  const data = await createNewImage(imageParams)
+  const { success } = data
 
-  if (imageParams.seed) {
-    params.seed = imageParams.seed
-  }
+  if (success) {
+    const { jobId } = data
+    jobDetailsQueue.push(jobId)
 
-  if (numImages > 1) {
-    multiImageJob({
-      numImages,
-      idx: 0,
-      params,
-      apikey
-    })
+    if (numImages > 1) {
+      imageParams.parentJobId = imageParams.parentJobId || jobId
+      delete imageParams.numImages
 
-    await sleep(numImages + 1 * 250)
-
-    return {
-      success: true
-    }
-  }
-
-  const res = await fetch(`/artbot/api/create`, {
-    method: 'POST',
-    body: JSON.stringify(Object.assign({}, params, { apikey })),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-
-  const data = await res.json()
-  const { id: jobId } = data
-
-  if (jobId) {
-    const jobDetails = await checkImageJob(jobId)
-    const { success, queue_position, wait_time } = jobDetails
-
-    if (!success) {
-      return {
-        success: false,
-        jobId,
-        message: jobDetails?.message
+      for (let i = 0; i < numImages - 1; i++) {
+        multiImageQueue.push(imageParams)
       }
     }
 
     await db.pending.add({
       jobId,
       timestamp: Date.now(),
-      queue_position,
-      wait_time,
-      ...params
+      ...imageParams
     })
 
     return {
-      success: true,
-      ...params,
-      jobDetails
+      success: true
     }
   }
 

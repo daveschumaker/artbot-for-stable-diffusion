@@ -9,6 +9,7 @@ export interface CreateImageJob {
   seed?: number
   numImages?: number
   useTrusted?: boolean
+  parentJobId?: string
 }
 
 export interface GenerateResponse {
