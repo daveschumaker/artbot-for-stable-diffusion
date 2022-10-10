@@ -78,6 +78,7 @@ export default async function handler(
     console.log(
       `${new Date().toLocaleString()}: Generating image for jobId: ${id}`
     )
+    console.log(`${height}h x ${width}w`)
 
     res.send({
       success: true,

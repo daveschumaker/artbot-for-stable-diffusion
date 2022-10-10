@@ -27,6 +27,7 @@ const Home: NextPage = () => {
 
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [pending, setPending] = useState(false)
+  const [hasError, setHasError] = useState(false)
   const [input, setInput] = useReducer(
     (state: any, newState: any) => ({ ...state, ...newState }),
     {
@@ -77,12 +78,18 @@ const Home: NextPage = () => {
   const handleOrientationSelect = (e: { target: { value: string } }) => {
     localStorage.setItem('orientation', e.target.value)
 
-    if (e.target.value === 'landscape') {
+    if (e.target.value === 'landscape-16x9') {
+      setInput({ height: 576, width: 1024, orientation: 'landscape-16x9' })
+    } else if (e.target.value === 'landscape') {
       setInput({ height: 512, width: 768, orientation: 'landscape' })
     } else if (e.target.value === 'portrait') {
       setInput({ height: 768, width: 512, orientation: 'portrait' })
     } else if (e.target.value === 'square') {
       setInput({ height: 512, width: 512, orientation: 'square' })
+    } else if (e.target.value === 'phone-bg') {
+      setInput({ height: 1344, width: 576, orientation: 'phone-bg' })
+    } else if (e.target.value === 'ultrawide') {
+      setInput({ height: 576, width: 1344, orientation: 'ultrawide' })
     } else {
       setInput({ height: 512, width: 512, orientation: 'square' })
     }
@@ -104,6 +111,9 @@ const Home: NextPage = () => {
     if (res.success) {
       updatedCachedPrompt('')
       router.push('/pending')
+    } else {
+      setHasError(true)
+      setPending(false)
     }
   }
 
@@ -165,19 +175,28 @@ const Home: NextPage = () => {
           onKeyDown={onEnterPress}
           value={input.prompt}
         />
+        {hasError && (
+          <div className="mt-2 mb-2 text-red-500 font-semibold">
+            Error: The server did not respond to the image request. Please try
+            again shortly.
+          </div>
+        )}
         <div className="flex flex-row mt-4 w-full">
-          <div className="w-1/2">
+          <div className="w-3/4">
             <select
-              className="w-[160px] p-1 border text-black border-slate-500 rounded-lg"
+              className="w-[220px] p-1 border text-black border-slate-500 rounded-lg"
               onChange={handleOrientationSelect}
               value={input.orientation}
             >
+              <option value="landscape-16x9">Landscape (16:9)</option>
               <option value="landscape">Landscape (3:2)</option>
               <option value="portrait">Portrait (2:3)</option>
+              <option value="phone-bg">Phone background (9:21)</option>
+              <option value="ultrawide">Ultrawide (21:9)</option>
               <option value="square">Square</option>
             </select>
           </div>
-          <div className="w-1/2 text-right">
+          <div className="w-1/4 text-right">
             <button
               className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
               onClick={handleSubmit}
