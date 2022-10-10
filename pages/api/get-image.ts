@@ -36,19 +36,27 @@ export default async function handler(
     )
 
     const data = await resp.json()
-
     const { generations } = data
-    const [image] = generations
-    const { img: base64String, seed } = image
 
-    res.send({
-      success: true,
-      jobId: id,
-      base64String,
-      seed
+    console.log(`Image status:`, data)
+
+    if (Array.isArray(generations)) {
+      const [image] = generations
+      const { img: base64String, seed } = image
+
+      return res.send({
+        success: true,
+        jobId: id,
+        base64String,
+        seed
+      })
+    }
+
+    return res.send({
+      success: false
     })
   } catch (err) {
-    console.log(`Error: Unable to fetch image.`)
+    console.log(`Error: Unable to fetch image for job: ${id}.`)
     console.log(err)
     res.send({
       success: false

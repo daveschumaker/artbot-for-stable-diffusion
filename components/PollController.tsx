@@ -25,7 +25,7 @@ const PollController = () => {
         showToastTimeout()
         setHasNewImage(true)
       }
-    }, 10000)
+    }, 15000)
 
     return () => clearInterval(interval)
   })
