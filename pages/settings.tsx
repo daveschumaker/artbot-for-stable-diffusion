@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import PageTitle from '../components/PageTitle'
 
 const SettingsPage = () => {
   const [apiKey, setApiKey] = useState('')
@@ -27,6 +28,7 @@ const SettingsPage = () => {
 
   return (
     <div>
+      <PageTitle>Settings</PageTitle>
       <div className="mb-2">
         <div className="inline-block w-[220px]">Use Only Trusted Workers:</div>
         <div className="inline-block w-[100px]">
@@ -42,8 +44,8 @@ const SettingsPage = () => {
         </div>
       </div>
       <div className="mb-2">
-        <div className="inline-block w-[220px]">API key:</div>
-        <div className="inline-block w-[160px]">
+        <div className="inline-block w-[140px]">API key:</div>
+        <div className="inline-block w-[180px] mr-2">
           <input
             type="text"
             className="text-black w-full p-1 rounded-lg border border-slate-500"

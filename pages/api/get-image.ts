@@ -44,7 +44,6 @@ export default async function handler(
     if (Array.isArray(generations)) {
       const [image] = generations
       const { img: base64String, seed } = image
-      sessionImages++
 
       if (!base64String) {
         res.send({
@@ -53,6 +52,7 @@ export default async function handler(
         })
       }
 
+      sessionImages++
       console.log(`Session images generated: ${sessionImages}`)
 
       return res.send({

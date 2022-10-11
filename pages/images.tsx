@@ -60,7 +60,7 @@ const ImagesPage = () => {
       </div>
       <div className="inline-block w-1/2 text-right">
         <div
-          className="cursor-pointer text-sm text-blue-500"
+          className="cursor-pointer text-sm text-teal-500"
           onClick={handleGridListClick}
         >
           {showGrid ? 'View: Grid' : 'View: List'}
@@ -74,7 +74,7 @@ const ImagesPage = () => {
       </div>
       {isInitialLoad && <Spinner />}
       {!isInitialLoad && images.length === 0 && (
-        <div>
+        <div className="mb-2">
           You haven&apos;t created any images yet.{' '}
           <Link href="/">
             <a className="text-cyan-400">Why not create something?</a>

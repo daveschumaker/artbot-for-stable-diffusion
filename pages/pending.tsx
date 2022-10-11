@@ -51,7 +51,7 @@ const PendingPage = () => {
 
       {isInitialLoad && <Spinner />}
       {!isInitialLoad && pendingImages.length === 0 && (
-        <div>
+        <div className="mt-4 mb-2">
           No images pending.{' '}
           <Link href="/">
             <a className="text-cyan-400">Why not create something?</a>

@@ -1,11 +1,35 @@
 /* eslint-disable @next/next/no-img-element */
 
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { IconBellRinging2 } from '@tabler/icons'
+
+import { getHasNewImage } from '../utils/imageCache'
+import { useRouter } from 'next/router'
 
 export default function Header() {
+  const router = useRouter()
+  const { pathname } = router
+  const [showNewImage, setShowNewImage] = useState(false)
+
+  const handleForceReload = () => {
+    if ('/images' === pathname) {
+      window.location.reload()
+    }
+  }
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      const hasNewImage = getHasNewImage()
+      setShowNewImage(hasNewImage)
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [])
+
   return (
-    <div className="mt-2">
-      <div className="flex flex-row content-center">
+    <div className="flex flex-row">
+      <div className="mt-2 w-1/2 inline-block">
         <Link href="/">
           <a>
             <div className="inline-block">
@@ -17,12 +41,28 @@ export default function Header() {
               />
             </div>
             <div className="inline-block">
-              <h1 className="ml-2 pt-1 inline-block h-8 text-[30px] font-bold leading-7 text-[#1D80A2]">
+              <h1 className="ml-2 pt-1 inline-block h-8 text-[30px] font-bold leading-7 text-teal-500">
                 ArtBot
               </h1>
             </div>
           </a>
         </Link>
+      </div>
+      <div className="mt-2 w-1/2 inline-block text-right">
+        <div className="mt-3">
+          {showNewImage && (
+            <Link href="/images" passHref>
+              <a onClick={handleForceReload}>
+                <IconBellRinging2
+                  size={26}
+                  color="red"
+                  stroke={1}
+                  className="inline-block mr-1 mb-1"
+                />
+              </a>
+            </Link>
+          )}
+        </div>
       </div>
     </div>
   )
