@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:deploy": "npm run build && npm run deploy",
-    "deploy": "node deployRelease.js",
+    "build:deploy": "npm run build && npm run deploy:prod",
+    "deploy:prod": "node deployRelease.js",
     "start": "next start -p 49997",
     "lint": "next lint",
     "pm2:start": "pm2 start ecosystem.config.js",

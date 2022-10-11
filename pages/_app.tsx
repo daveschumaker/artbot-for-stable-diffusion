@@ -37,6 +37,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           sizes="144x144"
           href="/artbot/apple-touch-icon-ipad-retina-152x152.png"
         />
+        <link rel="icon" type="image/x-icon" href="/artbot/favicon.ico"></link>
       </Head>
       <PollController />
       <ContentWrapper>
