@@ -1,7 +1,26 @@
+import { useEffect } from 'react'
+
 const ConfirmationModal = ({
   onConfirmClick = () => {},
   closeModal = () => {}
 }) => {
+  useEffect(() => {
+    // @ts-ignore
+    const handleKeyPress = (e) => {
+      if (e.keyCode === 27) {
+        closeModal()
+      }
+
+      if (e.keyCode === 13) {
+        onConfirmClick()
+      }
+    }
+    window.addEventListener('keydown', handleKeyPress)
+    return () => window.removeEventListener('keydown', handleKeyPress)
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <>
       <div
