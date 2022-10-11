@@ -6,12 +6,14 @@ const Application = require('ssh-deploy-release')
 
 const options = {
   localPath: process.cwd(),
-  exclude: ['release.tar.gz'],
+  exclude: ['node_modules/**', 'release.tar.gz'],
   archiveName: 'release.tar.gz',
   host: process.env.HOST,
   username: process.env.USERNAME,
   password: process.env.PW,
   deployPath: process.env.DEPLOY_PATH,
+  onBeforeLink: (context) =>
+    `source ~/.zshrc && cd ${context.release.path} && npm install --omit=dev`,
   onAfterDeploy: [
     `source ~/.zshrc && cd ${process.env.DEPLOY_PATH}/www && npm run pm2:stop && sleep 1s && npm run pm2:start && pm2 save`
   ]
