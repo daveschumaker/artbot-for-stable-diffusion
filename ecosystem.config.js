@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: 'next-horde-frontend',
+      name: 'horde-js',
       script: 'npm',
       args: 'start',
       restart_delay: 5000,
