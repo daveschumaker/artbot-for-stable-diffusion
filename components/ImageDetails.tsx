@@ -8,6 +8,7 @@ import ConfirmationModal from './ConfirmationModal'
 import { useCallback, useState } from 'react'
 import TrashIcon from './icons/TrashIcon'
 import RecycleIcon from './icons/RecycleIcon'
+import DownloadIcon from './icons/DownloadIcon'
 
 interface ImageDetails {
   jobId: string
@@ -54,6 +55,30 @@ const ImageDetails = ({
     })
 
     router.push(`/?edit=true`)
+  }
+
+  const handleDownloadClick = async (imageDetails: any) => {
+    const res = await fetch(`/artbot/api/get-png`, {
+      method: 'POST',
+      body: JSON.stringify({
+        imgString: imageDetails.base64String
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    const data = await res.json()
+    const { success } = data
+
+    if (success) {
+      const filename = imageDetails.prompt
+        .replace(/[^a-z0-9]/gi, '_')
+        .toLowerCase()
+      var a = document.createElement('a')
+      a.href = 'data:image/png;base64,' + data.base64String
+      a.download = filename + '.png'
+      a.click()
+    }
   }
 
   const handleRerollClick = useCallback(
@@ -122,6 +147,12 @@ const ImageDetails = ({
             onClick={() => handleRerollClick(imageDetails)}
           >
             <RecycleIcon className="mx-auto" />
+          </button>
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold rounded ml-2 h-[40px] w-[40px] align-top"
+            onClick={() => handleDownloadClick(imageDetails)}
+          >
+            <DownloadIcon className="mx-auto" />
           </button>
         </div>
         <div className="inline-block w-1/4 text-right">
