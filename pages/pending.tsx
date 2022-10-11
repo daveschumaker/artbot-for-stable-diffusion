@@ -19,9 +19,18 @@ const PendingPage = () => {
   }
 
   const handleDeleteJob = async (jobId: string) => {
+    fetch(`/artbot/api/delete-job`, {
+      method: 'POST',
+      body: JSON.stringify({
+        id: jobId
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+
     await deletePendingJob(jobId)
 
-    //TODO: Send API request
     fetchPrompts()
   }
 

@@ -4,6 +4,7 @@ import PageTitle from '../components/PageTitle'
 const SettingsPage = () => {
   const [apiKey, setApiKey] = useState('')
   const [useTrusted, setUseTrusted] = useState('false')
+  const [useNsfw, setUseNsfw] = useState('false')
 
   const handleApiInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     localStorage.setItem('apikey', e.target.value)
@@ -16,6 +17,12 @@ const SettingsPage = () => {
     setUseTrusted(e.target.value)
   }
 
+  // @ts-ignore
+  const handleNsfwSelect = (e) => {
+    localStorage.setItem('allowNsfwImages', e.target.value)
+    setUseNsfw(e.target.value)
+  }
+
   useEffect(() => {
     if (localStorage.getItem('apikey')) {
       setApiKey(localStorage.getItem('apikey') || '')
@@ -24,11 +31,29 @@ const SettingsPage = () => {
     if (localStorage.getItem('useTrusted')) {
       setUseTrusted(localStorage.getItem('useTrusted') || 'false')
     }
+
+    if (localStorage.getItem('allowNsfwImages')) {
+      setUseNsfw(localStorage.getItem('allowNsfwImages') || 'false')
+    }
   }, [])
 
   return (
     <div>
       <PageTitle>Settings</PageTitle>
+      <div className="mb-2">
+        <div className="inline-block w-[220px]">Allow NSFW images:</div>
+        <div className="inline-block w-[100px]">
+          <select
+            className="text-black w-full p-1 rounded-lg border border-slate-500"
+            name="numImages"
+            onChange={handleNsfwSelect}
+            value={useNsfw}
+          >
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+          </select>
+        </div>
+      </div>
       <div className="mb-2">
         <div className="inline-block w-[220px]">Use Only Trusted Workers:</div>
         <div className="inline-block w-[100px]">

@@ -18,7 +18,7 @@ export default async function handler(
     return res.status(400).json({ success: false })
   }
 
-  const { height, width, apikey } = req.body
+  const { height, width, apikey, allowNsfw = false } = req.body
   let {
     prompt,
     steps,
@@ -59,6 +59,7 @@ export default async function handler(
       width,
       steps: Number(steps)
     },
+    nsfw: allowNsfw,
     trusted_workers: useTrusted
   }
 

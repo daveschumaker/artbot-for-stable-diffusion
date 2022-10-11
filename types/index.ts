@@ -11,6 +11,7 @@ export interface CreateImageJob {
   useTrusted?: boolean
   parentJobId?: string
   negative?: string
+  allowNsfw?: boolean
 }
 
 export interface GenerateResponse {

@@ -3,6 +3,7 @@ import { CreateImageJob } from '../types'
 export const createNewImage = async (imageParams: CreateImageJob) => {
   const apikey = localStorage.getItem('apikey')?.trim() || '0000000000'
   const useTrusted = localStorage.getItem('useTrusted') || false
+  const allowNsfwImages = localStorage.getItem('allowNsfwImages') || false
 
   const params: CreateImageJob = {
     prompt: imageParams.prompt,
@@ -11,7 +12,8 @@ export const createNewImage = async (imageParams: CreateImageJob) => {
     cfg_scale: imageParams.cfg_scale || '12.0',
     steps: imageParams.steps || 50,
     sampler: imageParams.sampler || 'k_euler_a',
-    useTrusted: useTrusted === 'true' ? true : false
+    useTrusted: useTrusted === 'true' ? true : false,
+    allowNsfw: allowNsfwImages === 'true' ? true : false
   }
 
   if (imageParams.negative) {

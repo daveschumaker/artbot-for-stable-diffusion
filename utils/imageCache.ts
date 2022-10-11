@@ -137,7 +137,7 @@ export const createImageJob = async (imageParams: CreateImageJob) => {
   }
 
   // @ts-ignore
-  if (isNaN(numImages) || numImages < 1 || numImages > 8) {
+  if (isNaN(numImages) || numImages < 1 || numImages > 20) {
     numImages = 1
   }
 
@@ -287,4 +287,4 @@ export const setHasNewImage = (bool: boolean) => {
 setInterval(() => {
   createMultiImageJob()
   fetchJobDetails()
-}, 500)
+}, 200)

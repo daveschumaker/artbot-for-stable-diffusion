@@ -1,6 +1,7 @@
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
 
+import { initAppSettings } from '../utils/appSettings'
 import ContentWrapper from '../components/ContentWrapper'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
@@ -9,6 +10,7 @@ import PollController from '../components/PollController'
 import '../styles/globals.css'
 
 import { initDb } from '../utils/db'
+initAppSettings()
 initDb()
 
 function MyApp({ Component, pageProps }: AppProps) {
