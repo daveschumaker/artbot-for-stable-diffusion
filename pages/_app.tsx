@@ -42,9 +42,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <ContentWrapper>
         <Header />
         <NavBar />
-        <div className="">
-          <Component {...pageProps} />
-        </div>
+        <Component {...pageProps} />
         <Footer />
       </ContentWrapper>
     </>

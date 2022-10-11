@@ -1,12 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import {
-  IconEdit,
-  IconHourglassEmpty,
-  IconPhoto,
-  IconSettings
-} from '@tabler/icons'
+
+import IconCreate from './icons/CreateIcon'
+import HourglassIcon from './icons/HourglassIcon'
+import PhotoIcon from './icons/PhotoIcon'
+import SettingsIcon from './icons/SettingsIcon'
 
 export default function NavBar() {
   const router = useRouter()
@@ -26,12 +25,7 @@ export default function NavBar() {
         <li className="text-left w-1/4">
           <Link href="/" passHref>
             <a className={isActiveRoute('/')}>
-              <IconEdit
-                size={20}
-                color="white"
-                stroke={1}
-                className="inline-block mr-1 mb-1"
-              />
+              <IconCreate className="inline-block mr-1 pb-1" />
               Create
             </a>
           </Link>
@@ -39,12 +33,7 @@ export default function NavBar() {
         <li className="text-left w-1/4">
           <Link href="/pending" passHref>
             <a className={isActiveRoute('/pending')}>
-              <IconHourglassEmpty
-                size={20}
-                color="white"
-                stroke={1}
-                className="inline-block mr-1 mb-1"
-              />
+              <HourglassIcon className="inline-block mr-1 pb-1" />
               Pending
             </a>
           </Link>
@@ -52,12 +41,7 @@ export default function NavBar() {
         <li className="text-left w-1/4">
           <Link href="/images" passHref>
             <a className={isActiveRoute('/images')}>
-              <IconPhoto
-                size={20}
-                color="white"
-                stroke={1}
-                className="inline-block mr-1 mb-1"
-              />
+              <PhotoIcon className="inline-block mr-1 pb-1" />
               Images
             </a>
           </Link>
@@ -65,12 +49,7 @@ export default function NavBar() {
         <li className="text-left w-1/4">
           <Link href="/settings" passHref>
             <a className={isActiveRoute('/settings')}>
-              <IconSettings
-                size={20}
-                color="white"
-                stroke={1}
-                className="inline-block mr-1 mb-1"
-              />
+              <SettingsIcon className="inline-block mr-1 pb-1" />
               Settings
             </a>
           </Link>

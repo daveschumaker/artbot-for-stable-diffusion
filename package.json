@@ -13,7 +13,6 @@
     "pm2:stop": "pm2 delete ecosystem.config.js"
   },
   "dependencies": {
-    "@tabler/icons": "^1.102.0",
     "@types/react-lazyload": "3.2.0",
     "dexie": "3.2.2",
     "dexie-react-hooks": "1.1.1",

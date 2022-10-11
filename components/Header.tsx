@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { IconBellRinging2 } from '@tabler/icons'
 
 import { getHasNewImage } from '../utils/imageCache'
 import { useRouter } from 'next/router'
+import BellIcon from './icons/BellIcon'
 
 export default function Header() {
   const router = useRouter()
@@ -53,11 +53,10 @@ export default function Header() {
           {showNewImage && (
             <Link href="/images" passHref>
               <a onClick={handleForceReload}>
-                <IconBellRinging2
-                  size={26}
-                  color="red"
-                  stroke={1}
-                  className="inline-block mr-1 mb-1"
+                <BellIcon
+                  stroke="#db1a00"
+                  size={24}
+                  className="inline-block pb-1"
                 />
               </a>
             </Link>

@@ -6,6 +6,8 @@ import { deleteCompletedImage } from '../utils/db'
 import { savePrompt } from '../utils/promptUtils'
 import ConfirmationModal from './ConfirmationModal'
 import { useCallback, useState } from 'react'
+import TrashIcon from './icons/TrashIcon'
+import RecycleIcon from './icons/RecycleIcon'
 
 interface ImageDetails {
   jobId: string
@@ -119,13 +121,7 @@ const ImageDetails = ({
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold rounded ml-2 h-[40px] w-[40px] align-top"
             onClick={() => handleRerollClick(imageDetails)}
           >
-            <img
-              src="/artbot/recycle.svg"
-              height={26}
-              width={26}
-              alt="Re-roll"
-              className="mx-auto"
-            />
+            <RecycleIcon className="mx-auto" />
           </button>
         </div>
         <div className="inline-block w-1/4 text-right">
@@ -133,7 +129,7 @@ const ImageDetails = ({
             className="bg-red-500 hover:bg-red-700 text-white font-bold rounded ml-2 h-[40px] w-[40px] align-top"
             onClick={() => setShowDeleteModal(true)}
           >
-            X
+            <TrashIcon className="mx-auto" />
           </button>
         </div>
       </div>
