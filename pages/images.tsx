@@ -66,7 +66,7 @@ const ImagesPage = () => {
           {showGrid ? 'View: Grid' : 'View: List'}
         </div>
       </div>
-      <div className="mt-2 mb-2 text-sm">
+      <div className="mt-2 mb-4 text-sm">
         <strong>Important:</strong> All images persist within your local browser
         cache and are not stored on a remote server.
         <br />
@@ -95,7 +95,7 @@ const ImagesPage = () => {
             }) => {
               return (
                 <Link href={`/image/${image.jobId}`} key={image.jobId} passHref>
-                  <a>
+                  <a style={{ maxHeight: '180px' }}>
                     <ImageSquare imageDetails={image} />
                   </a>
                 </Link>

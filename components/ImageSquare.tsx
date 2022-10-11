@@ -12,7 +12,12 @@ interface ImageSquareProps {
 
 export default function ImageSquare({ imageDetails }: ImageSquareProps) {
   return (
-    <LazyLoad height={128} once className="inline-block">
+    <LazyLoad
+      height={180}
+      once
+      className="inline-block"
+      style={{ maxHeight: '180px' }}
+    >
       <Image
         src={'data:image/webp;base64,' + imageDetails.base64String}
         width={180}
