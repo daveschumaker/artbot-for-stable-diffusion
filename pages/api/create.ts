@@ -93,9 +93,26 @@ export default async function handler(
       })
     }
 
+    if (message === 'Input payload validation failed') {
+      console.log(`Error: Invalid payload params.`)
+      console.log(params)
+
+      return res.send({
+        success: false,
+        message,
+        status: 'INVALID_PARAMS'
+      })
+    }
+
     if (!id) {
       console.log('No id...', data)
       console.log(params)
+
+      return res.send({
+        success: false,
+        message,
+        status: 'MISSING_JOB_ID'
+      })
     }
 
     console.log(

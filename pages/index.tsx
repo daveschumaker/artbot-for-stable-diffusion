@@ -88,9 +88,9 @@ const Home: NextPage = () => {
     } else if (e.target.value === 'square') {
       setInput({ height: 512, width: 512, orientation: 'square' })
     } else if (e.target.value === 'phone-bg') {
-      setInput({ height: 1344, width: 576, orientation: 'phone-bg' })
+      setInput({ height: 1024, width: 448, orientation: 'phone-bg' })
     } else if (e.target.value === 'ultrawide') {
-      setInput({ height: 576, width: 1344, orientation: 'ultrawide' })
+      setInput({ height: 448, width: 1024, orientation: 'ultrawide' })
     } else {
       setInput({ height: 512, width: 512, orientation: 'square' })
     }

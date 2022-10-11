@@ -1,9 +1,19 @@
 import { useEffect, useState } from 'react'
 
-export default function ProgressBar({ done = false, time = 5 }) {
+export default function ProgressBar({
+  done = false,
+  time
+}: {
+  done?: boolean
+  time?: number
+}) {
   const [width, setWidth] = useState(done ? 100 : 0)
 
   useEffect(() => {
+    if (!time) {
+      return
+    }
+
     const pctPerSecond = 100 / time
     let count = 0
     const intervalId = setInterval(() => {
@@ -13,7 +23,8 @@ export default function ProgressBar({ done = false, time = 5 }) {
       }
 
       // Hacky method to show that an image is still waiting to be generated
-      // if we haven't seen a server response as of yet.
+      // if we haven't seen a server response as of yet. Pauses the progress
+      // bar at 95%
       if (count * pctPerSecond >= 95) {
         setWidth(95)
         clearInterval(intervalId)
