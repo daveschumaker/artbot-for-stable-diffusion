@@ -1,0 +1,26 @@
+{
+  "name": "ArtBot",
+  "short_name": "ArtBot",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "orientation": "portrait-primary",
+  "theme_color": "#003277",
+  "icons": [
+    {
+      "src": "/apple-touch-icon-iphone-60x60.png",
+      "type": "image/png",
+      "sizes": "60x60"
+    },
+    {
+      "src": "/apple-touch-icon-iphone-retina-120x120.png",
+      "type": "image/png",
+      "sizes": "114x114"
+    },
+    {
+      "src": "/apple-touch-icon-ipad-retina-152x152.png.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    }
+  ]
+}

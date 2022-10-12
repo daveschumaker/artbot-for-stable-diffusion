@@ -21,8 +21,8 @@ export default function NavBar() {
 
   return (
     <div className="mb-2 text-sm font-medium text-center text-white border-b border-gray-200 w-full">
-      <ul className="flex flex-wrap">
-        <li className="text-left w-1/4">
+      <ul className="flex flex-row">
+        <li className="text-left">
           <Link href="/" passHref>
             <a className={isActiveRoute('/')}>
               <IconCreate className="inline-block mr-1 pb-1" />
@@ -30,7 +30,7 @@ export default function NavBar() {
             </a>
           </Link>
         </li>
-        <li className="text-left w-1/4">
+        <li className="text-left">
           <Link href="/pending" passHref>
             <a className={isActiveRoute('/pending')}>
               <HourglassIcon className="inline-block mr-[2-px] pb-1" />
@@ -38,7 +38,7 @@ export default function NavBar() {
             </a>
           </Link>
         </li>
-        <li className="text-left w-1/4">
+        <li className="text-left">
           <Link href="/images" passHref>
             <a className={isActiveRoute('/images')}>
               <PhotoIcon className="inline-block mr-[2-px] pb-1" />
@@ -46,7 +46,7 @@ export default function NavBar() {
             </a>
           </Link>
         </li>
-        <li className="text-left w-1/4">
+        <li className="text-left">
           <Link href="/settings" passHref>
             <a className={isActiveRoute('/settings')}>
               <SettingsIcon className="inline-block mr-[2-px] pb-1" />

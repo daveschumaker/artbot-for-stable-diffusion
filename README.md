@@ -1,6 +1,10 @@
-# Next.Horde (A front-end for the Stable Horde distrubuted cluster)
+# ArtBot for Stable Diffusion
 
-This is a front-end GUI for interacting with the [Stable Horde](https://stablehorde.net/) distributed cluster.
+![A painting robot](/public/painting_bot.png)
+
+See it in action: [https://tinybots.net/artbot](https://tinybots.net/artbot)
+
+ArtBot is a front-end GUI for generating images and photos with Stable Diffusion using a distributed computing cluster powered by the [Stable Horde](https://stablehorde.net/).
 
 **To use:**
 

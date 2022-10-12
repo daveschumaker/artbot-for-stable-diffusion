@@ -1,14 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
+import Masonry from 'react-responsive-masonry'
 
 import ImageCardDetails from '../components/ImageCardDetails'
 import PageTitle from '../components/PageTitle'
 import Spinner from '../components/Spinner'
 import { fetchCompletedJobs } from '../utils/db'
 import { setHasNewImage } from '../utils/imageCache'
-import ImageSquare from '../components/ImageSquare'
 import LazyLoad from 'react-lazyload'
+import GridIcon from '../components/icons/GridIcon'
+import ListIcon from '../components/icons/ListIcon'
 
 const ImagesPage = () => {
   const [isInitialLoad, setIsInitialLoad] = useState(true)
@@ -59,13 +61,13 @@ const ImagesPage = () => {
       <div className="inline-block w-1/2">
         <PageTitle>Your images</PageTitle>
       </div>
-      <div className="inline-block w-1/2 text-right">
-        <div
-          className="cursor-pointer text-sm text-teal-500"
+      <div className="inline-block w-1/2 text-right content-center">
+        <button
+          className="p-[2px] border-[1px] border-teal-500 rounded-md cursor-pointer text-sm text-teal-500 relative top-[3px]"
           onClick={handleGridListClick}
         >
-          {showGrid ? 'View: Grid' : 'View: List'}
-        </div>
+          {showGrid ? <GridIcon /> : <ListIcon />}
+        </button>
       </div>
       <div className="mt-2 mb-6 text-sm">
         <strong>Important:</strong> All images persist within your local browser
@@ -82,26 +84,33 @@ const ImagesPage = () => {
         </div>
       )}
       <div className={defaultStyle}>
-        {!isInitialLoad &&
-          images.length > 0 &&
-          showGrid &&
-          images.map(
-            (image: {
-              jobId: string
-              base64String: string
-              prompt: string
-              timestamp: number
-              seed: number
-            }) => {
-              return (
-                <Link href={`/image/${image.jobId}`} key={image.jobId} passHref>
-                  <a style={{ maxHeight: '180px' }}>
-                    <ImageSquare imageDetails={image} />
-                  </a>
-                </Link>
-              )
-            }
-          )}
+        {!isInitialLoad && images.length > 0 && showGrid && (
+          <Masonry columnsCount={2} gutter="8px">
+            {images.map(
+              (image: {
+                jobId: string
+                base64String: string
+                prompt: string
+                timestamp: number
+                seed: number
+              }) => {
+                return (
+                  <LazyLoad key={image.jobId} once>
+                    <Link href={`/image/${image.jobId}`} passHref>
+                      <a>
+                        <img
+                          src={'data:image/webp;base64,' + image.base64String}
+                          style={{ width: '100%', display: 'block' }}
+                          alt={image.prompt}
+                        />
+                      </a>
+                    </Link>
+                  </LazyLoad>
+                )
+              }
+            )}
+          </Masonry>
+        )}
         {!isInitialLoad &&
           images.length > 0 &&
           !showGrid &&
@@ -116,11 +125,7 @@ const ImagesPage = () => {
               return (
                 <LazyLoad key={image.jobId} once>
                   <div className="text-center border-[1px] border-solid border-slate-100 rounded-lg w-full mb-4 md:w-[512px] mx-auto">
-                    <Link
-                      href={`/image/${image.jobId}`}
-                      key={image.jobId}
-                      passHref
-                    >
+                    <Link href={`/image/${image.jobId}`} passHref>
                       <a>
                         <div className="bg-slate-600 rounded-t-lg">
                           <img
