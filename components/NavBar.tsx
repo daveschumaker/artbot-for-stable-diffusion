@@ -33,7 +33,7 @@ export default function NavBar() {
         <li className="text-left w-1/4">
           <Link href="/pending" passHref>
             <a className={isActiveRoute('/pending')}>
-              <HourglassIcon className="inline-block mr-1 pb-1" />
+              <HourglassIcon className="inline-block mr-[2-px] pb-1" />
               Pending
             </a>
           </Link>
@@ -41,7 +41,7 @@ export default function NavBar() {
         <li className="text-left w-1/4">
           <Link href="/images" passHref>
             <a className={isActiveRoute('/images')}>
-              <PhotoIcon className="inline-block mr-1 pb-1" />
+              <PhotoIcon className="inline-block mr-[2-px] pb-1" />
               Images
             </a>
           </Link>
@@ -49,7 +49,7 @@ export default function NavBar() {
         <li className="text-left w-1/4">
           <Link href="/settings" passHref>
             <a className={isActiveRoute('/settings')}>
-              <SettingsIcon className="inline-block mr-1 pb-1" />
+              <SettingsIcon className="inline-block mr-[2-px] pb-1" />
               Settings
             </a>
           </Link>

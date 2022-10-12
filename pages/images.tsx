@@ -2,12 +2,13 @@
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 
-import ImageDetails from '../components/ImageDetails'
+import ImageCardDetails from '../components/ImageCardDetails'
 import PageTitle from '../components/PageTitle'
 import Spinner from '../components/Spinner'
 import { fetchCompletedJobs } from '../utils/db'
 import { setHasNewImage } from '../utils/imageCache'
 import ImageSquare from '../components/ImageSquare'
+import LazyLoad from 'react-lazyload'
 
 const ImagesPage = () => {
   const [isInitialLoad, setIsInitialLoad] = useState(true)
@@ -66,11 +67,10 @@ const ImagesPage = () => {
           {showGrid ? 'View: Grid' : 'View: List'}
         </div>
       </div>
-      <div className="mt-2 mb-4 text-sm">
+      <div className="mt-2 mb-6 text-sm">
         <strong>Important:</strong> All images persist within your local browser
-        cache and are not stored on a remote server.
-        <br />
-        Clearing your cache will <strong>delete</strong> all images.
+        cache and are not stored on a remote server. Clearing your cache will{' '}
+        <strong>delete</strong> all images.
       </div>
       {isInitialLoad && <Spinner />}
       {!isInitialLoad && images.length === 0 && (
@@ -114,20 +114,29 @@ const ImagesPage = () => {
               seed: number
             }) => {
               return (
-                <div
-                  key={image.jobId}
-                  className="text-center border-0 border-b-2 border-dashed border-slate-500 pt-6 pb-6"
-                >
-                  <img
-                    src={'data:image/webp;base64,' + image.base64String}
-                    className="mx-auto"
-                    alt={image.prompt}
-                  />
-                  <ImageDetails
-                    imageDetails={image}
-                    onDelete={handleDeleteImageClick}
-                  />
-                </div>
+                <LazyLoad key={image.jobId} once>
+                  <div className="text-center border-[1px] border-solid border-slate-100 rounded-lg w-full mb-4 md:w-[512px] mx-auto">
+                    <Link
+                      href={`/image/${image.jobId}`}
+                      key={image.jobId}
+                      passHref
+                    >
+                      <a>
+                        <div className="bg-slate-600 rounded-t-lg">
+                          <img
+                            src={'data:image/webp;base64,' + image.base64String}
+                            className="mx-auto rounded-t-lg"
+                            alt={image.prompt}
+                          />
+                        </div>
+                      </a>
+                    </Link>
+                    <ImageCardDetails
+                      imageDetails={image}
+                      onDelete={handleDeleteImageClick}
+                    />
+                  </div>
+                </LazyLoad>
               )
             }
           )}

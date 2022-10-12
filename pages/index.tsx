@@ -372,6 +372,13 @@ const Home: NextPage = () => {
             </Link>
           </li>
           <li>
+            <Link href="https://publicprompts.art/">
+              <a className="text-sm text-cyan-400" target="_blank">
+                Public Prompts Collection
+              </a>
+            </Link>
+          </li>
+          <li>
             <Link href="https://github.com/Maks-s/sd-akashic">
               <a className="text-sm text-cyan-400" target="_blank">
                 Stable Diffusion Artist Studies
