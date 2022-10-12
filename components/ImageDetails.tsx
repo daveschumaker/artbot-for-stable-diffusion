@@ -74,6 +74,7 @@ const ImageDetails = ({
       const filename = imageDetails.prompt
         .replace(/[^a-z0-9]/gi, '_')
         .toLowerCase()
+        .slice(0, 254)
       var a = document.createElement('a')
       a.href = 'data:image/png;base64,' + data.base64String
       a.download = filename + '.png'

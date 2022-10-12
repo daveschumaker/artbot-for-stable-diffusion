@@ -38,7 +38,7 @@ export const fetchCompletedJobs = async () => {
 }
 
 export const fetchRelatedImages = async (parentJobId: string) => {
-  return await db?.completed?.where({ parentJobId }).toArray()
+  return await db?.completed?.where({ parentJobId }).reverse().toArray()
 }
 
 export const getPendingJobDetails = async (jobId: string) => {
