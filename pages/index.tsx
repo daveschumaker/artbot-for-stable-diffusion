@@ -186,9 +186,9 @@ const Home: NextPage = () => {
           </div>
         )}
         <div className="flex flex-row mt-2 w-full">
-          <div className="w-3/4">
+          <div className="w-full md:w-[280px]">
             <select
-              className="w-[220px] p-1 border text-black border-slate-500 rounded-lg"
+              className="w-full p-1 border text-black border-slate-500 rounded-lg"
               onChange={handleOrientationSelect}
               value={input.orientation}
             >
@@ -201,20 +201,9 @@ const Home: NextPage = () => {
             </select>
           </div>
         </div>
-        <div className="flex flex-row mt-4 w-full">
+        <div className="flex flex-row mt-4 w-full justify-end">
           <button
-            className={`w-[160px] text-white font-bold py-2 px-4 rounded ${
-              !pending
-                ? 'bg-blue-500 hover:bg-blue-700'
-                : 'bg-slate-500 cursor-not-allowed'
-            }`}
-            onClick={handleSubmit}
-            disabled={pending}
-          >
-            {pending ? 'Creating...' : 'Create'}
-          </button>
-          <button
-            className={`ml-2 text-white font-bold py-2 px-4 rounded bg-red-500 hover:bg-red-700`}
+            className={`mr-2 text-white font-bold py-2 px-4 rounded bg-red-500 hover:bg-red-700`}
             onClick={() => {
               setInput({
                 numImages: 1,
@@ -226,6 +215,17 @@ const Home: NextPage = () => {
             }}
           >
             Clear
+          </button>
+          <button
+            className={`w-[160px] text-white font-bold py-2 px-4 rounded ${
+              !pending
+                ? 'bg-blue-500 hover:bg-blue-700'
+                : 'bg-slate-500 cursor-not-allowed'
+            }`}
+            onClick={handleSubmit}
+            disabled={pending}
+          >
+            {pending ? 'Creating...' : 'Create'}
           </button>
         </div>
       </div>

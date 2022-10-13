@@ -38,7 +38,7 @@ export default function Footer() {
         </Link>{' '}
         |{' '}
         <a
-          href="https://github.com/daveschumaker/Next-Horde-Frontend"
+          href="https://github.com/daveschumaker/artbot-for-stable-diffusion"
           target="_blank"
           rel="noreferrer"
           className="text-cyan-400"
