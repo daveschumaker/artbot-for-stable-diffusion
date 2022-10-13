@@ -7,8 +7,8 @@ import {
   getPendingJobDetails
 } from '../utils/db'
 import ProgressBar from './ProgressBar'
-import { setHasNewImage } from '../utils/imageCache'
 import Spinner from './Spinner'
+import { setNewImageReady } from '../store/appStore'
 
 // @ts-ignore
 const PendingItem = ({ handleDeleteJob, jobDetails }) => {
@@ -25,7 +25,7 @@ const PendingItem = ({ handleDeleteJob, jobDetails }) => {
 
     if (jobFinished?.jobId === jobDetails?.jobId) {
       setIsComplete(true)
-      setHasNewImage(true)
+      setNewImageReady(true)
     }
   }
 
@@ -83,7 +83,7 @@ const PendingItem = ({ handleDeleteJob, jobDetails }) => {
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded align-top"
               onClick={() => {
-                setHasNewImage(false)
+                setNewImageReady(false)
                 router.push(`/image/${jobDetails.jobId}`)
               }}
             >

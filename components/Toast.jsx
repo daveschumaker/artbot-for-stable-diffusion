@@ -1,6 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+import { setNewImageReady } from '../store/appStore'
+import { useEffect } from 'react'
 
 export default function Toast({ handleClose }) {
   const router = useRouter()
@@ -13,8 +15,16 @@ export default function Toast({ handleClose }) {
       router.push(`/images`)
     }
 
+    setNewImageReady(false)
     handleClose()
   }
+
+  useEffect(() => {
+    const interval = setTimeout(async () => {
+      handleClose()
+    }, 7500)
+    return () => clearInterval(interval)
+  })
 
   return (
     <>

@@ -1,34 +1,40 @@
 import { useEffect, useState } from 'react'
+import { useStore } from 'statery'
 
 import Toast from '../components/Toast'
-import { getCurrentJob, setHasNewImage } from '../utils/imageCache'
+import { appInfoStore, setNewImageReady } from '../store/appStore'
+import { getCurrentJob } from '../utils/imageCache'
 
 const PollController = () => {
-  const [showToast, setShowToast] = useState(false)
+  const appState = useStore(appInfoStore)
+  const { newImageReady } = appState
 
-  const showToastTimeout = () => {
-    setShowToast(true)
-    setTimeout(() => {
-      setShowToast(false)
-    }, 7500)
-  }
+  const [showToast, setShowToast] = useState(false)
 
   const handleCloseToast = () => {
     setShowToast(false)
   }
 
   useEffect(() => {
+    if (newImageReady === false) {
+      setShowToast(false)
+    } else if (newImageReady === true) {
+      setShowToast(true)
+    }
+  }, [newImageReady])
+
+  useEffect(() => {
     const interval = setInterval(async () => {
       const jobDetails = await getCurrentJob()
 
       if (jobDetails?.newImage) {
-        showToastTimeout()
-        setHasNewImage(true)
+        setNewImageReady(true)
+        setShowToast(true)
       }
     }, 2500)
 
     return () => clearInterval(interval)
-  })
+  }, [])
 
   return <>{showToast && <Toast handleClose={handleCloseToast} />}</>
 }

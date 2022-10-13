@@ -274,16 +274,6 @@ export const getCurrentJob = async () => {
   }
 }
 
-let hasNewImage = false
-
-export const getHasNewImage = () => {
-  return hasNewImage
-}
-
-export const setHasNewImage = (bool: boolean) => {
-  hasNewImage = bool
-}
-
 setInterval(() => {
   createMultiImageJob()
   fetchJobDetails()

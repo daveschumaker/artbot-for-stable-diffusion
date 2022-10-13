@@ -4,7 +4,7 @@ const JobPage = () => {
   return (
     <div>
       <div className="inline-block w-1/2">
-        <PageTitle>Images</PageTitle>
+        <PageTitle>Job details</PageTitle>
       </div>
     </div>
   )

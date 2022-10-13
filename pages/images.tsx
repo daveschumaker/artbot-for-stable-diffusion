@@ -7,7 +7,6 @@ import ImageCardDetails from '../components/ImageCardDetails'
 import PageTitle from '../components/PageTitle'
 import Spinner from '../components/Spinner'
 import { fetchCompletedJobs } from '../utils/db'
-import { setHasNewImage } from '../utils/imageCache'
 import LazyLoad from 'react-lazyload'
 import GridIcon from '../components/icons/GridIcon'
 import ListIcon from '../components/icons/ListIcon'
@@ -44,7 +43,6 @@ const ImagesPage = () => {
 
   useEffect(() => {
     fetchImages()
-    setHasNewImage(false)
 
     if (localStorage.getItem('showLayout')) {
       setShowLayout(localStorage.getItem('showLayout') || 'layout')

@@ -1,15 +1,27 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useStore } from 'statery'
+import { appInfoStore, setNewImageReady } from '../store/appStore'
 
 import IconCreate from './icons/CreateIcon'
 import HourglassIcon from './icons/HourglassIcon'
 import PhotoIcon from './icons/PhotoIcon'
+import PhotoPlusIcon from './icons/PhotoPlusIcon'
 import SettingsIcon from './icons/SettingsIcon'
 
 export default function NavBar() {
   const router = useRouter()
   const { pathname } = router
+
+  const appState = useStore(appInfoStore)
+  const { newImageReady } = appState
+
+  const handleForceReload = () => {
+    if ('/images' === pathname) {
+      window.location.reload()
+    }
+  }
 
   const isActiveRoute = (page: string) => {
     if (page === pathname) {
@@ -40,8 +52,21 @@ export default function NavBar() {
         </li>
         <li className="text-left">
           <Link href="/images" passHref>
-            <a className={isActiveRoute('/images')}>
-              <PhotoIcon className="inline-block mr-[2-px] pb-1" />
+            <a
+              className={isActiveRoute('/images')}
+              onClick={() => {
+                setNewImageReady(false)
+                handleForceReload()
+              }}
+            >
+              {newImageReady ? (
+                <PhotoPlusIcon
+                  className="inline-block mr-[2-px] pb-1"
+                  stroke={'red'}
+                />
+              ) : (
+                <PhotoIcon className="inline-block mr-[2-px] pb-1" />
+              )}
               Images
             </a>
           </Link>

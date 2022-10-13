@@ -11,7 +11,7 @@ import '../styles/globals.css'
 
 import { initDb } from '../utils/db'
 import { useCallback, useEffect } from 'react'
-import { appInfoStore, setBuildId } from '../store/appInfo'
+import { appInfoStore, setBuildId } from '../store/appStore'
 import { useStore } from 'statery'
 initAppSettings()
 initDb()

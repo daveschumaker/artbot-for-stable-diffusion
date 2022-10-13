@@ -1,32 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
-
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
-import { getHasNewImage } from '../utils/imageCache'
-import { useRouter } from 'next/router'
-import BellIcon from './icons/BellIcon'
-
 export default function Header() {
-  const router = useRouter()
-  const { pathname } = router
-  const [showNewImage, setShowNewImage] = useState(false)
-
-  const handleForceReload = () => {
-    if ('/images' === pathname) {
-      window.location.reload()
-    }
-  }
-
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      const hasNewImage = getHasNewImage()
-      setShowNewImage(hasNewImage)
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [])
-
   return (
     <div className="flex flex-row">
       <div className="mt-2 w-1/2 inline-block">
@@ -49,19 +24,7 @@ export default function Header() {
         </Link>
       </div>
       <div className="mt-2 w-1/2 inline-block text-right">
-        <div className="mt-3">
-          {showNewImage && (
-            <Link href="/images" passHref>
-              <a onClick={handleForceReload}>
-                <BellIcon
-                  stroke="#db1a00"
-                  size={24}
-                  className="inline-block pb-1"
-                />
-              </a>
-            </Link>
-          )}
-        </div>
+        <div className="mt-3"></div>
       </div>
     </div>
   )
