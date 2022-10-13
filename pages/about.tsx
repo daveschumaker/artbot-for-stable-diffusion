@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from 'next/link'
 import PageTitle from '../components/PageTitle'
 
@@ -6,7 +7,10 @@ const AboutPage = () => {
     <>
       <PageTitle>About</PageTitle>
       <div className="mt-2">
-        <img src="/artbot/painting_bot.png" />
+        <img
+          src="/artbot/painting_bot.png"
+          alt="painting of a robot painting robots"
+        />
         <div className="mt-2">
           ArtBot is an open source front-end client written with Next.js, for
           interacting with the{' '}
