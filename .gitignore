@@ -15,6 +15,9 @@
 # production
 /build
 
+# release files
+release.tar.gz
+
 # misc
 .DS_Store
 *.pem

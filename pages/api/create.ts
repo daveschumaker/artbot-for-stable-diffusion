@@ -1,6 +1,6 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { GenerateResponse } from '../../types'
+import buildInfo from '../../build_info.json'
 
 type Data = {
   success: boolean
@@ -70,6 +70,8 @@ export default async function handler(
     nsfw: allowNsfw,
     trusted_workers: useTrusted
   }
+
+  console.log(`build info??`, buildInfo)
 
   try {
     const resp = await fetch(`https://stablehorde.net/api/v2/generate/async`, {

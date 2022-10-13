@@ -4,16 +4,19 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && npm run update:build-id",
     "build:deploy": "npm run build && npm run deploy:prod",
-    "deploy:prod": "node deploy-release.js --prod",
-    "deploy:staging": "node deploy-release.js --staging",
+    "deploy:prod": "node ./x-build-scripts/release-deploy.js --prod",
+    "deploy:staging": "node ./x-build-scripts/release-deploy.js --staging",
     "start": "next start",
     "lint": "next lint",
     "pm2:start-prod": "pm2 start ecosystem.config.js --only horde-js",
     "pm2:stop-prod": "pm2 delete ecosystem.config.js --only horde-js",
     "pm2:start-staging": "pm2 start ecosystem.config.js --only horde-js-staging",
-    "pm2:stop-staging": "pm2 delete ecosystem.config.js --only horde-js-staging"
+    "pm2:stop-staging": "pm2 delete ecosystem.config.js --only horde-js-staging",
+    "rollback:prod": "node ./x-build-scripts/release-rollback.js --prod",
+    "rollback:staging": "node ./x-build-scripts/release-rollback.js --staging",
+    "update:build-id": "node ./x-build-scripts/updateBuildId.js"
   },
   "dependencies": {
     "@types/autosize": "4.0.1",

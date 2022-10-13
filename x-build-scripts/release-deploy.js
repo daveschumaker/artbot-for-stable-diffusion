@@ -1,5 +1,6 @@
 /**
- * Easily deploy a completed build to my remote server and restart the process with minimal downtime.
+ * Easily deploy a completed build to my remote server
+ * and restart the process with minimal downtime.
  */
 require('dotenv').config()
 const Application = require('ssh-deploy-release')
