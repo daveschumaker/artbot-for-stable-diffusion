@@ -10,11 +10,43 @@ import PollController from '../components/PollController'
 import '../styles/globals.css'
 
 import { initDb } from '../utils/db'
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
+import { appInfoStore, setBuildId } from '../store/appInfo'
+import { useStore } from 'statery'
 initAppSettings()
 initDb()
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const appState = useStore(appInfoStore)
+  const { buildId } = appState
+
+  const fetchAppInfo = useCallback(async () => {
+    try {
+      const res = await fetch('/artbot/api/server-info')
+      const data = await res.json()
+      const { build } = data
+
+      if (!buildId) {
+        setBuildId(build)
+      } else if (buildId !== build) {
+        // console.log(`buildId mistatch - reload page!`)
+        // console.log(`client id:`, buildId)
+        // console.log(`server id:`, build)
+      }
+    } catch (err) {
+      console.log(`Unable to fetch latest server-info. Connectivity issue?`)
+    }
+  }, [buildId])
+
+  useEffect(() => {
+    fetchAppInfo()
+    const interval = setInterval(async () => {
+      fetchAppInfo()
+    }, 5000)
+
+    return () => clearInterval(interval)
+  }, [fetchAppInfo])
+
   useEffect(() => {
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
