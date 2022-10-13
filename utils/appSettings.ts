@@ -17,10 +17,21 @@ export const checkNsfwSettings = () => {
   }
 }
 
+export const updateShowGrid = () => {
+  if (localStorage.getItem('showGrid') === 'true') {
+    localStorage.setItem('showLayout', 'grid')
+  } else if (localStorage.getItem('showGrid') === 'false') {
+    localStorage.setItem('showLayout', 'list')
+  }
+
+  localStorage.removeItem('showGrid')
+}
+
 export const initAppSettings = () => {
   if (typeof window === 'undefined') {
     return
   }
 
   checkNsfwSettings()
+  updateShowGrid()
 }

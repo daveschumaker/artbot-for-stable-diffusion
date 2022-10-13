@@ -11,21 +11,26 @@ import { setHasNewImage } from '../utils/imageCache'
 import LazyLoad from 'react-lazyload'
 import GridIcon from '../components/icons/GridIcon'
 import ListIcon from '../components/icons/ListIcon'
+import LayoutIcon from '../components/icons/LayoutIcon'
+import ImageSquare from '../components/ImageSquare'
 
 const ImagesPage = () => {
   const [isInitialLoad, setIsInitialLoad] = useState(true)
   const [images, setImages] = useState([])
-  const [showGrid, setShowGrid] = useState(true)
+  const [showLayout, setShowLayout] = useState('layout')
 
   const handleGridListClick = useCallback(() => {
-    if (showGrid) {
-      localStorage.setItem('showGrid', 'false')
-      setShowGrid(false)
+    if (showLayout === 'layout') {
+      localStorage.setItem('showLayout', 'list')
+      setShowLayout('list')
+    } else if (showLayout === 'list') {
+      localStorage.setItem('showLayout', 'grid')
+      setShowLayout('grid')
     } else {
-      localStorage.setItem('showGrid', 'true')
-      setShowGrid(true)
+      localStorage.setItem('showLayout', 'layout')
+      setShowLayout('layout')
     }
-  }, [showGrid])
+  }, [showLayout])
 
   const fetchImages = async () => {
     const data = await fetchCompletedJobs()
@@ -41,16 +46,14 @@ const ImagesPage = () => {
     fetchImages()
     setHasNewImage(false)
 
-    if (localStorage.getItem('showGrid') === 'true') {
-      setShowGrid(true)
-    } else {
-      setShowGrid(false)
+    if (localStorage.getItem('showLayout')) {
+      setShowLayout(localStorage.getItem('showLayout') || 'layout')
     }
   }, [])
 
   let defaultStyle = `flex justify-center gap-y-2.5`
 
-  if (showGrid) {
+  if (showLayout === 'grid' || showLayout === 'layout') {
     defaultStyle += ` flex-wrap gap-x-2.5`
   } else {
     defaultStyle += ` flex-col`
@@ -66,7 +69,9 @@ const ImagesPage = () => {
           className="p-[2px] border-[1px] border-teal-500 rounded-md cursor-pointer text-sm text-teal-500 relative top-[3px]"
           onClick={handleGridListClick}
         >
-          {showGrid ? <GridIcon /> : <ListIcon />}
+          {showLayout === 'layout' && <LayoutIcon />}
+          {showLayout === 'grid' && <GridIcon />}
+          {showLayout === 'list' && <ListIcon />}
         </button>
       </div>
       <div className="mt-2 mb-6 text-sm">
@@ -84,7 +89,7 @@ const ImagesPage = () => {
         </div>
       )}
       <div className={defaultStyle}>
-        {!isInitialLoad && images.length > 0 && showGrid && (
+        {!isInitialLoad && images.length > 0 && showLayout === 'layout' && (
           <Masonry columnsCount={2} gutter="8px">
             {images.map(
               (image: {
@@ -111,9 +116,32 @@ const ImagesPage = () => {
             )}
           </Masonry>
         )}
+        {!isInitialLoad && images.length > 0 && showLayout === 'grid' && (
+          <>
+            {images.map(
+              (image: {
+                jobId: string
+                base64String: string
+                prompt: string
+                timestamp: number
+                seed: number
+              }) => {
+                return (
+                  <LazyLoad key={image.jobId} once>
+                    <Link href={`/image/${image.jobId}`} passHref>
+                      <a>
+                        <ImageSquare imageDetails={image} />
+                      </a>
+                    </Link>
+                  </LazyLoad>
+                )
+              }
+            )}
+          </>
+        )}
         {!isInitialLoad &&
           images.length > 0 &&
-          !showGrid &&
+          showLayout === 'list' &&
           images.map(
             (image: {
               jobId: string
