@@ -28,8 +28,16 @@ export default async function handler(
     useTrusted
   } = req.body
 
-  if (!prompt || prompt?.length > 325) {
-    prompt = prompt.substring(0, 325)
+  /**
+   * Max prompt length for hlky is roughly 75 tokens.
+   * According to: https://beta.openai.com/tokenizer
+   * "One token is generally 4 chars of text". I believe
+   * Stable Horde silently trims lengthy prompts. I do it
+   * here, too, just so someone can't send Shakespeare
+   * novels inside a payload.
+   */
+  if (!prompt || prompt?.length > 1024) {
+    prompt = prompt.substring(0, 1024)
   }
 
   if (isNaN(steps) || steps > 100 || steps < 1) {

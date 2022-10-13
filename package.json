@@ -16,8 +16,10 @@
     "pm2:stop-staging": "pm2 delete ecosystem.config.js --only horde-js-staging"
   },
   "dependencies": {
+    "@types/autosize": "^4.0.1",
     "@types/react-lazyload": "3.2.0",
     "@types/sharp": "0.31.0",
+    "autosize": "^5.0.1",
     "dexie": "3.2.2",
     "dexie-react-hooks": "1.1.1",
     "dotenv": "16.0.3",

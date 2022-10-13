@@ -5,7 +5,6 @@ import { useRouter } from 'next/router'
 
 import { createImageJob } from '../utils/imageCache'
 import PageTitle from '../components/PageTitle'
-import { KeypressEvent } from '../types'
 import {
   clearPrompt,
   getCachedPrompt,
@@ -13,6 +12,7 @@ import {
   updatedCachedPrompt
 } from '../utils/promptUtils'
 import Link from 'next/link'
+import TextArea from '../components/TextArea'
 
 interface InputTarget {
   name: string
@@ -129,13 +129,6 @@ const Home: NextPage = () => {
     }
   }
 
-  const onEnterPress = (e: KeypressEvent) => {
-    if (e.keyCode == 13 && e.shiftKey == false) {
-      e.preventDefault()
-      handleSubmit()
-    }
-  }
-
   useEffect(() => {
     if (loadEditPrompt().copyPrompt) {
       setShowAdvanced(true)
@@ -180,22 +173,19 @@ const Home: NextPage = () => {
     <main>
       <PageTitle>Create new image</PageTitle>
       <div className="mt-2 mb-2">
-        <textarea
-          type="text"
+        <TextArea
           name="prompt"
-          className="block bg-white p-2.5 w-full text-lg text-black rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+          className="block bg-white p-2.5 w-full text-lg text-black rounded-lg max-h-[250px] border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
           placeholder="Image prompt..."
           onChange={handleChangeValue}
-          // @ts-ignore
-          onKeyDown={onEnterPress}
           value={input.prompt}
         />
         {hasError && (
-          <div className="mt-2 mb-2 text-red-500 font-semibold">
+          <div className="mt-2 text-red-500 font-semibold">
             Error: {hasError}
           </div>
         )}
-        <div className="flex flex-row mt-4 w-full">
+        <div className="flex flex-row mt-2 w-full">
           <div className="w-3/4">
             <select
               className="w-[220px] p-1 border text-black border-slate-500 rounded-lg"
@@ -210,14 +200,33 @@ const Home: NextPage = () => {
               <option value="square">Square</option>
             </select>
           </div>
-          <div className="w-1/4 text-right">
-            <button
-              className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
-              onClick={handleSubmit}
-            >
-              {pending ? 'Creating...' : 'Create'}
-            </button>
-          </div>
+        </div>
+        <div className="flex flex-row mt-4 w-full">
+          <button
+            className={`w-[160px] text-white font-bold py-2 px-4 rounded ${
+              !pending
+                ? 'bg-blue-500 hover:bg-blue-700'
+                : 'bg-slate-500 cursor-not-allowed'
+            }`}
+            onClick={handleSubmit}
+            disabled={pending}
+          >
+            {pending ? 'Creating...' : 'Create'}
+          </button>
+          <button
+            className={`ml-2 text-white font-bold py-2 px-4 rounded bg-red-500 hover:bg-red-700`}
+            onClick={() => {
+              setInput({
+                numImages: 1,
+                prompt: '',
+                seed: '',
+                parentJobId: '',
+                negative: ''
+              })
+            }}
+          >
+            Clear
+          </button>
         </div>
       </div>
       <div className="mt-2">

@@ -35,6 +35,7 @@ const ImageDetails = ({
   const router = useRouter()
 
   const [pending, setPending] = useState(false)
+  const [pendingDownload, setPendingDownload] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
 
   const handleDeleteImageClick = async (jobId: string) => {
@@ -58,6 +59,11 @@ const ImageDetails = ({
   }
 
   const handleDownloadClick = async (imageDetails: any) => {
+    if (pendingDownload) {
+      return
+    }
+
+    setPendingDownload(true)
     const res = await fetch(`/artbot/api/get-png`, {
       method: 'POST',
       body: JSON.stringify({
@@ -80,6 +86,7 @@ const ImageDetails = ({
       a.download = filename + '.png'
       a.click()
     }
+    setPendingDownload(false)
   }
 
   const handleRerollClick = useCallback(
@@ -144,14 +151,24 @@ const ImageDetails = ({
             Copy prompt
           </button>
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold rounded ml-2 h-[40px] w-[40px] align-top"
+            className={`text-white font-bold rounded ml-2 h-[40px] w-[40px] align-top ${
+              !pending
+                ? 'bg-blue-500 hover:bg-blue-700'
+                : 'bg-slate-500 cursor-not-allowed'
+            }`}
             onClick={() => handleRerollClick(imageDetails)}
+            disabled={pending}
           >
             <RecycleIcon className="mx-auto" />
           </button>
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold rounded ml-2 h-[40px] w-[40px] align-top"
+            className={`text-white font-bold rounded ml-2 h-[40px] w-[40px] align-top ${
+              !pendingDownload
+                ? 'bg-blue-500 hover:bg-blue-700'
+                : 'bg-slate-500 cursor-not-allowed'
+            }`}
             onClick={() => handleDownloadClick(imageDetails)}
+            disabled={pendingDownload}
           >
             <DownloadIcon className="mx-auto" />
           </button>
