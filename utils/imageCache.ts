@@ -1,3 +1,4 @@
+import { trackEvent } from '../api/telemetry'
 import { CreateImageJob } from '../types'
 import {
   allPendingJobs,
@@ -262,6 +263,13 @@ export const getCurrentJob = async () => {
         timestamp: Date.now()
       })
 
+      trackEvent({
+        event: 'IMAGE_RECEIVED_FROM_API',
+        dimensions: `h ${imageDetails.height} x w ${imageDetails.width}`,
+        waitTimeSeconds: (
+          Math.floor(Date.now() - imageDetails.timestamp) / 1000
+        ).toFixed(0)
+      })
       return {
         success: true,
         newImage: true
