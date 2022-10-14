@@ -71,6 +71,7 @@ const ImagesPage = () => {
       </div>
       <div className="inline-block w-1/2 text-right content-center">
         <button
+          title="Change layout"
           className="p-[2px] border-[1px] border-teal-500 rounded-md cursor-pointer text-sm text-teal-500 relative top-[3px]"
           onClick={handleGridListClick}
         >

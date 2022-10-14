@@ -7,10 +7,10 @@ import { savePrompt } from '../utils/promptUtils'
 import ConfirmationModal from './ConfirmationModal'
 import { useCallback, useState } from 'react'
 import TrashIcon from './icons/TrashIcon'
-import RecycleIcon from './icons/RecycleIcon'
 import DownloadIcon from './icons/DownloadIcon'
 import { Button } from './Button'
 import { trackEvent } from '../api/telemetry'
+import RefreshIcon from './icons/RefreshIcon'
 
 interface ImageDetails {
   jobId: string
@@ -164,16 +164,21 @@ const ImageDetails = ({
       </div>
       <div className="mt-2 w-full flex flex-row">
         <div className="inline-block w-3/4 flex flex-row gap-2">
-          <Button onClick={() => handleCopyPromptClick(imageDetails)}>
+          <Button
+            title="Copy and re-edit prompt"
+            onClick={() => handleCopyPromptClick(imageDetails)}
+          >
             Copy prompt
           </Button>
           <Button
+            title="Request new image with same settings"
             onClick={() => handleRerollClick(imageDetails)}
             disabled={pending}
           >
-            <RecycleIcon className="mx-auto" />
+            <RefreshIcon className="mx-auto" />
           </Button>
           <Button
+            title="Download PNG"
             onClick={() => handleDownloadClick(imageDetails)}
             disabled={pendingDownload}
           >
@@ -181,7 +186,11 @@ const ImageDetails = ({
           </Button>
         </div>
         <div className="inline-block w-1/4 flex flex-row justify-end">
-          <Button btnType="secondary" onClick={() => setShowDeleteModal(true)}>
+          <Button
+            title="Delete image"
+            btnType="secondary"
+            onClick={() => setShowDeleteModal(true)}
+          >
             <TrashIcon className="mx-auto" />
           </Button>
         </div>

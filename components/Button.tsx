@@ -6,6 +6,7 @@ interface ButtonProps {
   disabled?: boolean
   onClick?: () => void
   btnType?: string
+  title?: string
   width?: string
 }
 

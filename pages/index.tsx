@@ -122,7 +122,7 @@ const Home: NextPage = () => {
     setPageFeatures({ showOrientationDropdown: true })
   }
 
-  const handleOrientationSelect = (orientation: string) => {
+  const handleOrientationSelect = (orientation: string, options?: any) => {
     localStorage.setItem('orientation', orientation)
 
     if (orientation === 'landscape-16x9') {
@@ -141,11 +141,13 @@ const Home: NextPage = () => {
       setInput({ height: 512, width: 512, orientation: 'square' })
     }
 
-    trackEvent({
-      event: 'ORIENTATION_CLICK',
-      label: orientation,
-      context: `createPage`
-    })
+    if (!options?.initLoad) {
+      trackEvent({
+        event: 'ORIENTATION_CLICK',
+        label: orientation,
+        context: `createPage`
+      })
+    }
     setPageFeatures({ showOrientationDropdown: false })
   }
 
@@ -209,7 +211,9 @@ const Home: NextPage = () => {
 
     // Load preferences from localStorage:
     if (localStorage.getItem('orientation')) {
-      handleOrientationSelect(localStorage.getItem('orientation') || 'square')
+      handleOrientationSelect(localStorage.getItem('orientation') || 'square', {
+        initLoad: true
+      })
     }
 
     if (localStorage.getItem('sampler')) {
