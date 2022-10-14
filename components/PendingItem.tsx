@@ -9,6 +9,9 @@ import {
 import ProgressBar from './ProgressBar'
 import Spinner from './Spinner'
 import { setNewImageReady } from '../store/appStore'
+import { Button } from './Button'
+import TrashIcon from './icons/TrashIcon'
+import Panel from './Panel'
 
 // @ts-ignore
 const PendingItem = ({ handleDeleteJob, jobDetails }) => {
@@ -65,32 +68,31 @@ const PendingItem = ({ handleDeleteJob, jobDetails }) => {
   }, [])
 
   return (
-    <div className="mb-2 relative border-0 border-b-2 border-dashed border-slate-500 pt-4 pb-4 font-mono">
-      {jobDetails.prompt}
-      {!isComplete && isProcessing && (
-        <div className="mt-4 mb-4">
-          <ProgressBar time={jobDetails.wait_time} />
-        </div>
-      )}
-      {isComplete && (
-        <div className="mt-4 mb-4">
-          <ProgressBar done />
-        </div>
-      )}
-      <div className="mt-2 w-full table">
-        <div className="inline-block w-3/4 align-bottom">
-          {isComplete && (
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded align-top"
-              onClick={() => {
-                setNewImageReady(false)
-                router.push(`/image/${jobDetails.jobId}`)
-              }}
-            >
-              View image
-            </button>
-          )}
-          <div className="content-end">
+    <div className="mb-2 relative border-0 border-b-2 border-dashed border-slate-500 pb-4">
+      <Panel>
+        <span className="italic text-gray-300">{jobDetails.prompt}</span>
+        {!isComplete && isProcessing && (
+          <div className="mt-4 mb-4">
+            <ProgressBar time={jobDetails.wait_time} />
+          </div>
+        )}
+        {isComplete && (
+          <div className="mt-4 mb-4">
+            <ProgressBar done />
+          </div>
+        )}
+        <div className="mt-2 w-full flex flex-row items-center">
+          <div className="w-3/4">
+            {isComplete && (
+              <Button
+                onClick={() => {
+                  setNewImageReady(false)
+                  router.push(`/image/${jobDetails.jobId}`)
+                }}
+              >
+                View image
+              </Button>
+            )}
             {!isComplete && isProcessing && (
               <div className="font-mono text-xs mt-2">
                 {estimatedWait >= 1
@@ -104,23 +106,23 @@ const PendingItem = ({ handleDeleteJob, jobDetails }) => {
               </div>
             )}
           </div>
+          <div className="w-1/4 flex flex-row items-center justify-end">
+            {!isComplete && isProcessing && (
+              <div className="inline-block mt-1">
+                <Spinner />
+              </div>
+            )}
+            {!isComplete && (
+              <Button
+                btnType="secondary"
+                onClick={() => handleDeleteJob(jobDetails.jobId)}
+              >
+                <TrashIcon />
+              </Button>
+            )}
+          </div>
         </div>
-        <div className="inline-block w-1/4 text-right">
-          {!isComplete && isProcessing && (
-            <div className="inline-block mt-1">
-              <Spinner />
-            </div>
-          )}
-          {!isComplete && (
-            <button
-              className="bg-red-500 hover:bg-red-700 text-white font-bold rounded ml-2 h-[40px] w-[40px] align-top"
-              onClick={() => handleDeleteJob(jobDetails.jobId)}
-            >
-              X
-            </button>
-          )}
-        </div>
-      </div>
+      </Panel>
     </div>
   )
 }

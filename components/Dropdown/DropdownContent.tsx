@@ -1,0 +1,42 @@
+import React, { useRef } from 'react'
+import styled from 'styled-components'
+import { useOnClickOutside } from '../../hooks/useOnClickOutside'
+
+interface DropdownContentProps {
+  children?: React.ReactNode
+  disabled?: boolean
+  handleClose?: () => void
+  open?: boolean
+  onClick?: () => void
+  ref?: any
+  width?: string
+}
+
+const StyledDropdown = styled.div<DropdownContentProps>`
+  border: 1px solid gray;
+  border-color: white;
+  border-radius: 4px;
+  opacity: ${(props) => (props.open ? '1' : '0')};
+  max-height: ${(props) => (props.open ? '100%' : '0')};
+  overflow: hidden;
+  transition: all 0.4s;
+  position: absolute;
+  margin: 4px 0 0 0;
+  background-color: gray;
+`
+
+export function DropdownContent(props: DropdownContentProps) {
+  const { children, handleClose = () => {}, ...rest } = props
+  const ref = useRef()
+  useOnClickOutside(ref, () => {
+    if (props.open) {
+      handleClose()
+    }
+  })
+
+  return (
+    <StyledDropdown ref={ref} {...rest}>
+      <ul>{children}</ul>
+    </StyledDropdown>
+  )
+}

@@ -7,6 +7,15 @@ import React, {
   TextareaHTMLAttributes
 } from 'react'
 import autosize from 'autosize'
+import styled from 'styled-components'
+
+const StyledTextArea = styled.textarea`
+  background-color: rgb(42, 48, 60);
+  border: 1px solid white;
+  border-radius: 4px;
+  color: rgb(166, 173, 186);
+  font-size: 16px;
+`
 
 type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement>
 type RefType = HTMLTextAreaElement | null
@@ -36,7 +45,7 @@ const TextAreaAutoSize = (
   }, [])
 
   return (
-    <textarea
+    <StyledTextArea
       {...props}
       ref={(node) => {
         textareaRef.current = node

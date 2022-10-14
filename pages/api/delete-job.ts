@@ -30,8 +30,7 @@ export default async function handler(
 
     const data = await resp.json()
 
-    console.log(`Job deleted?`)
-    console.log(data)
+    console.log(`Deleting jobId: ${id}`)
 
     return res.send({
       success: true

@@ -13,6 +13,17 @@ import {
 } from '../utils/promptUtils'
 import Link from 'next/link'
 import TextArea from '../components/TextArea'
+import { Button } from '../components/Button'
+import PhotoIcon from '../components/icons/PhotoIcon'
+import { DropdownContent } from '../components/Dropdown/DropdownContent'
+import { DropdownItem } from '../components/Dropdown/DropdownItem'
+import TrashIcon from '../components/icons/TrashIcon'
+import SquarePlusIcon from '../components/icons/SquarePlusIcon'
+import { KeypressEvent } from '../types'
+import DotsVerticalIcon from '../components/icons/DotsVerticalIcon'
+import DotsIcon from '../components/icons/DotsIcon'
+import DotsHorizontalIcon from '../components/icons/DotsHorizontalIcon'
+import Panel from '../components/Panel'
 
 interface InputTarget {
   name: string
@@ -24,6 +35,14 @@ interface InputEvent {
 
 const Home: NextPage = () => {
   const router = useRouter()
+
+  const [pageFeatures, setPageFeatures] = useReducer(
+    (state: any, newState: any) => ({ ...state, ...newState }),
+    {
+      showOrientationDropdown: false,
+      disableOrientationBtn: false
+    }
+  )
 
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [pending, setPending] = useState(false)
@@ -76,24 +95,49 @@ const Home: NextPage = () => {
     }
   }, [showAdvanced])
 
-  const handleOrientationSelect = (e: { target: { value: string } }) => {
-    localStorage.setItem('orientation', e.target.value)
+  // Funky race condition here wtih clicking outside Dropdown
+  // if you click the orientation button.
+  const handeOutsideClick = () => {
+    setPageFeatures({
+      showOrientationDropdown: false,
+      disableOrientationBtn: true
+    })
 
-    if (e.target.value === 'landscape-16x9') {
+    setTimeout(() => {
+      setPageFeatures({
+        disableOrientationBtn: false
+      })
+    }, 100)
+  }
+
+  const toggleOrientationDropdown = () => {
+    if (pageFeatures.disableOrientationBtn) {
+      return
+    }
+
+    setPageFeatures({ showOrientationDropdown: true })
+  }
+
+  const handleOrientationSelect = (orientation: string) => {
+    localStorage.setItem('orientation', orientation)
+
+    if (orientation === 'landscape-16x9') {
       setInput({ height: 576, width: 1024, orientation: 'landscape-16x9' })
-    } else if (e.target.value === 'landscape') {
+    } else if (orientation === 'landscape') {
       setInput({ height: 512, width: 768, orientation: 'landscape' })
-    } else if (e.target.value === 'portrait') {
+    } else if (orientation === 'portrait') {
       setInput({ height: 768, width: 512, orientation: 'portrait' })
-    } else if (e.target.value === 'square') {
+    } else if (orientation === 'square') {
       setInput({ height: 512, width: 512, orientation: 'square' })
-    } else if (e.target.value === 'phone-bg') {
+    } else if (orientation === 'phone-bg') {
       setInput({ height: 1024, width: 448, orientation: 'phone-bg' })
-    } else if (e.target.value === 'ultrawide') {
+    } else if (orientation === 'ultrawide') {
       setInput({ height: 448, width: 1024, orientation: 'ultrawide' })
     } else {
       setInput({ height: 512, width: 512, orientation: 'square' })
     }
+
+    setPageFeatures({ showOrientationDropdown: false })
   }
 
   const handleSubmit = async () => {
@@ -129,6 +173,13 @@ const Home: NextPage = () => {
     }
   }
 
+  const onEnterPress = (e: KeypressEvent) => {
+    if (e.keyCode == 13 && e.shiftKey == false) {
+      e.preventDefault()
+      handleSubmit()
+    }
+  }
+
   useEffect(() => {
     if (loadEditPrompt().copyPrompt) {
       setShowAdvanced(true)
@@ -143,13 +194,7 @@ const Home: NextPage = () => {
 
     // Load preferences from localStorage:
     if (localStorage.getItem('orientation')) {
-      const e = {
-        target: {
-          value: localStorage.getItem('orientation') || 'square'
-        }
-      }
-
-      handleOrientationSelect(e)
+      handleOrientationSelect(localStorage.getItem('orientation') || 'square')
     }
 
     if (localStorage.getItem('sampler')) {
@@ -178,6 +223,8 @@ const Home: NextPage = () => {
           className="block bg-white p-2.5 w-full text-lg text-black rounded-lg max-h-[250px] border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
           placeholder="Image prompt..."
           onChange={handleChangeValue}
+          // @ts-ignore
+          onKeyDown={onEnterPress}
           value={input.prompt}
         />
         {hasError && (
@@ -185,71 +232,107 @@ const Home: NextPage = () => {
             Error: {hasError}
           </div>
         )}
-        <div className="flex flex-row mt-2 w-full">
-          <div className="w-full md:w-[280px]">
-            <select
-              className="w-full p-1 border text-black border-slate-500 rounded-lg"
-              onChange={handleOrientationSelect}
-              value={input.orientation}
-            >
-              <option value="landscape-16x9">Landscape (16:9)</option>
-              <option value="landscape">Landscape (3:2)</option>
-              <option value="portrait">Portrait (2:3)</option>
-              <option value="phone-bg">Phone background (9:21)</option>
-              <option value="ultrawide">Ultrawide (21:9)</option>
-              <option value="square">Square</option>
-            </select>
+        <div className="mt-4 mb-4 w-full flex flex-row">
+          <div className="w-1/2 flex flex-row gap-2">
+            <Button onClick={handleShowAdvancedOptions}>
+              {showAdvanced ? <DotsVerticalIcon /> : <DotsHorizontalIcon />}
+            </Button>
+            <div>
+              <Button onClick={toggleOrientationDropdown}>
+                <span>
+                  <PhotoIcon />
+                </span>
+                {input.orientation === 'landscape-16x9' && `Landscape`}
+                {input.orientation === 'landscape' && `Landscape`}
+                {input.orientation === 'portrait' && `Portrait`}
+                {input.orientation === 'phone-bg' && `Phone wallpaper`}
+                {input.orientation === 'ultrawide' && `Ultrawide`}
+                {input.orientation === 'square' && `Square`}
+              </Button>
+              <DropdownContent
+                handleClose={() => {
+                  handeOutsideClick()
+                }}
+                open={pageFeatures.showOrientationDropdown}
+              >
+                <DropdownItem
+                  active={input.orientation === 'landscape-16x9'}
+                  onClick={() => {
+                    handleOrientationSelect('landscape-16x9')
+                  }}
+                >
+                  Landscape 16 x 9
+                </DropdownItem>
+                <DropdownItem
+                  active={input.orientation === 'landscape'}
+                  onClick={() => {
+                    handleOrientationSelect('landscape')
+                  }}
+                >
+                  Landscape 3 x 2
+                </DropdownItem>
+                <DropdownItem
+                  active={input.orientation === 'portrait'}
+                  onClick={() => {
+                    handleOrientationSelect('portrait')
+                  }}
+                >
+                  Portrait 2 x 3
+                </DropdownItem>
+                <DropdownItem
+                  active={input.orientation === 'phone-bg'}
+                  onClick={() => {
+                    handleOrientationSelect('phone-bg')
+                  }}
+                >
+                  Phone wallpaper 9 x 21
+                </DropdownItem>
+                <DropdownItem
+                  active={input.orientation === 'ultrawide'}
+                  onClick={() => {
+                    handleOrientationSelect('ultrawide')
+                  }}
+                >
+                  Ultrawide 21 x 9
+                </DropdownItem>
+                <DropdownItem
+                  active={input.orientation === 'square'}
+                  onClick={() => {
+                    handleOrientationSelect('square')
+                  }}
+                >
+                  Square
+                </DropdownItem>
+              </DropdownContent>
+            </div>
           </div>
-        </div>
-        <div className="flex flex-row mt-4 w-full justify-end">
-          <button
-            className={`mr-2 text-white font-bold py-2 px-4 rounded bg-red-500 hover:bg-red-700`}
-            onClick={() => {
-              setInput({
-                numImages: 1,
-                prompt: '',
-                seed: '',
-                parentJobId: '',
-                negative: ''
-              })
-            }}
-          >
-            Clear
-          </button>
-          <button
-            className={`w-[160px] text-white font-bold py-2 px-4 rounded ${
-              !pending
-                ? 'bg-blue-500 hover:bg-blue-700'
-                : 'bg-slate-500 cursor-not-allowed'
-            }`}
-            onClick={handleSubmit}
-            disabled={pending}
-          >
-            {pending ? 'Creating...' : 'Create'}
-          </button>
-        </div>
-      </div>
-      <div className="mt-2">
-        <div className="mb-4">
-          <div
-            className="mb-4 cursor-pointer"
-            onClick={handleShowAdvancedOptions}
-          >
-            <img
-              src={
-                showAdvanced
-                  ? '/artbot/arrow-down.svg'
-                  : '/artbot/arrow-right.svg'
-              }
-              alt="advanced options dropdown menu"
-              className="inline-block mb-1"
-            />
-            Advanced options
+          <div className="w-1/2 flex flex-row justify-end gap-2">
+            <Button
+              btnType="secondary"
+              onClick={() => {
+                return setInput({
+                  numImages: 1,
+                  prompt: '',
+                  seed: '',
+                  parentJobId: '',
+                  negative: ''
+                })
+              }}
+            >
+              <span>
+                <TrashIcon />
+              </span>
+              Clear
+            </Button>
+            <Button onClick={handleSubmit} disabled={pending} width="100px">
+              <span>{pending ? '' : <SquarePlusIcon />}</span>
+              {pending ? 'Creating...' : 'Create'}
+            </Button>
           </div>
         </div>
       </div>
       {showAdvanced && (
-        <div className="w-full">
+        <Panel>
           <div className="mb-2">
             <div className="inline-block w-[160px]">Negative prompt:</div>
             <div className="inline-block w-[160px] md:w-[320px]">
@@ -368,7 +451,7 @@ const Home: NextPage = () => {
               </select>
             </div>
           </div>
-        </div>
+        </Panel>
       )}
       <div className="mt-2">
         <h2 className="font-bold mb-2">Resources and tips</h2>

@@ -9,6 +9,7 @@ import { useCallback, useState } from 'react'
 import TrashIcon from './icons/TrashIcon'
 import RecycleIcon from './icons/RecycleIcon'
 import DownloadIcon from './icons/DownloadIcon'
+import { Button } from './Button'
 
 interface ImageDetails {
   jobId: string
@@ -142,44 +143,28 @@ const ImageDetails = ({
       <div className="font-mono text-xs mt-2">
         Created: {new Date(imageDetails.timestamp).toLocaleString()}
       </div>
-      <div className="mt-2 w-full table">
-        <div className="inline-block w-3/4">
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded align-top"
-            onClick={() => handleCopyPromptClick(imageDetails)}
-          >
+      <div className="mt-2 w-full flex flex-row">
+        <div className="inline-block w-3/4 flex flex-row gap-2">
+          <Button onClick={() => handleCopyPromptClick(imageDetails)}>
             Copy prompt
-          </button>
-          <button
-            className={`text-white font-bold rounded ml-2 h-[40px] w-[40px] align-top ${
-              !pending
-                ? 'bg-blue-500 hover:bg-blue-700'
-                : 'bg-slate-500 cursor-not-allowed'
-            }`}
+          </Button>
+          <Button
             onClick={() => handleRerollClick(imageDetails)}
             disabled={pending}
           >
             <RecycleIcon className="mx-auto" />
-          </button>
-          <button
-            className={`text-white font-bold rounded ml-2 h-[40px] w-[40px] align-top ${
-              !pendingDownload
-                ? 'bg-blue-500 hover:bg-blue-700'
-                : 'bg-slate-500 cursor-not-allowed'
-            }`}
+          </Button>
+          <Button
             onClick={() => handleDownloadClick(imageDetails)}
             disabled={pendingDownload}
           >
             <DownloadIcon className="mx-auto" />
-          </button>
+          </Button>
         </div>
-        <div className="inline-block w-1/4 text-right">
-          <button
-            className="bg-red-500 hover:bg-red-700 text-white font-bold rounded ml-2 h-[40px] w-[40px] align-top"
-            onClick={() => setShowDeleteModal(true)}
-          >
+        <div className="inline-block w-1/4 flex flex-row justify-end">
+          <Button btnType="secondary" onClick={() => setShowDeleteModal(true)}>
             <TrashIcon className="mx-auto" />
-          </button>
+          </Button>
         </div>
       </div>
     </div>

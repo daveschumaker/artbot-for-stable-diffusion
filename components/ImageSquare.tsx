@@ -23,7 +23,7 @@ export default function ImageSquare({ imageDetails }: ImageSquareProps) {
         width={180}
         height={180}
         alt={imageDetails.prompt}
-        className="mx-auto"
+        className="mx-auto rounded"
         objectFit="cover"
       />
     </LazyLoad>

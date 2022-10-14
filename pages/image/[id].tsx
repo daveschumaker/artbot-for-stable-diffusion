@@ -79,7 +79,7 @@ const ImagePage = () => {
         <div key={imageDetails.jobId} className="text-center pb-6">
           <img
             src={'data:image/webp;base64,' + imageDetails.base64String}
-            className="mx-auto"
+            className="mx-auto rounded"
             alt={imageDetails.prompt}
           />
           <ImageDetails
@@ -107,7 +107,11 @@ const ImagePage = () => {
                         <a>
                           <img
                             src={'data:image/webp;base64,' + image.base64String}
-                            style={{ width: '100%', display: 'block' }}
+                            style={{
+                              borderRadius: '4px',
+                              width: '100%',
+                              display: 'block'
+                            }}
                             alt={image.prompt}
                           />
                         </a>

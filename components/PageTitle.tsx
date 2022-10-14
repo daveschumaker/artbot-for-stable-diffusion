@@ -1,9 +1,20 @@
+import styled from 'styled-components'
+
+const StyledPageTitle = styled.h1`
+  font-size: 20px;
+  font-weight: 700;
+
+  @media (min-width: 768px) {
+    font-size: 24px;
+  }
+`
+
 // @ts-ignore
 const PageTitle = (props) => {
   return (
-    <h1 className="text-2xl font-normal leading-normal mt-0 mb-2 text-teal-500">
+    <StyledPageTitle className="mt-0 mb-2 text-teal-500">
       {props.children}
-    </h1>
+    </StyledPageTitle>
   )
 }
 

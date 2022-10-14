@@ -72,7 +72,7 @@ const ImagesPage = () => {
           {showLayout === 'list' && <ListIcon />}
         </button>
       </div>
-      <div className="mt-2 mb-6 text-sm">
+      <div className="mb-6 text-sm">
         <strong>Important:</strong> All images persist within your local browser
         cache and are not stored on a remote server. Clearing your cache will{' '}
         <strong>delete</strong> all images.
@@ -103,7 +103,11 @@ const ImagesPage = () => {
                       <a>
                         <img
                           src={'data:image/webp;base64,' + image.base64String}
-                          style={{ width: '100%', display: 'block' }}
+                          style={{
+                            borderRadius: '4px',
+                            width: '100%',
+                            display: 'block'
+                          }}
                           alt={image.prompt}
                         />
                       </a>
@@ -150,7 +154,7 @@ const ImagesPage = () => {
             }) => {
               return (
                 <LazyLoad key={image.jobId} once>
-                  <div className="text-center border-[1px] border-solid border-slate-100 rounded-lg w-full mb-4 md:w-[512px] mx-auto">
+                  <div className="text-center border-[1px] border-solid border-slate-400 rounded-lg w-full mb-4 md:w-[512px] mx-auto">
                     <Link href={`/image/${image.jobId}`} passHref>
                       <a>
                         <div className="bg-slate-600 rounded-t-lg">
