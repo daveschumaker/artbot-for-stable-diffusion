@@ -21,14 +21,9 @@ export default async function handler(
   }
 
   try {
-    const resp = await fetch(
-      `https://stablehorde.net/api/v2/generate/status/${id}`,
-      {
-        method: 'DELETE'
-      }
-    )
-
-    const data = await resp.json()
+    await fetch(`https://stablehorde.net/api/v2/generate/status/${id}`, {
+      method: 'DELETE'
+    })
 
     console.log(`Deleting jobId: ${id}`)
 

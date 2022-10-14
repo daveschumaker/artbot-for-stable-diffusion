@@ -1,3 +1,4 @@
+import React from 'react'
 import styled from 'styled-components'
 
 interface PanelProps {
@@ -14,7 +15,7 @@ const StyledPanel = styled.div<PanelProps>`
 
 const Panel = (props: PanelProps) => {
   const { children, ...rest } = props
-  return <StyledPanel {...rest}>{props.children}</StyledPanel>
+  return <StyledPanel {...rest}>{children}</StyledPanel>
 }
 
 export default Panel

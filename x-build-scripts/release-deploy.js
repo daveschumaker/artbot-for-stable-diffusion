@@ -29,7 +29,7 @@ if (deployEnv === '--prod') {
 
 const options = {
   localPath: process.cwd(),
-  exclude: ['node_modules/**', 'release.tar.gz'],
+  exclude: ['.git/**', 'node_modules/**', 'release.tar.gz'],
   archiveName: 'release.tar.gz',
   host: process.env.HOST,
   username: process.env.USERNAME,

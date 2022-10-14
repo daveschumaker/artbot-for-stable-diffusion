@@ -45,7 +45,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     fetchAppInfo()
     const interval = setInterval(async () => {
       fetchAppInfo()
-    }, 5000)
+    }, 60000)
 
     return () => clearInterval(interval)
   }, [fetchAppInfo])
