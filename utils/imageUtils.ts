@@ -1,3 +1,4 @@
+import { trackEvent } from '../api/telemetry'
 import { CreateImageJob } from '../types'
 
 export const createNewImage = async (imageParams: CreateImageJob) => {

@@ -1,3 +1,5 @@
+import { trackNewSession } from './analytics'
+
 /**
  * Added "Allow NSFW Image" setting on 2022-10-11.
  * Will default to false for new users.
@@ -27,11 +29,12 @@ export const updateShowGrid = () => {
   localStorage.removeItem('showGrid')
 }
 
-export const initAppSettings = () => {
+export const initAppSettings = async () => {
   if (typeof window === 'undefined') {
     return
   }
 
+  await trackNewSession()
   checkNsfwSettings()
   updateShowGrid()
 }

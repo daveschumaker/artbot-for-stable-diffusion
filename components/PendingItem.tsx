@@ -12,6 +12,7 @@ import { setNewImageReady } from '../store/appStore'
 import { Button } from './Button'
 import TrashIcon from './icons/TrashIcon'
 import Panel from './Panel'
+import { trackEvent } from '../api/telemetry'
 
 // @ts-ignore
 const PendingItem = ({ handleDeleteJob, jobDetails }) => {
@@ -86,6 +87,10 @@ const PendingItem = ({ handleDeleteJob, jobDetails }) => {
             {isComplete && (
               <Button
                 onClick={() => {
+                  trackEvent({
+                    event: 'VIEW_IMAGE_CLICK',
+                    context: 'PendingItemsPage'
+                  })
                   setNewImageReady(false)
                   router.push(`/image/${jobDetails.jobId}`)
                 }}

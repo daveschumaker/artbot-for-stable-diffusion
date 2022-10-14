@@ -5,6 +5,7 @@ import PageTitle from '../components/PageTitle'
 import Spinner from '../components/Spinner'
 import { allPendingJobs, deletePendingJob } from '../utils/db'
 import PendingItem from '../components/PendingItem'
+import { trackEvent } from '../api/telemetry'
 
 const PendingPage = () => {
   const [isInitialLoad, setIsInitialLoad] = useState(true)
@@ -30,6 +31,10 @@ const PendingPage = () => {
     })
 
     await deletePendingJob(jobId)
+    trackEvent({
+      event: 'DELETE_PENDING_JOB',
+      context: 'PendingItemsPage'
+    })
 
     fetchPrompts()
   }

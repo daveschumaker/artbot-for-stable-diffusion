@@ -12,6 +12,7 @@ import GridIcon from '../components/icons/GridIcon'
 import ListIcon from '../components/icons/ListIcon'
 import LayoutIcon from '../components/icons/LayoutIcon'
 import ImageSquare from '../components/ImageSquare'
+import { trackEvent } from '../api/telemetry'
 
 const ImagesPage = () => {
   const [isInitialLoad, setIsInitialLoad] = useState(true)
@@ -29,6 +30,12 @@ const ImagesPage = () => {
       localStorage.setItem('showLayout', 'layout')
       setShowLayout('layout')
     }
+
+    trackEvent({
+      event: `LAYOUT_CLICK`,
+      label: showLayout,
+      context: `ImagesPage`
+    })
   }, [showLayout])
 
   const fetchImages = async () => {

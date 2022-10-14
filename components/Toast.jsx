@@ -3,12 +3,16 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { setNewImageReady } from '../store/appStore'
 import { useEffect } from 'react'
+import { trackEvent } from '../api/telemetry'
 
 export default function Toast({ handleClose }) {
   const router = useRouter()
   const { pathname } = router
 
   const handleClick = () => {
+    trackEvent({
+      event: 'NEW_IMAGE_TOAST_CLICK'
+    })
     if ('/images' === pathname) {
       window.location.reload(false)
     } else {

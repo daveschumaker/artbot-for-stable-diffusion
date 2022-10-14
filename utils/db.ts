@@ -78,6 +78,10 @@ export const deletePendingJob = async (jobId: string) => {
     .delete()
 }
 
+export const imageCount = async () => {
+  return await db.completed.count()
+}
+
 export const initDb = () => {
   // console.log(`Database loaded`)
 }

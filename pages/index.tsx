@@ -21,9 +21,9 @@ import TrashIcon from '../components/icons/TrashIcon'
 import SquarePlusIcon from '../components/icons/SquarePlusIcon'
 import { KeypressEvent } from '../types'
 import DotsVerticalIcon from '../components/icons/DotsVerticalIcon'
-import DotsIcon from '../components/icons/DotsIcon'
 import DotsHorizontalIcon from '../components/icons/DotsHorizontalIcon'
 import Panel from '../components/Panel'
+import { trackEvent } from '../api/telemetry'
 
 interface InputTarget {
   name: string
@@ -91,6 +91,10 @@ const Home: NextPage = () => {
     if (showAdvanced) {
       setShowAdvanced(false)
     } else {
+      trackEvent({
+        event: 'ADVANCED_OPTIONS_CLICK',
+        context: `createPage`
+      })
       setShowAdvanced(true)
     }
   }, [showAdvanced])
@@ -137,6 +141,11 @@ const Home: NextPage = () => {
       setInput({ height: 512, width: 512, orientation: 'square' })
     }
 
+    trackEvent({
+      event: 'ORIENTATION_CLICK',
+      label: orientation,
+      context: `createPage`
+    })
     setPageFeatures({ showOrientationDropdown: false })
   }
 
@@ -161,6 +170,12 @@ const Home: NextPage = () => {
 
     if (res.success) {
       updatedCachedPrompt('')
+      trackEvent({
+        event: 'NEW_IMAGE_REQUEST',
+        dimensions: `h ${input.height} x w ${input.width}`,
+        sampler: input.sampler,
+        numImages: input.numImages
+      })
       router.push('/pending')
     } else if (res.status === 'INVALID_API_KEY') {
       setHasError('Invalid API key sent to the server. Check your settings.')

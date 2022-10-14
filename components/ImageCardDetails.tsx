@@ -10,6 +10,7 @@ import TrashIcon from './icons/TrashIcon'
 import RecycleIcon from './icons/RecycleIcon'
 import DownloadIcon from './icons/DownloadIcon'
 import { Button } from './Button'
+import { trackEvent } from '../api/telemetry'
 
 interface ImageDetails {
   jobId: string
@@ -42,6 +43,10 @@ const ImageDetails = ({
   const handleDeleteImageClick = async (jobId: string) => {
     await deleteCompletedImage(jobId)
     onDelete()
+    trackEvent({
+      event: 'DELETE_IMAGE',
+      context: 'ImageCard'
+    })
     setShowDeleteModal(false)
   }
 
@@ -54,6 +59,11 @@ const ImageDetails = ({
       prompt: imageDetails.prompt,
       parentJobId: imageDetails.parentJobId,
       negative: imageDetails.negative
+    })
+
+    trackEvent({
+      event: 'COPY_PROMPT',
+      context: 'ImageCard'
     })
 
     router.push(`/?edit=true`)
@@ -78,6 +88,11 @@ const ImageDetails = ({
     const { success } = data
 
     if (success) {
+      trackEvent({
+        event: 'DOWNLOAD_PNG',
+        context: 'ImageCard'
+      })
+
       const filename = imageDetails.prompt
         .replace(/[^a-z0-9]/gi, '_')
         .toLowerCase()
@@ -113,6 +128,10 @@ const ImageDetails = ({
       })
 
       if (res.success) {
+        trackEvent({
+          event: 'REROLL_IMAGE',
+          context: 'ImageCard'
+        })
         router.push('/pending')
       }
       setPending(false)
