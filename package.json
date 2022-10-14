@@ -29,16 +29,19 @@
     "react-lazyload": "3.2.0",
     "react-responsive-masonry": "2.1.6",
     "sharp": "0.31.1",
-    "statery": "https://github.com/daveschumaker/statery.git#fix-ssr-build"
+    "statery": "https://github.com/daveschumaker/statery.git#fix-ssr-build",
+    "styled-components": "^5.3.6"
   },
   "devDependencies": {
     "@types/autosize": "4.0.1",
     "@types/node": "18.8.5",
+    "@types/react": "18.0.21",
     "@types/react-dom": "18.0.6",
     "@types/react-lazyload": "3.2.0",
-    "@types/react": "18.0.21",
     "@types/sharp": "0.31.0",
+    "@types/styled-components": "^5.1.26",
     "autoprefixer": "10.4.12",
+    "babel-plugin-styled-components": "^2.0.7",
     "eslint": "8.25.0",
     "eslint-config-next": "12.3.1",
     "postcss": "8.4.18",

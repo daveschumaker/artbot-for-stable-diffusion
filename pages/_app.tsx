@@ -1,5 +1,6 @@
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
+import { ThemeProvider } from 'styled-components'
 
 import { initAppSettings } from '../utils/appSettings'
 import ContentWrapper from '../components/ContentWrapper'
@@ -38,6 +39,8 @@ function MyApp({ Component, pageProps }: AppProps) {
     }
   }, [buildId])
 
+  const theme = {}
+
   useEffect(() => {
     fetchAppInfo()
     const interval = setInterval(async () => {
@@ -66,7 +69,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, [])
 
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <Head>
         <title>ArtBot - A Stable Diffusion demo utilizing Stable Horde</title>
         <meta name="twitter:card" content="summary_large_image" />
@@ -113,7 +116,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Component {...pageProps} />
         <Footer />
       </ContentWrapper>
-    </>
+    </ThemeProvider>
   )
 }
 
