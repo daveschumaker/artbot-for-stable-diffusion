@@ -11,13 +11,15 @@ import PollController from '../components/PollController'
 import '../styles/globals.css'
 
 import { initDb } from '../utils/db'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { appInfoStore, setBuildId } from '../store/appStore'
 import { useStore } from 'statery'
+import ServerUpdateModal from '../components/ServerUpdateModal'
 initAppSettings()
 initDb()
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const [showServerUpdateModal, setShowServerUpdateModal] = useState(false)
   const appState = useStore(appInfoStore)
   const { buildId } = appState
 
@@ -30,9 +32,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       if (!buildId) {
         setBuildId(build)
       } else if (buildId !== build) {
-        // console.log(`buildId mistatch - reload page!`)
-        // console.log(`client id:`, buildId)
-        // console.log(`server id:`, build)
+        setShowServerUpdateModal(true)
       }
     } catch (err) {
       console.log(`Unable to fetch latest server-info. Connectivity issue?`)
@@ -45,7 +45,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     fetchAppInfo()
     const interval = setInterval(async () => {
       fetchAppInfo()
-    }, 60000)
+    }, 5000)
 
     return () => clearInterval(interval)
   }, [fetchAppInfo])
@@ -111,6 +111,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       </Head>
       <PollController />
       <ContentWrapper>
+        {showServerUpdateModal && <ServerUpdateModal />}
         <Header />
         <NavBar />
         <Component {...pageProps} />
