@@ -253,11 +253,17 @@ const Home: NextPage = () => {
         )}
         <div className="mt-4 mb-4 w-full flex flex-row">
           <div className="w-1/2 flex flex-row gap-2">
-            <Button onClick={handleShowAdvancedOptions}>
+            <Button
+              title="Show advanced options"
+              onClick={handleShowAdvancedOptions}
+            >
               {showAdvanced ? <DotsVerticalIcon /> : <DotsHorizontalIcon />}
             </Button>
             <div>
-              <Button onClick={toggleOrientationDropdown}>
+              <Button
+                title="Select image orientation"
+                onClick={toggleOrientationDropdown}
+              >
                 <span>
                   <PhotoIcon />
                 </span>
@@ -327,6 +333,7 @@ const Home: NextPage = () => {
           </div>
           <div className="w-1/2 flex flex-row justify-end gap-2">
             <Button
+              title="Clear current input"
               btnType="secondary"
               onClick={() => {
                 return setInput({
@@ -343,7 +350,12 @@ const Home: NextPage = () => {
               </span>
               Clear
             </Button>
-            <Button onClick={handleSubmit} disabled={pending} width="100px">
+            <Button
+              title="Create new image"
+              onClick={handleSubmit}
+              disabled={pending}
+              width="100px"
+            >
               <span>{pending ? '' : <SquarePlusIcon />}</span>
               {pending ? 'Creating...' : 'Create'}
             </Button>

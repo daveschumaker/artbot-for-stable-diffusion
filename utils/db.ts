@@ -82,6 +82,10 @@ export const imageCount = async () => {
   return await db.completed.count()
 }
 
+export const pendingCount = async () => {
+  return await db.pending.count()
+}
+
 export const initDb = () => {
   // console.log(`Database loaded`)
 }
