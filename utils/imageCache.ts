@@ -5,6 +5,7 @@ import {
   db,
   deletePendingJob,
   getPendingJobDetails,
+  pendingCount,
   updatePendingJob
 } from './db'
 import { createNewImage } from './imageUtils'
@@ -119,7 +120,7 @@ export const createMultiImageJob = async () => {
   if (nextJobParams) {
     waitingForRes = true
     const newImage = await createImageJob(nextJobParams)
-    if (newImage.success) {
+    if (newImage?.success) {
       multiImageQueue.shift()
     }
     waitingForRes = false
@@ -140,6 +141,15 @@ export const createImageJob = async (imageParams: CreateImageJob) => {
   // @ts-ignore
   if (isNaN(numImages) || numImages < 1 || numImages > 20) {
     numImages = 1
+  }
+
+  // Limit number of currently pending requests so we don't
+  // hit API limits.
+  const numPending = await pendingCount()
+  if (numPending >= 25) {
+    return {
+      success: false
+    }
   }
 
   const data = await createNewImage(imageParams)
