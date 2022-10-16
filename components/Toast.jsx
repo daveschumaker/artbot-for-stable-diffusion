@@ -1,50 +1,99 @@
 /* eslint-disable @next/next/no-img-element */
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import { setNewImageReady } from '../store/appStore'
-import { useEffect } from 'react'
-import { trackEvent } from '../api/telemetry'
+import styled from 'styled-components'
 
-export default function Toast({ handleClose }) {
+import { setNewImageReady, setShowImageReadyToast } from '../store/appStore'
+import { useEffect, useState } from 'react'
+import { trackEvent } from '../api/telemetry'
+import { getImageDetails } from '../utils/db'
+import ImageSquare from './ImageSquare'
+import CloseIcon from './icons/CloseIcon'
+
+const StyledToast = styled.div`
+  align-items: center;
+  background-color: #282828;
+  border-radius: 4px;
+  border: 2px solid white;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  height: 96px;
+  padding: 8px;
+  position: fixed;
+  right: 8px;
+  top: ${(props) => (props.active ? '8px' : '-200px')};
+  transition: all 0.4s;
+  width: 300px;
+  z-index: 10;
+`
+
+const StyledClose = styled.div`
+  position: absolute;
+  top: 4px;
+  right: 4px;
+`;
+
+
+export default function Toast({ handleClose, jobId, showImageReadyToast }) {
   const router = useRouter()
-  const { pathname } = router
+  const [imageDetails, setImageDetails] = useState({})
+
+  const fetchImageDetails = async (jobId) => {
+    const details = await getImageDetails(jobId)
+    setImageDetails(details)
+  }
 
   const handleClick = () => {
     trackEvent({
       event: 'NEW_IMAGE_TOAST_CLICK'
     })
-    if ('/images' === pathname) {
-      window.location.reload(false)
-    } else {
-      router.push(`/images`)
-    }
+    router.push(`/image/${jobId}`)
 
-    setNewImageReady(false)
+    setShowImageReadyToast(false)
+    setNewImageReady('')
     handleClose()
   }
 
   useEffect(() => {
+    if (jobId) {
+      fetchImageDetails(jobId)
+    }
+  }, [jobId])
+
+  useEffect(() => {
     const interval = setTimeout(async () => {
       handleClose()
-    }, 7500)
+    }, 5000)
     return () => clearInterval(interval)
   })
 
+  const isActive = jobId && imageDetails.base64String && showImageReadyToast
+
   return (
-    <>
-      <Link href="/images">
-        <a onClick={handleClick}>
-          <div id="toast-default" className="drop-shadow-md fixed left-[50%] border-[1px] cursor-pointer translate-x-[-50%] mx-auto mt-2 flex items-center p-4 w-[280px] max-w-xs text-gray-500 bg-white rounded-lg shadow bg-cyan-800 z-50" role="alert">
-            <div className="inline-flex flex-shrink-0 justify-center items-center w-8 h-8">
-              <img src="/artbot/checkmark.svg" alt="Image completed checkmark" />
-            </div>
-            <div className="flex-col">
-              <div className="ml-4 text-sm font-normal text-white">Your new image is ready.</div>
-              <div className="ml-4 text-sm font-normal text-cyan-400">Check it out!</div>
-            </div>
+    <StyledToast active={isActive} role="alert">
+      {isActive && (
+        <>
+          <Link href={`/image/${jobId}`}>
+            <a onClick={handleClick}>
+              <div className="mt-[4px]">
+                <ImageSquare imageDetails={imageDetails} size={80} />
+              </div>
+            </a>
+          </Link>
+          <div className="flex-col">
+            <div className="ml-4 text-sm font-normal text-white">Your new image is ready.</div>
+            <Link href={`/image/${jobId}`}>
+              <a onClick={handleClick}>
+                <div className="ml-4 text-sm font-normal text-cyan-400">Check it out!</div>
+              </a>
+            </Link >
           </div>
-        </a>
-      </Link>
-    </>
+          <StyledClose onClick={handleClose}>
+            <CloseIcon />
+          </StyledClose>
+        </>
+      )}
+    </StyledToast >
   )
 }

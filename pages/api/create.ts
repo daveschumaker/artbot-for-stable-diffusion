@@ -80,36 +80,38 @@ export default async function handler(
       }
     })
 
-    const data = await resp.json()
-    const { id, message = '' }: GenerateResponse = data
+    const statusCode = resp.status
 
-    if (message?.indexOf('No user matching sent API Key') >= 0) {
+    if (statusCode === 400) {
+      return res.send({
+        success: false,
+        status: 'INVALID_PARAMS'
+      })
+    }
+
+    if (statusCode === 401) {
       return res.send({
         success: false,
         status: 'INVALID_API_KEY'
       })
     }
 
-    if (
-      message === 'Horde has enterred maintenance mode. Please try again later.'
-    ) {
+    if (statusCode === 429) {
       return res.send({
         success: false,
-        message,
+        status: 'MAX_REQUEST_LIMIT'
+      })
+    }
+
+    if (statusCode === 503) {
+      return res.send({
+        success: false,
         status: 'HORDE_OFFLINE'
       })
     }
 
-    if (message === 'Input payload validation failed') {
-      console.log(`Error: Invalid payload params.`)
-      console.log(params)
-
-      return res.send({
-        success: false,
-        message,
-        status: 'INVALID_PARAMS'
-      })
-    }
+    const data = await resp.json()
+    const { id, message = '' }: GenerateResponse = data
 
     if (!id) {
       console.log('No id...', data)

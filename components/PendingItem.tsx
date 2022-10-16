@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 
 import {
@@ -8,15 +8,22 @@ import {
 } from '../utils/db'
 import ProgressBar from './ProgressBar'
 import Spinner from './Spinner'
-import { setNewImageReady } from '../store/appStore'
+import {
+  appInfoStore,
+  setNewImageReady,
+  setShowImageReadyToast
+} from '../store/appStore'
 import { Button } from './Button'
 import TrashIcon from './icons/TrashIcon'
 import Panel from './Panel'
 import { trackEvent } from '../api/telemetry'
+import { useStore } from 'statery'
 
 // @ts-ignore
 const PendingItem = ({ handleDeleteJob, jobDetails }) => {
   const router = useRouter()
+  const appState = useStore(appInfoStore)
+  const { showImageReadyToast } = appState
 
   const [isComplete, setIsComplete] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
@@ -24,49 +31,80 @@ const PendingItem = ({ handleDeleteJob, jobDetails }) => {
     jobDetails?.wait_time || ''
   )
 
-  const checkJobFinished = async () => {
+  const clearNewImageNotification = () => {
+    setShowImageReadyToast(false)
+    setNewImageReady('')
+  }
+
+  const handleShowToast = useCallback(() => {
+    if (!showImageReadyToast) {
+      setNewImageReady(jobDetails.jobId)
+      setShowImageReadyToast(true)
+    }
+  }, [jobDetails.jobId, showImageReadyToast])
+
+  const checkJobFinished = useCallback(async () => {
+    if (isComplete) {
+      return
+    }
+
     const jobFinished = await getImageDetails(jobDetails.jobId)
 
     if (jobFinished?.jobId === jobDetails?.jobId) {
+      handleShowToast()
       setIsComplete(true)
-      setNewImageReady(jobDetails.jobId)
     }
-  }
+  }, [handleShowToast, isComplete, jobDetails?.jobId])
 
-  const fetchCurrentJob = async () => {
+  const fetchCurrentJob = useCallback(async () => {
+    if (isComplete) {
+      return
+    }
+
     const pendingJobs = await allPendingJobs()
     const [currentJob] = pendingJobs
 
     if (currentJob?.jobId === jobDetails.jobId) {
       setIsProcessing(true)
     }
-  }
+  }, [isComplete, jobDetails?.jobId])
 
   useEffect(() => {
-    const interval = setInterval(async () => {
+    fetchCurrentJob()
+    const pendingInterval = setInterval(async () => {
+      if (isComplete) {
+        return
+      }
+
       if (isProcessing && jobDetails?.jobId) {
         const updatedJobDetails = await getPendingJobDetails(jobDetails.jobId)
         if (updatedJobDetails?.wait_time) {
           setEstimatedWait(updatedJobDetails.wait_time)
         }
       }
-    }, 500)
+    }, 1000)
 
-    return () => clearInterval(interval)
-  }, [isProcessing, jobDetails.jobId])
-
-  useEffect(() => {
-    fetchCurrentJob()
-    checkJobFinished()
-
-    const interval = setInterval(async () => {
-      fetchCurrentJob()
-      checkJobFinished()
+    const completedInterval = setInterval(async () => {
+      await fetchCurrentJob()
     }, 2000)
 
-    return () => clearInterval(interval)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    return () => {
+      clearInterval(pendingInterval)
+      clearInterval(completedInterval)
+    }
+  }, [fetchCurrentJob, isComplete, isProcessing, jobDetails.jobId])
+
+  useEffect(() => {
+    checkJobFinished()
+
+    const completedInterval = setInterval(async () => {
+      await checkJobFinished()
+    }, 2500)
+
+    return () => {
+      clearInterval(completedInterval)
+    }
+  }, [checkJobFinished])
 
   return (
     <div className="mb-2 relative border-0 border-b-2 border-dashed border-slate-500 pb-4">
@@ -91,7 +129,7 @@ const PendingItem = ({ handleDeleteJob, jobDetails }) => {
                     event: 'VIEW_IMAGE_CLICK',
                     context: 'PendingItemsPage'
                   })
-                  setNewImageReady('')
+                  clearNewImageNotification()
                   router.push(`/image/${jobDetails.jobId}`)
                 }}
               >

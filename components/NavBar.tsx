@@ -2,7 +2,11 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useStore } from 'statery'
-import { appInfoStore, setNewImageReady } from '../store/appStore'
+import {
+  appInfoStore,
+  setNewImageReady,
+  setShowImageReadyToast
+} from '../store/appStore'
 
 import IconCreate from './icons/CreateIcon'
 import HourglassIcon from './icons/HourglassIcon'
@@ -16,6 +20,11 @@ export default function NavBar() {
 
   const appState = useStore(appInfoStore)
   const { newImageReady } = appState
+
+  const clearNewImageNotification = () => {
+    setShowImageReadyToast(false)
+    setNewImageReady('')
+  }
 
   const handleForceReload = () => {
     if ('/images' === pathname) {
@@ -55,7 +64,7 @@ export default function NavBar() {
             <a
               className={isActiveRoute('/images')}
               onClick={() => {
-                setNewImageReady(false)
+                clearNewImageNotification()
                 handleForceReload()
               }}
             >

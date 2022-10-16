@@ -11,7 +11,7 @@ const ServerUpdateModal = ({}) => {
   return (
     <>
       <div
-        className="relative z-10 opacity-100"
+        className="relative z-[100] opacity-100"
         aria-labelledby="modal-title"
         role="dialog"
         aria-modal="true"

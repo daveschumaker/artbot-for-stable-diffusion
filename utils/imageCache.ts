@@ -32,35 +32,42 @@ export const checkImageJob = async (jobId: string) => {
   }
 
   pendingCheckRequest = true
-  const res = await fetch(`/artbot/api/check`, {
-    method: 'POST',
-    body: JSON.stringify({
-      id: jobId
-    }),
-    headers: {
-      'Content-Type': 'application/json'
+
+  try {
+    const res = await fetch(`/artbot/api/check`, {
+      method: 'POST',
+      body: JSON.stringify({
+        id: jobId
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+
+    const data = await res.json()
+
+    const { status = '' } = data
+    pendingCheckRequest = false
+
+    if (status === 'NOT_FOUND') {
+      await deletePendingJob(jobId)
+      return {
+        success: false,
+        status: 'NOT_FOUND'
+      }
     }
-  })
 
-  const data = await res.json()
-
-  const { status = '' } = data
-  pendingCheckRequest = false
-
-  if (status === 'NOT_FOUND') {
-    await deletePendingJob(jobId)
+    return {
+      success: data.success,
+      jobId,
+      ...data
+    }
+  } catch (err) {
+    pendingCheckRequest = false
     return {
       success: false,
-      status: 'NOT_FOUND'
+      status: 'SOME_ERROR'
     }
-  }
-
-  pendingCheckRequest = false
-
-  return {
-    success: data.success,
-    jobId,
-    ...data
   }
 }
 
@@ -154,6 +161,14 @@ export const createImageJob = async (imageParams: CreateImageJob) => {
 
   const data = await createNewImage(imageParams)
   const { success } = data
+
+  // TODO: Fix me
+  // if (status === 'MAX_REQUEST_LIMIT') {
+  //   multiImageQueue.push(imageParams)
+  //   return {
+  //     success: true
+  //   }
+  // }
 
   if (success) {
     const { jobId } = data

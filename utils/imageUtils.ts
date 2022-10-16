@@ -24,27 +24,34 @@ export const createNewImage = async (imageParams: CreateImageJob) => {
     params.seed = imageParams.seed
   }
 
-  const res = await fetch(`/artbot/api/create`, {
-    method: 'POST',
-    body: JSON.stringify(Object.assign({}, params, { apikey })),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
+  try {
+    const res = await fetch(`/artbot/api/create`, {
+      method: 'POST',
+      body: JSON.stringify(Object.assign({}, params, { apikey })),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
 
-  const data = await res.json()
-  const { id: jobId, message, status } = data
+    const data = await res.json()
+    const { id: jobId, success, message, status } = data
 
-  if (jobId) {
-    return {
-      success: true,
-      jobId
+    if (success && jobId) {
+      return {
+        success: true,
+        jobId
+      }
+    } else {
+      return {
+        success: false,
+        message,
+        status
+      }
     }
-  } else {
+  } catch (err) {
     return {
       success: false,
-      message,
-      status
+      message: 'Unable to create image.'
     }
   }
 }

@@ -1,4 +1,11 @@
 export const trackEvent = async (obj = {}) => {
+  if (
+    typeof window !== 'undefined' &&
+    window.location.host.indexOf('localhost') >= 0
+  ) {
+    return
+  }
+
   try {
     await fetch(`/artbot/api/telemetry`, {
       method: 'POST',

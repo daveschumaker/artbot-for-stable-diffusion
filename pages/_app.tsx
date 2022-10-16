@@ -18,6 +18,8 @@ import ServerUpdateModal from '../components/ServerUpdateModal'
 initAppSettings()
 initDb()
 
+let waitingForServerInfoRes = false
+
 function MyApp({ Component, pageProps }: AppProps) {
   const [showServerUpdateModal, setShowServerUpdateModal] = useState(false)
   const appState = useStore(appInfoStore)
@@ -25,9 +27,15 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   const fetchAppInfo = useCallback(async () => {
     try {
+      if (waitingForServerInfoRes) {
+        return
+      }
+
+      waitingForServerInfoRes = true
       const res = await fetch('/artbot/api/server-info')
       const data = await res.json()
       const { build } = data
+      waitingForServerInfoRes = false
 
       if (!buildId) {
         setBuildId(build)
@@ -45,7 +53,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     fetchAppInfo()
     const interval = setInterval(async () => {
       fetchAppInfo()
-    }, 5000)
+    }, 60000)
 
     return () => clearInterval(interval)
   }, [fetchAppInfo])
@@ -53,17 +61,25 @@ function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
-        navigator.serviceWorker.register('/sw.js').then(
-          function (registration) {
-            console.log(
-              'Service Worker registration successful with scope: ',
-              registration.scope
-            )
-          },
-          function (err) {
-            console.log('Service Worker registration failed: ', err)
-          }
-        )
+        navigator.serviceWorker
+          .getRegistrations()
+          .then(function (registrations) {
+            for (let registration of registrations) {
+              registration.unregister()
+            }
+          })
+
+        // navigator.serviceWorker.register('/sw.js').then(
+        //   function (registration) {
+        //     console.log(
+        //       'Service Worker registration successful with scope: ',
+        //       registration.scope
+        //     )
+        //   },
+        //   function (err) {
+        //     console.log('Service Worker registration failed: ', err)
+        //   }
+        // )
       })
     }
   }, [])

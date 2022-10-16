@@ -29,12 +29,12 @@
     "react-lazyload": "3.2.0",
     "react-responsive-masonry": "2.1.6",
     "sharp": "0.31.1",
-    "statery": "https://github.com/daveschumaker/statery.git#fix-ssr-build",
+    "statery": "0.6.3",
     "styled-components": "^5.3.6"
   },
   "devDependencies": {
     "@types/autosize": "4.0.1",
-    "@types/node": "18.8.5",
+    "@types/node": "18.11.0",
     "@types/react": "18.0.21",
     "@types/react-dom": "18.0.6",
     "@types/react-lazyload": "3.2.0",
