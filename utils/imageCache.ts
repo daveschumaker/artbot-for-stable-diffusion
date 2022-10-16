@@ -282,6 +282,7 @@ export const getCurrentJob = async () => {
       })
       return {
         success: true,
+        jobId,
         newImage: true
       }
     }

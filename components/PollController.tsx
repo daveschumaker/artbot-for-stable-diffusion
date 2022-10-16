@@ -16,9 +16,9 @@ const PollController = () => {
   }
 
   useEffect(() => {
-    if (newImageReady === false) {
+    if (newImageReady === '') {
       setShowToast(false)
-    } else if (newImageReady === true) {
+    } else if (newImageReady) {
       setShowToast(true)
     }
   }, [newImageReady])
@@ -28,7 +28,7 @@ const PollController = () => {
       const jobDetails = await getCurrentJob()
 
       if (jobDetails?.newImage) {
-        setNewImageReady(true)
+        setNewImageReady(jobDetails.jobId)
         setShowToast(true)
       }
     }, 2500)

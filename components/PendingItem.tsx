@@ -29,7 +29,7 @@ const PendingItem = ({ handleDeleteJob, jobDetails }) => {
 
     if (jobFinished?.jobId === jobDetails?.jobId) {
       setIsComplete(true)
-      setNewImageReady(true)
+      setNewImageReady(jobDetails.jobId)
     }
   }
 
@@ -91,7 +91,7 @@ const PendingItem = ({ handleDeleteJob, jobDetails }) => {
                     event: 'VIEW_IMAGE_CLICK',
                     context: 'PendingItemsPage'
                   })
-                  setNewImageReady(false)
+                  setNewImageReady('')
                   router.push(`/image/${jobDetails.jobId}`)
                 }}
               >

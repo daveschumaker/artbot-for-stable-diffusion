@@ -2,7 +2,7 @@ import { makeStore } from 'statery'
 
 export const appInfoStore = makeStore({
   buildId: '',
-  newImageReady: false
+  newImageReady: ''
 })
 
 export const setBuildId = (id: string) => {
@@ -11,8 +11,8 @@ export const setBuildId = (id: string) => {
   }))
 }
 
-export const setNewImageReady = (bool: boolean) => {
+export const setNewImageReady = (jobId: string) => {
   appInfoStore.set(() => ({
-    newImageReady: bool
+    newImageReady: jobId
   }))
 }
