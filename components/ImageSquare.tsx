@@ -8,9 +8,13 @@ interface ImageDetails {
 
 interface ImageSquareProps {
   imageDetails: ImageDetails
+  size?: number
 }
 
-export default function ImageSquare({ imageDetails }: ImageSquareProps) {
+export default function ImageSquare({
+  imageDetails,
+  size = 180
+}: ImageSquareProps) {
   return (
     <LazyLoad
       height={180}
@@ -20,8 +24,8 @@ export default function ImageSquare({ imageDetails }: ImageSquareProps) {
     >
       <Image
         src={'data:image/webp;base64,' + imageDetails.base64String}
-        width={180}
-        height={180}
+        width={size}
+        height={size}
         alt={imageDetails.prompt}
         className="mx-auto rounded"
         objectFit="cover"
