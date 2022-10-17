@@ -140,7 +140,10 @@ const ImagesPage = () => {
                   <LazyLoad key={image.jobId} once>
                     <Link href={`/image/${image.jobId}`} passHref>
                       <a>
-                        <ImageSquare imageDetails={image} />
+                        <ImageSquare
+                          imageDetails={image}
+                          imageType={'image/webp'}
+                        />
                       </a>
                     </Link>
                   </LazyLoad>

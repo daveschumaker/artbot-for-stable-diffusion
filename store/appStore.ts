@@ -3,7 +3,8 @@ import { makeStore } from 'statery'
 export const appInfoStore = makeStore({
   buildId: '',
   showImageReadyToast: false,
-  newImageReady: ''
+  newImageReady: '',
+  img2imgFeature: false
 })
 
 export const setBuildId = (id: string) => {
@@ -15,6 +16,12 @@ export const setBuildId = (id: string) => {
 export const setShowImageReadyToast = (bool: boolean) => {
   appInfoStore.set(() => ({
     showImageReadyToast: bool
+  }))
+}
+
+export const setImg2ImgFeature = (bool: boolean) => {
+  appInfoStore.set(() => ({
+    img2imgFeature: bool
   }))
 }
 

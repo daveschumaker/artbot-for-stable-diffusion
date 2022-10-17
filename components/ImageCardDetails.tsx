@@ -1,6 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import { useRouter } from 'next/router'
 
+import { useStore } from 'statery'
+import { appInfoStore } from '../store/appStore'
 import { createImageJob } from '../utils/imageCache'
 import { deleteCompletedImage } from '../utils/db'
 import { savePrompt } from '../utils/promptUtils'
@@ -36,6 +38,9 @@ const ImageDetails = ({
   onDelete = () => {}
 }: ImageDetailsProps) => {
   const router = useRouter()
+
+  const appState = useStore(appInfoStore)
+  const { img2imgFeature } = appState
 
   const [pending, setPending] = useState(false)
   const [pendingDownload, setPendingDownload] = useState(false)
@@ -189,12 +194,15 @@ const ImageDetails = ({
           >
             <RefreshIcon className="mx-auto" />
           </Button>
-          <Button
-            title="Use for img2img"
-            onClick={() => handleUploadClick(imageDetails)}
-          >
-            <UploadIcon className="mx-auto" />
-          </Button>
+          {img2imgFeature && (
+            <Button
+              title="Use for img2img"
+              //@ts-ignore
+              onClick={() => handleUploadClick(imageDetails)}
+            >
+              <UploadIcon className="mx-auto" />
+            </Button>
+          )}
           <Button
             title="Download PNG"
             onClick={() => handleDownloadClick(imageDetails)}

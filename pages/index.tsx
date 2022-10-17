@@ -6,11 +6,12 @@ import { useRouter } from 'next/router'
 import { createImageJob } from '../utils/imageCache'
 import PageTitle from '../components/PageTitle'
 import {
-  clearPrompt,
   getCachedPrompt,
   loadEditPrompt,
   updatedCachedPrompt
 } from '../utils/promptUtils'
+import { useStore } from 'statery'
+import { appInfoStore } from '../store/appStore'
 import Link from 'next/link'
 import TextArea from '../components/TextArea'
 import { Button } from '../components/Button'
@@ -40,6 +41,9 @@ interface InputEvent {
 const Home: NextPage = () => {
   const router = useRouter()
   const { query } = router
+
+  const appState = useStore(appInfoStore)
+  const { img2imgFeature } = appState
 
   const [pageFeatures, setPageFeatures] = useReducer(
     (state: any, newState: any) => ({ ...state, ...newState }),
@@ -289,6 +293,10 @@ const Home: NextPage = () => {
       if (localStorage.getItem('steps')) {
         setInput({ steps: localStorage.getItem('steps') })
       }
+
+      if (localStorage.getItem('denoising_strength')) {
+        setInput({ steps: localStorage.getItem('denoising_strength') })
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -344,10 +352,12 @@ const Home: NextPage = () => {
             >
               {showAdvanced ? <DotsVerticalIcon /> : <DotsHorizontalIcon />}
             </Button>
-            <UploadButton
-              // @ts-ignore
-              handleFile={handleFileSelect}
-            />
+            {img2imgFeature && (
+              <UploadButton
+                // @ts-ignore
+                handleFile={handleFileSelect}
+              />
+            )}
             <div>
               <Button
                 title="Select image orientation"

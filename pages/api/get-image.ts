@@ -40,9 +40,6 @@ export default async function handler(
     const data = await resp.json()
     const { generations, message } = data
 
-    console.log(`--- GET-IMAGE.ts`)
-    console.log(data)
-
     if (message === '2 per 1 minute') {
       console.log(`Waiting for previous request to finish for ${id}`)
       return res.send({

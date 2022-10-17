@@ -1,3 +1,4 @@
+import { setImg2ImgFeature } from '../store/appStore'
 import { trackNewSession } from './analytics'
 
 /**
@@ -32,6 +33,13 @@ export const updateShowGrid = () => {
 export const initAppSettings = async () => {
   if (typeof window === 'undefined') {
     return
+  }
+
+  const urlParams = new URLSearchParams(window.location.search)
+  const img2imgEnabled = urlParams.get('enableImg2Img')
+
+  if (img2imgEnabled) {
+    setImg2ImgFeature(true)
   }
 
   await trackNewSession()
