@@ -4,6 +4,9 @@ interface SavePrompt {
   prompt: string
   sampler: string
   cfg_scale: number
+  orientation: string
+  height: number
+  width: number
   steps: number
   parentJobId: string
   negative?: string
@@ -17,7 +20,10 @@ let initPromptDetails: SavePrompt = {
   prompt: '',
   sampler: 'k_heun',
   cfg_scale: 9.0,
+  orientation: '',
   steps: 32,
+  height: 512,
+  width: 512,
   parentJobId: '',
   negative: '',
   source_image: '',
@@ -31,9 +37,12 @@ let promptDetails: SavePrompt = Object.assign({}, initPromptDetails)
 export const savePrompt = ({
   img2img = false,
   prompt = '',
+  orientation = '',
   sampler = 'k_heun',
   cfg_scale = 9.0,
   steps = 32,
+  height = 512,
+  width = 512,
   parentJobId = '',
   negative = '',
   source_image = '',
@@ -43,9 +52,12 @@ export const savePrompt = ({
     img2img,
     copyPrompt: true,
     prompt,
+    orientation,
     sampler,
     cfg_scale,
     steps,
+    height,
+    width,
     parentJobId,
     negative,
     source_image,
