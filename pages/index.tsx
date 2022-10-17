@@ -219,7 +219,7 @@ const Home: NextPage = () => {
     if (res.success) {
       updatedCachedPrompt('')
       trackEvent({
-        event: 'NEW_IMAGE_REQUEST',
+        event: input.img2img ? 'NEW_IMG2IMG_REQUEST' : 'NEW_IMAGE_REQUEST',
         dimensions: `h ${input.height} x w ${input.width}`,
         sampler: input.sampler,
         numImages: input.numImages

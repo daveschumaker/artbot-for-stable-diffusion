@@ -30,6 +30,7 @@ export default function ImageSquare({
       height={size}
       alt={imageDetails?.prompt}
       className="mx-auto rounded"
+      objectFit="cover"
     />
   )
 }
