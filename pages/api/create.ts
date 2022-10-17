@@ -123,9 +123,6 @@ export default async function handler(
     const data = await resp.json()
     const { id, message = '' }: GenerateResponse = data
 
-    console.log(`data??`)
-    console.log(data)
-
     if (!id) {
       console.log('No id...', data)
       console.log(params)

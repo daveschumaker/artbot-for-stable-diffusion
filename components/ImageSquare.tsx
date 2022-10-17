@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
-
+import Image from 'next/image'
+// import styled from 'styled-components'
 interface ImageDetails {
   base64String: string
   prompt?: string
@@ -16,23 +17,19 @@ export default function ImageSquare({
   size = 180,
   imageType = 'image/webp'
 }: ImageSquareProps) {
-  let base64String = imageDetails.base64String
+  let base64String = `data:${imageType};base64,${imageDetails.base64String}`
 
-  console.log(`yo what src?`, base64String)
-  console.log(`imgType?`, imageType)
-
-  if (!imageType || imageType === 'image/webp') {
+  if (!imageType) {
     base64String = `data:image/webp;base64,${imageDetails.base64String}`
   }
 
   return (
-    <img
+    <Image
       src={base64String}
       width={size}
       height={size}
       alt={imageDetails?.prompt}
       className="mx-auto rounded"
-      style={{ objectFit: 'cover' }}
     />
   )
 }

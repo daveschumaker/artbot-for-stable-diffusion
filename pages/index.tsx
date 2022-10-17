@@ -25,7 +25,6 @@ import DotsHorizontalIcon from '../components/icons/DotsHorizontalIcon'
 import Panel from '../components/Panel'
 import { trackEvent } from '../api/telemetry'
 import ImageSquare from '../components/ImageSquare'
-import UploadIcon from '../components/icons/UploadIcon'
 import { UploadButton } from '../components/UploadButton'
 import { getBase64 } from '../utils/imageUtils'
 import CloseIcon from '../components/icons/CloseIcon'
@@ -92,6 +91,10 @@ const Home: NextPage = () => {
       localStorage.setItem('cfg_scale', event.target.value)
     }
 
+    if (inputName === 'denoising_strength') {
+      updatedCachedPrompt(inputValue)
+    }
+
     if (inputName === 'steps') {
       localStorage.setItem('steps', event.target.value)
     }
@@ -132,20 +135,23 @@ const Home: NextPage = () => {
 
   // @ts-ignore
   const handleFileSelect = async (file) => {
-    console.log(`file?`, file)
+    let fullDataString
 
-    let imgBase64String
-    let img2imgType
     if (file) {
-      img2imgType = file.type
-      imgBase64String = await getBase64(file)
+      fullDataString = await getBase64(file)
     }
 
-    console.log(`img2imgType`, img2imgType)
+    if (!fullDataString) {
+      return
+    }
+
+    // @ts-ignore
+    const [fileType, imgBase64String] = fullDataString.split(';base64,')
+    const [, imageType] = fileType.split('data:')
 
     setInput({
       img2img: true,
-      imageType: img2imgType,
+      imageType,
       source_image: imgBase64String
     })
   }
@@ -338,7 +344,10 @@ const Home: NextPage = () => {
             >
               {showAdvanced ? <DotsVerticalIcon /> : <DotsHorizontalIcon />}
             </Button>
-            <UploadButton handleFile={handleFileSelect} />
+            <UploadButton
+              // @ts-ignore
+              handleFile={handleFileSelect}
+            />
             <div>
               <Button
                 title="Select image orientation"
@@ -474,14 +483,14 @@ const Home: NextPage = () => {
                 onChange={handleChangeValue}
                 value={input.sampler}
               >
-                <option value="DDIM">ddim</option>
+                {!input.img2img && <option value="DDIM">ddim</option>}
                 <option value="k_dpm_2_a">k_dpm_2_a</option>
                 <option value="k_dpm_2">k_dpm_2</option>
                 <option value="k_euler_a">k_euler_a</option>
                 <option value="k_euler">k_euler</option>
                 <option value="k_heun">k_heun</option>
                 <option value="k_lms">k_lms</option>
-                <option value="PLMS">plms</option>
+                {!input.img2img && <option value="PLMS">plms</option>}
               </select>
             </div>
           </div>

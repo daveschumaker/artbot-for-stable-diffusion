@@ -41,7 +41,7 @@ const StyledCircle = styled.circle`
 
 export default function Spinner() {
   return (
-    <StyledSVG viewBox="0 0 50 50">
+    <StyledSVG viewBox="0 0 25 25">
       <StyledCircle
         cx="25"
         cy="25"

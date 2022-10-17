@@ -11,6 +11,7 @@ import DownloadIcon from './icons/DownloadIcon'
 import { Button } from './Button'
 import { trackEvent } from '../api/telemetry'
 import RefreshIcon from './icons/RefreshIcon'
+import UploadIcon from './icons/UploadIcon'
 
 interface ImageDetails {
   jobId: string
@@ -105,6 +106,28 @@ const ImageDetails = ({
     setPendingDownload(false)
   }
 
+  const handleUploadClick = (imageDetails: {
+    prompt?: string
+    parentJobId?: string
+    negative?: string
+    base64String: string
+  }) => {
+    savePrompt({
+      img2img: true,
+      prompt: imageDetails.prompt,
+      parentJobId: imageDetails.parentJobId,
+      negative: imageDetails.negative,
+      source_image: imageDetails.base64String
+    })
+
+    trackEvent({
+      event: 'IMG2IMG_CLICK',
+      context: 'ImageCard'
+    })
+
+    router.push(`/?edit=true`)
+  }
+
   const handleRerollClick = useCallback(
     async (imageDetails: any) => {
       if (pending) {
@@ -165,6 +188,12 @@ const ImageDetails = ({
             disabled={pending}
           >
             <RefreshIcon className="mx-auto" />
+          </Button>
+          <Button
+            title="Use for img2img"
+            onClick={() => handleUploadClick(imageDetails)}
+          >
+            <UploadIcon className="mx-auto" />
           </Button>
           <Button
             title="Download PNG"

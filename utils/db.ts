@@ -34,7 +34,11 @@ export const allPendingJobs = async () => {
 }
 
 export const fetchCompletedJobs = async () => {
-  return await db?.completed?.orderBy('timestamp').reverse().toArray()
+  return await db?.completed
+    ?.orderBy('timestamp')
+    .reverse()
+    .limit(100)
+    .toArray()
 }
 
 export const fetchRelatedImages = async (parentJobId: string) => {
