@@ -114,7 +114,7 @@ const PendingItem = ({ handleDeleteJob, jobDetails }) => {
     <div className="pb-4 mb-4 relative border-0 border-b-2 border-dashed border-slate-500 pb-4">
       <Panel className=" flex flex-row">
         {isComplete && (
-          <div className="flex w-[100px] mr-3 cursor-pointer">
+          <div className="flex min-w-[100px] w-[100px] mr-3 cursor-pointer">
             <Link
               href={`/image/${jobDetails.jobId}`}
               passHref
@@ -136,7 +136,7 @@ const PendingItem = ({ handleDeleteJob, jobDetails }) => {
             </Link>
           </div>
         )}
-        <div className="flex flex-col align-top grow">
+        <div className="flex flex-col align-top grow flex-wrap">
           <span className="italic text-gray-300">{jobDetails.prompt}</span>
           {!isComplete && isProcessing && (
             <div className="mt-4 mb-2">

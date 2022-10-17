@@ -166,7 +166,16 @@ const ImageDetails = ({
         -- Settings --
         <ul>
           Job:{' '}
-          <Link href={`/job/${imageDetails.parentJobId}`} passHref>
+          <Link
+            href={`/job/${imageDetails.parentJobId}`}
+            passHref
+            onClick={() => {
+              trackEvent({
+                event: 'JOB_DETAILS_CLICK',
+                context: 'ImagePage'
+              })
+            }}
+          >
             <a className="text-cyan-500">{imageDetails.parentJobId}</a>
           </Link>
           {imageDetails.img2img && <li>Source: img2img</li>}

@@ -6,9 +6,29 @@ export const copyEditPrompt = (imageDetails: any) => {
     prompt: imageDetails.prompt,
     sampler: imageDetails.sampler,
     steps: imageDetails.steps,
+    orientation: imageDetails.orientation,
+    height: imageDetails.height,
+    width: imageDetails.width,
     cfg_scale: imageDetails.cfg_scale,
     parentJobId: imageDetails.parentJobId,
     negative: imageDetails.negative
+  })
+}
+
+export const uploadImg2Img = (imageDetails: any) => {
+  savePrompt({
+    img2img: true,
+    prompt: imageDetails.prompt,
+    sampler: imageDetails.sampler,
+    steps: imageDetails.steps,
+    orientation: imageDetails.orientation,
+    height: imageDetails.height,
+    width: imageDetails.width,
+    cfg_scale: imageDetails.cfg_scale,
+    parentJobId: imageDetails.parentJobId,
+    negative: imageDetails.negative,
+    source_image: imageDetails.base64String,
+    denoising_strength: imageDetails.denoising_strength
   })
 }
 
@@ -71,21 +91,4 @@ export const rerollImage = async (imageDetails: any) => {
   return {
     success: false
   }
-}
-
-export const uploadImg2Img = (imageDetails: any) => {
-  savePrompt({
-    img2img: true,
-    prompt: imageDetails.prompt,
-    sampler: imageDetails.sampler,
-    steps: imageDetails.steps,
-    orientation: imageDetails.orientation,
-    height: imageDetails.height,
-    width: imageDetails.width,
-    cfg_scale: imageDetails.cfg_scale,
-    parentJobId: imageDetails.parentJobId,
-    negative: imageDetails.negative,
-    source_image: imageDetails.base64String,
-    denoising_strength: imageDetails.denoising_strength
-  })
 }
