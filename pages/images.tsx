@@ -66,8 +66,11 @@ const ImagesPage = () => {
         newNum = offset + 100 > totalImages ? offset : offset + 100
       }
 
-      console.log(`offset?`, offset)
-      console.log(`newNum`, newNum)
+      trackEvent({
+        event: 'LOAD_MORE_IMAGES_CLICK',
+        context: 'ImagesPage',
+        label: `${btn} - ${newNum}`
+      })
 
       await fetchImages(newNum)
       setOffset(newNum)
@@ -234,7 +237,7 @@ const ImagesPage = () => {
             Prev
           </Button>
           <Button
-            disabled={currentOffset >= totalImages - 100}
+            disabled={currentOffset >= totalImages - 99}
             onClick={() => handleLoadMore('next')}
             width="52px"
           >
