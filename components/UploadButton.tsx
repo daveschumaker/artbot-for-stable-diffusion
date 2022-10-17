@@ -2,7 +2,8 @@ import { useRef } from 'react'
 import { Button } from './Button'
 import UploadIcon from './icons/UploadIcon'
 
-export function UploadButton({ handleFile = () => {} }) {
+// @ts-ignore
+export function UploadButton({ disabled, handleFile = () => {} }) {
   const hiddenFileInput = useRef(null)
 
   const handleClick = () => {
@@ -20,6 +21,7 @@ export function UploadButton({ handleFile = () => {} }) {
   return (
     <>
       <Button
+        disabled={disabled}
         title="Upload source image"
         // @ts-ignore
         onClick={handleClick}

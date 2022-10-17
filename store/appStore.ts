@@ -2,6 +2,7 @@ import { makeStore } from 'statery'
 
 export const appInfoStore = makeStore({
   buildId: '',
+  trusted: false,
   showImageReadyToast: false,
   newImageReady: '',
   img2imgFeature: false
@@ -10,6 +11,12 @@ export const appInfoStore = makeStore({
 export const setBuildId = (id: string) => {
   appInfoStore.set(() => ({
     buildId: id
+  }))
+}
+
+export const setTrustedUser = (bool: boolean) => {
+  appInfoStore.set(() => ({
+    trusted: bool
   }))
 }
 

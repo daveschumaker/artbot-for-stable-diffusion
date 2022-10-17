@@ -49,7 +49,7 @@ const ImageDetails = ({
   const router = useRouter()
 
   const appState = useStore(appInfoStore)
-  const { img2imgFeature } = appState
+  const { trusted } = appState
 
   const [pending, setPending] = useState(false)
   const [pendingDownload, setPendingDownload] = useState(false)
@@ -201,15 +201,14 @@ const ImageDetails = ({
           >
             <RefreshIcon className="mx-auto" />
           </Button>
-          {img2imgFeature && (
-            <Button
-              title="Use for img2img"
-              // @ts-ignore
-              onClick={() => handleUploadClick(imageDetails)}
-            >
-              <UploadIcon className="mx-auto" />
-            </Button>
-          )}
+          <Button
+            title="Use for img2img"
+            // @ts-ignore
+            onClick={() => handleUploadClick(imageDetails)}
+            disabled={!trusted}
+          >
+            <UploadIcon className="mx-auto" />
+          </Button>
           <Button
             title="Download PNG"
             onClick={() => handleDownloadClick(imageDetails)}

@@ -1,8 +1,15 @@
 import Head from 'next/head'
 import React, { useEffect, useState } from 'react'
+import { useStore } from 'statery'
+import { fetchUserDetails } from '../api/userInfo'
+import { Button } from '../components/Button'
 import PageTitle from '../components/PageTitle'
+import { appInfoStore, setTrustedUser } from '../store/appStore'
 
 const SettingsPage = () => {
+  const appState = useStore(appInfoStore)
+  const { trusted } = appState
+
   const [apiKey, setApiKey] = useState('')
   const [useTrusted, setUseTrusted] = useState('false')
   const [useNsfw, setUseNsfw] = useState('false')
@@ -10,6 +17,10 @@ const SettingsPage = () => {
   const handleApiInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     localStorage.setItem('apikey', e.target.value)
     setApiKey(e.target.value)
+  }
+
+  const handleSaveApiKey = async () => {
+    await fetchUserDetails(apiKey)
   }
 
   // @ts-ignore
@@ -73,7 +84,13 @@ const SettingsPage = () => {
         </div>
       </div>
       <div className="mb-2">
-        <div className="inline-block w-[140px]">API key:</div>
+        <div className="inline-block w-[140px] align-top">User trusted:</div>
+        <div className="inline-block w-[180px] mr-2">
+          {trusted ? 'True' : 'False'}
+        </div>
+      </div>
+      <div className="mb-2">
+        <div className="inline-block w-[140px] align-top">API key:</div>
         <div className="inline-block w-[180px] mr-2">
           <input
             type="text"
@@ -82,15 +99,24 @@ const SettingsPage = () => {
             onChange={handleApiInput}
             value={apiKey}
           />
-        </div>
-        <div
-          className="inline-block w-[24px] bg-blue-500 hover:bg-blue-700 ml-2 text-center cursor-pointer"
-          onClick={() => {
-            setApiKey('')
-            localStorage.setItem('apikey', '')
-          }}
-        >
-          X
+          <div className="flex gap-2 mt-2 justify-end">
+            <Button
+              onClick={() => {
+                handleSaveApiKey()
+              }}
+            >
+              Save
+            </Button>
+            <Button
+              onClick={() => {
+                setTrustedUser(false)
+                setApiKey('')
+                localStorage.setItem('apikey', '')
+              }}
+            >
+              Clear
+            </Button>
+          </div>
         </div>
         <div className="block w-full text-xs mt-2">
           (Leave blank for anonymous access. An API key gives higher priority

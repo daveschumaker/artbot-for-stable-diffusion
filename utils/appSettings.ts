@@ -1,4 +1,6 @@
-import { setImg2ImgFeature } from '../store/appStore'
+import { fetchUserDetails } from '../api/userInfo'
+
+// @ts-ignore
 import { trackNewSession } from './analytics'
 
 /**
@@ -35,14 +37,10 @@ export const initAppSettings = async () => {
     return
   }
 
-  const urlParams = new URLSearchParams(window.location.search)
-  const img2imgEnabled = urlParams.get('enableImg2Img')
-
-  if (img2imgEnabled) {
-    setImg2ImgFeature(true)
-  }
-
   await trackNewSession()
+
+  const apikey = localStorage.getItem('apikey') || ''
+  fetchUserDetails(apikey)
   checkNsfwSettings()
   updateShowGrid()
 }

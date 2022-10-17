@@ -43,7 +43,7 @@ const Home: NextPage = () => {
   const { query } = router
 
   const appState = useStore(appInfoStore)
-  const { img2imgFeature } = appState
+  const { trusted } = appState
 
   const [pageFeatures, setPageFeatures] = useReducer(
     (state: any, newState: any) => ({ ...state, ...newState }),
@@ -362,12 +362,11 @@ const Home: NextPage = () => {
             >
               {showAdvanced ? <DotsVerticalIcon /> : <DotsHorizontalIcon />}
             </Button>
-            {img2imgFeature && (
-              <UploadButton
-                // @ts-ignore
-                handleFile={handleFileSelect}
-              />
-            )}
+            <UploadButton
+              // @ts-ignore
+              handleFile={handleFileSelect}
+              disabled={!trusted}
+            />
             <div>
               <Button
                 title="Select image orientation"
