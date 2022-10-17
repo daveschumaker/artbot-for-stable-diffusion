@@ -4,7 +4,7 @@ interface SavePrompt {
   prompt: string
   parentJobId: string
   negative?: string
-  base64String?: string
+  source_image?: string
 }
 
 let promptDetails: SavePrompt = {
@@ -13,7 +13,7 @@ let promptDetails: SavePrompt = {
   prompt: '',
   parentJobId: '',
   negative: '',
-  base64String: ''
+  source_image: ''
 }
 
 // TODO: Restore other parameters relate to image
@@ -23,15 +23,17 @@ export const savePrompt = ({
   prompt = '',
   parentJobId = '',
   negative = '',
-  base64String = ''
+  source_image = ''
 } = {}) => {
+  console.log(`img2img`, img2img)
+
   promptDetails = {
     img2img,
     copyPrompt: true,
     prompt,
     parentJobId,
     negative,
-    base64String
+    source_image
   }
 }
 
@@ -46,7 +48,7 @@ export const clearPrompt = () => {
     prompt: '',
     parentJobId: '',
     negative: '',
-    base64String: ''
+    source_image: ''
   }
 }
 

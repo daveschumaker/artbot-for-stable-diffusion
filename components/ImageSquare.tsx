@@ -1,27 +1,38 @@
-import Image from 'next/image'
+/* eslint-disable @next/next/no-img-element */
 
 interface ImageDetails {
   base64String: string
-  prompt: string
+  prompt?: string
 }
 
 interface ImageSquareProps {
   imageDetails: ImageDetails
   size?: number
+  imageType: string
 }
 
 export default function ImageSquare({
   imageDetails,
-  size = 180
+  size = 180,
+  imageType = 'image/webp'
 }: ImageSquareProps) {
+  let base64String = imageDetails.base64String
+
+  console.log(`yo what src?`, base64String)
+  console.log(`imgType?`, imageType)
+
+  if (!imageType || imageType === 'image/webp') {
+    base64String = `data:image/webp;base64,${imageDetails.base64String}`
+  }
+
   return (
-    <Image
-      src={'data:image/webp;base64,' + imageDetails.base64String}
+    <img
+      src={base64String}
       width={size}
       height={size}
-      alt={imageDetails.prompt}
+      alt={imageDetails?.prompt}
       className="mx-auto rounded"
-      objectFit="cover"
+      style={{ objectFit: 'cover' }}
     />
   )
 }

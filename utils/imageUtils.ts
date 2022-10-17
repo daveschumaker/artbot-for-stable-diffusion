@@ -24,6 +24,11 @@ export const createNewImage = async (imageParams: CreateImageJob) => {
     params.seed = imageParams.seed
   }
 
+  if (imageParams.img2img) {
+    params.source_image = imageParams.source_image
+    params.denoising_strength = imageParams.denoising_strength
+  }
+
   try {
     const res = await fetch(`/artbot/api/create`, {
       method: 'POST',
@@ -54,4 +59,14 @@ export const createNewImage = async (imageParams: CreateImageJob) => {
       message: 'Unable to create image.'
     }
   }
+}
+
+export const getBase64 = (file: Blob) => {
+  return new Promise((resolve) => {
+    let reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => {
+      return resolve(reader.result)
+    }
+  })
 }

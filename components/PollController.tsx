@@ -21,6 +21,7 @@ const PollController = () => {
   }
 
   const checkForCompletedJob = useCallback(async () => {
+    console.log(`${new Date().toLocaleString()} polling`)
     const jobDetails = await getCurrentJob()
 
     if (jobDetails?.newImage && !showImageReadyToast) {
@@ -32,7 +33,7 @@ const PollController = () => {
   useEffect(() => {
     const interval = setInterval(async () => {
       checkForCompletedJob()
-    }, 2500)
+    }, 5000)
 
     return () => clearInterval(interval)
   }, [checkForCompletedJob])

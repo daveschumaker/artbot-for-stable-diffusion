@@ -15,6 +15,7 @@ const StyledTextArea = styled.textarea`
   border-radius: 4px;
   color: rgb(166, 173, 186);
   font-size: 16px;
+  min-height: 100px;
 `
 
 type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement>

@@ -202,7 +202,15 @@ export const createImageJob = async (imageParams: CreateImageJob) => {
   }
 }
 
+let pendingImageRequest = false
 export const getImage = async (jobId: string) => {
+  if (pendingImageRequest) {
+    return {
+      success: false,
+      status: 'WAITING_FOR_PENDING_REQUEST'
+    }
+  }
+
   if (!jobId || !jobId?.trim()) {
     return {
       success: false,
@@ -210,6 +218,7 @@ export const getImage = async (jobId: string) => {
     }
   }
 
+  pendingImageRequest = true
   const res = await fetch(`/artbot/api/get-image`, {
     method: 'POST',
     body: JSON.stringify({
@@ -223,6 +232,7 @@ export const getImage = async (jobId: string) => {
   const data = await res.json()
   const { status = '', message = '' } = data
 
+  pendingImageRequest = false
   if (data?.success) {
     return {
       success: true,
@@ -253,6 +263,9 @@ export const getCurrentJob = async () => {
     // @ts-ignore
     jobDetails = await checkImageJob(jobId)
   }
+
+  console.log(`imageCache#getCurrentJob jobDetails`)
+  console.log(jobDetails)
 
   // TODO: check verification message for missing images / jobs
   if (jobDetails?.message) {

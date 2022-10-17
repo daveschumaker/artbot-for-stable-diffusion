@@ -24,7 +24,9 @@ export default async function handler(
     cfg_scale,
     sampler,
     negative = '',
-    useTrusted
+    useTrusted,
+    denoising_strength,
+    source_image = ''
   } = req.body
 
   /**
@@ -70,6 +72,14 @@ export default async function handler(
     trusted_workers: useTrusted
   }
 
+  if (source_image && denoising_strength) {
+    // @ts-ignore
+    params.params.denoising_strength = Number(denoising_strength)
+
+    // @ts-ignore
+    params.source_image = source_image
+  }
+
   try {
     const resp = await fetch(`https://stablehorde.net/api/v2/generate/async`, {
       method: 'POST',
@@ -112,6 +122,9 @@ export default async function handler(
 
     const data = await resp.json()
     const { id, message = '' }: GenerateResponse = data
+
+    console.log(`data??`)
+    console.log(data)
 
     if (!id) {
       console.log('No id...', data)

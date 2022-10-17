@@ -24,6 +24,11 @@ import DotsVerticalIcon from '../components/icons/DotsVerticalIcon'
 import DotsHorizontalIcon from '../components/icons/DotsHorizontalIcon'
 import Panel from '../components/Panel'
 import { trackEvent } from '../api/telemetry'
+import ImageSquare from '../components/ImageSquare'
+import UploadIcon from '../components/icons/UploadIcon'
+import { UploadButton } from '../components/UploadButton'
+import { getBase64 } from '../utils/imageUtils'
+import CloseIcon from '../components/icons/CloseIcon'
 
 interface InputTarget {
   name: string
@@ -35,6 +40,7 @@ interface InputEvent {
 
 const Home: NextPage = () => {
   const router = useRouter()
+  const { query } = router
 
   const [pageFeatures, setPageFeatures] = useReducer(
     (state: any, newState: any) => ({ ...state, ...newState }),
@@ -44,24 +50,34 @@ const Home: NextPage = () => {
     }
   )
 
+  const editMode = query.edit
+
+  const initialState = {
+    img2img: editMode ? loadEditPrompt().img2img : false,
+    imageType: '',
+    orientation: 'square',
+    numImages: 1,
+    prompt: editMode ? loadEditPrompt().prompt : '',
+    height: 512,
+    width: 512,
+    sampler: 'k_heun',
+    cfg_scale: 9.0,
+    steps: 32,
+    seed: '',
+    denoising_strength: 0.75,
+    use_gfpgan: true,
+    use_real_esrgan: true,
+    parentJobId: editMode ? loadEditPrompt().parentJobId : '',
+    negative: editMode ? loadEditPrompt().negative : '',
+    source_image: editMode ? loadEditPrompt().source_image : ''
+  }
+
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [pending, setPending] = useState(false)
   const [hasError, setHasError] = useState('')
   const [input, setInput] = useReducer(
     (state: any, newState: any) => ({ ...state, ...newState }),
-    {
-      orientation: 'square',
-      numImages: 1,
-      prompt: '',
-      height: 512,
-      width: 512,
-      sampler: 'k_heun',
-      cfg_scale: 9.0,
-      steps: 32,
-      seed: '',
-      parentJobId: '',
-      negative: ''
-    }
+    initialState
   )
 
   const handleChangeValue = (event: InputEvent) => {
@@ -112,6 +128,26 @@ const Home: NextPage = () => {
         disableOrientationBtn: false
       })
     }, 100)
+  }
+
+  // @ts-ignore
+  const handleFileSelect = async (file) => {
+    console.log(`file?`, file)
+
+    let imgBase64String
+    let img2imgType
+    if (file) {
+      img2imgType = file.type
+      imgBase64String = await getBase64(file)
+    }
+
+    console.log(`img2imgType`, img2imgType)
+
+    setInput({
+      img2img: true,
+      imageType: img2imgType,
+      source_image: imgBase64String
+    })
   }
 
   const toggleOrientationDropdown = () => {
@@ -198,54 +234,97 @@ const Home: NextPage = () => {
   }
 
   useEffect(() => {
-    if (loadEditPrompt().copyPrompt) {
-      setShowAdvanced(true)
-      setInput({
-        prompt: loadEditPrompt().prompt,
-        parentJobId: loadEditPrompt().parentJobId,
-        negative: loadEditPrompt().negative
-      })
-      updatedCachedPrompt(loadEditPrompt().prompt)
-      clearPrompt()
-    }
-
-    // Load preferences from localStorage:
-    if (localStorage.getItem('orientation')) {
-      handleOrientationSelect(localStorage.getItem('orientation') || 'square', {
-        initLoad: true
-      })
-    }
-
-    if (localStorage.getItem('sampler')) {
-      setInput({ sampler: localStorage.getItem('sampler') })
-    }
-
-    if (localStorage.getItem('cfg_scale')) {
-      setInput({ cfg_scale: localStorage.getItem('cfg_scale') })
-    }
-
-    if (localStorage.getItem('steps')) {
-      setInput({ steps: localStorage.getItem('steps') })
-    }
-
     if (getCachedPrompt()) {
       setInput({ prompt: getCachedPrompt() })
     }
+
+    // if (loadEditPrompt().img2img) {
+    //   console.log('222')
+    //   console.log(`loadEditPrompt().img2img`, loadEditPrompt())
+    //   setShowAdvanced(true)
+    //   setInput({
+    //     img2img: true,
+    //     parentJobId: loadEditPrompt().parentJobId,
+    //     base64String: loadEditPrompt().base64String
+    //   })
+    //   updatedCachedPrompt(loadEditPrompt().prompt)
+    //   clearPrompt()
+    // } else if (loadEditPrompt().copyPrompt) {
+    //   console.log(`333`)
+    //   setShowAdvanced(true)
+    //   setInput({
+    //     prompt: loadEditPrompt().prompt,
+    //     parentJobId: loadEditPrompt().parentJobId,
+    //     negative: loadEditPrompt().negative
+    //   })
+    //   updatedCachedPrompt(loadEditPrompt().prompt)
+    //   clearPrompt()
+    // }
+
+    if (!query.edit) {
+      // Load preferences from localStorage:
+      if (localStorage.getItem('orientation')) {
+        handleOrientationSelect(
+          localStorage.getItem('orientation') || 'square',
+          {
+            initLoad: true
+          }
+        )
+      }
+
+      if (localStorage.getItem('sampler')) {
+        setInput({ sampler: localStorage.getItem('sampler') })
+      }
+
+      if (localStorage.getItem('cfg_scale')) {
+        setInput({ cfg_scale: localStorage.getItem('cfg_scale') })
+      }
+
+      if (localStorage.getItem('steps')) {
+        setInput({ steps: localStorage.getItem('steps') })
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
     <main>
       <PageTitle>Create new image</PageTitle>
       <div className="mt-2 mb-2">
-        <TextArea
-          name="prompt"
-          className="block bg-white p-2.5 w-full text-lg text-black rounded-lg max-h-[250px] border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-          placeholder="Image prompt..."
-          onChange={handleChangeValue}
-          // @ts-ignore
-          onKeyDown={onEnterPress}
-          value={input.prompt}
-        />
+        <div className="flex flex-row gap-[8px] items-start">
+          {input.source_image && (
+            <div
+              style={{ position: 'relative', height: '120px', width: '120px' }}
+            >
+              <ImageSquare
+                imageDetails={{ base64String: input.source_image }}
+                imageType={input.imageType}
+                size={120}
+              />
+              <div
+                className="absolute top-[2px] right-[2px] bg-blue-500 cursor-pointer"
+                onClick={() => {
+                  setInput({
+                    img2img: false,
+                    imgType: '',
+                    source_image: ''
+                  })
+                }}
+              >
+                <CloseIcon />
+              </div>
+            </div>
+          )}
+          <TextArea
+            name="prompt"
+            className="block bg-white p-2.5 w-full text-lg text-black rounded-lg max-h-[250px] border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Image prompt..."
+            onChange={handleChangeValue}
+            // @ts-ignore
+            onKeyDown={onEnterPress}
+            value={input.prompt}
+          />
+        </div>
         {hasError && (
           <div className="mt-2 text-red-500 font-semibold">
             Error: {hasError}
@@ -259,6 +338,7 @@ const Home: NextPage = () => {
             >
               {showAdvanced ? <DotsVerticalIcon /> : <DotsHorizontalIcon />}
             </Button>
+            <UploadButton handleFile={handleFileSelect} />
             <div>
               <Button
                 title="Select image orientation"
@@ -429,6 +509,20 @@ const Home: NextPage = () => {
               />
             </div>
           </div>
+          {input.img2img && (
+            <div className="mb-2">
+              <div className="inline-block w-[124px]">Denoise:</div>
+              <div className="inline-block w-[50px]">
+                <input
+                  type="text"
+                  className="text-black w-full rounded-lg p-1 border border-slate-500"
+                  name="denoising_strength"
+                  onChange={handleChangeValue}
+                  value={input.denoising_strength}
+                />
+              </div>
+            </div>
+          )}
           <div className="mb-2">
             <div className="inline-block w-[124px]">Seed:</div>
             <div className="inline-block w-[124px]">

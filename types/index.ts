@@ -1,4 +1,5 @@
 export interface CreateImageJob {
+  img2img?: boolean
   prompt: string
   height?: number
   width?: number
@@ -12,6 +13,8 @@ export interface CreateImageJob {
   parentJobId?: string
   negative?: string
   allowNsfw?: boolean
+  source_image?: string
+  denoising_strength?: number
 }
 
 export interface GenerateResponse {

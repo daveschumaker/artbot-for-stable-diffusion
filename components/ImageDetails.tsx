@@ -24,6 +24,7 @@ interface ImageDetails {
   sampler?: string
   seed: number
   negative?: string
+  base64String: string
 }
 
 interface ImageDetailsProps {
@@ -81,11 +82,11 @@ const ImageDetails = ({
       prompt: imageDetails.prompt,
       parentJobId: imageDetails.parentJobId,
       negative: imageDetails.negative,
-      base64String: imageDetails.base64String
+      source_image: imageDetails.base64String
     })
 
     trackEvent({
-      event: 'COPY_PROMPT',
+      event: 'IMG2IMG_CLICK',
       context: 'ImagePage'
     })
 
@@ -194,17 +195,17 @@ const ImageDetails = ({
             Copy prompt
           </Button>
           <Button
-            title="Use for img2img"
-            onClick={() => handleUploadClick(imageDetails)}
-          >
-            <UploadIcon className="mx-auto" />
-          </Button>
-          <Button
             title="Request new image with same settings"
             onClick={() => handleRerollClick(imageDetails)}
             disabled={pending}
           >
             <RefreshIcon className="mx-auto" />
+          </Button>
+          <Button
+            title="Use for img2img"
+            onClick={() => handleUploadClick(imageDetails)}
+          >
+            <UploadIcon className="mx-auto" />
           </Button>
           <Button
             title="Download PNG"

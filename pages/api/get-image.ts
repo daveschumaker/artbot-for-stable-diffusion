@@ -38,7 +38,18 @@ export default async function handler(
     )
 
     const data = await resp.json()
-    const { generations } = data
+    const { generations, message } = data
+
+    console.log(`--- GET-IMAGE.ts`)
+    console.log(data)
+
+    if (message === '2 per 1 minute') {
+      console.log(`Waiting for previous request to finish for ${id}`)
+      return res.send({
+        success: false,
+        status: 'WAITING_FOR_PENDING_REQUEST'
+      })
+    }
 
     if (Array.isArray(generations)) {
       const [image] = generations
