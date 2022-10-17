@@ -1,9 +1,13 @@
+import Head from 'next/head'
 import Link from 'next/link'
 import PageTitle from '../components/PageTitle'
 
 const FaqPage = () => {
   return (
     <>
+      <Head>
+        <title>ArtBot - FAQ</title>
+      </Head>
       <PageTitle>FAQ</PageTitle>
       <div className="text-sm">
         <div className="mt-2 font-bold">

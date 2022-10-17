@@ -1,10 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
+import Head from 'next/head'
 import Link from 'next/link'
 import PageTitle from '../components/PageTitle'
 
 const AboutPage = () => {
   return (
     <>
+      <Head>
+        <title>ArtBot - About</title>
+      </Head>
       <PageTitle>About</PageTitle>
       <div className="mt-2">
         <img

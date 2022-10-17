@@ -16,7 +16,7 @@ import {
 import { Button } from './Button'
 import TrashIcon from './icons/TrashIcon'
 import Panel from './Panel'
-import { trackEvent } from '../api/telemetry'
+import { trackEvent, trackGaEvent } from '../api/telemetry'
 import { useStore } from 'statery'
 import ImageSquare from './ImageSquare'
 import Link from 'next/link'
@@ -156,6 +156,12 @@ const PendingItem = ({ handleDeleteJob, jobDetails }) => {
                     trackEvent({
                       event: 'VIEW_IMAGE_CLICK',
                       context: 'PendingItemsPage'
+                    })
+                    trackGaEvent({
+                      action: 'pending_view_image_btn',
+                      params: {
+                        context: 'PendingItemsPage'
+                      }
                     })
                     clearNewImageNotification()
                     router.push(`/image/${jobDetails.jobId}`)

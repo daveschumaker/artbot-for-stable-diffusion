@@ -1,3 +1,9 @@
+// @ts-ignore
+export const trackGaEvent = ({ action, params }) => {
+  // @ts-ignore
+  window.gtag('event', action, params)
+}
+
 export const trackEvent = async (obj = {}) => {
   if (
     typeof window !== 'undefined' &&

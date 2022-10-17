@@ -1,3 +1,4 @@
+import Head from 'next/head'
 import React, { useEffect, useState } from 'react'
 import PageTitle from '../components/PageTitle'
 
@@ -39,6 +40,9 @@ const SettingsPage = () => {
 
   return (
     <div>
+      <Head>
+        <title>ArtBot - Settings</title>
+      </Head>
       <PageTitle>Settings</PageTitle>
       <div className="mb-2">
         <div className="inline-block w-[220px]">Allow NSFW images:</div>

@@ -1,4 +1,4 @@
-import { trackEvent } from '../api/telemetry'
+import { trackEvent, trackGaEvent } from '../api/telemetry'
 import { CreateImageJob } from '../types'
 import {
   allPendingJobs,
@@ -174,6 +174,9 @@ export const createImageJob = async (imageParams: CreateImageJob) => {
     const { jobId } = data
     jobDetailsQueue.push(jobId)
 
+    imageParams.jobTimestamp = imageParams.jobTimestamp
+      ? imageParams.jobTimestamp
+      : Date.now()
     imageParams.parentJobId = imageParams.parentJobId || jobId
 
     if (numImages > 1) {
@@ -185,6 +188,7 @@ export const createImageJob = async (imageParams: CreateImageJob) => {
     }
 
     await db.pending.add({
+      // @ts-ignore
       jobId,
       timestamp: Date.now(),
       ...imageParams
@@ -264,9 +268,6 @@ export const getCurrentJob = async () => {
     jobDetails = await checkImageJob(jobId)
   }
 
-  console.log(`imageCache#getCurrentJob jobDetails`)
-  console.log(jobDetails)
-
   // TODO: check verification message for missing images / jobs
   if (jobDetails?.message) {
     if (jobDetails.message.indexOf('not found') >= 0) {
@@ -295,6 +296,7 @@ export const getCurrentJob = async () => {
 
     if (imgDetails?.success && imgDetails?.base64String) {
       await db.completed.add({
+        // @ts-ignore
         jobId,
         ...imageDetails,
         ...imgDetails,
@@ -307,6 +309,16 @@ export const getCurrentJob = async () => {
         waitTimeSeconds: (
           Math.floor(Date.now() - imageDetails.timestamp) / 1000
         ).toFixed(0)
+      })
+      trackGaEvent({
+        action: 'img_received_from_api',
+        params: {
+          height: imageDetails.height,
+          width: imageDetails.width,
+          waitTime: (
+            Math.floor(Date.now() - imageDetails.timestamp) / 1000
+          ).toFixed(0)
+        }
       })
       return {
         success: true,

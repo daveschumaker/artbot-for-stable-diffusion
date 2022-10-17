@@ -1,5 +1,6 @@
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
+import Script from 'next/script'
 import { ThemeProvider } from 'styled-components'
 
 import { initAppSettings } from '../utils/appSettings'
@@ -58,34 +59,23 @@ function MyApp({ Component, pageProps }: AppProps) {
     return () => clearInterval(interval)
   }, [fetchAppInfo])
 
-  useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function () {
-        navigator.serviceWorker
-          .getRegistrations()
-          .then(function (registrations) {
-            for (let registration of registrations) {
-              registration.unregister()
-            }
-          })
-
-        // navigator.serviceWorker.register('/sw.js').then(
-        //   function (registration) {
-        //     console.log(
-        //       'Service Worker registration successful with scope: ',
-        //       registration.scope
-        //     )
-        //   },
-        //   function (err) {
-        //     console.log('Service Worker registration failed: ', err)
-        //   }
-        // )
-      })
-    }
-  }, [])
-
   return (
     <ThemeProvider theme={theme}>
+      <Script
+        strategy="lazyOnload"
+        src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
+      />
+
+      <Script id="analytics" strategy="lazyOnload">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}', {
+          page_path: window.location.pathname,
+          });
+      `}
+      </Script>
       <Head>
         <title>ArtBot - A Stable Diffusion demo utilizing Stable Horde</title>
         <meta name="twitter:card" content="summary_large_image" />

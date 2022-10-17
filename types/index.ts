@@ -1,9 +1,11 @@
 export interface CreateImageJob {
+  jobTimestamp?: number
+  jobId?: string
   img2img?: boolean
   prompt: string
   height?: number
   width?: number
-  cfg_scale?: string
+  cfg_scale?: number
   steps?: number
   sampler?: string
   apikey?: string

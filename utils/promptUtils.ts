@@ -2,38 +2,54 @@ interface SavePrompt {
   img2img: boolean
   copyPrompt: boolean
   prompt: string
+  sampler: string
+  cfg_scale: number
+  steps: number
   parentJobId: string
   negative?: string
   source_image?: string
+  denoising_strength?: number
 }
 
-let promptDetails: SavePrompt = {
+let initPromptDetails: SavePrompt = {
   img2img: false,
   copyPrompt: false,
   prompt: '',
+  sampler: 'k_heun',
+  cfg_scale: 9.0,
+  steps: 32,
   parentJobId: '',
   negative: '',
-  source_image: ''
+  source_image: '',
+  denoising_strength: 0.75
 }
+
+let promptDetails: SavePrompt = Object.assign({}, initPromptDetails)
 
 // TODO: Restore other parameters relate to image
 // e.g., height, width, sampler, etc.
 export const savePrompt = ({
   img2img = false,
   prompt = '',
+  sampler = 'k_heun',
+  cfg_scale = 9.0,
+  steps = 32,
   parentJobId = '',
   negative = '',
-  source_image = ''
+  source_image = '',
+  denoising_strength = 0.75
 } = {}) => {
-  console.log(`img2img`, img2img)
-
   promptDetails = {
     img2img,
     copyPrompt: true,
     prompt,
+    sampler,
+    cfg_scale,
+    steps,
     parentJobId,
     negative,
-    source_image
+    source_image,
+    denoising_strength
   }
 }
 
@@ -42,14 +58,7 @@ export const loadEditPrompt = () => {
 }
 
 export const clearPrompt = () => {
-  promptDetails = {
-    img2img: false,
-    copyPrompt: false,
-    prompt: '',
-    parentJobId: '',
-    negative: '',
-    source_image: ''
-  }
+  promptDetails = Object.assign({}, initPromptDetails)
 }
 
 // Caches prompt so that it can be restored when user switches between tabs

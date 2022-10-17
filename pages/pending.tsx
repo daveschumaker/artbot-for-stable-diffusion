@@ -6,6 +6,7 @@ import Spinner from '../components/Spinner'
 import { allPendingJobs, deletePendingJob } from '../utils/db'
 import PendingItem from '../components/PendingItem'
 import { trackEvent } from '../api/telemetry'
+import Head from 'next/head'
 
 const PendingPage = () => {
   const [isInitialLoad, setIsInitialLoad] = useState(true)
@@ -61,6 +62,9 @@ const PendingPage = () => {
 
   return (
     <div>
+      <Head>
+        <title>ArtBot - Pending images</title>
+      </Head>
       <PageTitle>Your pending images</PageTitle>
 
       {isInitialLoad && <Spinner />}

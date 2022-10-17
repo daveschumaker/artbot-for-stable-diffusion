@@ -1,5 +1,6 @@
 // @ts-nocheck
 /* eslint-disable @next/next/no-img-element */
+import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -51,6 +52,9 @@ const ImagePage = () => {
 
   return (
     <div>
+      <Head>
+        <title>ArtBot - Image details</title>
+      </Head>
       <div className="inline-block w-1/2">
         {!isInitialLoad && noImageFound ? (
           <PageTitle>Image not found</PageTitle>

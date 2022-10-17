@@ -3,17 +3,21 @@ import { useRouter } from 'next/router'
 
 import { useStore } from 'statery'
 import { appInfoStore } from '../store/appStore'
-import { createImageJob } from '../utils/imageCache'
 import { deleteCompletedImage } from '../utils/db'
-import { savePrompt } from '../utils/promptUtils'
 import ConfirmationModal from './ConfirmationModal'
 import { useCallback, useState } from 'react'
 import TrashIcon from './icons/TrashIcon'
 import DownloadIcon from './icons/DownloadIcon'
 import { Button } from './Button'
-import { trackEvent } from '../api/telemetry'
+import { trackEvent, trackGaEvent } from '../api/telemetry'
 import RefreshIcon from './icons/RefreshIcon'
 import UploadIcon from './icons/UploadIcon'
+import {
+  copyEditPrompt,
+  downloadImage,
+  rerollImage,
+  uploadImg2Img
+} from '../controllers/imageDetailsCommon'
 
 interface ImageDetails {
   jobId: string
@@ -53,23 +57,27 @@ const ImageDetails = ({
       event: 'DELETE_IMAGE',
       context: 'ImageCard'
     })
+    trackGaEvent({
+      action: 'btn_delete_img',
+      params: {
+        context: 'ImageCard'
+      }
+    })
     setShowDeleteModal(false)
   }
 
-  const handleCopyPromptClick = (imageDetails: {
-    prompt?: string
-    parentJobId?: string
-    negative?: string
-  }) => {
-    savePrompt({
-      prompt: imageDetails.prompt,
-      parentJobId: imageDetails.parentJobId,
-      negative: imageDetails.negative
-    })
+  const handleCopyPromptClick = (imageDetails: any) => {
+    copyEditPrompt(imageDetails)
 
     trackEvent({
       event: 'COPY_PROMPT',
       context: 'ImageCard'
+    })
+    trackGaEvent({
+      action: 'btn_copy_prompt',
+      params: {
+        context: 'ImageCard'
+      }
     })
 
     router.push(`/?edit=true`)
@@ -81,53 +89,37 @@ const ImageDetails = ({
     }
 
     setPendingDownload(true)
-    const res = await fetch(`/artbot/api/get-png`, {
-      method: 'POST',
-      body: JSON.stringify({
-        imgString: imageDetails.base64String
-      }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-    const data = await res.json()
-    const { success } = data
+
+    const imageDownload = await downloadImage(imageDetails)
+    const { success } = imageDownload
 
     if (success) {
       trackEvent({
         event: 'DOWNLOAD_PNG',
         context: 'ImageCard'
       })
-
-      const filename = imageDetails.prompt
-        .replace(/[^a-z0-9]/gi, '_')
-        .toLowerCase()
-        .slice(0, 254)
-      var a = document.createElement('a')
-      a.href = 'data:image/png;base64,' + data.base64String
-      a.download = filename + '.png'
-      a.click()
+      trackGaEvent({
+        action: 'btn_download_png',
+        params: {
+          context: 'ImageCard'
+        }
+      })
     }
     setPendingDownload(false)
   }
 
-  const handleUploadClick = (imageDetails: {
-    prompt?: string
-    parentJobId?: string
-    negative?: string
-    base64String: string
-  }) => {
-    savePrompt({
-      img2img: true,
-      prompt: imageDetails.prompt,
-      parentJobId: imageDetails.parentJobId,
-      negative: imageDetails.negative,
-      source_image: imageDetails.base64String
-    })
+  const handleUploadClick = (imageDetails: any) => {
+    uploadImg2Img(imageDetails)
 
     trackEvent({
       event: 'IMG2IMG_CLICK',
       context: 'ImageCard'
+    })
+    trackGaEvent({
+      action: 'btn_img2img',
+      params: {
+        context: 'ImageCard'
+      }
     })
 
     router.push(`/?edit=true`)
@@ -140,28 +132,24 @@ const ImageDetails = ({
       }
 
       setPending(true)
-      const cleanParams = Object.assign({}, imageDetails)
 
-      delete cleanParams.base64String
-      delete cleanParams.id
-      delete cleanParams.jobId
-      delete cleanParams.queue_position
-      delete cleanParams.seed
-      delete cleanParams.success
-      delete cleanParams.timestamp
-      delete cleanParams.wait_time
+      const reRollStatus = await rerollImage(imageDetails)
+      const { success } = reRollStatus
 
-      const res = await createImageJob({
-        ...cleanParams
-      })
-
-      if (res.success) {
+      if (success) {
         trackEvent({
           event: 'REROLL_IMAGE',
           context: 'ImageCard'
         })
+        trackGaEvent({
+          action: 'btn_reroll',
+          params: {
+            context: 'ImageCard'
+          }
+        })
         router.push('/pending')
       }
+
       setPending(false)
     },
     [pending, router]

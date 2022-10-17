@@ -9,7 +9,7 @@ export const createNewImage = async (imageParams: CreateImageJob) => {
     prompt: imageParams.prompt,
     height: imageParams.height || 512,
     width: imageParams.width || 512,
-    cfg_scale: imageParams.cfg_scale || '12.0',
+    cfg_scale: imageParams.cfg_scale || 12.0,
     steps: imageParams.steps || 50,
     sampler: imageParams.sampler || 'k_euler_a',
     useTrusted: useTrusted === 'true' ? true : false,

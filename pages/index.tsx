@@ -24,7 +24,7 @@ import { KeypressEvent } from '../types'
 import DotsVerticalIcon from '../components/icons/DotsVerticalIcon'
 import DotsHorizontalIcon from '../components/icons/DotsHorizontalIcon'
 import Panel from '../components/Panel'
-import { trackEvent } from '../api/telemetry'
+import { trackEvent, trackGaEvent } from '../api/telemetry'
 import ImageSquare from '../components/ImageSquare'
 import { UploadButton } from '../components/UploadButton'
 import { getBase64 } from '../utils/imageUtils'
@@ -63,11 +63,11 @@ const Home: NextPage = () => {
     prompt: editMode ? loadEditPrompt().prompt : '',
     height: 512,
     width: 512,
-    sampler: 'k_heun',
-    cfg_scale: 9.0,
-    steps: 32,
+    sampler: editMode ? loadEditPrompt().sampler : 'k_heun',
+    cfg_scale: editMode ? loadEditPrompt().cfg_scale : 9.0,
+    steps: editMode ? loadEditPrompt().steps : 32,
     seed: '',
-    denoising_strength: 0.75,
+    denoising_strength: editMode ? loadEditPrompt().denoising_strength : 0.75,
     use_gfpgan: true,
     use_real_esrgan: true,
     parentJobId: editMode ? loadEditPrompt().parentJobId : '',
@@ -224,6 +224,12 @@ const Home: NextPage = () => {
         sampler: input.sampler,
         numImages: input.numImages
       })
+      trackGaEvent({
+        action: 'new_img_request',
+        params: {
+          type: input.img2img ? 'img2img' : 'prompt2img'
+        }
+      })
       router.push('/pending')
     } else if (res.status === 'INVALID_API_KEY') {
       setHasError('Invalid API key sent to the server. Check your settings.')
@@ -271,6 +277,10 @@ const Home: NextPage = () => {
     //   clearPrompt()
     // }
 
+    if (query.edit) {
+      setShowAdvanced(true)
+    }
+
     if (!query.edit) {
       // Load preferences from localStorage:
       if (localStorage.getItem('orientation')) {
@@ -308,7 +318,7 @@ const Home: NextPage = () => {
         <div className="flex flex-row gap-[8px] items-start">
           {input.source_image && (
             <div
-              style={{ position: 'relative', height: '120px', width: '120px' }}
+              style={{ position: 'relative', height: '100px', width: '120px' }}
             >
               <ImageSquare
                 imageDetails={{ base64String: input.source_image }}

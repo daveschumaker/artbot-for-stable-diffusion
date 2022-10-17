@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 import { setNewImageReady, setShowImageReadyToast } from '../store/appStore'
 import { useEffect, useState } from 'react'
-import { trackEvent } from '../api/telemetry'
+import { trackEvent, trackGaEvent } from '../api/telemetry'
 import { getImageDetails } from '../utils/db'
 import ImageSquare from './ImageSquare'
 import CloseIcon from './icons/CloseIcon'
@@ -47,6 +47,12 @@ export default function Toast({ handleClose, jobId, showImageReadyToast }) {
   const handleClick = () => {
     trackEvent({
       event: 'NEW_IMAGE_TOAST_CLICK'
+    })
+    trackGaEvent({
+      action: 'toast_click',
+      params: {
+        type: 'new_img'
+      }
     })
     router.push(`/image/${jobId}`)
 

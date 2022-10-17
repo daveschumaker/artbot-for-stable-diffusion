@@ -14,6 +14,7 @@ import LayoutIcon from '../components/icons/LayoutIcon'
 import ImageSquare from '../components/ImageSquare'
 import { trackEvent } from '../api/telemetry'
 import { Button } from '../components/Button'
+import Head from 'next/head'
 
 const ImagesPage = () => {
   const [totalImages, setTotalImages] = useState(0)
@@ -100,6 +101,9 @@ const ImagesPage = () => {
 
   return (
     <div>
+      <Head>
+        <title>ArtBot - Your images</title>
+      </Head>
       <div className="inline-block w-1/2">
         <PageTitle>Your images</PageTitle>
       </div>
