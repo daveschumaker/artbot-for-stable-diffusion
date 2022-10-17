@@ -3,6 +3,7 @@ import styled from 'styled-components'
 
 interface PanelProps {
   children?: React.ReactNode
+  className?: string
   open?: boolean
 }
 

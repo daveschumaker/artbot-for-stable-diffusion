@@ -13,7 +13,7 @@ const StyledTextArea = styled.textarea`
   background-color: rgb(42, 48, 60);
   border: 1px solid white;
   border-radius: 4px;
-  color: rgb(166, 173, 186);
+  color: #e1e1e1;
   font-size: 16px;
   min-height: 100px;
 `

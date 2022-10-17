@@ -18,6 +18,8 @@ import TrashIcon from './icons/TrashIcon'
 import Panel from './Panel'
 import { trackEvent } from '../api/telemetry'
 import { useStore } from 'statery'
+import ImageSquare from './ImageSquare'
+import Link from 'next/link'
 
 // @ts-ignore
 const PendingItem = ({ handleDeleteJob, jobDetails }) => {
@@ -25,6 +27,7 @@ const PendingItem = ({ handleDeleteJob, jobDetails }) => {
   const appState = useStore(appInfoStore)
   const { showImageReadyToast } = appState
 
+  const [imageDetails, setImageDetails] = useState({})
   const [isComplete, setIsComplete] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
   const [estimatedWait, setEstimatedWait] = useState(
@@ -53,6 +56,7 @@ const PendingItem = ({ handleDeleteJob, jobDetails }) => {
     if (jobFinished?.jobId === jobDetails?.jobId) {
       handleShowToast()
       setIsComplete(true)
+      setImageDetails(jobFinished)
     }
   }, [handleShowToast, isComplete, jobDetails?.jobId])
 
@@ -107,62 +111,87 @@ const PendingItem = ({ handleDeleteJob, jobDetails }) => {
   }, [checkJobFinished])
 
   return (
-    <div className="mb-2 relative border-0 border-b-2 border-dashed border-slate-500 pb-4">
-      <Panel>
-        <span className="italic text-gray-300">{jobDetails.prompt}</span>
-        {!isComplete && isProcessing && (
-          <div className="mt-4 mb-4">
-            <ProgressBar time={jobDetails.wait_time} />
-          </div>
-        )}
+    <div className="pb-4 mb-4 relative border-0 border-b-2 border-dashed border-slate-500 pb-4">
+      <Panel className=" flex flex-row">
         {isComplete && (
-          <div className="mt-4 mb-4">
-            <ProgressBar done />
+          <div className="flex w-[100px] mr-3 cursor-pointer">
+            <Link
+              href={`/image/${jobDetails.jobId}`}
+              passHref
+              onClick={() => {
+                trackEvent({
+                  event: 'VIEW_IMAGE_CLICK',
+                  context: 'PendingItemsPage'
+                })
+                clearNewImageNotification()
+              }}
+            >
+              <a>
+                <ImageSquare
+                  // @ts-ignore
+                  imageDetails={imageDetails}
+                  imageType="image/webp"
+                />
+              </a>
+            </Link>
           </div>
         )}
-        <div className="mt-2 w-full flex flex-row items-center">
-          <div className="w-3/4">
-            {isComplete && (
-              <Button
-                onClick={() => {
-                  trackEvent({
-                    event: 'VIEW_IMAGE_CLICK',
-                    context: 'PendingItemsPage'
-                  })
-                  clearNewImageNotification()
-                  router.push(`/image/${jobDetails.jobId}`)
-                }}
-              >
-                View image
-              </Button>
-            )}
-            {!isComplete && isProcessing && (
-              <div className="font-mono text-xs mt-2">
-                {estimatedWait >= 1
-                  ? `Estimated time remaining: ${estimatedWait} seconds`
-                  : 'Estimating wait...'}
-              </div>
-            )}
-            {!isComplete && (
-              <div className="font-mono text-xs mt-2">
-                Created: {new Date(jobDetails.timestamp).toLocaleString()}
-              </div>
-            )}
-          </div>
-          <div className="w-1/4 flex flex-row items-center justify-end">
-            {!isComplete && isProcessing && (
-              <div className="inline-block mt-1">
-                <Spinner />
-              </div>
-            )}
-            {!isComplete && (
-              <Button
-                btnType="secondary"
-                onClick={() => handleDeleteJob(jobDetails.jobId)}
-              >
-                <TrashIcon />
-              </Button>
-            )}
+        <div className="flex flex-col align-top grow">
+          <span className="italic text-gray-300">{jobDetails.prompt}</span>
+          {!isComplete && isProcessing && (
+            <div className="mt-4 mb-2">
+              <ProgressBar time={jobDetails.wait_time} />
+            </div>
+          )}
+          {isComplete && (
+            <div className="mt-3 mb-3">
+              <ProgressBar done />
+            </div>
+          )}
+          <div className="mt-2 w-full flex flex-row items-center">
+            <div className="w-3/4">
+              {isComplete && (
+                <Button
+                  onClick={() => {
+                    trackEvent({
+                      event: 'VIEW_IMAGE_CLICK',
+                      context: 'PendingItemsPage'
+                    })
+                    clearNewImageNotification()
+                    router.push(`/image/${jobDetails.jobId}`)
+                  }}
+                >
+                  View image
+                </Button>
+              )}
+              {!isComplete && isProcessing && (
+                <div className="font-mono text-xs mt-2">
+                  {estimatedWait >= 1
+                    ? `Estimated time remaining: ${estimatedWait} seconds`
+                    : 'Estimating wait...'}
+                </div>
+              )}
+              {!isComplete && (
+                <div className="font-mono text-xs mt-2">
+                  Created: {new Date(jobDetails.timestamp).toLocaleString()}
+                </div>
+              )}
+            </div>
+            <div className="w-1/4 flex flex-row items-center justify-end">
+              {!isComplete && isProcessing && (
+                <div className="inline-block mt-1">
+                  <Spinner />
+                </div>
+              )}
+              {!isComplete && (
+                <Button
+                  btnType="secondary"
+                  onClick={() => handleDeleteJob(jobDetails.jobId)}
+                >
+                  <TrashIcon />
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       </Panel>

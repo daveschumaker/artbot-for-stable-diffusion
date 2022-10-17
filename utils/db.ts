@@ -33,11 +33,12 @@ export const allPendingJobs = async () => {
   return await db?.pending?.orderBy('timestamp').toArray()
 }
 
-export const fetchCompletedJobs = async () => {
+export const fetchCompletedJobs = async ({ limit = 100, offset = 0 } = {}) => {
   return await db?.completed
     ?.orderBy('timestamp')
     .reverse()
-    .limit(100)
+    .offset(offset)
+    .limit(limit)
     .toArray()
 }
 

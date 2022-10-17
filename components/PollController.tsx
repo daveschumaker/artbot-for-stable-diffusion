@@ -21,7 +21,6 @@ const PollController = () => {
   }
 
   const checkForCompletedJob = useCallback(async () => {
-    console.log(`${new Date().toLocaleString()} polling`)
     const jobDetails = await getCurrentJob()
 
     if (jobDetails?.newImage && !showImageReadyToast) {
