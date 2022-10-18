@@ -43,7 +43,7 @@ const Home: NextPage = () => {
   const { query } = router
 
   const appState = useStore(appInfoStore)
-  const { trusted } = appState
+  const { models, trusted } = appState
 
   const [pageFeatures, setPageFeatures] = useReducer(
     (state: any, newState: any) => ({ ...state, ...newState }),
@@ -573,6 +573,32 @@ const Home: NextPage = () => {
             </div>
             <div className="block w-full text-xs mt-1">
               (Leave seed blank for random)
+            </div>
+          </div>
+          <div className="mb-2">
+            <div className="inline-block w-[124px]">Model:</div>
+            <div className="inline-block w-[124px]">
+              <select
+                className="text-black w-full p-1 rounded-lg border border-slate-500"
+                name="models"
+                onChange={(e) => {
+                  if (e.target.value === 'random') {
+                    setInput({ models: [''] })
+                  } else {
+                    setInput({ models: [e.target.value] })
+                  }
+                }}
+                value={input.models[0]}
+              >
+                {models.map((model, i) => {
+                  return (
+                    <option key={`${model}_select_${i}`} value={model}>
+                      {model}
+                    </option>
+                  )
+                })}
+                <option value="random">random</option>
+              </select>
             </div>
           </div>
           <div className="mb-2">

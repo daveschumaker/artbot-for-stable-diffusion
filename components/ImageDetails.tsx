@@ -35,6 +35,7 @@ interface ImageDetails {
   base64String: string
   denoising_strength?: number
   parentJobId?: string
+  model?: string
 }
 
 interface ImageDetailsProps {
@@ -183,6 +184,10 @@ const ImageDetails = ({
             <li>Negative prompt: {imageDetails.negative}</li>
           )}
           <li>Sampler: {imageDetails.sampler}</li>
+          <li>
+            Model:{' '}
+            {imageDetails.model ? imageDetails.model : 'stable_diffusion'}
+          </li>
           <li>Seed: {imageDetails.seed}</li>
           <li>Steps: {imageDetails.steps}</li>
           <li>cfg scale: {imageDetails.cfg_scale}</li>

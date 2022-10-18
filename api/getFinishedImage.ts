@@ -4,6 +4,7 @@ interface FinishedImageResponse {
   jobId?: string
   base64String?: string
   seed?: string
+  model?: string
 }
 
 let isPending = false
@@ -58,7 +59,7 @@ export const getFinishedImage = async (
     isPending = false
     if (Array.isArray(generations)) {
       const [image] = generations
-      const { img: base64String, seed } = image
+      const { img: base64String, model, seed } = image
 
       if (!base64String) {
         return {
@@ -70,6 +71,7 @@ export const getFinishedImage = async (
       return {
         success: true,
         jobId,
+        model,
         base64String,
         seed
       }
