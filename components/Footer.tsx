@@ -1,8 +1,32 @@
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import styled from 'styled-components'
+import { isInstalledPwa } from '../utils/appUtils'
+
+const StyledFooter = styled.footer`
+  margin-top: auto;
+  margin-bottom: 88px;
+  padding-top: 16px;
+  text-align: center;
+
+  @media (min-width: 640px) {
+    padding-top: 16px;
+  }
+`
 
 export default function Footer() {
+  const [isPwa, setIsPwa] = useState(false)
+
+  useEffect(() => {
+    setIsPwa(isInstalledPwa())
+  }, [])
+
+  if (isPwa) {
+    return null
+  }
+
   return (
-    <div className="text-center mt-2 mb-2 left-0 right-0 content-end">
+    <StyledFooter>
       <div>
         Web app created with ❤️ by{' '}
         <Link href="https://twitter.com/davely">
@@ -46,6 +70,6 @@ export default function Footer() {
           Github
         </a>
       </div>
-    </div>
+    </StyledFooter>
   )
 }

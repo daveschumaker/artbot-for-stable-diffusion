@@ -6,6 +6,9 @@ import HourglassIcon from './icons/HourglassIcon'
 import PhotoIcon from './icons/PhotoIcon'
 import SettingsIcon from './icons/SettingsIcon'
 import Link from 'next/link'
+import HelpIcon from './icons/HelpIcon'
+import { useEffect, useState } from 'react'
+import { isInstalledPwa } from '../utils/appUtils'
 
 const StyledFooter = styled.div`
   background-color: black;
@@ -14,21 +17,22 @@ const StyledFooter = styled.div`
   position: fixed;
   bottom: 0;
   display: flex;
-  height: 68px;
+  height: 100px;
   left: 0;
   padding-bottom: calc(1rem + env(safe-area-inset-bottom));
   right: 0;
 
-  @media (min-width: 768px) {
+  @media (min-width: 640px) {
     display: none;
   }
 `
 
 const NavIcons = styled.div`
-  align-items: center;
-  bottom: calc(1rem + env(safe-area-inset-bottom));
+  align-items: start;
+  /* bottom: calc(1rem + env(safe-area-inset-bottom)); */
   display: flex;
   flex-direction: row;
+  padding-top: 16px;
   justify-content: space-around;
   width: 100%;
 `
@@ -37,8 +41,18 @@ export default function MobileFooter() {
   const router = useRouter()
   const { pathname } = router
 
+  const [isPwa, setIsPwa] = useState(false)
+
   const isActive = (path = '') => {
     return `${path}` === pathname
+  }
+
+  useEffect(() => {
+    setIsPwa(isInstalledPwa())
+  }, [])
+
+  if (!isPwa) {
+    return null
   }
 
   return (
@@ -65,6 +79,14 @@ export default function MobileFooter() {
             <PhotoIcon
               size={32}
               stroke={isActive('/images') ? '#14B8A6' : 'white'}
+            />
+          </a>
+        </Link>
+        <Link href="/faq">
+          <a>
+            <HelpIcon
+              size={32}
+              stroke={isActive('/faq') ? '#14B8A6' : 'white'}
             />
           </a>
         </Link>
