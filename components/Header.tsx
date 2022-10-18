@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 export default function Header() {
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-row mb-1 md:mb-0">
       <div className="mt-2 w-1/2 inline-block">
         <Link href="/">
           <a>

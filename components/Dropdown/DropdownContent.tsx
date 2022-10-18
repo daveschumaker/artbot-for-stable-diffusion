@@ -13,16 +13,17 @@ interface DropdownContentProps {
 }
 
 const StyledDropdown = styled.div<DropdownContentProps>`
-  border: 1px solid gray;
+  background-color: gray;
   border-color: white;
   border-radius: 4px;
-  opacity: ${(props) => (props.open ? '1' : '0')};
-  max-height: ${(props) => (props.open ? '100%' : '0')};
-  overflow: hidden;
-  transition: all 0.4s;
-  position: absolute;
+  border: 1px solid gray;
   margin: 4px 0 0 0;
-  background-color: gray;
+  max-height: ${(props) => (props.open ? '100%' : '0')};
+  opacity: ${(props) => (props.open ? '1' : '0')};
+  overflow: hidden;
+  position: absolute;
+  transition: all 0.4s;
+  z-index: 10;
 `
 
 export function DropdownContent(props: DropdownContentProps) {

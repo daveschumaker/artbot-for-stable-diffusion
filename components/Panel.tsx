@@ -10,7 +10,7 @@ interface PanelProps {
 const StyledPanel = styled.div<PanelProps>`
   border: solid 1px white;
   border-radius: 4px;
-  padding: 8px;
+  padding: 8px 16px;
   width: 100%;
 `
 

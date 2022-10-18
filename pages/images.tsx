@@ -120,15 +120,17 @@ const ImagesPage = () => {
         <PageTitle>Your images</PageTitle>
       </div>
       <div className="inline-block w-1/2 text-right content-center">
-        <button
-          title="Change layout"
-          className="p-[2px] border-[1px] border-teal-500 rounded-md cursor-pointer text-sm text-teal-500 relative top-[3px]"
-          onClick={handleGridListClick}
-        >
-          {showLayout === 'layout' && <LayoutIcon size={18} />}
-          {showLayout === 'grid' && <GridIcon size={18} />}
-          {showLayout === 'list' && <ListIcon size={18} />}
-        </button>
+        <div>
+          <button
+            title="Change layout"
+            className="p-[2px] border-[1px] border-teal-500 rounded-md cursor-pointer text-sm text-teal-500 relative top-[3px]"
+            onClick={handleGridListClick}
+          >
+            {showLayout === 'layout' && <LayoutIcon size={18} />}
+            {showLayout === 'grid' && <GridIcon size={18} />}
+            {showLayout === 'list' && <ListIcon size={18} />}
+          </button>
+        </div>
       </div>
       <div className="mb-2 text-sm">
         <strong>Important:</strong> All images persist within your local browser

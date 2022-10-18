@@ -2,6 +2,7 @@
 import { useEffect, useReducer, useState } from 'react'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
+import styled from 'styled-components'
 
 import { createImageJob } from '../utils/imageCache'
 import PageTitle from '../components/PageTitle'
@@ -23,6 +24,10 @@ import { trackEvent, trackGaEvent } from '../api/telemetry'
 import ImageSquare from '../components/ImageSquare'
 import CloseIcon from '../components/icons/CloseIcon'
 import { AdvancedOptions } from '../components/CreatePage/AdditionalOptions'
+import SectionTitle from '../components/SectionTitle'
+import Tooltip from '../components/Tooltip'
+import Select from '../components/Select'
+import Input from '../components/Input'
 
 interface InputTarget {
   name: string
@@ -31,6 +36,16 @@ interface InputTarget {
 interface InputEvent {
   target: InputTarget
 }
+
+interface StyledPanelProps {
+  open: boolean
+}
+
+const StyledPanel = styled.div<StyledPanelProps>`
+  opacity: ${(props) => (props.open ? '1' : '0')};
+  max-height: ${(props) => (props.open ? '100%' : '0')};
+  transition: all 0.4s;
+`
 
 const Home: NextPage = () => {
   const router = useRouter()
@@ -289,168 +304,181 @@ const Home: NextPage = () => {
           </div>
         </div>
       </div>
-      {showAdvanced && (
-        <Panel>
-          <div className="mb-2">
-            <div className="inline-block w-[160px]">Negative prompt:</div>
-            <div className="inline-block w-[160px] md:w-[320px]">
-              <input
+      <StyledPanel open={showAdvanced}>
+        {showAdvanced && (
+          <Panel>
+            <div className="mb-2">
+              <SectionTitle>Advanced options</SectionTitle>
+              <div className="mb-2">
+                Negative prompt
+                <Tooltip width="180px">
+                  (Add words or phrases to demphasize from your desired image)
+                </Tooltip>
+              </div>
+              <Input
+                className="mb-2"
                 type="text"
-                className="text-black w-full rounded-lg p-1 border border-slate-500"
                 name="negative"
                 onChange={handleChangeValue}
+                // @ts-ignore
                 value={input.negative}
+                width="100%"
               />
+              <div className="w-full flex flex-row justify-end gap-2 mb-4">
+                <Button
+                  title="Clear negative input"
+                  btnType="secondary"
+                  onClick={() => setInput({ negative: '' })}
+                >
+                  Clear
+                </Button>
+                <Button
+                  title="Save negative prompt"
+                  onClick={() => {}}
+                  width="100px"
+                >
+                  Save
+                </Button>
+              </div>
             </div>
-            <div
-              className="inline-block w-[24px] bg-blue-500 hover:bg-blue-700 ml-2 text-center cursor-pointer"
-              onClick={() => setInput({ negative: '' })}
-            >
-              X
-            </div>
-            <div className="block w-full text-xs mt-1">
-              (Add words or phrases to demphasize from your desired image)
-            </div>
-          </div>
-          <div className="mb-2">
-            <div className="inline-block w-[124px]">Sampler:</div>
-            <div className="inline-block w-[124px]">
-              <select
-                className="text-black w-full p-1 rounded-lg border border-slate-500"
-                name="sampler"
-                onChange={handleChangeValue}
-                value={input.sampler}
-              >
-                {!input.img2img && <option value="DDIM">ddim</option>}
-                <option value="k_dpm_2_a">k_dpm_2_a</option>
-                <option value="k_dpm_2">k_dpm_2</option>
-                <option value="k_euler_a">k_euler_a</option>
-                <option value="k_euler">k_euler</option>
-                <option value="k_heun">k_heun</option>
-                <option value="k_lms">k_lms</option>
-                {!input.img2img && <option value="PLMS">plms</option>}
-              </select>
-            </div>
-          </div>
-          <div className="mb-2">
-            <div className="inline-block w-[124px]">Steps:</div>
-            <div className="inline-block w-[50px]">
-              <input
-                type="text"
-                className="text-black w-full p-1 rounded-lg border border-slate-500"
-                name="steps"
-                onChange={handleChangeValue}
-                value={input.steps}
-              />
-            </div>
-          </div>
-          <div className="mb-2">
-            <div className="inline-block w-[124px]">Guidance:</div>
-            <div className="inline-block w-[50px]">
-              <input
-                type="text"
-                className="text-black w-full rounded-lg p-1 border border-slate-500"
-                name="cfg_scale"
-                onChange={handleChangeValue}
-                value={input.cfg_scale}
-              />
-            </div>
-          </div>
-          {input.img2img && (
             <div className="mb-2">
-              <div className="inline-block w-[124px]">Denoise:</div>
-              <div className="inline-block w-[50px]">
-                <input
-                  type="text"
-                  className="text-black w-full rounded-lg p-1 border border-slate-500"
-                  name="denoising_strength"
+              <div className="inline-block w-[124px]">Sampler</div>
+              <div className="inline-block">
+                <Select
+                  name="sampler"
+                  //@ts-ignore
                   onChange={handleChangeValue}
-                  value={input.denoising_strength}
+                  value={input.sampler}
+                  width="180px"
+                >
+                  {!input.img2img && <option value="DDIM">ddim</option>}
+                  <option value="k_dpm_2_a">k_dpm_2_a</option>
+                  <option value="k_dpm_2">k_dpm_2</option>
+                  <option value="k_euler_a">k_euler_a</option>
+                  <option value="k_euler">k_euler</option>
+                  <option value="k_heun">k_heun</option>
+                  <option value="k_lms">k_lms</option>
+                  {!input.img2img && <option value="PLMS">plms</option>}
+                </Select>
+              </div>
+            </div>
+            <div className="mb-2">
+              <div className="inline-block w-[124px]">Steps</div>
+              <div className="inline-block">
+                <Input
+                  type="text"
+                  name="steps"
+                  onChange={handleChangeValue}
+                  value={input.steps}
                 />
               </div>
             </div>
-          )}
-          <div className="mb-2">
-            <div className="inline-block w-[124px]">Seed:</div>
-            <div className="inline-block w-[124px]">
-              <input
-                type="text"
-                className="text-black w-full rounded-lg p-1 border border-slate-500"
-                name="seed"
-                onChange={handleChangeValue}
-                value={input.seed}
-              />
+            <div className="mb-2">
+              <div className="inline-block w-[124px]">
+                Guidance
+                <Tooltip width="200px">
+                  Higher numbers follow the prompt more closely. Lower numbers
+                  give more creativity.
+                </Tooltip>
+              </div>
+              <div className="inline-block">
+                <Input
+                  type="text"
+                  name="cfg_scale"
+                  onChange={handleChangeValue}
+                  value={input.cfg_scale}
+                />
+              </div>
             </div>
-            <div
-              className="inline-block w-[24px] bg-blue-500 hover:bg-blue-700 ml-2 text-center cursor-pointer"
-              onClick={() => setInput({ seed: '' })}
-            >
-              X
+            {input.img2img && (
+              <div className="mb-2">
+                <div className="inline-block w-[124px]">Denoise</div>
+                <div className="inline-block">
+                  <Input
+                    type="text"
+                    name="denoising_strength"
+                    onChange={handleChangeValue}
+                    value={input.denoising_strength}
+                  />
+                </div>
+              </div>
+            )}
+            <div className="mb-2">
+              <div className="inline-block w-[124px]">
+                Seed
+                <Tooltip width="140px">Leave seed blank for random.</Tooltip>
+              </div>
+              <div className="inline-block">
+                <Input
+                  type="text"
+                  name="seed"
+                  onChange={handleChangeValue}
+                  value={input.seed}
+                  width="200px"
+                />
+              </div>
             </div>
-            <div className="block w-full text-xs mt-1">
-              (Leave seed blank for random)
+            <div className="mb-2">
+              <div className="inline-block w-[124px]">Model</div>
+              <div className="inline-block">
+                <Select
+                  name="models"
+                  onChange={(e: any) => {
+                    if (e.target.value === 'random') {
+                      setInput({ models: [''] })
+                    } else {
+                      setInput({ models: [e.target.value] })
+                    }
+                  }}
+                  value={input.models[0]}
+                  width="200px"
+                >
+                  {models.map((model, i) => {
+                    return (
+                      <option key={`${model}_select_${i}`} value={model}>
+                        {model}
+                      </option>
+                    )
+                  })}
+                  <option value="random">random</option>
+                </Select>
+              </div>
             </div>
-          </div>
-          <div className="mb-2">
-            <div className="inline-block w-[124px]">Model:</div>
-            <div className="inline-block w-[124px]">
-              <select
-                className="text-black w-full p-1 rounded-lg border border-slate-500"
-                name="models"
-                onChange={(e) => {
-                  if (e.target.value === 'random') {
-                    setInput({ models: [''] })
-                  } else {
-                    setInput({ models: [e.target.value] })
-                  }
-                }}
-                value={input.models[0]}
-              >
-                {models.map((model, i) => {
-                  return (
-                    <option key={`${model}_select_${i}`} value={model}>
-                      {model}
-                    </option>
-                  )
-                })}
-                <option value="random">random</option>
-              </select>
+            <div className="mb-2">
+              <div className="inline-block w-[124px]"># of images</div>
+              <div className="inline-block">
+                <Select
+                  name="numImages"
+                  onChange={handleChangeValue}
+                  value={input.numImages}
+                  width="75px"
+                >
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                  <option value="13">13</option>
+                  <option value="14">14</option>
+                  <option value="15">15</option>
+                  <option value="16">16</option>
+                  <option value="17">17</option>
+                  <option value="18">18</option>
+                  <option value="19">19</option>
+                  <option value="20">20</option>
+                </Select>
+              </div>
             </div>
-          </div>
-          <div className="mb-2">
-            <div className="inline-block w-[124px]"># of images:</div>
-            <div className="inline-block w-[124px]">
-              <select
-                className="text-black w-full p-1 rounded-lg border border-slate-500"
-                name="numImages"
-                onChange={handleChangeValue}
-                value={input.numImages}
-              >
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-                <option value="13">13</option>
-                <option value="14">14</option>
-                <option value="15">15</option>
-                <option value="16">16</option>
-                <option value="17">17</option>
-                <option value="18">18</option>
-                <option value="19">19</option>
-                <option value="20">20</option>
-              </select>
-            </div>
-          </div>
-        </Panel>
-      )}
+          </Panel>
+        )}
+      </StyledPanel>
       <div className="mt-2">
         <h2 className="font-bold mb-2">Resources and tips</h2>
         <ul>

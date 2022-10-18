@@ -1,13 +1,15 @@
 // Modified via: https://tabler-icons.io/
 
-const AlertCircleIcon = ({
+const InfoIcon = ({
   className,
   size = 24,
-  stroke = 'currentColor'
+  stroke = 'currentColor',
+  fill = 'none'
 }: {
   className?: string
   size?: number
   stroke?: string
+  fill?: string
 }) => {
   return (
     <svg
@@ -16,18 +18,18 @@ const AlertCircleIcon = ({
       width={size}
       height={size}
       viewBox="0 0 24 24"
-      strokeWidth="1"
+      strokeWidth="2"
       stroke={stroke}
-      fill="none"
+      fill={fill}
       strokeLinecap="round"
       strokeLinejoin="round"
     >
       <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
       <circle cx="12" cy="12" r="9"></circle>
-      <line x1="12" y1="8" x2="12" y2="12"></line>
-      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      <polyline points="11 12 12 12 12 16 13 16"></polyline>
     </svg>
   )
 }
 
-export default AlertCircleIcon
+export default InfoIcon
