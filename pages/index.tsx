@@ -58,11 +58,9 @@ const Home: NextPage = () => {
   const initialState = {
     img2img: editMode ? loadEditPrompt().img2img : false,
     imageType: '',
-    orientation: editMode ? loadEditPrompt().orientation : 'square',
+    orientationType: editMode ? loadEditPrompt().orientation : 'square',
     numImages: 1,
     prompt: editMode ? loadEditPrompt().prompt : '',
-    height: editMode ? loadEditPrompt().height : 512,
-    width: editMode ? loadEditPrompt().width : 512,
     sampler: editMode ? loadEditPrompt().sampler : 'k_heun',
     cfg_scale: editMode ? loadEditPrompt().cfg_scale : 9.0,
     steps: editMode ? loadEditPrompt().steps : 32,
@@ -171,22 +169,7 @@ const Home: NextPage = () => {
 
   const handleOrientationSelect = (orientation: string, options?: any) => {
     localStorage.setItem('orientation', orientation)
-
-    if (orientation === 'landscape-16x9') {
-      setInput({ height: 576, width: 1024, orientation: 'landscape-16x9' })
-    } else if (orientation === 'landscape') {
-      setInput({ height: 512, width: 768, orientation: 'landscape' })
-    } else if (orientation === 'portrait') {
-      setInput({ height: 768, width: 512, orientation: 'portrait' })
-    } else if (orientation === 'square') {
-      setInput({ height: 512, width: 512, orientation: 'square' })
-    } else if (orientation === 'phone-bg') {
-      setInput({ height: 1024, width: 448, orientation: 'phone-bg' })
-    } else if (orientation === 'ultrawide') {
-      setInput({ height: 448, width: 1024, orientation: 'ultrawide' })
-    } else {
-      setInput({ height: 512, width: 512, orientation: 'square' })
-    }
+    setInput({ orientationType: orientation })
 
     if (!options?.initLoad) {
       trackEvent({
@@ -221,7 +204,6 @@ const Home: NextPage = () => {
       updatedCachedPrompt('')
       trackEvent({
         event: input.img2img ? 'NEW_IMG2IMG_REQUEST' : 'NEW_IMAGE_REQUEST',
-        dimensions: `h ${input.height} x w ${input.width}`,
         sampler: input.sampler,
         numImages: input.numImages
       })
@@ -377,12 +359,13 @@ const Home: NextPage = () => {
                   <PhotoIcon />
                 </span>
                 <span className="hidden md:inline-block">
-                  {input.orientation === 'landscape-16x9' && `Landscape`}
-                  {input.orientation === 'landscape' && `Landscape`}
-                  {input.orientation === 'portrait' && `Portrait`}
-                  {input.orientation === 'phone-bg' && `Phone wallpaper`}
-                  {input.orientation === 'ultrawide' && `Ultrawide`}
-                  {input.orientation === 'square' && `Square`}
+                  {input.orientationType === 'landscape-16x9' && `Landscape`}
+                  {input.orientationType === 'landscape' && `Landscape`}
+                  {input.orientationType === 'portrait' && `Portrait`}
+                  {input.orientationType === 'phone-bg' && `Phone wallpaper`}
+                  {input.orientationType === 'ultrawide' && `Ultrawide`}
+                  {input.orientationType === 'square' && `Square`}
+                  {input.orientationType === 'random' && `Random!`}
                 </span>
               </Button>
               <DropdownContent
@@ -438,6 +421,14 @@ const Home: NextPage = () => {
                   }}
                 >
                   Square
+                </DropdownItem>
+                <DropdownItem
+                  active={input.orientation === 'random'}
+                  onClick={() => {
+                    handleOrientationSelect('random')
+                  }}
+                >
+                  Random
                 </DropdownItem>
               </DropdownContent>
             </div>

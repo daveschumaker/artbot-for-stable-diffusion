@@ -24,6 +24,8 @@ export interface CreateImageJob {
   allowNsfw?: boolean
   source_image?: string
   denoising_strength?: number
+  orientationType?: string
+  orientation?: string
 }
 
 export interface GenerateResponse {

@@ -10,7 +10,7 @@ import {
   pendingCount,
   updatePendingJob
 } from './db'
-import { createNewImage } from './imageUtils'
+import { createNewImage, orientationDetails } from './imageUtils'
 
 export const initIndexedDb = () => {}
 
@@ -160,6 +160,11 @@ export const createImageJob = async (imageParams: CreateImageJob) => {
   if (isNaN(numImages) || numImages < 1 || numImages > 20) {
     numImages = 1
   }
+
+  const imageSize = orientationDetails(imageParams.orientationType || 'square')
+  imageParams.orientation = imageSize.orientation
+  imageParams.height = imageSize.height
+  imageParams.width = imageSize.width
 
   // Limit number of currently pending requests so we don't
   // hit API limits.

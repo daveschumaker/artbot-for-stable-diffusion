@@ -18,6 +18,74 @@ interface CreateImageJob {
   denoising_strength?: number
 }
 
+interface OrientationLookup {
+  [key: string]: ImageOrientation
+}
+
+interface ImageOrientation {
+  orientation?: string
+  height: number
+  width: number
+}
+
+export const orientationDetails = (orientation: string): ImageOrientation => {
+  const orientationIds = [
+    'landscape-16x9',
+    'landscape',
+    'phone-bg',
+    'portrait',
+    'square',
+    'ultrawide'
+  ]
+  const lookup: OrientationLookup = {
+    'landscape-16x9': {
+      height: 576,
+      width: 1024
+    },
+    landscape: {
+      height: 512,
+      width: 768
+    },
+    portrait: {
+      height: 768,
+      width: 512
+    },
+    square: {
+      height: 512,
+      width: 512
+    },
+    'phone-bg': {
+      height: 1024,
+      width: 448
+    },
+    ultrawide: {
+      height: 448,
+      width: 1024
+    }
+  }
+
+  if (orientation === 'random') {
+    const value =
+      orientationIds[Math.floor(Math.random() * orientationIds.length)]
+
+    return {
+      orientation: value,
+      ...lookup[value]
+    }
+  } else if (lookup[orientation]) {
+    return {
+      orientation,
+      ...lookup[orientation]
+    }
+  }
+
+  return {
+    orientation: 'square',
+    height: 512,
+    width: 512
+  }
+}
+
 export const createNewImage = async (imageParams: CreateImageJob) => {
   /**
    * Max prompt length for hlky is roughly 75 tokens.
