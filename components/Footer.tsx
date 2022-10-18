@@ -3,11 +3,21 @@ import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { isInstalledPwa } from '../utils/appUtils'
 
-const StyledFooter = styled.footer`
+interface FooterProps {
+  isSafari: boolean
+}
+
+const StyledFooter = styled.footer<FooterProps>`
   margin-top: auto;
-  margin-bottom: 88px;
+  margin-bottom: 16px;
   padding-top: 16px;
   text-align: center;
+
+  ${(props) =>
+    props.isSafari &&
+    `
+      margin-bottom: 88px;
+    `}
 
   @media (min-width: 640px) {
     padding-top: 16px;
@@ -15,9 +25,14 @@ const StyledFooter = styled.footer`
 `
 
 export default function Footer() {
+  const [isSafari, setIsSafari] = useState(false)
   const [isPwa, setIsPwa] = useState(false)
 
   useEffect(() => {
+    var userAgent = window.navigator.userAgent
+    if (userAgent?.match(/iPhone/i)) {
+      setIsSafari(true)
+    }
     setIsPwa(isInstalledPwa())
   }, [])
 
@@ -26,7 +41,7 @@ export default function Footer() {
   }
 
   return (
-    <StyledFooter>
+    <StyledFooter isSafari={isSafari}>
       <div>
         Web app created with ❤️ by{' '}
         <Link href="https://twitter.com/davely">

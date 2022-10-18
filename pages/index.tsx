@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { useCallback, useEffect, useReducer, useState } from 'react'
+import { useEffect, useReducer, useState } from 'react'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 
@@ -15,20 +15,14 @@ import { appInfoStore } from '../store/appStore'
 import Link from 'next/link'
 import TextArea from '../components/TextArea'
 import { Button } from '../components/Button'
-import PhotoIcon from '../components/icons/PhotoIcon'
-import { DropdownContent } from '../components/Dropdown/DropdownContent'
-import { DropdownItem } from '../components/Dropdown/DropdownItem'
 import TrashIcon from '../components/icons/TrashIcon'
 import SquarePlusIcon from '../components/icons/SquarePlusIcon'
 import { KeypressEvent } from '../types'
-import DotsVerticalIcon from '../components/icons/DotsVerticalIcon'
-import DotsHorizontalIcon from '../components/icons/DotsHorizontalIcon'
 import Panel from '../components/Panel'
 import { trackEvent, trackGaEvent } from '../api/telemetry'
 import ImageSquare from '../components/ImageSquare'
-import { UploadButton } from '../components/UploadButton'
-import { getBase64 } from '../utils/imageUtils'
 import CloseIcon from '../components/icons/CloseIcon'
+import { AdvancedOptions } from '../components/CreatePage/AdditionalOptions'
 
 interface InputTarget {
   name: string
@@ -43,15 +37,7 @@ const Home: NextPage = () => {
   const { query } = router
 
   const appState = useStore(appInfoStore)
-  const { models, trusted } = appState
-
-  const [pageFeatures, setPageFeatures] = useReducer(
-    (state: any, newState: any) => ({ ...state, ...newState }),
-    {
-      showOrientationDropdown: false,
-      disableOrientationBtn: false
-    }
-  )
+  const { models } = appState
 
   const editMode = query.edit
 
@@ -107,78 +93,6 @@ const Home: NextPage = () => {
     }
 
     setInput({ [inputName]: inputValue })
-  }
-
-  const handleShowAdvancedOptions = useCallback(() => {
-    if (showAdvanced) {
-      setShowAdvanced(false)
-    } else {
-      trackEvent({
-        event: 'ADVANCED_OPTIONS_CLICK',
-        context: `createPage`
-      })
-      setShowAdvanced(true)
-    }
-  }, [showAdvanced])
-
-  // Funky race condition here wtih clicking outside Dropdown
-  // if you click the orientation button.
-  const handeOutsideClick = () => {
-    setPageFeatures({
-      showOrientationDropdown: false,
-      disableOrientationBtn: true
-    })
-
-    setTimeout(() => {
-      setPageFeatures({
-        disableOrientationBtn: false
-      })
-    }, 100)
-  }
-
-  // @ts-ignore
-  const handleFileSelect = async (file) => {
-    let fullDataString
-
-    if (file) {
-      fullDataString = await getBase64(file)
-    }
-
-    if (!fullDataString) {
-      return
-    }
-
-    // @ts-ignore
-    const [fileType, imgBase64String] = fullDataString.split(';base64,')
-    const [, imageType] = fileType.split('data:')
-
-    setInput({
-      img2img: true,
-      imageType,
-      source_image: imgBase64String
-    })
-  }
-
-  const toggleOrientationDropdown = () => {
-    if (pageFeatures.disableOrientationBtn) {
-      return
-    }
-
-    setPageFeatures({ showOrientationDropdown: true })
-  }
-
-  const handleOrientationSelect = (orientation: string, options?: any) => {
-    localStorage.setItem('orientation', orientation)
-    setInput({ orientationType: orientation })
-
-    if (!options?.initLoad) {
-      trackEvent({
-        event: 'ORIENTATION_CLICK',
-        label: orientation,
-        context: `createPage`
-      })
-    }
-    setPageFeatures({ showOrientationDropdown: false })
   }
 
   const handleSubmit = async () => {
@@ -266,14 +180,14 @@ const Home: NextPage = () => {
 
     if (!query.edit) {
       // Load preferences from localStorage:
-      if (localStorage.getItem('orientation')) {
-        handleOrientationSelect(
-          localStorage.getItem('orientation') || 'square',
-          {
-            initLoad: true
-          }
-        )
-      }
+      // if (localStorage.getItem('orientation')) {
+      //   handleOrientationSelect(
+      //     localStorage.getItem('orientation') || 'square',
+      //     {
+      //       initLoad: true
+      //     }
+      //   )
+      // }
 
       if (localStorage.getItem('sampler')) {
         setInput({ sampler: localStorage.getItem('sampler') })
@@ -338,101 +252,12 @@ const Home: NextPage = () => {
           </div>
         )}
         <div className="mt-4 mb-4 w-full flex flex-row">
-          <div className="w-1/2 flex flex-row gap-2">
-            <Button
-              title="Show advanced options"
-              onClick={handleShowAdvancedOptions}
-            >
-              {showAdvanced ? <DotsVerticalIcon /> : <DotsHorizontalIcon />}
-            </Button>
-            <UploadButton
-              // @ts-ignore
-              handleFile={handleFileSelect}
-              disabled={!trusted}
-            />
-            <div>
-              <Button
-                title="Select image orientation"
-                onClick={toggleOrientationDropdown}
-              >
-                <span>
-                  <PhotoIcon />
-                </span>
-                <span className="hidden md:inline-block">
-                  {input.orientationType === 'landscape-16x9' && `Landscape`}
-                  {input.orientationType === 'landscape' && `Landscape`}
-                  {input.orientationType === 'portrait' && `Portrait`}
-                  {input.orientationType === 'phone-bg' && `Phone wallpaper`}
-                  {input.orientationType === 'ultrawide' && `Ultrawide`}
-                  {input.orientationType === 'square' && `Square`}
-                  {input.orientationType === 'random' && `Random!`}
-                </span>
-              </Button>
-              <DropdownContent
-                handleClose={() => {
-                  handeOutsideClick()
-                }}
-                open={pageFeatures.showOrientationDropdown}
-              >
-                <DropdownItem
-                  active={input.orientation === 'landscape-16x9'}
-                  onClick={() => {
-                    handleOrientationSelect('landscape-16x9')
-                  }}
-                >
-                  Landscape 16 x 9
-                </DropdownItem>
-                <DropdownItem
-                  active={input.orientation === 'landscape'}
-                  onClick={() => {
-                    handleOrientationSelect('landscape')
-                  }}
-                >
-                  Landscape 3 x 2
-                </DropdownItem>
-                <DropdownItem
-                  active={input.orientation === 'portrait'}
-                  onClick={() => {
-                    handleOrientationSelect('portrait')
-                  }}
-                >
-                  Portrait 2 x 3
-                </DropdownItem>
-                <DropdownItem
-                  active={input.orientation === 'phone-bg'}
-                  onClick={() => {
-                    handleOrientationSelect('phone-bg')
-                  }}
-                >
-                  Phone wallpaper 9 x 21
-                </DropdownItem>
-                <DropdownItem
-                  active={input.orientation === 'ultrawide'}
-                  onClick={() => {
-                    handleOrientationSelect('ultrawide')
-                  }}
-                >
-                  Ultrawide 21 x 9
-                </DropdownItem>
-                <DropdownItem
-                  active={input.orientation === 'square'}
-                  onClick={() => {
-                    handleOrientationSelect('square')
-                  }}
-                >
-                  Square
-                </DropdownItem>
-                <DropdownItem
-                  active={input.orientation === 'random'}
-                  onClick={() => {
-                    handleOrientationSelect('random')
-                  }}
-                >
-                  Random
-                </DropdownItem>
-              </DropdownContent>
-            </div>
-          </div>
+          <AdvancedOptions
+            orientationType={input.orientationType}
+            setInput={setInput}
+            showAdvanced={showAdvanced}
+            setShowAdvanced={setShowAdvanced}
+          />
           <div className="w-1/2 flex flex-row justify-end gap-2">
             <Button
               title="Clear current input"

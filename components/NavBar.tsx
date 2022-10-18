@@ -1,12 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 import { useStore } from 'statery'
 import {
   appInfoStore,
   setNewImageReady,
   setShowImageReadyToast
 } from '../store/appStore'
+import { isInstalledPwa } from '../utils/appUtils'
 
 import IconCreate from './icons/CreateIcon'
 import HourglassIcon from './icons/HourglassIcon'
@@ -20,6 +22,8 @@ export default function NavBar() {
 
   const appState = useStore(appInfoStore)
   const { newImageReady } = appState
+
+  const [isPwa, setIsPwa] = useState(false)
 
   const clearNewImageNotification = () => {
     setShowImageReadyToast(false)
@@ -38,6 +42,14 @@ export default function NavBar() {
     }
 
     return 'inline-block p-2 rounded-t-lg border-b-2 border-transparent hover:text-teal-500 hover:border-teal-500'
+  }
+
+  useEffect(() => {
+    setIsPwa(isInstalledPwa())
+  }, [])
+
+  if (isPwa) {
+    return null
   }
 
   return (

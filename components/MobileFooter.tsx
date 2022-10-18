@@ -9,6 +9,12 @@ import Link from 'next/link'
 import HelpIcon from './icons/HelpIcon'
 import { useEffect, useState } from 'react'
 import { isInstalledPwa } from '../utils/appUtils'
+import { useStore } from 'statery'
+import {
+  appInfoStore,
+  setNewImageReady,
+  setShowImageReadyToast
+} from '../store/appStore'
 
 const StyledFooter = styled.div`
   background-color: black;
@@ -40,6 +46,9 @@ const NavIcons = styled.div`
 export default function MobileFooter() {
   const router = useRouter()
   const { pathname } = router
+
+  const appState = useStore(appInfoStore)
+  const { newImageReady } = appState
 
   const [isPwa, setIsPwa] = useState(false)
 
@@ -75,7 +84,16 @@ export default function MobileFooter() {
           </a>
         </Link>
         <Link href="/images">
-          <a>
+          <a
+            className="relative"
+            onClick={() => {
+              setShowImageReadyToast(false)
+              setNewImageReady('')
+            }}
+          >
+            {newImageReady && (
+              <span className="opacity-1 inline-block w-3 h-3 mr-1 bg-red-600 rounded-full absolute l-[4px]"></span>
+            )}
             <PhotoIcon
               size={32}
               stroke={isActive('/images') ? '#14B8A6' : 'white'}
