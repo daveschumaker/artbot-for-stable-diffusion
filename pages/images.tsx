@@ -102,11 +102,11 @@ const ImagesPage = () => {
   const currentOffset = offset + 1
   const maxOffset = offset + 100 > totalImages ? totalImages : offset + 100
 
-  console.log(`size?`, size)
   let imageColumns = 2
-
+  // @ts-ignore
   if (size?.width > 1280) {
     imageColumns = 4
+    // @ts-ignore
   } else if (size?.width > 800) {
     imageColumns = 3
   }

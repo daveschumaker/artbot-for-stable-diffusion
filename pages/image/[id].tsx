@@ -10,9 +10,11 @@ import ImageDetails from '../../components/ImageDetails'
 import PageTitle from '../../components/PageTitle'
 
 import Spinner from '../../components/Spinner'
+import { useWindowSize } from '../../hooks/useWindowSize'
 import { fetchRelatedImages, getImageDetails } from '../../utils/db'
 
 const ImagePage = () => {
+  const size = useWindowSize()
   const router = useRouter()
   const { id } = router.query
 
@@ -50,6 +52,15 @@ const ImagePage = () => {
 
   const noImageFound = !isInitialLoad && !imageDetails?.base64String
 
+  let imageColumns = 2
+  // @ts-ignore
+  if (size?.width > 1280) {
+    imageColumns = 4
+    // @ts-ignore
+  } else if (size?.width > 800) {
+    imageColumns = 3
+  }
+
   return (
     <div>
       <Head>
@@ -85,6 +96,10 @@ const ImagePage = () => {
             src={'data:image/webp;base64,' + imageDetails.base64String}
             className="mx-auto rounded"
             alt={imageDetails.prompt}
+            style={{
+              height:
+                imageDetails.height > 768 ? '768px' : imageDetails.height + 'px'
+            }}
           />
           <ImageDetails
             imageDetails={imageDetails}
@@ -96,7 +111,7 @@ const ImagePage = () => {
         <div className="pt-2 border-0 border-t-2 border-dashed border-slate-500">
           <PageTitle>Related images</PageTitle>
           <div className="mt-4 flex gap-y-2.5 flex-wrap gap-x-2.5">
-            <Masonry columnsCount={2} gutter="10px">
+            <Masonry columnsCount={imageColumns} gutter="8px">
               {relatedImages.map(
                 (image: {
                   jobId: string
