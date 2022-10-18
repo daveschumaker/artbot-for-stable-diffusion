@@ -113,9 +113,9 @@ const ImagesPage = () => {
           className="p-[2px] border-[1px] border-teal-500 rounded-md cursor-pointer text-sm text-teal-500 relative top-[3px]"
           onClick={handleGridListClick}
         >
-          {showLayout === 'layout' && <LayoutIcon />}
-          {showLayout === 'grid' && <GridIcon />}
-          {showLayout === 'list' && <ListIcon />}
+          {showLayout === 'layout' && <LayoutIcon size={18} />}
+          {showLayout === 'grid' && <GridIcon size={18} />}
+          {showLayout === 'list' && <ListIcon size={18} />}
         </button>
       </div>
       <div className="mb-2 text-sm">

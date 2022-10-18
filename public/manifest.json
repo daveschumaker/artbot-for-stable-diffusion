@@ -2,10 +2,10 @@
   "name": "ArtBot",
   "short_name": "ArtBot",
   "display": "standalone",
-  "scope": "/",
-  "start_url": "/",
+  "scope": "/artbot",
+  "start_url": "/artbot",
   "orientation": "portrait-primary",
-  "theme_color": "#003277",
+  "theme_color": "#282828",
   "icons": [
     {
       "src": "/apple-touch-icon-iphone-60x60.png",

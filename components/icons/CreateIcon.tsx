@@ -1,15 +1,23 @@
 // Modified via: https://tabler-icons.io/
 
-const IconCreate = ({ className }: { className?: string }) => {
+const IconCreate = ({
+  className,
+  size = 24,
+  stroke = 'currentColor'
+}: {
+  className?: string
+  size?: number
+  stroke?: string
+}) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       className={className}
-      width="24"
-      height="24"
+      width={size}
+      height={size}
       viewBox="0 0 24 24"
       strokeWidth="1"
-      stroke="currentColor"
+      stroke={stroke}
       fill="none"
       strokeLinecap="round"
       strokeLinejoin="round"

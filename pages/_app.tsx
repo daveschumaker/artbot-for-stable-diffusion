@@ -16,6 +16,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { appInfoStore, setBuildId } from '../store/appStore'
 import { useStore } from 'statery'
 import ServerUpdateModal from '../components/ServerUpdateModal'
+import MobileFooter from '../components/MobileFooter'
 initAppSettings()
 initDb()
 
@@ -108,7 +109,10 @@ function MyApp({ Component, pageProps }: AppProps) {
           sizes="144x144"
           href="/artbot/apple-touch-icon-ipad-retina-152x152.png"
         />
+        <link rel="manifest" href="/artbot/manifest.json" />
         <meta name="apple-mobile-web-app-title" content="ArtBot"></meta>
+        <meta name="mobile-web-app-capable" content="yes"></meta>
+        <meta name="apple-mobile-web-app-capable" content="yes"></meta>
         <meta
           name="apple-mobile-web-app-status-bar-style"
           content="black-translucent"
@@ -123,6 +127,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Component {...pageProps} />
         <Footer />
       </ContentWrapper>
+      <MobileFooter />
     </ThemeProvider>
   )
 }
