@@ -1,4 +1,5 @@
 import { checkImageStatus } from '../api/checkImageStatus'
+import { getFinishedImage } from '../api/getFinishedImage'
 import { trackEvent, trackGaEvent } from '../api/telemetry'
 import { CreateImageJob } from '../types'
 import {
@@ -16,8 +17,22 @@ export const initIndexedDb = () => {}
 const multiImageQueue: Array<CreateImageJob> = []
 const jobDetailsQueue: Array<string> = []
 
+interface CheckImage {
+  success: boolean
+  status?: string
+  jobId?: string
+  done?: boolean
+  queue_position?: number
+  wait_time?: number
+}
+
+interface FinishedImage {
+  success: boolean
+  base64String?: string
+}
+
 let pendingCheckRequest = false
-export const checkImageJob = async (jobId: string) => {
+export const checkImageJob = async (jobId: string): Promise<CheckImage> => {
   if (!jobId || !jobId?.trim()) {
     return {
       success: false,
@@ -35,7 +50,7 @@ export const checkImageJob = async (jobId: string) => {
   pendingCheckRequest = true
 
   try {
-    const data = await checkImageStatus(jobId)
+    const data: CheckImage = await checkImageStatus(jobId)
     console.log(`IMG STATUS`, data)
 
     const { success, status = '' } = data
@@ -167,7 +182,14 @@ export const createImageJob = async (imageParams: CreateImageJob) => {
   // }
 
   if (success) {
-    const { jobId } = data
+    const { jobId = '' } = data
+    if (!jobId) {
+      return {
+        success: false,
+        status: 'MISSING_JOB_ID'
+      }
+    }
+
     jobDetailsQueue.push(jobId)
 
     imageParams.jobTimestamp = imageParams.jobTimestamp
@@ -219,31 +241,19 @@ export const getImage = async (jobId: string) => {
   }
 
   pendingImageRequest = true
-  const res = await fetch(`/artbot/api/get-image`, {
-    method: 'POST',
-    body: JSON.stringify({
-      id: jobId
-    }),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-
-  const data = await res.json()
-  const { status = '', message = '' } = data
+  const data = await getFinishedImage(jobId)
+  const { status = '' } = data
 
   pendingImageRequest = false
   if (data?.success) {
     return {
-      success: true,
       jobId,
       ...data
     }
   } else {
     return {
       success: false,
-      status,
-      message
+      status
     }
   }
 }
@@ -260,16 +270,7 @@ export const getCurrentJob = async () => {
   const { jobId } = firstJob
 
   if (jobId) {
-    // @ts-ignore
     jobDetails = await checkImageJob(jobId)
-  }
-
-  // TODO: check verification message for missing images / jobs
-  if (jobDetails?.message) {
-    if (jobDetails.message.indexOf('not found') >= 0) {
-      deletePendingJob(jobId)
-      return
-    }
   }
 
   if (jobDetails?.success && !jobDetails?.done) {
@@ -283,14 +284,11 @@ export const getCurrentJob = async () => {
   }
 
   if (jobDetails?.done) {
-    // @ts-ignore
     const imageDetails = await getPendingJobDetails(jobId)
-    deletePendingJob(jobId)
-
-    // @ts-ignore
-    const imgDetails = await getImage(jobId)
+    const imgDetails: FinishedImage = await getImage(jobId)
 
     if (imgDetails?.success && imgDetails?.base64String) {
+      deletePendingJob(jobId)
       await db.completed.add({
         // @ts-ignore
         jobId,

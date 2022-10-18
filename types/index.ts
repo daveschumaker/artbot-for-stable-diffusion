@@ -9,16 +9,17 @@ export interface CreateImageJob {
   jobId?: string
   img2img?: boolean
   prompt: string
-  height?: number
-  width?: number
-  cfg_scale?: number
-  steps?: number
-  sampler?: string
+  height: number
+  width: number
+  cfg_scale: number
+  steps: number
+  sampler: string
   apikey?: string
-  seed?: number
+  seed?: string
   numImages?: number
   useTrusted?: boolean
   parentJobId?: string
+  models: Array<string>
   negative?: string
   allowNsfw?: boolean
   source_image?: string
