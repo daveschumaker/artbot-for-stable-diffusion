@@ -1,3 +1,4 @@
+import { fetchAvailableModels } from '../api/availableModels'
 import { fetchUserDetails } from '../api/userInfo'
 
 // @ts-ignore
@@ -41,6 +42,7 @@ export const initAppSettings = async () => {
 
   const apikey = localStorage.getItem('apikey') || ''
   fetchUserDetails(apikey)
+  fetchAvailableModels()
   checkNsfwSettings()
   updateShowGrid()
 }

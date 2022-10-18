@@ -1,3 +1,9 @@
+export interface DiffusionModel {
+  name: string
+  count: number
+  performance: number
+}
+
 export interface CreateImageJob {
   jobTimestamp?: number
   jobId?: string

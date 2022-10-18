@@ -1,11 +1,19 @@
 import { makeStore } from 'statery'
 
-export const appInfoStore = makeStore({
+interface AppStore {
+  buildId: string
+  trusted: boolean
+  showImageReadyToast: boolean
+  newImageReady: string
+  models: Array<string>
+}
+
+export const appInfoStore = makeStore<AppStore>({
   buildId: '',
   trusted: false,
   showImageReadyToast: false,
   newImageReady: '',
-  img2imgFeature: false
+  models: ['stable_diffusion']
 })
 
 export const setBuildId = (id: string) => {
@@ -26,9 +34,9 @@ export const setShowImageReadyToast = (bool: boolean) => {
   }))
 }
 
-export const setImg2ImgFeature = (bool: boolean) => {
+export const setAvailableModels = (arr: Array<string>) => {
   appInfoStore.set(() => ({
-    img2imgFeature: bool
+    models: arr
   }))
 }
 
