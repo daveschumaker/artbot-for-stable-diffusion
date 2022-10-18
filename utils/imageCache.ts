@@ -1,3 +1,4 @@
+import { checkImageStatus } from '../api/checkImageStatus'
 import { trackEvent, trackGaEvent } from '../api/telemetry'
 import { CreateImageJob } from '../types'
 import {
@@ -34,19 +35,10 @@ export const checkImageJob = async (jobId: string) => {
   pendingCheckRequest = true
 
   try {
-    const res = await fetch(`/artbot/api/check`, {
-      method: 'POST',
-      body: JSON.stringify({
-        id: jobId
-      }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
+    const data = await checkImageStatus(jobId)
+    console.log(`IMG STATUS`, data)
 
-    const data = await res.json()
-
-    const { status = '' } = data
+    const { success, status = '' } = data
     pendingCheckRequest = false
 
     if (status === 'NOT_FOUND') {
@@ -55,10 +47,14 @@ export const checkImageJob = async (jobId: string) => {
         success: false,
         status: 'NOT_FOUND'
       }
+    } else if (!success) {
+      return {
+        success: false,
+        status
+      }
     }
 
     return {
-      success: data.success,
       jobId,
       ...data
     }

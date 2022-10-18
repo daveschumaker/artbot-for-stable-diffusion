@@ -1,5 +1,12 @@
 import { GenerateResponse } from '../types'
 
+interface CreateImageResponse {
+  success: boolean
+  jobId?: string
+  status?: string
+  message?: string
+}
+
 interface ImageDetails {
   prompt: string
   sampler: string
@@ -79,6 +86,8 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
     apiParams.params.denoising_strength = Number(denoising_strength)
     apiParams.source_image = source_image
   }
+
+  return apiParams
 }
 
 let isPending = false
@@ -89,15 +98,18 @@ const apiCooldown = () => {
   }, 30000)
 }
 
-export const createImage = async (imageDetails: ImageDetails) => {
+export const createImage = async (
+  imageDetails: ImageDetails
+): Promise<CreateImageResponse> => {
   const apikey = localStorage.getItem('apikey')?.trim() || '0000000000'
 
   if (!apikey || isPending) {
-    return
+    return {
+      success: false
+    }
   }
 
   isPending = true
-
   const imageParams = mapImageDetailsToApi(imageDetails)
 
   try {
@@ -159,8 +171,7 @@ export const createImage = async (imageDetails: ImageDetails) => {
     isPending = false
     return {
       success: true,
-      id,
-      prompt
+      jobId: id
     }
   } catch (err) {
     apiCooldown()

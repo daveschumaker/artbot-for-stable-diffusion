@@ -72,7 +72,8 @@ const Home: NextPage = () => {
     use_real_esrgan: true,
     parentJobId: editMode ? loadEditPrompt().parentJobId : '',
     negative: editMode ? loadEditPrompt().negative : '',
-    source_image: editMode ? loadEditPrompt().source_image : ''
+    source_image: editMode ? loadEditPrompt().source_image : '',
+    models: ['stable_diffusion']
   }
 
   const [showAdvanced, setShowAdvanced] = useState(false)

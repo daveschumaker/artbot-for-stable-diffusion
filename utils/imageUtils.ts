@@ -1,45 +1,65 @@
-import { CreateImageJob } from '../types'
+import { createImage } from '../api/createImage'
+
+interface CreateImageJob {
+  jobId?: string
+  img2img?: boolean
+  prompt: string
+  height: number
+  width: number
+  cfg_scale: number
+  steps: number
+  sampler: string
+  seed?: string
+  numImages?: number
+  parentJobId?: string
+  models: Array<string>
+  negative?: string
+  source_image?: string
+  denoising_strength?: number
+}
 
 export const createNewImage = async (imageParams: CreateImageJob) => {
-  const apikey = localStorage.getItem('apikey')?.trim() || '0000000000'
-  const useTrusted = localStorage.getItem('useTrusted') || false
-  const allowNsfwImages = localStorage.getItem('allowNsfwImages') || false
-
-  const params: CreateImageJob = {
-    prompt: imageParams.prompt,
-    height: imageParams.height || 512,
-    width: imageParams.width || 512,
-    cfg_scale: imageParams.cfg_scale || 12.0,
-    steps: imageParams.steps || 50,
-    sampler: imageParams.sampler || 'k_euler_a',
-    useTrusted: useTrusted === 'true' ? true : false,
-    allowNsfw: allowNsfwImages === 'true' ? true : false
+  /**
+   * Max prompt length for hlky is roughly 75 tokens.
+   * According to: https://beta.openai.com/tokenizer
+   * "One token is generally 4 chars of text". I believe
+   * Stable Horde silently trims lengthy prompts. I do it
+   * here, too, just so someone can't send Shakespeare
+   * novels inside a payload.
+   */
+  imageParams.prompt = imageParams.prompt.trim()
+  if (imageParams?.prompt?.length > 1024) {
+    console.log(
+      `Warning: prompt length of ${imageParams.prompt.length} is greater than 1024 chars. Prompt will be shortned.`
+    )
+    imageParams.prompt = imageParams.prompt.substring(0, 1024)
   }
 
-  if (imageParams.negative) {
-    params.negative = imageParams.negative
+  // Image Validation
+  imageParams.negative = imageParams?.negative?.trim()
+  if (imageParams?.negative) {
+    imageParams.prompt += ' ### ' + imageParams.negative
   }
 
-  if (imageParams.seed) {
-    params.seed = imageParams.seed
+  if (
+    isNaN(imageParams.steps) ||
+    imageParams.steps > 100 ||
+    imageParams.steps < 1
+  ) {
+    imageParams.steps = 30
   }
 
-  if (imageParams.img2img) {
-    params.source_image = imageParams.source_image
-    params.denoising_strength = imageParams.denoising_strength
+  if (
+    isNaN(imageParams.cfg_scale) ||
+    imageParams.cfg_scale > 64 ||
+    imageParams.cfg_scale < 1
+  ) {
+    imageParams.cfg_scale = 9.0
   }
 
   try {
-    const res = await fetch(`/artbot/api/create`, {
-      method: 'POST',
-      body: JSON.stringify(Object.assign({}, params, { apikey })),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-
-    const data = await res.json()
-    const { id: jobId, success, message, status } = data
+    const data = await createImage(imageParams)
+    const { jobId, success, message, status } = data
 
     if (success && jobId) {
       return {
