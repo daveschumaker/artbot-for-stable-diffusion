@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import Head from 'next/head'
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import Masonry from 'react-responsive-masonry'
@@ -14,9 +15,11 @@ import LayoutIcon from '../components/icons/LayoutIcon'
 import ImageSquare from '../components/ImageSquare'
 import { trackEvent } from '../api/telemetry'
 import { Button } from '../components/Button'
-import Head from 'next/head'
+import { useWindowSize } from '../hooks/useWindowSize'
 
 const ImagesPage = () => {
+  const size = useWindowSize()
+
   const [totalImages, setTotalImages] = useState(0)
   const [offset, setOffset] = useState(0)
   const [isInitialLoad, setIsInitialLoad] = useState(true)
@@ -99,6 +102,15 @@ const ImagesPage = () => {
   const currentOffset = offset + 1
   const maxOffset = offset + 100 > totalImages ? totalImages : offset + 100
 
+  console.log(`size?`, size)
+  let imageColumns = 2
+
+  if (size?.width > 1280) {
+    imageColumns = 4
+  } else if (size?.width > 800) {
+    imageColumns = 3
+  }
+
   return (
     <div>
       <Head>
@@ -140,7 +152,7 @@ const ImagesPage = () => {
       )}
       <div className={defaultStyle}>
         {!isInitialLoad && images.length > 0 && showLayout === 'layout' && (
-          <Masonry columnsCount={2} gutter="8px">
+          <Masonry columnsCount={imageColumns} gutter="8px">
             {images.map(
               (image: {
                 jobId: string
@@ -231,7 +243,7 @@ const ImagesPage = () => {
             }
           )}
       </div>
-      {totalImages > 0 && (
+      {totalImages > 100 && (
         <div className="flex flex-row justify-center gap-2 mt-2">
           <Button
             disabled={offset === 0}

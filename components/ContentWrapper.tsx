@@ -5,14 +5,27 @@ interface ContentWrapperProps {
 }
 
 const StyledContent = styled.div`
-  margin: auto 24px 0 24px;
+  margin-top: auto;
+  margin-left: 24px;
+  margin-right: 24px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  max-width: 768px;
   min-height: 100vh;
   padding-top: 8px;
   position: relative;
+  /* width: 100%; */
+
+  @media (min-width: 640px) {
+    margin: auto auto 0 auto;
+    max-width: 768px;
+    width: calc(100% - 32px);
+  }
+
+  @media (min-width: 1280px) {
+    margin: auto auto 0 auto;
+    max-width: 1024px;
+  }
 `
 // className="pb-[68px] md:pb-2 px-4 md:px-2"
 export default function ContentWrapper(props: ContentWrapperProps) {
