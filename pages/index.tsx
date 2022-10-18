@@ -375,12 +375,14 @@ const Home: NextPage = () => {
                 <span>
                   <PhotoIcon />
                 </span>
-                {input.orientation === 'landscape-16x9' && `Landscape`}
-                {input.orientation === 'landscape' && `Landscape`}
-                {input.orientation === 'portrait' && `Portrait`}
-                {input.orientation === 'phone-bg' && `Phone wallpaper`}
-                {input.orientation === 'ultrawide' && `Ultrawide`}
-                {input.orientation === 'square' && `Square`}
+                <span className="hidden md:inline-block">
+                  {input.orientation === 'landscape-16x9' && `Landscape`}
+                  {input.orientation === 'landscape' && `Landscape`}
+                  {input.orientation === 'portrait' && `Portrait`}
+                  {input.orientation === 'phone-bg' && `Phone wallpaper`}
+                  {input.orientation === 'ultrawide' && `Ultrawide`}
+                  {input.orientation === 'square' && `Square`}
+                </span>
               </Button>
               <DropdownContent
                 handleClose={() => {
@@ -456,7 +458,7 @@ const Home: NextPage = () => {
               <span>
                 <TrashIcon />
               </span>
-              Clear
+              <span className="hidden md:inline-block">Clear</span>
             </Button>
             <Button
               title="Create new image"

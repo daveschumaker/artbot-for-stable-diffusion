@@ -173,7 +173,8 @@ const ImageDetails = ({
             title="Copy and re-edit prompt"
             onClick={() => handleCopyPromptClick(imageDetails)}
           >
-            Copy prompt
+            <span className="inline-block md:hidden">Copy</span>
+            <span className="hidden md:inline-block">Copy prompt</span>
           </Button>
           <Button
             title="Request new image with same settings"
