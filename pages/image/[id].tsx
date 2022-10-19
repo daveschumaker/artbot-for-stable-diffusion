@@ -96,10 +96,6 @@ const ImagePage = () => {
             src={'data:image/webp;base64,' + imageDetails.base64String}
             className="mx-auto rounded"
             alt={imageDetails.prompt}
-            style={{
-              height:
-                imageDetails.height > 768 ? '768px' : imageDetails.height + 'px'
-            }}
           />
           <ImageDetails
             imageDetails={imageDetails}
