@@ -19,7 +19,7 @@ export interface CreateImageJob {
   numImages?: number
   useTrusted?: boolean
   parentJobId?: string
-  models: Array<string>
+  models: Array<ModelDetails>
   negative?: string
   allowNsfw?: boolean
   source_image?: string

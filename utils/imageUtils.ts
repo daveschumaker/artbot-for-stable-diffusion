@@ -1,4 +1,5 @@
 import { createImage } from '../api/createImage'
+import { ModelDetails } from '../types'
 
 interface CreateImageJob {
   jobId?: string
@@ -12,7 +13,7 @@ interface CreateImageJob {
   seed?: string
   numImages?: number
   parentJobId?: string
-  models: Array<string>
+  models: Array<ModelDetails>
   negative?: string
   source_image?: string
   denoising_strength?: number
