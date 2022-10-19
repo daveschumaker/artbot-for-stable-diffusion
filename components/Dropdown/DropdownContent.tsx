@@ -23,7 +23,7 @@ const StyledDropdown = styled.div<DropdownContentProps>`
   overflow: hidden;
   position: absolute;
   transition: all 0.4s;
-  z-index: 10;
+  z-index: 20;
 `
 
 export function DropdownContent(props: DropdownContentProps) {

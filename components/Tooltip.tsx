@@ -13,7 +13,7 @@ const StyledInfoTip = styled.span`
   padding-left: 8px;
   position: relative;
   top: 6px;
-  z-index: 1;
+  /* z-index: 0; */
 `
 
 const StyledPopup = styled.div<TooltipProps>`
@@ -29,6 +29,7 @@ const StyledPopup = styled.div<TooltipProps>`
   position: absolute;
   top: 28px;
   width: ${(props) => (props.width ? props.width : '120px')};
+  z-index: 10;
 `
 
 export default function Tooltip({ children, width }: TooltipProps) {
