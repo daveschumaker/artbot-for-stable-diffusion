@@ -2,6 +2,7 @@ import { checkImageStatus } from '../api/checkImageStatus'
 import { getFinishedImage } from '../api/getFinishedImage'
 import { trackEvent, trackGaEvent } from '../api/telemetry'
 import { CreateImageJob } from '../types'
+import { uuidv4 } from './appUtils'
 import {
   allPendingJobs,
   db,
@@ -51,7 +52,6 @@ export const checkImageJob = async (jobId: string): Promise<CheckImage> => {
 
   try {
     const data: CheckImage = await checkImageStatus(jobId)
-    console.log(`IMG STATUS`, data)
 
     const { success, status = '' } = data
     pendingCheckRequest = false
@@ -166,6 +166,10 @@ export const createImageJob = async (imageParams: CreateImageJob) => {
   imageParams.height = imageSize.height
   imageParams.width = imageSize.width
 
+  if (!imageParams.parentJobId) {
+    imageParams.parentJobId = uuidv4()
+  }
+
   const clonedParams = Object.assign({}, imageParams)
   if (imageParams.sampler === 'random') {
     clonedParams.sampler = randomSampler(imageParams?.img2img || false)
@@ -201,11 +205,7 @@ export const createImageJob = async (imageParams: CreateImageJob) => {
       : Date.now()
     clonedParams.jobTimestamp = imageParams.jobTimestamp
 
-    // Set parentJobId on imageParams, which is passed along to multiImageQueue.
-    // Then store on clonedParams, which is immediately saved to the database.
-    imageParams.parentJobId = imageParams.parentJobId || jobId
-    clonedParams.parentJobId = imageParams.parentJobId
-
+    // On successful submit, add remaining images to queue
     if (numImages > 1) {
       delete imageParams.numImages
 
@@ -215,7 +215,6 @@ export const createImageJob = async (imageParams: CreateImageJob) => {
     }
 
     await db.pending.add({
-      // @ts-ignore
       jobId,
       timestamp: Date.now(),
       ...clonedParams

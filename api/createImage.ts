@@ -1,4 +1,4 @@
-import { GenerateResponse } from '../types'
+import { GenerateResponse, ModelDetails } from '../types'
 
 interface CreateImageResponse {
   success: boolean
@@ -15,7 +15,7 @@ interface ImageDetails {
   width: number
   seed?: string
   steps: number
-  models: Array<string>
+  models: Array<ModelDetails>
   source_image?: string
   denoising_strength?: number
 }
@@ -75,7 +75,7 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
     },
     nsfw: allowNsfw,
     trusted_workers: useTrusted,
-    models
+    models: [models[0].name]
   }
 
   if (seed) {

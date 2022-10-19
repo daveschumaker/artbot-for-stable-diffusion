@@ -313,10 +313,34 @@ const Home: NextPage = () => {
           <Panel>
             <div className="mb-2">
               <SectionTitle>Advanced options</SectionTitle>
+              {input.parentJobId && (
+                <>
+                  <div className="mt-2 inline-block w-[124px]">
+                    {' '}
+                    Parent Job{' '}
+                    <Tooltip width="180px">
+                      This image will be related to an existing image within
+                      your browser cache.
+                    </Tooltip>{' '}
+                  </div>
+                  <div className="inline-block text-sm">
+                    {input.parentJobId}
+                  </div>
+                  <div className="inline-block ml-4">
+                    <Button
+                      title="Clear negative input"
+                      btnType="secondary"
+                      onClick={() => setInput({ parentJobId: '' })}
+                    >
+                      <TrashIcon />
+                    </Button>
+                  </div>
+                </>
+              )}
               <div className="mb-2">
                 Negative prompt
                 <Tooltip width="180px">
-                  (Add words or phrases to demphasize from your desired image)
+                  Add words or phrases to demphasize from your desired image
                 </Tooltip>
               </div>
               <Input

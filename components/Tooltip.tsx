@@ -40,7 +40,11 @@ export default function Tooltip({ children, width }: TooltipProps) {
   }, [showTooltip])
 
   return (
-    <StyledInfoTip onClick={handleShowToolip}>
+    <StyledInfoTip
+      onClick={handleShowToolip}
+      onMouseEnter={() => setShowTooltip(true)}
+      onMouseLeave={() => setShowTooltip(false)}
+    >
       <InfoIcon stroke="white" fill="#14B8A6" />
       {showTooltip && <StyledPopup width={width}>{children}</StyledPopup>}
     </StyledInfoTip>
