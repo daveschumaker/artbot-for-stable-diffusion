@@ -10,7 +10,7 @@ import {
   pendingCount,
   updatePendingJob
 } from './db'
-import { createNewImage, orientationDetails } from './imageUtils'
+import { createNewImage, orientationDetails, randomSampler } from './imageUtils'
 
 export const initIndexedDb = () => {}
 
@@ -166,8 +166,13 @@ export const createImageJob = async (imageParams: CreateImageJob) => {
   imageParams.height = imageSize.height
   imageParams.width = imageSize.width
 
-  // Limit number of currently pending requests so we don't
-  // hit API limits.
+  const clonedParams = Object.assign({}, imageParams)
+  if (imageParams.sampler === 'random') {
+    clonedParams.sampler = randomSampler(imageParams?.img2img || false)
+  }
+
+  // Limit number of currently pending
+  // requests so we don't hit API limits.
   const numPending = await pendingCount()
   if (numPending >= 25) {
     return {
@@ -175,16 +180,8 @@ export const createImageJob = async (imageParams: CreateImageJob) => {
     }
   }
 
-  const data = await createNewImage(imageParams)
+  const data = await createNewImage(clonedParams)
   const { success } = data
-
-  // TODO: Fix me
-  // if (status === 'MAX_REQUEST_LIMIT') {
-  //   multiImageQueue.push(imageParams)
-  //   return {
-  //     success: true
-  //   }
-  // }
 
   if (success) {
     const { jobId = '' } = data
@@ -197,10 +194,10 @@ export const createImageJob = async (imageParams: CreateImageJob) => {
 
     jobDetailsQueue.push(jobId)
 
-    imageParams.jobTimestamp = imageParams.jobTimestamp
+    clonedParams.jobTimestamp = imageParams.jobTimestamp
       ? imageParams.jobTimestamp
       : Date.now()
-    imageParams.parentJobId = imageParams.parentJobId || jobId
+    clonedParams.parentJobId = imageParams.parentJobId || jobId
 
     if (numImages > 1) {
       delete imageParams.numImages
@@ -214,7 +211,7 @@ export const createImageJob = async (imageParams: CreateImageJob) => {
       // @ts-ignore
       jobId,
       timestamp: Date.now(),
-      ...imageParams
+      ...clonedParams
     })
 
     return {

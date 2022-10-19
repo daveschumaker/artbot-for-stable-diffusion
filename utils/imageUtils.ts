@@ -28,6 +28,24 @@ interface ImageOrientation {
   width: number
 }
 
+export const randomSampler = (img2img: boolean) => {
+  const samplerArray = [
+    'k_dpm_2_a',
+    'k_dpm_2',
+    'k_euler_a',
+    'k_euler',
+    'k_heun',
+    'k_lms'
+  ]
+
+  if (img2img) {
+    samplerArray.push('DDIM')
+    samplerArray.push('PLMS')
+  }
+
+  return samplerArray[Math.floor(Math.random() * samplerArray.length)]
+}
+
 export const orientationDetails = (orientation: string): ImageOrientation => {
   const orientationIds = [
     'landscape-16x9',

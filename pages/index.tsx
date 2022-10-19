@@ -360,6 +360,7 @@ const Home: NextPage = () => {
                   <option value="k_heun">k_heun</option>
                   <option value="k_lms">k_lms</option>
                   {!input.img2img && <option value="PLMS">plms</option>}
+                  <option value="random">random</option>
                 </Select>
               </div>
             </div>
