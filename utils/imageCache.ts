@@ -5,7 +5,7 @@ import { CreateImageJob } from '../types'
 import {
   allPendingJobs,
   db,
-  deletePendingJob,
+  deletePendingJobFromDb,
   getPendingJobDetails,
   pendingCount,
   updatePendingJob
@@ -57,7 +57,7 @@ export const checkImageJob = async (jobId: string): Promise<CheckImage> => {
     pendingCheckRequest = false
 
     if (status === 'NOT_FOUND') {
-      await deletePendingJob(jobId)
+      await deletePendingJobFromDb(jobId)
       return {
         success: false,
         status: 'NOT_FOUND'
@@ -109,7 +109,7 @@ export const fetchJobDetails = async () => {
 
       // Check if job is stale and remove it.
       if (timestamp - jobTimestamp > 720) {
-        deletePendingJob(currentJobId)
+        deletePendingJobFromDb(currentJobId)
         jobDetailsQueue.shift()
       }
     }
@@ -290,7 +290,7 @@ export const getCurrentJob = async () => {
     const imgDetails: FinishedImage = await getImage(jobId)
 
     if (imgDetails?.success && imgDetails?.base64String) {
-      deletePendingJob(jobId)
+      deletePendingJobFromDb(jobId)
       await db.completed.add({
         // @ts-ignore
         jobId,
