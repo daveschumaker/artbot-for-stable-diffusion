@@ -42,9 +42,18 @@ export const fetchCompletedJobs = async ({ limit = 100, offset = 0 } = {}) => {
     .toArray()
 }
 
-export const fetchRelatedImages = async (parentJobId: string) => {
-  console.log(`what is the ask??`, parentJobId)
-  return await db?.completed?.where({ parentJobId }).reverse().toArray()
+export const fetchRelatedImages = async (
+  parentJobId: string,
+  limit?: number
+) => {
+  if (!limit) {
+    limit = Infinity
+  }
+  return await db?.completed
+    ?.where({ parentJobId })
+    .limit(limit)
+    .reverse()
+    .toArray()
 }
 
 export const getPendingJobDetails = async (jobId: string) => {

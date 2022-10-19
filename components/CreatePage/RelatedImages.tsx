@@ -1,25 +1,40 @@
 import { useCallback, useEffect, useState } from 'react'
 import { fetchRelatedImages } from '../../utils/db'
+import ImageSquare from '../ImageSquare'
 
-const RelatedImages = ({ jobId }) => {
+const RelatedImages = ({ jobId }: { jobId: string }) => {
   const [images, setImages] = useState([])
 
   const fetchImages = useCallback(async () => {
+    if (!jobId) {
+      return
+    }
+
     console.log(`parentJobId??`, jobId)
-    const data = await fetchRelatedImages(jobId)
-
+    const data = await fetchRelatedImages(jobId, 4)
     console.log(`data??`, data)
-
-    // setImages(data)
+    setImages(data)
   }, [jobId])
 
   useEffect(() => {
-    if (jobId) {
-      fetchImages()
-    }
-  }, [fetchImages, jobId])
+    fetchImages()
+  }, [fetchImages])
 
-  return <div>hiii</div>
+  return (
+    <div className="flex flex-row gap-2 mt-2">
+      {images.length > 0 &&
+        images.map((image, i) => {
+          return (
+            <ImageSquare
+              // @ts-ignore
+              key={`${image.jobId}_${i}`}
+              imageDetails={image}
+              size={80}
+            />
+          )
+        })}
+    </div>
+  )
 }
 
 export default RelatedImages

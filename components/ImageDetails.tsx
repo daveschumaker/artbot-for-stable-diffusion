@@ -167,17 +167,18 @@ const ImageDetails = ({
         -- Settings --
         <ul>
           Job:{' '}
-          <Link
-            href={`/job/${imageDetails.parentJobId}`}
-            passHref
-            onClick={() => {
-              trackEvent({
-                event: 'JOB_DETAILS_CLICK',
-                context: 'ImagePage'
-              })
-            }}
-          >
-            <a className="text-cyan-500">{imageDetails.parentJobId}</a>
+          <Link href={`/job/${imageDetails.parentJobId}`} passHref>
+            <a
+              className="text-cyan-500"
+              onClick={() => {
+                trackEvent({
+                  event: 'JOB_DETAILS_CLICK',
+                  context: 'ImagePage'
+                })
+              }}
+            >
+              {imageDetails.parentJobId}
+            </a>
           </Link>
           {imageDetails.img2img && <li>Source: img2img</li>}
           {imageDetails.negative && (

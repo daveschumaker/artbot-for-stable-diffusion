@@ -454,7 +454,7 @@ const Home: NextPage = () => {
                     </Tooltip>{' '}
                   </div>
                   <div
-                    className="inline-block text-sm text-cyan-500 cursor-pointer"
+                    className="inline-block ml-4 text-cyan-500 cursor-pointer"
                     onClick={() => {
                       setPageFeatures({
                         showRelatedImagesDropdown:
@@ -462,19 +462,17 @@ const Home: NextPage = () => {
                       })
                     }}
                   >
-                    {input.parentJobId}
+                    {pageFeatures.showRelatedImagesDropdown && `[ - Hide ]`}
+                    {!pageFeatures.showRelatedImagesDropdown && `[ + View ]`}
                   </div>
-                  <div className="inline-block ml-4">
-                    <Button
-                      title="Clear negative input"
-                      btnType="secondary"
-                      onClick={() => setInput({ parentJobId: '' })}
-                    >
-                      <TrashIcon />
-                    </Button>
+                  <div
+                    className="inline-block ml-4 text-red-500 cursor-pointer"
+                    onClick={() => setInput({ parentJobId: '' })}
+                  >
+                    [ Remove ]
                   </div>
                   {pageFeatures.showRelatedImagesDropdown && (
-                    <RelatedImages jobId={input.parentJobId.jobId} />
+                    <RelatedImages jobId={input.parentJobId} />
                   )}
                 </>
               )}

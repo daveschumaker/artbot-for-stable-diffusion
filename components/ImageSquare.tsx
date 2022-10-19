@@ -9,7 +9,7 @@ interface ImageDetails {
 interface ImageSquareProps {
   imageDetails: ImageDetails
   size?: number
-  imageType: string
+  imageType?: string
 }
 
 export default function ImageSquare({
