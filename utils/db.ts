@@ -75,7 +75,7 @@ export const deleteCompletedImage = async (jobId: string) => {
     .delete()
 }
 
-export const deletePendingJob = async (jobId: string) => {
+export const deletePendingJobFromDb = async (jobId: string) => {
   await db.pending
     .filter(function (job: { jobId: string }) {
       return job.jobId === jobId

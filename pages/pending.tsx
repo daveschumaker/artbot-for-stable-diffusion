@@ -3,10 +3,11 @@ import Link from 'next/link'
 
 import PageTitle from '../components/PageTitle'
 import Spinner from '../components/Spinner'
-import { allPendingJobs, deletePendingJob } from '../utils/db'
+import { allPendingJobs, deletePendingJobFromDb } from '../utils/db'
 import PendingItem from '../components/PendingItem'
 import { trackEvent } from '../api/telemetry'
 import Head from 'next/head'
+import { deletePendingJob } from '../api/deletePendingJob'
 
 const PendingPage = () => {
   const [isInitialLoad, setIsInitialLoad] = useState(true)
@@ -21,17 +22,8 @@ const PendingPage = () => {
   }
 
   const handleDeleteJob = async (jobId: string) => {
-    fetch(`/artbot/api/delete-job`, {
-      method: 'POST',
-      body: JSON.stringify({
-        id: jobId
-      }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-
-    await deletePendingJob(jobId)
+    deletePendingJob(jobId)
+    await deletePendingJobFromDb(jobId)
     trackEvent({
       event: 'DELETE_PENDING_JOB',
       context: 'PendingItemsPage'
