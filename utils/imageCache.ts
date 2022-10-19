@@ -194,10 +194,17 @@ export const createImageJob = async (imageParams: CreateImageJob) => {
 
     jobDetailsQueue.push(jobId)
 
-    clonedParams.jobTimestamp = imageParams.jobTimestamp
+    // Set jobTimestamp on imageParams, which is passed along to multiImageQueue.
+    // Then store on clonedParams, which is immediately saved to the database.
+    imageParams.jobTimestamp = imageParams.jobTimestamp
       ? imageParams.jobTimestamp
       : Date.now()
-    clonedParams.parentJobId = imageParams.parentJobId || jobId
+    clonedParams.jobTimestamp = imageParams.jobTimestamp
+
+    // Set parentJobId on imageParams, which is passed along to multiImageQueue.
+    // Then store on clonedParams, which is immediately saved to the database.
+    imageParams.parentJobId = imageParams.parentJobId || jobId
+    clonedParams.parentJobId = imageParams.parentJobId
 
     if (numImages > 1) {
       delete imageParams.numImages

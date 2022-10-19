@@ -1,11 +1,12 @@
 import { makeStore } from 'statery'
+import { ModelDetails } from '../types'
 
 interface AppStore {
   buildId: string
   trusted: boolean
   showImageReadyToast: boolean
   newImageReady: string
-  models: Array<string>
+  models: Array<ModelDetails>
 }
 
 export const appInfoStore = makeStore<AppStore>({
@@ -13,7 +14,7 @@ export const appInfoStore = makeStore<AppStore>({
   trusted: false,
   showImageReadyToast: false,
   newImageReady: '',
-  models: ['stable_diffusion']
+  models: [{ name: 'stable_diffusion' }]
 })
 
 export const setBuildId = (id: string) => {
@@ -34,7 +35,7 @@ export const setShowImageReadyToast = (bool: boolean) => {
   }))
 }
 
-export const setAvailableModels = (arr: Array<string>) => {
+export const setAvailableModels = (arr: Array<ModelDetails>) => {
   appInfoStore.set(() => ({
     models: arr
   }))

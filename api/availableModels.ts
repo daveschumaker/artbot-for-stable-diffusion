@@ -1,5 +1,5 @@
 import { setAvailableModels } from '../store/appStore'
-import { DiffusionModel } from '../types'
+import { DiffusionModel, ModelDetails } from '../types'
 
 function compare(a: DiffusionModel, b: DiffusionModel) {
   if (a.count < b.count) {
@@ -18,7 +18,7 @@ export const fetchAvailableModels = async () => {
   }
 
   isPending = true
-  let availableModels: Array<string> = []
+  let availableModels: Array<ModelDetails> = []
 
   try {
     const res = await fetch(`https://stablehorde.net/api/v2/status/models`)
@@ -27,13 +27,18 @@ export const fetchAvailableModels = async () => {
     if (Array.isArray(modelDetails)) {
       modelDetails.sort(compare)
       modelDetails.forEach((model) => {
-        availableModels.push(model.name)
+        availableModels.push({
+          name: model.name,
+          count: model.count
+        })
       })
     }
 
     setAvailableModels(availableModels)
   } catch (err) {
-    availableModels.push('stable_diffusion')
+    availableModels.push({
+      name: 'stable_diffusion'
+    })
   }
 
   isPending = false

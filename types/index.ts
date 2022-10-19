@@ -38,3 +38,8 @@ export interface KeypressEvent {
   preventDefault: () => {}
   shiftKey: boolean
 }
+
+export interface ModelDetails {
+  name: string
+  count?: number
+}

@@ -1,6 +1,16 @@
 import { makeStore } from 'statery'
 
-export const imageStore = makeStore({
+interface ImageDetailsStore {
+  pendingJobs: number
+}
+interface JobDetails {
+  processing: boolean
+  jobStartTimestamp: number
+  initialTimeRemaining: number
+}
+
+export const imageStore = makeStore<ImageDetailsStore>({
+  pendingJobs: 0,
   processing: false,
   initialTimeRemaining: 0,
   timeRemaining: 0,

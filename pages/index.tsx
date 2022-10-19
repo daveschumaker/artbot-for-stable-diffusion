@@ -72,7 +72,7 @@ const Home: NextPage = () => {
     parentJobId: editMode ? loadEditPrompt().parentJobId : '',
     negative: editMode ? loadEditPrompt().negative : '',
     source_image: editMode ? loadEditPrompt().source_image : '',
-    models: ['stable_diffusion']
+    models: editMode ? loadEditPrompt().models : [{ name: 'stable_diffusion' }]
   }
 
   const [showAdvanced, setShowAdvanced] = useState(false)
@@ -203,6 +203,10 @@ const Home: NextPage = () => {
       //     }
       //   )
       // }
+
+      if (localStorage.getItem('orientation')) {
+        setInput({ orientationType: localStorage.getItem('orientation') })
+      }
 
       if (localStorage.getItem('sampler')) {
         setInput({ sampler: localStorage.getItem('sampler') })
@@ -421,7 +425,14 @@ const Home: NextPage = () => {
               </div>
             </div>
             <div className="mb-2">
-              <div className="inline-block w-[124px]">Model</div>
+              <div className="inline-block w-[124px]">
+                Model
+                <Tooltip width="240px">
+                  Models currently available within the horde. Numbers in
+                  paranthesis indicate number of works. Generally, these models
+                  will generate images quicker.
+                </Tooltip>
+              </div>
               <div className="inline-block">
                 <Select
                   name="models"
@@ -437,8 +448,13 @@ const Home: NextPage = () => {
                 >
                   {models.map((model, i) => {
                     return (
-                      <option key={`${model}_select_${i}`} value={model}>
-                        {model}
+                      <option
+                        key={`${model.name}_select_${i}`}
+                        value={model.name}
+                      >
+                        {`${model.name}${
+                          model.count ? ` (${model.count})` : ''
+                        }`}
                       </option>
                     )
                   })}

@@ -1,3 +1,5 @@
+import { ModelDetails } from '../types'
+
 interface SavePrompt {
   img2img: boolean
   copyPrompt: boolean
@@ -12,6 +14,7 @@ interface SavePrompt {
   negative?: string
   source_image?: string
   denoising_strength?: number
+  models: Array<ModelDetails>
 }
 
 let initPromptDetails: SavePrompt = {
@@ -27,7 +30,8 @@ let initPromptDetails: SavePrompt = {
   parentJobId: '',
   negative: '',
   source_image: '',
-  denoising_strength: 0.75
+  denoising_strength: 0.75,
+  models: [{ name: 'stable_diffusion' }]
 }
 
 let promptDetails: SavePrompt = Object.assign({}, initPromptDetails)
@@ -46,7 +50,8 @@ export const savePrompt = ({
   parentJobId = '',
   negative = '',
   source_image = '',
-  denoising_strength = 0.75
+  denoising_strength = 0.75,
+  models = [{ name: 'stable_diffusion' }]
 } = {}) => {
   promptDetails = {
     img2img,
@@ -61,7 +66,8 @@ export const savePrompt = ({
     parentJobId,
     negative,
     source_image,
-    denoising_strength
+    denoising_strength,
+    models
   }
 }
 
