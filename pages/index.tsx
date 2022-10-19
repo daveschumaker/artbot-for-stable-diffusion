@@ -440,7 +440,10 @@ const Home: NextPage = () => {
       </div>
       <StyledPanel open={showAdvanced}>
         {showAdvanced && (
-          <Panel>
+          <Panel className="relative">
+            <div className="absolute" style={{ top: '-23px', left: '17px' }}>
+              |
+            </div>
             <div className="mb-2">
               <SectionTitle>Advanced options</SectionTitle>
               {input.parentJobId && (
@@ -456,6 +459,13 @@ const Home: NextPage = () => {
                   <div
                     className="inline-block ml-4 text-cyan-500 cursor-pointer"
                     onClick={() => {
+                      {
+                        !pageFeatures.showRelatedImagesDropdown &&
+                          trackEvent({
+                            event: 'ADVANCED_RELATED_IMAGES_CLICK',
+                            context: `createPage`
+                          })
+                      }
                       setPageFeatures({
                         showRelatedImagesDropdown:
                           !pageFeatures.showRelatedImagesDropdown
@@ -467,7 +477,13 @@ const Home: NextPage = () => {
                   </div>
                   <div
                     className="inline-block ml-4 text-red-500 cursor-pointer"
-                    onClick={() => setInput({ parentJobId: '' })}
+                    onClick={() => {
+                      setInput({ parentJobId: '' })
+                      trackEvent({
+                        event: 'ADVANCED_REMOVE_RELATED_IMAGES_CLICK',
+                        context: `createPage`
+                      })
+                    }}
                   >
                     [ Remove ]
                   </div>
