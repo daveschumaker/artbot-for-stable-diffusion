@@ -43,6 +43,7 @@ export const fetchCompletedJobs = async ({ limit = 100, offset = 0 } = {}) => {
 }
 
 export const fetchRelatedImages = async (parentJobId: string) => {
+  console.log(`what is the ask??`, parentJobId)
   return await db?.completed?.where({ parentJobId }).reverse().toArray()
 }
 

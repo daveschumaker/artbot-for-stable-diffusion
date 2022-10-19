@@ -2,6 +2,11 @@ import { makeStore } from 'statery'
 
 interface ImageDetailsStore {
   pendingJobs: number
+  currentJobs: CurrentJobs
+}
+
+interface CurrentJobs {
+  [key: string]: JobDetails
 }
 interface JobDetails {
   processing: boolean
@@ -11,10 +16,7 @@ interface JobDetails {
 
 export const imageStore = makeStore<ImageDetailsStore>({
   pendingJobs: 0,
-  processing: false,
-  initialTimeRemaining: 0,
-  timeRemaining: 0,
-  timeElapsed: 0
+  currentJobs: {}
 })
 
 // export const setBuildId = (id: string) => {

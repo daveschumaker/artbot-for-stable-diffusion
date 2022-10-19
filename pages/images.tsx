@@ -245,7 +245,7 @@ const ImagesPage = () => {
             }
           )}
       </div>
-      {totalImages > 100 && (
+      {!isInitialLoad && totalImages > 100 && (
         <div className="flex flex-row justify-center gap-2 mt-2">
           <Button
             disabled={offset === 0}

@@ -28,6 +28,10 @@ import SectionTitle from '../components/SectionTitle'
 import Tooltip from '../components/Tooltip'
 import Select from '../components/Select'
 import Input from '../components/Input'
+import PhotoIcon from '../components/icons/PhotoIcon'
+import { DropdownContent } from '../components/Dropdown/DropdownContent'
+import { DropdownItem } from '../components/Dropdown/DropdownItem'
+import RelatedImages from '../components/CreatePage/RelatedImages'
 
 interface InputTarget {
   name: string
@@ -75,6 +79,14 @@ const Home: NextPage = () => {
     models: editMode ? loadEditPrompt().models : [{ name: 'stable_diffusion' }]
   }
 
+  const [pageFeatures, setPageFeatures] = useReducer(
+    (state: any, newState: any) => ({ ...state, ...newState }),
+    {
+      showRelatedImagesDropdown: false,
+      showOrientationDropdown: false,
+      disableOrientationBtn: false
+    }
+  )
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [pending, setPending] = useState(false)
   const [hasError, setHasError] = useState('')
@@ -108,6 +120,43 @@ const Home: NextPage = () => {
     }
 
     setInput({ [inputName]: inputValue })
+  }
+
+  const handleOrientationSelect = (orientation: string, options?: any) => {
+    localStorage.setItem('orientation', orientation)
+    setInput({ orientationType: orientation })
+
+    if (!options?.initLoad) {
+      trackEvent({
+        event: 'ORIENTATION_CLICK',
+        label: orientation,
+        context: `createPage`
+      })
+    }
+    setPageFeatures({ showOrientationDropdown: false })
+  }
+
+  // Funky race condition here wtih clicking outside Dropdown
+  // if you click the orientation button.
+  const handeOutsideClick = () => {
+    setPageFeatures({
+      showOrientationDropdown: false,
+      disableOrientationBtn: true
+    })
+
+    setTimeout(() => {
+      setPageFeatures({
+        disableOrientationBtn: false
+      })
+    }, 100)
+  }
+
+  const toggleOrientationDropdown = () => {
+    if (pageFeatures.disableOrientationBtn) {
+      return
+    }
+
+    setPageFeatures({ showOrientationDropdown: true })
   }
 
   const handleSubmit = async () => {
@@ -231,6 +280,88 @@ const Home: NextPage = () => {
     <main>
       <PageTitle>Create new image</PageTitle>
       <div className="mt-2 mb-2">
+        <div className="mb-4">
+          <Button
+            title="Select image orientation"
+            onClick={toggleOrientationDropdown}
+          >
+            <span>
+              <PhotoIcon />
+            </span>
+            <span className="inline-block">
+              {input.orientationType === 'landscape-16x9' && `Landscape`}
+              {input.orientationType === 'landscape' && `Landscape`}
+              {input.orientationType === 'portrait' && `Portrait`}
+              {input.orientationType === 'phone-bg' && `Phone wallpaper`}
+              {input.orientationType === 'ultrawide' && `Ultrawide`}
+              {input.orientationType === 'square' && `Square`}
+              {input.orientationType === 'random' && `Random!`}
+            </span>
+          </Button>
+          <DropdownContent
+            handleClose={() => {
+              handeOutsideClick()
+            }}
+            open={pageFeatures.showOrientationDropdown}
+          >
+            <DropdownItem
+              active={input.orientationType === 'landscape-16x9'}
+              onClick={() => {
+                handleOrientationSelect('landscape-16x9')
+              }}
+            >
+              Landscape 16 x 9
+            </DropdownItem>
+            <DropdownItem
+              active={input.orientationType === 'landscape'}
+              onClick={() => {
+                handleOrientationSelect('landscape')
+              }}
+            >
+              Landscape 3 x 2
+            </DropdownItem>
+            <DropdownItem
+              active={input.orientationType === 'portrait'}
+              onClick={() => {
+                handleOrientationSelect('portrait')
+              }}
+            >
+              Portrait 2 x 3
+            </DropdownItem>
+            <DropdownItem
+              active={input.orientationType === 'phone-bg'}
+              onClick={() => {
+                handleOrientationSelect('phone-bg')
+              }}
+            >
+              Phone wallpaper 9 x 21
+            </DropdownItem>
+            <DropdownItem
+              active={input.orientationType === 'ultrawide'}
+              onClick={() => {
+                handleOrientationSelect('ultrawide')
+              }}
+            >
+              Ultrawide 21 x 9
+            </DropdownItem>
+            <DropdownItem
+              active={input.orientationType === 'square'}
+              onClick={() => {
+                handleOrientationSelect('square')
+              }}
+            >
+              Square
+            </DropdownItem>
+            <DropdownItem
+              active={input.orientationType === 'random'}
+              onClick={() => {
+                handleOrientationSelect('random')
+              }}
+            >
+              Random
+            </DropdownItem>
+          </DropdownContent>
+        </div>
         <div className="flex flex-row gap-[8px] items-start">
           {input.source_image && (
             <div
@@ -272,7 +403,6 @@ const Home: NextPage = () => {
         )}
         <div className="mt-4 mb-4 w-full flex flex-row">
           <AdvancedOptions
-            orientationType={input.orientationType}
             setInput={setInput}
             showAdvanced={showAdvanced}
             setShowAdvanced={setShowAdvanced}
@@ -323,7 +453,15 @@ const Home: NextPage = () => {
                       your browser cache.
                     </Tooltip>{' '}
                   </div>
-                  <div className="inline-block text-sm">
+                  <div
+                    className="inline-block text-sm text-cyan-500 cursor-pointer"
+                    onClick={() => {
+                      setPageFeatures({
+                        showRelatedImagesDropdown:
+                          !pageFeatures.showRelatedImagesDropdown
+                      })
+                    }}
+                  >
                     {input.parentJobId}
                   </div>
                   <div className="inline-block ml-4">
@@ -335,6 +473,9 @@ const Home: NextPage = () => {
                       <TrashIcon />
                     </Button>
                   </div>
+                  {pageFeatures.showRelatedImagesDropdown && (
+                    <RelatedImages jobId={input.parentJobId.jobId} />
+                  )}
                 </>
               )}
               <div className="mb-2">
