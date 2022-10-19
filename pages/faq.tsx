@@ -4,7 +4,7 @@ import PageTitle from '../components/PageTitle'
 
 const FaqPage = () => {
   return (
-    <>
+    <div className="mb-4">
       <Head>
         <title>ArtBot - FAQ</title>
       </Head>
@@ -59,7 +59,7 @@ const FaqPage = () => {
           .
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

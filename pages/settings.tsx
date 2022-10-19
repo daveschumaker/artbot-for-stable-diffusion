@@ -136,8 +136,8 @@ const SettingsPage = () => {
             </Button>
           </div>
         </div>
-        <div className="block text-xs mt-2 ml-[140px]">
-          ( Leave blank for an anonymous user ID. Register via{' '}
+        <div className="block text-xs mt-2 ml-[140px] max-w-[220px]">
+          Leave blank for an anonymous user ID. Register via{' '}
           <a
             href="https://stablehorde.net/"
             target="_blank"
@@ -146,7 +146,7 @@ const SettingsPage = () => {
           >
             stablehorde.net
           </a>
-          . Stored in browser using LocalStorage. )
+          . Stored in browser using LocalStorage.
         </div>
       </div>
     </div>

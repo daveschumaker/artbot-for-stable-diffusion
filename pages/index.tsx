@@ -316,6 +316,7 @@ const Home: NextPage = () => {
                 </Tooltip>
               </div>
               <Input
+                // @ts-ignore
                 className="mb-2"
                 type="text"
                 name="negative"
