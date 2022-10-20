@@ -67,6 +67,7 @@ export function AdvancedOptions({
         // @ts-ignore
         handleFile={handleFileSelect}
         disabled={!trusted}
+        label="img2img"
       />
     </div>
   )

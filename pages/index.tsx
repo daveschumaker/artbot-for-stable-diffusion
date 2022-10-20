@@ -616,6 +616,10 @@ const Home: NextPage = () => {
                 <Select
                   name="models"
                   onChange={(e: any) => {
+                    console.log(`what are you doing???`, e)
+                    console.log(`e.target?`, e.target)
+                    console.log(`e.target.value?`, e.target.value)
+
                     if (e.target.value === 'random') {
                       setInput({ models: [''] })
                     } else {

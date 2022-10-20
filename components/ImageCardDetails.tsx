@@ -177,13 +177,6 @@ const ImageDetails = ({
             <span className="hidden md:inline-block">Copy prompt</span>
           </Button>
           <Button
-            title="Request new image with same settings"
-            onClick={() => handleRerollClick(imageDetails)}
-            disabled={pending}
-          >
-            <RefreshIcon className="mx-auto" />
-          </Button>
-          <Button
             title="Use for img2img"
             //@ts-ignore
             onClick={() => handleUploadClick(imageDetails)}
@@ -199,7 +192,14 @@ const ImageDetails = ({
             <DownloadIcon className="mx-auto" />
           </Button>
         </div>
-        <div className="inline-block w-1/4 flex flex-row justify-end">
+        <div className="inline-block w-1/4 flex flex-row justify-end gap-2">
+          <Button
+            title="Request new image with same settings"
+            onClick={() => handleRerollClick(imageDetails)}
+            disabled={pending}
+          >
+            <RefreshIcon className="mx-auto" />
+          </Button>
           <Button
             title="Delete image"
             btnType="secondary"

@@ -3,7 +3,7 @@ import { Button } from './Button'
 import UploadIcon from './icons/UploadIcon'
 
 // @ts-ignore
-export function UploadButton({ disabled, handleFile = () => {} }) {
+export function UploadButton({ label = '', disabled, handleFile = () => {} }) {
   const hiddenFileInput = useRef(null)
 
   const handleClick = () => {
@@ -27,6 +27,7 @@ export function UploadButton({ disabled, handleFile = () => {} }) {
         onClick={handleClick}
       >
         <UploadIcon className="mx-auto" />
+        {label && <span>{label}</span>}
       </Button>
       <input
         type="file"

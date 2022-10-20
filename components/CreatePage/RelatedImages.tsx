@@ -10,9 +10,7 @@ const RelatedImages = ({ jobId }: { jobId: string }) => {
       return
     }
 
-    console.log(`parentJobId??`, jobId)
     const data = await fetchRelatedImages(jobId, 4)
-    console.log(`data??`, data)
     setImages(data)
   }, [jobId])
 
