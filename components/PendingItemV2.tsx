@@ -170,7 +170,7 @@ const PendingItem = ({ handleDeleteJob, jobId }) => {
             <div className="flex flex-grow flex-col">
               {jobDetails.jobStatus === 'processing' && (
                 <div className="w-full font-mono text-xs mt-2">
-                  Estimated time remaing: {calcTime.remainingTime}s (
+                  Estimated time remaining: {calcTime.remainingTime}s (
                   {calcTime.pctComplete.toFixed(0)}
                   %)
                 </div>
@@ -210,7 +210,7 @@ const PendingItem = ({ handleDeleteJob, jobId }) => {
                     router.push(`/image/${jobDetails.jobId}`)
                   }}
                 >
-                  View image
+                  View
                 </Button>
               )}
               {jobDetails.jobStatus !== 'done' && (
