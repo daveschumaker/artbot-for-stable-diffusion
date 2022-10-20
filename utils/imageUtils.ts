@@ -24,7 +24,7 @@ interface OrientationLookup {
 }
 
 interface ImageOrientation {
-  orientation?: string
+  orientation: string
   height: number
   width: number
 }
@@ -58,26 +58,32 @@ export const orientationDetails = (orientation: string): ImageOrientation => {
   ]
   const lookup: OrientationLookup = {
     'landscape-16x9': {
+      orientation: 'landscape-16x9',
       height: 576,
       width: 1024
     },
     landscape: {
+      orientation: 'landscape',
       height: 512,
       width: 768
     },
     portrait: {
+      orientation: 'portrait',
       height: 768,
       width: 512
     },
     square: {
+      orientation: 'square',
       height: 512,
       width: 512
     },
     'phone-bg': {
+      orientation: 'phone-bg',
       height: 1024,
       width: 448
     },
     ultrawide: {
+      orientation: 'ultrawide',
       height: 448,
       width: 1024
     }
@@ -88,12 +94,10 @@ export const orientationDetails = (orientation: string): ImageOrientation => {
       orientationIds[Math.floor(Math.random() * orientationIds.length)]
 
     return {
-      orientation: value,
       ...lookup[value]
     }
   } else if (lookup[orientation]) {
     return {
-      orientation,
       ...lookup[orientation]
     }
   }

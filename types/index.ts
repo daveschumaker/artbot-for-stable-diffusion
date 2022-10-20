@@ -1,9 +1,3 @@
-export interface DiffusionModel {
-  name: string
-  count: number
-  performance: number
-}
-
 export interface CreateImageJob {
   jobTimestamp?: number
   jobId?: string
@@ -26,6 +20,12 @@ export interface CreateImageJob {
   denoising_strength?: number
   orientationType?: string
   orientation?: string
+}
+
+export interface DiffusionModel {
+  name: string
+  count: number
+  performance: number
 }
 
 export interface GenerateResponse {

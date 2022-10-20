@@ -33,6 +33,19 @@ export const allPendingJobs = async () => {
   return await db?.pending?.orderBy('timestamp').toArray()
 }
 
+export const getAllPendingJobsByStatus = async (
+  status: string,
+  limit: number = 5
+) => {
+  return await db.pending
+    .orderBy('timestamp')
+    .limit(limit)
+    .filter(function (job: { jobStatus: string }) {
+      return job.jobStatus === status
+    })
+    .toArray()
+}
+
 export const fetchCompletedJobs = async ({ limit = 100, offset = 0 } = {}) => {
   return await db?.completed
     ?.orderBy('timestamp')
