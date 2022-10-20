@@ -14,7 +14,7 @@ interface SavePrompt {
   negative?: string
   source_image?: string
   denoising_strength?: number
-  models: Array<ModelDetails>
+  models: Array<string>
 }
 
 let initPromptDetails: SavePrompt = {
@@ -31,7 +31,7 @@ let initPromptDetails: SavePrompt = {
   negative: '',
   source_image: '',
   denoising_strength: 0.75,
-  models: [{ name: 'stable_diffusion' }]
+  models: ['stable_diffusion']
 }
 
 let promptDetails: SavePrompt = Object.assign({}, initPromptDetails)
@@ -51,7 +51,7 @@ export const savePrompt = ({
   negative = '',
   source_image = '',
   denoising_strength = 0.75,
-  models = [{ name: 'stable_diffusion' }]
+  models = ['stable_diffusion']
 } = {}) => {
   promptDetails = {
     img2img,

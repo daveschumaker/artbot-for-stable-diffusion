@@ -76,7 +76,7 @@ const Home: NextPage = () => {
     parentJobId: editMode ? loadEditPrompt().parentJobId : '',
     negative: editMode ? loadEditPrompt().negative : '',
     source_image: editMode ? loadEditPrompt().source_image : '',
-    models: editMode ? loadEditPrompt().models : [{ name: 'stable_diffusion' }]
+    models: editMode ? loadEditPrompt().models : ['stable_diffusion']
   }
 
   const [pageFeatures, setPageFeatures] = useReducer(
@@ -257,8 +257,9 @@ const Home: NextPage = () => {
         setInput({ orientationType: localStorage.getItem('orientation') })
       }
 
+      // TODO: fix me later
       if (localStorage.getItem('sampler')) {
-        setInput({ sampler: localStorage.getItem('sampler') })
+        // setInput({ sampler: localStorage.getItem('sampler') })
       }
 
       if (localStorage.getItem('cfg_scale')) {
