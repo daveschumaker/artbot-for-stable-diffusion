@@ -94,7 +94,7 @@ const ImagesPage = () => {
   let defaultStyle = `flex gap-y-2.5`
 
   if (showLayout === 'grid' || showLayout === 'layout') {
-    defaultStyle += ` flex-wrap gap-x-2.5 justify-start`
+    defaultStyle += ` flex-wrap gap-x-2.5 justify-center md:justify-start`
   } else {
     defaultStyle += ` flex-col justify-center`
   }

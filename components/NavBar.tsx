@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useStore } from 'statery'
+import { useWindowSize } from '../hooks/useWindowSize'
 import {
   appInfoStore,
   setNewImageReady,
@@ -17,6 +18,7 @@ import PhotoPlusIcon from './icons/PhotoPlusIcon'
 import SettingsIcon from './icons/SettingsIcon'
 
 export default function NavBar() {
+  const size = useWindowSize()
   const router = useRouter()
   const { pathname } = router
 
@@ -48,7 +50,7 @@ export default function NavBar() {
     setIsPwa(isInstalledPwa())
   }, [])
 
-  if (isPwa) {
+  if (isPwa && size && size.width < 640) {
     return null
   }
 
