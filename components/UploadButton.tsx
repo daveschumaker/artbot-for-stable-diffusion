@@ -4,6 +4,7 @@ import UploadIcon from './icons/UploadIcon'
 
 // @ts-ignore
 export function UploadButton({ label = '', disabled, handleFile = () => {} }) {
+  // @ts-ignore
   const hiddenFileInput = useRef(null)
 
   const handleClick = () => {

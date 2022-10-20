@@ -1,5 +1,4 @@
 import { useCallback } from 'react'
-// import { readAndCompressImage } from 'browser-image-resizer'
 
 import { trackEvent } from '../../api/telemetry'
 import { getBase64 } from '../../utils/imageUtils'
@@ -7,13 +6,6 @@ import { Button } from '../Button'
 import DotsHorizontalIcon from '../icons/DotsHorizontalIcon'
 import DotsVerticalIcon from '../icons/DotsVerticalIcon'
 import { UploadButton } from '../UploadButton'
-
-// const imgConfig = {
-//   quality: 0.8,
-//   maxWidth: 1024,
-//   maxHeight: 1024,
-//   debug: true
-// }
 
 interface AdvancedOptionsProps {
   setInput: any
@@ -28,9 +20,11 @@ export function AdvancedOptions({
 }: AdvancedOptionsProps) {
   // @ts-ignore
   const handleFileSelect = async (file) => {
-    let fullDataString
+    if (typeof window === 'undefined') {
+      return
+    }
 
-    // let resizedImage = await readAndCompressImage(file, imgConfig)
+    let fullDataString
 
     if (file) {
       fullDataString = await getBase64(file)
