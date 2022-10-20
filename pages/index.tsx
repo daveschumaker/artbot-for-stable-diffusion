@@ -617,10 +617,6 @@ const Home: NextPage = () => {
                 <Select
                   name="models"
                   onChange={(e: any) => {
-                    console.log(`what are you doing???`, e)
-                    console.log(`e.target?`, e.target)
-                    console.log(`e.target.value?`, e.target.value)
-
                     if (e.target.value === 'random') {
                       setInput({ models: [''] })
                     } else {
@@ -631,12 +627,14 @@ const Home: NextPage = () => {
                   width="200px"
                 >
                   {models.map((model, i) => {
+                    console.log(`model?>??`, model)
                     return (
-                      <option key={`${model}_select_${i}`} value={model}>
-                        {`${model}${
-                          // @ts-ignore
-                          model.count ? ` (${model.count})` : ''
-                        }`}
+                      //@ts-ignore
+                      <option key={`${model.name}_select_${i}`} value={model}>
+                        {model
+                          ? // @ts-ignore
+                            model.name
+                          : ''}
                       </option>
                     )
                   })}
