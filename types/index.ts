@@ -24,6 +24,7 @@ export interface CreateImageJob {
   orientation?: string
   wait_time?: number
   queue_position?: number
+  base64String?: string
 }
 
 export interface CreatePendingJob {
