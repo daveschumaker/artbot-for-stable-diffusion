@@ -2,24 +2,13 @@ import { useCallback, useEffect, useReducer, useState } from 'react'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
 
-import {
-  allPendingJobs,
-  db,
-  getImageDetails,
-  getPendingJobDetails
-} from '../utils/db'
+import { getImageDetails, getPendingJobDetails } from '../utils/db'
 import ProgressBar from './ProgressBarV2'
-import Spinner from './Spinner'
-import {
-  appInfoStore,
-  setNewImageReady,
-  setShowImageReadyToast
-} from '../store/appStore'
+import { setNewImageReady, setShowImageReadyToast } from '../store/appStore'
 import { Button } from './Button'
 import TrashIcon from './icons/TrashIcon'
 import Panel from './Panel'
 import { trackEvent, trackGaEvent } from '../api/telemetry'
-import { useStore } from 'statery'
 import ImageSquare from './ImageSquare'
 import Link from 'next/link'
 import SpinnerV2 from './SpinnerV2'
@@ -160,7 +149,11 @@ const PendingItem = ({ handleDeleteJob, jobId }) => {
                   clearNewImageNotification()
                 }}
               >
-                <ImageSquare imageDetails={jobDetails} size={100} />
+                <ImageSquare
+                  // @ts-ignore
+                  imageDetails={jobDetails}
+                  size={100}
+                />
               </a>
             </Link>
           )}

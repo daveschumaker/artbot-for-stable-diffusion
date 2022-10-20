@@ -74,7 +74,6 @@ const PendingPage = () => {
           return (
             <PendingItem
               handleDeleteJob={handleDeleteJob}
-              jobDetails={job}
               jobId={job.jobId}
               key={job.jobId}
             />
