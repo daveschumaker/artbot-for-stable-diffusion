@@ -4,7 +4,7 @@ import Link from 'next/link'
 import PageTitle from '../components/PageTitle'
 import Spinner from '../components/Spinner'
 import { allPendingJobs, deletePendingJobFromDb } from '../utils/db'
-import PendingItem from '../components/PendingItem'
+import PendingItem from '../components/PendingItemV2'
 import { trackEvent } from '../api/telemetry'
 import Head from 'next/head'
 import { deletePendingJobFromApi } from '../api/deletePendingJobFromApi'
@@ -75,6 +75,7 @@ const PendingPage = () => {
             <PendingItem
               handleDeleteJob={handleDeleteJob}
               jobDetails={job}
+              jobId={job.jobId}
               key={job.jobId}
             />
           )

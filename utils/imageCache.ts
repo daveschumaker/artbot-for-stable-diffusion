@@ -126,7 +126,7 @@ export const fetchJobDetails = async () => {
         tableId,
         Object.assign({}, pendingJobDetails, {
           queue_position,
-          wait_time
+          wait_time: (wait_time || 0) + 30
         })
       )
 
@@ -174,7 +174,7 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
 
       if (detailsSuccess) {
         imageParams.timestamp = Date.now()
-        imageParams.wait_time = wait_time
+        imageParams.wait_time = (wait_time || 0) + 30
         imageParams.queue_position = queue_position
       }
 
@@ -321,16 +321,17 @@ export const getCurrentJob = async () => {
 
   if (jobDetails?.done) {
     const imageDetails = await getPendingJobDetails(jobId)
-    const imgDetails: FinishedImage = await getImage(jobId)
+    const imgDetailsFromApi: FinishedImage = await getImage(jobId)
 
-    if (imgDetails?.success && imgDetails?.base64String) {
-      deletePendingJobFromDb(jobId)
+    if (imgDetailsFromApi?.success && imgDetailsFromApi?.base64String) {
+      imageDetails.done = true
+      imageDetails.jobStatus = 'done'
+      imageDetails.timestamp = Date.now()
+
+      await deletePendingJobFromDb(jobId)
       await db.completed.add({
-        // @ts-ignore
-        jobId,
         ...imageDetails,
-        ...imgDetails,
-        timestamp: Date.now()
+        ...imgDetailsFromApi
       })
 
       trackEvent({
