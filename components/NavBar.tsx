@@ -25,7 +25,7 @@ export default function NavBar() {
   const appState = useStore(appInfoStore)
   const { newImageReady } = appState
 
-  const [isPwa, setIsPwa] = useState(false)
+  const [hideNavBar, setHideNavBar] = useState(false)
 
   const clearNewImageNotification = () => {
     setShowImageReadyToast(false)
@@ -47,10 +47,14 @@ export default function NavBar() {
   }
 
   useEffect(() => {
-    setIsPwa(isInstalledPwa())
-  }, [])
+    const { width = 0 } = size
 
-  if (isPwa && size && size.width < 640) {
+    if (width < 640 && isInstalledPwa()) {
+      setHideNavBar(true)
+    }
+  }, [size])
+
+  if (hideNavBar) {
     return null
   }
 
