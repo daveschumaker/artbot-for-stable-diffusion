@@ -628,8 +628,12 @@ const Home: NextPage = () => {
                 >
                   {models.map((model, i) => {
                     return (
-                      //@ts-ignore
-                      <option key={`${model.name}_select_${i}`} value={model}>
+                      <option
+                        //@ts-ignore
+                        key={`${model.name}_select_${i}`}
+                        // @ts-ignore
+                        value={model.name}
+                      >
                         {model
                           ? // @ts-ignore
                             model.name

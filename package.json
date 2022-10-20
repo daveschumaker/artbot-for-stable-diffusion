@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "autosize": "5.0.1",
+    "browser-image-resizer": "^2.4.1",
     "dexie": "3.2.2",
     "dexie-react-hooks": "1.1.1",
     "dotenv": "16.0.3",
