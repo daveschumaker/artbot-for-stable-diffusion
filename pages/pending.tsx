@@ -7,7 +7,7 @@ import { allPendingJobs, deletePendingJobFromDb } from '../utils/db'
 import PendingItem from '../components/PendingItem'
 import { trackEvent } from '../api/telemetry'
 import Head from 'next/head'
-import { deletePendingJob } from '../api/deletePendingJob'
+import { deletePendingJobFromApi } from '../api/deletePendingJobFromApi'
 
 const PendingPage = () => {
   const [isInitialLoad, setIsInitialLoad] = useState(true)
@@ -22,7 +22,7 @@ const PendingPage = () => {
   }
 
   const handleDeleteJob = async (jobId: string) => {
-    deletePendingJob(jobId)
+    deletePendingJobFromApi(jobId)
     await deletePendingJobFromDb(jobId)
     trackEvent({
       event: 'DELETE_PENDING_JOB',
