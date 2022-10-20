@@ -34,6 +34,7 @@ export const fetchAvailableModels = async () => {
       })
     }
 
+    // @ts-ignore
     setAvailableModels(availableModels)
   } catch (err) {
     availableModels.push({
