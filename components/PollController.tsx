@@ -2,12 +2,8 @@ import { useCallback, useEffect } from 'react'
 import { useStore } from 'statery'
 
 import Toast from '../components/Toast'
-import {
-  appInfoStore,
-  setNewImageReady,
-  setShowImageReadyToast
-} from '../store/appStore'
-import { getCurrentJob } from '../utils/imageCache'
+import { appInfoStore, setShowImageReadyToast } from '../store/appStore'
+import { hackyMultiJobCheck } from '../utils/imageCache'
 
 const PollController = () => {
   const appState = useStore(appInfoStore)
@@ -21,13 +17,8 @@ const PollController = () => {
   }
 
   const checkForCompletedJob = useCallback(async () => {
-    const jobDetails = await getCurrentJob()
-
-    if (jobDetails?.newImage && !showImageReadyToast) {
-      setNewImageReady(jobDetails.jobId)
-      setShowImageReadyToast(true)
-    }
-  }, [showImageReadyToast])
+    await hackyMultiJobCheck()
+  }, [])
 
   useEffect(() => {
     const interval = setInterval(async () => {

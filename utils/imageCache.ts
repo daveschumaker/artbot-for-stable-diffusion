@@ -1,6 +1,7 @@
 import { checkImageStatus } from '../api/checkImageStatus'
 import { getFinishedImage } from '../api/getFinishedImage'
 import { trackEvent, trackGaEvent } from '../api/telemetry'
+import { setNewImageReady, setShowImageReadyToast } from '../store/appStore'
 import { CreateImageJob, CreatePendingJob } from '../types'
 import {
   allPendingJobs,
@@ -294,16 +295,31 @@ export const getImage = async (jobId: string) => {
   }
 }
 
-export const getCurrentJob = async () => {
-  let jobDetails
+export const hackyMultiJobCheck = async () => {
   const allKeys = await allPendingJobs()
-  const [firstJob] = allKeys
+  const [firstJob, secondJob, thirdJob, fourthJob] = allKeys
 
-  if (!firstJob) {
-    return
+  if (firstJob) {
+    await checkCurrentJob(firstJob)
   }
 
-  const { jobId } = firstJob
+  if (secondJob) {
+    await checkCurrentJob(secondJob)
+  }
+
+  if (thirdJob) {
+    await checkCurrentJob(thirdJob)
+  }
+
+  if (fourthJob) {
+    await checkCurrentJob(fourthJob)
+  }
+}
+
+export const checkCurrentJob = async (imageDetails: any) => {
+  let jobDetails
+
+  const { jobId } = imageDetails
 
   if (jobId) {
     jobDetails = await checkImageJob(jobId)
@@ -311,10 +327,10 @@ export const getCurrentJob = async () => {
 
   if (jobDetails?.success && !jobDetails?.done) {
     await updatePendingJob(
-      firstJob.id,
-      Object.assign({}, firstJob, {
+      imageDetails.id,
+      Object.assign({}, imageDetails, {
         queue_position: jobDetails.queue_position,
-        wait_time: jobDetails.wait_time
+        wait_time: (jobDetails.wait_time || 0) + 30
       })
     )
   }
@@ -333,6 +349,9 @@ export const getCurrentJob = async () => {
         ...imageDetails,
         ...imgDetailsFromApi
       })
+
+      setNewImageReady(imageDetails.jobId)
+      setShowImageReadyToast(true)
 
       trackEvent({
         event: 'IMAGE_RECEIVED_FROM_API',
