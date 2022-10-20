@@ -698,6 +698,13 @@ const Home: NextPage = () => {
             </Link>
           </li>
           <li>
+            <Link href="https://www.reddit.com/r/StableDiffusion/comments/x4zs1r/comparison_between_different_samplers_in_stable/">
+              <a className="text-sm text-cyan-400" target="_blank">
+                Sampler comparison (reddit)
+              </a>
+            </Link>
+          </li>
+          <li>
             <Link href="https://github.com/Maks-s/sd-akashic">
               <a className="text-sm text-cyan-400" target="_blank">
                 Stable Diffusion Artist Studies
