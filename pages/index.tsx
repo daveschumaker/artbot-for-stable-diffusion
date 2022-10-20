@@ -178,7 +178,7 @@ const Home: NextPage = () => {
       ...input
     })
 
-    if (res.success) {
+    if (res?.success) {
       updatedCachedPrompt('')
       trackEvent({
         event: input.img2img ? 'NEW_IMG2IMG_REQUEST' : 'NEW_IMAGE_REQUEST',
@@ -192,7 +192,7 @@ const Home: NextPage = () => {
         }
       })
       router.push('/pending')
-    } else if (res.status === 'INVALID_API_KEY') {
+    } else if (res?.status === 'INVALID_API_KEY') {
       setHasError('Invalid API key sent to the server. Check your settings.')
       setPending(false)
     } else {
@@ -627,7 +627,6 @@ const Home: NextPage = () => {
                   width="200px"
                 >
                   {models.map((model, i) => {
-                    console.log(`model?>??`, model)
                     return (
                       //@ts-ignore
                       <option key={`${model.name}_select_${i}`} value={model}>

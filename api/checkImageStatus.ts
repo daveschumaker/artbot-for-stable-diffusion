@@ -1,5 +1,6 @@
 interface CheckResponse {
   success: boolean
+  message?: string
   status?: string
   finished?: number
   processing?: number
@@ -23,7 +24,8 @@ export const checkImageStatus = async (
 ): Promise<CheckResponse> => {
   if (isPending || !jobId) {
     return {
-      success: false
+      success: false,
+      message: 'Unable to check image status'
     }
   }
 

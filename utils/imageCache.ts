@@ -1,8 +1,7 @@
 import { checkImageStatus } from '../api/checkImageStatus'
 import { getFinishedImage } from '../api/getFinishedImage'
 import { trackEvent, trackGaEvent } from '../api/telemetry'
-import { CreateImageJob } from '../types'
-import { uuidv4 } from './appUtils'
+import { CreateImageJob, CreatePendingJob } from '../types'
 import {
   allPendingJobs,
   db,
@@ -11,16 +10,18 @@ import {
   pendingCount,
   updatePendingJob
 } from './db'
-import { createNewImage, orientationDetails, randomSampler } from './imageUtils'
+import { createNewImage } from './imageUtils'
+import { createPendingJob } from './pendingUtils'
 
 export const initIndexedDb = () => {}
 
-const multiImageQueue: Array<CreateImageJob> = []
-const jobDetailsQueue: Array<string> = []
+let multiImageQueue: Array<CreateImageJob> = []
+let jobDetailsQueue: Array<CreatePendingJob> = []
 
 interface CheckImage {
   success: boolean
   status?: string
+  message?: string
   jobId?: string
   done?: boolean
   queue_position?: number
@@ -83,7 +84,13 @@ export const checkImageJob = async (jobId: string): Promise<CheckImage> => {
 }
 
 export const fetchJobDetails = async () => {
-  const [currentJobId] = jobDetailsQueue
+  const [firstJob]: Array<CreatePendingJob> = jobDetailsQueue
+
+  if (!firstJob) {
+    return
+  }
+
+  const { jobId: currentJobId } = firstJob
 
   if (currentJobId) {
     const pendingJobDetails = await getPendingJobDetails(currentJobId)
@@ -135,9 +142,10 @@ export const createMultiImageJob = async () => {
   }
 
   const [nextJobParams] = multiImageQueue
+
   if (nextJobParams) {
     waitingForRes = true
-    const newImage = await createImageJob(nextJobParams)
+    const newImage = await sendJobToApi(nextJobParams)
     if (newImage?.success) {
       multiImageQueue.shift()
     }
@@ -145,35 +153,71 @@ export const createMultiImageJob = async () => {
   }
 }
 
-export const createImageJob = async (imageParams: CreateImageJob) => {
-  const { prompt } = imageParams
-  let { numImages = 1 } = imageParams
+export const sendJobToApi = async (imageParams: CreateImageJob) => {
+  try {
+    const data = await createNewImage(imageParams)
+    const { success, jobId } = data
 
-  if (!prompt || !prompt?.trim()) {
+    if (success && jobId) {
+      // Overwrite params on success.
+      imageParams.jobId = jobId
+      imageParams.timestamp = Date.now()
+      imageParams.jobStatus = 'processing'
+
+      const jobDetailsFromApi = await checkImageJob(jobId)
+      const {
+        success: detailsSuccess,
+        wait_time,
+        queue_position,
+        message
+      } = jobDetailsFromApi
+
+      if (detailsSuccess) {
+        imageParams.timestamp = Date.now()
+        imageParams.wait_time = wait_time
+        imageParams.queue_position = queue_position
+      }
+
+      await db.pending.add({
+        ...imageParams
+      })
+
+      return {
+        success: true,
+        message
+      }
+    } else {
+      trackEvent({
+        type: 'ERROR',
+        event: 'UNABLE_TO_SEND_IMAGE_REQUEST',
+        imageParams: { ...imageParams }
+      })
+
+      return {
+        success: false,
+        status: 'UNABLE_TO_SEND_IMAGE_REQUEST',
+        message: ''
+      }
+    }
+  } catch (err) {
+    console.log(`Error: Unable to send job to API`)
+    console.log(err)
+
+    trackEvent({
+      type: 'ERROR',
+      event: 'SEND_TO_API',
+      imageParams: { ...imageParams }
+    })
+
     return {
       success: false,
-      status: 'Invalid prompt'
+      status: 'UNABLE_TO_SEND_IMAGE_REQUEST'
     }
   }
+}
 
-  // @ts-ignore
-  if (isNaN(numImages) || numImages < 1 || numImages > 20) {
-    numImages = 1
-  }
-
-  const imageSize = orientationDetails(imageParams.orientationType || 'square')
-  imageParams.orientation = imageSize.orientation
-  imageParams.height = imageSize.height
-  imageParams.width = imageSize.width
-
-  if (!imageParams.parentJobId) {
-    imageParams.parentJobId = uuidv4()
-  }
-
-  const clonedParams = Object.assign({}, imageParams)
-  if (imageParams.sampler === 'random') {
-    clonedParams.sampler = randomSampler(imageParams?.img2img || false)
-  }
+export const createImageJob = async (imageParams: CreatePendingJob) => {
+  const jobsToSend = createPendingJob(imageParams)
 
   // Limit number of currently pending
   // requests so we don't hit API limits.
@@ -184,51 +228,35 @@ export const createImageJob = async (imageParams: CreateImageJob) => {
     }
   }
 
-  const data = await createNewImage(clonedParams)
-  const { success } = data
-
-  if (success) {
-    const { jobId = '' } = data
-    if (!jobId) {
-      return {
-        success: false,
-        status: 'MISSING_JOB_ID'
-      }
-    }
-
-    jobDetailsQueue.push(jobId)
-
-    // Set jobTimestamp on imageParams, which is passed along to multiImageQueue.
-    // Then store on clonedParams, which is immediately saved to the database.
-    imageParams.jobTimestamp = imageParams.jobTimestamp
-      ? imageParams.jobTimestamp
-      : Date.now()
-    clonedParams.jobTimestamp = imageParams.jobTimestamp
-
-    // On successful submit, add remaining images to queue
-    if (numImages > 1) {
-      delete imageParams.numImages
-
-      for (let i = 0; i < numImages - 1; i++) {
-        multiImageQueue.push(imageParams)
-      }
-    }
-
-    await db.pending.add({
-      jobId,
-      timestamp: Date.now(),
-      ...clonedParams
-    })
-
+  if (jobsToSend.length === 0) {
     return {
-      success: true
+      success: false
     }
   }
 
-  return {
-    success: false,
-    message: data?.message ? data.message : 'Something unfortunate happened.',
-    status: data?.status
+  if (jobsToSend.length === 1) {
+    const res = await sendJobToApi(jobsToSend[0])
+    const { success, status, message } = res
+
+    return {
+      success,
+      status,
+      message
+    }
+  } else if (jobsToSend.length > 1) {
+    const res = await sendJobToApi(jobsToSend[0])
+    const { success, status, message } = res
+
+    if (success) {
+      jobsToSend.shift()
+      multiImageQueue = [...jobsToSend]
+    }
+
+    return {
+      success,
+      status,
+      message
+    }
   }
 }
 

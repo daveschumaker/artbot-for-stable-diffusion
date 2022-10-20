@@ -1,10 +1,12 @@
 export interface CreateImageJob {
   jobTimestamp?: number
   jobId?: string
+  jobStatus?: string
   img2img?: boolean
   prompt: string
   height: number
   width: number
+  timestamp?: number
   cfg_scale: number
   steps: number
   sampler: string
@@ -20,6 +22,24 @@ export interface CreateImageJob {
   denoising_strength?: number
   orientationType?: string
   orientation?: string
+  wait_time?: number
+  queue_position?: number
+}
+
+export interface CreatePendingJob {
+  jobId?: string
+  prompt: string
+  numImages: number
+  orientationType: string
+  orientation: string
+  height: number
+  width: number
+  parentJobId: string
+  jobTimestamp: number
+  models: Array<string>
+  cfg_scale: number
+  steps: number
+  sampler: string
 }
 
 export interface DiffusionModel {

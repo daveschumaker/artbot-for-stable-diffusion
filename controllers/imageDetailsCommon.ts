@@ -84,7 +84,7 @@ export const rerollImage = async (imageDetails: any) => {
     ...cleanParams
   })
 
-  if (res.success) {
+  if (res?.success) {
     return {
       success: true
     }

@@ -115,18 +115,16 @@ const PendingItem = ({ handleDeleteJob, jobDetails }) => {
       <Panel className=" flex flex-row">
         {isComplete && (
           <div className="flex min-w-[100px] w-[100px] mr-3 cursor-pointer">
-            <Link
-              href={`/image/${jobDetails.jobId}`}
-              passHref
-              onClick={() => {
-                trackEvent({
-                  event: 'VIEW_IMAGE_CLICK',
-                  context: 'PendingItemsPage'
-                })
-                clearNewImageNotification()
-              }}
-            >
-              <a>
+            <Link href={`/image/${jobDetails.jobId}`} passHref>
+              <a
+                onClick={() => {
+                  trackEvent({
+                    event: 'VIEW_IMAGE_CLICK',
+                    context: 'PendingItemsPage'
+                  })
+                  clearNewImageNotification()
+                }}
+              >
                 <ImageSquare
                   // @ts-ignore
                   imageDetails={imageDetails}
