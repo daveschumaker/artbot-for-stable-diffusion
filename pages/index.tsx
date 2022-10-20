@@ -632,11 +632,9 @@ const Home: NextPage = () => {
                 >
                   {models.map((model, i) => {
                     return (
-                      <option
-                        key={`${model.name}_select_${i}`}
-                        value={model.name}
-                      >
-                        {`${model.name}${
+                      <option key={`${model}_select_${i}`} value={model}>
+                        {`${model}${
+                          // @ts-ignore
                           model.count ? ` (${model.count})` : ''
                         }`}
                       </option>
