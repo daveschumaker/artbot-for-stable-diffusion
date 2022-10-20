@@ -1,8 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { useRouter } from 'next/router'
 
-import { useStore } from 'statery'
-import { appInfoStore } from '../store/appStore'
 import { deleteCompletedImage } from '../utils/db'
 import ConfirmationModal from './ConfirmationModal'
 import { useCallback, useState } from 'react'
@@ -42,9 +40,6 @@ const ImageDetails = ({
   onDelete = () => {}
 }: ImageDetailsProps) => {
   const router = useRouter()
-
-  const appState = useStore(appInfoStore)
-  const { trusted } = appState
 
   const [pending, setPending] = useState(false)
   const [pendingDownload, setPendingDownload] = useState(false)
@@ -180,7 +175,6 @@ const ImageDetails = ({
             title="Use for img2img"
             //@ts-ignore
             onClick={() => handleUploadClick(imageDetails)}
-            disabled={!trusted}
           >
             <UploadIcon className="mx-auto" />
           </Button>

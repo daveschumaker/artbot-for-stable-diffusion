@@ -1,8 +1,6 @@
 import { useCallback } from 'react'
-import { useStore } from 'statery'
 
 import { trackEvent } from '../../api/telemetry'
-import { appInfoStore } from '../../store/appStore'
 import { getBase64 } from '../../utils/imageUtils'
 import { Button } from '../Button'
 import DotsHorizontalIcon from '../icons/DotsHorizontalIcon'
@@ -20,9 +18,6 @@ export function AdvancedOptions({
   showAdvanced,
   setShowAdvanced
 }: AdvancedOptionsProps) {
-  const appState = useStore(appInfoStore)
-  const { trusted } = appState
-
   // @ts-ignore
   const handleFileSelect = async (file) => {
     let fullDataString
@@ -66,7 +61,6 @@ export function AdvancedOptions({
       <UploadButton
         // @ts-ignore
         handleFile={handleFileSelect}
-        disabled={!trusted}
         label="img2img"
       />
     </div>
