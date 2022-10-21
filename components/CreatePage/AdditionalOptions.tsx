@@ -7,6 +7,12 @@ import DotsHorizontalIcon from '../icons/DotsHorizontalIcon'
 import DotsVerticalIcon from '../icons/DotsVerticalIcon'
 import { UploadButton } from '../UploadButton'
 
+const imgConfig = {
+  quality: 0.8,
+  maxWidth: 1024,
+  maxHeight: 1024
+}
+
 interface AdvancedOptionsProps {
   setInput: any
   showAdvanced: boolean
@@ -24,10 +30,13 @@ export function AdvancedOptions({
       return
     }
 
+    const { readAndCompressImage } = await import('browser-image-resizer')
+    let resizedImage = await readAndCompressImage(file, imgConfig)
+
     let fullDataString
 
     if (file) {
-      fullDataString = await getBase64(file)
+      fullDataString = await getBase64(resizedImage)
     }
 
     if (!fullDataString) {
