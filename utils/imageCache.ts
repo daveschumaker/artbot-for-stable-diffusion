@@ -370,9 +370,11 @@ export const checkCurrentJob = async (imageDetails: any) => {
         params: {
           height: imageDetails.height,
           width: imageDetails.width,
-          waitTime: (
-            Math.floor(Date.now() - imageDetails.timestamp) / 1000
-          ).toFixed(0)
+          waitTime: imageDetails.jobStartTimestamp
+            ? (
+                Math.floor(Date.now() - imageDetails.jobStartTimestamp) / 1000
+              ).toFixed(0)
+            : 0
         }
       })
       return {
@@ -391,4 +393,4 @@ export const checkCurrentJob = async (imageDetails: any) => {
 setInterval(() => {
   createMultiImageJob()
   fetchJobDetails()
-}, 200)
+}, 250)

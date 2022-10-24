@@ -41,6 +41,7 @@ export interface CreatePendingJob {
   cfg_scale: number
   steps: number
   sampler: string
+  jobStartTimestamp: number
 }
 
 export interface DiffusionModel {

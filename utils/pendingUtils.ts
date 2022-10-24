@@ -41,6 +41,7 @@ export const createPendingJob = (imageParams: CreatePendingJob) => {
     // by API
     const clonedParams = Object.assign({}, imageParams)
     clonedParams.jobId = uuidv4()
+    clonedParams.jobStartTimestamp = Date.now()
 
     const imageSize: ImageSize = orientationDetails(
       clonedParams.orientationType || 'square'
