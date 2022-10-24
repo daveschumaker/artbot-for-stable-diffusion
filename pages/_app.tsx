@@ -17,7 +17,6 @@ import { appInfoStore, setBuildId } from '../store/appStore'
 import { useStore } from 'statery'
 import ServerUpdateModal from '../components/ServerUpdateModal'
 import MobileFooter from '../components/MobileFooter'
-import PwaToast from '../components/PwaToast'
 initAppSettings()
 initDb()
 
@@ -128,7 +127,6 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Component {...pageProps} />
         <Footer />
       </ContentWrapper>
-      <PwaToast />
       <MobileFooter />
     </ThemeProvider>
   )
