@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
 
+import { colors } from '../styles/colors'
 import CreateIcon from '../components/icons/CreateIcon'
 import HourglassIcon from './icons/HourglassIcon'
 import PhotoIcon from './icons/PhotoIcon'
@@ -18,6 +19,10 @@ import {
 
 interface StyledFooterProps {
   isPwa: boolean
+}
+
+interface NavIconWrapperProps {
+  active: boolean
 }
 
 const StyledFooter = styled.div<StyledFooterProps>`
@@ -46,12 +51,28 @@ const StyledFooter = styled.div<StyledFooterProps>`
 `
 
 const NavIcons = styled.div`
-  align-items: start;
+  align-items: center;
   display: flex;
   flex-direction: row;
-  padding-top: 16px;
+  /* padding-top: 16px; */
   justify-content: space-around;
   width: 100%;
+`
+
+const NavIconWrapper = styled.div<NavIconWrapperProps>`
+  align-items: center;
+  border-top: 4px solid ${colors['background']};
+  display: flex;
+  justify-content: center;
+  height: 51px;
+  padding-top: 8px;
+  width: 40px;
+
+  ${(props) =>
+    props.active &&
+    `
+      border-top: 4px solid ${colors['teal']};
+    `}
 `
 
 export default function MobileFooter() {
@@ -78,55 +99,65 @@ export default function MobileFooter() {
   return (
     <StyledFooter isPwa={isPwa}>
       <NavIcons>
-        <Link href="/">
-          <a>
-            <CreateIcon
-              size={32}
-              stroke={isActive('/') ? '#14B8A6' : 'white'}
-            />
-          </a>
-        </Link>
-        <Link href="/pending">
-          <a>
-            <HourglassIcon
-              size={32}
-              stroke={isActive('/pending') ? '#14B8A6' : 'white'}
-            />
-          </a>
-        </Link>
-        <Link href="/images">
-          <a
-            className="relative"
-            onClick={() => {
-              setShowImageReadyToast(false)
-              setNewImageReady('')
-            }}
-          >
-            {newImageReady && (
-              <span className="opacity-1 inline-block w-3 h-3 mr-1 bg-red-600 rounded-full absolute l-[4px]"></span>
-            )}
-            <PhotoIcon
-              size={32}
-              stroke={isActive('/images') ? '#14B8A6' : 'white'}
-            />
-          </a>
-        </Link>
-        <Link href="/about">
-          <a>
-            <HelpIcon
-              size={32}
-              stroke={isActive('/about') ? '#14B8A6' : 'white'}
-            />
-          </a>
-        </Link>
-        <Link href="/settings">
-          <a>
-            <SettingsIcon
-              size={32}
-              stroke={isActive('/settings') ? '#14B8A6' : 'white'}
-            />
-          </a>
-        </Link>
+        <NavIconWrapper active={isActive('/')}>
+          <Link href="/">
+            <a>
+              <CreateIcon
+                size={32}
+                stroke={isActive('/') ? '#14B8A6' : 'white'}
+              />
+            </a>
+          </Link>
+        </NavIconWrapper>
+        <NavIconWrapper active={isActive('/pending')}>
+          <Link href="/pending">
+            <a>
+              <HourglassIcon
+                size={32}
+                stroke={isActive('/pending') ? '#14B8A6' : 'white'}
+              />
+            </a>
+          </Link>
+        </NavIconWrapper>
+        <NavIconWrapper active={isActive('/images')}>
+          <Link href="/images">
+            <a
+              className="relative"
+              onClick={() => {
+                setShowImageReadyToast(false)
+                setNewImageReady('')
+              }}
+            >
+              {newImageReady && (
+                <span className="opacity-1 inline-block w-3 h-3 mr-1 bg-red-600 rounded-full absolute l-[4px]"></span>
+              )}
+              <PhotoIcon
+                size={32}
+                stroke={isActive('/images') ? '#14B8A6' : 'white'}
+              />
+            </a>
+          </Link>
+        </NavIconWrapper>
+        <NavIconWrapper active={isActive('/about')}>
+          <Link href="/about">
+            <a>
+              <HelpIcon
+                size={32}
+                stroke={isActive('/about') ? '#14B8A6' : 'white'}
+              />
+            </a>
+          </Link>
+        </NavIconWrapper>
+        <NavIconWrapper active={isActive('/settings')}>
+          <Link href="/settings">
+            <a>
+              <SettingsIcon
+                size={32}
+                stroke={isActive('/settings') ? '#14B8A6' : 'white'}
+              />
+            </a>
+          </Link>
+        </NavIconWrapper>
       </NavIcons>
     </StyledFooter>
   )

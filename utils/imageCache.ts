@@ -157,7 +157,7 @@ export const createMultiImageJob = async () => {
 export const sendJobToApi = async (imageParams: CreateImageJob) => {
   try {
     const data = await createNewImage(imageParams)
-    const { success, jobId } = data
+    const { success, jobId, message = '' } = data
 
     if (success && jobId) {
       // Overwrite params on success.
@@ -192,13 +192,14 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
       trackEvent({
         type: 'ERROR',
         event: 'UNABLE_TO_SEND_IMAGE_REQUEST',
-        imageParams: { ...imageParams }
+        imageParams: { ...imageParams },
+        messageFromApi: message
       })
 
       return {
         success: false,
         status: 'UNABLE_TO_SEND_IMAGE_REQUEST',
-        message: ''
+        messageFromApi: message
       }
     }
   } catch (err) {
@@ -208,7 +209,7 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
     delete imageParams.base64String
     trackEvent({
       type: 'ERROR',
-      event: 'SEND_TO_API',
+      event: 'SEND_TO_API_ERROR',
       imageParams: { ...imageParams }
     })
 

@@ -13,7 +13,6 @@ import {
 } from '../utils/promptUtils'
 import { useStore } from 'statery'
 import { appInfoStore } from '../store/appStore'
-import Link from 'next/link'
 import TextArea from '../components/TextArea'
 import { Button } from '../components/Button'
 import TrashIcon from '../components/icons/TrashIcon'

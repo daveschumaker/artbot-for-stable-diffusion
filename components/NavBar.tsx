@@ -20,15 +20,16 @@ import PhotoPlusIcon from './icons/PhotoPlusIcon'
 import SettingsIcon from './icons/SettingsIcon'
 
 const StyledNavBar = styled.nav`
-  border-bottom: 1px solid rgb(229, 231, 235);
-  color: white;
-  display: flex;
-  font-size: 14px;
-  justify-content: flex-start;
-  margin-bottom: 8px;
-  width: 100%;
+  display: none;
 
   @media (min-width: 640px) {
+    border-bottom: 1px solid rgb(229, 231, 235);
+    color: white;
+    display: flex;
+    font-size: 14px;
+    justify-content: flex-start;
+    margin-bottom: 8px;
+    width: 100%;
   }
 `
 

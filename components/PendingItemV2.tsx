@@ -11,7 +11,7 @@ import Panel from './Panel'
 import { trackEvent, trackGaEvent } from '../api/telemetry'
 import ImageSquare from './ImageSquare'
 import Link from 'next/link'
-import SpinnerV2 from './SpinnerV2'
+import SpinnerV2 from './Spinner'
 import PhotoUpIcon from './icons/PhotoUpIcon'
 import AlertTriangleIcon from './icons/AlertTriangle'
 
