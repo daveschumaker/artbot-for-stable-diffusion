@@ -41,8 +41,8 @@ const StyledFooter = styled.div<StyledFooterProps>`
   ${(props) =>
     props.isPwa &&
     `
-      height: 100px;
-      padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+      height: 76px;
+      padding-bottom: calc(24px + env(safe-area-inset-bottom));
     `}
 
   @media (min-width: 640px) {
