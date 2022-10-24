@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 interface InputProps {
   name?: string
-  type: string
+  type?: string
   children?: React.ReactNode
   onChange: any
   width?: string

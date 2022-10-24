@@ -31,6 +31,9 @@ import PhotoIcon from '../components/icons/PhotoIcon'
 import { DropdownContent } from '../components/Dropdown/DropdownContent'
 import { DropdownItem } from '../components/Dropdown/DropdownItem'
 import RelatedImages from '../components/CreatePage/RelatedImages'
+import Modal from '../components/Modal/modal'
+import FileUploader from '../components/FileUploader'
+import UploadIcon from '../components/icons/UploadIcon'
 
 interface InputTarget {
   name: string
@@ -81,6 +84,7 @@ const Home: NextPage = () => {
   const [pageFeatures, setPageFeatures] = useReducer(
     (state: any, newState: any) => ({ ...state, ...newState }),
     {
+      showUploaderModal: false,
       showRelatedImagesDropdown: false,
       showOrientationDropdown: false,
       disableOrientationBtn: false
@@ -119,6 +123,16 @@ const Home: NextPage = () => {
     }
 
     setInput({ [inputName]: inputValue })
+  }
+
+  const handleImageUpload = (imageType: string, source_image: string) => {
+    setInput({
+      img2img: true,
+      imageType,
+      source_image
+    })
+
+    setPageFeatures({ showUploaderModal: false })
   }
 
   const handleOrientationSelect = (orientation: string, options?: any) => {
@@ -278,89 +292,104 @@ const Home: NextPage = () => {
 
   return (
     <main>
+      {pageFeatures.showUploaderModal && (
+        <Modal
+          handleClose={() => setPageFeatures({ showUploaderModal: false })}
+        >
+          <FileUploader handleUpload={handleImageUpload} />
+        </Modal>
+      )}
       <PageTitle>Create new image</PageTitle>
       <div className="mt-2 mb-2">
-        <div className="mb-4">
+        <div className="flex flex-row gap-2">
           <Button
             title="Select image orientation"
-            onClick={toggleOrientationDropdown}
+            onClick={() => setPageFeatures({ showUploaderModal: true })}
           >
-            <span>
-              <PhotoIcon />
-            </span>
-            <span className="inline-block">
-              {input.orientationType === 'landscape-16x9' && `Landscape`}
-              {input.orientationType === 'landscape' && `Landscape`}
-              {input.orientationType === 'portrait' && `Portrait`}
-              {input.orientationType === 'phone-bg' && `Phone wallpaper`}
-              {input.orientationType === 'ultrawide' && `Ultrawide`}
-              {input.orientationType === 'square' && `Square`}
-              {input.orientationType === 'random' && `Random!`}
-            </span>
+            <UploadIcon className="mx-auto" /> Upload (img2img)
           </Button>
-          <DropdownContent
-            handleClose={() => {
-              handeOutsideClick()
-            }}
-            open={pageFeatures.showOrientationDropdown}
-          >
-            <DropdownItem
-              active={input.orientationType === 'landscape-16x9'}
-              onClick={() => {
-                handleOrientationSelect('landscape-16x9')
-              }}
+          <div className="mb-4">
+            <Button
+              title="Select image orientation"
+              onClick={toggleOrientationDropdown}
             >
-              Landscape 16 x 9
-            </DropdownItem>
-            <DropdownItem
-              active={input.orientationType === 'landscape'}
-              onClick={() => {
-                handleOrientationSelect('landscape')
+              <span>
+                <PhotoIcon />
+              </span>
+              <span className="inline-block">
+                {input.orientationType === 'landscape-16x9' && `Landscape`}
+                {input.orientationType === 'landscape' && `Landscape`}
+                {input.orientationType === 'portrait' && `Portrait`}
+                {input.orientationType === 'phone-bg' && `Phone wallpaper`}
+                {input.orientationType === 'ultrawide' && `Ultrawide`}
+                {input.orientationType === 'square' && `Square`}
+                {input.orientationType === 'random' && `Random!`}
+              </span>
+            </Button>
+            <DropdownContent
+              handleClose={() => {
+                handeOutsideClick()
               }}
+              open={pageFeatures.showOrientationDropdown}
             >
-              Landscape 3 x 2
-            </DropdownItem>
-            <DropdownItem
-              active={input.orientationType === 'portrait'}
-              onClick={() => {
-                handleOrientationSelect('portrait')
-              }}
-            >
-              Portrait 2 x 3
-            </DropdownItem>
-            <DropdownItem
-              active={input.orientationType === 'phone-bg'}
-              onClick={() => {
-                handleOrientationSelect('phone-bg')
-              }}
-            >
-              Phone wallpaper 9 x 21
-            </DropdownItem>
-            <DropdownItem
-              active={input.orientationType === 'ultrawide'}
-              onClick={() => {
-                handleOrientationSelect('ultrawide')
-              }}
-            >
-              Ultrawide 21 x 9
-            </DropdownItem>
-            <DropdownItem
-              active={input.orientationType === 'square'}
-              onClick={() => {
-                handleOrientationSelect('square')
-              }}
-            >
-              Square
-            </DropdownItem>
-            <DropdownItem
-              active={input.orientationType === 'random'}
-              onClick={() => {
-                handleOrientationSelect('random')
-              }}
-            >
-              Random
-            </DropdownItem>
-          </DropdownContent>
+              <DropdownItem
+                active={input.orientationType === 'landscape-16x9'}
+                onClick={() => {
+                  handleOrientationSelect('landscape-16x9')
+                }}
+              >
+                Landscape 16 x 9
+              </DropdownItem>
+              <DropdownItem
+                active={input.orientationType === 'landscape'}
+                onClick={() => {
+                  handleOrientationSelect('landscape')
+                }}
+              >
+                Landscape 3 x 2
+              </DropdownItem>
+              <DropdownItem
+                active={input.orientationType === 'portrait'}
+                onClick={() => {
+                  handleOrientationSelect('portrait')
+                }}
+              >
+                Portrait 2 x 3
+              </DropdownItem>
+              <DropdownItem
+                active={input.orientationType === 'phone-bg'}
+                onClick={() => {
+                  handleOrientationSelect('phone-bg')
+                }}
+              >
+                Phone wallpaper 9 x 21
+              </DropdownItem>
+              <DropdownItem
+                active={input.orientationType === 'ultrawide'}
+                onClick={() => {
+                  handleOrientationSelect('ultrawide')
+                }}
+              >
+                Ultrawide 21 x 9
+              </DropdownItem>
+              <DropdownItem
+                active={input.orientationType === 'square'}
+                onClick={() => {
+                  handleOrientationSelect('square')
+                }}
+              >
+                Square
+              </DropdownItem>
+              <DropdownItem
+                active={input.orientationType === 'random'}
+                onClick={() => {
+                  handleOrientationSelect('random')
+                }}
+              >
+                Random
+              </DropdownItem>
+            </DropdownContent>
+          </div>
         </div>
         <div className="flex flex-row gap-[8px] items-start">
           {input.source_image && (
@@ -403,7 +432,6 @@ const Home: NextPage = () => {
         )}
         <div className="mt-4 mb-4 w-full flex flex-row">
           <AdvancedOptions
-            setInput={setInput}
             showAdvanced={showAdvanced}
             setShowAdvanced={setShowAdvanced}
           />

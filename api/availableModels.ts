@@ -1,6 +1,16 @@
 import { setAvailableModels } from '../store/appStore'
 import { DiffusionModel, ModelDetails } from '../types'
 
+interface ModelsCache {
+  [key: string]: number
+}
+
+const modelsCache: ModelsCache = {}
+
+export const getModelsCache = () => {
+  return modelsCache
+}
+
 function compare(a: DiffusionModel, b: DiffusionModel) {
   if (a.count < b.count) {
     return 1
@@ -27,6 +37,8 @@ export const fetchAvailableModels = async () => {
     if (Array.isArray(modelDetails)) {
       modelDetails.sort(compare)
       modelDetails.forEach((model) => {
+        modelsCache[model.name] = model.count
+
         availableModels.push({
           name: model.name,
           count: model.count

@@ -181,3 +181,26 @@ export const getBase64 = (file: Blob) => {
     }
   })
 }
+
+export const imgUrlToDataUrl = (url: string) => {
+  return new Promise((resolve) => {
+    try {
+      var xhr = new XMLHttpRequest()
+      xhr.onload = function () {
+        var reader = new FileReader()
+        reader.onloadend = function () {
+          resolve(xhr.response)
+        }
+        reader.readAsDataURL(xhr.response)
+      }
+      xhr.onerror = function () {
+        resolve(false)
+      }
+      xhr.open('GET', url)
+      xhr.responseType = 'blob'
+      xhr.send()
+    } catch (err) {
+      resolve(false)
+    }
+  })
+}
