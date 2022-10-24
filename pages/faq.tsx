@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import PageTitle from '../components/PageTitle'
+import Text from '../components/Text'
 
 const FaqPage = () => {
   return (
@@ -10,10 +11,10 @@ const FaqPage = () => {
       </Head>
       <PageTitle>FAQ</PageTitle>
       <div className="text-md">
-        <div className="mt-2 font-bold">
-          Q: Is img2img live? How do I use it?
-        </div>
-        <div className="">
+        <Text className="mt-2 font-bold">
+          <strong>Q: Is img2img live? How do I use it?</strong>
+        </Text>
+        <Text>
           A: Db0 has release img2img support through the Stable Horde as a
           pilot. You can currently use it if you are considered a trusted user
           within Stable Horde. One way to do that is to contribute GPU cycles
@@ -27,7 +28,7 @@ const FaqPage = () => {
             here
           </a>
           .
-        </div>
+        </Text>
         <div className="mt-2 font-bold">
           Q: Why does the estimated time remaining to generate an image seem to
           fluctuate so much?

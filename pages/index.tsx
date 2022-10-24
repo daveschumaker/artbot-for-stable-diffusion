@@ -680,46 +680,6 @@ const Home: NextPage = () => {
           </Panel>
         )}
       </StyledPanel>
-      <div className="mt-2">
-        <h2 className="font-bold mb-2">Resources and tips</h2>
-        <ul>
-          <li>
-            <Link href="https://lexica.art/">
-              <a className="text-sm text-cyan-400" target="_blank">
-                Lexica - Prompt Search Engine
-              </a>
-            </Link>
-          </li>
-          <li>
-            <Link href="https://publicprompts.art/">
-              <a className="text-sm text-cyan-400" target="_blank">
-                Public Prompts Collection
-              </a>
-            </Link>
-          </li>
-          <li>
-            <Link href="https://www.reddit.com/r/StableDiffusion/comments/x4zs1r/comparison_between_different_samplers_in_stable/">
-              <a className="text-sm text-cyan-400" target="_blank">
-                Sampler comparison (reddit)
-              </a>
-            </Link>
-          </li>
-          <li>
-            <Link href="https://github.com/Maks-s/sd-akashic">
-              <a className="text-sm text-cyan-400" target="_blank">
-                Stable Diffusion Artist Studies
-              </a>
-            </Link>
-          </li>
-          <li>
-            <Link href="https://promptomania.com/stable-diffusion-prompt-builder/">
-              <a className="text-sm text-cyan-400" target="_blank">
-                Stable Diffusion Prompt Builder
-              </a>
-            </Link>
-          </li>
-        </ul>
-      </div>
     </main>
   )
 }

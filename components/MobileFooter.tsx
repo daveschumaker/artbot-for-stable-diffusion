@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
+import styled from 'styled-components'
 
 import CreateIcon from '../components/icons/CreateIcon'
-import styled from 'styled-components'
 import HourglassIcon from './icons/HourglassIcon'
 import PhotoIcon from './icons/PhotoIcon'
 import SettingsIcon from './icons/SettingsIcon'
@@ -16,17 +16,29 @@ import {
   setShowImageReadyToast
 } from '../store/appStore'
 
-const StyledFooter = styled.div`
+interface StyledFooterProps {
+  isPwa: boolean
+}
+
+const StyledFooter = styled.div<StyledFooterProps>`
   background-color: black;
   background-color: #282828;
   border-top: 1px solid gray;
   position: fixed;
   bottom: 0;
   display: flex;
-  height: 100px;
+  height: 68px;
   left: 0;
-  padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+  padding-bottom: 16px;
   right: 0;
+  z-index: 10;
+
+  ${(props) =>
+    props.isPwa &&
+    `
+      height: 100px;
+      padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+    `}
 
   @media (min-width: 640px) {
     display: none;
@@ -35,7 +47,6 @@ const StyledFooter = styled.div`
 
 const NavIcons = styled.div`
   align-items: start;
-  /* bottom: calc(1rem + env(safe-area-inset-bottom)); */
   display: flex;
   flex-direction: row;
   padding-top: 16px;
@@ -60,12 +71,12 @@ export default function MobileFooter() {
     setIsPwa(isInstalledPwa())
   }, [])
 
-  if (!isPwa) {
-    return null
-  }
+  // if (!isPwa) {
+  //   return null
+  // }
 
   return (
-    <StyledFooter>
+    <StyledFooter isPwa={isPwa}>
       <NavIcons>
         <Link href="/">
           <a>
@@ -100,11 +111,11 @@ export default function MobileFooter() {
             />
           </a>
         </Link>
-        <Link href="/faq">
+        <Link href="/about">
           <a>
             <HelpIcon
               size={32}
-              stroke={isActive('/faq') ? '#14B8A6' : 'white'}
+              stroke={isActive('/about') ? '#14B8A6' : 'white'}
             />
           </a>
         </Link>

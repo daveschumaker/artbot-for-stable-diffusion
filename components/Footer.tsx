@@ -8,6 +8,7 @@ interface FooterProps {
 }
 
 const StyledFooter = styled.footer<FooterProps>`
+  display: none;
   margin-top: auto;
   margin-bottom: 16px;
   padding-top: 16px;
@@ -16,10 +17,11 @@ const StyledFooter = styled.footer<FooterProps>`
   ${(props) =>
     props.isSafari &&
     `
-      margin-bottom: 88px;
+    margin-bottom: 160px;
     `}
 
   @media (min-width: 640px) {
+    display: block;
     padding-top: 16px;
   }
 `

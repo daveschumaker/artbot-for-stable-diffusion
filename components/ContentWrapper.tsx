@@ -13,6 +13,7 @@ const StyledContent = styled.div<StyleProps>`
   margin-top: auto;
   margin-left: 24px;
   margin-right: 24px;
+  margin-bottom: 80px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;

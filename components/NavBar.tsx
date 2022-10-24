@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useStore } from 'statery'
+import styled from 'styled-components'
+
 import { useWindowSize } from '../hooks/useWindowSize'
 import {
   appInfoStore,
@@ -16,6 +18,19 @@ import HourglassIcon from './icons/HourglassIcon'
 import PhotoIcon from './icons/PhotoIcon'
 import PhotoPlusIcon from './icons/PhotoPlusIcon'
 import SettingsIcon from './icons/SettingsIcon'
+
+const StyledNavBar = styled.nav`
+  border-bottom: 1px solid rgb(229, 231, 235);
+  color: white;
+  display: flex;
+  font-size: 14px;
+  justify-content: flex-start;
+  margin-bottom: 8px;
+  width: 100%;
+
+  @media (min-width: 640px) {
+  }
+`
 
 export default function NavBar() {
   const size = useWindowSize()
@@ -59,7 +74,7 @@ export default function NavBar() {
   }
 
   return (
-    <div className="mb-2 text-sm font-medium text-center text-white border-b border-gray-200 w-full">
+    <StyledNavBar>
       <ul className="flex flex-row">
         <li className="text-left">
           <Link href="/" passHref>
@@ -107,6 +122,6 @@ export default function NavBar() {
           </Link>
         </li>
       </ul>
-    </div>
+    </StyledNavBar>
   )
 }
