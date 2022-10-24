@@ -54,7 +54,6 @@ const NavIcons = styled.div`
   align-items: center;
   display: flex;
   flex-direction: row;
-  /* padding-top: 16px; */
   justify-content: space-around;
   width: 100%;
 `
