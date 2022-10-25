@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { getBase64, imgUrlToDataUrl } from '../../utils/imageUtils'
+import { trackEvent } from '../../api/telemetry'
+import { getBase64 } from '../../utils/imageUtils'
 import { isValidHttpUrl } from '../../utils/validationUtils'
 import { Button } from '../Button'
 import Input from '../Input'
@@ -87,32 +88,37 @@ const Uploader = (props: UploaderProps) => {
       return false
     }
 
-    const data = await imgUrlToDataUrl(imgUrl)
+    const resp = await fetch(`/artbot/api/img-from-url`, {
+      method: 'POST',
+      body: JSON.stringify({
+        imageUrl: imgUrl
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    const data = await resp.json()
 
-    if (!data) {
+    // @ts-ignore
+    const { success, imageType, imgBase64String } = data
+
+    if (!data || !success) {
       setErrorMsg(
         'Unable to process image from URL, please try something else.'
       )
+
+      trackEvent({
+        event: 'ERROR_UPLOAD_IMG_BY_URL',
+        imgUrl
+      })
+
       return false
     }
 
-    const { readAndCompressImage } = await import('browser-image-resizer')
-    // @ts-ignore
-    let resizedImage = await readAndCompressImage(data, imgConfig)
-
-    let fullDataString
-
-    if (data) {
-      fullDataString = await getBase64(resizedImage)
-    }
-
-    if (!fullDataString) {
-      return
-    }
-
-    // @ts-ignore
-    const [fileType, imgBase64String] = fullDataString.split(';base64,')
-    const [, imageType] = fileType.split('data:')
+    trackEvent({
+      event: 'UPLOAD_IMG_BY_URL',
+      imgUrl
+    })
 
     props.handleUpload(imageType, imgBase64String)
   }

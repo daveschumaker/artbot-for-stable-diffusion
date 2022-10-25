@@ -22,6 +22,7 @@ const Overlay = styled.div`
   right: 0;
   left: 0;
   bottom: 0;
+  z-index: 20;
 `
 
 const StyledModal = styled.div`
@@ -35,9 +36,10 @@ const StyledModal = styled.div`
   transform: translate(-50%, -50%);
   padding: 16px;
   position: fixed;
+  z-index: 20;
 
   @media (min-width: 640px) {
-    width: 320px;
+    width: 480px;
     min-height: 300px;
   }
 `

@@ -99,8 +99,28 @@ const AboutPage = () => {
             className="text-cyan-400"
           >
             Github
-          </a>{' '}
-          and contributions are welcome!
+          </a>
+          . Feedback and contributions are welcome! Feel free to reach out to me
+          on Twitter at{' '}
+          <Link href="https://twitter.com/davely">
+            <a
+              className="text-cyan-400"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              @davely
+            </a>
+          </Link>{' '}
+          or on Discord at{' '}
+          <Link href="https://discordapp.com/users/bitbandit#4910">
+            <a
+              className="text-cyan-400"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              bitbandit#4910
+            </a>
+          </Link>
         </Text>
       </div>
       <div className="mt-2">
