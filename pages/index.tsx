@@ -663,7 +663,9 @@ const Home: NextPage = () => {
                       >
                         {model
                           ? // @ts-ignore
-                            model.name
+                            model.name +
+                            // @ts-ignore
+                            (model.count ? ` (${model.count})` : '')
                           : ''}
                       </option>
                     )
