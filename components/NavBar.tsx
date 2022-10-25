@@ -78,51 +78,44 @@ export default function NavBar() {
     <StyledNavBar>
       <ul className="flex flex-row">
         <li className="text-left">
-          <Link href="/" passHref>
-            <a className={isActiveRoute('/')}>
-              <IconCreate className="inline-block mr-1 pb-1" />
-              Create
-            </a>
+          <Link href="/" passHref className={isActiveRoute('/')}>
+
+            <IconCreate className="inline-block mr-1 pb-1" />Create
           </Link>
         </li>
         <li className="text-left">
-          <Link href="/pending" passHref>
-            <a className={isActiveRoute('/pending')}>
-              <HourglassIcon className="inline-block mr-[2-px] pb-1" />
-              Pending
-            </a>
+          <Link href="/pending" passHref className={isActiveRoute('/pending')}>
+
+            <HourglassIcon className="inline-block mr-[2-px] pb-1" />Pending
           </Link>
         </li>
         <li className="text-left">
-          <Link href="/images" passHref>
-            <a
-              className={isActiveRoute('/images')}
-              onClick={() => {
-                clearNewImageNotification()
-                handleForceReload()
-              }}
-            >
-              {newImageReady ? (
-                <PhotoPlusIcon
-                  className="inline-block mr-[2-px] pb-1"
-                  stroke={'red'}
-                />
-              ) : (
-                <PhotoIcon className="inline-block mr-[2-px] pb-1" />
-              )}
-              Images
-            </a>
+          <Link
+            href="/images"
+            passHref
+            className={isActiveRoute('/images')}
+            onClick={() => {
+              clearNewImageNotification()
+              handleForceReload()
+            }}>
+
+            {newImageReady ? (
+              <PhotoPlusIcon
+                className="inline-block mr-[2-px] pb-1"
+                stroke={'red'}
+              />
+            ) : (
+              <PhotoIcon className="inline-block mr-[2-px] pb-1" />
+            )}Images
           </Link>
         </li>
         <li className="text-left">
-          <Link href="/settings" passHref>
-            <a className={isActiveRoute('/settings')}>
-              <SettingsIcon className="inline-block mr-[2-px] pb-1" />
-              Settings
-            </a>
+          <Link href="/settings" passHref className={isActiveRoute('/settings')}>
+
+            <SettingsIcon className="inline-block mr-[2-px] pb-1" />Settings
           </Link>
         </li>
       </ul>
     </StyledNavBar>
-  )
+  );
 }

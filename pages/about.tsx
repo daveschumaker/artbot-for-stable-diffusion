@@ -68,14 +68,14 @@ const AboutPage = () => {
         </Text>
         <Text>
           This particular web app was initially built as a side project by{' '}
-          <Link href="https://twitter.com/davely">
-            <a
-              className="text-cyan-400"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+          <Link
+            href="https://twitter.com/davely"
+            className="text-cyan-400"
+            target="_blank"
+            rel="noopener noreferrer">
+            
               davely
-            </a>
+            
           </Link>{' '}
           as a way to experiment with various client-side technology, such as{' '}
           <a
@@ -102,24 +102,24 @@ const AboutPage = () => {
           </a>
           . Feedback and contributions are welcome! Feel free to reach out to me
           on Twitter at{' '}
-          <Link href="https://twitter.com/davely">
-            <a
-              className="text-cyan-400"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+          <Link
+            href="https://twitter.com/davely"
+            className="text-cyan-400"
+            target="_blank"
+            rel="noopener noreferrer">
+            
               @davely
-            </a>
+            
           </Link>{' '}
           or on Discord at{' '}
-          <Link href="https://discordapp.com/users/bitbandit#4910">
-            <a
-              className="text-cyan-400"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+          <Link
+            href="https://discordapp.com/users/bitbandit#4910"
+            className="text-cyan-400"
+            target="_blank"
+            rel="noopener noreferrer">
+            
               bitbandit#4910
-            </a>
+            
           </Link>
         </Text>
       </div>
@@ -127,44 +127,59 @@ const AboutPage = () => {
         <h2 className="font-bold mb-2">Resources and tips</h2>
         <ul>
           <li>
-            <Link href="https://lexica.art/">
-              <a className="text-sm text-cyan-400" target="_blank">
+            <Link
+              href="https://lexica.art/"
+              className="text-sm text-cyan-400"
+              target="_blank">
+              
                 Lexica - Prompt Search Engine
-              </a>
+              
             </Link>
           </li>
           <li>
-            <Link href="https://publicprompts.art/">
-              <a className="text-sm text-cyan-400" target="_blank">
+            <Link
+              href="https://publicprompts.art/"
+              className="text-sm text-cyan-400"
+              target="_blank">
+              
                 Public Prompts Collection
-              </a>
+              
             </Link>
           </li>
           <li>
-            <Link href="https://www.reddit.com/r/StableDiffusion/comments/x4zs1r/comparison_between_different_samplers_in_stable/">
-              <a className="text-sm text-cyan-400" target="_blank">
+            <Link
+              href="https://www.reddit.com/r/StableDiffusion/comments/x4zs1r/comparison_between_different_samplers_in_stable/"
+              className="text-sm text-cyan-400"
+              target="_blank">
+              
                 Sampler comparison (reddit)
-              </a>
+              
             </Link>
           </li>
           <li>
-            <Link href="https://github.com/Maks-s/sd-akashic">
-              <a className="text-sm text-cyan-400" target="_blank">
+            <Link
+              href="https://github.com/Maks-s/sd-akashic"
+              className="text-sm text-cyan-400"
+              target="_blank">
+              
                 Stable Diffusion Artist Studies
-              </a>
+              
             </Link>
           </li>
           <li>
-            <Link href="https://promptomania.com/stable-diffusion-prompt-builder/">
-              <a className="text-sm text-cyan-400" target="_blank">
+            <Link
+              href="https://promptomania.com/stable-diffusion-prompt-builder/"
+              className="text-sm text-cyan-400"
+              target="_blank">
+              
                 Stable Diffusion Prompt Builder
-              </a>
+              
             </Link>
           </li>
         </ul>
       </div>
     </AboutWrapper>
-  )
+  );
 }
 
 export default AboutPage

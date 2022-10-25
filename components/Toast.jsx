@@ -80,19 +80,19 @@ export default function Toast({ handleClose, jobId, showImageReadyToast }) {
     <StyledToast active={isActive} role="alert">
       {isActive && (
         <>
-          <Link href={`/image/${jobId}`}>
-            <a onClick={handleClick}>
-              <div className="mt-[4px]">
-                <ImageSquare imageDetails={imageDetails} size={80} />
-              </div>
-            </a>
+          <Link href={`/image/${jobId}`} onClick={handleClick}>
+
+            <div className="mt-[4px]">
+              <ImageSquare imageDetails={imageDetails} size={80} />
+            </div>
+
           </Link>
           <div className="flex-col">
             <div className="ml-4 text-sm font-normal text-white">Your new image is ready.</div>
-            <Link href={`/image/${jobId}`}>
-              <a onClick={handleClick}>
-                <div className="ml-4 text-sm font-normal text-cyan-400">Check it out!</div>
-              </a>
+            <Link href={`/image/${jobId}`} onClick={handleClick}>
+
+              <div className="ml-4 text-sm font-normal text-cyan-400">Check it out!</div>
+
             </Link >
           </div>
           <StyledClose onClick={handleClose}>
@@ -101,5 +101,5 @@ export default function Toast({ handleClose, jobId, showImageReadyToast }) {
         </>
       )}
     </StyledToast >
-  )
+  );
 }

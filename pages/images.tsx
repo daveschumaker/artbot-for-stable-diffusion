@@ -147,8 +147,8 @@ const ImagesPage = () => {
       {!isInitialLoad && images.length === 0 && (
         <div className="mb-2">
           You haven&apos;t created any images yet.{' '}
-          <Link href="/">
-            <a className="text-cyan-400">Why not create something?</a>
+          <Link href="/" className="text-cyan-400">
+            Why not create something?
           </Link>
         </div>
       )}
@@ -166,20 +166,20 @@ const ImagesPage = () => {
                 return (
                   <LazyLoad key={image.jobId} once>
                     <Link href={`/image/${image.jobId}`} passHref>
-                      <a>
-                        <img
-                          src={'data:image/webp;base64,' + image.base64String}
-                          style={{
-                            borderRadius: '4px',
-                            width: '100%',
-                            display: 'block'
-                          }}
-                          alt={image.prompt}
-                        />
-                      </a>
+
+                      <img
+                        src={'data:image/webp;base64,' + image.base64String}
+                        style={{
+                          borderRadius: '4px',
+                          width: '100%',
+                          display: 'block'
+                        }}
+                        alt={image.prompt}
+                      />
+
                     </Link>
                   </LazyLoad>
-                )
+                );
               }
             )}
           </Masonry>
@@ -197,15 +197,15 @@ const ImagesPage = () => {
                 return (
                   <LazyLoad key={image.jobId} once>
                     <Link href={`/image/${image.jobId}`} passHref>
-                      <a>
-                        <ImageSquare
-                          imageDetails={image}
-                          imageType={'image/webp'}
-                        />
-                      </a>
+
+                      <ImageSquare
+                        imageDetails={image}
+                        imageType={'image/webp'}
+                      />
+
                     </Link>
                   </LazyLoad>
-                )
+                );
               }
             )}
           </>
@@ -225,15 +225,15 @@ const ImagesPage = () => {
                 <LazyLoad key={image.jobId} once>
                   <div className="text-center border-[1px] border-solid border-slate-400 rounded-lg w-full mb-4 md:w-[512px] mx-auto">
                     <Link href={`/image/${image.jobId}`} passHref>
-                      <a>
-                        <div className="bg-slate-600 rounded-t-lg">
-                          <img
-                            src={'data:image/webp;base64,' + image.base64String}
-                            className="mx-auto rounded-t-lg"
-                            alt={image.prompt}
-                          />
-                        </div>
-                      </a>
+
+                      <div className="bg-slate-600 rounded-t-lg">
+                        <img
+                          src={'data:image/webp;base64,' + image.base64String}
+                          className="mx-auto rounded-t-lg"
+                          alt={image.prompt}
+                        />
+                      </div>
+
                     </Link>
                     <ImageCardDetails
                       imageDetails={image}
@@ -241,7 +241,7 @@ const ImagesPage = () => {
                     />
                   </div>
                 </LazyLoad>
-              )
+              );
             }
           )}
       </div>
@@ -264,7 +264,7 @@ const ImagesPage = () => {
         </div>
       )}
     </div>
-  )
+  );
 }
 
 export default ImagesPage

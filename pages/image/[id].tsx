@@ -84,8 +84,8 @@ const ImagePage = () => {
             browser.
           </div>
           <div className="mt-4 mb-2">
-            <Link href="/">
-              <a className="text-cyan-400">Why not create something new?</a>
+            <Link href="/" className="text-cyan-400">
+              Why not create something new?
             </Link>
           </div>
         </>
@@ -119,20 +119,20 @@ const ImagePage = () => {
                   return (
                     <LazyLoad key={image.jobId} once>
                       <Link href={`/image/${image.jobId}`} passHref>
-                        <a>
-                          <img
-                            src={'data:image/webp;base64,' + image.base64String}
-                            style={{
-                              borderRadius: '4px',
-                              width: '100%',
-                              display: 'block'
-                            }}
-                            alt={image.prompt}
-                          />
-                        </a>
+
+                        <img
+                          src={'data:image/webp;base64,' + image.base64String}
+                          style={{
+                            borderRadius: '4px',
+                            width: '100%',
+                            display: 'block'
+                          }}
+                          alt={image.prompt}
+                        />
+
                       </Link>
                     </LazyLoad>
-                  )
+                  );
                 }
               )}
             </Masonry>
@@ -140,7 +140,7 @@ const ImagePage = () => {
         </div>
       )}
     </div>
-  )
+  );
 }
 
 export default ImagePage

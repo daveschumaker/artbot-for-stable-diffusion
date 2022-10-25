@@ -22,5 +22,5 @@ export function uuidv4() {
       c ^
       (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
     ).toString(16)
-  )
+  );
 }

@@ -35,14 +35,14 @@ const FaqPage = () => {
           A: You&apos;re probably running into the Stable Diffusion / Stable
           Horde NSFW filter. It can sometimes be a bit too aggressive. Try
           disabling it in the{' '}
-          <Link href="/settings">
-            <a className="text-cyan-500">settings panel</a>
+          <Link href="/settings" className="text-cyan-500">
+            settings panel
           </Link>
           .
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default FaqPage

@@ -143,19 +143,19 @@ const PendingItem = ({ handleDeleteJob, jobId }) => {
         <ImageWaiting>
           {jobDetails.jobStatus === 'processing' && <SpinnerV2 />}
           {jobDetails.jobStatus === 'done' && (
-            <Link href={`/image/${jobId}`}>
-              <a
-                onClick={() => {
-                  clearNewImageNotification()
-                }}
-              >
-                <ImageSquare
-                  // @ts-ignore
-                  imageDetails={jobDetails}
-                  size={100}
-                />
-              </a>
-            </Link>
+            (<Link
+              href={`/image/${jobId}`}
+              onClick={() => {
+                clearNewImageNotification()
+              }}>
+
+              <ImageSquare
+                // @ts-ignore
+                imageDetails={jobDetails}
+                size={100}
+              />
+
+            </Link>)
           )}
           {jobDetails.jobStatus === 'waiting' && <PhotoUpIcon size={48} />}
           {jobDetails.jobStatus === 'error' && (
@@ -236,7 +236,7 @@ const PendingItem = ({ handleDeleteJob, jobId }) => {
         )}
       </Panel>
     </div>
-  )
+  );
 }
 
 export default PendingItem

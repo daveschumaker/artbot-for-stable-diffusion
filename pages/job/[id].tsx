@@ -90,13 +90,13 @@ const JobPage = () => {
         <div key={image.jobId}>
           <LazyLoad once>
             <Link href={`/image/${image.jobId}`} passHref>
-              <a>
-                <ImageSquare
-                  //@ts-ignore
-                  imageDetails={image}
-                  imageType={'image/webp'}
-                />
-              </a>
+
+              <ImageSquare
+                //@ts-ignore
+                imageDetails={image}
+                imageType={'image/webp'}
+              />
+
             </Link>
           </LazyLoad>
         </div>
