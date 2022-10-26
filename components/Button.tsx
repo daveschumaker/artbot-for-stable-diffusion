@@ -30,10 +30,10 @@ const StyledButton = styled.button<ButtonProps>`
     props.btnType === 'secondary' &&
     `
     color: white;
-    background-color: #fa5757;
+    background-color: ${props.theme.buttonSecondary};
 
     &:hover {
-      background-color: #e14e4e;
+      background-color: ${props.theme.buttonSecondaryActive};
     }
   `}
 

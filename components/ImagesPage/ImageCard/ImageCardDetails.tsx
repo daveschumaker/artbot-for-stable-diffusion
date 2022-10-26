@@ -38,9 +38,7 @@ interface ImageDetailsProps {
 
 const StyledPanel = styled.div`
   background-color: ${(props) => props.theme.cardBackground};
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
-  border-top: 1px solid ${(props) => props.theme.inputText};
+  border-top: 2px solid ${(props) => props.theme.text};
   color: ${(props) => props.theme.grayText};
 `
 

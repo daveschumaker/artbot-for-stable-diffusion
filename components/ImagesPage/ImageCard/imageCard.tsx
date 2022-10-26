@@ -10,30 +10,34 @@ interface Props {
 }
 
 interface ImageDetails {
-  jobId: string
   base64String: string
+  height: number
+  jobId: string
   prompt: string
-  timestamp: number
   seed: number
+  timestamp: number
+  width: number
+}
+
+interface StyledProps {
+  height: number
+  width: number
 }
 
 const CardContainer = styled.div`
-  border: 1px solid ${(props) => props.theme.inputText};
+  border: 2px solid ${(props) => props.theme.text};
   border-radius: 4px;
   margin: 0 auto;
+  margin-bottom: 8px;
   max-width: 512px;
   width: 100%;
 `
 
-const StyledImageContainer = styled.div`
+const StyledImageContainer = styled.div<StyledProps>`
   position: relative;
-  height: ${(props) => props.height};
-  width: ${(props) => props.width};
-  /* max-height: 768px; */
-  max-width: 512px;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
 `
+
+const StyledImage = styled(Image)``
 
 const ImageCard = (props: Props) => {
   const { imageDetails, handleDeleteImageClick } = props
@@ -42,9 +46,8 @@ const ImageCard = (props: Props) => {
     <CardContainer>
       <Link href={`/image/${jobId}`} passHref>
         <StyledImageContainer height={height} width={width}>
-          <Image
+          <StyledImage
             src={'data:image/webp;base64,' + base64String}
-            className="mx-auto rounded-t-lg"
             alt={prompt}
             height={height}
             width={width}

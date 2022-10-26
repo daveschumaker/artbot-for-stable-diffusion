@@ -11,11 +11,14 @@ export const lightTheme = {
   navLinkActive: colors.teal,
   navLinkNormal: '#282828',
   textLink: 'rgb(34, 211, 238)',
-  buttonPrimary: 'rgb(59, 130, 246)',
-  buttonPrimaryActive: '#1890ff',
   link: '#17cfbb',
   linkActive: '#5eedde',
-  waitingImageBackground: 'gray'
+  waitingImageBackground: '#d4d4d4',
+
+  buttonPrimary: '#6AB7C6',
+  buttonPrimaryActive: '#8fc9d4',
+  buttonSecondary: '#C77B68',
+  buttonSecondaryActive: '#d59c8e'
 }
 export const darkTheme = {
   body: '#344c50',
@@ -28,9 +31,12 @@ export const darkTheme = {
   navLinkActive: colors.teal,
   navLinkNormal: '#ffffff',
   textLink: 'rgb(34, 211, 238)',
-  buttonPrimary: '#1890ff',
-  buttonPrimaryActive: 'rgb(59, 130, 246)',
   link: '#5eedde',
   linkActive: '#17cfbb',
-  waitingImageBackground: 'black'
+  waitingImageBackground: 'black',
+
+  buttonPrimary: '#6AB7C6',
+  buttonPrimaryActive: '#8fc9d4',
+  buttonSecondary: '#C77B68',
+  buttonSecondaryActive: '#d59c8e'
 }

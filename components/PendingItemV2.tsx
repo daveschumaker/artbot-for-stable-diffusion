@@ -46,6 +46,8 @@ const ImageWaiting = styled.div`
   width: 100px;
   min-width: 100px;
   min-height: 100px;
+  box-shadow: 0 16px 38px -12px rgb(0 0 0 / 56%),
+    0 4px 25px 0px rgb(0 0 0 / 12%), 0 8px 10px -5px rgb(0 0 0 / 20%);
 `
 
 const ProgressBarPosition = styled.div`
@@ -69,6 +71,8 @@ const StyledInfoDiv = styled.div`
   display: flex;
   margin-top: 8px;
 `
+
+const StyledImage = styled(ImageSquare)``
 
 // @ts-ignore
 const PendingItem = ({ handleDeleteJob, jobId }) => {
@@ -176,7 +180,7 @@ const PendingItem = ({ handleDeleteJob, jobId }) => {
                   clearNewImageNotification()
                 }}
               >
-                <ImageSquare
+                <StyledImage
                   // @ts-ignore
                   imageDetails={jobDetails}
                   size={100}

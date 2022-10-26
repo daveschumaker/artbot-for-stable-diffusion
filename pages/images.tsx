@@ -4,7 +4,6 @@ import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import Masonry from 'react-responsive-masonry'
 
-import ImageCardDetails from '../components/ImagesPage/ImageCard/ImageCardDetails'
 import PageTitle from '../components/PageTitle'
 import Spinner from '../components/Spinner'
 import { fetchCompletedJobs, imageCount } from '../utils/db'
@@ -92,10 +91,10 @@ const ImagesPage = () => {
     }
   }, [fetchImages])
 
-  let defaultStyle = `flex gap-y-2.5`
+  let defaultStyle = `flex gap-y-3 mt-4`
 
   if (showLayout === 'grid' || showLayout === 'layout') {
-    defaultStyle += ` flex-wrap gap-x-2.5 justify-center md:justify-start`
+    defaultStyle += ` flex-wrap gap-x-3 justify-center md:justify-start`
   } else {
     defaultStyle += ` flex-col justify-center`
   }
@@ -217,6 +216,8 @@ const ImagesPage = () => {
               prompt: string
               timestamp: number
               seed: number
+              height: number
+              width: number
             }) => {
               return (
                 <ImageCard
