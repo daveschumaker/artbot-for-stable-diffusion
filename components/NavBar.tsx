@@ -33,6 +33,35 @@ const StyledNavBar = styled.nav`
   }
 `
 
+const StyledUl = styled.ul`
+  display: flex;
+  flex-direction: row;
+`
+
+interface LiProps {
+  active: boolean
+}
+
+const StyledLi = styled.li<LiProps>`
+  color: ${(props) => props.theme.navLinkNormal};
+  font-size: 16px;
+  font-weight: 600;
+  padding: 4px 8px;
+  text-align: left;
+
+  &:hover {
+    color: ${(props) => props.theme.navLinkActive};
+    border-bottom: 2px solid ${(props) => props.theme.navLinkActive};
+  }
+
+  ${(props) =>
+    props.active &&
+    `
+    color: ${props.theme.navLinkActive};
+    border-bottom: 2px solid  ${props.theme.navLinkActive};
+  `}
+`
+
 export default function NavBar() {
   const size = useWindowSize()
   const router = useRouter()
@@ -56,10 +85,12 @@ export default function NavBar() {
 
   const isActiveRoute = (page: string) => {
     if (page === pathname) {
-      return 'inline-block p-2 text-teal-500 rounded-t-lg border-b-2 border-teal-500 active0'
+      // return 'inline-block p-2 text-teal-500 rounded-t-lg border-b-2 border-teal-500 active0'
+      return true
     }
 
-    return 'inline-block p-2 rounded-t-lg border-b-2 border-transparent hover:text-teal-500 hover:border-teal-500'
+    return false
+    // return 'inline-block p-2 rounded-t-lg border-b-2 border-transparent hover:text-teal-500 hover:border-teal-500'
   }
 
   useEffect(() => {
@@ -76,29 +107,28 @@ export default function NavBar() {
 
   return (
     <StyledNavBar>
-      <ul className="flex flex-row">
-        <li className="text-left">
-          <Link href="/" passHref className={isActiveRoute('/')}>
-
-            <IconCreate className="inline-block mr-1 pb-1" />Create
+      <StyledUl>
+        <StyledLi active={isActiveRoute('/')}>
+          <Link href="/" passHref>
+            <IconCreate className="inline-block mr-1 pb-1" />
+            Create
           </Link>
-        </li>
-        <li className="text-left">
-          <Link href="/pending" passHref className={isActiveRoute('/pending')}>
-
-            <HourglassIcon className="inline-block mr-[2-px] pb-1" />Pending
+        </StyledLi>
+        <StyledLi active={isActiveRoute('/pending')}>
+          <Link href="/pending" passHref>
+            <HourglassIcon className="inline-block mr-[2-px] pb-1" />
+            Pending
           </Link>
-        </li>
-        <li className="text-left">
+        </StyledLi>
+        <StyledLi active={isActiveRoute('/images')}>
           <Link
             href="/images"
             passHref
-            className={isActiveRoute('/images')}
             onClick={() => {
               clearNewImageNotification()
               handleForceReload()
-            }}>
-
+            }}
+          >
             {newImageReady ? (
               <PhotoPlusIcon
                 className="inline-block mr-[2-px] pb-1"
@@ -106,16 +136,17 @@ export default function NavBar() {
               />
             ) : (
               <PhotoIcon className="inline-block mr-[2-px] pb-1" />
-            )}Images
+            )}
+            Images
           </Link>
-        </li>
-        <li className="text-left">
-          <Link href="/settings" passHref className={isActiveRoute('/settings')}>
-
-            <SettingsIcon className="inline-block mr-[2-px] pb-1" />Settings
+        </StyledLi>
+        <StyledLi active={isActiveRoute('/settings')}>
+          <Link href="/settings" passHref>
+            <SettingsIcon className="inline-block mr-[2-px] pb-1" />
+            Settings
           </Link>
-        </li>
-      </ul>
+        </StyledLi>
+      </StyledUl>
     </StyledNavBar>
-  );
+  )
 }

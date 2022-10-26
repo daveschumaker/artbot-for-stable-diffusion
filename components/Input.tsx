@@ -11,10 +11,10 @@ interface InputProps {
 }
 
 const StyledInput = styled.input<InputProps>`
-  background-color: rgb(42, 48, 60);
+  background-color: ${(props) => props.theme.inputBackground};
   border-radius: 4px;
-  border: 1px solid white;
-  color: #e1e1e1;
+  border: 1px solid ${(props) => props.theme.inputColor};
+  color: ${(props) => props.theme.border};
   font-size: 16px;
   height: 40px;
   padding: 8px;

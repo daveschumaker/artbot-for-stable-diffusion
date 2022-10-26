@@ -10,13 +10,13 @@ import { Button } from './Button'
 import { trackEvent, trackGaEvent } from '../api/telemetry'
 import RefreshIcon from './icons/RefreshIcon'
 import UploadIcon from './icons/UploadIcon'
-import Link from 'next/link'
 import {
   copyEditPrompt,
   downloadImage,
   rerollImage,
   uploadImg2Img
 } from '../controllers/imageDetailsCommon'
+import Linker from './Linker'
 
 interface ImageDetails {
   img2img?: boolean
@@ -162,7 +162,7 @@ const ImageDetails = ({
         -- Settings --
         <ul>
           Job:{' '}
-          <Link
+          <Linker
             href={`/job/${imageDetails.parentJobId}`}
             passHref
             className="text-cyan-500"
@@ -171,11 +171,10 @@ const ImageDetails = ({
                 event: 'JOB_DETAILS_CLICK',
                 context: 'ImagePage'
               })
-            }}>
-
+            }}
+          >
             {imageDetails.parentJobId}
-
-          </Link>
+          </Linker>
           {imageDetails.img2img && <li>Source: img2img</li>}
           {imageDetails.negative && (
             <li>Negative prompt: {imageDetails.negative}</li>
@@ -239,7 +238,7 @@ const ImageDetails = ({
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 export default ImageDetails

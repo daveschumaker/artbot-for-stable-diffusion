@@ -9,6 +9,9 @@ import Footer from '../components/Footer'
 import Header from '../components/Header'
 import NavBar from '../components/NavBar'
 import PollController from '../components/PollController'
+
+import { GlobalStyles } from '../styles/globalStyles'
+import { lightTheme, darkTheme } from '../styles/theme'
 import '../styles/globals.css'
 
 import { initDb } from '../utils/db'
@@ -49,8 +52,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     }
   }, [buildId])
 
-  const theme = {}
-
   useEffect(() => {
     fetchAppInfo()
     const interval = setInterval(async () => {
@@ -61,7 +62,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, [fetchAppInfo])
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={darkTheme}>
+      <GlobalStyles />
       <Script
         strategy="lazyOnload"
         src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}

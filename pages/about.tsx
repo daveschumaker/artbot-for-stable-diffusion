@@ -2,6 +2,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import styled from 'styled-components'
+import Linker from '../components/Linker'
 
 import PageTitle from '../components/PageTitle'
 import Text from '../components/Text'
@@ -31,14 +32,13 @@ const AboutPage = () => {
         <Text>
           ArtBot is an unofficial front-end web client designed for interacting
           with the{' '}
-          <a
+          <Linker
             href="https://stablehorde.net/"
             target="_blank"
-            className="text-cyan-400"
             rel="noreferrer"
           >
             Stable Horde
-          </a>{' '}
+          </Linker>{' '}
           distributed cluster.
         </Text>
         <Text>
@@ -46,140 +46,111 @@ const AboutPage = () => {
           provided by a community of generous users that allows anyone to create
           generative AI artwork on their own computers or mobile devices. More
           information is available on the{' '}
-          <a
+          <Linker
             href="https://stablehorde.net/"
             target="_blank"
-            className="text-cyan-400"
             rel="noreferrer"
           >
             Stable Horde
-          </a>{' '}
+          </Linker>{' '}
           page and you can also join their{' '}
-          <a
+          <Linker
             href="https://discord.gg/3DxrhksKzn"
             target="_blank"
-            className="text-cyan-400"
             rel="noreferrer"
           >
             Discord server
-          </a>{' '}
+          </Linker>{' '}
           for further discussion on the technology behind the cluster, as well
           as tools built on top of the platform (such as ArtBot).
         </Text>
         <Text>
           This particular web app was initially built as a side project by{' '}
-          <Link
+          <Linker
             href="https://twitter.com/davely"
-            className="text-cyan-400"
             target="_blank"
-            rel="noopener noreferrer">
-            
-              davely
-            
-          </Link>{' '}
+            rel="noopener noreferrer"
+          >
+            davely
+          </Linker>{' '}
           as a way to experiment with various client-side technology, such as{' '}
-          <a
+          <Linker
             href="https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API"
             target="_blank"
-            className="text-cyan-400"
             rel="noreferrer"
           >
             IndexedDB
-          </a>{' '}
+          </Linker>{' '}
           and LocalStorage APIs. These APIs allow you to securely and privately
           store the AI generated images you&apos;ve created with the cluster
           within your own browser. The UI components are built using NextJS.
         </Text>
         <Text>
           The source code is available on{' '}
-          <a
+          <Linker
             href="https://github.com/daveschumaker/artbot-for-stable-diffusion"
             target="_blank"
             rel="noreferrer"
-            className="text-cyan-400"
           >
             Github
-          </a>
+          </Linker>
           . Feedback and contributions are welcome! Feel free to reach out to me
           on Twitter at{' '}
-          <Link
+          <Linker
             href="https://twitter.com/davely"
-            className="text-cyan-400"
             target="_blank"
-            rel="noopener noreferrer">
-            
-              @davely
-            
-          </Link>{' '}
+            rel="noopener noreferrer"
+          >
+            @davely
+          </Linker>{' '}
           or on Discord at{' '}
-          <Link
+          <Linker
             href="https://discordapp.com/users/bitbandit#4910"
-            className="text-cyan-400"
             target="_blank"
-            rel="noopener noreferrer">
-            
-              bitbandit#4910
-            
-          </Link>
+            rel="noopener noreferrer"
+          >
+            bitbandit#4910
+          </Linker>
         </Text>
       </div>
       <div className="mt-2">
         <h2 className="font-bold mb-2">Resources and tips</h2>
         <ul>
           <li>
-            <Link
-              href="https://lexica.art/"
-              className="text-sm text-cyan-400"
-              target="_blank">
-              
-                Lexica - Prompt Search Engine
-              
-            </Link>
+            <Linker href="https://lexica.art/" target="_blank">
+              Lexica - Prompt Search Engine
+            </Linker>
           </li>
           <li>
-            <Link
-              href="https://publicprompts.art/"
-              className="text-sm text-cyan-400"
-              target="_blank">
-              
-                Public Prompts Collection
-              
-            </Link>
+            <Linker href="https://publicprompts.art/" target="_blank">
+              Public Prompts Collection
+            </Linker>
           </li>
           <li>
-            <Link
+            <Linker
               href="https://www.reddit.com/r/StableDiffusion/comments/x4zs1r/comparison_between_different_samplers_in_stable/"
-              className="text-sm text-cyan-400"
-              target="_blank">
-              
-                Sampler comparison (reddit)
-              
-            </Link>
+              target="_blank"
+            >
+              Sampler comparison (reddit)
+            </Linker>
           </li>
           <li>
-            <Link
-              href="https://github.com/Maks-s/sd-akashic"
-              className="text-sm text-cyan-400"
-              target="_blank">
-              
-                Stable Diffusion Artist Studies
-              
-            </Link>
+            <Linker href="https://github.com/Maks-s/sd-akashic" target="_blank">
+              Stable Diffusion Artist Studies
+            </Linker>
           </li>
           <li>
-            <Link
+            <Linker
               href="https://promptomania.com/stable-diffusion-prompt-builder/"
-              className="text-sm text-cyan-400"
-              target="_blank">
-              
-                Stable Diffusion Prompt Builder
-              
-            </Link>
+              target="_blank"
+            >
+              Stable Diffusion Prompt Builder
+            </Linker>
           </li>
         </ul>
       </div>
     </AboutWrapper>
-  );
+  )
 }
 
 export default AboutPage

@@ -25,8 +25,8 @@ interface JobDetails {
 
 const ImageWaiting = styled.div`
   align-items: center;
-  background-color: black;
-  border: 1px solid white;
+  background-color: ${(props) => props.theme.waitingImageBackground};
+  border: 1px solid ${(props) => props.theme.border};
   border-radius: 4px;
   display: flex;
   justify-content: center;
@@ -42,6 +42,10 @@ const ProgressBarPosition = styled.div`
   bottom: 16px;
   left: 0;
   right: 0;
+`
+
+const StyledPrompt = styled.div`
+  color: ${(props) => props.theme.grayText};
 `
 
 // @ts-ignore
@@ -143,19 +147,18 @@ const PendingItem = ({ handleDeleteJob, jobId }) => {
         <ImageWaiting>
           {jobDetails.jobStatus === 'processing' && <SpinnerV2 />}
           {jobDetails.jobStatus === 'done' && (
-            (<Link
+            <Link
               href={`/image/${jobId}`}
               onClick={() => {
                 clearNewImageNotification()
-              }}>
-
+              }}
+            >
               <ImageSquare
                 // @ts-ignore
                 imageDetails={jobDetails}
                 size={100}
               />
-
-            </Link>)
+            </Link>
           )}
           {jobDetails.jobStatus === 'waiting' && <PhotoUpIcon size={48} />}
           {jobDetails.jobStatus === 'error' && (
@@ -163,9 +166,9 @@ const PendingItem = ({ handleDeleteJob, jobId }) => {
           )}
         </ImageWaiting>
         <div className="flex flex-col align-top flex-grow flex-wrap">
-          <div className="italic text-gray-300 flex-grow">
+          <StyledPrompt className="italic flex-grow">
             {jobDetails.prompt}
-          </div>
+          </StyledPrompt>
           <div className="mt-2 w-full flex flex-row items-center">
             <div className="flex flex-grow flex-col">
               {jobDetails.jobStatus === 'processing' && (
@@ -236,7 +239,7 @@ const PendingItem = ({ handleDeleteJob, jobId }) => {
         )}
       </Panel>
     </div>
-  );
+  )
 }
 
 export default PendingItem

@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import Image from 'next/image'
-// import styled from 'styled-components'
+import styled from 'styled-components'
 interface ImageDetails {
   base64String: string
   prompt?: string
@@ -11,6 +11,17 @@ interface ImageSquareProps {
   size?: number
   imageType?: string
 }
+
+interface StyledProps {
+  size: number
+}
+
+const StyledImageWrapper = styled.div<StyledProps>`
+  overflow: hidden;
+  position: relative;
+  height: ${(props) => props.size}px;
+  width: ${(props) => props.size}px;
+`
 
 export default function ImageSquare({
   imageDetails,
@@ -24,13 +35,14 @@ export default function ImageSquare({
   }
 
   return (
-    <Image
-      src={base64String}
-      width={size}
-      height={size}
-      alt={imageDetails?.prompt}
-      className="mx-auto rounded"
-      objectFit="cover"
-    />
+    <StyledImageWrapper size={size}>
+      <Image
+        fill
+        src={base64String}
+        alt={imageDetails?.prompt || ''}
+        className="mx-auto rounded"
+        style={{ objectFit: 'cover' }}
+      />
+    </StyledImageWrapper>
   )
 }

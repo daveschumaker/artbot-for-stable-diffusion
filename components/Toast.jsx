@@ -12,9 +12,9 @@ import CloseIcon from './icons/CloseIcon'
 
 const StyledToast = styled.div`
   align-items: center;
-  background-color: #282828;
+  background-color: ${(props) => props.theme.background};
   border-radius: 4px;
-  border: 2px solid white;
+  border: 2px solid ${(props) => props.theme.border};
   cursor: pointer;
   display: flex;
   flex-direction: row;
