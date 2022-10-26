@@ -29,6 +29,7 @@
     "react-dropzone": "14.2.3",
     "react-lazyload": "3.2.0",
     "react-responsive-masonry": "2.1.6",
+    "react-select": "^5.5.6",
     "sharp": "0.31.1",
     "statery": "0.6.3",
     "styled-components": "5.3.6"
