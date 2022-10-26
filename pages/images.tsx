@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import Masonry from 'react-responsive-masonry'
 
-import ImageCardDetails from '../components/ImageCardDetails'
+import ImageCardDetails from '../components/ImagesPage/ImageCard/ImageCardDetails'
 import PageTitle from '../components/PageTitle'
 import Spinner from '../components/Spinner'
 import { fetchCompletedJobs, imageCount } from '../utils/db'
@@ -16,6 +16,7 @@ import ImageSquare from '../components/ImageSquare'
 import { trackEvent } from '../api/telemetry'
 import { Button } from '../components/Button'
 import { useWindowSize } from '../hooks/useWindowSize'
+import ImageCard from '../components/ImagesPage/ImageCard/imageCard'
 
 const ImagesPage = () => {
   const size = useWindowSize()
@@ -166,7 +167,6 @@ const ImagesPage = () => {
                 return (
                   <LazyLoad key={image.jobId} once>
                     <Link href={`/image/${image.jobId}`} passHref>
-
                       <img
                         src={'data:image/webp;base64,' + image.base64String}
                         style={{
@@ -176,10 +176,9 @@ const ImagesPage = () => {
                         }}
                         alt={image.prompt}
                       />
-
                     </Link>
                   </LazyLoad>
-                );
+                )
               }
             )}
           </Masonry>
@@ -197,15 +196,13 @@ const ImagesPage = () => {
                 return (
                   <LazyLoad key={image.jobId} once>
                     <Link href={`/image/${image.jobId}`} passHref>
-
                       <ImageSquare
                         imageDetails={image}
                         imageType={'image/webp'}
                       />
-
                     </Link>
                   </LazyLoad>
-                );
+                )
               }
             )}
           </>
@@ -222,26 +219,12 @@ const ImagesPage = () => {
               seed: number
             }) => {
               return (
-                <LazyLoad key={image.jobId} once>
-                  <div className="text-center border-[1px] border-solid border-slate-400 rounded-lg w-full mb-4 md:w-[512px] mx-auto">
-                    <Link href={`/image/${image.jobId}`} passHref>
-
-                      <div className="bg-slate-600 rounded-t-lg">
-                        <img
-                          src={'data:image/webp;base64,' + image.base64String}
-                          className="mx-auto rounded-t-lg"
-                          alt={image.prompt}
-                        />
-                      </div>
-
-                    </Link>
-                    <ImageCardDetails
-                      imageDetails={image}
-                      onDelete={handleDeleteImageClick}
-                    />
-                  </div>
-                </LazyLoad>
-              );
+                <ImageCard
+                  key={image.jobId}
+                  imageDetails={image}
+                  handleDeleteImageClick={handleDeleteImageClick}
+                />
+              )
             }
           )}
       </div>
@@ -264,7 +247,7 @@ const ImagesPage = () => {
         </div>
       )}
     </div>
-  );
+  )
 }
 
 export default ImagesPage

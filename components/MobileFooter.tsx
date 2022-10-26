@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
-import { colors } from '../styles/colors'
+import { colors } from '../styles/variables'
 import CreateIcon from '../components/icons/CreateIcon'
 import HourglassIcon from './icons/HourglassIcon'
 import PhotoIcon from './icons/PhotoIcon'
@@ -26,8 +26,7 @@ interface NavIconWrapperProps {
 }
 
 const StyledFooter = styled.div<StyledFooterProps>`
-  background-color: black;
-  background-color: #282828;
+  background-color: ${(props) => props.theme.body};
   border-top: 1px solid gray;
   position: fixed;
   bottom: 0;
@@ -60,7 +59,8 @@ const NavIcons = styled.div`
 
 const NavIconWrapper = styled.div<NavIconWrapperProps>`
   align-items: center;
-  border-top: 4px solid ${colors['background']};
+  border-top: 4px solid transparent;
+  color: black;
   display: flex;
   justify-content: center;
   height: 51px;
@@ -72,6 +72,38 @@ const NavIconWrapper = styled.div<NavIconWrapperProps>`
     `
       border-top: 4px solid ${colors['teal']};
     `}
+`
+
+interface IconProps {
+  active?: boolean
+}
+
+const IconCss = css<IconProps>`
+  stroke: ${(props) => props.theme.navLinkNormal};
+
+  ${(props) =>
+    props.active &&
+    `
+    stroke: ${props.theme.navLinkActive};
+  `}
+`
+
+const StyledCreateIcon = styled(CreateIcon)`
+  ${IconCss}
+`
+
+const StyledHourglassIcon = styled(HourglassIcon)`
+  ${IconCss}
+`
+const StyledPhotoIcon = styled(PhotoIcon)`
+  ${IconCss}
+`
+const StyledHelpIcon = styled(HelpIcon)`
+  ${IconCss}
+`
+
+const StyledSettingsIcon = styled(SettingsIcon)`
+  ${IconCss}
 `
 
 export default function MobileFooter() {
@@ -98,26 +130,16 @@ export default function MobileFooter() {
   return (
     <StyledFooter isPwa={isPwa}>
       <NavIcons>
-        <NavIconWrapper active={isActive('/')}>
-          <Link href="/">
-
-            <CreateIcon
-              size={32}
-              stroke={isActive('/') ? '#14B8A6' : 'white'}
-            />
-
-          </Link>
-        </NavIconWrapper>
-        <NavIconWrapper active={isActive('/pending')}>
-          <Link href="/pending">
-
-            <HourglassIcon
-              size={32}
-              stroke={isActive('/pending') ? '#14B8A6' : 'white'}
-            />
-
-          </Link>
-        </NavIconWrapper>
+        <Link href="/">
+          <NavIconWrapper active={isActive('/')}>
+            <StyledCreateIcon size={32} active={isActive('/')} />
+          </NavIconWrapper>
+        </Link>
+        <Link href="/pending">
+          <NavIconWrapper active={isActive('/pending')}>
+            <StyledHourglassIcon size={32} active={isActive('/pending')} />
+          </NavIconWrapper>
+        </Link>
         <NavIconWrapper active={isActive('/images')}>
           <Link
             href="/images"
@@ -125,39 +147,25 @@ export default function MobileFooter() {
             onClick={() => {
               setShowImageReadyToast(false)
               setNewImageReady('')
-            }}>
-
+            }}
+          >
             {newImageReady && (
               <span className="opacity-1 inline-block w-3 h-3 mr-1 bg-red-600 rounded-full absolute l-[4px]"></span>
             )}
-            <PhotoIcon
-              size={32}
-              stroke={isActive('/images') ? '#14B8A6' : 'white'}
-            />
-
+            <StyledPhotoIcon size={32} active={isActive('/images')} />
           </Link>
         </NavIconWrapper>
         <NavIconWrapper active={isActive('/about')}>
           <Link href="/about">
-
-            <HelpIcon
-              size={32}
-              stroke={isActive('/about') ? '#14B8A6' : 'white'}
-            />
-
+            <StyledHelpIcon size={32} active={isActive('/about')} />
           </Link>
         </NavIconWrapper>
         <NavIconWrapper active={isActive('/settings')}>
           <Link href="/settings">
-
-            <SettingsIcon
-              size={32}
-              stroke={isActive('/settings') ? '#14B8A6' : 'white'}
-            />
-
+            <StyledSettingsIcon size={32} active={isActive('/settings')} />
           </Link>
         </NavIconWrapper>
       </NavIcons>
     </StyledFooter>
-  );
+  )
 }

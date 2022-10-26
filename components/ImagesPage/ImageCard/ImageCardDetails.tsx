@@ -1,21 +1,22 @@
 /* eslint-disable @next/next/no-img-element */
 import { useRouter } from 'next/router'
+import styled from 'styled-components'
 
-import { deleteCompletedImage } from '../utils/db'
-import ConfirmationModal from './ConfirmationModal'
+import { deleteCompletedImage } from '../../../utils/db'
+import ConfirmationModal from '../../ConfirmationModal'
 import { useCallback, useState } from 'react'
-import TrashIcon from './icons/TrashIcon'
-import DownloadIcon from './icons/DownloadIcon'
-import { Button } from './Button'
-import { trackEvent, trackGaEvent } from '../api/telemetry'
-import RefreshIcon from './icons/RefreshIcon'
-import UploadIcon from './icons/UploadIcon'
+import TrashIcon from '../../icons/TrashIcon'
+import DownloadIcon from '../../icons/DownloadIcon'
+import { Button } from '../../Button'
+import { trackEvent, trackGaEvent } from '../../../api/telemetry'
+import RefreshIcon from '../../icons/RefreshIcon'
+import UploadIcon from '../../icons/UploadIcon'
 import {
   copyEditPrompt,
   downloadImage,
   rerollImage,
   uploadImg2Img
-} from '../controllers/imageDetailsCommon'
+} from '../../../controllers/imageDetailsCommon'
 
 interface ImageDetails {
   jobId: string
@@ -34,6 +35,14 @@ interface ImageDetailsProps {
   imageDetails: ImageDetails
   onDelete: () => void
 }
+
+const StyledPanel = styled.div`
+  background-color: ${(props) => props.theme.cardBackground};
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  border-top: 1px solid ${(props) => props.theme.inputText};
+  color: ${(props) => props.theme.grayText};
+`
 
 const ImageDetails = ({
   imageDetails,
@@ -151,14 +160,14 @@ const ImageDetails = ({
   )
 
   return (
-    <div className="text-left border-slate-400 border-t-[1px] p-4">
+    <StyledPanel className="text-left p-4">
       {showDeleteModal && (
         <ConfirmationModal
           onConfirmClick={() => handleDeleteImageClick(imageDetails.jobId)}
           closeModal={() => setShowDeleteModal(false)}
         />
       )}
-      <div className="font-mono">{imageDetails.prompt}</div>
+      <div>{imageDetails.prompt}</div>
       <div className="font-mono text-xs mt-2">
         Created: {new Date(imageDetails.timestamp).toLocaleString()}
       </div>
@@ -203,7 +212,7 @@ const ImageDetails = ({
           </Button>
         </div>
       </div>
-    </div>
+    </StyledPanel>
   )
 }
 

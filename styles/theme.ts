@@ -1,15 +1,11 @@
-export const colors = {
-  blue: '#1890ff',
-  cyan: '#22D3EE',
-  red: '#fa5757',
-  teal: '#14B8A6'
-}
+import { colors, colorsV2 } from './variables'
 
 export const lightTheme = {
-  body: '#ffffff',
-  text: '#000000',
-  grayText: '#525f72',
-  border: '#282828',
+  body: '#f3f3ef',
+  text: '#344c50',
+  grayText: '#ffffff',
+  cardBackground: colorsV2.darkAccent,
+  border: '#7e5a6c',
   inputBackground: '#ffffff',
   inputColor: '#282828',
   navLinkActive: colors.teal,
@@ -17,15 +13,16 @@ export const lightTheme = {
   textLink: 'rgb(34, 211, 238)',
   buttonPrimary: 'rgb(59, 130, 246)',
   buttonPrimaryActive: '#1890ff',
-  link: 'rgb(59, 130, 246)',
-  linkActive: '#1890ff',
+  link: '#17cfbb',
+  linkActive: '#5eedde',
   waitingImageBackground: 'gray'
 }
 export const darkTheme = {
-  body: '#282828',
-  text: '#ffffff',
-  grayText: 'rgb(100, 116, 139)',
-  border: '#ffffff',
+  body: '#344c50',
+  text: '#f3f3ef',
+  grayText: 'f3f3ef',
+  cardBackground: colorsV2.darkAccent,
+  border: '#7e5a6c',
   inputBackground: 'rgb(42, 48, 60)',
   inputColor: '#e1e1e1',
   navLinkActive: colors.teal,
@@ -33,7 +30,7 @@ export const darkTheme = {
   textLink: 'rgb(34, 211, 238)',
   buttonPrimary: '#1890ff',
   buttonPrimaryActive: 'rgb(59, 130, 246)',
-  link: '#1890ff',
-  linkActive: 'rgb(59, 130, 246)',
+  link: '#5eedde',
+  linkActive: '#17cfbb',
   waitingImageBackground: 'black'
 }

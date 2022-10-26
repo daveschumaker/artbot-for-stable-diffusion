@@ -23,7 +23,7 @@ const StyledNavBar = styled.nav`
   display: none;
 
   @media (min-width: 640px) {
-    border-bottom: 1px solid rgb(229, 231, 235);
+    border-bottom: 1px solid ${(props) => props.theme.border};
     color: white;
     display: flex;
     font-size: 14px;
@@ -43,6 +43,7 @@ interface LiProps {
 }
 
 const StyledLi = styled.li<LiProps>`
+  border-bottom: 2px solid transparent;
   color: ${(props) => props.theme.navLinkNormal};
   font-size: 16px;
   font-weight: 600;
@@ -108,27 +109,27 @@ export default function NavBar() {
   return (
     <StyledNavBar>
       <StyledUl>
-        <StyledLi active={isActiveRoute('/')}>
-          <Link href="/" passHref>
+        <Link href="/" passHref>
+          <StyledLi active={isActiveRoute('/')}>
             <IconCreate className="inline-block mr-1 pb-1" />
             Create
-          </Link>
-        </StyledLi>
-        <StyledLi active={isActiveRoute('/pending')}>
-          <Link href="/pending" passHref>
+          </StyledLi>
+        </Link>
+        <Link href="/pending" passHref>
+          <StyledLi active={isActiveRoute('/pending')}>
             <HourglassIcon className="inline-block mr-[2-px] pb-1" />
             Pending
-          </Link>
-        </StyledLi>
-        <StyledLi active={isActiveRoute('/images')}>
-          <Link
-            href="/images"
-            passHref
-            onClick={() => {
-              clearNewImageNotification()
-              handleForceReload()
-            }}
-          >
+          </StyledLi>
+        </Link>
+        <Link
+          href="/images"
+          passHref
+          onClick={() => {
+            clearNewImageNotification()
+            handleForceReload()
+          }}
+        >
+          <StyledLi active={isActiveRoute('/images')}>
             {newImageReady ? (
               <PhotoPlusIcon
                 className="inline-block mr-[2-px] pb-1"
@@ -138,14 +139,14 @@ export default function NavBar() {
               <PhotoIcon className="inline-block mr-[2-px] pb-1" />
             )}
             Images
-          </Link>
-        </StyledLi>
-        <StyledLi active={isActiveRoute('/settings')}>
-          <Link href="/settings" passHref>
+          </StyledLi>
+        </Link>
+        <Link href="/settings" passHref>
+          <StyledLi active={isActiveRoute('/settings')}>
             <SettingsIcon className="inline-block mr-[2-px] pb-1" />
             Settings
-          </Link>
-        </StyledLi>
+          </StyledLi>
+        </Link>
       </StyledUl>
     </StyledNavBar>
   )

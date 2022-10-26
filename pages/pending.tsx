@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
 
 import PageTitle from '../components/PageTitle'
 import Spinner from '../components/Spinner'
@@ -8,6 +7,7 @@ import PendingItem from '../components/PendingItemV2'
 import { trackEvent } from '../api/telemetry'
 import Head from 'next/head'
 import { deletePendingJobFromApi } from '../api/deletePendingJobFromApi'
+import Linker from '../components/Linker'
 
 const PendingPage = () => {
   const [isInitialLoad, setIsInitialLoad] = useState(true)
@@ -63,9 +63,9 @@ const PendingPage = () => {
       {!isInitialLoad && pendingImages.length === 0 && (
         <div className="mt-4 mb-2">
           No images pending.{' '}
-          <Link href="/" className="text-cyan-400">
+          <Linker href="/" className="text-cyan-400">
             Why not create something?
-          </Link>
+          </Linker>
         </div>
       )}
       {!isInitialLoad &&
@@ -80,7 +80,7 @@ const PendingPage = () => {
           )
         })}
     </div>
-  );
+  )
 }
 
 export default PendingPage

@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import Head from 'next/head'
-import Link from 'next/link'
 import styled from 'styled-components'
 import Linker from '../components/Linker'
 

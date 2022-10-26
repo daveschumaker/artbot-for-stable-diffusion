@@ -3,6 +3,7 @@ import Link from 'next/link'
 
 const StyledLink = styled(Link)`
   color: ${(props) => props.theme.link};
+  font-weight: 600;
 
   &:hover {
     color: ${(props) => props.theme.linkActive};

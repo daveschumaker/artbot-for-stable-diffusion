@@ -23,6 +23,17 @@ interface JobDetails {
   wait_time: number
 }
 
+const StyledContainer = styled.div`
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+  position: relative;
+`
+
+const StyledPanel = styled(Panel)`
+  background-color: ${(props) => props.theme.cardBackground};
+  display: flex;
+  flex-direction: column;
+`
+
 const ImageWaiting = styled.div`
   align-items: center;
   background-color: ${(props) => props.theme.waitingImageBackground};
@@ -39,13 +50,24 @@ const ImageWaiting = styled.div`
 
 const ProgressBarPosition = styled.div`
   position: absolute;
-  bottom: 16px;
+  bottom: 0px;
   left: 0;
   right: 0;
 `
 
+const StyledImageInfoPanel = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
 const StyledPrompt = styled.div`
   color: ${(props) => props.theme.grayText};
+`
+
+const StyledInfoDiv = styled.div`
+  color: ${(props) => props.theme.grayText};
+  display: flex;
+  margin-top: 8px;
 `
 
 // @ts-ignore
@@ -142,91 +164,97 @@ const PendingItem = ({ handleDeleteJob, jobId }) => {
   }
 
   return (
-    <div className="pb-4 mb-4 relative border-0 border-b-2 border-dashed border-slate-500 pb-4">
-      <Panel className=" flex flex-row">
-        <ImageWaiting>
-          {jobDetails.jobStatus === 'processing' && <SpinnerV2 />}
-          {jobDetails.jobStatus === 'done' && (
-            <Link
-              href={`/image/${jobId}`}
-              onClick={() => {
-                clearNewImageNotification()
-              }}
-            >
-              <ImageSquare
-                // @ts-ignore
-                imageDetails={jobDetails}
-                size={100}
-              />
-            </Link>
-          )}
-          {jobDetails.jobStatus === 'waiting' && <PhotoUpIcon size={48} />}
-          {jobDetails.jobStatus === 'error' && (
-            <AlertTriangleIcon size={48} stroke="rgb(234 179 8)" />
-          )}
-        </ImageWaiting>
-        <div className="flex flex-col align-top flex-grow flex-wrap">
+    <StyledContainer>
+      <StyledPanel>
+        <StyledImageInfoPanel>
+          <ImageWaiting>
+            {jobDetails.jobStatus === 'processing' && <SpinnerV2 />}
+            {jobDetails.jobStatus === 'done' && (
+              <Link
+                href={`/image/${jobId}`}
+                onClick={() => {
+                  clearNewImageNotification()
+                }}
+              >
+                <ImageSquare
+                  // @ts-ignore
+                  imageDetails={jobDetails}
+                  size={100}
+                />
+              </Link>
+            )}
+            {jobDetails.jobStatus === 'waiting' && <PhotoUpIcon size={48} />}
+            {jobDetails.jobStatus === 'error' && (
+              <AlertTriangleIcon size={48} stroke="rgb(234 179 8)" />
+            )}
+          </ImageWaiting>
           <StyledPrompt className="italic flex-grow">
             {jobDetails.prompt}
           </StyledPrompt>
-          <div className="mt-2 w-full flex flex-row items-center">
-            <div className="flex flex-grow flex-col">
-              {jobDetails.jobStatus === 'processing' && (
-                <div className="w-full font-mono text-xs mt-2">
-                  Estimated time remaining: {calcTime.remainingTime}s (
-                  {calcTime.pctComplete.toFixed(0)}
-                  %)
-                </div>
-              )}
-              {jobDetails.jobStatus === 'waiting' && (
-                <div className="w-full font-mono text-xs mt-2">
-                  Image request queued
-                </div>
-              )}
-              {(jobDetails.jobStatus === 'waiting' ||
-                jobDetails.jobStatus === 'processing') && (
-                <div className="w-full font-mono text-xs">
-                  Created: {new Date(jobDetails.timestamp).toLocaleString()}
-                </div>
-              )}
-              {jobDetails.jobStatus === 'error' && (
-                <div className="font-mono text-xs mt-2 text-red-500">
-                  Created: {new Date(jobDetails.timestamp).toLocaleString()}
-                </div>
-              )}
-            </div>
-            <div className="w-1/4 flex flex-row items-end justify-end">
-              {jobDetails.jobStatus === 'done' && (
-                <Button
-                  onClick={() => {
-                    clearNewImageNotification()
-                    trackEvent({
-                      event: 'VIEW_IMAGE_CLICK',
-                      context: 'PendingItemsPage'
-                    })
-                    trackGaEvent({
-                      action: 'pending_view_image_btn',
-                      params: {
-                        context: 'PendingItemsPage'
-                      }
-                    })
-                    router.push(`/image/${jobDetails.jobId}`)
-                  }}
-                >
-                  View
-                </Button>
-              )}
-              {jobDetails.jobStatus !== 'done' && (
-                <Button
-                  btnType="secondary"
-                  onClick={() => handleDeleteJob(jobId)}
-                >
-                  <TrashIcon />
-                </Button>
-              )}
-            </div>
+        </StyledImageInfoPanel>
+        <StyledInfoDiv>
+          <div className="flex flex-grow flex-col">
+            {jobDetails.jobStatus === 'processing' && (
+              <div className="w-full font-mono text-xs mt-2">
+                Estimated time remaining: {calcTime.remainingTime}s (
+                {calcTime.pctComplete.toFixed(0)}
+                %)
+              </div>
+            )}
+            {jobDetails.jobStatus === 'waiting' && (
+              <div className="w-full font-mono text-xs mt-2">
+                Image request queued
+              </div>
+            )}
+            {jobDetails.jobStatus === 'done' && (
+              <div className="w-full font-mono text-xs mt-2">
+                Image request complete
+              </div>
+            )}
+            {(jobDetails.jobStatus === 'done' ||
+              jobDetails.jobStatus === 'waiting' ||
+              jobDetails.jobStatus === 'processing') && (
+              <div className="w-full font-mono text-xs">
+                Created: {new Date(jobDetails.timestamp).toLocaleString()}
+              </div>
+            )}
+            {jobDetails.jobStatus === 'error' && (
+              <div className="font-mono text-xs mt-2 text-red-500">
+                Created: {new Date(jobDetails.timestamp).toLocaleString()}
+              </div>
+            )}
           </div>
-        </div>
+          <div className="w-1/4 flex flex-row items-end justify-end">
+            {jobDetails.jobStatus === 'done' && (
+              <Button
+                onClick={() => {
+                  clearNewImageNotification()
+                  trackEvent({
+                    event: 'VIEW_IMAGE_CLICK',
+                    context: 'PendingItemsPage'
+                  })
+                  trackGaEvent({
+                    action: 'pending_view_image_btn',
+                    params: {
+                      context: 'PendingItemsPage'
+                    }
+                  })
+                  router.push(`/image/${jobDetails.jobId}`)
+                }}
+              >
+                View
+              </Button>
+            )}
+            {jobDetails.jobStatus !== 'done' && (
+              <Button
+                btnType="secondary"
+                onClick={() => handleDeleteJob(jobId)}
+              >
+                <TrashIcon />
+              </Button>
+            )}
+          </div>
+        </StyledInfoDiv>
         {jobDetails.jobStatus === 'processing' && (
           <ProgressBarPosition>
             <ProgressBar pct={calcTime.pctComplete} />
@@ -237,8 +265,8 @@ const PendingItem = ({ handleDeleteJob, jobId }) => {
             <ProgressBar pct={100} />
           </ProgressBarPosition>
         )}
-      </Panel>
-    </div>
+      </StyledPanel>
+    </StyledContainer>
   )
 }
 

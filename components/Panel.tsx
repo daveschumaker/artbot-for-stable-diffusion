@@ -10,8 +10,12 @@ interface PanelProps {
 const StyledPanel = styled.div<PanelProps>`
   border: solid 1px ${(props) => props.theme.border};
   border-radius: 4px;
-  padding: 16px;
+  padding: 8px;
   width: 100%;
+
+  @media (min-width: 640px) {
+    padding: 16px;
+  }
 `
 
 const Panel = (props: PanelProps) => {

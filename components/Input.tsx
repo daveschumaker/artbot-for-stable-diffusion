@@ -14,7 +14,7 @@ const StyledInput = styled.input<InputProps>`
   background-color: ${(props) => props.theme.inputBackground};
   border-radius: 4px;
   border: 1px solid ${(props) => props.theme.inputColor};
-  color: ${(props) => props.theme.border};
+  color: ${(props) => props.theme.inputColor};
   font-size: 16px;
   height: 40px;
   padding: 8px;

@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import { useRouter } from 'next/router'
-import Link from 'next/link'
 import styled from 'styled-components'
 
 import { setNewImageReady, setShowImageReadyToast } from '../store/appStore'
@@ -9,12 +8,15 @@ import { trackEvent, trackGaEvent } from '../api/telemetry'
 import { getImageDetails } from '../utils/db'
 import ImageSquare from './ImageSquare'
 import CloseIcon from './icons/CloseIcon'
+import Linker from './Linker'
 
 const StyledToast = styled.div`
   align-items: center;
-  background-color: ${(props) => props.theme.background};
+  background-color: ${(props) => props.theme.body};
   border-radius: 4px;
   border: 2px solid ${(props) => props.theme.border};
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+  color: ${(props) => props.theme.text};
   cursor: pointer;
   display: flex;
   flex-direction: row;
@@ -34,6 +36,16 @@ const StyledClose = styled.div`
   right: 4px;
 `;
 
+const StyledTextPanel = styled.div`
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  height: 80px;
+  justify-content: space-between;
+  padding-top: 20px;
+  padding-bottom: 8px;
+  padding-left: 8px;
+`
 
 export default function Toast({ handleClose, jobId, showImageReadyToast }) {
   const router = useRouter()
@@ -80,21 +92,17 @@ export default function Toast({ handleClose, jobId, showImageReadyToast }) {
     <StyledToast active={isActive} role="alert">
       {isActive && (
         <>
-          <Link href={`/image/${jobId}`} onClick={handleClick}>
-
-            <div className="mt-[4px]">
+          <div>
+            <Linker href={`/image/${jobId}`} onClick={handleClick}>
               <ImageSquare imageDetails={imageDetails} size={80} />
-            </div>
-
-          </Link>
-          <div className="flex-col">
-            <div className="ml-4 text-sm font-normal text-white">Your new image is ready.</div>
-            <Link href={`/image/${jobId}`} onClick={handleClick}>
-
-              <div className="ml-4 text-sm font-normal text-cyan-400">Check it out!</div>
-
-            </Link >
+            </Linker>
           </div>
+          <StyledTextPanel>
+            <div>Your new image is ready.</div>
+            <Linker href={`/image/${jobId}`} onClick={handleClick}>
+              Check it out!
+            </Linker >
+          </StyledTextPanel>
           <StyledClose onClick={handleClose}>
             <CloseIcon />
           </StyledClose>

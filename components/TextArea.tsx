@@ -11,7 +11,7 @@ import styled from 'styled-components'
 
 const StyledTextArea = styled.textarea`
   background-color: ${(props) => props.theme.inputBackground};
-  border: 1px solid ${(props) => props.theme.border};
+  border: 1px solid ${(props) => props.theme.inputColor};
   border-radius: 4px;
   color: ${(props) => props.theme.inputColor};
   font-size: 16px;

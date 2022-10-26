@@ -62,7 +62,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, [fetchAppInfo])
 
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={lightTheme}>
       <GlobalStyles />
       <Script
         strategy="lazyOnload"
