@@ -2,6 +2,7 @@ import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import Script from 'next/script'
 import { ThemeProvider } from 'styled-components'
+import withDarkMode from 'next-dark-mode'
 
 import { initAppSettings } from '../utils/appSettings'
 import ContentWrapper from '../components/ContentWrapper'
@@ -25,7 +26,12 @@ initDb()
 
 let waitingForServerInfoRes = false
 
-function MyApp({ Component, pageProps }: AppProps) {
+interface MyAppProps extends AppProps {
+  darkMode: any
+}
+
+function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
+  const { darkModeActive } = darkMode
   const [showServerUpdateModal, setShowServerUpdateModal] = useState(false)
   const appState = useStore(appInfoStore)
   const { buildId } = appState
@@ -62,7 +68,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, [fetchAppInfo])
 
   return (
-    <ThemeProvider theme={lightTheme}>
+    <ThemeProvider theme={darkModeActive ? darkTheme : lightTheme}>
       <GlobalStyles />
       <Script
         strategy="lazyOnload"
@@ -134,4 +140,4 @@ function MyApp({ Component, pageProps }: AppProps) {
   )
 }
 
-export default MyApp
+export default withDarkMode(MyApp)

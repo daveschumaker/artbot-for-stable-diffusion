@@ -1,17 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
 import { useStore } from 'statery'
 import styled from 'styled-components'
 
-import { useWindowSize } from '../hooks/useWindowSize'
 import {
   appInfoStore,
   setNewImageReady,
   setShowImageReadyToast
 } from '../store/appStore'
-import { isInstalledPwa } from '../utils/appUtils'
 
 import IconCreate from './icons/CreateIcon'
 import HourglassIcon from './icons/HourglassIcon'
@@ -64,14 +61,11 @@ const StyledLi = styled.li<LiProps>`
 `
 
 export default function NavBar() {
-  const size = useWindowSize()
   const router = useRouter()
   const { pathname } = router
 
   const appState = useStore(appInfoStore)
   const { newImageReady } = appState
-
-  const [hideNavBar, setHideNavBar] = useState(false)
 
   const clearNewImageNotification = () => {
     setShowImageReadyToast(false)
@@ -86,24 +80,10 @@ export default function NavBar() {
 
   const isActiveRoute = (page: string) => {
     if (page === pathname) {
-      // return 'inline-block p-2 text-teal-500 rounded-t-lg border-b-2 border-teal-500 active0'
       return true
     }
 
     return false
-    // return 'inline-block p-2 rounded-t-lg border-b-2 border-transparent hover:text-teal-500 hover:border-teal-500'
-  }
-
-  useEffect(() => {
-    const { width = 0 } = size
-
-    if (width < 640 && isInstalledPwa()) {
-      setHideNavBar(true)
-    }
-  }, [size])
-
-  if (hideNavBar) {
-    return null
   }
 
   return (

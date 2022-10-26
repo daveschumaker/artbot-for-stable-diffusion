@@ -1,21 +1,21 @@
 import { useRouter } from 'next/router'
 import styled, { css } from 'styled-components'
 
-import { colors } from '../styles/variables'
-import CreateIcon from '../components/icons/CreateIcon'
-import HourglassIcon from './icons/HourglassIcon'
-import PhotoIcon from './icons/PhotoIcon'
-import SettingsIcon from './icons/SettingsIcon'
+import { colors } from '../../styles/variables'
+import CreateIcon from '../icons/CreateIcon'
+import HourglassIcon from '../icons/HourglassIcon'
+import PhotoIcon from '../icons/PhotoIcon'
+import SettingsIcon from '../icons/SettingsIcon'
 import Link from 'next/link'
-import HelpIcon from './icons/HelpIcon'
+import HelpIcon from '../icons/HelpIcon'
 import { useEffect, useState } from 'react'
-import { isInstalledPwa } from '../utils/appUtils'
+import { isInstalledPwa } from '../../utils/appUtils'
 import { useStore } from 'statery'
 import {
   appInfoStore,
   setNewImageReady,
   setShowImageReadyToast
-} from '../store/appStore'
+} from '../../store/appStore'
 
 interface StyledFooterProps {
   isPwa: boolean
@@ -27,7 +27,7 @@ interface NavIconWrapperProps {
 
 const StyledFooter = styled.div<StyledFooterProps>`
   background-color: ${(props) => props.theme.body};
-  border-top: 1px solid gray;
+  border-top: 2px solid ${(props) => props.theme.text};
   position: fixed;
   bottom: 0;
   display: flex;
@@ -79,7 +79,7 @@ interface IconProps {
 }
 
 const IconCss = css<IconProps>`
-  stroke: ${(props) => props.theme.navLinkNormal};
+  stroke: ${(props) => props.theme.text};
 
   ${(props) =>
     props.active &&
@@ -122,10 +122,6 @@ export default function MobileFooter() {
   useEffect(() => {
     setIsPwa(isInstalledPwa())
   }, [])
-
-  // if (!isPwa) {
-  //   return null
-  // }
 
   return (
     <StyledFooter isPwa={isPwa}>

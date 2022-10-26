@@ -89,7 +89,7 @@ export default function Toast({ handleClose, jobId, showImageReadyToast }) {
   const isActive = jobId && imageDetails.base64String && showImageReadyToast
 
   return (
-    <StyledToast active={isActive} role="alert">
+    <StyledToast active={isActive}>
       {isActive && (
         <>
           <div>
