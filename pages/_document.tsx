@@ -20,7 +20,6 @@ export default class MyDocument extends Document {
         })
 
       const initialProps = await Document.getInitialProps(ctx)
-      console.log(`initialProps`, initialProps)
       return {
         ...initialProps,
         styles: (
@@ -43,8 +42,7 @@ export default class MyDocument extends Document {
           <link
             rel="preconnect"
             href="https://fonts.gstatic.com"
-            // @ts-ignore
-            crossorigin
+            crossOrigin="true"
           />
           <link
             href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;400;500;800&display=swap"

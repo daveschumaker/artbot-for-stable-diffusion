@@ -23,7 +23,7 @@ export const lightTheme = {
 export const darkTheme = {
   body: '#344c50',
   text: '#f3f3ef',
-  grayText: 'f3f3ef',
+  grayText: '#f3f3ef',
   cardBackground: colorsV2.darkAccent,
   border: '#7e5a6c',
   inputBackground: 'rgb(42, 48, 60)',
