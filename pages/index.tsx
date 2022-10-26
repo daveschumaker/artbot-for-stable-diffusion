@@ -20,8 +20,6 @@ import SquarePlusIcon from '../components/icons/SquarePlusIcon'
 import { KeypressEvent } from '../types'
 import Panel from '../components/Panel'
 import { trackEvent, trackGaEvent } from '../api/telemetry'
-import ImageSquare from '../components/ImageSquare'
-import CloseIcon from '../components/icons/CloseIcon'
 import { AdvancedOptions } from '../components/CreatePage/AdditionalOptions'
 import SectionTitle from '../components/SectionTitle'
 import Tooltip from '../components/Tooltip'
@@ -34,6 +32,7 @@ import RelatedImages from '../components/CreatePage/RelatedImages'
 import Modal from '../components/Modal/modal'
 import FileUploader from '../components/FileUploader'
 import UploadIcon from '../components/icons/UploadIcon'
+import ImageUploadDisplay from '../components/CreatePage/ImageUploadDisplay'
 
 interface InputTarget {
   name: string
@@ -392,29 +391,18 @@ const Home: NextPage = () => {
           </div>
         </div>
         <div className="flex flex-row gap-[8px] items-start">
-          {input.source_image && (
-            <div
-              style={{ position: 'relative', height: '100px', width: '120px' }}
-            >
-              <ImageSquare
-                imageDetails={{ base64String: input.source_image }}
-                imageType={input.imageType}
-                size={120}
-              />
-              <div
-                className="absolute top-[2px] right-[2px] bg-blue-500 cursor-pointer"
-                onClick={() => {
-                  setInput({
-                    img2img: false,
-                    imgType: '',
-                    source_image: ''
-                  })
-                }}
-              >
-                <CloseIcon />
-              </div>
-            </div>
-          )}
+          <ImageUploadDisplay
+            handleUpload={handleImageUpload}
+            imageType={input.imageType}
+            sourceImage={input.source_image}
+            resetImage={() => {
+              setInput({
+                img2img: false,
+                imgType: '',
+                source_image: ''
+              })
+            }}
+          />
           <TextArea
             name="prompt"
             className="block bg-white p-2.5 w-full text-lg text-black rounded-lg max-h-[250px] border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
