@@ -1,6 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import Head from 'next/head'
+import { useState } from 'react'
 import styled from 'styled-components'
+import FeedbackModal from '../components/Feedback'
 import Linker from '../components/Linker'
 
 import PageTitle from '../components/PageTitle'
@@ -8,6 +10,16 @@ import Text from '../components/Text'
 
 const AboutWrapper = styled.div`
   margin-bottom: 80px;
+`
+
+const LinkButton = styled.div`
+  cursor: pointer;
+  color: ${(props) => props.theme.link};
+  font-weight: 600;
+
+  &:hover {
+    color: ${(props) => props.theme.linkActive};
+  }
 `
 
 const HeroImage = styled.img`
@@ -28,8 +40,12 @@ const HelpfulLinks = styled.div`
 `
 
 const AboutPage = () => {
+  const [showFeedback, setShowFeedback] = useState(false)
   return (
     <AboutWrapper>
+      {showFeedback && (
+        <FeedbackModal handleClose={() => setShowFeedback(false)} />
+      )}
       <Head>
         <title>ArtBot - About</title>
       </Head>
@@ -40,7 +56,10 @@ const AboutPage = () => {
           alt="painting of a robot painting robots"
         />
         <HelpfulLinks className="mb-2">
-          <Linker href="/changelog">Changelog</Linker>|
+          <LinkButton onClick={() => setShowFeedback(true)}>
+            Contact / Feedback
+          </LinkButton>
+          |<Linker href="/changelog">Changelog</Linker>|
           <Linker href="/faq">FAQ</Linker>
         </HelpfulLinks>
         <Text>

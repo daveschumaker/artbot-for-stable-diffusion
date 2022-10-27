@@ -28,7 +28,7 @@ const StyledLi = styled.li`
 const AddedInfo = styled.div`
   border-left: 2px solid ${(props) => props.theme.text};
   font-size: 14px;
-  margin-top: 8px;
+  margin-top: 2px;
   margin-bottom: 8px;
   margin-left: 16px;
   padding-left: 8px;
@@ -77,7 +77,25 @@ const Changelog = () => {
             issues)
           </StyledLi>
           <StyledLi>
-            Fixed issue when attempting to choose a random sampler.
+            Fixed: issue when attempting to choose a random sampler.
+          </StyledLi>
+          <StyledLi>
+            Fixed: issue where choosing a model (e.g., stable_diffusion) would
+            get saved as a variable for samplers, resulting in payload
+            validation errors from the API. This is why testing your code is
+            important. Ah hem.
+          </StyledLi>
+          <StyledLi>
+            Track initial estimated wait time returned from API
+            <AddedInfo>
+              Relates to future feature that will attempt to detect if job has
+              gone stale and attempt to retry / resubmit
+            </AddedInfo>
+          </StyledLi>
+          <StyledLi>
+            Add new contact form accessible from the{' '}
+            <Linker href="/">about page</Linker>. Questions, comments, or bug
+            reports? Send me a message.
           </StyledLi>
         </StyledUl>
       </Section>
@@ -140,7 +158,7 @@ const Changelog = () => {
         </StyledUl>
       </Section>
       <Section>
-        <SubSectionTitle>2022.10.11</SubSectionTitle>
+        <SubSectionTitle>2022.10.14</SubSectionTitle>
         <StyledUl>
           <StyledLi>
             MILESTONE: 10,000 images have been created using ArtBot!

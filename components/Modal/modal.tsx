@@ -3,8 +3,8 @@ import styled from 'styled-components'
 import CloseIcon from '../icons/CloseIcon'
 
 interface ModalProps {
-  children?: React.ReactNode
-  handleClose: () => void
+  children?: React.ReactNode | React.ReactNode[]
+  handleClose(): void
 }
 
 const CloseIconWrapper = styled.div`
@@ -26,7 +26,8 @@ const Overlay = styled.div`
 `
 
 const StyledModal = styled.div`
-  background-color: black;
+  background-color: ${(props) => props.theme.body};
+  border: 1px solid ${(props) => props.theme.text};
   border-radius: 8px;
   opacity: 1;
   width: calc(100% - 32px);
@@ -40,7 +41,7 @@ const StyledModal = styled.div`
 
   @media (min-width: 640px) {
     width: 480px;
-    min-height: 300px;
+    min-height: 280px;
   }
 `
 
@@ -49,10 +50,10 @@ const Modal = (props: ModalProps) => {
     <>
       <Overlay onClick={props.handleClose} />
       <StyledModal>
+        {props.children}
         <CloseIconWrapper onClick={props.handleClose}>
           <CloseIcon />
         </CloseIconWrapper>
-        {props.children}
       </StyledModal>
     </>
   )

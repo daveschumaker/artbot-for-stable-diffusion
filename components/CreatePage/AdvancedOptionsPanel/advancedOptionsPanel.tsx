@@ -86,7 +86,7 @@ const samplerOptions = (img2img: boolean) => {
     { value: 'random', label: 'random' }
   ]
 
-  if (img2img) {
+  if (!img2img) {
     options.unshift({ value: 'PLMS', label: 'PLMS' })
     options.unshift({ value: 'DDIM', label: 'DDIM' })
   }
@@ -360,7 +360,6 @@ const AdvancedOptionsPanel = ({
               options={modelerOptions(models)}
               onChange={(obj: { value: string; label: string }) => {
                 setInput({ models: [obj.value] })
-                localStorage.setItem('sampler', obj.value)
               }}
               value={modelsValue}
             />

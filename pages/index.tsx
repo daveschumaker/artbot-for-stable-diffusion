@@ -20,6 +20,7 @@ import { AdvancedOptions } from '../components/CreatePage/AdditionalOptions'
 import AdvancedOptionsPanel from '../components/CreatePage/AdvancedOptionsPanel'
 import CloseIcon from '../components/icons/CloseIcon'
 import ImageSquare from '../components/ImageSquare'
+import { validSampler } from '../utils/validationUtils'
 
 interface InputTarget {
   name: string
@@ -176,7 +177,13 @@ const Home: NextPage = () => {
       }
 
       if (localStorage.getItem('sampler')) {
-        setInput({ sampler: localStorage.getItem('sampler') })
+        const valid = validSampler(
+          localStorage.getItem('sampler') || '',
+          input.img2img
+        )
+        setInput({
+          sampler: valid ? localStorage.getItem('sampler') : 'k_euler_a'
+        })
       }
 
       if (localStorage.getItem('cfg_scale')) {

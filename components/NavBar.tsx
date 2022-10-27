@@ -25,7 +25,7 @@ const StyledNavBar = styled.nav`
     display: flex;
     font-size: 14px;
     justify-content: flex-start;
-    margin-bottom: 8px;
+    margin-bottom: 16px;
     width: 100%;
   }
 `

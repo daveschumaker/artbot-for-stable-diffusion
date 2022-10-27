@@ -25,6 +25,7 @@ export interface CreateImageJob {
   wait_time?: number
   queue_position?: number
   base64String?: string
+  initWaitTime?: number
 }
 
 export interface CreatePendingJob {

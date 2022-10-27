@@ -175,6 +175,7 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
 
       if (detailsSuccess) {
         imageParams.timestamp = Date.now()
+        imageParams.initWaitTime = wait_time
         imageParams.wait_time = (wait_time || 0) + 30
         imageParams.queue_position = queue_position
       }
