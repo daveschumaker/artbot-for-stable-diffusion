@@ -10,6 +10,7 @@ import { appInfoStore } from '../../store/appStore'
 import Tooltip from '../Tooltip'
 import { Button } from '../Button'
 import TrashIcon from '../icons/TrashIcon'
+import { ModelDetails } from '../../types'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -32,9 +33,18 @@ const FlexRow = styled.div`
   width: 100%;
 `
 
-const MaxWidth = styled.div`
-  max-width: ${(props) => props.maxWidth}px;
+interface MaxWidthProps {
+  maxWidth?: number
+}
+
+const MaxWidth = styled.div<MaxWidthProps>`
   width: 100%;
+
+  ${(props) =>
+    props.maxWidth &&
+    `
+    max-width: ${props.maxWidth}px;
+  `}
 `
 
 const orientationOptions = [
@@ -47,7 +57,7 @@ const orientationOptions = [
   { value: 'random', label: 'Random!' }
 ]
 
-const modelerOptions = (models) => {
+const modelerOptions = (models: Array<ModelDetails>) => {
   return models.map((model) => {
     return { value: model.name, label: `${model.name} (${model.count})` }
   })
@@ -72,18 +82,27 @@ const samplerOptions = (img2img: boolean) => {
   return options
 }
 
+interface Props {
+  handleChangeInput: any
+  handleImageUpload: any
+  handleOrientationSelect: any
+  input: any
+  setInput: any
+}
+
 const AdvancedOptionsPanel = ({
   handleChangeInput,
   handleImageUpload,
   handleOrientationSelect,
   input,
   setInput
-}) => {
+}: Props) => {
   const appState = useStore(appInfoStore)
   const { models } = appState
   const orientationValue = orientationOptions.filter((option) => {
     return input.orientationType === option.value
   })[0]
+  // @ts-ignore
   const modelsValue = modelerOptions(models).filter((option) => {
     return input.models[0] === option.value
   })[0]
@@ -99,7 +118,10 @@ const AdvancedOptionsPanel = ({
           <SubSectionTitle>
             Upload or import and image (img2img)
           </SubSectionTitle>
-          <MaxWidth maxWidth="480">
+          <MaxWidth
+            // @ts-ignore
+            maxWidth="480"
+          >
             <FlexRow>
               <span style={{ lineHeight: '40px', marginRight: '16px' }}>
                 URL:
@@ -143,7 +165,10 @@ const AdvancedOptionsPanel = ({
         </Section>
         <Section>
           <SubSectionTitle>Image orientation</SubSectionTitle>
-          <MaxWidth maxWidth="480">
+          <MaxWidth
+            // @ts-ignore
+            maxWidth="480"
+          >
             <SelectComponent
               options={orientationOptions}
               onChange={(obj: { value: string; label: string }) => {
@@ -187,7 +212,10 @@ const AdvancedOptionsPanel = ({
         </Section>
         <Section>
           <SubSectionTitle>Sampler</SubSectionTitle>
-          <MaxWidth maxWidth="240">
+          <MaxWidth
+            // @ts-ignore
+            maxWidth="240"
+          >
             <SelectComponent
               options={samplerOptions(input.img2img)}
               onChange={(obj: { value: string; label: string }) => {
@@ -200,7 +228,10 @@ const AdvancedOptionsPanel = ({
         </Section>
         <Section>
           <SubSectionTitle>Steps</SubSectionTitle>
-          <MaxWidth maxWidth="120">
+          <MaxWidth
+            // @ts-ignore
+            maxWidth="120"
+          >
             <Input
               // @ts-ignore
               className="mb-2"
@@ -221,7 +252,10 @@ const AdvancedOptionsPanel = ({
               more creativity.
             </Tooltip>
           </SubSectionTitle>
-          <MaxWidth maxWidth="120">
+          <MaxWidth
+            // @ts-ignore
+            maxWidth="120"
+          >
             <Input
               // @ts-ignore
               className="mb-2"
@@ -237,7 +271,10 @@ const AdvancedOptionsPanel = ({
         {input.img2img && (
           <Section>
             <SubSectionTitle>Denoise</SubSectionTitle>
-            <MaxWidth maxWidth="120">
+            <MaxWidth
+              // @ts-ignore
+              maxWidth="120"
+            >
               <Input
                 // @ts-ignore
                 className="mb-2"
@@ -256,7 +293,10 @@ const AdvancedOptionsPanel = ({
             Seed
             <Tooltip width="140px">Leave seed blank for random.</Tooltip>
           </SubSectionTitle>
-          <MaxWidth maxWidth="240">
+          <MaxWidth
+            // @ts-ignore
+            maxWidth="240"
+          >
             <Input
               // @ts-ignore
               className="mb-2"
@@ -278,7 +318,10 @@ const AdvancedOptionsPanel = ({
               generate images quicker.
             </Tooltip>
           </SubSectionTitle>
-          <MaxWidth maxWidth="240">
+          <MaxWidth
+            // @ts-ignore
+            maxWidth="240"
+          >
             <SelectComponent
               menuPlacement={'top'}
               options={modelerOptions(models)}
@@ -293,7 +336,10 @@ const AdvancedOptionsPanel = ({
         </Section>
         <Section>
           <SubSectionTitle>Number of images</SubSectionTitle>
-          <MaxWidth maxWidth="120">
+          <MaxWidth
+            // @ts-ignore
+            maxWidth="120"
+          >
             <Input
               // @ts-ignore
               className="mb-2"

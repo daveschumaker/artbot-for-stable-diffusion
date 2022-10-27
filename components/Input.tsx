@@ -18,7 +18,7 @@ const StyledInput = styled.input<InputProps>`
   font-size: 16px;
   height: 40px;
   padding: 8px;
-  width: ${(props) => (props.width ? props.width : '120px')};
+  width: ${(props) => (props.width ? props.width : '100%')};
 `
 
 const Input = (props: InputProps) => {

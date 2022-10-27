@@ -16,10 +16,11 @@ interface SelectProps {
   value?: Value
   options: Array<any>
   styles?: any
+  menuPlacement?: string
 }
 
 interface Value {
-  value: string
+  value: string | boolean
   label: string
 }
 
