@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic'
 
 const DynamicMobileFooter = dynamic(() => import('./mobileFooter'), {
-  suspense: true
+  // suspense: true
 })
 
 export default function Modal() {
