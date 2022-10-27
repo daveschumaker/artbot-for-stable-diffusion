@@ -66,14 +66,14 @@ export default function Footer() {
         </Linker>
       </div>
       <div>
-        <Linker href="/about">About</Linker> | <Linker href="/faq">FAQ</Linker>{' '}
-        |{' '}
+        <Linker href="/about">about</Linker> | <Linker href="/faq">faq</Linker>{' '}
+        | <Linker href="/changelog">changelog</Linker> |{' '}
         <Linker
           href="https://github.com/daveschumaker/artbot-for-stable-diffusion"
           target="_blank"
           rel="noreferrer"
         >
-          Github
+          github
         </Linker>
       </div>
     </StyledFooter>

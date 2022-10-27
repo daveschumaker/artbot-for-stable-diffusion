@@ -26,6 +26,7 @@ interface JobDetails {
 const StyledContainer = styled.div`
   box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
   position: relative;
+  margin-bottom: 16px;
 `
 
 const StyledPanel = styled(Panel)`
@@ -70,6 +71,13 @@ const StyledInfoDiv = styled.div`
   color: ${(props) => props.theme.grayText};
   display: flex;
   margin-top: 8px;
+`
+
+const MobileHideText = styled.span`
+  display: none;
+  @media (min-width: 640px) {
+    display: inline-block;
+  }
 `
 
 const StyledImage = styled(ImageSquare)``
@@ -246,7 +254,7 @@ const PendingItem = ({ handleDeleteJob, jobId }) => {
                   router.push(`/image/${jobDetails.jobId}`)
                 }}
               >
-                View
+                View image
               </Button>
             )}
             {jobDetails.jobStatus !== 'done' && (
@@ -255,6 +263,7 @@ const PendingItem = ({ handleDeleteJob, jobId }) => {
                 onClick={() => handleDeleteJob(jobId)}
               >
                 <TrashIcon />
+                <MobileHideText>Delete job</MobileHideText>
               </Button>
             )}
           </div>

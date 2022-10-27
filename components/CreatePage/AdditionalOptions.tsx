@@ -1,15 +1,21 @@
 import { useCallback } from 'react'
+import styled from 'styled-components'
 
 import { trackEvent } from '../../api/telemetry'
 import { Button } from '../Button'
-import DotsHorizontalIcon from '../icons/DotsHorizontalIcon'
-import DotsVerticalIcon from '../icons/DotsVerticalIcon'
 import ToolIcon from '../icons/ToolIcon'
 
 interface AdvancedOptionsProps {
   showAdvanced: boolean
   setShowAdvanced: any
 }
+
+const MobileHideText = styled.span`
+  display: none;
+  @media (min-width: 640px) {
+    display: inline-block;
+  }
+`
 
 export function AdvancedOptions({
   showAdvanced,
@@ -31,6 +37,7 @@ export function AdvancedOptions({
     <div className="w-1/2 flex flex-row gap-2">
       <Button title="Show advanced options" onClick={handleShowAdvancedOptions}>
         <ToolIcon />
+        <MobileHideText>Advanced options</MobileHideText>
       </Button>
     </div>
   )

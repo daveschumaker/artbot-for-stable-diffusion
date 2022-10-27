@@ -30,6 +30,7 @@ export interface CreateImageJob {
 export interface CreatePendingJob {
   jobId?: string
   prompt: string
+  img2img?: boolean
   numImages: number
   orientationType: string
   orientation: string

@@ -18,6 +18,15 @@ const HeroImage = styled.img`
   width: 100%;
 `
 
+const HelpfulLinks = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 4px;
+  width: 100%;
+`
+
 const AboutPage = () => {
   return (
     <AboutWrapper>
@@ -30,6 +39,10 @@ const AboutPage = () => {
           src="/artbot/painting_bot.png"
           alt="painting of a robot painting robots"
         />
+        <HelpfulLinks className="mb-2">
+          <Linker href="/changelog">Changelog</Linker>|
+          <Linker href="/faq">FAQ</Linker>
+        </HelpfulLinks>
         <Text>
           ArtBot is an unofficial front-end web client designed for interacting
           with the{' '}

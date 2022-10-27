@@ -1,12 +1,12 @@
-import React from 'react'
-import Select from 'react-select'
+import React, { CSSProperties } from 'react'
+import Select, { OptionProps } from 'react-select'
 import { useTheme } from 'styled-components'
 
 interface Theme {
   border?: string
   cardBackground?: string
   inputBackground?: string
-  inputText?: string
+  inputColor?: string
 }
 
 interface SelectProps {
@@ -29,46 +29,43 @@ const SelectComponent = (props: SelectProps) => {
   const { ...rest } = props
 
   const customStyles = {
-    container: (provided: any) => ({
-      ...provided,
-      borderColor: theme.border
+    container: (provided: CSSProperties) => ({
+      ...provided
     }),
-    control: (provided: any) => ({
+    control: (provided: CSSProperties) => ({
       ...provided,
       backgroundColor: theme.inputBackground,
-      color: theme.inputText
+      borderColor: theme.inputColor,
+      color: theme.inputColor
     }),
-    input: (provided: any) => ({
+    input: (provided: CSSProperties) => ({
       ...provided,
-      color: theme.inputText
+      color: theme.inputColor
     }),
-    option: (provided: any, state: any) => {
+    option: (provided: CSSProperties, state: OptionProps) => {
       return {
         ...provided,
         backgroundColor: state.isFocused
           ? theme.cardBackground
           : theme.inputBackground,
-        color: theme.inputText
-        // borderBottom: '1px dotted pink',
-        // color: state.isSelected ? 'red' : 'blue',
-        // padding: 20
+        color: theme.inputColor
       }
     },
-    valueContainer: (provided: any) => ({
+    valueContainer: (provided: CSSProperties) => ({
       ...provided
     }),
-    menu: (provided: any) => ({
+    menu: (provided: CSSProperties) => ({
       ...provided,
       backgroundColor: theme.inputBackground
     }),
-    indicatorsContainer: (provided: any) => ({
+    indicatorsContainer: (provided: CSSProperties) => ({
       ...provided,
       backgroundColor: theme.inputBackground
     }),
-    singleValue: (provided: any) => {
+    singleValue: (provided: CSSProperties) => {
       return {
         ...provided,
-        color: theme.inputText
+        color: theme.inputColor
       }
     }
   }
@@ -78,6 +75,7 @@ const SelectComponent = (props: SelectProps) => {
       id="long-value-select"
       instanceId="long-value-select"
       {...rest}
+      //@ts-ignore
       styles={customStyles}
     />
   )

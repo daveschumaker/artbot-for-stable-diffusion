@@ -27,7 +27,7 @@ interface NavIconWrapperProps {
 
 const StyledFooter = styled.div<StyledFooterProps>`
   background-color: ${(props) => props.theme.body};
-  border-top: 2px solid ${(props) => props.theme.text};
+  border-top: 1px solid ${(props) => props.theme.text};
   position: fixed;
   bottom: 0;
   display: flex;

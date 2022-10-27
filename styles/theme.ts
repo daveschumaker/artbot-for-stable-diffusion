@@ -21,7 +21,8 @@ export const lightTheme = {
   buttonSecondaryActive: '#d59c8e'
 }
 export const darkTheme = {
-  body: '#344c50',
+  // body: '#344c50',
+  body: '#080B0C',
   text: '#f3f3ef',
   grayText: '#f3f3ef',
   cardBackground: colorsV2.darkAccent,

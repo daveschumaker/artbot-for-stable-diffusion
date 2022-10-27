@@ -4,6 +4,7 @@ import styled from 'styled-components'
 interface InputProps {
   name?: string
   type?: string
+  className?: string
   children?: React.ReactNode
   onChange: any
   width?: string

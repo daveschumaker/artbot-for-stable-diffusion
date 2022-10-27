@@ -1,4 +1,6 @@
 import { createImage } from '../api/createImage'
+import { trackEvent } from '../api/telemetry'
+import { isValidHttpUrl } from './validationUtils'
 
 interface CreateImageJob {
   jobId?: string
@@ -203,4 +205,54 @@ export const imgUrlToDataUrl = (url: string) => {
       resolve(false)
     }
   })
+}
+
+export const getImageFromUrl = async (imgUrl: string) => {
+  const validUrl = isValidHttpUrl(imgUrl)
+
+  if (!validUrl) {
+    return {
+      success: false,
+      status: 'GET_IMG_FROM_URL_ERROR',
+      message: 'Unable to process image from URL, please try something else.'
+    }
+  }
+
+  const resp = await fetch(`/artbot/api/img-from-url`, {
+    method: 'POST',
+    body: JSON.stringify({
+      imageUrl: imgUrl
+    }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  const data = await resp.json()
+
+  // @ts-ignore
+  const { success, imageType, imgBase64String } = data
+
+  if (!data || !success) {
+    trackEvent({
+      event: 'ERROR_UPLOAD_IMG_BY_URL',
+      imgUrl
+    })
+
+    return {
+      success: false,
+      status: 'GET_IMG_FROM_URL_ERROR',
+      message: 'Unable to process image from URL, please try something else.'
+    }
+  }
+
+  trackEvent({
+    event: 'UPLOAD_IMG_BY_URL',
+    imgUrl
+  })
+
+  return {
+    success: true,
+    imageType,
+    imgBase64String
+  }
 }

@@ -37,7 +37,9 @@ const StyledImageContainer = styled.div<StyledProps>`
   position: relative;
 `
 
-const StyledImage = styled(Image)``
+const StyledImage = styled(Image)`
+  margin: 0 auto;
+`
 
 const ImageCard = (props: Props) => {
   const { imageDetails, handleDeleteImageClick } = props

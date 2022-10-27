@@ -2,7 +2,6 @@
 import { useEffect, useReducer, useState } from 'react'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import styled from 'styled-components'
 
 import { createImageJob } from '../utils/imageCache'
 import PageTitle from '../components/PageTitle'
@@ -11,28 +10,13 @@ import {
   loadEditPrompt,
   updatedCachedPrompt
 } from '../utils/promptUtils'
-import { useStore } from 'statery'
-import { appInfoStore } from '../store/appStore'
 import TextArea from '../components/TextArea'
 import { Button } from '../components/Button'
 import TrashIcon from '../components/icons/TrashIcon'
 import SquarePlusIcon from '../components/icons/SquarePlusIcon'
 import { KeypressEvent } from '../types'
-import Panel from '../components/Panel'
 import { trackEvent, trackGaEvent } from '../api/telemetry'
 import { AdvancedOptions } from '../components/CreatePage/AdditionalOptions'
-import SectionTitle from '../components/SectionTitle'
-import Tooltip from '../components/Tooltip'
-import Select from '../components/Select'
-import Input from '../components/Input'
-import PhotoIcon from '../components/icons/PhotoIcon'
-import { DropdownContent } from '../components/Dropdown/DropdownContent'
-import { DropdownItem } from '../components/Dropdown/DropdownItem'
-import RelatedImages from '../components/CreatePage/RelatedImages'
-import Modal from '../components/Modal/modal'
-import FileUploader from '../components/FileUploader'
-import UploadIcon from '../components/icons/UploadIcon'
-import ImageUploadDisplay from '../components/CreatePage/ImageUploadDisplay'
 import AdvancedOptionsPanel from '../components/CreatePage/AdvancedOptionsPanel'
 import CloseIcon from '../components/icons/CloseIcon'
 import ImageSquare from '../components/ImageSquare'
@@ -45,22 +29,9 @@ interface InputEvent {
   target: InputTarget
 }
 
-interface StyledPanelProps {
-  open: boolean
-}
-
-const StyledPanel = styled.div<StyledPanelProps>`
-  opacity: ${(props) => (props.open ? '1' : '0')};
-  max-height: ${(props) => (props.open ? '100%' : '0')};
-  transition: all 0.4s;
-`
-
 const Home: NextPage = () => {
   const router = useRouter()
   const { query } = router
-
-  const appState = useStore(appInfoStore)
-  const { models } = appState
 
   const editMode = query.edit
 
@@ -83,15 +54,6 @@ const Home: NextPage = () => {
     models: editMode ? loadEditPrompt().models : ['stable_diffusion']
   }
 
-  const [pageFeatures, setPageFeatures] = useReducer(
-    (state: any, newState: any) => ({ ...state, ...newState }),
-    {
-      showUploaderModal: false,
-      showRelatedImagesDropdown: false,
-      showOrientationDropdown: false,
-      disableOrientationBtn: false
-    }
-  )
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [pending, setPending] = useState(false)
   const [hasError, setHasError] = useState('')
@@ -133,8 +95,6 @@ const Home: NextPage = () => {
       imageType,
       source_image
     })
-
-    setPageFeatures({ showUploaderModal: false })
   }
 
   const handleOrientationSelect = (orientation: string, options?: any) => {
@@ -148,30 +108,6 @@ const Home: NextPage = () => {
         context: `createPage`
       })
     }
-    setPageFeatures({ showOrientationDropdown: false })
-  }
-
-  // Funky race condition here wtih clicking outside Dropdown
-  // if you click the orientation button.
-  const handeOutsideClick = () => {
-    setPageFeatures({
-      showOrientationDropdown: false,
-      disableOrientationBtn: true
-    })
-
-    setTimeout(() => {
-      setPageFeatures({
-        disableOrientationBtn: false
-      })
-    }, 100)
-  }
-
-  const toggleOrientationDropdown = () => {
-    if (pageFeatures.disableOrientationBtn) {
-      return
-    }
-
-    setPageFeatures({ showOrientationDropdown: true })
   }
 
   const handleSubmit = async () => {
@@ -230,44 +166,11 @@ const Home: NextPage = () => {
       setInput({ prompt: getCachedPrompt() })
     }
 
-    // if (loadEditPrompt().img2img) {
-    //   console.log('222')
-    //   console.log(`loadEditPrompt().img2img`, loadEditPrompt())
-    //   setShowAdvanced(true)
-    //   setInput({
-    //     img2img: true,
-    //     parentJobId: loadEditPrompt().parentJobId,
-    //     base64String: loadEditPrompt().base64String
-    //   })
-    //   updatedCachedPrompt(loadEditPrompt().prompt)
-    //   clearPrompt()
-    // } else if (loadEditPrompt().copyPrompt) {
-    //   console.log(`333`)
-    //   setShowAdvanced(true)
-    //   setInput({
-    //     prompt: loadEditPrompt().prompt,
-    //     parentJobId: loadEditPrompt().parentJobId,
-    //     negative: loadEditPrompt().negative
-    //   })
-    //   updatedCachedPrompt(loadEditPrompt().prompt)
-    //   clearPrompt()
-    // }
-
     if (query.edit) {
       setShowAdvanced(true)
     }
 
     if (!query.edit) {
-      // Load preferences from localStorage:
-      // if (localStorage.getItem('orientation')) {
-      //   handleOrientationSelect(
-      //     localStorage.getItem('orientation') || 'square',
-      //     {
-      //       initLoad: true
-      //     }
-      //   )
-      // }
-
       if (localStorage.getItem('orientation')) {
         setInput({ orientationType: localStorage.getItem('orientation') })
       }
@@ -368,253 +271,15 @@ const Home: NextPage = () => {
           </div>
         </div>
       </div>
-      <AdvancedOptionsPanel
-        handleChangeInput={handleChangeValue}
-        handleImageUpload={handleImageUpload}
-        handleOrientationSelect={handleOrientationSelect}
-        input={input}
-        setInput={setInput}
-      />
-      <StyledPanel open={showAdvanced}>
-        {showAdvanced && (
-          <Panel className="relative">
-            <div className="mb-2">
-              <SectionTitle>Advanced options</SectionTitle>
-              {input.parentJobId && (
-                <>
-                  <div className="mt-2 inline-block w-[124px]">
-                    {' '}
-                    Parent Job{' '}
-                    <Tooltip width="180px">
-                      This image will be related to an existing image within
-                      your browser cache.
-                    </Tooltip>{' '}
-                  </div>
-                  <div
-                    className="inline-block ml-4 text-cyan-500 cursor-pointer"
-                    onClick={() => {
-                      {
-                        !pageFeatures.showRelatedImagesDropdown &&
-                          trackEvent({
-                            event: 'ADVANCED_RELATED_IMAGES_CLICK',
-                            context: `createPage`
-                          })
-                      }
-                      setPageFeatures({
-                        showRelatedImagesDropdown:
-                          !pageFeatures.showRelatedImagesDropdown
-                      })
-                    }}
-                  >
-                    {pageFeatures.showRelatedImagesDropdown && `[ - Hide ]`}
-                    {!pageFeatures.showRelatedImagesDropdown && `[ + View ]`}
-                  </div>
-                  <div
-                    className="inline-block ml-4 text-red-500 cursor-pointer"
-                    onClick={() => {
-                      setInput({ parentJobId: '' })
-                      trackEvent({
-                        event: 'ADVANCED_REMOVE_RELATED_IMAGES_CLICK',
-                        context: `createPage`
-                      })
-                    }}
-                  >
-                    [ Remove ]
-                  </div>
-                  {pageFeatures.showRelatedImagesDropdown && (
-                    <RelatedImages jobId={input.parentJobId} />
-                  )}
-                </>
-              )}
-              <div className="mb-2">
-                Negative prompt
-                <Tooltip width="180px">
-                  Add words or phrases to demphasize from your desired image
-                </Tooltip>
-              </div>
-              <Input
-                // @ts-ignore
-                className="mb-2"
-                type="text"
-                name="negative"
-                onChange={handleChangeValue}
-                // @ts-ignore
-                value={input.negative}
-                width="100%"
-              />
-              <div className="w-full flex flex-row justify-end gap-2 mb-4">
-                <Button
-                  title="Clear negative input"
-                  btnType="secondary"
-                  onClick={() => setInput({ negative: '' })}
-                >
-                  Clear
-                </Button>
-                <Button
-                  title="Save negative prompt"
-                  onClick={() => {}}
-                  width="100px"
-                >
-                  Save
-                </Button>
-              </div>
-            </div>
-            <div className="mb-2">
-              <div className="inline-block w-[124px]">Sampler</div>
-              <div className="inline-block">
-                <Select
-                  name="sampler"
-                  //@ts-ignore
-                  onChange={handleChangeValue}
-                  value={input.sampler}
-                  width="180px"
-                >
-                  {!input.img2img && <option value="DDIM">ddim</option>}
-                  <option value="k_dpm_2_a">k_dpm_2_a</option>
-                  <option value="k_dpm_2">k_dpm_2</option>
-                  <option value="k_euler_a">k_euler_a</option>
-                  <option value="k_euler">k_euler</option>
-                  <option value="k_heun">k_heun</option>
-                  <option value="k_lms">k_lms</option>
-                  {!input.img2img && <option value="PLMS">plms</option>}
-                  <option value="random">random</option>
-                </Select>
-              </div>
-            </div>
-            <div className="mb-2">
-              <div className="inline-block w-[124px]">Steps</div>
-              <div className="inline-block">
-                <Input
-                  type="text"
-                  name="steps"
-                  onChange={handleChangeValue}
-                  value={input.steps}
-                />
-              </div>
-            </div>
-            <div className="mb-2">
-              <div className="inline-block w-[124px]">
-                Guidance
-                <Tooltip width="200px">
-                  Higher numbers follow the prompt more closely. Lower numbers
-                  give more creativity.
-                </Tooltip>
-              </div>
-              <div className="inline-block">
-                <Input
-                  type="text"
-                  name="cfg_scale"
-                  onChange={handleChangeValue}
-                  value={input.cfg_scale}
-                />
-              </div>
-            </div>
-            {input.img2img && (
-              <div className="mb-2">
-                <div className="inline-block w-[124px]">Denoise</div>
-                <div className="inline-block">
-                  <Input
-                    type="text"
-                    name="denoising_strength"
-                    onChange={handleChangeValue}
-                    value={input.denoising_strength}
-                  />
-                </div>
-              </div>
-            )}
-            <div className="mb-2">
-              <div className="inline-block w-[124px]">
-                Seed
-                <Tooltip width="140px">Leave seed blank for random.</Tooltip>
-              </div>
-              <div className="inline-block">
-                <Input
-                  type="text"
-                  name="seed"
-                  onChange={handleChangeValue}
-                  value={input.seed}
-                  width="200px"
-                />
-              </div>
-            </div>
-            <div className="mb-2">
-              <div className="inline-block w-[124px]">
-                Model
-                <Tooltip width="240px">
-                  Models currently available within the horde. Numbers in
-                  paranthesis indicate number of works. Generally, these models
-                  will generate images quicker.
-                </Tooltip>
-              </div>
-              <div className="inline-block">
-                <Select
-                  name="models"
-                  onChange={(e: any) => {
-                    if (e.target.value === 'random') {
-                      setInput({ models: [''] })
-                    } else {
-                      setInput({ models: [e.target.value] })
-                    }
-                  }}
-                  value={input.models[0]}
-                  width="200px"
-                >
-                  {models.map((model, i) => {
-                    return (
-                      <option
-                        //@ts-ignore
-                        key={`${model.name}_select_${i}`}
-                        // @ts-ignore
-                        value={model.name}
-                      >
-                        {model
-                          ? // @ts-ignore
-                            model.name +
-                            // @ts-ignore
-                            (model.count ? ` (${model.count})` : '')
-                          : ''}
-                      </option>
-                    )
-                  })}
-                  <option value="random">random</option>
-                </Select>
-              </div>
-            </div>
-            <div className="mb-2">
-              <div className="inline-block w-[124px]"># of images</div>
-              <div className="inline-block">
-                <Select
-                  name="numImages"
-                  onChange={handleChangeValue}
-                  value={input.numImages}
-                  width="75px"
-                >
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  <option value="8">8</option>
-                  <option value="9">9</option>
-                  <option value="10">10</option>
-                  <option value="11">11</option>
-                  <option value="12">12</option>
-                  <option value="13">13</option>
-                  <option value="14">14</option>
-                  <option value="15">15</option>
-                  <option value="16">16</option>
-                  <option value="17">17</option>
-                  <option value="18">18</option>
-                  <option value="19">19</option>
-                  <option value="20">20</option>
-                </Select>
-              </div>
-            </div>
-          </Panel>
-        )}
-      </StyledPanel>
+      {showAdvanced && (
+        <AdvancedOptionsPanel
+          handleChangeInput={handleChangeValue}
+          handleImageUpload={handleImageUpload}
+          handleOrientationSelect={handleOrientationSelect}
+          input={input}
+          setInput={setInput}
+        />
+      )}
     </main>
   )
 }

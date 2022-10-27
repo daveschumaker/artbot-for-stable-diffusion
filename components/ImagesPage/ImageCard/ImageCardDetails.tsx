@@ -17,6 +17,7 @@ import {
   rerollImage,
   uploadImg2Img
 } from '../../../controllers/imageDetailsCommon'
+import CopyIcon from '../../icons/CopyIcon'
 
 interface ImageDetails {
   jobId: string
@@ -175,6 +176,7 @@ const ImageDetails = ({
             title="Copy and re-edit prompt"
             onClick={() => handleCopyPromptClick(imageDetails)}
           >
+            <CopyIcon />
             <span className="inline-block md:hidden">Copy</span>
             <span className="hidden md:inline-block">Copy prompt</span>
           </Button>

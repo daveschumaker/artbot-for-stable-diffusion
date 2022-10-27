@@ -1,16 +1,18 @@
 import styled from 'styled-components'
 
-import Panel from '../Panel'
-import SectionTitle from '../SectionTitle'
-import ImageUploadDisplay from './ImageUploadDisplay'
-import SelectComponent from '../Select'
-import Input from '../Input'
+import Panel from '../../Panel'
+import SectionTitle from '../../SectionTitle'
+import ImageUploadDisplay from '../ImageUploadDisplay'
+import SelectComponent from '../../Select'
+import Input from '../../Input'
 import { useStore } from 'statery'
-import { appInfoStore } from '../../store/appStore'
-import Tooltip from '../Tooltip'
-import { Button } from '../Button'
-import TrashIcon from '../icons/TrashIcon'
-import { ModelDetails } from '../../types'
+import { appInfoStore } from '../../../store/appStore'
+import Tooltip from '../../Tooltip'
+import { Button } from '../../Button'
+import TrashIcon from '../../icons/TrashIcon'
+import { ModelDetails } from '../../../types'
+import React, { useState } from 'react'
+import { getImageFromUrl } from '../../../utils/imageUtils'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -24,13 +26,23 @@ const SubSectionTitle = styled.div`
   padding-bottom: 8px;
 `
 
-const FlexRow = styled.div`
+interface FlexRowProps {
+  bottomPadding?: number
+}
+
+const FlexRow = styled.div<FlexRowProps>`
   align-items: flex-start;
   display: flex;
   flex-direction: row;
   flex-shrink: 0;
   gap: 8px;
   width: 100%;
+
+  ${(props) =>
+    props.bottomPadding &&
+    `
+    padding-bottom: ${props.bottomPadding}px;
+  `}
 `
 
 interface MaxWidthProps {
@@ -99,6 +111,10 @@ const AdvancedOptionsPanel = ({
 }: Props) => {
   const appState = useStore(appInfoStore)
   const { models } = appState
+
+  const [imgUrl, setImgUrl] = useState('')
+  const [imgUrlError, setImgUrlError] = useState('')
+
   const orientationValue = orientationOptions.filter((option) => {
     return input.orientationType === option.value
   })[0]
@@ -109,6 +125,23 @@ const AdvancedOptionsPanel = ({
   const samplerValue = samplerOptions(input.img2img).filter((option) => {
     return input.sampler === option.value
   })[0]
+
+  const handleImportFromUrl = async () => {
+    if (!imgUrl) {
+      return
+    }
+
+    const data = await getImageFromUrl(imgUrl)
+    const { success, message, imageType, imgBase64String } = data
+
+    if (!success) {
+      setImgUrlError(message || '')
+      return
+    }
+
+    setImgUrlError('')
+    handleImageUpload(imageType, imgBase64String)
+  }
 
   return (
     <Panel>
@@ -122,33 +155,32 @@ const AdvancedOptionsPanel = ({
             // @ts-ignore
             maxWidth="480"
           >
-            <FlexRow>
+            <FlexRow bottomPadding={8}>
               <span style={{ lineHeight: '40px', marginRight: '16px' }}>
                 URL:
               </span>
               <Input
-                // @ts-ignore
                 className="mb-2"
                 type="text"
                 name="img-url"
-                // onChange={handleChangeInput}
-                // @ts-ignore
-                // value={input.negative}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setImgUrl(e.target.value)
+                }
+                value={imgUrl}
                 width="100%"
               />
               <Button
                 title="Upload image from URL"
                 btnType="primary"
-                onClick={() => {
-                  // return setInput({
-                  //   negative: ''
-                  // })
-                }}
+                onClick={handleImportFromUrl}
                 width="120px"
               >
                 Upload
               </Button>
             </FlexRow>
+            {imgUrlError && (
+              <div className="mb-2 text-red-500 text-sm">{imgUrlError}</div>
+            )}
           </MaxWidth>
           <ImageUploadDisplay
             handleUpload={handleImageUpload}
@@ -324,11 +356,11 @@ const AdvancedOptionsPanel = ({
           >
             <SelectComponent
               menuPlacement={'top'}
+              //@ts-ignore
               options={modelerOptions(models)}
               onChange={(obj: { value: string; label: string }) => {
                 setInput({ models: [obj.value] })
-                // TODO: Fix me
-                // localStorage.setItem('sampler', obj.value)
+                localStorage.setItem('sampler', obj.value)
               }}
               value={modelsValue}
             />

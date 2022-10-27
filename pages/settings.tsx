@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import React, { useEffect, useState } from 'react'
-import { useStore } from 'statery'
 import styled from 'styled-components'
 
 import { fetchUserDetails } from '../api/userInfo'
