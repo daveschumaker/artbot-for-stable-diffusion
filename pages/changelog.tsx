@@ -94,8 +94,8 @@ const Changelog = () => {
           </StyledLi>
           <StyledLi>
             Add new contact form accessible from the{' '}
-            <Linker href="/">about page</Linker>. Questions, comments, or bug
-            reports? Send me a message.
+            <Linker href="/about">about page</Linker>. Questions, comments, or
+            bug reports? Send me a message.
           </StyledLi>
         </StyledUl>
       </Section>
