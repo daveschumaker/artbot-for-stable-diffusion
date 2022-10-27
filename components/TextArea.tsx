@@ -15,7 +15,7 @@ const StyledTextArea = styled.textarea`
   border-radius: 4px;
   color: ${(props) => props.theme.inputColor};
   font-size: 16px;
-  min-height: 100px;
+  min-height: 120px;
 `
 
 type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement>

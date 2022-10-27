@@ -33,6 +33,9 @@ import Modal from '../components/Modal/modal'
 import FileUploader from '../components/FileUploader'
 import UploadIcon from '../components/icons/UploadIcon'
 import ImageUploadDisplay from '../components/CreatePage/ImageUploadDisplay'
+import AdvancedOptionsPanel from '../components/CreatePage/AdvancedOptionsPanel'
+import CloseIcon from '../components/icons/CloseIcon'
+import ImageSquare from '../components/ImageSquare'
 
 interface InputTarget {
   name: string
@@ -269,9 +272,8 @@ const Home: NextPage = () => {
         setInput({ orientationType: localStorage.getItem('orientation') })
       }
 
-      // TODO: fix me later
       if (localStorage.getItem('sampler')) {
-        // setInput({ sampler: localStorage.getItem('sampler') })
+        setInput({ sampler: localStorage.getItem('sampler') })
       }
 
       if (localStorage.getItem('cfg_scale')) {
@@ -291,118 +293,30 @@ const Home: NextPage = () => {
 
   return (
     <main>
-      {pageFeatures.showUploaderModal && (
-        <Modal
-          handleClose={() => setPageFeatures({ showUploaderModal: false })}
-        >
-          <FileUploader handleUpload={handleImageUpload} />
-        </Modal>
-      )}
       <PageTitle>Create new image</PageTitle>
       <div className="mt-2 mb-2">
-        <div className="flex flex-row gap-2">
-          <Button
-            title="Select image orientation"
-            onClick={() => setPageFeatures({ showUploaderModal: true })}
-          >
-            <UploadIcon className="mx-auto" /> Upload (img2img)
-          </Button>
-          <div className="mb-4">
-            <Button
-              title="Select image orientation"
-              onClick={toggleOrientationDropdown}
-            >
-              <span>
-                <PhotoIcon />
-              </span>
-              <span className="inline-block">
-                {input.orientationType === 'landscape-16x9' && `Landscape`}
-                {input.orientationType === 'landscape' && `Landscape`}
-                {input.orientationType === 'portrait' && `Portrait`}
-                {input.orientationType === 'phone-bg' && `Phone wallpaper`}
-                {input.orientationType === 'ultrawide' && `Ultrawide`}
-                {input.orientationType === 'square' && `Square`}
-                {input.orientationType === 'random' && `Random!`}
-              </span>
-            </Button>
-            <DropdownContent
-              handleClose={() => {
-                handeOutsideClick()
-              }}
-              open={pageFeatures.showOrientationDropdown}
-            >
-              <DropdownItem
-                active={input.orientationType === 'landscape-16x9'}
-                onClick={() => {
-                  handleOrientationSelect('landscape-16x9')
-                }}
-              >
-                Landscape 16 x 9
-              </DropdownItem>
-              <DropdownItem
-                active={input.orientationType === 'landscape'}
-                onClick={() => {
-                  handleOrientationSelect('landscape')
-                }}
-              >
-                Landscape 3 x 2
-              </DropdownItem>
-              <DropdownItem
-                active={input.orientationType === 'portrait'}
-                onClick={() => {
-                  handleOrientationSelect('portrait')
-                }}
-              >
-                Portrait 2 x 3
-              </DropdownItem>
-              <DropdownItem
-                active={input.orientationType === 'phone-bg'}
-                onClick={() => {
-                  handleOrientationSelect('phone-bg')
-                }}
-              >
-                Phone wallpaper 9 x 21
-              </DropdownItem>
-              <DropdownItem
-                active={input.orientationType === 'ultrawide'}
-                onClick={() => {
-                  handleOrientationSelect('ultrawide')
-                }}
-              >
-                Ultrawide 21 x 9
-              </DropdownItem>
-              <DropdownItem
-                active={input.orientationType === 'square'}
-                onClick={() => {
-                  handleOrientationSelect('square')
-                }}
-              >
-                Square
-              </DropdownItem>
-              <DropdownItem
-                active={input.orientationType === 'random'}
-                onClick={() => {
-                  handleOrientationSelect('random')
-                }}
-              >
-                Random
-              </DropdownItem>
-            </DropdownContent>
-          </div>
-        </div>
         <div className="flex flex-row gap-[8px] items-start">
-          <ImageUploadDisplay
-            handleUpload={handleImageUpload}
-            imageType={input.imageType}
-            sourceImage={input.source_image}
-            resetImage={() => {
-              setInput({
-                img2img: false,
-                imgType: '',
-                source_image: ''
-              })
-            }}
-          />
+          {input.sourceImage && (
+            <ImageSquare
+              imageDetails={{ base64String: input.sourceImage }}
+              imageType={input.imageType}
+              size={120}
+            />
+          )}
+          {input.sourceImage && (
+            <div
+              className="absolute top-[2px] right-[2px] bg-blue-500 cursor-pointer"
+              onClick={() => {
+                setInput({
+                  img2img: false,
+                  imgType: '',
+                  source_image: ''
+                })
+              }}
+            >
+              <CloseIcon />
+            </div>
+          )}
           <TextArea
             name="prompt"
             className="block bg-white p-2.5 w-full text-lg text-black rounded-lg max-h-[250px] border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
@@ -454,12 +368,16 @@ const Home: NextPage = () => {
           </div>
         </div>
       </div>
+      <AdvancedOptionsPanel
+        handleChangeInput={handleChangeValue}
+        handleImageUpload={handleImageUpload}
+        handleOrientationSelect={handleOrientationSelect}
+        input={input}
+        setInput={setInput}
+      />
       <StyledPanel open={showAdvanced}>
         {showAdvanced && (
           <Panel className="relative">
-            <div className="absolute" style={{ top: '-23px', left: '17px' }}>
-              |
-            </div>
             <div className="mb-2">
               <SectionTitle>Advanced options</SectionTitle>
               {input.parentJobId && (

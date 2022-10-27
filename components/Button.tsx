@@ -8,6 +8,7 @@ interface ButtonProps {
   btnType?: string
   title?: string
   width?: string
+  style?: any
 }
 
 const StyledButton = styled.button<ButtonProps>`
@@ -21,7 +22,7 @@ const StyledButton = styled.button<ButtonProps>`
   font-weight: 600;
   gap: 4px;
   justify-content: center;
-  height: 44px;
+  height: 40px;
   min-width: 40px;
   padding: 2px 8px;
   width: ${(props) => props.width};

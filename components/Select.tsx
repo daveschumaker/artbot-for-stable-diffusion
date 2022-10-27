@@ -1,37 +1,84 @@
 import React from 'react'
 import Select from 'react-select'
-import styled from 'styled-components'
-interface SelectProps {
-  name?: string
-  children?: React.ReactNode
-  onChange: any
-  width?: string
-  value?: string
+import { useTheme } from 'styled-components'
+
+interface Theme {
+  border?: string
+  cardBackground?: string
+  inputBackground?: string
+  inputText?: string
 }
 
-const StyledSelect = styled(Select)<SelectProps>`
-  & .Select__control {
-    border-color: black;
-  }
+interface SelectProps {
+  name?: string
+  onChange: any
+  width?: string
+  value?: Value
+  options: Array<any>
+  styles?: any
+}
 
-  position: relative;
-
-  /* background-color: rgb(42, 48, 60); */
-  /* border-radius: 4px; */
-  /* border: 1px solid white; */
-  /* color: #e1e1e1; */
-  /* font-size: 14px; */
-  /* height: 39px; */
-  /* padding: 8px; */
-  width: ${(props) => (props.width ? props.width : '120px')};
-`
+interface Value {
+  value: string
+  label: string
+}
 
 const SelectComponent = (props: SelectProps) => {
-  const { children, ...rest } = props
+  const theme: Theme = useTheme()
+  const { ...rest } = props
+
+  const customStyles = {
+    container: (provided: any) => ({
+      ...provided,
+      borderColor: theme.border
+    }),
+    control: (provided: any) => ({
+      ...provided,
+      backgroundColor: theme.inputBackground,
+      color: theme.inputText
+    }),
+    input: (provided: any) => ({
+      ...provided,
+      color: theme.inputText
+    }),
+    option: (provided: any, state: any) => {
+      return {
+        ...provided,
+        backgroundColor: state.isFocused
+          ? theme.cardBackground
+          : theme.inputBackground,
+        color: theme.inputText
+        // borderBottom: '1px dotted pink',
+        // color: state.isSelected ? 'red' : 'blue',
+        // padding: 20
+      }
+    },
+    valueContainer: (provided: any) => ({
+      ...provided
+    }),
+    menu: (provided: any) => ({
+      ...provided,
+      backgroundColor: theme.inputBackground
+    }),
+    indicatorsContainer: (provided: any) => ({
+      ...provided,
+      backgroundColor: theme.inputBackground
+    }),
+    singleValue: (provided: any) => {
+      return {
+        ...provided,
+        color: theme.inputText
+      }
+    }
+  }
+
   return (
-    <StyledSelect classNamePrefix={'Select'} {...rest}>
-      {children}
-    </StyledSelect>
+    <Select
+      id="long-value-select"
+      instanceId="long-value-select"
+      {...rest}
+      styles={customStyles}
+    />
   )
 }
 

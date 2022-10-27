@@ -34,7 +34,7 @@ const ImageUploadDisplay = ({
       )}
       {sourceImage && (
         <div
-          className="absolute top-[2px] right-[2px] bg-blue-500 cursor-pointer"
+          className="absolute top-[0px] right-[0px] bg-blue-500 cursor-pointer"
           onClick={resetImage}
         >
           <CloseIcon />

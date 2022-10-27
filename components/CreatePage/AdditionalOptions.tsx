@@ -4,6 +4,7 @@ import { trackEvent } from '../../api/telemetry'
 import { Button } from '../Button'
 import DotsHorizontalIcon from '../icons/DotsHorizontalIcon'
 import DotsVerticalIcon from '../icons/DotsVerticalIcon'
+import ToolIcon from '../icons/ToolIcon'
 
 interface AdvancedOptionsProps {
   showAdvanced: boolean
@@ -29,7 +30,7 @@ export function AdvancedOptions({
   return (
     <div className="w-1/2 flex flex-row gap-2">
       <Button title="Show advanced options" onClick={handleShowAdvancedOptions}>
-        {showAdvanced ? <DotsVerticalIcon /> : <DotsHorizontalIcon />}
+        <ToolIcon />
       </Button>
     </div>
   )
