@@ -11,24 +11,6 @@ const FaqPage = () => {
       <PageTitle>FAQ</PageTitle>
       <div className="text-md">
         <div className="mt-2 font-bold">
-          Q: Is img2img live? How do I use it?
-        </div>
-        <div className="">
-          A: Db0 has release img2img support through the Stable Horde as a
-          pilot. You can currently use it if you are considered a trusted user
-          within Stable Horde. One way to do that is to contribute GPU cycles
-          toward the distributed cluster. More information is available{' '}
-          <a
-            className="text-cyan-500"
-            href="https://github.com/db0/AI-Horde/blob/main/FAQ.md"
-            target="_blank"
-            rel="noreferrer"
-          >
-            here
-          </a>
-          .
-        </div>
-        <div className="mt-2 font-bold">
           Q: Why does the estimated time remaining to generate an image seem to
           fluctuate so much?
         </div>
@@ -53,14 +35,14 @@ const FaqPage = () => {
           A: You&apos;re probably running into the Stable Diffusion / Stable
           Horde NSFW filter. It can sometimes be a bit too aggressive. Try
           disabling it in the{' '}
-          <Link href="/settings">
-            <a className="text-cyan-500">settings panel</a>
+          <Link href="/settings" className="text-cyan-500">
+            settings panel
           </Link>
           .
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default FaqPage

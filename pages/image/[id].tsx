@@ -6,12 +6,19 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import LazyLoad from 'react-lazyload'
 import Masonry from 'react-responsive-masonry'
+import styled from 'styled-components'
+
 import ImageDetails from '../../components/ImageDetails'
 import PageTitle from '../../components/PageTitle'
 
 import Spinner from '../../components/Spinner'
 import { useWindowSize } from '../../hooks/useWindowSize'
 import { fetchRelatedImages, getImageDetails } from '../../utils/db'
+
+const StyledImage = styled.img`
+  box-shadow: 0 16px 38px -12px rgb(0 0 0 / 56%),
+    0 4px 25px 0px rgb(0 0 0 / 12%), 0 8px 10px -5px rgb(0 0 0 / 20%);
+`
 
 const ImagePage = () => {
   const size = useWindowSize()
@@ -84,15 +91,15 @@ const ImagePage = () => {
             browser.
           </div>
           <div className="mt-4 mb-2">
-            <Link href="/">
-              <a className="text-cyan-400">Why not create something new?</a>
+            <Link href="/" className="text-cyan-400">
+              Why not create something new?
             </Link>
           </div>
         </>
       )}
       {!isInitialLoad && imageDetails?.base64String && (
         <div key={imageDetails.jobId} className="text-center pb-6">
-          <img
+          <StyledImage
             src={'data:image/webp;base64,' + imageDetails.base64String}
             className="mx-auto rounded"
             alt={imageDetails.prompt}
@@ -119,17 +126,15 @@ const ImagePage = () => {
                   return (
                     <LazyLoad key={image.jobId} once>
                       <Link href={`/image/${image.jobId}`} passHref>
-                        <a>
-                          <img
-                            src={'data:image/webp;base64,' + image.base64String}
-                            style={{
-                              borderRadius: '4px',
-                              width: '100%',
-                              display: 'block'
-                            }}
-                            alt={image.prompt}
-                          />
-                        </a>
+                        <img
+                          src={'data:image/webp;base64,' + image.base64String}
+                          style={{
+                            borderRadius: '4px',
+                            width: '100%',
+                            display: 'block'
+                          }}
+                          alt={image.prompt}
+                        />
                       </Link>
                     </LazyLoad>
                   )

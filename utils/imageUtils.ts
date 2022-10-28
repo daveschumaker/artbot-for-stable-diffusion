@@ -1,4 +1,6 @@
 import { createImage } from '../api/createImage'
+import { trackEvent } from '../api/telemetry'
+import { isValidHttpUrl } from './validationUtils'
 
 interface CreateImageJob {
   jobId?: string
@@ -109,6 +111,7 @@ export const orientationDetails = (orientation: string): ImageOrientation => {
 }
 
 export const createNewImage = async (imageParams: CreateImageJob) => {
+  const clonedParams = Object.assign({}, imageParams)
   /**
    * Max prompt length for hlky is roughly 75 tokens.
    * According to: https://beta.openai.com/tokenizer
@@ -117,38 +120,38 @@ export const createNewImage = async (imageParams: CreateImageJob) => {
    * here, too, just so someone can't send Shakespeare
    * novels inside a payload.
    */
-  imageParams.prompt = imageParams.prompt.trim()
-  if (imageParams?.prompt?.length > 1024) {
+  clonedParams.prompt = imageParams.prompt.trim()
+  if (clonedParams?.prompt?.length > 1024) {
     console.log(
-      `Warning: prompt length of ${imageParams.prompt.length} is greater than 1024 chars. Prompt will be shortned.`
+      `Warning: prompt length of ${clonedParams.prompt.length} is greater than 1024 chars. Prompt will be shortned.`
     )
-    imageParams.prompt = imageParams.prompt.substring(0, 1024)
+    clonedParams.prompt = clonedParams.prompt.substring(0, 1024)
   }
 
   // Image Validation
-  imageParams.negative = imageParams?.negative?.trim()
-  if (imageParams?.negative) {
-    imageParams.prompt += ' ### ' + imageParams.negative
+  clonedParams.negative = clonedParams?.negative?.trim()
+  if (clonedParams?.negative) {
+    clonedParams.prompt += ' ### ' + clonedParams.negative
   }
 
   if (
-    isNaN(imageParams.steps) ||
-    imageParams.steps > 100 ||
-    imageParams.steps < 1
+    isNaN(clonedParams.steps) ||
+    clonedParams.steps > 100 ||
+    clonedParams.steps < 1
   ) {
-    imageParams.steps = 30
+    clonedParams.steps = 30
   }
 
   if (
-    isNaN(imageParams.cfg_scale) ||
-    imageParams.cfg_scale > 64 ||
-    imageParams.cfg_scale < 1
+    isNaN(clonedParams.cfg_scale) ||
+    clonedParams.cfg_scale > 64 ||
+    clonedParams.cfg_scale < 1
   ) {
-    imageParams.cfg_scale = 9.0
+    clonedParams.cfg_scale = 9.0
   }
 
   try {
-    const data = await createImage(imageParams)
+    const data = await createImage(clonedParams)
     const { jobId, success, message, status } = data
 
     if (success && jobId) {
@@ -179,4 +182,77 @@ export const getBase64 = (file: Blob) => {
       return resolve(reader.result)
     }
   })
+}
+
+export const imgUrlToDataUrl = (url: string) => {
+  return new Promise((resolve) => {
+    try {
+      var xhr = new XMLHttpRequest()
+      xhr.onload = function () {
+        var reader = new FileReader()
+        reader.onloadend = function () {
+          resolve(xhr.response)
+        }
+        reader.readAsDataURL(xhr.response)
+      }
+      xhr.onerror = function () {
+        resolve(false)
+      }
+      xhr.open('GET', url)
+      xhr.responseType = 'blob'
+      xhr.send()
+    } catch (err) {
+      resolve(false)
+    }
+  })
+}
+
+export const getImageFromUrl = async (imgUrl: string) => {
+  const validUrl = isValidHttpUrl(imgUrl)
+
+  if (!validUrl) {
+    return {
+      success: false,
+      status: 'GET_IMG_FROM_URL_ERROR',
+      message: 'Unable to process image from URL, please try something else.'
+    }
+  }
+
+  const resp = await fetch(`/artbot/api/img-from-url`, {
+    method: 'POST',
+    body: JSON.stringify({
+      imageUrl: imgUrl
+    }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  const data = await resp.json()
+
+  // @ts-ignore
+  const { success, imageType, imgBase64String } = data
+
+  if (!data || !success) {
+    trackEvent({
+      event: 'ERROR_UPLOAD_IMG_BY_URL',
+      imgUrl
+    })
+
+    return {
+      success: false,
+      status: 'GET_IMG_FROM_URL_ERROR',
+      message: 'Unable to process image from URL, please try something else.'
+    }
+  }
+
+  trackEvent({
+    event: 'UPLOAD_IMG_BY_URL',
+    imgUrl
+  })
+
+  return {
+    success: true,
+    imageType,
+    imgBase64String
+  }
 }

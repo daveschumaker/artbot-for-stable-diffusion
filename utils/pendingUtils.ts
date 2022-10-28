@@ -1,6 +1,6 @@
 import { CreatePendingJob } from '../types'
 import { uuidv4 } from './appUtils'
-import { orientationDetails } from './imageUtils'
+import { orientationDetails, randomSampler } from './imageUtils'
 
 interface ImageSize {
   orientation: string
@@ -41,6 +41,11 @@ export const createPendingJob = (imageParams: CreatePendingJob) => {
     // by API
     const clonedParams = Object.assign({}, imageParams)
     clonedParams.jobId = uuidv4()
+    clonedParams.jobStartTimestamp = Date.now()
+
+    if (clonedParams.sampler === 'random') {
+      clonedParams.sampler = randomSampler(clonedParams.img2img || false)
+    }
 
     const imageSize: ImageSize = orientationDetails(
       clonedParams.orientationType || 'square'

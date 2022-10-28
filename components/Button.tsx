@@ -8,20 +8,21 @@ interface ButtonProps {
   btnType?: string
   title?: string
   width?: string
+  style?: any
 }
 
 const StyledButton = styled.button<ButtonProps>`
   align-items: center;
-  background-color: #1890ff;
+  background-color: ${(props) => props.theme.buttonPrimary};
   border-radius: 4px;
   border: 1px solid white;
   color: white;
   display: flex;
   font-size: 14px;
-  font-weight: 700;
-  height: 32px;
+  font-weight: 600;
   gap: 4px;
   justify-content: center;
+  height: 40px;
   min-width: 40px;
   padding: 2px 8px;
   width: ${(props) => props.width};
@@ -30,10 +31,10 @@ const StyledButton = styled.button<ButtonProps>`
     props.btnType === 'secondary' &&
     `
     color: white;
-    background-color: #fa5757;
+    background-color: ${props.theme.buttonSecondary};
 
     &:hover {
-      background-color: #e14e4e;
+      background-color: ${props.theme.buttonSecondaryActive};
     }
   `}
 
@@ -42,7 +43,7 @@ const StyledButton = styled.button<ButtonProps>`
     props.btnType !== 'secondary' &&
     `
     &:hover {
-      background-color: rgb(59 130 246);
+      background-color: ${props.theme.buttonPrimaryActive};
     }
   `}
 

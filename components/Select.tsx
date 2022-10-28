@@ -1,28 +1,84 @@
-import React from 'react'
-import styled from 'styled-components'
+import React, { CSSProperties } from 'react'
+import Select, { OptionProps } from 'react-select'
+import { useTheme } from 'styled-components'
+
+interface Theme {
+  border?: string
+  cardBackground?: string
+  inputBackground?: string
+  inputColor?: string
+}
 
 interface SelectProps {
   name?: string
-  children?: React.ReactNode
   onChange: any
   width?: string
-  value?: string
+  value?: Value
+  options: Array<any>
+  styles?: any
+  menuPlacement?: string
 }
 
-const StyledSelect = styled.select<SelectProps>`
-  background-color: rgb(42, 48, 60);
-  border-radius: 4px;
-  border: 1px solid white;
-  color: #e1e1e1;
-  font-size: 14px;
-  height: 39px;
-  padding: 8px;
-  width: ${(props) => (props.width ? props.width : '120px')};
-`
-
-const Select = (props: SelectProps) => {
-  const { children, ...rest } = props
-  return <StyledSelect {...rest}>{children}</StyledSelect>
+interface Value {
+  value: string | boolean
+  label: string
 }
 
-export default Select
+const SelectComponent = (props: SelectProps) => {
+  const theme: Theme = useTheme()
+  const { ...rest } = props
+
+  const customStyles = {
+    container: (provided: CSSProperties) => ({
+      ...provided
+    }),
+    control: (provided: CSSProperties) => ({
+      ...provided,
+      backgroundColor: theme.inputBackground,
+      borderColor: theme.inputColor,
+      color: theme.inputColor
+    }),
+    input: (provided: CSSProperties) => ({
+      ...provided,
+      color: theme.inputColor
+    }),
+    option: (provided: CSSProperties, state: OptionProps) => {
+      return {
+        ...provided,
+        backgroundColor: state.isFocused
+          ? theme.cardBackground
+          : theme.inputBackground,
+        color: theme.inputColor
+      }
+    },
+    valueContainer: (provided: CSSProperties) => ({
+      ...provided
+    }),
+    menu: (provided: CSSProperties) => ({
+      ...provided,
+      backgroundColor: theme.inputBackground
+    }),
+    indicatorsContainer: (provided: CSSProperties) => ({
+      ...provided,
+      backgroundColor: theme.inputBackground
+    }),
+    singleValue: (provided: CSSProperties) => {
+      return {
+        ...provided,
+        color: theme.inputColor
+      }
+    }
+  }
+
+  return (
+    <Select
+      id="long-value-select"
+      instanceId="long-value-select"
+      {...rest}
+      //@ts-ignore
+      styles={customStyles}
+    />
+  )
+}
+
+export default SelectComponent

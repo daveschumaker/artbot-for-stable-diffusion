@@ -11,8 +11,9 @@ interface StyleProps {
 
 const StyledContent = styled.div<StyleProps>`
   margin-top: auto;
-  margin-left: 24px;
-  margin-right: 24px;
+  margin-left: 12px;
+  margin-right: 12px;
+  margin-bottom: 80px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;

@@ -157,7 +157,7 @@ export const createMultiImageJob = async () => {
 export const sendJobToApi = async (imageParams: CreateImageJob) => {
   try {
     const data = await createNewImage(imageParams)
-    const { success, jobId } = data
+    const { success, jobId, message = '' } = data
 
     if (success && jobId) {
       // Overwrite params on success.
@@ -175,6 +175,7 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
 
       if (detailsSuccess) {
         imageParams.timestamp = Date.now()
+        imageParams.initWaitTime = wait_time
         imageParams.wait_time = (wait_time || 0) + 30
         imageParams.queue_position = queue_position
       }
@@ -193,13 +194,14 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
       trackEvent({
         type: 'ERROR',
         event: 'UNABLE_TO_SEND_IMAGE_REQUEST',
-        imageParams: { ...imageParams }
+        imageParams: { ...imageParams },
+        messageFromApi: message
       })
 
       return {
         success: false,
         status: 'UNABLE_TO_SEND_IMAGE_REQUEST',
-        message: ''
+        messageFromApi: message
       }
     }
   } catch (err) {
@@ -210,7 +212,7 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
     delete imageParams.source_image
     trackEvent({
       type: 'ERROR',
-      event: 'SEND_TO_API',
+      event: 'SEND_TO_API_ERROR',
       imageParams: { ...imageParams }
     })
 
@@ -369,9 +371,11 @@ export const checkCurrentJob = async (imageDetails: any) => {
         params: {
           height: imageDetails.height,
           width: imageDetails.width,
-          waitTime: (
-            Math.floor(Date.now() - imageDetails.timestamp) / 1000
-          ).toFixed(0)
+          waitTime: imageDetails.jobStartTimestamp
+            ? (
+                Math.floor(Date.now() - imageDetails.jobStartTimestamp) / 1000
+              ).toFixed(0)
+            : 0
         }
       })
       return {
@@ -390,4 +394,4 @@ export const checkCurrentJob = async (imageDetails: any) => {
 setInterval(() => {
   createMultiImageJob()
   fetchJobDetails()
-}, 200)
+}, 250)

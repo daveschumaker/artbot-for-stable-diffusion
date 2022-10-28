@@ -25,11 +25,13 @@ export interface CreateImageJob {
   wait_time?: number
   queue_position?: number
   base64String?: string
+  initWaitTime?: number
 }
 
 export interface CreatePendingJob {
   jobId?: string
   prompt: string
+  img2img?: boolean
   numImages: number
   orientationType: string
   orientation: string
@@ -41,6 +43,7 @@ export interface CreatePendingJob {
   cfg_scale: number
   steps: number
   sampler: string
+  jobStartTimestamp: number
 }
 
 export interface DiffusionModel {

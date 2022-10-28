@@ -30,11 +30,13 @@ const PollController = () => {
 
   return (
     <>
-      <Toast
-        handleClose={handleCloseToast}
-        jobId={newImageReady}
-        showImageReadyToast={showImageReadyToast}
-      />
+      {newImageReady && (
+        <Toast
+          handleClose={handleCloseToast}
+          jobId={newImageReady}
+          showImageReadyToast={showImageReadyToast}
+        />
+      )}
     </>
   )
 }

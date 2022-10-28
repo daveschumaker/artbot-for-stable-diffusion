@@ -4,7 +4,6 @@ import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import Masonry from 'react-responsive-masonry'
 
-import ImageCardDetails from '../components/ImageCardDetails'
 import PageTitle from '../components/PageTitle'
 import Spinner from '../components/Spinner'
 import { fetchCompletedJobs, imageCount } from '../utils/db'
@@ -16,6 +15,7 @@ import ImageSquare from '../components/ImageSquare'
 import { trackEvent } from '../api/telemetry'
 import { Button } from '../components/Button'
 import { useWindowSize } from '../hooks/useWindowSize'
+import ImageCard from '../components/ImagesPage/ImageCard/imageCard'
 
 const ImagesPage = () => {
   const size = useWindowSize()
@@ -91,10 +91,10 @@ const ImagesPage = () => {
     }
   }, [fetchImages])
 
-  let defaultStyle = `flex gap-y-2.5`
+  let defaultStyle = `flex gap-y-3 mt-4`
 
   if (showLayout === 'grid' || showLayout === 'layout') {
-    defaultStyle += ` flex-wrap gap-x-2.5 justify-center md:justify-start`
+    defaultStyle += ` flex-wrap gap-x-3 justify-center md:justify-start`
   } else {
     defaultStyle += ` flex-col justify-center`
   }
@@ -147,8 +147,8 @@ const ImagesPage = () => {
       {!isInitialLoad && images.length === 0 && (
         <div className="mb-2">
           You haven&apos;t created any images yet.{' '}
-          <Link href="/">
-            <a className="text-cyan-400">Why not create something?</a>
+          <Link href="/" className="text-cyan-400">
+            Why not create something?
           </Link>
         </div>
       )}
@@ -166,17 +166,15 @@ const ImagesPage = () => {
                 return (
                   <LazyLoad key={image.jobId} once>
                     <Link href={`/image/${image.jobId}`} passHref>
-                      <a>
-                        <img
-                          src={'data:image/webp;base64,' + image.base64String}
-                          style={{
-                            borderRadius: '4px',
-                            width: '100%',
-                            display: 'block'
-                          }}
-                          alt={image.prompt}
-                        />
-                      </a>
+                      <img
+                        src={'data:image/webp;base64,' + image.base64String}
+                        style={{
+                          borderRadius: '4px',
+                          width: '100%',
+                          display: 'block'
+                        }}
+                        alt={image.prompt}
+                      />
                     </Link>
                   </LazyLoad>
                 )
@@ -197,12 +195,10 @@ const ImagesPage = () => {
                 return (
                   <LazyLoad key={image.jobId} once>
                     <Link href={`/image/${image.jobId}`} passHref>
-                      <a>
-                        <ImageSquare
-                          imageDetails={image}
-                          imageType={'image/webp'}
-                        />
-                      </a>
+                      <ImageSquare
+                        imageDetails={image}
+                        imageType={'image/webp'}
+                      />
                     </Link>
                   </LazyLoad>
                 )
@@ -220,27 +216,15 @@ const ImagesPage = () => {
               prompt: string
               timestamp: number
               seed: number
+              height: number
+              width: number
             }) => {
               return (
-                <LazyLoad key={image.jobId} once>
-                  <div className="text-center border-[1px] border-solid border-slate-400 rounded-lg w-full mb-4 md:w-[512px] mx-auto">
-                    <Link href={`/image/${image.jobId}`} passHref>
-                      <a>
-                        <div className="bg-slate-600 rounded-t-lg">
-                          <img
-                            src={'data:image/webp;base64,' + image.base64String}
-                            className="mx-auto rounded-t-lg"
-                            alt={image.prompt}
-                          />
-                        </div>
-                      </a>
-                    </Link>
-                    <ImageCardDetails
-                      imageDetails={image}
-                      onDelete={handleDeleteImageClick}
-                    />
-                  </div>
-                </LazyLoad>
+                <ImageCard
+                  key={image.jobId}
+                  imageDetails={image}
+                  handleDeleteImageClick={handleDeleteImageClick}
+                />
               )
             }
           )}

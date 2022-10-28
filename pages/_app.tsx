@@ -2,6 +2,7 @@ import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import Script from 'next/script'
 import { ThemeProvider } from 'styled-components'
+import withDarkMode from 'next-dark-mode'
 
 import { initAppSettings } from '../utils/appSettings'
 import ContentWrapper from '../components/ContentWrapper'
@@ -9,6 +10,9 @@ import Footer from '../components/Footer'
 import Header from '../components/Header'
 import NavBar from '../components/NavBar'
 import PollController from '../components/PollController'
+
+import { GlobalStyles } from '../styles/globalStyles'
+import { lightTheme, darkTheme } from '../styles/theme'
 import '../styles/globals.css'
 
 import { initDb } from '../utils/db'
@@ -17,13 +21,17 @@ import { appInfoStore, setBuildId } from '../store/appStore'
 import { useStore } from 'statery'
 import ServerUpdateModal from '../components/ServerUpdateModal'
 import MobileFooter from '../components/MobileFooter'
-import PwaToast from '../components/PwaToast'
 initAppSettings()
 initDb()
 
 let waitingForServerInfoRes = false
 
-function MyApp({ Component, pageProps }: AppProps) {
+interface MyAppProps extends AppProps {
+  darkMode: any
+}
+
+function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
+  const { darkModeActive } = darkMode
   const [showServerUpdateModal, setShowServerUpdateModal] = useState(false)
   const appState = useStore(appInfoStore)
   const { buildId } = appState
@@ -50,8 +58,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     }
   }, [buildId])
 
-  const theme = {}
-
   useEffect(() => {
     fetchAppInfo()
     const interval = setInterval(async () => {
@@ -62,7 +68,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, [fetchAppInfo])
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={darkModeActive ? darkTheme : lightTheme}>
+      <GlobalStyles />
       <Script
         strategy="lazyOnload"
         src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
@@ -128,10 +135,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Component {...pageProps} />
         <Footer />
       </ContentWrapper>
-      <PwaToast />
       <MobileFooter />
     </ThemeProvider>
   )
 }
 
-export default MyApp
+export default withDarkMode(MyApp)

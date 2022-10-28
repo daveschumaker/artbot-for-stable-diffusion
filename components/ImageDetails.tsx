@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { useRouter } from 'next/router'
+import styled from 'styled-components'
 
 import { deleteCompletedImage } from '../utils/db'
 import ConfirmationModal from './ConfirmationModal'
@@ -10,13 +11,14 @@ import { Button } from './Button'
 import { trackEvent, trackGaEvent } from '../api/telemetry'
 import RefreshIcon from './icons/RefreshIcon'
 import UploadIcon from './icons/UploadIcon'
-import Link from 'next/link'
 import {
   copyEditPrompt,
   downloadImage,
   rerollImage,
   uploadImg2Img
 } from '../controllers/imageDetailsCommon'
+import Linker from './Linker'
+import CopyIcon from './icons/CopyIcon'
 
 interface ImageDetails {
   img2img?: boolean
@@ -40,6 +42,13 @@ interface ImageDetailsProps {
   imageDetails: ImageDetails
   onDelete: () => void
 }
+
+const MobileHideText = styled.span`
+  display: none;
+  @media (min-width: 718px) {
+    display: inline-block;
+  }
+`
 
 const ImageDetails = ({
   imageDetails,
@@ -162,19 +171,19 @@ const ImageDetails = ({
         -- Settings --
         <ul>
           Job:{' '}
-          <Link href={`/job/${imageDetails.parentJobId}`} passHref>
-            <a
-              className="text-cyan-500"
-              onClick={() => {
-                trackEvent({
-                  event: 'JOB_DETAILS_CLICK',
-                  context: 'ImagePage'
-                })
-              }}
-            >
-              {imageDetails.parentJobId}
-            </a>
-          </Link>
+          <Linker
+            href={`/job/${imageDetails.parentJobId}`}
+            passHref
+            className="text-cyan-500"
+            onClick={() => {
+              trackEvent({
+                event: 'JOB_DETAILS_CLICK',
+                context: 'ImagePage'
+              })
+            }}
+          >
+            {imageDetails.parentJobId}
+          </Linker>
           {imageDetails.img2img && <li>Source: img2img</li>}
           {imageDetails.negative && (
             <li>Negative prompt: {imageDetails.negative}</li>
@@ -202,6 +211,7 @@ const ImageDetails = ({
             // @ts-ignore
             onClick={() => handleCopyPromptClick(imageDetails)}
           >
+            <CopyIcon />
             <span className="inline-block md:hidden">Copy</span>
             <span className="hidden md:inline-block">Copy prompt</span>
           </Button>
@@ -211,6 +221,7 @@ const ImageDetails = ({
             onClick={() => handleUploadClick(imageDetails)}
           >
             <UploadIcon className="mx-auto" />
+            <MobileHideText>Use for img2img</MobileHideText>
           </Button>
           <Button
             title="Download PNG"
@@ -218,15 +229,17 @@ const ImageDetails = ({
             disabled={pendingDownload}
           >
             <DownloadIcon className="mx-auto" />
+            <MobileHideText>Download PNG</MobileHideText>
           </Button>
         </div>
-        <div className="inline-block w-1/4 flex flex-row justify-end gap-2">
+        <div className="inline-block w-1/2 flex flex-row justify-end gap-2">
           <Button
             title="Request new image with same settings"
             onClick={() => handleRerollClick(imageDetails)}
             disabled={pending}
           >
             <RefreshIcon className="mx-auto" />
+            <MobileHideText>Reroll Image</MobileHideText>
           </Button>
           <Button
             title="Delete image"
@@ -234,6 +247,7 @@ const ImageDetails = ({
             onClick={() => setShowDeleteModal(true)}
           >
             <TrashIcon className="mx-auto" />
+            <MobileHideText>Delete image</MobileHideText>
           </Button>
         </div>
       </div>

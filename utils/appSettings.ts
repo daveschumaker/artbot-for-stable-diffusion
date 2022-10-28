@@ -45,4 +45,8 @@ export const initAppSettings = async () => {
   fetchAvailableModels()
   checkNsfwSettings()
   updateShowGrid()
+
+  setInterval(() => {
+    fetchAvailableModels()
+  }, 60000)
 }

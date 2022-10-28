@@ -2,8 +2,18 @@ import { useRef } from 'react'
 import { Button } from './Button'
 import UploadIcon from './icons/UploadIcon'
 
+interface UploadButtonProps {
+  label: string
+  disabled?: boolean
+  handleFile: () => void
+}
+
 // @ts-ignore
-export function UploadButton({ label = '', disabled, handleFile = () => {} }) {
+export function UploadButton({
+  label = '',
+  disabled = false,
+  handleFile
+}: UploadButtonProps) {
   // @ts-ignore
   const hiddenFileInput = useRef(null)
 

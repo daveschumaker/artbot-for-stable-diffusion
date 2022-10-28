@@ -3,7 +3,8 @@ import styled from 'styled-components'
 
 interface InputProps {
   name?: string
-  type: string
+  type?: string
+  className?: string
   children?: React.ReactNode
   onChange: any
   width?: string
@@ -11,14 +12,14 @@ interface InputProps {
 }
 
 const StyledInput = styled.input<InputProps>`
-  background-color: rgb(42, 48, 60);
+  background-color: ${(props) => props.theme.inputBackground};
   border-radius: 4px;
-  border: 1px solid white;
-  color: #e1e1e1;
+  border: 1px solid ${(props) => props.theme.inputColor};
+  color: ${(props) => props.theme.inputColor};
   font-size: 16px;
   height: 40px;
   padding: 8px;
-  width: ${(props) => (props.width ? props.width : '120px')};
+  width: ${(props) => (props.width ? props.width : '100%')};
 `
 
 const Input = (props: InputProps) => {

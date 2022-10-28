@@ -1,4 +1,4 @@
-import { ModelDetails } from '../types'
+import { validSampler } from './validationUtils'
 
 interface SavePrompt {
   img2img: boolean
@@ -53,12 +53,13 @@ export const savePrompt = ({
   denoising_strength = 0.75,
   models = ['stable_diffusion']
 } = {}) => {
+  const samplerValid = validSampler(sampler, img2img)
   promptDetails = {
     img2img,
     copyPrompt: true,
     prompt,
     orientation,
-    sampler,
+    sampler: samplerValid ? sampler : 'k_euler_a',
     cfg_scale,
     steps,
     height,

@@ -10,12 +10,12 @@ import autosize from 'autosize'
 import styled from 'styled-components'
 
 const StyledTextArea = styled.textarea`
-  background-color: rgb(42, 48, 60);
-  border: 1px solid white;
+  background-color: ${(props) => props.theme.inputBackground};
+  border: 1px solid ${(props) => props.theme.inputColor};
   border-radius: 4px;
-  color: #e1e1e1;
+  color: ${(props) => props.theme.inputColor};
   font-size: 16px;
-  min-height: 100px;
+  min-height: 120px;
 `
 
 type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement>

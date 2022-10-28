@@ -12,6 +12,21 @@ export const trackEvent = async (obj = {}) => {
     return
   }
 
+  // @ts-ignore
+  const { event } = obj
+
+  if (event === 'FEEDBACK_FORM') {
+    //@ts-ignore
+    if (isNaN(obj.totalImages) || obj.totalImages === 0) {
+      return
+    }
+
+    //@ts-ignore
+    if (!obj.input || obj?.input.trim().length < 10) {
+      return
+    }
+  }
+
   try {
     await fetch(`/artbot/api/telemetry`, {
       method: 'POST',

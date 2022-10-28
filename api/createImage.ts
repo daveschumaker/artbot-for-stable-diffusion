@@ -123,12 +123,15 @@ export const createImage = async (
     })
 
     const statusCode = resp.status
+    const data = await resp.json()
+    const { id, message = '' }: GenerateResponse = data
 
     if (statusCode === 400) {
       apiCooldown()
       return {
         success: false,
-        status: 'INVALID_PARAMS'
+        status: 'INVALID_PARAMS',
+        message
       }
     }
 
@@ -136,7 +139,8 @@ export const createImage = async (
       apiCooldown()
       return {
         success: false,
-        status: 'INVALID_API_KEY'
+        status: 'INVALID_API_KEY',
+        message
       }
     }
 
@@ -144,7 +148,8 @@ export const createImage = async (
       apiCooldown()
       return {
         success: false,
-        status: 'MAX_REQUEST_LIMIT'
+        status: 'MAX_REQUEST_LIMIT',
+        message
       }
     }
 
@@ -152,12 +157,10 @@ export const createImage = async (
       apiCooldown()
       return {
         success: false,
-        status: 'HORDE_OFFLINE'
+        status: 'HORDE_OFFLINE',
+        message
       }
     }
-
-    const data = await resp.json()
-    const { id, message = '' }: GenerateResponse = data
 
     if (!id) {
       apiCooldown()
