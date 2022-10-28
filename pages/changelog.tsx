@@ -70,6 +70,12 @@ const Changelog = () => {
               the Stable Horde cluster supports it.
             </AddedInfo>
           </StyledLi>
+          <StyledLi>
+            Show source image on details page if an image was generated via
+            img2img. Also added an upload icon in the top right corner of this
+            source image, so you can quickly create / modify a new prompt using
+            the original image.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

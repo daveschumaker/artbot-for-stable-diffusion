@@ -17,6 +17,8 @@ import UploadIcon from '../icons/UploadIcon'
 import CaptureClickOverlay from '../UI/CaptureClickOverly'
 import BrushIcon from '../icons/BrushIcon'
 import SprayIcon from '../icons/SprayIcon'
+import { trackEvent } from '../../api/telemetry'
+import DownloadIcon from '../icons/DownloadIcon'
 
 const canvasSizes = {
   landscape: {
@@ -62,8 +64,14 @@ const BottomOptions = styled.div`
   flex-direction: row;
   gap: 8px;
   justify-content: space-between;
-  margin-top: 16px;
+  margin-bottom: 16px;
   position: relative;
+`
+
+const CanvasWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
 `
 
 const StyledCanvas = styled.canvas`
@@ -229,12 +237,29 @@ const PaintCanvas = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const loadPrevious = () => {
+    const data = localStorage.getItem('paintJob')
+    //@ts-ignore
+    fabric.Image.fromURL(data, function (img) {
+      //@ts-ignore
+      fabricRef.current.add(img)
+    })
+  }
+
   const sendToImg2Img = () => {
+    trackEvent({
+      event: 'USE_PAINTED_FOR_IMG2IMG',
+      context: 'PaintPage'
+    })
+
     //@ts-ignore
     const data = fabricRef.current.toDataURL({
       format: 'png',
       multiplier: 1
     })
+
+    localStorage.setItem('paintJob', data)
+
     const imageType = 'image/png'
     const base64String = data.split('data:image/png;base64,')[1]
 
@@ -344,11 +369,6 @@ const PaintCanvas = () => {
           <TrashIcon />
         </Button>
       </Toolbar>
-      <StyledCanvas
-        id="canvas"
-        //@ts-ignore
-        ref={canvasRef}
-      />
       <BottomOptions>
         <SelectComponent
           options={[
@@ -361,10 +381,22 @@ const PaintCanvas = () => {
           value={orientation}
           menuPlacement="auto"
         />
-        <Button onClick={sendToImg2Img}>
-          <UploadIcon /> Use Drawing
-        </Button>
+        <div className="flex flex-row gap-2">
+          <Button onClick={loadPrevious}>
+            <DownloadIcon /> Previous
+          </Button>
+          <Button onClick={sendToImg2Img}>
+            <UploadIcon /> Use Drawing
+          </Button>
+        </div>
       </BottomOptions>
+      <CanvasWrapper>
+        <StyledCanvas
+          id="canvas"
+          //@ts-ignore
+          ref={canvasRef}
+        />
+      </CanvasWrapper>
     </div>
   )
 }

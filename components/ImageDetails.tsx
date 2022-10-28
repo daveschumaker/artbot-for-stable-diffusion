@@ -19,6 +19,8 @@ import {
 } from '../controllers/imageDetailsCommon'
 import Linker from './UI/Linker'
 import CopyIcon from './icons/CopyIcon'
+import ImageSquare from './ImageSquare'
+import { savePrompt } from '../utils/promptUtils'
 
 interface ImageDetails {
   img2img?: boolean
@@ -27,7 +29,7 @@ interface ImageDetails {
   prompt: string
   height?: number
   width?: number
-  cfg_scale?: string
+  cfg_scale: number
   steps?: number
   sampler?: string
   seed: number
@@ -36,6 +38,10 @@ interface ImageDetails {
   denoising_strength?: number
   parentJobId?: string
   model?: string
+  imageType?: string
+  source_image?: string
+  orientation: string
+  models?: Array<string>
 }
 
 interface ImageDetailsProps {
@@ -167,39 +173,82 @@ const ImageDetails = ({
         />
       )}
       <div className="pt-2 font-mono">{imageDetails.prompt}</div>
-      <div className="font-mono text-xs mt-2">
-        -- Settings --
-        <ul>
-          Job:{' '}
-          <Linker
-            href={`/job/${imageDetails.parentJobId}`}
-            passHref
-            className="text-cyan-500"
-            onClick={() => {
-              trackEvent({
-                event: 'JOB_DETAILS_CLICK',
-                context: 'ImagePage'
-              })
-            }}
-          >
-            {imageDetails.parentJobId}
-          </Linker>
-          {imageDetails.img2img && <li>Source: img2img</li>}
-          {imageDetails.negative && (
-            <li>Negative prompt: {imageDetails.negative}</li>
-          )}
-          <li>Sampler: {imageDetails.sampler}</li>
-          <li>
-            Model:{' '}
-            {imageDetails.model ? imageDetails.model : 'stable_diffusion'}
-          </li>
-          <li>Seed: {imageDetails.seed}</li>
-          <li>Steps: {imageDetails.steps}</li>
-          <li>cfg scale: {imageDetails.cfg_scale}</li>
-          {imageDetails.img2img && imageDetails.denoising_strength && (
-            <li>Denoise: {imageDetails.denoising_strength}</li>
-          )}
-        </ul>
+      <div className="font-mono text-xs mt-2 w-full flex flex-row justify-between">
+        <div>
+          -- Settings --
+          <ul>
+            Job:{' '}
+            <Linker
+              href={`/job/${imageDetails.parentJobId}`}
+              passHref
+              className="text-cyan-500"
+              onClick={() => {
+                trackEvent({
+                  event: 'JOB_DETAILS_CLICK',
+                  context: 'ImagePage'
+                })
+              }}
+            >
+              {imageDetails.parentJobId}
+            </Linker>
+            {imageDetails.img2img && <li>Source: img2img</li>}
+            {imageDetails.negative && (
+              <li>Negative prompt: {imageDetails.negative}</li>
+            )}
+            <li>Sampler: {imageDetails.sampler}</li>
+            <li>
+              Model:{' '}
+              {imageDetails.model ? imageDetails.model : 'stable_diffusion'}
+            </li>
+            <li>Seed: {imageDetails.seed}</li>
+            <li>Steps: {imageDetails.steps}</li>
+            <li>cfg scale: {imageDetails.cfg_scale}</li>
+            {imageDetails.img2img && imageDetails.denoising_strength && (
+              <li>Denoise: {imageDetails.denoising_strength}</li>
+            )}
+          </ul>
+        </div>
+        {imageDetails.source_image && (
+          <div>
+            <div className="mb-2">img2img source:</div>
+            <div className="relative">
+              <ImageSquare
+                imageDetails={{ base64String: imageDetails.source_image }}
+                imageType={imageDetails.imageType}
+                size={120}
+              />
+              <div
+                className="absolute top-0 right-0 bg-blue-500 cursor-pointer p-[1px]"
+                onClick={() => {
+                  trackEvent({
+                    event: 'NEW_PROMPT_FROM_ORIGINAL_IMG2IMG_SRC',
+                    context: 'ImagePage'
+                  })
+
+                  savePrompt({
+                    img2img: true,
+                    imageType: imageDetails.imageType,
+                    prompt: imageDetails.prompt,
+                    sampler: imageDetails.sampler,
+                    steps: imageDetails.steps,
+                    orientation: imageDetails.orientation,
+                    height: imageDetails.height,
+                    width: imageDetails.width,
+                    cfg_scale: imageDetails.cfg_scale,
+                    parentJobId: imageDetails.parentJobId,
+                    negative: imageDetails.negative,
+                    source_image: imageDetails.source_image,
+                    denoising_strength: imageDetails.denoising_strength,
+                    models: imageDetails.models
+                  })
+                  router.push(`/?edit=true`)
+                }}
+              >
+                <UploadIcon />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
       <div className="font-mono text-xs mt-2">
         Created: {new Date(imageDetails.timestamp).toLocaleString()}

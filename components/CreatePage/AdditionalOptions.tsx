@@ -37,6 +37,10 @@ export function AdvancedOptions({
   }, [setShowAdvanced, showAdvanced])
 
   const handlePaintClick = () => {
+    trackEvent({
+      event: 'NEW_PAINT_CLICK',
+      context: 'createPage'
+    })
     router.push('/paint')
   }
 
