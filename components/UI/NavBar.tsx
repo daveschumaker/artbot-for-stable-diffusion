@@ -8,13 +8,13 @@ import {
   appInfoStore,
   setNewImageReady,
   setShowImageReadyToast
-} from '../store/appStore'
+} from '../../store/appStore'
 
-import IconCreate from './icons/CreateIcon'
-import HourglassIcon from './icons/HourglassIcon'
-import PhotoIcon from './icons/PhotoIcon'
-import PhotoPlusIcon from './icons/PhotoPlusIcon'
-import SettingsIcon from './icons/SettingsIcon'
+import IconCreate from '../icons/CreateIcon'
+import HourglassIcon from '../icons/HourglassIcon'
+import PhotoIcon from '../icons/PhotoIcon'
+import PhotoPlusIcon from '../icons/PhotoPlusIcon'
+import SettingsIcon from '../icons/SettingsIcon'
 
 const StyledNavBar = styled.nav`
   display: none;

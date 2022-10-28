@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react'
 import { useStore } from 'statery'
 
-import Toast from '../components/Toast'
+import Toast from '../components/UI/Toast'
 import { appInfoStore, setShowImageReadyToast } from '../store/appStore'
 import { hackyMultiJobCheck } from '../utils/imageCache'
 

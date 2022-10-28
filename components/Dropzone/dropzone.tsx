@@ -75,9 +75,6 @@ export default function Dropzone(props: UploaderProps) {
         const [fileType, imgBase64String] = fullDataString.split(';base64,')
         const [, imageType] = fileType.split('data:')
 
-        // console.log(`imageType?`, imageType)
-        // console.log(`imgBase64String?`, imgBase64String)
-
         handleUpload(imageType, imgBase64String)
       }
       try {

@@ -19,6 +19,7 @@ export const copyEditPrompt = (imageDetails: any) => {
 export const uploadImg2Img = (imageDetails: any) => {
   savePrompt({
     img2img: true,
+    imageType: imageDetails.imageType,
     prompt: imageDetails.prompt,
     sampler: imageDetails.sampler,
     steps: imageDetails.steps,

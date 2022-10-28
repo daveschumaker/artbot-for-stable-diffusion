@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import PageTitle from '../components/PageTitle'
+import PageTitle from '../components/UI/PageTitle'
 
 export default function NotFoundPage() {
   return (

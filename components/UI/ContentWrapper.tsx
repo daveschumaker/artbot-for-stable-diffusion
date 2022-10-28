@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { isInstalledPwa } from '../utils/appUtils'
+import { isInstalledPwa } from '../../utils/appUtils'
 interface ContentWrapperProps {
   children: React.ReactNode
 }

@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import { fetchUserDetails } from '../api/userInfo'
-import { Button } from '../components/Button'
-import Input from '../components/Input'
-import PageTitle from '../components/PageTitle'
-import Select from '../components/Select'
-import Tooltip from '../components/Tooltip'
+import { Button } from '../components/UI/Button'
+import Input from '../components/UI/Input'
+import PageTitle from '../components/UI/PageTitle'
+import Select from '../components/UI/Select'
+import Tooltip from '../components/UI/Tooltip'
 import { setTrustedUser } from '../store/appStore'
 
 const Section = styled.div`

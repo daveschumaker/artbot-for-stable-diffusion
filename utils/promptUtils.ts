@@ -2,6 +2,7 @@ import { validSampler } from './validationUtils'
 
 interface SavePrompt {
   img2img: boolean
+  imageType: string
   copyPrompt: boolean
   prompt: string
   sampler: string
@@ -19,6 +20,7 @@ interface SavePrompt {
 
 let initPromptDetails: SavePrompt = {
   img2img: false,
+  imageType: '',
   copyPrompt: false,
   prompt: '',
   sampler: 'k_heun',
@@ -40,6 +42,7 @@ let promptDetails: SavePrompt = Object.assign({}, initPromptDetails)
 // e.g., height, width, sampler, etc.
 export const savePrompt = ({
   img2img = false,
+  imageType = '',
   prompt = '',
   orientation = '',
   sampler = 'k_heun',
@@ -56,6 +59,7 @@ export const savePrompt = ({
   const samplerValid = validSampler(sampler, img2img)
   promptDetails = {
     img2img,
+    imageType,
     copyPrompt: true,
     prompt,
     orientation,

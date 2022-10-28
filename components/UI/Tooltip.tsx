@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
-import InfoIcon from './icons/InfoIcon'
+import InfoIcon from '../icons/InfoIcon'
 
 interface TooltipProps {
   children?: React.ReactNode

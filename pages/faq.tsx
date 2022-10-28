@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import PageTitle from '../components/PageTitle'
+import PageTitle from '../components/UI/PageTitle'
 
 const FaqPage = () => {
   return (
@@ -42,7 +42,7 @@ const FaqPage = () => {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 export default FaqPage

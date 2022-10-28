@@ -4,14 +4,14 @@ import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 
 import { createImageJob } from '../utils/imageCache'
-import PageTitle from '../components/PageTitle'
+import PageTitle from '../components/UI/PageTitle'
 import {
   getCachedPrompt,
   loadEditPrompt,
   updatedCachedPrompt
 } from '../utils/promptUtils'
-import TextArea from '../components/TextArea'
-import { Button } from '../components/Button'
+import TextArea from '../components/UI/TextArea'
+import { Button } from '../components/UI/Button'
 import TrashIcon from '../components/icons/TrashIcon'
 import SquarePlusIcon from '../components/icons/SquarePlusIcon'
 import { KeypressEvent } from '../types'
@@ -38,7 +38,7 @@ const Home: NextPage = () => {
 
   const initialState = {
     img2img: editMode ? loadEditPrompt().img2img : false,
-    imageType: '',
+    imageType: editMode ? loadEditPrompt().imageType : '',
     orientationType: editMode ? loadEditPrompt().orientation : 'square',
     numImages: 1,
     prompt: editMode ? loadEditPrompt().prompt : '',

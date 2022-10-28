@@ -1,4 +1,4 @@
-import PageTitle from '../../components/PageTitle'
+import PageTitle from '../../components/UI/PageTitle'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { fetchRelatedImages } from '../../utils/db'

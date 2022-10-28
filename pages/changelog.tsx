@@ -1,7 +1,7 @@
 import Head from 'next/head'
-import PageTitle from '../components/PageTitle'
+import PageTitle from '../components/UI/PageTitle'
 import styled from 'styled-components'
-import Linker from '../components/Linker'
+import Linker from '../components/UI/Linker'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -53,6 +53,31 @@ const Changelog = () => {
         <title>ArtBot - Changelog</title>
       </Head>
       <PageTitle>Changelog</PageTitle>
+      <Section>
+        <SubSectionTitle>2022.10.28</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            NEW FEATURE: 🎨 <Linker href="/paint">Painting!</Linker> You can now
+            paint your own images and then send them to the img2img feature.
+            <AddedInfo>
+              Turn your cheesy drawings into awesome AI generated art. This is
+              somewhat in beta as I&apos;m working out some kinks with the
+              painting library{' '}
+              <Linker href="http://fabricjs.com/" target="_blank">
+                (Fabric.js)
+              </Linker>
+              . This should also lay the groundwork for inpainting support once
+              the Stable Horde cluster supports it.
+            </AddedInfo>
+          </StyledLi>
+          <StyledLi>
+            Show source image on details page if an image was generated via
+            img2img. Also added an upload icon in the top right corner of this
+            source image, so you can quickly create / modify a new prompt using
+            the original image.
+          </StyledLi>
+        </StyledUl>
+      </Section>
       <Section>
         <SubSectionTitle>2022.10.27</SubSectionTitle>
         <StyledUl>

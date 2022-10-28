@@ -1,8 +1,10 @@
 import { useCallback } from 'react'
 import styled from 'styled-components'
+import { useRouter } from 'next/router'
 
 import { trackEvent } from '../../api/telemetry'
-import { Button } from '../Button'
+import { Button } from '../UI/Button'
+import BrushIcon from '../icons/BrushIcon'
 import ToolIcon from '../icons/ToolIcon'
 
 interface AdvancedOptionsProps {
@@ -21,6 +23,7 @@ export function AdvancedOptions({
   showAdvanced,
   setShowAdvanced
 }: AdvancedOptionsProps) {
+  const router = useRouter()
   const handleShowAdvancedOptions = useCallback(() => {
     if (showAdvanced) {
       setShowAdvanced(false)
@@ -33,8 +36,19 @@ export function AdvancedOptions({
     }
   }, [setShowAdvanced, showAdvanced])
 
+  const handlePaintClick = () => {
+    trackEvent({
+      event: 'NEW_PAINT_CLICK',
+      context: 'createPage'
+    })
+    router.push('/paint')
+  }
+
   return (
     <div className="w-1/2 flex flex-row gap-2">
+      <Button title="Make a painting" onClick={handlePaintClick}>
+        <BrushIcon />
+      </Button>
       <Button title="Show advanced options" onClick={handleShowAdvancedOptions}>
         <ToolIcon />
         <MobileHideText>Advanced options</MobileHideText>
