@@ -17,6 +17,7 @@ interface SelectProps {
   options: Array<any>
   styles?: any
   menuPlacement?: string
+  isSearchable?: boolean
 }
 
 interface Value {

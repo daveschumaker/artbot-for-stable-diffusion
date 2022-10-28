@@ -5,9 +5,9 @@ import styled from 'styled-components'
 import { getImageDetails, getPendingJobDetails } from '../utils/db'
 import ProgressBar from './ProgressBarV2'
 import { setNewImageReady, setShowImageReadyToast } from '../store/appStore'
-import { Button } from './Button'
+import { Button } from './UI/Button'
 import TrashIcon from './icons/TrashIcon'
-import Panel from './Panel'
+import Panel from './UI/Panel'
 import { trackEvent, trackGaEvent } from '../api/telemetry'
 import ImageSquare from './ImageSquare'
 import Link from 'next/link'
@@ -254,7 +254,7 @@ const PendingItem = ({ handleDeleteJob, jobId }) => {
                   router.push(`/image/${jobDetails.jobId}`)
                 }}
               >
-                View image
+                View
               </Button>
             )}
             {jobDetails.jobStatus !== 'done' && (

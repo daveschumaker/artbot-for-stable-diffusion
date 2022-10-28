@@ -3,11 +3,11 @@ import styled from 'styled-components'
 
 import { trackEvent } from '../api/telemetry'
 import { imageCount } from '../utils/db'
-import { Button } from './Button'
+import { Button } from './UI/Button'
 import Modal from './Modal'
-import SectionTitle from './SectionTitle'
-import Text from './Text'
-import TextArea from './TextArea'
+import SectionTitle from './UI/SectionTitle'
+import Text from './UI/Text'
+import TextArea from './UI/TextArea'
 
 const FlexRow = styled.div`
   width: 100%;

@@ -3,10 +3,10 @@ import Head from 'next/head'
 import { useState } from 'react'
 import styled from 'styled-components'
 import FeedbackModal from '../components/Feedback'
-import Linker from '../components/Linker'
+import Linker from '../components/UI/Linker'
 
-import PageTitle from '../components/PageTitle'
-import Text from '../components/Text'
+import PageTitle from '../components/UI/PageTitle'
+import Text from '../components/UI/Text'
 
 const AboutWrapper = styled.div`
   margin-bottom: 80px;

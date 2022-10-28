@@ -3,9 +3,9 @@ import styled from 'styled-components'
 import { trackEvent } from '../../api/telemetry'
 import { getBase64 } from '../../utils/imageUtils'
 import { isValidHttpUrl } from '../../utils/validationUtils'
-import { Button } from '../Button'
-import Input from '../Input'
-import PageTitle from '../PageTitle'
+import { Button } from '../UI/Button'
+import Input from '../UI/Input'
+import PageTitle from '../UI/PageTitle'
 import { UploadButton } from '../UploadButton'
 
 const imgConfig = {

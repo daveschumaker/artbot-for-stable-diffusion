@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { isInstalledPwa } from '../utils/appUtils'
+import { isInstalledPwa } from '../../utils/appUtils'
 import Linker from './Linker'
 
 interface FooterProps {

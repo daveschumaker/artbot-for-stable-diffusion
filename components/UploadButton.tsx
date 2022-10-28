@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { Button } from './Button'
+import { Button } from './UI/Button'
 import UploadIcon from './icons/UploadIcon'
 
 interface UploadButtonProps {

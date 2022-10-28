@@ -7,7 +7,7 @@ import ConfirmationModal from './ConfirmationModal'
 import { useCallback, useState } from 'react'
 import TrashIcon from './icons/TrashIcon'
 import DownloadIcon from './icons/DownloadIcon'
-import { Button } from './Button'
+import { Button } from './UI/Button'
 import { trackEvent, trackGaEvent } from '../api/telemetry'
 import RefreshIcon from './icons/RefreshIcon'
 import UploadIcon from './icons/UploadIcon'
@@ -17,7 +17,7 @@ import {
   rerollImage,
   uploadImg2Img
 } from '../controllers/imageDetailsCommon'
-import Linker from './Linker'
+import Linker from './UI/Linker'
 import CopyIcon from './icons/CopyIcon'
 
 interface ImageDetails {

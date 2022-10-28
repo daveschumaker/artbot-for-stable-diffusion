@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 
-import PageTitle from '../components/PageTitle'
+import PageTitle from '../components/UI/PageTitle'
 import Spinner from '../components/Spinner'
 import { allPendingJobs, deletePendingJobFromDb } from '../utils/db'
 import PendingItem from '../components/PendingItemV2'
 import { trackEvent } from '../api/telemetry'
 import Head from 'next/head'
 import { deletePendingJobFromApi } from '../api/deletePendingJobFromApi'
-import Linker from '../components/Linker'
+import Linker from '../components/UI/Linker'
 
 const PendingPage = () => {
   const [isInitialLoad, setIsInitialLoad] = useState(true)

@@ -2,12 +2,12 @@
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
 
-import { setNewImageReady, setShowImageReadyToast } from '../store/appStore'
+import { setNewImageReady, setShowImageReadyToast } from '../../store/appStore'
 import { useEffect, useState } from 'react'
-import { trackEvent, trackGaEvent } from '../api/telemetry'
-import { getImageDetails } from '../utils/db'
-import ImageSquare from './ImageSquare'
-import CloseIcon from './icons/CloseIcon'
+import { trackEvent, trackGaEvent } from '../../api/telemetry'
+import { getImageDetails } from '../../utils/db'
+import ImageSquare from '../ImageSquare'
+import CloseIcon from '../icons/CloseIcon'
 import Linker from './Linker'
 
 const StyledToast = styled.div`

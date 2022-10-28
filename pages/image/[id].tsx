@@ -9,7 +9,7 @@ import Masonry from 'react-responsive-masonry'
 import styled from 'styled-components'
 
 import ImageDetails from '../../components/ImageDetails'
-import PageTitle from '../../components/PageTitle'
+import PageTitle from '../../components/UI/PageTitle'
 
 import Spinner from '../../components/Spinner'
 import { useWindowSize } from '../../hooks/useWindowSize'
