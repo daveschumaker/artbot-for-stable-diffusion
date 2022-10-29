@@ -40,7 +40,7 @@ export const randomSampler = (img2img: boolean) => {
     'k_lms'
   ]
 
-  if (img2img) {
+  if (!img2img) {
     samplerArray.push('DDIM')
     samplerArray.push('PLMS')
   }
