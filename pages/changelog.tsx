@@ -54,6 +54,22 @@ const Changelog = () => {
       </Head>
       <PageTitle>Changelog</PageTitle>
       <Section>
+        <SubSectionTitle>2022.10.29</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Add some debugging logic to attempt to capture some pesky
+            &quot;server did not respond to the image request&quot; errors that
+            some people are encountering. Pretty sure it&apos;s something on my
+            end and not with the Stable Horde cluster.
+          </StyledLi>
+          <StyledLi>
+            Small design change to <Linker href="/paint">paint page</Linker> to
+            make toolbar and overall theme more consistent across dark / light
+            mode.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.10.28</SubSectionTitle>
         <StyledUl>
           <StyledLi>

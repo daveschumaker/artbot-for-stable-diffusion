@@ -44,15 +44,12 @@ const defaultSettings = {
 
 const Toolbar = styled.div`
   align-items: center;
-  background-color: white;
-  border-radius: 4px;
-  border: 1px solid black;
   display: flex;
   flex-direction: row;
   gap: 8px;
   height: 52px;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
   padding: 0 8px;
   position: relative;
   width: 100%;
@@ -81,10 +78,10 @@ const StyledCanvas = styled.canvas`
 const ColorButton = styled.div`
   border-radius: 50%;
   background-color: ${(props) => props.color};
-  border: 1px solid black;
+  border: 1px solid ${(props) => props.theme.inputText};
   cursor: pointer;
-  height: 30px;
-  width: 30px;
+  height: 20px;
+  width: 20px;
   position: relative;
 `
 
