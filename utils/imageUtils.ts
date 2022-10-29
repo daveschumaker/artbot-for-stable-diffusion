@@ -167,6 +167,11 @@ export const createNewImage = async (imageParams: CreateImageJob) => {
       }
     }
   } catch (err) {
+    trackEvent({
+      event: 'UNABLE_TO_CREATE_IMAGE',
+      context: 'imageUtils',
+      imageParams: clonedParams
+    })
     return {
       success: false,
       message: 'Unable to create image.'

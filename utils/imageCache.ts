@@ -231,7 +231,8 @@ export const createImageJob = async (imageParams: CreatePendingJob) => {
   const numPending = await pendingCount()
   if (numPending >= 25) {
     return {
-      success: false
+      success: false,
+      status: 'MAX_PENDING_JOBS'
     }
   }
 

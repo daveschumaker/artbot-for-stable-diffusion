@@ -1,4 +1,5 @@
 import { GenerateResponse } from '../types'
+import { trackEvent } from './telemetry'
 
 interface CreateImageResponse {
   success: boolean
@@ -48,8 +49,8 @@ const toBool = (value?: string | null) => {
 }
 
 const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
-  const useTrusted = toBool(localStorage.getItem('useTrusted'))
-  const allowNsfw = toBool(localStorage.getItem('allowNsfwImages'))
+  const useTrusted = toBool(localStorage.getItem('useTrusted')) || true
+  const allowNsfw = toBool(localStorage.getItem('allowNsfwImages')) || false
 
   const {
     prompt,
@@ -104,8 +105,15 @@ export const createImage = async (
   const apikey = localStorage.getItem('apikey')?.trim() || '0000000000'
 
   if (!apikey || isPending) {
+    trackEvent({
+      event: 'WAITING_FOR_PENDING_JOB',
+      content: 'createImageApi'
+    })
+
     return {
-      success: false
+      success: false,
+      status: 'WAITING_FOR_PENDING_JOB',
+      message: 'Waiting for pending job to finish before requesting new image.'
     }
   }
 
@@ -127,6 +135,11 @@ export const createImage = async (
     const { id, message = '' }: GenerateResponse = data
 
     if (statusCode === 400) {
+      trackEvent({
+        event: 'INVALID_PARAMS',
+        content: 'createImageApi',
+        imageParams
+      })
       apiCooldown()
       return {
         success: false,
@@ -178,6 +191,11 @@ export const createImage = async (
     }
   } catch (err) {
     apiCooldown()
+    trackEvent({
+      event: 'UNKNOWN_ERROR',
+      content: 'createImageApi',
+      imageParams
+    })
     return {
       success: false,
       status: 'UNKNOWN_ERROR',
