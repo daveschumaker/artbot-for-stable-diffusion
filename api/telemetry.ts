@@ -17,9 +17,9 @@ export const trackEvent = async (obj = {}) => {
 
   if (event === 'FEEDBACK_FORM') {
     //@ts-ignore
-    if (isNaN(obj.totalImages) || obj.totalImages === 0) {
-      return
-    }
+    // if (isNaN(obj.totalImages) || obj.totalImages === 0) {
+    //   return
+    // }
 
     //@ts-ignore
     if (!obj.input || obj?.input.trim().length < 10) {
