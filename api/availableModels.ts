@@ -39,6 +39,10 @@ export const fetchAvailableModels = async () => {
       modelDetails.forEach((model) => {
         modelsCache[model.name] = model.count
 
+        if (model.name === 'stable_diffusion_inpainting') {
+          return
+        }
+
         availableModels.push({
           name: model.name,
           count: model.count
