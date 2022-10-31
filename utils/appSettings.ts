@@ -33,6 +33,14 @@ export const updateShowGrid = () => {
   localStorage.removeItem('showGrid')
 }
 
+// Issue with new / anonymous users unable to generate images. Potentially related to
+// default useTrusted value being set to false.
+export const checkTrustedWorkerSettingsForAnon = () => {
+  if (!localStorage.getItem('apikey')) {
+    localStorage.setItem('useTrusted', 'true')
+  }
+}
+
 export const initAppSettings = async () => {
   if (typeof window === 'undefined') {
     return

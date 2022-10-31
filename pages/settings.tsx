@@ -37,7 +37,7 @@ const MaxWidth = styled.div<MaxWidthProps>`
 `
 const SettingsPage = () => {
   const [apiKey, setApiKey] = useState('')
-  const [useTrusted, setUseTrusted] = useState('false')
+  const [useTrusted, setUseTrusted] = useState('true')
   const [useNsfw, setUseNsfw] = useState('false')
 
   const handleApiInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,7 +67,7 @@ const SettingsPage = () => {
     }
 
     if (localStorage.getItem('useTrusted')) {
-      setUseTrusted(localStorage.getItem('useTrusted') || 'false')
+      setUseTrusted(localStorage.getItem('useTrusted') || 'true')
     }
 
     if (localStorage.getItem('allowNsfwImages')) {
