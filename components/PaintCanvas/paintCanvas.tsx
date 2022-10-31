@@ -18,7 +18,13 @@ import CaptureClickOverlay from '../UI/CaptureClickOverly'
 import BrushIcon from '../icons/BrushIcon'
 import SprayIcon from '../icons/SprayIcon'
 import { trackEvent } from '../../api/telemetry'
-import DownloadIcon from '../icons/DownloadIcon'
+import {
+  getSessionPaintCache,
+  setSessionPaintCache
+} from '../../utils/paintUtils'
+import CloudDownloadIcon from '../icons/CloudDownloadIcon'
+import { UploadButton } from '../UploadButton'
+import { getBase64 } from '../../utils/imageUtils'
 
 const canvasSizes = {
   landscape: {
@@ -144,6 +150,9 @@ const PaintCanvas = () => {
   const [brushSize, setBrushSize] = useState({ value: 1, label: '1px' })
   const [showColorPicker, setShowColorPicker] = useState(false)
   const [brushColor, setBrushColor] = useState('#000000')
+
+  const isDrawingRef = React.useRef<boolean>(false)
+
   const canvasRef = React.useRef<HTMLDivElement>(null)
   const fabricRef = React.useRef<HTMLDivElement>(null)
 
@@ -218,6 +227,10 @@ const PaintCanvas = () => {
     // basically: fabricRef.current === canvas
     // @ts-ignore
     fabricRef.current = new fabric.Canvas(canvasRef.current, initSettings)
+    //@ts-ignore
+    fabricRef.current.on('path:created', () => {
+      isDrawingRef.current = true
+    })
   }
 
   useEffect(() => {
@@ -229,13 +242,69 @@ const PaintCanvas = () => {
     initFabric()
 
     return () => {
+      // Automatically save drawing when moving away from page.
+      if (isDrawingRef.current === true) {
+        //@ts-ignore
+        const data = fabricRef.current.toDataURL({
+          format: 'png',
+          multiplier: 1
+        })
+
+        // Automatically save canvas when we leave page.
+        setSessionPaintCache(data)
+      }
+
       disposeFabric()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const handleFileSelect = async (file: any) => {
+    if (typeof window === 'undefined') {
+      return
+    }
+
+    const windowSize = calcWindowSizes(orientation.value)
+
+    let imgConfig = {
+      quality: 0.9,
+      maxWidth: 10000,
+      maxHeight: 10000
+    }
+
+    windowSize.width <= windowSize.height
+      ? (imgConfig.maxWidth = windowSize.width)
+      : (imgConfig.maxHeight = windowSize.height)
+
+    const { readAndCompressImage } = await import('browser-image-resizer')
+    let resizedImage = await readAndCompressImage(file, imgConfig)
+
+    let fullDataString
+
+    if (file) {
+      fullDataString = await getBase64(resizedImage)
+    }
+
+    if (!fullDataString) {
+      return
+    }
+
+    // @ts-ignore
+    fabric.Image.fromURL(fullDataString, function (img) {
+      //@ts-ignore
+      fabricRef.current.clear()
+      //@ts-ignore
+      fabricRef.current.loadFromJSON(defaultSettings)
+
+      //@ts-ignore
+      fabricRef.current.add(img)
+      img.viewportCenter()
+      isDrawingRef.current = true
+    })
+  }
+
   const loadPrevious = () => {
-    const data = localStorage.getItem('paintJob')
+    const data = getSessionPaintCache()
     //@ts-ignore
     fabric.Image.fromURL(data, function (img) {
       //@ts-ignore
@@ -255,7 +324,7 @@ const PaintCanvas = () => {
       multiplier: 1
     })
 
-    localStorage.setItem('paintJob', data)
+    setSessionPaintCache(data)
 
     const imageType = 'image/png'
     const base64String = data.split('data:image/png;base64,')[1]
@@ -357,6 +426,7 @@ const PaintCanvas = () => {
         <Button
           btnType="secondary"
           onClick={() => {
+            isDrawingRef.current = false
             //@ts-ignore
             fabricRef.current.clear()
             //@ts-ignore
@@ -367,20 +437,27 @@ const PaintCanvas = () => {
         </Button>
       </Toolbar>
       <BottomOptions>
-        <SelectComponent
-          options={[
-            { value: 'landscape', label: 'Landscape' },
-            { value: 'portrait', label: 'Portrait' },
-            { value: 'square', label: 'square' }
-          ]}
-          isSearchable={false}
-          onChange={changeOrientation}
-          value={orientation}
-          menuPlacement="auto"
-        />
+        <div className="flex flex-row gap-2">
+          <UploadButton
+            label="Upload"
+            //@ts-ignore
+            handleFile={handleFileSelect}
+          />
+          <SelectComponent
+            options={[
+              { value: 'landscape', label: 'Landscape' },
+              { value: 'portrait', label: 'Portrait' },
+              { value: 'square', label: 'square' }
+            ]}
+            isSearchable={false}
+            onChange={changeOrientation}
+            value={orientation}
+            menuPlacement="auto"
+          />
+        </div>
         <div className="flex flex-row gap-2">
           <Button onClick={loadPrevious}>
-            <DownloadIcon /> Previous
+            <CloudDownloadIcon /> Restore
           </Button>
           <Button onClick={sendToImg2Img}>
             <UploadIcon /> Use Drawing

@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { Button } from './UI/Button'
-import UploadIcon from './icons/UploadIcon'
+import CloudUploadIcon from './icons/CloudUploadIcon'
+import MobileHideText from './UI/MobileHideText'
 
 interface UploadButtonProps {
   label: string
@@ -37,8 +38,8 @@ export function UploadButton({
         // @ts-ignore
         onClick={handleClick}
       >
-        <UploadIcon className="mx-auto" />
-        {label && <span>{label}</span>}
+        <CloudUploadIcon className="mx-auto" />
+        {label && <MobileHideText>{label}</MobileHideText>}
       </Button>
       <input
         type="file"

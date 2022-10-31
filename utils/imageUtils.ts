@@ -30,6 +30,12 @@ interface ImageOrientation {
   width: number
 }
 
+export const uploadImageConfig = {
+  quality: 0.9,
+  maxWidth: 1024,
+  maxHeight: 1024
+}
+
 export const randomSampler = (img2img: boolean) => {
   const samplerArray = [
     'k_dpm_2_a',
