@@ -54,7 +54,7 @@ const Changelog = () => {
       </Head>
       <PageTitle>Changelog</PageTitle>
       <Section>
-        <SubSectionTitle>2022.10.29</SubSectionTitle>
+        <SubSectionTitle>2022.10.30</SubSectionTitle>
         <StyledUl>
           <StyledLi>
             Add some debugging logic to attempt to capture some pesky
@@ -66,6 +66,15 @@ const Changelog = () => {
             Small design change to <Linker href="/paint">paint page</Linker> to
             make toolbar and overall theme more consistent across dark / light
             mode.
+          </StyledLi>
+          <StyledLi>
+            Fix: Hide inpainting model from models dropdown in non inpainting
+            contexts. (e.g., selecting a model from the dropdown menu when doing
+            a simple text2img prompt)
+          </StyledLi>
+          <StyledLi>
+            Small feature: Support for uploading images into the{' '}
+            <Linker href="/paint">painter page</Linker>
           </StyledLi>
         </StyledUl>
       </Section>
