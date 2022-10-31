@@ -156,8 +156,12 @@ export const createMultiImageJob = async () => {
 
 export const sendJobToApi = async (imageParams: CreateImageJob) => {
   try {
+    console.log(`imageParams`, imageParams)
+
     const data = await createNewImage(imageParams)
-    const { success, jobId, message = '' } = data
+    const { success, jobId, status, message = '' } = data
+
+    console.log(`imageParams.data?`, data)
 
     if (success && jobId) {
       // Overwrite params on success.
@@ -194,14 +198,15 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
       trackEvent({
         type: 'ERROR',
         event: 'UNABLE_TO_SEND_IMAGE_REQUEST',
+        status,
         imageParams: { ...imageParams },
         messageFromApi: message
       })
 
       return {
         success: false,
-        status: 'UNABLE_TO_SEND_IMAGE_REQUEST',
-        messageFromApi: message
+        status: status || 'UNABLE_TO_SEND_IMAGE_REQUEST',
+        message
       }
     }
   } catch (err) {
@@ -232,13 +237,16 @@ export const createImageJob = async (imageParams: CreatePendingJob) => {
   if (numPending >= 25) {
     return {
       success: false,
-      status: 'MAX_PENDING_JOBS'
+      status: 'MAX_PENDING_JOBS',
+      message: 'Maximum of 25 jobs currently pending...'
     }
   }
 
   if (jobsToSend.length === 0) {
     return {
-      success: false
+      success: false,
+      status: 'NO_JOBS_TO_SEND',
+      message: ''
     }
   }
 
@@ -273,14 +281,16 @@ export const getImage = async (jobId: string) => {
   if (pendingImageRequest) {
     return {
       success: false,
-      status: 'WAITING_FOR_PENDING_REQUEST'
+      status: 'WAITING_FOR_PENDING_REQUEST',
+      message: ''
     }
   }
 
   if (!jobId || !jobId?.trim()) {
     return {
       success: false,
-      status: 'Invalid id'
+      status: 'Invalid id',
+      message: ''
     }
   }
 
@@ -292,12 +302,15 @@ export const getImage = async (jobId: string) => {
   if (data?.success) {
     return {
       jobId,
+      status: 'SUCCESS',
+      message: '',
       ...data
     }
   } else {
     return {
       success: false,
-      status
+      status,
+      message: ''
     }
   }
 }

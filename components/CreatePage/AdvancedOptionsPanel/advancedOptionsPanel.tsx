@@ -259,7 +259,15 @@ const AdvancedOptionsPanel = ({
           </MaxWidth>
         </Section>
         <Section>
-          <SubSectionTitle>Steps</SubSectionTitle>
+          <SubSectionTitle>
+            Steps
+            <Tooltip width="200px">
+              Fewer steps generally result in quicker image generations. Many
+              models achieve full coherence after a certain number of finite
+              steps (60 - 90). Keep your initial queries in the 30 - 50 range
+              for best results.
+            </Tooltip>
+          </SubSectionTitle>
           <MaxWidth
             // @ts-ignore
             maxWidth="120"

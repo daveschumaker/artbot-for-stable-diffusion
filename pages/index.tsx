@@ -42,13 +42,13 @@ const Home: NextPage = () => {
     orientationType: editMode ? loadEditPrompt().orientation : 'square',
     numImages: 1,
     prompt: editMode ? loadEditPrompt().prompt : '',
-    sampler: editMode ? loadEditPrompt().sampler : 'k_heun',
-    cfg_scale: editMode ? loadEditPrompt().cfg_scale : 9.0,
+    sampler: editMode ? loadEditPrompt().sampler : 'k_euler_a',
+    cfg_scale: editMode ? loadEditPrompt().cfg_scale : 9,
     steps: editMode ? loadEditPrompt().steps : 32,
     seed: '',
     denoising_strength: editMode ? loadEditPrompt().denoising_strength : 0.75,
-    use_gfpgan: true,
-    use_real_esrgan: true,
+    // use_gfpgan: true,
+    // use_real_esrgan: true,
     parentJobId: editMode ? loadEditPrompt().parentJobId : '',
     negative: editMode ? loadEditPrompt().negative : '',
     source_image: editMode ? loadEditPrompt().source_image : '',
@@ -126,9 +126,15 @@ const Home: NextPage = () => {
       return
     }
 
+    console.log(`INPUT:`)
+    console.log(input)
+
     const res = await createImageJob({
       ...input
     })
+
+    // @ts-ignore
+    const { status, message } = res
 
     if (res?.success) {
       updatedCachedPrompt('')
@@ -144,10 +150,19 @@ const Home: NextPage = () => {
         }
       })
       router.push('/pending')
-    } else if (res?.status === 'INVALID_API_KEY') {
+    } else if (status === 'INVALID_API_KEY') {
       setHasError('Invalid API key sent to the server. Check your settings.')
       setPending(false)
+    } else if (status === 'UNTRUSTED_IP' && input.img2img) {
+      setHasError(
+        'Stable Horde API error: Untrusted IP -- please use text2img prompts to build trust and try an img2img request again later.'
+      )
+      setPending(false)
+    } else if (message) {
+      setHasError(`Stable Horde API error: ${message}`)
+      setPending(false)
     } else {
+      console.log(`res`, res)
       setHasError(
         'The server did not respond to the image request. Please try again shortly.'
       )

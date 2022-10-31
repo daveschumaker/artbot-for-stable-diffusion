@@ -9,6 +9,7 @@ interface CreateImageResponse {
 }
 
 interface ImageDetails {
+  img2img?: boolean
   prompt: string
   sampler: string
   cfg_scale: number
@@ -28,6 +29,8 @@ interface ApiParams {
   trusted_workers: boolean
   models: Array<string>
   source_image?: string
+  source_processing?: string
+  source_mask?: string
 }
 
 interface ParamsObject {
@@ -86,6 +89,7 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
   if (source_image && denoising_strength) {
     apiParams.params.denoising_strength = Number(denoising_strength)
     apiParams.source_image = source_image
+    apiParams.source_processing = 'img2img'
   }
 
   return apiParams
@@ -134,11 +138,32 @@ export const createImage = async (
     const data = await resp.json()
     const { id, message = '' }: GenerateResponse = data
 
+    if (
+      message === 'Only Trusted users are allowed to perform this operation'
+    ) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+      const { source_image, ...rest } = imageParams
+      trackEvent({
+        event: 'UNTRUSTED_IP',
+        content: 'createImageApi',
+        imageParams: rest
+      })
+      apiCooldown()
+      return {
+        success: false,
+        status: 'UNTRUSTED_IP',
+        message
+      }
+    }
+
     if (statusCode === 400) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+      const { source_image, ...rest } = imageParams
+
       trackEvent({
         event: 'INVALID_PARAMS',
         content: 'createImageApi',
-        imageParams
+        imageParams: rest
       })
       apiCooldown()
       return {
@@ -153,6 +178,15 @@ export const createImage = async (
       return {
         success: false,
         status: 'INVALID_API_KEY',
+        message
+      }
+    }
+
+    if (statusCode === 403) {
+      apiCooldown()
+      return {
+        success: false,
+        status: 'FORBIDDEN_REQUEST',
         message
       }
     }
@@ -190,11 +224,13 @@ export const createImage = async (
       jobId: id
     }
   } catch (err) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+    const { source_image, ...rest } = imageParams
     apiCooldown()
     trackEvent({
       event: 'UNKNOWN_ERROR',
       content: 'createImageApi',
-      imageParams
+      imageParams: rest
     })
     return {
       success: false,

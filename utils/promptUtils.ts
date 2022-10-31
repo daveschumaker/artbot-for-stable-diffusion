@@ -74,6 +74,8 @@ export const savePrompt = ({
     denoising_strength,
     models
   }
+
+  console.log(`promptDetails?!`, promptDetails)
 }
 
 export const loadEditPrompt = () => {
