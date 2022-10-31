@@ -34,7 +34,7 @@ export const fetchAvailableModels = async () => {
     const res = await fetch(`https://stablehorde.net/api/v2/status/models`)
     const modelDetails: Array<DiffusionModel> = await res.json()
 
-    if (Array.isArray(modelDetails)) {
+    if (Array.isArray(modelDetails) && modelDetails.length > 0) {
       modelDetails.sort(compare)
       modelDetails.forEach((model) => {
         modelsCache[model.name] = model.count
@@ -48,13 +48,19 @@ export const fetchAvailableModels = async () => {
           count: model.count
         })
       })
+    } else {
+      availableModels.push({
+        name: 'stable_diffusion',
+        count: 1
+      })
     }
 
     // @ts-ignore
     setAvailableModels(availableModels)
   } catch (err) {
     availableModels.push({
-      name: 'stable_diffusion'
+      name: 'stable_diffusion',
+      count: 1
     })
   }
 
