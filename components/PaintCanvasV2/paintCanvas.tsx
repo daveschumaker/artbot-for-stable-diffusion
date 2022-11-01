@@ -1,7 +1,9 @@
+import { useEffect, useRef, useState } from 'react'
 import { fabric } from 'fabric'
 import styled from 'styled-components'
 import 'fabric-history'
-import { useCallback, useEffect, useRef, useState } from 'react'
+
+import { debounce } from '../../utils/debounce'
 import { UploadButton } from '../UploadButton'
 import { getBase64 } from '../../utils/imageUtils'
 import { Button } from '../UI/Button'
@@ -188,6 +190,15 @@ const PaintCanvas = () => {
     return newGroup
   }
 
+  const debounceBrushPreview = debounce(() => {
+    if (!brushPreviewRef.current) {
+      return
+    }
+
+    brushPreviewRef.current.opacity = 0
+    canvasRef.current.renderAll()
+  }, 500)
+
   const onMouseMove = (event: fabric.IEvent<Event>) => {
     if (!canvasRef.current || !brushPreviewRef.current) {
       return
@@ -196,7 +207,7 @@ const PaintCanvas = () => {
     const pointer = canvasRef.current.getPointer(event.e)
     brushPreviewRef.current.left = pointer.x
     brushPreviewRef.current.top = pointer.y
-    brushPreviewRef.current.opacity = 0.7
+    brushPreviewRef.current.opacity = 0.5
 
     if (drawModeRef.current === 'erase') {
       brushPreviewRef.current.set('strokeWidth', 3)
@@ -207,7 +218,9 @@ const PaintCanvas = () => {
       brushPreviewRef.current.set('fill', 'white')
       setBrush('white')
     }
+
     brushPreviewRef.current.set('radius', 20 / 2)
+    debounceBrushPreview()
     canvasRef.current.renderAll()
   }
 
