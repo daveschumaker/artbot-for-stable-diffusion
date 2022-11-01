@@ -108,18 +108,19 @@ const PaintCanvas = () => {
       }
       resetCanvas()
 
-      let height = image.height || 512
-      let width = image.width || 512
+      const maxSize = 768
+      let height = image.height || maxSize
+      let width = image.width || maxSize
 
-      if (width !== 512 || height !== 512) {
+      if (width !== maxSize || height !== maxSize) {
         if (width > height) {
-          image.scaleToWidth(512)
-          height = 512 * (height / width)
-          width = 512
+          image.scaleToWidth(maxSize)
+          height = maxSize * (height / width)
+          width = maxSize
         } else {
-          image.scaleToHeight(512)
-          width = 512 * (width / height)
-          height = 512
+          image.scaleToHeight(maxSize)
+          width = maxSize * (width / height)
+          height = maxSize
         }
       }
 

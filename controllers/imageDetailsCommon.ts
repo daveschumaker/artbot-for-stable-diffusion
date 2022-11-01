@@ -79,6 +79,7 @@ export const rerollImage = async (imageDetails: any) => {
   delete cleanParams.success
   delete cleanParams.timestamp
   delete cleanParams.wait_time
+  delete cleanParams.initWaitTime
   delete cleanParams.jobTimestamp
   delete cleanParams.numImages
 
