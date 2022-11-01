@@ -1,11 +1,13 @@
 import { fabric } from 'fabric'
 import styled from 'styled-components'
 import 'fabric-history'
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { UploadButton } from '../UploadButton'
 import { getBase64 } from '../../utils/imageUtils'
 import { Button } from '../UI/Button'
 import DownloadIcon from '../icons/DownloadIcon'
+import BrushIcon from '../icons/BrushIcon'
+import EraserIcon from '../icons/EraserIcon'
 
 interface CanvasProps {
   ref: any
@@ -25,7 +27,11 @@ const StyledCanvas = styled.canvas<CanvasProps>`
 `
 
 const PaintCanvas = () => {
+  const [drawMode, setDrawMode] = useState<string>('paint')
+
   const brushRef = useRef<any>(null)
+  const drawModeRef = useRef<string>('paint')
+
   const canvasElementRef = useRef<HTMLCanvasElement | null>(null)
   const canvasRef = useRef<fabric.Canvas | null>(null)
   const drawLayerRef = useRef<any | null>(null)
@@ -114,9 +120,10 @@ const PaintCanvas = () => {
     canvasRef.current.selection = false
     canvasRef.current.setHeight(512)
     canvasRef.current.setWidth(768)
-    canvasRef.current.on('path:created', onPathCreated)
-
     setBrush('white')
+
+    canvasRef.current.on('path:created', onPathCreated)
+    canvasRef.current.renderAll()
   }
 
   const makeInvisibleDrawLayer = () => {
@@ -175,9 +182,20 @@ const PaintCanvas = () => {
     const drawLayerPath = (await asyncClone(path)) as fabric.Path
     const visibleLayerPath = (await asyncClone(path)) as fabric.Path
 
+    if (drawModeRef.current === 'erase') {
+      console.log(`Should erase, yeah?`)
+      visibleLayerPath.globalCompositeOperation = 'destination-out'
+      drawLayerPath.stroke = 'black'
+    } else {
+      console.log(`should draw yeah??`)
+      visibleLayerPath.globalCompositeOperation = 'source-over'
+    }
+
     drawLayerRef.current.add(drawLayerPath)
     visibleDrawLayerRef.current.addWithUpdate(visibleLayerPath)
     canvasRef.current.remove(path)
+
+    canvasRef.current.renderAll()
   }
 
   const resetCanvas = () => {
@@ -233,6 +251,20 @@ const PaintCanvas = () => {
     brushRef.current.width = 20
   }
 
+  /////////////
+
+  const handleToggle = () => {
+    if (drawModeRef.current === 'paint') {
+      setDrawMode('erase')
+      drawModeRef.current = 'erase'
+      setBrush('red')
+    } else {
+      setDrawMode('paint')
+      drawModeRef.current = 'paint'
+      setBrush('white')
+    }
+  }
+
   useEffect(() => {
     initCanvas()
 
@@ -245,6 +277,9 @@ const PaintCanvas = () => {
   return (
     <div>
       <div className="flex flex-row gap-2 mb-2">
+        <Button onClick={handleToggle}>
+          {drawMode === 'paint' ? <BrushIcon /> : <EraserIcon />}
+        </Button>
         <UploadButton label="" handleFile={handleFileSelect} />
         <Button onClick={saveImageMask}>
           <DownloadIcon />
