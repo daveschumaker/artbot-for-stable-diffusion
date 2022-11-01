@@ -32,6 +32,7 @@ const PaintCanvas = () => {
   const brushRef = useRef<any>(null)
   const drawModeRef = useRef<string>('paint')
 
+  const brushPreviewRef = useRef<fabric.Circle | null>(null)
   const canvasElementRef = useRef<HTMLCanvasElement | null>(null)
   const canvasRef = useRef<fabric.Canvas | null>(null)
   const drawLayerRef = useRef<any | null>(null)
@@ -96,6 +97,10 @@ const PaintCanvas = () => {
       // Add to Canvas
       canvasRef?.current?.add(imageLayerRef.current)
       canvasRef?.current?.add(visibleDrawLayerRef.current)
+
+      if (brushPreviewRef.current) {
+        canvasRef?.current?.add(brushPreviewRef.current)
+      }
     })
   }
 
@@ -116,14 +121,31 @@ const PaintCanvas = () => {
       height: 768,
       width: 512
     })
+
     canvasRef.current.freeDrawingCursor = 'crosshair'
     canvasRef.current.selection = false
     canvasRef.current.setHeight(512)
     canvasRef.current.setWidth(768)
+    makeBrushPreviewLayer()
     setBrush('white')
 
+    canvasRef.current.on('mouse:move', onMouseMove)
     canvasRef.current.on('path:created', onPathCreated)
     canvasRef.current.renderAll()
+  }
+
+  const makeBrushPreviewLayer = () => {
+    brushPreviewRef.current = new fabric.Circle({
+      radius: 20,
+      left: 0,
+      originX: 'center',
+      originY: 'center',
+      angle: 0,
+      fill: '',
+      stroke: 'red',
+      strokeWidth: 3,
+      opacity: 0
+    })
   }
 
   const makeInvisibleDrawLayer = () => {
@@ -166,6 +188,29 @@ const PaintCanvas = () => {
     return newGroup
   }
 
+  const onMouseMove = (event: fabric.IEvent<Event>) => {
+    if (!canvasRef.current || !brushPreviewRef.current) {
+      return
+    }
+
+    const pointer = canvasRef.current.getPointer(event.e)
+    brushPreviewRef.current.left = pointer.x
+    brushPreviewRef.current.top = pointer.y
+    brushPreviewRef.current.opacity = 0.7
+
+    if (drawModeRef.current === 'erase') {
+      brushPreviewRef.current.set('strokeWidth', 3)
+      brushPreviewRef.current.set('fill', 'red')
+      setBrush('red')
+    } else {
+      brushPreviewRef.current.set('strokeWidth', 0)
+      brushPreviewRef.current.set('fill', 'white')
+      setBrush('white')
+    }
+    brushPreviewRef.current.set('radius', 20 / 2)
+    canvasRef.current.renderAll()
+  }
+
   const onPathCreated = async (e: any) => {
     if (
       !canvasRef.current ||
@@ -183,11 +228,9 @@ const PaintCanvas = () => {
     const visibleLayerPath = (await asyncClone(path)) as fabric.Path
 
     if (drawModeRef.current === 'erase') {
-      console.log(`Should erase, yeah?`)
       visibleLayerPath.globalCompositeOperation = 'destination-out'
       drawLayerPath.stroke = 'black'
     } else {
-      console.log(`should draw yeah??`)
       visibleLayerPath.globalCompositeOperation = 'source-over'
     }
 
