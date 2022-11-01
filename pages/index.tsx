@@ -8,6 +8,7 @@ import PageTitle from '../components/UI/PageTitle'
 import {
   getCachedPrompt,
   loadEditPrompt,
+  SourceProcessing,
   updatedCachedPrompt
 } from '../utils/promptUtils'
 import TextArea from '../components/UI/TextArea'
@@ -40,6 +41,8 @@ const Home: NextPage = () => {
     img2img: editMode ? loadEditPrompt().img2img : false,
     imageType: editMode ? loadEditPrompt().imageType : '',
     orientationType: editMode ? loadEditPrompt().orientation : 'square',
+    height: editMode ? loadEditPrompt().height : 512,
+    width: editMode ? loadEditPrompt().width : 512,
     numImages: 1,
     prompt: editMode ? loadEditPrompt().prompt : '',
     sampler: editMode ? loadEditPrompt().sampler : 'k_euler_a',
@@ -52,6 +55,10 @@ const Home: NextPage = () => {
     parentJobId: editMode ? loadEditPrompt().parentJobId : '',
     negative: editMode ? loadEditPrompt().negative : '',
     source_image: editMode ? loadEditPrompt().source_image : '',
+    source_mask: editMode ? loadEditPrompt().source_mask : '',
+    source_processing: editMode
+      ? loadEditPrompt().source_processing
+      : SourceProcessing.Prompt,
     models: editMode ? loadEditPrompt().models : ['stable_diffusion']
   }
 
@@ -235,7 +242,9 @@ const Home: NextPage = () => {
                 setInput({
                   img2img: false,
                   imgType: '',
-                  source_image: ''
+                  source_image: '',
+                  source_processing: SourceProcessing.Prompt,
+                  source_mask: ''
                 })
               }}
             >

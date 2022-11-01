@@ -13,6 +13,7 @@ import TrashIcon from '../../icons/TrashIcon'
 import { ModelDetails } from '../../../types'
 import React, { useState } from 'react'
 import { getImageFromUrl } from '../../../utils/imageUtils'
+import { SourceProcessing } from '../../../utils/promptUtils'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -308,26 +309,27 @@ const AdvancedOptionsPanel = ({
             />
           </MaxWidth>
         </Section>
-        {input.img2img && (
-          <Section>
-            <SubSectionTitle>Denoise</SubSectionTitle>
-            <MaxWidth
-              // @ts-ignore
-              maxWidth="120"
-            >
-              <Input
+        {input.img2img ||
+          (input.source_processing !== SourceProcessing.Prompt && (
+            <Section>
+              <SubSectionTitle>Denoise</SubSectionTitle>
+              <MaxWidth
                 // @ts-ignore
-                className="mb-2"
-                type="text"
-                name="denoising_strength"
-                onChange={handleChangeInput}
-                // @ts-ignore
-                value={input.denoising_strength}
-                width="100%"
-              />
-            </MaxWidth>
-          </Section>
-        )}
+                maxWidth="120"
+              >
+                <Input
+                  // @ts-ignore
+                  className="mb-2"
+                  type="text"
+                  name="denoising_strength"
+                  onChange={handleChangeInput}
+                  // @ts-ignore
+                  value={input.denoising_strength}
+                  width="100%"
+                />
+              </MaxWidth>
+            </Section>
+          ))}
         <Section>
           <SubSectionTitle>
             Seed
@@ -349,30 +351,33 @@ const AdvancedOptionsPanel = ({
             />
           </MaxWidth>
         </Section>
-        <Section>
-          <SubSectionTitle>
-            Model
-            <Tooltip width="240px">
-              Models currently available within the horde. Numbers in
-              paranthesis indicate number of works. Generally, these models will
-              generate images quicker.
-            </Tooltip>
-          </SubSectionTitle>
-          <MaxWidth
-            // @ts-ignore
-            maxWidth="240"
-          >
-            <SelectComponent
-              menuPlacement={'top'}
-              //@ts-ignore
-              options={modelerOptions(models)}
-              onChange={(obj: { value: string; label: string }) => {
-                setInput({ models: [obj.value] })
-              }}
-              value={modelsValue}
-            />
-          </MaxWidth>
-        </Section>
+        {input.source_processing !==
+          (SourceProcessing.InPainting || SourceProcessing.OutPaiting) && (
+          <Section>
+            <SubSectionTitle>
+              Model
+              <Tooltip width="240px">
+                Models currently available within the horde. Numbers in
+                paranthesis indicate number of works. Generally, these models
+                will generate images quicker.
+              </Tooltip>
+            </SubSectionTitle>
+            <MaxWidth
+              // @ts-ignore
+              maxWidth="240"
+            >
+              <SelectComponent
+                menuPlacement={'top'}
+                //@ts-ignore
+                options={modelerOptions(models)}
+                onChange={(obj: { value: string; label: string }) => {
+                  setInput({ models: [obj.value] })
+                }}
+                value={modelsValue}
+              />
+            </MaxWidth>
+          </Section>
+        )}
         <Section>
           <SubSectionTitle>Number of images</SubSectionTitle>
           <MaxWidth

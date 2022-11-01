@@ -54,7 +54,11 @@ export const randomSampler = (img2img: boolean) => {
   return samplerArray[Math.floor(Math.random() * samplerArray.length)]
 }
 
-export const orientationDetails = (orientation: string): ImageOrientation => {
+export const orientationDetails = (
+  orientation: string,
+  height: number,
+  width: number
+): ImageOrientation => {
   const orientationIds = [
     'landscape-16x9',
     'landscape',
@@ -93,6 +97,14 @@ export const orientationDetails = (orientation: string): ImageOrientation => {
       orientation: 'ultrawide',
       height: 448,
       width: 1024
+    }
+  }
+
+  if (orientation === 'custom') {
+    return {
+      orientation: 'custom',
+      height: nearestWholeMultiple(height),
+      width: nearestWholeMultiple(width)
     }
   }
 
@@ -266,4 +278,15 @@ export const getImageFromUrl = async (imgUrl: string) => {
     imageType,
     imgBase64String
   }
+}
+
+export const nearestWholeMultiple = (input: number, X = 64) => {
+  let output = Math.round(input / X)
+  if (output === 0 && input > 0) {
+    output += 1
+  }
+
+  output *= X
+
+  return output
 }

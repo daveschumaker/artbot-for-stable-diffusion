@@ -1,5 +1,11 @@
 import { validSampler } from './validationUtils'
 
+export enum SourceProcessing {
+  Prompt = 'prompt',
+  Img2Img = 'img2img',
+  InPainting = 'inpainting',
+  OutPaiting = 'outpainting'
+}
 interface SavePrompt {
   img2img: boolean
   imageType: string
@@ -14,6 +20,12 @@ interface SavePrompt {
   parentJobId: string
   negative?: string
   source_image?: string
+  source_processing?:
+    | SourceProcessing.Prompt
+    | SourceProcessing.Img2Img
+    | SourceProcessing.InPainting
+    | SourceProcessing.OutPaiting
+  source_mask?: string
   denoising_strength?: number
   models: Array<string>
 }
@@ -32,6 +44,8 @@ let initPromptDetails: SavePrompt = {
   parentJobId: '',
   negative: '',
   source_image: '',
+  source_processing: SourceProcessing.Prompt,
+  source_mask: '',
   denoising_strength: 0.75,
   models: ['stable_diffusion']
 }
@@ -53,6 +67,8 @@ export const savePrompt = ({
   parentJobId = '',
   negative = '',
   source_image = '',
+  source_processing = SourceProcessing.Prompt,
+  source_mask = '',
   denoising_strength = 0.75,
   models = ['stable_diffusion']
 } = {}) => {
@@ -71,11 +87,11 @@ export const savePrompt = ({
     parentJobId,
     negative,
     source_image,
+    source_processing,
+    source_mask,
     denoising_strength,
     models
   }
-
-  console.log(`promptDetails?!`, promptDetails)
 }
 
 export const loadEditPrompt = () => {

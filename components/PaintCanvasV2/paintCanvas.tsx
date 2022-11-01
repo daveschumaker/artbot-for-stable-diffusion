@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useRouter } from 'next/router'
 import { fabric } from 'fabric'
 import styled from 'styled-components'
 import 'fabric-history'
@@ -10,6 +11,23 @@ import { Button } from '../UI/Button'
 import DownloadIcon from '../icons/DownloadIcon'
 import BrushIcon from '../icons/BrushIcon'
 import EraserIcon from '../icons/EraserIcon'
+import { savePrompt, SourceProcessing } from '../../utils/promptUtils'
+import UndoIcon from '../icons/UndoIcon'
+import RedoIcon from '../icons/RedoIcon'
+
+const maxSize = {
+  height: 768,
+  width: 512
+}
+
+interface IHistory {
+  path: fabric.Path
+  drawPath?: fabric.Path
+  visibleDrawPath?: fabric.Path
+}
+
+let redoHistory: Array<IHistory> = []
+let undoHistory: Array<IHistory> = []
 
 interface CanvasProps {
   ref: any
@@ -29,6 +47,7 @@ const StyledCanvas = styled.canvas<CanvasProps>`
 `
 
 const PaintCanvas = () => {
+  const router = useRouter()
   const [drawMode, setDrawMode] = useState<string>('paint')
 
   const brushRef = useRef<any>(null)
@@ -58,6 +77,10 @@ const PaintCanvas = () => {
       return
     }
 
+    if (!file) {
+      return
+    }
+
     if (!canvasRef.current) {
       return
     }
@@ -83,18 +106,40 @@ const PaintCanvas = () => {
       if (!canvasRef.current) {
         return
       }
+      resetCanvas()
+
+      let height = image.height || 512
+      let width = image.width || 512
+
+      if (width !== 512 || height !== 512) {
+        if (width > height) {
+          image.scaleToWidth(512)
+          height = 512 * (height / width)
+          width = 512
+        } else {
+          image.scaleToHeight(512)
+          width = 512 * (width / height)
+          height = 512
+        }
+      }
 
       // Init canvas settings
-      resetCanvas()
       canvasRef.current.isDrawingMode = true
-      canvasRef.current.setHeight(512)
-      canvasRef.current.setWidth(768)
+      canvasRef.current.setHeight(height)
+      canvasRef.current.setWidth(width)
 
       // Generate various layers
-      imageLayerRef.current = makeNewLayer({ image })
-      visibleDrawLayerRef.current = makeNewLayer()
+      imageLayerRef.current = makeNewLayer({
+        image,
+        layerHeight: height,
+        layerWidth: width
+      })
+      visibleDrawLayerRef.current = makeNewLayer({
+        layerHeight: height,
+        layerWidth: width
+      })
       visibleDrawLayerRef.current.set('opacity', 0.8)
-      drawLayerRef.current = makeInvisibleDrawLayer()
+      drawLayerRef.current = makeInvisibleDrawLayer(height, width)
 
       // Add to Canvas
       canvasRef?.current?.add(imageLayerRef.current)
@@ -150,13 +195,13 @@ const PaintCanvas = () => {
     })
   }
 
-  const makeInvisibleDrawLayer = () => {
+  const makeInvisibleDrawLayer = (height = 512, width = 768) => {
     const newDrawLayer = new fabric.Canvas(null)
 
     newDrawLayer.backgroundColor = 'black'
     newDrawLayer.selection = false
-    newDrawLayer.setHeight(512)
-    newDrawLayer.setWidth(768)
+    newDrawLayer.setHeight(height)
+    newDrawLayer.setWidth(width)
 
     return newDrawLayer
   }
@@ -191,12 +236,16 @@ const PaintCanvas = () => {
   }
 
   const debounceBrushPreview = debounce(() => {
-    if (!brushPreviewRef.current) {
+    if (!brushPreviewRef.current || !canvasRef.current) {
       return
     }
 
     brushPreviewRef.current.opacity = 0
-    canvasRef.current.renderAll()
+    try {
+      canvasRef?.current?.renderAll()
+    } catch (err) {
+      console.log(`An oopsie happened!`)
+    }
   }, 500)
 
   const onMouseMove = (event: fabric.IEvent<Event>) => {
@@ -225,6 +274,12 @@ const PaintCanvas = () => {
   }
 
   const onPathCreated = async (e: any) => {
+    const path = { path: e.path }
+    pathCreate(path)
+    redoHistory.push(path)
+  }
+
+  const pathCreate = async (newPath: any, eraseOverride = false) => {
     if (
       !canvasRef.current ||
       !drawLayerRef.current ||
@@ -233,24 +288,21 @@ const PaintCanvas = () => {
       return
     }
 
-    const path = e.path
-    path.opacity = 1
-    path.selectable = false
+    newPath.path.selectable = false
+    newPath.path.opacity = 1
 
-    const drawLayerPath = (await asyncClone(path)) as fabric.Path
-    const visibleLayerPath = (await asyncClone(path)) as fabric.Path
+    newPath.drawPath = (await asyncClone(newPath.path)) as fabric.Path
+    newPath.visibleDrawPath = (await asyncClone(newPath.path)) as fabric.Path
 
-    if (drawModeRef.current === 'erase') {
-      visibleLayerPath.globalCompositeOperation = 'destination-out'
-      drawLayerPath.stroke = 'black'
+    if (!eraseOverride && drawModeRef.current === 'erase') {
+      newPath.visibleDrawPath.globalCompositeOperation = 'destination-out'
+      newPath.drawPath.stroke = 'black'
     } else {
-      visibleLayerPath.globalCompositeOperation = 'source-over'
+      newPath.visibleDrawPath.globalCompositeOperation = 'source-over'
     }
-
-    drawLayerRef.current.add(drawLayerPath)
-    visibleDrawLayerRef.current.addWithUpdate(visibleLayerPath)
-    canvasRef.current.remove(path)
-
+    drawLayerRef.current.add(newPath.drawPath)
+    visibleDrawLayerRef.current.addWithUpdate(newPath.visibleDrawPath)
+    canvasRef.current.remove(newPath.path)
     canvasRef.current.renderAll()
   }
 
@@ -291,7 +343,8 @@ const PaintCanvas = () => {
         .split(',')[1]
     }
 
-    downloadWebp(drawLayerRef.current.toDataURL({ format: 'webp' }))
+    downloadWebp(drawLayerRef.current.toDataURL({ format: 'webp' }), 'mask')
+    downloadWebp(imageLayerRef.current.toDataURL({ format: 'webp' }), 'image')
 
     console.log(`data:`, data)
     return data
@@ -305,6 +358,37 @@ const PaintCanvas = () => {
     brushRef.current = canvasRef.current.freeDrawingBrush
     brushRef.current.color = color || brushRef?.current?.color
     brushRef.current.width = 20
+  }
+
+  const redo = () => {
+    if (undoHistory.length === 0) {
+      return
+    }
+
+    const path = undoHistory.pop() as IHistory
+    pathCreate(path, true)
+    redoHistory.push(path)
+  }
+
+  const undo = () => {
+    if (
+      redoHistory.length === 0 ||
+      !drawLayerRef.current ||
+      !visibleDrawLayerRef.current ||
+      !canvasRef.current
+    ) {
+      return
+    }
+
+    const path = redoHistory.pop() as IHistory
+    undoHistory.push(path)
+    drawLayerRef.current.remove(path.drawPath as fabric.Path)
+    visibleDrawLayerRef.current.remove(path.visibleDrawPath as fabric.Path)
+    delete path.drawPath
+    delete path.visibleDrawPath
+
+    // saveImages()
+    // updateCanvas()
   }
 
   /////////////
@@ -321,7 +405,46 @@ const PaintCanvas = () => {
     }
   }
 
+  const handleUseImageClick = () => {
+    if (!canvasRef.current) {
+      return
+    }
+
+    const data = {
+      image: '',
+      mask: ''
+    }
+
+    if (imageLayerRef.current) {
+      data.image = imageLayerRef.current
+        .toDataURL({ format: 'webp' })
+        .split(',')[1]
+    }
+
+    if (drawLayerRef.current) {
+      data.mask = drawLayerRef.current
+        .toDataURL({ format: 'webp' })
+        .split(',')[1]
+    }
+
+    savePrompt({
+      imageType: 'image/webp',
+      sampler: 'k_euler_a',
+
+      source_processing: SourceProcessing.InPainting,
+      source_image: data.image,
+      source_mask: data.mask,
+      orientation: 'custom',
+      height: canvasRef.current.height,
+      width: canvasRef.current.width
+    })
+
+    router.push(`/?edit=true`)
+  }
+
   useEffect(() => {
+    redoHistory = []
+    undoHistory = []
     initCanvas()
 
     return () => {
@@ -340,6 +463,23 @@ const PaintCanvas = () => {
         <Button onClick={saveImageMask}>
           <DownloadIcon />
         </Button>
+        <Button
+          //@ts-ignore
+          onClick={() => {
+            undo()
+          }}
+        >
+          <UndoIcon />
+        </Button>
+        <Button
+          //@ts-ignore
+          onClick={() => {
+            redo()
+          }}
+        >
+          <RedoIcon />
+        </Button>
+        <Button onClick={handleUseImageClick}>USE</Button>
       </div>
       <StyledCanvas id="canvas" ref={canvasElementRef} />
     </div>

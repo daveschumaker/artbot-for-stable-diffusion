@@ -48,7 +48,9 @@ export const createPendingJob = (imageParams: CreatePendingJob) => {
     }
 
     const imageSize: ImageSize = orientationDetails(
-      clonedParams.orientationType || 'square'
+      clonedParams.orientationType || 'square',
+      clonedParams.height,
+      clonedParams.width
     )
     clonedParams.orientation = imageSize.orientation
     clonedParams.height = imageSize.height

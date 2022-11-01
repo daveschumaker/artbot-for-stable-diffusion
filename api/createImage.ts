@@ -1,4 +1,5 @@
 import { GenerateResponse } from '../types'
+import { SourceProcessing } from '../utils/promptUtils'
 import { trackEvent } from './telemetry'
 
 interface CreateImageResponse {
@@ -19,6 +20,8 @@ interface ImageDetails {
   steps: number
   models: Array<string>
   source_image?: string
+  source_processing?: string
+  source_mask?: string
   denoising_strength?: number
 }
 
@@ -65,6 +68,8 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
     steps,
     models,
     source_image,
+    source_processing,
+    source_mask,
     denoising_strength
   } = imageDetails
 
@@ -86,10 +91,19 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
     apiParams.params.seed = seed
   }
 
-  if (source_image && denoising_strength) {
-    apiParams.params.denoising_strength = Number(denoising_strength)
+  if (source_processing !== SourceProcessing.Prompt) {
+    apiParams.params.denoising_strength = Number(denoising_strength) || 0.75
+    apiParams.source_image = source_image
+    apiParams.source_processing = source_processing
+    apiParams.source_mask = source_mask
+  } else if (source_image) {
+    apiParams.params.denoising_strength = Number(denoising_strength) || 0.75
     apiParams.source_image = source_image
     apiParams.source_processing = 'img2img'
+  }
+
+  if (source_processing === SourceProcessing.InPainting) {
+    apiParams.models = ['stable_diffusion_inpainting']
   }
 
   return apiParams
