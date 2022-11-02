@@ -188,12 +188,39 @@ const AdvancedOptionsPanel = ({
                     className="mb-2"
                     type="text"
                     name="height"
+                    error={hasError.height}
                     onChange={handleChangeInput}
+                    onBlur={(e: any) => {
+                      if (
+                        isNaN(e.target.value) ||
+                        e.target.value < 64 ||
+                        e.target.value > 1024
+                      ) {
+                        setHasError({
+                          height:
+                            'Please enter a valid number between 64 and 1024'
+                        })
+                        return
+                      }
+
+                      if (hasError.height) {
+                        setHasError({})
+                      }
+
+                      setInput({
+                        height: nearestWholeMultiple(e.target.value)
+                      })
+                    }}
                     // @ts-ignore
                     value={input.height}
                     width="75px"
                   />
                 </div>
+                {hasError.height && (
+                  <div className="mb-2 text-red-500 font-bold">
+                    {hasError.height}
+                  </div>
+                )}
               </div>
               <div className="block text-xs mt-2 w-full">
                 Height and widths must be divisible by 64. Enter your desired
@@ -260,6 +287,7 @@ const AdvancedOptionsPanel = ({
             (60 - 90). Keep your initial queries in the 30 - 50 range for best
             results.
           </Tooltip>
+          <div className="block text-xs w-full">(1 - 200)</div>
         </SubSectionTitle>
         <MaxWidth
           // @ts-ignore
@@ -303,6 +331,7 @@ const AdvancedOptionsPanel = ({
             Higher numbers follow the prompt more closely. Lower numbers give
             more creativity.
           </Tooltip>
+          <div className="block text-xs w-full">(1 - 30)</div>
         </SubSectionTitle>
         <MaxWidth
           // @ts-ignore
@@ -409,7 +438,10 @@ const AdvancedOptionsPanel = ({
         </Section>
       )}
       <Section>
-        <SubSectionTitle>Number of images</SubSectionTitle>
+        <SubSectionTitle>
+          Number of images
+          <div className="block text-xs w-full">(1 - 20)</div>
+        </SubSectionTitle>
         <MaxWidth
           // @ts-ignore
           maxWidth="120"
