@@ -215,7 +215,12 @@ const Home: NextPage = () => {
 
   return (
     <main>
-      <PageTitle>Create new image</PageTitle>
+      <PageTitle>
+        Create new image{' '}
+        {input.source_processing === 'outpainting' && '(outpainting)'}
+        {input.source_processing === 'inpainting' && '(inpainting)'}
+        {input.source_processing === 'img2img' && '(img2img)'}
+      </PageTitle>
       <div className="mt-2 mb-2">
         <div className="flex flex-row gap-[8px] items-start">
           {input.sourceImage && (

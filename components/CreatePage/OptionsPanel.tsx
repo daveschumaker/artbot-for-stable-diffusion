@@ -49,7 +49,6 @@ const OptionsPanel = ({
   const [activeNav, setActiveNav] = useState('advanced')
 
   useEffect(() => {
-    console.log(`query`, router.query)
     const { panel } = router.query
 
     if (panel === 'inpaiting') {

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
 import { fabric } from 'fabric'
 import 'fabric-history'
 import styled from 'styled-components'
@@ -11,7 +12,6 @@ import UndoIcon from '../icons/UndoIcon'
 import RedoIcon from '../icons/RedoIcon'
 import SelectComponent from '../UI/Select'
 import TrashIcon from '../icons/TrashIcon'
-import UploadIcon from '../icons/UploadIcon'
 import CaptureClickOverlay from '../UI/CaptureClickOverly'
 import BrushIcon from '../icons/BrushIcon'
 import SprayIcon from '../icons/SprayIcon'
@@ -119,25 +119,11 @@ const calcWindowSizes = (orientation: any) => {
     containerWidth = width - 46
   }
 
-  /**
-    if (options.n2){
-  		return options.n2 * options.d1 / options.n1;
-  	} else {
-  		return options.n1 * options.d2 / options.d1;
-  	}
-
-    768 / 512 === 1024 / x
-  */
-
   if (orientation === 'landscape') {
     const newHeight = Math.round(
       (canvasSizes.landscape.height * containerWidth) /
         canvasSizes.landscape.width
     )
-
-    console.log(`width`, width)
-    console.log(`newWidth`, containerWidth)
-    console.log(`newHeight`, newHeight)
 
     return {
       height: newHeight,
@@ -172,6 +158,8 @@ interface Props {
 }
 
 const PaintCanvas = ({ setActiveNav, setInput }: Props) => {
+  const router = useRouter()
+
   const [orientation, setOrientation] = useState({
     value: 'landscape',
     label: 'Landscape'
@@ -225,10 +213,9 @@ const PaintCanvas = ({ setActiveNav, setInput }: Props) => {
   }
 
   const changeOrientation = (obj: any) => {
-    let innerWidth = window.innerWidth
     setOrientation(obj)
 
-    const result = calcWindowSizes(obj.value, innerWidth)
+    const result = calcWindowSizes(obj.value)
     const { height, width } = result
 
     // @ts-ignore
@@ -246,10 +233,9 @@ const PaintCanvas = ({ setActiveNav, setInput }: Props) => {
   }
 
   const initFabric = () => {
-    let innerWidth = window.innerWidth
     const initSettings = Object.assign({}, defaultSettings)
 
-    const data = calcWindowSizes(orientation.value, innerWidth)
+    const data = calcWindowSizes(orientation.value)
 
     initSettings.width = data.width
     initSettings.height = data.height
@@ -294,8 +280,7 @@ const PaintCanvas = ({ setActiveNav, setInput }: Props) => {
       return
     }
 
-    let innerWidth = window.innerWidth
-    const windowSize = calcWindowSizes(orientation.value, innerWidth)
+    const windowSize = calcWindowSizes(orientation.value)
 
     let imgConfig = {
       quality: 0.9,
@@ -370,7 +355,9 @@ const PaintCanvas = ({ setActiveNav, setInput }: Props) => {
       source_image: base64String,
       source_processing: 'img2img'
     })
+
     setActiveNav('img2img')
+    router.push('?panel=img2img')
   }
 
   // <div className="overflow-x-hidden">
@@ -467,7 +454,7 @@ const PaintCanvas = ({ setActiveNav, setInput }: Props) => {
       <BottomOptions>
         <div className="flex flex-row gap-2">
           <UploadButton
-            label="Upload"
+            label="Import"
             //@ts-ignore
             handleFile={handleFileSelect}
           />
@@ -487,9 +474,7 @@ const PaintCanvas = ({ setActiveNav, setInput }: Props) => {
           <Button onClick={loadPrevious}>
             <CloudDownloadIcon /> Restore
           </Button>
-          <Button onClick={sendToImg2Img}>
-            <UploadIcon /> Use Drawing
-          </Button>
+          <Button onClick={sendToImg2Img}>Use Drawing</Button>
         </div>
       </BottomOptions>
       <CanvasWrapper>

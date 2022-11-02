@@ -40,20 +40,6 @@ const SubSectionTitle = styled.div`
   padding-bottom: 8px;
 `
 
-interface MaxWidthProps {
-  maxWidth?: number
-}
-
-const MaxWidth = styled.div<MaxWidthProps>`
-  width: 100%;
-
-  ${(props) =>
-    props.maxWidth &&
-    `
-    max-width: ${props.maxWidth}px;
-  `}
-`
-
 interface Props {
   handleChangeInput: any
   handleImageUpload: any
@@ -131,7 +117,9 @@ const Img2ImgPanel = ({ input, setInput }: Props) => {
               </Button>
             </FlexRow>
             {imgUrlError && (
-              <div className="mb-2 text-red-500 text-sm">{imgUrlError}</div>
+              <div className="mb-2 text-red-500 text-lg font-bold">
+                {imgUrlError}
+              </div>
             )}
           </>
         )}

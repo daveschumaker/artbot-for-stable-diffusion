@@ -103,7 +103,11 @@ export default function Dropzone(props: UploaderProps) {
 
   return (
     <>
-      {fileRejections?.length > 0 && <div>OOPS!</div>}
+      {fileRejections?.length > 0 && (
+        <div className="mb-2 text-red-500 text-lg font-bold">
+          Please upload a single valid image file!
+        </div>
+      )}
       <StyledDropZone
         {...getRootProps({ isFocused, isDragAccept, isDragReject })}
       >
