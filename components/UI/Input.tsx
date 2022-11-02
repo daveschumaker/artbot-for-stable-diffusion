@@ -6,7 +6,7 @@ interface InputProps {
   type?: string
   className?: string
   children?: React.ReactNode
-  error?: boolean
+  error?: boolean | string
   onBlur?: any
   onChange: any
   width?: string

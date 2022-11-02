@@ -46,7 +46,7 @@ const StyledCanvas = styled.canvas<CanvasProps>`
   border: 1px solid ${(props) => props.theme.border};
 `
 
-const PaintCanvas = () => {
+const Inpaint = () => {
   const router = useRouter()
   const [drawMode, setDrawMode] = useState<string>('paint')
 
@@ -486,4 +486,4 @@ const PaintCanvas = () => {
   )
 }
 
-export default PaintCanvas
+export default Inpaint

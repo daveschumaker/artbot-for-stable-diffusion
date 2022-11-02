@@ -51,7 +51,7 @@ const OptionsPanel = ({
   useEffect(() => {
     const { panel } = router.query
 
-    if (panel === 'inpaiting') {
+    if (panel === 'inpainting') {
       setActiveNav('inpainting')
     } else if (panel === 'painter') {
       setActiveNav('painter')

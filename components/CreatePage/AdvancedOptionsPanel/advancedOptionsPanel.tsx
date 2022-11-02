@@ -93,6 +93,14 @@ const samplerOptions = (img2img: boolean) => {
   return options
 }
 
+interface InputError {
+  steps?: string
+  cfg_scale?: string
+  numImages?: string
+  height?: string
+  width?: string
+}
+
 interface Props {
   handleChangeInput: any
   handleImageUpload: any
@@ -110,7 +118,7 @@ const AdvancedOptionsPanel = ({
   const appState = useStore(appInfoStore)
   const { models } = appState
 
-  const [hasError, setHasError] = useState({})
+  const [hasError, setHasError] = useState<InputError>({})
 
   const orientationValue = orientationOptions.filter((option) => {
     return input.orientationType === option.value
@@ -138,6 +146,7 @@ const AdvancedOptionsPanel = ({
               setInput({ orientationType: obj.value })
             }}
             value={orientationValue}
+            isSearchable={false}
           />
           {orientationValue?.value === 'custom' && (
             <>
@@ -274,6 +283,7 @@ const AdvancedOptionsPanel = ({
               setInput({ sampler: obj.value })
               localStorage.setItem('sampler', obj.value)
             }}
+            isSearchable={false}
             value={samplerValue}
           />
         </MaxWidth>
@@ -433,6 +443,7 @@ const AdvancedOptionsPanel = ({
                 setInput({ models: [obj.value] })
               }}
               value={modelsValue}
+              isSearchable={false}
             />
           </MaxWidth>
         </Section>
