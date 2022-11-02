@@ -55,6 +55,7 @@ const Inpaint = () => {
 
   const brushPreviewRef = useRef<fabric.Circle | null>(null)
   const canvasElementRef = useRef<HTMLCanvasElement | null>(null)
+
   const canvasRef = useRef<fabric.Canvas | null>(null)
   const drawLayerRef = useRef<any | null>(null)
   const imageLayerRef = useRef<any | null>(null)
@@ -72,7 +73,7 @@ const Inpaint = () => {
     })
   }
 
-  const handleFileSelect = async (file: any) => {
+  const handleFileSelect = async (file: any, skipCompress = false) => {
     if (typeof window === 'undefined') {
       return
     }
@@ -85,17 +86,23 @@ const Inpaint = () => {
       return
     }
 
-    const { readAndCompressImage } = await import('browser-image-resizer')
-    let resizedImage = await readAndCompressImage(file, {
-      quality: 0.9,
-      maxWidth: 1024,
-      maxHeight: 1024
-    })
-
+    let resizedImage
     let fullDataString: string = ''
 
-    if (file) {
-      fullDataString = await getBase64(resizedImage)
+    if (!skipCompress) {
+      const { readAndCompressImage } = await import('browser-image-resizer')
+      resizedImage = await readAndCompressImage(file, {
+        quality: 0.9,
+        maxWidth: 1024,
+        maxHeight: 1024
+      })
+
+      if (file) {
+        fullDataString = await getBase64(resizedImage)
+        storeCanvas('imageLayerRef', fullDataString)
+      }
+    } else {
+      fullDataString = file
     }
 
     if (!fullDataString) {
