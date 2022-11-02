@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import { fabric } from 'fabric'
 import styled from 'styled-components'
@@ -14,6 +14,8 @@ import EraserIcon from '../icons/EraserIcon'
 import { savePrompt, SourceProcessing } from '../../utils/promptUtils'
 import UndoIcon from '../icons/UndoIcon'
 import RedoIcon from '../icons/RedoIcon'
+import { useEffectOnce } from '../../hooks/useEffectOnce'
+import { getCanvasStore, storeCanvas } from '../../store/canvasStore'
 
 const maxSize = {
   height: 768,
@@ -142,16 +144,20 @@ const Inpaint = () => {
         layerHeight: height,
         layerWidth: width
       })
-      visibleDrawLayerRef.current = makeNewLayer({
-        layerHeight: height,
-        layerWidth: width
-      })
-      visibleDrawLayerRef.current.set('opacity', 0.8)
-      drawLayerRef.current = makeInvisibleDrawLayer(height, width)
 
-      // Add to Canvas
-      canvasRef?.current?.add(imageLayerRef.current)
-      canvasRef?.current?.add(visibleDrawLayerRef.current)
+      if (!skipCompress) {
+        drawLayerRef.current = makeInvisibleDrawLayer(height, width)
+
+        visibleDrawLayerRef.current = makeNewLayer({
+          layerHeight: height,
+          layerWidth: width
+        })
+        visibleDrawLayerRef.current.set('opacity', 0.8)
+
+        // Add to Canvas
+        canvasRef?.current?.add(imageLayerRef.current)
+        canvasRef?.current?.add(visibleDrawLayerRef.current)
+      }
 
       if (brushPreviewRef.current) {
         canvasRef?.current?.add(brushPreviewRef.current)
@@ -169,18 +175,18 @@ const Inpaint = () => {
 
   ///////////////////////
 
-  const initCanvas = () => {
+  const initCanvas = ({ height = 512, width = 768 } = {}) => {
     canvasRef.current = new fabric.Canvas(canvasElementRef.current, {
       backgroundColor: 'white',
       isDrawingMode: false,
-      height: 768,
-      width: 512
+      height,
+      width
     })
 
     canvasRef.current.freeDrawingCursor = 'crosshair'
     canvasRef.current.selection = false
-    canvasRef.current.setHeight(512)
-    canvasRef.current.setWidth(768)
+    canvasRef.current.setHeight(height)
+    canvasRef.current.setWidth(width)
     makeBrushPreviewLayer()
     setBrush('white')
 
@@ -283,8 +289,19 @@ const Inpaint = () => {
 
   const onPathCreated = async (e: any) => {
     const path = { path: e.path }
-    pathCreate(path)
+    await pathCreate(path)
     redoHistory.push(path)
+
+    if (canvasRef.current) {
+      let baseCanvas = canvasRef.current.toObject()
+      storeCanvas('canvasRef', baseCanvas)
+
+      let drawCanvas = drawLayerRef.current.toObject()
+      storeCanvas('drawLayerRef', drawCanvas)
+
+      console.log(`canvasRef?`, canvasRef)
+      console.log(`drawLayerRef?`, drawLayerRef)
+    }
   }
 
   const pathCreate = async (newPath: any, eraseOverride = false) => {
@@ -449,16 +466,80 @@ const Inpaint = () => {
     router.push(`/?edit=true`)
   }
 
-  useEffect(() => {
+  useEffectOnce(() => {
     redoHistory = []
     undoHistory = []
-    initCanvas()
 
+    if (getCanvasStore().canvasRef) {
+      const { objects } = getCanvasStore().canvasRef
+      initCanvas({ height: objects[0].height, width: objects[0].width })
+
+      console.log(`objects`, objects)
+
+      canvasRef.current.clear()
+      canvasRef.current.loadFromJSON(getCanvasStore().canvasRef, () => {
+        if (!canvasRef.current) {
+          return
+        }
+
+        const objects = canvasRef?.current?.getObjects()
+
+        console.log(`objects[1]`, objects[1])
+
+        imageLayerRef.current = objects[0]
+        visibleDrawLayerRef.current = objects[1]
+        brushPreviewRef.current = objects[2]
+
+        visibleDrawLayerRef.current.set('opacity', 0.8)
+        visibleDrawLayerRef.current.set('selectable', false)
+
+        drawLayerRef.current = new fabric.Canvas(null)
+        drawLayerRef.current.setHeight(canvasRef.current.height)
+        drawLayerRef.current.setWidth(canvasRef.current.width)
+        drawLayerRef.current.loadFromJSON(getCanvasStore().drawLayerRef)
+
+        // drawLayerRef.current.backgroundColor = 'black'
+        // drawLayerRef.current.selection = false
+        // drawLayerRef.current.set('backgroundColor', 'black')
+        // newDrawLayer.selection = false
+
+        canvasRef.current.isDrawingMode = true
+      })
+
+      setTimeout(function () {
+        if (!canvasRef.current) {
+          return
+        }
+
+        canvasRef.current.setHeight(canvasRef.current.height)
+        canvasRef.current.setWidth(canvasRef.current.width)
+        canvasRef.current.renderAll(canvasRef.current)
+      }, 250)
+
+      // const { objects } = getCanvasStore().canvasRef
+      // const [imageLayer] = objects
+
+      // imageLayerRef.current = new fabric.Group(imageLayer)
+      // canvasRef?.current?.add(imageLayerRef.current)
+
+      // console.log(`objects?`, objects)
+      // canvasRef.current.loadFromJSON(getCanvasStore().canvasRef)
+    } else {
+      initCanvas()
+    }
+
+    // if (getCanvasStore().imageLayerRef) {
+    //   setTimeout(() => {
+    //     handleFileSelect(getCanvasStore().imageLayerRef, true)
+    //   }, 500)
+    // }
+
+    // canvasRef.current?.renderAll()
     return () => {
       canvasRef?.current?.dispose()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  })
 
   return (
     <div>
