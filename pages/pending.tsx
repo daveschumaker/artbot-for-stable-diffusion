@@ -2,12 +2,17 @@ import { useEffect, useState } from 'react'
 
 import PageTitle from '../components/UI/PageTitle'
 import Spinner from '../components/Spinner'
-import { allPendingJobs, deletePendingJobFromDb } from '../utils/db'
+import {
+  allPendingJobs,
+  deletePendingJobFromDb,
+  getPendingJobDetails
+} from '../utils/db'
 import PendingItem from '../components/PendingItemV2'
 import { trackEvent } from '../api/telemetry'
 import Head from 'next/head'
 import { deletePendingJobFromApi } from '../api/deletePendingJobFromApi'
 import Linker from '../components/UI/Linker'
+import { createImageJob } from '../utils/imageCache'
 
 const PendingPage = () => {
   const [isInitialLoad, setIsInitialLoad] = useState(true)
@@ -19,6 +24,17 @@ const PendingPage = () => {
     setIsInitialLoad(false)
     setPendingImages(data)
     return data
+  }
+
+  const handleRetryJob = async (jobId: string) => {
+    const details = await getPendingJobDetails(jobId)
+    console.log(`details?`, details)
+
+    deletePendingJobFromApi(jobId)
+    await deletePendingJobFromDb(jobId)
+    await createImageJob({ ...details })
+
+    fetchPrompts()
   }
 
   const handleDeleteJob = async (jobId: string) => {
@@ -74,6 +90,7 @@ const PendingPage = () => {
           return (
             <PendingItem
               handleDeleteJob={handleDeleteJob}
+              handleRetryJob={handleRetryJob}
               jobId={job.jobId}
               key={job.jobId}
             />

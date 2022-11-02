@@ -8,6 +8,7 @@ import Input from '../../UI/Input'
 import Image from '../../Image'
 import TrashIcon from '../../icons/TrashIcon'
 import { SourceProcessing } from '../../../utils/promptUtils'
+import Uploader from '../Uploader'
 
 interface FlexRowProps {
   bottomPadding?: number
@@ -88,42 +89,7 @@ const Img2ImgPanel = ({ input, setInput }: Props) => {
   return (
     <div>
       <Section>
-        {!input.source_image && (
-          <>
-            <SubSectionTitle>
-              Upload an image from your device or import from URL
-            </SubSectionTitle>
-            <FlexRow bottomPadding={8}>
-              <span style={{ lineHeight: '40px', marginRight: '16px' }}>
-                URL:
-              </span>
-              <Input
-                className="mb-2"
-                type="text"
-                name="img-url"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setImgUrl(e.target.value)
-                }
-                value={imgUrl}
-                width="100%"
-              />
-              <Button
-                title="Upload image from URL"
-                btnType="primary"
-                onClick={handleImportFromUrl}
-                width="120px"
-              >
-                Upload
-              </Button>
-            </FlexRow>
-            {imgUrlError && (
-              <div className="mb-2 text-red-500 text-lg font-bold">
-                {imgUrlError}
-              </div>
-            )}
-          </>
-        )}
-        {!input.source_image && <Dropzone handleUpload={saveImage} />}
+        {!input.source_image && <Uploader handleSaveImage={saveImage} />}
         {input.source_image && (
           <>
             <div className="flex flex-row mb-4">

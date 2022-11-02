@@ -21,6 +21,7 @@ import CloseIcon from '../components/icons/CloseIcon'
 import ImageSquare from '../components/ImageSquare'
 import { validSampler } from '../utils/validationUtils'
 import OptionsPanel from '../components/CreatePage/OptionsPanel'
+import { clearCanvasStore } from '../store/canvasStore'
 
 interface InputTarget {
   name: string
@@ -139,6 +140,7 @@ const Home: NextPage = () => {
     const { status, message } = res
 
     if (res?.success) {
+      clearCanvasStore()
       updatedCachedPrompt('')
       trackEvent({
         event: input.img2img ? 'NEW_IMG2IMG_REQUEST' : 'NEW_IMAGE_REQUEST',

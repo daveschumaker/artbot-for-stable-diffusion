@@ -83,7 +83,7 @@ const MobileHideText = styled.span`
 const StyledImage = styled(ImageSquare)``
 
 // @ts-ignore
-const PendingItem = ({ handleDeleteJob, jobId }) => {
+const PendingItem = ({ handleDeleteJob, handleRetryJob, jobId }) => {
   const router = useRouter()
   const [initialLoad, setInitialLoad] = useState(true)
   const [jobDetails, setJobDetails] = useState<JobDetails | undefined>(
@@ -258,13 +258,16 @@ const PendingItem = ({ handleDeleteJob, jobId }) => {
               </Button>
             )}
             {jobDetails.jobStatus !== 'done' && (
-              <Button
-                btnType="secondary"
-                onClick={() => handleDeleteJob(jobId)}
-              >
-                <TrashIcon />
-                <MobileHideText>Delete job</MobileHideText>
-              </Button>
+              <div className="flex flex-row gap-2">
+                <Button onClick={() => handleRetryJob(jobId)}>Retry?</Button>
+                <Button
+                  btnType="secondary"
+                  onClick={() => handleDeleteJob(jobId)}
+                >
+                  <TrashIcon />
+                  <MobileHideText>Delete job</MobileHideText>
+                </Button>
+              </div>
             )}
           </div>
         </StyledInfoDiv>

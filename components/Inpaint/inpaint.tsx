@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import { fabric } from 'fabric'
 import styled from 'styled-components'
@@ -15,7 +15,13 @@ import { savePrompt, SourceProcessing } from '../../utils/promptUtils'
 import UndoIcon from '../icons/UndoIcon'
 import RedoIcon from '../icons/RedoIcon'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
-import { getCanvasStore, storeCanvas } from '../../store/canvasStore'
+import {
+  getCanvasStore,
+  getI2IString,
+  storeCanvas
+} from '../../store/canvasStore'
+import Uploader from '../CreatePage/Uploader'
+import { inputCSS } from 'react-select/dist/declarations/src/components/Input'
 
 const maxSize = {
   height: 768,
@@ -48,8 +54,15 @@ const StyledCanvas = styled.canvas<CanvasProps>`
   border: 1px solid ${(props) => props.theme.border};
 `
 
-const Inpaint = () => {
+interface Props {
+  input: any
+  setInput: any
+}
+
+const Inpaint = ({ input, setInput }: Props) => {
   const router = useRouter()
+
+  const [hasImage, setHasImage] = useState(false)
   const [drawMode, setDrawMode] = useState<string>('paint')
 
   const brushRef = useRef<any>(null)
@@ -75,7 +88,17 @@ const Inpaint = () => {
     })
   }
 
-  const handleFileSelect = async (file: any, skipCompress = false) => {
+  interface IFileSelect {
+    file: any
+    skipRead: boolean
+    skipSetup: boolean
+  }
+
+  const handleFileSelect = async ({
+    file,
+    skipRead = false,
+    skipSetup = false
+  }: IFileSelect) => {
     if (typeof window === 'undefined') {
       return
     }
@@ -91,7 +114,7 @@ const Inpaint = () => {
     let resizedImage
     let fullDataString: string = ''
 
-    if (!skipCompress) {
+    if (!skipRead) {
       const { readAndCompressImage } = await import('browser-image-resizer')
       resizedImage = await readAndCompressImage(file, {
         quality: 0.9,
@@ -145,7 +168,7 @@ const Inpaint = () => {
         layerWidth: width
       })
 
-      if (!skipCompress) {
+      if (!skipSetup) {
         drawLayerRef.current = makeInvisibleDrawLayer(height, width)
 
         visibleDrawLayerRef.current = makeNewLayer({
@@ -299,8 +322,7 @@ const Inpaint = () => {
       let drawCanvas = drawLayerRef.current.toObject()
       storeCanvas('drawLayerRef', drawCanvas)
 
-      console.log(`canvasRef?`, canvasRef)
-      console.log(`drawLayerRef?`, drawLayerRef)
+      autoSave()
     }
   }
 
@@ -429,6 +451,39 @@ const Inpaint = () => {
     }
   }
 
+  const autoSave = () => {
+    if (!canvasRef.current) {
+      return
+    }
+
+    const data = {
+      image: '',
+      mask: ''
+    }
+
+    if (imageLayerRef.current) {
+      data.image = imageLayerRef.current
+        .toDataURL({ format: 'webp' })
+        .split(',')[1]
+    }
+
+    if (drawLayerRef.current) {
+      data.mask = drawLayerRef.current
+        .toDataURL({ format: 'webp' })
+        .split(',')[1]
+    }
+
+    setInput({
+      imageType: 'image/webp',
+      source_image: data.image,
+      source_mask: data.mask,
+      source_processing: 'inpainting',
+      orientation: 'custom',
+      height: canvasRef.current.height,
+      width: canvasRef.current.width
+    })
+  }
+
   const handleUseImageClick = () => {
     if (!canvasRef.current) {
       return
@@ -470,7 +525,19 @@ const Inpaint = () => {
     redoHistory = []
     undoHistory = []
 
-    if (getCanvasStore().canvasRef) {
+    if (!getCanvasStore().canvasRef && getI2IString().base64String) {
+      console.log(`BUAHAHAH`)
+      initCanvas({ height: getI2IString().height, width: getI2IString().width })
+
+      setTimeout(() => {
+        handleFileSelect({
+          file: getI2IString().base64String,
+          skipRead: true,
+          skipSetup: false
+        })
+      }, 250)
+    } else if (getCanvasStore().canvasRef) {
+      setHasImage(true)
       const { objects } = getCanvasStore().canvasRef
       initCanvas({ height: objects[0].height, width: objects[0].width })
 
@@ -514,7 +581,7 @@ const Inpaint = () => {
         canvasRef.current.setHeight(canvasRef.current.height)
         canvasRef.current.setWidth(canvasRef.current.width)
         canvasRef.current.renderAll(canvasRef.current)
-      }, 250)
+      }, 50)
 
       // const { objects } = getCanvasStore().canvasRef
       // const [imageLayer] = objects
@@ -542,7 +609,7 @@ const Inpaint = () => {
   })
 
   return (
-    <div>
+    <div className="relative">
       <div className="flex flex-row gap-2 mb-2">
         <Button onClick={handleToggle}>
           {drawMode === 'paint' ? <BrushIcon /> : <EraserIcon />}

@@ -8,6 +8,8 @@ import AdvancedOptionsPanel from './AdvancedOptionsPanel'
 import Img2ImgPanel from './Img2ImgPanel'
 import InpaintingPanel from './InpaintingPanel'
 import PainterPanel from './PainterPanel'
+import Uploader from './Uploader'
+import { setI2iUploaded } from '../../store/canvasStore'
 
 interface LiProps {
   active?: boolean
@@ -61,6 +63,22 @@ const OptionsPanel = ({
       setActiveNav('advanced')
     }
   }, [router.query])
+
+  const handleSaveAction = async (data: any) => {
+    const newBase64String = `data:${data.imageType};base64,${data.source_image}`
+    setI2iUploaded({
+      base64String: newBase64String,
+      height: data.height,
+      width: data.width
+    })
+
+    setInput({
+      imageType: data.imageType,
+      source_image: data.source_image,
+      source_mask: '',
+      source_processing: 'inpainting'
+    })
+  }
 
   return (
     <Panel>
@@ -123,7 +141,12 @@ const OptionsPanel = ({
       {activeNav === 'painter' && (
         <PainterPanel setActiveNav={setActiveNav} setInput={setInput} />
       )}
-      {activeNav === 'inpainting' && <InpaintingPanel />}
+      {activeNav === 'inpainting' &&
+        (input.source_image && input.source_processing === 'inpainting' ? (
+          <InpaintingPanel input={input} setInput={setInput} />
+        ) : (
+          <Uploader handleSaveImage={handleSaveAction} />
+        ))}
     </Panel>
   )
 }
