@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 
 import SelectComponent from '../../UI/Select'
@@ -108,6 +108,8 @@ const AdvancedOptionsPanel = ({
 }: Props) => {
   const appState = useStore(appInfoStore)
   const { models } = appState
+
+  const [hasError, setHasError] = useState({})
 
   const orientationValue = orientationOptions.filter((option) => {
     return input.orientationType === option.value
@@ -230,15 +232,34 @@ const AdvancedOptionsPanel = ({
         >
           <Input
             // @ts-ignore
+            error={hasError.steps}
             className="mb-2"
             type="text"
             name="steps"
             onChange={handleChangeInput}
+            onBlur={(e: any) => {
+              if (
+                isNaN(e.target.value) ||
+                e.target.value < 1 ||
+                e.target.value > 200
+              ) {
+                setHasError({
+                  steps: 'Please enter a valid number between 1 and 200'
+                })
+              } else if (hasError.steps) {
+                setHasError({})
+              }
+            }}
             // @ts-ignore
             value={input.steps}
             width="100%"
           />
         </MaxWidth>
+        {hasError.steps && (
+          <div className="mb-2 text-red-500 text-lg font-bold">
+            {hasError.steps}
+          </div>
+        )}
       </Section>
       <Section>
         <SubSectionTitle>
@@ -254,15 +275,34 @@ const AdvancedOptionsPanel = ({
         >
           <Input
             // @ts-ignore
+            error={hasError.cfg_scale}
             className="mb-2"
             type="text"
             name="cfg_scale"
+            onBlur={(e: any) => {
+              if (
+                isNaN(e.target.value) ||
+                e.target.value < 1 ||
+                e.target.value > 30
+              ) {
+                setHasError({
+                  cfg_scale: 'Please enter a valid number between 1 and 30'
+                })
+              } else if (hasError.cfg_scale) {
+                setHasError({})
+              }
+            }}
             onChange={handleChangeInput}
             // @ts-ignore
             value={input.cfg_scale}
             width="100%"
           />
         </MaxWidth>
+        {hasError.cfg_scale && (
+          <div className="mb-2 text-red-500 text-lg font-bold">
+            {hasError.cfg_scale}
+          </div>
+        )}
       </Section>
       {input.img2img ||
         (input.source_processing !== SourceProcessing.Prompt && (
@@ -342,14 +382,33 @@ const AdvancedOptionsPanel = ({
           <Input
             // @ts-ignore
             className="mb-2"
+            error={hasError.numImages}
             type="text"
             name="numImages"
             onChange={handleChangeInput}
+            onBlur={(e: any) => {
+              if (
+                isNaN(e.target.value) ||
+                e.target.value < 1 ||
+                e.target.value > 20
+              ) {
+                setHasError({
+                  numImages: 'Please enter a valid number between 1 and 20'
+                })
+              } else if (hasError.numImages) {
+                setHasError({})
+              }
+            }}
             // @ts-ignore
             value={input.numImages}
             width="100%"
           />
         </MaxWidth>
+        {hasError.numImages && (
+          <div className="mb-2 text-red-500 text-lg font-bold">
+            {hasError.numImages}
+          </div>
+        )}
       </Section>
     </div>
   )

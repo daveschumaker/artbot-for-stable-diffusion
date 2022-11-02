@@ -6,6 +6,8 @@ interface InputProps {
   type?: string
   className?: string
   children?: React.ReactNode
+  error?: boolean
+  onBlur?: any
   onChange: any
   width?: string
   value: string
@@ -20,6 +22,8 @@ const StyledInput = styled.input<InputProps>`
   height: 40px;
   padding: 8px;
   width: ${(props) => (props.width ? props.width : '100%')};
+
+  ${(props) => props.error && `border: 1px solid red;`}
 `
 
 const Input = (props: InputProps) => {

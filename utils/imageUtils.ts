@@ -154,18 +154,18 @@ export const createNewImage = async (imageParams: CreateImageJob) => {
 
   if (
     isNaN(clonedParams.steps) ||
-    clonedParams.steps > 100 ||
+    clonedParams.steps > 200 ||
     clonedParams.steps < 1
   ) {
-    clonedParams.steps = 30
+    clonedParams.steps = 200
   }
 
   if (
     isNaN(clonedParams.cfg_scale) ||
-    clonedParams.cfg_scale > 64 ||
+    clonedParams.cfg_scale > 32 ||
     clonedParams.cfg_scale < 1
   ) {
-    clonedParams.cfg_scale = 9.0
+    clonedParams.cfg_scale = 32.0
   }
 
   try {
