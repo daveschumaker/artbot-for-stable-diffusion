@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { useDropzone } from 'react-dropzone'
 
 import PlusIcon from '../icons/PlusIcon'
-import { getBase64 } from '../../utils/imageUtils'
+import { getBase64, imageDimensions } from '../../utils/imageUtils'
 
 const imgConfig = {
   quality: 0.9,
@@ -32,24 +32,18 @@ const StyledDropZone = styled.div`
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  font-size: 12px;
+  font-size: 16px;
   outline: none;
-  padding: 2px;
-  height: 100px;
-  width: 100px;
+  padding: 16px;
   justify-content: center;
   text-align: center;
   transition: border 0.24s ease-in-out;
-
-  @media (min-width: 640px) {
-    height: 120px;
-    width: 120px;
-    padding: 8px;
-  }
+  width: 100%;
 `
 
 export default function Dropzone(props: UploaderProps) {
   const { handleUpload } = props
+
   const onDrop = useCallback(
     async (acceptedFiles: any[]) => {
       const [acceptedFile] = acceptedFiles
@@ -72,11 +66,22 @@ export default function Dropzone(props: UploaderProps) {
         }
 
         // @ts-ignore
+        const imageDetails = await imageDimensions(fullDataString)
+
+        // @ts-ignore
         const [fileType, imgBase64String] = fullDataString.split(';base64,')
         const [, imageType] = fileType.split('data:')
 
-        handleUpload(imageType, imgBase64String)
+        handleUpload({
+          imageType,
+          source_image: imgBase64String,
+          //@ts-ignore
+          height: imageDetails?.height,
+          //@ts-ignore
+          width: imageDetails?.width
+        })
       }
+
       try {
         reader.readAsDataURL(acceptedFile)
       } catch (err) {

@@ -1,6 +1,6 @@
+import React from 'react'
 import styled from 'styled-components'
 
-import ImageUploadDisplay from '../ImageUploadDisplay'
 import SelectComponent from '../../UI/Select'
 import Input from '../../UI/Input'
 import { useStore } from 'statery'
@@ -9,8 +9,6 @@ import Tooltip from '../../UI/Tooltip'
 import { Button } from '../../UI/Button'
 import TrashIcon from '../../icons/TrashIcon'
 import { ModelDetails } from '../../../types'
-import React, { useState } from 'react'
-import { getImageFromUrl } from '../../../utils/imageUtils'
 import { SourceProcessing } from '../../../utils/promptUtils'
 
 const Section = styled.div`
@@ -104,16 +102,12 @@ interface Props {
 
 const AdvancedOptionsPanel = ({
   handleChangeInput,
-  handleImageUpload,
   handleOrientationSelect,
   input,
   setInput
 }: Props) => {
   const appState = useStore(appInfoStore)
   const { models } = appState
-
-  const [imgUrl, setImgUrl] = useState('')
-  const [imgUrlError, setImgUrlError] = useState('')
 
   const orientationValue = orientationOptions.filter((option) => {
     return input.orientationType === option.value
@@ -126,71 +120,8 @@ const AdvancedOptionsPanel = ({
     return input.sampler === option.value
   })[0]
 
-  const handleImportFromUrl = async () => {
-    if (!imgUrl) {
-      return
-    }
-
-    const data = await getImageFromUrl(imgUrl)
-    const { success, message, imageType, imgBase64String } = data
-
-    if (!success) {
-      setImgUrlError(message || '')
-      return
-    }
-
-    setImgUrlError('')
-    handleImageUpload(imageType, imgBase64String)
-  }
-
   return (
     <div>
-      {/* <Section>
-        <SubSectionTitle>Upload or import and image (img2img)</SubSectionTitle>
-        <MaxWidth
-          // @ts-ignore
-          maxWidth="480"
-        >
-          <FlexRow bottomPadding={8}>
-            <span style={{ lineHeight: '40px', marginRight: '16px' }}>
-              URL:
-            </span>
-            <Input
-              className="mb-2"
-              type="text"
-              name="img-url"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setImgUrl(e.target.value)
-              }
-              value={imgUrl}
-              width="100%"
-            />
-            <Button
-              title="Upload image from URL"
-              btnType="primary"
-              onClick={handleImportFromUrl}
-              width="120px"
-            >
-              Upload
-            </Button>
-          </FlexRow>
-          {imgUrlError && (
-            <div className="mb-2 text-red-500 text-sm">{imgUrlError}</div>
-          )}
-        </MaxWidth>
-        <ImageUploadDisplay
-          handleUpload={handleImageUpload}
-          imageType={input.imageType}
-          sourceImage={input.source_image}
-          resetImage={() => {
-            setInput({
-              img2img: false,
-              imgType: '',
-              source_image: ''
-            })
-          }}
-        />
-      </Section> */}
       <Section>
         <SubSectionTitle>Image orientation</SubSectionTitle>
         <MaxWidth
@@ -205,7 +136,7 @@ const AdvancedOptionsPanel = ({
             }}
             value={orientationValue}
           />
-          {orientationValue.value === 'custom' && (
+          {orientationValue?.value === 'custom' && (
             <div className="mt-2 flex flex-col gap-4 justify-start">
               <div className="mt-2 flex flex-row gap-4 items-center">
                 <SubSectionTitle>Width</SubSectionTitle>

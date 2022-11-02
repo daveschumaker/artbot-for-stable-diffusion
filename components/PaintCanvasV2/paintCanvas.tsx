@@ -347,7 +347,6 @@ const PaintCanvas = () => {
     downloadWebp(drawLayerRef.current.toDataURL({ format: 'webp' }), 'mask')
     downloadWebp(imageLayerRef.current.toDataURL({ format: 'webp' }), 'image')
 
-    console.log(`data:`, data)
     return data
   }
 

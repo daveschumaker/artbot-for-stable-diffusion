@@ -207,6 +207,22 @@ export const getBase64 = (file: Blob) => {
   })
 }
 
+export const imageDimensions = (fullDataString: string) => {
+  return new Promise((resolve) => {
+    var i = new Image()
+
+    i.onload = function () {
+      resolve({
+        height: i.height,
+        width: i.width
+      })
+    }
+
+    // @ts-ignore
+    i.src = fullDataString
+  })
+}
+
 export const imgUrlToDataUrl = (url: string) => {
   return new Promise((resolve) => {
     try {
@@ -253,7 +269,7 @@ export const getImageFromUrl = async (imgUrl: string) => {
   const data = await resp.json()
 
   // @ts-ignore
-  const { success, imageType, imgBase64String } = data
+  const { success, imageType, imgBase64String, height, width } = data
 
   if (!data || !success) {
     trackEvent({
@@ -275,8 +291,11 @@ export const getImageFromUrl = async (imgUrl: string) => {
 
   return {
     success: true,
+    imgUrl,
     imageType,
-    imgBase64String
+    imgBase64String,
+    height,
+    width
   }
 }
 

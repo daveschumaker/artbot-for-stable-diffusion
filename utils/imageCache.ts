@@ -156,12 +156,8 @@ export const createMultiImageJob = async () => {
 
 export const sendJobToApi = async (imageParams: CreateImageJob) => {
   try {
-    console.log(`imageParams`, imageParams)
-
     const data = await createNewImage(imageParams)
     const { success, jobId, status, message = '' } = data
-
-    console.log(`imageParams.data?`, data)
 
     if (success && jobId) {
       // Overwrite params on success.

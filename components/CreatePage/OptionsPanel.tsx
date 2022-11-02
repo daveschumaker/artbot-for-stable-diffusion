@@ -52,30 +52,30 @@ const OptionsPanel = ({
         {activeNav === 'painter' && `Painter`}
         {activeNav === 'inpainting' && `Inpainting`}
       </SectionTitle>
-      <ul className="flex flex-row gap-4 md:gap-8 mb-2">
+      <ul className="flex flex-row gap-4 md:gap-8 mb-3">
         <NavItem
           active={activeNav === 'advanced'}
           onClick={() => setActiveNav('advanced')}
         >
-          advanced
+          [ advanced ]
         </NavItem>
         <NavItem
           active={activeNav === 'img2img'}
           onClick={() => setActiveNav('img2img')}
         >
-          img2img
+          [ img2img ]
         </NavItem>
         <NavItem
           active={activeNav === 'painter'}
           onClick={() => setActiveNav('painter')}
         >
-          painter
+          [ painter ]
         </NavItem>
         <NavItem
           active={activeNav === 'inpainting'}
           onClick={() => setActiveNav('inpainting')}
         >
-          inpainting
+          [ inpainting ]
         </NavItem>
       </ul>
       {activeNav === 'advanced' && (
@@ -87,7 +87,9 @@ const OptionsPanel = ({
           setInput={setInput}
         />
       )}
-      {activeNav === 'img2img' && <Img2ImgPanel />}
+      {activeNav === 'img2img' && (
+        <Img2ImgPanel input={input} setInput={setInput} />
+      )}
       {activeNav === 'painter' && <PainterPanel />}
       {activeNav === 'inpainting' && <InpaintingPanel />}
     </Panel>

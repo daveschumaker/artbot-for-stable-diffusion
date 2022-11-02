@@ -15,14 +15,14 @@ const resizeImage = (imgBuffer: any) => {
         height: 1024,
         fit: 'inside'
       })
-      .toBuffer()
-      .then(async function (data) {
+      .toBuffer({ resolveWithObject: true })
+      .then(async function ({ data, info }) {
         const pngString = await data.toString('base64')
-
-        console.log(`${new Date().toLocaleString()}: Resizing image.`)
         resolve({
           success: true,
-          base64String: pngString
+          base64String: pngString,
+          height: info.height,
+          width: info.width
         })
       })
       .catch((err) => {
@@ -52,14 +52,16 @@ export default async function handler(
   const converted = await resizeImage(imgBuffer)
 
   // @ts-ignore
-  const { success, base64String } = converted
+  const { success, base64String, height, width } = converted
 
   if (success) {
     return res.send({
       success,
       // @ts-ignore
       imageType,
-      imgBase64String: base64String
+      imgBase64String: base64String,
+      height,
+      width
     })
   } else {
     res.send({

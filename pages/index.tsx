@@ -17,8 +17,6 @@ import TrashIcon from '../components/icons/TrashIcon'
 import SquarePlusIcon from '../components/icons/SquarePlusIcon'
 import { KeypressEvent } from '../types'
 import { trackEvent, trackGaEvent } from '../api/telemetry'
-import { AdvancedOptions } from '../components/CreatePage/AdditionalOptions'
-import AdvancedOptionsPanel from '../components/CreatePage/AdvancedOptionsPanel'
 import CloseIcon from '../components/icons/CloseIcon'
 import ImageSquare from '../components/ImageSquare'
 import { validSampler } from '../utils/validationUtils'
@@ -63,7 +61,6 @@ const Home: NextPage = () => {
     models: editMode ? loadEditPrompt().models : ['stable_diffusion']
   }
 
-  const [showAdvanced, setShowAdvanced] = useState(false)
   const [pending, setPending] = useState(false)
   const [hasError, setHasError] = useState('')
   const [input, setInput] = useReducer(
@@ -134,9 +131,6 @@ const Home: NextPage = () => {
       return
     }
 
-    console.log(`INPUT:`)
-    console.log(input)
-
     const res = await createImageJob({
       ...input
     })
@@ -170,7 +164,6 @@ const Home: NextPage = () => {
       setHasError(`Stable Horde API error: ${message}`)
       setPending(false)
     } else {
-      console.log(`res`, res)
       setHasError(
         'The server did not respond to the image request. Please try again shortly.'
       )
@@ -188,10 +181,6 @@ const Home: NextPage = () => {
   useEffect(() => {
     if (getCachedPrompt()) {
       setInput({ prompt: getCachedPrompt() })
-    }
-
-    if (query.edit) {
-      setShowAdvanced(true)
     }
 
     if (!query.edit) {
@@ -267,11 +256,7 @@ const Home: NextPage = () => {
             Error: {hasError}
           </div>
         )}
-        <div className="mt-4 mb-4 w-full flex flex-row">
-          <AdvancedOptions
-            showAdvanced={showAdvanced}
-            setShowAdvanced={setShowAdvanced}
-          />
+        <div className="mt-4 mb-4 w-full flex flex-row justify-end">
           <div className="w-1/2 flex flex-row justify-end gap-2">
             <Button
               title="Clear current input"
@@ -310,15 +295,6 @@ const Home: NextPage = () => {
         input={input}
         setInput={setInput}
       />
-      {showAdvanced && (
-        <AdvancedOptionsPanel
-          handleChangeInput={handleChangeValue}
-          handleImageUpload={handleImageUpload}
-          handleOrientationSelect={handleOrientationSelect}
-          input={input}
-          setInput={setInput}
-        />
-      )}
     </main>
   )
 }

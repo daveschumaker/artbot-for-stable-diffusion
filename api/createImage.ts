@@ -95,14 +95,17 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
     apiParams.params.denoising_strength = Number(denoising_strength) || 0.75
     apiParams.source_image = source_image
     apiParams.source_processing = source_processing
-    apiParams.source_mask = source_mask
   } else if (source_image) {
     apiParams.params.denoising_strength = Number(denoising_strength) || 0.75
     apiParams.source_image = source_image
     apiParams.source_processing = 'img2img'
   }
 
-  if (source_processing === SourceProcessing.InPainting) {
+  if (
+    source_processing ===
+    (SourceProcessing.InPainting || SourceProcessing.OutPaiting)
+  ) {
+    apiParams.source_mask = source_mask
     apiParams.models = ['stable_diffusion_inpainting']
   }
 
