@@ -1,7 +1,5 @@
 import styled from 'styled-components'
 
-import Panel from '../../UI/Panel'
-import SectionTitle from '../../UI/SectionTitle'
 import ImageUploadDisplay from '../ImageUploadDisplay'
 import SelectComponent from '../../UI/Select'
 import Input from '../../UI/Input'
@@ -67,6 +65,7 @@ const orientationOptions = [
   { value: 'phone-bg', label: 'Phone background (9 x 21)' },
   { value: 'ultrawide', label: 'Ultrawide (21 x 9)' },
   { value: 'square', label: 'Square' },
+  { value: 'custom', label: 'Custom' },
   { value: 'random', label: 'Random!' }
 ]
 
@@ -145,259 +144,283 @@ const AdvancedOptionsPanel = ({
   }
 
   return (
-    <Panel>
-      <SectionTitle>Advanced options</SectionTitle>
-      <div>
-        <Section>
-          <SubSectionTitle>
-            Upload or import and image (img2img)
-          </SubSectionTitle>
-          <MaxWidth
-            // @ts-ignore
-            maxWidth="480"
-          >
-            <FlexRow bottomPadding={8}>
-              <span style={{ lineHeight: '40px', marginRight: '16px' }}>
-                URL:
-              </span>
-              <Input
-                className="mb-2"
-                type="text"
-                name="img-url"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setImgUrl(e.target.value)
-                }
-                value={imgUrl}
-                width="100%"
-              />
-              <Button
-                title="Upload image from URL"
-                btnType="primary"
-                onClick={handleImportFromUrl}
-                width="120px"
-              >
-                Upload
-              </Button>
-            </FlexRow>
-            {imgUrlError && (
-              <div className="mb-2 text-red-500 text-sm">{imgUrlError}</div>
-            )}
-          </MaxWidth>
-          <ImageUploadDisplay
-            handleUpload={handleImageUpload}
-            imageType={input.imageType}
-            sourceImage={input.source_image}
-            resetImage={() => {
-              setInput({
-                img2img: false,
-                imgType: '',
-                source_image: ''
-              })
-            }}
-          />
-        </Section>
-        <Section>
-          <SubSectionTitle>Image orientation</SubSectionTitle>
-          <MaxWidth
-            // @ts-ignore
-            maxWidth="480"
-          >
-            <SelectComponent
-              options={orientationOptions}
-              onChange={(obj: { value: string; label: string }) => {
-                handleOrientationSelect(obj.value)
-                setInput({ orientationType: obj.value })
-              }}
-              value={orientationValue}
-            />
-          </MaxWidth>
-        </Section>
-        <Section>
-          <SubSectionTitle>
-            Negative prompt
-            <Tooltip width="180px">
-              Add words or phrases to demphasize from your desired image
-            </Tooltip>
-          </SubSectionTitle>
-          <FlexRow>
+    <div>
+      {/* <Section>
+        <SubSectionTitle>Upload or import and image (img2img)</SubSectionTitle>
+        <MaxWidth
+          // @ts-ignore
+          maxWidth="480"
+        >
+          <FlexRow bottomPadding={8}>
+            <span style={{ lineHeight: '40px', marginRight: '16px' }}>
+              URL:
+            </span>
             <Input
-              // @ts-ignore
               className="mb-2"
               type="text"
-              name="negative"
-              onChange={handleChangeInput}
-              // @ts-ignore
-              value={input.negative}
+              name="img-url"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setImgUrl(e.target.value)
+              }
+              value={imgUrl}
               width="100%"
             />
             <Button
-              title="Clear current input"
-              btnType="secondary"
-              onClick={() => {
-                return setInput({
-                  negative: ''
-                })
-              }}
+              title="Upload image from URL"
+              btnType="primary"
+              onClick={handleImportFromUrl}
+              width="120px"
             >
-              <TrashIcon />
+              Upload
             </Button>
           </FlexRow>
-        </Section>
-        <Section>
-          <SubSectionTitle>Sampler</SubSectionTitle>
-          <MaxWidth
-            // @ts-ignore
-            maxWidth="240"
-          >
-            <SelectComponent
-              options={samplerOptions(input.img2img)}
-              onChange={(obj: { value: string; label: string }) => {
-                setInput({ sampler: obj.value })
-                localStorage.setItem('sampler', obj.value)
-              }}
-              value={samplerValue}
-            />
-          </MaxWidth>
-        </Section>
-        <Section>
-          <SubSectionTitle>
-            Steps
-            <Tooltip width="200px">
-              Fewer steps generally result in quicker image generations. Many
-              models achieve full coherence after a certain number of finite
-              steps (60 - 90). Keep your initial queries in the 30 - 50 range
-              for best results.
-            </Tooltip>
-          </SubSectionTitle>
-          <MaxWidth
-            // @ts-ignore
-            maxWidth="120"
-          >
-            <Input
-              // @ts-ignore
-              className="mb-2"
-              type="text"
-              name="steps"
-              onChange={handleChangeInput}
-              // @ts-ignore
-              value={input.steps}
-              width="100%"
-            />
-          </MaxWidth>
-        </Section>
-        <Section>
-          <SubSectionTitle>
-            Guidance
-            <Tooltip width="200px">
-              Higher numbers follow the prompt more closely. Lower numbers give
-              more creativity.
-            </Tooltip>
-          </SubSectionTitle>
-          <MaxWidth
-            // @ts-ignore
-            maxWidth="120"
-          >
-            <Input
-              // @ts-ignore
-              className="mb-2"
-              type="text"
-              name="cfg_scale"
-              onChange={handleChangeInput}
-              // @ts-ignore
-              value={input.cfg_scale}
-              width="100%"
-            />
-          </MaxWidth>
-        </Section>
-        {input.img2img ||
-          (input.source_processing !== SourceProcessing.Prompt && (
-            <Section>
-              <SubSectionTitle>Denoise</SubSectionTitle>
-              <MaxWidth
-                // @ts-ignore
-                maxWidth="120"
-              >
+          {imgUrlError && (
+            <div className="mb-2 text-red-500 text-sm">{imgUrlError}</div>
+          )}
+        </MaxWidth>
+        <ImageUploadDisplay
+          handleUpload={handleImageUpload}
+          imageType={input.imageType}
+          sourceImage={input.source_image}
+          resetImage={() => {
+            setInput({
+              img2img: false,
+              imgType: '',
+              source_image: ''
+            })
+          }}
+        />
+      </Section> */}
+      <Section>
+        <SubSectionTitle>Image orientation</SubSectionTitle>
+        <MaxWidth
+          // @ts-ignore
+          maxWidth="480"
+        >
+          <SelectComponent
+            options={orientationOptions}
+            onChange={(obj: { value: string; label: string }) => {
+              handleOrientationSelect(obj.value)
+              setInput({ orientationType: obj.value })
+            }}
+            value={orientationValue}
+          />
+          {orientationValue.value === 'custom' && (
+            <div className="mt-2 flex flex-col gap-4 justify-start">
+              <div className="mt-2 flex flex-row gap-4 items-center">
+                <SubSectionTitle>Width</SubSectionTitle>
+                <Input
+                  // @ts-ignore
+                  type="text"
+                  name="width"
+                  onChange={handleChangeInput}
+                  // @ts-ignore
+                  value={input.width}
+                  width="50px"
+                />
+              </div>
+              <div className="flex flex-row gap-4 items-center">
+                <SubSectionTitle>Height</SubSectionTitle>
                 <Input
                   // @ts-ignore
                   className="mb-2"
                   type="text"
-                  name="denoising_strength"
+                  name="height"
                   onChange={handleChangeInput}
                   // @ts-ignore
-                  value={input.denoising_strength}
-                  width="100%"
+                  value={input.height}
+                  width="50px"
                 />
-              </MaxWidth>
-            </Section>
-          ))}
+              </div>
+            </div>
+          )}
+        </MaxWidth>
+      </Section>
+      <Section>
+        <SubSectionTitle>
+          Negative prompt
+          <Tooltip width="180px">
+            Add words or phrases to demphasize from your desired image
+          </Tooltip>
+        </SubSectionTitle>
+        <FlexRow>
+          <Input
+            // @ts-ignore
+            className="mb-2"
+            type="text"
+            name="negative"
+            onChange={handleChangeInput}
+            // @ts-ignore
+            value={input.negative}
+            width="100%"
+          />
+          <Button
+            title="Clear current input"
+            btnType="secondary"
+            onClick={() => {
+              return setInput({
+                negative: ''
+              })
+            }}
+          >
+            <TrashIcon />
+          </Button>
+        </FlexRow>
+      </Section>
+      <Section>
+        <SubSectionTitle>Sampler</SubSectionTitle>
+        <MaxWidth
+          // @ts-ignore
+          maxWidth="240"
+        >
+          <SelectComponent
+            options={samplerOptions(input.img2img)}
+            onChange={(obj: { value: string; label: string }) => {
+              setInput({ sampler: obj.value })
+              localStorage.setItem('sampler', obj.value)
+            }}
+            value={samplerValue}
+          />
+        </MaxWidth>
+      </Section>
+      <Section>
+        <SubSectionTitle>
+          Steps
+          <Tooltip width="200px">
+            Fewer steps generally result in quicker image generations. Many
+            models achieve full coherence after a certain number of finite steps
+            (60 - 90). Keep your initial queries in the 30 - 50 range for best
+            results.
+          </Tooltip>
+        </SubSectionTitle>
+        <MaxWidth
+          // @ts-ignore
+          maxWidth="120"
+        >
+          <Input
+            // @ts-ignore
+            className="mb-2"
+            type="text"
+            name="steps"
+            onChange={handleChangeInput}
+            // @ts-ignore
+            value={input.steps}
+            width="100%"
+          />
+        </MaxWidth>
+      </Section>
+      <Section>
+        <SubSectionTitle>
+          Guidance
+          <Tooltip width="200px">
+            Higher numbers follow the prompt more closely. Lower numbers give
+            more creativity.
+          </Tooltip>
+        </SubSectionTitle>
+        <MaxWidth
+          // @ts-ignore
+          maxWidth="120"
+        >
+          <Input
+            // @ts-ignore
+            className="mb-2"
+            type="text"
+            name="cfg_scale"
+            onChange={handleChangeInput}
+            // @ts-ignore
+            value={input.cfg_scale}
+            width="100%"
+          />
+        </MaxWidth>
+      </Section>
+      {input.img2img ||
+        (input.source_processing !== SourceProcessing.Prompt && (
+          <Section>
+            <SubSectionTitle>Denoise</SubSectionTitle>
+            <MaxWidth
+              // @ts-ignore
+              maxWidth="120"
+            >
+              <Input
+                // @ts-ignore
+                className="mb-2"
+                type="text"
+                name="denoising_strength"
+                onChange={handleChangeInput}
+                // @ts-ignore
+                value={input.denoising_strength}
+                width="100%"
+              />
+            </MaxWidth>
+          </Section>
+        ))}
+      <Section>
+        <SubSectionTitle>
+          Seed
+          <Tooltip width="140px">Leave seed blank for random.</Tooltip>
+        </SubSectionTitle>
+        <MaxWidth
+          // @ts-ignore
+          maxWidth="240"
+        >
+          <Input
+            // @ts-ignore
+            className="mb-2"
+            type="text"
+            name="seed"
+            onChange={handleChangeInput}
+            // @ts-ignore
+            value={input.seed}
+            width="100%"
+          />
+        </MaxWidth>
+      </Section>
+      {input.source_processing !==
+        (SourceProcessing.InPainting || SourceProcessing.OutPaiting) && (
         <Section>
           <SubSectionTitle>
-            Seed
-            <Tooltip width="140px">Leave seed blank for random.</Tooltip>
+            Model
+            <Tooltip width="240px">
+              Models currently available within the horde. Numbers in
+              paranthesis indicate number of works. Generally, these models will
+              generate images quicker.
+            </Tooltip>
           </SubSectionTitle>
           <MaxWidth
             // @ts-ignore
             maxWidth="240"
           >
-            <Input
-              // @ts-ignore
-              className="mb-2"
-              type="text"
-              name="seed"
-              onChange={handleChangeInput}
-              // @ts-ignore
-              value={input.seed}
-              width="100%"
+            <SelectComponent
+              menuPlacement={'top'}
+              //@ts-ignore
+              options={modelerOptions(models)}
+              onChange={(obj: { value: string; label: string }) => {
+                setInput({ models: [obj.value] })
+              }}
+              value={modelsValue}
             />
           </MaxWidth>
         </Section>
-        {input.source_processing !==
-          (SourceProcessing.InPainting || SourceProcessing.OutPaiting) && (
-          <Section>
-            <SubSectionTitle>
-              Model
-              <Tooltip width="240px">
-                Models currently available within the horde. Numbers in
-                paranthesis indicate number of works. Generally, these models
-                will generate images quicker.
-              </Tooltip>
-            </SubSectionTitle>
-            <MaxWidth
-              // @ts-ignore
-              maxWidth="240"
-            >
-              <SelectComponent
-                menuPlacement={'top'}
-                //@ts-ignore
-                options={modelerOptions(models)}
-                onChange={(obj: { value: string; label: string }) => {
-                  setInput({ models: [obj.value] })
-                }}
-                value={modelsValue}
-              />
-            </MaxWidth>
-          </Section>
-        )}
-        <Section>
-          <SubSectionTitle>Number of images</SubSectionTitle>
-          <MaxWidth
+      )}
+      <Section>
+        <SubSectionTitle>Number of images</SubSectionTitle>
+        <MaxWidth
+          // @ts-ignore
+          maxWidth="120"
+        >
+          <Input
             // @ts-ignore
-            maxWidth="120"
-          >
-            <Input
-              // @ts-ignore
-              className="mb-2"
-              type="text"
-              name="numImages"
-              onChange={handleChangeInput}
-              // @ts-ignore
-              value={input.numImages}
-              width="100%"
-            />
-          </MaxWidth>
-        </Section>
-      </div>
-    </Panel>
+            className="mb-2"
+            type="text"
+            name="numImages"
+            onChange={handleChangeInput}
+            // @ts-ignore
+            value={input.numImages}
+            width="100%"
+          />
+        </MaxWidth>
+      </Section>
+    </div>
   )
 }
 

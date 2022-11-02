@@ -22,6 +22,7 @@ import AdvancedOptionsPanel from '../components/CreatePage/AdvancedOptionsPanel'
 import CloseIcon from '../components/icons/CloseIcon'
 import ImageSquare from '../components/ImageSquare'
 import { validSampler } from '../utils/validationUtils'
+import OptionsPanel from '../components/CreatePage/OptionsPanel'
 
 interface InputTarget {
   name: string
@@ -302,6 +303,13 @@ const Home: NextPage = () => {
           </div>
         </div>
       </div>
+      <OptionsPanel
+        handleChangeInput={handleChangeValue}
+        handleImageUpload={handleImageUpload}
+        handleOrientationSelect={handleOrientationSelect}
+        input={input}
+        setInput={setInput}
+      />
       {showAdvanced && (
         <AdvancedOptionsPanel
           handleChangeInput={handleChangeValue}
