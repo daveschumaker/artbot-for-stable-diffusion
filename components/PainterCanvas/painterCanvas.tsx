@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { useRouter } from 'next/router'
 import { fabric } from 'fabric'
 import 'fabric-history'
 import styled from 'styled-components'
@@ -11,7 +10,6 @@ import { Button } from '../UI/Button'
 import UndoIcon from '../icons/UndoIcon'
 import RedoIcon from '../icons/RedoIcon'
 import SelectComponent from '../UI/Select'
-import { savePrompt } from '../../utils/promptUtils'
 import TrashIcon from '../icons/TrashIcon'
 import UploadIcon from '../icons/UploadIcon'
 import CaptureClickOverlay from '../UI/CaptureClickOverly'
@@ -56,7 +54,7 @@ const Toolbar = styled.div`
   height: 52px;
   justify-content: space-between;
   margin-bottom: 8px;
-  padding: 0 8px;
+  padding: 0;
   position: relative;
   width: 100%;
 `
@@ -100,37 +98,67 @@ const WrappedPicker = styled.div`
 `
 
 const calcWindowSizes = (orientation: any) => {
-  const width = window.innerWidth
-  const padding = 24
+  let width = window.innerWidth
+  const padding = 32
 
-  if (width < 802) {
-    if (orientation === 'landscape') {
-      const newWidth = width - padding
-      const newHeight = Math.round(
-        (canvasSizes.landscape.height * newWidth) / canvasSizes.landscape.width
-      )
+  let containerWidth = 1024 - padding
 
-      return {
-        height: newHeight,
-        width: newWidth
-      }
-    } else if (orientation === 'portrait') {
-      const newWidth = width - padding
-      const newHeight = Math.round(
-        (canvasSizes.portrait.height * newWidth) / canvasSizes.portrait.width
-      )
+  if (width < 1280) {
+    containerWidth = 768 - padding
+  }
 
-      return {
-        height: newHeight,
-        width: newWidth
-      }
-    } else {
-      const newSize = width - padding
+  if (width < 1024) {
+    containerWidth = 768 - 48
+  }
 
-      return {
-        height: newSize,
-        width: newSize
-      }
+  if (width < 768) {
+    containerWidth = width - 64
+  }
+
+  if (width < 640) {
+    containerWidth = width - 46
+  }
+
+  /**
+    if (options.n2){
+  		return options.n2 * options.d1 / options.n1;
+  	} else {
+  		return options.n1 * options.d2 / options.d1;
+  	}
+
+    768 / 512 === 1024 / x
+  */
+
+  if (orientation === 'landscape') {
+    const newHeight = Math.round(
+      (canvasSizes.landscape.height * containerWidth) /
+        canvasSizes.landscape.width
+    )
+
+    console.log(`width`, width)
+    console.log(`newWidth`, containerWidth)
+    console.log(`newHeight`, newHeight)
+
+    return {
+      height: newHeight,
+      width: containerWidth
+    }
+  } else if (orientation === 'portrait') {
+    const newWidth = containerWidth - padding
+    const newHeight = Math.round(
+      (canvasSizes.portrait.height * newWidth) / canvasSizes.portrait.width
+    )
+
+    return {
+      height: newHeight,
+      width: newWidth
+    }
+  } else {
+    const newSize = containerWidth - padding
+
+    return {
+      height: newSize,
+      width: newSize
     }
   }
 
@@ -138,9 +166,12 @@ const calcWindowSizes = (orientation: any) => {
   return Object.assign({}, canvasSizes[orientation])
 }
 
-const PaintCanvas = () => {
-  const router = useRouter()
+interface Props {
+  setActiveNav: any
+  setInput: any
+}
 
+const PaintCanvas = ({ setActiveNav, setInput }: Props) => {
   const [orientation, setOrientation] = useState({
     value: 'landscape',
     label: 'Landscape'
@@ -194,9 +225,10 @@ const PaintCanvas = () => {
   }
 
   const changeOrientation = (obj: any) => {
+    let innerWidth = window.innerWidth
     setOrientation(obj)
 
-    const result = calcWindowSizes(obj.value)
+    const result = calcWindowSizes(obj.value, innerWidth)
     const { height, width } = result
 
     // @ts-ignore
@@ -214,15 +246,13 @@ const PaintCanvas = () => {
   }
 
   const initFabric = () => {
-    const width = window.innerWidth
+    let innerWidth = window.innerWidth
     const initSettings = Object.assign({}, defaultSettings)
 
-    if (width < 802) {
-      const data = calcWindowSizes(orientation.value)
+    const data = calcWindowSizes(orientation.value, innerWidth)
 
-      initSettings.width = data.width
-      initSettings.height = data.height
-    }
+    initSettings.width = data.width
+    initSettings.height = data.height
 
     // basically: fabricRef.current === canvas
     // @ts-ignore
@@ -264,7 +294,8 @@ const PaintCanvas = () => {
       return
     }
 
-    const windowSize = calcWindowSizes(orientation.value)
+    let innerWidth = window.innerWidth
+    const windowSize = calcWindowSizes(orientation.value, innerWidth)
 
     let imgConfig = {
       quality: 0.9,
@@ -329,23 +360,20 @@ const PaintCanvas = () => {
     const imageType = 'image/png'
     const base64String = data.split('data:image/png;base64,')[1]
 
-    savePrompt({
+    setInput({
       img2img: true,
       imageType,
-      sampler: 'k_euler_a',
-      source_image: base64String,
-      orientation: orientation.value,
       //@ts-ignore
-
       height: canvasSizes[orientation.value].height,
-
       //@ts-ignore
-      width: canvasSizes[orientation.value].width
+      width: canvasSizes[orientation.value].width,
+      source_image: base64String,
+      source_processing: 'img2img'
     })
-
-    router.push(`/?edit=true`)
+    setActiveNav('img2img')
   }
 
+  // <div className="overflow-x-hidden">
   return (
     <div>
       <Toolbar>

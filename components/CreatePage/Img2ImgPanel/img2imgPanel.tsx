@@ -107,37 +107,32 @@ const Img2ImgPanel = ({ input, setInput }: Props) => {
             <SubSectionTitle>
               Upload an image from your device or import from URL
             </SubSectionTitle>
-            <MaxWidth
-              // @ts-ignore
-              maxWidth="480"
-            >
-              <FlexRow bottomPadding={8}>
-                <span style={{ lineHeight: '40px', marginRight: '16px' }}>
-                  URL:
-                </span>
-                <Input
-                  className="mb-2"
-                  type="text"
-                  name="img-url"
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setImgUrl(e.target.value)
-                  }
-                  value={imgUrl}
-                  width="100%"
-                />
-                <Button
-                  title="Upload image from URL"
-                  btnType="primary"
-                  onClick={handleImportFromUrl}
-                  width="120px"
-                >
-                  Upload
-                </Button>
-              </FlexRow>
-              {imgUrlError && (
-                <div className="mb-2 text-red-500 text-sm">{imgUrlError}</div>
-              )}
-            </MaxWidth>
+            <FlexRow bottomPadding={8}>
+              <span style={{ lineHeight: '40px', marginRight: '16px' }}>
+                URL:
+              </span>
+              <Input
+                className="mb-2"
+                type="text"
+                name="img-url"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setImgUrl(e.target.value)
+                }
+                value={imgUrl}
+                width="100%"
+              />
+              <Button
+                title="Upload image from URL"
+                btnType="primary"
+                onClick={handleImportFromUrl}
+                width="120px"
+              >
+                Upload
+              </Button>
+            </FlexRow>
+            {imgUrlError && (
+              <div className="mb-2 text-red-500 text-sm">{imgUrlError}</div>
+            )}
           </>
         )}
         {!input.source_image && <Dropzone handleUpload={saveImage} />}
@@ -161,7 +156,7 @@ const Img2ImgPanel = ({ input, setInput }: Props) => {
                 Clear
               </Button>
             </div>
-            <div className="align-top table w-full mx-auto">
+            <div className="flex flex-row align-top justify-around w-full mx-auto">
               <Image
                 base64String={input.source_image}
                 alt="Test"
@@ -172,20 +167,6 @@ const Img2ImgPanel = ({ input, setInput }: Props) => {
             </div>
           </>
         )}
-        {/* <ImageUploadDisplay
-          handleUpload={handleImageUpload}
-          imageType={input.imageType}
-          sourceImage={input.source_image}
-          resetImage={() => {
-            setInput({
-              img2img: false,
-              imgType: '',
-              source_image: '',
-              source_processing: '',
-              source_mask: ''
-            })
-          }}
-        /> */}
       </Section>
     </div>
   )

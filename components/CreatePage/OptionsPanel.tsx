@@ -1,5 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { useRouter } from 'next/router'
+
 import Panel from '../UI/Panel'
 import SectionTitle from '../UI/SectionTitle'
 import AdvancedOptionsPanel from './AdvancedOptionsPanel'
@@ -43,7 +45,24 @@ const OptionsPanel = ({
   input,
   setInput
 }: Props) => {
+  const router = useRouter()
   const [activeNav, setActiveNav] = useState('advanced')
+
+  useEffect(() => {
+    console.log(`query`, router.query)
+    const { panel } = router.query
+
+    if (panel === 'inpaiting') {
+      setActiveNav('inpainting')
+    } else if (panel === 'painter') {
+      setActiveNav('painter')
+    } else if (panel === 'img2img') {
+      setActiveNav('img2img')
+    } else {
+      setActiveNav('advanced')
+    }
+  }, [router.query])
+
   return (
     <Panel>
       <SectionTitle>
@@ -52,28 +71,40 @@ const OptionsPanel = ({
         {activeNav === 'painter' && `Painter`}
         {activeNav === 'inpainting' && `Inpainting`}
       </SectionTitle>
-      <ul className="flex flex-row gap-4 md:gap-8 mb-3">
+      <ul className="flex flex-row gap-2 md:gap-8 mb-3 text-sm md:text-base">
         <NavItem
           active={activeNav === 'advanced'}
-          onClick={() => setActiveNav('advanced')}
+          onClick={() => {
+            setActiveNav('advanced')
+            router.push(`/`)
+          }}
         >
           [ advanced ]
         </NavItem>
         <NavItem
           active={activeNav === 'img2img'}
-          onClick={() => setActiveNav('img2img')}
+          onClick={() => {
+            router.push(`?panel=img2img`)
+            setActiveNav('img2img')
+          }}
         >
           [ img2img ]
         </NavItem>
         <NavItem
           active={activeNav === 'painter'}
-          onClick={() => setActiveNav('painter')}
+          onClick={() => {
+            router.push(`?panel=painter`)
+            setActiveNav('painter')
+          }}
         >
           [ painter ]
         </NavItem>
         <NavItem
           active={activeNav === 'inpainting'}
-          onClick={() => setActiveNav('inpainting')}
+          onClick={() => {
+            router.push(`?panel=inpainting`)
+            setActiveNav('inpainting')
+          }}
         >
           [ inpainting ]
         </NavItem>
@@ -90,7 +121,9 @@ const OptionsPanel = ({
       {activeNav === 'img2img' && (
         <Img2ImgPanel input={input} setInput={setInput} />
       )}
-      {activeNav === 'painter' && <PainterPanel />}
+      {activeNav === 'painter' && (
+        <PainterPanel setActiveNav={setActiveNav} setInput={setInput} />
+      )}
       {activeNav === 'inpainting' && <InpaintingPanel />}
     </Panel>
   )

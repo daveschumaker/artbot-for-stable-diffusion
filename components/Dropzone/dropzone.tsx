@@ -22,20 +22,20 @@ const StyledIcon = styled(PlusIcon)`
 
 const StyledDropZone = styled.div`
   align-items: center;
-  /* background-color: #fafafa; */
-  border-color: #eeeeee;
+  border-color: ${(props) => props.theme.text};
   border-radius: 4px;
   border-style: dashed;
   border-width: 2px;
-  color: #bdbdbd;
+  color: ${(props) => props.theme.text};
   cursor: pointer;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
   font-size: 16px;
+  height: 200px;
+  justify-content: center;
   outline: none;
   padding: 16px;
-  justify-content: center;
   text-align: center;
   transition: border 0.24s ease-in-out;
   width: 100%;
