@@ -10,6 +10,7 @@ import { Button } from '../../UI/Button'
 import TrashIcon from '../../icons/TrashIcon'
 import { ModelDetails } from '../../../types'
 import { SourceProcessing } from '../../../utils/promptUtils'
+import { nearestWholeMultiple } from '../../../utils/imageUtils'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -139,33 +140,67 @@ const AdvancedOptionsPanel = ({
             value={orientationValue}
           />
           {orientationValue?.value === 'custom' && (
-            <div className="mt-2 flex flex-col gap-4 justify-start">
-              <div className="mt-2 flex flex-row gap-4 items-center">
-                <SubSectionTitle>Width</SubSectionTitle>
-                <Input
-                  // @ts-ignore
-                  type="text"
-                  name="width"
-                  onChange={handleChangeInput}
-                  // @ts-ignore
-                  value={input.width}
-                  width="50px"
-                />
+            <>
+              <div className="mt-2 flex flex-col gap-4 justify-start">
+                <div className="mt-2 flex flex-row gap-4 items-center">
+                  <SubSectionTitle>Width</SubSectionTitle>
+                  <Input
+                    // @ts-ignore
+                    type="text"
+                    name="width"
+                    error={hasError.width}
+                    onChange={handleChangeInput}
+                    onBlur={(e: any) => {
+                      if (
+                        isNaN(e.target.value) ||
+                        e.target.value < 64 ||
+                        e.target.value > 1024
+                      ) {
+                        setHasError({
+                          width:
+                            'Please enter a valid number between 64 and 1024'
+                        })
+                        return
+                      }
+
+                      if (hasError.width) {
+                        setHasError({})
+                      }
+
+                      setInput({
+                        width: nearestWholeMultiple(e.target.value)
+                      })
+                    }}
+                    // @ts-ignore
+                    value={input.width}
+                    width="75px"
+                  />
+                </div>
+                {hasError.width && (
+                  <div className="mb-2 text-red-500 font-bold">
+                    {hasError.width}
+                  </div>
+                )}
+                <div className="flex flex-row gap-4 items-center">
+                  <SubSectionTitle>Height</SubSectionTitle>
+                  <Input
+                    // @ts-ignore
+                    className="mb-2"
+                    type="text"
+                    name="height"
+                    onChange={handleChangeInput}
+                    // @ts-ignore
+                    value={input.height}
+                    width="75px"
+                  />
+                </div>
               </div>
-              <div className="flex flex-row gap-4 items-center">
-                <SubSectionTitle>Height</SubSectionTitle>
-                <Input
-                  // @ts-ignore
-                  className="mb-2"
-                  type="text"
-                  name="height"
-                  onChange={handleChangeInput}
-                  // @ts-ignore
-                  value={input.height}
-                  width="50px"
-                />
+              <div className="block text-xs mt-2 w-full">
+                Height and widths must be divisible by 64. Enter your desired
+                dimensions and it will be automatically convereted to nearest
+                valid integer.
               </div>
-            </div>
+            </>
           )}
         </MaxWidth>
       </Section>
