@@ -140,11 +140,7 @@ const Home: NextPage = () => {
       imageJobData.canvasStore = { ...getCanvasStore() }
     }
 
-    console.log(`input??`, input)
-
     const res = await createImageJob(imageJobData)
-
-    console.log(`wtffff`, res)
 
     // @ts-ignore
     const { status, message } = res

@@ -6,14 +6,12 @@ import { deleteCompletedImage } from '../utils/db'
 import ConfirmationModal from './ConfirmationModal'
 import { useCallback, useState } from 'react'
 import TrashIcon from './icons/TrashIcon'
-import DownloadIcon from './icons/DownloadIcon'
 import { Button } from './UI/Button'
 import { trackEvent, trackGaEvent } from '../api/telemetry'
 import RefreshIcon from './icons/RefreshIcon'
 import UploadIcon from './icons/UploadIcon'
 import {
   copyEditPrompt,
-  downloadImage,
   rerollImage,
   uploadImg2Img
 } from '../controllers/imageDetailsCommon'
@@ -63,7 +61,6 @@ const ImageDetails = ({
   const router = useRouter()
 
   const [pending, setPending] = useState(false)
-  const [pendingDownload, setPendingDownload] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
 
   const handleDeleteImageClick = async (jobId: string) => {
@@ -111,31 +108,6 @@ const ImageDetails = ({
     router.push(`/?panel=img2img&edit=true`)
   }
 
-  const handleDownloadClick = async (imageDetails: any) => {
-    if (pendingDownload) {
-      return
-    }
-
-    setPendingDownload(true)
-
-    const imageDownload = await downloadImage(imageDetails)
-    const { success } = imageDownload
-
-    if (success) {
-      trackEvent({
-        event: 'DOWNLOAD_PNG',
-        context: 'ImagePage'
-      })
-      trackGaEvent({
-        action: 'btn_download_png',
-        params: {
-          context: 'ImagePage'
-        }
-      })
-    }
-    setPendingDownload(false)
-  }
-
   const handleRerollClick = useCallback(
     async (imageDetails: any) => {
       if (pending) {
@@ -175,7 +147,7 @@ const ImageDetails = ({
       <div className="pt-2 font-mono">{imageDetails.prompt}</div>
       <div className="font-mono text-xs mt-2 w-full flex flex-row justify-between">
         <div>
-          -- Settings --
+          -- Image Details --
           <ul>
             Job:{' '}
             <Linker
@@ -195,6 +167,8 @@ const ImageDetails = ({
             {imageDetails.negative && (
               <li>Negative prompt: {imageDetails.negative}</li>
             )}
+            <li>Height: {imageDetails.height} px</li>
+            <li>Width: {imageDetails.width} px</li>
             <li>Sampler: {imageDetails.sampler}</li>
             <li>
               Model:{' '}
@@ -242,7 +216,7 @@ const ImageDetails = ({
                     denoising_strength: imageDetails.denoising_strength,
                     models: imageDetails.models
                   })
-                  router.push(`/?edit=true`)
+                  router.push(`/?panel=img2img&edit=true`)
                 }}
               >
                 <UploadIcon />
@@ -272,14 +246,6 @@ const ImageDetails = ({
           >
             <UploadIcon className="mx-auto" />
             <MobileHideText>Use for img2img</MobileHideText>
-          </Button>
-          <Button
-            title="Download PNG"
-            onClick={() => handleDownloadClick(imageDetails)}
-            disabled={pendingDownload}
-          >
-            <DownloadIcon className="mx-auto" />
-            <MobileHideText>Download PNG</MobileHideText>
           </Button>
         </div>
         <div className="inline-block w-1/2 flex flex-row justify-end gap-2">

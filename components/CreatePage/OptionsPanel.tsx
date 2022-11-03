@@ -10,7 +10,6 @@ import InpaintingPanel from './InpaintingPanel'
 import PainterPanel from './PainterPanel'
 import Uploader from './Uploader'
 import { clearCanvasStore, setI2iUploaded } from '../../store/canvasStore'
-import { Button } from '../UI/Button'
 import { SourceProcessing } from '../../utils/promptUtils'
 import WarningPanel from './WarningPanel'
 
@@ -77,14 +76,14 @@ const OptionsPanel = ({
     })
 
     setInput({
+      height: data.height,
+      width: data.width,
       imageType: data.imageType,
       source_image: data.source_image,
       source_mask: '',
       source_processing: 'inpainting'
     })
   }
-
-  console.log(`options panel#input`, input)
 
   return (
     <Panel>
@@ -113,7 +112,7 @@ const OptionsPanel = ({
         >
           [ img2img ]
         </NavItem>
-        <NavItem
+        {/* <NavItem
           active={activeNav === 'painter'}
           onClick={() => {
             router.push(`?panel=painter`)
@@ -121,7 +120,7 @@ const OptionsPanel = ({
           }}
         >
           [ painter ]
-        </NavItem>
+        </NavItem> */}
         <NavItem
           active={activeNav === 'inpainting'}
           onClick={() => {

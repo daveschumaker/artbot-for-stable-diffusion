@@ -131,7 +131,6 @@ const Inpaint = ({ setInput }: Props) => {
       return
     }
 
-    console.log(`????111`)
     fabric.Image.fromURL(fullDataString, function (image) {
       if (!canvasRef.current || !image) {
         return
@@ -143,8 +142,6 @@ const Inpaint = ({ setInput }: Props) => {
       const containerWidth = getPanelWidth(innerWidth)
       let newHeight = image.height || 512
       let newWidth = containerWidth
-
-      console.log(`????2222`)
 
       // @ts-ignore
       if (image?.width > containerWidth && image.width >= image.height) {
@@ -557,6 +554,7 @@ const Inpaint = ({ setInput }: Props) => {
         })
 
         if (canvasRef.current) {
+          canvasRef.current.backgroundColor = 'white'
           canvasRef.current.setHeight(getI2IString().height)
           canvasRef.current.setWidth(getI2IString().width)
           canvasRef.current.renderAll()

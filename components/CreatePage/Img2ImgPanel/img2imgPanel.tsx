@@ -35,9 +35,6 @@ const Img2ImgPanel = ({ input, saveForInpaint, setInput }: Props) => {
     height = 512,
     width = 512
   }) => {
-    console.log(`imageTYpe?`, imageType)
-    console.log(`source_image?`, source_image)
-
     setInput({
       img2img: true,
       imageType,
@@ -56,8 +53,6 @@ const Img2ImgPanel = ({ input, saveForInpaint, setInput }: Props) => {
     router.push('?panel=inpainting')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [input])
-
-  console.log(`input??`, input)
 
   return (
     <div>

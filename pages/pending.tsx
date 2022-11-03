@@ -28,7 +28,6 @@ const PendingPage = () => {
 
   const handleRetryJob = async (jobId: string) => {
     const details = await getPendingJobDetails(jobId)
-    console.log(`details?`, details)
 
     deletePendingJobFromApi(jobId)
     await deletePendingJobFromDb(jobId)

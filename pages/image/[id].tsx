@@ -2,11 +2,11 @@
 /* eslint-disable @next/next/no-img-element */
 import Head from 'next/head'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import LazyLoad from 'react-lazyload'
 import Masonry from 'react-responsive-masonry'
 import styled from 'styled-components'
+import { useRouter } from 'next/router'
 
 import ImageDetails from '../../components/ImageDetails'
 import PageTitle from '../../components/UI/PageTitle'
@@ -14,10 +14,34 @@ import PageTitle from '../../components/UI/PageTitle'
 import Spinner from '../../components/Spinner'
 import { useWindowSize } from '../../hooks/useWindowSize'
 import { fetchRelatedImages, getImageDetails } from '../../utils/db'
+import {
+  downloadImage,
+  uploadImg2Img,
+  uploadInpaint
+} from '../../controllers/imageDetailsCommon'
+import { trackEvent, trackGaEvent } from '../../api/telemetry'
 
 const StyledImage = styled.img`
   box-shadow: 0 16px 38px -12px rgb(0 0 0 / 56%),
     0 4px 25px 0px rgb(0 0 0 / 12%), 0 8px 10px -5px rgb(0 0 0 / 20%);
+`
+
+const Section = styled.div`
+  padding-top: 8px;
+
+  &:first-child {
+    padding-top: 0;
+  }
+`
+
+const OptionsLink = styled.div`
+  display: inline-block;
+  color: ${(props) => props.theme.navLinkActive};
+  cursor: pointer;
+
+  &:hover {
+    color: ${(props) => props.theme.navLinkNormal};
+  }
 `
 
 const ImagePage = () => {
@@ -27,6 +51,7 @@ const ImagePage = () => {
 
   const [isInitialLoad, setIsInitialLoad] = useState(true)
   const [imageDetails, setImageDetails] = useState({})
+  const [pendingDownload, setPendingDownload] = useState(false)
   const [relatedImages, setRelatedImages] = useState([])
 
   const fetchImageDetails = async (jobId: string) => {
@@ -48,6 +73,31 @@ const ImagePage = () => {
       const foundImages = await fetchRelatedImages(parentJobId)
       setRelatedImages(foundImages)
     }
+  }
+
+  const handleDownloadClick = async () => {
+    if (pendingDownload) {
+      return
+    }
+
+    setPendingDownload(true)
+
+    const imageDownload = await downloadImage(imageDetails)
+    const { success } = imageDownload
+
+    if (success) {
+      trackEvent({
+        event: 'DOWNLOAD_PNG',
+        context: 'ImagePage'
+      })
+      trackGaEvent({
+        action: 'btn_download_png',
+        params: {
+          context: 'ImagePage'
+        }
+      })
+    }
+    setPendingDownload(false)
   }
 
   useEffect(() => {
@@ -98,18 +148,63 @@ const ImagePage = () => {
         </>
       )}
       {!isInitialLoad && imageDetails?.base64String && (
-        <div key={imageDetails.jobId} className="text-center pb-6">
-          <StyledImage
-            src={'data:image/webp;base64,' + imageDetails.base64String}
-            className="mx-auto rounded"
-            alt={imageDetails.prompt}
-          />
-          <ImageDetails
-            imageDetails={imageDetails}
-            onDelete={handleDeleteImageClick}
-          />
-        </div>
+        <>
+          <div key={imageDetails.jobId} className="text-center pb-6">
+            <StyledImage
+              src={'data:image/webp;base64,' + imageDetails.base64String}
+              className="mx-auto rounded"
+              alt={imageDetails.prompt}
+            />
+            <ImageDetails
+              imageDetails={imageDetails}
+              onDelete={handleDeleteImageClick}
+            />
+          </div>
+          <div className="mb-4">
+            <PageTitle>Advanced Options</PageTitle>
+            <Section>
+              <OptionsLink
+                onClick={() => {
+                  console.log(`what are we sending?`, imageDetails)
+                  uploadImg2Img(imageDetails)
+                  router.push(`/?panel=img2img&edit=true`)
+                }}
+              >
+                [ use for img2img ]
+              </OptionsLink>
+            </Section>
+            <Section>
+              <OptionsLink
+                onClick={() => {
+                  uploadInpaint(imageDetails)
+                  router.push(`/?panel=inpainting&edit=true`)
+                }}
+              >
+                [ use for inpainting ]
+              </OptionsLink>
+            </Section>
+            {imageDetails.canvasStore && (
+              <Section>
+                <OptionsLink
+                  onClick={() => {
+                    const clone = true
+                    uploadInpaint(imageDetails, clone)
+                    router.push(`/?panel=inpainting&edit=true`)
+                  }}
+                >
+                  [ clone and edit inpainting mask ]
+                </OptionsLink>
+              </Section>
+            )}
+            <Section>
+              <OptionsLink onClick={() => handleDownloadClick()}>
+                [ download PNG {pendingDownload && '(processing...)'} ]
+              </OptionsLink>
+            </Section>
+          </div>
+        </>
       )}
+
       {!isInitialLoad && relatedImages.length > 1 && (
         <div className="pt-2 border-0 border-t-2 border-dashed border-slate-500">
           <PageTitle>Related images</PageTitle>
