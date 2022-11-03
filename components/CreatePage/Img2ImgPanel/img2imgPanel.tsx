@@ -57,7 +57,9 @@ const Img2ImgPanel = ({ input, saveForInpaint, setInput }: Props) => {
   return (
     <div>
       <Section>
-        {!input.source_image && <Uploader handleSaveImage={saveImage} />}
+        {!input.source_image && (
+          <Uploader handleSaveImage={saveImage} type="img2img" />
+        )}
         {input.source_image && (
           <>
             <div className="flex flex-row mb-4 gap-2">

@@ -40,7 +40,7 @@ const ImageUploadDisplay = ({
           <CloseIcon />
         </div>
       )}
-      {!sourceImage && <Dropzone handleUpload={handleUpload} />}
+      {!sourceImage && <Dropzone handleUpload={handleUpload} type="img2img" />}
     </StyledWrapper>
   )
 }

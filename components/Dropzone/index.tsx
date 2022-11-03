@@ -5,6 +5,12 @@ const DynamicDropzone = dynamic(() => import('./dropzone'), {
   ssr: false
 })
 
-export default function FileUploader({ handleUpload }: { handleUpload: any }) {
-  return <DynamicDropzone handleUpload={handleUpload} />
+export default function FileUploader({
+  handleUpload,
+  type
+}: {
+  handleUpload: any
+  type: string
+}) {
+  return <DynamicDropzone handleUpload={handleUpload} type={type} />
 }
