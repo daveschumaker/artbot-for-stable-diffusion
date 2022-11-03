@@ -561,7 +561,6 @@ const Inpaint = ({ setInput }: Props) => {
         canvasRef.current.renderAll(canvasRef.current)
       }, 250)
     } else if (getCanvasStore().canvasRef) {
-      const { objects } = getCanvasStore().canvasRef
       const { height, width } = getCanvasStore()
       initCanvas({ height, width })
 
@@ -595,7 +594,7 @@ const Inpaint = ({ setInput }: Props) => {
 
         canvasRef.current.setHeight(height)
         canvasRef.current.setWidth(width)
-        canvasRef.current.renderAll(canvasRef.current)
+        canvasRef.current.renderAll()
       }, 50)
     } else {
       initCanvas()
@@ -629,12 +628,9 @@ const Inpaint = ({ setInput }: Props) => {
         <Button onClick={handleToggle}>
           {drawMode === 'paint' ? <BrushIcon /> : <EraserIcon />}
         </Button>
-        {/* <UploadButton label="" handleFile={handleFileSelect} /> */}
         <Button onClick={saveImageMask}>
           <DownloadIcon />
         </Button>
-
-        {/* <Button onClick={handleUseImageClick}>USE</Button> */}
       </div>
       <StyledCanvas id="canvas" ref={canvasElementRef} />
     </div>
