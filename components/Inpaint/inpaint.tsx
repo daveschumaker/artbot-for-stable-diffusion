@@ -150,12 +150,14 @@ const Inpaint = ({ setInput }: Props) => {
         image.scaleToWidth(containerWidth)
 
         // @ts-ignore
-      } else if (image.height > image.width) {
+      } else if (image.height > image.width && image.width > containerWidth) {
         newWidth = getCanvasWidth({
           baseHeight: image.height,
           baseWidth: image.width,
           foundHeight: newHeight
         })
+
+        newWidth = containerWidth
 
         image.scaleToHeight(newHeight)
       } else if (image.height === image.width) {
@@ -503,7 +505,21 @@ const Inpaint = ({ setInput }: Props) => {
     undoHistory = []
 
     if (!getCanvasStore().canvasRef && getI2IString().base64String) {
-      initCanvas({ height: getI2IString().height, width: getI2IString().width })
+      const innerWidth = window.innerWidth
+      const containerWidth = getPanelWidth(innerWidth)
+      let newHeight = getI2IString().height
+      let newWidth = getI2IString().width
+
+      if (newWidth > containerWidth) {
+        newHeight = getCanvasHeight({
+          baseHeight: getI2IString().height,
+          baseWidth: getI2IString().width,
+          foundWidth: containerWidth
+        })
+        newWidth = containerWidth
+      }
+
+      initCanvas({ height: newHeight, width: newWidth })
 
       setTimeout(() => {
         handleFileSelect({
@@ -513,10 +529,10 @@ const Inpaint = ({ setInput }: Props) => {
         })
 
         if (canvasRef.current) {
-          canvasRef.current.backgroundColor = 'white'
-          canvasRef.current.setHeight(getI2IString().height)
-          canvasRef.current.setWidth(getI2IString().width)
-          canvasRef.current.renderAll()
+          // canvasRef.current.backgroundColor = 'white'
+          // canvasRef.current.setHeight(newHeight)
+          // canvasRef.current.setWidth(newWidth)
+          // canvasRef.current.renderAll()
         }
       }, 250)
     } else if (getCanvasStore().canvasRef) {
