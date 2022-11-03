@@ -241,9 +241,29 @@ export const createImage = async (
       jobId: id
     }
   } catch (err) {
+    apiCooldown()
+
+    // Handles weird issue where Safari encodes API key using unicode text.
+    if (
+      //@ts-ignore
+      err.name === 'TypeError' &&
+      //@ts-ignore
+      err.message.indexOf(`Header 'apikey' has invalid value`) >= 0
+    ) {
+      trackEvent({
+        event: 'API_KEY_ERROR',
+        content: 'createImageApi'
+      })
+      return {
+        success: false,
+        status: 'API_KEY_ERROR',
+        message:
+          'Character encoding issue with apikey. Please go to settings page to clear and re-renter your API key.'
+      }
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
     const { source_image, ...rest } = imageParams
-    apiCooldown()
     trackEvent({
       event: 'UNKNOWN_ERROR',
       content: 'createImageApi',
