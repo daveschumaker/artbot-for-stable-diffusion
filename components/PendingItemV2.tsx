@@ -21,6 +21,7 @@ interface JobDetails {
   jobStatus: string
   timestamp: number
   wait_time: number
+  initWaitTime: number
 }
 
 const StyledContainer = styled.div`
@@ -130,6 +131,8 @@ const PendingItem = ({ handleDeleteJob, handleRetryJob, jobId }) => {
         return
       }
 
+      console.log(`JobDEETZ`, jobDetails)
+
       const { jobStatus, timestamp, wait_time } = jobDetails
 
       if (!wait_time || jobStatus !== 'processing') {
@@ -174,6 +177,8 @@ const PendingItem = ({ handleDeleteJob, handleRetryJob, jobId }) => {
   if (initialLoad || !jobDetails) {
     return null
   }
+
+  const elapsedTimeSec = Math.round((Date.now() - jobDetails.timestamp) / 1000)
 
   return (
     <StyledContainer>
@@ -259,7 +264,6 @@ const PendingItem = ({ handleDeleteJob, handleRetryJob, jobId }) => {
             )}
             {jobDetails.jobStatus !== 'done' && (
               <div className="flex flex-row gap-2">
-                <Button onClick={() => handleRetryJob(jobId)}>Retry?</Button>
                 <Button
                   btnType="secondary"
                   onClick={() => handleDeleteJob(jobId)}
@@ -271,6 +275,26 @@ const PendingItem = ({ handleDeleteJob, handleRetryJob, jobId }) => {
             )}
           </div>
         </StyledInfoDiv>
+        {elapsedTimeSec > 2 * jobDetails.initWaitTime &&
+          jobDetails.jobStatus !== 'done' && (
+            <div className="w-full flex flex-row items-start justify-end mt-2">
+              <div className="w-[80px]">
+                <AlertTriangleIcon size={24} />
+              </div>
+              <div className="flex flex-row">
+                <div className="ml-2 mr-2 text-sm">
+                  Job seems to have stalled. This can happen if a worker goes
+                  offline or crashes without completing the request. Do you want
+                  to automatically cancel and retry this request?
+                </div>
+              </div>
+              <div>
+                <div className="w-[120px] flex justify-end">
+                  <Button onClick={() => handleRetryJob(jobId)}>Retry?</Button>
+                </div>
+              </div>
+            </div>
+          )}
         {jobDetails.jobStatus === 'processing' && (
           <ProgressBarPosition>
             <ProgressBar pct={calcTime.pctComplete} />

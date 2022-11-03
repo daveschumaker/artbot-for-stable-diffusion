@@ -30,9 +30,10 @@ const SubSectionTitle = styled.div`
 
 interface Props {
   handleSaveImage: any
+  type: string
 }
 
-const Uploader = ({ handleSaveImage }: Props) => {
+const Uploader = ({ handleSaveImage, type = 'img2img' }: Props) => {
   const [imgUrl, setImgUrl] = useState('')
   const [imgUrlError, setImgUrlError] = useState('')
 
@@ -82,7 +83,7 @@ const Uploader = ({ handleSaveImage }: Props) => {
       {imgUrlError && (
         <div className="mb-2 text-red-500 text-lg font-bold">{imgUrlError}</div>
       )}
-      <Dropzone handleUpload={handleSaveImage} />
+      <Dropzone handleUpload={handleSaveImage} type={type} />
     </div>
   )
 }

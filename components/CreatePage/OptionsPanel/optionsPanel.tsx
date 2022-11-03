@@ -196,7 +196,7 @@ const OptionsPanel = ({
       {activeNav === 'inpainting' &&
         !input.source_image &&
         input.source_processing !== SourceProcessing.InPainting && (
-          <Uploader handleSaveImage={handleSaveAction} />
+          <Uploader handleSaveImage={handleSaveAction} type="inpainting" />
         )}
 
       {activeNav === 'inpainting' &&

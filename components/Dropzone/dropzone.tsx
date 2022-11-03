@@ -14,6 +14,7 @@ const imgConfig = {
 interface UploaderProps {
   children?: React.ReactNode
   handleUpload: any
+  type: string
 }
 
 const StyledIcon = styled(PlusIcon)`
@@ -42,7 +43,7 @@ const StyledDropZone = styled.div`
 `
 
 export default function Dropzone(props: UploaderProps) {
-  const { handleUpload } = props
+  const { handleUpload, type = 'img2img' } = props
 
   const onDrop = useCallback(
     async (acceptedFiles: any[]) => {
@@ -118,8 +119,7 @@ export default function Dropzone(props: UploaderProps) {
         ) : (
           <div>
             drag image or click to upload
-            <br />
-            (img2img)
+            <br />({type})
           </div>
         )}
       </StyledDropZone>
