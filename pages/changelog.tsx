@@ -54,6 +54,36 @@ const Changelog = () => {
       </Head>
       <PageTitle>Changelog</PageTitle>
       <Section>
+        <SubSectionTitle>2022.11.03</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            FEATURE: Big changes!{' '}
+            <Linker href="/?panel=inpainting">Inpainting is now live.</Linker>{' '}
+            Upload a photo from a URL, from your device or even use an existing
+            image that you&apos;ve created.
+          </StyledLi>
+          <StyledLi>
+            FEATURE: Custom image orientations (you are no longer limited to the
+            few aspect ratios I provided for you). Image dimensions must be
+            divisible by 64, but I handle that for you after you&apos;ve entered
+            your desired dimensions.
+          </StyledLi>
+          <StyledLi>
+            In my endless tinkering, the advanced options panel on the create
+            page is now open by default.
+          </StyledLi>
+          <StyledLi>
+            Added some validation to various input fields inside advanced
+            options, as well as subtext defining the requiered parameters.
+          </StyledLi>
+          <StyledLi>
+            Temporarily removed painter page while I refactor a few things to
+            make it more mobile friendly (and to tie into the existing img2img
+            and inpainting system)
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.10.30</SubSectionTitle>
         <StyledUl>
           <StyledLi>
@@ -63,9 +93,8 @@ const Changelog = () => {
             end and not with the Stable Horde cluster.
           </StyledLi>
           <StyledLi>
-            Small design change to <Linker href="/paint">paint page</Linker> to
-            make toolbar and overall theme more consistent across dark / light
-            mode.
+            Small design change to paint page to make toolbar and overall theme
+            more consistent across dark / light mode.
           </StyledLi>
           <StyledLi>
             Fix: Hide inpainting model from models dropdown in non inpainting
