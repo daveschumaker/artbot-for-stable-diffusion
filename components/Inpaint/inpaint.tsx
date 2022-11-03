@@ -1,5 +1,4 @@
 import { useRef, useState } from 'react'
-import { useRouter } from 'next/router'
 import { fabric } from 'fabric'
 import styled from 'styled-components'
 import 'fabric-history'
@@ -10,7 +9,6 @@ import { Button } from '../UI/Button'
 import DownloadIcon from '../icons/DownloadIcon'
 import BrushIcon from '../icons/BrushIcon'
 import EraserIcon from '../icons/EraserIcon'
-import { savePrompt, SourceProcessing } from '../../utils/promptUtils'
 import UndoIcon from '../icons/UndoIcon'
 import RedoIcon from '../icons/RedoIcon'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
@@ -57,8 +55,6 @@ interface Props {
 }
 
 const Inpaint = ({ setInput }: Props) => {
-  const router = useRouter()
-
   const [drawMode, setDrawMode] = useState<string>('paint')
 
   const brushRef = useRef<any>(null)
@@ -502,43 +498,6 @@ const Inpaint = ({ setInput }: Props) => {
     })
   }
 
-  const handleUseImageClick = () => {
-    if (!canvasRef.current) {
-      return
-    }
-
-    const data = {
-      image: '',
-      mask: ''
-    }
-
-    if (imageLayerRef.current) {
-      data.image = imageLayerRef.current
-        .toDataURL({ format: 'webp' })
-        .split(',')[1]
-    }
-
-    if (drawLayerRef.current) {
-      data.mask = drawLayerRef.current
-        .toDataURL({ format: 'webp' })
-        .split(',')[1]
-    }
-
-    savePrompt({
-      imageType: 'image/webp',
-      sampler: 'k_euler_a',
-
-      source_processing: SourceProcessing.InPainting,
-      source_image: data.image,
-      source_mask: data.mask,
-      orientation: 'custom',
-      height: canvasRef.current.height,
-      width: canvasRef.current.width
-    })
-
-    router.push(`/?edit=true`)
-  }
-
   useEffectOnce(() => {
     redoHistory = []
     undoHistory = []
@@ -578,6 +537,7 @@ const Inpaint = ({ setInput }: Props) => {
 
         imageLayerRef.current = objects[0]
         visibleDrawLayerRef.current = objects[1]
+        // @ts-ignore
         brushPreviewRef.current = objects[2]
 
         visibleDrawLayerRef.current.set('opacity', 0.8)
