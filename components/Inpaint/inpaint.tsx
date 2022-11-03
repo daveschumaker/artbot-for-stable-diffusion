@@ -22,6 +22,7 @@ import {
 } from '../../store/canvasStore'
 import Uploader from '../CreatePage/Uploader'
 import { inputCSS } from 'react-select/dist/declarations/src/components/Input'
+import { getCanvasHeight, getPanelWidth } from '../../utils/fabricUtils'
 
 const maxSize = {
   height: 768,
@@ -62,7 +63,6 @@ interface Props {
 const Inpaint = ({ input, setInput }: Props) => {
   const router = useRouter()
 
-  const [hasImage, setHasImage] = useState(false)
   const [drawMode, setDrawMode] = useState<string>('paint')
 
   const brushRef = useRef<any>(null)
@@ -135,45 +135,44 @@ const Inpaint = ({ input, setInput }: Props) => {
     }
 
     fabric.Image.fromURL(fullDataString, function (image) {
-      if (!canvasRef.current) {
+      if (!canvasRef.current || !image) {
         return
       }
+
       resetCanvas()
 
-      const maxSize = 768
-      let height = image.height || maxSize
-      let width = image.width || maxSize
+      const innerWidth = window.innerWidth
+      const containerWidth = getPanelWidth(innerWidth)
+      let newHeight = image.height || 512
 
-      if (width !== maxSize || height !== maxSize) {
-        if (width > height) {
-          image.scaleToWidth(maxSize)
-          height = maxSize * (height / width)
-          width = maxSize
-        } else {
-          image.scaleToHeight(maxSize)
-          width = maxSize * (width / height)
-          height = maxSize
-        }
+      if (image?.width > containerWidth) {
+        newHeight = getCanvasHeight({
+          baseHeight: image.height,
+          baseWidth: image.width,
+          foundWidth: containerWidth
+        })
+
+        image.scaleToWidth(containerWidth)
       }
 
       // Init canvas settings
       canvasRef.current.isDrawingMode = true
-      canvasRef.current.setHeight(height)
-      canvasRef.current.setWidth(width)
+      canvasRef.current.setHeight(newHeight)
+      canvasRef.current.setWidth(containerWidth)
 
       // Generate various layers
       imageLayerRef.current = makeNewLayer({
         image,
-        layerHeight: height,
-        layerWidth: width
+        layerHeight: newHeight,
+        layerWidth: containerWidth
       })
 
       if (!skipSetup) {
-        drawLayerRef.current = makeInvisibleDrawLayer(height, width)
+        drawLayerRef.current = makeInvisibleDrawLayer(newHeight, containerWidth)
 
         visibleDrawLayerRef.current = makeNewLayer({
-          layerHeight: height,
-          layerWidth: width
+          layerHeight: newHeight,
+          layerWidth: containerWidth
         })
         visibleDrawLayerRef.current.set('opacity', 0.8)
 
@@ -199,6 +198,10 @@ const Inpaint = ({ input, setInput }: Props) => {
   ///////////////////////
 
   const initCanvas = ({ height = 512, width = 768 } = {}) => {
+    const innerWidth = window.innerWidth
+    const containerWidth = getPanelWidth(innerWidth)
+    const newHeight = getCanvasHeight({ foundWidth: containerWidth })
+
     canvasRef.current = new fabric.Canvas(canvasElementRef.current, {
       backgroundColor: 'white',
       isDrawingMode: false,
@@ -208,8 +211,8 @@ const Inpaint = ({ input, setInput }: Props) => {
 
     canvasRef.current.freeDrawingCursor = 'crosshair'
     canvasRef.current.selection = false
-    canvasRef.current.setHeight(height)
-    canvasRef.current.setWidth(width)
+    canvasRef.current.setHeight(newHeight)
+    canvasRef.current.setWidth(containerWidth)
     makeBrushPreviewLayer()
     setBrush('white')
 
@@ -526,7 +529,6 @@ const Inpaint = ({ input, setInput }: Props) => {
     undoHistory = []
 
     if (!getCanvasStore().canvasRef && getI2IString().base64String) {
-      console.log(`BUAHAHAH`)
       initCanvas({ height: getI2IString().height, width: getI2IString().width })
 
       setTimeout(() => {
@@ -537,11 +539,8 @@ const Inpaint = ({ input, setInput }: Props) => {
         })
       }, 250)
     } else if (getCanvasStore().canvasRef) {
-      setHasImage(true)
       const { objects } = getCanvasStore().canvasRef
       initCanvas({ height: objects[0].height, width: objects[0].width })
-
-      console.log(`objects`, objects)
 
       canvasRef.current.clear()
       canvasRef.current.loadFromJSON(getCanvasStore().canvasRef, () => {
@@ -550,8 +549,6 @@ const Inpaint = ({ input, setInput }: Props) => {
         }
 
         const objects = canvasRef?.current?.getObjects()
-
-        console.log(`objects[1]`, objects[1])
 
         imageLayerRef.current = objects[0]
         visibleDrawLayerRef.current = objects[1]
@@ -582,26 +579,10 @@ const Inpaint = ({ input, setInput }: Props) => {
         canvasRef.current.setWidth(canvasRef.current.width)
         canvasRef.current.renderAll(canvasRef.current)
       }, 50)
-
-      // const { objects } = getCanvasStore().canvasRef
-      // const [imageLayer] = objects
-
-      // imageLayerRef.current = new fabric.Group(imageLayer)
-      // canvasRef?.current?.add(imageLayerRef.current)
-
-      // console.log(`objects?`, objects)
-      // canvasRef.current.loadFromJSON(getCanvasStore().canvasRef)
     } else {
       initCanvas()
     }
 
-    // if (getCanvasStore().imageLayerRef) {
-    //   setTimeout(() => {
-    //     handleFileSelect(getCanvasStore().imageLayerRef, true)
-    //   }, 500)
-    // }
-
-    // canvasRef.current?.renderAll()
     return () => {
       canvasRef?.current?.dispose()
     }
@@ -611,13 +592,6 @@ const Inpaint = ({ input, setInput }: Props) => {
   return (
     <div className="relative">
       <div className="flex flex-row gap-2 mb-2">
-        <Button onClick={handleToggle}>
-          {drawMode === 'paint' ? <BrushIcon /> : <EraserIcon />}
-        </Button>
-        <UploadButton label="" handleFile={handleFileSelect} />
-        <Button onClick={saveImageMask}>
-          <DownloadIcon />
-        </Button>
         <Button
           //@ts-ignore
           onClick={() => {
@@ -634,7 +608,15 @@ const Inpaint = ({ input, setInput }: Props) => {
         >
           <RedoIcon />
         </Button>
-        <Button onClick={handleUseImageClick}>USE</Button>
+        <Button onClick={handleToggle}>
+          {drawMode === 'paint' ? <BrushIcon /> : <EraserIcon />}
+        </Button>
+        {/* <UploadButton label="" handleFile={handleFileSelect} /> */}
+        <Button onClick={saveImageMask}>
+          <DownloadIcon />
+        </Button>
+
+        {/* <Button onClick={handleUseImageClick}>USE</Button> */}
       </div>
       <StyledCanvas id="canvas" ref={canvasElementRef} />
     </div>
