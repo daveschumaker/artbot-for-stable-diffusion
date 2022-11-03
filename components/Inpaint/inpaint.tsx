@@ -17,11 +17,7 @@ import {
   getI2IString,
   storeCanvas
 } from '../../store/canvasStore'
-import {
-  getCanvasHeight,
-  getCanvasWidth,
-  getPanelWidth
-} from '../../utils/fabricUtils'
+import { getCanvasHeight, getPanelWidth } from '../../utils/fabricUtils'
 
 interface IHistory {
   path: fabric.Path
