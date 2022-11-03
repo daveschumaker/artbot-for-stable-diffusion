@@ -190,7 +190,19 @@ const OptionsPanel = ({
       {activeNav === 'inpainting' &&
         input.source_image &&
         input.source_processing === SourceProcessing.InPainting && (
-          <InpaintingPanel input={input} setInput={setInput} />
+          <InpaintingPanel
+            input={input}
+            setInput={setInput}
+            handleRemoveClick={() => {
+              clearCanvasStore()
+              setInput({
+                imageType: '',
+                source_image: '',
+                source_mask: '',
+                source_processing: SourceProcessing.Prompt
+              })
+            }}
+          />
         )}
 
       {activeNav === 'inpainting' &&

@@ -6,7 +6,7 @@ import 'fabric-history'
 import { debounce } from '../../utils/debounce'
 import { getBase64 } from '../../utils/imageUtils'
 import { Button } from '../UI/Button'
-import DownloadIcon from '../icons/DownloadIcon'
+// import DownloadIcon from '../icons/DownloadIcon'
 import BrushIcon from '../icons/BrushIcon'
 import EraserIcon from '../icons/EraserIcon'
 import UndoIcon from '../icons/UndoIcon'
@@ -50,12 +50,12 @@ const StyledCanvas = styled.canvas<CanvasProps>`
 `
 
 interface Props {
-  input: any
+  handleRemoveClick: any
   setInput: any
 }
 
-const Inpaint = ({ setInput }: Props) => {
-  const [drawMode, setDrawMode] = useState<string>('paint')
+const Inpaint = ({ handleRemoveClick, setInput }: Props) => {
+  const [, setDrawMode] = useState<string>('paint')
 
   const brushRef = useRef<any>(null)
   const drawModeRef = useRef<string>('paint')
@@ -200,13 +200,13 @@ const Inpaint = ({ setInput }: Props) => {
     })
   }
 
-  const downloadWebp = (base64Data: string, fileName = 'test') => {
-    const linkSource = `${base64Data}`
-    const downloadLink = document.createElement('a')
-    downloadLink.href = linkSource
-    downloadLink.download = fileName.substring(0, 255) + '.webp' // Only get first 255 characters so we don't break the max file name limit
-    downloadLink.click()
-  }
+  // const downloadWebp = (base64Data: string, fileName = 'test') => {
+  //   const linkSource = `${base64Data}`
+  //   const downloadLink = document.createElement('a')
+  //   downloadLink.href = linkSource
+  //   downloadLink.download = fileName.substring(0, 255) + '.webp' // Only get first 255 characters so we don't break the max file name limit
+  //   downloadLink.click()
+  // }
 
   ///////////////////////
 
@@ -388,29 +388,29 @@ const Inpaint = ({ setInput }: Props) => {
     canvasRef.current.isDrawingMode = false
   }
 
-  const saveImageMask = () => {
-    const data = {
-      image: '',
-      mask: ''
-    }
+  // const saveImageMask = () => {
+  //   const data = {
+  //     image: '',
+  //     mask: ''
+  //   }
 
-    if (imageLayerRef.current) {
-      data.image = imageLayerRef.current
-        .toDataURL({ format: 'webp' })
-        .split(',')[1]
-    }
+  //   if (imageLayerRef.current) {
+  //     data.image = imageLayerRef.current
+  //       .toDataURL({ format: 'webp' })
+  //       .split(',')[1]
+  //   }
 
-    if (drawLayerRef.current) {
-      data.mask = drawLayerRef.current
-        .toDataURL({ format: 'webp' })
-        .split(',')[1]
-    }
+  //   if (drawLayerRef.current) {
+  //     data.mask = drawLayerRef.current
+  //       .toDataURL({ format: 'webp' })
+  //       .split(',')[1]
+  //   }
 
-    downloadWebp(drawLayerRef.current.toDataURL({ format: 'webp' }), 'mask')
-    downloadWebp(imageLayerRef.current.toDataURL({ format: 'webp' }), 'image')
+  //   downloadWebp(drawLayerRef.current.toDataURL({ format: 'webp' }), 'mask')
+  //   downloadWebp(imageLayerRef.current.toDataURL({ format: 'webp' }), 'image')
 
-    return data
-  }
+  //   return data
+  // }
 
   const setBrush = (color?: string) => {
     if (!canvasRef.current) {
@@ -455,16 +455,16 @@ const Inpaint = ({ setInput }: Props) => {
 
   /////////////
 
-  const handleToggle = () => {
-    if (drawModeRef.current === 'paint') {
-      setDrawMode('erase')
-      drawModeRef.current = 'erase'
-      setBrush('red')
-    } else {
-      setDrawMode('paint')
-      drawModeRef.current = 'paint'
-      setBrush('white')
-    }
+  const handleEraseClick = () => {
+    setDrawMode('erase')
+    drawModeRef.current = 'erase'
+    setBrush('red')
+  }
+
+  const handlePaintClick = () => {
+    setDrawMode('paint')
+    drawModeRef.current = 'paint'
+    setBrush('white')
   }
 
   const autoSave = () => {
@@ -589,28 +589,38 @@ const Inpaint = ({ setInput }: Props) => {
   return (
     <div className="relative mx-auto">
       <div className="flex flex-row gap-2 mb-2">
-        <Button
-          //@ts-ignore
-          onClick={() => {
-            undo()
-          }}
-        >
-          <UndoIcon />
-        </Button>
-        <Button
-          //@ts-ignore
-          onClick={() => {
-            redo()
-          }}
-        >
-          <RedoIcon />
-        </Button>
-        <Button onClick={handleToggle}>
-          {drawMode === 'paint' ? <BrushIcon /> : <EraserIcon />}
-        </Button>
-        <Button onClick={saveImageMask}>
+        <div className="flex flex-row gap-2 mb-2 shrink-0">
+          <Button
+            //@ts-ignore
+            onClick={() => {
+              undo()
+            }}
+          >
+            <UndoIcon />
+          </Button>
+          <Button
+            //@ts-ignore
+            onClick={() => {
+              redo()
+            }}
+          >
+            <RedoIcon />
+          </Button>
+          <Button onClick={handlePaintClick}>
+            <BrushIcon />
+          </Button>
+          <Button onClick={handleEraseClick}>
+            <EraserIcon />
+          </Button>
+        </div>
+        <div className="flex flex-row gap-2 mb-2 justify-end grow">
+          <Button btnType="secondary" onClick={handleRemoveClick}>
+            Remove image
+          </Button>
+        </div>
+        {/* <Button onClick={saveImageMask}>
           <DownloadIcon />
-        </Button>
+        </Button> */}
       </div>
       <StyledCanvas id="canvas" ref={canvasElementRef} />
     </div>

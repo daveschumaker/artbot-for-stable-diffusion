@@ -165,7 +165,10 @@ const ImagePage = () => {
             <Section>
               <OptionsLink
                 onClick={() => {
-                  console.log(`what are we sending?`, imageDetails)
+                  trackEvent({
+                    event: 'USE_IMG_FOR_IMG2IMG',
+                    context: 'ImagePage'
+                  })
                   uploadImg2Img(imageDetails)
                   router.push(`/?panel=img2img&edit=true`)
                 }}
@@ -176,6 +179,10 @@ const ImagePage = () => {
             <Section>
               <OptionsLink
                 onClick={() => {
+                  trackEvent({
+                    event: 'USE_IMG_FOR_INPAINT',
+                    context: 'ImagePage'
+                  })
                   uploadInpaint(imageDetails)
                   router.push(`/?panel=inpainting&edit=true`)
                 }}
@@ -187,6 +194,10 @@ const ImagePage = () => {
               <Section>
                 <OptionsLink
                   onClick={() => {
+                    trackEvent({
+                      event: 'CLONE_INPAINT_MASK',
+                      context: 'ImagePage'
+                    })
                     const clone = true
                     uploadInpaint(imageDetails, clone)
                     router.push(`/?panel=inpainting&edit=true`)

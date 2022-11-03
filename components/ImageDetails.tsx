@@ -10,11 +10,7 @@ import { Button } from './UI/Button'
 import { trackEvent, trackGaEvent } from '../api/telemetry'
 import RefreshIcon from './icons/RefreshIcon'
 import UploadIcon from './icons/UploadIcon'
-import {
-  copyEditPrompt,
-  rerollImage,
-  uploadImg2Img
-} from '../controllers/imageDetailsCommon'
+import { copyEditPrompt, rerollImage } from '../controllers/imageDetailsCommon'
 import Linker from './UI/Linker'
 import CopyIcon from './icons/CopyIcon'
 import ImageSquare from './ImageSquare'
@@ -89,23 +85,6 @@ const ImageDetails = ({
     })
 
     router.push(`/?edit=true`)
-  }
-
-  const handleUploadClick = (imageDetails: any) => {
-    uploadImg2Img(imageDetails)
-
-    trackEvent({
-      event: 'IMG2IMG_CLICK',
-      context: 'ImagePage'
-    })
-    trackGaEvent({
-      action: 'btn_img2img',
-      params: {
-        context: 'ImagePage'
-      }
-    })
-
-    router.push(`/?panel=img2img&edit=true`)
   }
 
   const handleRerollClick = useCallback(
@@ -238,14 +217,6 @@ const ImageDetails = ({
             <CopyIcon />
             <span className="inline-block md:hidden">Copy</span>
             <span className="hidden md:inline-block">Copy prompt</span>
-          </Button>
-          <Button
-            title="Use for img2img"
-            // @ts-ignore
-            onClick={() => handleUploadClick(imageDetails)}
-          >
-            <UploadIcon className="mx-auto" />
-            <MobileHideText>Use for img2img</MobileHideText>
           </Button>
         </div>
         <div className="inline-block w-1/2 flex flex-row justify-end gap-2">
