@@ -117,7 +117,7 @@ let isPending = false
 const apiCooldown = () => {
   setTimeout(() => {
     isPending = false
-  }, 30000)
+  }, 1000)
 }
 
 export const createImage = async (
