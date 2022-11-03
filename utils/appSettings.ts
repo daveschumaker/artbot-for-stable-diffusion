@@ -37,7 +37,7 @@ export const updateShowGrid = () => {
 // default useTrusted value being set to false.
 export const checkTrustedWorkerSettingsForAnon = () => {
   if (!localStorage.getItem('apikey')) {
-    localStorage.setItem('useTrusted', 'true')
+    localStorage.setItem('useTrusted', 'false')
   }
 }
 
