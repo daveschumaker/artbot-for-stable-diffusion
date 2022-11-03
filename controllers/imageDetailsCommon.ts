@@ -23,7 +23,7 @@ export const uploadInpaint = (imageDetails: any, clone = false) => {
   }
 
   const i2iBase64String = {
-    base64String: `data:${imageDetails.imageType};base64,${imageDetails.source_image}`,
+    base64String: `data:${imageDetails.imageType};base64,${imageDetails.base64String}`,
     width: imageDetails.width,
     height: imageDetails.height
   }
