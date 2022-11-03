@@ -140,7 +140,11 @@ const Home: NextPage = () => {
       imageJobData.canvasStore = { ...getCanvasStore() }
     }
 
+    console.log(`input??`, input)
+
     const res = await createImageJob(imageJobData)
+
+    console.log(`wtffff`, res)
 
     // @ts-ignore
     const { status, message } = res
@@ -220,8 +224,6 @@ const Home: NextPage = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  console.log(`index input`, input)
 
   return (
     <main>

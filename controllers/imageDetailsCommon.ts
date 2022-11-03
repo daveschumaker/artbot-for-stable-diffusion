@@ -18,8 +18,6 @@ export const copyEditPrompt = (imageDetails: any) => {
 }
 
 export const uploadImg2Img = (imageDetails: any) => {
-  console.log(`imageDetials??`, imageDetails)
-
   if (imageDetails.canvasStore) {
     const i2iBase64String = {
       base64String: `data:${imageDetails.imageType};base64,${imageDetails.source_image}`,

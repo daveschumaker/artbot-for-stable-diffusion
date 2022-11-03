@@ -66,7 +66,9 @@ export const clearCanvasStore = () => {
     canvasRef: null,
     imageLayerRef: null,
     drawLayerRef: null,
-    visibleCanvas: null
+    visibleCanvas: null,
+    height: null,
+    width: null
   }
 
   i2iBase64String = {

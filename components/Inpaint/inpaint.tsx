@@ -556,13 +556,19 @@ const Inpaint = ({ setInput }: Props) => {
           skipSetup: false
         })
 
-        canvasRef.current.setHeight(getI2IString().height)
-        canvasRef.current.setWidth(getI2IString().width)
-        canvasRef.current.renderAll(canvasRef.current)
+        if (canvasRef.current) {
+          canvasRef.current.setHeight(getI2IString().height)
+          canvasRef.current.setWidth(getI2IString().width)
+          canvasRef.current.renderAll()
+        }
       }, 250)
     } else if (getCanvasStore().canvasRef) {
       const { height, width } = getCanvasStore()
       initCanvas({ height, width })
+
+      if (!canvasRef.current) {
+        return
+      }
 
       canvasRef.current.clear()
       canvasRef.current.loadFromJSON(getCanvasStore().canvasRef, () => {

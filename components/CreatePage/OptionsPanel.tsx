@@ -9,7 +9,10 @@ import Img2ImgPanel from './Img2ImgPanel'
 import InpaintingPanel from './InpaintingPanel'
 import PainterPanel from './PainterPanel'
 import Uploader from './Uploader'
-import { setI2iUploaded } from '../../store/canvasStore'
+import { clearCanvasStore, setI2iUploaded } from '../../store/canvasStore'
+import { Button } from '../UI/Button'
+import { SourceProcessing } from '../../utils/promptUtils'
+import WarningPanel from './WarningPanel'
 
 interface LiProps {
   active?: boolean
@@ -81,6 +84,8 @@ const OptionsPanel = ({
     })
   }
 
+  console.log(`options panel#input`, input)
+
   return (
     <Panel>
       <SectionTitle>
@@ -136,22 +141,81 @@ const OptionsPanel = ({
           setInput={setInput}
         />
       )}
-      {activeNav === 'img2img' && (
-        <Img2ImgPanel
-          input={input}
-          setInput={setInput}
-          saveForInpaint={handleSaveAction}
-        />
-      )}
-      {activeNav === 'painter' && (
-        <PainterPanel setActiveNav={setActiveNav} setInput={setInput} />
-      )}
+      {activeNav === 'img2img' &&
+        input.source_processing === SourceProcessing.InPainting && (
+          <WarningPanel
+            panelType="inpainting"
+            handleRemoveClick={() => {
+              clearCanvasStore()
+              setInput({
+                imageType: '',
+                source_image: '',
+                source_mask: '',
+                source_processing: SourceProcessing.Prompt
+              })
+            }}
+          />
+        )}
+      {activeNav === 'img2img' &&
+        input.source_processing !==
+          (SourceProcessing.InPainting || SourceProcessing.OutPaiting) && (
+          <Img2ImgPanel
+            input={input}
+            setInput={setInput}
+            saveForInpaint={handleSaveAction}
+          />
+        )}
+
+      {activeNav === 'painter' &&
+        input.source_image &&
+        input.source_processing === SourceProcessing.InPainting && (
+          <WarningPanel
+            panelType="inpainting"
+            handleRemoveClick={() => {
+              clearCanvasStore()
+              setInput({
+                imageType: '',
+                source_image: '',
+                source_mask: '',
+                source_processing: SourceProcessing.Prompt
+              })
+            }}
+          />
+        )}
+
+      {activeNav === 'painter' &&
+        input.source_processing !== SourceProcessing.InPainting && (
+          <PainterPanel setActiveNav={setActiveNav} setInput={setInput} />
+        )}
+
       {activeNav === 'inpainting' &&
-        (input.source_image && input.source_processing === 'inpainting' ? (
+        input.source_image &&
+        input.source_processing === SourceProcessing.InPainting && (
           <InpaintingPanel input={input} setInput={setInput} />
-        ) : (
+        )}
+
+      {activeNav === 'inpainting' &&
+        !input.source_image &&
+        input.source_processing !== SourceProcessing.InPainting && (
           <Uploader handleSaveImage={handleSaveAction} />
-        ))}
+        )}
+
+      {activeNav === 'inpainting' &&
+        input.source_image &&
+        input.source_processing === SourceProcessing.Img2Img && (
+          <WarningPanel
+            panelType="img2img"
+            handleRemoveClick={() => {
+              clearCanvasStore()
+              setInput({
+                imageType: '',
+                source_image: '',
+                source_mask: '',
+                source_processing: SourceProcessing.Prompt
+              })
+            }}
+          />
+        )}
     </Panel>
   )
 }
