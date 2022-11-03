@@ -21,7 +21,7 @@ import CloseIcon from '../components/icons/CloseIcon'
 import ImageSquare from '../components/ImageSquare'
 import { validSampler } from '../utils/validationUtils'
 import OptionsPanel from '../components/CreatePage/OptionsPanel'
-import { clearCanvasStore } from '../store/canvasStore'
+import { clearCanvasStore, getCanvasStore } from '../store/canvasStore'
 
 interface InputTarget {
   name: string
@@ -132,9 +132,15 @@ const Home: NextPage = () => {
       return
     }
 
-    const res = await createImageJob({
+    const imageJobData = {
       ...input
-    })
+    }
+
+    if (getCanvasStore().cached) {
+      imageJobData.canvasStore = { ...getCanvasStore() }
+    }
+
+    const res = await createImageJob(imageJobData)
 
     // @ts-ignore
     const { status, message } = res
@@ -215,6 +221,8 @@ const Home: NextPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  console.log(`index input`, input)
+
   return (
     <main>
       <PageTitle>
@@ -269,12 +277,16 @@ const Home: NextPage = () => {
               title="Clear current input"
               btnType="secondary"
               onClick={() => {
+                clearCanvasStore()
                 return setInput({
                   numImages: 1,
                   prompt: '',
                   seed: '',
                   parentJobId: '',
-                  negative: ''
+                  negative: '',
+                  source_processing: SourceProcessing.Prompt,
+                  source_image: '',
+                  source_mask: ''
                 })
               }}
             >

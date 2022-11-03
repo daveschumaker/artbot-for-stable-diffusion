@@ -1,3 +1,4 @@
+import { cloneFromImage } from '../store/canvasStore'
 import { createImageJob } from '../utils/imageCache'
 import { savePrompt, SourceProcessing } from '../utils/promptUtils'
 
@@ -17,8 +18,20 @@ export const copyEditPrompt = (imageDetails: any) => {
 }
 
 export const uploadImg2Img = (imageDetails: any) => {
+  console.log(`imageDetials??`, imageDetails)
+
+  if (imageDetails.canvasStore) {
+    const i2iBase64String = {
+      base64String: `data:${imageDetails.imageType};base64,${imageDetails.source_image}`,
+      width: imageDetails.width,
+      height: imageDetails.height
+    }
+
+    cloneFromImage(imageDetails.canvasStore, i2iBase64String)
+  }
+
   savePrompt({
-    img2img: true,
+    // img2img: true,
     imageType: imageDetails.imageType,
     prompt: imageDetails.prompt,
     sampler: imageDetails.sampler,
@@ -30,7 +43,9 @@ export const uploadImg2Img = (imageDetails: any) => {
     parentJobId: imageDetails.parentJobId,
     negative: imageDetails.negative,
     source_image: imageDetails.base64String,
-    source_processing: SourceProcessing.Img2Img,
+    // source_processing: SourceProcessing.Img2Img, // TODO: Handle existing img2img vs inpaint
+    source_processing: imageDetails.source_processing,
+    source_mask: imageDetails.source_mask,
     denoising_strength: imageDetails.denoising_strength,
     models: imageDetails.models
   })

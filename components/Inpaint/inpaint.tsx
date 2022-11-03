@@ -131,6 +131,7 @@ const Inpaint = ({ setInput }: Props) => {
       return
     }
 
+    console.log(`????111`)
     fabric.Image.fromURL(fullDataString, function (image) {
       if (!canvasRef.current || !image) {
         return
@@ -142,6 +143,8 @@ const Inpaint = ({ setInput }: Props) => {
       const containerWidth = getPanelWidth(innerWidth)
       let newHeight = image.height || 512
       let newWidth = containerWidth
+
+      console.log(`????2222`)
 
       // @ts-ignore
       if (image?.width > containerWidth && image.width >= image.height) {
@@ -162,7 +165,13 @@ const Inpaint = ({ setInput }: Props) => {
         })
 
         image.scaleToHeight(newHeight)
+      } else if (image.height === image.width) {
+        newHeight = image.height || 512
+        newWidth = image.width || 512
       }
+
+      storeCanvas('height', newHeight)
+      storeCanvas('width', newWidth)
 
       // Init canvas settings
       canvasRef.current.isDrawingMode = true
@@ -546,10 +555,15 @@ const Inpaint = ({ setInput }: Props) => {
           skipRead: true,
           skipSetup: false
         })
+
+        canvasRef.current.setHeight(getI2IString().height)
+        canvasRef.current.setWidth(getI2IString().width)
+        canvasRef.current.renderAll(canvasRef.current)
       }, 250)
     } else if (getCanvasStore().canvasRef) {
       const { objects } = getCanvasStore().canvasRef
-      initCanvas({ height: objects[0].height, width: objects[0].width })
+      const { height, width } = getCanvasStore()
+      initCanvas({ height, width })
 
       canvasRef.current.clear()
       canvasRef.current.loadFromJSON(getCanvasStore().canvasRef, () => {
@@ -567,14 +581,9 @@ const Inpaint = ({ setInput }: Props) => {
         visibleDrawLayerRef.current.set('selectable', false)
 
         drawLayerRef.current = new fabric.Canvas(null)
-        drawLayerRef.current.setHeight(canvasRef.current.height)
-        drawLayerRef.current.setWidth(canvasRef.current.width)
+        drawLayerRef.current.setHeight(height)
+        drawLayerRef.current.setWidth(width)
         drawLayerRef.current.loadFromJSON(getCanvasStore().drawLayerRef)
-
-        // drawLayerRef.current.backgroundColor = 'black'
-        // drawLayerRef.current.selection = false
-        // drawLayerRef.current.set('backgroundColor', 'black')
-        // newDrawLayer.selection = false
 
         canvasRef.current.isDrawingMode = true
       })
@@ -584,8 +593,8 @@ const Inpaint = ({ setInput }: Props) => {
           return
         }
 
-        canvasRef.current.setHeight(canvasRef.current.height)
-        canvasRef.current.setWidth(canvasRef.current.width)
+        canvasRef.current.setHeight(height)
+        canvasRef.current.setWidth(width)
         canvasRef.current.renderAll(canvasRef.current)
       }, 50)
     } else {
