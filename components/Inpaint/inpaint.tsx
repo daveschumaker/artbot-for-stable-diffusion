@@ -151,15 +151,13 @@ const Inpaint = ({ handleRemoveClick, setInput }: Props) => {
 
         // @ts-ignore
       } else if (image.height > image.width && image.width > containerWidth) {
-        newWidth = getCanvasWidth({
+        newHeight = getCanvasHeight({
           baseHeight: image.height,
           baseWidth: image.width,
-          foundHeight: newHeight
+          foundWidth: containerWidth
         })
 
-        newWidth = containerWidth
-
-        image.scaleToHeight(newHeight)
+        image.scaleToWidth(containerWidth)
       } else if (image.height === image.width) {
         newHeight = image.height || 512
         newWidth = image.width || 512
