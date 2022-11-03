@@ -16,6 +16,24 @@ export const getCanvasHeight = ({
   return Math.floor((baseHeight * foundWidth) / baseWidth)
 }
 
+interface GetCanvasWidth {
+  baseHeight?: number
+  baseWidth?: number
+  foundHeight: number
+}
+
+export const getCanvasWidth = ({
+  baseHeight = 768,
+  baseWidth = 512,
+  foundHeight
+}: GetCanvasWidth) => {
+  if (!foundHeight) {
+    return 512
+  }
+
+  return Math.floor((baseWidth * foundHeight) / baseHeight)
+}
+
 export const getPanelWidth = (windowWidth: number) => {
   const padding = 32
   let containerWidth = 1024 - padding

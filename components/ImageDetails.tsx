@@ -20,7 +20,7 @@ import {
 import Linker from './UI/Linker'
 import CopyIcon from './icons/CopyIcon'
 import ImageSquare from './ImageSquare'
-import { savePrompt } from '../utils/promptUtils'
+import { savePrompt, SourceProcessing } from '../utils/promptUtils'
 
 interface ImageDetails {
   img2img?: boolean
@@ -108,7 +108,7 @@ const ImageDetails = ({
       }
     })
 
-    router.push(`/?edit=true`)
+    router.push(`/?panel=img2img&edit=true`)
   }
 
   const handleDownloadClick = async (imageDetails: any) => {
@@ -238,6 +238,7 @@ const ImageDetails = ({
                     parentJobId: imageDetails.parentJobId,
                     negative: imageDetails.negative,
                     source_image: imageDetails.source_image,
+                    source_processing: SourceProcessing.Img2Img,
                     denoising_strength: imageDetails.denoising_strength,
                     models: imageDetails.models
                   })

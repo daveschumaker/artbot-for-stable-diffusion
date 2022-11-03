@@ -1,5 +1,5 @@
 import { createImageJob } from '../utils/imageCache'
-import { savePrompt } from '../utils/promptUtils'
+import { savePrompt, SourceProcessing } from '../utils/promptUtils'
 
 export const copyEditPrompt = (imageDetails: any) => {
   savePrompt({
@@ -30,6 +30,7 @@ export const uploadImg2Img = (imageDetails: any) => {
     parentJobId: imageDetails.parentJobId,
     negative: imageDetails.negative,
     source_image: imageDetails.base64String,
+    source_processing: SourceProcessing.Img2Img,
     denoising_strength: imageDetails.denoising_strength,
     models: imageDetails.models
   })

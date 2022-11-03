@@ -66,6 +66,7 @@ const OptionsPanel = ({
 
   const handleSaveAction = async (data: any) => {
     const newBase64String = `data:${data.imageType};base64,${data.source_image}`
+
     setI2iUploaded({
       base64String: newBase64String,
       height: data.height,
@@ -136,7 +137,11 @@ const OptionsPanel = ({
         />
       )}
       {activeNav === 'img2img' && (
-        <Img2ImgPanel input={input} setInput={setInput} />
+        <Img2ImgPanel
+          input={input}
+          setInput={setInput}
+          saveForInpaint={handleSaveAction}
+        />
       )}
       {activeNav === 'painter' && (
         <PainterPanel setActiveNav={setActiveNav} setInput={setInput} />

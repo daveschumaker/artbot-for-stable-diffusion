@@ -1,33 +1,13 @@
-import React, { useState } from 'react'
+import React, { useCallback } from 'react'
+import { useRouter } from 'next/router'
 import styled from 'styled-components'
 
 import { Button } from '../../UI/Button'
-import Dropzone from '../../Dropzone/dropzone'
-import { getImageFromUrl } from '../../../utils/imageUtils'
-import Input from '../../UI/Input'
 import Image from '../../Image'
 import TrashIcon from '../../icons/TrashIcon'
 import { SourceProcessing } from '../../../utils/promptUtils'
 import Uploader from '../Uploader'
-
-interface FlexRowProps {
-  bottomPadding?: number
-}
-
-const FlexRow = styled.div<FlexRowProps>`
-  align-items: flex-start;
-  display: flex;
-  flex-direction: row;
-  flex-shrink: 0;
-  gap: 8px;
-  width: 100%;
-
-  ${(props) =>
-    props.bottomPadding &&
-    `
-    padding-bottom: ${props.bottomPadding}px;
-  `}
-`
+import PhotoUpIcon from '../../icons/PhotoUpIcon'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -37,21 +17,17 @@ const Section = styled.div`
   }
 `
 
-const SubSectionTitle = styled.div`
-  padding-bottom: 8px;
-`
-
 interface Props {
   handleChangeInput: any
   handleImageUpload: any
   handleOrientationSelect: any
   input: any
+  saveForInpaint: any
   setInput: any
 }
 
-const Img2ImgPanel = ({ input, setInput }: Props) => {
-  const [imgUrl, setImgUrl] = useState('')
-  const [imgUrlError, setImgUrlError] = useState('')
+const Img2ImgPanel = ({ input, saveForInpaint, setInput }: Props) => {
+  const router = useRouter()
 
   const saveImage = ({
     imageType = '',
@@ -69,22 +45,14 @@ const Img2ImgPanel = ({ input, setInput }: Props) => {
     })
   }
 
-  const handleImportFromUrl = async () => {
-    if (!imgUrl) {
-      return
-    }
+  const handleInpaintClick = useCallback(() => {
+    saveForInpaint({
+      ...input
+    })
 
-    const data = await getImageFromUrl(imgUrl)
-    const { success, message, imageType, imgBase64String, height, width } = data
-
-    if (!success) {
-      setImgUrlError(message || '')
-      return
-    }
-
-    setImgUrlError('')
-    saveImage({ imageType, source_image: imgBase64String, height, width })
-  }
+    router.push('?panel=inpainting')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [input])
 
   return (
     <div>
@@ -92,7 +60,7 @@ const Img2ImgPanel = ({ input, setInput }: Props) => {
         {!input.source_image && <Uploader handleSaveImage={saveImage} />}
         {input.source_image && (
           <>
-            <div className="flex flex-row mb-4">
+            <div className="flex flex-row mb-4 gap-2">
               <Button
                 btnType="secondary"
                 onClick={() =>
@@ -108,6 +76,10 @@ const Img2ImgPanel = ({ input, setInput }: Props) => {
               >
                 <TrashIcon />
                 Clear
+              </Button>
+              <Button onClick={handleInpaintClick}>
+                <PhotoUpIcon />
+                Use Inpaint
               </Button>
             </div>
             <div className="flex flex-row align-top justify-around w-full mx-auto">

@@ -1,11 +1,10 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import { fabric } from 'fabric'
 import styled from 'styled-components'
 import 'fabric-history'
 
 import { debounce } from '../../utils/debounce'
-import { UploadButton } from '../UploadButton'
 import { getBase64 } from '../../utils/imageUtils'
 import { Button } from '../UI/Button'
 import DownloadIcon from '../icons/DownloadIcon'
@@ -20,14 +19,11 @@ import {
   getI2IString,
   storeCanvas
 } from '../../store/canvasStore'
-import Uploader from '../CreatePage/Uploader'
-import { inputCSS } from 'react-select/dist/declarations/src/components/Input'
-import { getCanvasHeight, getPanelWidth } from '../../utils/fabricUtils'
-
-const maxSize = {
-  height: 768,
-  width: 512
-}
+import {
+  getCanvasHeight,
+  getCanvasWidth,
+  getPanelWidth
+} from '../../utils/fabricUtils'
 
 interface IHistory {
   path: fabric.Path
@@ -60,7 +56,7 @@ interface Props {
   setInput: any
 }
 
-const Inpaint = ({ input, setInput }: Props) => {
+const Inpaint = ({ setInput }: Props) => {
   const router = useRouter()
 
   const [drawMode, setDrawMode] = useState<string>('paint')
@@ -123,6 +119,7 @@ const Inpaint = ({ input, setInput }: Props) => {
       })
 
       if (file) {
+        // @ts-ignore
         fullDataString = await getBase64(resizedImage)
         storeCanvas('imageLayerRef', fullDataString)
       }
@@ -144,8 +141,10 @@ const Inpaint = ({ input, setInput }: Props) => {
       const innerWidth = window.innerWidth
       const containerWidth = getPanelWidth(innerWidth)
       let newHeight = image.height || 512
+      let newWidth = containerWidth
 
-      if (image?.width > containerWidth) {
+      // @ts-ignore
+      if (image?.width > containerWidth && image.width >= image.height) {
         newHeight = getCanvasHeight({
           baseHeight: image.height,
           baseWidth: image.width,
@@ -153,26 +152,36 @@ const Inpaint = ({ input, setInput }: Props) => {
         })
 
         image.scaleToWidth(containerWidth)
+
+        // @ts-ignore
+      } else if (image.height > image.width) {
+        newWidth = getCanvasWidth({
+          baseHeight: image.height,
+          baseWidth: image.width,
+          foundHeight: newHeight
+        })
+
+        image.scaleToHeight(newHeight)
       }
 
       // Init canvas settings
       canvasRef.current.isDrawingMode = true
       canvasRef.current.setHeight(newHeight)
-      canvasRef.current.setWidth(containerWidth)
+      canvasRef.current.setWidth(newWidth)
 
       // Generate various layers
       imageLayerRef.current = makeNewLayer({
         image,
         layerHeight: newHeight,
-        layerWidth: containerWidth
+        layerWidth: newWidth
       })
 
       if (!skipSetup) {
-        drawLayerRef.current = makeInvisibleDrawLayer(newHeight, containerWidth)
+        drawLayerRef.current = makeInvisibleDrawLayer(newHeight, newWidth)
 
         visibleDrawLayerRef.current = makeNewLayer({
           layerHeight: newHeight,
-          layerWidth: containerWidth
+          layerWidth: newWidth
         })
         visibleDrawLayerRef.current.set('opacity', 0.8)
 
@@ -590,7 +599,7 @@ const Inpaint = ({ input, setInput }: Props) => {
   })
 
   return (
-    <div className="relative">
+    <div className="relative mx-auto">
       <div className="flex flex-row gap-2 mb-2">
         <Button
           //@ts-ignore

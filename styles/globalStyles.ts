@@ -45,4 +45,8 @@ export const GlobalStyles = createGlobalStyle<{ theme: DefaultTheme }>`
   * {
     box-sizing: border-box;
   }
+
+  .canvas-container {
+    margin: 0 auto;
+  }
   `
