@@ -3,50 +3,80 @@ import Head from 'next/head'
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import Masonry from 'react-responsive-masonry'
+import styled from 'styled-components'
 
 import PageTitle from '../components/UI/PageTitle'
 import Spinner from '../components/Spinner'
-import { fetchCompletedJobs, imageCount } from '../utils/db'
+import { countCompletedJobs, fetchCompletedJobs, imageCount } from '../utils/db'
 import LazyLoad from 'react-lazyload'
-import GridIcon from '../components/icons/GridIcon'
-import ListIcon from '../components/icons/ListIcon'
-import LayoutIcon from '../components/icons/LayoutIcon'
 import ImageSquare from '../components/ImageSquare'
 import { trackEvent } from '../api/telemetry'
 import { Button } from '../components/UI/Button'
 import { useWindowSize } from '../hooks/useWindowSize'
 import ImageCard from '../components/ImagesPage/ImageCard/imageCard'
+import DotsVerticalIcon from '../components/icons/DotsVerticalIcon'
+
+const MenuButton = styled.button`
+  background-color: ${(props) => props.theme.body};
+  border: 2px solid ${(props) => props.theme.navLinkActive};
+  border-radius: 4px;
+  color: ${(props) => props.theme.navLinkActive};
+  cursor: pointer;
+  padding: 2px;
+  position: relative;
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &:hover {
+    background-color: ${(props) => props.theme.navLinkActive};
+    color: ${(props) => props.theme.body};
+  }
+`
+
+const DropDownMenu = styled.div`
+  background-color: ${(props) => props.theme.body};
+  border: 2px solid ${(props) => props.theme.navLinkActive};
+  border-radius: 4px;
+  /* padding: 8px; */
+  position: absolute;
+  top: 0;
+  width: 200px;
+  right: -2px;
+  top: 36px;
+  z-index: 10;
+`
+
+const MenuSeparator = styled.div`
+  width: 100%;
+  border-bottom: 1px solid ${(props) => props.theme.navLinkActive};
+`
+
+const MenuItem = styled.li`
+  cursor: pointer;
+  padding: 4px 8px;
+  width: 100%;
+
+  &:hover {
+    background-color: ${(props) => props.theme.navLinkActive};
+    color: ${(props) => props.theme.body};
+  }
+`
 
 const ImagesPage = () => {
   const size = useWindowSize()
 
+  const [showMenu, setShowMenu] = useState(false)
   const [totalImages, setTotalImages] = useState(0)
   const [offset, setOffset] = useState(0)
   const [isInitialLoad, setIsInitialLoad] = useState(true)
   const [images, setImages] = useState([])
   const [showLayout, setShowLayout] = useState('layout')
 
-  const handleGridListClick = useCallback(() => {
-    if (showLayout === 'layout') {
-      localStorage.setItem('showLayout', 'list')
-      setShowLayout('list')
-    } else if (showLayout === 'list') {
-      localStorage.setItem('showLayout', 'grid')
-      setShowLayout('grid')
-    } else {
-      localStorage.setItem('showLayout', 'layout')
-      setShowLayout('layout')
-    }
-
-    trackEvent({
-      event: `LAYOUT_CLICK`,
-      label: showLayout,
-      context: `ImagesPage`
-    })
-  }, [showLayout])
-
   const fetchImages = useCallback(async (offset = 0) => {
-    const data = await fetchCompletedJobs({ offset })
+    const sort = localStorage.getItem('imagePageSort') || 'new'
+    const data = await fetchCompletedJobs({ offset, sort })
     setImages(data)
     setIsInitialLoad(false)
   }, [])
@@ -64,6 +94,26 @@ const ImagesPage = () => {
     async (btn: string) => {
       window.scrollTo(0, 0)
       let newNum
+      if (btn === 'last') {
+        const count = await countCompletedJobs()
+        const sort = localStorage.getItem('imagePageSort') || 'new'
+        const data = await fetchCompletedJobs({ offset: count - 100, sort })
+        setImages(data)
+        setOffset(count - 100)
+        return
+      }
+
+      if (btn === 'first') {
+        const sort = localStorage.getItem('imagePageSort') || 'new'
+        const data = await fetchCompletedJobs({
+          offset: 0,
+          sort
+        })
+        setImages(data)
+        setOffset(0)
+        return
+      }
+
       if (btn === 'prev') {
         newNum = offset - 100 < 0 ? 0 : offset - 100
       } else {
@@ -120,16 +170,84 @@ const ImagesPage = () => {
         <div className="inline-block w-1/2">
           <PageTitle>Your images</PageTitle>
         </div>
-        <div className="flex flex-row justify-end w-1/2 items-start h-[38px]">
-          <button
+        <div className="flex flex-row justify-end w-1/2 items-start h-[38px] relative">
+          <MenuButton
             title="Change layout"
-            className="p-[2px] border-[1px] border-teal-500 rounded-md cursor-pointer text-sm text-teal-500 relative top-[3px]"
-            onClick={handleGridListClick}
+            onClick={() => {
+              if (showMenu) {
+                setShowMenu(false)
+              } else {
+                setShowMenu(true)
+              }
+            }}
           >
-            {showLayout === 'layout' && <LayoutIcon size={24} />}
-            {showLayout === 'grid' && <GridIcon size={24} />}
-            {showLayout === 'list' && <ListIcon size={24} />}
-          </button>
+            <DotsVerticalIcon size={24} />
+          </MenuButton>
+          {showMenu && (
+            <DropDownMenu>
+              <ul>
+                {/* <MenuItem>Select images...</MenuItem>
+                <MenuSeparator /> */}
+                <MenuItem
+                  onClick={() => {
+                    setShowMenu(false)
+                    localStorage.setItem('showLayout', 'grid')
+                    setShowLayout('grid')
+                    trackEvent({
+                      event: `MENU_CLICK`,
+                      label: 'grid_view',
+                      context: `ImagesPage`
+                    })
+                  }}
+                >
+                  Square Grid
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    setShowMenu(false)
+                    localStorage.setItem('showLayout', 'layout')
+                    setShowLayout('layout')
+                    trackEvent({
+                      event: `MENU_CLICK`,
+                      label: 'layout_view',
+                      context: `ImagesPage`
+                    })
+                  }}
+                >
+                  Layout
+                </MenuItem>
+                <MenuSeparator />
+                <MenuItem
+                  onClick={() => {
+                    setShowMenu(false)
+                    localStorage.setItem('imagePageSort', 'new')
+                    fetchImages()
+                    trackEvent({
+                      event: `MENU_CLICK`,
+                      label: 'sort_new',
+                      context: `ImagesPage`
+                    })
+                  }}
+                >
+                  Sort by Newest
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    setShowMenu(false)
+                    localStorage.setItem('imagePageSort', 'old')
+                    fetchImages()
+                    trackEvent({
+                      event: `MENU_CLICK`,
+                      label: 'sort_old',
+                      context: `ImagesPage`
+                    })
+                  }}
+                >
+                  Sort by Oldest
+                </MenuItem>
+              </ul>
+            </DropDownMenu>
+          )}
         </div>
       </div>
       <div className="mb-2 text-sm">
@@ -233,6 +351,13 @@ const ImagesPage = () => {
         <div className="flex flex-row justify-center gap-2 mt-2">
           <Button
             disabled={offset === 0}
+            onClick={() => handleLoadMore('first')}
+            width="52px"
+          >
+            First
+          </Button>
+          <Button
+            disabled={offset === 0}
             onClick={() => handleLoadMore('prev')}
             width="52px"
           >
@@ -244,6 +369,13 @@ const ImagesPage = () => {
             width="52px"
           >
             Next
+          </Button>
+          <Button
+            disabled={currentOffset >= totalImages - 99}
+            onClick={() => handleLoadMore('last')}
+            width="52px"
+          >
+            Last
           </Button>
         </div>
       )}

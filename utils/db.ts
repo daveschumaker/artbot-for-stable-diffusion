@@ -46,13 +46,29 @@ export const getAllPendingJobsByStatus = async (
     .toArray()
 }
 
-export const fetchCompletedJobs = async ({ limit = 100, offset = 0 } = {}) => {
-  return await db?.completed
-    ?.orderBy('timestamp')
-    .reverse()
-    .offset(offset)
-    .limit(limit)
-    .toArray()
+export const countCompletedJobs = async () => {
+  return await db?.completed?.orderBy('timestamp').count()
+}
+
+export const fetchCompletedJobs = async ({
+  limit = 100,
+  offset = 0,
+  sort = 'new'
+} = {}) => {
+  if (sort === 'old') {
+    return await db?.completed
+      ?.orderBy('timestamp')
+      .offset(offset)
+      .limit(limit)
+      .toArray()
+  } else {
+    return await db?.completed
+      ?.orderBy('timestamp')
+      .reverse()
+      .offset(offset)
+      .limit(limit)
+      .toArray()
+  }
 }
 
 export const fetchRelatedImages = async (
