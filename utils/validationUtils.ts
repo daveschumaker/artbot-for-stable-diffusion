@@ -1,4 +1,4 @@
-export const validSampler = (sampler: string, img2img: boolean = false) => {
+export const validSampler = (sampler: string) => {
   const samplers = [
     'k_dpm_2_a',
     'k_dpm_2',
@@ -9,10 +9,11 @@ export const validSampler = (sampler: string, img2img: boolean = false) => {
     'random'
   ]
 
-  if (!img2img) {
-    samplers.push('PLMS')
-    samplers.push('DDIM')
-  }
+  // Temporarily hide options due to issues with Stable Horde backend.
+  // if (!img2img) {
+  //   samplers.push('PLMS')
+  //   samplers.push('DDIM')
+  // }
 
   return samplers.indexOf(sampler) >= 0
 }

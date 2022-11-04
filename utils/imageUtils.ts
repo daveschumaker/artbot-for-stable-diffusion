@@ -36,7 +36,7 @@ export const uploadImageConfig = {
   maxHeight: 1024
 }
 
-export const randomSampler = (img2img: boolean) => {
+export const randomSampler = () => {
   const samplerArray = [
     'k_dpm_2_a',
     'k_dpm_2',
@@ -46,10 +46,11 @@ export const randomSampler = (img2img: boolean) => {
     'k_lms'
   ]
 
-  if (!img2img) {
-    samplerArray.push('DDIM')
-    samplerArray.push('PLMS')
-  }
+  // Temporarily hide options due to issues with Stable Horde backend.
+  // if (!img2img) {
+  //   samplerArray.push('DDIM')
+  //   samplerArray.push('PLMS')
+  // }
 
   return samplerArray[Math.floor(Math.random() * samplerArray.length)]
 }

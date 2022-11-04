@@ -74,7 +74,7 @@ const modelerOptions = (models: Array<ModelDetails>) => {
   })
 }
 
-const samplerOptions = (img2img: boolean) => {
+const samplerOptions = () => {
   const options = [
     { value: 'k_dpm_2_a', label: 'k_dpm_2_a' },
     { value: 'k_dpm_2', label: 'k_dpm_2' },
@@ -85,10 +85,13 @@ const samplerOptions = (img2img: boolean) => {
     { value: 'random', label: 'random' }
   ]
 
-  if (!img2img) {
-    options.unshift({ value: 'PLMS', label: 'PLMS' })
-    options.unshift({ value: 'DDIM', label: 'DDIM' })
-  }
+  // Temporarily hide options due to issues with Stable Horde backend.
+  // Temporarily hide DDIM and PLMS based on convo with db0:
+  // DDIM never worked in nataili. That reminds me, @Stable Horde: Integrator can you hide DDIM and PLMS until we get them working properly?
+  // if (!img2img) {
+  //   options.unshift({ value: 'PLMS', label: 'PLMS' })
+  //   options.unshift({ value: 'DDIM', label: 'DDIM' })
+  // }
 
   return options
 }
@@ -127,7 +130,7 @@ const AdvancedOptionsPanel = ({
   const modelsValue = modelerOptions(models).filter((option) => {
     return input.models[0] === option.value
   })[0]
-  const samplerValue = samplerOptions(input.img2img).filter((option) => {
+  const samplerValue = samplerOptions().filter((option) => {
     return input.sampler === option.value
   })[0]
 
@@ -278,7 +281,7 @@ const AdvancedOptionsPanel = ({
           maxWidth="240"
         >
           <SelectComponent
-            options={samplerOptions(input.img2img)}
+            options={samplerOptions()}
             onChange={(obj: { value: string; label: string }) => {
               setInput({ sampler: obj.value })
               localStorage.setItem('sampler', obj.value)

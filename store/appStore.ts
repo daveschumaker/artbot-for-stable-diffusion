@@ -1,5 +1,4 @@
 import { makeStore } from 'statery'
-import { ModelDetails } from '../types'
 
 interface AppStore {
   buildId: string

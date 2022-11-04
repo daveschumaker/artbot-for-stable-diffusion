@@ -207,10 +207,7 @@ const Home: NextPage = () => {
       }
 
       if (localStorage.getItem('sampler')) {
-        const valid = validSampler(
-          localStorage.getItem('sampler') || '',
-          input.img2img
-        )
+        const valid = validSampler(localStorage.getItem('sampler') || '')
         setInput({
           sampler: valid ? localStorage.getItem('sampler') : 'k_euler_a'
         })

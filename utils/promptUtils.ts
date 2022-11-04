@@ -72,7 +72,7 @@ export const savePrompt = ({
   denoising_strength = 0.75,
   models = ['stable_diffusion']
 } = {}) => {
-  const samplerValid = validSampler(sampler, img2img)
+  const samplerValid = validSampler(sampler)
   promptDetails = {
     img2img,
     imageType,

@@ -44,7 +44,7 @@ export const createPendingJob = (imageParams: CreatePendingJob) => {
     clonedParams.jobStartTimestamp = Date.now()
 
     if (clonedParams.sampler === 'random') {
-      clonedParams.sampler = randomSampler(clonedParams.img2img || false)
+      clonedParams.sampler = randomSampler()
     }
 
     const imageSize: ImageSize = orientationDetails(
