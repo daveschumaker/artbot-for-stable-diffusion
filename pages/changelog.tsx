@@ -81,6 +81,11 @@ const Changelog = () => {
             make it more mobile friendly (and to tie into the existing img2img
             and inpainting system)
           </StyledLi>
+          <StyledLi>
+            Add ability to sort <Linker href="/images">images page</Linker> by
+            newest or oldest images, as well as the ability to jump to the
+            beginning or end of your image collection.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
