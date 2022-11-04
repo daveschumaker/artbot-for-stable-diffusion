@@ -95,7 +95,8 @@ const PendingItem = ({ handleDeleteJob, handleRetryJob, jobId }) => {
     (state: any, newState: any) => ({ ...state, ...newState }),
     {
       pctComplete: 0,
-      remainingTime: 0
+      remainingTime: 0,
+      elapsedTimeSec: 0
     }
   )
 
@@ -126,25 +127,23 @@ const PendingItem = ({ handleDeleteJob, handleRetryJob, jobId }) => {
   }, [jobId])
 
   useEffect(() => {
+    if (!jobDetails) {
+      return
+    }
+
     const interval = setInterval(() => {
-      if (!jobDetails) {
-        return
-      }
-
-      console.log(`JobDEETZ`, jobDetails)
-
       const { jobStatus, timestamp, wait_time } = jobDetails
 
       if (!wait_time || jobStatus !== 'processing') {
         return
       }
 
-      const initTime = timestamp / 1000
-      const currentTimeSec = Date.now() / 1000
+      const initTime = Math.round(timestamp / 1000)
+      const currentTimeSec = Math.round(Date.now() / 1000)
       const timeDiff = currentTimeSec - initTime
 
       let timeLeft = wait_time - timeDiff
-      let pct = (timeDiff / wait_time) * 100
+      let pct = Math.round((timeDiff / wait_time) * 100)
 
       if (pct > 95) {
         pct = 95
@@ -156,7 +155,8 @@ const PendingItem = ({ handleDeleteJob, handleRetryJob, jobId }) => {
 
       setCalcTime({
         pctComplete: pct,
-        remainingTime: Math.round(timeLeft)
+        remainingTime: Math.round(timeLeft),
+        elapsedTimeSec: Math.round((Date.now() - jobDetails.timestamp) / 1000)
       })
     }, 500)
 
@@ -177,8 +177,6 @@ const PendingItem = ({ handleDeleteJob, handleRetryJob, jobId }) => {
   if (initialLoad || !jobDetails) {
     return null
   }
-
-  const elapsedTimeSec = Math.round((Date.now() - jobDetails.timestamp) / 1000)
 
   return (
     <StyledContainer>
@@ -275,11 +273,12 @@ const PendingItem = ({ handleDeleteJob, handleRetryJob, jobId }) => {
             )}
           </div>
         </StyledInfoDiv>
-        {elapsedTimeSec > 2 * jobDetails.initWaitTime &&
-          jobDetails.jobStatus !== 'done' && (
+        {calcTime.elapsedTimeSec > 2.5 * jobDetails.initWaitTime &&
+          jobDetails.jobStatus !== 'done' &&
+          calcTime.remainingTime < 3 && (
             <div className="w-full flex flex-row items-start justify-end mt-2">
               <div className="w-[80px]">
-                <AlertTriangleIcon size={24} />
+                <AlertTriangleIcon size={24} stroke="yellow" />
               </div>
               <div className="flex flex-row">
                 <div className="ml-2 mr-2 text-sm">
