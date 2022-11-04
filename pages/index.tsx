@@ -136,8 +136,18 @@ const Home: NextPage = () => {
       ...input
     }
 
-    if (getCanvasStore().cached) {
+    if (getCanvasStore().cached && getCanvasStore().canvasRef) {
       imageJobData.canvasStore = { ...getCanvasStore() }
+    }
+
+    // Handle weird error that's been cropping up where canvas is empty but inpainting is true:
+    if (
+      !getCanvasStore().canvasRef &&
+      input.source_processing === SourceProcessing.InPainting
+    ) {
+      setInput({
+        source_processing: SourceProcessing.Prompt
+      })
     }
 
     const res = await createImageJob(imageJobData)
