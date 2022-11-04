@@ -16,7 +16,11 @@ import { useWindowSize } from '../hooks/useWindowSize'
 import ImageCard from '../components/ImagesPage/ImageCard/imageCard'
 import DotsVerticalIcon from '../components/icons/DotsVerticalIcon'
 
-const MenuButton = styled.button`
+interface MenuButtonProps {
+  showMenu?: boolean
+}
+
+const MenuButton = styled.button<MenuButtonProps>`
   background-color: ${(props) => props.theme.body};
   border: 2px solid ${(props) => props.theme.navLinkActive};
   border-radius: 4px;
@@ -33,6 +37,13 @@ const MenuButton = styled.button`
     background-color: ${(props) => props.theme.navLinkActive};
     color: ${(props) => props.theme.body};
   }
+
+  ${(props) =>
+    props.showMenu &&
+    `
+      background-color: ${props.theme.navLinkActive};
+      color: ${props.theme.body};
+  `}
 `
 
 const DropDownMenu = styled.div`
@@ -172,6 +183,7 @@ const ImagesPage = () => {
         </div>
         <div className="flex flex-row justify-end w-1/2 items-start h-[38px] relative">
           <MenuButton
+            showMenu={showMenu}
             title="Change layout"
             onClick={() => {
               if (showMenu) {
