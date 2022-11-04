@@ -26,6 +26,7 @@ export interface CreateImageJob {
   queue_position?: number
   base64String?: string
   initWaitTime?: number
+  canvasStore?: any
 }
 
 export interface CreatePendingJob {

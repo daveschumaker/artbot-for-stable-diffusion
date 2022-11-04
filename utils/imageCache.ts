@@ -191,6 +191,7 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
     } else {
       delete imageParams.base64String
       delete imageParams.source_image
+      delete imageParams.canvasStore
       trackEvent({
         type: 'ERROR',
         event: 'UNABLE_TO_SEND_IMAGE_REQUEST',
@@ -211,6 +212,7 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
 
     delete imageParams.base64String
     delete imageParams.source_image
+    delete imageParams.canvasStore
     trackEvent({
       type: 'ERROR',
       event: 'SEND_TO_API_ERROR',
