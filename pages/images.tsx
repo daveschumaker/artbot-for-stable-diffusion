@@ -116,19 +116,19 @@ const ImagesPage = () => {
       <Head>
         <title>ArtBot - Your images</title>
       </Head>
-      <div className="inline-block w-1/2">
-        <PageTitle>Your images</PageTitle>
-      </div>
-      <div className="inline-block w-1/2 text-right content-center">
-        <div>
+      <div className="flex flex-row w-full items-center">
+        <div className="inline-block w-1/2">
+          <PageTitle>Your images</PageTitle>
+        </div>
+        <div className="flex flex-row justify-end w-1/2 items-start h-[38px]">
           <button
             title="Change layout"
             className="p-[2px] border-[1px] border-teal-500 rounded-md cursor-pointer text-sm text-teal-500 relative top-[3px]"
             onClick={handleGridListClick}
           >
-            {showLayout === 'layout' && <LayoutIcon size={18} />}
-            {showLayout === 'grid' && <GridIcon size={18} />}
-            {showLayout === 'list' && <ListIcon size={18} />}
+            {showLayout === 'layout' && <LayoutIcon size={24} />}
+            {showLayout === 'grid' && <GridIcon size={24} />}
+            {showLayout === 'list' && <ListIcon size={24} />}
           </button>
         </div>
       </div>
