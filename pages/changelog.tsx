@@ -54,6 +54,30 @@ const Changelog = () => {
       </Head>
       <PageTitle>Changelog</PageTitle>
       <Section>
+        <SubSectionTitle>2022.11.05</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Feature: Bulk delete images from the{' '}
+            <Linker href="/images">images page</Linker>. Just hit the select /
+            checkmark button in the top right to start choosing. I will bring
+            this to the image details page in the near future.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
+        <SubSectionTitle>2022.11.04</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            MILESTONE: 200,000 images have been created with ArtBot!
+          </StyledLi>
+          <StyledLi>
+            Add dropdown menu button to{' '}
+            <Linker href="/images">images page</Linker> to change sort order of
+            images and layout
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.11.03</SubSectionTitle>
         <StyledUl>
           <StyledLi>

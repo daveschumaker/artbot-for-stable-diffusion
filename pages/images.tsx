@@ -3,18 +3,26 @@ import Head from 'next/head'
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import Masonry from 'react-responsive-masonry'
+import LazyLoad from 'react-lazyload'
 import styled from 'styled-components'
 
 import PageTitle from '../components/UI/PageTitle'
 import Spinner from '../components/Spinner'
-import { countCompletedJobs, fetchCompletedJobs, imageCount } from '../utils/db'
-import LazyLoad from 'react-lazyload'
+import {
+  bulkDeleteImages,
+  countCompletedJobs,
+  fetchCompletedJobs,
+  imageCount
+} from '../utils/db'
 import ImageSquare from '../components/ImageSquare'
 import { trackEvent } from '../api/telemetry'
 import { Button } from '../components/UI/Button'
 import { useWindowSize } from '../hooks/useWindowSize'
 import ImageCard from '../components/ImagesPage/ImageCard/imageCard'
 import DotsVerticalIcon from '../components/icons/DotsVerticalIcon'
+import CircleCheckIcon from '../components/icons/CircleCheckIcon'
+import TextButton from '../components/UI/TextButton'
+import ConfirmationModal from '../components/ConfirmationModal'
 
 interface MenuButtonProps {
   showMenu?: boolean
@@ -75,8 +83,33 @@ const MenuItem = styled.li`
   }
 `
 
+const NonLink = styled.div`
+  cursor: pointer;
+  position: relative;
+`
+
+const ImageOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: gray;
+  opacity: 0.6;
+`
+
+const SelectCheck = styled(CircleCheckIcon)`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+`
+
 const ImagesPage = () => {
   const size = useWindowSize()
+
+  const [deleteMode, setDeleteMode] = useState(false)
+  const [deleteSelection, setDeleteSelection] = useState<Array<string>>([])
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
 
   const [showMenu, setShowMenu] = useState(false)
   const [totalImages, setTotalImages] = useState(0)
@@ -93,7 +126,18 @@ const ImagesPage = () => {
   }, [])
 
   const handleDeleteImageClick = async () => {
-    fetchImages()
+    trackEvent({
+      event: 'BULK_DELETE',
+      numImages: deleteSelection.length,
+      context: 'ImagesPage'
+    })
+
+    await bulkDeleteImages(deleteSelection)
+    await getImageCount()
+    await fetchImages()
+    setDeleteSelection([])
+    setDeleteMode(false)
+    setShowDeleteModal(false)
   }
 
   const getImageCount = async () => {
@@ -152,7 +196,7 @@ const ImagesPage = () => {
     }
   }, [fetchImages])
 
-  let defaultStyle = `flex gap-y-3 mt-4`
+  let defaultStyle = `flex gap-y-3 mt-4 relative`
 
   if (showLayout === 'grid' || showLayout === 'layout') {
     defaultStyle += ` flex-wrap gap-x-3 justify-center md:justify-start`
@@ -172,8 +216,47 @@ const ImagesPage = () => {
     imageColumns = 3
   }
 
+  const handleImageClick = useCallback(
+    (id: string) => {
+      let newArray: Array<string> = [...deleteSelection]
+      if (deleteMode) {
+        const index = newArray.indexOf(id)
+        if (index >= 0) {
+          newArray.splice(index, 1)
+        } else {
+          newArray.push(id)
+        }
+      }
+
+      setDeleteSelection(newArray)
+    },
+    [deleteMode, deleteSelection]
+  )
+
+  const handleSelectAll = () => {
+    let delArray: Array<string> = []
+    images.forEach((image: { id: string }) => {
+      delArray.push(image.id)
+    })
+
+    setDeleteSelection(delArray)
+  }
+
+  const LinkEl = deleteMode ? NonLink : Link
+
   return (
     <div>
+      {showDeleteModal && (
+        <ConfirmationModal
+          multiImage={deleteSelection.length > 1}
+          onConfirmClick={() => handleDeleteImageClick()}
+          closeModal={() => {
+            setDeleteSelection([])
+            setDeleteMode(false)
+            setShowDeleteModal(false)
+          }}
+        />
+      )}
       <Head>
         <title>ArtBot - Your images</title>
       </Head>
@@ -181,7 +264,21 @@ const ImagesPage = () => {
         <div className="inline-block w-1/2">
           <PageTitle>Your images</PageTitle>
         </div>
-        <div className="flex flex-row justify-end w-1/2 items-start h-[38px] relative">
+        <div className="flex flex-row justify-end w-1/2 items-start h-[38px] relative gap-2">
+          <MenuButton
+            showMenu={deleteMode}
+            title="Select Images"
+            onClick={() => {
+              if (deleteMode) {
+                setDeleteSelection([])
+                setDeleteMode(false)
+              } else {
+                setDeleteMode(true)
+              }
+            }}
+          >
+            <CircleCheckIcon size={24} />
+          </MenuButton>
           <MenuButton
             showMenu={showMenu}
             title="Change layout"
@@ -267,12 +364,48 @@ const ImagesPage = () => {
         cache and are not stored on a remote server. Clearing your cache will{' '}
         <strong>delete</strong> all images.
       </div>
-      {totalImages > 0 && (
-        <div className="text-sm mb-2 text-teal-500">
-          Showing {currentOffset} - {maxOffset} of{' '}
-          <strong>{totalImages}</strong> images
-        </div>
-      )}
+      <div className="flex flex-row w-full justify-between">
+        {!deleteMode && totalImages > 0 && (
+          <div className="text-sm mb-2 text-teal-500">
+            Showing {currentOffset} - {maxOffset} of{' '}
+            <strong>{totalImages}</strong> images
+          </div>
+        )}
+        {deleteMode && (
+          <>
+            <div className="text-sm mb-2 text-teal-500">
+              selected ({deleteSelection.length})
+            </div>
+            <div className="flex flex-row gap-2">
+              <TextButton
+                onClick={() => {
+                  setDeleteSelection([])
+                  setDeleteMode(false)
+                }}
+              >
+                cancel
+              </TextButton>
+              <TextButton
+                onClick={() => {
+                  handleSelectAll()
+                }}
+              >
+                select all
+              </TextButton>
+              <TextButton
+                color="red"
+                onClick={() => {
+                  if (deleteSelection.length > 0) {
+                    setShowDeleteModal(true)
+                  }
+                }}
+              >
+                delete
+              </TextButton>
+            </div>
+          </>
+        )}
+      </div>
       {isInitialLoad && <Spinner />}
       {!isInitialLoad && images.length === 0 && (
         <div className="mb-2">
@@ -287,6 +420,7 @@ const ImagesPage = () => {
           <Masonry columnsCount={imageColumns} gutter="8px">
             {images.map(
               (image: {
+                id: string
                 jobId: string
                 base64String: string
                 prompt: string
@@ -295,7 +429,11 @@ const ImagesPage = () => {
               }) => {
                 return (
                   <LazyLoad key={image.jobId} once>
-                    <Link href={`/image/${image.jobId}`} passHref>
+                    <LinkEl
+                      href={`/image/${image.jobId}`}
+                      passHref
+                      onClick={() => handleImageClick(image.id)}
+                    >
                       <img
                         src={'data:image/webp;base64,' + image.base64String}
                         style={{
@@ -305,7 +443,17 @@ const ImagesPage = () => {
                         }}
                         alt={image.prompt}
                       />
-                    </Link>
+                      {deleteMode && deleteSelection.indexOf(image.id) >= 0 && (
+                        <ImageOverlay></ImageOverlay>
+                      )}
+                      {deleteMode &&
+                        deleteSelection.indexOf(image.id) === -1 && (
+                          <SelectCheck />
+                        )}
+                      {deleteMode && deleteSelection.indexOf(image.id) >= 0 && (
+                        <SelectCheck fill="blue" stroke="white" />
+                      )}
+                    </LinkEl>
                   </LazyLoad>
                 )
               }
@@ -316,6 +464,7 @@ const ImagesPage = () => {
           <>
             {images.map(
               (image: {
+                id: string
                 jobId: string
                 base64String: string
                 prompt: string
@@ -324,12 +473,26 @@ const ImagesPage = () => {
               }) => {
                 return (
                   <LazyLoad key={image.jobId} once>
-                    <Link href={`/image/${image.jobId}`} passHref>
+                    <LinkEl
+                      href={`/image/${image.jobId}`}
+                      passHref
+                      onClick={() => handleImageClick(image.id)}
+                    >
                       <ImageSquare
                         imageDetails={image}
                         imageType={'image/webp'}
                       />
-                    </Link>
+                      {deleteMode && deleteSelection.indexOf(image.id) >= 0 && (
+                        <ImageOverlay></ImageOverlay>
+                      )}
+                      {deleteMode &&
+                        deleteSelection.indexOf(image.id) === -1 && (
+                          <SelectCheck />
+                        )}
+                      {deleteMode && deleteSelection.indexOf(image.id) >= 0 && (
+                        <SelectCheck fill="blue" stroke="white" />
+                      )}
+                    </LinkEl>
                   </LazyLoad>
                 )
               }

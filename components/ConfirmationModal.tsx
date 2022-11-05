@@ -2,7 +2,8 @@ import { useEffect } from 'react'
 
 const ConfirmationModal = ({
   onConfirmClick = () => {},
-  closeModal = () => {}
+  closeModal = () => {},
+  multiImage = false
 }) => {
   useEffect(() => {
     // @ts-ignore
@@ -57,11 +58,12 @@ const ConfirmationModal = ({
                     className="text-lg font-medium leading-6 text-gray-900"
                     id="modal-title"
                   >
-                    Delete image
+                    Delete {multiImage ? 'images' : 'image'}
                   </h3>
                   <div className="mt-2">
                     <p className="text-sm text-gray-500">
-                      Are you sure you want to delete this image?
+                      Are you sure you want to delete{' '}
+                      {multiImage ? 'these images' : 'this image'}?
                       <br />
                       This action cannot be undone.
                     </p>

@@ -33,6 +33,10 @@ export const allPendingJobs = async () => {
   return await db?.pending?.orderBy('timestamp').toArray()
 }
 
+export const bulkDeleteImages = async (images: Array<string>) => {
+  return db.completed.bulkDelete(images)
+}
+
 export const getAllPendingJobsByStatus = async (
   status: string,
   limit: number = 5
