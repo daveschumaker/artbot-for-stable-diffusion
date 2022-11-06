@@ -25,7 +25,7 @@ const HeartIcon = ({
       strokeWidth={width}
       stroke={stroke}
       fill={fill}
-      filter={shadow ? 'drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4))' : undefined}
+      filter={shadow ? 'drop-shadow(3px 5px 2px rgb(0 0 0 / 0.8))' : undefined}
       strokeLinecap="round"
       strokeLinejoin="round"
     >
