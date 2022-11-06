@@ -75,6 +75,24 @@ const Changelog = () => {
             <Linker href="/images">images page</Linker> to change sort order of
             images and layout
           </StyledLi>
+          <StyledLi>
+            Better limits and validation for advanced parameters on the create
+            image page, this is especially helpful for logged out or anonymous
+            users.
+          </StyledLi>
+          <StyledLi>
+            Make ID of the worker that generated an image visible on image
+            details page. This is useful in case you need to report an unsavory
+            worker that is running within the cluster. You can report these
+            sorts of images on the{' '}
+            <Linker
+              href="https://discord.com/channels/781145214752129095/1027506429139095562"
+              target="_blank"
+            >
+              Stable Horde Discord channel
+            </Linker>
+            .
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
