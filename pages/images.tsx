@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import Head from 'next/head'
-import { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import Masonry from 'react-responsive-masonry'
 import LazyLoad from 'react-lazyload'
@@ -23,36 +23,7 @@ import DotsVerticalIcon from '../components/icons/DotsVerticalIcon'
 import CircleCheckIcon from '../components/icons/CircleCheckIcon'
 import TextButton from '../components/UI/TextButton'
 import ConfirmationModal from '../components/ConfirmationModal'
-
-interface MenuButtonProps {
-  showMenu?: boolean
-}
-
-const MenuButton = styled.button<MenuButtonProps>`
-  background-color: ${(props) => props.theme.body};
-  border: 2px solid ${(props) => props.theme.navLinkActive};
-  border-radius: 4px;
-  color: ${(props) => props.theme.navLinkActive};
-  cursor: pointer;
-  padding: 2px;
-  position: relative;
-
-  &:active {
-    transform: scale(0.98);
-  }
-
-  &:hover {
-    background-color: ${(props) => props.theme.navLinkActive};
-    color: ${(props) => props.theme.body};
-  }
-
-  ${(props) =>
-    props.showMenu &&
-    `
-      background-color: ${props.theme.navLinkActive};
-      color: ${props.theme.body};
-  `}
-`
+import MenuButton from '../components/UI/MenuButton'
 
 const DropDownMenu = styled.div`
   background-color: ${(props) => props.theme.body};
@@ -242,6 +213,22 @@ const ImagesPage = () => {
     setDeleteSelection(delArray)
   }
 
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (deleteMode && e.keyCode === 27) {
+        setDeleteSelection([])
+        setDeleteMode(false)
+        setShowDeleteModal(false)
+      }
+
+      if (deleteMode && e.keyCode === 13) {
+        setShowDeleteModal(true)
+      }
+    }
+    window.addEventListener('keydown', handleKeyPress)
+    return () => window.removeEventListener('keydown', handleKeyPress)
+  }, [deleteMode])
+
   const LinkEl = deleteMode ? NonLink : Link
 
   return (
@@ -266,7 +253,7 @@ const ImagesPage = () => {
         </div>
         <div className="flex flex-row justify-end w-1/2 items-start h-[38px] relative gap-2">
           <MenuButton
-            showMenu={deleteMode}
+            active={deleteMode}
             title="Select Images"
             onClick={() => {
               if (deleteMode) {
@@ -280,7 +267,7 @@ const ImagesPage = () => {
             <CircleCheckIcon size={24} />
           </MenuButton>
           <MenuButton
-            showMenu={showMenu}
+            active={showMenu}
             title="Change layout"
             onClick={() => {
               if (showMenu) {

@@ -15,7 +15,6 @@ import TextArea from '../components/UI/TextArea'
 import { Button } from '../components/UI/Button'
 import TrashIcon from '../components/icons/TrashIcon'
 import SquarePlusIcon from '../components/icons/SquarePlusIcon'
-import { KeypressEvent } from '../types'
 import { trackEvent, trackGaEvent } from '../api/telemetry'
 import CloseIcon from '../components/icons/CloseIcon'
 import ImageSquare from '../components/ImageSquare'
@@ -188,7 +187,7 @@ const Home: NextPage = () => {
     }
   }
 
-  const onEnterPress = (e: KeypressEvent) => {
+  const onEnterPress = (e: KeyboardEvent) => {
     if (e.keyCode == 13 && e.shiftKey == false) {
       e.preventDefault()
       handleSubmit()
