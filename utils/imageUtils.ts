@@ -192,7 +192,7 @@ export const createNewImage = async (imageParams: CreateImageJob) => {
         success: true,
         jobId
       }
-    } else {
+    } else if (!success && status !== 'WAITING_FOR_PENDING_JOB') {
       if (clonedParams.source_image) {
         clonedParams.has_source_image = true
       }
@@ -207,6 +207,7 @@ export const createNewImage = async (imageParams: CreateImageJob) => {
       delete clonedParams.canvasStore
 
       trackEvent({
+        type: 'ERROR',
         event: 'UNABLE_TO_CREATE_IMAGE',
         context: 'imageUtils',
         imageParams: clonedParams
@@ -232,6 +233,7 @@ export const createNewImage = async (imageParams: CreateImageJob) => {
     delete clonedParams.canvasStore
 
     trackEvent({
+      type: 'ERROR',
       event: 'UNABLE_TO_CREATE_IMAGE',
       context: 'imageUtils',
       imageParams: clonedParams
