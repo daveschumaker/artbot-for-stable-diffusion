@@ -34,6 +34,6 @@ export const setUserInfo = ({ username, kudos, trusted }: UserInfo) => {
     username,
     kudos,
     trusted,
-    loggedIn: true
+    loggedIn: username ? true : false
   }))
 }

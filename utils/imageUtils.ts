@@ -1,5 +1,6 @@
 import { createImage } from '../api/createImage'
 import { trackEvent } from '../api/telemetry'
+import { userInfoStore } from '../store/userStore'
 import { isValidHttpUrl } from './validationUtils'
 
 interface CreateImageJob {
@@ -42,7 +43,9 @@ export const uploadImageConfig = {
   maxHeight: 1024
 }
 
-export const randomSampler = () => {
+export const randomSampler = (steps: number) => {
+  const loggedIn = userInfoStore.state.loggedIn
+
   const samplerArray = [
     'k_dpm_2_a',
     'k_dpm_2',
@@ -58,7 +61,12 @@ export const randomSampler = () => {
   //   samplerArray.push('PLMS')
   // }
 
-  return samplerArray[Math.floor(Math.random() * samplerArray.length)]
+  if (loggedIn || steps <= 50) {
+    return samplerArray[Math.floor(Math.random() * samplerArray.length)]
+  } else {
+    const limitedArray = ['k_euler_a', 'k_euler']
+    return limitedArray[Math.floor(Math.random() * limitedArray.length)]
+  }
 }
 
 export const orientationDetails = (

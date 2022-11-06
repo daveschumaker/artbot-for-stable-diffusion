@@ -14,7 +14,7 @@ export const fetchUserDetails = async (apikey: string) => {
       }
     })
     const userDetails = await res.json()
-    const { kudos, trusted, username } = userDetails
+    const { kudos = 0, trusted = false, username = '' } = userDetails
 
     setUserInfo({
       kudos,

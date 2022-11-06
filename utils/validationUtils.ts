@@ -8,7 +8,8 @@ export const maxSteps = (sampler: string, loggedIn: boolean = false) => {
     k_euler_a: 100,
     k_euler: 100,
     k_heun: 50,
-    k_lms: 50
+    k_lms: 50,
+    random: 50
   }
 
   if (loggedIn) {

@@ -134,8 +134,6 @@ const AdvancedOptionsPanel = ({
   })[0]
 
   const validateSteps = useCallback(() => {
-    console.log(`sampler`, input.sampler)
-    console.log(`loggedIn`, loggedIn)
     if (
       isNaN(input.steps) ||
       input.steps < 1 ||

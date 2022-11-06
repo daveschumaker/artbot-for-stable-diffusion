@@ -35,6 +35,7 @@ interface ImageDetails {
   imageType?: string
   source_image?: string
   orientation: string
+  worker_id?: string
   models?: Array<string>
 }
 
@@ -128,20 +129,23 @@ const ImageDetails = ({
         <div>
           -- Image Details --
           <ul>
-            Job:{' '}
-            <Linker
-              href={`/job/${imageDetails.parentJobId}`}
-              passHref
-              className="text-cyan-500"
-              onClick={() => {
-                trackEvent({
-                  event: 'JOB_DETAILS_CLICK',
-                  context: 'ImagePage'
-                })
-              }}
-            >
-              {imageDetails.parentJobId}
-            </Linker>
+            <li>Worker ID: {imageDetails.worker_id}</li>
+            <li>
+              Job:{' '}
+              <Linker
+                href={`/job/${imageDetails.parentJobId}`}
+                passHref
+                className="text-cyan-500"
+                onClick={() => {
+                  trackEvent({
+                    event: 'JOB_DETAILS_CLICK',
+                    context: 'ImagePage'
+                  })
+                }}
+              >
+                {imageDetails.parentJobId}
+              </Linker>
+            </li>
             {imageDetails.img2img && <li>Source: img2img</li>}
             {imageDetails.negative && (
               <li>Negative prompt: {imageDetails.negative}</li>

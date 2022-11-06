@@ -173,11 +173,8 @@ const Home: NextPage = () => {
       })
       router.push('/pending')
     } else if (status === 'INVALID_API_KEY') {
-      setHasError('Invalid API key sent to the server. Check your settings.')
-      setPending(false)
-    } else if (status === 'UNTRUSTED_IP' && input.img2img) {
       setHasError(
-        'Stable Horde API error: Untrusted IP -- please use text2img prompts to build trust and try an img2img request again later.'
+        'Invalid API key sent to the server. Check your settings and re-enter your key.'
       )
       setPending(false)
     } else if (message) {

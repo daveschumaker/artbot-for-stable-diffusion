@@ -8,7 +8,7 @@ import Input from '../components/UI/Input'
 import PageTitle from '../components/UI/PageTitle'
 import Select from '../components/UI/Select'
 import Tooltip from '../components/UI/Tooltip'
-import { setTrustedUser } from '../store/appStore'
+import { unsetUserInfo } from '../store/userStore'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -165,7 +165,7 @@ const SettingsPage = () => {
             <Button
               btnType="secondary"
               onClick={() => {
-                setTrustedUser(false)
+                unsetUserInfo()
                 setApiKey('')
                 localStorage.setItem('apikey', '')
               }}
