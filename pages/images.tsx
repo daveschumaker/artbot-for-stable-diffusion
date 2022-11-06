@@ -26,6 +26,7 @@ import TextButton from '../components/UI/TextButton'
 import ConfirmationModal from '../components/ConfirmationModal'
 import MenuButton from '../components/UI/MenuButton'
 import FilterIcon from '../components/icons/FilterIcon'
+import HeartIcon from '../components/icons/HeartIcon'
 
 const DropDownMenu = styled.div`
   background-color: ${(props) => props.theme.body};
@@ -75,6 +76,12 @@ const SelectCheck = styled(CircleCheckIcon)`
   position: absolute;
   top: 8px;
   right: 8px;
+`
+
+const StyledHeartIcon = styled(HeartIcon)`
+  position: absolute;
+  top: 8px;
+  left: 8px;
 `
 
 const ImagesPage = () => {
@@ -318,6 +325,14 @@ const ImagesPage = () => {
                   >
                     Show favorited
                   </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      setShowFilters(false)
+                      setFilterMode('unfavorited')
+                    }}
+                  >
+                    Show unfavorited
+                  </MenuItem>
                   <MenuSeparator />
                   <MenuItem
                     onClick={() => {
@@ -490,6 +505,7 @@ const ImagesPage = () => {
             {images.map(
               (image: {
                 id: string
+                favorited: boolean
                 jobId: string
                 base64String: string
                 prompt: string
@@ -499,6 +515,7 @@ const ImagesPage = () => {
                 return (
                   <LazyLoad key={image.jobId} once>
                     <LinkEl
+                      className="relative"
                       href={`/image/${image.jobId}`}
                       passHref
                       onClick={() => handleImageClick(image.id)}
@@ -522,6 +539,14 @@ const ImagesPage = () => {
                       {deleteMode && deleteSelection.indexOf(image.id) >= 0 && (
                         <SelectCheck fill="blue" stroke="white" />
                       )}
+                      {image.favorited && (
+                        <StyledHeartIcon
+                          fill="#14B8A6"
+                          width="2"
+                          size="32"
+                          shadow
+                        />
+                      )}
                     </LinkEl>
                   </LazyLoad>
                 )
@@ -543,6 +568,7 @@ const ImagesPage = () => {
                 return (
                   <LazyLoad key={image.jobId} once>
                     <LinkEl
+                      className="relative"
                       href={`/image/${image.jobId}`}
                       passHref
                       onClick={() => handleImageClick(image.id)}
@@ -560,6 +586,14 @@ const ImagesPage = () => {
                         )}
                       {deleteMode && deleteSelection.indexOf(image.id) >= 0 && (
                         <SelectCheck fill="blue" stroke="white" />
+                      )}
+                      {image.favorited && (
+                        <StyledHeartIcon
+                          fill="#14B8A6"
+                          width="2"
+                          size="32"
+                          shadow
+                        />
                       )}
                     </LinkEl>
                   </LazyLoad>

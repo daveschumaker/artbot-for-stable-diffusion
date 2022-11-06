@@ -4,12 +4,16 @@ const HeartIcon = ({
   className,
   fill = 'none',
   size = 24,
-  stroke = 'currentColor'
+  stroke = 'currentColor',
+  shadow = false,
+  width = 1
 }: {
   className?: string
   fill?: string
   size?: number
   stroke?: string
+  shadow?: boolean
+  width?: number
 }) => {
   return (
     <svg
@@ -18,9 +22,10 @@ const HeartIcon = ({
       width={size}
       height={size}
       viewBox="0 0 24 24"
-      strokeWidth="1"
+      strokeWidth={width}
       stroke={stroke}
       fill={fill}
+      filter={shadow ? 'drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4))' : undefined}
       strokeLinecap="round"
       strokeLinejoin="round"
     >

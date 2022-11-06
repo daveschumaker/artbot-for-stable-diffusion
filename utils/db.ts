@@ -66,6 +66,10 @@ export const filterCompletedJobs = async ({
       return entry.favorited === true
     }
 
+    if (filterType === 'unfavorited') {
+      return entry.favorited !== true
+    }
+
     if (filterType === 'text2img') {
       return (
         !entry.img2img ||
