@@ -42,7 +42,7 @@ export const uploadInpaint = (imageDetails: any, clone = false) => {
     negative: imageDetails.negative,
     source_image: imageDetails.base64String,
     source_processing: SourceProcessing.InPainting,
-    source_mask: '',
+    source_mask: imageDetails.source_mask,
     denoising_strength: imageDetails.denoising_strength,
     models: imageDetails.models
   })

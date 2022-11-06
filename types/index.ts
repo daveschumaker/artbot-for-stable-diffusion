@@ -19,6 +19,7 @@ export interface CreateImageJob {
   negative?: string
   allowNsfw?: boolean
   source_image?: string
+  source_mask?: string
   denoising_strength?: number
   orientationType?: string
   orientation?: string
@@ -27,6 +28,9 @@ export interface CreateImageJob {
   base64String?: string
   initWaitTime?: number
   canvasStore?: any
+
+  has_source_mask?: boolean
+  has_source_image?: boolean
 }
 
 export interface CreatePendingJob {
@@ -45,6 +49,9 @@ export interface CreatePendingJob {
   steps: number
   sampler: string
   jobStartTimestamp: number
+
+  has_source_mask?: boolean
+  has_source_image?: boolean
 }
 
 export interface DiffusionModel {

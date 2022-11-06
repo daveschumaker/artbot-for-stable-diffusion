@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import styled from 'styled-components'
+import { useStore } from 'statery'
 
 import SelectComponent from '../../UI/Select'
 import Input from '../../UI/Input'
-import { useStore } from 'statery'
 import { appInfoStore } from '../../../store/appStore'
 import Tooltip from '../../UI/Tooltip'
 import { Button } from '../../UI/Button'
@@ -11,6 +11,9 @@ import TrashIcon from '../../icons/TrashIcon'
 import { ModelDetails } from '../../../types'
 import { SourceProcessing } from '../../../utils/promptUtils'
 import { nearestWholeMultiple } from '../../../utils/imageUtils'
+import { userInfoStore } from '../../../store/userStore'
+import { maxSteps } from '../../../utils/validationUtils'
+import useErrorMessage from '../../../hooks/useErrorMessage'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -96,32 +99,28 @@ const samplerOptions = () => {
   return options
 }
 
-interface InputError {
-  steps?: string
-  cfg_scale?: string
-  numImages?: string
-  height?: string
-  width?: string
-}
-
 interface Props {
   handleChangeInput: any
   handleImageUpload: any
   handleOrientationSelect: any
   input: any
   setInput: any
+  setHasValidationError: any
 }
 
 const AdvancedOptionsPanel = ({
   handleChangeInput,
   handleOrientationSelect,
   input,
-  setInput
+  setInput,
+  setHasValidationError
 }: Props) => {
+  const userState = useStore(userInfoStore)
   const appState = useStore(appInfoStore)
+  const { loggedIn } = userState
   const { models } = appState
 
-  const [hasError, setHasError] = useState<InputError>({})
+  const [errorMessage, setErrorMessage, hasError] = useErrorMessage()
 
   const orientationValue = orientationOptions.filter((option) => {
     return input.orientationType === option.value
@@ -133,6 +132,33 @@ const AdvancedOptionsPanel = ({
   const samplerValue = samplerOptions().filter((option) => {
     return input.sampler === option.value
   })[0]
+
+  const validateSteps = useCallback(() => {
+    console.log(`sampler`, input.sampler)
+    console.log(`loggedIn`, loggedIn)
+    if (
+      isNaN(input.steps) ||
+      input.steps < 1 ||
+      input.steps > maxSteps(input.sampler, loggedIn)
+    ) {
+      setErrorMessage({
+        steps: `Please enter a valid number between 1 and ${maxSteps(
+          input.sampler,
+          loggedIn
+        )}`
+      })
+    } else {
+      setErrorMessage({ steps: null })
+    }
+  }, [input.sampler, input.steps, loggedIn, setErrorMessage])
+
+  useEffect(() => {
+    setHasValidationError(hasError)
+  }, [hasError, setHasValidationError])
+
+  useEffect(() => {
+    validateSteps()
+  }, [input.sampler, validateSteps])
 
   return (
     <div>
@@ -146,37 +172,55 @@ const AdvancedOptionsPanel = ({
             options={orientationOptions}
             onChange={(obj: { value: string; label: string }) => {
               handleOrientationSelect(obj.value)
-              setInput({ orientationType: obj.value })
+              setInput({ orientationType: obj.value, height: 512, width: 512 })
+
+              if (obj.value !== 'custom') {
+                setErrorMessage({ height: null, width: null })
+              }
             }}
             value={orientationValue}
             isSearchable={false}
           />
           {orientationValue?.value === 'custom' && (
             <>
-              <div className="mt-2 flex flex-col gap-4 justify-start">
+              <div className="block text-xs mt-4 w-full">
+                Max size for each dimension: {loggedIn ? 3072 : 1024} pixels
+                {loggedIn && input.height * input.width > 1024 * 1024 && (
+                  <div className="text-red-500 font-bold">
+                    WARNING: You will need to have enough kudos to complete this
+                    request.
+                  </div>
+                )}
+              </div>
+              <div className="flex flex-col gap-4 justify-start">
                 <div className="mt-2 flex flex-row gap-4 items-center">
                   <SubSectionTitle>Width</SubSectionTitle>
                   <Input
                     // @ts-ignore
                     type="text"
                     name="width"
-                    error={hasError.width}
+                    error={errorMessage.width}
                     onChange={handleChangeInput}
                     onBlur={(e: any) => {
+                      if (input.orientationType !== 'custom') {
+                        return
+                      }
+
                       if (
                         isNaN(e.target.value) ||
                         e.target.value < 64 ||
-                        e.target.value > 1024
+                        e.target.value > (loggedIn ? 3072 : 1024)
                       ) {
-                        setHasError({
-                          width:
-                            'Please enter a valid number between 64 and 1024'
+                        setErrorMessage({
+                          width: `Please enter a valid number between 64 and ${
+                            loggedIn ? 3072 : 1024
+                          }`
                         })
                         return
                       }
 
-                      if (hasError.width) {
-                        setHasError({})
+                      if (errorMessage.width) {
+                        setErrorMessage({ width: null })
                       }
 
                       setInput({
@@ -188,9 +232,9 @@ const AdvancedOptionsPanel = ({
                     width="75px"
                   />
                 </div>
-                {hasError.width && (
+                {errorMessage.width && (
                   <div className="mb-2 text-red-500 font-bold">
-                    {hasError.width}
+                    {errorMessage.width}
                   </div>
                 )}
                 <div className="flex flex-row gap-4 items-center">
@@ -200,23 +244,28 @@ const AdvancedOptionsPanel = ({
                     className="mb-2"
                     type="text"
                     name="height"
-                    error={hasError.height}
+                    error={errorMessage.height}
                     onChange={handleChangeInput}
                     onBlur={(e: any) => {
+                      if (input.orientationType !== 'custom') {
+                        return
+                      }
+
                       if (
                         isNaN(e.target.value) ||
                         e.target.value < 64 ||
-                        e.target.value > 1024
+                        e.target.value > (loggedIn ? 3072 : 1024)
                       ) {
-                        setHasError({
-                          height:
-                            'Please enter a valid number between 64 and 1024'
+                        setErrorMessage({
+                          height: `Please enter a valid number between 64 and ${
+                            loggedIn ? 3072 : 1024
+                          }`
                         })
                         return
                       }
 
-                      if (hasError.height) {
-                        setHasError({})
+                      if (errorMessage.height) {
+                        setErrorMessage({ height: null })
                       }
 
                       setInput({
@@ -228,9 +277,9 @@ const AdvancedOptionsPanel = ({
                     width="75px"
                   />
                 </div>
-                {hasError.height && (
+                {errorMessage.height && (
                   <div className="mb-2 text-red-500 font-bold">
-                    {hasError.height}
+                    {errorMessage.height}
                   </div>
                 )}
               </div>
@@ -300,7 +349,9 @@ const AdvancedOptionsPanel = ({
             (60 - 90). Keep your initial queries in the 30 - 50 range for best
             results.
           </Tooltip>
-          <div className="block text-xs w-full">(1 - 200)</div>
+          <div className="block text-xs w-full">
+            (1 - {maxSteps(input.sampler, loggedIn)})
+          </div>
         </SubSectionTitle>
         <MaxWidth
           // @ts-ignore
@@ -308,32 +359,22 @@ const AdvancedOptionsPanel = ({
         >
           <Input
             // @ts-ignore
-            error={hasError.steps}
+            error={errorMessage.steps}
             className="mb-2"
             type="text"
             name="steps"
             onChange={handleChangeInput}
-            onBlur={(e: any) => {
-              if (
-                isNaN(e.target.value) ||
-                e.target.value < 1 ||
-                e.target.value > 200
-              ) {
-                setHasError({
-                  steps: 'Please enter a valid number between 1 and 200'
-                })
-              } else if (hasError.steps) {
-                setHasError({})
-              }
+            onBlur={() => {
+              validateSteps()
             }}
             // @ts-ignore
             value={input.steps}
             width="100%"
           />
         </MaxWidth>
-        {hasError.steps && (
+        {errorMessage.steps && (
           <div className="mb-2 text-red-500 text-lg font-bold">
-            {hasError.steps}
+            {errorMessage.steps}
           </div>
         )}
       </Section>
@@ -352,7 +393,7 @@ const AdvancedOptionsPanel = ({
         >
           <Input
             // @ts-ignore
-            error={hasError.cfg_scale}
+            error={errorMessage.cfg_scale}
             className="mb-2"
             type="text"
             name="cfg_scale"
@@ -362,11 +403,11 @@ const AdvancedOptionsPanel = ({
                 e.target.value < 1 ||
                 e.target.value > 30
               ) {
-                setHasError({
+                setErrorMessage({
                   cfg_scale: 'Please enter a valid number between 1 and 30'
                 })
-              } else if (hasError.cfg_scale) {
-                setHasError({})
+              } else if (errorMessage.cfg_scale) {
+                setErrorMessage({ cfg_scale: null })
               }
             }}
             onChange={handleChangeInput}
@@ -375,9 +416,9 @@ const AdvancedOptionsPanel = ({
             width="100%"
           />
         </MaxWidth>
-        {hasError.cfg_scale && (
+        {errorMessage.cfg_scale && (
           <div className="mb-2 text-red-500 text-lg font-bold">
-            {hasError.cfg_scale}
+            {errorMessage.cfg_scale}
           </div>
         )}
       </Section>
@@ -463,7 +504,7 @@ const AdvancedOptionsPanel = ({
           <Input
             // @ts-ignore
             className="mb-2"
-            error={hasError.numImages}
+            error={errorMessage.numImages}
             type="text"
             name="numImages"
             onChange={handleChangeInput}
@@ -473,11 +514,11 @@ const AdvancedOptionsPanel = ({
                 e.target.value < 1 ||
                 e.target.value > 20
               ) {
-                setHasError({
+                setErrorMessage({
                   numImages: 'Please enter a valid number between 1 and 20'
                 })
-              } else if (hasError.numImages) {
-                setHasError({})
+              } else if (errorMessage.numImages) {
+                setErrorMessage({ numImages: null })
               }
             }}
             // @ts-ignore
@@ -485,9 +526,9 @@ const AdvancedOptionsPanel = ({
             width="100%"
           />
         </MaxWidth>
-        {hasError.numImages && (
+        {errorMessage.numImages && (
           <div className="mb-2 text-red-500 text-lg font-bold">
-            {hasError.numImages}
+            {errorMessage.numImages}
           </div>
         )}
       </Section>

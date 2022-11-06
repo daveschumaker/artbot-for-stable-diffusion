@@ -1,4 +1,4 @@
-import { setTrustedUser } from '../store/appStore'
+import { setUserInfo } from '../store/userStore'
 
 let isPending = false
 export const fetchUserDetails = async (apikey: string) => {
@@ -14,13 +14,13 @@ export const fetchUserDetails = async (apikey: string) => {
       }
     })
     const userDetails = await res.json()
-    const { trusted } = userDetails
+    const { kudos, trusted, username } = userDetails
 
-    if (trusted) {
-      setTrustedUser(true)
-    } else {
-      setTrustedUser(false)
-    }
+    setUserInfo({
+      kudos,
+      trusted,
+      username
+    })
   } catch (err) {
     // Ah well.
   }

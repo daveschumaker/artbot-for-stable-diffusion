@@ -62,6 +62,7 @@ const Home: NextPage = () => {
     models: editMode ? loadEditPrompt().models : ['stable_diffusion']
   }
 
+  const [hasValidationError, setHasValidationError] = useState(false)
   const [pending, setPending] = useState(false)
   const [hasError, setHasError] = useState('')
   const [input, setInput] = useReducer(
@@ -120,11 +121,12 @@ const Home: NextPage = () => {
   const handleSubmit = async () => {
     // TODO: Rather than directly send to API, we should queue up
     // jobs so we only ever send one job at a time to the API?
-    setPending(true)
 
-    if (pending) {
+    if (hasValidationError || pending) {
       return
     }
+
+    setPending(true)
 
     if (!input?.prompt || input?.prompt.trim() === '') {
       setHasError('Please enter a prompt to continue.')
@@ -271,6 +273,11 @@ const Home: NextPage = () => {
             value={input.prompt}
           />
         </div>
+        {hasValidationError && (
+          <div className="mt-2 text-red-500 font-semibold">
+            Please correct all input errors before continuing
+          </div>
+        )}
         {hasError && (
           <div className="mt-2 text-red-500 font-semibold">
             Error: {hasError}
@@ -303,7 +310,7 @@ const Home: NextPage = () => {
             <Button
               title="Create new image"
               onClick={handleSubmit}
-              disabled={pending}
+              disabled={hasValidationError || pending}
               width="100px"
             >
               <span>{pending ? '' : <SquarePlusIcon />}</span>
@@ -318,6 +325,7 @@ const Home: NextPage = () => {
         handleOrientationSelect={handleOrientationSelect}
         input={input}
         setInput={setInput}
+        setHasValidationError={setHasValidationError}
       />
     </main>
   )

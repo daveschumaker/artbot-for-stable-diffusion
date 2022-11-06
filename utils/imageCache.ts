@@ -189,6 +189,11 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
         message
       }
     } else {
+      if (imageParams.source_image) {
+        // @ts-ignore
+        imageParams.has_source_image = true
+      }
+
       delete imageParams.base64String
       delete imageParams.source_image
       delete imageParams.canvasStore
@@ -210,8 +215,17 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
     console.log(`Error: Unable to send job to API`)
     console.log(err)
 
+    if (imageParams.source_image) {
+      imageParams.has_source_image = true
+    }
+
+    if (imageParams.source_mask) {
+      imageParams.has_source_mask = true
+    }
+
     delete imageParams.base64String
     delete imageParams.source_image
+    delete imageParams.source_mask
     delete imageParams.canvasStore
     trackEvent({
       type: 'ERROR',

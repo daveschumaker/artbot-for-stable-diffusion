@@ -3,6 +3,7 @@ import { trackEvent } from '../api/telemetry'
 import { isValidHttpUrl } from './validationUtils'
 
 interface CreateImageJob {
+  base64String?: string
   jobId?: string
   img2img?: boolean
   prompt: string
@@ -17,7 +18,12 @@ interface CreateImageJob {
   models: Array<string>
   negative?: string
   source_image?: string
+  source_mask?: string
   denoising_strength?: number
+
+  has_source_image?: boolean
+  has_source_mask?: boolean
+  canvasStore?: any
 }
 
 interface OrientationLookup {
@@ -179,6 +185,24 @@ export const createNewImage = async (imageParams: CreateImageJob) => {
         jobId
       }
     } else {
+      if (clonedParams.source_image) {
+        clonedParams.has_source_image = true
+      }
+
+      if (clonedParams.source_mask) {
+        clonedParams.has_source_mask = true
+      }
+
+      delete clonedParams.base64String
+      delete clonedParams.source_image
+      delete clonedParams.source_mask
+      delete clonedParams.canvasStore
+
+      trackEvent({
+        event: 'UNABLE_TO_CREATE_IMAGE',
+        context: 'imageUtils',
+        imageParams: clonedParams
+      })
       return {
         success: false,
         message,
@@ -186,6 +210,19 @@ export const createNewImage = async (imageParams: CreateImageJob) => {
       }
     }
   } catch (err) {
+    if (clonedParams.source_image) {
+      clonedParams.has_source_image = true
+    }
+
+    if (clonedParams.source_mask) {
+      clonedParams.has_source_mask = true
+    }
+
+    delete clonedParams.base64String
+    delete clonedParams.source_image
+    delete clonedParams.source_mask
+    delete clonedParams.canvasStore
+
     trackEvent({
       event: 'UNABLE_TO_CREATE_IMAGE',
       context: 'imageUtils',

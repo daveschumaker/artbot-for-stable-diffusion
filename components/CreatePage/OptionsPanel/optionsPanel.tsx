@@ -40,6 +40,7 @@ interface Props {
   handleOrientationSelect: any
   input: any
   setInput: any
+  setHasValidationError: any
 }
 
 const OptionsPanel = ({
@@ -47,7 +48,8 @@ const OptionsPanel = ({
   handleImageUpload,
   handleOrientationSelect,
   input,
-  setInput
+  setInput,
+  setHasValidationError
 }: Props) => {
   const router = useRouter()
   const [activeNav, setActiveNav] = useState('advanced')
@@ -138,6 +140,7 @@ const OptionsPanel = ({
           handleOrientationSelect={handleOrientationSelect}
           input={input}
           setInput={setInput}
+          setHasValidationError={setHasValidationError}
         />
       )}
       {activeNav === 'img2img' &&

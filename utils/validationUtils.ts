@@ -1,3 +1,23 @@
+interface Samplers {
+  [key: string]: number
+}
+export const maxSteps = (sampler: string, loggedIn: boolean = false) => {
+  const anonMaxSteps: Samplers = {
+    k_dpm_2_a: 50,
+    k_dpm_2: 50,
+    k_euler_a: 100,
+    k_euler: 100,
+    k_heun: 50,
+    k_lms: 50
+  }
+
+  if (loggedIn) {
+    return 200
+  }
+
+  return anonMaxSteps[sampler]
+}
+
 export const validSampler = (sampler: string) => {
   const samplers = [
     'k_dpm_2_a',

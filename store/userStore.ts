@@ -1,15 +1,39 @@
 import { makeStore } from 'statery'
 
 interface UserStore {
-  userName: string
+  username: string
   kudos: number
-  loggedIn: false
-  trusted: false
+  loggedIn: boolean
+  trusted: boolean
+}
+
+interface UserInfo {
+  username: string
+  kudos: number
+  trusted: boolean
 }
 
 export const userInfoStore = makeStore<UserStore>({
-  userName: '',
+  username: '',
   kudos: 0,
   trusted: false,
   loggedIn: false
 })
+
+export const unsetUserInfo = () => {
+  userInfoStore.set(() => ({
+    username: '',
+    kudos: 0,
+    trusted: false,
+    loggedIn: false
+  }))
+}
+
+export const setUserInfo = ({ username, kudos, trusted }: UserInfo) => {
+  userInfoStore.set(() => ({
+    username,
+    kudos,
+    trusted,
+    loggedIn: true
+  }))
+}

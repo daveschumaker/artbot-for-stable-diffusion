@@ -116,7 +116,7 @@ let isPending = false
 const apiCooldown = () => {
   setTimeout(() => {
     isPending = false
-  }, 15000)
+  }, 5000)
 }
 
 export const createImage = async (
@@ -124,16 +124,25 @@ export const createImage = async (
 ): Promise<CreateImageResponse> => {
   const apikey = localStorage.getItem('apikey')?.trim() || '0000000000'
 
-  if (!apikey || isPending) {
-    trackEvent({
-      event: 'WAITING_FOR_PENDING_JOB',
-      content: 'createImageApi'
-    })
+  if (!apikey) {
+    return {
+      success: false,
+      status: 'MISSING_API_KEY',
+      message: 'Incorrect API key'
+    }
+  }
+
+  if (isPending) {
+    // This ends up spamming the error logs
+    // trackEvent({
+    //   event: 'WAITING_FOR_PENDING_JOB',
+    //   content: 'createImageApi'
+    // })
 
     return {
       success: false,
       status: 'WAITING_FOR_PENDING_JOB',
-      message: 'Waiting for pending job to finish before requesting new image.'
+      message: 'Waiting for pending request to finish.'
     }
   }
 
@@ -168,7 +177,8 @@ export const createImage = async (
       return {
         success: false,
         status: 'UNTRUSTED_IP',
-        message
+        message:
+          'Cannot send img2img or inpainting requests from an IP address behind a VPN or Private Relay. Please disable and try again.'
       }
     }
 
