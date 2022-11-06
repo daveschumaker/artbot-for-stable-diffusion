@@ -2,7 +2,7 @@
 /* eslint-disable @next/next/no-img-element */
 import Head from 'next/head'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import LazyLoad from 'react-lazyload'
 import Masonry from 'react-responsive-masonry'
 import styled from 'styled-components'
@@ -13,13 +13,20 @@ import PageTitle from '../../components/UI/PageTitle'
 
 import Spinner from '../../components/Spinner'
 import { useWindowSize } from '../../hooks/useWindowSize'
-import { fetchRelatedImages, getImageDetails } from '../../utils/db'
+import {
+  fetchRelatedImages,
+  getImageDetails,
+  updateCompletedJob
+} from '../../utils/db'
 import {
   downloadImage,
   uploadImg2Img,
   uploadInpaint
 } from '../../controllers/imageDetailsCommon'
 import { trackEvent, trackGaEvent } from '../../api/telemetry'
+import MenuButton from '../../components/UI/MenuButton'
+import CarouselIcon from '../../components/icons/CarouselIcon'
+import HeartIcon from '../../components/icons/HeartIcon'
 
 const StyledImage = styled.img`
   box-shadow: 0 16px 38px -12px rgb(0 0 0 / 56%),
@@ -53,16 +60,20 @@ const ImagePage = () => {
   const [imageDetails, setImageDetails] = useState({})
   const [pendingDownload, setPendingDownload] = useState(false)
   const [relatedImages, setRelatedImages] = useState([])
+  const [optimisticFavorite, setOptimisticFavorite] = useState(false)
 
-  const fetchImageDetails = async (jobId: string) => {
+  const fetchImageDetails = useCallback(async (jobId: string) => {
     const data = await getImageDetails(jobId)
     setIsInitialLoad(false)
     setImageDetails(data)
+    setOptimisticFavorite(data.favorited ? true : false)
+
+    console.log(`data??`, data)
 
     if (data?.base64String) {
       findRelatedImages(data.parentJobId)
     }
-  }
+  }, [])
 
   const handleDeleteImageClick = async () => {
     router.push(`/images`)
@@ -100,6 +111,18 @@ const ImagePage = () => {
     setPendingDownload(false)
   }
 
+  const handleFavoriteClick = useCallback(async () => {
+    const newFavStatus = imageDetails.favorited ? false : true
+    setOptimisticFavorite(newFavStatus)
+    await updateCompletedJob(
+      imageDetails.id,
+      Object.assign({}, imageDetails, {
+        favorited: newFavStatus
+      })
+    )
+    fetchImageDetails(id)
+  }, [fetchImageDetails, id, imageDetails])
+
   useEffect(() => {
     if (id) {
       fetchImageDetails(id)
@@ -123,11 +146,27 @@ const ImagePage = () => {
       <Head>
         <title>ArtBot - Image details</title>
       </Head>
-      <div className="inline-block w-1/2">
-        {!isInitialLoad && noImageFound ? (
-          <PageTitle>Image not found</PageTitle>
-        ) : (
-          <PageTitle>Image details</PageTitle>
+      <div className="flex flex-row w-full items-center">
+        <div className="inline-block w-1/2">
+          {!isInitialLoad && noImageFound ? (
+            <PageTitle>Image not found</PageTitle>
+          ) : (
+            <PageTitle>Image details</PageTitle>
+          )}
+        </div>
+        {!isInitialLoad && (
+          <div className="flex flex-row justify-end w-1/2 items-start h-[38px] relative gap-2">
+            <MenuButton
+              active={optimisticFavorite}
+              title="Save as favorite"
+              onClick={handleFavoriteClick}
+            >
+              <HeartIcon />
+            </MenuButton>
+            <MenuButton>
+              <CarouselIcon />
+            </MenuButton>
+          </div>
         )}
       </div>
       {isInitialLoad && <Spinner />}
@@ -231,7 +270,13 @@ const ImagePage = () => {
                 }) => {
                   return (
                     <LazyLoad key={image.jobId} once>
-                      <Link href={`/image/${image.jobId}`} passHref>
+                      <Link
+                        href={`/image/${image.jobId}`}
+                        passHref
+                        onClick={() => {
+                          setOptimisticFavorite(false)
+                        }}
+                      >
                         <img
                           src={'data:image/webp;base64,' + image.base64String}
                           style={{

@@ -12,6 +12,7 @@ import {
   bulkDeleteImages,
   countCompletedJobs,
   fetchCompletedJobs,
+  filterCompletedJobs,
   imageCount
 } from '../utils/db'
 import ImageSquare from '../components/ImageSquare'
@@ -24,6 +25,7 @@ import CircleCheckIcon from '../components/icons/CircleCheckIcon'
 import TextButton from '../components/UI/TextButton'
 import ConfirmationModal from '../components/ConfirmationModal'
 import MenuButton from '../components/UI/MenuButton'
+import FilterIcon from '../components/icons/FilterIcon'
 
 const DropDownMenu = styled.div`
   background-color: ${(props) => props.theme.body};
@@ -82,6 +84,8 @@ const ImagesPage = () => {
   const [deleteSelection, setDeleteSelection] = useState<Array<string>>([])
   const [showDeleteModal, setShowDeleteModal] = useState(false)
 
+  const [showFilters, setShowFilters] = useState(false)
+  const [filterMode, setFilterMode] = useState('all')
   const [showMenu, setShowMenu] = useState(false)
   const [totalImages, setTotalImages] = useState(0)
   const [offset, setOffset] = useState(0)
@@ -89,12 +93,26 @@ const ImagesPage = () => {
   const [images, setImages] = useState([])
   const [showLayout, setShowLayout] = useState('layout')
 
-  const fetchImages = useCallback(async (offset = 0) => {
-    const sort = localStorage.getItem('imagePageSort') || 'new'
-    const data = await fetchCompletedJobs({ offset, sort })
-    setImages(data)
-    setIsInitialLoad(false)
-  }, [])
+  const fetchImages = useCallback(
+    async (offset = 0) => {
+      let data
+      const sort = localStorage.getItem('imagePageSort') || 'new'
+
+      if (filterMode === 'all') {
+        data = await fetchCompletedJobs({ offset, sort })
+      } else {
+        data = await filterCompletedJobs({
+          offset,
+          sort,
+          filterType: filterMode
+        })
+      }
+
+      setImages(data)
+      setIsInitialLoad(false)
+    },
+    [filterMode]
+  )
 
   const handleDeleteImageClick = async () => {
     trackEvent({
@@ -266,6 +284,69 @@ const ImagesPage = () => {
           >
             <CircleCheckIcon size={24} />
           </MenuButton>
+          <div className="relative">
+            <MenuButton
+              active={filterMode !== 'all'}
+              title="Filter images"
+              onClick={() => {
+                if (showFilters) {
+                  setShowFilters(false)
+                } else {
+                  setShowMenu(false)
+                  setShowFilters(true)
+                }
+              }}
+            >
+              <FilterIcon />
+            </MenuButton>
+            {showFilters && (
+              <DropDownMenu>
+                <ul>
+                  <MenuItem
+                    onClick={() => {
+                      setShowFilters(false)
+                      setFilterMode('all')
+                    }}
+                  >
+                    Show all images
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      setShowFilters(false)
+                      setFilterMode('favorited')
+                    }}
+                  >
+                    Show favorited
+                  </MenuItem>
+                  <MenuSeparator />
+                  <MenuItem
+                    onClick={() => {
+                      setShowFilters(false)
+                      setFilterMode('text2img')
+                    }}
+                  >
+                    Text-2-Img
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      setShowFilters(false)
+                      setFilterMode('img2img')
+                    }}
+                  >
+                    Img-2-Img
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      setShowFilters(false)
+                      setFilterMode('inpainting')
+                    }}
+                  >
+                    Inpainting
+                  </MenuItem>
+                </ul>
+              </DropDownMenu>
+            )}
+          </div>
           <MenuButton
             active={showMenu}
             title="Change layout"
@@ -273,6 +354,7 @@ const ImagesPage = () => {
               if (showMenu) {
                 setShowMenu(false)
               } else {
+                setShowFilters(false)
                 setShowMenu(true)
               }
             }}
@@ -510,7 +592,7 @@ const ImagesPage = () => {
           )}
       </div>
       {!isInitialLoad && totalImages > 100 && (
-        <div className="flex flex-row justify-center gap-2 mt-2">
+        <div className="flex flex-row justify-center gap-2 mt-4">
           <Button
             disabled={offset === 0}
             onClick={() => handleLoadMore('first')}

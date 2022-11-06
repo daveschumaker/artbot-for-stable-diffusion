@@ -1,4 +1,5 @@
 import Dexie, { Table } from 'dexie'
+import { SourceProcessing } from './promptUtils'
 
 export interface Friend {
   id?: number
@@ -54,6 +55,58 @@ export const countCompletedJobs = async () => {
   return await db?.completed?.orderBy('timestamp').count()
 }
 
+export const filterCompletedJobs = async ({
+  limit = 100,
+  offset = 0,
+  sort = 'new',
+  filterType = 'favorited'
+} = {}) => {
+  const filterFunc = (entry: any) => {
+    if (filterType === 'favorited') {
+      return entry.favorited === true
+    }
+
+    if (filterType === 'text2img') {
+      return (
+        !entry.img2img ||
+        entry.source_processing === '' ||
+        entry.source_processing === SourceProcessing.Prompt
+      )
+    }
+
+    if (filterType === 'img2img') {
+      return (
+        entry.img2img || entry.source_processing === SourceProcessing.Img2Img
+      )
+    }
+
+    if (filterType === 'inpainting') {
+      return entry.source_processing === SourceProcessing.InPainting
+    }
+  }
+
+  if (sort === 'old') {
+    return await db?.completed
+      ?.orderBy('timestamp')
+      .filter(function (entry: any) {
+        return filterFunc(entry)
+      })
+      .offset(offset)
+      .limit(limit)
+      .toArray()
+  } else {
+    return await db?.completed
+      ?.orderBy('timestamp')
+      .filter(function (entry: any) {
+        return filterFunc(entry)
+      })
+      .reverse()
+      .offset(offset)
+      .limit(limit)
+      .toArray()
+  }
+}
+
 export const fetchCompletedJobs = async ({
   limit = 100,
   offset = 0,
@@ -95,6 +148,11 @@ export const getPendingJobDetails = async (jobId: string) => {
       return job.jobId === jobId
     })
     .first()
+}
+
+// @ts-ignore
+export const updateCompletedJob = async (tableId: number, updatedObject) => {
+  db.completed.update(tableId, updatedObject)
 }
 
 // @ts-ignore
