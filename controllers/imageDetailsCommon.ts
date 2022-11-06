@@ -85,7 +85,7 @@ export const downloadImage = async (imageDetails: any) => {
     const filename = imageDetails.prompt
       .replace(/[^a-z0-9]/gi, '_')
       .toLowerCase()
-      .slice(0, 254)
+      .slice(0, 128)
     var a = document.createElement('a')
     a.href = 'data:image/png;base64,' + data.base64String
     a.download = filename + '.png'
