@@ -157,6 +157,7 @@ export const createMultiImageJob = async () => {
 export const sendJobToApi = async (imageParams: CreateImageJob) => {
   try {
     const data = await createNewImage(imageParams)
+    // @ts-ignore
     const { success, jobId, status, message = '' } = data
 
     if (success && jobId) {
