@@ -85,6 +85,10 @@ const samplerOptions = () => {
     { value: 'k_euler', label: 'k_euler' },
     { value: 'k_heun', label: 'k_heun' },
     { value: 'k_lms', label: 'k_lms' },
+    { value: 'k_dpm_fast', label: 'k_dpm_fast' },
+    { value: 'k_dpm_adaptive', label: 'k_dpm_adaptive' },
+    { value: 'k_dpmpp_2m', label: 'k_dpmpp_2m' },
+    { value: 'k_dpmpp_2s_a', label: 'k_dpmpp_2s_a' },
     { value: 'random', label: 'random' }
   ]
 
