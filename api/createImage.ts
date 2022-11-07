@@ -88,7 +88,7 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
     models
   }
 
-  if (modelDetails(models[0]).trigger) {
+  if (modelDetails(models[0])?.trigger) {
     apiParams.prompt = `${modelDetails(models[0]).trigger} ${prompt}`
   }
 
