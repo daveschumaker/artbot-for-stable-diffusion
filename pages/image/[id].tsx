@@ -27,6 +27,7 @@ import { trackEvent, trackGaEvent } from '../../api/telemetry'
 import MenuButton from '../../components/UI/MenuButton'
 // import CarouselIcon from '../../components/icons/CarouselIcon'
 import HeartIcon from '../../components/icons/HeartIcon'
+import { useSwipeable } from 'react-swipeable'
 
 const StyledImage = styled.img`
   box-shadow: 0 16px 38px -12px rgb(0 0 0 / 56%),
@@ -52,6 +53,10 @@ const OptionsLink = styled.div`
 `
 
 const ImagePage = () => {
+  const handlers = useSwipeable({
+    onSwipedLeft: () => handleKeyPress(null, 'left'),
+    onSwipedRight: () => handleKeyPress(null, 'right')
+  })
   const size = useWindowSize()
   const router = useRouter()
   const { id } = router.query
@@ -128,6 +133,49 @@ const ImagePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
 
+  const handleKeyPress = useCallback(
+    (e: any, swipeDir) => {
+      const maxLength = relatedImages.length
+      const currentIndex = relatedImages.findIndex((el) => {
+        return el.jobId === id
+      })
+
+      if (maxLength <= 1) {
+        return
+      }
+
+      if (e === null && swipeDir) {
+        e = {}
+        if (swipeDir === 'left') {
+          e.keyCode = 37
+        } else if (swipeDir === 'right') {
+          e.keyCode = 39
+        }
+      }
+
+      if (e.keyCode === 37) {
+        //left
+        if (currentIndex !== 0) {
+          router.push(`/image/${relatedImages[currentIndex - 1].jobId}`)
+        }
+      } else if (e.keyCode === 39) {
+        // right
+        if (currentIndex < maxLength - 1) {
+          router.push(`/image/${relatedImages[currentIndex + 1].jobId}`)
+        }
+      } else if (e.keyCode === 70) {
+        handleFavoriteClick()
+      }
+    },
+    [id, handleFavoriteClick, relatedImages, router]
+  )
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyPress)
+
+    return () => window.removeEventListener('keydown', handleKeyPress)
+  }, [handleKeyPress])
+
   const noImageFound = !isInitialLoad && !imageDetails?.base64String
 
   let imageColumns = 2
@@ -186,7 +234,11 @@ const ImagePage = () => {
       )}
       {!isInitialLoad && imageDetails?.base64String && (
         <>
-          <div key={imageDetails.jobId} className="text-center pb-6">
+          <div
+            {...handlers}
+            key={imageDetails.jobId}
+            className="text-center pb-6"
+          >
             <StyledImage
               src={'data:image/webp;base64,' + imageDetails.base64String}
               className="mx-auto rounded"

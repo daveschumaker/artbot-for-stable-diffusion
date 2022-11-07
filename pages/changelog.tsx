@@ -74,6 +74,17 @@ const Changelog = () => {
             it is now automatically added to the beginning of your prompt when
             sent to the API.
           </StyledLi>
+          <StyledLi>
+            Added advanced option to use the karras scheduler, which should help
+            improve image generation at lower step counts.
+          </StyledLi>
+          <StyledLi>
+            Feature: You can now use the left and right arrow keys (on desktop),
+            or swipe left and right (on mobile) to navigate between related
+            images on each image page... providing they exist, of course.
+            Additionally, on desktop, if you tap &quot;F&quot;, you can quickly
+            favorite or unfavorite an image.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
