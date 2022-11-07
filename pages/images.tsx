@@ -593,7 +593,7 @@ const ImagesPage = () => {
                     })
                   }}
                 >
-                  Layout
+                  Dynamic Layout
                 </MenuItem>
                 <MenuSeparator />
                 <MenuItem

@@ -68,8 +68,6 @@ const ImagePage = () => {
     setImageDetails(data)
     setOptimisticFavorite(data.favorited ? true : false)
 
-    console.log(`data??`, data)
-
     if (data?.base64String) {
       findRelatedImages(data.parentJobId)
     }

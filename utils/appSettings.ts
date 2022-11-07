@@ -1,4 +1,5 @@
 import { fetchAvailableModels } from '../api/availableModels'
+import { models } from '../api/models'
 import { fetchUserDetails } from '../api/userInfo'
 
 // @ts-ignore
@@ -53,6 +54,7 @@ export const initAppSettings = async () => {
   fetchAvailableModels()
   checkNsfwSettings()
   updateShowGrid()
+  models()
 
   setInterval(() => {
     fetchAvailableModels()

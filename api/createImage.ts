@@ -1,5 +1,6 @@
 import { GenerateResponse } from '../types'
 import { SourceProcessing } from '../utils/promptUtils'
+import { modelDetails } from './models'
 import { trackEvent } from './telemetry'
 
 interface CreateImageResponse {
@@ -85,6 +86,10 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
     nsfw: allowNsfw,
     trusted_workers: useTrusted,
     models
+  }
+
+  if (modelDetails(models[0]).trigger) {
+    apiParams.prompt = `${modelDetails(models[0]).trigger} ${prompt}`
   }
 
   if (seed) {

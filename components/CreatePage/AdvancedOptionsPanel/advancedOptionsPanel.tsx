@@ -14,6 +14,7 @@ import { nearestWholeMultiple } from '../../../utils/imageUtils'
 import { userInfoStore } from '../../../store/userStore'
 import { maxSteps } from '../../../utils/validationUtils'
 import useErrorMessage from '../../../hooks/useErrorMessage'
+import { modelDetails } from '../../../api/models'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -507,6 +508,21 @@ const AdvancedOptionsPanel = ({
               value={modelsValue}
               isSearchable={false}
             />
+          </MaxWidth>
+          <MaxWidth
+            // @ts-ignore
+            maxWidth="480"
+          >
+            {modelDetails(input.models[0]) && (
+              <div className="mt-2 text-xs">
+                {modelDetails(input.models[0]).description &&
+                  `${modelDetails(input.models[0]).description}`}
+                <br />
+                {modelDetails(input.models[0]).style &&
+                  `Style: ${modelDetails(input.models[0]).style}`}{' '}
+                {modelDetails(input.models[0]).nsfw && ` (nsfw)`}
+              </div>
+            )}
           </MaxWidth>
         </Section>
       )}

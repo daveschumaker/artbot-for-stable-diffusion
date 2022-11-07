@@ -67,6 +67,13 @@ const Changelog = () => {
             enough kudos (add your Stable Horde API key to the settings page to
             log in).
           </StyledLi>
+          <StyledLi>Fix: You can now choose random models again.</StyledLi>
+          <StyledLi>
+            Model descriptions now added below dropdown on advanced options
+            panel. If a custom model requires the use of a trigger to activate,
+            it is now automatically added to the beginning of your prompt when
+            sent to the API.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
