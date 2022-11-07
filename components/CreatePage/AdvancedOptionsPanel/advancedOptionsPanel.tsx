@@ -424,27 +424,36 @@ const AdvancedOptionsPanel = ({
           </div>
         )}
       </Section>
-      {input.img2img ||
-        (input.source_processing !== SourceProcessing.Prompt && (
-          <Section>
-            <SubSectionTitle>Denoise</SubSectionTitle>
-            <MaxWidth
+      {(input.img2img ||
+        input.source_processing === SourceProcessing.Img2Img) && (
+        <Section>
+          <SubSectionTitle>
+            Denoise{' '}
+            <Tooltip width="200px">
+              Amount of noise added to input image. Values that approach 1.0
+              allow for lots of variations but will also produce images that are
+              not semantically consistent with the input. Only available for
+              img2img.
+            </Tooltip>
+            <div className="block text-xs w-full">(0.0 - 1.0)</div>
+          </SubSectionTitle>
+          <MaxWidth
+            // @ts-ignore
+            maxWidth="120"
+          >
+            <Input
               // @ts-ignore
-              maxWidth="120"
-            >
-              <Input
-                // @ts-ignore
-                className="mb-2"
-                type="text"
-                name="denoising_strength"
-                onChange={handleChangeInput}
-                // @ts-ignore
-                value={input.denoising_strength}
-                width="100%"
-              />
-            </MaxWidth>
-          </Section>
-        ))}
+              className="mb-2"
+              type="text"
+              name="denoising_strength"
+              onChange={handleChangeInput}
+              // @ts-ignore
+              value={input.denoising_strength}
+              width="100%"
+            />
+          </MaxWidth>
+        </Section>
+      )}
       <Section>
         <SubSectionTitle>
           Seed

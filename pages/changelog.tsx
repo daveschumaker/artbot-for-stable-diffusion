@@ -54,6 +54,17 @@ const Changelog = () => {
       </Head>
       <PageTitle>Changelog</PageTitle>
       <Section>
+        <SubSectionTitle>2022.11.07</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix denoising strength not showing up on advanced options panel when
+            creating a new img2img request. (Note: due to limitations with the
+            Stable Horde API, denoise is only available for img2img and not
+            inpainting)
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.11.06</SubSectionTitle>
         <StyledUl>
           <StyledLi>

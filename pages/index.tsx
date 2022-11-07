@@ -82,6 +82,7 @@ const Home: NextPage = () => {
     }
 
     if (inputName === 'denoising_strength') {
+      localStorage.setItem('denoising_strength', event.target.value)
       updatedCachedPrompt(inputValue)
     }
 
@@ -220,7 +221,9 @@ const Home: NextPage = () => {
       }
 
       if (localStorage.getItem('denoising_strength')) {
-        setInput({ steps: localStorage.getItem('denoising_strength') })
+        setInput({
+          denoising_strength: localStorage.getItem('denoising_strength')
+        })
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
