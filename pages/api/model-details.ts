@@ -22,7 +22,7 @@ export default async function handler(
     )
     const data = await resp.json()
 
-    res.send({
+    return res.send({
       success: true,
       models: data
     })
@@ -30,7 +30,7 @@ export default async function handler(
     // eh, it's okay if nothing happens.
   }
 
-  res.send({
+  return res.send({
     success: false
   })
 }
