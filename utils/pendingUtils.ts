@@ -1,6 +1,7 @@
 import { CreatePendingJob } from '../types'
 import { uuidv4 } from './appUtils'
 import { orientationDetails, randomSampler } from './imageUtils'
+import { SourceProcessing } from './promptUtils'
 
 interface ImageSize {
   orientation: string
@@ -44,7 +45,11 @@ export const createPendingJob = (imageParams: CreatePendingJob) => {
     clonedParams.jobStartTimestamp = Date.now()
 
     if (clonedParams.sampler === 'random') {
-      clonedParams.sampler = randomSampler(clonedParams.steps)
+      const isImg2Img =
+        !clonedParams.img2img &&
+        clonedParams.source_processing !== SourceProcessing.Img2Img &&
+        clonedParams.source_processing !== SourceProcessing.InPainting
+      clonedParams.sampler = randomSampler(clonedParams.steps, isImg2Img)
     }
 
     const imageSize: ImageSize = orientationDetails(

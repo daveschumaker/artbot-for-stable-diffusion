@@ -50,6 +50,7 @@ export interface CreatePendingJob {
   sampler: string
   jobStartTimestamp: number
 
+  source_processing?: string
   has_source_mask?: boolean
   has_source_image?: boolean
 }

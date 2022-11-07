@@ -85,19 +85,14 @@ const modelerOptions = (models: Array<ModelDetails>) => {
   return modelsArray
 }
 
-const samplerOptions = () => {
+const samplerOptions = (input: any) => {
   const options = [
     { value: 'k_dpm_2_a', label: 'k_dpm_2_a' },
     { value: 'k_dpm_2', label: 'k_dpm_2' },
     { value: 'k_euler_a', label: 'k_euler_a' },
     { value: 'k_euler', label: 'k_euler' },
     { value: 'k_heun', label: 'k_heun' },
-    { value: 'k_lms', label: 'k_lms' },
-    { value: 'k_dpm_fast', label: 'k_dpm_fast' },
-    { value: 'k_dpm_adaptive', label: 'k_dpm_adaptive' },
-    { value: 'k_dpmpp_2m', label: 'k_dpmpp_2m' },
-    { value: 'k_dpmpp_2s_a', label: 'k_dpmpp_2s_a' },
-    { value: 'random', label: 'random' }
+    { value: 'k_lms', label: 'k_lms' }
   ]
 
   // Temporarily hide options due to issues with Stable Horde backend.
@@ -107,6 +102,20 @@ const samplerOptions = () => {
   //   options.unshift({ value: 'PLMS', label: 'PLMS' })
   //   options.unshift({ value: 'DDIM', label: 'DDIM' })
   // }
+
+  // Per hlky, these samplers do not currently work for img2img
+  if (
+    !input.img2img &&
+    input.source_processing !== SourceProcessing.Img2Img &&
+    input.source_processing !== SourceProcessing.InPainting
+  ) {
+    options.push({ value: 'k_dpm_fast', label: 'k_dpm_fast' })
+    options.push({ value: 'k_dpm_adaptive', label: 'k_dpm_adaptive' })
+    options.push({ value: 'k_dpmpp_2m', label: 'k_dpmpp_2m' })
+    options.push({ value: 'k_dpmpp_2s_a', label: 'k_dpmpp_2s_a' })
+  }
+
+  options.push({ value: 'random', label: 'random' })
 
   return options
 }
@@ -141,7 +150,7 @@ const AdvancedOptionsPanel = ({
   const modelsValue = modelerOptions(models).filter((option) => {
     return input.models[0] === option.value
   })[0]
-  const samplerValue = samplerOptions().filter((option) => {
+  const samplerValue = samplerOptions(input).filter((option) => {
     return input.sampler === option.value
   })[0]
 

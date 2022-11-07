@@ -43,7 +43,7 @@ export const uploadImageConfig = {
   maxHeight: 1024
 }
 
-export const randomSampler = (steps: number) => {
+export const randomSampler = (steps: number, isImg2Img: boolean) => {
   const loggedIn = userInfoStore.state.loggedIn
 
   const samplerArray = [
@@ -56,13 +56,26 @@ export const randomSampler = (steps: number) => {
   ]
 
   // Temporarily hide options due to issues with Stable Horde backend.
-  // if (!img2img) {
-  //   samplerArray.push('DDIM')
-  //   samplerArray.push('PLMS')
-  // }
+  if (!isImg2Img) {
+    //   samplerArray.push('DDIM')
+    //   samplerArray.push('PLMS')
+    samplerArray.push('k_dpm_fast')
+    samplerArray.push('k_dpm_adaptive')
+    samplerArray.push('k_dpmpp_2m')
+    samplerArray.push('k_dpmpp_2s_a')
+  }
 
   if (loggedIn || steps <= 50) {
     return samplerArray[Math.floor(Math.random() * samplerArray.length)]
+  } else if (!isImg2Img) {
+    const limitedArray = [
+      'k_euler_a',
+      'k_euler',
+      'k_dpm_fast',
+      'k_dpm_adaptive',
+      'k_dpmpp_2m'
+    ]
+    return limitedArray[Math.floor(Math.random() * limitedArray.length)]
   } else {
     const limitedArray = ['k_euler_a', 'k_euler']
     return limitedArray[Math.floor(Math.random() * limitedArray.length)]
