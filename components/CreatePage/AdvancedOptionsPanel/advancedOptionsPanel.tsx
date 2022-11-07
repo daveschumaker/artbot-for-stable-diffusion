@@ -344,20 +344,26 @@ const AdvancedOptionsPanel = ({
       </Section>
       <Section>
         <SubSectionTitle>Sampler</SubSectionTitle>
-        <MaxWidth
-          // @ts-ignore
-          maxWidth="240"
-        >
-          <SelectComponent
-            options={samplerOptions()}
-            onChange={(obj: { value: string; label: string }) => {
-              setInput({ sampler: obj.value })
-              localStorage.setItem('sampler', obj.value)
-            }}
-            isSearchable={false}
-            value={samplerValue}
-          />
-        </MaxWidth>
+        {input.source_processing === SourceProcessing.InPainting ? (
+          <div className="mt-2 text-sm text-slate-500">
+            Note: Sampler disabled when inpainting is used.
+          </div>
+        ) : (
+          <MaxWidth
+            // @ts-ignore
+            maxWidth="240"
+          >
+            <SelectComponent
+              options={samplerOptions(input)}
+              onChange={(obj: { value: string; label: string }) => {
+                setInput({ sampler: obj.value })
+                localStorage.setItem('sampler', obj.value)
+              }}
+              isSearchable={false}
+              value={samplerValue}
+            />
+          </MaxWidth>
+        )}
       </Section>
       <Section>
         <SubSectionTitle>
