@@ -13,6 +13,7 @@ interface CreateImageJob {
   cfg_scale: number
   steps: number
   sampler: string
+  karras: boolean
   seed?: string
   numImages?: number
   parentJobId?: string

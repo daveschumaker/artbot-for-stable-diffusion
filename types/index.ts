@@ -8,6 +8,7 @@ export interface CreateImageJob {
   width: number
   timestamp?: number
   cfg_scale: number
+  karras: boolean
   steps: number
   sampler: string
   apikey?: string
@@ -40,6 +41,7 @@ export interface CreatePendingJob {
   numImages: number
   orientationType: string
   orientation: string
+  karras: boolean
   height: number
   width: number
   parentJobId: string

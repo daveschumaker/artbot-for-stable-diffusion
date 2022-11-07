@@ -34,6 +34,7 @@
     "react-lazyload": "3.2.0",
     "react-responsive-masonry": "2.1.6",
     "react-select": "5.6.0",
+    "react-switch": "7.0.0",
     "sharp": "0.31.2",
     "statery": "0.6.3",
     "styled-components": "5.3.6"
@@ -47,8 +48,8 @@
     "@types/react-lazyload": "3.2.0",
     "@types/sharp": "0.31.0",
     "@types/styled-components": "5.1.26",
-    "@typescript-eslint/eslint-plugin": "5.42.0",
-    "@typescript-eslint/parser": "5.42.0",
+    "@typescript-eslint/eslint-plugin": "5.42.1",
+    "@typescript-eslint/parser": "5.42.1",
     "autoprefixer": "10.4.13",
     "babel-plugin-styled-components": "2.0.7",
     "eslint": "8.27.0",

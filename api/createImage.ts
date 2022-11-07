@@ -19,6 +19,7 @@ interface ImageDetails {
   width: number
   seed?: string
   steps: number
+  karras: boolean
   models: Array<string>
   source_image?: string
   source_processing?: string
@@ -45,6 +46,7 @@ interface ParamsObject {
   seed?: string
   steps: number
   denoising_strength?: number
+  karras: boolean
 }
 
 const toBool = (value?: string | null) => {
@@ -68,6 +70,7 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
     seed,
     steps,
     models,
+    karras,
     source_image,
     source_processing,
     source_mask,
@@ -81,7 +84,8 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
       cfg_scale: Number(cfg_scale),
       height: Number(height),
       width: Number(width),
-      steps: Number(steps)
+      steps: Number(steps),
+      karras
     },
     nsfw: allowNsfw,
     trusted_workers: useTrusted,

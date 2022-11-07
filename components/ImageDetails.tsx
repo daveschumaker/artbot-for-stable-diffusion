@@ -35,6 +35,7 @@ interface ImageDetails {
   imageType?: string
   source_image?: string
   orientation: string
+  karras: boolean
   worker_id?: string
   models?: Array<string>
 }
@@ -158,6 +159,7 @@ const ImageDetails = ({
             <li>Height: {imageDetails.height} px</li>
             <li>Width: {imageDetails.width} px</li>
             <li>Sampler: {imageDetails.sampler}</li>
+            <li>Karras: {imageDetails.karras ? 'true' : 'false'}</li>
             <li>
               Model:{' '}
               {imageDetails.model ? imageDetails.model : 'stable_diffusion'}

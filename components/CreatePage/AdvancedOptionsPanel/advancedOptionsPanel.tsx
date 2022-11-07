@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { useStore } from 'statery'
+import Switch from 'react-switch'
 
 import SelectComponent from '../../UI/Select'
 import Input from '../../UI/Input'
@@ -541,6 +542,25 @@ const AdvancedOptionsPanel = ({
           </MaxWidth>
         </Section>
       )}
+      <Section>
+        <SubSectionTitle>
+          Enable karras
+          <Tooltip width="240px">
+            Denoising magic. Dramatically improves image generation using fewer
+            steps. (Not all workers support this yet)
+          </Tooltip>
+        </SubSectionTitle>
+        <Switch
+          onChange={() => {
+            if (!input.karras) {
+              setInput({ karras: true })
+            } else {
+              setInput({ karras: false })
+            }
+          }}
+          checked={input.karras}
+        />
+      </Section>
       <Section>
         <SubSectionTitle>
           Number of images

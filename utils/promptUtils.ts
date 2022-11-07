@@ -14,6 +14,7 @@ interface SavePrompt {
   sampler: string
   cfg_scale: number
   orientation: string
+  karras: boolean
   height: number
   width: number
   steps: number
@@ -38,6 +39,7 @@ let initPromptDetails: SavePrompt = {
   sampler: 'k_heun',
   cfg_scale: 9.0,
   orientation: '',
+  karras: false,
   steps: 32,
   height: 512,
   width: 512,
@@ -59,6 +61,7 @@ export const savePrompt = ({
   imageType = '',
   prompt = '',
   orientation = '',
+  karras = false,
   sampler = 'k_heun',
   cfg_scale = 9.0,
   steps = 32,
@@ -79,6 +82,7 @@ export const savePrompt = ({
     copyPrompt: true,
     prompt,
     orientation,
+    karras,
     sampler: samplerValid ? sampler : 'k_euler_a',
     cfg_scale,
     steps,

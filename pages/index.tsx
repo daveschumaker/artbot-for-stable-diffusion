@@ -49,6 +49,7 @@ const Home: NextPage = () => {
     steps: editMode ? loadEditPrompt().steps : 32,
     seed: '',
     denoising_strength: editMode ? loadEditPrompt().denoising_strength : 0.75,
+    karras: editMode ? loadEditPrompt().karras : false,
     // use_gfpgan: true,
     // use_real_esrgan: true,
     parentJobId: editMode ? loadEditPrompt().parentJobId : '',
