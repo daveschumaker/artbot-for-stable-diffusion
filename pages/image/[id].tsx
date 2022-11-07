@@ -156,12 +156,12 @@ const ImagePage = () => {
       if (e.keyCode === 37) {
         //left
         if (currentIndex !== 0) {
-          router.push(`/image/${relatedImages[currentIndex - 1].jobId}`)
+          router.replace(`/image/${relatedImages[currentIndex - 1].jobId}`)
         }
       } else if (e.keyCode === 39) {
         // right
         if (currentIndex < maxLength - 1) {
-          router.push(`/image/${relatedImages[currentIndex + 1].jobId}`)
+          router.replace(`/image/${relatedImages[currentIndex + 1].jobId}`)
         }
       } else if (e.keyCode === 70) {
         handleFavoriteClick()
