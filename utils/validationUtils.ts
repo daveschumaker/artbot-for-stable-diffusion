@@ -17,7 +17,7 @@ export const maxSteps = (sampler: string, loggedIn: boolean = false) => {
   }
 
   if (loggedIn) {
-    return 200
+    return 500
   }
 
   return anonMaxSteps[sampler]

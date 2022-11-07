@@ -62,6 +62,11 @@ const Changelog = () => {
             Stable Horde API, denoise is only available for img2img and not
             inpainting)
           </StyledLi>
+          <StyledLi>
+            Updated max steps to 500 for logged in users, providing you have
+            enough kudos (add your Stable Horde API key to the settings page to
+            log in).
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
