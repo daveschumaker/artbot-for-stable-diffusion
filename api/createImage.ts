@@ -183,7 +183,7 @@ export const createImage = async (
         success: false,
         status: 'UNTRUSTED_IP',
         message:
-          'Cannot send img2img or inpainting requests from an IP address behind a VPN or Private Relay. Please disable and try again.'
+          'Cannot send requests from an IP address behind a VPN or Private Relay. Please disable and try again.'
       }
     }
 
