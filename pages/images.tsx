@@ -410,7 +410,11 @@ const ImagesPage = () => {
               if (componentState.deleteMode) {
                 setComponentState({ deleteMode: false, deleteSelection: [] })
               } else {
-                setComponentState({ deleteMode: true })
+                setComponentState({
+                  deleteMode: true,
+                  showFilterMenu: false,
+                  showLayoutMenu: false
+                })
               }
             }}
           >
