@@ -115,6 +115,7 @@ export const rerollImage = async (imageDetails: any) => {
   delete cleanParams.initWaitTime
   delete cleanParams.jobTimestamp
   delete cleanParams.numImages
+  delete cleanParams.favorited
 
   const res = await createImageJob({
     ...cleanParams

@@ -9,6 +9,10 @@ export const maxSteps = (sampler: string, loggedIn: boolean = false) => {
     k_euler: 100,
     k_heun: 50,
     k_lms: 50,
+    k_dpm_fast: 100,
+    k_dpm_adaptive: 100,
+    k_dpmpp_2m: 100,
+    k_dpmpp_2s_a: 50,
     random: 50
   }
 
@@ -27,6 +31,10 @@ export const validSampler = (sampler: string) => {
     'k_euler',
     'k_heun',
     'k_lms',
+    'k_dpm_fast',
+    'k_dpm_adaptive',
+    'k_dpmpp_2m',
+    'k_dpmpp_2s_a',
     'random'
   ]
 

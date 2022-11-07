@@ -25,7 +25,7 @@ import {
 } from '../../controllers/imageDetailsCommon'
 import { trackEvent, trackGaEvent } from '../../api/telemetry'
 import MenuButton from '../../components/UI/MenuButton'
-import CarouselIcon from '../../components/icons/CarouselIcon'
+// import CarouselIcon from '../../components/icons/CarouselIcon'
 import HeartIcon from '../../components/icons/HeartIcon'
 
 const StyledImage = styled.img`
@@ -163,9 +163,9 @@ const ImagePage = () => {
             >
               <HeartIcon />
             </MenuButton>
-            <MenuButton>
+            {/* <MenuButton>
               <CarouselIcon />
-            </MenuButton>
+            </MenuButton> */}
           </div>
         )}
       </div>

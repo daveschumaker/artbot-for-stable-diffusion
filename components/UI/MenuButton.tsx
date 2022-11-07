@@ -21,9 +21,13 @@ const StyledMenuButton = styled.button<MenuButtonProps>`
     transform: scale(0.96);
   }
 
-  &:hover {
-    background-color: ${(props) => props.theme.navLinkActive};
-    color: ${(props) => props.theme.body};
+  // Disables hover effect for mobile devices:
+  // https://stackoverflow.com/a/59210149
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: ${(props) => props.theme.navLinkActive};
+      color: ${(props) => props.theme.body};
+    }
   }
 
   ${(props) =>

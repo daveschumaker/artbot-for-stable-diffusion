@@ -55,6 +55,47 @@ export const countCompletedJobs = async () => {
   return await db?.completed?.orderBy('timestamp').count()
 }
 
+export const countFilterCompleted = async ({
+  filterType = 'favorited'
+} = {}) => {
+  const filterFunc = (entry: any) => {
+    if (filterType === 'favorited') {
+      return entry.favorited === true
+    }
+
+    if (filterType === 'unfavorited') {
+      return entry.favorited !== true
+    }
+
+    if (filterType === 'text2img') {
+      return (
+        !entry.img2img ||
+        entry.source_processing === '' ||
+        entry.source_processing === SourceProcessing.Prompt
+      )
+    }
+
+    if (filterType === 'img2img') {
+      return (
+        entry.img2img || entry.source_processing === SourceProcessing.Img2Img
+      )
+    }
+
+    if (filterType === 'inpainting') {
+      return entry.source_processing === SourceProcessing.InPainting
+    }
+
+    return true
+  }
+
+  return await db?.completed
+    ?.orderBy('timestamp')
+    .filter(function (entry: any) {
+      return filterFunc(entry)
+    })
+    .count()
+}
+
 export const filterCompletedJobs = async ({
   limit = 100,
   offset = 0,
@@ -87,6 +128,8 @@ export const filterCompletedJobs = async ({
     if (filterType === 'inpainting') {
       return entry.source_processing === SourceProcessing.InPainting
     }
+
+    return true
   }
 
   if (sort === 'old') {

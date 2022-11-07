@@ -11,8 +11,12 @@ const StyledTextButton = styled.div`
   cursor: pointer;
   color: ${(props) => props.color || props.theme.navLinkActive};
 
-  &:hover {
-    text-decoration: underline;
+  // Disables hover effect for mobile devices:
+  // https://stackoverflow.com/a/59210149
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   &:active {

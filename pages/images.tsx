@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import Head from 'next/head'
 import React, { useCallback, useEffect } from 'react'
+import { useRouter } from 'next/router'
 import Link from 'next/link'
 import Masonry from 'react-responsive-masonry'
 import LazyLoad from 'react-lazyload'
@@ -11,6 +12,7 @@ import Spinner from '../components/Spinner'
 import {
   bulkDeleteImages,
   countCompletedJobs,
+  countFilterCompleted,
   fetchCompletedJobs,
   filterCompletedJobs,
   imageCount
@@ -75,17 +77,18 @@ const ImageOverlay = styled.div`
 
 const SelectCheck = styled(CircleCheckIcon)`
   position: absolute;
-  bottom: 8px;
-  right: 8px;
+  bottom: 4px;
+  right: 4px;
 `
 
 const StyledHeartIcon = styled(HeartIcon)`
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 4px;
+  right: 4px;
 `
 
 const ImagesPage = () => {
+  const router = useRouter()
   const size = useWindowSize()
 
   const [componentState, setComponentState] = useComponentState({
@@ -93,10 +96,10 @@ const ImagesPage = () => {
     deleteSelection: [],
     showDeleteModal: false,
 
-    offset: 0,
-    filterMode: 'all',
+    offset: Number(router.query.offset) || 0,
+    filterMode: router.query.filter || 'all',
     layoutMode: 'layout',
-    sortMode: 'new',
+    sortMode: router.query.sort || 'new',
     showFilterMenu: false,
     showLayoutMenu: false,
     totalImages: 0,
@@ -104,25 +107,41 @@ const ImagesPage = () => {
     isLoading: true
   })
 
-  const fetchImages = useCallback(
-    async (offset = 0) => {
-      let data
-      const sort = localStorage.getItem('imagePageSort') || 'new'
+  const getImageCount = useCallback(async () => {
+    let count
 
-      if (componentState.filterMode === 'all') {
-        data = await fetchCompletedJobs({ offset, sort })
-      } else {
-        data = await filterCompletedJobs({
-          offset,
-          sort,
-          filterType: componentState.filterMode
-        })
-      }
+    if (componentState.filterMode !== 'all') {
+      count = await countFilterCompleted({
+        filterType: componentState.filterMode
+      })
+    } else {
+      count = await imageCount()
+    }
+    setComponentState({ totalImages: count })
+  }, [componentState.filterMode, setComponentState])
 
-      setComponentState({ images: data, isLoading: false })
-    },
-    [componentState.filterMode, setComponentState]
-  )
+  const fetchImages = useCallback(async () => {
+    const offset = Number(router.query.offset) || 0
+    let data
+    const sort = localStorage.getItem('imagePageSort') || 'new'
+
+    if (componentState.filterMode === 'all') {
+      data = await fetchCompletedJobs({ offset, sort })
+    } else {
+      data = await filterCompletedJobs({
+        offset,
+        sort,
+        filterType: componentState.filterMode
+      })
+    }
+    await getImageCount()
+    setComponentState({ images: data, isLoading: false })
+  }, [
+    componentState.filterMode,
+    getImageCount,
+    router.query.offset,
+    setComponentState
+  ])
 
   const handleDeleteImageClick = async () => {
     trackEvent({
@@ -141,11 +160,6 @@ const ImagesPage = () => {
     })
   }
 
-  const getImageCount = async () => {
-    const count = await imageCount()
-    setComponentState({ totalImages: count })
-  }
-
   const handleLoadMore = useCallback(
     async (btn: string) => {
       setComponentState({
@@ -162,6 +176,11 @@ const ImagesPage = () => {
           isLoading: false,
           offset: count - 100
         })
+
+        const newQuery = Object.assign({}, router.query)
+        newQuery.offset = String(count - 100)
+        //@ts-ignore
+        router.push(`?${new URLSearchParams(newQuery).toString()}`)
         return
       }
 
@@ -176,6 +195,11 @@ const ImagesPage = () => {
           isLoading: false,
           offset: 0
         })
+
+        const newQuery = Object.assign({}, router.query)
+        delete newQuery.offset
+        //@ts-ignore
+        router.push(`?${new URLSearchParams(newQuery).toString()}`)
         return
       }
 
@@ -195,15 +219,16 @@ const ImagesPage = () => {
         label: `${btn} - ${newNum}`
       })
 
-      await fetchImages(newNum)
+      //await fetchImages(newNum)
       setComponentState({ offset: newNum })
+
+      const newQuery = Object.assign({}, router.query)
+      newQuery.offset = newNum
+      //@ts-ignore
+      router.push(`?${new URLSearchParams(newQuery).toString()}`)
     },
-    [
-      fetchImages,
-      componentState.offset,
-      componentState.totalImages,
-      setComponentState
-    ]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [componentState.offset, componentState.totalImages, setComponentState]
   )
 
   useEffect(() => {
@@ -215,7 +240,7 @@ const ImagesPage = () => {
         layoutMode: localStorage.getItem('showLayout') || 'layout'
       })
     }
-  }, [fetchImages, setComponentState])
+  }, [fetchImages, getImageCount, setComponentState])
 
   let defaultStyle = `flex gap-y-3 mt-4 relative`
 
@@ -273,6 +298,17 @@ const ImagesPage = () => {
     setComponentState({ deleteSelection: delArray })
   }
 
+  const handleFilterButtonClick = useCallback(() => {
+    if (componentState.showFilterMenu) {
+      setComponentState({ showFilterMenu: false })
+    } else {
+      setComponentState({
+        showFilterMenu: true,
+        showLayoutMenu: false
+      })
+    }
+  }, [componentState.showFilterMenu, setComponentState])
+
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       if (componentState.deleteMode && e.keyCode === 27) {
@@ -291,7 +327,58 @@ const ImagesPage = () => {
     return () => window.removeEventListener('keydown', handleKeyPress)
   }, [componentState.deleteMode, setComponentState])
 
+  useEffect(() => {
+    if (localStorage.getItem('imagePageSort') === 'old') {
+      setComponentState({ sortMode: 'old' })
+    } else {
+      setComponentState({ sortMode: 'new' })
+    }
+  }, [setComponentState])
+
+  useEffect(() => {
+    const updateObject = {
+      isLoading: true
+    }
+
+    // @ts-ignore
+    if (router.query.filter) updateObject.filterMode = router.query.filter
+    // @ts-ignore
+    if (router.query.offset) updateObject.offset = Number(router.query.offset)
+    //@ts-ignore
+    if (!router.query.offset) updateObject.offset = 0
+    // @ts-ignore
+    if (router.query.sort) updateObject.sortMode = router.query.sort
+
+    setComponentState(updateObject)
+  }, [router.query, setComponentState])
+
   const LinkEl = componentState.deleteMode ? NonLink : Link
+
+  const countDescriptor = () => {
+    let string = ``
+
+    if (componentState.filterMode === 'favorited') {
+      string = 'favorite '
+    }
+
+    if (componentState.filterMode === 'unfavorited') {
+      string = 'unfavorited '
+    }
+
+    if (componentState.filterMode === 'text2img') {
+      string = 'text2img '
+    }
+
+    if (componentState.filterMode === 'img2img') {
+      string = 'img2img '
+    }
+
+    if (componentState.filterMode === 'inpainting') {
+      string = 'inpainted '
+    }
+
+    return string
+  }
 
   return (
     <div>
@@ -331,18 +418,9 @@ const ImagesPage = () => {
           </MenuButton>
           <div className="relative">
             <MenuButton
-              active={componentState.filterMode !== 'all'}
+              active={componentState.showFilterMenu}
               title="Filter images"
-              onClick={() => {
-                if (componentState.showFilterMenu) {
-                  setComponentState({ showFilterMenu: false })
-                } else {
-                  setComponentState({
-                    showFilterMenu: true,
-                    showLayoutMenu: false
-                  })
-                }
-              }}
+              onClick={handleFilterButtonClick}
             >
               <FilterIcon />
             </MenuButton>
@@ -353,9 +431,16 @@ const ImagesPage = () => {
                     onClick={() => {
                       setComponentState({
                         filterMode: 'all',
-                        isLoading: true,
+                        isLoading: componentState.filterMode !== 'all',
                         showFilterMenu: false
                       })
+
+                      const newQuery = Object.assign({}, router.query)
+                      delete newQuery.filter
+                      router.push(
+                        //@ts-ignore
+                        `?${new URLSearchParams(newQuery).toString()}`
+                      )
                     }}
                   >
                     Show all images
@@ -364,9 +449,16 @@ const ImagesPage = () => {
                     onClick={() => {
                       setComponentState({
                         filterMode: 'favorited',
-                        isLoading: true,
+                        isLoading: componentState.filterMode !== 'favorited',
                         showFilterMenu: false
                       })
+
+                      const newQuery = Object.assign({}, router.query)
+                      newQuery.filter = 'favorited'
+                      router.push(
+                        //@ts-ignore
+                        `?${new URLSearchParams(newQuery).toString()}`
+                      )
                     }}
                   >
                     Show favorited
@@ -375,9 +467,16 @@ const ImagesPage = () => {
                     onClick={() => {
                       setComponentState({
                         filterMode: 'unfavorited',
-                        isLoading: true,
+                        isLoading: componentState.filterMode !== 'unfavorited',
                         showFilterMenu: false
                       })
+
+                      const newQuery = Object.assign({}, router.query)
+                      newQuery.filter = 'unfavorited'
+                      router.push(
+                        //@ts-ignore
+                        `?${new URLSearchParams(newQuery).toString()}`
+                      )
                     }}
                   >
                     Show unfavorited
@@ -387,34 +486,55 @@ const ImagesPage = () => {
                     onClick={() => {
                       setComponentState({
                         filterMode: 'text2img',
-                        isLoading: true,
+                        isLoading: componentState.filterMode !== 'text2img',
                         showFilterMenu: false
                       })
+
+                      const newQuery = Object.assign({}, router.query)
+                      newQuery.filter = 'text2img'
+                      router.push(
+                        //@ts-ignore
+                        `?${new URLSearchParams(newQuery).toString()}`
+                      )
                     }}
                   >
-                    Text-2-Img
+                    text2img
                   </MenuItem>
                   <MenuItem
                     onClick={() => {
                       setComponentState({
                         filterMode: 'img2img',
-                        isLoading: true,
+                        isLoading: componentState.filterMode !== 'img2img',
                         showFilterMenu: false
                       })
+
+                      const newQuery = Object.assign({}, router.query)
+                      newQuery.filter = 'img2img'
+                      router.push(
+                        //@ts-ignore
+                        `?${new URLSearchParams(newQuery).toString()}`
+                      )
                     }}
                   >
-                    Img-2-Img
+                    img2img
                   </MenuItem>
                   <MenuItem
                     onClick={() => {
                       setComponentState({
                         filterMode: 'inpainting',
-                        isLoading: true,
+                        isLoading: componentState.filterMode !== 'inpainting',
                         showFilterMenu: false
                       })
+
+                      const newQuery = Object.assign({}, router.query)
+                      newQuery.filter = 'inpainting'
+                      router.push(
+                        //@ts-ignore
+                        `?${new URLSearchParams(newQuery).toString()}`
+                      )
                     }}
                   >
-                    Inpainting
+                    inpainting
                   </MenuItem>
                 </ul>
               </DropDownMenu>
@@ -480,10 +600,17 @@ const ImagesPage = () => {
                   onClick={() => {
                     setComponentState({
                       isLoading: true,
-                      showLayoutMenu: false
+                      showLayoutMenu: false,
+                      sortMode: 'new'
                     })
                     localStorage.setItem('imagePageSort', 'new')
                     fetchImages()
+
+                    const newQuery = Object.assign({}, router.query)
+                    delete newQuery.sort
+                    //@ts-ignore
+                    router.push(`?${new URLSearchParams(newQuery).toString()}`)
+
                     trackEvent({
                       event: `MENU_CLICK`,
                       label: 'sort_new',
@@ -497,10 +624,17 @@ const ImagesPage = () => {
                   onClick={() => {
                     setComponentState({
                       isLoading: true,
-                      showLayoutMenu: false
+                      showLayoutMenu: false,
+                      sortMode: 'old'
                     })
                     localStorage.setItem('imagePageSort', 'old')
                     fetchImages()
+
+                    const newQuery = Object.assign({}, router.query)
+                    newQuery.sort = 'old'
+                    //@ts-ignore
+                    router.push(`?${new URLSearchParams(newQuery).toString()}`)
+
                     trackEvent({
                       event: `MENU_CLICK`,
                       label: 'sort_old',
@@ -524,7 +658,9 @@ const ImagesPage = () => {
         {!componentState.deleteMode && componentState.totalImages > 0 && (
           <div className="text-sm mb-2 text-teal-500">
             Showing {currentOffset} - {maxOffset} of{' '}
-            <strong>{componentState.totalImages}</strong> images
+            <strong>{componentState.totalImages}</strong> {countDescriptor()}
+            images {componentState.sortMode === 'new' && `(↓ newest)`}
+            {componentState.sortMode === 'old' && `(↓ oldest)`}
           </div>
         )}
         {componentState.deleteMode && (
@@ -587,39 +723,40 @@ const ImagesPage = () => {
                 }) => {
                   return (
                     <LazyLoad key={image.jobId} once>
-                      <LinkEl
-                        className="relative"
-                        href={`/image/${image.jobId}`}
-                        passHref
-                        onClick={() => handleImageClick(image.id)}
-                      >
-                        <img
-                          src={'data:image/webp;base64,' + image.base64String}
-                          style={{
-                            borderRadius: '4px',
-                            width: '100%',
-                            display: 'block'
-                          }}
-                          alt={image.prompt}
-                        />
-                        {componentState.deleteMode &&
-                          componentState.deleteSelection.indexOf(image.id) >=
-                            0 && <ImageOverlay></ImageOverlay>}
-                        {componentState.deleteMode &&
-                          componentState.deleteSelection.indexOf(image.id) ===
-                            -1 && <SelectCheck />}
-                        {componentState.deleteMode &&
-                          componentState.deleteSelection.indexOf(image.id) >=
-                            0 && <SelectCheck fill="blue" stroke="white" />}
-                        {image.favorited && (
-                          <StyledHeartIcon
-                            fill="#14B8A6"
-                            width="2"
-                            size="32"
-                            shadow
+                      <div className="relative">
+                        <LinkEl
+                          href={`/image/${image.jobId}`}
+                          passHref
+                          onClick={() => handleImageClick(image.id)}
+                        >
+                          <img
+                            src={'data:image/webp;base64,' + image.base64String}
+                            style={{
+                              borderRadius: '4px',
+                              width: '100%',
+                              display: 'block'
+                            }}
+                            alt={image.prompt}
                           />
-                        )}
-                      </LinkEl>
+                          {componentState.deleteMode &&
+                            componentState.deleteSelection.indexOf(image.id) >=
+                              0 && <ImageOverlay></ImageOverlay>}
+                          {componentState.deleteMode &&
+                            componentState.deleteSelection.indexOf(image.id) ===
+                              -1 && <SelectCheck />}
+                          {componentState.deleteMode &&
+                            componentState.deleteSelection.indexOf(image.id) >=
+                              0 && <SelectCheck fill="blue" stroke="white" />}
+                          {image.favorited && (
+                            <StyledHeartIcon
+                              fill="#14B8A6"
+                              width={2}
+                              size={32}
+                              shadow
+                            />
+                          )}
+                        </LinkEl>
+                      </div>
                     </LazyLoad>
                   )
                 }
@@ -638,37 +775,39 @@ const ImagesPage = () => {
                   prompt: string
                   timestamp: number
                   seed: number
+                  favorited: boolean
                 }) => {
                   return (
                     <LazyLoad key={image.jobId} once>
-                      <LinkEl
-                        className="relative"
-                        href={`/image/${image.jobId}`}
-                        passHref
-                        onClick={() => handleImageClick(image.id)}
-                      >
-                        <ImageSquare
-                          imageDetails={image}
-                          imageType={'image/webp'}
-                        />
-                        {componentState.deleteMode &&
-                          componentState.deleteSelection.indexOf(image.id) >=
-                            0 && <ImageOverlay></ImageOverlay>}
-                        {componentState.deleteMode &&
-                          componentState.deleteSelection.indexOf(image.id) ===
-                            -1 && <SelectCheck />}
-                        {componentState.deleteMode &&
-                          componentState.deleteSelection.indexOf(image.id) >=
-                            0 && <SelectCheck fill="blue" stroke="white" />}
-                        {image.favorited && (
-                          <StyledHeartIcon
-                            fill="#14B8A6"
-                            width="2"
-                            size="32"
-                            shadow
+                      <div className="relative">
+                        <LinkEl
+                          href={`/image/${image.jobId}`}
+                          passHref
+                          onClick={() => handleImageClick(image.id)}
+                        >
+                          <ImageSquare
+                            imageDetails={image}
+                            imageType={'image/webp'}
                           />
-                        )}
-                      </LinkEl>
+                          {componentState.deleteMode &&
+                            componentState.deleteSelection.indexOf(image.id) >=
+                              0 && <ImageOverlay></ImageOverlay>}
+                          {componentState.deleteMode &&
+                            componentState.deleteSelection.indexOf(image.id) ===
+                              -1 && <SelectCheck />}
+                          {componentState.deleteMode &&
+                            componentState.deleteSelection.indexOf(image.id) >=
+                              0 && <SelectCheck fill="blue" stroke="white" />}
+                          {image.favorited && (
+                            <StyledHeartIcon
+                              fill="#14B8A6"
+                              width={2}
+                              size={32}
+                              shadow
+                            />
+                          )}
+                        </LinkEl>
+                      </div>
                     </LazyLoad>
                   )
                 }

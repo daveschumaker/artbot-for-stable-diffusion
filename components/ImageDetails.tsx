@@ -96,6 +96,11 @@ const ImageDetails = ({
 
       setPending(true)
 
+      trackEvent({
+        event: 'REROLL_IMAGE_CLICK',
+        context: 'ImagePage'
+      })
+
       const reRollStatus = await rerollImage(imageDetails)
       const { success } = reRollStatus
 

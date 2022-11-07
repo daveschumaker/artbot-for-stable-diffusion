@@ -54,6 +54,16 @@ const Changelog = () => {
       </Head>
       <PageTitle>Changelog</PageTitle>
       <Section>
+        <SubSectionTitle>2022.11.06</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Feature: Mark images as favorites, and filter images on the main
+            gallery page (by favorited / non-favorited, image generation type
+            and more to come soon).
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.11.05</SubSectionTitle>
         <StyledUl>
           <StyledLi>
