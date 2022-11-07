@@ -72,9 +72,16 @@ const orientationOptions = [
 ]
 
 const modelerOptions = (models: Array<ModelDetails>) => {
-  return models.map((model) => {
-    return { value: model.name, label: `${model.name} (${model.count})` }
+  const modelsArray = []
+  models.forEach((model) => {
+    modelsArray.push({
+      value: model.name,
+      label: `${model.name} (${model.count})`
+    })
   })
+
+  modelsArray.push({ value: 'random', label: 'Random!' })
+  return modelsArray
 }
 
 const samplerOptions = () => {

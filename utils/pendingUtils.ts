@@ -56,6 +56,10 @@ export const createPendingJob = (imageParams: CreatePendingJob) => {
     clonedParams.height = imageSize.height
     clonedParams.width = imageSize.width
 
+    if (clonedParams.models[0] === 'random') {
+      clonedParams.models = []
+    }
+
     jobsToSend.push(clonedParams)
   }
 
