@@ -119,6 +119,12 @@ export default function MobileFooter() {
     return `${path}` === pathname
   }
 
+  const handleForceReload = () => {
+    if ('/images' === pathname) {
+      window.location.reload()
+    }
+  }
+
   useEffect(() => {
     setIsPwa(isInstalledPwa())
   }, [])
@@ -141,6 +147,7 @@ export default function MobileFooter() {
             href="/images"
             className="relative"
             onClick={() => {
+              handleForceReload()
               setShowImageReadyToast(false)
               setNewImageReady('')
             }}
