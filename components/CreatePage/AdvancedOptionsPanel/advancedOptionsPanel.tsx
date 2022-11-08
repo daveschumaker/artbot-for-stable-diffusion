@@ -537,6 +537,13 @@ const AdvancedOptionsPanel = ({
                 {modelDetails(input.models[0]).style &&
                   `Style: ${modelDetails(input.models[0]).style}`}{' '}
                 {modelDetails(input.models[0]).nsfw && ` (nsfw)`}
+                {modelDetails(input.models[0]).trigger ? (
+                  <>
+                    <br />
+                    Trigger: &quot;{modelDetails(input.models[0]).trigger}&quot;
+                    (will be automatically added to your prompt)
+                  </>
+                ) : null}
               </div>
             )}
           </MaxWidth>
