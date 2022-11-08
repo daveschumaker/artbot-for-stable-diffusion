@@ -149,9 +149,9 @@ const ImagePage = () => {
       if (e === null && swipeDir) {
         e = {}
         if (swipeDir === 'left') {
-          e.keyCode = 37
-        } else if (swipeDir === 'right') {
           e.keyCode = 39
+        } else if (swipeDir === 'right') {
+          e.keyCode = 37
         }
       }
 
