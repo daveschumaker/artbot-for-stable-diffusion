@@ -54,6 +54,20 @@ const Changelog = () => {
       </Head>
       <PageTitle>Changelog</PageTitle>
       <Section>
+        <SubSectionTitle>2022.11.08</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Feature: Bulk download images from the{' '}
+            <Linker href="/images">images page</Linker>. Hit the select button
+            in the top right, pick the images you want and then click the
+            download link. A zip file will be created with your images, as well
+            as a json file that lists all the relevant image generation details
+            (handy if you need to recreate or reference the image details
+            later).
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.11.07</SubSectionTitle>
         <StyledUl>
           <StyledLi>

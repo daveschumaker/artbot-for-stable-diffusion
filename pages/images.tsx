@@ -30,6 +30,8 @@ import MenuButton from '../components/UI/MenuButton'
 import FilterIcon from '../components/icons/FilterIcon'
 import HeartIcon from '../components/icons/HeartIcon'
 import useComponentState from '../hooks/useComponentState'
+import { base64toBlob } from '../utils/imageUtils'
+import { SourceProcessing } from '../utils/promptUtils'
 
 const DropDownMenu = styled.div`
   background-color: ${(props) => props.theme.body};
@@ -85,6 +87,20 @@ const StyledHeartIcon = styled(HeartIcon)`
   position: absolute;
   top: 4px;
   right: 4px;
+`
+
+const ButtonContainer = styled.div`
+  column-gap: 8px;
+  display: flex;
+  flex-direction: row;
+  row-gap: 4px;
+  max-width: 240px;
+  flex-wrap: wrap;
+  justify-content: end;
+
+  @media (min-width: 640px) {
+    max-width: 100%;
+  }
 `
 
 const ImagesPage = () => {
@@ -240,7 +256,7 @@ const ImagesPage = () => {
         layoutMode: localStorage.getItem('showLayout') || 'layout'
       })
     }
-  }, [fetchImages, getImageCount, setComponentState])
+  }, [fetchImages, getImageCount, router.query, setComponentState])
 
   let defaultStyle = `flex gap-y-3 mt-4 relative`
 
@@ -288,6 +304,80 @@ const ImagesPage = () => {
       setComponentState
     ]
   )
+
+  const handleDownloadClick = async () => {
+    if (componentState.deleteSelection.length === 0) {
+      return
+    }
+
+    const { downloadZip } = await import('client-zip')
+    const fileDetails: any = []
+    const fileArray: any = []
+
+    componentState.deleteSelection.forEach((id: number, i: number) => {
+      componentState.images.filter((image: any) => {
+        if (image.id === id) {
+          let filename =
+            image.prompt
+              .replace(/[^a-z0-9]/gi, '_')
+              .toLowerCase()
+              .slice(0, 125) + `_${i}.webp`
+
+          // Output image generation details to a JSON file. Helpful for people to
+          // reference what / how they created an image when they come back at a later time.
+          const imageData = {
+            name: filename,
+            date: new Date(image.timestamp),
+            prompt: image.prompt,
+            negative_prompt: image.negative,
+            sampler: image.sampler,
+            model: image.models[0],
+            height: image.height,
+            width: image.width,
+            steps: Number(image.steps),
+            cfg_scale: Number(image.cfg_scale),
+            seed: image.seed
+          }
+
+          if (
+            image.img2img ||
+            image.source_processing === SourceProcessing.Img2Img
+          ) {
+            // @ts-ignore
+            imageData.denoising_strength = image.denoising_strength
+          }
+
+          fileDetails.push(imageData)
+
+          const input = base64toBlob(image.base64String, 'image/webp')
+          fileArray.push({
+            name: filename,
+            lastModified: new Date(image.timestamp),
+            input
+          })
+        }
+      })
+    })
+
+    const jsonDetails = {
+      name: '_image_details.json',
+      lastModified: new Date(),
+      input: JSON.stringify(fileDetails, null, 2)
+    }
+
+    const blob = await downloadZip([jsonDetails, ...fileArray]).blob()
+    const link = document.createElement('a')
+    link.href = URL.createObjectURL(blob)
+    link.download = 'artbot-images.zip'
+    link.click()
+    link.remove()
+
+    setComponentState({
+      deleteMode: false,
+      deleteSelection: [],
+      showDeleteModal: false
+    })
+  }
 
   const handleSelectAll = () => {
     let delArray: Array<string> = []
@@ -672,7 +762,7 @@ const ImagesPage = () => {
             <div className="text-sm mb-2 text-teal-500">
               selected ({componentState.deleteSelection.length})
             </div>
-            <div className="flex flex-row gap-2">
+            <ButtonContainer>
               <TextButton
                 onClick={() => {
                   setComponentState({ deleteMode: false, deleteSelection: [] })
@@ -687,6 +777,7 @@ const ImagesPage = () => {
               >
                 select all
               </TextButton>
+              <TextButton onClick={handleDownloadClick}>download</TextButton>
               <TextButton
                 color="red"
                 onClick={() => {
@@ -697,19 +788,42 @@ const ImagesPage = () => {
               >
                 delete
               </TextButton>
-            </div>
+            </ButtonContainer>
           </>
         )}
       </div>
       {componentState.isLoading && <Spinner />}
-      {!componentState.isLoading && componentState.images.length === 0 && (
-        <div className="mb-2">
-          You haven&apos;t created any images yet.{' '}
-          <Link href="/" className="text-cyan-400">
-            Why not create something?
-          </Link>
-        </div>
-      )}
+      {!componentState.isLoading &&
+        componentState.images.length === 0 &&
+        componentState.filterMode !== 'all' && (
+          <div className="mt-2 mb-2">
+            No {countDescriptor()} images found for this filter.{' '}
+            <Link
+              href="/images"
+              className="text-cyan-400"
+              onClick={() => {
+                setComponentState({
+                  deleteMode: true,
+                  filterMode: 'all',
+                  showFilterMenu: false,
+                  showLayoutMenu: false
+                })
+              }}
+            >
+              Reset filter and show all images.
+            </Link>
+          </div>
+        )}
+      {!componentState.isLoading &&
+        componentState.images.length === 0 &&
+        componentState.filterMode === 'all' && (
+          <div className="mt-2 mb-2">
+            You haven&apos;t created any images yet.{' '}
+            <Link href="/" className="text-cyan-400">
+              Why not create something?
+            </Link>
+          </div>
+        )}
       <div className={defaultStyle}>
         {!componentState.isLoading &&
           componentState.images.length > 0 &&
