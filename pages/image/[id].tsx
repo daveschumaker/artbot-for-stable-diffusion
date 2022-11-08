@@ -32,6 +32,7 @@ import { useSwipeable } from 'react-swipeable'
 const StyledImage = styled.img`
   box-shadow: 0 16px 38px -12px rgb(0 0 0 / 56%),
     0 4px 25px 0px rgb(0 0 0 / 12%), 0 8px 10px -5px rgb(0 0 0 / 20%);
+  max-height: 512px;
 `
 
 const Section = styled.div`
@@ -55,7 +56,8 @@ const OptionsLink = styled.div`
 const ImagePage = () => {
   const handlers = useSwipeable({
     onSwipedLeft: () => handleKeyPress(null, 'left'),
-    onSwipedRight: () => handleKeyPress(null, 'right')
+    onSwipedRight: () => handleKeyPress(null, 'right'),
+    preventScrollOnSwipe: true
   })
   const size = useWindowSize()
   const router = useRouter()
@@ -66,6 +68,11 @@ const ImagePage = () => {
   const [pendingDownload, setPendingDownload] = useState(false)
   const [relatedImages, setRelatedImages] = useState([])
   const [optimisticFavorite, setOptimisticFavorite] = useState(false)
+
+  const maxLength = relatedImages.length
+  const currentIndex = relatedImages.findIndex((el) => {
+    return el.jobId === id
+  })
 
   const fetchImageDetails = useCallback(async (jobId: string) => {
     const data = await getImageDetails(jobId)
@@ -135,11 +142,6 @@ const ImagePage = () => {
 
   const handleKeyPress = useCallback(
     (e: any, swipeDir) => {
-      const maxLength = relatedImages.length
-      const currentIndex = relatedImages.findIndex((el) => {
-        return el.jobId === id
-      })
-
       if (maxLength <= 1) {
         return
       }
@@ -197,7 +199,14 @@ const ImagePage = () => {
           {!isInitialLoad && noImageFound ? (
             <PageTitle>Image not found</PageTitle>
           ) : (
-            <PageTitle>Image details</PageTitle>
+            <PageTitle>
+              Image details{' '}
+              <div className="text-sm font-normal mt-[-4px]">
+                {relatedImages.length > 1
+                  ? `(${currentIndex + 1} / ${maxLength})`
+                  : null}
+              </div>
+            </PageTitle>
           )}
         </div>
         {!isInitialLoad && (
