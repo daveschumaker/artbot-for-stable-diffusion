@@ -378,10 +378,18 @@ export const checkCurrentJob = async (imageDetails: any) => {
       imageDetails.timestamp = Date.now()
 
       await deletePendingJobFromDb(jobId)
-      await db.completed.add({
-        ...imageDetails,
-        ...imgDetailsFromApi
-      })
+      // Catch a potential race condition where the same jobId can be added twice.
+      // This might happen when multiple tabs are open.
+      try {
+        await db.completed.add({
+          ...imageDetails,
+          ...imgDetailsFromApi
+        })
+      } catch (err) {
+        return {
+          newImage: false
+        }
+      }
 
       setNewImageReady(imageDetails.jobId)
       setShowImageReadyToast(true)
@@ -389,9 +397,11 @@ export const checkCurrentJob = async (imageDetails: any) => {
       trackEvent({
         event: 'IMAGE_RECEIVED_FROM_API',
         dimensions: `h ${imageDetails.height} x w ${imageDetails.width}`,
-        waitTimeSeconds: (
-          Math.floor(Date.now() - imageDetails.timestamp) / 1000
-        ).toFixed(0)
+        waitTimeSeconds: imageDetails.jobStartTimestamp
+          ? (
+              Math.floor(Date.now() - imageDetails.jobStartTimestamp) / 1000
+            ).toFixed(0)
+          : 0
       })
       trackGaEvent({
         action: 'img_received_from_api',
