@@ -65,6 +65,12 @@ const Changelog = () => {
             (handy if you need to recreate or reference the image details
             later).
           </StyledLi>
+          <StyledLi>
+            Feature: Generate an image using all models at once! In the advanced
+            options panel on the <Linker href="/">create page</Linker>, scroll
+            down and select &quot;use all available models&quot;. You will get
+            an image back for each model currently available on Stable Horde.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

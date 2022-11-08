@@ -55,6 +55,7 @@ export interface CreatePendingJob {
   source_processing?: string
   has_source_mask?: boolean
   has_source_image?: boolean
+  useAllModels?: boolean
 }
 
 export interface DiffusionModel {

@@ -59,7 +59,8 @@ const Home: NextPage = () => {
     source_processing: editMode
       ? loadEditPrompt().source_processing
       : SourceProcessing.Prompt,
-    models: editMode ? loadEditPrompt().models : ['stable_diffusion']
+    models: editMode ? loadEditPrompt().models : ['stable_diffusion'],
+    useAllModels: false
   }
 
   const [hasValidationError, setHasValidationError] = useState(false)

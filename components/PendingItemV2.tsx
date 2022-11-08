@@ -22,6 +22,7 @@ interface JobDetails {
   timestamp: number
   wait_time: number
   initWaitTime: number
+  models: Array<string>
 }
 
 const StyledContainer = styled.div`
@@ -203,9 +204,14 @@ const PendingItem = ({ handleDeleteJob, handleRetryJob, jobId }) => {
               <AlertTriangleIcon size={48} stroke="rgb(234 179 8)" />
             )}
           </ImageWaiting>
-          <StyledPrompt className="italic flex-grow">
-            {jobDetails.prompt}
-          </StyledPrompt>
+          <div className="flex flex-col flex-grow">
+            <StyledPrompt className="italic flex-grow">
+              {jobDetails.prompt}
+            </StyledPrompt>
+            <div className="w-full font-mono text-xs mt-2">
+              Model: {jobDetails.models[0]}
+            </div>
+          </div>
         </StyledImageInfoPanel>
         <StyledInfoDiv>
           <div className="flex flex-grow flex-col">

@@ -500,55 +500,75 @@ const AdvancedOptionsPanel = ({
         </MaxWidth>
       </Section>
       {input.source_processing !==
-        (SourceProcessing.InPainting || SourceProcessing.OutPaiting) && (
-        <Section>
-          <SubSectionTitle>
-            Model
-            <Tooltip width="240px">
-              Models currently available within the horde. Numbers in
-              paranthesis indicate number of works. Generally, these models will
-              generate images quicker.
-            </Tooltip>
-          </SubSectionTitle>
-          <MaxWidth
-            // @ts-ignore
-            maxWidth="240"
-          >
-            <SelectComponent
-              menuPlacement={'top'}
-              //@ts-ignore
-              options={modelerOptions(models)}
-              onChange={(obj: { value: string; label: string }) => {
-                setInput({ models: [obj.value] })
-              }}
-              value={modelsValue}
-              isSearchable={false}
-            />
-          </MaxWidth>
-          <MaxWidth
-            // @ts-ignore
-            maxWidth="480"
-          >
-            {modelDetails(input.models[0]) && (
-              <div className="mt-2 text-xs">
-                {modelDetails(input.models[0]).description &&
-                  `${modelDetails(input.models[0]).description}`}
-                <br />
-                {modelDetails(input.models[0]).style &&
-                  `Style: ${modelDetails(input.models[0]).style}`}{' '}
-                {modelDetails(input.models[0]).nsfw && ` (nsfw)`}
-                {modelDetails(input.models[0]).trigger ? (
-                  <>
-                    <br />
-                    Trigger: &quot;{modelDetails(input.models[0]).trigger}&quot;
-                    (will be automatically added to your prompt)
-                  </>
-                ) : null}
-              </div>
-            )}
-          </MaxWidth>
-        </Section>
-      )}
+        (SourceProcessing.InPainting || SourceProcessing.OutPaiting) &&
+        !input.useAllModels && (
+          <Section>
+            <SubSectionTitle>
+              Model
+              <Tooltip width="240px">
+                Models currently available within the horde. Numbers in
+                paranthesis indicate number of works. Generally, these models
+                will generate images quicker.
+              </Tooltip>
+            </SubSectionTitle>
+            <MaxWidth
+              // @ts-ignore
+              maxWidth="240"
+            >
+              <SelectComponent
+                menuPlacement={'top'}
+                //@ts-ignore
+                options={modelerOptions(models)}
+                onChange={(obj: { value: string; label: string }) => {
+                  setInput({ models: [obj.value] })
+                }}
+                value={modelsValue}
+                isSearchable={false}
+              />
+            </MaxWidth>
+            <MaxWidth
+              // @ts-ignore
+              maxWidth="480"
+            >
+              {modelDetails(input.models[0]) && (
+                <div className="mt-2 text-xs">
+                  {modelDetails(input.models[0]).description &&
+                    `${modelDetails(input.models[0]).description}`}
+                  <br />
+                  {modelDetails(input.models[0]).style &&
+                    `Style: ${modelDetails(input.models[0]).style}`}{' '}
+                  {modelDetails(input.models[0]).nsfw && ` (nsfw)`}
+                  {modelDetails(input.models[0]).trigger ? (
+                    <>
+                      <br />
+                      Trigger: &quot;{modelDetails(input.models[0]).trigger}
+                      &quot; (will be automatically added to your prompt)
+                    </>
+                  ) : null}
+                </div>
+              )}
+            </MaxWidth>
+          </Section>
+        )}
+      <Section>
+        <SubSectionTitle>
+          Use all available models
+          <Tooltip width="240px">
+            Automatically generate an image for each model currently available
+            on Stable Horde
+          </Tooltip>
+        </SubSectionTitle>
+        <Switch
+          onChange={() => {
+            if (!input.useAllModels) {
+              setInput({ useAllModels: true })
+            } else {
+              setInput({ useAllModels: false })
+            }
+          }}
+          checked={input.useAllModels}
+        />
+      </Section>
       <Section>
         <SubSectionTitle>
           Enable karras
@@ -568,46 +588,48 @@ const AdvancedOptionsPanel = ({
           checked={input.karras}
         />
       </Section>
-      <Section>
-        <SubSectionTitle>
-          Number of images
-          <div className="block text-xs w-full">(1 - 20)</div>
-        </SubSectionTitle>
-        <MaxWidth
-          // @ts-ignore
-          maxWidth="120"
-        >
-          <Input
+      {!input.useAllModels && (
+        <Section>
+          <SubSectionTitle>
+            Number of images
+            <div className="block text-xs w-full">(1 - 20)</div>
+          </SubSectionTitle>
+          <MaxWidth
             // @ts-ignore
-            className="mb-2"
-            error={errorMessage.numImages}
-            type="text"
-            name="numImages"
-            onChange={handleChangeInput}
-            onBlur={(e: any) => {
-              if (
-                isNaN(e.target.value) ||
-                e.target.value < 1 ||
-                e.target.value > 20
-              ) {
-                setErrorMessage({
-                  numImages: 'Please enter a valid number between 1 and 20'
-                })
-              } else if (errorMessage.numImages) {
-                setErrorMessage({ numImages: null })
-              }
-            }}
-            // @ts-ignore
-            value={input.numImages}
-            width="100%"
-          />
-        </MaxWidth>
-        {errorMessage.numImages && (
-          <div className="mb-2 text-red-500 text-lg font-bold">
-            {errorMessage.numImages}
-          </div>
-        )}
-      </Section>
+            maxWidth="120"
+          >
+            <Input
+              // @ts-ignore
+              className="mb-2"
+              error={errorMessage.numImages}
+              type="text"
+              name="numImages"
+              onChange={handleChangeInput}
+              onBlur={(e: any) => {
+                if (
+                  isNaN(e.target.value) ||
+                  e.target.value < 1 ||
+                  e.target.value > 20
+                ) {
+                  setErrorMessage({
+                    numImages: 'Please enter a valid number between 1 and 20'
+                  })
+                } else if (errorMessage.numImages) {
+                  setErrorMessage({ numImages: null })
+                }
+              }}
+              // @ts-ignore
+              value={input.numImages}
+              width="100%"
+            />
+          </MaxWidth>
+          {errorMessage.numImages && (
+            <div className="mb-2 text-red-500 text-lg font-bold">
+              {errorMessage.numImages}
+            </div>
+          )}
+        </Section>
+      )}
     </div>
   )
 }

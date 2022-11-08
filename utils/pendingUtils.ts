@@ -1,3 +1,4 @@
+import { getModelsCache } from '../api/availableModels'
 import { CreatePendingJob } from '../types'
 import { uuidv4 } from './appUtils'
 import { orientationDetails, randomSampler } from './imageUtils'
@@ -18,7 +19,12 @@ export const createPendingJob = (imageParams: CreatePendingJob) => {
     return []
   }
 
-  if (isNaN(numImages) || numImages < 1 || numImages > 20) {
+  if (
+    isNaN(numImages) ||
+    numImages < 1 ||
+    numImages > 20 ||
+    imageParams.useAllModels
+  ) {
     numImages = 1
   }
 
@@ -35,6 +41,44 @@ export const createPendingJob = (imageParams: CreatePendingJob) => {
   // same timestamp. Then later come back and make another group, they
   // will have a different timestamp.
   imageParams.jobTimestamp = Date.now()
+
+  // TODO: Unify this.
+  if (imageParams.useAllModels) {
+    const models = getModelsCache()
+
+    // Make new parentJobId for this specific type of job:
+    imageParams.parentJobId = uuidv4()
+
+    for (const [key] of Object.entries(models)) {
+      // Create a temporary uuid for easier lookups.
+      // Will be replaced later when job is accepted
+      // by API
+      const clonedParams = Object.assign({}, imageParams)
+      clonedParams.jobId = uuidv4()
+      clonedParams.jobStartTimestamp = Date.now()
+      if (clonedParams.sampler === 'random') {
+        const isImg2Img =
+          !clonedParams.img2img &&
+          clonedParams.source_processing !== SourceProcessing.Img2Img &&
+          clonedParams.source_processing !== SourceProcessing.InPainting
+        clonedParams.sampler = randomSampler(clonedParams.steps, isImg2Img)
+      }
+
+      const imageSize: ImageSize = orientationDetails(
+        clonedParams.orientationType || 'square',
+        clonedParams.height,
+        clonedParams.width
+      )
+      clonedParams.orientation = imageSize.orientation
+      clonedParams.height = imageSize.height
+      clonedParams.width = imageSize.width
+
+      clonedParams.models = [key]
+      jobsToSend.push(clonedParams)
+    }
+
+    return jobsToSend
+  }
 
   for (let i = 0; i < numImages; i++) {
     // Create a temporary uuid for easier lookups.
