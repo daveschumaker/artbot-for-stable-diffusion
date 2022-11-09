@@ -1,6 +1,7 @@
 import { getModelsCache } from '../api/availableModels'
-import { CreatePendingJob } from '../types'
+import { CreatePendingJob, JobStatus } from '../types'
 import { uuidv4 } from './appUtils'
+import { db } from './db'
 import { orientationDetails, randomSampler } from './imageUtils'
 import { SourceProcessing } from './promptUtils'
 
@@ -10,21 +11,50 @@ interface ImageSize {
   width: number
 }
 
-export const createPendingJob = (imageParams: CreatePendingJob) => {
+const cloneImageParams = (imageParams: CreatePendingJob) => {
+  const clonedParams = Object.assign({}, imageParams)
+  delete clonedParams.id
+
+  // Create a temporary uuid for easier lookups.
+  // Will be replaced later when job is accepted
+  // by API
+  clonedParams.jobId = uuidv4()
+  clonedParams.timestamp = Date.now()
+
+  if (clonedParams.sampler === 'random') {
+    const isImg2Img =
+      !clonedParams.img2img &&
+      clonedParams.source_processing !== SourceProcessing.Img2Img &&
+      clonedParams.source_processing !== SourceProcessing.InPainting
+    clonedParams.sampler = randomSampler(clonedParams.steps, isImg2Img)
+  }
+
+  const imageSize: ImageSize = orientationDetails(
+    clonedParams.orientationType || 'square',
+    clonedParams.height,
+    clonedParams.width
+  )
+
+  clonedParams.orientation = imageSize.orientation
+  clonedParams.height = imageSize.height
+  clonedParams.width = imageSize.width
+
+  if (clonedParams.models[0] === 'random') {
+    clonedParams.models = []
+  }
+
+  return clonedParams
+}
+
+export const createPendingJob = async (imageParams: CreatePendingJob) => {
   const { prompt } = imageParams
   let { numImages = 1 } = imageParams
-  let jobsToSend: Array<CreatePendingJob> = []
 
   if (!prompt || !prompt?.trim()) {
     return []
   }
 
-  if (
-    isNaN(numImages) ||
-    numImages < 1 ||
-    numImages > 20 ||
-    imageParams.useAllModels
-  ) {
+  if (isNaN(numImages) || numImages < 1 || numImages > 50) {
     numImages = 1
   }
 
@@ -41,76 +71,41 @@ export const createPendingJob = (imageParams: CreatePendingJob) => {
   // same timestamp. Then later come back and make another group, they
   // will have a different timestamp.
   imageParams.jobTimestamp = Date.now()
+  imageParams.groupJobId = uuidv4()
 
-  // TODO: Unify this.
+  imageParams.jobStatus = JobStatus.Waiting
+  let clonedParams
+
   if (imageParams.useAllModels) {
+    imageParams.numImages = 1
     const models = getModelsCache()
 
-    // Make new parentJobId for this specific type of job:
-    imageParams.parentJobId = uuidv4()
-
     for (const [key] of Object.entries(models)) {
-      // Create a temporary uuid for easier lookups.
-      // Will be replaced later when job is accepted
-      // by API
-      const clonedParams = Object.assign({}, imageParams)
-      clonedParams.jobId = uuidv4()
-      clonedParams.jobStartTimestamp = Date.now()
-      if (clonedParams.sampler === 'random') {
-        const isImg2Img =
-          !clonedParams.img2img &&
-          clonedParams.source_processing !== SourceProcessing.Img2Img &&
-          clonedParams.source_processing !== SourceProcessing.InPainting
-        clonedParams.sampler = randomSampler(clonedParams.steps, isImg2Img)
-      }
-
-      const imageSize: ImageSize = orientationDetails(
-        clonedParams.orientationType || 'square',
-        clonedParams.height,
-        clonedParams.width
-      )
-      clonedParams.orientation = imageSize.orientation
-      clonedParams.height = imageSize.height
-      clonedParams.width = imageSize.width
-
+      clonedParams = cloneImageParams(imageParams)
       clonedParams.models = [key]
-      jobsToSend.push(clonedParams)
-    }
 
-    return jobsToSend
+      try {
+        await db.pending.add({
+          ...clonedParams
+        })
+      } catch (err) {
+        // Ah well
+      }
+    }
+  } else {
+    const count = Array(Number(numImages)).fill(0)
+
+    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+    for (const _num of count) {
+      clonedParams = cloneImageParams(imageParams)
+
+      try {
+        await db.pending.add({
+          ...clonedParams
+        })
+      } catch (err) {
+        // Ah well
+      }
+    }
   }
-
-  for (let i = 0; i < numImages; i++) {
-    // Create a temporary uuid for easier lookups.
-    // Will be replaced later when job is accepted
-    // by API
-    const clonedParams = Object.assign({}, imageParams)
-    clonedParams.jobId = uuidv4()
-    clonedParams.jobStartTimestamp = Date.now()
-
-    if (clonedParams.sampler === 'random') {
-      const isImg2Img =
-        !clonedParams.img2img &&
-        clonedParams.source_processing !== SourceProcessing.Img2Img &&
-        clonedParams.source_processing !== SourceProcessing.InPainting
-      clonedParams.sampler = randomSampler(clonedParams.steps, isImg2Img)
-    }
-
-    const imageSize: ImageSize = orientationDetails(
-      clonedParams.orientationType || 'square',
-      clonedParams.height,
-      clonedParams.width
-    )
-    clonedParams.orientation = imageSize.orientation
-    clonedParams.height = imageSize.height
-    clonedParams.width = imageSize.width
-
-    if (clonedParams.models[0] === 'random') {
-      clonedParams.models = []
-    }
-
-    jobsToSend.push(clonedParams)
-  }
-
-  return jobsToSend
 }

@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useStore } from 'statery'
 
 import Toast from '../components/UI/Toast'
@@ -16,17 +16,18 @@ const PollController = () => {
     setShowImageReadyToast(false)
   }
 
-  const checkForCompletedJob = useCallback(async () => {
+  const checkForCompletedJob = async () => {
     await hackyMultiJobCheck()
-  }, [])
+  }
 
   useEffect(() => {
     const interval = setInterval(async () => {
       checkForCompletedJob()
-    }, 5000)
+    }, 2000)
 
     return () => clearInterval(interval)
-  }, [checkForCompletedJob])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <>

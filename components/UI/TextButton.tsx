@@ -10,6 +10,7 @@ interface Props {
 const StyledTextButton = styled.div`
   cursor: pointer;
   color: ${(props) => props.color || props.theme.navLinkActive};
+  font-size: 14px;
 
   // Disables hover effect for mobile devices:
   // https://stackoverflow.com/a/59210149
@@ -21,6 +22,10 @@ const StyledTextButton = styled.div`
 
   &:active {
     transform: scale(0.98);
+  }
+
+  @media (min-width: 640px) {
+    font-size: 16px;
   }
 `
 

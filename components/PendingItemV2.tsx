@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useReducer, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
+import { useLiveQuery } from 'dexie-react-hooks'
 
-import { getImageDetails, getPendingJobDetails } from '../utils/db'
+import { db, deletePendingJobFromDb } from '../utils/db'
 import ProgressBar from './ProgressBarV2'
 import { setNewImageReady, setShowImageReadyToast } from '../store/appStore'
 import { Button } from './UI/Button'
@@ -14,16 +15,11 @@ import Link from 'next/link'
 import SpinnerV2 from './Spinner'
 import PhotoUpIcon from './icons/PhotoUpIcon'
 import AlertTriangleIcon from './icons/AlertTriangle'
-
-interface JobDetails {
-  jobId: string
-  prompt: string
-  jobStatus: string
-  timestamp: number
-  wait_time: number
-  initWaitTime: number
-  models: Array<string>
-}
+import { JobStatus } from '../types'
+import CloseIcon from './icons/CloseIcon'
+import { deletePendingJobFromApi } from '../api/deletePendingJobFromApi'
+import { createImageJob } from '../utils/imageCache'
+import { savePrompt } from '../utils/promptUtils'
 
 const StyledContainer = styled.div`
   box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
@@ -37,10 +33,20 @@ const StyledPanel = styled(Panel)`
   flex-direction: column;
 `
 
+const StyledCloseButton = styled.div`
+  cursor: pointer;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+
+  @media (min-width: 640px) {
+    right: 16px;
+  }
+`
+
 const ImageWaiting = styled.div`
   align-items: center;
   background-color: ${(props) => props.theme.waitingImageBackground};
-  border: 1px solid ${(props) => props.theme.border};
   border-radius: 4px;
   display: flex;
   justify-content: center;
@@ -67,12 +73,22 @@ const StyledImageInfoPanel = styled.div`
 
 const StyledPrompt = styled.div`
   color: ${(props) => props.theme.grayText};
+  margin-right: 24px;
 `
 
 const StyledInfoDiv = styled.div`
   color: ${(props) => props.theme.grayText};
   display: flex;
+  flex-direction: row;
   margin-top: 8px;
+`
+
+const StyledButtonContainer = styled.div`
+  align-items: flex-end;
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+  justify-content: flex-end;
 `
 
 const MobileHideText = styled.span`
@@ -85,107 +101,115 @@ const MobileHideText = styled.span`
 const StyledImage = styled(ImageSquare)``
 
 // @ts-ignore
-const PendingItem = ({ handleDeleteJob, handleRetryJob, jobId }) => {
+const PendingItem = ({ jobId }) => {
   const router = useRouter()
-  const [initialLoad, setInitialLoad] = useState(true)
-  const [jobDetails, setJobDetails] = useState<JobDetails | undefined>(
-    undefined
+  const jobDetails = useLiveQuery(() =>
+    db.pending
+      .filter(function (job: { jobId: string }) {
+        return job.jobId === jobId
+      })
+      .first()
   )
 
-  const [calcTime, setCalcTime] = useReducer(
-    (state: any, newState: any) => ({ ...state, ...newState }),
-    {
-      pctComplete: 0,
-      remainingTime: 0,
-      elapsedTimeSec: 0
+  const processDoneOrError =
+    jobDetails?.jobStatus === JobStatus.Done ||
+    jobDetails?.jobStatus === JobStatus.Error
+
+  const serverHasJob =
+    jobDetails?.jobStatus === JobStatus.Queued ||
+    jobDetails?.jobStatus === JobStatus.Processing
+
+  const [hidePanel, setHidePanel] = useState(false)
+
+  const handleDeleteJob = async () => {
+    if (serverHasJob) {
+      deletePendingJobFromApi(jobId)
     }
-  )
+    await deletePendingJobFromDb(jobId)
+  }
+
+  const handleEditClick = async () => {
+    await deletePendingJobFromDb(jobId)
+    savePrompt({ ...jobDetails })
+    router.push(`/?edit=true`)
+  }
+
+  const handleRetryJob = async () => {
+    if (serverHasJob) {
+      deletePendingJobFromApi(jobId)
+    }
+
+    const clonedParams = Object.assign({}, jobDetails)
+    delete clonedParams.id
+    delete clonedParams.jobStatus
+    delete clonedParams.errorMessage
+    clonedParams.useAllModels = false
+    clonedParams.numImages = 1
+
+    await createImageJob({ ...clonedParams })
+    await deletePendingJobFromDb(jobId)
+    window.scrollTo(0, 0)
+  }
 
   const clearNewImageNotification = () => {
     setShowImageReadyToast(false)
     setNewImageReady('')
   }
 
-  const fetchJobDetails = useCallback(async () => {
-    if (!jobId) {
-      return
-    }
+  const handleRemovePanel = () => {
+    deletePendingJobFromDb(jobId)
+    setHidePanel(true)
+  }
 
-    const pending = await getPendingJobDetails(jobId)
-    if (pending) {
-      setJobDetails(pending)
-      setInitialLoad(false)
-      return
-    }
+  const timeDiff = jobDetails?.initWaitTime - jobDetails?.wait_time || 0
+  let remainingTime = jobDetails?.initWaitTime - timeDiff || 0
+  const elapsedTimeSec = Math.round((Date.now() - jobDetails?.timestamp) / 1000)
+  let pctComplete = Math.round(
+    (elapsedTimeSec / jobDetails?.initWaitTime) * 100
+  )
 
-    const completed = await getImageDetails(jobId)
+  if (isNaN(pctComplete)) {
+    pctComplete = 0
+  }
 
-    if (completed) {
-      setJobDetails(completed)
-      setInitialLoad(false)
-      return
-    }
-  }, [jobId])
+  if (pctComplete > 95) {
+    pctComplete = 95
+  }
 
-  useEffect(() => {
-    if (!jobDetails) {
-      return
-    }
-
-    const interval = setInterval(() => {
-      const { jobStatus, timestamp, wait_time } = jobDetails
-
-      if (!wait_time || jobStatus !== 'processing') {
-        return
-      }
-
-      const initTime = Math.round(timestamp / 1000)
-      const currentTimeSec = Math.round(Date.now() / 1000)
-      const timeDiff = currentTimeSec - initTime
-
-      let timeLeft = wait_time - timeDiff
-      let pct = Math.round((timeDiff / wait_time) * 100)
-
-      if (pct > 95) {
-        pct = 95
-      }
-
-      if (timeLeft < 1) {
-        timeLeft = 1
-      }
-
-      setCalcTime({
-        pctComplete: pct,
-        remainingTime: Math.round(timeLeft),
-        elapsedTimeSec: Math.round((Date.now() - jobDetails.timestamp) / 1000)
-      })
-    }, 500)
-
-    return () => clearInterval(interval)
-  }, [jobDetails])
+  if (remainingTime <= 1) {
+    remainingTime = 1
+  }
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      // checkFinished()
-      if (jobId) {
-        fetchJobDetails()
+    return () => {
+      if (jobDetails && jobDetails.jobStatus === JobStatus.Done) {
+        deletePendingJobFromDb(jobDetails.jobId)
       }
-    }, 1000)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-    return () => clearInterval(interval)
-  }, [fetchJobDetails, jobId])
-
-  if (initialLoad || !jobDetails) {
+  if (!jobDetails || hidePanel) {
     return null
   }
+
+  const jobStalled =
+    elapsedTimeSec > 2.5 * jobDetails.initWaitTime &&
+    jobDetails.jobStatus !== JobStatus.Done &&
+    remainingTime < 3
 
   return (
     <StyledContainer>
       <StyledPanel>
+        {processDoneOrError ? (
+          <StyledCloseButton onClick={handleRemovePanel}>
+            <CloseIcon width={2} />
+          </StyledCloseButton>
+        ) : null}
         <StyledImageInfoPanel>
           <ImageWaiting>
-            {jobDetails.jobStatus === 'processing' && <SpinnerV2 />}
-            {jobDetails.jobStatus === 'done' && (
+            {serverHasJob ? <SpinnerV2 /> : null}
+            {jobDetails.jobStatus === JobStatus.Done && (
               <Link
                 href={`/image/${jobId}`}
                 onClick={() => {
@@ -199,8 +223,10 @@ const PendingItem = ({ handleDeleteJob, handleRetryJob, jobId }) => {
                 />
               </Link>
             )}
-            {jobDetails.jobStatus === 'waiting' && <PhotoUpIcon size={48} />}
-            {jobDetails.jobStatus === 'error' && (
+            {jobDetails.jobStatus === JobStatus.Waiting && (
+              <PhotoUpIcon size={48} />
+            )}
+            {jobDetails.jobStatus === JobStatus.Error && (
               <AlertTriangleIcon size={48} stroke="rgb(234 179 8)" />
             )}
           </ImageWaiting>
@@ -209,44 +235,75 @@ const PendingItem = ({ handleDeleteJob, handleRetryJob, jobId }) => {
               {jobDetails.prompt}
             </StyledPrompt>
             <div className="w-full font-mono text-xs mt-2">
-              Model: {jobDetails.models[0]}
+              Steps: {jobDetails.steps}
+              <br />
+              Sampler: {jobDetails.sampler}
+              <br />
+              Model: {!jobDetails.models[0] ? 'Random' : jobDetails.models[0]}
             </div>
           </div>
         </StyledImageInfoPanel>
+        {jobDetails.jobStatus === JobStatus.Error ? (
+          <div className="font-mono text-xs mt-2 text-red-400">
+            <strong>Stable Horde API Error:</strong> {jobDetails.errorMessage}
+          </div>
+        ) : null}
+        {jobStalled ? (
+          <div className="font-mono text-xs mt-2">
+            <strong>Warning:</strong> Job seems to have stalled. This can happen
+            if a worker goes offline or crashes without completing the request.
+            You can automatically cancel and retry this request or continue to
+            wait.
+          </div>
+        ) : null}
         <StyledInfoDiv>
-          <div className="flex flex-grow flex-col">
-            {jobDetails.jobStatus === 'processing' && (
+          <div className="flex flex-grow flex-col justify-end">
+            {jobDetails.jobStatus === JobStatus.Queued && (
               <div className="w-full font-mono text-xs mt-2">
-                Estimated time remaining: {calcTime.remainingTime}s (
-                {calcTime.pctComplete.toFixed(0)}
+                Image request queued
+                <br />
+                Queue position: {jobDetails.queue_position}
+                <br />
+                Estimated time remaining: {jobDetails.wait_time}s (
+                {pctComplete.toFixed(0)}
                 %)
               </div>
             )}
-            {jobDetails.jobStatus === 'waiting' && (
+            {jobDetails.jobStatus === JobStatus.Processing && (
               <div className="w-full font-mono text-xs mt-2">
-                Image request queued
+                Processing
+                <br />
+                Estimated time remaining: {jobDetails.wait_time}s (
+                {pctComplete.toFixed(0)}
+                %)
               </div>
             )}
-            {jobDetails.jobStatus === 'done' && (
+            {jobDetails.jobStatus === JobStatus.Waiting && (
+              <div className="w-full font-mono text-xs mt-2">
+                Waiting to submit image request
+              </div>
+            )}
+            {jobDetails.jobStatus === JobStatus.Done && (
               <div className="w-full font-mono text-xs mt-2">
                 Image request complete
               </div>
             )}
-            {(jobDetails.jobStatus === 'done' ||
-              jobDetails.jobStatus === 'waiting' ||
-              jobDetails.jobStatus === 'processing') && (
+            {(jobDetails.jobStatus === JobStatus.Done ||
+              jobDetails.jobStatus === JobStatus.Waiting ||
+              jobDetails.jobStatus === JobStatus.Queued ||
+              jobDetails.jobStatus === JobStatus.Processing) && (
               <div className="w-full font-mono text-xs">
                 Created: {new Date(jobDetails.timestamp).toLocaleString()}
               </div>
             )}
-            {jobDetails.jobStatus === 'error' && (
-              <div className="font-mono text-xs mt-2 text-red-500">
+            {jobDetails.jobStatus === JobStatus.Error && (
+              <div className="font-mono text-xs mt-2 text-red-400">
                 Created: {new Date(jobDetails.timestamp).toLocaleString()}
               </div>
             )}
           </div>
-          <div className="w-1/4 flex flex-row items-end justify-end">
-            {jobDetails.jobStatus === 'done' && (
+          <StyledButtonContainer>
+            {jobDetails.jobStatus === JobStatus.Done && (
               <Button
                 onClick={() => {
                   clearNewImageNotification()
@@ -266,46 +323,35 @@ const PendingItem = ({ handleDeleteJob, handleRetryJob, jobId }) => {
                 View
               </Button>
             )}
-            {jobDetails.jobStatus !== 'done' && (
+            {jobDetails.jobStatus !== JobStatus.Done && (
               <div className="flex flex-row gap-2">
-                <Button
-                  btnType="secondary"
-                  onClick={() => handleDeleteJob(jobId)}
-                >
-                  <TrashIcon />
-                  <MobileHideText>Delete job</MobileHideText>
-                </Button>
+                {jobDetails.jobStatus === JobStatus.Error && (
+                  <Button onClick={handleEditClick}>Edit</Button>
+                )}
+                {jobDetails.jobStatus === JobStatus.Error || jobStalled ? (
+                  <Button onClick={handleRetryJob}>Retry?</Button>
+                ) : null}
+                {jobDetails.jobStatus !== JobStatus.Processing &&
+                !jobStalled ? (
+                  <Button btnType="secondary" onClick={handleDeleteJob}>
+                    <TrashIcon />
+                    <MobileHideText>
+                      {jobDetails.jobStatus === JobStatus.Error
+                        ? 'Remove'
+                        : 'Cancel'}
+                    </MobileHideText>
+                  </Button>
+                ) : null}
               </div>
             )}
-          </div>
+          </StyledButtonContainer>
         </StyledInfoDiv>
-        {calcTime.elapsedTimeSec > 2.5 * jobDetails.initWaitTime &&
-          jobDetails.jobStatus !== 'done' &&
-          calcTime.remainingTime < 3 && (
-            <div className="w-full flex flex-row items-start justify-end mt-2">
-              <div className="w-[80px]">
-                <AlertTriangleIcon size={24} stroke="yellow" />
-              </div>
-              <div className="flex flex-row">
-                <div className="ml-2 mr-2 text-sm">
-                  Job seems to have stalled. This can happen if a worker goes
-                  offline or crashes without completing the request. Do you want
-                  to automatically cancel and retry this request?
-                </div>
-              </div>
-              <div>
-                <div className="w-[120px] flex justify-end">
-                  <Button onClick={() => handleRetryJob(jobId)}>Retry?</Button>
-                </div>
-              </div>
-            </div>
-          )}
-        {jobDetails.jobStatus === 'processing' && (
+        {serverHasJob && (
           <ProgressBarPosition>
-            <ProgressBar pct={calcTime.pctComplete} />
+            <ProgressBar pct={pctComplete} />
           </ProgressBarPosition>
         )}
-        {jobDetails.jobStatus === 'done' && (
+        {jobDetails.jobStatus === JobStatus.Done && (
           <ProgressBarPosition>
             <ProgressBar pct={100} />
           </ProgressBarPosition>

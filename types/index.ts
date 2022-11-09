@@ -1,4 +1,5 @@
 export interface CreateImageJob {
+  id: number
   jobTimestamp?: number
   jobId?: string
   jobStatus?: string
@@ -35,6 +36,11 @@ export interface CreateImageJob {
 }
 
 export interface CreatePendingJob {
+  id?: number
+  timestamp: number
+  jobStatus?: JobStatus
+  errorMessage?: string
+  groupJobId: string
   jobId?: string
   prompt: string
   img2img?: boolean
@@ -67,6 +73,14 @@ export interface DiffusionModel {
 export interface GenerateResponse {
   id: string
   message?: string
+}
+
+export enum JobStatus {
+  Waiting = 'waiting', // waiting to submit to stable horde api
+  Queued = 'queued', // submitted and waiting
+  Processing = 'processing', // image has been sent to a worker and is in-process
+  Done = 'done', // finished
+  Error = 'error' // something unfortunate has happened
 }
 
 export interface KeypressEvent {

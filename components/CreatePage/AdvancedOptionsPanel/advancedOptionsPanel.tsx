@@ -592,7 +592,7 @@ const AdvancedOptionsPanel = ({
         <Section>
           <SubSectionTitle>
             Number of images
-            <div className="block text-xs w-full">(1 - 20)</div>
+            <div className="block text-xs w-full">(1 - 50)</div>
           </SubSectionTitle>
           <MaxWidth
             // @ts-ignore
@@ -609,10 +609,10 @@ const AdvancedOptionsPanel = ({
                 if (
                   isNaN(e.target.value) ||
                   e.target.value < 1 ||
-                  e.target.value > 20
+                  e.target.value > 50
                 ) {
                   setErrorMessage({
-                    numImages: 'Please enter a valid number between 1 and 20'
+                    numImages: 'Please enter a valid number between 1 and 50'
                   })
                 } else if (errorMessage.numImages) {
                   setErrorMessage({ numImages: null })

@@ -3,11 +3,13 @@
 const CloseIcon = ({
   className,
   size = 24,
-  stroke = 'currentColor'
+  stroke = 'currentColor',
+  width = 1
 }: {
   className?: string
   size?: number
   stroke?: string
+  width?: number
 }) => {
   return (
     <svg
@@ -16,7 +18,7 @@ const CloseIcon = ({
       width={size}
       height={size}
       viewBox="0 0 24 24"
-      strokeWidth="1"
+      strokeWidth={width}
       stroke={stroke}
       fill="none"
       strokeLinecap="round"

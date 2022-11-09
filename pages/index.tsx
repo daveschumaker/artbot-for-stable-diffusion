@@ -46,10 +46,10 @@ const Home: NextPage = () => {
     prompt: editMode ? loadEditPrompt().prompt : '',
     sampler: editMode ? loadEditPrompt().sampler : 'k_euler_a',
     cfg_scale: editMode ? loadEditPrompt().cfg_scale : 9,
-    steps: editMode ? loadEditPrompt().steps : 32,
+    steps: editMode ? loadEditPrompt().steps : 30,
     seed: '',
     denoising_strength: editMode ? loadEditPrompt().denoising_strength : 0.75,
-    karras: editMode ? loadEditPrompt().karras : false,
+    karras: editMode ? loadEditPrompt().karras : true,
     // use_gfpgan: true,
     // use_real_esrgan: true,
     parentJobId: editMode ? loadEditPrompt().parentJobId : '',
@@ -154,40 +154,52 @@ const Home: NextPage = () => {
       })
     }
 
-    const res = await createImageJob(imageJobData)
+    await createImageJob(imageJobData)
 
-    // @ts-ignore
-    const { status, message } = res
+    clearCanvasStore()
+    updatedCachedPrompt('')
+    trackEvent({
+      event: input.img2img ? 'NEW_IMG2IMG_REQUEST' : 'NEW_IMAGE_REQUEST',
+      sampler: input.sampler,
+      numImages: input.numImages
+    })
+    trackGaEvent({
+      action: 'new_img_request',
+      params: {
+        type: input.img2img ? 'img2img' : 'prompt2img'
+      }
+    })
+    router.push('/pending')
 
-    if (res?.success) {
-      clearCanvasStore()
-      updatedCachedPrompt('')
-      trackEvent({
-        event: input.img2img ? 'NEW_IMG2IMG_REQUEST' : 'NEW_IMAGE_REQUEST',
-        sampler: input.sampler,
-        numImages: input.numImages
-      })
-      trackGaEvent({
-        action: 'new_img_request',
-        params: {
-          type: input.img2img ? 'img2img' : 'prompt2img'
-        }
-      })
-      router.push('/pending')
-    } else if (status === 'INVALID_API_KEY') {
-      setHasError(
-        'Invalid API key sent to the server. Check your settings and re-enter your key.'
-      )
-      setPending(false)
-    } else if (message) {
-      setHasError(`Stable Horde API error: ${message}`)
-      setPending(false)
-    } else {
-      setHasError(
-        'The server did not respond to the image request. Please try again shortly.'
-      )
-      setPending(false)
-    }
+    // if (res?.success) {
+    //   clearCanvasStore()
+    //   updatedCachedPrompt('')
+    //   trackEvent({
+    //     event: input.img2img ? 'NEW_IMG2IMG_REQUEST' : 'NEW_IMAGE_REQUEST',
+    //     sampler: input.sampler,
+    //     numImages: input.numImages
+    //   })
+    //   trackGaEvent({
+    //     action: 'new_img_request',
+    //     params: {
+    //       type: input.img2img ? 'img2img' : 'prompt2img'
+    //     }
+    //   })
+    //   router.push('/pending')
+    // } else if (status === 'INVALID_API_KEY') {
+    //   setHasError(
+    //     'Invalid API key sent to the server. Check your settings and re-enter your key.'
+    //   )
+    //   setPending(false)
+    // } else if (message) {
+    //   setHasError(`Stable Horde API error: ${message}`)
+    //   setPending(false)
+    // } else {
+    //   setHasError(
+    //     'The server did not respond to the image request. Please try again shortly.'
+    //   )
+    //   setPending(false)
+    // }
   }
 
   const onEnterPress = (e: KeyboardEvent) => {

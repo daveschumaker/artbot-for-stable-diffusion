@@ -1,4 +1,5 @@
 import Dexie, { Table } from 'dexie'
+import { JobStatus } from '../types'
 import { SourceProcessing } from './promptUtils'
 
 export interface Friend {
@@ -30,8 +31,28 @@ export class MySubClassedDexie extends Dexie {
 
 export const db = new MySubClassedDexie()
 
-export const allPendingJobs = async () => {
-  return await db?.pending?.orderBy('timestamp').toArray()
+export const allPendingJobs = async (status?: string) => {
+  try {
+    return await db?.pending
+      ?.orderBy('id')
+      ?.filter(function (job: { jobStatus: string }) {
+        if (status) {
+          return job.jobStatus === status
+        } else {
+          return true
+        }
+      })
+      ?.toArray()
+  } catch (err) {
+    return []
+  }
+}
+
+export const deleteDoneFromPending = async () => {
+  const images = (await allPendingJobs(JobStatus.Done)) || []
+  const ids = images.map((job: any) => job.id)
+
+  await db.pending.bulkDelete(ids)
 }
 
 export const bulkDeleteImages = async (images: Array<string>) => {

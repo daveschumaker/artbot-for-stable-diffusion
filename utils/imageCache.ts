@@ -2,22 +2,18 @@ import { checkImageStatus } from '../api/checkImageStatus'
 import { getFinishedImage } from '../api/getFinishedImage'
 import { trackEvent, trackGaEvent } from '../api/telemetry'
 import { setNewImageReady, setShowImageReadyToast } from '../store/appStore'
-import { CreateImageJob, CreatePendingJob } from '../types'
+import { CreateImageJob, CreatePendingJob, JobStatus } from '../types'
 import {
   allPendingJobs,
   db,
   deletePendingJobFromDb,
   getPendingJobDetails,
-  pendingCount,
   updatePendingJob
 } from './db'
 import { createNewImage } from './imageUtils'
 import { createPendingJob } from './pendingUtils'
 
 export const initIndexedDb = () => {}
-
-let multiImageQueue: Array<CreateImageJob> = []
-let jobDetailsQueue: Array<CreatePendingJob> = []
 
 interface CheckImage {
   success: boolean
@@ -27,6 +23,8 @@ interface CheckImage {
   done?: boolean
   queue_position?: number
   wait_time?: number
+  processing?: number
+  finished?: number
 }
 
 interface FinishedImage {
@@ -84,77 +82,35 @@ export const checkImageJob = async (jobId: string): Promise<CheckImage> => {
   }
 }
 
-export const fetchJobDetails = async () => {
-  const [firstJob]: Array<CreatePendingJob> = jobDetailsQueue
-
-  if (!firstJob) {
+let waitingForRes = false
+export const createMultiImageJob = async () => {
+  if (typeof window === 'undefined') {
     return
   }
 
-  const { jobId: currentJobId } = firstJob
-
-  if (currentJobId) {
-    const pendingJobDetails = await getPendingJobDetails(currentJobId)
-
-    if (!pendingJobDetails) {
-      jobDetailsQueue.shift()
-      return
-    }
-
-    const { id: tableId } = pendingJobDetails
-
-    const jobDetailsFromApi = await checkImageJob(currentJobId)
-    const { success, queue_position, wait_time, status } = jobDetailsFromApi
-
-    if (status === 'NOT_FOUND') {
-      jobDetailsQueue.shift()
-      return
-    }
-
-    if (!success) {
-      const jobTimestamp = pendingJobDetails.timestamp / 1000
-      const timestamp = Date.now() / 1000
-
-      // Check if job is stale and remove it.
-      if (timestamp - jobTimestamp > 720) {
-        deletePendingJobFromDb(currentJobId)
-        jobDetailsQueue.shift()
-      }
-    }
-
-    if (success) {
-      await updatePendingJob(
-        tableId,
-        Object.assign({}, pendingJobDetails, {
-          queue_position,
-          wait_time: (wait_time || 0) + 30
-        })
-      )
-
-      jobDetailsQueue.shift()
-    }
-  }
-}
-
-let waitingForRes = false
-export const createMultiImageJob = async () => {
   if (waitingForRes) {
     return
   }
 
-  const [nextJobParams] = multiImageQueue
+  const queuedCount = (await allPendingJobs(JobStatus.Queued)) || []
 
-  if (nextJobParams) {
-    waitingForRes = true
-    const newImage = await sendJobToApi(nextJobParams)
-    if (newImage?.success) {
-      multiImageQueue.shift()
+  if (queuedCount.length < 3) {
+    const pendingJobs = await allPendingJobs(JobStatus.Waiting)
+    const [nextJobParams] = pendingJobs
+
+    if (nextJobParams) {
+      waitingForRes = true
+      await sendJobToApi(nextJobParams)
+      waitingForRes = false
     }
-    waitingForRes = false
   }
 }
 
 export const sendJobToApi = async (imageParams: CreateImageJob) => {
+  if (!imageParams) {
+    return
+  }
+
   try {
     const data = await createNewImage(imageParams)
     // @ts-ignore
@@ -164,32 +120,60 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
       // Overwrite params on success.
       imageParams.jobId = jobId
       imageParams.timestamp = Date.now()
-      imageParams.jobStatus = 'processing'
+      imageParams.jobStatus = JobStatus.Queued
 
-      const jobDetailsFromApi = await checkImageJob(jobId)
+      await updatePendingJob(imageParams.id, Object.assign({}, imageParams))
+
+      const jobDetailsFromApi = (await checkImageJob(jobId)) || {}
+      if (typeof jobDetailsFromApi?.success === 'undefined') {
+        return {
+          success: false,
+          message: 'Unable to send request...'
+        }
+      }
+
       const {
         success: detailsSuccess,
-        wait_time,
+        wait_time = 0,
         queue_position,
         message
       } = jobDetailsFromApi
 
       if (detailsSuccess) {
+        //@ts-ignore
+        if (!imageParams.initWaitTime) {
+          imageParams.initWaitTime = wait_time
+          //@ts-ignore
+        } else if (wait_time > imageParams.initWaitTime) {
+          imageParams.initWaitTime = wait_time
+        }
+
         imageParams.timestamp = Date.now()
-        imageParams.initWaitTime = wait_time
-        imageParams.wait_time = (wait_time || 0) + 30
+        imageParams.wait_time = wait_time
         imageParams.queue_position = queue_position
       }
 
-      await db.pending.add({
-        ...imageParams
-      })
+      await updatePendingJob(
+        imageParams.id,
+        Object.assign({}, imageParams, {
+          queue_position: imageParams.queue_position,
+          wait_time: imageParams.wait_time || 0
+        })
+      )
 
       return {
         success: true,
         message
       }
     } else {
+      await updatePendingJob(
+        imageParams.id,
+        Object.assign({}, imageParams, {
+          jobStatus: JobStatus.Error,
+          errorMessage: message
+        })
+      )
+
       if (imageParams.source_image) {
         // @ts-ignore
         imageParams.has_source_image = true
@@ -213,6 +197,14 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
       }
     }
   } catch (err) {
+    await updatePendingJob(
+      imageParams.id,
+      Object.assign({}, imageParams, {
+        jobStatus: JobStatus.Error,
+        errorMessage: 'An unknown error occurred...'
+      })
+    )
+
     console.log(`Error: Unable to send job to API`)
     console.log(err)
 
@@ -242,50 +234,10 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
 }
 
 export const createImageJob = async (imageParams: CreatePendingJob) => {
-  const jobsToSend = createPendingJob(imageParams)
+  await createPendingJob(imageParams)
 
-  // Limit number of currently pending
-  // requests so we don't hit API limits.
-  const numPending = await pendingCount()
-  if (numPending >= 25) {
-    return {
-      success: false,
-      status: 'MAX_PENDING_JOBS',
-      message: 'Maximum of 25 jobs currently pending...'
-    }
-  }
-
-  if (jobsToSend.length === 0) {
-    return {
-      success: false,
-      status: 'NO_JOBS_TO_SEND',
-      message: ''
-    }
-  }
-
-  if (jobsToSend.length === 1) {
-    const res = await sendJobToApi(jobsToSend[0])
-    const { success, status, message } = res
-
-    return {
-      success,
-      status,
-      message
-    }
-  } else if (jobsToSend.length > 1) {
-    const res = await sendJobToApi(jobsToSend[0])
-    const { success, status, message } = res
-
-    if (success) {
-      jobsToSend.shift()
-      multiImageQueue = [...jobsToSend]
-    }
-
-    return {
-      success,
-      status,
-      message
-    }
+  return {
+    success: true
   }
 }
 
@@ -329,8 +281,16 @@ export const getImage = async (jobId: string) => {
 }
 
 export const hackyMultiJobCheck = async () => {
-  const allKeys = await allPendingJobs()
-  const [firstJob, secondJob, thirdJob, fourthJob] = allKeys
+  const allKeys = (await allPendingJobs()) || []
+
+  const queuedOrProcessing = allKeys.filter((job: any = {}) => {
+    return (
+      job.jobStatus === JobStatus.Queued ||
+      job.jobStatus === JobStatus.Processing
+    )
+  })
+
+  const [firstJob, secondJob, thirdJob] = queuedOrProcessing
 
   if (firstJob) {
     await checkCurrentJob(firstJob)
@@ -344,9 +304,9 @@ export const hackyMultiJobCheck = async () => {
     await checkCurrentJob(thirdJob)
   }
 
-  if (fourthJob) {
-    await checkCurrentJob(fourthJob)
-  }
+  // if (fourthJob) {
+  //   await checkCurrentJob(fourthJob)
+  // }
 }
 
 export const checkCurrentJob = async (imageDetails: any) => {
@@ -358,12 +318,29 @@ export const checkCurrentJob = async (imageDetails: any) => {
     jobDetails = await checkImageJob(jobId)
   }
 
+  if (jobDetails?.processing === 1) {
+    imageDetails.jobStatus = JobStatus.Processing
+  }
+
   if (jobDetails?.success && !jobDetails?.done) {
+    //@ts-ignore
+    if (!imageDetails.initWaitTime) {
+      imageDetails.initWaitTime = jobDetails.wait_time
+      //@ts-ignore
+    }
+
+    if (
+      jobDetails.wait_time &&
+      jobDetails.wait_time > imageDetails.initWaitTime
+    ) {
+      imageDetails.initWaitTime = jobDetails.wait_time
+    }
+
     await updatePendingJob(
       imageDetails.id,
       Object.assign({}, imageDetails, {
         queue_position: jobDetails.queue_position,
-        wait_time: (jobDetails.wait_time || 0) + 30
+        wait_time: jobDetails.wait_time || 0
       })
     )
   }
@@ -374,17 +351,27 @@ export const checkCurrentJob = async (imageDetails: any) => {
 
     if (imgDetailsFromApi?.success && imgDetailsFromApi?.base64String) {
       imageDetails.done = true
-      imageDetails.jobStatus = 'done'
+      imageDetails.jobStatus = JobStatus.Done
       imageDetails.timestamp = Date.now()
 
-      await deletePendingJobFromDb(jobId)
+      const job = {
+        ...imageDetails,
+        ...imgDetailsFromApi
+      }
+      await updatePendingJob(
+        imageDetails.id,
+        Object.assign({}, job, {
+          jobStatus: JobStatus.Done
+        })
+      )
       // Catch a potential race condition where the same jobId can be added twice.
       // This might happen when multiple tabs are open.
       try {
-        await db.completed.add({
-          ...imageDetails,
-          ...imgDetailsFromApi
-        })
+        await db.completed.add(
+          Object.assign({}, job, {
+            jobStatus: JobStatus.Done
+          })
+        )
       } catch (err) {
         return {
           newImage: false
@@ -430,5 +417,5 @@ export const checkCurrentJob = async (imageDetails: any) => {
 
 setInterval(() => {
   createMultiImageJob()
-  fetchJobDetails()
-}, 250)
+  // fetchJobDetails()
+}, 2500)

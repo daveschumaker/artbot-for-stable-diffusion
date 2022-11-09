@@ -54,6 +54,20 @@ const Changelog = () => {
       </Head>
       <PageTitle>Changelog</PageTitle>
       <Section>
+        <SubSectionTitle>2022.11.09</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Made a number of improvements to pending items page, such as filters
+            and options to edit or retry image requests when an error is
+            detected from the Stable Horde API.
+          </StyledLi>
+          <StyledLi>
+            Thanks to some refactored logic with the pending items queue,
+            I&apos;ve upped limit of images that can be requested at once.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.11.08</SubSectionTitle>
         <StyledUl>
           <StyledLi>
