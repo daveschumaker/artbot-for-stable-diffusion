@@ -57,6 +57,10 @@ const Changelog = () => {
         <SubSectionTitle>2022.11.09</SubSectionTitle>
         <StyledUl>
           <StyledLi>
+            MILESTONE: 300,000 images have been created with ArtBot! (33,000 in
+            the last 24 hours)
+          </StyledLi>
+          <StyledLi>
             Made a number of improvements to pending items page, such as filters
             and options to edit or retry image requests when an error is
             detected from the Stable Horde API.

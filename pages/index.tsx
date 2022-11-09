@@ -170,36 +170,6 @@ const Home: NextPage = () => {
       }
     })
     router.push('/pending')
-
-    // if (res?.success) {
-    //   clearCanvasStore()
-    //   updatedCachedPrompt('')
-    //   trackEvent({
-    //     event: input.img2img ? 'NEW_IMG2IMG_REQUEST' : 'NEW_IMAGE_REQUEST',
-    //     sampler: input.sampler,
-    //     numImages: input.numImages
-    //   })
-    //   trackGaEvent({
-    //     action: 'new_img_request',
-    //     params: {
-    //       type: input.img2img ? 'img2img' : 'prompt2img'
-    //     }
-    //   })
-    //   router.push('/pending')
-    // } else if (status === 'INVALID_API_KEY') {
-    //   setHasError(
-    //     'Invalid API key sent to the server. Check your settings and re-enter your key.'
-    //   )
-    //   setPending(false)
-    // } else if (message) {
-    //   setHasError(`Stable Horde API error: ${message}`)
-    //   setPending(false)
-    // } else {
-    //   setHasError(
-    //     'The server did not respond to the image request. Please try again shortly.'
-    //   )
-    //   setPending(false)
-    // }
   }
 
   const onEnterPress = (e: KeyboardEvent) => {
