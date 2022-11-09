@@ -69,6 +69,8 @@ const PendingPage = () => {
   })
 
   useEffectOnce(() => {
+    deleteDoneFromPending()
+
     return () => {
       deleteDoneFromPending()
     }

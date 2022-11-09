@@ -331,8 +331,7 @@ const PendingItem = ({ jobId }) => {
                 {jobDetails.jobStatus === JobStatus.Error || jobStalled ? (
                   <Button onClick={handleRetryJob}>Retry?</Button>
                 ) : null}
-                {jobDetails.jobStatus !== JobStatus.Processing &&
-                !jobStalled ? (
+                {jobDetails.jobStatus !== JobStatus.Processing || jobStalled ? (
                   <Button btnType="secondary" onClick={handleDeleteJob}>
                     <TrashIcon />
                     <MobileHideText>

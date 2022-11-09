@@ -56,6 +56,10 @@ const AboutPage = () => {
           alt="painting of a robot painting robots"
         />
         <HelpfulLinks className="mb-2">
+          <Linker href="https://www.buymeacoffee.com/davely" target="_blank">
+            Buy me a coffee
+          </Linker>
+          |
           <LinkButton onClick={() => setShowFeedback(true)}>
             Contact / Feedback
           </LinkButton>
@@ -144,7 +148,15 @@ const AboutPage = () => {
           >
             bitbandit#4910
           </Linker>
+          . If you have found this service useful, I&apos;d be grateful if you
+          were to consider{' '}
+          <Linker href="https://www.buymeacoffee.com/davely" target="_blank">
+            buying me a coffee
+          </Linker>{' '}
+          (seriously, I love coffee). Regardless, I hope you are creating some
+          awesome art! Cheers.
         </Text>
+        <Text>-Dave Schumaker</Text>
       </div>
       <div className="mt-2">
         <h2 className="font-bold mb-2">Resources and tips</h2>

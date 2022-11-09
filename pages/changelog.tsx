@@ -69,6 +69,23 @@ const Changelog = () => {
             Thanks to some refactored logic with the pending items queue,
             I&apos;ve upped limit of images that can be requested at once.
           </StyledLi>
+          <StyledLi>
+            Fix: issue where clicking &quot;reroll&quot; on an image created
+            with the &quot;use all models&quot; options resulted in re-running
+            the job again... the whole thing (this meant 20+ new images, when
+            you probably only wanted one).
+          </StyledLi>
+          <StyledLi>
+            For those so inclined, I added a{' '}
+            <Linker href="https://www.buymeacoffee.com/davely" target="_blank">
+              buy me a coffee
+            </Linker>{' '}
+            link to the{' '}
+            <Linker href="/about" target="_blank">
+              about page
+            </Linker>
+            .
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
