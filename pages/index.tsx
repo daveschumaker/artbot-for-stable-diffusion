@@ -154,10 +154,6 @@ const Home: NextPage = () => {
       })
     }
 
-    await createImageJob(imageJobData)
-
-    clearCanvasStore()
-    updatedCachedPrompt('')
     trackEvent({
       event: input.img2img ? 'NEW_IMG2IMG_REQUEST' : 'NEW_IMAGE_REQUEST',
       sampler: input.sampler,
@@ -169,6 +165,11 @@ const Home: NextPage = () => {
         type: input.img2img ? 'img2img' : 'prompt2img'
       }
     })
+
+    await createImageJob(imageJobData)
+
+    clearCanvasStore()
+    updatedCachedPrompt('')
     router.push('/pending')
   }
 
