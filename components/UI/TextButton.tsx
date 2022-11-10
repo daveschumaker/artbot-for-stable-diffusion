@@ -5,6 +5,7 @@ interface Props {
   color?: string
   children: React.ReactNode
   onClick(): void
+  tabIndex?: number
 }
 
 const StyledTextButton = styled.div`
@@ -29,9 +30,9 @@ const StyledTextButton = styled.div`
   }
 `
 
-const TextButton = ({ children, color, onClick }: Props) => {
+const TextButton = ({ children, color, onClick, tabIndex }: Props) => {
   return (
-    <StyledTextButton color={color} onClick={onClick}>
+    <StyledTextButton color={color} onClick={onClick} tabIndex={tabIndex}>
       [ {children} ]
     </StyledTextButton>
   )

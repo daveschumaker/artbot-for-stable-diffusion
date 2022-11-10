@@ -779,6 +779,7 @@ const ImagesPage = () => {
                 onClick={() => {
                   setComponentState({ deleteMode: false, deleteSelection: [] })
                 }}
+                tabIndex={0}
               >
                 cancel
               </TextButton>
@@ -786,10 +787,13 @@ const ImagesPage = () => {
                 onClick={() => {
                   handleSelectAll()
                 }}
+                tabIndex={0}
               >
                 select all
               </TextButton>
-              <TextButton onClick={handleDownloadClick}>download</TextButton>
+              <TextButton onClick={handleDownloadClick} tabIndex={0}>
+                download
+              </TextButton>
               <TextButton
                 color="red"
                 onClick={() => {
@@ -797,6 +801,7 @@ const ImagesPage = () => {
                     setComponentState({ showDeleteModal: true })
                   }
                 }}
+                tabIndex={0}
               >
                 delete
               </TextButton>
@@ -858,6 +863,7 @@ const ImagesPage = () => {
                           href={`/image/${image.jobId}`}
                           passHref
                           onClick={() => handleImageClick(image.id)}
+                          tabIndex={0}
                         >
                           <img
                             src={'data:image/webp;base64,' + image.base64String}
@@ -914,6 +920,7 @@ const ImagesPage = () => {
                           href={`/image/${image.jobId}`}
                           passHref
                           onClick={() => handleImageClick(image.id)}
+                          tabIndex={0}
                         >
                           <ImageSquare
                             imageDetails={image}
