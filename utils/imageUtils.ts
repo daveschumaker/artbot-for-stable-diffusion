@@ -66,7 +66,7 @@ export const randomSampler = (steps: number, isImg2Img: boolean) => {
     samplerArray.push('k_dpmpp_2s_a')
   }
 
-  if (loggedIn || steps <= 50) {
+  if (loggedIn || steps <= 25) {
     return samplerArray[Math.floor(Math.random() * samplerArray.length)]
   } else if (!isImg2Img) {
     const limitedArray = [

@@ -69,6 +69,11 @@ const Changelog = () => {
             <Linker href="/images">images page</Linker> using arrow keys on a
             computer or swiping on a mobile device.
           </StyledLi>
+          <StyledLi>
+            Fix: Adjusted max steps (down) for various samplers for anonymous
+            users -- this contributed to a number of frustrating error messages
+            from the Stable Horde API when trying to create images.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

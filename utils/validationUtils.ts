@@ -3,15 +3,15 @@ interface Samplers {
 }
 export const maxSteps = (sampler: string, loggedIn: boolean = false) => {
   const anonMaxSteps: Samplers = {
-    k_dpm_2_a: 50,
-    k_dpm_2: 50,
-    k_euler_a: 100,
-    k_euler: 100,
-    k_heun: 50,
+    k_dpm_2_a: 25,
+    k_dpm_2: 25,
+    k_euler_a: 50,
+    k_euler: 50,
+    k_heun: 25,
     k_lms: 50,
-    k_dpm_fast: 100,
-    k_dpm_adaptive: 100,
-    k_dpmpp_2m: 100,
+    k_dpm_fast: 50,
+    k_dpm_adaptive: 50,
+    k_dpmpp_2m: 50,
     k_dpmpp_2s_a: 50,
     random: 50
   }
