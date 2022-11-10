@@ -78,9 +78,13 @@ export const createPendingJob = async (imageParams: CreatePendingJob) => {
 
   if (imageParams.useAllModels) {
     imageParams.numImages = 1
-    const models = getModelsCache()
+    const models = Object.assign({}, getModelsCache())
 
     for (const [key] of Object.entries(models)) {
+      // It doesn't make sense to include this in all models mode.
+      if (key === 'stable_diffusion_inpainting') {
+        return
+      }
       clonedParams = cloneImageParams(imageParams)
       clonedParams.models = [key]
 
