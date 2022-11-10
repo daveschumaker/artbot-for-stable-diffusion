@@ -552,7 +552,7 @@ const AdvancedOptionsPanel = ({
         )}
       <Section>
         <SubSectionTitle>
-          Use all available models
+          Use all available models ({models.length})
           <Tooltip width="240px">
             Automatically generate an image for each model currently available
             on Stable Horde

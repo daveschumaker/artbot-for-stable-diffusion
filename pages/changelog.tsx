@@ -54,6 +54,24 @@ const Changelog = () => {
       </Head>
       <PageTitle>Changelog</PageTitle>
       <Section>
+        <SubSectionTitle>2022.11.10</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: When using the &quot;use all available models&quot; option, do
+            not send a request to &quot;stable_diffusion_inpainting&quot;.
+          </StyledLi>
+          <StyledLi>
+            Added number of currently available models to &quot;use all
+            available models&quot; option.{' '}
+          </StyledLi>
+          <StyledLi>
+            Feature: Navigate between multiple pages on{' '}
+            <Linker href="/images">images page</Linker> using arrow keys on a
+            computer or swiping on a mobile device.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.11.09</SubSectionTitle>
         <StyledUl>
           <StyledLi>
@@ -80,11 +98,7 @@ const Changelog = () => {
             <Linker href="https://www.buymeacoffee.com/davely" target="_blank">
               buy me a coffee
             </Linker>{' '}
-            link to the{' '}
-            <Linker href="/about" target="_blank">
-              about page
-            </Linker>
-            .
+            link to the <Linker href="/about">about page</Linker>.
           </StyledLi>
         </StyledUl>
       </Section>

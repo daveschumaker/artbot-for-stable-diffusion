@@ -32,6 +32,7 @@ import HeartIcon from '../components/icons/HeartIcon'
 import useComponentState from '../hooks/useComponentState'
 import { base64toBlob } from '../utils/imageUtils'
 import { SourceProcessing } from '../utils/promptUtils'
+import { useSwipeable } from 'react-swipeable'
 
 const DropDownMenu = styled.div`
   background-color: ${(props) => props.theme.body};
@@ -104,6 +105,11 @@ const ButtonContainer = styled.div`
 `
 
 const ImagesPage = () => {
+  const handlers = useSwipeable({
+    onSwipedLeft: () => handleLoadMore('next'),
+    onSwipedRight: () => handleLoadMore('prev'),
+    preventScrollOnSwipe: true
+  })
   const router = useRouter()
   const size = useWindowSize()
 
@@ -411,11 +417,17 @@ const ImagesPage = () => {
 
       if (componentState.deleteMode && e.keyCode === 13) {
         setComponentState({ showDeleteModal: true })
+      } else if (e.keyCode === 37) {
+        //left
+        handleLoadMore('prev')
+      } else if (e.keyCode === 39) {
+        // right
+        handleLoadMore('next')
       }
     }
     window.addEventListener('keydown', handleKeyPress)
     return () => window.removeEventListener('keydown', handleKeyPress)
-  }, [componentState.deleteMode, setComponentState])
+  }, [componentState.deleteMode, handleLoadMore, setComponentState])
 
   useEffect(() => {
     if (localStorage.getItem('imagePageSort') === 'old') {
@@ -471,7 +483,7 @@ const ImagesPage = () => {
   }
 
   return (
-    <div>
+    <div {...handlers}>
       {componentState.showDeleteModal && (
         <ConfirmationModal
           multiImage={componentState.deleteSelection.length > 1}
