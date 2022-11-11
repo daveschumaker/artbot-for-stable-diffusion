@@ -27,6 +27,10 @@ export const fetchAvailableModels = async () => {
     return
   }
 
+  if (!document.hasFocus()) {
+    return
+  }
+
   isPending = true
   let availableModels: Array<ModelDetails> = []
 

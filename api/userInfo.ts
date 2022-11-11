@@ -6,6 +6,10 @@ export const fetchUserDetails = async (apikey: string) => {
     return
   }
 
+  if (!document.hasFocus()) {
+    return
+  }
+
   isPending = true
   try {
     const res = await fetch(`https://stablehorde.net/api/v2/find_user`, {

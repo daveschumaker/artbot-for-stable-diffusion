@@ -37,6 +37,10 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
   const { buildId } = appState
 
   const fetchAppInfo = useCallback(async () => {
+    if (!document.hasFocus()) {
+      return
+    }
+
     try {
       if (waitingForServerInfoRes) {
         return

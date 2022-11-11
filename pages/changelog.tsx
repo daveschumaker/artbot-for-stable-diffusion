@@ -74,6 +74,16 @@ const Changelog = () => {
             users -- this contributed to a number of frustrating error messages
             from the Stable Horde API when trying to create images.
           </StyledLi>
+          <StyledLi>
+            Fix: I think I found the issue with the pesky &quot;90 per 1
+            minute&quot; rate limiting error. A number of people open images up
+            in new tabs. Each one of those tabs is firing off API calls to
+            Stable Horde (especially if you are generating and checking a number
+            of image requests). This makes it easy to inadvertently hit a rate
+            limit and get unexplained errors. Now, API calls will only happen in
+            the active browser tab. Things should be much smoother now. Thanks
+            to &quot;webhead&quot; on Discord for helping me to track this down.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

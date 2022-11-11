@@ -10,6 +10,10 @@ interface TrackSessionType {
 }
 
 export const trackNewSession = async () => {
+  if (!document.hasFocus()) {
+    return
+  }
+
   let userType = 'NEW_USER'
   if (
     localStorage.getItem('allowNsfwImages') ||

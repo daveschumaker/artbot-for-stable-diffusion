@@ -12,6 +12,7 @@ import {
 } from './db'
 import { createNewImage } from './imageUtils'
 import { createPendingJob } from './pendingUtils'
+import { sleep } from './sleep'
 
 export const initIndexedDb = () => {}
 
@@ -85,6 +86,10 @@ export const checkImageJob = async (jobId: string): Promise<CheckImage> => {
 let waitingForRes = false
 export const createMultiImageJob = async () => {
   if (typeof window === 'undefined') {
+    return
+  }
+
+  if (!document.hasFocus()) {
     return
   }
 
@@ -296,9 +301,13 @@ export const hackyMultiJobCheck = async () => {
     await checkCurrentJob(firstJob)
   }
 
+  await sleep(300)
+
   if (secondJob) {
     await checkCurrentJob(secondJob)
   }
+
+  await sleep(300)
 
   if (thirdJob) {
     await checkCurrentJob(thirdJob)
@@ -311,6 +320,10 @@ export const hackyMultiJobCheck = async () => {
 
 export const checkCurrentJob = async (imageDetails: any) => {
   let jobDetails
+
+  if (!document.hasFocus()) {
+    return
+  }
 
   const { jobId } = imageDetails
 

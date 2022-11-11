@@ -47,16 +47,24 @@ export const initAppSettings = async () => {
     return
   }
 
+  // app settings from local storage
+  checkNsfwSettings()
+  updateShowGrid()
+
   await trackNewSession()
 
   const apikey = localStorage.getItem('apikey') || ''
-  fetchUserDetails(apikey)
-  fetchAvailableModels()
-  checkNsfwSettings()
-  updateShowGrid()
-  models()
+  await fetchUserDetails(apikey)
+  await fetchAvailableModels()
+  await models()
 
-  setInterval(() => {
-    fetchAvailableModels()
+  setInterval(async () => {
+    if (!document?.hasFocus()) {
+      return
+    }
+
+    await fetchUserDetails(apikey)
+    await fetchAvailableModels()
+    await models()
   }, 60000)
 }

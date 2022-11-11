@@ -16,7 +16,22 @@ export const modelDetails = (name: string) => {
   return modelsCache[name]
 }
 
+let lastFetchTime = 0
+
 export const models = async () => {
+  if (!document.hasFocus()) {
+    return
+  }
+
+  const timestamp = Date.now() / 1000
+
+  // Periodically fetch models from API every 15 minutes
+  if (timestamp - lastFetchTime < 60 * 15) {
+    return
+  } else {
+    lastFetchTime = Date.now()
+  }
+
   try {
     const res = await fetch(`/artbot/api/model-details`)
     const { models } = await res.json()
@@ -41,8 +56,3 @@ export const models = async () => {
     // Ah well.
   }
 }
-
-// Periodically fetch models from API every 15 minutes
-setInterval(() => {
-  models()
-}, 60 * 1000 * 15)
