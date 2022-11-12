@@ -122,12 +122,6 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
 
 let isPending = false
 
-const apiCooldown = () => {
-  setTimeout(() => {
-    isPending = false
-  }, 5000)
-}
-
 export const createImage = async (
   imageDetails: ImageDetails
 ): Promise<CreateImageResponse> => {
@@ -142,12 +136,6 @@ export const createImage = async (
   }
 
   if (isPending) {
-    // This ends up spamming the error logs
-    // trackEvent({
-    //   event: 'WAITING_FOR_PENDING_JOB',
-    //   content: 'createImageApi'
-    // })
-
     return {
       success: false,
       status: 'WAITING_FOR_PENDING_JOB',
@@ -182,7 +170,7 @@ export const createImage = async (
         content: 'createImageApi',
         imageParams: rest
       })
-      apiCooldown()
+      isPending = false
       return {
         success: false,
         status: 'UNTRUSTED_IP',
@@ -200,7 +188,7 @@ export const createImage = async (
         content: 'createImageApi',
         imageParams: rest
       })
-      apiCooldown()
+      isPending = false
       return {
         success: false,
         status: 'INVALID_PARAMS',
@@ -209,7 +197,7 @@ export const createImage = async (
     }
 
     if (statusCode === 401) {
-      apiCooldown()
+      isPending = false
       return {
         success: false,
         status: 'INVALID_API_KEY',
@@ -218,7 +206,7 @@ export const createImage = async (
     }
 
     if (statusCode === 403) {
-      apiCooldown()
+      isPending = false
       return {
         success: false,
         status: 'FORBIDDEN_REQUEST',
@@ -227,7 +215,7 @@ export const createImage = async (
     }
 
     if (statusCode === 429) {
-      apiCooldown()
+      isPending = false
       return {
         success: false,
         status: 'MAX_REQUEST_LIMIT',
@@ -236,7 +224,7 @@ export const createImage = async (
     }
 
     if (statusCode === 503) {
-      apiCooldown()
+      isPending = false
       return {
         success: false,
         status: 'HORDE_OFFLINE',
@@ -245,7 +233,7 @@ export const createImage = async (
     }
 
     if (!id) {
-      apiCooldown()
+      isPending = false
       return {
         success: false,
         message,
@@ -259,7 +247,7 @@ export const createImage = async (
       jobId: id
     }
   } catch (err) {
-    apiCooldown()
+    isPending = false
 
     // Handles weird issue where Safari encodes API key using unicode text.
     if (

@@ -16,7 +16,7 @@ let isPending = false
 const apiCooldown = () => {
   setTimeout(() => {
     isPending = false
-  }, 30000)
+  }, 5000)
 }
 
 export const checkImageStatus = async (
