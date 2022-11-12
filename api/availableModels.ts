@@ -5,7 +5,12 @@ interface ModelsCache {
   [key: string]: number
 }
 
+let currentModelNames: Array<string> = [] // Used to pull random model name
 const modelsCache: ModelsCache = {}
+
+export const getCurrentModels = () => {
+  return currentModelNames
+}
 
 export const getModelsCache = () => {
   return modelsCache
@@ -33,6 +38,7 @@ export const fetchAvailableModels = async () => {
 
   isPending = true
   let availableModels: Array<ModelDetails> = []
+  let availableModelNames: Array<string> = []
 
   try {
     const res = await fetch(`https://stablehorde.net/api/v2/status/models`)
@@ -47,12 +53,14 @@ export const fetchAvailableModels = async () => {
           return
         }
 
+        availableModelNames.push(model.name)
         availableModels.push({
           name: model.name,
           count: model.count
         })
       })
     } else {
+      availableModelNames.push('stable_diffusion')
       availableModels.push({
         name: 'stable_diffusion',
         count: 1
@@ -68,6 +76,7 @@ export const fetchAvailableModels = async () => {
     })
   }
 
+  currentModelNames = [...availableModelNames]
   isPending = false
   return {
     success: true

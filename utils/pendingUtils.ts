@@ -1,4 +1,4 @@
-import { getModelsCache } from '../api/availableModels'
+import { getCurrentModels, getModelsCache } from '../api/availableModels'
 import { CreatePendingJob, JobStatus } from '../types'
 import { uuidv4 } from './appUtils'
 import { db } from './db'
@@ -40,7 +40,10 @@ const cloneImageParams = (imageParams: CreatePendingJob) => {
   clonedParams.width = imageSize.width
 
   if (clonedParams.models[0] === 'random') {
-    clonedParams.models = []
+    const currentModels = getCurrentModels()
+    const randomModel =
+      currentModels[Math.floor(Math.random() * currentModels.length)]
+    clonedParams.models = [randomModel]
   }
 
   return clonedParams

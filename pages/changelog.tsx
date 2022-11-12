@@ -54,6 +54,30 @@ const Changelog = () => {
       </Head>
       <PageTitle>Changelog</PageTitle>
       <Section>
+        <SubSectionTitle>2022.11.12</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix (hopefully): When rerolling existing images or retrying pending
+            images, sometimes ArtBot would forget what model you had originally
+            selected and revert to the default model (&quot;stable
+            diffusion&quot;).
+            <StyledLi>
+              Fix: Selecting random in the models dropdown never actually
+              selected a random model.
+            </StyledLi>
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
+        <SubSectionTitle>2022.11.11</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            MILESTONE: That was fast. 400,000 images have been created with
+            ArtBot!
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.11.10</SubSectionTitle>
         <StyledUl>
           <StyledLi>
