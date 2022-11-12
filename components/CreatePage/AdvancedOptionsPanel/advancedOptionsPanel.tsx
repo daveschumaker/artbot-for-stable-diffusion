@@ -82,7 +82,12 @@ const modelerOptions = (models: Array<ModelDetails>) => {
     })
   })
 
-  modelsArray.push({ value: 'random', label: 'Random!' })
+  if (!models || models?.length === 0) {
+    modelsArray.push({ value: 'stable_diffusion', label: 'stable_diffusion' })
+  } else {
+    modelsArray.push({ value: 'random', label: 'Random!' })
+  }
+
   return modelsArray
 }
 
