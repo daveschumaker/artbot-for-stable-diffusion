@@ -16,6 +16,8 @@ import { userInfoStore } from '../../../store/userStore'
 import { maxSteps } from '../../../utils/validationUtils'
 import useErrorMessage from '../../../hooks/useErrorMessage'
 import { modelDetails } from '../../../api/models'
+import TextButton from '../../UI/TextButton'
+import Linker from '../../UI/Linker'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -187,6 +189,24 @@ const AdvancedOptionsPanel = ({
 
   return (
     <div>
+      {input.parentJobId ? (
+        <Section>
+          <SubSectionTitle>Attached to previous job</SubSectionTitle>
+          <div className="text-xs">
+            This job will be associated with an{' '}
+            <Linker href={`/job/${input.parentJobId}`}>existing job</Linker>.
+          </div>
+          <TextButton
+            onClick={() => {
+              setInput({
+                parentJobId: ''
+              })
+            }}
+          >
+            Remove attachment?
+          </TextButton>
+        </Section>
+      ) : null}
       <Section>
         <SubSectionTitle>Image orientation</SubSectionTitle>
         <MaxWidth
