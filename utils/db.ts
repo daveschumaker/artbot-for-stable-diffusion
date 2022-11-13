@@ -263,3 +263,10 @@ export const pendingCount = async () => {
 export const initDb = () => {
   // console.log(`Database loaded`)
 }
+
+if (typeof window !== 'undefined') {
+  // @ts-ignore
+  window.artbotDb = db
+  // @ts-ignore
+  window.artbotDb.getImageDetails = getImageDetails
+}
