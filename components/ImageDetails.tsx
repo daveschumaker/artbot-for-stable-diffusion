@@ -134,8 +134,6 @@ const ImageDetails = ({
     [pending, router]
   )
 
-  console.log(`imagedee`, imageDetails)
-
   return (
     <div className="mt-2 text-left">
       {showDeleteModal && (

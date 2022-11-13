@@ -4,6 +4,7 @@ import { modelDetails } from './models'
 import { trackEvent } from './telemetry'
 
 interface CreateImageResponse {
+  statusCode?: number
   success: boolean
   jobId?: string
   status?: string
@@ -160,6 +161,8 @@ export const createImage = async (
     const data = await resp.json()
     const { id, message = '' }: GenerateResponse = data
 
+    console.log(`status code?`, statusCode)
+
     if (
       message === 'Only Trusted users are allowed to perform this operation'
     ) {
@@ -190,6 +193,7 @@ export const createImage = async (
       })
       isPending = false
       return {
+        statusCode,
         success: false,
         status: 'INVALID_PARAMS',
         message
@@ -199,6 +203,7 @@ export const createImage = async (
     if (statusCode === 401) {
       isPending = false
       return {
+        statusCode,
         success: false,
         status: 'INVALID_API_KEY',
         message
@@ -208,6 +213,7 @@ export const createImage = async (
     if (statusCode === 403) {
       isPending = false
       return {
+        statusCode,
         success: false,
         status: 'FORBIDDEN_REQUEST',
         message
@@ -217,6 +223,7 @@ export const createImage = async (
     if (statusCode === 429) {
       isPending = false
       return {
+        statusCode,
         success: false,
         status: 'MAX_REQUEST_LIMIT',
         message
@@ -226,6 +233,7 @@ export const createImage = async (
     if (statusCode === 503) {
       isPending = false
       return {
+        statusCode,
         success: false,
         status: 'HORDE_OFFLINE',
         message
@@ -235,6 +243,7 @@ export const createImage = async (
     if (!id) {
       isPending = false
       return {
+        statusCode,
         success: false,
         message,
         status: 'MISSING_JOB_ID'

@@ -36,36 +36,37 @@ interface InputEvent {
   target: InputTarget
 }
 
+const defaultState: any = {
+  img2img: false,
+  imageType: '',
+  orientationType: 'square',
+  height: 512,
+  width: 512,
+  numImages: 1,
+  prompt: '',
+  sampler: 'k_euler_a',
+  cfg_scale: 9,
+  steps: 20,
+  seed: '',
+  denoising_strength: 0.75,
+  karras: true,
+  parentJobId: '',
+  negative: '',
+  source_image: '',
+  source_mask: '',
+  source_processing: SourceProcessing.Prompt,
+  models: ['stable_diffusion'],
+  useAllModels: false
+}
+
 const Home: NextPage = () => {
   const router = useRouter()
   const { query } = router
   const editMode = query.edit
 
-  let initialState: any = {
-    img2img: false,
-    imageType: '',
-    orientationType: 'square',
-    height: 512,
-    width: 512,
-    numImages: 1,
-    prompt: '',
-    sampler: 'k_euler_a',
-    cfg_scale: 9,
-    steps: 20,
-    seed: '',
-    denoising_strength: 0.75,
-    karras: true,
-    parentJobId: '',
-    negative: '',
-    source_image: '',
-    source_mask: '',
-    source_processing: SourceProcessing.Prompt,
-    models: ['stable_diffusion'],
-    useAllModels: false
-  }
+  let initialState: any = defaultState
 
   if (editMode) {
-    console.log(`loadEditPrompt`, loadEditPrompt())
     initialState = {
       img2img: loadEditPrompt().img2img,
       imageType: loadEditPrompt().imageType,
@@ -210,16 +211,7 @@ const Home: NextPage = () => {
 
   const resetInput = () => {
     clearCanvasStore()
-    return setInput({
-      numImages: 1,
-      prompt: '',
-      seed: '',
-      parentJobId: '',
-      negative: '',
-      source_processing: SourceProcessing.Prompt,
-      source_image: '',
-      source_mask: ''
-    })
+    setInput(defaultState)
   }
 
   useEffect(() => {
@@ -259,10 +251,10 @@ const Home: NextPage = () => {
   useEffectOnce(() => {
     if (!editMode && getInputCache()) {
       setInput({ ...getInputCache() })
+    } else if (editMode) {
+      setInput({ ...loadEditPrompt() })
     }
   })
-
-  console.log(`in`, input)
 
   return (
     <main>

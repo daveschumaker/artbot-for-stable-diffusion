@@ -1,3 +1,4 @@
+import { userInfoStore } from '../store/userStore'
 import { checkImageStatus } from '../api/checkImageStatus'
 import { getFinishedImage } from '../api/getFinishedImage'
 import { trackEvent, trackGaEvent } from '../api/telemetry'
@@ -16,6 +17,9 @@ import { sleep } from './sleep'
 
 export const initIndexedDb = () => {}
 
+// Limit max jobs for anon users. If user is logged in,
+// let them run more jobs at once.
+let MAX_JOBS = 3
 interface CheckImage {
   success: boolean
   status?: string
@@ -97,9 +101,12 @@ export const createMultiImageJob = async () => {
     return
   }
 
-  const queuedCount = (await allPendingJobs(JobStatus.Queued)) || []
+  if (userInfoStore.state.loggedIn) {
+    MAX_JOBS = 6
+  }
 
-  if (queuedCount.length < 3) {
+  const queuedCount = (await allPendingJobs(JobStatus.Queued)) || []
+  if (queuedCount.length < MAX_JOBS) {
     const pendingJobs = await allPendingJobs(JobStatus.Waiting)
     const [nextJobParams] = pendingJobs
 
@@ -119,7 +126,18 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
   try {
     const data = await createNewImage(imageParams)
     // @ts-ignore
-    const { success, jobId, status, message = '' } = data
+    const { success, jobId, status, message = '' } = data || {}
+
+    // Skip for now and try again soon...
+    if (!success && status === 'MAX_REQUEST_LIMIT') {
+      return
+    }
+
+    // Handle condition where API ignores request.
+    // Probably rate limited?
+    if (!success && !jobId && !status) {
+      return
+    }
 
     if (success && jobId) {
       // Overwrite params on success.
@@ -295,7 +313,8 @@ export const hackyMultiJobCheck = async () => {
     )
   })
 
-  const [firstJob, secondJob, thirdJob] = queuedOrProcessing
+  const [firstJob, secondJob, thirdJob, fourthJob, fifthJob] =
+    queuedOrProcessing
 
   if (firstJob) {
     await checkCurrentJob(firstJob)
@@ -313,9 +332,21 @@ export const hackyMultiJobCheck = async () => {
     await checkCurrentJob(thirdJob)
   }
 
-  // if (fourthJob) {
-  //   await checkCurrentJob(fourthJob)
-  // }
+  if (MAX_JOBS >= 4) {
+    await sleep(300)
+
+    if (fourthJob) {
+      await checkCurrentJob(fourthJob)
+    }
+  }
+
+  if (MAX_JOBS >= 5) {
+    await sleep(300)
+
+    if (fifthJob) {
+      await checkCurrentJob(fifthJob)
+    }
+  }
 }
 
 export const checkCurrentJob = async (imageDetails: any) => {
