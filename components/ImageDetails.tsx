@@ -61,6 +61,18 @@ const ImageDetails = ({
   const [pending, setPending] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
 
+  // Older images are missing the correct models field and can cause an exception
+  // Check for updated models reference and modify as needed:
+  let models = ['stable_diffusion']
+
+  if (imageDetails.models && imageDetails.models[0]) {
+    models = [imageDetails.models[0]]
+  } else if (!imageDetails.models && imageDetails.model) {
+    models = [imageDetails.model]
+  }
+
+  imageDetails.models = models
+
   const handleDeleteImageClick = async (jobId: string) => {
     await deleteCompletedImage(jobId)
     onDelete()
