@@ -10,7 +10,12 @@ interface ModelsCache {
   [key: string]: Model
 }
 
+let currentModelNames: Array<string> = [] // Used to pull random model name
 export const modelsCache: ModelsCache = {}
+
+export const getAllModelNames = () => {
+  return currentModelNames
+}
 
 export const modelDetails = (name: string) => {
   return modelsCache[name]
@@ -35,11 +40,13 @@ export const models = async () => {
   try {
     const res = await fetch(`/artbot/api/model-details`)
     const { models } = await res.json()
+    let modelNames = []
 
     for (const model in models) {
       const { description, name, nsfw, style, trigger, type } = models[model]
 
       if (type === 'ckpt') {
+        modelNames.push(name)
         modelsCache[name] = {
           description,
           nsfw,
@@ -50,6 +57,7 @@ export const models = async () => {
       }
     }
 
+    currentModelNames = [...modelNames]
     return modelsCache
   } catch (err) {
     return {}
