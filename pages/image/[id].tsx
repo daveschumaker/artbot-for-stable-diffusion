@@ -243,16 +243,14 @@ const ImagePage = () => {
       )}
       {!isInitialLoad && imageDetails?.base64String && (
         <>
-          <div
-            {...handlers}
-            key={imageDetails.jobId}
-            className="text-center pb-6"
-          >
-            <StyledImage
-              src={'data:image/webp;base64,' + imageDetails.base64String}
-              className="mx-auto rounded"
-              alt={imageDetails.prompt}
-            />
+          <div key={imageDetails.jobId} className="text-center pb-6">
+            <div {...handlers}>
+              <StyledImage
+                src={'data:image/webp;base64,' + imageDetails.base64String}
+                className="mx-auto rounded"
+                alt={imageDetails.prompt}
+              />
+            </div>
             <ImageDetails
               imageDetails={imageDetails}
               onDelete={handleDeleteImageClick}
