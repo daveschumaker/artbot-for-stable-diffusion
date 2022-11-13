@@ -21,6 +21,12 @@ import ImageSquare from '../components/ImageSquare'
 import { validSampler } from '../utils/validationUtils'
 import OptionsPanel from '../components/CreatePage/OptionsPanel'
 import { clearCanvasStore, getCanvasStore } from '../store/canvasStore'
+import {
+  clearInputCache,
+  getInputCache,
+  setInputCache
+} from '../store/inputCache'
+import { useEffectOnce } from '../hooks/useEffectOnce'
 
 interface InputTarget {
   name: string
@@ -33,43 +39,64 @@ interface InputEvent {
 const Home: NextPage = () => {
   const router = useRouter()
   const { query } = router
-
   const editMode = query.edit
 
-  const initialState = {
-    img2img: editMode ? loadEditPrompt().img2img : false,
-    imageType: editMode ? loadEditPrompt().imageType : '',
-    orientationType: editMode ? loadEditPrompt().orientation : 'square',
-    height: editMode ? loadEditPrompt().height : 512,
-    width: editMode ? loadEditPrompt().width : 512,
+  let initialState: any = {
+    img2img: false,
+    imageType: '',
+    orientationType: 'square',
+    height: 512,
+    width: 512,
     numImages: 1,
-    prompt: editMode ? loadEditPrompt().prompt : '',
-    sampler: editMode ? loadEditPrompt().sampler : 'k_euler_a',
-    cfg_scale: editMode ? loadEditPrompt().cfg_scale : 9,
-    steps: editMode ? loadEditPrompt().steps : 30,
+    prompt: '',
+    sampler: 'k_euler_a',
+    cfg_scale: 9,
+    steps: 20,
     seed: '',
-    denoising_strength: editMode ? loadEditPrompt().denoising_strength : 0.75,
-    karras: editMode ? loadEditPrompt().karras : true,
-    // use_gfpgan: true,
-    // use_real_esrgan: true,
-    parentJobId: editMode ? loadEditPrompt().parentJobId : '',
-    negative: editMode ? loadEditPrompt().negative : '',
-    source_image: editMode ? loadEditPrompt().source_image : '',
-    source_mask: editMode ? loadEditPrompt().source_mask : '',
-    source_processing: editMode
-      ? loadEditPrompt().source_processing
-      : SourceProcessing.Prompt,
-    models: editMode ? loadEditPrompt().models : ['stable_diffusion'],
+    denoising_strength: 0.75,
+    karras: true,
+    parentJobId: '',
+    negative: '',
+    source_image: '',
+    source_mask: '',
+    source_processing: SourceProcessing.Prompt,
+    models: ['stable_diffusion'],
     useAllModels: false
+  }
+
+  if (editMode) {
+    console.log(`loadEditPrompt`, loadEditPrompt())
+    initialState = {
+      img2img: loadEditPrompt().img2img,
+      imageType: loadEditPrompt().imageType,
+      orientationType: loadEditPrompt().orientation,
+      height: loadEditPrompt().height,
+      width: loadEditPrompt().width,
+      numImages: 1,
+      prompt: loadEditPrompt().prompt,
+      sampler: loadEditPrompt().sampler,
+      cfg_scale: loadEditPrompt().cfg_scale,
+      steps: loadEditPrompt().steps,
+      seed: '',
+      denoising_strength: loadEditPrompt().denoising_strength,
+      karras: loadEditPrompt().karras,
+      parentJobId: loadEditPrompt().parentJobId,
+      negative: loadEditPrompt().negative,
+      source_image: loadEditPrompt().source_image,
+      source_mask: loadEditPrompt().source_mask,
+      source_processing: loadEditPrompt().source_processing,
+      models: loadEditPrompt().models,
+      useAllModels: false
+    }
   }
 
   const [hasValidationError, setHasValidationError] = useState(false)
   const [pending, setPending] = useState(false)
   const [hasError, setHasError] = useState('')
-  const [input, setInput] = useReducer(
-    (state: any, newState: any) => ({ ...state, ...newState }),
-    initialState
-  )
+  const [input, setInput] = useReducer((state: any, newState: any) => {
+    setInputCache({ ...state, ...newState })
+    return { ...state, ...newState }
+  }, initialState)
 
   const handleChangeValue = (event: InputEvent) => {
     const inputName = event.target.name
@@ -168,6 +195,7 @@ const Home: NextPage = () => {
 
     await createImageJob(imageJobData)
 
+    clearInputCache()
     clearCanvasStore()
     updatedCachedPrompt('')
     router.push('/pending')
@@ -178,6 +206,20 @@ const Home: NextPage = () => {
       e.preventDefault()
       handleSubmit()
     }
+  }
+
+  const resetInput = () => {
+    clearCanvasStore()
+    return setInput({
+      numImages: 1,
+      prompt: '',
+      seed: '',
+      parentJobId: '',
+      negative: '',
+      source_processing: SourceProcessing.Prompt,
+      source_image: '',
+      source_mask: ''
+    })
   }
 
   useEffect(() => {
@@ -213,6 +255,14 @@ const Home: NextPage = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffectOnce(() => {
+    if (!editMode && getInputCache()) {
+      setInput({ ...getInputCache() })
+    }
+  })
+
+  console.log(`in`, input)
 
   return (
     <main>
@@ -272,19 +322,7 @@ const Home: NextPage = () => {
             <Button
               title="Clear current input"
               btnType="secondary"
-              onClick={() => {
-                clearCanvasStore()
-                return setInput({
-                  numImages: 1,
-                  prompt: '',
-                  seed: '',
-                  parentJobId: '',
-                  negative: '',
-                  source_processing: SourceProcessing.Prompt,
-                  source_image: '',
-                  source_mask: ''
-                })
-              }}
+              onClick={resetInput}
             >
               <span>
                 <TrashIcon />

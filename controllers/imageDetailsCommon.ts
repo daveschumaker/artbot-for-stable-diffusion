@@ -14,7 +14,9 @@ export const copyEditPrompt = (imageDetails: any) => {
     cfg_scale: imageDetails.cfg_scale,
     parentJobId: imageDetails.parentJobId,
     negative: imageDetails.negative,
-    models: imageDetails.models
+    models: imageDetails?.models[0]
+      ? imageDetails.models
+      : [imageDetails.model || 'stable_diffusion']
   })
 }
 
@@ -46,7 +48,9 @@ export const uploadInpaint = (imageDetails: any, clone = false) => {
     source_processing: SourceProcessing.InPainting,
     source_mask: imageDetails.source_mask,
     denoising_strength: imageDetails.denoising_strength,
-    models: imageDetails.models
+    models: imageDetails?.models[0]
+      ? imageDetails.models
+      : [imageDetails.model || 'stable_diffusion']
   })
 }
 
@@ -67,7 +71,9 @@ export const uploadImg2Img = (imageDetails: any) => {
     source_processing: SourceProcessing.Img2Img,
     source_mask: '',
     denoising_strength: imageDetails.denoising_strength,
-    models: imageDetails.models
+    models: imageDetails?.models[0]
+      ? imageDetails.models
+      : [imageDetails.model || 'stable_diffusion']
   })
 }
 

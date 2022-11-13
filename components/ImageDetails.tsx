@@ -134,6 +134,8 @@ const ImageDetails = ({
     [pending, router]
   )
 
+  console.log(`imagedee`, imageDetails)
+
   return (
     <div className="mt-2 text-left">
       {showDeleteModal && (
@@ -172,7 +174,7 @@ const ImageDetails = ({
             <li>Width: {imageDetails.width} px</li>
             <li>Sampler: {imageDetails.sampler}</li>
             <li>Karras: {imageDetails.karras ? 'true' : 'false'}</li>
-            <li>Model: {imageDetails.models[0] || ''}</li>
+            <li>Model: {imageDetails.models[0] || imageDetails.model || ''}</li>
             <li>Seed: {imageDetails.seed}</li>
             <li>Steps: {imageDetails.steps}</li>
             <li>cfg scale: {imageDetails.cfg_scale}</li>
@@ -213,7 +215,9 @@ const ImageDetails = ({
                     source_image: imageDetails.source_image,
                     source_processing: SourceProcessing.Img2Img,
                     denoising_strength: imageDetails.denoising_strength,
-                    models: imageDetails.models
+                    models: imageDetails?.models[0]
+                      ? imageDetails.models
+                      : [imageDetails.model || 'stable_diffusion']
                   })
                   router.push(`/?panel=img2img&edit=true`)
                 }}
