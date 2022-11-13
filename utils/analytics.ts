@@ -37,6 +37,5 @@ export const trackNewSession = async () => {
     data.totalImages = totalImages
   }
 
-  console.log(`referrer`, data.referrer)
   trackEvent(data)
 }
