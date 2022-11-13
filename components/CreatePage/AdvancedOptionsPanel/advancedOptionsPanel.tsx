@@ -558,7 +558,7 @@ const AdvancedOptionsPanel = ({
       <Section>
         <SubSectionTitle>
           Use all available models ({models.length})
-          <Tooltip width="240px">
+          <Tooltip left="-140" width="240px">
             Automatically generate an image for each model currently available
             on Stable Horde
           </Tooltip>
@@ -577,7 +577,7 @@ const AdvancedOptionsPanel = ({
       <Section>
         <SubSectionTitle>
           Enable karras
-          <Tooltip width="240px">
+          <Tooltip left="-20" width="240px">
             Denoising magic. Dramatically improves image generation using fewer
             steps. (Not all workers support this yet)
           </Tooltip>

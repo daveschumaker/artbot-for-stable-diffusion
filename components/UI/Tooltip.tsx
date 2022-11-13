@@ -4,6 +4,7 @@ import InfoIcon from '../icons/InfoIcon'
 
 interface TooltipProps {
   children?: React.ReactNode
+  left?: string
   width?: string
 }
 
@@ -23,6 +24,7 @@ const StyledPopup = styled.div<TooltipProps>`
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   color: white;
   font-size: 12px;
+  left: ${(props) => (props.left ? props.left + 'px' : '0')};
   min-height: 50px;
   min-width: 100px;
   padding: 12px;
@@ -32,7 +34,7 @@ const StyledPopup = styled.div<TooltipProps>`
   z-index: 10;
 `
 
-export default function Tooltip({ children, width }: TooltipProps) {
+export default function Tooltip({ children, left = '0', width }: TooltipProps) {
   const [showTooltip, setShowTooltip] = useState(false)
 
   const handleShowToolip = useCallback(() => {
@@ -46,7 +48,11 @@ export default function Tooltip({ children, width }: TooltipProps) {
       onMouseLeave={() => setShowTooltip(false)}
     >
       <InfoIcon stroke="white" fill="#14B8A6" />
-      {showTooltip && <StyledPopup width={width}>{children}</StyledPopup>}
+      {showTooltip && (
+        <StyledPopup left={left} width={width}>
+          {children}
+        </StyledPopup>
+      )}
     </StyledInfoTip>
   )
 }
