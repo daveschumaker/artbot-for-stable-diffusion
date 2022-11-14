@@ -2,6 +2,8 @@ import Head from 'next/head'
 import PageTitle from '../components/UI/PageTitle'
 import styled from 'styled-components'
 import Linker from '../components/UI/Linker'
+import FeedbackModal from '../components/Feedback'
+import { useState } from 'react'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -34,6 +36,17 @@ const AddedInfo = styled.div`
   padding-left: 8px;
 `
 
+const LinkButton = styled.div`
+  display: inline-block;
+  cursor: pointer;
+  color: ${(props) => props.theme.link};
+  font-weight: 600;
+
+  &:hover {
+    color: ${(props) => props.theme.linkActive};
+  }
+`
+
 /** TEMPLATE
 
 <Section>
@@ -47,12 +60,61 @@ const AddedInfo = styled.div`
 */
 
 const Changelog = () => {
+  const [showFeedback, setShowFeedback] = useState(false)
+
   return (
     <div className="mb-4">
+      {showFeedback && (
+        <FeedbackModal handleClose={() => setShowFeedback(false)} />
+      )}
       <Head>
         <title>ArtBot - Changelog</title>
       </Head>
       <PageTitle>Changelog</PageTitle>
+      <div>
+        The latest happenings on ArtBot. Have a feature request or bug report?{' '}
+        <LinkButton onClick={() => setShowFeedback(true)}>
+          Contact me!
+        </LinkButton>
+      </div>
+      <Section>
+        <SubSectionTitle>2022.11.14</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            {' '}
+            MILESTONE: 🎉🎉🎉 <strong>500,000</strong> 🎉🎉🎉 images have been
+            created with ArtBot!!! The pace has definitely picked up. That is
+            awesome to see.
+          </StyledLi>
+          <StyledLi>
+            Replaced document.hasFocus() with{' '}
+            <Linker
+              href="https://developer.mozilla.org/en-US/docs/Web/API/Document/visibilityState"
+              target="_blank"
+            >
+              document.visibilityState
+            </Linker>{' '}
+            so that images can still be requested and fetched if ArtBot is
+            visible in another tab or monitor. Big thanks to
+            &quot;headhunterjack&quot; on Discord.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
+        <SubSectionTitle>2022.11.13</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Feature: Preserve input settings when navigating around ArtBot.
+            <AddedInfo>
+              It&apos;s frustrating to have added all sorts of input for an
+              image and then you click some other link on ArtBot to check
+              something and then all the data is lost when you return. No more!
+              Data is preserved if you move away from the create page. This
+              state gets reset when you create a new image.
+            </AddedInfo>
+          </StyledLi>
+        </StyledUl>
+      </Section>
       <Section>
         <SubSectionTitle>2022.11.12</SubSectionTitle>
         <StyledUl>
