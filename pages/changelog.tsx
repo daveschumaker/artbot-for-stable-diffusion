@@ -98,6 +98,13 @@ const Changelog = () => {
             visible in another tab or monitor. Big thanks to
             &quot;headhunterjack&quot; on Discord.
           </StyledLi>
+          <StyledLi>
+            Feature: Negative prompt library on the{' '}
+            <Linker href="/">create page</Linker>. Rather than having to
+            remember to repeatedly paste in a negative prompt, you can now
+            optionally save the prompt as load it by default. You can also save
+            multiple negative prompts!
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

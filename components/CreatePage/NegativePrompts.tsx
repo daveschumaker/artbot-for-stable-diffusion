@@ -14,6 +14,7 @@ interface Props {
 }
 
 const Content = styled.div`
+  background-color: ${(props) => props.theme.body};
   margin-bottom: 140px;
 
   @media (min-width: 640px) {
