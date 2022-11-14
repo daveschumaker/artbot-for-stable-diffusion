@@ -323,11 +323,15 @@ const ImagesPage = () => {
     componentState.deleteSelection.forEach((id: number, i: number) => {
       componentState.images.filter((image: any) => {
         if (image.id === id) {
-          let filename =
-            image.prompt
-              .replace(/[^a-z0-9]/gi, '_')
-              .toLowerCase()
-              .slice(0, 125) + `_${i}.webp`
+          let filename = `image_${i}.webp`
+
+          if (image.prompt) {
+            filename =
+              image.prompt
+                .replace(/[^a-z0-9]/gi, '_')
+                .toLowerCase()
+                .slice(0, 125) + `_${i}.webp`
+          }
 
           // Output image generation details to a JSON file. Helpful for people to
           // reference what / how they created an image when they come back at a later time.
@@ -337,7 +341,9 @@ const ImagesPage = () => {
             prompt: image.prompt,
             negative_prompt: image.negative,
             sampler: image.sampler,
-            model: image.models[0],
+            model: image.models
+              ? image.models[0]
+              : image.model || 'stable_diffusion',
             height: image.height,
             width: image.width,
             steps: Number(image.steps),
