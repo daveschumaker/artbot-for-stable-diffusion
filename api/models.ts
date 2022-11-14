@@ -19,7 +19,7 @@ export const modelDetails = (name: string) => {
 let lastFetchTime = 0
 
 export const models = async () => {
-  if (document.visibilityState === 'visible') {
+  if (document.visibilityState !== 'visible') {
     return
   }
 

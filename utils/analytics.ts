@@ -11,7 +11,7 @@ interface TrackSessionType {
 }
 
 export const trackNewSession = async () => {
-  if (document.visibilityState === 'visible') {
+  if (document.visibilityState !== 'visible') {
     return
   }
 

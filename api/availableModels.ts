@@ -32,7 +32,7 @@ export const fetchAvailableModels = async () => {
     return
   }
 
-  if (document.visibilityState === 'visible') {
+  if (document.visibilityState !== 'visible') {
     return
   }
 
