@@ -826,7 +826,7 @@ const ImagesPage = () => {
               className="text-cyan-400"
               onClick={() => {
                 setComponentState({
-                  deleteMode: true,
+                  deleteMode: false,
                   filterMode: 'all',
                   showFilterMenu: false,
                   showLayoutMenu: false
