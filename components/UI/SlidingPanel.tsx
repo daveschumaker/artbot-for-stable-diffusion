@@ -23,6 +23,10 @@ const StyledSlidingPanel = styled(SlidingPane)`
     border-radius: 4px;
     border-bottom: none;
   }
+
+  & > div {
+    background-color: ${(props) => props.theme.body};
+  }
 `
 
 const SlidingPanel = ({
