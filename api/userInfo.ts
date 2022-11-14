@@ -6,7 +6,7 @@ export const fetchUserDetails = async (apikey: string) => {
     return
   }
 
-  if (!document.hasFocus()) {
+  if (document.visibilityState === 'visible') {
     return
   }
 

@@ -11,7 +11,7 @@ interface TrackSessionType {
 }
 
 export const trackNewSession = async () => {
-  if (!document.hasFocus()) {
+  if (document.visibilityState === 'visible') {
     return
   }
 

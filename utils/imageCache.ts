@@ -93,7 +93,7 @@ export const createMultiImageJob = async () => {
     return
   }
 
-  if (!document.hasFocus()) {
+  if (document.visibilityState === 'visible') {
     return
   }
 
@@ -352,7 +352,7 @@ export const hackyMultiJobCheck = async () => {
 export const checkCurrentJob = async (imageDetails: any) => {
   let jobDetails
 
-  if (!document.hasFocus()) {
+  if (document.visibilityState === 'visible') {
     return
   }
 

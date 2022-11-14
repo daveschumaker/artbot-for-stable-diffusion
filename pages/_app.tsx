@@ -37,7 +37,7 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
   const { buildId } = appState
 
   const fetchAppInfo = useCallback(async () => {
-    if (!document.hasFocus()) {
+    if (document.visibilityState === 'visible') {
       return
     }
 
