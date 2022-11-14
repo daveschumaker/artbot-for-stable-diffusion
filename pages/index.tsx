@@ -27,6 +27,7 @@ import {
   setInputCache
 } from '../store/inputCache'
 import { useEffectOnce } from '../hooks/useEffectOnce'
+import { getDefaultPrompt } from '../utils/db'
 
 interface InputTarget {
   name: string
@@ -214,11 +215,7 @@ const Home: NextPage = () => {
     setInput(defaultState)
   }
 
-  useEffect(() => {
-    if (getCachedPrompt()) {
-      setInput({ prompt: getCachedPrompt() })
-    }
-
+  const updateDefaultInput = async () => {
     if (!query.edit) {
       if (localStorage.getItem('orientation')) {
         setInput({ orientationType: localStorage.getItem('orientation') })
@@ -244,6 +241,27 @@ const Home: NextPage = () => {
           denoising_strength: localStorage.getItem('denoising_strength')
         })
       }
+
+      if (localStorage.getItem('negativePrompts')) {
+        const result = (await getDefaultPrompt()) || []
+        const [defaultPrompt] = result
+
+        if (result.length >= 1) {
+          setInput({
+            negative: defaultPrompt.prompt || ''
+          })
+        }
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (getCachedPrompt()) {
+      setInput({ prompt: getCachedPrompt() })
+    }
+
+    if (!query.edit) {
+      updateDefaultInput()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
