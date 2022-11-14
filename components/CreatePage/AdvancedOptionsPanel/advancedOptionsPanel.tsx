@@ -19,7 +19,7 @@ import { modelDetails } from '../../../api/models'
 import TextButton from '../../UI/TextButton'
 import Linker from '../../UI/Linker'
 import NegativePrompts from '../NegativePrompts'
-import { db, setDefaultPrompt } from '../../../utils/db'
+import { db, getDefaultPrompt, setDefaultPrompt } from '../../../utils/db'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -190,6 +190,13 @@ const AdvancedOptionsPanel = ({
   const handleSaveNeg = useCallback(async () => {
     const trimInput = input.negative.trim()
     if (!trimInput) {
+      return
+    }
+
+    const defaultPromptResult = (await getDefaultPrompt()) || []
+    const [defaultPrompt = {}] = defaultPromptResult
+
+    if (defaultPrompt.prompt === trimInput) {
       return
     }
 

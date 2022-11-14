@@ -241,15 +241,12 @@ const Home: NextPage = () => {
         })
       }
 
-      if (localStorage.getItem('negativePrompts')) {
-        const result = (await getDefaultPrompt()) || []
-        const [defaultPrompt] = result
-
-        if (result.length >= 1) {
-          setInput({
-            negative: defaultPrompt.prompt || ''
-          })
-        }
+      const negativePrompts = (await getDefaultPrompt()) || []
+      if (negativePrompts.length > 0) {
+        const [defaultPrompt] = negativePrompts
+        setInput({
+          negative: defaultPrompt.prompt || ''
+        })
       }
     }
   }
