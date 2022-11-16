@@ -169,9 +169,12 @@ export const createImage = async (
       // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
       const { source_image, ...rest } = imageParams
       trackEvent({
-        event: 'UNTRUSTED_IP',
-        content: 'createImageApi',
-        imageParams: rest
+        event: 'ERROR',
+        action: 'UNTRUSTED_IP',
+        context: 'createImageApi',
+        data: {
+          imageParams: { ...rest }
+        }
       })
       isPending = false
       return {
@@ -187,9 +190,12 @@ export const createImage = async (
       const { source_image, ...rest } = imageParams
 
       trackEvent({
-        event: 'INVALID_PARAMS',
-        content: 'createImageApi',
-        imageParams: rest
+        event: 'ERROR',
+        action: 'INVALID_PARAMS',
+        context: 'createImageApi',
+        data: {
+          imageParams: { ...rest }
+        }
       })
       isPending = false
       return {
@@ -266,7 +272,8 @@ export const createImage = async (
       err.message.indexOf(`Header 'apikey' has invalid value`) >= 0
     ) {
       trackEvent({
-        event: 'API_KEY_ERROR',
+        event: 'ERROR',
+        action: 'API_KEY_ERROR',
         content: 'createImageApi'
       })
       return {
@@ -282,7 +289,9 @@ export const createImage = async (
     trackEvent({
       event: 'UNKNOWN_ERROR',
       content: 'createImageApi',
-      imageParams: rest
+      data: {
+        imageParams: { ...rest }
+      }
     })
     return {
       success: false,

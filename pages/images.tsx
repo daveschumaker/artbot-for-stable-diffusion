@@ -167,9 +167,11 @@ const ImagesPage = () => {
 
   const handleDeleteImageClick = async () => {
     trackEvent({
-      event: 'BULK_DELETE',
-      numImages: componentState.deleteSelection.length,
-      context: 'ImagesPage'
+      event: 'BULK_DELETE_CLICK',
+      context: 'ImagesPage',
+      data: {
+        numImages: componentState.deleteSelection.length
+      }
     })
 
     await bulkDeleteImages(componentState.deleteSelection)
@@ -238,7 +240,9 @@ const ImagesPage = () => {
       trackEvent({
         event: 'LOAD_MORE_IMAGES_CLICK',
         context: 'ImagesPage',
-        label: `${btn} - ${newNum}`
+        data: {
+          range: `${btn} - ${newNum}`
+        }
       })
 
       //await fetchImages(newNum)
@@ -684,7 +688,7 @@ const ImagesPage = () => {
                     localStorage.setItem('showLayout', 'grid')
                     trackEvent({
                       event: `MENU_CLICK`,
-                      label: 'grid_view',
+                      action: 'grid_view',
                       context: `ImagesPage`
                     })
                   }}
@@ -700,7 +704,7 @@ const ImagesPage = () => {
                     localStorage.setItem('showLayout', 'layout')
                     trackEvent({
                       event: `MENU_CLICK`,
-                      label: 'layout_view',
+                      action: 'layout_view',
                       context: `ImagesPage`
                     })
                   }}
@@ -725,7 +729,7 @@ const ImagesPage = () => {
 
                     trackEvent({
                       event: `MENU_CLICK`,
-                      label: 'sort_new',
+                      action: 'sort_new',
                       context: `ImagesPage`
                     })
                   }}
@@ -749,7 +753,7 @@ const ImagesPage = () => {
 
                     trackEvent({
                       event: `MENU_CLICK`,
-                      label: 'sort_old',
+                      action: 'sort_old',
                       context: `ImagesPage`
                     })
                   }}

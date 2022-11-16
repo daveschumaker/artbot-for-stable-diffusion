@@ -3,7 +3,7 @@ import { trackEvent } from '../api/telemetry'
 const ServerUpdateModal = ({}) => {
   const reloadPageClick = () => {
     trackEvent({
-      event: 'RELOAD_PAGE_CLICK'
+      event: 'SERVER_UPDATE_RELOAD_CLOCK'
     })
     window.location.reload()
   }

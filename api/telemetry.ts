@@ -17,11 +17,6 @@ export const trackEvent = async (obj = {}) => {
 
   if (event === 'FEEDBACK_FORM') {
     //@ts-ignore
-    // if (isNaN(obj.totalImages) || obj.totalImages === 0) {
-    //   return
-    // }
-
-    //@ts-ignore
     if (!obj.input || obj?.input.trim().length < 10) {
       return
     }
@@ -35,7 +30,7 @@ export const trackEvent = async (obj = {}) => {
         'Content-Type': 'application/json'
       }
     })
-  } catch (err) {
+  } finally {
     // If nothing happens, it's fine to ignore this.
   }
 }

@@ -4,11 +4,7 @@ import { imageCount } from './db'
 
 interface TrackSessionType {
   event: string
-  userType: string
-  referrer: string
-  totalImages?: number
-  PWA_APP?: boolean
-  loggedIn: boolean
+  data: any
 }
 
 export const trackNewSession = async () => {
@@ -28,18 +24,20 @@ export const trackNewSession = async () => {
 
   const data: TrackSessionType = {
     event: 'NEW_SESSION',
-    userType,
-    referrer: document.referrer || 'direct',
-    loggedIn: userLoggedIn.length > 0 ? true : false
+    data: {
+      userType,
+      referrer: document.referrer || 'direct',
+      loggedIn: userLoggedIn.length > 0 ? true : false
+    }
   }
 
   if (isInstalledPwa()) {
-    data.PWA_APP = true
+    data.data.PWA_APP = true
   }
 
   if (userType === 'RETURNING_USER') {
     let totalImages = await imageCount()
-    data.totalImages = totalImages
+    data.data.totalImages = totalImages
   }
 
   trackEvent(data)

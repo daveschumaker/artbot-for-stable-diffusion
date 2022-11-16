@@ -206,11 +206,13 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
       delete imageParams.source_image
       delete imageParams.canvasStore
       trackEvent({
-        type: 'ERROR',
-        event: 'UNABLE_TO_SEND_IMAGE_REQUEST',
-        status,
-        imageParams: { ...imageParams },
-        messageFromApi: message
+        event: 'ERROR',
+        action: 'UNABLE_TO_SEND_IMAGE_REQUEST',
+        data: {
+          status,
+          imageParams: { ...imageParams },
+          messageFromApi: message
+        }
       })
 
       return {
@@ -244,9 +246,11 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
     delete imageParams.source_mask
     delete imageParams.canvasStore
     trackEvent({
-      type: 'ERROR',
-      event: 'SEND_TO_API_ERROR',
-      imageParams: { ...imageParams }
+      event: 'ERROR',
+      action: 'SEND_TO_API_ERROR',
+      data: {
+        imageParams: { ...imageParams }
+      }
     })
 
     return {
@@ -427,21 +431,23 @@ export const checkCurrentJob = async (imageDetails: any) => {
 
       trackEvent({
         event: 'IMAGE_RECEIVED_FROM_API',
-        dimensions: `h ${imageDetails.height} x w ${imageDetails.width}`,
-        waitTimeSeconds: imageDetails.jobStartTimestamp
-          ? (
-              Math.floor(Date.now() - imageDetails.jobStartTimestamp) / 1000
-            ).toFixed(0)
-          : 0
+        data: {
+          dimensions: `h ${imageDetails.height} x w ${imageDetails.width}`,
+          waitTimeSeconds: imageDetails.jobTimestamp
+            ? (
+                Math.floor(Date.now() - imageDetails.jobTimestamp) / 1000
+              ).toFixed(0)
+            : 0
+        }
       })
       trackGaEvent({
         action: 'img_received_from_api',
         params: {
           height: imageDetails.height,
           width: imageDetails.width,
-          waitTime: imageDetails.jobStartTimestamp
+          waitTime: imageDetails.jobTimestamp
             ? (
-                Math.floor(Date.now() - imageDetails.jobStartTimestamp) / 1000
+                Math.floor(Date.now() - imageDetails.jobTimestamp) / 1000
               ).toFixed(0)
             : 0
         }

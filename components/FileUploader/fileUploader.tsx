@@ -108,8 +108,11 @@ const Uploader = (props: UploaderProps) => {
       )
 
       trackEvent({
-        event: 'ERROR_UPLOAD_IMG_BY_URL',
-        imgUrl
+        event: 'ERROR',
+        action: 'ERROR_UPLOAD_IMG_BY_URL',
+        data: {
+          imgUrl
+        }
       })
 
       return false
@@ -117,7 +120,9 @@ const Uploader = (props: UploaderProps) => {
 
     trackEvent({
       event: 'UPLOAD_IMG_BY_URL',
-      imgUrl
+      data: {
+        imgUrl
+      }
     })
 
     props.handleUpload(imageType, imgBase64String)

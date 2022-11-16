@@ -221,10 +221,12 @@ export const createNewImage = async (imageParams: CreateImageJob) => {
       delete clonedParams.canvasStore
 
       trackEvent({
-        type: 'ERROR',
-        event: 'UNABLE_TO_CREATE_IMAGE',
+        event: 'ERROR',
+        action: 'UNABLE_TO_CREATE_IMAGE',
         context: 'imageUtils',
-        imageParams: clonedParams
+        data: {
+          imageParams: clonedParams
+        }
       })
       return {
         success: false,
@@ -247,10 +249,12 @@ export const createNewImage = async (imageParams: CreateImageJob) => {
     delete clonedParams.canvasStore
 
     trackEvent({
-      type: 'ERROR',
-      event: 'UNABLE_TO_CREATE_IMAGE',
+      event: 'ERROR',
+      action: 'UNABLE_TO_CREATE_IMAGE',
       context: 'imageUtils',
-      imageParams: clonedParams
+      data: {
+        imageParams: clonedParams
+      }
     })
     return {
       success: false,
@@ -357,7 +361,10 @@ export const getImageFromUrl = async (imgUrl: string) => {
   if (!data || !success) {
     trackEvent({
       event: 'ERROR_UPLOAD_IMG_BY_URL',
-      imgUrl
+      context: 'imageUtils',
+      data: {
+        imgUrl
+      }
     })
 
     return {
@@ -369,7 +376,10 @@ export const getImageFromUrl = async (imgUrl: string) => {
 
   trackEvent({
     event: 'UPLOAD_IMG_BY_URL',
-    imgUrl
+    context: 'imageUtils',
+    data: {
+      imgUrl
+    }
   })
 
   return {

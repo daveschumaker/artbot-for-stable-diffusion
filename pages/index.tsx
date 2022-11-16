@@ -136,8 +136,10 @@ const Home: NextPage = () => {
     if (!options?.initLoad) {
       trackEvent({
         event: 'ORIENTATION_CLICK',
-        label: orientation,
-        context: `createPage`
+        context: `createPage`,
+        data: {
+          orientation
+        }
       })
     }
   }
@@ -177,9 +179,14 @@ const Home: NextPage = () => {
     }
 
     trackEvent({
-      event: input.img2img ? 'NEW_IMG2IMG_REQUEST' : 'NEW_IMAGE_REQUEST',
-      sampler: input.sampler,
-      numImages: input.numImages
+      event: 'NEW_IMAGE_REQUEST',
+      context: 'createPage',
+      data: {
+        sampler: input.sampler,
+        steps: input.steps,
+        numImages: input.numImages,
+        source: input.source_processing
+      }
     })
     trackGaEvent({
       action: 'new_img_request',

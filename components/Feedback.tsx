@@ -53,8 +53,10 @@ const FeedbackModal = ({ handleClose }: { handleClose: () => void }) => {
     setFeedbackSent(true)
     trackEvent({
       event: 'FEEDBACK_FORM',
-      input: inputText,
-      totalImages
+      data: {
+        input: inputText,
+        totalImages
+      }
     })
   }
 

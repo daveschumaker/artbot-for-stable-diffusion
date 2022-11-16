@@ -308,7 +308,7 @@ const PendingItem = ({ jobId }) => {
                 onClick={() => {
                   clearNewImageNotification()
                   trackEvent({
-                    event: 'VIEW_IMAGE_CLICK',
+                    event: 'VIEW_IMAGE_BTN_CLICK',
                     context: 'PendingItemsPage'
                   })
                   trackGaEvent({
