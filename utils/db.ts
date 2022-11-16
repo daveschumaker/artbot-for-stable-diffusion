@@ -1,19 +1,11 @@
-import Dexie, { Table } from 'dexie'
+import Dexie from 'dexie'
 import { JobStatus } from '../types'
 import { SourceProcessing } from './promptUtils'
 
-export interface Friend {
-  id?: number
-  name: string
-  age: number
-}
-
 export class MySubClassedDexie extends Dexie {
-  // 'friends' is added by dexie when declaring the stores()
-  // We just tell the typing system this is the case
-  friends!: Table<Friend>
   completed: any
   pending: any
+  prompts: any
 
   constructor() {
     super('imageHorde')
@@ -26,10 +18,58 @@ export class MySubClassedDexie extends Dexie {
       completed: '++id, jobId, timestamp, parentJobId',
       pending: '++id, jobId,timestamp, parentJobId'
     })
+
+    this.version(3).stores({
+      completed: '++id, jobId, timestamp, parentJobId',
+      pending: '++id, jobId,timestamp, parentJobId',
+      prompts: '++id, timestamp, promptType'
+    })
   }
 }
 
 export const db = new MySubClassedDexie()
+
+export const setDefaultPrompt = async (prompt: string) => {
+  const result = (await getDefaultPrompt()) || []
+  const [defaultPrompt] = result
+
+  if (!defaultPrompt || !defaultPrompt.timestamp) {
+    await db.prompts.add({
+      prompt,
+      promptType: 'default',
+      timestamp: Date.now()
+    })
+  } else if (defaultPrompt.id) {
+    await db.prompts.update(defaultPrompt.id, {
+      prompt,
+      promptType: 'default',
+      timestamp: Date.now()
+    })
+  }
+
+  return defaultPrompt
+}
+
+export const getDefaultPrompt = async () => {
+  try {
+    return (
+      (await db?.prompts
+        ?.where({ promptType: 'default' })
+        .limit(1)
+        ?.toArray()) || []
+    )
+  } catch (err) {
+    return []
+  }
+}
+
+export const getPrompts = async (promptType: string) => {
+  return await db.prompts
+    .filter(function (prompt: { promptType: string }) {
+      return prompt.promptType === promptType
+    })
+    ?.toArray()
+}
 
 export const allPendingJobs = async (status?: string) => {
   try {

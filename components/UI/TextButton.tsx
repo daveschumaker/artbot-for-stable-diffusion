@@ -12,6 +12,7 @@ const StyledTextButton = styled.div`
   cursor: pointer;
   color: ${(props) => props.color || props.theme.navLinkActive};
   font-size: 14px;
+  letter-spacing: 0.2px;
 
   // Disables hover effect for mobile devices:
   // https://stackoverflow.com/a/59210149

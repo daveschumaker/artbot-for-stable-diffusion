@@ -32,7 +32,7 @@ export const fetchAvailableModels = async () => {
     return
   }
 
-  if (!document.hasFocus()) {
+  if (document.visibilityState !== 'visible') {
     return
   }
 

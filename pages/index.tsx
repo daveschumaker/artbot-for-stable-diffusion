@@ -5,12 +5,7 @@ import { useRouter } from 'next/router'
 
 import { createImageJob } from '../utils/imageCache'
 import PageTitle from '../components/UI/PageTitle'
-import {
-  getCachedPrompt,
-  loadEditPrompt,
-  SourceProcessing,
-  updatedCachedPrompt
-} from '../utils/promptUtils'
+import { loadEditPrompt, SourceProcessing } from '../utils/promptUtils'
 import TextArea from '../components/UI/TextArea'
 import { Button } from '../components/UI/Button'
 import TrashIcon from '../components/icons/TrashIcon'
@@ -27,6 +22,7 @@ import {
   setInputCache
 } from '../store/inputCache'
 import { useEffectOnce } from '../hooks/useEffectOnce'
+import { getDefaultPrompt } from '../utils/db'
 
 interface InputTarget {
   name: string
@@ -113,7 +109,6 @@ const Home: NextPage = () => {
 
     if (inputName === 'denoising_strength') {
       localStorage.setItem('denoising_strength', event.target.value)
-      updatedCachedPrompt(inputValue)
     }
 
     if (inputName === 'steps') {
@@ -121,7 +116,6 @@ const Home: NextPage = () => {
     }
 
     if (inputName === 'prompt') {
-      updatedCachedPrompt(inputValue)
     }
 
     setInput({ [inputName]: inputValue })
@@ -198,7 +192,6 @@ const Home: NextPage = () => {
 
     clearInputCache()
     clearCanvasStore()
-    updatedCachedPrompt('')
     router.push('/pending')
   }
 
@@ -209,16 +202,19 @@ const Home: NextPage = () => {
     }
   }
 
-  const resetInput = () => {
+  const resetInput = async () => {
+    const defaultPromptResult = (await getDefaultPrompt()) || []
+    const [defaultPrompt = {}] = defaultPromptResult
+
+    const newDefaultState = Object.assign({}, defaultState, {
+      negative: defaultPrompt.prompt || ''
+    })
+
     clearCanvasStore()
-    setInput(defaultState)
+    setInput(newDefaultState)
   }
 
-  useEffect(() => {
-    if (getCachedPrompt()) {
-      setInput({ prompt: getCachedPrompt() })
-    }
-
+  const updateDefaultInput = async () => {
     if (!query.edit) {
       if (localStorage.getItem('orientation')) {
         setInput({ orientationType: localStorage.getItem('orientation') })
@@ -244,6 +240,20 @@ const Home: NextPage = () => {
           denoising_strength: localStorage.getItem('denoising_strength')
         })
       }
+
+      const negativePrompts = (await getDefaultPrompt()) || []
+      if (negativePrompts.length > 0) {
+        const [defaultPrompt] = negativePrompts
+        setInput({
+          negative: defaultPrompt.prompt || ''
+        })
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (!query.edit) {
+      updateDefaultInput()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

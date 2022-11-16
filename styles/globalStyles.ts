@@ -49,4 +49,10 @@ export const GlobalStyles = createGlobalStyle<{ theme: DefaultTheme }>`
   .canvas-container {
     margin: 0 auto;
   }
+
+  @media (prefers-color-scheme: dark) {
+    body {
+      background-color: #080B0C;
+    }
+  }
   `

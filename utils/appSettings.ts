@@ -59,7 +59,7 @@ export const initAppSettings = async () => {
   await models()
 
   setInterval(async () => {
-    if (!document?.hasFocus()) {
+    if (document.visibilityState !== 'visible') {
       return
     }
 

@@ -23,7 +23,7 @@ const PollController = () => {
   useEffect(() => {
     const interval = setInterval(async () => {
       // If user has multiple tabs open, prevent firing off numerous API calls.
-      if (!document.hasFocus()) {
+      if (document.visibilityState !== 'visible') {
         return
       }
 

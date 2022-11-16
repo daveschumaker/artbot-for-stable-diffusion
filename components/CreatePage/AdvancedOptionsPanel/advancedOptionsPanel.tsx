@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useStore } from 'statery'
 import Switch from 'react-switch'
@@ -18,6 +18,8 @@ import useErrorMessage from '../../../hooks/useErrorMessage'
 import { modelDetails } from '../../../api/models'
 import TextButton from '../../UI/TextButton'
 import Linker from '../../UI/Linker'
+import NegativePrompts from '../NegativePrompts'
+import { db, getDefaultPrompt, setDefaultPrompt } from '../../../utils/db'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -150,6 +152,7 @@ const AdvancedOptionsPanel = ({
   const { models } = appState
 
   const [errorMessage, setErrorMessage, hasError] = useErrorMessage()
+  const [showNegPane, setShowNegPane] = useState(false)
 
   const orientationValue = orientationOptions.filter((option) => {
     return input.orientationType === option.value
@@ -179,6 +182,34 @@ const AdvancedOptionsPanel = ({
     }
   }, [input.sampler, input.steps, loggedIn, setErrorMessage])
 
+  const clearNegPrompt = () => {
+    setDefaultPrompt('')
+    setInput({ negative: '' })
+  }
+
+  const handleSaveNeg = useCallback(async () => {
+    const trimInput = input.negative.trim()
+    if (!trimInput) {
+      return
+    }
+
+    const defaultPromptResult = (await getDefaultPrompt()) || []
+    const [defaultPrompt = {}] = defaultPromptResult
+
+    if (defaultPrompt.prompt === trimInput) {
+      return
+    }
+
+    try {
+      await db.prompts.add({
+        prompt: trimInput,
+        promptType: 'negative'
+      })
+
+      await setDefaultPrompt(trimInput)
+    } catch (err) {}
+  }, [input.negative])
+
   useEffect(() => {
     setHasValidationError(hasError)
   }, [hasError, setHasValidationError])
@@ -189,6 +220,13 @@ const AdvancedOptionsPanel = ({
 
   return (
     <div>
+      {showNegPane ? (
+        <NegativePrompts
+          open={showNegPane}
+          handleClosePane={() => setShowNegPane(false)}
+          setInput={setInput}
+        />
+      ) : null}
       {input.parentJobId ? (
         <Section>
           <SubSectionTitle>Attached to previous job</SubSectionTitle>
@@ -366,6 +404,11 @@ const AdvancedOptionsPanel = ({
           >
             <TrashIcon />
           </Button>
+        </FlexRow>
+        <FlexRow>
+          <TextButton onClick={clearNegPrompt}>clear default</TextButton>
+          <TextButton onClick={handleSaveNeg}>save as default</TextButton>
+          <TextButton onClick={() => setShowNegPane(true)}>load</TextButton>
         </FlexRow>
       </Section>
       <Section>

@@ -8,10 +8,11 @@ interface TrackSessionType {
   referrer: string
   totalImages?: number
   PWA_APP?: boolean
+  loggedIn: boolean
 }
 
 export const trackNewSession = async () => {
-  if (!document.hasFocus()) {
+  if (document.visibilityState !== 'visible') {
     return
   }
 
@@ -22,10 +23,14 @@ export const trackNewSession = async () => {
   ) {
     userType = 'RETURNING_USER'
   }
+
+  const userLoggedIn = localStorage.getItem('apikey')?.trim() || ''
+
   const data: TrackSessionType = {
     event: 'NEW_SESSION',
     userType,
-    referrer: document.referrer || 'direct'
+    referrer: document.referrer || 'direct',
+    loggedIn: userLoggedIn.length > 0 ? true : false
   }
 
   if (isInstalledPwa()) {
