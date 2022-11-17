@@ -20,6 +20,7 @@ interface SavePrompt {
   steps: number
   parentJobId: string
   negative?: string
+  triggers?: Array<string>
   source_image?: string
   source_processing?:
     | SourceProcessing.Prompt
@@ -45,6 +46,7 @@ let initPromptDetails: SavePrompt = {
   width: 512,
   parentJobId: '',
   negative: '',
+  triggers: [],
   source_image: '',
   source_processing: SourceProcessing.Prompt,
   source_mask: '',
@@ -69,6 +71,7 @@ export const savePrompt = ({
   width = 512,
   parentJobId = '',
   negative = '',
+  triggers = [],
   source_image = '',
   source_processing = SourceProcessing.Prompt,
   source_mask = '',
@@ -90,6 +93,7 @@ export const savePrompt = ({
     width,
     parentJobId,
     negative,
+    triggers,
     source_image,
     source_processing,
     source_mask,

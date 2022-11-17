@@ -22,6 +22,7 @@ interface ImageDetails {
   steps: number
   karras: boolean
   models: Array<string>
+  triggers?: Array<string>
   source_image?: string
   source_processing?: string
   source_mask?: string
@@ -73,6 +74,7 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
     steps,
     models,
     karras,
+    triggers,
     source_image,
     source_processing,
     source_mask,
@@ -94,7 +96,9 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
     models
   }
 
-  if (modelDetails[models[0]]?.trigger) {
+  if (triggers && triggers?.length > 0) {
+    apiParams.prompt = `${triggers.join(' ')} ${prompt}`
+  } else if (modelDetails[models[0]]?.trigger) {
     apiParams.prompt = `${modelDetails[models[0]].trigger} ${prompt}`
   }
 

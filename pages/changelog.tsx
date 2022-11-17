@@ -87,6 +87,27 @@ const Changelog = () => {
         </LinkButton>
       </div>
       <Section>
+        <SubSectionTitle>2022.11.16</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            MILESTONE: 600,000 images have been created with ArtBot!
+          </StyledLi>
+          <StyledLi>
+            Tackling some personal tech debt -- refactored how models are
+            fetched and cached from backend API
+          </StyledLi>
+          <StyledLi>
+            Refactored some telemetry tooling for determining which features are
+            used, what things break, etc.
+          </StyledLi>
+          <StyledLi>
+            Support for multi-trigger select for available models (currently
+            only 1 available). You can mix and match potential triggers to
+            change the style of a supported model.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.11.14</SubSectionTitle>
         <StyledUl>
           <StyledLi>

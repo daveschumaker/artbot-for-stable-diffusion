@@ -20,6 +20,7 @@ import NegativePrompts from '../NegativePrompts'
 import { db, getDefaultPrompt, setDefaultPrompt } from '../../../utils/db'
 import { trackEvent } from '../../../api/telemetry'
 import { modelInfoStore } from '../../../store/modelStore'
+import Checkbox from '../../UI/Checkbox'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -214,6 +215,30 @@ const AdvancedOptionsPanel = ({
       await setDefaultPrompt(trimInput)
     } catch (err) {}
   }, [input.negative])
+
+  const getSelectedTrigger = useCallback(
+    (value: string) => {
+      return input.triggers.indexOf(value) >= 0
+    },
+    [input.triggers]
+  )
+
+  const handleMultiTrigger = useCallback(
+    (value: string) => {
+      const newTriggers = [...input.triggers]
+
+      const index = newTriggers.indexOf(value)
+      if (index > -1) {
+        newTriggers.splice(index, 1)
+      } else {
+        newTriggers.push(value)
+      }
+
+      console.log(`newTriggers`, newTriggers)
+      setInput({ triggers: newTriggers })
+    },
+    [input.triggers, setInput]
+  )
 
   useEffect(() => {
     setHasValidationError(hasError)
@@ -616,7 +641,8 @@ const AdvancedOptionsPanel = ({
                   {modelDetails[input.models[0]].style &&
                     `Style: ${modelDetails[input.models[0]].style}`}{' '}
                   {modelDetails[input.models[0]].nsfw && ` (nsfw)`}
-                  {modelDetails[input.models[0]].trigger ? (
+                  {!Array.isArray(modelDetails[input.models[0]]?.trigger) &&
+                  modelDetails[input.models[0]].trigger ? (
                     <>
                       <br />
                       Trigger: &quot;{modelDetails[input.models[0]].trigger}
@@ -625,6 +651,37 @@ const AdvancedOptionsPanel = ({
                   ) : null}
                 </div>
               )}
+
+              {Array.isArray(modelDetails[input.models[0]]?.trigger) &&
+              // @ts-ignore
+              modelDetails[input?.models[0]]?.trigger?.length > 1 ? (
+                <div>
+                  <div className="mt-2 text-md">Multi-trigger select</div>
+                  <div className="text-xs">
+                    This model allows you to mix and max multiple types of
+                    triggers.
+                  </div>
+                  <div className="mb-2 text-xs">
+                    Triggers will be automatically added to your prompt.
+                  </div>
+                  {
+                    //@ts-ignore
+                    modelDetails[input?.models[0]]?.trigger.map(
+                      (trigger: string, i: any) => {
+                        return (
+                          <div key={`trigger_${i}`}>
+                            <Checkbox
+                              label={trigger}
+                              value={getSelectedTrigger(trigger)}
+                              onChange={() => handleMultiTrigger(trigger)}
+                            />
+                          </div>
+                        )
+                      }
+                    )
+                  }
+                </div>
+              ) : null}
             </MaxWidth>
           </Section>
         )}
