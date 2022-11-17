@@ -166,8 +166,6 @@ export const createImage = async (
     const data = await resp.json()
     const { id, message = '' }: GenerateResponse = data
 
-    console.log(`status code?`, statusCode)
-
     if (
       message === 'Only Trusted users are allowed to perform this operation'
     ) {

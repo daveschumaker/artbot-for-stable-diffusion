@@ -641,11 +641,15 @@ const AdvancedOptionsPanel = ({
                   {modelDetails[input.models[0]].style &&
                     `Style: ${modelDetails[input.models[0]].style}`}{' '}
                   {modelDetails[input.models[0]].nsfw && ` (nsfw)`}
-                  {!Array.isArray(modelDetails[input.models[0]]?.trigger) &&
-                  modelDetails[input.models[0]].trigger ? (
+                  {Array.isArray(modelDetails[input.models[0]]?.trigger) &&
+                  modelDetails[input.models[0]].trigger?.length === 1 ? (
                     <>
                       <br />
-                      Trigger: &quot;{modelDetails[input.models[0]].trigger}
+                      Trigger: &quot;
+                      {
+                        //@ts-ignore
+                        modelDetails[input.models[0]]?.trigger[0]
+                      }
                       &quot; (will be automatically added to your prompt)
                     </>
                   ) : null}
