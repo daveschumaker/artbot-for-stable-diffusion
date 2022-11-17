@@ -87,6 +87,19 @@ const Changelog = () => {
         </LinkButton>
       </div>
       <Section>
+        <SubSectionTitle>2022.11.17</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: useAllModels option was broken after the refactor I did
+            yesterday. It&apos;s now fixed.
+          </StyledLi>
+          <StyledLi>
+            Fix: Sort by number of available models in model select dropdown on
+            the create page.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.11.16</SubSectionTitle>
         <StyledUl>
           <StyledLi>

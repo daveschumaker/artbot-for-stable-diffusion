@@ -83,13 +83,16 @@ export const createPendingJob = async (imageParams: CreatePendingJob) => {
     imageParams.numImages = 1
     const models = modelInfoStore.state.availableModels
 
-    for (const [key] of Object.entries(models)) {
+    for (const model of models) {
+      const { name: modelName } = model
+
       // It doesn't make sense to include this in all models mode.
-      if (key === 'stable_diffusion_inpainting') {
+      if (modelName === 'stable_diffusion_inpainting') {
         return
       }
+
       clonedParams = cloneImageParams(imageParams)
-      clonedParams.models = [key]
+      clonedParams.models = [modelName]
 
       try {
         await db.pending.add({

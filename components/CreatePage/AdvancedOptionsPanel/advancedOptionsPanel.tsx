@@ -662,7 +662,7 @@ const AdvancedOptionsPanel = ({
                 <div>
                   <div className="mt-2 text-md">Multi-trigger select</div>
                   <div className="text-xs">
-                    This model allows you to mix and max multiple types of
+                    This model allows you to mix and match multiple types of
                     triggers.
                   </div>
                   <div className="mb-2 text-xs">

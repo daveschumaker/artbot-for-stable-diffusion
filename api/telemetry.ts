@@ -1,16 +1,20 @@
-// @ts-ignore
-export const trackGaEvent = ({ action, params }) => {
+interface Params {
+  action: string
+  params: any
+}
+
+export const trackGaEvent = ({ action, params }: Params) => {
   // @ts-ignore
   window.gtag('event', action, params)
 }
 
 export const trackEvent = async (obj = {}) => {
-  // if (
-  //   typeof window !== 'undefined' &&
-  //   window.location.host.indexOf('localhost') >= 0
-  // ) {
-  //   return
-  // }
+  if (
+    typeof window !== 'undefined' &&
+    window.location.host.indexOf('localhost') >= 0
+  ) {
+    return
+  }
 
   // @ts-ignore
   // const { event } = obj

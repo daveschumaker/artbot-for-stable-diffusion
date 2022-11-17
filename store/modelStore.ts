@@ -4,6 +4,7 @@ interface ModelStore {
   availableModelNames: Array<string>
   availableModels: Array<AvailableModel>
   modelDetails: IModelsDetails
+  sort: string
 }
 
 export interface AvailableModel {
@@ -32,10 +33,17 @@ export interface IModelDetails {
 export const modelInfoStore = makeStore<ModelStore>({
   availableModelNames: [],
   availableModels: [],
-  modelDetails: {}
+  modelDetails: {},
+  sort: 'count'
 })
 
 export const setAvailableModels = (models: Array<AvailableModel>) => {
+  // handle issue where API times out after already using web-app.
+  // error would overwrite existing models.
+  if (modelInfoStore.state.availableModels.length > 1 && models.length <= 1) {
+    return
+  }
+
   modelInfoStore.set(() => ({
     availableModelNames: models?.map((model) => model.name),
     availableModels: [...models]
@@ -43,6 +51,15 @@ export const setAvailableModels = (models: Array<AvailableModel>) => {
 }
 
 export const setModelDetails = (models: IModelsDetails) => {
+  // handle issue where API times out after already using web-app.
+  // error would overwrite existing models.
+  if (
+    Object.keys(modelInfoStore.state.modelDetails).length > 1 &&
+    Object.keys(models).length <= 1
+  ) {
+    return
+  }
+
   modelInfoStore.set(() => ({
     modelDetails: Object.assign({}, models)
   }))
