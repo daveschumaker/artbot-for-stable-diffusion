@@ -19,6 +19,7 @@
     "update:build-id": "node ./x-build-scripts/updateBuildId.js"
   },
   "dependencies": {
+    "@next/bundle-analyzer": "13.0.3",
     "autosize": "5.0.1",
     "browser-image-resizer": "2.4.1",
     "client-zip": "2.3.0",
@@ -44,7 +45,6 @@
     "styled-components": "5.3.6"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "13.0.3",
     "@types/autosize": "4.0.1",
     "@types/fabric": "4.5.12",
     "@types/node": "18.11.9",

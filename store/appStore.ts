@@ -2,16 +2,16 @@ import { makeStore } from 'statery'
 
 interface AppStore {
   buildId: string
-  trusted: boolean
   showImageReadyToast: boolean
   newImageReady: string
+  indexDbSupport: boolean
 }
 
 export const appInfoStore = makeStore<AppStore>({
   buildId: '',
-  trusted: false,
   showImageReadyToast: false,
-  newImageReady: ''
+  newImageReady: '',
+  indexDbSupport: true
 })
 
 export const setBuildId = (id: string) => {
@@ -20,9 +20,9 @@ export const setBuildId = (id: string) => {
   }))
 }
 
-export const setTrustedUser = (bool: boolean) => {
+export const setIndexDbSupport = (bool: boolean) => {
   appInfoStore.set(() => ({
-    trusted: bool
+    indexDbSupport: bool
   }))
 }
 

@@ -4,6 +4,7 @@ import { imageCount } from './db'
 
 interface TrackSessionType {
   event: string
+  context: string
   data: any
 }
 
@@ -24,8 +25,8 @@ export const trackNewSession = async () => {
 
   const data: TrackSessionType = {
     event: 'NEW_SESSION',
+    context: userType,
     data: {
-      userType,
       referrer: document.referrer || 'direct',
       loggedIn: userLoggedIn.length > 0 ? true : false
     }
