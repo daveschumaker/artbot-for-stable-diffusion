@@ -5,7 +5,6 @@ import Switch from 'react-switch'
 
 import SelectComponent from '../../UI/Select'
 import Input from '../../UI/Input'
-import { appInfoStore } from '../../../store/appStore'
 import Tooltip from '../../UI/Tooltip'
 import { Button } from '../../UI/Button'
 import TrashIcon from '../../icons/TrashIcon'
@@ -15,11 +14,11 @@ import { nearestWholeMultiple } from '../../../utils/imageUtils'
 import { userInfoStore } from '../../../store/userStore'
 import { maxSteps } from '../../../utils/validationUtils'
 import useErrorMessage from '../../../hooks/useErrorMessage'
-import { modelDetails } from '../../../api/models'
 import TextButton from '../../UI/TextButton'
 import Linker from '../../UI/Linker'
 import NegativePrompts from '../NegativePrompts'
 import { db, getDefaultPrompt, setDefaultPrompt } from '../../../utils/db'
+import { modelInfoStore } from '../../../store/modelStore'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -147,9 +146,9 @@ const AdvancedOptionsPanel = ({
   setHasValidationError
 }: Props) => {
   const userState = useStore(userInfoStore)
-  const appState = useStore(appInfoStore)
+  const modelState = useStore(modelInfoStore)
+  const { availableModels, modelDetails } = modelState
   const { loggedIn } = userState
-  const { models } = appState
 
   const [errorMessage, setErrorMessage, hasError] = useErrorMessage()
   const [showNegPane, setShowNegPane] = useState(false)
@@ -158,7 +157,7 @@ const AdvancedOptionsPanel = ({
     return input.orientationType === option.value
   })[0]
   // @ts-ignore
-  const modelsValue = modelerOptions(models).filter((option) => {
+  const modelsValue = modelerOptions(availableModels).filter((option) => {
     return input.models[0] === option.value
   })[0]
   const samplerValue = samplerOptions(input).filter((option) => {
@@ -586,7 +585,7 @@ const AdvancedOptionsPanel = ({
               <SelectComponent
                 menuPlacement={'top'}
                 //@ts-ignore
-                options={modelerOptions(models)}
+                options={modelerOptions(availableModels)}
                 onChange={(obj: { value: string; label: string }) => {
                   setInput({ models: [obj.value] })
                 }}
@@ -598,18 +597,18 @@ const AdvancedOptionsPanel = ({
               // @ts-ignore
               maxWidth="480"
             >
-              {modelDetails(input.models[0]) && (
+              {modelDetails[input.models[0]] && (
                 <div className="mt-2 text-xs">
-                  {modelDetails(input.models[0]).description &&
-                    `${modelDetails(input.models[0]).description}`}
+                  {modelDetails[input.models[0]].description &&
+                    `${modelDetails[input.models[0]].description}`}
                   <br />
-                  {modelDetails(input.models[0]).style &&
-                    `Style: ${modelDetails(input.models[0]).style}`}{' '}
-                  {modelDetails(input.models[0]).nsfw && ` (nsfw)`}
-                  {modelDetails(input.models[0]).trigger ? (
+                  {modelDetails[input.models[0]].style &&
+                    `Style: ${modelDetails[input.models[0]].style}`}{' '}
+                  {modelDetails[input.models[0]].nsfw && ` (nsfw)`}
+                  {modelDetails[input.models[0]].trigger ? (
                     <>
                       <br />
-                      Trigger: &quot;{modelDetails(input.models[0]).trigger}
+                      Trigger: &quot;{modelDetails[input.models[0]].trigger}
                       &quot; (will be automatically added to your prompt)
                     </>
                   ) : null}
@@ -620,7 +619,7 @@ const AdvancedOptionsPanel = ({
         )}
       <Section>
         <SubSectionTitle>
-          Use all available models ({models.length})
+          Use all available models ({availableModels.length})
           <Tooltip left="-140" width="240px">
             Automatically generate an image for each model currently available
             on Stable Horde

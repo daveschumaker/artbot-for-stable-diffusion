@@ -102,7 +102,7 @@ export const createMultiImageJob = async () => {
   }
 
   if (userInfoStore.state.loggedIn) {
-    MAX_JOBS = 6
+    MAX_JOBS = 3
   }
 
   const queuedCount = (await allPendingJobs(JobStatus.Queued)) || []
@@ -462,4 +462,4 @@ export const checkCurrentJob = async (imageDetails: any) => {
 setInterval(() => {
   createMultiImageJob()
   // fetchJobDetails()
-}, 2500)
+}, 3000)

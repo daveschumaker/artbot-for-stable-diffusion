@@ -1,6 +1,6 @@
+import { modelInfoStore } from '../store/modelStore'
 import { GenerateResponse } from '../types'
 import { SourceProcessing } from '../utils/promptUtils'
-import { modelDetails } from './models'
 import { trackEvent } from './telemetry'
 
 interface CreateImageResponse {
@@ -59,6 +59,7 @@ const toBool = (value?: string | null) => {
 }
 
 const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
+  const modelDetails = modelInfoStore.state.modelDetails
   const useTrusted = toBool(localStorage.getItem('useTrusted')) || true
   const allowNsfw = toBool(localStorage.getItem('allowNsfwImages')) || false
 
@@ -93,8 +94,8 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
     models
   }
 
-  if (modelDetails(models[0])?.trigger) {
-    apiParams.prompt = `${modelDetails(models[0]).trigger} ${prompt}`
+  if (modelDetails[models[0]]?.trigger) {
+    apiParams.prompt = `${modelDetails[models[0]].trigger} ${prompt}`
   }
 
   if (seed) {
