@@ -1,4 +1,4 @@
-import { getCurrentModels, getModelsCache } from '../api/availableModels'
+import { modelInfoStore } from '../store/modelStore'
 import { CreatePendingJob, JobStatus } from '../types'
 import { uuidv4 } from './appUtils'
 import { db } from './db'
@@ -40,7 +40,7 @@ const cloneImageParams = (imageParams: CreatePendingJob) => {
   clonedParams.width = imageSize.width
 
   if (clonedParams.models[0] === 'random') {
-    const currentModels = getCurrentModels()
+    const currentModels = modelInfoStore.state.availableModelNames
     const randomModel =
       currentModels[Math.floor(Math.random() * currentModels.length)]
     clonedParams.models = [randomModel]
@@ -81,7 +81,7 @@ export const createPendingJob = async (imageParams: CreatePendingJob) => {
 
   if (imageParams.useAllModels) {
     imageParams.numImages = 1
-    const models = Object.assign({}, getModelsCache())
+    const models = modelInfoStore.state.availableModels
 
     for (const [key] of Object.entries(models)) {
       // It doesn't make sense to include this in all models mode.

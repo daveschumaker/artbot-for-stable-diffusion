@@ -1,5 +1,5 @@
-import { fetchAvailableModels } from '../api/availableModels'
-import { models } from '../api/models'
+import fetchAvailableModels from '../api/fetchAvailableModels'
+import fetchModelDetails from '../api/fetchModelDetails'
 import { fetchUserDetails } from '../api/userInfo'
 
 // @ts-ignore
@@ -56,7 +56,7 @@ export const initAppSettings = async () => {
   const apikey = localStorage.getItem('apikey') || ''
   await fetchUserDetails(apikey)
   await fetchAvailableModels()
-  await models()
+  await fetchModelDetails()
 
   setInterval(async () => {
     if (document.visibilityState !== 'visible') {
@@ -65,6 +65,6 @@ export const initAppSettings = async () => {
 
     await fetchUserDetails(apikey)
     await fetchAvailableModels()
-    await models()
+    await fetchModelDetails()
   }, 60000)
 }

@@ -5,15 +5,13 @@ interface AppStore {
   trusted: boolean
   showImageReadyToast: boolean
   newImageReady: string
-  models: Array<string>
 }
 
 export const appInfoStore = makeStore<AppStore>({
   buildId: '',
   trusted: false,
   showImageReadyToast: false,
-  newImageReady: '',
-  models: ['stable_diffusion']
+  newImageReady: ''
 })
 
 export const setBuildId = (id: string) => {
@@ -31,12 +29,6 @@ export const setTrustedUser = (bool: boolean) => {
 export const setShowImageReadyToast = (bool: boolean) => {
   appInfoStore.set(() => ({
     showImageReadyToast: bool
-  }))
-}
-
-export const setAvailableModels = (arr: Array<string>) => {
-  appInfoStore.set(() => ({
-    models: arr
   }))
 }
 
