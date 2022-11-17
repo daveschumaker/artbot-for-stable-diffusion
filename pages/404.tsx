@@ -1,7 +1,24 @@
 /* eslint-disable @next/next/no-img-element */
+import { useRouter } from 'next/router'
+import { trackEvent } from '../api/telemetry'
 import PageTitle from '../components/UI/PageTitle'
+import { useEffectOnce } from '../hooks/useEffectOnce'
 
 export default function NotFoundPage() {
+  const router = useRouter()
+  const { pathname } = router
+
+  useEffectOnce(() => {
+    trackEvent({
+      event: 'PAGE_VIEW',
+      context: '/pages/404',
+      data: {
+        referrer: document.referrer,
+        pathname
+      }
+    })
+  })
+
   return (
     <div>
       <PageTitle>404</PageTitle>

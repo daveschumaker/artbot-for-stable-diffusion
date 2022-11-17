@@ -2,11 +2,13 @@
 import Head from 'next/head'
 import { useState } from 'react'
 import styled from 'styled-components'
+import { trackEvent } from '../api/telemetry'
 import FeedbackModal from '../components/Feedback'
 import Linker from '../components/UI/Linker'
 
 import PageTitle from '../components/UI/PageTitle'
 import Text from '../components/UI/Text'
+import { useEffectOnce } from '../hooks/useEffectOnce'
 
 const AboutWrapper = styled.div`
   margin-bottom: 80px;
@@ -41,6 +43,14 @@ const HelpfulLinks = styled.div`
 
 const AboutPage = () => {
   const [showFeedback, setShowFeedback] = useState(false)
+
+  useEffectOnce(() => {
+    trackEvent({
+      event: 'PAGE_VIEW',
+      context: '/pages/about'
+    })
+  })
+
   return (
     <AboutWrapper>
       {showFeedback && (

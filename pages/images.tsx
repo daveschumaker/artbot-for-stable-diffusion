@@ -33,6 +33,7 @@ import useComponentState from '../hooks/useComponentState'
 import { base64toBlob } from '../utils/imageUtils'
 import { SourceProcessing } from '../utils/promptUtils'
 import { useSwipeable } from 'react-swipeable'
+import { useEffectOnce } from '../hooks/useEffectOnce'
 
 const DropDownMenu = styled.div`
   background-color: ${(props) => props.theme.body};
@@ -239,7 +240,7 @@ const ImagesPage = () => {
 
       trackEvent({
         event: 'LOAD_MORE_IMAGES_CLICK',
-        context: 'ImagesPage',
+        context: '/pages/images',
         data: {
           range: `${btn} - ${newNum}`
         }
@@ -388,6 +389,14 @@ const ImagesPage = () => {
     link.click()
     link.remove()
 
+    trackEvent({
+      event: 'BULK_FILE_DOWNLOAD',
+      context: '/pages/images',
+      data: {
+        numImages: componentState.deleteSelection.length
+      }
+    })
+
     setComponentState({
       deleteMode: false,
       deleteSelection: [],
@@ -438,6 +447,13 @@ const ImagesPage = () => {
     window.addEventListener('keydown', handleKeyPress)
     return () => window.removeEventListener('keydown', handleKeyPress)
   }, [componentState.deleteMode, handleLoadMore, setComponentState])
+
+  useEffectOnce(() => {
+    trackEvent({
+      event: 'PAGE_VIEW',
+      context: '/pages/images'
+    })
+  })
 
   useEffect(() => {
     if (localStorage.getItem('imagePageSort') === 'old') {
@@ -689,7 +705,7 @@ const ImagesPage = () => {
                     trackEvent({
                       event: `MENU_CLICK`,
                       action: 'grid_view',
-                      context: `ImagesPage`
+                      context: '/pages/images'
                     })
                   }}
                 >
@@ -705,7 +721,7 @@ const ImagesPage = () => {
                     trackEvent({
                       event: `MENU_CLICK`,
                       action: 'layout_view',
-                      context: `ImagesPage`
+                      context: '/pages/images'
                     })
                   }}
                 >
@@ -730,7 +746,7 @@ const ImagesPage = () => {
                     trackEvent({
                       event: `MENU_CLICK`,
                       action: 'sort_new',
-                      context: `ImagesPage`
+                      context: '/pages/images'
                     })
                   }}
                 >
@@ -754,7 +770,7 @@ const ImagesPage = () => {
                     trackEvent({
                       event: `MENU_CLICK`,
                       action: 'sort_old',
-                      context: `ImagesPage`
+                      context: '/pages/images'
                     })
                   }}
                 >

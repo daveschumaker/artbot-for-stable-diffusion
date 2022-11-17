@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { trackEvent } from '../api/telemetry'
 
 import { fetchUserDetails } from '../api/userInfo'
 import { Button } from '../components/UI/Button'
@@ -8,6 +9,7 @@ import Input from '../components/UI/Input'
 import PageTitle from '../components/UI/PageTitle'
 import Select from '../components/UI/Select'
 import Tooltip from '../components/UI/Tooltip'
+import { useEffectOnce } from '../hooks/useEffectOnce'
 import { unsetUserInfo } from '../store/userStore'
 
 const Section = styled.div`
@@ -74,6 +76,13 @@ const SettingsPage = () => {
       setUseNsfw(localStorage.getItem('allowNsfwImages') || 'false')
     }
   }, [])
+
+  useEffectOnce(() => {
+    trackEvent({
+      event: 'PAGE_VIEW',
+      context: '/pages/settings'
+    })
+  })
 
   return (
     <div>

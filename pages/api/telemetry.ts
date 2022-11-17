@@ -13,6 +13,24 @@ export default async function handler(
     return res.status(400).json({ success: false })
   }
 
+  const data = { ...req.body }
+  let ip
+
+  if (req.headers['x-forwarded-for']) {
+    // @ts-ignore
+    ip = req.headers['x-forwarded-for'].split(',')[0]
+  } else if (req.headers['x-real-ip']) {
+    ip = req?.connection?.remoteAddress
+  } else {
+    ip = req?.connection?.remoteAddress
+  }
+
+  if (ip) {
+    data.ip = ip
+  }
+
+  data.useragent = req.headers['user-agent']
+
   if (process.env.TELEMETRY_API) {
     try {
       await fetch(process.env.TELEMETRY_API, {

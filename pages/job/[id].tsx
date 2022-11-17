@@ -8,6 +8,8 @@ import Link from 'next/link'
 import ImageSquare from '../../components/ImageSquare'
 import { CreateImageJob } from '../../types'
 import Head from 'next/head'
+import { useEffectOnce } from '../../hooks/useEffectOnce'
+import { trackEvent } from '../../api/telemetry'
 
 const JobPage = () => {
   const router = useRouter()
@@ -130,6 +132,13 @@ const JobPage = () => {
 
     return divs
   }
+
+  useEffectOnce(() => {
+    trackEvent({
+      event: 'PAGE_VIEW',
+      context: '/pages/job/[id]'
+    })
+  })
 
   return (
     <div className="w-full">

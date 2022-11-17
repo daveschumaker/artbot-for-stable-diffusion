@@ -20,6 +20,7 @@ import TextButton from '../../UI/TextButton'
 import Linker from '../../UI/Linker'
 import NegativePrompts from '../NegativePrompts'
 import { db, getDefaultPrompt, setDefaultPrompt } from '../../../utils/db'
+import { trackEvent } from '../../../api/telemetry'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -200,6 +201,11 @@ const AdvancedOptionsPanel = ({
       return
     }
 
+    trackEvent({
+      event: 'SAVE_DEFAULT_NEG_PROMPT',
+      context: '/pages/index'
+    })
+
     try {
       await db.prompts.add({
         prompt: trimInput,
@@ -236,6 +242,11 @@ const AdvancedOptionsPanel = ({
           </div>
           <TextButton
             onClick={() => {
+              trackEvent({
+                event: 'REMOVE_PARENT_JOB_ID',
+                context: '/pages/index'
+              })
+
               setInput({
                 parentJobId: ''
               })
@@ -629,6 +640,10 @@ const AdvancedOptionsPanel = ({
         <Switch
           onChange={() => {
             if (!input.useAllModels) {
+              trackEvent({
+                event: 'USE_ALL_MODELS_CLICK',
+                context: '/pages/index'
+              })
               setInput({ useAllModels: true })
             } else {
               setInput({ useAllModels: false })

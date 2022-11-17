@@ -1,8 +1,17 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import { trackEvent } from '../api/telemetry'
 import PageTitle from '../components/UI/PageTitle'
+import { useEffectOnce } from '../hooks/useEffectOnce'
 
 const FaqPage = () => {
+  useEffectOnce(() => {
+    trackEvent({
+      event: 'PAGE_VIEW',
+      context: '/pages/faq'
+    })
+  })
+
   return (
     <div className="mb-4">
       <Head>

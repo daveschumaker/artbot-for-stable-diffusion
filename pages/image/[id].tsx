@@ -28,6 +28,7 @@ import MenuButton from '../../components/UI/MenuButton'
 // import CarouselIcon from '../../components/icons/CarouselIcon'
 import HeartIcon from '../../components/icons/HeartIcon'
 import { useSwipeable } from 'react-swipeable'
+import { useEffectOnce } from '../../hooks/useEffectOnce'
 
 const StyledImage = styled.img`
   box-shadow: 0 16px 38px -12px rgb(0 0 0 / 56%),
@@ -109,12 +110,12 @@ const ImagePage = () => {
     if (success) {
       trackEvent({
         event: 'DOWNLOAD_PNG',
-        context: 'ImagePage'
+        context: '/pages/image/[id]'
       })
       trackGaEvent({
         action: 'btn_download_png',
         params: {
-          context: 'ImagePage'
+          context: '/pages/image/[id]'
         }
       })
     }
@@ -124,6 +125,14 @@ const ImagePage = () => {
   const handleFavoriteClick = useCallback(async () => {
     const newFavStatus = imageDetails.favorited ? false : true
     setOptimisticFavorite(newFavStatus)
+
+    if (newFavStatus) {
+      trackEvent({
+        event: 'FAVORITE_IMG_CLICK',
+        context: '/pages/image/[id]'
+      })
+    }
+
     await updateCompletedJob(
       imageDetails.id,
       Object.assign({}, imageDetails, {
@@ -188,6 +197,13 @@ const ImagePage = () => {
   } else if (size?.width > 800) {
     imageColumns = 3
   }
+
+  useEffectOnce(() => {
+    trackEvent({
+      event: 'PAGE_VIEW',
+      context: '/pages/image/[id]'
+    })
+  })
 
   return (
     <div>
@@ -265,7 +281,7 @@ const ImagePage = () => {
                 onClick={() => {
                   trackEvent({
                     event: 'USE_IMG_FOR_IMG2IMG',
-                    context: 'ImagePage'
+                    context: '/pages/image/[id]'
                   })
                   uploadImg2Img(imageDetails)
                   router.push(`/?panel=img2img&edit=true`)
@@ -279,7 +295,7 @@ const ImagePage = () => {
                 onClick={() => {
                   trackEvent({
                     event: 'USE_IMG_FOR_INPAINT',
-                    context: 'ImagePage'
+                    context: '/pages/image/[id]'
                   })
                   uploadInpaint(imageDetails)
                   router.push(`/?panel=inpainting&edit=true`)
@@ -294,7 +310,7 @@ const ImagePage = () => {
                   onClick={() => {
                     trackEvent({
                       event: 'CLONE_INPAINT_MASK',
-                      context: 'ImagePage'
+                      context: '/pages/image/[id]'
                     })
                     const clone = true
                     uploadInpaint(imageDetails, clone)

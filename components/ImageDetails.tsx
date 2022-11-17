@@ -78,7 +78,7 @@ const ImageDetails = ({
     onDelete()
     trackEvent({
       event: 'DELETE_IMAGE',
-      context: 'ImagePage'
+      context: '/pages/image/[id]'
     })
 
     setShowDeleteModal(false)
@@ -89,12 +89,12 @@ const ImageDetails = ({
 
     trackEvent({
       event: 'COPY_PROMPT',
-      context: 'ImagePage'
+      context: '/pages/image/[id]'
     })
     trackGaEvent({
       action: 'btn_delete_img',
       params: {
-        context: 'ImagePage'
+        context: '/pages/image/[id]'
       }
     })
 
@@ -111,7 +111,7 @@ const ImageDetails = ({
 
       trackEvent({
         event: 'REROLL_IMAGE_CLICK',
-        context: 'ImagePage'
+        context: '/pages/image/[id]'
       })
 
       const reRollStatus = await rerollImage(imageDetails)
@@ -120,12 +120,12 @@ const ImageDetails = ({
       if (success) {
         trackEvent({
           event: 'REROLL_IMAGE',
-          context: 'ImagePage'
+          context: '/pages/image/[id]'
         })
         trackGaEvent({
           action: 'btn_reroll',
           params: {
-            context: 'ImagePage'
+            context: '/pages/image/[id]'
           }
         })
         router.push('/pending')
@@ -157,7 +157,7 @@ const ImageDetails = ({
                 onClick={() => {
                   trackEvent({
                     event: 'JOB_DETAILS_CLICK',
-                    context: 'ImagePage'
+                    context: '/pages/image/[id]'
                   })
                 }}
               >
@@ -195,7 +195,7 @@ const ImageDetails = ({
                 onClick={() => {
                   trackEvent({
                     event: 'NEW_PROMPT_FROM_ORIGINAL_IMG2IMG_SRC',
-                    context: 'ImagePage'
+                    context: '/pages/image/[id]'
                   })
 
                   savePrompt({

@@ -4,6 +4,8 @@ import styled from 'styled-components'
 import Linker from '../components/UI/Linker'
 import FeedbackModal from '../components/Feedback'
 import { useState } from 'react'
+import { useEffectOnce } from '../hooks/useEffectOnce'
+import { trackEvent } from '../api/telemetry'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -61,6 +63,13 @@ const LinkButton = styled.div`
 
 const Changelog = () => {
   const [showFeedback, setShowFeedback] = useState(false)
+
+  useEffectOnce(() => {
+    trackEvent({
+      event: 'PAGE_VIEW',
+      context: '/pages/changelog'
+    })
+  })
 
   return (
     <div className="mb-4">

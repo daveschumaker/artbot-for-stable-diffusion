@@ -136,7 +136,7 @@ const Home: NextPage = () => {
     if (!options?.initLoad) {
       trackEvent({
         event: 'ORIENTATION_CLICK',
-        context: `createPage`,
+        context: '/pages/index',
         data: {
           orientation
         }
@@ -180,11 +180,13 @@ const Home: NextPage = () => {
 
     trackEvent({
       event: 'NEW_IMAGE_REQUEST',
-      context: 'createPage',
+      context: '/pages/index',
       data: {
+        orientation: input.orientationType,
         sampler: input.sampler,
         steps: input.steps,
         numImages: input.numImages,
+        model: input.models,
         source: input.source_processing
       }
     })
@@ -266,6 +268,11 @@ const Home: NextPage = () => {
   }, [])
 
   useEffectOnce(() => {
+    trackEvent({
+      event: 'PAGE_VIEW',
+      context: '/pages/index'
+    })
+
     if (!editMode && getInputCache()) {
       setInput({ ...getInputCache() })
     } else if (editMode) {

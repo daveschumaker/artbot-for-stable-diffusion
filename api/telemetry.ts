@@ -5,22 +5,22 @@ export const trackGaEvent = ({ action, params }) => {
 }
 
 export const trackEvent = async (obj = {}) => {
-  if (
-    typeof window !== 'undefined' &&
-    window.location.host.indexOf('localhost') >= 0
-  ) {
-    return
-  }
+  // if (
+  //   typeof window !== 'undefined' &&
+  //   window.location.host.indexOf('localhost') >= 0
+  // ) {
+  //   return
+  // }
 
   // @ts-ignore
-  const { event } = obj
+  // const { event } = obj
 
-  if (event === 'FEEDBACK_FORM') {
-    //@ts-ignore
-    if (!obj.input || obj?.input.trim().length < 10) {
-      return
-    }
-  }
+  // if (event === 'FEEDBACK_FORM') {
+  //   //@ts-ignore
+  //   if (!obj.input || obj?.input.trim().length < 10) {
+  //     return
+  //   }
+  // }
 
   try {
     await fetch(`/artbot/api/telemetry`, {

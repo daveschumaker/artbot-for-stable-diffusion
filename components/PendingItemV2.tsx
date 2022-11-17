@@ -125,6 +125,12 @@ const PendingItem = ({ jobId }) => {
     if (serverHasJob) {
       deletePendingJobFromApi(jobId)
     }
+
+    trackEvent({
+      event: 'DELETE_PENDING_JOB',
+      context: '/pages/pending'
+    })
+
     await deletePendingJobFromDb(jobId)
   }
 
@@ -145,6 +151,11 @@ const PendingItem = ({ jobId }) => {
     delete clonedParams.errorMessage
     clonedParams.useAllModels = false
     clonedParams.numImages = 1
+
+    trackEvent({
+      event: 'RETRY_JOB',
+      context: '/pages/pending'
+    })
 
     await createImageJob({ ...clonedParams })
     await deletePendingJobFromDb(jobId)
@@ -309,12 +320,12 @@ const PendingItem = ({ jobId }) => {
                   clearNewImageNotification()
                   trackEvent({
                     event: 'VIEW_IMAGE_BTN_CLICK',
-                    context: 'PendingItemsPage'
+                    context: '/pages/pending'
                   })
                   trackGaEvent({
                     action: 'pending_view_image_btn',
                     params: {
-                      context: 'PendingItemsPage'
+                      context: '/pages/pending'
                     }
                   })
                   router.push(`/image/${jobDetails.jobId}`)
