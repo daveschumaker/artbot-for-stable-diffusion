@@ -3,11 +3,19 @@ import { useStore } from 'statery'
 
 import Toast from '../components/UI/Toast'
 import { appInfoStore, setShowImageReadyToast } from '../store/appStore'
+import { decideNewMain, enablePingChecker, LocalStorageEvents, multiStore, onLocalStorageEvent } from '../store/multiStore'
 import { hackyMultiJobCheck } from '../utils/imageCache'
+
 
 const PollController = () => {
   const appState = useStore(appInfoStore)
+  const multiState = useStore(multiStore)
+
   const { newImageReady, showImageReadyToast } = appState
+
+
+  
+  
 
   const handleCloseToast = () => {
     // If Toast is closed automatically (or via X), don't
@@ -21,6 +29,17 @@ const PollController = () => {
   }
 
   useEffect(() => {
+    localStorage[LocalStorageEvents.New] = Date.now()
+
+    const firstCheckDelay = 500
+    setTimeout(() => {
+      enablePingChecker()
+      if (!multiState.otherAvailablePagesFound) {
+        decideNewMain()
+      }
+    }, firstCheckDelay)
+    window.addEventListener('storage', onLocalStorageEvent, false)
+    
     const interval = setInterval(async () => {
       // If user has multiple tabs open, prevent firing off numerous API calls.
       if (document.visibilityState !== 'visible') {
