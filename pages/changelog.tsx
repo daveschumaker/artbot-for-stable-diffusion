@@ -97,6 +97,12 @@ const Changelog = () => {
             Fix: Sort by number of available models in model select dropdown on
             the create page.
           </StyledLi>
+          <StyledLi>
+            Feature: The Horde now supports upscalers like RealESRGAN_x4plus and
+            face correction tools such as GFPGAN. These have now been added into
+            ArtBot (see both the advanced parameters on the image generation
+            page, as well as the advanced options below any image).
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

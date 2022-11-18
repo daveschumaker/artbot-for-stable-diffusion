@@ -22,6 +22,7 @@ interface CreateImageJob {
   source_image?: string
   source_mask?: string
   denoising_strength?: number
+  post_processing: Array<string>
 
   has_source_image?: boolean
   has_source_mask?: boolean
