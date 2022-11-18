@@ -17,12 +17,13 @@ import ImageSquare from './ImageSquare'
 import { savePrompt, SourceProcessing } from '../utils/promptUtils'
 
 interface ImageDetails {
+  upscaled?: boolean
   img2img?: boolean
   jobId: string
   timestamp: number
   prompt: string
-  height?: number
-  width?: number
+  height: number
+  width: number
   cfg_scale: number
   steps?: number
   sampler?: string
@@ -164,12 +165,25 @@ const ImageDetails = ({
                 {imageDetails.parentJobId}
               </Linker>
             </li>
+            {imageDetails.upscaled && <li>UPSCALED IMAGE</li>}
             {imageDetails.img2img && <li>Source: img2img</li>}
             {imageDetails.negative && (
               <li>Negative prompt: {imageDetails.negative}</li>
             )}
-            <li>Height: {imageDetails.height} px</li>
-            <li>Width: {imageDetails.width} px</li>
+            <li>
+              Height:{' '}
+              {imageDetails.upscaled
+                ? imageDetails.height * 4
+                : imageDetails.height}{' '}
+              px
+            </li>
+            <li>
+              Width:{' '}
+              {imageDetails.upscaled
+                ? imageDetails.width * 4
+                : imageDetails.width}{' '}
+              px
+            </li>
             <li>Sampler: {imageDetails.sampler}</li>
             <li>Karras: {imageDetails.karras ? 'true' : 'false'}</li>
             <li>Model: {imageDetails.models[0] || imageDetails.model || ''}</li>

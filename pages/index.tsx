@@ -34,6 +34,7 @@ interface InputEvent {
 
 const defaultState: any = {
   img2img: false,
+  upscaled: false,
   imageType: '',
   orientationType: 'square',
   height: 512,
@@ -52,6 +53,7 @@ const defaultState: any = {
   source_image: '',
   source_mask: '',
   source_processing: SourceProcessing.Prompt,
+  post_processing: [],
   models: ['stable_diffusion'],
   useAllModels: false
 }
@@ -65,6 +67,7 @@ const Home: NextPage = () => {
 
   if (editMode) {
     initialState = {
+      upscaled: false,
       img2img: loadEditPrompt().img2img,
       imageType: loadEditPrompt().imageType,
       orientationType: loadEditPrompt().orientation,
@@ -84,6 +87,7 @@ const Home: NextPage = () => {
       source_image: loadEditPrompt().source_image,
       source_mask: loadEditPrompt().source_mask,
       source_processing: loadEditPrompt().source_processing,
+      post_processing: [],
       models: loadEditPrompt().models,
       useAllModels: false
     }

@@ -21,7 +21,8 @@ import {
 import {
   downloadImage,
   uploadImg2Img,
-  uploadInpaint
+  uploadInpaint,
+  upscaleImage
 } from '../../controllers/imageDetailsCommon'
 import { trackEvent, trackGaEvent } from '../../api/telemetry'
 import MenuButton from '../../components/UI/MenuButton'
@@ -67,6 +68,7 @@ const ImagePage = () => {
   const [isInitialLoad, setIsInitialLoad] = useState(true)
   const [imageDetails, setImageDetails] = useState({})
   const [pendingDownload, setPendingDownload] = useState(false)
+  const [pendingUpscale, setPendingUpscale] = useState(false)
   const [relatedImages, setRelatedImages] = useState([])
   const [optimisticFavorite, setOptimisticFavorite] = useState(false)
 
@@ -89,6 +91,36 @@ const ImagePage = () => {
   const handleDeleteImageClick = async () => {
     router.push(`/images`)
   }
+
+  const handleUpscaleClick = useCallback(async () => {
+    if (pendingUpscale) {
+      return
+    }
+
+    setPendingUpscale(true)
+
+    trackEvent({
+      event: 'UPSCALE_IMAGE_CLICK',
+      context: '/pages/image/[id]'
+    })
+
+    const status = await upscaleImage(imageDetails)
+    const { success } = status
+
+    if (success) {
+      trackEvent({
+        event: 'UPSCALE_IMAGE_CLICK',
+        context: '/pages/image/[id]'
+      })
+      trackGaEvent({
+        action: 'btn_upscale',
+        params: {
+          context: '/pages/image/[id]'
+        }
+      })
+      router.push('/pending')
+    }
+  }, [imageDetails, pendingUpscale, router])
 
   const findRelatedImages = async (parentJobId = '') => {
     if (parentJobId) {
@@ -275,6 +307,20 @@ const ImagePage = () => {
           <div className="mb-4">
             <PageTitle>Advanced Options</PageTitle>
             <Section>
+              <OptionsLink onClick={() => handleDownloadClick()}>
+                [ download PNG {pendingDownload && '(processing...)'} ]
+              </OptionsLink>
+            </Section>
+            <Section>
+              {imageDetails.upscaled ? (
+                <div>[ upscaled image (already upscaled)]</div>
+              ) : (
+                <OptionsLink onClick={() => handleUpscaleClick()}>
+                  [ upscale image {pendingUpscale && '(processing...)'} ]
+                </OptionsLink>
+              )}
+            </Section>
+            <Section>
               <OptionsLink
                 onClick={() => {
                   trackEvent({
@@ -319,11 +365,6 @@ const ImagePage = () => {
                 </OptionsLink>
               </Section>
             )}
-            <Section>
-              <OptionsLink onClick={() => handleDownloadClick()}>
-                [ download PNG {pendingDownload && '(processing...)'} ]
-              </OptionsLink>
-            </Section>
           </div>
         </>
       )}

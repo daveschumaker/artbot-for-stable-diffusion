@@ -613,6 +613,24 @@ const ImagesPage = () => {
                   >
                     Show unfavorited
                   </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      setComponentState({
+                        filterMode: 'upscaled',
+                        isLoading: componentState.filterMode !== 'upscaled',
+                        showFilterMenu: false
+                      })
+
+                      const newQuery = Object.assign({}, router.query)
+                      newQuery.filter = 'upscaled'
+                      router.push(
+                        //@ts-ignore
+                        `?${new URLSearchParams(newQuery).toString()}`
+                      )
+                    }}
+                  >
+                    Show upscaled
+                  </MenuItem>
                   <MenuSeparator />
                   <MenuItem
                     onClick={() => {

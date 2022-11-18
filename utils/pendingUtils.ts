@@ -46,6 +46,11 @@ const cloneImageParams = (imageParams: CreatePendingJob) => {
     clonedParams.models = [randomModel]
   }
 
+  if (clonedParams.post_processing.indexOf('RealESRGAN_x4plus') >= 0) {
+    clonedParams.height = clonedParams.height
+    clonedParams.width = clonedParams.width
+  }
+
   return clonedParams
 }
 

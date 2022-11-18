@@ -190,6 +190,10 @@ export const filterCompletedJobs = async ({
       return entry.source_processing === SourceProcessing.InPainting
     }
 
+    if (filterType === 'upscaled') {
+      return entry.upscaled === true
+    }
+
     return true
   }
 

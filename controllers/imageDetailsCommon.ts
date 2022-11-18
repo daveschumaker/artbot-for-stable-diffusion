@@ -141,3 +141,37 @@ export const rerollImage = async (imageDetails: any) => {
     success: false
   }
 }
+
+export const upscaleImage = async (imageDetails: any) => {
+  const cleanParams = Object.assign({}, imageDetails)
+
+  delete cleanParams.base64String
+  delete cleanParams.id
+  delete cleanParams.jobId
+  delete cleanParams.queue_position
+  delete cleanParams.success
+  delete cleanParams.timestamp
+  delete cleanParams.wait_time
+  delete cleanParams.initWaitTime
+  delete cleanParams.jobTimestamp
+  delete cleanParams.numImages
+  delete cleanParams.favorited
+  delete cleanParams.useAllModels
+
+  cleanParams.upscaled = true
+  cleanParams.post_processing = ['RealESRGAN_x4plus']
+
+  const res = await createImageJob({
+    ...cleanParams
+  })
+
+  if (res?.success) {
+    return {
+      success: true
+    }
+  }
+
+  return {
+    success: false
+  }
+}

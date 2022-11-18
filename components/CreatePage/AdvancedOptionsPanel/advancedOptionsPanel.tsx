@@ -234,10 +234,35 @@ const AdvancedOptionsPanel = ({
         newTriggers.push(value)
       }
 
-      console.log(`newTriggers`, newTriggers)
       setInput({ triggers: newTriggers })
     },
     [input.triggers, setInput]
+  )
+
+  const getPostProcessing = useCallback(
+    (value: string) => {
+      return input.post_processing.indexOf(value) >= 0
+    },
+    [input.post_processing]
+  )
+
+  const handlePostProcessing = useCallback(
+    (value: string) => {
+      const newPost = [...input.post_processing]
+
+      const index = newPost.indexOf(value)
+      if (index > -1) {
+        newPost.splice(index, 1)
+      } else {
+        if (value === 'RealESRGAN_x4plus') {
+          setInput({ numImages: 1 })
+        }
+        newPost.push(value)
+      }
+
+      setInput({ post_processing: newPost })
+    },
+    [input.post_processing, setInput]
   )
 
   useEffect(() => {
@@ -704,7 +729,7 @@ const AdvancedOptionsPanel = ({
                 event: 'USE_ALL_MODELS_CLICK',
                 context: '/pages/index'
               })
-              setInput({ useAllModels: true })
+              setInput({ useAllModels: true, post_processing: [] })
             } else {
               setInput({ useAllModels: false })
             }
@@ -734,45 +759,69 @@ const AdvancedOptionsPanel = ({
       {!input.useAllModels && (
         <Section>
           <SubSectionTitle>
-            Number of images
-            <div className="block text-xs w-full">(1 - 50)</div>
+            Post-processing
+            <Tooltip left="-20" width="240px">
+              Post-processing options such as face improvement and image
+              upscaling.
+            </Tooltip>
           </SubSectionTitle>
-          <MaxWidth
-            // @ts-ignore
-            maxWidth="120"
-          >
-            <Input
-              // @ts-ignore
-              className="mb-2"
-              error={errorMessage.numImages}
-              type="text"
-              name="numImages"
-              onChange={handleChangeInput}
-              onBlur={(e: any) => {
-                if (
-                  isNaN(e.target.value) ||
-                  e.target.value < 1 ||
-                  e.target.value > 50
-                ) {
-                  setErrorMessage({
-                    numImages: 'Please enter a valid number between 1 and 50'
-                  })
-                } else if (errorMessage.numImages) {
-                  setErrorMessage({ numImages: null })
-                }
-              }}
-              // @ts-ignore
-              value={input.numImages}
-              width="100%"
+          <div className="flex flex-col gap-2">
+            <Checkbox
+              label={`GFPGAN (improves faces)`}
+              value={getPostProcessing('GFPGAN')}
+              onChange={() => handlePostProcessing('GFPGAN')}
             />
-          </MaxWidth>
-          {errorMessage.numImages && (
-            <div className="mb-2 text-red-500 text-lg font-bold">
-              {errorMessage.numImages}
-            </div>
-          )}
+            <Checkbox
+              label={`RealESRGAN_x4plus (upscaler - max 1 image)`}
+              value={getPostProcessing(`RealESRGAN_x4plus`)}
+              onChange={() => handlePostProcessing(`RealESRGAN_x4plus`)}
+            />
+          </div>
         </Section>
       )}
+      {!input.useAllModels &&
+        input.post_processing.indexOf('RealESRGAN_x4plus') === -1 && (
+          <Section>
+            <SubSectionTitle>
+              Number of images
+              <div className="block text-xs w-full">(1 - 50)</div>
+            </SubSectionTitle>
+            <MaxWidth
+              // @ts-ignore
+              maxWidth="120"
+            >
+              <Input
+                // @ts-ignore
+                className="mb-2"
+                error={errorMessage.numImages}
+                type="text"
+                name="numImages"
+                onChange={handleChangeInput}
+                onBlur={(e: any) => {
+                  if (
+                    isNaN(e.target.value) ||
+                    e.target.value < 1 ||
+                    e.target.value > 50
+                  ) {
+                    setErrorMessage({
+                      numImages: 'Please enter a valid number between 1 and 50'
+                    })
+                  } else if (errorMessage.numImages) {
+                    setErrorMessage({ numImages: null })
+                  }
+                }}
+                // @ts-ignore
+                value={input.numImages}
+                width="100%"
+              />
+            </MaxWidth>
+            {errorMessage.numImages && (
+              <div className="mb-2 text-red-500 text-lg font-bold">
+                {errorMessage.numImages}
+              </div>
+            )}
+          </Section>
+        )}
     </div>
   )
 }

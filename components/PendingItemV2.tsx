@@ -242,8 +242,9 @@ const PendingItem = ({ jobId }) => {
             )}
           </ImageWaiting>
           <div className="flex flex-col flex-grow">
-            <StyledPrompt className="italic flex-grow">
-              {jobDetails.prompt}
+            <StyledPrompt className="flex-grow">
+              {jobDetails.upscaled && <div>[ UPSCALING ]</div>}
+              <div className="italic">{jobDetails.prompt}</div>
             </StyledPrompt>
             <div className="w-full font-mono text-xs mt-2">
               Steps: {jobDetails.steps}

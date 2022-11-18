@@ -25,6 +25,7 @@ interface ImageDetails {
   triggers?: Array<string>
   source_image?: string
   source_processing?: string
+  post_processing: Array<string>
   source_mask?: string
   denoising_strength?: number
 }
@@ -49,6 +50,7 @@ interface ParamsObject {
   steps: number
   denoising_strength?: number
   karras: boolean
+  post_processing?: Array<string>
 }
 
 const toBool = (value?: string | null) => {
@@ -77,6 +79,7 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
     triggers,
     source_image,
     source_processing,
+    post_processing,
     source_mask,
     denoising_strength
   } = imageDetails
@@ -121,6 +124,10 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
     apiParams.source_processing = source_processing
     apiParams.source_mask = source_mask
     apiParams.models = ['stable_diffusion_inpainting']
+  }
+
+  if (post_processing.length > 0) {
+    apiParams.params.post_processing = post_processing
   }
 
   return apiParams
