@@ -98,6 +98,10 @@ const Changelog = () => {
             which workers a job was sent to.
           </StyledLi>
           <StyledLi>
+            Feature: Added option on settings page to preserve image generation
+            parameters after creating a new image.
+          </StyledLi>
+          <StyledLi>
             Feature: Show kudos associated with your StableHorde account.{' '}
             <Linker
               href="https://github.com/daveschumaker/artbot-for-stable-diffusion/pull/12"

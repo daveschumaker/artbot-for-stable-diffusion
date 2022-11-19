@@ -205,7 +205,10 @@ const Home: NextPage = () => {
 
     await createImageJob(imageJobData)
 
-    clearInputCache()
+    if (localStorage.getItem('preserveCreateSettings') !== 'true') {
+      clearInputCache()
+    }
+
     clearCanvasStore()
     router.push('/pending')
   }
