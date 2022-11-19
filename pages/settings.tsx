@@ -82,19 +82,31 @@ const SettingsPage = () => {
 
     if (localStorage.getItem('useTrusted') === 'true') {
       setComponentState({
-        useTrusted: localStorage.getItem('useTrusted') || 'true'
+        useTrusted: localStorage.getItem('useTrusted')
+      })
+    } else {
+      setComponentState({
+        useTrusted: false
       })
     }
 
     if (localStorage.getItem('allowNsfwImages') === 'true') {
       setComponentState({
-        useNsfw: localStorage.getItem('allowNsfwImages') || 'true'
+        useNsfw: localStorage.getItem('allowNsfwImages')
+      })
+    } else {
+      setComponentState({
+        useNsfw: false
       })
     }
 
     if (localStorage.getItem('preserveCreateSettings') === 'true') {
       setComponentState({
-        preserveCreate: localStorage.getItem('preserveCreateSettings') || 'true'
+        preserveCreate: localStorage.getItem('preserveCreateSettings')
+      })
+    } else {
+      setComponentState({
+        preserveCreate: false
       })
     }
 
