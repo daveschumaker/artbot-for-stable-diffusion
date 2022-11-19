@@ -87,6 +87,36 @@ const Changelog = () => {
         </LinkButton>
       </div>
       <Section>
+        <SubSectionTitle>2022.11.19</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            CURRENT ISSUE: There are backend issues with inpainting via the
+            Stable Horde API at the moment and I am waiting on a resolution.
+          </StyledLi>
+          <StyledLi>
+            Fix: Resolve issue with allowing the generation of NSFW images and
+            which workers a job was sent to.
+          </StyledLi>
+          <StyledLi>
+            Feature: Show kudos associated with your StableHorde account.{' '}
+            <Linker
+              href="https://github.com/daveschumaker/artbot-for-stable-diffusion/pull/12"
+              target="_blank"
+            >
+              (Thanks to Florian for the PR)
+            </Linker>
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
+        <SubSectionTitle>2022.11.18</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            MILESTONE: 700,000 images have been created with ArtBot!
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.11.17</SubSectionTitle>
         <StyledUl>
           <StyledLi>
