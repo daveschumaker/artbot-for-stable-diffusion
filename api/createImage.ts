@@ -34,6 +34,7 @@ interface ApiParams {
   prompt: string
   params: ParamsObject
   nsfw: boolean
+  censor_nsfw: boolean
   trusted_workers: boolean
   models: Array<string>
   source_image?: string
@@ -94,7 +95,8 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
       steps: Number(steps),
       karras
     },
-    nsfw: allowNsfw,
+    nsfw: allowNsfw, // Use workers that allow NSFW images
+    censor_nsfw: !allowNsfw, // Show user NSFW images if created
     trusted_workers: useTrusted,
     models
   }
