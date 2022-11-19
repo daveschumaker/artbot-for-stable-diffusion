@@ -87,17 +87,12 @@ export const checkImageJob = async (jobId: string): Promise<CheckImage> => {
   }
 }
 
-let waitingForRes = false
 export const createMultiImageJob = async () => {
   if (typeof window === 'undefined') {
     return
   }
 
   if (document.visibilityState !== 'visible') {
-    return
-  }
-
-  if (waitingForRes) {
     return
   }
 
@@ -111,9 +106,7 @@ export const createMultiImageJob = async () => {
     const [nextJobParams] = pendingJobs
 
     if (nextJobParams) {
-      waitingForRes = true
       await sendJobToApi(nextJobParams)
-      waitingForRes = false
     }
   }
 }

@@ -25,12 +25,10 @@ export const fetchUserDetails = async (apikey: string) => {
       trusted,
       username
     })
-  } catch (err) {
-    // Ah well.
-  }
-
-  isPending = false
-  return {
-    success: true
+  } finally {
+    isPending = false
+    return {
+      success: true
+    }
   }
 }
