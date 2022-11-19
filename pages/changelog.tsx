@@ -109,6 +109,10 @@ const Changelog = () => {
             >
               (Thanks to Florian for the PR)
             </Linker>
+            <StyledLi>
+              Fix: Trusted worker option on settings page would not remember
+              value after leaving tab.
+            </StyledLi>
           </StyledLi>
         </StyledUl>
       </Section>
