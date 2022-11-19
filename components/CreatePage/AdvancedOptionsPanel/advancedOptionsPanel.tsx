@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useStore } from 'statery'
@@ -661,7 +662,12 @@ const AdvancedOptionsPanel = ({
                 className="mt-2"
               >
                 Example:
-                <img src={modelDetails[input.models[0]]?.showcase} />
+                <img
+                  src={modelDetails[input.models[0]]?.showcase}
+                  alt="Model example"
+                  width="240"
+                  height="240"
+                />
               </MaxWidth>
             )}
             <MaxWidth

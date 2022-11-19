@@ -12,19 +12,13 @@ interface CheckResponse {
 }
 
 let isPending = false
-
-const apiCooldown = () => {
-  setTimeout(() => {
-    isPending = false
-  }, 5000)
-}
-
 export const checkImageStatus = async (
   jobId: string
 ): Promise<CheckResponse> => {
   if (isPending || !jobId) {
     return {
       success: false,
+      status: 'WAIT_FOR_PENDING_REQUEST',
       message: 'Unable to check image status'
     }
   }
@@ -51,7 +45,7 @@ export const checkImageStatus = async (
       ...data
     }
   } catch (err) {
-    apiCooldown()
+    isPending = false
     return {
       success: false,
       status: 'UNKNOWN_ERROR'
