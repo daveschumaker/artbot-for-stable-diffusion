@@ -654,6 +654,16 @@ const AdvancedOptionsPanel = ({
                 isSearchable={false}
               />
             </MaxWidth>
+            {modelDetails[input.models[0]]?.showcase && (
+              <MaxWidth
+                // @ts-ignore
+                maxWidth="240"
+                className="mt-2"
+              >
+                Example:
+                <img src={modelDetails[input.models[0]]?.showcase} />
+              </MaxWidth>
+            )}
             <MaxWidth
               // @ts-ignore
               maxWidth="480"

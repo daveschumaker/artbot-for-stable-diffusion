@@ -22,6 +22,7 @@ export interface IModelsDetails {
 export interface IModelDetails {
   description: string
   homepage: string
+  showcase: string
   name: string
   nsfw: boolean
   style: string
