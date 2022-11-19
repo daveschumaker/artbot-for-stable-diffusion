@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import React, { useEffect, useState } from 'react'
+import { useStore } from 'statery'
 import styled from 'styled-components'
 import { trackEvent } from '../api/telemetry'
 
@@ -10,7 +11,7 @@ import PageTitle from '../components/UI/PageTitle'
 import Select from '../components/UI/Select'
 import Tooltip from '../components/UI/Tooltip'
 import { useEffectOnce } from '../hooks/useEffectOnce'
-import { unsetUserInfo } from '../store/userStore'
+import { unsetUserInfo, userInfoStore } from '../store/userStore'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -41,7 +42,8 @@ const SettingsPage = () => {
   const [apiKey, setApiKey] = useState('')
   const [useTrusted, setUseTrusted] = useState('true')
   const [useNsfw, setUseNsfw] = useState('false')
-
+  const userStore = useStore(userInfoStore)
+  
   const handleApiInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     localStorage.setItem('apikey', e.target.value)
     setApiKey(e.target.value)
@@ -152,6 +154,13 @@ const SettingsPage = () => {
           // @ts-ignore
           maxWidth="480"
         >
+          {userStore.loggedIn && (
+            <div className="block text-xs mt-2 mb-2 w-full">
+              Logged in as {userStore.username}
+              <br />
+              Kudos: <span className="text-blue-500">{userStore.kudos}</span>
+            </div>
+          )}
           <Input
             type="text"
             name="steps"
