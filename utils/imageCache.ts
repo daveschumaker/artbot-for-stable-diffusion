@@ -17,6 +17,10 @@ import { sleep } from './sleep'
 
 export const initIndexedDb = () => {}
 
+// Dynamically change fetch interval
+// (e.g., in cases where there are too many parallel requests)
+let FETCH_INTERVAL_SEC = 3000
+
 // Limit max jobs for anon users. If user is logged in,
 // let them run more jobs at once.
 let MAX_JOBS = 3
@@ -122,7 +126,12 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
     const { success, jobId, status, message = '' } = data || {}
 
     // Skip for now and try again soon...
-    if (!success && status === 'MAX_REQUEST_LIMIT') {
+    if (
+      !success &&
+      status === 'MAX_REQUEST_LIMIT' &&
+      FETCH_INTERVAL_SEC < 15000
+    ) {
+      FETCH_INTERVAL_SEC += 1000
       return
     }
 
@@ -133,6 +142,8 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
     }
 
     if (success && jobId) {
+      FETCH_INTERVAL_SEC = 3000
+
       // Overwrite params on success.
       imageParams.jobId = jobId
       imageParams.timestamp = Date.now()
@@ -458,7 +469,11 @@ export const checkCurrentJob = async (imageDetails: any) => {
   }
 }
 
-setInterval(() => {
+const createJobInterval = () => {
   createMultiImageJob()
-  // fetchJobDetails()
-}, 3000)
+  setTimeout(() => {
+    createJobInterval()
+  }, FETCH_INTERVAL_SEC)
+}
+
+createJobInterval()
