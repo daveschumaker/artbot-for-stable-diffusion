@@ -257,16 +257,6 @@ export const createImage = async (
     }
 
     if (statusCode === 429) {
-      trackEvent({
-        event: 'ERROR',
-        action: 'MAX_REQUEST_LIMIT',
-        context: 'createImageApi',
-        data: {
-          imageParams: { ...rest },
-          message,
-          statusCode
-        }
-      })
       return {
         statusCode,
         success: false,
@@ -324,7 +314,9 @@ export const createImage = async (
       event: 'UNKNOWN_ERROR',
       content: 'createImageApi',
       data: {
-        imageParams: { ...rest }
+        imageParams: { ...rest },
+        // @ts-ignore
+        errMsg: err?.message || ''
       }
     })
     return {
