@@ -1,4 +1,5 @@
 import { AvailableModel, setAvailableModels } from '../store/modelStore'
+import { isAppActive } from '../utils/appUtils'
 
 let isPending = false
 const fetchAvailableModels = async () => {
@@ -6,7 +7,7 @@ const fetchAvailableModels = async () => {
     return
   }
 
-  if (document.visibilityState !== 'visible') {
+  if (!isAppActive()) {
     return
   }
 

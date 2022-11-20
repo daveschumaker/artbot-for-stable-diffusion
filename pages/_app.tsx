@@ -21,6 +21,7 @@ import { appInfoStore, setBuildId } from '../store/appStore'
 import { useStore } from 'statery'
 import ServerUpdateModal from '../components/ServerUpdateModal'
 import MobileFooter from '../components/MobileFooter'
+import { isAppActive } from '../utils/appUtils'
 initAppSettings()
 initDb()
 
@@ -37,7 +38,7 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
   const { buildId } = appState
 
   const fetchAppInfo = useCallback(async () => {
-    if (document.visibilityState !== 'visible') {
+    if (!isAppActive()) {
       return
     }
 

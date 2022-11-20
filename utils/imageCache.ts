@@ -20,6 +20,7 @@ import {
   MAX_CONCURRENT_JOBS_ANON,
   MAX_CONCURRENT_JOBS_USER
 } from '../constants'
+import { isAppActive } from './appUtils'
 
 export const initIndexedDb = () => {}
 
@@ -102,7 +103,7 @@ export const createMultiImageJob = async () => {
     return
   }
 
-  if (document.visibilityState !== 'visible') {
+  if (!isAppActive()) {
     return
   }
 
@@ -382,7 +383,7 @@ export const hackyMultiJobCheck = async () => {
 export const checkCurrentJob = async (imageDetails: any) => {
   let jobDetails
 
-  if (document.visibilityState !== 'visible') {
+  if (!isAppActive()) {
     return
   }
 

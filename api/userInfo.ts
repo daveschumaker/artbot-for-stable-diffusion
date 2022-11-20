@@ -1,4 +1,5 @@
 import { setUserInfo } from '../store/userStore'
+import { isAppActive } from '../utils/appUtils'
 
 let isPending = false
 export const fetchUserDetails = async (apikey: string) => {
@@ -6,7 +7,7 @@ export const fetchUserDetails = async (apikey: string) => {
     return
   }
 
-  if (document.visibilityState !== 'visible') {
+  if (!isAppActive()) {
     return
   }
 

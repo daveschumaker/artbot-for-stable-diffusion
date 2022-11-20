@@ -44,6 +44,7 @@ const SettingsPage = () => {
   const [componentState, setComponentState] = useComponentState({
     apiKey: '',
     preserveCreate: 'false',
+    runBackground: 'false',
     useTrusted: 'true',
     useNsfw: 'false'
   })
@@ -61,6 +62,12 @@ const SettingsPage = () => {
     const { value } = obj
     localStorage.setItem('preserveCreateSettings', value)
     setComponentState({ preserveCreate: value })
+  }
+
+  const handleRunBackground = (obj: any) => {
+    const { value } = obj
+    localStorage.setItem('runBackground', value)
+    setComponentState({ runBackground: value })
   }
 
   const handleTrustedSelect = (obj: any) => {
@@ -110,6 +117,16 @@ const SettingsPage = () => {
       })
     }
 
+    if (localStorage.getItem('runBackground') === 'true') {
+      setComponentState({
+        runBackground: localStorage.getItem('runBackground')
+      })
+    } else {
+      setComponentState({
+        runBackground: false
+      })
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -148,6 +165,31 @@ const SettingsPage = () => {
             After clicking &quot;create&quot; on the image generation page,
             preserve all settings. To remove settings between generations, you
             will need to click the clear button.
+          </div>
+        </MaxWidth>
+      </Section>
+      <Section>
+        <SubSectionTitle>Run in background?</SubSectionTitle>
+        <MaxWidth
+          // @ts-ignore
+          maxWidth="240"
+        >
+          <Select
+            options={[
+              { value: 'true', label: 'Yes' },
+              { value: 'false', label: 'No' }
+            ]}
+            onChange={handleRunBackground}
+            value={
+              componentState.runBackground === 'true'
+                ? { value: 'true', label: 'Yes' }
+                : { value: 'false', label: 'No' }
+            }
+          />
+          <div className="block text-xs mt-2 w-full">
+            By default, ArtBot only runs in the active browser tab in order to
+            try and help prevent your IP address from being throttled. You may
+            disable this behavior if you wish.
           </div>
         </MaxWidth>
       </Section>

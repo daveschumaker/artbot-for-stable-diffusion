@@ -105,6 +105,13 @@ const Changelog = () => {
             Because of the above fix, we can now update max images per job. Lets
             bump it up to... 100!
           </StyledLi>
+          <StyledLi>
+            Initial support for new showcases field in the Stable Horde API that
+            highlights example images for each model.
+          </StyledLi>
+          <StyledLi>
+            Added optional setting to allow web app to run in background tab.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
