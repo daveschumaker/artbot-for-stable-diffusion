@@ -22,6 +22,7 @@ import { db, getDefaultPrompt, setDefaultPrompt } from '../../../utils/db'
 import { trackEvent } from '../../../api/telemetry'
 import { modelInfoStore } from '../../../store/modelStore'
 import Checkbox from '../../UI/Checkbox'
+import { MAX_IMAGES_PER_JOB } from '../../../constants'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -800,7 +801,7 @@ const AdvancedOptionsPanel = ({
           <Section>
             <SubSectionTitle>
               Number of images
-              <div className="block text-xs w-full">(1 - 50)</div>
+              <div className="block text-xs w-full">(1 - 100)</div>
             </SubSectionTitle>
             <MaxWidth
               // @ts-ignore
@@ -817,7 +818,7 @@ const AdvancedOptionsPanel = ({
                   if (
                     isNaN(e.target.value) ||
                     e.target.value < 1 ||
-                    e.target.value > 50
+                    e.target.value > MAX_IMAGES_PER_JOB
                   ) {
                     setErrorMessage({
                       numImages: 'Please enter a valid number between 1 and 50'

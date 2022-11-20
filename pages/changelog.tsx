@@ -87,12 +87,29 @@ const Changelog = () => {
         </LinkButton>
       </div>
       <Section>
-        <SubSectionTitle>2022.11.19</SubSectionTitle>
+        <SubSectionTitle>2022.11.20</SubSectionTitle>
         <StyledUl>
           <StyledLi>
             CURRENT ISSUE: There are backend issues with inpainting via the
             Stable Horde API at the moment and I am waiting on a resolution.
           </StyledLi>
+          <StyledLi>
+            Fix: If a pending image job encounters an error state (e.g., max
+            concurrent requests, invalid params, anon user limits, flagged
+            prompt, horde offline, etc), all related pending jobs will
+            automatically have the same error state applied. This will prevent
+            us from unnecessarily slamming the Horde API and potentially having
+            requests from your IP address throttled.
+          </StyledLi>
+          <StyledLi>
+            Because of the above fix, we can now update max images per job. Lets
+            bump it up to... 100!
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
+        <SubSectionTitle>2022.11.19</SubSectionTitle>
+        <StyledUl>
           <StyledLi>
             Fix: Resolve issue with allowing the generation of NSFW images and
             which workers a job was sent to.

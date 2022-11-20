@@ -9,21 +9,27 @@ import {
   db,
   deletePendingJobFromDb,
   getPendingJobDetails,
+  updateAllPendingJobs,
   updatePendingJob
 } from './db'
 import { createNewImage } from './imageUtils'
 import { createPendingJob } from './pendingUtils'
 import { sleep } from './sleep'
+import {
+  CREATE_NEW_JOB_INTERVAL,
+  MAX_CONCURRENT_JOBS_ANON,
+  MAX_CONCURRENT_JOBS_USER
+} from '../constants'
 
 export const initIndexedDb = () => {}
 
 // Dynamically change fetch interval
 // (e.g., in cases where there are too many parallel requests)
-let FETCH_INTERVAL_SEC = 3000
+let FETCH_INTERVAL_SEC = CREATE_NEW_JOB_INTERVAL
 
 // Limit max jobs for anon users. If user is logged in,
 // let them run more jobs at once.
-let MAX_JOBS = 3
+let MAX_JOBS = MAX_CONCURRENT_JOBS_ANON
 interface CheckImage {
   success: boolean
   status?: string
@@ -101,7 +107,7 @@ export const createMultiImageJob = async () => {
   }
 
   if (userInfoStore.state.loggedIn) {
-    MAX_JOBS = 3
+    MAX_JOBS = MAX_CONCURRENT_JOBS_USER
   }
 
   const queuedCount = (await allPendingJobs(JobStatus.Queued)) || []
@@ -142,7 +148,7 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
     }
 
     if (success && jobId) {
-      FETCH_INTERVAL_SEC = 3000
+      FETCH_INTERVAL_SEC = CREATE_NEW_JOB_INTERVAL
 
       // Overwrite params on success.
       imageParams.jobId = jobId

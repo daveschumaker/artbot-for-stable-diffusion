@@ -1,3 +1,4 @@
+import { MAX_IMAGES_PER_JOB } from '../constants'
 import { modelInfoStore } from '../store/modelStore'
 import { CreatePendingJob, JobStatus } from '../types'
 import { uuidv4 } from './appUtils'
@@ -57,7 +58,7 @@ export const createPendingJob = async (imageParams: CreatePendingJob) => {
     return []
   }
 
-  if (isNaN(numImages) || numImages < 1 || numImages > 50) {
+  if (isNaN(numImages) || numImages < 1 || numImages > MAX_IMAGES_PER_JOB) {
     numImages = 1
   }
 
