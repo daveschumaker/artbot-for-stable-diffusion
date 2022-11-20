@@ -801,7 +801,9 @@ const AdvancedOptionsPanel = ({
           <Section>
             <SubSectionTitle>
               Number of images
-              <div className="block text-xs w-full">(1 - 100)</div>
+              <div className="block text-xs w-full">
+                (1 - {MAX_IMAGES_PER_JOB})
+              </div>
             </SubSectionTitle>
             <MaxWidth
               // @ts-ignore
@@ -821,7 +823,7 @@ const AdvancedOptionsPanel = ({
                     e.target.value > MAX_IMAGES_PER_JOB
                   ) {
                     setErrorMessage({
-                      numImages: 'Please enter a valid number between 1 and 50'
+                      numImages: `Please enter a valid number between 1 and ${MAX_IMAGES_PER_JOB}`
                     })
                   } else if (errorMessage.numImages) {
                     setErrorMessage({ numImages: null })
