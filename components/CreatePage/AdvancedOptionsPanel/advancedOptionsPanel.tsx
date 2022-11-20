@@ -656,7 +656,7 @@ const AdvancedOptionsPanel = ({
                 isSearchable={false}
               />
             </MaxWidth>
-            {modelDetails[input.models[0]]?.showcase && (
+            {modelDetails[input.models[0]]?.showcases && (
               <MaxWidth
                 // @ts-ignore
                 maxWidth="240"
@@ -664,7 +664,7 @@ const AdvancedOptionsPanel = ({
               >
                 Example:
                 <img
-                  src={modelDetails[input.models[0]]?.showcase}
+                  src={modelDetails[input.models[0]]?.showcases[0]}
                   alt="Model example"
                   width="240"
                   height="240"

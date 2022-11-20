@@ -21,7 +21,7 @@ const fetchModelDetails = async () => {
       const {
         description,
         homepage,
-        showcase,
+        showcases,
         name,
         nsfw,
         style,
@@ -34,7 +34,7 @@ const fetchModelDetails = async () => {
         modelDetails[name] = {
           description,
           homepage,
-          showcase,
+          showcases,
           name,
           nsfw,
           style,
