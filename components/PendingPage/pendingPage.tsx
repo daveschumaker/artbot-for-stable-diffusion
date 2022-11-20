@@ -2,7 +2,11 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { useState } from 'react'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
 import { JobStatus } from '../../types'
-import { db, deleteDoneFromPending } from '../../utils/db'
+import {
+  db,
+  deleteAllPendingErrors,
+  deleteDoneFromPending
+} from '../../utils/db'
 import PendingItem from '../PendingItemV2'
 import Linker from '../UI/Linker'
 import PageTitle from '../UI/PageTitle'
@@ -92,6 +96,13 @@ const PendingPage = () => {
           </TextButton>
           <TextButton onClick={() => setFilter('error')}>
             error ({error.length})
+          </TextButton>
+        </div>
+      ) : null}
+      {error.length > 2 ? (
+        <div className="mb-2">
+          <TextButton color="red" onClick={deleteAllPendingErrors}>
+            delete all errors? ({error.length})
           </TextButton>
         </div>
       ) : null}

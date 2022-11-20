@@ -201,6 +201,13 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
         })
       )
 
+      if (imageParams.parentJobId) {
+        await updateAllPendingJobs(imageParams.parentJobId, {
+          jobStatus: JobStatus.Error,
+          errorMessage: message
+        })
+      }
+
       if (imageParams.source_image) {
         // @ts-ignore
         imageParams.has_source_image = true
@@ -234,6 +241,13 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
       })
     )
 
+    if (imageParams.parentJobId) {
+      await updateAllPendingJobs(imageParams.parentJobId, {
+        jobStatus: JobStatus.Error,
+        errorMessage: 'An unknown error occurred...'
+      })
+    }
+
     console.log(`Error: Unable to send job to API`)
     console.log(err)
 
@@ -253,7 +267,9 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
       event: 'ERROR',
       action: 'SEND_TO_API_ERROR',
       data: {
-        imageParams: { ...imageParams }
+        imageParams: { ...imageParams },
+        // @ts-ignore
+        errMessage: err?.message || ''
       }
     })
 
