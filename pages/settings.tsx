@@ -1,8 +1,10 @@
 import Head from 'next/head'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
+import { useStore } from 'statery'
 import styled from 'styled-components'
-import { trackEvent } from '../api/telemetry'
 
+import useComponentState from '../hooks/useComponentState'
+import { trackEvent } from '../api/telemetry'
 import { fetchUserDetails } from '../api/userInfo'
 import { Button } from '../components/UI/Button'
 import Input from '../components/UI/Input'
@@ -10,7 +12,7 @@ import PageTitle from '../components/UI/PageTitle'
 import Select from '../components/UI/Select'
 import Tooltip from '../components/UI/Tooltip'
 import { useEffectOnce } from '../hooks/useEffectOnce'
-import { unsetUserInfo } from '../store/userStore'
+import { unsetUserInfo, userInfoStore } from '../store/userStore'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -38,43 +40,94 @@ const MaxWidth = styled.div<MaxWidthProps>`
   `}
 `
 const SettingsPage = () => {
-  const [apiKey, setApiKey] = useState('')
-  const [useTrusted, setUseTrusted] = useState('true')
-  const [useNsfw, setUseNsfw] = useState('false')
+  const userStore = useStore(userInfoStore)
+  const [componentState, setComponentState] = useComponentState({
+    apiKey: '',
+    preserveCreate: 'false',
+    runBackground: 'false',
+    useTrusted: 'true',
+    useNsfw: 'false'
+  })
 
   const handleApiInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     localStorage.setItem('apikey', e.target.value)
-    setApiKey(e.target.value)
+    setComponentState({ apiKey: e.target.value })
   }
 
   const handleSaveApiKey = async () => {
-    await fetchUserDetails(apiKey)
+    await fetchUserDetails(componentState.apiKey)
+  }
+
+  const handlePreserveCreate = (obj: any) => {
+    const { value } = obj
+    localStorage.setItem('preserveCreateSettings', value)
+    setComponentState({ preserveCreate: value })
+  }
+
+  const handleRunBackground = (obj: any) => {
+    const { value } = obj
+    localStorage.setItem('runBackground', value)
+    setComponentState({ runBackground: value })
   }
 
   const handleTrustedSelect = (obj: any) => {
     const { value } = obj
     localStorage.setItem('useTrusted', value)
-    setUseTrusted(value)
+    setComponentState({ useTrusted: value })
   }
 
   const handleNsfwSelect = (obj: any) => {
     const { value } = obj
     localStorage.setItem('allowNsfwImages', value)
-    setUseNsfw(value)
+    setComponentState({ useNsfw: value })
   }
 
   useEffect(() => {
     if (localStorage.getItem('apikey')) {
-      setApiKey(localStorage.getItem('apikey') || '')
+      setComponentState({ apiKey: localStorage.getItem('apikey') || '' })
     }
 
-    if (localStorage.getItem('useTrusted')) {
-      setUseTrusted(localStorage.getItem('useTrusted') || 'true')
+    if (localStorage.getItem('useTrusted') === 'true') {
+      setComponentState({
+        useTrusted: localStorage.getItem('useTrusted')
+      })
+    } else {
+      setComponentState({
+        useTrusted: false
+      })
     }
 
-    if (localStorage.getItem('allowNsfwImages')) {
-      setUseNsfw(localStorage.getItem('allowNsfwImages') || 'false')
+    if (localStorage.getItem('allowNsfwImages') === 'true') {
+      setComponentState({
+        useNsfw: localStorage.getItem('allowNsfwImages')
+      })
+    } else {
+      setComponentState({
+        useNsfw: false
+      })
     }
+
+    if (localStorage.getItem('preserveCreateSettings') === 'true') {
+      setComponentState({
+        preserveCreate: localStorage.getItem('preserveCreateSettings')
+      })
+    } else {
+      setComponentState({
+        preserveCreate: false
+      })
+    }
+
+    if (localStorage.getItem('runBackground') === 'true') {
+      setComponentState({
+        runBackground: localStorage.getItem('runBackground')
+      })
+    } else {
+      setComponentState({
+        runBackground: false
+      })
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffectOnce(() => {
@@ -91,6 +144,56 @@ const SettingsPage = () => {
       </Head>
       <PageTitle>Settings</PageTitle>
       <Section>
+        <SubSectionTitle>Save input on create?</SubSectionTitle>
+        <MaxWidth
+          // @ts-ignore
+          maxWidth="240"
+        >
+          <Select
+            options={[
+              { value: 'true', label: 'Yes' },
+              { value: 'false', label: 'No' }
+            ]}
+            onChange={handlePreserveCreate}
+            value={
+              componentState.preserveCreate === 'true'
+                ? { value: 'true', label: 'Yes' }
+                : { value: 'false', label: 'No' }
+            }
+          />
+          <div className="block text-xs mt-2 w-full">
+            After clicking &quot;create&quot; on the image generation page,
+            preserve all settings. To remove settings between generations, you
+            will need to click the clear button.
+          </div>
+        </MaxWidth>
+      </Section>
+      <Section>
+        <SubSectionTitle>Run in background?</SubSectionTitle>
+        <MaxWidth
+          // @ts-ignore
+          maxWidth="240"
+        >
+          <Select
+            options={[
+              { value: 'true', label: 'Yes' },
+              { value: 'false', label: 'No' }
+            ]}
+            onChange={handleRunBackground}
+            value={
+              componentState.runBackground === 'true'
+                ? { value: 'true', label: 'Yes' }
+                : { value: 'false', label: 'No' }
+            }
+          />
+          <div className="block text-xs mt-2 w-full">
+            By default, ArtBot only runs in the active browser tab in order to
+            try and help prevent your IP address from being throttled. You may
+            disable this behavior if you wish.
+          </div>
+        </MaxWidth>
+      </Section>
+      <Section>
         <SubSectionTitle>Allow NSFW images</SubSectionTitle>
         <MaxWidth
           // @ts-ignore
@@ -103,7 +206,7 @@ const SettingsPage = () => {
             ]}
             onChange={handleNsfwSelect}
             value={
-              useNsfw === 'true'
+              componentState.useNsfw === 'true'
                 ? { value: 'true', label: 'Yes' }
                 : { value: 'false', label: 'No' }
             }
@@ -127,7 +230,7 @@ const SettingsPage = () => {
               { value: 'true', label: 'Trusted Only' }
             ]}
             value={
-              useTrusted === 'true'
+              componentState.useTrusted === 'true'
                 ? { value: 'true', label: 'Trusted Only' }
                 : { value: 'false', label: 'All Workers' }
             }
@@ -152,11 +255,18 @@ const SettingsPage = () => {
           // @ts-ignore
           maxWidth="480"
         >
+          {userStore.loggedIn && (
+            <div className="block text-xs mt-2 mb-2 w-full">
+              Logged in as {userStore.username}
+              <br />
+              Kudos: <span className="text-blue-500">{userStore.kudos}</span>
+            </div>
+          )}
           <Input
             type="text"
             name="steps"
             onChange={handleApiInput}
-            value={apiKey}
+            value={componentState.apiKey}
           />
           <div className="block text-xs mt-2 w-full">
             Leave blank for an anonymous user ID. Register via{' '}
@@ -175,7 +285,7 @@ const SettingsPage = () => {
               btnType="secondary"
               onClick={() => {
                 unsetUserInfo()
-                setApiKey('')
+                setComponentState({ apiKey: '' })
                 localStorage.setItem('apikey', '')
               }}
             >

@@ -1,4 +1,5 @@
 import { IModelsDetails, setModelDetails } from '../store/modelStore'
+import { isAppActive } from '../utils/appUtils'
 
 let isPending = false
 const fetchModelDetails = async () => {
@@ -6,7 +7,7 @@ const fetchModelDetails = async () => {
     return
   }
 
-  if (document.visibilityState !== 'visible') {
+  if (!isAppActive()) {
     return
   }
 
@@ -21,6 +22,7 @@ const fetchModelDetails = async () => {
       const {
         description,
         homepage,
+        showcases,
         name,
         nsfw,
         style,
@@ -33,6 +35,7 @@ const fetchModelDetails = async () => {
         modelDetails[name] = {
           description,
           homepage,
+          showcases,
           name,
           nsfw,
           style,

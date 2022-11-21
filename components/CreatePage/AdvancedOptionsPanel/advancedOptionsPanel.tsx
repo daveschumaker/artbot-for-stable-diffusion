@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useStore } from 'statery'
@@ -21,6 +22,7 @@ import { db, getDefaultPrompt, setDefaultPrompt } from '../../../utils/db'
 import { trackEvent } from '../../../api/telemetry'
 import { modelInfoStore } from '../../../store/modelStore'
 import Checkbox from '../../UI/Checkbox'
+import { MAX_IMAGES_PER_JOB } from '../../../constants'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -654,6 +656,21 @@ const AdvancedOptionsPanel = ({
                 isSearchable={false}
               />
             </MaxWidth>
+            {modelDetails[input.models[0]]?.showcases && (
+              <MaxWidth
+                // @ts-ignore
+                maxWidth="240"
+                className="mt-2"
+              >
+                Example:
+                <img
+                  src={modelDetails[input.models[0]]?.showcases[0]}
+                  alt="Model example"
+                  width="240"
+                  height="240"
+                />
+              </MaxWidth>
+            )}
             <MaxWidth
               // @ts-ignore
               maxWidth="480"
@@ -784,7 +801,9 @@ const AdvancedOptionsPanel = ({
           <Section>
             <SubSectionTitle>
               Number of images
-              <div className="block text-xs w-full">(1 - 50)</div>
+              <div className="block text-xs w-full">
+                (1 - {MAX_IMAGES_PER_JOB})
+              </div>
             </SubSectionTitle>
             <MaxWidth
               // @ts-ignore
@@ -801,10 +820,10 @@ const AdvancedOptionsPanel = ({
                   if (
                     isNaN(e.target.value) ||
                     e.target.value < 1 ||
-                    e.target.value > 50
+                    e.target.value > MAX_IMAGES_PER_JOB
                   ) {
                     setErrorMessage({
-                      numImages: 'Please enter a valid number between 1 and 50'
+                      numImages: `Please enter a valid number between 1 and ${MAX_IMAGES_PER_JOB}`
                     })
                   } else if (errorMessage.numImages) {
                     setErrorMessage({ numImages: null })

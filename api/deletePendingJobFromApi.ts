@@ -9,11 +9,9 @@ export const deletePendingJobFromApi = async (jobId: string) => {
     await fetch(`https://stablehorde.net/api/v2/generate/status/${jobId}`, {
       method: 'DELETE'
     })
-  } catch (err) {
-    // Ah well.
-  }
-
-  return {
-    success: true
+  } finally {
+    return {
+      success: true
+    }
   }
 }

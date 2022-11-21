@@ -9,17 +9,28 @@ import {
   db,
   deletePendingJobFromDb,
   getPendingJobDetails,
+  updateAllPendingJobs,
   updatePendingJob
 } from './db'
 import { createNewImage } from './imageUtils'
 import { createPendingJob } from './pendingUtils'
 import { sleep } from './sleep'
+import {
+  CREATE_NEW_JOB_INTERVAL,
+  MAX_CONCURRENT_JOBS_ANON,
+  MAX_CONCURRENT_JOBS_USER
+} from '../constants'
+import { isAppActive } from './appUtils'
 
 export const initIndexedDb = () => {}
 
+// Dynamically change fetch interval
+// (e.g., in cases where there are too many parallel requests)
+let FETCH_INTERVAL_SEC = CREATE_NEW_JOB_INTERVAL
+
 // Limit max jobs for anon users. If user is logged in,
 // let them run more jobs at once.
-let MAX_JOBS = 3
+let MAX_JOBS = MAX_CONCURRENT_JOBS_ANON
 interface CheckImage {
   success: boolean
   status?: string
@@ -87,22 +98,17 @@ export const checkImageJob = async (jobId: string): Promise<CheckImage> => {
   }
 }
 
-let waitingForRes = false
 export const createMultiImageJob = async () => {
   if (typeof window === 'undefined') {
     return
   }
 
-  if (document.visibilityState !== 'visible') {
-    return
-  }
-
-  if (waitingForRes) {
+  if (!isAppActive()) {
     return
   }
 
   if (userInfoStore.state.loggedIn) {
-    MAX_JOBS = 3
+    MAX_JOBS = MAX_CONCURRENT_JOBS_USER
   }
 
   const queuedCount = (await allPendingJobs(JobStatus.Queued)) || []
@@ -111,9 +117,7 @@ export const createMultiImageJob = async () => {
     const [nextJobParams] = pendingJobs
 
     if (nextJobParams) {
-      waitingForRes = true
       await sendJobToApi(nextJobParams)
-      waitingForRes = false
     }
   }
 }
@@ -129,7 +133,12 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
     const { success, jobId, status, message = '' } = data || {}
 
     // Skip for now and try again soon...
-    if (!success && status === 'MAX_REQUEST_LIMIT') {
+    if (
+      !success &&
+      status === 'MAX_REQUEST_LIMIT' &&
+      FETCH_INTERVAL_SEC < 15000
+    ) {
+      FETCH_INTERVAL_SEC += 1000
       return
     }
 
@@ -140,6 +149,8 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
     }
 
     if (success && jobId) {
+      FETCH_INTERVAL_SEC = CREATE_NEW_JOB_INTERVAL
+
       // Overwrite params on success.
       imageParams.jobId = jobId
       imageParams.timestamp = Date.now()
@@ -197,6 +208,13 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
         })
       )
 
+      if (imageParams.parentJobId) {
+        await updateAllPendingJobs(imageParams.parentJobId, {
+          jobStatus: JobStatus.Error,
+          errorMessage: message
+        })
+      }
+
       if (imageParams.source_image) {
         // @ts-ignore
         imageParams.has_source_image = true
@@ -230,6 +248,13 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
       })
     )
 
+    if (imageParams.parentJobId) {
+      await updateAllPendingJobs(imageParams.parentJobId, {
+        jobStatus: JobStatus.Error,
+        errorMessage: 'An unknown error occurred...'
+      })
+    }
+
     console.log(`Error: Unable to send job to API`)
     console.log(err)
 
@@ -249,7 +274,9 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
       event: 'ERROR',
       action: 'SEND_TO_API_ERROR',
       data: {
-        imageParams: { ...imageParams }
+        imageParams: { ...imageParams },
+        // @ts-ignore
+        errMessage: err?.message || ''
       }
     })
 
@@ -356,7 +383,7 @@ export const hackyMultiJobCheck = async () => {
 export const checkCurrentJob = async (imageDetails: any) => {
   let jobDetails
 
-  if (document.visibilityState !== 'visible') {
+  if (!isAppActive()) {
     return
   }
 
@@ -465,7 +492,11 @@ export const checkCurrentJob = async (imageDetails: any) => {
   }
 }
 
-setInterval(() => {
+const createJobInterval = () => {
   createMultiImageJob()
-  // fetchJobDetails()
-}, 3000)
+  setTimeout(() => {
+    createJobInterval()
+  }, FETCH_INTERVAL_SEC)
+}
+
+createJobInterval()

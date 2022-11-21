@@ -34,6 +34,7 @@ interface ApiParams {
   prompt: string
   params: ParamsObject
   nsfw: boolean
+  censor_nsfw: boolean
   trusted_workers: boolean
   models: Array<string>
   source_image?: string
@@ -94,7 +95,8 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
       steps: Number(steps),
       karras
     },
-    nsfw: allowNsfw,
+    nsfw: allowNsfw, // Use workers that allow NSFW images
+    censor_nsfw: !allowNsfw, // Show user NSFW images if created
     trusted_workers: useTrusted,
     models
   }
@@ -159,6 +161,9 @@ export const createImage = async (
   isPending = true
   const imageParams = mapImageDetailsToApi(imageDetails)
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  const { source_image, source_mask, ...rest } = imageParams
+
   try {
     const resp = await fetch(`https://stablehorde.net/api/v2/generate/async`, {
       method: 'POST',
@@ -172,12 +177,12 @@ export const createImage = async (
     const statusCode = resp.status
     const data = await resp.json()
     const { id, message = '' }: GenerateResponse = data
+    isPending = false
 
     if (
       message === 'Only Trusted users are allowed to perform this operation'
     ) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-      const { source_image, ...rest } = imageParams
       trackEvent({
         event: 'ERROR',
         action: 'UNTRUSTED_IP',
@@ -186,7 +191,6 @@ export const createImage = async (
           imageParams: { ...rest }
         }
       })
-      isPending = false
       return {
         success: false,
         status: 'UNTRUSTED_IP',
@@ -196,18 +200,16 @@ export const createImage = async (
     }
 
     if (statusCode === 400) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-      const { source_image, ...rest } = imageParams
-
       trackEvent({
         event: 'ERROR',
         action: 'INVALID_PARAMS',
         context: 'createImageApi',
         data: {
-          imageParams: { ...rest }
+          imageParams: { ...rest },
+          message,
+          statusCode
         }
       })
-      isPending = false
       return {
         statusCode,
         success: false,
@@ -217,7 +219,16 @@ export const createImage = async (
     }
 
     if (statusCode === 401) {
-      isPending = false
+      trackEvent({
+        event: 'ERROR',
+        action: 'INVALID_API_KEY',
+        context: 'createImageApi',
+        data: {
+          imageParams: { ...rest },
+          message,
+          statusCode
+        }
+      })
       return {
         statusCode,
         success: false,
@@ -227,7 +238,16 @@ export const createImage = async (
     }
 
     if (statusCode === 403) {
-      isPending = false
+      trackEvent({
+        event: 'ERROR',
+        action: 'FORBIDDEN_REQUEST',
+        context: 'createImageApi',
+        data: {
+          imageParams: { ...rest },
+          message,
+          statusCode
+        }
+      })
       return {
         statusCode,
         success: false,
@@ -237,7 +257,6 @@ export const createImage = async (
     }
 
     if (statusCode === 429) {
-      isPending = false
       return {
         statusCode,
         success: false,
@@ -247,7 +266,6 @@ export const createImage = async (
     }
 
     if (statusCode === 503) {
-      isPending = false
       return {
         statusCode,
         success: false,
@@ -257,7 +275,6 @@ export const createImage = async (
     }
 
     if (!id) {
-      isPending = false
       return {
         statusCode,
         success: false,
@@ -266,7 +283,6 @@ export const createImage = async (
       }
     }
 
-    isPending = false
     return {
       success: true,
       jobId: id
@@ -294,13 +310,13 @@ export const createImage = async (
       }
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-    const { source_image, ...rest } = imageParams
     trackEvent({
       event: 'UNKNOWN_ERROR',
       content: 'createImageApi',
       data: {
-        imageParams: { ...rest }
+        imageParams: { ...rest },
+        // @ts-ignore
+        errMsg: err?.message || ''
       }
     })
     return {

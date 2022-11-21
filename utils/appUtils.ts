@@ -1,3 +1,15 @@
+export const isAppActive = () => {
+  if (localStorage.getItem('runBackground') === 'true') {
+    return true
+  }
+
+  if (document.visibilityState === 'visible') {
+    return true
+  }
+
+  return false
+}
+
 export const isInstalledPwa = () => {
   // @ts-ignore
   if (window?.navigator?.standalone) {

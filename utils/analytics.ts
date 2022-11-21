@@ -1,5 +1,5 @@
 import { trackEvent } from '../api/telemetry'
-import { isInstalledPwa } from './appUtils'
+import { isAppActive, isInstalledPwa } from './appUtils'
 import { imageCount } from './db'
 
 interface TrackSessionType {
@@ -9,7 +9,7 @@ interface TrackSessionType {
 }
 
 export const trackNewSession = async () => {
-  if (document.visibilityState !== 'visible') {
+  if (!isAppActive()) {
     return
   }
 

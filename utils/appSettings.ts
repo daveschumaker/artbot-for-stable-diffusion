@@ -4,6 +4,7 @@ import { fetchUserDetails } from '../api/userInfo'
 
 // @ts-ignore
 import { trackNewSession } from './analytics'
+import { isAppActive } from './appUtils'
 
 /**
  * Added "Allow NSFW Image" setting on 2022-10-11.
@@ -59,7 +60,7 @@ export const initAppSettings = async () => {
   await fetchModelDetails()
 
   setInterval(async () => {
-    if (document.visibilityState !== 'visible') {
+    if (!isAppActive()) {
       return
     }
 

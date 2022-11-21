@@ -272,6 +272,31 @@ export const updatePendingJob = async (tableId: number, updatedObject) => {
   db.pending.update(tableId, updatedObject)
 }
 
+export const updateAllPendingJobs = async (
+  parentJobId: string,
+  updateFields: any
+) => {
+  await db.pending
+    .filter((job: { parentJobId: string; jobStatus: string }) => {
+      return (
+        job.parentJobId === parentJobId && job.jobStatus === JobStatus.Waiting
+      )
+    })
+    .modify((job: any) => {
+      for (const [key, value] of Object.entries(updateFields)) {
+        job[key] = value
+      }
+    })
+}
+
+export const deleteAllPendingErrors = async () => {
+  await db.pending
+    .filter(function (job: { jobStatus: string }) {
+      return job.jobStatus === JobStatus.Error
+    })
+    .delete()
+}
+
 export const getImageDetails = async (jobId: string) => {
   return await db.completed
     .filter(function (job: { jobId: string }) {

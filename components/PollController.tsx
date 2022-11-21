@@ -2,8 +2,10 @@ import { useEffect } from 'react'
 import { useStore } from 'statery'
 
 import Toast from '../components/UI/Toast'
+import { POLL_COMPLETED_JOBS_INTERVAL } from '../constants'
 import { appInfoStore, setShowImageReadyToast } from '../store/appStore'
 import { decideNewMain, enablePingChecker, LocalStorageEvents, multiStore, onLocalStorageEvent } from '../store/multiStore'
+import { isAppActive } from '../utils/appUtils'
 import { hackyMultiJobCheck } from '../utils/imageCache'
 
 
@@ -12,11 +14,7 @@ const PollController = () => {
   const multiState = useStore(multiStore)
 
   const { newImageReady, showImageReadyToast } = appState
-
-
   
-  
-
   const handleCloseToast = () => {
     // If Toast is closed automatically (or via X), don't
     // clear newImageJobId so we can keep new image indicator
@@ -42,12 +40,12 @@ const PollController = () => {
     
     const interval = setInterval(async () => {
       // If user has multiple tabs open, prevent firing off numerous API calls.
-      if (document.visibilityState !== 'visible') {
+      if (!isAppActive()) {
         return
       }
 
       checkForCompletedJob()
-    }, 2000)
+    }, POLL_COMPLETED_JOBS_INTERVAL)
 
     return () => clearInterval(interval)
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -19,7 +19,6 @@
 release.tar.gz
 
 # misc
-build_info.json
 .DS_Store
 *.pem
 
