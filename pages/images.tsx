@@ -174,7 +174,8 @@ const ImagesPage = () => {
       event: 'BULK_DELETE_CLICK',
       context: 'ImagesPage',
       data: {
-        numImages: componentState.deleteSelection.length
+        totalImages: componentState.totalImages,
+        numImagesDeleted: componentState.deleteSelection.length
       }
     })
 
@@ -489,6 +490,10 @@ const ImagesPage = () => {
 
   const countDescriptor = () => {
     let string = ``
+
+    if (componentState.filterMode === 'model') {
+      string = `"${router?.query?.model || ''}" `
+    }
 
     if (componentState.filterMode === 'favorited') {
       string = 'favorite '

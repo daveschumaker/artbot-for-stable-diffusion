@@ -129,6 +129,8 @@ export const countFilterCompleted = async ({
       if (entry?.model && entry?.model?.indexOf(model) >= 0) {
         return true
       }
+
+      return false
     }
 
     if (filterType === 'favorited') {
@@ -179,6 +181,8 @@ export const filterCompletedByModel = async (model: string) => {
       if (entry?.model && entry?.model?.indexOf(model) >= 0) {
         return true
       }
+
+      return false
     })
     .count()
 }
@@ -190,15 +194,18 @@ export const filterCompletedJobs = async ({
   filterType = 'favorited',
   model = ''
 } = {}) => {
+  console.log(`model?`, model)
   const filterFunc = (entry: any) => {
     if (filterType === 'model') {
-      if (entry?.models && entry?.models?.indexOf(model) >= 0) {
+      if (entry.models && entry?.models?.indexOf(model) >= 0) {
         return true
       }
 
-      if (entry?.model && entry?.model?.indexOf(model) >= 0) {
+      if (entry.model && entry?.model?.indexOf(model) >= 0) {
         return true
       }
+
+      return false
     }
 
     if (filterType === 'favorited') {

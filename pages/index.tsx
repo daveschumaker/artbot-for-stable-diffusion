@@ -287,7 +287,7 @@ const Home: NextPage = () => {
       context: '/pages/index'
     })
 
-    if (!editMode && getInputCache()) {
+    if (!editMode && !loadModel && getInputCache()) {
       setInput({ ...getInputCache() })
     } else if (editMode) {
       setInput({ ...loadEditPrompt() })
