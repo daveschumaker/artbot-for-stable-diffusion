@@ -135,13 +135,14 @@ const ImagesPage = () => {
 
     if (componentState.filterMode !== 'all') {
       count = await countFilterCompleted({
-        filterType: componentState.filterMode
+        filterType: componentState.filterMode,
+        model: router.query.model as string
       })
     } else {
       count = await imageCount()
     }
     setComponentState({ totalImages: count })
-  }, [componentState.filterMode, setComponentState])
+  }, [componentState.filterMode, router.query.model, setComponentState])
 
   const fetchImages = useCallback(async () => {
     const offset = Number(router.query.offset) || 0
@@ -154,7 +155,8 @@ const ImagesPage = () => {
       data = await filterCompletedJobs({
         offset,
         sort,
-        filterType: componentState.filterMode
+        filterType: componentState.filterMode,
+        model: router.query.model as string
       })
     }
     await getImageCount()
@@ -162,6 +164,7 @@ const ImagesPage = () => {
   }, [
     componentState.filterMode,
     getImageCount,
+    router.query.model,
     router.query.offset,
     setComponentState
   ])
@@ -469,6 +472,8 @@ const ImagesPage = () => {
     }
 
     // @ts-ignore
+    if (router.query.model) updateObject.filterMode = 'model'
+    // @ts-ignore
     if (router.query.filter) updateObject.filterMode = router.query.filter
     // @ts-ignore
     if (router.query.offset) updateObject.offset = Number(router.query.offset)
@@ -569,6 +574,7 @@ const ImagesPage = () => {
 
                       const newQuery = Object.assign({}, router.query)
                       delete newQuery.filter
+                      delete newQuery.model
                       router.push(
                         //@ts-ignore
                         `?${new URLSearchParams(newQuery).toString()}`

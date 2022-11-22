@@ -47,6 +47,8 @@ const fetchAvailableModels = async () => {
         return true
       })
     }
+  } catch (err) {
+    console.log(`Warning: Unable to fetch available models. API offline?`)
   } finally {
     isPending = false
     setAvailableModels(availableModels)

@@ -4,11 +4,12 @@ import styled from 'styled-components'
 interface Props {
   color?: string
   children: React.ReactNode
+  disabled?: boolean
   onClick(): void
   tabIndex?: number
 }
 
-const StyledTextButton = styled.div`
+const StyledTextButton = styled.div<Props>`
   cursor: pointer;
   color: ${(props) => props.color || props.theme.navLinkActive};
   font-size: 14px;
@@ -29,11 +30,28 @@ const StyledTextButton = styled.div`
   @media (min-width: 640px) {
     font-size: 16px;
   }
+
+  ${(props) =>
+    props.disabled === true &&
+    `
+    color: gray;
+  `}
 `
 
-const TextButton = ({ children, color, onClick, tabIndex }: Props) => {
+const TextButton = ({
+  children,
+  color,
+  disabled = false,
+  onClick,
+  tabIndex
+}: Props) => {
   return (
-    <StyledTextButton color={color} onClick={onClick} tabIndex={tabIndex}>
+    <StyledTextButton
+      color={color}
+      disabled={disabled}
+      onClick={disabled ? () => {} : onClick}
+      tabIndex={tabIndex}
+    >
       [ {children} ]
     </StyledTextButton>
   )

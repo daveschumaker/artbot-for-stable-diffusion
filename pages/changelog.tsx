@@ -87,6 +87,26 @@ const Changelog = () => {
         </LinkButton>
       </div>
       <Section>
+        <SubSectionTitle>2022.11.22</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Feature: New <Linker href="/info">info tab</Linker> with stats and
+            information about all models currently available via Stable Horde.
+            See which models are in high demand, how many workers are currently
+            serving the model and how many images you&apos;ve generated with
+            each model.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
+        <SubSectionTitle>2022.11.21</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            MILESTONE: 800,000 images have been created with ArtBot!
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.11.20</SubSectionTitle>
         <StyledUl>
           <StyledLi>

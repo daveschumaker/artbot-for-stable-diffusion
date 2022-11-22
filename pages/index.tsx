@@ -61,9 +61,14 @@ const defaultState: any = {
 const Home: NextPage = () => {
   const router = useRouter()
   const { query } = router
+  const loadModel = query.model
   const editMode = query.edit
 
   let initialState: any = defaultState
+
+  if (loadModel) {
+    initialState.models = [loadModel]
+  }
 
   if (editMode) {
     initialState = {

@@ -135,6 +135,8 @@ const ImageDetails = ({
     [pending, router]
   )
 
+  const modelName = imageDetails.models[0] || imageDetails.model
+
   return (
     <div className="mt-2 text-left">
       {showDeleteModal && (
@@ -186,7 +188,18 @@ const ImageDetails = ({
             </li>
             <li>Sampler: {imageDetails.sampler}</li>
             <li>Karras: {imageDetails.karras ? 'true' : 'false'}</li>
-            <li>Model: {imageDetails.models[0] || imageDetails.model || ''}</li>
+            {modelName ? (
+              <li>
+                Model:{' '}
+                <Linker
+                  href={`/images?model=${modelName}`}
+                  passHref
+                  className="text-cyan-500"
+                >
+                  {modelName}
+                </Linker>
+              </li>
+            ) : null}
             <li>Seed: {imageDetails.seed}</li>
             <li>Steps: {imageDetails.steps}</li>
             <li>cfg scale: {imageDetails.cfg_scale}</li>

@@ -640,6 +640,9 @@ const AdvancedOptionsPanel = ({
                 paranthesis indicate number of works. Generally, these models
                 will generate images quicker.
               </Tooltip>
+              <div className="text-xs">
+                <Linker href="/info">[ View detailed model info ]</Linker>
+              </div>
             </SubSectionTitle>
             <MaxWidth
               // @ts-ignore

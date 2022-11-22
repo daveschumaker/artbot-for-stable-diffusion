@@ -12,6 +12,7 @@ import {
 
 import IconCreate from '../icons/CreateIcon'
 import HourglassIcon from '../icons/HourglassIcon'
+import InfoIcon from '../icons/InfoIcon'
 import PhotoIcon from '../icons/PhotoIcon'
 import PhotoPlusIcon from '../icons/PhotoPlusIcon'
 import SettingsIcon from '../icons/SettingsIcon'
@@ -119,6 +120,12 @@ export default function NavBar() {
               <PhotoIcon className="inline-block mr-[2-px] pb-1" />
             )}
             Images
+          </StyledLi>
+        </Link>
+        <Link href="/info" passHref>
+          <StyledLi active={isActiveRoute('/info')}>
+            <InfoIcon className="inline-block mr-1 pb-1" />
+            Info
           </StyledLi>
         </Link>
         <Link href="/settings" passHref>

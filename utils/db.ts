@@ -117,9 +117,14 @@ export const countCompletedJobs = async () => {
 }
 
 export const countFilterCompleted = async ({
-  filterType = 'favorited'
+  filterType = 'favorited',
+  model = ''
 } = {}) => {
   const filterFunc = (entry: any) => {
+    if (filterType === 'model') {
+      return entry.models.indexOf(model) >= 0
+    }
+
     if (filterType === 'favorited') {
       return entry.favorited === true
     }
@@ -157,13 +162,34 @@ export const countFilterCompleted = async ({
     .count()
 }
 
+export const filterCompletedByModel = async (model: string) => {
+  return await db?.completed
+    ?.orderBy('timestamp')
+    .filter(function (entry: any) {
+      return entry.models.indexOf(model) >= 0
+    })
+    .count()
+  // return await db?.completed
+  //   ?.orderBy('timestamp')
+  //   .filter(function (entry: any) {
+  //     return entry.models.indexOf(model) >= 0
+  //   })
+  //   .reverse()
+  //   .toArray()
+}
+
 export const filterCompletedJobs = async ({
   limit = 100,
   offset = 0,
   sort = 'new',
-  filterType = 'favorited'
+  filterType = 'favorited',
+  model = ''
 } = {}) => {
   const filterFunc = (entry: any) => {
+    if (filterType === 'model') {
+      return entry.models.indexOf(model) >= 0
+    }
+
     if (filterType === 'favorited') {
       return entry.favorited === true
     }

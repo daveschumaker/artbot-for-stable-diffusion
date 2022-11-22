@@ -45,6 +45,8 @@ const fetchModelDetails = async () => {
         }
       }
     }
+  } catch (err) {
+    console.log(`Warning: Unable to fetch model details. API offline?`)
   } finally {
     isPending = false
     setModelDetails(modelDetails)

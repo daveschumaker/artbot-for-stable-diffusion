@@ -26,6 +26,8 @@ export const fetchUserDetails = async (apikey: string) => {
       trusted,
       username
     })
+  } catch (err) {
+    console.log(`Warning: Unable to fetch user details. API offline?`)
   } finally {
     isPending = false
     return {

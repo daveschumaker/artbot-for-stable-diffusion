@@ -65,7 +65,7 @@ const AboutPage = () => {
           src="/artbot/painting_bot.png"
           alt="painting of a robot painting robots"
         />
-        <HelpfulLinks className="mb-2">
+        <HelpfulLinks className="mb-4 flex-wrap text-sm md:text-md">
           <Linker href="https://www.buymeacoffee.com/davely" target="_blank">
             Buy me a coffee
           </Linker>
@@ -74,7 +74,8 @@ const AboutPage = () => {
             Contact / Feedback
           </LinkButton>
           |<Linker href="/changelog">Changelog</Linker>|
-          <Linker href="/faq">FAQ</Linker>
+          <Linker href="/faq">FAQ</Linker>|
+          <Linker href="/info">General Info</Linker>
         </HelpfulLinks>
         <Text>
           ArtBot is an unofficial front-end web client designed for interacting
