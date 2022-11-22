@@ -194,7 +194,6 @@ export const filterCompletedJobs = async ({
   filterType = 'favorited',
   model = ''
 } = {}) => {
-  console.log(`model?`, model)
   const filterFunc = (entry: any) => {
     if (filterType === 'model') {
       if (entry.models && entry?.models?.indexOf(model) >= 0) {
