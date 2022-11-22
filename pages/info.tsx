@@ -84,8 +84,12 @@ const InfoPage = () => {
     const count: IModelCount = {}
 
     for (const model in modelState.modelDetails) {
-      const data: number = await filterCompletedByModel(model)
-      count[model] = data
+      try {
+        const data: number = await filterCompletedByModel(model)
+        count[model] = data
+      } catch (err) {
+        count[model] = 0
+      }
     }
 
     setComponentState({

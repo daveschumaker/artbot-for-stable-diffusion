@@ -122,7 +122,13 @@ export const countFilterCompleted = async ({
 } = {}) => {
   const filterFunc = (entry: any) => {
     if (filterType === 'model') {
-      return entry.models.indexOf(model) >= 0
+      if (entry?.models && entry?.models?.indexOf(model) >= 0) {
+        return true
+      }
+
+      if (entry?.model && entry?.model?.indexOf(model) >= 0) {
+        return true
+      }
     }
 
     if (filterType === 'favorited') {
@@ -166,16 +172,15 @@ export const filterCompletedByModel = async (model: string) => {
   return await db?.completed
     ?.orderBy('timestamp')
     .filter(function (entry: any) {
-      return entry.models.indexOf(model) >= 0
+      if (entry?.models && entry?.models?.indexOf(model) >= 0) {
+        return true
+      }
+
+      if (entry?.model && entry?.model?.indexOf(model) >= 0) {
+        return true
+      }
     })
     .count()
-  // return await db?.completed
-  //   ?.orderBy('timestamp')
-  //   .filter(function (entry: any) {
-  //     return entry.models.indexOf(model) >= 0
-  //   })
-  //   .reverse()
-  //   .toArray()
 }
 
 export const filterCompletedJobs = async ({
@@ -187,7 +192,13 @@ export const filterCompletedJobs = async ({
 } = {}) => {
   const filterFunc = (entry: any) => {
     if (filterType === 'model') {
-      return entry.models.indexOf(model) >= 0
+      if (entry?.models && entry?.models?.indexOf(model) >= 0) {
+        return true
+      }
+
+      if (entry?.model && entry?.model?.indexOf(model) >= 0) {
+        return true
+      }
     }
 
     if (filterType === 'favorited') {
