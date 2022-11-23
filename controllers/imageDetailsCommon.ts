@@ -1,5 +1,7 @@
+import RerollImageRequest from '../models/RerollImageRequest'
 import { cloneFromImage, setI2iUploaded } from '../store/canvasStore'
 import { createImageJob } from '../utils/imageCache'
+import { createPendingRerollJob } from '../utils/pendingUtils'
 import { savePrompt, SourceProcessing } from '../utils/promptUtils'
 
 export const copyEditPrompt = (imageDetails: any) => {
@@ -111,25 +113,27 @@ export const downloadImage = async (imageDetails: any) => {
 }
 
 export const rerollImage = async (imageDetails: any) => {
-  const cleanParams = Object.assign({}, imageDetails)
+  const rerollImageJob = new RerollImageRequest(imageDetails)
+  const res = await createPendingRerollJob(rerollImageJob)
 
-  delete cleanParams.base64String
-  delete cleanParams.id
-  delete cleanParams.jobId
-  delete cleanParams.queue_position
-  delete cleanParams.seed
-  delete cleanParams.success
-  delete cleanParams.timestamp
-  delete cleanParams.wait_time
-  delete cleanParams.initWaitTime
-  delete cleanParams.jobTimestamp
-  delete cleanParams.numImages
-  delete cleanParams.favorited
-  delete cleanParams.useAllModels
+  // const cleanParams = Object.assign({}, imageDetails)
+  // delete cleanParams.base64String
+  // delete cleanParams.id
+  // delete cleanParams.jobId
+  // delete cleanParams.queue_position
+  // delete cleanParams.seed
+  // delete cleanParams.success
+  // delete cleanParams.timestamp
+  // delete cleanParams.wait_time
+  // delete cleanParams.initWaitTime
+  // delete cleanParams.jobTimestamp
+  // delete cleanParams.numImages
+  // delete cleanParams.favorited
+  // delete cleanParams.useAllModels
 
-  const res = await createImageJob({
-    ...cleanParams
-  })
+  // const res = await createImageJob({
+  //   ...rerollImageJob
+  // })
 
   if (res?.success) {
     return {

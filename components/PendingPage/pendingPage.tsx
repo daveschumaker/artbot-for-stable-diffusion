@@ -115,8 +115,8 @@ const PendingPage = () => {
         </div>
       )}
       {sorted.length > 0 &&
-        sorted.map((job: { jobId: string; prompt: string }) => {
-          return <PendingItem jobId={job.jobId} key={job.jobId} />
+        sorted.map((job: { jobId: string; prompt: string }, i) => {
+          return <PendingItem jobId={job.jobId} key={job.jobId + `_${i}`} />
         })}
     </div>
   )

@@ -1,3 +1,17 @@
+export enum ArtBotJobTypes {
+  Text2Img = 'Text2Img',
+  Img2Img = 'Img2Img',
+  Drawing = 'Drawing',
+  Inpainting = 'Inpainting',
+  Upscale = 'Upscale',
+  Reroll = 'Reroll',
+  CopyPrompt = 'CopiedPrompt',
+  SharedPrompt = 'SharedPrompt'
+}
+
+export enum Common {
+  Empty = ''
+}
 export interface CreateImageJob {
   id: number
   jobTimestamp?: number
@@ -83,6 +97,33 @@ export enum JobStatus {
   Processing = 'processing', // image has been sent to a worker and is in-process
   Done = 'done', // finished
   Error = 'error' // something unfortunate has happened
+}
+
+export interface IBase64String {
+  base64String: string
+  height: number
+  width: number
+}
+
+export interface ICanvas {
+  cached: boolean
+  canvasRef: any
+  imageLayerRef: any
+  drawLayerRef: any
+  visibleCanvas: any
+  height: any
+  width: any
+}
+
+export enum ImageMimeType {
+  Png = 'image/png',
+  WebP = 'image/webp'
+}
+
+export interface ImageSize {
+  orientation: string
+  height: number
+  width: number
 }
 
 export interface KeypressEvent {

@@ -1,14 +1,6 @@
 // Cache data related to FabricJS / canvas
 
-interface ICanvas {
-  cached: boolean
-  canvasRef: any
-  imageLayerRef: any
-  drawLayerRef: any
-  visibleCanvas: any
-  height: any
-  width: any
-}
+import { IBase64String, ICanvas } from '../types'
 
 let i2iCanvas: ICanvas = {
   cached: false,
@@ -27,12 +19,6 @@ export const getCanvasStore = () => {
 export const storeCanvas = (canvasType: string, data: any) => {
   i2iCanvas[canvasType as keyof ICanvas] = data
   i2iCanvas.cached = true
-}
-
-interface IBase64String {
-  base64String: string
-  height: number
-  width: number
 }
 
 let i2iBase64String: IBase64String = {

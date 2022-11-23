@@ -1,20 +1,14 @@
 import { MAX_IMAGES_PER_JOB } from '../constants'
+import CreateImageRequest from '../models/CreateImageRequest'
+import RerollImageRequest from '../models/RerollImageRequest'
 import { modelInfoStore } from '../store/modelStore'
-import { CreatePendingJob, JobStatus } from '../types'
 import { uuidv4 } from './appUtils'
 import { db } from './db'
-import { orientationDetails, randomSampler } from './imageUtils'
-import { SourceProcessing } from './promptUtils'
 
-interface ImageSize {
-  orientation: string
-  height: number
-  width: number
-}
-
-const cloneImageParams = (imageParams: CreatePendingJob) => {
+const cloneImageParams = (
+  imageParams: CreateImageRequest | RerollImageRequest
+) => {
   const clonedParams = Object.assign({}, imageParams)
-  delete clonedParams.id
 
   // Create a temporary uuid for easier lookups.
   // Will be replaced later when job is accepted
@@ -22,35 +16,26 @@ const cloneImageParams = (imageParams: CreatePendingJob) => {
   clonedParams.jobId = uuidv4()
   clonedParams.timestamp = Date.now()
 
-  if (clonedParams.sampler === 'random') {
-    const isImg2Img =
-      !clonedParams.img2img &&
-      clonedParams.source_processing !== SourceProcessing.Img2Img &&
-      clonedParams.source_processing !== SourceProcessing.InPainting
-    clonedParams.sampler = randomSampler(clonedParams.steps, isImg2Img)
-  }
-
-  const imageSize: ImageSize = orientationDetails(
-    clonedParams.orientationType || 'square',
-    clonedParams.height,
-    clonedParams.width
-  )
-
-  clonedParams.orientation = imageSize.orientation
-  clonedParams.height = imageSize.height
-  clonedParams.width = imageSize.width
-
-  if (clonedParams.models[0] === 'random') {
-    const currentModels = modelInfoStore.state.availableModelNames
-    const randomModel =
-      currentModels[Math.floor(Math.random() * currentModels.length)]
-    clonedParams.models = [randomModel]
-  }
-
   return clonedParams
 }
 
-export const createPendingJob = async (imageParams: CreatePendingJob) => {
+export const createPendingRerollJob = async (
+  imageParams: RerollImageRequest
+) => {
+  const clonedParams = cloneImageParams(imageParams)
+
+  try {
+    await db.pending.add({
+      ...clonedParams
+    })
+  } finally {
+    return {
+      success: true
+    }
+  }
+}
+
+export const createPendingJob = async (imageParams: CreateImageRequest) => {
   const { prompt } = imageParams
   let { numImages = 1 } = imageParams
 
@@ -62,22 +47,6 @@ export const createPendingJob = async (imageParams: CreatePendingJob) => {
     numImages = 1
   }
 
-  // Used in tracking groups of related images over multiple
-  // generation events. e.g., if someone makes a bunch of photos of robots
-  // and then comes back a few days later to pick up where they left off.
-  // All those images should logically be grouped together.
-  if (!imageParams.parentJobId) {
-    imageParams.parentJobId = uuidv4()
-  }
-
-  // Used in tracking groups of images created per generation event.
-  // e.g., if someone makes a group of 20 photos of robots, they will have the
-  // same timestamp. Then later come back and make another group, they
-  // will have a different timestamp.
-  imageParams.jobTimestamp = Date.now()
-  imageParams.groupJobId = uuidv4()
-
-  imageParams.jobStatus = JobStatus.Waiting
   let clonedParams
 
   if (imageParams.useAllModels) {
@@ -99,8 +68,10 @@ export const createPendingJob = async (imageParams: CreatePendingJob) => {
         await db.pending.add({
           ...clonedParams
         })
-      } catch (err) {
-        // Ah well
+      } finally {
+        return {
+          success: true
+        }
       }
     }
   } else {
@@ -114,8 +85,10 @@ export const createPendingJob = async (imageParams: CreatePendingJob) => {
         await db.pending.add({
           ...clonedParams
         })
-      } catch (err) {
-        // Ah well
+      } finally {
+        return {
+          success: true
+        }
       }
     }
   }

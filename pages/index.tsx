@@ -23,6 +23,7 @@ import {
 } from '../store/inputCache'
 import { useEffectOnce } from '../hooks/useEffectOnce'
 import { getDefaultPrompt } from '../utils/db'
+import CreateImageRequest from '../models/CreateImageRequest'
 
 interface InputTarget {
   name: string
@@ -175,6 +176,9 @@ const Home: NextPage = () => {
       ...input
     }
 
+    console.log(`....`)
+    console.log(new CreateImageRequest(input))
+
     if (getCanvasStore().cached && getCanvasStore().canvasRef) {
       imageJobData.canvasStore = { ...getCanvasStore() }
     }
@@ -208,7 +212,7 @@ const Home: NextPage = () => {
       }
     })
 
-    await createImageJob(imageJobData)
+    await createImageJob(new CreateImageRequest(input))
 
     if (localStorage.getItem('preserveCreateSettings') !== 'true') {
       clearInputCache()

@@ -3,7 +3,7 @@ import { checkImageStatus } from '../api/checkImageStatus'
 import { getFinishedImage } from '../api/getFinishedImage'
 import { trackEvent, trackGaEvent } from '../api/telemetry'
 import { setNewImageReady, setShowImageReadyToast } from '../store/appStore'
-import { CreateImageJob, CreatePendingJob, JobStatus } from '../types'
+import { CreateImageJob, JobStatus } from '../types'
 import {
   allPendingJobs,
   db,
@@ -21,6 +21,7 @@ import {
   MAX_CONCURRENT_JOBS_USER
 } from '../constants'
 import { isAppActive } from './appUtils'
+import CreateImageRequest from '../models/CreateImageRequest'
 
 export const initIndexedDb = () => {}
 
@@ -287,8 +288,8 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
   }
 }
 
-export const createImageJob = async (imageParams: CreatePendingJob) => {
-  await createPendingJob(imageParams)
+export const createImageJob = async (newImageRequest: CreateImageRequest) => {
+  await createPendingJob(newImageRequest)
 
   return {
     success: true
