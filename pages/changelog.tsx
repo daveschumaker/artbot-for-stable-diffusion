@@ -87,6 +87,20 @@ const Changelog = () => {
         </LinkButton>
       </div>
       <Section>
+        <SubSectionTitle>2022.11.23</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            MILESTONE: 900,000 images have been created with ArtBot!
+          </StyledLi>
+          <StyledLi>
+            Refactored some things related to fetching model details to better
+            cache data and hopefully make the{' '}
+            <Linker href="/info">info page</Linker> snappier.
+          </StyledLi>
+          <StyledLi>Minor: Update various packages.</StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.11.22</SubSectionTitle>
         <StyledUl>
           <StyledLi>
