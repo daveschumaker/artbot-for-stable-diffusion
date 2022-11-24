@@ -637,7 +637,7 @@ const AdvancedOptionsPanel = ({
               Model
               <Tooltip width="240px">
                 Models currently available within the horde. Numbers in
-                paranthesis indicate number of works. Generally, these models
+                parentheses indicate number of works. Generally, these models
                 will generate images quicker.
               </Tooltip>
               <div className="text-xs">
@@ -646,7 +646,7 @@ const AdvancedOptionsPanel = ({
             </SubSectionTitle>
             <MaxWidth
               // @ts-ignore
-              maxWidth="240"
+              maxWidth="480"
             >
               <SelectComponent
                 menuPlacement={'top'}
@@ -785,7 +785,7 @@ const AdvancedOptionsPanel = ({
               upscaling.
             </Tooltip>
           </SubSectionTitle>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 items-start">
             <Checkbox
               label={`GFPGAN (improves faces)`}
               value={getPostProcessing('GFPGAN')}
