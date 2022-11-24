@@ -67,7 +67,7 @@ const Home: NextPage = () => {
 
   let initialState: any = defaultState
 
-  if (loadModel === 'stable_diffusion_2') {
+  if (loadModel === 'stable_diffusion_2.0') {
     initialState.models = [loadModel]
     initialState.sampler = 'dpmsolver'
   } else if (loadModel) {
