@@ -176,9 +176,6 @@ const Home: NextPage = () => {
       ...input
     }
 
-    console.log(`....`)
-    console.log(new CreateImageRequest(input))
-
     if (getCanvasStore().cached && getCanvasStore().canvasRef) {
       imageJobData.canvasStore = { ...getCanvasStore() }
     }

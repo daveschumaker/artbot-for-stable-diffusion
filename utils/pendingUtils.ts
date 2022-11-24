@@ -49,7 +49,22 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
 
   let clonedParams
 
-  if (imageParams.useAllModels) {
+  if (imageParams.models.length > 1) {
+    imageParams.models.forEach(async (model) => {
+      clonedParams = cloneImageParams(imageParams)
+      clonedParams.models = [model]
+
+      try {
+        await db.pending.add({
+          ...clonedParams
+        })
+      } finally {
+        return {
+          success: true
+        }
+      }
+    })
+  } else if (imageParams.useAllModels) {
     imageParams.numImages = 1
     const models = modelInfoStore.state.availableModels
 

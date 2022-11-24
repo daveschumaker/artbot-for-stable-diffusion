@@ -155,15 +155,18 @@ const AdvancedOptionsPanel = ({
   const { loggedIn } = userState
 
   const [errorMessage, setErrorMessage, hasError] = useErrorMessage()
+  const [showMultiModel, setShowMultiModel] = useState(false)
   const [showNegPane, setShowNegPane] = useState(false)
 
   const orientationValue = orientationOptions.filter((option) => {
     return input.orientationType === option.value
   })[0]
+
   // @ts-ignore
   const modelsValue = modelerOptions(availableModels).filter((option) => {
-    return input.models[0] === option.value
-  })[0]
+    return input?.models?.indexOf(option.value) >= 0
+  })
+
   const samplerValue = samplerOptions(input).filter((option) => {
     return input.sampler === option.value
   })[0]
@@ -631,7 +634,8 @@ const AdvancedOptionsPanel = ({
       </Section>
       {input.source_processing !==
         (SourceProcessing.InPainting || SourceProcessing.OutPaiting) &&
-        !input.useAllModels && (
+        !input.useAllModels &&
+        !showMultiModel && (
           <Section>
             <SubSectionTitle>
               Model
@@ -655,6 +659,7 @@ const AdvancedOptionsPanel = ({
                 onChange={(obj: { value: string; label: string }) => {
                   setInput({ models: [obj.value] })
                 }}
+                // @ts-ignore
                 value={modelsValue}
                 isSearchable={false}
               />
@@ -734,29 +739,93 @@ const AdvancedOptionsPanel = ({
             </MaxWidth>
           </Section>
         )}
-      <Section>
-        <SubSectionTitle>
-          Use all available models ({availableModels.length})
-          <Tooltip left="-140" width="240px">
-            Automatically generate an image for each model currently available
-            on Stable Horde
-          </Tooltip>
-        </SubSectionTitle>
-        <Switch
-          onChange={() => {
-            if (!input.useAllModels) {
-              trackEvent({
-                event: 'USE_ALL_MODELS_CLICK',
-                context: '/pages/index'
-              })
-              setInput({ useAllModels: true, post_processing: [] })
-            } else {
-              setInput({ useAllModels: false })
-            }
-          }}
-          checked={input.useAllModels}
-        />
-      </Section>
+      {!input.useAllModels ? (
+        <Section>
+          <SubSectionTitle>
+            Multi-model select
+            <Tooltip left="-140" width="240px">
+              Pick from multiple models that you might prefer.
+            </Tooltip>
+          </SubSectionTitle>
+          <Switch
+            onChange={() => {
+              if (!showMultiModel) {
+                trackEvent({
+                  event: 'USE_MULTI_MODEL_SELECT',
+                  context: '/pages/index'
+                })
+                setShowMultiModel(true)
+              } else {
+                setShowMultiModel(false)
+              }
+            }}
+            checked={showMultiModel}
+          />
+        </Section>
+      ) : null}
+      {showMultiModel ? (
+        <Section>
+          <SubSectionTitle>
+            Select Models
+            <Tooltip width="240px">
+              Models currently available within the horde. Numbers in
+              parentheses indicate number of works. Generally, these models will
+              generate images quicker.
+            </Tooltip>
+            <div className="text-xs">
+              <Linker href="/info">[ View detailed model info ]</Linker>
+            </div>
+          </SubSectionTitle>
+          <MaxWidth
+            // @ts-ignore
+            maxWidth="480"
+          >
+            <SelectComponent
+              isMulti
+              menuPlacement={'top'}
+              //@ts-ignore
+              options={modelerOptions(availableModels)}
+              onChange={(obj: Array<{ value: string; label: string }>) => {
+                const modelArray: Array<string> = []
+
+                obj.forEach((model: { value: string; label: string }) => {
+                  modelArray.push(model.value)
+                })
+
+                setInput({ models: [...modelArray] })
+              }}
+              // @ts-ignore
+              value={modelsValue}
+              isSearchable={false}
+            />
+          </MaxWidth>
+        </Section>
+      ) : null}
+      {!showMultiModel ? (
+        <Section>
+          <SubSectionTitle>
+            Use all available models ({availableModels.length})
+            <Tooltip left="-140" width="240px">
+              Automatically generate an image for each model currently available
+              on Stable Horde
+            </Tooltip>
+          </SubSectionTitle>
+          <Switch
+            onChange={() => {
+              if (!input.useAllModels) {
+                trackEvent({
+                  event: 'USE_ALL_MODELS_CLICK',
+                  context: '/pages/index'
+                })
+                setInput({ useAllModels: true, post_processing: [] })
+              } else {
+                setInput({ useAllModels: false })
+              }
+            }}
+            checked={input.useAllModels}
+          />
+        </Section>
+      ) : null}
       <Section>
         <SubSectionTitle>
           Enable karras
@@ -800,7 +869,8 @@ const AdvancedOptionsPanel = ({
         </Section>
       )}
       {!input.useAllModels &&
-        input.post_processing.indexOf('RealESRGAN_x4plus') === -1 && (
+        input.post_processing.indexOf('RealESRGAN_x4plus') === -1 &&
+        !showMultiModel && (
           <Section>
             <SubSectionTitle>
               Number of images
