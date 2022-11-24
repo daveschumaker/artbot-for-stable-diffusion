@@ -205,7 +205,7 @@ const PendingItem = ({ jobId }) => {
   }
 
   const jobStalled =
-    elapsedTimeSec > 2.5 * jobDetails.initWaitTime &&
+    elapsedTimeSec > 4 * jobDetails.initWaitTime &&
     jobDetails.jobStatus !== JobStatus.Done &&
     remainingTime < 3
 

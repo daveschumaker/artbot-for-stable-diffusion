@@ -247,10 +247,18 @@ const Home: NextPage = () => {
         setInput({ orientationType: localStorage.getItem('orientation') })
       }
 
-      if (localStorage.getItem('sampler')) {
+      if (
+        loadModel !== 'stable_diffusion_2.0' &&
+        localStorage.getItem('sampler')
+      ) {
         const valid = validSampler(localStorage.getItem('sampler') || '')
         setInput({
           sampler: valid ? localStorage.getItem('sampler') : 'k_euler_a'
+        })
+      } else if (loadModel === 'stable_diffusion_2.0') {
+        setInput({
+          models: ['stable_diffusion_2.0'],
+          sampler: 'dpmsolver'
         })
       }
 

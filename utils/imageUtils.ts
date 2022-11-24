@@ -115,8 +115,8 @@ export const orientationDetails = (
     },
     square: {
       orientation: 'square',
-      height: 512,
-      width: 512
+      height: 768,
+      width: 768
     },
     'phone-bg': {
       orientation: 'phone-bg',
