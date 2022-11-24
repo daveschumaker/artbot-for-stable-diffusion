@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import Head from 'next/head'
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback } from 'react'
 import { useStore } from 'statery'
 import { useRouter } from 'next/router'
 
@@ -11,19 +11,19 @@ import TextButton from '../components/UI/TextButton'
 import useComponentState from '../hooks/useComponentState'
 import { useEffectOnce } from '../hooks/useEffectOnce'
 import { modelInfoStore } from '../store/modelStore'
-import { filterCompletedByModel } from '../utils/db'
+// import { filterCompletedByModel } from '../utils/db'
 import SpinnerV2 from '../components/Spinner'
 
-interface IModelCount {
-  [key: string]: number
-}
+// interface IModelCount {
+//   [key: string]: number
+// }
 
 const InfoPage = () => {
   const router = useRouter()
   const modelState = useStore(modelInfoStore)
   const [componentState, setComponentState] = useComponentState({
     imageCounts: {},
-    isLoading: true,
+    isLoading: false,
     sort: 'count',
     view: 'models'
   })
@@ -80,23 +80,23 @@ const InfoPage = () => {
     modelState.modelDetails
   ])
 
-  const updateLocalCount = useCallback(async () => {
-    const count: IModelCount = {}
+  // const updateLocalCount = useCallback(async () => {
+  //   const count: IModelCount = {}
 
-    for (const model in modelState.modelDetails) {
-      try {
-        const data: number = await filterCompletedByModel(model)
-        count[model] = data
-      } catch (err) {
-        count[model] = 0
-      }
-    }
+  //   for (const model in modelState.modelDetails) {
+  //     try {
+  //       const data: number = await filterCompletedByModel(model)
+  //       console.log(`model data`, model, data)
+  //       count[model] = data
+  //     } catch (err) {
+  //       count[model] = 0
+  //     }
+  //   }
 
-    setComponentState({
-      imageCounts: { ...count },
-      isLoading: modelState.availableModels.length === 0
-    })
-  }, [modelState.availableModels, modelState.modelDetails, setComponentState])
+  //   setComponentState({
+  //     imageCounts: { ...count }
+  //   })
+  // }, [modelState.modelDetails, setComponentState])
 
   const renderModelDetails = () => {
     const modelDetailsArray: Array<React.ReactNode> = []
@@ -166,33 +166,31 @@ const InfoPage = () => {
             </div>
           ) : null}
           {componentState.imageCounts[name] >= 0 ? (
-            <>
-              <div>
-                You have made {componentState.imageCounts[name] || 0} images
-                with this model.
-              </div>
-              <div className="flex flex-row gap-2">
-                <TextButton
-                  disabled={
-                    isNaN(modelStats[0]?.count) || modelStats[0]?.count <= 0
-                  }
-                  onClick={() => {
-                    router.push(`/?model=${name}`)
-                  }}
-                >
-                  Create
-                </TextButton>
-                <TextButton
-                  disabled={componentState.imageCounts[name] <= 0}
-                  onClick={() => {
-                    router.push(`/images?model=${name}`)
-                  }}
-                >
-                  View
-                </TextButton>
-              </div>
-            </>
+            <div>
+              You have made {componentState.imageCounts[name] || 0} images with
+              this model.
+            </div>
           ) : null}
+          <div className="flex flex-row gap-2 mt-2">
+            <TextButton
+              disabled={
+                isNaN(modelStats[0]?.count) || modelStats[0]?.count <= 0
+              }
+              onClick={() => {
+                router.push(`/?model=${name}`)
+              }}
+            >
+              Create
+            </TextButton>
+            <TextButton
+              disabled={componentState.imageCounts[name] <= 0}
+              onClick={() => {
+                router.push(`/images?model=${name}`)
+              }}
+            >
+              View your images
+            </TextButton>
+          </div>
         </Panel>
       )
     })
@@ -203,13 +201,13 @@ const InfoPage = () => {
   useEffectOnce(() => {
     trackEvent({
       event: 'PAGE_VIEW',
-      context: '/pages/faq'
+      context: '/pages/info'
     })
   })
 
-  useEffect(() => {
-    updateLocalCount()
-  }, [updateLocalCount])
+  // useEffect(() => {
+  //   updateLocalCount()
+  // }, [updateLocalCount])
 
   return (
     <div className="mb-4">
@@ -220,7 +218,17 @@ const InfoPage = () => {
       {componentState.isLoading && <SpinnerV2 />}
       {!componentState.isLoading && (
         <>
-          <div className="flex flex-row gap-1 text-sm">sort by:</div>
+          {modelState.availableModels.length > 1 ? (
+            <div className="mb-2">
+              Total models available: {modelState.availableModels.length}
+            </div>
+          ) : null}
+          <div className="flex flex-row gap-1 text-sm">
+            <span className="mr-2">sort by:</span>{' '}
+            {componentState.sort === 'name' && `(alphabetical)`}
+            {componentState.sort === 'count' && `(workers)`}
+            {componentState.sort === 'queued' && `(demand)`}
+          </div>
           <div className="mb-4 flex flex-row gap-1 text-sm">
             <TextButton onClick={() => setComponentState({ sort: 'name' })}>
               name
@@ -231,11 +239,11 @@ const InfoPage = () => {
             <TextButton onClick={() => setComponentState({ sort: 'queued' })}>
               demand
             </TextButton>
-            <TextButton
+            {/* <TextButton
               onClick={() => setComponentState({ sort: 'numImages' })}
             >
               images
-            </TextButton>
+            </TextButton> */}
           </div>
           <div>{renderModelDetails()}</div>
         </>

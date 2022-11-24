@@ -1,4 +1,4 @@
-import { AvailableModel, setAvailableModels } from '../store/modelStore'
+import { setAvailableModels } from '../store/modelStore'
 import { isAppActive } from '../utils/appUtils'
 
 let isPending = false
@@ -24,8 +24,8 @@ const fetchAvailableModels = async () => {
   ]
 
   try {
-    const res = await fetch(`https://stablehorde.net/api/v2/status/models`)
-    const modelDetails: Array<AvailableModel> = await res.json()
+    const res = await fetch(`/artbot/api/models-available`)
+    const { models: modelDetails } = await res.json()
 
     if (Array.isArray(modelDetails) && modelDetails.length > 0) {
       modelDetails.sort((a, b) => {

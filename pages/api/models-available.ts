@@ -1,13 +1,19 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { AvailableModel } from '../../store/modelStore'
 
 type Data = {
   success: boolean
   models?: any
 }
 
-const cache = {
+interface IModelCache {
+  fetchTimestamp: number
+  models: Array<AvailableModel>
+}
+
+const cache: IModelCache = {
   fetchTimestamp: 0,
-  models: {}
+  models: []
 }
 
 export default async function handler(
@@ -19,25 +25,22 @@ export default async function handler(
   }
 
   const timeDiff = Date.now() - cache.fetchTimestamp
-  if (timeDiff <= 120000) {
+  if (timeDiff <= 60000) {
     return res.send({
       success: true,
-      models: { ...cache.models }
+      models: [...cache.models]
     })
   }
 
   try {
-    const resp = await fetch(
-      `https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/db.json`,
-      {
-        method: 'GET'
-      }
-    )
+    const resp = await fetch(`https://stablehorde.net/api/v2/status/models`, {
+      method: 'GET'
+    })
 
     const data = await resp.json()
 
     cache.fetchTimestamp = Date.now()
-    cache.models = { ...data }
+    cache.models = [...data]
 
     return res.send({
       success: true,
@@ -47,11 +50,11 @@ export default async function handler(
     // eh, it's okay if nothing happens.
   }
 
-  // Optimistically send model details if we already have the information.
+  // Optimistically send model availability if we already have the information.
   if (cache.fetchTimestamp > 0) {
     return res.send({
       success: true,
-      models: { ...cache.models }
+      models: [...cache.models]
     })
   } else {
     return res.send({
