@@ -99,6 +99,10 @@ const modelerOptions = (models: Array<ModelDetails>) => {
 }
 
 const samplerOptions = (input: any) => {
+  if (input.models[0] === 'stable_diffusion_2.0') {
+    return [{ value: 'dpmsolver', label: 'dpmsolver' }]
+  }
+
   const options = [
     { value: 'k_dpm_2_a', label: 'k_dpm_2_a' },
     { value: 'k_dpm_2', label: 'k_dpm_2' },
@@ -657,6 +661,10 @@ const AdvancedOptionsPanel = ({
                 //@ts-ignore
                 options={modelerOptions(availableModels)}
                 onChange={(obj: { value: string; label: string }) => {
+                  if (obj.value === 'stable_diffusion_2.0') {
+                    setInput({ sampler: 'dpmsolver' })
+                  }
+
                   setInput({ models: [obj.value] })
                 }}
                 // @ts-ignore

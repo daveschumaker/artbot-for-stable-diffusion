@@ -54,6 +54,10 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
       clonedParams = cloneImageParams(imageParams)
       clonedParams.models = [model]
 
+      if (model === 'stable_diffusion_2.0') {
+        clonedParams.sampler = 'dpmsolver'
+      }
+
       try {
         await db.pending.add({
           ...clonedParams
@@ -78,6 +82,10 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
 
       clonedParams = cloneImageParams(imageParams)
       clonedParams.models = [modelName]
+
+      if (modelName === 'stable_diffusion_2.0') {
+        clonedParams.sampler = 'dpmsolver'
+      }
 
       try {
         await db.pending.add({
