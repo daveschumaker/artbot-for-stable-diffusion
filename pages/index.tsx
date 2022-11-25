@@ -24,6 +24,7 @@ import {
 import { useEffectOnce } from '../hooks/useEffectOnce'
 import { getDefaultPrompt } from '../utils/db'
 import CreateImageRequest from '../models/CreateImageRequest'
+import Panel from '../components/UI/Panel'
 
 interface InputTarget {
   name: string
@@ -318,6 +319,14 @@ const Home: NextPage = () => {
         {input.source_processing === 'inpainting' && '(inpainting)'}
         {input.source_processing === 'img2img' && '(img2img)'}
       </PageTitle>
+      <div className="mt-2 mb-4">
+        <Panel>
+          <strong>
+            NOTE: Stable Horde API is currently under high loads due to release
+            of Stable Diffusion 2.0. Requests are currently experiencing delays.
+          </strong>
+        </Panel>
+      </div>
       <div className="mt-2 mb-2">
         <div className="flex flex-row gap-[8px] items-start">
           {input.sourceImage && (
