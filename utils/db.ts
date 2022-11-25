@@ -71,6 +71,16 @@ export const getPrompts = async (promptType: string) => {
     ?.toArray()
 }
 
+// Fix interesting race condition where pending jobs appear in "all" jobs,
+// but no actual items are visible.
+export const deleteStalePending = async () => {
+  return await db?.pending
+    ?.filter(function (job: { jobStatus: string }) {
+      return !job.jobStatus
+    })
+    ?.delete()
+}
+
 export const allPendingJobs = async (status?: string) => {
   try {
     return await db?.pending

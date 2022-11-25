@@ -5,6 +5,7 @@ import { fetchUserDetails } from '../api/userInfo'
 // @ts-ignore
 import { trackNewSession } from './analytics'
 import { isAppActive } from './appUtils'
+import { deleteStalePending } from './db'
 
 /**
  * Added "Allow NSFW Image" setting on 2022-10-11.
@@ -55,17 +56,26 @@ export const initAppSettings = async () => {
   await trackNewSession()
 
   const apikey = localStorage.getItem('apikey') || ''
-  await fetchUserDetails(apikey)
-  await fetchAvailableModels()
-  await fetchModelDetails()
+  fetchUserDetails(apikey)
+  fetchAvailableModels()
+  fetchModelDetails()
+  deleteStalePending()
 
   setInterval(async () => {
     if (!isAppActive()) {
       return
     }
 
-    await fetchUserDetails(apikey)
-    await fetchAvailableModels()
-    await fetchModelDetails()
+    fetchAvailableModels()
+    fetchModelDetails()
+    deleteStalePending()
   }, 60000)
+
+  setInterval(async () => {
+    if (!isAppActive()) {
+      return
+    }
+
+    fetchUserDetails(apikey)
+  }, 120000)
 }

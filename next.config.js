@@ -6,6 +6,9 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 const nextConfig = {
   basePath: '/artbot',
   distDir: 'build',
+  images: {
+    domains: ['raw.githubusercontent.com']
+  },
   reactStrictMode: true,
   swcMinify: true
 }

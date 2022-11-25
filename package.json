@@ -30,6 +30,7 @@
     "fabric-history": "1.7.0",
     "next": "13.0.5",
     "next-dark-mode": "3.0.0",
+    "node-abort-controller": "^3.0.1",
     "react": "18.2.0",
     "react-color": "2.19.3",
     "react-dom": "18.2.0",
