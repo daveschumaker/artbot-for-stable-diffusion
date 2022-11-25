@@ -87,6 +87,40 @@ const Changelog = () => {
         </LinkButton>
       </div>
       <Section>
+        <SubSectionTitle>2022.11.25</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Stability.Ai released their Stable Diffusion 2.0 model yesterday.
+            The model was quickly added to Stable Horde and due to increased
+            demand, the cluster has been under a pretty heavy load (all Stable
+            Horde UIs seem to be slow lately). Things seem to be getting a bit
+            better, but requests are still a bit slow. You can try out the new
+            model <Linker href="/?model=stable_diffusion_2.0">here</Linker>.
+          </StyledLi>
+          <StyledLi>
+            Fix: Implemented better caching of model details and model
+            availability on my own server. Various API calls to the Stable Horde
+            API were encountering response times of up to 10 seconds. This made
+            the whole ArtBot experience... not very pleasant.
+          </StyledLi>
+          <StyledLi>
+            Fix: Finally remember selected model when navigating between pages!
+          </StyledLi>
+          <StyledLi>
+            Fix: Multi-model select dropdown stays open after selecting an
+            initial model.
+          </StyledLi>
+          <StyledLi>
+            Fix: When choosing to generate multiple images, only 1 image was
+            ever generated.
+          </StyledLi>
+          <StyledLi>
+            Fix: Fix issue where pending items page showed there were active
+            pending jobs, but nothing appeared on the page.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.11.23</SubSectionTitle>
         <StyledUl>
           <StyledLi>
