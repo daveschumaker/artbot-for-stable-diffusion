@@ -13,6 +13,7 @@ import { useEffectOnce } from '../hooks/useEffectOnce'
 import { modelInfoStore } from '../store/modelStore'
 // import { filterCompletedByModel } from '../utils/db'
 import SpinnerV2 from '../components/Spinner'
+import Image from 'next/image'
 
 // interface IModelCount {
 //   [key: string]: number
@@ -154,10 +155,12 @@ const InfoPage = () => {
                       className="max-w-[490px]"
                       key={`${name}_showcase_${idx}`}
                     >
-                      <img
+                      <Image
                         className="rounded"
                         src={img}
                         alt={`Example of images created using ${name} model.`}
+                        height={490}
+                        width={490}
                       />
                     </div>
                   )

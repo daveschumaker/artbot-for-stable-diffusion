@@ -1,5 +1,66 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { AvailableModel } from '../../store/modelStore'
+import serverFetchWithTimeout from '../../utils/serverFetchWithTimeout'
+
+// Start with initial cache of popular models on initial boot:
+const initModels = [
+  {
+    performance: 0,
+    queued: 0,
+    eta: 0,
+    name: 'stable_diffusion_2.0',
+    count: 9
+  },
+  {
+    performance: 0,
+    queued: 0,
+    eta: 0,
+    name: 'stable_diffusion',
+    count: 10
+  },
+  {
+    performance: 0,
+    queued: 0,
+    eta: 0,
+    name: 'Yiffy',
+    count: 6
+  },
+  {
+    performance: 0,
+    queued: 0,
+    eta: 0,
+    name: 'Anything Diffusion',
+    count: 8
+  },
+  {
+    performance: 0,
+    queued: 0,
+    eta: 0,
+    name: 'Zeipher Female Model',
+    count: 7
+  },
+  {
+    performance: 0,
+    queued: 0,
+    eta: 0,
+    name: 'Mega Merge Diffusion',
+    count: 8
+  },
+  {
+    performance: 0,
+    queued: 0,
+    eta: 0,
+    name: 'Zack3D',
+    count: 6
+  },
+  {
+    performance: 0,
+    queued: 0,
+    eta: 0,
+    name: 'waifu_diffusion',
+    count: 5
+  }
+]
 
 type Data = {
   success: boolean
@@ -7,14 +68,36 @@ type Data = {
 }
 
 interface IModelCache {
-  fetchTimestamp: number
   models: Array<AvailableModel>
 }
 
 const cache: IModelCache = {
-  fetchTimestamp: 0,
-  models: []
+  models: [...initModels]
 }
+
+const fetchData = async () => {
+  try {
+    const resp = await serverFetchWithTimeout(
+      `https://stablehorde.net/api/v2/status/models`,
+      {
+        method: 'GET'
+      }
+    )
+
+    const data = await resp.json()
+    cache.models = [...data]
+  } catch (err) {
+    // eh, it's okay if nothing happens.
+  }
+}
+
+// Kick off periodic fetch
+setInterval(async () => {
+  await fetchData()
+}, 60000)
+
+// Kick off initial data fetch on server mount
+fetchData()
 
 export default async function handler(
   req: NextApiRequest,
@@ -24,41 +107,8 @@ export default async function handler(
     return res.status(400).json({ success: false })
   }
 
-  const timeDiff = Date.now() - cache.fetchTimestamp
-  if (timeDiff <= 60000) {
-    return res.send({
-      success: true,
-      models: [...cache.models]
-    })
-  }
-
-  try {
-    const resp = await fetch(`https://stablehorde.net/api/v2/status/models`, {
-      method: 'GET'
-    })
-
-    const data = await resp.json()
-
-    cache.fetchTimestamp = Date.now()
-    cache.models = [...data]
-
-    return res.send({
-      success: true,
-      models: data
-    })
-  } catch (err) {
-    // eh, it's okay if nothing happens.
-  }
-
-  // Optimistically send model availability if we already have the information.
-  if (cache.fetchTimestamp > 0) {
-    return res.send({
-      success: true,
-      models: [...cache.models]
-    })
-  } else {
-    return res.send({
-      success: false
-    })
-  }
+  return res.send({
+    success: true,
+    models: [...cache.models]
+  })
 }

@@ -78,10 +78,10 @@ const ImagePage = () => {
   })
 
   const fetchImageDetails = useCallback(async (jobId: string) => {
-    const data = await getImageDetails(jobId)
+    const data = (await getImageDetails(jobId)) || {}
     setIsInitialLoad(false)
-    setImageDetails(data)
     setOptimisticFavorite(data.favorited ? true : false)
+    setImageDetails(data)
 
     if (data?.base64String) {
       findRelatedImages(data.parentJobId)

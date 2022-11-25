@@ -1,4 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import serverFetchWithTimeout from '../../utils/serverFetchWithTimeout'
+import modelDetailsJson from '../../store/model-details.json'
 
 type Data = {
   success: boolean
@@ -6,9 +8,32 @@ type Data = {
 }
 
 const cache = {
-  fetchTimestamp: 0,
-  models: {}
+  models: { ...modelDetailsJson }
 }
+
+const fetchData = async () => {
+  try {
+    const resp = await serverFetchWithTimeout(
+      `https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/db.json`,
+      {
+        method: 'GET'
+      }
+    )
+
+    const data = await resp.json()
+    cache.models = { ...data }
+  } catch (err) {
+    // Don't worry if nothing happens...
+  }
+}
+
+// Kick off periodic fetch
+setInterval(async () => {
+  await fetchData()
+}, 60000)
+
+// Kick off initial data fetch on server mount
+fetchData()
 
 export default async function handler(
   req: NextApiRequest,
@@ -18,44 +43,8 @@ export default async function handler(
     return res.status(400).json({ success: false })
   }
 
-  const timeDiff = Date.now() - cache.fetchTimestamp
-  if (timeDiff <= 120000) {
-    return res.send({
-      success: true,
-      models: { ...cache.models }
-    })
-  }
-
-  try {
-    const resp = await fetch(
-      `https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/db.json`,
-      {
-        method: 'GET'
-      }
-    )
-
-    const data = await resp.json()
-
-    cache.fetchTimestamp = Date.now()
-    cache.models = { ...data }
-
-    return res.send({
-      success: true,
-      models: data
-    })
-  } catch (err) {
-    // eh, it's okay if nothing happens.
-  }
-
-  // Optimistically send model details if we already have the information.
-  if (cache.fetchTimestamp > 0) {
-    return res.send({
-      success: true,
-      models: { ...cache.models }
-    })
-  } else {
-    return res.send({
-      success: false
-    })
-  }
+  return res.send({
+    success: true,
+    models: { ...cache.models }
+  })
 }
