@@ -790,6 +790,7 @@ const AdvancedOptionsPanel = ({
             maxWidth="480"
           >
             <SelectComponent
+              closeMenuOnSelect={false}
               isMulti
               menuPlacement={'top'}
               //@ts-ignore
