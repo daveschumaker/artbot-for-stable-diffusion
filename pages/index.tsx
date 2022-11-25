@@ -276,6 +276,10 @@ const Home: NextPage = () => {
         })
       }
 
+      if (localStorage.getItem('model')) {
+        setInput({ models: [localStorage.getItem('model')] })
+      }
+
       const negativePrompts = (await getDefaultPrompt()) || []
       if (negativePrompts.length > 0) {
         const [defaultPrompt] = negativePrompts

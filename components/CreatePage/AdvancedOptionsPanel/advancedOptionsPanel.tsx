@@ -665,6 +665,7 @@ const AdvancedOptionsPanel = ({
                     setInput({ sampler: 'dpmsolver' })
                   }
 
+                  localStorage.setItem('model', obj.value)
                   setInput({ models: [obj.value] })
                 }}
                 // @ts-ignore
