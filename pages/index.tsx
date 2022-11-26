@@ -25,6 +25,8 @@ import { useEffectOnce } from '../hooks/useEffectOnce'
 import { getDefaultPrompt } from '../utils/db'
 import CreateImageRequest from '../models/CreateImageRequest'
 import Panel from '../components/UI/Panel'
+import ShareLinkDetails from '../models/ShareableLink'
+import Head from 'next/head'
 
 interface InputTarget {
   name: string
@@ -63,8 +65,10 @@ const defaultState: any = {
 const Home: NextPage = () => {
   const router = useRouter()
   const { query } = router
-  const loadModel = query.model
+
   const editMode = query.edit
+  const loadModel = query.model
+  const shareMode = query.share
 
   let initialState: any = defaultState
 
@@ -75,7 +79,10 @@ const Home: NextPage = () => {
     initialState.models = [loadModel]
   }
 
-  if (editMode) {
+  if (shareMode) {
+    const shareParams = ShareLinkDetails.decode(shareMode as string) || {}
+    initialState = { ...defaultState, ...shareParams }
+  } else if (editMode) {
     initialState = {
       upscaled: false,
       img2img: loadEditPrompt().img2img,
@@ -129,9 +136,6 @@ const Home: NextPage = () => {
 
     if (inputName === 'steps') {
       localStorage.setItem('steps', event.target.value)
-    }
-
-    if (inputName === 'prompt') {
     }
 
     setInput({ [inputName]: inputValue })
@@ -243,7 +247,7 @@ const Home: NextPage = () => {
   }
 
   const updateDefaultInput = async () => {
-    if (!query.edit) {
+    if (!query.edit && !query.share) {
       if (localStorage.getItem('orientation')) {
         setInput({ orientationType: localStorage.getItem('orientation') })
       }
@@ -292,7 +296,7 @@ const Home: NextPage = () => {
   }
 
   useEffect(() => {
-    if (!query.edit) {
+    if (!query.edit && !query.share) {
       updateDefaultInput()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -304,7 +308,7 @@ const Home: NextPage = () => {
       context: '/pages/index'
     })
 
-    if (!editMode && !loadModel && getInputCache()) {
+    if (!editMode && !shareMode && !loadModel && getInputCache()) {
       setInput({ ...getInputCache() })
     } else if (editMode) {
       setInput({ ...loadEditPrompt() })
@@ -313,6 +317,17 @@ const Home: NextPage = () => {
 
   return (
     <main>
+      {shareMode ? (
+        <Head>
+          <title>ArtBot - Shareable Link</title>
+          <meta name="twitter:title" content="ArtBot - Shareable Link" />
+          <meta
+            name="twitter:description"
+            content={`Prompt: "${input.prompt}"`}
+          />
+          <meta name="twitter:image" content="" />
+        </Head>
+      ) : null}
       <PageTitle>
         Create new image{' '}
         {input.source_processing === 'outpainting' && '(outpainting)'}

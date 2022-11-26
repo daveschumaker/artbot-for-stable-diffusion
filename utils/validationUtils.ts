@@ -25,6 +25,7 @@ export const maxSteps = (sampler: string, loggedIn: boolean = false) => {
 
 export const validSampler = (sampler: string) => {
   const samplers = [
+    'dpmsolver',
     'k_dpm_2_a',
     'k_dpm_2',
     'k_euler_a',

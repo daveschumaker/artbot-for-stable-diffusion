@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
+import { ToastContainer, toast } from 'react-toastify'
 
 import { deleteCompletedImage } from '../utils/db'
 import ConfirmationModal from './ConfirmationModal'
@@ -15,6 +16,9 @@ import Linker from './UI/Linker'
 import CopyIcon from './icons/CopyIcon'
 import ImageSquare from './ImageSquare'
 import { savePrompt, SourceProcessing } from '../utils/promptUtils'
+import ShareIcon from './icons/ShareIcon'
+import ShareLinkDetails from '../models/ShareableLink'
+import 'react-toastify/dist/ReactToastify.css'
 
 interface ImageDetails {
   upscaled?: boolean
@@ -139,6 +143,7 @@ const ImageDetails = ({
 
   return (
     <div className="mt-2 text-left">
+      <ToastContainer />
       {showDeleteModal && (
         <ConfirmationModal
           onConfirmClick={() => handleDeleteImageClick(imageDetails.jobId)}
@@ -266,6 +271,31 @@ const ImageDetails = ({
             <CopyIcon />
             <span className="inline-block md:hidden">Copy</span>
             <span className="hidden md:inline-block">Copy prompt</span>
+          </Button>
+          <Button
+            title="Share link"
+            onClick={() => {
+              // @ts-ignore
+              const test = ShareLinkDetails.encode(imageDetails)
+              navigator?.clipboard
+                ?.writeText(`https://tinybots.net/artbot?share=${test}`)
+                .then(() => {
+                  toast.success('URL copied!', {
+                    position: 'top-center',
+                    autoClose: 2500,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    draggable: false,
+                    progress: undefined,
+                    theme: 'light'
+                  })
+                })
+            }}
+          >
+            <ShareIcon />
+            <span className="inline-block md:hidden">Share</span>
+            <span className="hidden md:inline-block">Share link</span>
           </Button>
         </div>
         <div className="inline-block w-1/2 flex flex-row justify-end gap-2">

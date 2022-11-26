@@ -155,6 +155,7 @@ const AdvancedOptionsPanel = ({
 }: Props) => {
   const userState = useStore(userInfoStore)
   const modelState = useStore(modelInfoStore)
+
   const { availableModels, modelDetails } = modelState
   const { loggedIn } = userState
 
@@ -662,11 +663,16 @@ const AdvancedOptionsPanel = ({
                 options={modelerOptions(availableModels)}
                 onChange={(obj: { value: string; label: string }) => {
                   if (obj.value === 'stable_diffusion_2.0') {
-                    setInput({ sampler: 'dpmsolver' })
+                    setInput({
+                      models: [obj.value],
+                      sampler: 'dpmsolver'
+                    })
+                    localStorage.setItem('sampler', 'dpmsolver')
+                  } else {
+                    setInput({ models: [obj.value] })
                   }
 
                   localStorage.setItem('model', obj.value)
-                  setInput({ models: [obj.value] })
                 }}
                 // @ts-ignore
                 value={modelsValue}

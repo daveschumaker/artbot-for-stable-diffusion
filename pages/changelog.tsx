@@ -87,6 +87,52 @@ const Changelog = () => {
         </LinkButton>
       </div>
       <Section>
+        <SubSectionTitle>Ongoing issues:</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            There are backend issues with inpainting via the Stable Horde API at
+            the moment and I am waiting on a more solid resolution. It may work
+            for you, it may not.
+          </StyledLi>
+          <StyledLi>
+            Due to the release of Stable Diffusion 2.0 by Stability.Ai, there is
+            a lot of interest in generating images with the new model. The
+            Stable Horde API has been under heavy load and requests are taking
+            longer than usual.
+          </StyledLi>
+          <StyledLi>
+            Pending Page issues: When retrying and canceling jobs, all pending
+            jobs disappear, or other jobs enter some sort of invisible state.
+            Looking into this.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
+        <SubSectionTitle>2022.11.26</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            MILESTONE: 🎉🎉🎉 1,000,000 images have been created with ArtBot!
+            🎉🎉🎉
+            <AddedInfo>
+              Absolutely amazing. Thanks to everyone for suggestions, feedback,
+              and using the site. This has been a fun side project and I&apos;m
+              very grateful to Db0 and the rest of the Stable Horde community
+              for creating such an awesome project! Here&apos;s to the next
+              million. 😎
+            </AddedInfo>
+            <StyledLi>
+              Feature: Shareable links. This is something I&apos;ve wanted to do
+              for awhile and StableUI (the other big Stable Horde web UI),
+              recently implemented it. Now you can share your ArtBot image
+              generations with others. For example:{' '}
+              <Linker href="https://tinybots.net/artbot?share=N4IgDgTg9gtmAuIBcIDKMCWAbDA7A5gAQCGEGAzvFAMYTHzmEAWUWAJnkVqfgKaHkc1XoygAzZsRgAaQgCNexAK7wMYpVhK42AgJ4wYveGWrFNY4sPKyo2QmGJ5VBWXNJQAjkv6VdWXiDSILi8+PQYAG4BKIHgpFLkyADaIBEAjIEArGkATNIA7ABsABxBANYA+rwavBAVxIE5ACzSAJxBxfnFAMwlTa3FsZTEcv4VHGLq5BhQuIHG3tIpAOIAYgAKywCCAHIgALpL+-sAvkA">
+                Smiling aristocrats holding slices of ham.
+              </Linker>
+            </StyledLi>
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.11.25</SubSectionTitle>
         <StyledUl>
           <StyledLi>
@@ -157,10 +203,6 @@ const Changelog = () => {
       <Section>
         <SubSectionTitle>2022.11.20</SubSectionTitle>
         <StyledUl>
-          <StyledLi>
-            CURRENT ISSUE: There are backend issues with inpainting via the
-            Stable Horde API at the moment and I am waiting on a resolution.
-          </StyledLi>
           <StyledLi>
             Fix: If a pending image job encounters an error state (e.g., max
             concurrent requests, invalid params, anon user limits, flagged
