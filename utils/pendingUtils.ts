@@ -64,12 +64,12 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
             ...clonedParams
           })
         }
-      } finally {
-        return {
-          success: true
-        }
-      }
+      } catch (err) {}
     })
+
+    return {
+      success: true
+    }
   } else if (imageParams.useAllModels) {
     imageParams.numImages = 1
     const models = modelInfoStore.state.availableModels
@@ -93,11 +93,11 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
         await db.pending.add({
           ...clonedParams
         })
-      } finally {
-        return {
-          success: true
-        }
-      }
+      } catch (err) {}
+    }
+
+    return {
+      success: true
     }
   } else {
     const count = Array(Number(numImages)).fill(0)
@@ -112,11 +112,11 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
             ...clonedParams
           })
         }
-      } finally {
-        return {
-          success: true
-        }
-      }
+      } catch (err) {}
+    }
+
+    return {
+      success: true
     }
   }
 }

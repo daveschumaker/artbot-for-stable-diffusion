@@ -113,7 +113,13 @@ const Changelog = () => {
           <StyledLi>
             Fix: Resolve issue where sampler field would be empty when switching
             from stable_diffusion_2.0 model to something else. This would cause
-            API errors when submitting a new image request.
+            API errors when submitting a new image request. (Thanks for
+            reporting this, anonymous user!)
+          </StyledLi>
+          <StyledLi>
+            Fix: Resolve issue with &quot;use all models&quot; option not
+            actually using all models. (Also, thanks for reporting this,
+            anonymous user!)
           </StyledLi>
         </StyledUl>
       </Section>
