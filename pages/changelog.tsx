@@ -108,6 +108,16 @@ const Changelog = () => {
         </StyledUl>
       </Section>
       <Section>
+        <SubSectionTitle>2022.11.27</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: Resolve issue where sampler field would be empty when switching
+            from stable_diffusion_2.0 model to something else. This would cause
+            API errors when submitting a new image request.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.11.26</SubSectionTitle>
         <StyledUl>
           <StyledLi>

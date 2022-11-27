@@ -668,6 +668,9 @@ const AdvancedOptionsPanel = ({
                       sampler: 'dpmsolver'
                     })
                     localStorage.setItem('sampler', 'dpmsolver')
+                  } else if (input.sampler === 'dpmsolver') {
+                    setInput({ models: [obj.value], sampler: 'k_euler_a' })
+                    localStorage.setItem('sampler', 'k_euler_a')
                   } else {
                     setInput({ models: [obj.value] })
                   }
