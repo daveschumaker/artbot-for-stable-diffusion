@@ -888,8 +888,7 @@ const AdvancedOptionsPanel = ({
         </Section>
       )}
       {!input.useAllModels &&
-        input.post_processing.indexOf('RealESRGAN_x4plus') === -1 &&
-        !showMultiModel && (
+        input.post_processing.indexOf('RealESRGAN_x4plus') === -1 && (
           <Section>
             <SubSectionTitle>
               Number of images

@@ -60,7 +60,7 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
 
       try {
         for (let i = 0; i < numImages; i++) {
-          await db.pending.add({
+          db.pending.add({
             ...clonedParams
           })
         }
@@ -107,11 +107,9 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
       clonedParams = cloneImageParams(imageParams)
 
       try {
-        for (let i = 0; i < numImages; i++) {
-          await db.pending.add({
-            ...clonedParams
-          })
-        }
+        await db.pending.add({
+          ...clonedParams
+        })
       } catch (err) {}
     }
 

@@ -121,6 +121,18 @@ const Changelog = () => {
             actually using all models. (Also, thanks for reporting this,
             anonymous user!)
           </StyledLi>
+          <StyledLi>
+            Fix: Number of images calculation was wrong. (Thanks for reporting,{' '}
+            <Linker
+              href="https://github.com/daveschumaker/artbot-for-stable-diffusion/issues/16"
+              target="_blank"
+            >
+              KyuubiYoru
+            </Linker>
+            ). I also added multi-images per model when using multi-model
+            select. (e.g., if you choose 3 different models and want to generate
+            4 images, you will get 4 images per each model)
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
