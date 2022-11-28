@@ -3,19 +3,21 @@ module.exports = {
     {
       name: 'horde-js',
       script: 'npm',
-      args: 'start -- -p 49997',
+      args: 'start',
       restart_delay: 5000,
       env: {
-        NODE_ENV: 'production'
+        NODE_ENV: 'production',
+        PORT: 49997
       }
     },
     {
       name: 'horde-js-staging',
       script: 'npm',
-      args: 'start -- -p 3001',
+      args: 'start',
       restart_delay: 5000,
       env: {
-        NODE_ENV: 'production'
+        NODE_ENV: 'production',
+        PORT: 3001
       }
     }
   ]

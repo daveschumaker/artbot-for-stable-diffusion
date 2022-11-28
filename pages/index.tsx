@@ -27,6 +27,7 @@ import CreateImageRequest from '../models/CreateImageRequest'
 import Panel from '../components/UI/Panel'
 import ShareLinkDetails from '../models/ShareableLink'
 import Head from 'next/head'
+import { setAvailableModels, setModelDetails } from '../store/modelStore'
 
 interface InputTarget {
   name: string
@@ -62,7 +63,33 @@ const defaultState: any = {
   useAllModels: false
 }
 
-const Home: NextPage = () => {
+export async function getServerSideProps() {
+  let availableModels: Array<any> = []
+  let modelDetails: any = {}
+
+  try {
+    const availableModelsRes = await fetch(
+      `http://localhost:${process.env.PORT}/artbot/api/v1/models/available`
+    )
+    const availableModelsData = (await availableModelsRes.json()) || {}
+    availableModels = availableModelsData.models
+
+    const modelDetailsRes = await fetch(
+      `http://localhost:${process.env.PORT}/artbot/api/v1/models/details`
+    )
+    const modelDetailsData = (await modelDetailsRes.json()) || {}
+    modelDetails = modelDetailsData.models
+  } catch (err) {}
+
+  return {
+    props: {
+      availableModels,
+      modelDetails
+    }
+  }
+}
+
+const Home: NextPage = ({ availableModels, modelDetails }: any) => {
   const router = useRouter()
   const { query } = router
 
@@ -108,6 +135,15 @@ const Home: NextPage = () => {
       models: loadEditPrompt().models,
       useAllModels: false
     }
+  }
+
+  const hasModel = availableModels.filter((model: any) => {
+    return model.name === initialState.models[0]
+  })
+
+  if (hasModel.length === 0) {
+    initialState.models = ['stable_diffusion']
+    initialState.sampler = 'k_euler_a'
   }
 
   const [hasValidationError, setHasValidationError] = useState(false)
@@ -253,6 +289,7 @@ const Home: NextPage = () => {
       }
 
       if (
+        loadModel &&
         loadModel !== 'stable_diffusion_2.0' &&
         localStorage.getItem('sampler')
       ) {
@@ -265,6 +302,8 @@ const Home: NextPage = () => {
           models: ['stable_diffusion_2.0'],
           sampler: 'dpmsolver'
         })
+      } else if (localStorage.getItem('model')) {
+        setInput({ models: [localStorage.getItem('model')] })
       }
 
       if (localStorage.getItem('cfg_scale')) {
@@ -279,10 +318,6 @@ const Home: NextPage = () => {
         setInput({
           denoising_strength: localStorage.getItem('denoising_strength')
         })
-      }
-
-      if (localStorage.getItem('model')) {
-        setInput({ models: [localStorage.getItem('model')] })
       }
 
       const negativePrompts = (await getDefaultPrompt()) || []
@@ -307,6 +342,9 @@ const Home: NextPage = () => {
       event: 'PAGE_VIEW',
       context: '/pages/index'
     })
+
+    setAvailableModels(availableModels)
+    setModelDetails(modelDetails)
 
     if (!editMode && !shareMode && !loadModel && getInputCache()) {
       setInput({ ...getInputCache() })
