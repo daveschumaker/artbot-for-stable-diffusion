@@ -25,6 +25,7 @@
     "client-zip": "2.3.0",
     "dexie": "3.2.2",
     "dexie-react-hooks": "1.1.1",
+    "dotenv": "16.0.3",
     "express": "4.18.2",
     "fabric": "5.2.4",
     "fabric-history": "1.7.0",
