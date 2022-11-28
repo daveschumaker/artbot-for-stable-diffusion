@@ -91,13 +91,16 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
       `}
       </Script>
       <Head>
-        <title>ArtBot - A Stable Diffusion demo utilizing Stable Horde</title>
+        <title>
+          ArtBot - Create images with Stable Diffusion, utilizing the Stable
+          Horde
+        </title>
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@davely" />
         <meta name="twitter:title" content="ArtBot for Stable Diffusion" />
         <meta
           name="twitter:description"
-          content="Generate AI-created images and photos with Stable Diffusion using a distributed computing cluster powered by Stable Horde."
+          content="Generate AI-created images and photos with Stable Diffusion using a distributed computing cluster powered by Stable Horde. No login required and free to use."
         />
         <meta
           name="twitter:image"

@@ -75,5 +75,5 @@ export const initAppSettings = async () => {
     }
 
     fetchUserDetails(apikey)
-  }, 120000)
+  }, 300000)
 }

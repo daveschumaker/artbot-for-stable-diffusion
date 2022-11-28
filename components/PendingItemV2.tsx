@@ -274,11 +274,21 @@ const PendingItem = ({ jobId }) => {
               <div className="w-full font-mono text-xs mt-2">
                 Image request queued
                 <br />
-                Queue position: {jobDetails.queue_position}
-                <br />
-                Estimated time remaining: {jobDetails.wait_time}s (
-                {pctComplete.toFixed(0)}
-                %)
+                {isNaN(jobDetails.queue_position) ? null : (
+                  <>
+                    Queue position: {jobDetails.queue_position}
+                    <br />
+                  </>
+                )}
+                Estimated time remaining:{' '}
+                {isNaN(jobDetails.wait_time) ? (
+                  '...'
+                ) : (
+                  <>
+                    {jobDetails.wait_time}s ({pctComplete.toFixed(0)}
+                    %)
+                  </>
+                )}
               </div>
             )}
             {jobDetails.jobStatus === JobStatus.Processing && (

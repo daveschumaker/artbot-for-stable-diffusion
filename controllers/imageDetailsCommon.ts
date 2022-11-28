@@ -1,4 +1,5 @@
 import RerollImageRequest from '../models/RerollImageRequest'
+import UpscaleImageRequest from '../models/UpscaleImageRequest'
 import { cloneFromImage, setI2iUploaded } from '../store/canvasStore'
 import { createImageJob } from '../utils/imageCache'
 import { createPendingRerollJob } from '../utils/pendingUtils'
@@ -116,25 +117,6 @@ export const rerollImage = async (imageDetails: any) => {
   const rerollImageJob = new RerollImageRequest(imageDetails)
   const res = await createPendingRerollJob(rerollImageJob)
 
-  // const cleanParams = Object.assign({}, imageDetails)
-  // delete cleanParams.base64String
-  // delete cleanParams.id
-  // delete cleanParams.jobId
-  // delete cleanParams.queue_position
-  // delete cleanParams.seed
-  // delete cleanParams.success
-  // delete cleanParams.timestamp
-  // delete cleanParams.wait_time
-  // delete cleanParams.initWaitTime
-  // delete cleanParams.jobTimestamp
-  // delete cleanParams.numImages
-  // delete cleanParams.favorited
-  // delete cleanParams.useAllModels
-
-  // const res = await createImageJob({
-  //   ...rerollImageJob
-  // })
-
   if (res?.success) {
     return {
       success: true
@@ -147,27 +129,8 @@ export const rerollImage = async (imageDetails: any) => {
 }
 
 export const upscaleImage = async (imageDetails: any) => {
-  const cleanParams = Object.assign({}, imageDetails)
-
-  delete cleanParams.base64String
-  delete cleanParams.id
-  delete cleanParams.jobId
-  delete cleanParams.queue_position
-  delete cleanParams.success
-  delete cleanParams.timestamp
-  delete cleanParams.wait_time
-  delete cleanParams.initWaitTime
-  delete cleanParams.jobTimestamp
-  delete cleanParams.numImages
-  delete cleanParams.favorited
-  delete cleanParams.useAllModels
-
-  cleanParams.upscaled = true
-  cleanParams.post_processing = ['RealESRGAN_x4plus']
-
-  const res = await createImageJob({
-    ...cleanParams
-  })
+  const cleanParams = new UpscaleImageRequest(imageDetails)
+  const res = await createImageJob(cleanParams)
 
   if (res?.success) {
     return {

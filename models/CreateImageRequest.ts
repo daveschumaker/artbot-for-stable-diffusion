@@ -62,6 +62,7 @@ class CreateImageRequest {
   steps: number
   timestamp?: number
   triggers: Array<string>
+  upscaled?: boolean
   useAllModels: boolean
   width: number
 
@@ -111,7 +112,11 @@ class CreateImageRequest {
 
     this.karras = Boolean(karras)
 
-    if (models[0] === 'random') {
+    if (models.length === 0) {
+      sampler = 'k_euler_a'
+    }
+
+    if (models[0] === 'random' || models.length === 0) {
       const currentModels = modelInfoStore.state.availableModelNames
       const randomModel =
         currentModels[Math.floor(Math.random() * currentModels.length)]

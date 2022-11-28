@@ -6,6 +6,7 @@ import FeedbackModal from '../components/Feedback'
 import { useState } from 'react'
 import { useEffectOnce } from '../hooks/useEffectOnce'
 import { trackEvent } from '../api/telemetry'
+import Panel from '../components/UI/Panel'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -80,39 +81,47 @@ const Changelog = () => {
         <title>ArtBot - Changelog</title>
       </Head>
       <PageTitle>Changelog</PageTitle>
-      <div>
+      <div className="mb-4">
         The latest happenings on ArtBot. Have a feature request or bug report?{' '}
         <LinkButton onClick={() => setShowFeedback(true)}>
           Contact me!
         </LinkButton>
       </div>
+      <Panel>
+        <Section>
+          <SubSectionTitle>Ongoing issues:</SubSectionTitle>
+          <StyledUl>
+            <StyledLi>
+              There are backend issues with inpainting via the Stable Horde API
+              at the moment and I am waiting on a more solid resolution. It may
+              work for you, it may not.
+            </StyledLi>
+            <StyledLi>
+              Due to the release of Stable Diffusion 2.0 by Stability.Ai, there
+              is a lot of interest in generating images with the new model. The
+              Stable Horde API has been under heavy load and requests are taking
+              longer than usual.
+            </StyledLi>
+            <StyledLi>
+              Pending Page issues: When retrying and canceling jobs, all pending
+              jobs disappear, or other jobs enter some sort of invisible state.
+              Looking into this.
+            </StyledLi>
+          </StyledUl>
+        </Section>
+      </Panel>
       <Section>
-        <SubSectionTitle>Ongoing issues:</SubSectionTitle>
-        <StyledUl>
-          <StyledLi>
-            There are backend issues with inpainting via the Stable Horde API at
-            the moment and I am waiting on a more solid resolution. It may work
-            for you, it may not.
-          </StyledLi>
-          <StyledLi>
-            Due to the release of Stable Diffusion 2.0 by Stability.Ai, there is
-            a lot of interest in generating images with the new model. The
-            Stable Horde API has been under heavy load and requests are taking
-            longer than usual.
-          </StyledLi>
-          <StyledLi>
-            Pending Page issues: When retrying and canceling jobs, all pending
-            jobs disappear, or other jobs enter some sort of invisible state.
-            Looking into this.
-          </StyledLi>
-        </StyledUl>
-      </Section>
-      <Section>
-        <SubSectionTitle>2022.10.28</SubSectionTitle>
+        <SubSectionTitle>2022.11.28</SubSectionTitle>
         <StyledUl>
           <StyledLi>
             Refactor: More work on caching model data from Stable Horde API so
             that it is immediately available on page load.
+          </StyledLi>
+          <StyledLi>
+            Fix: Clicking the &quot;upscale image&quot; link from any image
+            details page should now work properly. (I broke this while trying to
+            create some new classes for handling image requests, reroll
+            requests, and upscale requests.)
           </StyledLi>
         </StyledUl>
       </Section>

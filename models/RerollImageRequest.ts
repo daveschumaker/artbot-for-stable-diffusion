@@ -107,7 +107,10 @@ class RerollImageRequest {
     this.negative = String(negative)
     this.numImages = 1
     this.parentJobId = String(parentJobId) || uuidv4()
-    this.post_processing = [...post_processing]
+    this.post_processing =
+      post_processing?.filter((value) => {
+        return value !== 'RealESRGAN_x4plus'
+      }) || []
     this.prompt = prompt ? String(prompt).trim() : ''
 
     if (sampler === 'random') {
