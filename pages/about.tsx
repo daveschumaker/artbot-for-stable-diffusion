@@ -170,6 +170,67 @@ const AboutPage = () => {
         <Text>-Dave Schumaker</Text>
       </div>
       <div className="mt-2">
+        <h2 className="font-bold mb-2">Ways to contact me</h2>
+        <ul>
+          <li>
+            Discord (ArtBot feedback):{' '}
+            <Linker
+              href="https://discord.com/channels/781145214752129095/1038867597543882894"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              ArtBot suggestions and feedback (Stable Horde Discord server)
+            </Linker>
+          </li>
+          <li>
+            Contact form:{' '}
+            <Linker
+              href=""
+              onClick={() => setShowFeedback(true)}
+              scroll={false}
+            >
+              open
+            </Linker>
+          </li>
+          <li>
+            Discord (Profile):{' '}
+            <Linker
+              href="https://discordapp.com/users/bitbandit#4910"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              bitbandit#4910
+            </Linker>
+          </li>
+          <li>
+            GitHub:{' '}
+            <Linker
+              href="https://github.com/daveschumaker/artbot-for-stable-diffusion"
+              target="_blank"
+              rel="noreferrer"
+            >
+              ArtBot Discussion and Issues
+            </Linker>
+          </li>
+          <li>
+            Mastondon:{' '}
+            <Linker href="https://mastodon.world/@davely" target="_blank">
+              @davely@mastodon.world
+            </Linker>
+          </li>
+          <li>
+            Twitter:{' '}
+            <Linker
+              href="https://twitter.com/davely"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              @davely
+            </Linker>
+          </li>
+        </ul>
+      </div>
+      <div className="mt-2">
         <h2 className="font-bold mb-2">Resources and tips</h2>
         <ul>
           <li>
