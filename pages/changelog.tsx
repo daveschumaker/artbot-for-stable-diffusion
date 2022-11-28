@@ -108,6 +108,15 @@ const Changelog = () => {
         </StyledUl>
       </Section>
       <Section>
+        <SubSectionTitle>2022.10.28</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Refactor: More work on caching model data from Stable Horde API so
+            that it is immediately available on page load.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.11.27</SubSectionTitle>
         <StyledUl>
           <StyledLi>
