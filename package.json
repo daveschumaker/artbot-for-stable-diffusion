@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "analyze": "ANALYZE=true npm run build",
-    "dev": "PORT=3000 node server.js",
+    "dev": "npm run update:build-id && PORT=3000 node server.js",
     "build": "npm run update:build-id && next build",
     "deploy:prod": "npm run build && node ./x-build-scripts/release-deploy.js --prod",
     "deploy:staging": "npm run build && node ./x-build-scripts/release-deploy.js --staging",

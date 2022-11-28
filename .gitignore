@@ -20,6 +20,7 @@ release.tar.gz
 
 # misc
 .DS_Store
+build_info.json
 *.pem
 
 # debug
