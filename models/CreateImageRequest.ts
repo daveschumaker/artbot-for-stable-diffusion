@@ -125,6 +125,10 @@ class CreateImageRequest {
       this.models = [...models]
     }
 
+    if (source_processing === 'inpainting') {
+      this.models = ['stable_diffusion_inpainting']
+    }
+
     this.negative = String(negative)
     this.numImages = Number(numImages)
     this.parentJobId = String(parentJobId) || uuidv4()
