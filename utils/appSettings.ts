@@ -57,8 +57,6 @@ export const initAppSettings = async () => {
 
   const apikey = localStorage.getItem('apikey') || ''
   fetchUserDetails(apikey)
-  fetchAvailableModels()
-  fetchModelDetails()
   deleteStalePending()
 
   setInterval(async () => {

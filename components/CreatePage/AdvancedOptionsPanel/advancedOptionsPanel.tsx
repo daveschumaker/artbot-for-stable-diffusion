@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useStore } from 'statery'
 import Switch from 'react-switch'
+import { useRouter } from 'next/router'
 
 import SelectComponent from '../../UI/Select'
 import Input from '../../UI/Input'
@@ -153,6 +154,7 @@ const AdvancedOptionsPanel = ({
   setInput,
   setHasValidationError
 }: Props) => {
+  const router = useRouter()
   const userState = useStore(userInfoStore)
   const modelState = useStore(modelInfoStore)
 
@@ -662,6 +664,16 @@ const AdvancedOptionsPanel = ({
                 //@ts-ignore
                 options={modelerOptions(availableModels)}
                 onChange={(obj: { value: string; label: string }) => {
+                  if (router.query.model) {
+                    router.push(
+                      {
+                        pathname: '/'
+                      },
+                      undefined,
+                      { scroll: false }
+                    )
+                  }
+
                   if (obj.value === 'stable_diffusion_2.0') {
                     setInput({
                       models: [obj.value],

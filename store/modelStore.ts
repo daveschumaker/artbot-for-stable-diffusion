@@ -4,6 +4,7 @@ interface ModelStore {
   availableModelNames: Array<string>
   availableModels: Array<AvailableModel>
   modelDetails: IModelsDetails
+  inpaintingWorkers: number
   sort: string
 }
 
@@ -34,6 +35,7 @@ export interface IModelDetails {
 export const modelInfoStore = makeStore<ModelStore>({
   availableModelNames: [],
   availableModels: [],
+  inpaintingWorkers: 0,
   modelDetails: {},
   sort: 'count'
 })
@@ -45,9 +47,30 @@ export const setAvailableModels = (models: Array<AvailableModel>) => {
     return
   }
 
+  models.sort((a, b) => {
+    if (a.count < b.count) {
+      return 1
+    }
+    if (a.count > b.count) {
+      return -1
+    }
+    return 0
+  })
+
+  let inpaintingWorkers = 0
+  const availableModels = models.filter((model) => {
+    if (model.name === 'stable_diffusion_inpainting') {
+      inpaintingWorkers = model.count
+      return false
+    }
+
+    return true
+  })
+
   modelInfoStore.set(() => ({
-    availableModelNames: models?.map((model) => model.name),
-    availableModels: [...models]
+    availableModelNames: availableModels?.map((model) => model.name),
+    availableModels,
+    inpaintingWorkers
   }))
 }
 

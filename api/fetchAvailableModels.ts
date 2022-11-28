@@ -25,28 +25,8 @@ const fetchAvailableModels = async () => {
 
   try {
     const res = await fetch(`/artbot/api/models-available`)
-    const { models: modelDetails } = await res.json()
-
-    if (Array.isArray(modelDetails) && modelDetails.length > 0) {
-      modelDetails.sort((a, b) => {
-        if (a.count < b.count) {
-          return 1
-        }
-        if (a.count > b.count) {
-          return -1
-        }
-        return 0
-      })
-
-      availableModels = modelDetails.filter((model) => {
-        // Stable Diffusion Inpainting shouldn't appear in our model dropdown
-        if (model.name === 'stable_diffusion_inpainting') {
-          return false
-        }
-
-        return true
-      })
-    }
+    const data = await res.json()
+    availableModels = data.models
   } catch (err) {
     console.log(`Warning: Unable to fetch available models. API offline?`)
   } finally {

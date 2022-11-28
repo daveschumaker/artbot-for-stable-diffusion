@@ -10,16 +10,42 @@ import Panel from '../components/UI/Panel'
 import TextButton from '../components/UI/TextButton'
 import useComponentState from '../hooks/useComponentState'
 import { useEffectOnce } from '../hooks/useEffectOnce'
-import { modelInfoStore } from '../store/modelStore'
+import {
+  modelInfoStore,
+  setAvailableModels,
+  setModelDetails
+} from '../store/modelStore'
 // import { filterCompletedByModel } from '../utils/db'
 import SpinnerV2 from '../components/Spinner'
 import Image from 'next/image'
 
-// interface IModelCount {
-//   [key: string]: number
-// }
+export async function getServerSideProps() {
+  let availableModels: Array<any> = []
+  let modelDetails: any = {}
 
-const InfoPage = () => {
+  try {
+    const availableModelsRes = await fetch(
+      `http://localhost:${process.env.PORT}/artbot/api/v1/models/available`
+    )
+    const availableModelsData = (await availableModelsRes.json()) || {}
+    availableModels = availableModelsData.models
+
+    const modelDetailsRes = await fetch(
+      `http://localhost:${process.env.PORT}/artbot/api/v1/models/details`
+    )
+    const modelDetailsData = (await modelDetailsRes.json()) || {}
+    modelDetails = modelDetailsData.models
+  } catch (err) {}
+
+  return {
+    props: {
+      availableModels,
+      modelDetails
+    }
+  }
+}
+
+const InfoPage = ({ availableModels, modelDetails }: any) => {
   const router = useRouter()
   const modelState = useStore(modelInfoStore)
   const [componentState, setComponentState] = useComponentState({
@@ -206,6 +232,9 @@ const InfoPage = () => {
       event: 'PAGE_VIEW',
       context: '/pages/info'
     })
+
+    setAvailableModels(availableModels)
+    setModelDetails(modelDetails)
   })
 
   // useEffect(() => {
