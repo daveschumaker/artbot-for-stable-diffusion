@@ -25,7 +25,9 @@ class UpscaleImageRequest extends CreateImageRequest {
     this.orientation = imageSize.orientation
     this.width = Number(imageSize.width)
     this.height = Number(imageSize.height)
+
     this.numImages = 1
+    this.useAllModels = false
     this.upscaled = true
     this.post_processing = [...post_processing, 'RealESRGAN_x4plus']
   }
