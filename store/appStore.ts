@@ -2,21 +2,33 @@ import { makeStore } from 'statery'
 
 interface AppStore {
   buildId: string
-  showImageReadyToast: boolean
-  newImageReady: string
   indexDbSupport: boolean
+  serverMessage: string
+  newImageReady: string
+  showImageReadyToast: boolean
 }
 
 export const appInfoStore = makeStore<AppStore>({
   buildId: '',
-  showImageReadyToast: false,
+  indexDbSupport: true,
+  serverMessage: '',
   newImageReady: '',
-  indexDbSupport: true
+  showImageReadyToast: false
 })
 
 export const setBuildId = (id: string) => {
   appInfoStore.set(() => ({
     buildId: id
+  }))
+}
+
+export const setServerMessage = (message: string) => {
+  if (appInfoStore.state.serverMessage === message) {
+    return
+  }
+
+  appInfoStore.set(() => ({
+    serverMessage: message
   }))
 }
 
@@ -27,6 +39,10 @@ export const setIndexDbSupport = (bool: boolean) => {
 }
 
 export const setShowImageReadyToast = (bool: boolean) => {
+  if (appInfoStore.state.showImageReadyToast === bool) {
+    return
+  }
+
   appInfoStore.set(() => ({
     showImageReadyToast: bool
   }))

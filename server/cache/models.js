@@ -1,9 +1,13 @@
 const fetch = require('node-fetch')
 
+// Temporarily import a static version of available models
+// in order to get page up and running while API loads.
+const availableModels = require('./availableModels.json')
+
 const cache = {
   availableFetchTimestamp: 0,
   detailsFetchTimestamp: 0,
-  models: [],
+  models: [...availableModels],
   details: {}
 }
 

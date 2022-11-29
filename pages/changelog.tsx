@@ -151,6 +151,17 @@ const Changelog = () => {
             select. (e.g., if you choose 3 different models and want to generate
             4 images, you will get 4 images per each model)
           </StyledLi>
+          <StyledLi>
+            Fix: Upscaling an image that had been created with the
+            &quot;useAllModels&quot; option created a new batch of images using
+            every single model available, instead of just one.
+          </StyledLi>
+          <StyledLi>
+            Minor feature: Created a micro-service to better push relevant
+            updates to ArtBot front page without having to redeploy. This
+            handles the &quot;API is currently under high load...&quot; warning
+            you might have seen as of late.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

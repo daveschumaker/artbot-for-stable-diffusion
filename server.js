@@ -2,6 +2,7 @@ const express = require('express')
 const next = require('next')
 
 const { initModelDataFetch } = require('./server/cache/models')
+const { initServerStatusFetch } = require('./server/cache/serverStatus')
 const routes = require('./server/routes/index.js')
 
 const dev = process.env.NODE_ENV !== 'production'
@@ -18,6 +19,7 @@ app.prepare().then(async () => {
     const server = express()
 
     initModelDataFetch()
+    initServerStatusFetch()
 
     server.get('/', (req, res) => {
       res.redirect('/artbot')

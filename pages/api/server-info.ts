@@ -4,6 +4,7 @@ import buildInfo from '../../build_info.json'
 type Data = {
   success: boolean
   build?: string
+  message?: string
 }
 
 export default async function handler(
@@ -15,9 +16,23 @@ export default async function handler(
   }
 
   const { build } = buildInfo
+  let message
+
+  try {
+    const resp = await fetch(
+      `http://localhost:${process.env.PORT}/artbot/api/v1/status/message`,
+      {
+        method: 'GET'
+      }
+    )
+
+    const data = (await resp.json()) || {}
+    message = data.message
+  } catch (err) {}
 
   res.send({
     success: true,
-    build
+    build,
+    message
   })
 }

@@ -17,7 +17,7 @@ import '../styles/globals.css'
 
 import { initDb } from '../utils/db'
 import { useCallback, useEffect, useState } from 'react'
-import { appInfoStore, setBuildId } from '../store/appStore'
+import { appInfoStore, setBuildId, setServerMessage } from '../store/appStore'
 import { useStore } from 'statery'
 import ServerUpdateModal from '../components/ServerUpdateModal'
 import MobileFooter from '../components/MobileFooter'
@@ -50,8 +50,10 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
       waitingForServerInfoRes = true
       const res = await fetch('/artbot/api/server-info')
       const data = await res.json()
-      const { build } = data
+      const { build, message = '' } = data
       waitingForServerInfoRes = false
+
+      setServerMessage(message)
 
       if (!buildId) {
         setBuildId(build)
@@ -60,6 +62,7 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
       }
     } catch (err) {
       console.log(`Unable to fetch latest server-info. Connectivity issue?`)
+      waitingForServerInfoRes = false
     }
   }, [buildId])
 

@@ -18,6 +18,7 @@ import {
 // import { filterCompletedByModel } from '../utils/db'
 import SpinnerV2 from '../components/Spinner'
 import Image from 'next/image'
+import ServerMessage from '../components/ServerMessage'
 
 export async function getServerSideProps() {
   let availableModels: Array<any> = []
@@ -247,6 +248,7 @@ const InfoPage = ({ availableModels, modelDetails }: any) => {
         <title>ArtBot - Info</title>
       </Head>
       <PageTitle>General Information</PageTitle>
+      <ServerMessage />
       {componentState.isLoading && <SpinnerV2 />}
       {!componentState.isLoading && (
         <>

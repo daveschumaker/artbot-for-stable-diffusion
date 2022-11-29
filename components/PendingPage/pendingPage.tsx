@@ -8,6 +8,7 @@ import {
   deleteDoneFromPending
 } from '../../utils/db'
 import PendingItem from '../PendingItemV2'
+import ServerMessage from '../ServerMessage'
 import Linker from '../UI/Linker'
 import PageTitle from '../UI/PageTitle'
 import TextButton from '../UI/TextButton'
@@ -83,8 +84,9 @@ const PendingPage = () => {
   return (
     <div>
       <PageTitle>Your pending images</PageTitle>
+      <ServerMessage />
       {pendingImages.length > 0 ? (
-        <div className="flex flex-row gap-2 mb-2">
+        <div className="flex flex-row gap-2 mb-4">
           <TextButton onClick={() => setFilter('all')}>
             all ({pendingImages.length})
           </TextButton>

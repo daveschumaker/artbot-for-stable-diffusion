@@ -24,10 +24,10 @@ import {
 import { useEffectOnce } from '../hooks/useEffectOnce'
 import { getDefaultPrompt } from '../utils/db'
 import CreateImageRequest from '../models/CreateImageRequest'
-import Panel from '../components/UI/Panel'
 import ShareLinkDetails from '../models/ShareableLink'
 import Head from 'next/head'
 import { setAvailableModels, setModelDetails } from '../store/modelStore'
+import ServerMessage from '../components/ServerMessage'
 
 interface InputTarget {
   name: string
@@ -379,14 +379,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
         {input.source_processing === 'inpainting' && '(inpainting)'}
         {input.source_processing === 'img2img' && '(img2img)'}
       </PageTitle>
-      <div className="mt-2 mb-4">
-        <Panel>
-          <strong>
-            NOTE: Stable Horde API is currently under high loads due to release
-            of Stable Diffusion 2.0. Requests are currently experiencing delays.
-          </strong>
-        </Panel>
-      </div>
+      <ServerMessage />
       <div className="mt-2 mb-2">
         <div className="flex flex-row gap-[8px] items-start">
           {input.sourceImage && (

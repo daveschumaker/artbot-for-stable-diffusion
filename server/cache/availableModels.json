@@ -1,0 +1,338 @@
+[
+  {
+    "performance": 595028.7,
+    "queued": 185597952.0,
+    "eta": 23,
+    "name": "stable_diffusion_2.0",
+    "count": 13
+  },
+  {
+    "performance": 690945.4,
+    "queued": 82558976.0,
+    "eta": 2,
+    "name": "stable_diffusion",
+    "count": 40
+  },
+  {
+    "performance": 735898.1,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "Yiffy",
+    "count": 15
+  },
+  {
+    "performance": 682671.7,
+    "queued": 224051200.0,
+    "eta": 13,
+    "name": "Anything Diffusion",
+    "count": 25
+  },
+  {
+    "performance": 1407254.2,
+    "queued": 235929600.0,
+    "eta": 41,
+    "name": "Microworlds",
+    "count": 4
+  },
+  {
+    "performance": 1215482.0,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "Tron Legacy Diffusion",
+    "count": 3
+  },
+  {
+    "performance": 467107.4,
+    "queued": 17498112.0,
+    "eta": 5,
+    "name": "Elden Ring Diffusion",
+    "count": 7
+  },
+  {
+    "performance": 1164675.7,
+    "queued": 23592960.0,
+    "eta": 3,
+    "name": "Robo-Diffusion",
+    "count": 6
+  },
+  {
+    "performance": 1582100.8,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "Comic-Diffusion",
+    "count": 6
+  },
+  {
+    "performance": 816641.6,
+    "queued": 65536000.0,
+    "eta": 7,
+    "name": "Zeipher Female Model",
+    "count": 11
+  },
+  {
+    "performance": 868512.2,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "Borderlands",
+    "count": 4
+  },
+  {
+    "performance": 1406393.1,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "Dungeons and Diffusion",
+    "count": 5
+  },
+  {
+    "performance": 1227722.0,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "Voxel Art Diffusion",
+    "count": 5
+  },
+  {
+    "performance": 892497.7,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "App Icon Diffusion",
+    "count": 5
+  },
+  {
+    "performance": 1673357.9,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "Nitro Diffusion",
+    "count": 3
+  },
+  {
+    "performance": 1778975.5,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "Papercut Diffusion",
+    "count": 3
+  },
+  {
+    "performance": 1807552.5,
+    "queued": 12740198.4,
+    "eta": 1,
+    "name": "Mega Merge Diffusion",
+    "count": 5
+  },
+  {
+    "performance": 1259608.1,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "Furry Epoch",
+    "count": 8
+  },
+  {
+    "performance": 997377.0,
+    "queued": 40140800.0,
+    "eta": 5,
+    "name": "Zack3D",
+    "count": 7
+  },
+  {
+    "performance": 1300796.8,
+    "queued": 16384000.0,
+    "eta": 1,
+    "name": "trinart",
+    "count": 8
+  },
+  {
+    "performance": 1940805.8,
+    "queued": 13107200.0,
+    "eta": 0,
+    "name": "waifu_diffusion",
+    "count": 17
+  },
+  {
+    "performance": 534334.3,
+    "queued": 79298560.0,
+    "eta": 13,
+    "name": "Hentai Diffusion",
+    "count": 11
+  },
+  {
+    "performance": 1808010.2,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "Ghibli Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 681700.6,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "AIO Pixel Art",
+    "count": 4
+  },
+  {
+    "performance": 1875537.1,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "Arcane Diffusion",
+    "count": 6
+  },
+  {
+    "performance": 812627.9,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "Archer Diffusion",
+    "count": 3
+  },
+  {
+    "performance": 1185834.8,
+    "queued": 27525120.0,
+    "eta": 5,
+    "name": "BubblyDubbly",
+    "count": 4
+  },
+  {
+    "performance": 2019479.7,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "Classic Animation Diffusion",
+    "count": 2
+  },
+  {
+    "performance": 1758015.6,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "Clazy",
+    "count": 2
+  },
+  {
+    "performance": 694339.6,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "colorbook",
+    "count": 2
+  },
+  {
+    "performance": 1494211.5,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "Cyberpunk Anime Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 970920.6,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "Fantasy Card Diffusion",
+    "count": 3
+  },
+  {
+    "performance": 829448.2,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "Guohua Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 2027669.6,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "JWST Deep Space Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 1142361.3,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "Knollingcase",
+    "count": 4
+  },
+  {
+    "performance": 311065.5,
+    "queued": 27525120.0,
+    "eta": 7,
+    "name": "Midjourney Diffusion",
+    "count": 12
+  },
+  {
+    "performance": 1118143.3,
+    "queued": 17694720.0,
+    "eta": 5,
+    "name": "Midjourney PaintArt",
+    "count": 3
+  },
+  {
+    "performance": 2504017.4,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "mo-di-diffusion",
+    "count": 5
+  },
+  {
+    "performance": 1280740.6,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "Ranma Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 1794640.4,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "Redshift Diffusion",
+    "count": 7
+  },
+  {
+    "performance": 2514997.9,
+    "queued": 29491200.0,
+    "eta": 2,
+    "name": "Samdoesarts Ultmerge",
+    "count": 4
+  },
+  {
+    "performance": 1683846.4,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "Spider-Verse Diffusion",
+    "count": 5
+  },
+  {
+    "performance": 1041465.0,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "Synthwave",
+    "count": 2
+  },
+  {
+    "performance": 883851.2,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "Van Gogh Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 1977150.0,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "vectorartz",
+    "count": 5
+  },
+  {
+    "performance": 727580.4,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "Xynthii-Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 1316149.6,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "Inkpunk Diffusion",
+    "count": 3
+  },
+  {
+    "performance": 1060814.0,
+    "queued": 0.0,
+    "eta": 0,
+    "name": "stable_diffusion_inpainting",
+    "count": 4
+  }
+]
