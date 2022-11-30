@@ -28,7 +28,7 @@ import ShareLinkDetails from '../models/ShareableLink'
 import Head from 'next/head'
 import { setAvailableModels, setModelDetails } from '../store/modelStore'
 import ServerMessage from '../components/ServerMessage'
-import { StylesDrodown } from '../components/CreatePage/StylesDropdown/stylesDropdown'
+import StylesDrodown from '../components/CreatePage/StylesDropdown'
 
 interface InputTarget {
   name: string
