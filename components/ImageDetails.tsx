@@ -280,9 +280,9 @@ const ImageDetails = ({
             title="Share link"
             onClick={() => {
               // @ts-ignore
-              const test = ShareLinkDetails.encode(imageDetails)
+              const shareLink = ShareLinkDetails.encode(imageDetails)
               navigator?.clipboard
-                ?.writeText(`https://tinybots.net/artbot?share=${test}`)
+                ?.writeText(`https://tinybots.net/artbot?share=${shareLink}`)
                 .then(() => {
                   toast.success('URL copied!', {
                     position: 'top-center',

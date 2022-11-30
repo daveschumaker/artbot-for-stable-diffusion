@@ -129,6 +129,9 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
   }
 
   try {
+    imageParams.jobStatus = JobStatus.Requested
+    await updatePendingJob(imageParams.id, Object.assign({}, imageParams))
+
     const data = await createNewImage(imageParams)
     // @ts-ignore
     const { success, jobId, status, message = '' } = data || {}
@@ -140,12 +143,16 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
       FETCH_INTERVAL_SEC < 15000
     ) {
       FETCH_INTERVAL_SEC += 1000
+      imageParams.jobStatus = JobStatus.Waiting
+      await updatePendingJob(imageParams.id, Object.assign({}, imageParams))
       return
     }
 
     // Handle condition where API ignores request.
     // Probably rate limited?
     if (!success && !jobId && !status) {
+      imageParams.jobStatus = JobStatus.Waiting
+      await updatePendingJob(imageParams.id, Object.assign({}, imageParams))
       return
     }
 
@@ -161,6 +168,8 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
 
       const jobDetailsFromApi = (await checkImageJob(jobId)) || {}
       if (typeof jobDetailsFromApi?.success === 'undefined') {
+        imageParams.jobStatus = JobStatus.Waiting
+        await updatePendingJob(imageParams.id, Object.assign({}, imageParams))
         return {
           success: false,
           message: 'Unable to send request...'

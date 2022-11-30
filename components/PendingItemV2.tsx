@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
 import { useLiveQuery } from 'dexie-react-hooks'
@@ -103,7 +103,7 @@ const MobileHideText = styled.span`
 const StyledImage = styled(ImageSquare)``
 
 // @ts-ignore
-const PendingItem = ({ jobId }) => {
+const PendingItem = memo(({ jobId }) => {
   const router = useRouter()
   const jobDetails = useLiveQuery(() =>
     db.pending
@@ -218,7 +218,9 @@ const PendingItem = ({ jobId }) => {
         ) : null}
         <StyledImageInfoPanel>
           <ImageWaiting>
-            {serverHasJob ? <SpinnerV2 /> : null}
+            {serverHasJob || jobDetails.jobStatus === JobStatus.Requested ? (
+              <SpinnerV2 />
+            ) : null}
             {jobDetails.jobStatus === JobStatus.Done && (
               <Link
                 href={`/image/${jobId}`}
@@ -257,15 +259,20 @@ const PendingItem = ({ jobId }) => {
         {jobDetails.jobStatus === JobStatus.Error ? (
           <div className="font-mono text-xs mt-2 text-red-400">
             <strong>Stable Horde API Error:</strong> {jobDetails.errorMessage}{' '}
-            Not sure what this means? Please visit the{' '}
-            <Linker
-              href="https://discord.gg/3DxrhksKzn"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Stable Horde Discord channel
-            </Linker>{' '}
-            for more information.
+            {jobDetails.errorMessage !==
+            'Unable to create image. Please try again soon.' ? (
+              <>
+                Not sure what this means? Please visit the{' '}
+                <Linker
+                  href="https://discord.gg/3DxrhksKzn"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Stable Horde Discord channel
+                </Linker>{' '}
+                for more information.
+              </>
+            ) : null}
           </div>
         ) : null}
         {jobStalled ? (
@@ -278,18 +285,23 @@ const PendingItem = ({ jobId }) => {
         ) : null}
         <StyledInfoDiv>
           <div className="flex flex-grow flex-col justify-end">
+            {jobDetails.jobStatus === JobStatus.Requested && (
+              <div className="w-full font-mono text-xs mt-2">
+                Image requested
+                <br />
+                Waiting for response...
+              </div>
+            )}
             {jobDetails.jobStatus === JobStatus.Queued && (
               <div className="w-full font-mono text-xs mt-2">
-                Image request queued
-                <br />
+                Request queued{' '}
                 {isNaN(jobDetails.queue_position) ? null : (
-                  <>
-                    Queue position: {jobDetails.queue_position}
-                    <br />
-                  </>
+                  <>(queue position: {jobDetails.queue_position})</>
                 )}
+                <br />
                 Estimated time remaining:{' '}
-                {isNaN(jobDetails.wait_time) ? (
+                {isNaN(jobDetails.wait_time) ||
+                (jobDetails.wait_time === 0 && pctComplete === 0) ? (
                   '...'
                 ) : (
                   <>
@@ -311,16 +323,21 @@ const PendingItem = ({ jobId }) => {
             {jobDetails.jobStatus === JobStatus.Waiting && (
               <div className="w-full font-mono text-xs mt-2">
                 Waiting to submit image request
+                <br />
+                <br />
               </div>
             )}
             {jobDetails.jobStatus === JobStatus.Done && (
               <div className="w-full font-mono text-xs mt-2">
                 Image request complete
+                <br />
+                <br />
               </div>
             )}
             {(jobDetails.jobStatus === JobStatus.Done ||
               jobDetails.jobStatus === JobStatus.Waiting ||
               jobDetails.jobStatus === JobStatus.Queued ||
+              jobDetails.jobStatus === JobStatus.Requested ||
               jobDetails.jobStatus === JobStatus.Processing) && (
               <div className="w-full font-mono text-xs">
                 Created: {new Date(jobDetails.timestamp).toLocaleString()}
@@ -388,6 +405,7 @@ const PendingItem = ({ jobId }) => {
       </StyledPanel>
     </StyledContainer>
   )
-}
+})
 
+PendingItem.displayName = 'PendingItem'
 export default PendingItem

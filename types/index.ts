@@ -95,6 +95,7 @@ export interface GenerateResponse {
 
 export enum JobStatus {
   Waiting = 'waiting', // waiting to submit to stable horde api
+  Requested = 'requested', // Job sent to API, waiting for response.
   Queued = 'queued', // submitted and waiting
   Processing = 'processing', // image has been sent to a worker and is in-process
   Done = 'done', // finished

@@ -77,8 +77,8 @@ const ImagePage = () => {
     return el.jobId === id
   })
 
-  const fetchImageDetails = useCallback(async (jobId: string) => {
-    const data = (await getImageDetails(jobId)) || {}
+  const fetchImageDetails = useCallback(async () => {
+    const data = (await getImageDetails(id)) || {}
     setIsInitialLoad(false)
     setOptimisticFavorite(data.favorited ? true : false)
     setImageDetails(data)
@@ -86,7 +86,7 @@ const ImagePage = () => {
     if (data?.base64String) {
       findRelatedImages(data.parentJobId)
     }
-  }, [])
+  }, [id])
 
   const handleDeleteImageClick = async () => {
     router.push(`/images`)

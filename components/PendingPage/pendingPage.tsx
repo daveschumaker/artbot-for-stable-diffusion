@@ -1,5 +1,5 @@
 import { useLiveQuery } from 'dexie-react-hooks'
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
 import { JobStatus } from '../../types'
 import {
@@ -15,36 +15,65 @@ import TextButton from '../UI/TextButton'
 
 const PendingPage = () => {
   const [filter, setFilter] = useState('all')
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const pendingImages =
     useLiveQuery(() => db?.pending?.orderBy('id')?.toArray()) || []
+  const [done, setDone] = useState([])
 
-  const done: any = []
-  const processing: any = []
-  const queued: any = []
-  const waiting: any = []
-  const error: any = []
+  const processDone = useCallback(() => {
+    const updateDone: any = [...done]
+    let updated = false
 
-  pendingImages.forEach((job: any) => {
-    if (job.jobStatus === JobStatus.Done) {
-      done.push(job)
+    pendingImages.forEach((job: any) => {
+      const DONE = job.jobStatus === JobStatus.Done
+
+      if (
+        DONE &&
+        done.filter((_job: any) => {
+          return _job.id === job.id
+        }).length === 0
+      ) {
+        updated = true
+        updateDone.push(job)
+      }
+    })
+
+    if (updated) {
+      setDone(updateDone)
     }
+  }, [done, pendingImages])
 
-    if (job.jobStatus === JobStatus.Processing) {
-      processing.push(job)
-    }
+  const processPending = () => {
+    const processing: any = []
+    const queued: any = []
+    const waiting: any = []
+    const error: any = []
 
-    if (job.jobStatus === JobStatus.Queued) {
-      queued.push(job)
-    }
+    pendingImages.forEach((job: any) => {
+      if (job.jobStatus === JobStatus.Processing) {
+        processing.push(job)
+      }
 
-    if (job.jobStatus === JobStatus.Waiting) {
-      waiting.push(job)
-    }
+      if (
+        job.jobStatus === JobStatus.Queued ||
+        job.jobStatus === JobStatus.Requested
+      ) {
+        queued.push(job)
+      }
 
-    if (job.jobStatus === JobStatus.Error) {
-      error.push(job)
-    }
-  })
+      if (job.jobStatus === JobStatus.Waiting) {
+        waiting.push(job)
+      }
+
+      if (job.jobStatus === JobStatus.Error) {
+        error.push(job)
+      }
+    })
+
+    return [processing, queued, waiting, error]
+  }
+
+  const [processing, queued, waiting, error] = processPending()
 
   const sorted = [
     ...done,
@@ -64,6 +93,7 @@ const PendingPage = () => {
     if (filter === 'processing') {
       return (
         job.jobStatus === JobStatus.Processing ||
+        job.jobStatus === JobStatus.Requested ||
         job.jobStatus === JobStatus.Queued
       )
     }
@@ -72,6 +102,14 @@ const PendingPage = () => {
       return job.jobStatus === JobStatus.Error
     }
   })
+
+  useEffect(() => {
+    setDone([])
+  }, [])
+
+  useEffect(() => {
+    processDone()
+  }, [processDone])
 
   useEffectOnce(() => {
     deleteDoneFromPending()
@@ -82,7 +120,7 @@ const PendingPage = () => {
   })
 
   return (
-    <div>
+    <div style={{ overflowAnchor: 'none' }}>
       <PageTitle>Your pending images</PageTitle>
       <ServerMessage />
       {pendingImages.length > 0 ? (
@@ -117,8 +155,14 @@ const PendingPage = () => {
         </div>
       )}
       {sorted.length > 0 &&
-        sorted.map((job: { jobId: string; prompt: string }, i) => {
-          return <PendingItem jobId={job.jobId} key={job.jobId + `_${i}`} />
+        sorted.map((job: { jobId: string; prompt: string }) => {
+          return (
+            <PendingItem
+              //@ts-ignore
+              jobId={job.jobId}
+              key={job.jobId}
+            />
+          )
         })}
     </div>
   )
