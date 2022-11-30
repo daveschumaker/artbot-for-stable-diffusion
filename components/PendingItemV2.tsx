@@ -20,6 +20,8 @@ import CloseIcon from './icons/CloseIcon'
 import { deletePendingJobFromApi } from '../api/deletePendingJobFromApi'
 import { createImageJob } from '../utils/imageCache'
 import { savePrompt } from '../utils/promptUtils'
+import CreateImageRequest from '../models/CreateImageRequest'
+import Linker from './UI/Linker'
 
 const StyledContainer = styled.div`
   box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
@@ -145,10 +147,7 @@ const PendingItem = ({ jobId }) => {
       deletePendingJobFromApi(jobId)
     }
 
-    const clonedParams = Object.assign({}, jobDetails)
-    delete clonedParams.id
-    delete clonedParams.jobStatus
-    delete clonedParams.errorMessage
+    const clonedParams = new CreateImageRequest(jobDetails)
     clonedParams.useAllModels = false
     clonedParams.numImages = 1
 
@@ -157,7 +156,7 @@ const PendingItem = ({ jobId }) => {
       context: '/pages/pending'
     })
 
-    await createImageJob({ ...clonedParams })
+    await createImageJob(clonedParams)
     await deletePendingJobFromDb(jobId)
     window.scrollTo(0, 0)
   }
@@ -257,7 +256,16 @@ const PendingItem = ({ jobId }) => {
         </StyledImageInfoPanel>
         {jobDetails.jobStatus === JobStatus.Error ? (
           <div className="font-mono text-xs mt-2 text-red-400">
-            <strong>Stable Horde API Error:</strong> {jobDetails.errorMessage}
+            <strong>Stable Horde API Error:</strong> {jobDetails.errorMessage}{' '}
+            Not sure what this means? Please visit the{' '}
+            <Linker
+              href="https://discord.gg/3DxrhksKzn"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Stable Horde Discord channel
+            </Linker>{' '}
+            for more information.
           </div>
         ) : null}
         {jobStalled ? (
