@@ -69,6 +69,17 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
             clonedParams.models = [stylePresets[clonedParams.stylePreset].model]
           }
 
+          if (clonedParams.models[0] === 'random') {
+            clonedParams.models = [CreateImageRequest.getRandomModel()]
+          }
+
+          if (clonedParams.sampler === 'random') {
+            clonedParams.sampler = CreateImageRequest.getRandomSampler({
+              steps: clonedParams.steps,
+              source_processing: clonedParams.source_processing
+            })
+          }
+
           db.pending.add({
             ...clonedParams
           })
@@ -98,6 +109,17 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
         clonedParams.sampler = 'dpmsolver'
       }
 
+      if (clonedParams.models[0] === 'random') {
+        clonedParams.models = [CreateImageRequest.getRandomModel()]
+      }
+
+      if (clonedParams.sampler === 'random') {
+        clonedParams.sampler = CreateImageRequest.getRandomSampler({
+          steps: clonedParams.steps,
+          source_processing: clonedParams.source_processing
+        })
+      }
+
       try {
         await db.pending.add({
           ...clonedParams
@@ -120,6 +142,17 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
 
         // @ts-ignore
         clonedParams.models = [stylePresets[clonedParams.stylePreset].model]
+      }
+
+      if (clonedParams.models[0] === 'random') {
+        clonedParams.models = [CreateImageRequest.getRandomModel()]
+      }
+
+      if (clonedParams.sampler === 'random') {
+        clonedParams.sampler = CreateImageRequest.getRandomSampler({
+          steps: clonedParams.steps,
+          source_processing: clonedParams.source_processing
+        })
       }
 
       try {

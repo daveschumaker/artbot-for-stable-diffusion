@@ -11,6 +11,10 @@ import { uuidv4 } from '../utils/appUtils'
 import { orientationDetails, randomSampler } from '../utils/imageUtils'
 import { SourceProcessing } from '../utils/promptUtils'
 
+interface IRandomSampler {
+  source_processing: string
+  steps: number
+}
 export interface IRequestParams {
   artbotJobType: ArtBotJobTypes
   canvasStore?: ICanvas
@@ -119,14 +123,7 @@ class CreateImageRequest {
       sampler = 'k_euler_a'
     }
 
-    if (models[0] === 'random' || models.length === 0) {
-      const currentModels = modelInfoStore.state.availableModelNames
-      const randomModel =
-        currentModels[Math.floor(Math.random() * currentModels.length)]
-      this.models = [randomModel]
-    } else {
-      this.models = [...models]
-    }
+    this.models = [...models]
 
     if (source_processing === 'inpainting') {
       this.models = ['stable_diffusion_inpainting']
@@ -137,14 +134,7 @@ class CreateImageRequest {
     this.parentJobId = String(parentJobId) || uuidv4()
     this.post_processing = [...post_processing]
     this.prompt = prompt ? String(prompt).trim() : ''
-
-    if (sampler === 'random') {
-      const isImg2Img = source_processing !== SourceProcessing.Prompt
-      this.sampler = randomSampler(steps, isImg2Img)
-    } else {
-      this.sampler = String(sampler)
-    }
-
+    this.sampler = String(sampler)
     this.seed = String(seed)
     this.source_image = String(source_image)
     this.source_mask = String(source_mask)
@@ -160,6 +150,16 @@ class CreateImageRequest {
     this.steps = Number(steps)
     this.triggers = [...triggers]
     this.useAllModels = Boolean(useAllModels)
+  }
+
+  static getRandomModel() {
+    const currentModels = modelInfoStore.state.availableModelNames
+    return currentModels[Math.floor(Math.random() * currentModels.length)]
+  }
+
+  static getRandomSampler({ source_processing, steps }: IRandomSampler) {
+    const isImg2Img = source_processing !== SourceProcessing.Prompt
+    return randomSampler(steps, isImg2Img)
   }
 }
 

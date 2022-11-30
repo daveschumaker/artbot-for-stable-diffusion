@@ -425,7 +425,11 @@ export const checkCurrentJob = async (imageDetails: any) => {
     const imageDetails = await getPendingJobDetails(jobId)
     const imgDetailsFromApi: FinishedImage = await getImage(jobId)
 
-    if (imgDetailsFromApi?.success && imgDetailsFromApi?.base64String) {
+    if (
+      imageDetails &&
+      imgDetailsFromApi?.success &&
+      imgDetailsFromApi?.base64String
+    ) {
       imageDetails.done = true
       imageDetails.jobStatus = JobStatus.Done
       imageDetails.timestamp = Date.now()
