@@ -42,6 +42,7 @@ interface ImageDetails {
   orientation: string
   karras: boolean
   worker_id?: string
+  stylePreset: string
   models: Array<string>
 }
 
@@ -176,6 +177,9 @@ const ImageDetails = ({
             {imageDetails.img2img && <li>Source: img2img</li>}
             {imageDetails.negative && (
               <li>Negative prompt: {imageDetails.negative}</li>
+            )}
+            {imageDetails.stylePreset && (
+              <li>Style preset: {imageDetails.stylePreset}</li>
             )}
             <li>
               Height:{' '}

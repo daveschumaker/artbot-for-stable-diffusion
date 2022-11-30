@@ -31,6 +31,7 @@ export interface IRequestParams {
   source_image?: string
   source_mask?: string
   source_processing: SourceProcessing
+  stylePreset: string
   steps: number
   triggers?: Array<string>
   useAllModels: boolean
@@ -59,6 +60,7 @@ class CreateImageRequest {
   source_image: string
   source_mask: string
   source_processing: SourceProcessing
+  stylePreset: string
   steps: number
   timestamp?: number
   triggers: Array<string>
@@ -85,6 +87,7 @@ class CreateImageRequest {
     source_image = '',
     source_mask = '',
     source_processing = SourceProcessing.Prompt,
+    stylePreset = 'none',
     steps = 20,
     triggers = [],
     useAllModels = false,
@@ -146,6 +149,7 @@ class CreateImageRequest {
     this.source_image = String(source_image)
     this.source_mask = String(source_mask)
     this.source_processing = source_processing
+    this.stylePreset = stylePreset
 
     if (source_processing === SourceProcessing.Img2Img) {
       this.denoising_strength = Number(denoising_strength)

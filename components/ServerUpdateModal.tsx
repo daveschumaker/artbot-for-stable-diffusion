@@ -1,9 +1,16 @@
 import { trackEvent } from '../api/telemetry'
 
 const ServerUpdateModal = ({}) => {
+  const changelogClick = () => {
+    trackEvent({
+      event: 'SERVER_UPDATE_CHANGELOG_CLICK'
+    })
+    window.location.assign('https://tinybots.net/artbot/changelog')
+  }
+
   const reloadPageClick = () => {
     trackEvent({
-      event: 'SERVER_UPDATE_RELOAD_CLOCK'
+      event: 'SERVER_UPDATE_RELOAD_CLICK'
     })
     window.location.reload()
   }
@@ -45,6 +52,13 @@ const ServerUpdateModal = ({}) => {
                 onClick={reloadPageClick}
               >
                 Reload page
+              </button>
+              <button
+                type="button"
+                className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                onClick={changelogClick}
+              >
+                View changelog
               </button>
             </div>
           </div>

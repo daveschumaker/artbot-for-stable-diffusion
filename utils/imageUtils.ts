@@ -1,6 +1,7 @@
 import { createImage } from '../api/createImage'
 import { trackEvent } from '../api/telemetry'
 import { userInfoStore } from '../store/userStore'
+import { stylePresets } from './stylePresets'
 import { isValidHttpUrl } from './validationUtils'
 
 interface CreateImageJob {
@@ -21,6 +22,7 @@ interface CreateImageJob {
   negative?: string
   source_image?: string
   source_mask?: string
+  stylePreset: string
   denoising_strength?: number
   post_processing: Array<string>
 
@@ -402,4 +404,39 @@ export const nearestWholeMultiple = (input: number, X = 64) => {
   output *= X
 
   return output
+}
+
+interface IPresetParams {
+  prompt: string
+  stylePreset: string
+}
+
+export const modifyPromptForStylePreset = ({
+  prompt = '',
+  stylePreset = 'none'
+}: IPresetParams) => {
+  // @ts-ignore
+  const presetText = { ...stylePresets[stylePreset] }
+
+  // Split any negative prompt from presetText (so we can combine with user's existing negative prompt)
+  let [newPrompt = '', presetNeg = ''] = presetText?.prompt
+    ? presetText.prompt.split('###')
+    : []
+
+  // Split negative prompt so it can be combined with preset negative prompt.
+  const [initPrompt = '', negative = ''] = prompt.split('###')
+
+  // Replace key in preset style text
+  const regex = /{p}/i
+  newPrompt = newPrompt.replace(regex, initPrompt.trim())
+
+  // Handle negative prompt
+  if (presetNeg || negative) {
+    newPrompt =
+      newPrompt +
+      ' ### ' +
+      [presetNeg ? presetNeg + ', ' : '', negative].join('')
+  }
+
+  return newPrompt
 }

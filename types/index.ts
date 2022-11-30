@@ -6,7 +6,8 @@ export enum ArtBotJobTypes {
   Upscale = 'Upscale',
   Reroll = 'Reroll',
   CopyPrompt = 'CopiedPrompt',
-  SharedPrompt = 'SharedPrompt'
+  SharedPrompt = 'SharedPrompt',
+  Variation = 'Variation'
 }
 
 export enum Common {
@@ -36,6 +37,7 @@ export interface CreateImageJob {
   allowNsfw?: boolean
   source_image?: string
   source_mask?: string
+  stylePreset: string
   denoising_strength?: number
   orientationType?: string
   orientation?: string

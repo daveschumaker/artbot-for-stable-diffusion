@@ -10,6 +10,7 @@ interface Theme {
 }
 
 interface SelectProps {
+  className?: string
   name?: string
   onChange: any
   width?: string
@@ -27,7 +28,7 @@ interface Value {
 
 const SelectComponent = (props: SelectProps) => {
   const theme: Theme = useTheme()
-  const { ...rest } = props
+  const { className, ...rest } = props
 
   const customStyles = {
     container: (provided: CSSProperties) => ({
@@ -73,6 +74,7 @@ const SelectComponent = (props: SelectProps) => {
 
   return (
     <Select
+      className={className}
       id="long-value-select"
       instanceId="long-value-select"
       {...rest}

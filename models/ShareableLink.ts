@@ -17,6 +17,7 @@ class ShareLinkDetails {
     sampler = 'k_euler',
     seed = '',
     steps = 20,
+    stylePreset = 'none',
     triggers = [],
     width = 512
   }) {
@@ -37,7 +38,8 @@ class ShareLinkDetails {
         model,
         karras,
         [...post_processing],
-        [...triggers]
+        [...triggers],
+        stylePreset
       ]
     }
 
@@ -63,7 +65,8 @@ class ShareLinkDetails {
       model,
       karras,
       post_processing,
-      triggers
+      triggers,
+      stylePreset
     ] = params
 
     return {
@@ -79,7 +82,8 @@ class ShareLinkDetails {
       karras,
       post_processing,
       triggers,
-      orientationType: 'custom'
+      orientationType: 'custom',
+      stylePreset
     }
   }
 }

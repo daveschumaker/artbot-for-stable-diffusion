@@ -1,5 +1,6 @@
 import { modelInfoStore } from '../store/modelStore'
 import { GenerateResponse } from '../types'
+import { modifyPromptForStylePreset } from '../utils/imageUtils'
 import { SourceProcessing } from '../utils/promptUtils'
 import { trackEvent } from './telemetry'
 
@@ -25,6 +26,7 @@ interface ImageDetails {
   triggers?: Array<string>
   source_image?: string
   source_processing?: string
+  stylePreset: string
   post_processing: Array<string>
   source_mask?: string
   denoising_strength?: number
@@ -80,6 +82,7 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
     triggers,
     source_image,
     source_processing,
+    stylePreset,
     post_processing,
     source_mask,
     denoising_strength
@@ -132,6 +135,10 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
     apiParams.params.post_processing = post_processing
   }
 
+  if (stylePreset && stylePreset !== 'none') {
+    apiParams.prompt = modifyPromptForStylePreset({ prompt, stylePreset })
+  }
+
   return apiParams
 }
 
@@ -162,7 +169,7 @@ export const createImage = async (
   const imageParams = mapImageDetailsToApi(imageDetails)
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  const { source_image, source_mask, ...rest } = imageParams
+  const { source_image = '', source_mask = '', ...rest } = imageParams
 
   try {
     const resp = await fetch(`https://stablehorde.net/api/v2/generate/async`, {

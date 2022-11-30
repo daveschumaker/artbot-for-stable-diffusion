@@ -28,6 +28,7 @@ import ShareLinkDetails from '../models/ShareableLink'
 import Head from 'next/head'
 import { setAvailableModels, setModelDetails } from '../store/modelStore'
 import ServerMessage from '../components/ServerMessage'
+import { StylesDrodown } from '../components/CreatePage/StylesDropdown/stylesDropdown'
 
 interface InputTarget {
   name: string
@@ -57,6 +58,7 @@ const defaultState: any = {
   triggers: [],
   source_image: '',
   source_mask: '',
+  stylePreset: 'none',
   source_processing: SourceProcessing.Prompt,
   post_processing: [],
   models: ['stable_diffusion'],
@@ -426,6 +428,9 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
           </div>
         )}
         <div className="mt-4 mb-4 w-full flex flex-row justify-end">
+          <div className="w-1/2 flex flex-row justify-start gap-2 items-center">
+            Style: <StylesDrodown input={input} setInput={setInput} />
+          </div>
           <div className="w-1/2 flex flex-row justify-end gap-2">
             <Button
               title="Clear current input"

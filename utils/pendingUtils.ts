@@ -4,6 +4,8 @@ import RerollImageRequest from '../models/RerollImageRequest'
 import { modelInfoStore } from '../store/modelStore'
 import { uuidv4 } from './appUtils'
 import { db } from './db'
+import { randomPropertyName } from './helperUtils'
+import { stylePresets } from './stylePresets'
 
 const cloneImageParams = (
   imageParams: CreateImageRequest | RerollImageRequest
@@ -60,6 +62,13 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
 
       try {
         for (let i = 0; i < numImages; i++) {
+          if (clonedParams.stylePreset === 'random') {
+            clonedParams.stylePreset = randomPropertyName(stylePresets)
+
+            // @ts-ignore
+            clonedParams.models = [stylePresets[clonedParams.stylePreset].model]
+          }
+
           db.pending.add({
             ...clonedParams
           })
@@ -105,6 +114,13 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
     // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
     for (const _num of count) {
       clonedParams = cloneImageParams(imageParams)
+
+      if (clonedParams.stylePreset === 'random') {
+        clonedParams.stylePreset = randomPropertyName(stylePresets)
+
+        // @ts-ignore
+        clonedParams.models = [stylePresets[clonedParams.stylePreset].model]
+      }
 
       try {
         await db.pending.add({
