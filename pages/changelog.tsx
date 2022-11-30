@@ -102,14 +102,39 @@ const Changelog = () => {
               Stable Horde API has been under heavy load and requests are taking
               longer than usual.
             </StyledLi>
-            <StyledLi>
-              Pending Page issues: When retrying and canceling jobs, all pending
-              jobs disappear, or other jobs enter some sort of invisible state.
-              Looking into this.
-            </StyledLi>
           </StyledUl>
         </Section>
       </Panel>
+      <Section>
+        <SubSectionTitle>2022.10.29</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: Finally fixed the pesky bug where everything would disappear
+            from pending items page when you clicked retry or delete.
+          </StyledLi>
+          <StyledLi>
+            Feature: Styles! Are you having a hard time coming up with a prompt
+            to give you good looking images? Over on the{' '}
+            <Linker
+              href="https://discord.com/channels/781145214752129095/1027506429139095562"
+              target="_blank"
+            >
+              Stable Horde Discord channel
+            </Linker>
+            , Db0 has implemented a bot that can make it easier to emulate a
+            number of different art styles. There is now a styles dropdown below
+            the prompt textbox where you can choose one of these style presets.
+            You can see prompt details related to various styles on{' '}
+            <Linker
+              href="https://github.com/db0/Stable-Horde-Styles"
+              target="_blank"
+            >
+              Github
+            </Linker>
+            .
+          </StyledLi>
+        </StyledUl>
+      </Section>
       <Section>
         <SubSectionTitle>2022.11.28</SubSectionTitle>
         <StyledUl>
