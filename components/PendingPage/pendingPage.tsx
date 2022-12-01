@@ -159,6 +159,8 @@ const PendingPage = () => {
           return (
             <PendingItem
               //@ts-ignore
+              jobDetails={job}
+              //@ts-ignore
               jobId={job.jobId}
               key={job.jobId}
             />

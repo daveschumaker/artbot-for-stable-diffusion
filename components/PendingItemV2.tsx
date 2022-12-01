@@ -103,16 +103,8 @@ const MobileHideText = styled.span`
 const StyledImage = styled(ImageSquare)``
 
 // @ts-ignore
-const PendingItem = memo(({ jobId }) => {
+const PendingItem = memo(({ jobDetails, jobId }) => {
   const router = useRouter()
-  const jobDetails = useLiveQuery(() =>
-    db.pending
-      .filter(function (job: { jobId: string }) {
-        return job.jobId === jobId
-      })
-      .first()
-  )
-
   const processDoneOrError =
     jobDetails?.jobStatus === JobStatus.Done ||
     jobDetails?.jobStatus === JobStatus.Error
@@ -133,7 +125,7 @@ const PendingItem = memo(({ jobId }) => {
       context: '/pages/pending'
     })
 
-    await deletePendingJobFromDb(jobId)
+    deletePendingJobFromDb(jobId)
   }
 
   const handleEditClick = async () => {
@@ -203,10 +195,11 @@ const PendingItem = memo(({ jobId }) => {
     return null
   }
 
+  const jobDone = jobDetails.jobStatus === JobStatus.Done
+  const minJobWaitTime =
+    4 * jobDetails.initWaitTime < 60 ? 60 : 4 * jobDetails.initWaitTime
   const jobStalled =
-    elapsedTimeSec > 4 * jobDetails.initWaitTime &&
-    jobDetails.jobStatus !== JobStatus.Done &&
-    remainingTime < 3
+    elapsedTimeSec > minJobWaitTime && !jobDone && remainingTime < 3
 
   return (
     <StyledContainer>
@@ -299,13 +292,13 @@ const PendingItem = memo(({ jobId }) => {
                   <>(queue position: {jobDetails.queue_position})</>
                 )}
                 <br />
-                Estimated time remaining:{' '}
                 {isNaN(jobDetails.wait_time) ||
                 (jobDetails.wait_time === 0 && pctComplete === 0) ? (
-                  '...'
+                  'Estimating time remaining...'
                 ) : (
                   <>
-                    {jobDetails.wait_time}s ({pctComplete.toFixed(0)}
+                    Estimated time remaining: {jobDetails.wait_time}s (
+                    {pctComplete.toFixed(0)}
                     %)
                   </>
                 )}
