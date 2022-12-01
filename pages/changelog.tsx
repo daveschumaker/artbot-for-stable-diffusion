@@ -120,6 +120,17 @@ const Changelog = () => {
             managing workers (if you happen to be contributing your GPU power to
             The Horde).
           </StyledLi>
+          <StyledLi>
+            Feature: Automatically restore prompts after server is updated.
+            <AddedInfo>
+              If you have been bitten by the issue where I push an update to
+              ArtBot while you&apos;re in the middle of writing a prompt and
+              then lose everything because the page reloads... I&apos;m really
+              sorry! This should no longer happen! Your prompts (and associated
+              image generation settings) will be automatically restored after
+              future server updates.
+            </AddedInfo>
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

@@ -16,7 +16,7 @@ import { lightTheme, darkTheme } from '../styles/theme'
 import '../styles/globals.css'
 
 import { initDb } from '../utils/db'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import {
   appInfoStore,
   setBuildId,
@@ -27,7 +27,7 @@ import { useStore } from 'statery'
 import ServerUpdateModal from '../components/ServerUpdateModal'
 import MobileFooter from '../components/MobileFooter'
 import { isAppActive } from '../utils/appUtils'
-import { useEffectOnce } from '../hooks/useEffectOnce'
+
 initAppSettings()
 initDb()
 
@@ -101,6 +101,7 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
       if (!buildId) {
         setBuildId(build)
       } else if (buildId !== build) {
+        setBuildId(build)
         setShowServerUpdateModal(true)
       }
     } catch (err) {
@@ -109,14 +110,14 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
     }
   }, [buildId])
 
-  useEffectOnce(() => {
+  useEffect(() => {
     fetchAppInfo()
     const interval = setInterval(async () => {
       fetchAppInfo()
-    }, 60000)
+    }, 10000)
 
     return () => clearInterval(interval)
-  })
+  }, [fetchAppInfo])
 
   return (
     <ThemeProvider theme={darkModeActive ? darkTheme : lightTheme}>

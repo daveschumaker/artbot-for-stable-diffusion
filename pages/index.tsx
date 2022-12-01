@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { useEffect, useReducer, useState } from 'react'
+import { useCallback, useEffect, useReducer, useState } from 'react'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 
@@ -29,6 +29,8 @@ import Head from 'next/head'
 import { setAvailableModels, setModelDetails } from '../store/modelStore'
 import ServerMessage from '../components/ServerMessage'
 import StylesDrodown from '../components/CreatePage/StylesDropdown'
+import { useStore } from 'statery'
+import { appInfoStore } from '../store/appStore'
 
 interface InputTarget {
   name: string
@@ -92,6 +94,11 @@ export async function getServerSideProps() {
 }
 
 const Home: NextPage = ({ availableModels, modelDetails }: any) => {
+  const appState = useStore(appInfoStore)
+  const { buildId } = appState
+
+  const [build, setBuild] = useState(buildId)
+
   const router = useRouter()
   const { query } = router
 
@@ -155,6 +162,20 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
     setInputCache({ ...state, ...newState })
     return { ...state, ...newState }
   }, initialState)
+
+  const watchBuild = useCallback(() => {
+    if (!build) {
+      setBuild(buildId)
+      return
+    }
+
+    if (buildId !== build) {
+      const imageParams = new CreateImageRequest(input)
+      // @ts-ignore
+      const shareLinkDetails = ShareLinkDetails.encode(imageParams)
+      localStorage.setItem('reloadPrompt', shareLinkDetails)
+    }
+  }, [build, buildId, input])
 
   const handleChangeValue = (event: InputEvent) => {
     const inputName = event.target.name
@@ -285,7 +306,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
   }
 
   const updateDefaultInput = async () => {
-    if (!query.edit && !query.share) {
+    if (!editMode && !shareMode) {
       if (localStorage.getItem('orientation')) {
         setInput({ orientationType: localStorage.getItem('orientation') })
       }
@@ -340,7 +361,11 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
   }
 
   useEffect(() => {
-    if (!query.edit && !query.share) {
+    watchBuild()
+  }, [watchBuild])
+
+  useEffect(() => {
+    if (!editMode && !shareMode) {
       updateDefaultInput()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -355,7 +380,14 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
     setAvailableModels(availableModels)
     setModelDetails(modelDetails)
 
-    if (!editMode && !shareMode && !loadModel && getInputCache()) {
+    const restorePrompt = localStorage.getItem('reloadPrompt')
+
+    if (restorePrompt) {
+      const shareParams = ShareLinkDetails.decode(restorePrompt as string) || {}
+      initialState = { ...defaultState, ...shareParams }
+      setInput({ ...initialState })
+      localStorage.removeItem('reloadPrompt')
+    } else if (!editMode && !shareMode && !loadModel && getInputCache()) {
       setInput({ ...getInputCache() })
     } else if (editMode) {
       setInput({ ...loadEditPrompt() })
