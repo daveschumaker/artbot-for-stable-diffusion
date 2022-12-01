@@ -1,3 +1,5 @@
+import { getApiHostServer } from '../utils/appUtils'
+
 export const deletePendingJobFromApi = async (jobId: string) => {
   if (!jobId) {
     return {
@@ -6,7 +8,7 @@ export const deletePendingJobFromApi = async (jobId: string) => {
   }
 
   try {
-    await fetch(`https://stablehorde.net/api/v2/generate/status/${jobId}`, {
+    await fetch(`${getApiHostServer()}/api/v2/generate/status/${jobId}`, {
       method: 'DELETE'
     })
   } catch (err) {

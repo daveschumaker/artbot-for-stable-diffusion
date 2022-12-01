@@ -1,3 +1,5 @@
+import { HORDE_DEV, HORDE_PROD } from '../constants'
+
 export const isAppActive = () => {
   if (localStorage.getItem('runBackground') === 'true') {
     return true
@@ -35,4 +37,15 @@ export function uuidv4() {
       (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
     ).toString(16)
   )
+}
+
+export const getApiHostServer = () => {
+  if (
+    localStorage.getItem('useBeta') === 'true' ||
+    localStorage.getItem('useBeta') === 'userTrue'
+  ) {
+    return HORDE_DEV
+  }
+
+  return HORDE_PROD
 }

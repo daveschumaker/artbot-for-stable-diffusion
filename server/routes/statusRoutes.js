@@ -1,14 +1,15 @@
-const { getServerMessage } = require('../cache/serverStatus.js')
+const { getServerSettings } = require('../cache/serverStatus.js')
 
 const express = require('express')
 const router = express.Router()
 
 router.get('/message', async (req, res) => {
-  const { message } = getServerMessage()
+  const { message, enrollPct } = getServerSettings()
 
   res.send({
     success: true,
-    message
+    message,
+    enrollPct
   })
 })
 

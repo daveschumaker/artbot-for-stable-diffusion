@@ -5,6 +5,8 @@ type Data = {
   success: boolean
   build?: string
   message?: string
+  enrollPct?: number
+  showBetaOption?: boolean
 }
 
 export default async function handler(
@@ -16,7 +18,9 @@ export default async function handler(
   }
 
   const { build } = buildInfo
-  let message
+  let message = ''
+  let enrollPct = 0
+  let showBetaOption = false
 
   try {
     const resp = await fetch(
@@ -28,11 +32,15 @@ export default async function handler(
 
     const data = (await resp.json()) || {}
     message = data.message
+    enrollPct = data.enrollPct
+    showBetaOption = data.showBetaOption
   } catch (err) {}
 
   res.send({
     success: true,
     build,
-    message
+    message,
+    enrollPct,
+    showBetaOption
   })
 }

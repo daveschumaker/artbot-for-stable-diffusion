@@ -1,12 +1,16 @@
 const fetch = require('node-fetch')
 
 const cache = {
-  message: ''
+  message: '',
+  enrollPct: 0,
+  showBetaOption: false
 }
 
-const getServerMessage = () => {
+const getServerSettings = () => {
   return {
-    message: cache.message
+    message: cache.message,
+    enrollPct: cache.enrollPct,
+    showBetaOption: cache.showBetaOption
   }
 }
 
@@ -23,6 +27,8 @@ const fetchServerMessage = async () => {
 
     if (typeof data === 'object' && !Array.isArray(data) && data !== null) {
       cache.message = data.message
+      cache.enrollPct = data.enrollPct || 0
+      cache.showBetaOption = data.showBetaOption || false
     }
   } catch (err) {}
 }
@@ -38,6 +44,6 @@ const initServerStatusFetch = async () => {
 }
 
 module.exports = {
-  getServerMessage,
+  getServerSettings,
   initServerStatusFetch
 }

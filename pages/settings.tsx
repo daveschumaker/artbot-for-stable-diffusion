@@ -15,6 +15,7 @@ import Tooltip from '../components/UI/Tooltip'
 import { useEffectOnce } from '../hooks/useEffectOnce'
 import {
   IWorkers,
+  setWorker,
   setWorkers,
   unsetUserInfo,
   userInfoStore
@@ -24,6 +25,13 @@ import Panel from '../components/UI/Panel'
 import PointIcon from '../components/icons/PointIcon'
 import SpinnerV2 from '../components/Spinner'
 import { formatSeconds } from '../utils/helperUtils'
+import { sleep } from '../utils/sleep'
+import PlayIcon from '../components/icons/PlayIcon'
+import PauseIcon from '../components/icons/PauseIcon'
+import { getApiHostServer } from '../utils/appUtils'
+import MenuButton from '../components/UI/MenuButton'
+import DotsVerticalIcon from '../components/icons/DotsVerticalIcon'
+import { appInfoStore } from '../store/appStore'
 
 interface IWorkerChange {
   id: string
@@ -95,6 +103,7 @@ const OptionsPanel = styled.div`
 `
 
 const WorkerTitle = styled.div`
+  align-items: center;
   column-gap: 2px;
   display: flex;
   flex-direction: row;
@@ -111,19 +120,54 @@ const WorkerStatus = styled.div`
   margin-top: 8px;
 `
 
+const DropDownMenu = styled.div`
+  background-color: ${(props) => props.theme.body};
+  border: 2px solid ${(props) => props.theme.navLinkActive};
+  border-radius: 4px;
+  /* padding: 8px; */
+  position: absolute;
+  top: 0;
+  width: 200px;
+  right: -2px;
+  top: 36px;
+  z-index: 10;
+`
+
+const MenuItem = styled.li`
+  cursor: pointer;
+  padding: 4px 8px;
+  width: 100%;
+
+  &:hover {
+    background-color: ${(props) => props.theme.navLinkActive};
+    color: ${(props) => props.theme.body};
+  }
+`
+
+const ShowOnMobile = styled.div`
+  @media (min-width: 640px) {
+    display: none;
+  }
+`
+
 const SettingsPage = () => {
   const router = useRouter()
+  const appStore = useStore(appInfoStore)
   const userStore = useStore(userInfoStore)
+
   const { worker_ids, workers } = userStore
+  const { showBetaOption } = appStore
 
   const [componentState, setComponentState] = useComponentState({
     apiKey: '',
+    loadingWorkerStatus: {},
     panel: 'stableHorde',
     preserveCreate: 'false',
     runBackground: 'false',
-    useTrusted: 'true',
+    showOptionsMenu: false,
+    useBeta: 'false',
     useNsfw: 'false',
-    loadingWorkerStatus: {}
+    useTrusted: 'true'
   })
 
   const handleWorkerChange = async (worker: IWorkerChange) => {
@@ -133,7 +177,7 @@ const SettingsPage = () => {
 
     setComponentState({ loadingWorkerStatus })
 
-    await fetch(`https://stablehorde.net/api/v2/workers/${id}`, {
+    await fetch(`${getApiHostServer()}/api/v2/workers/${id}`, {
       body: JSON.stringify({
         maintenance: state === 'pause' ? true : false,
         name,
@@ -147,17 +191,16 @@ const SettingsPage = () => {
       method: 'PUT'
     })
 
-    const workerRes = await fetch(
-      `https://stablehorde.net/api/v2/workers/${id}`
-    )
-    const data = await workerRes.json()
+    await sleep(1000)
 
-    console.log(`WORKER DATA`, data)
+    const workerRes = await fetch(`${getApiHostServer()}/api/v2/workers/${id}`)
+    const data = await workerRes.json()
+    setWorker(data)
+
+    await fetchUserDetails(componentState.apiKey)
 
     loadingWorkerStatus[id] = false
     setComponentState({ loadingWorkerStatus })
-
-    await fetchUserDetails(componentState.apiKey)
   }
 
   const handleApiInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -179,6 +222,12 @@ const SettingsPage = () => {
     const { value } = obj
     localStorage.setItem('runBackground', value)
     setComponentState({ runBackground: value })
+  }
+
+  const handleBetaSelect = (obj: any) => {
+    const { value } = obj
+    localStorage.setItem('useBeta', value === 'true' ? 'userTrue' : 'userFalse')
+    setComponentState({ useBeta: value })
   }
 
   const handleTrustedSelect = (obj: any) => {
@@ -238,6 +287,19 @@ const SettingsPage = () => {
       })
     }
 
+    if (
+      localStorage.getItem('useBeta') === 'true' ||
+      localStorage.getItem('useBeta') === 'userTrue'
+    ) {
+      setComponentState({
+        useBeta: 'true'
+      })
+    } else {
+      setComponentState({
+        useBeta: false
+      })
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -247,7 +309,7 @@ const SettingsPage = () => {
 
       for (const idx in worker_ids) {
         const workerRes = await fetch(
-          `https://stablehorde.net/api/v2/workers/${worker_ids[idx]}`
+          `${getApiHostServer()}/api/v2/workers/${worker_ids[idx]}`
         )
         const workerData = await workerRes.json()
         const { id } = workerData
@@ -276,7 +338,80 @@ const SettingsPage = () => {
       <Head>
         <title>ArtBot - Settings</title>
       </Head>
-      <PageTitle>Settings</PageTitle>
+      <div className="flex flex-row w-full items-center">
+        <div className="inline-block w-1/2">
+          <PageTitle>Settings</PageTitle>
+        </div>
+        <div className="flex flex-row justify-end w-1/2 items-start h-[38px] relative gap-2">
+          <ShowOnMobile>
+            <MenuButton
+              active={componentState.showOptionsMenu}
+              title="Click for more settings"
+              onClick={() => {
+                if (componentState.showOptionsMenu) {
+                  setComponentState({
+                    showOptionsMenu: false
+                  })
+                } else {
+                  setComponentState({
+                    showOptionsMenu: true
+                  })
+                }
+              }}
+            >
+              <div className="flex flex-row gap-2 pl-2">
+                Stable Horde Settings
+                <DotsVerticalIcon size={24} />
+              </div>
+            </MenuButton>
+            {componentState.showOptionsMenu && (
+              <DropDownMenu>
+                <ul>
+                  <MenuItem
+                    onClick={() => {
+                      setComponentState({
+                        showOptionsMenu: false
+                      })
+                      router.push(
+                        //@ts-ignore
+                        `/settings`
+                      )
+                    }}
+                  >
+                    Stable Horde settings
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      setComponentState({
+                        showOptionsMenu: false
+                      })
+                      router.push(
+                        //@ts-ignore
+                        `/settings?panel=workers`
+                      )
+                    }}
+                  >
+                    Manage workers
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      setComponentState({
+                        showOptionsMenu: false
+                      })
+                      router.push(
+                        //@ts-ignore
+                        `/settings?panel=prefs`
+                      )
+                    }}
+                  >
+                    ArtBot preferences
+                  </MenuItem>
+                </ul>
+              </DropDownMenu>
+            )}
+          </ShowOnMobile>
+        </div>
+      </div>
       <SettingsWrapper>
         <LinksPanel>
           <LinksList>
@@ -291,7 +426,7 @@ const SettingsPage = () => {
               </Linker>
             </li>
             <li>
-              <Linker href="/settings?panel=pref" passHref>
+              <Linker href="/settings?panel=prefs" passHref>
                 ArtBot Preferences
               </Linker>
             </li>
@@ -416,6 +551,35 @@ const SettingsPage = () => {
                   />
                 </MaxWidth>
               </Section>
+              {showBetaOption && (
+                <Section>
+                  <SubSectionTitle>
+                    Enable Beta
+                    <div className="block text-xs mt-2 mb-2 w-full">
+                      Will route all requests to Stable Horde&apos;s beta server
+                      (if available). Used for testing purposes. Things may
+                      break.
+                    </div>
+                  </SubSectionTitle>
+                  <MaxWidth
+                    // @ts-ignore
+                    maxWidth="240"
+                  >
+                    <Select
+                      options={[
+                        { value: 'true', label: 'Yes' },
+                        { value: 'false', label: 'No' }
+                      ]}
+                      onChange={handleBetaSelect}
+                      value={
+                        componentState.useBeta === 'true'
+                          ? { value: 'true', label: 'Yes' }
+                          : { value: 'false', label: 'No' }
+                      }
+                    />
+                  </MaxWidth>
+                </Section>
+              )}
             </>
           ) : null}
           {router.query.panel === 'workers' ? (
@@ -432,90 +596,111 @@ const SettingsPage = () => {
                     You currently have no active workers on Stable Horde.
                   </Section>
                 ) : null}
-                {Object.keys(workers).map((key) => {
-                  const worker = workers[key]
+                <Section className="flex flex-col gap-2">
+                  {Object.keys(workers).map((key) => {
+                    const worker = workers[key]
 
-                  let statusColor = 'green'
-                  if (worker.online && worker.maintenance_mode) {
-                    statusColor = 'yellow'
-                  } else if (!worker.online) {
-                    statusColor = 'red'
-                  }
+                    let statusColor = 'green'
+                    if (worker.online && worker.maintenance_mode) {
+                      statusColor = 'yellow'
+                    } else if (!worker.online) {
+                      statusColor = 'red'
+                    }
 
-                  return (
-                    <Panel key={worker.id}>
-                      <WorkerTitle>
-                        <PointIcon
-                          size={28}
-                          fill={statusColor}
-                          stroke={statusColor}
-                        />
-                        <strong>{worker.name}</strong>
-                      </WorkerTitle>
-                      <WorkerId>id: {worker.id}</WorkerId>
-                      <WorkerStatus>
-                        <div>
-                          Status:{' '}
-                          {worker.online && worker.maintenance_mode && 'Paused'}
-                          {worker.online &&
-                            !worker.maintenance_mode &&
-                            'Online'}
-                          {!worker.online && 'Offline'}
-                        </div>
-                        <div>Uptime: {formatSeconds(worker.uptime)}</div>
-                        <div>
-                          Requests completed:{' '}
-                          {worker.requests_fulfilled?.toLocaleString()}
-                        </div>
-                      </WorkerStatus>
-                      <div className="mt-2">
-                        {worker.online && !worker.maintenance_mode && (
-                          <Button
-                            btnType="secondary"
-                            disabled={
-                              componentState.loadingWorkerStatus[worker.id]
-                            }
-                            onClick={() => {
-                              handleWorkerChange({
-                                id: worker.id,
-                                state: 'pause',
-                                name: worker.name,
-                                team: worker.team?.id ?? ''
-                              })
-                            }}
-                          >
-                            {componentState.loadingWorkerStatus[worker.id]
-                              ? 'Updating...'
-                              : 'Pause worker'}
-                          </Button>
+                    return (
+                      <Panel key={worker.id}>
+                        <WorkerTitle>
+                          <PointIcon
+                            size={28}
+                            fill={statusColor}
+                            stroke={statusColor}
+                          />
+                          <strong>{worker.name}</strong>
+                        </WorkerTitle>
+                        <WorkerId>id: {worker.id}</WorkerId>
+                        <WorkerStatus>
+                          <div>
+                            Status:{' '}
+                            {worker.online &&
+                              worker.maintenance_mode &&
+                              'Paused'}
+                            {worker.online &&
+                              !worker.maintenance_mode &&
+                              'Online'}
+                            {!worker.online && 'Offline'}
+                          </div>
+                          <div>
+                            Total uptime: {formatSeconds(worker.uptime)}
+                          </div>
+                          <div>Performance: {worker.performance}</div>
+                          <div>
+                            Requests completed:{' '}
+                            {worker.requests_fulfilled?.toLocaleString()}
+                          </div>
+                        </WorkerStatus>
+                        {worker.online && (
+                          <div className="mt-4">
+                            {worker.online && !worker.maintenance_mode && (
+                              <Button
+                                btnType="secondary"
+                                disabled={
+                                  componentState.loadingWorkerStatus[worker.id]
+                                }
+                                onClick={() => {
+                                  handleWorkerChange({
+                                    id: worker.id,
+                                    state: 'pause',
+                                    name: worker.name,
+                                    team: worker.team?.id ?? ''
+                                  })
+                                }}
+                              >
+                                {componentState.loadingWorkerStatus[
+                                  worker.id
+                                ] ? (
+                                  'Updating...'
+                                ) : (
+                                  <>
+                                    <PauseIcon /> Pause worker
+                                  </>
+                                )}
+                              </Button>
+                            )}
+                            {worker.online && worker.maintenance_mode && (
+                              <Button
+                                disabled={
+                                  componentState.loadingWorkerStatus[worker.id]
+                                }
+                                onClick={() => {
+                                  handleWorkerChange({
+                                    id: worker.id,
+                                    state: 'start',
+                                    name: worker.name,
+                                    team: worker.team?.id ?? ''
+                                  })
+                                }}
+                              >
+                                {componentState.loadingWorkerStatus[
+                                  worker.id
+                                ] ? (
+                                  'Updating...'
+                                ) : (
+                                  <>
+                                    <PlayIcon /> Re-start worker
+                                  </>
+                                )}
+                              </Button>
+                            )}
+                          </div>
                         )}
-                        {worker.online && worker.maintenance_mode && (
-                          <Button
-                            disabled={
-                              componentState.loadingWorkerStatus[worker.id]
-                            }
-                            onClick={() => {
-                              handleWorkerChange({
-                                id: worker.id,
-                                state: 'start',
-                                name: worker.name,
-                                team: worker.team?.id ?? ''
-                              })
-                            }}
-                          >
-                            {componentState.loadingWorkerStatus[worker.id]
-                              ? 'Updating...'
-                              : 'Re-start worker'}
-                          </Button>
-                        )}
-                      </div>
-                    </Panel>
-                  )
-                })}
+                      </Panel>
+                    )
+                  })}
+                </Section>
               </Section>
             </>
           ) : null}
-          {router.query.panel === 'pref' ? (
+          {router.query.panel === 'prefs' ? (
             <>
               <Section>
                 <PageTitle as="h2">ArtBot Preferences</PageTitle>

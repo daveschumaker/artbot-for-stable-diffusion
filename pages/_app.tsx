@@ -16,12 +16,18 @@ import { lightTheme, darkTheme } from '../styles/theme'
 import '../styles/globals.css'
 
 import { initDb } from '../utils/db'
-import { useCallback, useEffect, useState } from 'react'
-import { appInfoStore, setBuildId, setServerMessage } from '../store/appStore'
+import { useCallback, useState } from 'react'
+import {
+  appInfoStore,
+  setBuildId,
+  setServerMessage,
+  setShowBetaOption
+} from '../store/appStore'
 import { useStore } from 'statery'
 import ServerUpdateModal from '../components/ServerUpdateModal'
 import MobileFooter from '../components/MobileFooter'
 import { isAppActive } from '../utils/appUtils'
+import { useEffectOnce } from '../hooks/useEffectOnce'
 initAppSettings()
 initDb()
 
@@ -50,8 +56,45 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
       waitingForServerInfoRes = true
       const res = await fetch('/artbot/api/server-info')
       const data = await res.json()
-      const { build, message = '' } = data
+      const {
+        build,
+        message = '',
+        enrollPct = 0,
+        showBetaOption = false
+      } = data
       waitingForServerInfoRes = false
+
+      // If user has manually opted in or out of beta
+      // then ignore setting A/B test params.
+      const userBetaOption =
+        localStorage.getItem('useBeta') === 'userTrue' ||
+        localStorage.getItem('useBeta') === 'userFalse'
+
+      if (!userBetaOption) {
+        if (Number(localStorage.getItem('enrollPct')) !== enrollPct) {
+          localStorage.setItem('enrollPct', enrollPct)
+
+          const enrollValue = String(Math.random())
+          localStorage.setItem('enrollValue', enrollValue)
+
+          if (Number(enrollValue) <= enrollPct) {
+            localStorage.setItem('useBeta', 'true')
+          }
+        }
+
+        if (!localStorage.getItem('enrollPct') || enrollPct === 0) {
+          localStorage.removeItem('enrollPct')
+          localStorage.removeItem('enrollValue')
+          localStorage.setItem('useBeta', 'false')
+        }
+      }
+
+      if (!showBetaOption) {
+        localStorage.removeItem('enrollPct')
+        localStorage.removeItem('enrollValue')
+        localStorage.removeItem('useBeta')
+        setShowBetaOption(false)
+      }
 
       setServerMessage(message)
 
@@ -66,14 +109,14 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
     }
   }, [buildId])
 
-  useEffect(() => {
+  useEffectOnce(() => {
     fetchAppInfo()
     const interval = setInterval(async () => {
       fetchAppInfo()
     }, 60000)
 
     return () => clearInterval(interval)
-  }, [fetchAppInfo])
+  })
 
   return (
     <ThemeProvider theme={darkModeActive ? darkTheme : lightTheme}>

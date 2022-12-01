@@ -1,5 +1,6 @@
 import { modelInfoStore } from '../store/modelStore'
 import { GenerateResponse } from '../types'
+import { getApiHostServer } from '../utils/appUtils'
 import { modifyPromptForStylePreset } from '../utils/imageUtils'
 import { SourceProcessing } from '../utils/promptUtils'
 import { trackEvent } from './telemetry'
@@ -172,7 +173,7 @@ export const createImage = async (
   const { source_image = '', source_mask = '', ...rest } = imageParams
 
   try {
-    const resp = await fetch(`https://stablehorde.net/api/v2/generate/async`, {
+    const resp = await fetch(`${getApiHostServer()}/api/v2/generate/async`, {
       method: 'POST',
       body: JSON.stringify(imageParams),
       headers: {

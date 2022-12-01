@@ -13,6 +13,7 @@ export interface IWorker {
   maintenance_mode: boolean
   requests_fulfilled: number
   models: Array<string>
+  performance: string
 }
 
 export interface ITeam {

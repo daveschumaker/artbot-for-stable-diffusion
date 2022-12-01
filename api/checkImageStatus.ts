@@ -1,3 +1,5 @@
+import { getApiHostServer } from '../utils/appUtils'
+
 interface CheckResponse {
   success: boolean
   message?: string
@@ -26,7 +28,7 @@ export const checkImageStatus = async (
   isPending = true
   try {
     const res = await fetch(
-      `https://stablehorde.net/api/v2/generate/check/${jobId}`
+      `${getApiHostServer()}/api/v2/generate/check/${jobId}`
     )
 
     const statusCode = res.status

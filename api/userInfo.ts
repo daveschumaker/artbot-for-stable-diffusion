@@ -1,5 +1,5 @@
 import { IWorker, setUserInfo, setWorkers } from '../store/userStore'
-import { isAppActive } from '../utils/appUtils'
+import { getApiHostServer, isAppActive } from '../utils/appUtils'
 
 let isPending = false
 export const fetchUserDetails = async (apikey: string) => {
@@ -13,7 +13,7 @@ export const fetchUserDetails = async (apikey: string) => {
 
   isPending = true
   try {
-    const res = await fetch(`https://dev.stablehorde.net/api/v2/find_user`, {
+    const res = await fetch(`${getApiHostServer()}/api/v2/find_user`, {
       headers: {
         apikey
       }
@@ -38,7 +38,7 @@ export const fetchUserDetails = async (apikey: string) => {
 
       for (const idx in worker_ids) {
         const workerRes = await fetch(
-          `https://stablehorde.net/api/v2/workers/${worker_ids[idx]}`
+          `${getApiHostServer()}/api/v2/workers/${worker_ids[idx]}`
         )
         const workerData = await workerRes.json()
         const {
@@ -49,7 +49,8 @@ export const fetchUserDetails = async (apikey: string) => {
           online,
           requests_fulfilled,
           team,
-          uptime
+          uptime,
+          performance
         } = workerData
 
         workerInfo[id] = {
@@ -60,7 +61,8 @@ export const fetchUserDetails = async (apikey: string) => {
           online,
           requests_fulfilled,
           team,
-          uptime
+          uptime,
+          performance
         }
       }
 

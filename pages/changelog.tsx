@@ -106,7 +106,24 @@ const Changelog = () => {
         </Section>
       </Panel>
       <Section>
-        <SubSectionTitle>2022.10.29</SubSectionTitle>
+        <SubSectionTitle>2022.12.01</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Refactored the <Linker href="/pending">pending items page</Linker>.
+            Previously, if you queued up a whole bunch of images, things would
+            jump around, disappear, etc. It was just an annoying experience for
+            everyone.
+          </StyledLi>
+          <StyledLi>
+            Refactored the <Linker href="/settings">settings page</Linker>. The
+            layout is more logical now. There is also a simplified tool for
+            managing workers (if you happen to be contributing your GPU power to
+            The Horde).
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
+        <SubSectionTitle>2022.11.29</SubSectionTitle>
         <StyledUl>
           <StyledLi>
             Fix: Finally fixed the pesky bug where everything would disappear

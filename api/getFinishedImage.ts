@@ -1,3 +1,5 @@
+import { getApiHostServer } from '../utils/appUtils'
+
 interface FinishedImageResponse {
   success: boolean
   status?: string
@@ -37,7 +39,7 @@ export const getFinishedImage = async (
 
   try {
     const res = await fetch(
-      `https://stablehorde.net/api/v2/generate/status/${jobId}`,
+      `${getApiHostServer()}/api/v2/generate/status/${jobId}`,
       {
         method: 'GET',
         headers: {

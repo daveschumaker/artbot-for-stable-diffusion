@@ -4,6 +4,7 @@ interface AppStore {
   buildId: string
   indexDbSupport: boolean
   serverMessage: string
+  showBetaOption: boolean
   newImageReady: string
   showImageReadyToast: boolean
 }
@@ -12,9 +13,16 @@ export const appInfoStore = makeStore<AppStore>({
   buildId: '',
   indexDbSupport: true,
   serverMessage: '',
+  showBetaOption: false,
   newImageReady: '',
   showImageReadyToast: false
 })
+
+export const setShowBetaOption = (val: boolean) => {
+  appInfoStore.set(() => ({
+    showBetaOption: val
+  }))
+}
 
 export const setBuildId = (id: string) => {
   appInfoStore.set(() => ({
