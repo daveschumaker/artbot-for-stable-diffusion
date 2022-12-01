@@ -94,6 +94,8 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
         localStorage.removeItem('enrollValue')
         localStorage.removeItem('useBeta')
         setShowBetaOption(false)
+      } else {
+        setShowBetaOption(true)
       }
 
       setServerMessage(message)
