@@ -73,6 +73,13 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
             clonedParams.models = [CreateImageRequest.getRandomModel()]
           }
 
+          if (clonedParams.orientation === 'random') {
+            clonedParams = {
+              ...clonedParams,
+              ...CreateImageRequest.getRandomOrientation()
+            }
+          }
+
           if (clonedParams.sampler === 'random') {
             clonedParams.sampler = CreateImageRequest.getRandomSampler({
               steps: clonedParams.steps,
@@ -113,6 +120,13 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
         clonedParams.models = [CreateImageRequest.getRandomModel()]
       }
 
+      if (clonedParams.orientation === 'random') {
+        clonedParams = {
+          ...clonedParams,
+          ...CreateImageRequest.getRandomOrientation()
+        }
+      }
+
       if (clonedParams.sampler === 'random') {
         clonedParams.sampler = CreateImageRequest.getRandomSampler({
           steps: clonedParams.steps,
@@ -146,6 +160,13 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
 
       if (clonedParams.models[0] === 'random') {
         clonedParams.models = [CreateImageRequest.getRandomModel()]
+      }
+
+      if (clonedParams.orientation === 'random') {
+        clonedParams = {
+          ...clonedParams,
+          ...CreateImageRequest.getRandomOrientation()
+        }
       }
 
       if (clonedParams.sampler === 'random') {

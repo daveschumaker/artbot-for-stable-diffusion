@@ -107,15 +107,21 @@ class CreateImageRequest {
     this.jobTimestamp = Date.now()
 
     // Orientation settings
-    const imageSize: ImageSize = orientationDetails(
-      orientationType,
-      height,
-      width
-    )
+    if (orientationType !== 'random') {
+      const imageSize: ImageSize = orientationDetails(
+        orientationType,
+        height,
+        width
+      )
 
-    this.orientation = imageSize.orientation
-    this.width = Number(imageSize.width)
-    this.height = Number(imageSize.height)
+      this.orientation = imageSize.orientation
+      this.width = Number(imageSize.width)
+      this.height = Number(imageSize.height)
+    } else {
+      this.orientation = 'random'
+      this.width = 512
+      this.height = 512
+    }
 
     this.karras = Boolean(karras)
 
@@ -155,6 +161,16 @@ class CreateImageRequest {
   static getRandomModel() {
     const currentModels = modelInfoStore.state.availableModelNames
     return currentModels[Math.floor(Math.random() * currentModels.length)]
+  }
+
+  static getRandomOrientation() {
+    const imageSize: ImageSize = orientationDetails('random')
+
+    return {
+      orientation: imageSize.orientation,
+      height: Number(imageSize.height),
+      width: Number(imageSize.width)
+    }
   }
 
   static getRandomSampler({ source_processing, steps }: IRandomSampler) {

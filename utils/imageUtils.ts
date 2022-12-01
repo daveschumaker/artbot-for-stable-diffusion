@@ -88,8 +88,8 @@ export const randomSampler = (steps: number, isImg2Img: boolean) => {
 
 export const orientationDetails = (
   orientation: string,
-  height: number,
-  width: number
+  height: number = 512,
+  width: number = 512
 ): ImageOrientation => {
   const orientationIds = [
     'landscape-16x9',
