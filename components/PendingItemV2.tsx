@@ -1,9 +1,8 @@
 import { memo, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
-import { useLiveQuery } from 'dexie-react-hooks'
 
-import { db, deletePendingJobFromDb } from '../utils/db'
+import { deletePendingJobFromDb } from '../utils/db'
 import ProgressBar from './ProgressBarV2'
 import { setNewImageReady, setShowImageReadyToast } from '../store/appStore'
 import { Button } from './UI/Button'
