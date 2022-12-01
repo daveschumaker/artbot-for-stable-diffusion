@@ -4,8 +4,15 @@ interface Params {
 }
 
 export const trackGaEvent = ({ action, params }: Params) => {
+  if (typeof window === 'undefined') {
+    return
+  }
+
   // @ts-ignore
-  window.gtag('event', action, params)
+  if (window.gtag) {
+    // @ts-ignore
+    window.gtag('event', action, params)
+  }
 }
 
 export const trackEvent = async (obj = {}) => {
