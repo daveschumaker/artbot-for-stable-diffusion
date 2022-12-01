@@ -339,10 +339,10 @@ const SettingsPage = () => {
         <title>ArtBot - Settings</title>
       </Head>
       <div className="flex flex-row w-full items-center">
-        <div className="inline-block w-1/2">
+        <div className="inline-block w-1/4">
           <PageTitle>Settings</PageTitle>
         </div>
-        <div className="flex flex-row justify-end w-1/2 items-start h-[38px] relative gap-2">
+        <div className="flex flex-row justify-end w-3/4 items-start h-[38px] relative gap-2">
           <ShowOnMobile>
             <MenuButton
               active={componentState.showOptionsMenu}
@@ -589,9 +589,8 @@ const SettingsPage = () => {
                 {componentState.apiKey && worker_ids === null ? (
                   <SpinnerV2 />
                 ) : null}
-                {componentState.apiKey &&
-                Array.isArray(worker_ids) &&
-                worker_ids.length === 0 ? (
+                {(Array.isArray(worker_ids) && worker_ids.length === 0) ||
+                !componentState.apiKey ? (
                   <Section>
                     You currently have no active workers on Stable Horde.
                   </Section>
