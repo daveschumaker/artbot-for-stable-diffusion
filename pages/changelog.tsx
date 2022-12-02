@@ -97,16 +97,22 @@ const Changelog = () => {
               solid resolution. It may work for you, it may not. Seems to depend
               on which worker is available at a given time.
             </StyledLi>
-            <StyledLi>
-              Due to the release of Stable Diffusion 2.0 by Stability.Ai, there
-              is a lot of interest in generating images with the new model. The
-              Stable Horde API has been under heavy load and requests are taking
-              longer than usual. A database upgrade is planned for Stable Horde
-              in the next few days that should increase performance.
-            </StyledLi>
           </StyledUl>
         </Section>
       </Panel>
+      <Section>
+        <SubSectionTitle>2022.12.02</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Shareable model information. Do you want to know more about{' '}
+            <Linker href="/info#Clazy" passHref>
+              Clazy?
+            </Linker>{' '}
+            Or maybe share the details about this particular model with a
+            friend? Easy! Hit the link icon next to the model name.
+          </StyledLi>
+        </StyledUl>
+      </Section>
       <Section>
         <SubSectionTitle>2022.12.01</SubSectionTitle>
         <StyledUl>
