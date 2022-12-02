@@ -30,8 +30,9 @@ import PlayIcon from '../components/icons/PlayIcon'
 import PauseIcon from '../components/icons/PauseIcon'
 import { getApiHostServer } from '../utils/appUtils'
 import MenuButton from '../components/UI/MenuButton'
-import DotsVerticalIcon from '../components/icons/DotsVerticalIcon'
 import { appInfoStore } from '../store/appStore'
+import ChevronRightIcon from '../components/icons/ChevronRightIcon'
+import ChevronDownIcon from '../components/icons/ChevronDownIcon'
 
 interface IWorkerChange {
   id: string
@@ -359,9 +360,13 @@ const SettingsPage = () => {
                 }
               }}
             >
-              <div className="flex flex-row gap-2 pl-2">
+              <div className="flex flex-row gap-1 pr-2">
+                {componentState.showOptionsMenu ? (
+                  <ChevronDownIcon />
+                ) : (
+                  <ChevronRightIcon />
+                )}
                 Stable Horde Settings
-                <DotsVerticalIcon size={24} />
               </div>
             </MenuButton>
             {componentState.showOptionsMenu && (
