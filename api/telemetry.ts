@@ -15,7 +15,17 @@ export const trackGaEvent = ({ action, params }: Params) => {
   }
 }
 
-export const trackEvent = async (obj = {}) => {
+export const trackEvent = async (obj: any = {}) => {
+  const useBeta = localStorage.getItem('useBeta')
+
+  if (useBeta === 'true' || useBeta === 'userTrue') {
+    if (!obj.data) {
+      obj.data = {}
+    }
+
+    obj.data = { ...obj.data, useBeta }
+  }
+
   if (
     typeof window !== 'undefined' &&
     window.location.host.indexOf('localhost') >= 0

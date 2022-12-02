@@ -92,15 +92,17 @@ const Changelog = () => {
           <SubSectionTitle>Ongoing issues:</SubSectionTitle>
           <StyledUl>
             <StyledLi>
-              There are backend issues with inpainting via the Stable Horde API
-              at the moment and I am waiting on a more solid resolution. It may
-              work for you, it may not.
+              There are backend issues with workers using inpainting models via
+              the Stable Horde API at the moment and I am waiting on a more
+              solid resolution. It may work for you, it may not. Seems to depend
+              on which worker is available at a given time.
             </StyledLi>
             <StyledLi>
               Due to the release of Stable Diffusion 2.0 by Stability.Ai, there
               is a lot of interest in generating images with the new model. The
               Stable Horde API has been under heavy load and requests are taking
-              longer than usual.
+              longer than usual. A database upgrade is planned for Stable Horde
+              in the next few days that should increase performance.
             </StyledLi>
           </StyledUl>
         </Section>
@@ -130,6 +132,11 @@ const Changelog = () => {
               image generation settings) will be automatically restored after
               future server updates.
             </AddedInfo>
+          </StyledLi>
+          <StyledLi>
+            Add some additional telemetry to better log requests created using
+            the beta option for better error handling and performance
+            monitoring.
           </StyledLi>
         </StyledUl>
       </Section>
