@@ -637,7 +637,7 @@ const AdvancedOptionsPanel = ({
           <Input
             // @ts-ignore
             className="mb-2"
-            type="number"
+            type="text"
             name="seed"
             onChange={handleChangeInput}
             // @ts-ignore
