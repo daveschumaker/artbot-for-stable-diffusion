@@ -55,6 +55,7 @@ interface ParamsObject {
   denoising_strength?: number
   karras: boolean
   post_processing?: Array<string>
+  n: number
 }
 
 const toBool = (value?: string | null) => {
@@ -92,12 +93,13 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
   const apiParams: ApiParams = {
     prompt,
     params: {
-      sampler_name: sampler,
       cfg_scale: Number(cfg_scale),
+      sampler_name: sampler,
       height: Number(height),
       width: Number(width),
       steps: Number(steps),
-      karras
+      karras,
+      n: 1
     },
     nsfw: allowNsfw, // Use workers that allow NSFW images
     censor_nsfw: !allowNsfw, // Show user NSFW images if created
@@ -113,6 +115,8 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
 
   if (seed) {
     apiParams.params.seed = seed
+  } else {
+    apiParams.params.seed = ''
   }
 
   if (source_processing === SourceProcessing.Img2Img) {
@@ -134,6 +138,8 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
 
   if (post_processing.length > 0) {
     apiParams.params.post_processing = post_processing
+  } else {
+    apiParams.params.post_processing = []
   }
 
   if (stylePreset && stylePreset !== 'none') {

@@ -11,6 +11,7 @@ import Header from '../components/UI/Header'
 import NavBar from '../components/UI/NavBar'
 import PollController from '../components/PollController'
 
+import 'react-toastify/dist/ReactToastify.css'
 import { GlobalStyles } from '../styles/globalStyles'
 import { lightTheme, darkTheme } from '../styles/theme'
 import '../styles/globals.css'
@@ -27,6 +28,7 @@ import { useStore } from 'statery'
 import ServerUpdateModal from '../components/ServerUpdateModal'
 import MobileFooter from '../components/MobileFooter'
 import { isAppActive } from '../utils/appUtils'
+import { ToastContainer } from 'react-toastify'
 
 initAppSettings()
 initDb()
@@ -184,6 +186,7 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
         ></meta>
         <link rel="icon" type="image/x-icon" href="/artbot/favicon.ico"></link>
       </Head>
+      <ToastContainer />
       <PollController />
       <ContentWrapper>
         {showServerUpdateModal && <ServerUpdateModal />}

@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
-import { ToastContainer, toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 
 import { deleteCompletedImage } from '../utils/db'
 import ConfirmationModal from './ConfirmationModal'
@@ -18,7 +18,6 @@ import ImageSquare from './ImageSquare'
 import { savePrompt, SourceProcessing } from '../utils/promptUtils'
 import ShareIcon from './icons/ShareIcon'
 import ShareLinkDetails from '../models/ShareableLink'
-import 'react-toastify/dist/ReactToastify.css'
 
 interface ImageDetails {
   upscaled?: boolean
@@ -144,7 +143,6 @@ const ImageDetails = ({
 
   return (
     <div className="mt-2 text-left">
-      <ToastContainer />
       {showDeleteModal && (
         <ConfirmationModal
           onConfirmClick={() => handleDeleteImageClick(imageDetails.jobId)}

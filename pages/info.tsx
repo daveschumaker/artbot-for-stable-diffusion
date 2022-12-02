@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import Head from 'next/head'
-import React, { useCallback } from 'react'
-import { useStore } from 'statery'
+import React, { useCallback, useEffect } from 'react'
 import { useRouter } from 'next/router'
+import { toast } from 'react-toastify'
 
 import { trackEvent } from '../api/telemetry'
 import PageTitle from '../components/UI/PageTitle'
@@ -10,15 +10,18 @@ import Panel from '../components/UI/Panel'
 import TextButton from '../components/UI/TextButton'
 import useComponentState from '../hooks/useComponentState'
 import { useEffectOnce } from '../hooks/useEffectOnce'
-import {
-  modelInfoStore,
-  setAvailableModels,
-  setModelDetails
-} from '../store/modelStore'
+import { setAvailableModels, setModelDetails } from '../store/modelStore'
 // import { filterCompletedByModel } from '../utils/db'
 import SpinnerV2 from '../components/Spinner'
 import Image from 'next/image'
 import ServerMessage from '../components/ServerMessage'
+import LinkIcon from '../components/icons/LinkIcon'
+import styled from 'styled-components'
+import Linker from '../components/UI/Linker'
+
+const StyledLinkIcon = styled(LinkIcon)`
+  cursor: pointer;
+`
 
 export async function getServerSideProps() {
   let availableModels: Array<any> = []
@@ -48,8 +51,9 @@ export async function getServerSideProps() {
 
 const InfoPage = ({ availableModels, modelDetails }: any) => {
   const router = useRouter()
-  const modelState = useStore(modelInfoStore)
   const [componentState, setComponentState] = useComponentState({
+    availableModels: availableModels,
+    modelDetails: modelDetails,
     imageCounts: {},
     isLoading: false,
     sort: 'count',
@@ -59,15 +63,15 @@ const InfoPage = ({ availableModels, modelDetails }: any) => {
   const sortModels = useCallback(() => {
     const modelDetailsArray: Array<any> = []
 
-    for (const model in modelState.modelDetails) {
-      const [modelStats = {}] = modelState.availableModels.filter(
+    for (const model in componentState.modelDetails) {
+      const [modelStats = {}] = componentState.availableModels.filter(
         (obj: any) => {
           return obj.name === model
         }
       )
 
       modelDetailsArray.push({
-        ...modelState.modelDetails[model],
+        ...componentState.modelDetails[model],
         // @ts-ignore
         count: modelStats.count || 0,
         numImages: componentState?.imageCounts[model] || 0,
@@ -104,8 +108,8 @@ const InfoPage = ({ availableModels, modelDetails }: any) => {
   }, [
     componentState.imageCounts,
     componentState.sort,
-    modelState.availableModels,
-    modelState.modelDetails
+    componentState.availableModels,
+    componentState.modelDetails
   ])
 
   // const updateLocalCount = useCallback(async () => {
@@ -133,95 +137,119 @@ const InfoPage = ({ availableModels, modelDetails }: any) => {
       const { description, name, nsfw, trigger, showcases, style } =
         modelDetails
 
-      const modelStats = modelState.availableModels.filter((obj) => {
+      const modelStats = componentState.availableModels.filter((obj: any) => {
         return obj.name === name
       })
 
       modelDetailsArray.push(
-        <Panel className="mb-2 text-sm" key={`${name}_panel_${idx}`}>
-          <div className="text-lg">
-            <strong>{name}</strong>
-          </div>
-          <div className="mb-2">
-            {nsfw ? 'This model generates NSFW images. ' : ''}
-            {description}
-          </div>
-          <div>
-            <strong>Workers available:</strong> {modelStats[0]?.count || 0}
-          </div>
-          <div>
-            <strong>Total performance:</strong>{' '}
-            {modelStats[0]?.performance?.toLocaleString() || 'N/A'}{' '}
-            mega-pixelsteps
-          </div>
-          <div>
-            <strong>Queued work:</strong>{' '}
-            {modelStats[0]?.queued?.toLocaleString() || 'N/A'} mega-pixelsteps
-          </div>
-          <div className="mb-2">
-            <strong>Estimated queue time:</strong> ~{modelStats[0]?.eta || 0}{' '}
-            seconds
-          </div>
-          <div>
-            <strong>Style:</strong> {style}
-          </div>
-          {trigger ? (
-            <div>
-              <strong>Triggers:</strong> {trigger}
+        <div key={`${name}_panel_${idx}`}>
+          <a id={name} />
+          <Panel className="mb-2 text-sm">
+            <div className="flex flex-row gap-1 items-center text-lg">
+              <Linker
+                href={`/info#${name}`}
+                onClick={() => {
+                  navigator?.clipboard
+                    ?.writeText(`https://tinybots.net/artbot/info/#${name}`)
+                    .then(() => {
+                      toast.success('Model URL copied!', {
+                        position: 'top-center',
+                        autoClose: 2500,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: false,
+                        draggable: false,
+                        progress: undefined,
+                        theme: 'light'
+                      })
+                    })
+                }}
+              >
+                <StyledLinkIcon />
+              </Linker>
+              <strong>{name}</strong>
             </div>
-          ) : null}
-          {showcases && showcases.length > 0 ? (
+            <div className="mb-2">
+              {nsfw ? 'This model generates NSFW images. ' : ''}
+              {description}
+            </div>
             <div>
-              <div className="mb-2">
-                <strong>Image showcase:</strong>
+              <strong>Workers available:</strong> {modelStats[0]?.count || 0}
+            </div>
+            <div>
+              <strong>Total performance:</strong>{' '}
+              {modelStats[0]?.performance?.toLocaleString() || 'N/A'}{' '}
+              mega-pixelsteps
+            </div>
+            <div>
+              <strong>Queued work:</strong>{' '}
+              {modelStats[0]?.queued?.toLocaleString() || 'N/A'} mega-pixelsteps
+            </div>
+            <div className="mb-2">
+              <strong>Estimated queue time:</strong> ~{modelStats[0]?.eta || 0}{' '}
+              seconds
+            </div>
+            <div>
+              <strong>Style:</strong> {style}
+            </div>
+            {trigger ? (
+              <div>
+                <strong>Triggers:</strong> {trigger}
               </div>
-              <div className="flex flex-col md:flex-row w-full gap-2 mb-2">
-                {showcases.map((img: string, idx: number) => {
-                  return (
-                    <div
-                      className="max-w-[490px]"
-                      key={`${name}_showcase_${idx}`}
-                    >
-                      <Image
-                        className="rounded"
-                        src={img}
-                        alt={`Example of images created using ${name} model.`}
-                        height={490}
-                        width={490}
-                      />
-                    </div>
-                  )
-                })}
+            ) : null}
+            {showcases && showcases.length > 0 ? (
+              <div>
+                <div className="mb-2">
+                  <strong>Image showcase:</strong>
+                </div>
+                <div className="flex flex-col md:flex-row w-full gap-2 mb-2">
+                  {showcases.map((img: string, idx: number) => {
+                    return (
+                      <div
+                        className="max-w-[490px]"
+                        key={`${name}_showcase_${idx}`}
+                      >
+                        <Image
+                          className="rounded"
+                          src={img}
+                          alt={`Example of images created using ${name} model.`}
+                          height={490}
+                          width={490}
+                        />
+                      </div>
+                    )
+                  })}
+                </div>
               </div>
+            ) : null}
+            {componentState.imageCounts[name] >= 0 ? (
+              <div>
+                You have made {componentState.imageCounts[name] || 0} images
+                with this model.
+              </div>
+            ) : null}
+            <div className="flex flex-row gap-2 mt-2">
+              <TextButton
+                disabled={
+                  isNaN(modelStats[0]?.count) || modelStats[0]?.count <= 0
+                }
+                onClick={() => {
+                  router.push(`/?model=${name}`)
+                }}
+              >
+                Create
+              </TextButton>
+              <TextButton
+                disabled={componentState.imageCounts[name] <= 0}
+                onClick={() => {
+                  router.push(`/images?model=${name}`)
+                }}
+              >
+                View your images
+              </TextButton>
             </div>
-          ) : null}
-          {componentState.imageCounts[name] >= 0 ? (
-            <div>
-              You have made {componentState.imageCounts[name] || 0} images with
-              this model.
-            </div>
-          ) : null}
-          <div className="flex flex-row gap-2 mt-2">
-            <TextButton
-              disabled={
-                isNaN(modelStats[0]?.count) || modelStats[0]?.count <= 0
-              }
-              onClick={() => {
-                router.push(`/?model=${name}`)
-              }}
-            >
-              Create
-            </TextButton>
-            <TextButton
-              disabled={componentState.imageCounts[name] <= 0}
-              onClick={() => {
-                router.push(`/images?model=${name}`)
-              }}
-            >
-              View your images
-            </TextButton>
-          </div>
-        </Panel>
+          </Panel>
+        </div>
       )
     })
 
@@ -238,6 +266,15 @@ const InfoPage = ({ availableModels, modelDetails }: any) => {
     setModelDetails(modelDetails)
   })
 
+  // Handle scrolling to hash links after page loads.
+  useEffect(() => {
+    const hash = window.location.hash
+    if (hash.length > 0) {
+      window.location.hash = ''
+      window.location.hash = hash
+    }
+  })
+
   // useEffect(() => {
   //   updateLocalCount()
   // }, [updateLocalCount])
@@ -252,9 +289,9 @@ const InfoPage = ({ availableModels, modelDetails }: any) => {
       {componentState.isLoading && <SpinnerV2 />}
       {!componentState.isLoading && (
         <>
-          {modelState.availableModels.length > 1 ? (
+          {availableModels.length > 1 ? (
             <div className="mb-2">
-              Total models available: {modelState.availableModels.length}
+              Total models available: {availableModels.length}
             </div>
           ) : null}
           <div className="flex flex-row gap-1 text-sm">
