@@ -111,6 +111,16 @@ const Changelog = () => {
             Or maybe share the details about this particular model with a
             friend? Easy! Hit the link icon next to the model name.
           </StyledLi>
+          <StyledLi>
+            Updated inputs in advanced options tab to be number fields (and make
+            it easier to step between values).{' '}
+            <Linker
+              href="https://github.com/daveschumaker/artbot-for-stable-diffusion/pull/18"
+              target="_blank"
+            >
+              Thanks voodoocode!
+            </Linker>
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
