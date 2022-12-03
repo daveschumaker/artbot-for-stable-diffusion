@@ -4,7 +4,6 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
 import LazyLoad from 'react-lazyload'
-import Masonry from 'react-responsive-masonry'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
 
@@ -30,6 +29,7 @@ import MenuButton from '../../components/UI/MenuButton'
 import HeartIcon from '../../components/icons/HeartIcon'
 import { useSwipeable } from 'react-swipeable'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
+import MasonryLayout from '../../components/MasonryLayout'
 
 const StyledImage = styled.img`
   box-shadow: 0 16px 38px -12px rgb(0 0 0 / 56%),
@@ -373,7 +373,7 @@ const ImagePage = () => {
         <div className="pt-2 border-0 border-t-2 border-dashed border-slate-500">
           <PageTitle>Related images</PageTitle>
           <div className="mt-4 flex gap-y-2.5 flex-wrap gap-x-2.5">
-            <Masonry columnsCount={imageColumns} gutter="8px">
+            <MasonryLayout columns={imageColumns} gap={8}>
               {relatedImages.map(
                 (image: {
                   jobId: string
@@ -405,7 +405,7 @@ const ImagePage = () => {
                   )
                 }
               )}
-            </Masonry>
+            </MasonryLayout>
           </div>
         </div>
       )}

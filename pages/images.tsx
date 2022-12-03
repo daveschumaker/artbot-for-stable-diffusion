@@ -3,7 +3,6 @@ import Head from 'next/head'
 import React, { useCallback, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import Masonry from 'react-responsive-masonry'
 import LazyLoad from 'react-lazyload'
 import styled from 'styled-components'
 
@@ -34,6 +33,7 @@ import { base64toBlob } from '../utils/imageUtils'
 import { SourceProcessing } from '../utils/promptUtils'
 import { useSwipeable } from 'react-swipeable'
 import { useEffectOnce } from '../hooks/useEffectOnce'
+import MasonryLayout from '../components/MasonryLayout'
 
 const DropDownMenu = styled.div`
   background-color: ${(props) => props.theme.body};
@@ -900,7 +900,7 @@ const ImagesPage = () => {
         {!componentState.isLoading &&
           componentState.images.length > 0 &&
           componentState.layoutMode === 'layout' && (
-            <Masonry columnsCount={imageColumns} gutter="8px">
+            <MasonryLayout columns={imageColumns} gap={8}>
               {componentState.images.map(
                 (image: {
                   id: string
@@ -952,7 +952,7 @@ const ImagesPage = () => {
                   )
                 }
               )}
-            </Masonry>
+            </MasonryLayout>
           )}
         {!componentState.isLoading &&
           componentState.images.length > 0 &&

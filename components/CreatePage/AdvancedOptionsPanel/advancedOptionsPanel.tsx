@@ -528,8 +528,8 @@ const AdvancedOptionsPanel = ({
             error={errorMessage.steps}
             className="mb-2"
             type="number"
-            min="1"
-            max="50"
+            min={1}
+            max={maxSteps(input.sampler, loggedIn)}
             name="steps"
             onChange={handleChangeInput}
             onBlur={() => {
@@ -564,8 +564,8 @@ const AdvancedOptionsPanel = ({
             error={errorMessage.cfg_scale}
             className="mb-2"
             type="number"
-            min="1"
-            max="30"
+            min={1}
+            max={30}
             name="cfg_scale"
             onBlur={(e: any) => {
               if (
@@ -613,9 +613,9 @@ const AdvancedOptionsPanel = ({
               // @ts-ignore
               className="mb-2"
               type="number"
-              step="0.05"
-              min="0"
-              max="1.0"
+              step={0.05}
+              min={0}
+              max={1.0}
               name="denoising_strength"
               onChange={handleChangeInput}
               // @ts-ignore
@@ -924,7 +924,7 @@ const AdvancedOptionsPanel = ({
                 className="mb-2"
                 error={errorMessage.numImages}
                 type="number"
-                min="1"
+                min={1}
                 max={MAX_IMAGES_PER_JOB}
                 name="numImages"
                 onChange={handleChangeInput}

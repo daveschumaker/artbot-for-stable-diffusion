@@ -7,6 +7,9 @@ interface InputProps {
   className?: string
   children?: React.ReactNode
   error?: boolean | string
+  step?: number
+  min?: number
+  max?: number
   onBlur?: any
   onChange: any
   width?: string
