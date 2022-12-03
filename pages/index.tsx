@@ -459,11 +459,11 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
             Error: {hasError}
           </div>
         )}
-        <div className="mt-4 mb-4 w-full flex flex-row justify-end">
-          <div className="w-1/2 flex flex-row justify-start gap-2 items-center">
+        <div className="mt-4 mb-4 w-full flex flex-col sm:flex-row gap-2 sm:justify-end">
+          <div className="w-full sm:w-1/2 flex flex-row justify-start gap-2 items-center">
             Style: <StylesDrodown input={input} setInput={setInput} />
           </div>
-          <div className="w-1/2 flex flex-row justify-end gap-2">
+          <div className="w-full sm:w-1/2 flex flex-row justify-end gap-2">
             <Button
               title="Clear current input"
               btnType="secondary"
