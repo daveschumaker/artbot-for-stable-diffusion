@@ -168,7 +168,7 @@ const SettingsPage = () => {
     runInBackground: false,
     showOptionsMenu: false,
     useBeta: false,
-    useNsfw: false,
+    allowNsfwImages: false,
     useTrusted: true
   })
 
@@ -487,14 +487,14 @@ const SettingsPage = () => {
                 >
                   <Select
                     options={[
-                      { value: 'true', label: 'Yes' },
-                      { value: 'false', label: 'No' }
+                      { value: true, label: 'Yes' },
+                      { value: false, label: 'No' }
                     ]}
                     onChange={handleNsfwSelect}
                     value={
                       componentState.allowNsfwImages
-                        ? { value: 'true', label: 'Yes' }
-                        : { value: 'false', label: 'No' }
+                        ? { value: true, label: 'Yes' }
+                        : { value: false, label: 'No' }
                     }
                   />
                 </MaxWidth>
