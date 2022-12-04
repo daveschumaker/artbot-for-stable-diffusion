@@ -33,6 +33,7 @@ import MenuButton from '../components/UI/MenuButton'
 import { appInfoStore } from '../store/appStore'
 import ChevronRightIcon from '../components/icons/ChevronRightIcon'
 import ChevronDownIcon from '../components/icons/ChevronDownIcon'
+import AppSettings from '../models/AppSettings'
 
 interface IWorkerChange {
   id: string
@@ -163,12 +164,12 @@ const SettingsPage = () => {
     apiKey: '',
     loadingWorkerStatus: {},
     panel: 'stableHorde',
-    preserveCreate: 'false',
-    runBackground: 'false',
+    preserveCreate: false,
+    runInBackground: false,
     showOptionsMenu: false,
-    useBeta: 'false',
-    useNsfw: 'false',
-    useTrusted: 'true'
+    useBeta: false,
+    useNsfw: false,
+    useTrusted: true
   })
 
   const handleWorkerChange = async (worker: IWorkerChange) => {
@@ -205,7 +206,7 @@ const SettingsPage = () => {
   }
 
   const handleApiInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    localStorage.setItem('apikey', e.target.value)
+    AppSettings.save('apiKey', e.target.value)
     setComponentState({ apiKey: e.target.value })
   }
 
@@ -215,92 +216,45 @@ const SettingsPage = () => {
 
   const handlePreserveCreate = (obj: any) => {
     const { value } = obj
-    localStorage.setItem('preserveCreateSettings', value)
+    AppSettings.save('saveInputOnCreate', value)
     setComponentState({ preserveCreate: value })
   }
 
   const handleRunBackground = (obj: any) => {
     const { value } = obj
-    localStorage.setItem('runBackground', value)
-    setComponentState({ runBackground: value })
+    AppSettings.save('runInBackground', value)
+    setComponentState({ runInBackground: value })
   }
 
   const handleBetaSelect = (obj: any) => {
     const { value } = obj
-    localStorage.setItem('useBeta', value === 'true' ? 'userTrue' : 'userFalse')
+    AppSettings.save('useBeta', value === 'true' ? 'userTrue' : 'userFalse')
     setComponentState({ useBeta: value })
   }
 
   const handleTrustedSelect = (obj: any) => {
     const { value } = obj
-    localStorage.setItem('useTrusted', value)
+    AppSettings.save('useTrusted', value)
     setComponentState({ useTrusted: value })
   }
 
   const handleNsfwSelect = (obj: any) => {
     const { value } = obj
-    localStorage.setItem('allowNsfwImages', value)
-    setComponentState({ useNsfw: value })
+    AppSettings.save('allowNsfwImages', value)
+    setComponentState({ allowNsfwImages: value })
   }
 
   useEffect(() => {
-    if (localStorage.getItem('apikey')) {
-      setComponentState({ apiKey: localStorage.getItem('apikey') || '' })
-    }
+    const updateObj: any = {}
 
-    if (localStorage.getItem('useTrusted') === 'true') {
-      setComponentState({
-        useTrusted: localStorage.getItem('useTrusted')
-      })
-    } else {
-      setComponentState({
-        useTrusted: false
-      })
-    }
+    updateObj.apiKey = AppSettings.get('apiKey') || ''
+    updateObj.useTrusted = AppSettings.get('useTrusted') || false
+    updateObj.allowNsfwImages = AppSettings.get('allowNsfwImages') || false
+    updateObj.saveInputOnCreate = AppSettings.get('saveInputOnCreate') || false
+    updateObj.runInBackground = AppSettings.get('runInBackground') || false
+    updateObj.useBeta = AppSettings.get('useBeta') || false
 
-    if (localStorage.getItem('allowNsfwImages') === 'true') {
-      setComponentState({
-        useNsfw: localStorage.getItem('allowNsfwImages')
-      })
-    } else {
-      setComponentState({
-        useNsfw: false
-      })
-    }
-
-    if (localStorage.getItem('preserveCreateSettings') === 'true') {
-      setComponentState({
-        preserveCreate: localStorage.getItem('preserveCreateSettings')
-      })
-    } else {
-      setComponentState({
-        preserveCreate: false
-      })
-    }
-
-    if (localStorage.getItem('runBackground') === 'true') {
-      setComponentState({
-        runBackground: localStorage.getItem('runBackground')
-      })
-    } else {
-      setComponentState({
-        runBackground: false
-      })
-    }
-
-    if (
-      localStorage.getItem('useBeta') === 'true' ||
-      localStorage.getItem('useBeta') === 'userTrue'
-    ) {
-      setComponentState({
-        useBeta: 'true'
-      })
-    } else {
-      setComponentState({
-        useBeta: false
-      })
-    }
-
+    setComponentState({ ...updateObj })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -488,7 +442,7 @@ const SettingsPage = () => {
                       onClick={() => {
                         unsetUserInfo()
                         setComponentState({ apiKey: '' })
-                        localStorage.setItem('apikey', '')
+                        AppSettings.save('apiKey', '')
                       }}
                     >
                       Log out
@@ -522,7 +476,7 @@ const SettingsPage = () => {
                     ]}
                     onChange={handleNsfwSelect}
                     value={
-                      componentState.useNsfw === 'true'
+                      componentState.allowNsfwImages
                         ? { value: 'true', label: 'Yes' }
                         : { value: 'false', label: 'No' }
                     }
@@ -545,13 +499,13 @@ const SettingsPage = () => {
                   <Select
                     onChange={handleTrustedSelect}
                     options={[
-                      { value: 'false', label: 'All Workers' },
-                      { value: 'true', label: 'Trusted Only' }
+                      { value: false, label: 'All Workers' },
+                      { value: true, label: 'Trusted Only' }
                     ]}
                     value={
-                      componentState.useTrusted === 'true'
-                        ? { value: 'true', label: 'Trusted Only' }
-                        : { value: 'false', label: 'All Workers' }
+                      componentState.useTrusted
+                        ? { value: true, label: 'Trusted Only' }
+                        : { value: false, label: 'All Workers' }
                     }
                   />
                 </MaxWidth>
@@ -572,14 +526,14 @@ const SettingsPage = () => {
                   >
                     <Select
                       options={[
-                        { value: 'true', label: 'Yes' },
-                        { value: 'false', label: 'No' }
+                        { value: true, label: 'Yes' },
+                        { value: false, label: 'No' }
                       ]}
                       onChange={handleBetaSelect}
                       value={
-                        componentState.useBeta === 'true'
-                          ? { value: 'true', label: 'Yes' }
-                          : { value: 'false', label: 'No' }
+                        componentState.useBeta
+                          ? { value: true, label: 'Yes' }
+                          : { value: false, label: 'No' }
                       }
                     />
                   </MaxWidth>
@@ -722,14 +676,14 @@ const SettingsPage = () => {
                 >
                   <Select
                     options={[
-                      { value: 'true', label: 'Yes' },
-                      { value: 'false', label: 'No' }
+                      { value: true, label: 'Yes' },
+                      { value: false, label: 'No' }
                     ]}
                     onChange={handlePreserveCreate}
                     value={
-                      componentState.preserveCreate === 'true'
-                        ? { value: 'true', label: 'Yes' }
-                        : { value: 'false', label: 'No' }
+                      componentState.saveInputOnCreate
+                        ? { value: true, label: 'Yes' }
+                        : { value: true, label: 'No' }
                     }
                   />
                 </MaxWidth>
@@ -749,14 +703,14 @@ const SettingsPage = () => {
                 >
                   <Select
                     options={[
-                      { value: 'true', label: 'Yes' },
-                      { value: 'false', label: 'No' }
+                      { value: true, label: 'Yes' },
+                      { value: false, label: 'No' }
                     ]}
                     onChange={handleRunBackground}
                     value={
-                      componentState.runBackground === 'true'
-                        ? { value: 'true', label: 'Yes' }
-                        : { value: 'false', label: 'No' }
+                      componentState.runInBackground
+                        ? { value: true, label: 'Yes' }
+                        : { value: false, label: 'No' }
                     }
                   />
                 </MaxWidth>

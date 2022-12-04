@@ -1,4 +1,5 @@
 import { trackEvent } from '../api/telemetry'
+import AppSettings from '../models/AppSettings'
 import { isAppActive, isInstalledPwa } from './appUtils'
 import { imageCount } from './db'
 
@@ -21,7 +22,7 @@ export const trackNewSession = async () => {
     userType = 'RETURNING_USER'
   }
 
-  const userLoggedIn = localStorage.getItem('apikey')?.trim() || ''
+  const userLoggedIn = AppSettings.get('apiKey')?.trim() || ''
 
   const data: TrackSessionType = {
     event: 'NEW_SESSION',

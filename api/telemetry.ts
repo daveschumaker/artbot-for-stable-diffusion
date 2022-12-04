@@ -1,3 +1,5 @@
+import AppSettings from '../models/AppSettings'
+
 interface Params {
   action: string
   params: any
@@ -16,9 +18,9 @@ export const trackGaEvent = ({ action, params }: Params) => {
 }
 
 export const trackEvent = async (obj: any = {}) => {
-  const useBeta = localStorage.getItem('useBeta')
+  const useBeta = AppSettings.get('useBeta')
 
-  if (useBeta === 'true' || useBeta === 'userTrue') {
+  if (useBeta || useBeta === 'userTrue') {
     if (!obj.data) {
       obj.data = {}
     }

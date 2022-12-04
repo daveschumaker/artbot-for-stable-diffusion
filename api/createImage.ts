@@ -1,3 +1,4 @@
+import AppSettings from '../models/AppSettings'
 import { modelInfoStore } from '../store/modelStore'
 import { GenerateResponse } from '../types'
 import { getApiHostServer } from '../utils/appUtils'
@@ -58,18 +59,10 @@ interface ParamsObject {
   n: number
 }
 
-const toBool = (value?: string | null) => {
-  if (value === 'true' || value === 'True') {
-    return true
-  } else {
-    return false
-  }
-}
-
 const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
   const modelDetails = modelInfoStore.state.modelDetails
-  const useTrusted = toBool(localStorage.getItem('useTrusted')) || true
-  const allowNsfw = toBool(localStorage.getItem('allowNsfwImages')) || false
+  const useTrusted = AppSettings.get('useTrusted') || true
+  const allowNsfw = AppSettings.get('allowNsfw') || false
 
   const {
     prompt,
@@ -154,7 +147,7 @@ let isPending = false
 export const createImage = async (
   imageDetails: ImageDetails
 ): Promise<CreateImageResponse> => {
-  const apikey = localStorage.getItem('apikey')?.trim() || '0000000000'
+  const apikey = AppSettings.get('apiKey')?.trim() || '0000000000'
 
   if (!apikey) {
     return {

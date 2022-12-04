@@ -18,12 +18,7 @@ import '../styles/globals.css'
 
 import { initDb } from '../utils/db'
 import { useCallback, useEffect, useState } from 'react'
-import {
-  appInfoStore,
-  setBuildId,
-  setServerMessage,
-  setShowBetaOption
-} from '../store/appStore'
+import { appInfoStore, setBuildId, setServerMessage } from '../store/appStore'
 import { useStore } from 'statery'
 import ServerUpdateModal from '../components/ServerUpdateModal'
 import MobileFooter from '../components/MobileFooter'
@@ -60,45 +55,45 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
       const data = await res.json()
       const {
         build,
-        message = '',
-        enrollPct = 0,
-        showBetaOption = false
+        message = ''
+        // enrollPct = 0,
+        // showBetaOption = false
       } = data
       waitingForServerInfoRes = false
 
       // If user has manually opted in or out of beta
       // then ignore setting A/B test params.
-      const userBetaOption =
-        localStorage.getItem('useBeta') === 'userTrue' ||
-        localStorage.getItem('useBeta') === 'userFalse'
+      // const userBetaOption =
+      //   localStorage.getItem('useBeta') === 'userTrue' ||
+      //   localStorage.getItem('useBeta') === 'userFalse'
 
-      if (!userBetaOption) {
-        if (Number(localStorage.getItem('enrollPct')) !== enrollPct) {
-          localStorage.setItem('enrollPct', enrollPct)
+      // if (!userBetaOption) {
+      //   if (Number(localStorage.getItem('enrollPct')) !== enrollPct) {
+      //     localStorage.setItem('enrollPct', enrollPct)
 
-          const enrollValue = String(Math.random())
-          localStorage.setItem('enrollValue', enrollValue)
+      //     const enrollValue = String(Math.random())
+      //     localStorage.setItem('enrollValue', enrollValue)
 
-          if (Number(enrollValue) <= enrollPct) {
-            localStorage.setItem('useBeta', 'true')
-          }
-        }
+      //     if (Number(enrollValue) <= enrollPct) {
+      //       localStorage.setItem('useBeta', 'true')
+      //     }
+      //   }
 
-        if (!localStorage.getItem('enrollPct') || enrollPct === 0) {
-          localStorage.removeItem('enrollPct')
-          localStorage.removeItem('enrollValue')
-          localStorage.setItem('useBeta', 'false')
-        }
-      }
+      //   if (!localStorage.getItem('enrollPct') || enrollPct === 0) {
+      //     localStorage.removeItem('enrollPct')
+      //     localStorage.removeItem('enrollValue')
+      //     localStorage.setItem('useBeta', 'false')
+      //   }
+      // }
 
-      if (!showBetaOption) {
-        localStorage.removeItem('enrollPct')
-        localStorage.removeItem('enrollValue')
-        localStorage.removeItem('useBeta')
-        setShowBetaOption(false)
-      } else {
-        setShowBetaOption(true)
-      }
+      // if (!showBetaOption) {
+      //   localStorage.removeItem('enrollPct')
+      //   localStorage.removeItem('enrollValue')
+      //   localStorage.removeItem('useBeta')
+      //   setShowBetaOption(false)
+      // } else {
+      //   setShowBetaOption(true)
+      // }
 
       setServerMessage(message)
 

@@ -1,7 +1,8 @@
 import { HORDE_DEV, HORDE_PROD } from '../constants'
+import AppSettings from '../models/AppSettings'
 
 export const isAppActive = () => {
-  if (localStorage.getItem('runBackground') === 'true') {
+  if (AppSettings.get('runInBackground')) {
     return true
   }
 
@@ -40,10 +41,7 @@ export function uuidv4() {
 }
 
 export const getApiHostServer = () => {
-  if (
-    localStorage.getItem('useBeta') === 'true' ||
-    localStorage.getItem('useBeta') === 'userTrue'
-  ) {
+  if (AppSettings.get('useBeta') || AppSettings.get('useBeta') === 'userTrue') {
     return HORDE_DEV
   }
 

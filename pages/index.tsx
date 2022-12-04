@@ -31,6 +31,7 @@ import ServerMessage from '../components/ServerMessage'
 import StylesDrodown from '../components/CreatePage/StylesDropdown'
 import { useStore } from 'statery'
 import { appInfoStore } from '../store/appStore'
+import AppSettings from '../models/AppSettings'
 
 interface InputTarget {
   name: string
@@ -278,7 +279,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
 
     await createImageJob(new CreateImageRequest(input))
 
-    if (localStorage.getItem('preserveCreateSettings') !== 'true') {
+    if (AppSettings.get('saveInputOnCreate')) {
       clearInputCache()
     }
 
