@@ -1,6 +1,7 @@
 import SelectComponent from '../../UI/Select'
 import { sortedPresets, stylePresets } from '../../../utils/stylePresets'
 import { useEffect, useState } from 'react'
+import styled from 'styled-components'
 
 interface IProps {
   input: any
@@ -18,6 +19,14 @@ const presetOptions = () => {
 
   return options
 }
+
+const StyledDropdown = styled(SelectComponent)`
+  width: 100%;
+
+  @media (min-width: 640px) {
+    width: 180px;
+  }
+`
 
 const StylesDrodown = ({ input, setInput }: IProps) => {
   const [presetValue, setPresetValue] = useState({
@@ -50,14 +59,11 @@ const StylesDrodown = ({ input, setInput }: IProps) => {
   }, [input?.stylePreset])
 
   return (
-    <div>
-      <SelectComponent
-        onChange={handleSelect}
-        options={presetOptions()}
-        value={presetValue}
-        className="w-[180px]"
-      />
-    </div>
+    <StyledDropdown
+      onChange={handleSelect}
+      options={presetOptions()}
+      value={presetValue}
+    />
   )
 }
 
