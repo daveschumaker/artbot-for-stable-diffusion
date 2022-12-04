@@ -210,7 +210,7 @@ const ImagePage = () => {
         handleFavoriteClick()
       }
     },
-    [id, handleFavoriteClick, relatedImages, router]
+    [maxLength, currentIndex, router, relatedImages, handleFavoriteClick]
   )
 
   useEffect(() => {

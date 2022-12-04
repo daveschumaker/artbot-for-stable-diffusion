@@ -1,3 +1,5 @@
+import NoSleep from 'nosleep.js'
+
 import fetchAvailableModels from '../api/fetchAvailableModels'
 import fetchModelDetails from '../api/fetchModelDetails'
 import { fetchUserDetails } from '../api/userInfo'
@@ -16,6 +18,20 @@ export const updateShowGrid = () => {
   }
 
   localStorage.removeItem('showGrid')
+}
+
+export const enableNoSleep = () => {
+  if (AppSettings.get('enableNoSleep')) {
+    const noSleep = new NoSleep()
+    document.addEventListener(
+      'click',
+      function enableNoSleep() {
+        document.removeEventListener('click', enableNoSleep, false)
+        noSleep.enable()
+      },
+      false
+    )
+  }
 }
 
 export const updateAppConfig = () => {
@@ -70,6 +86,8 @@ export const initAppSettings = async () => {
   // 2022.12.04
   // Start converting all users to new appConfig format
   updateAppConfig()
+
+  enableNoSleep()
 
   // app settings from local storage
   updateShowGrid()

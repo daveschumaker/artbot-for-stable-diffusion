@@ -28,12 +28,13 @@ const StyledUl = styled.ul`
 const StyledLi = styled.li`
   list-style: square;
   margin-left: 16px;
+  margin-bottom: 8px;
 `
 
 const AddedInfo = styled.div`
   border-left: 2px solid ${(props) => props.theme.text};
   font-size: 14px;
-  margin-top: 2px;
+  margin-top: 8px;
   margin-bottom: 8px;
   margin-left: 16px;
   padding-left: 8px;
@@ -100,6 +101,28 @@ const Changelog = () => {
           </StyledUl>
         </Section>
       </Panel>
+      <Section>
+        <SubSectionTitle>2022.12.04</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Experimental feature: Added a &quot;no sleep&quot; option to the{' '}
+            <Linker href="/settings?panel=pref" passHref>
+              settings page
+            </Linker>{' '}
+            which uses background audio APIs to keep your mobile device screen
+            awake.
+            <AddedInfo>
+              This is useful in instances where you may have queued up a large
+              number of images on your mobile device and want the process to
+              continue running. This is an experimental feature.{' '}
+              <LinkButton onClick={() => setShowFeedback(true)}>
+                Leave me feedback
+              </LinkButton>{' '}
+              if anything looks amiss.
+            </AddedInfo>
+          </StyledLi>
+        </StyledUl>
+      </Section>
       <Section>
         <SubSectionTitle>2022.12.02</SubSectionTitle>
         <StyledUl>
