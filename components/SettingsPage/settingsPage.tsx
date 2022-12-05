@@ -160,15 +160,15 @@ const SettingsPage = () => {
   const { showBetaOption } = appStore
 
   const [componentState, setComponentState] = useComponentState({
+    allowNsfwImages: false,
     apiKey: '',
     enableNoSleep: false,
     loadingWorkerStatus: {},
     panel: 'stableHorde',
-    preserveCreate: false,
     runInBackground: false,
+    saveInputOnCreate: false,
     showOptionsMenu: false,
     useBeta: false,
-    allowNsfwImages: false,
     useTrusted: true
   })
 
@@ -238,7 +238,7 @@ const SettingsPage = () => {
   const handlePreserveCreate = (obj: any) => {
     const { value } = obj
     AppSettings.save('saveInputOnCreate', value)
-    setComponentState({ preserveCreate: value })
+    setComponentState({ saveInputOnCreate: value })
   }
 
   const handleRunBackground = (obj: any) => {
