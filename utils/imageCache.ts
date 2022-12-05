@@ -22,6 +22,7 @@ import {
 } from '../constants'
 import { isAppActive } from './appUtils'
 import CreateImageRequest from '../models/CreateImageRequest'
+import { hasPromptMatrix, promptMatrix } from './promptUtils'
 
 export const initIndexedDb = () => {}
 
@@ -298,7 +299,17 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
 }
 
 export const createImageJob = async (newImageRequest: CreateImageRequest) => {
-  await createPendingJob(newImageRequest)
+  // Check for prompt matrix
+  if (hasPromptMatrix(newImageRequest.prompt)) {
+    const matrixPrompts = [...promptMatrix(newImageRequest.prompt)]
+
+    for (const idx in matrixPrompts) {
+      newImageRequest.prompt = matrixPrompts[idx]
+      await createPendingJob(newImageRequest)
+    }
+  } else {
+    await createPendingJob(newImageRequest)
+  }
 
   return {
     success: true

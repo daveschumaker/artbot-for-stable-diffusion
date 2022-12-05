@@ -24,6 +24,7 @@ import { trackEvent } from '../../../api/telemetry'
 import { modelInfoStore } from '../../../store/modelStore'
 import Checkbox from '../../UI/Checkbox'
 import { MAX_IMAGES_PER_JOB } from '../../../constants'
+import GrainIcon from '../../icons/GrainIcon'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -634,16 +635,26 @@ const AdvancedOptionsPanel = ({
           // @ts-ignore
           maxWidth="240"
         >
-          <Input
-            // @ts-ignore
-            className="mb-2"
-            type="text"
-            name="seed"
-            onChange={handleChangeInput}
-            // @ts-ignore
-            value={input.seed}
-            width="100%"
-          />
+          <div className="flex flex-row gap-2">
+            <Input
+              // @ts-ignore
+              className="mb-2"
+              type="text"
+              name="seed"
+              onChange={handleChangeInput}
+              // @ts-ignore
+              value={input.seed}
+              width="100%"
+            />
+            <Button
+              title="Generate random number"
+              onClick={() => {
+                setInput({ seed: Math.abs((Math.random() * 2 ** 32) | 0) })
+              }}
+            >
+              <GrainIcon />
+            </Button>
+          </div>
         </MaxWidth>
       </Section>
       {input.source_processing !==

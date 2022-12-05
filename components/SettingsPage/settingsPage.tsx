@@ -172,7 +172,8 @@ const SettingsPage = () => {
     useTrusted: true
   })
 
-  const handleNoSleep = (value: boolean) => {
+  const handleNoSleep = (obj: any) => {
+    const { value } = obj
     const noSleep = new NoSleep()
 
     if (value) {

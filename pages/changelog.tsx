@@ -102,6 +102,22 @@ const Changelog = () => {
         </Section>
       </Panel>
       <Section>
+        <SubSectionTitle>2022.12.05</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: &quot;Save input on create&quot; option wasn&apos;t working.
+            (Thanks for reporting, bigdawg on Discord)
+          </StyledLi>
+          <StyledLi>
+            Feature: Support for using a prompt matrix. For example:
+            &quot;Beautiful forest full of trees by{' '}
+            {`{Bob Ross|Thomas Kinkade}`}&quot; will create two images, one with
+            the Bob Ross parameter and another with the Thomas Kinkade
+            parameter. This mode works best if you fix the seed ahead of time.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.12.04</SubSectionTitle>
         <StyledUl>
           <StyledLi>

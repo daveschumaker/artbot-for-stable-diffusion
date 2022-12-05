@@ -120,3 +120,46 @@ export const updatedCachedPrompt = (text: string) => {
 export const getCachedPrompt = () => {
   return cachedPrompt
 }
+
+export const hasPromptMatrix = (initPrompt = '') => {
+  const matchedMatrix = initPrompt.match(/\{.+?\}/g) || ''
+
+  if (matchedMatrix?.length >= 1) {
+    return true
+  }
+
+  return false
+}
+
+export const promptMatrix = (initPrompt = '') => {
+  let newPromptsArray: Array<string> = []
+  const matchedMatrix = initPrompt.match(/\{.+?\}/g)
+
+  const parsePrompt = (matched = '') => {
+    const updatePrompts: Array<string> = []
+    let stripBrackets = matched.replace(/{/g, '').replace(/}/g, '')
+    const matchedWordArray = stripBrackets.split('|') || []
+
+    if (newPromptsArray.length === 0) {
+      matchedWordArray.forEach((word = '') => {
+        let string = initPrompt.replace(matched, word)
+        updatePrompts.push(string)
+      })
+    } else {
+      newPromptsArray.forEach((string = '') => {
+        matchedWordArray.forEach((word = '') => {
+          let newString = string.replace(matched, word)
+          updatePrompts.push(newString)
+        })
+      })
+    }
+
+    newPromptsArray = [...updatePrompts]
+  }
+
+  matchedMatrix?.forEach((match) => {
+    parsePrompt(match)
+  })
+
+  return newPromptsArray
+}
