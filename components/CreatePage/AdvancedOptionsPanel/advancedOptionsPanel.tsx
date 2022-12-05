@@ -333,7 +333,6 @@ const AdvancedOptionsPanel = ({
             options={orientationOptions}
             onChange={(obj: { value: string; label: string }) => {
               handleOrientationSelect(obj.value)
-              setInput({ orientationType: obj.value, height: 512, width: 512 })
 
               if (obj.value !== 'custom') {
                 setErrorMessage({ height: null, width: null })

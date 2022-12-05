@@ -214,8 +214,6 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
     const details = orientationDetails(orientation, input.height, input.width)
     localStorage.setItem('orientation', orientation)
 
-    console.log(`details?`, details)
-
     setInput({
       orientationType: orientation,
       height: details.height,
