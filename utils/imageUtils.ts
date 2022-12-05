@@ -440,3 +440,27 @@ export const modifyPromptForStylePreset = ({
 
   return newPrompt
 }
+
+export const kudosCost = (
+  width: number,
+  height: number,
+  steps: number,
+  n: number,
+  hasUpscaler: boolean,
+  numPostProcessors: number,
+  sampler: string
+): number => {
+  const result =
+    Math.pow(width * height - 64 * 64, 1.75) /
+    Math.pow(1024 * 1024 - 64 * 64, 1.75)
+  let kudos = 0.1232 * steps + result * (0.1232 * steps * 8.75)
+  if (hasUpscaler) {
+    kudos *= 1.3
+  }
+  if (numPostProcessors > 0) {
+    kudos = kudos * (1 + 0.2 * numPostProcessors)
+  }
+  kudos *= /k_heun|dpm_2|k_dpmpp_2s_a/.test(sampler) ? 2 : 1
+  kudos *= n
+  return Math.round(kudos)
+}

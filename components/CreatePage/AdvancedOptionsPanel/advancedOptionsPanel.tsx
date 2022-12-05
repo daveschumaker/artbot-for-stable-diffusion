@@ -267,6 +267,11 @@ const AdvancedOptionsPanel = ({
       if (index > -1) {
         newPost.splice(index, 1)
       } else {
+        trackEvent({
+          event: 'USE_ALL_MODELS_CLICK',
+          context: '/pages/index'
+        })
+
         if (value === 'RealESRGAN_x4plus') {
           setInput({ numImages: 1 })
         }

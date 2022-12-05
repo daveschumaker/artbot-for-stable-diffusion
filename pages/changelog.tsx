@@ -115,6 +115,9 @@ const Changelog = () => {
             the Bob Ross parameter and another with the Thomas Kinkade
             parameter. This mode works best if you fix the seed ahead of time.
           </StyledLi>
+          <StyledLi>
+            Add kudos cost calculation when modifying image parameters.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

@@ -32,6 +32,7 @@ import StylesDrodown from '../components/CreatePage/StylesDropdown'
 import { useStore } from 'statery'
 import { appInfoStore } from '../store/appStore'
 import AppSettings from '../models/AppSettings'
+import { kudosCost, orientationDetails } from '../utils/imageUtils'
 
 interface InputTarget {
   name: string
@@ -210,8 +211,16 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
   }
 
   const handleOrientationSelect = (orientation: string, options?: any) => {
+    const details = orientationDetails(orientation, input.height, input.width)
     localStorage.setItem('orientation', orientation)
-    setInput({ orientationType: orientation })
+
+    console.log(`details?`, details)
+
+    setInput({
+      orientationType: orientation,
+      height: details.height,
+      width: details.width
+    })
 
     if (!options?.initLoad) {
       trackEvent({
@@ -267,7 +276,9 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
         steps: input.steps,
         numImages: input.numImages,
         model: input.models,
-        source: input.source_processing
+        source: input.source_processing,
+        prompt: input.prompt,
+        post_processing: input.post_processing
       }
     })
     trackGaEvent({
@@ -309,7 +320,14 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
   const updateDefaultInput = async () => {
     if (!editMode && !shareMode) {
       if (localStorage.getItem('orientation')) {
-        setInput({ orientationType: localStorage.getItem('orientation') })
+        const orientation = localStorage.getItem('orientation') || 'square'
+        const imageOrientation = orientationDetails(orientation)
+
+        setInput({
+          orientationType: imageOrientation.orientation,
+          height: imageOrientation.height,
+          width: imageOrientation.width
+        })
       }
 
       if (localStorage.getItem('sampler')) {
@@ -460,30 +478,47 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
             Error: {hasError}
           </div>
         )}
-        <div className="mt-4 mb-4 w-full flex flex-col sm:flex-row gap-2 sm:justify-end">
+        <div className="mt-4 mb-4 w-full flex flex-col sm:flex-row gap-2 sm:justify-end items-start">
           <div className="w-full sm:w-1/2 flex flex-row justify-start gap-2 items-center">
             Style: <StylesDrodown input={input} setInput={setInput} />
           </div>
-          <div className="w-full sm:w-1/2 flex flex-row justify-end gap-2">
-            <Button
-              title="Clear current input"
-              btnType="secondary"
-              onClick={resetInput}
-            >
-              <span>
-                <TrashIcon />
-              </span>
-              <span className="hidden md:inline-block">Clear</span>
-            </Button>
-            <Button
-              title="Create new image"
-              onClick={handleSubmit}
-              disabled={hasValidationError || pending}
-              width="100px"
-            >
-              <span>{pending ? '' : <SquarePlusIcon />}</span>
-              {pending ? 'Creating...' : 'Create'}
-            </Button>
+          <div className="w-full sm:w-1/2 flex flex-col justify-end gap-2">
+            <div className="flex flex-row justify-end gap-2">
+              <Button
+                title="Clear current input"
+                btnType="secondary"
+                onClick={resetInput}
+              >
+                <span>
+                  <TrashIcon />
+                </span>
+                <span className="hidden md:inline-block">Clear</span>
+              </Button>
+              <Button
+                title="Create new image"
+                onClick={handleSubmit}
+                disabled={hasValidationError || pending}
+                width="100px"
+              >
+                <span>{pending ? '' : <SquarePlusIcon />}</span>
+                {pending ? 'Creating...' : 'Create'}
+              </Button>
+            </div>
+            <div className="text-xs flex flex-row justify-end gap-2">
+              Generation cost:{' '}
+              {kudosCost(
+                input.width,
+                input.height,
+                input.steps,
+                input.numImages,
+                input.post_processing.indexOf('RealESRGAN_x4plus') === -1
+                  ? false
+                  : true,
+                input.post_processing.length,
+                input.sampler
+              )}{' '}
+              kudos
+            </div>
           </div>
         </div>
       </div>
