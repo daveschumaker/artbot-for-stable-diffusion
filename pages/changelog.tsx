@@ -102,6 +102,31 @@ const Changelog = () => {
         </Section>
       </Panel>
       <Section>
+        <SubSectionTitle>2022.12.06</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: Issue with attempting to use non-trusted workers. (
+            <Linker
+              href="https://github.com/daveschumaker/artbot-for-stable-diffusion/issues/20"
+              target="_blank"
+            >
+              Thanks voodoocode!
+            </Linker>
+            )
+          </StyledLi>
+          <StyledLi>
+            Added option to search model and sampler dropdowns. (
+            <Linker
+              href="https://github.com/daveschumaker/artbot-for-stable-diffusion/pull/19"
+              target="_blank"
+            >
+              Thanks voodoocode!
+            </Linker>
+            )
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.12.05</SubSectionTitle>
         <StyledUl>
           <StyledLi>
