@@ -34,6 +34,7 @@ import { appInfoStore } from '../store/appStore'
 import AppSettings from '../models/AppSettings'
 import { kudosCost, orientationDetails } from '../utils/imageUtils'
 import { toast } from 'react-toastify'
+import Linker from '../components/UI/Linker'
 
 interface InputTarget {
   name: string
@@ -525,18 +526,22 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
             </div>
             <div className="text-xs flex flex-row justify-end gap-2">
               Generation cost:{' '}
-              {kudosCost(
-                input.width,
-                input.height,
-                input.steps,
-                input.numImages,
-                input.post_processing.indexOf('RealESRGAN_x4plus') === -1
-                  ? false
-                  : true,
-                input.post_processing.length,
-                input.sampler
-              )}{' '}
-              kudos
+              <Linker href="/faq#kudos" passHref>
+                <>
+                  {kudosCost(
+                    input.width,
+                    input.height,
+                    input.steps,
+                    input.numImages,
+                    input.post_processing.indexOf('RealESRGAN_x4plus') === -1
+                      ? false
+                      : true,
+                    input.post_processing.length,
+                    input.sampler
+                  )}{' '}
+                  kudos
+                </>
+              </Linker>
             </div>
           </div>
         </div>
