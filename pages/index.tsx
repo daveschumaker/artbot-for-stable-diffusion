@@ -33,6 +33,7 @@ import { useStore } from 'statery'
 import { appInfoStore } from '../store/appStore'
 import AppSettings from '../models/AppSettings'
 import { kudosCost, orientationDetails } from '../utils/imageUtils'
+import { toast } from 'react-toastify'
 
 interface InputTarget {
   name: string
@@ -288,12 +289,27 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
 
     await createImageJob(new CreateImageRequest(input))
 
-    if (AppSettings.get('saveInputOnCreate')) {
-      clearInputCache()
-    }
+    if (!AppSettings.get('stayOnCreate')) {
+      if (AppSettings.get('saveInputOnCreate')) {
+        clearInputCache()
+      }
 
-    clearCanvasStore()
-    router.push('/pending')
+      clearCanvasStore()
+
+      router.push('/pending')
+    } else {
+      toast.success('Image requested!', {
+        position: 'top-center',
+        autoClose: 2500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: 'light'
+      })
+      setPending(false)
+    }
   }
 
   const onEnterPress = (e: KeyboardEvent) => {

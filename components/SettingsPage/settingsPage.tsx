@@ -167,6 +167,7 @@ const SettingsPage = () => {
     panel: 'stableHorde',
     runInBackground: false,
     saveInputOnCreate: false,
+    stayOnCreate: false,
     showOptionsMenu: false,
     useBeta: false,
     useR2: false,
@@ -257,6 +258,7 @@ const SettingsPage = () => {
     updateObj.enableNoSleep = AppSettings.get('enableNoSleep') || false
     updateObj.runInBackground = AppSettings.get('runInBackground') || false
     updateObj.saveInputOnCreate = AppSettings.get('saveInputOnCreate') || false
+    updateObj.stayOnCreate = AppSettings.get('stayOnCreate') || false
     updateObj.useBeta = AppSettings.get('useBeta') || false
     updateObj.useR2 = AppSettings.get('useR2') || false
     updateObj.useTrusted = AppSettings.get('useTrusted') || false
@@ -696,6 +698,34 @@ const SettingsPage = () => {
             <>
               <Section>
                 <PageTitle as="h2">ArtBot Preferences</PageTitle>
+                <SubSectionTitle>
+                  Stay on create page?
+                  <div className="block text-xs mb-2 mt-2 w-full">
+                    After clicking &quot;create&quot; on the image generation
+                    page, stay on the page, rather than show pending items.
+                  </div>
+                </SubSectionTitle>
+                <MaxWidth
+                  // @ts-ignore
+                  maxWidth="240"
+                >
+                  <Select
+                    options={[
+                      { value: true, label: 'Yes' },
+                      { value: false, label: 'No' }
+                    ]}
+                    onChange={(obj: any) =>
+                      handleUpdateSelect('stayOnCreate', obj)
+                    }
+                    value={
+                      componentState.stayOnCreate
+                        ? { value: true, label: 'Yes' }
+                        : { value: true, label: 'No' }
+                    }
+                  />
+                </MaxWidth>
+              </Section>
+              <Section>
                 <SubSectionTitle>
                   Save input on create?
                   <div className="block text-xs mb-2 mt-2 w-full">

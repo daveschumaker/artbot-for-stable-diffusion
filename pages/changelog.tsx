@@ -118,6 +118,14 @@ const Changelog = () => {
           <StyledLi>
             Add kudos cost calculation when modifying image parameters.
           </StyledLi>
+          <StyledLi>
+            Added experimental option to get images from Cloudflare R2 service
+            (this will be default behavior in the future). For end users, this
+            means the potential for generating real lossless images.
+          </StyledLi>
+          <StyledLi>
+            Added an option to stay on create page after requesting a new image.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
