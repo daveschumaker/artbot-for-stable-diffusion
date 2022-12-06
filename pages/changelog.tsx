@@ -124,6 +124,7 @@ const Changelog = () => {
             </Linker>
             )
           </StyledLi>
+          <StyledLi>Update style presets.</StyledLi>
         </StyledUl>
       </Section>
       <Section>

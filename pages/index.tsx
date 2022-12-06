@@ -494,7 +494,12 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
         )}
         <div className="mt-4 mb-4 w-full flex flex-col sm:flex-row gap-2 sm:justify-end items-start">
           <div className="w-full sm:w-1/2 flex flex-row justify-start gap-2 items-center">
-            Style: <StylesDrodown input={input} setInput={setInput} />
+            Style:{' '}
+            <StylesDrodown
+              input={input}
+              setInput={setInput}
+              isSearchable={true}
+            />
           </div>
           <div className="w-full sm:w-1/2 flex flex-col justify-end gap-2">
             <div className="flex flex-row justify-end gap-2">

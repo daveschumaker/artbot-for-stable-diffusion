@@ -20,7 +20,7 @@ export const stylePresets = {
       '{p}, fantasy artwork, epic, detailed and intricate digital painting, trending on artstation, by wlop and greg rutkowski, octane render',
     model: 'stable_diffusion'
   },
-  '19th centuty painting': {
+  '19th century painting': {
     prompt:
       '{p}, digitized painting, highly detailed, sharp focus, impasto brush strokes, acclaimed artwork by gaston bussiere, by j. c. leyendecker',
     model: 'stable_diffusion'
@@ -67,6 +67,51 @@ export const stylePresets = {
   'dark fantasy': {
     prompt:
       'highly detailed digital painting of {p}, highly realistic fantasy concept art by Darek Zabrocki and Zdzisław Beksiński, paint strokes, intricate, eerie scenery, dark volumetric lighting, triadic color scheme, very coherent, sharp focus, illustration, film grain, spooky vibe',
+    model: 'stable_diffusion'
+  },
+  'frozen village': {
+    prompt:
+      '{p} close to anime village in a vast rural frozen hilly landscape, mountains, anime, makoto shinkai',
+    model: 'stable_diffusion'
+  },
+  culdesac: {
+    prompt:
+      'a beautiful oil painting of a {p} in a closeup groundup perspective of a culdesac of modern houses in winter, epic composition, rural, snowy village, by studio ghibli and rossdraws',
+    model: 'stable_diffusion'
+  },
+  snowing: {
+    prompt:
+      '{p} as an anime movie background matte painting of a snowing meadow in the countryside in winter, rolling hills, cottages, fields, christmas, by Makoto Shinkai, trending on artstation, highly detailed ### summer',
+    model: 'stable_diffusion'
+  },
+  'wintersun temple': {
+    prompt:
+      'elden ring style {p}, heron flying in a snow landscape with a japanese temple at the background, epic middle of a storm, wintersun cover, showing every detail of each snowflake in unreal engine 5, bright, dramatic light, cinematic luminous golden hour, lifey landscape, beautiful, vibrant, abandoned overgrown seas ###lowres, text, error, cropped, worst quality, jpeg artifacts, signature, watermark, deformed, frames',
+    model: 'stable_diffusion'
+  },
+  'fantasy snowstorm': {
+    prompt:
+      '{p} in a fantasy snowstorm, snowflakes,8k,highly detailed,a cozy village,sun behind clouds, masterpiece,art by WLOP ### out of frame,lowres, text, error, cropped, bad quality, jpeg artifacts, signature, watermark, deformed, ugly, unsightly',
+    model: 'stable_diffusion'
+  },
+  'christmas church': {
+    prompt:
+      '{p} next to a church with christmas lights, snowy weather, village on side of mountain, swiss alps, pixar render, unreal 5, uhd, 8k, landscape, panorama',
+    model: 'stable_diffusion'
+  },
+  'log cabin': {
+    prompt:
+      ' winter in the snow, concept art oil painting of a {p}, a log cabin by a river, christmas,extremely detailed, brush hard, artstation , fantasy by jama jurabaev, Paul Lehr, masterpiece, award winning, trending on artstation',
+    model: 'stable_diffusion'
+  },
+  'prehistoric winter': {
+    prompt:
+      '{p}, epic iced snow landscape battles in prehistory, vasteness, Albert Bierstadt, valleys, luminous golden hour, lifey landscape, beautiful, vibrant, abandoned overgrown mountains ###lowres, text, error, cropped, worst quality, jpeg artifacts, signature, watermark, deformed',
+    model: 'stable_diffusion'
+  },
+  'warrior fairy': {
+    prompt:
+      'beautiful warrior fairy {p}, portrait, up close, cinematic, snowy background, dramatic lighting, highly detailed, very intricate, meta, fanciful, optimistic, wide shot, volumetric lighting, bokeh blur, unreal engine, octane render ### deformed, ugly, mutated, watermark, trademark, border, nude, NSFW',
     model: 'stable_diffusion'
   },
   anything: {
