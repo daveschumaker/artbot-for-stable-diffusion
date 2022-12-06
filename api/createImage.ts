@@ -62,7 +62,10 @@ interface ParamsObject {
 
 const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
   const modelDetails = modelInfoStore.state.modelDetails
-  const useTrusted = AppSettings.get('useTrusted') || true
+  const useTrusted =
+    AppSettings.get('useTrusted') === undefined
+      ? true
+      : AppSettings.get('useTrusted')
   const allowNsfw = AppSettings.get('allowNsfw') || false
 
   const {
