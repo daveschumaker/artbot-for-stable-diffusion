@@ -505,7 +505,7 @@ const AdvancedOptionsPanel = ({
                 setInput({ sampler: obj.value })
                 localStorage.setItem('sampler', obj.value)
               }}
-              isSearchable={false}
+              isSearchable={true}
               value={samplerValue}
             />
           </MaxWidth>
@@ -713,7 +713,7 @@ const AdvancedOptionsPanel = ({
                 }}
                 // @ts-ignore
                 value={modelsValue}
-                isSearchable={false}
+                isSearchable={true}
               />
             </MaxWidth>
             {modelDetails[input.models[0]]?.showcases && (
@@ -849,7 +849,7 @@ const AdvancedOptionsPanel = ({
               }}
               // @ts-ignore
               value={modelsValue}
-              isSearchable={false}
+              isSearchable={true}
             />
           </MaxWidth>
         </Section>
