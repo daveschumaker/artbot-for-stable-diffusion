@@ -1,4 +1,5 @@
 import AppSettings from '../models/AppSettings'
+import serverFetchWithTimeout from '../utils/serverFetchWithTimeout'
 
 interface Params {
   action: string
@@ -46,14 +47,19 @@ export const trackEvent = async (obj: any = {}) => {
   // }
 
   try {
-    await fetch(`/artbot/api/telemetry`, {
+    serverFetchWithTimeout(`/artbot/api/telemetry`, {
       method: 'POST',
       body: JSON.stringify(obj),
       headers: {
         'Content-Type': 'application/json'
-      }
+      },
+      timeout: 3000
     })
-  } finally {
+  } catch (err) {
     // If nothing happens, it's fine to ignore this.
+  } finally {
+    return {
+      success: true
+    }
   }
 }

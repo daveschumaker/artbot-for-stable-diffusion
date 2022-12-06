@@ -3,6 +3,8 @@ import { AbortController } from 'node-abort-controller'
 interface IOptions {
   timeout?: number
   method?: string
+  body?: string
+  headers?: any
 }
 
 async function serverFetchWithTimeout(
