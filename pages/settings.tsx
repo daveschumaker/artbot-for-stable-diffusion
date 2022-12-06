@@ -14,7 +14,7 @@ const SettingsPage = () => {
   return (
     <>
       <Head>
-        <title>ArtBot - Srttings</title>
+        <title>ArtBot - Settings</title>
       </Head>
       <SettingsPageComponent />
     </>

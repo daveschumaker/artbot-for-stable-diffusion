@@ -7,6 +7,28 @@ type Data = {
   status?: string
 }
 
+const getDataUrl = (imgBuffer: any) => {
+  return new Promise((resolve) => {
+    return sharp(imgBuffer)
+      .toBuffer({ resolveWithObject: true })
+      .then(async function ({ data, info }) {
+        const pngString = await data.toString('base64')
+        resolve({
+          success: true,
+          base64String: pngString,
+          height: info.height,
+          width: info.width
+        })
+      })
+      .catch((err) => {
+        console.log(`Unable to create png file.`, err)
+        resolve({
+          success: false
+        })
+      })
+  })
+}
+
 const resizeImage = (imgBuffer: any) => {
   return new Promise((resolve) => {
     return sharp(imgBuffer)
@@ -42,14 +64,21 @@ export default async function handler(
     return res.status(400).json({ success: false })
   }
 
-  const { imageUrl } = req.body
+  const { imageUrl, r2 = false } = req.body
 
   const resp = await fetch(imageUrl)
   const imageType = resp.headers.get('Content-Type')
 
+  let converted
+
   // @ts-ignore
   const imgBuffer = await resp.buffer()
-  const converted = await resizeImage(imgBuffer)
+
+  if (!r2) {
+    converted = await resizeImage(imgBuffer)
+  } else {
+    converted = await getDataUrl(imgBuffer)
+  }
 
   // @ts-ignore
   const { success, base64String, height, width } = converted

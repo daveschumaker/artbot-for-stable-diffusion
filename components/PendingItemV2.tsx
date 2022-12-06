@@ -370,16 +370,14 @@ const PendingItem = memo(({ jobDetails, jobId }) => {
                 {jobDetails.jobStatus === JobStatus.Error || jobStalled ? (
                   <Button onClick={handleRetryJob}>Retry?</Button>
                 ) : null}
-                {jobDetails.jobStatus !== JobStatus.Processing || jobStalled ? (
-                  <Button btnType="secondary" onClick={handleDeleteJob}>
-                    <TrashIcon />
-                    <MobileHideText>
-                      {jobDetails.jobStatus === JobStatus.Error
-                        ? 'Remove'
-                        : 'Cancel'}
-                    </MobileHideText>
-                  </Button>
-                ) : null}
+                <Button btnType="secondary" onClick={handleDeleteJob}>
+                  <TrashIcon />
+                  <MobileHideText>
+                    {jobDetails.jobStatus === JobStatus.Error
+                      ? 'Remove'
+                      : 'Cancel'}
+                  </MobileHideText>
+                </Button>
               </div>
             )}
           </StyledButtonContainer>

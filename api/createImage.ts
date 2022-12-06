@@ -44,6 +44,7 @@ interface ApiParams {
   source_image?: string
   source_processing?: string
   source_mask?: string
+  r2?: boolean
 }
 
 interface ParamsObject {
@@ -97,7 +98,8 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
     nsfw: allowNsfw, // Use workers that allow NSFW images
     censor_nsfw: !allowNsfw, // Show user NSFW images if created
     trusted_workers: useTrusted,
-    models
+    models,
+    r2: AppSettings.get('useR2')
   }
 
   if (triggers && triggers?.length > 0) {

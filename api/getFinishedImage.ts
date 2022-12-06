@@ -1,3 +1,4 @@
+import AppSettings from '../models/AppSettings'
 import { getApiHostServer } from '../utils/appUtils'
 
 interface FinishedImageResponse {
@@ -62,7 +63,25 @@ export const getFinishedImage = async (
     isPending = false
     if (Array.isArray(generations)) {
       const [image] = generations
-      const { img: base64String, model, seed, worker_id } = image
+      const { model, seed, worker_id } = image
+      let base64String = image.img
+
+      if (AppSettings.get('useR2')) {
+        const resp = await fetch(`/artbot/api/img-from-url`, {
+          method: 'POST',
+          body: JSON.stringify({
+            imageUrl: base64String,
+            r2: true
+          }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        const data = await resp.json()
+
+        // @ts-ignore
+        base64String = data.imgBase64String
+      }
 
       if (!base64String) {
         return {

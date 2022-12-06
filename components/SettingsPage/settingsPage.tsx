@@ -169,6 +169,7 @@ const SettingsPage = () => {
     saveInputOnCreate: false,
     showOptionsMenu: false,
     useBeta: false,
+    useR2: false,
     useTrusted: true
   })
 
@@ -227,6 +228,12 @@ const SettingsPage = () => {
     setComponentState({ loadingWorkerStatus })
   }
 
+  const handleR2Select = (obj: any) => {
+    const { value } = obj
+    AppSettings.save('useR2', value)
+    setComponentState({ useR2: value })
+  }
+
   const handleApiInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     AppSettings.save('apiKey', e.target.value)
     setComponentState({ apiKey: e.target.value })
@@ -275,6 +282,7 @@ const SettingsPage = () => {
     updateObj.runInBackground = AppSettings.get('runInBackground') || false
     updateObj.saveInputOnCreate = AppSettings.get('saveInputOnCreate') || false
     updateObj.useBeta = AppSettings.get('useBeta') || false
+    updateObj.useR2 = AppSettings.get('useR2') || false
     updateObj.useTrusted = AppSettings.get('useTrusted') || false
 
     setComponentState({ ...updateObj })
@@ -523,6 +531,35 @@ const SettingsPage = () => {
                       componentState.useTrusted
                         ? { value: true, label: 'Trusted Only' }
                         : { value: false, label: 'All Workers' }
+                    }
+                  />
+                </MaxWidth>
+              </Section>
+              <Section>
+                <SubSectionTitle>
+                  Fetch images from Cloudflare R2 (experimental)
+                  <div className="block text-xs mb-2 mt-2 w-full">
+                    Help test out an upcoming feature where images are sent from
+                    workers to Cloudflare. From there, clients can request
+                    (potentially lossless!) images. Not many workers support
+                    this feature as of now, so image generation times may take
+                    longer.
+                  </div>
+                </SubSectionTitle>
+                <MaxWidth
+                  // @ts-ignore
+                  maxWidth="240"
+                >
+                  <Select
+                    onChange={handleR2Select}
+                    options={[
+                      { value: true, label: 'Yes' },
+                      { value: false, label: 'No' }
+                    ]}
+                    value={
+                      componentState.useR2
+                        ? { value: true, label: 'Yes' }
+                        : { value: false, label: 'No' }
                     }
                   />
                 </MaxWidth>
