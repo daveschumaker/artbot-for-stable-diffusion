@@ -228,10 +228,10 @@ const SettingsPage = () => {
     setComponentState({ loadingWorkerStatus })
   }
 
-  const handleR2Select = (obj: any) => {
+  const handleUpdateSelect = (key: string, obj: any) => {
     const { value } = obj
-    AppSettings.save('useR2', value)
-    setComponentState({ useR2: value })
+    AppSettings.save(key, value)
+    setComponentState({ [key]: value })
   }
 
   const handleApiInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -243,34 +243,10 @@ const SettingsPage = () => {
     await fetchUserDetails(componentState.apiKey)
   }
 
-  const handlePreserveCreate = (obj: any) => {
-    const { value } = obj
-    AppSettings.save('saveInputOnCreate', value)
-    setComponentState({ saveInputOnCreate: value })
-  }
-
-  const handleRunBackground = (obj: any) => {
-    const { value } = obj
-    AppSettings.save('runInBackground', value)
-    setComponentState({ runInBackground: value })
-  }
-
   const handleBetaSelect = (obj: any) => {
     const { value } = obj
     AppSettings.save('useBeta', value === 'true' ? 'userTrue' : 'userFalse')
     setComponentState({ useBeta: value })
-  }
-
-  const handleTrustedSelect = (obj: any) => {
-    const { value } = obj
-    AppSettings.save('useTrusted', value)
-    setComponentState({ useTrusted: value })
-  }
-
-  const handleNsfwSelect = (obj: any) => {
-    const { value } = obj
-    AppSettings.save('allowNsfwImages', value)
-    setComponentState({ allowNsfwImages: value })
   }
 
   useEffect(() => {
@@ -499,7 +475,9 @@ const SettingsPage = () => {
                       { value: true, label: 'Yes' },
                       { value: false, label: 'No' }
                     ]}
-                    onChange={handleNsfwSelect}
+                    onChange={(obj: any) =>
+                      handleUpdateSelect('allowNsfwImages', obj)
+                    }
                     value={
                       componentState.allowNsfwImages
                         ? { value: true, label: 'Yes' }
@@ -522,7 +500,9 @@ const SettingsPage = () => {
                   maxWidth="240"
                 >
                   <Select
-                    onChange={handleTrustedSelect}
+                    onChange={(obj: any) =>
+                      handleUpdateSelect('useTrusted', obj)
+                    }
                     options={[
                       { value: false, label: 'All Workers' },
                       { value: true, label: 'Trusted Only' }
@@ -551,7 +531,7 @@ const SettingsPage = () => {
                   maxWidth="240"
                 >
                   <Select
-                    onChange={handleR2Select}
+                    onChange={(obj: any) => handleUpdateSelect('useR2', obj)}
                     options={[
                       { value: true, label: 'Yes' },
                       { value: false, label: 'No' }
@@ -733,7 +713,9 @@ const SettingsPage = () => {
                       { value: true, label: 'Yes' },
                       { value: false, label: 'No' }
                     ]}
-                    onChange={handlePreserveCreate}
+                    onChange={(obj: any) =>
+                      handleUpdateSelect('saveInputOnCreate', obj)
+                    }
                     value={
                       componentState.saveInputOnCreate
                         ? { value: true, label: 'Yes' }
@@ -760,7 +742,9 @@ const SettingsPage = () => {
                       { value: true, label: 'Yes' },
                       { value: false, label: 'No' }
                     ]}
-                    onChange={handleRunBackground}
+                    onChange={(obj: any) =>
+                      handleUpdateSelect('runInBackground', obj)
+                    }
                     value={
                       componentState.runInBackground
                         ? { value: true, label: 'Yes' }
