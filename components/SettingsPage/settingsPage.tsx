@@ -125,6 +125,10 @@ const WorkerStatus = styled.div`
   margin-top: 8px;
 `
 
+const Spacer = styled.div`
+  margin-bottom: 8px;
+`
+
 const ShowOnMobile = styled.div`
   @media (min-width: 640px) {
     display: none;
@@ -629,8 +633,18 @@ const SettingsPage = () => {
                           <div>
                             Total uptime: {formatSeconds(worker.uptime)}
                           </div>
-                          <div>Performance: {worker.performance}</div>
+                          <Spacer />
                           <div>Threads: {worker.threads}</div>
+                          <div>Performance: {worker.performance}</div>
+                          <div>
+                            Avg time per request:{' '}
+                            {worker.requests_fulfilled > 0
+                              ? `${Math.round(
+                                  worker.uptime / worker.requests_fulfilled
+                                )} seconds`
+                              : 'N/A'}
+                          </div>
+                          <Spacer />
                           <div>
                             Kudos earned:{' '}
                             {worker?.kudos_rewards?.toLocaleString()}

@@ -102,6 +102,17 @@ const Changelog = () => {
         </Section>
       </Panel>
       <Section>
+        <SubSectionTitle>2022.12.07</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: Pesky bug that duplicated all image requests if &quot;use all
+            samplers&quot; was selected and the image job had encountered an
+            error. (Thanks, anonymous user!)
+          </StyledLi>
+          <StyledLi></StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.12.06</SubSectionTitle>
         <StyledUl>
           <StyledLi>

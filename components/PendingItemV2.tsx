@@ -140,6 +140,7 @@ const PendingItem = memo(({ jobDetails, jobId }) => {
 
     const clonedParams = new CreateImageRequest(jobDetails)
     clonedParams.useAllModels = false
+    clonedParams.useAllSamplers = false
     clonedParams.numImages = 1
 
     trackEvent({
