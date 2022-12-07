@@ -133,6 +133,10 @@ const Changelog = () => {
             </Linker>
             .
           </StyledLi>
+          <StyledLi>
+            Feature: Generate a series of images using all available samplers.
+            Works best if you fix the seed ahead of time.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

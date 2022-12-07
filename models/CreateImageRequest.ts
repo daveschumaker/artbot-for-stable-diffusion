@@ -39,6 +39,7 @@ export interface IRequestParams {
   steps: number
   triggers?: Array<string>
   useAllModels: boolean
+  useAllSamplers: boolean
   width: number
 }
 
@@ -70,6 +71,7 @@ class CreateImageRequest {
   triggers: Array<string>
   upscaled?: boolean
   useAllModels: boolean
+  useAllSamplers: boolean
   width: number
 
   constructor({
@@ -95,6 +97,7 @@ class CreateImageRequest {
     steps = 20,
     triggers = [],
     useAllModels = false,
+    useAllSamplers = false,
     width = 512
   }: IRequestParams) {
     if (canvasStore) {
@@ -156,6 +159,7 @@ class CreateImageRequest {
     this.steps = Number(steps)
     this.triggers = [...triggers]
     this.useAllModels = Boolean(useAllModels)
+    this.useAllSamplers = Boolean(useAllSamplers)
   }
 
   static getRandomModel() {

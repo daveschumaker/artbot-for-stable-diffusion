@@ -97,6 +97,52 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
     return {
       success: true
     }
+  } else if (imageParams.useAllSamplers) {
+    imageParams.numImages = 1
+
+    // TODO: Blarg. Should not hard code this. Constants, man. CONSTANTS.
+    let samplerArray = [
+      'k_dpm_2_a',
+      'k_dpm_2',
+      'k_euler_a',
+      'k_euler',
+      'k_heun',
+      'k_lms',
+      'k_dpm_fast',
+      'k_dpm_adaptive',
+      'k_dpmpp_2m',
+      'k_dpmpp_2s_a'
+    ]
+
+    if (imageParams.models[0] === 'stable_diffusion_2') {
+      samplerArray = ['dpmsolver']
+    }
+
+    for (const sampler of samplerArray) {
+      clonedParams = cloneImageParams(imageParams)
+      clonedParams.sampler = sampler
+
+      if (clonedParams.models[0] === 'random') {
+        clonedParams.models = [CreateImageRequest.getRandomModel()]
+      }
+
+      if (clonedParams.orientation === 'random') {
+        clonedParams = {
+          ...clonedParams,
+          ...CreateImageRequest.getRandomOrientation()
+        }
+      }
+
+      try {
+        await db.pending.add({
+          ...clonedParams
+        })
+      } catch (err) {}
+    }
+
+    return {
+      success: true
+    }
   } else if (imageParams.useAllModels) {
     imageParams.numImages = 1
     const models = modelInfoStore.state.availableModels

@@ -69,7 +69,8 @@ const defaultState: any = {
   post_processing: [],
   models: ['stable_diffusion'],
   useAllModels: false,
-  useFavoriteModels: false
+  useFavoriteModels: false,
+  useAllSamplers: false
 }
 
 export async function getServerSideProps() {
@@ -148,7 +149,8 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
       post_processing: [],
       models: loadEditPrompt().models,
       useAllModels: false,
-      useFavoriteModels: false
+      useFavoriteModels: false,
+      useAllSamplers: false
     }
   }
 

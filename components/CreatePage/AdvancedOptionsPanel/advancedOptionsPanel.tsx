@@ -491,29 +491,60 @@ const AdvancedOptionsPanel = ({
           <TextButton onClick={() => setShowNegPane(true)}>load</TextButton>
         </FlexRow>
       </Section>
-      <Section>
-        <SubSectionTitle>Sampler</SubSectionTitle>
-        {input.source_processing === SourceProcessing.InPainting ? (
-          <div className="mt-2 text-sm text-slate-500">
-            Note: Sampler disabled when inpainting is used.
-          </div>
-        ) : (
-          <MaxWidth
-            // @ts-ignore
-            maxWidth="240"
-          >
-            <SelectComponent
-              options={samplerOptions(input)}
-              onChange={(obj: { value: string; label: string }) => {
-                setInput({ sampler: obj.value })
-                localStorage.setItem('sampler', obj.value)
+      {!input.useAllSamplers && (
+        <Section>
+          <SubSectionTitle>Sampler</SubSectionTitle>
+          {input.source_processing === SourceProcessing.InPainting ? (
+            <div className="mt-2 text-sm text-slate-500">
+              Note: Sampler disabled when inpainting is used.
+            </div>
+          ) : (
+            <MaxWidth
+              // @ts-ignore
+              maxWidth="240"
+            >
+              <SelectComponent
+                options={samplerOptions(input)}
+                onChange={(obj: { value: string; label: string }) => {
+                  setInput({ sampler: obj.value })
+                  localStorage.setItem('sampler', obj.value)
+                }}
+                isSearchable={true}
+                value={samplerValue}
+              />
+            </MaxWidth>
+          )}
+        </Section>
+      )}
+      {input.source_processing !== SourceProcessing.Img2Img &&
+        input.source_processing !== SourceProcessing.InPainting && (
+          <Section>
+            <SubSectionTitle>
+              Use all samplers
+              <Tooltip left="-140" width="240px">
+                Automatically generate an image for sampler
+              </Tooltip>
+            </SubSectionTitle>
+            <Switch
+              onChange={() => {
+                if (!input.useAllSamplers) {
+                  trackEvent({
+                    event: 'USE_ALL_SAMPLERS_CLICK',
+                    context: '/pages/index'
+                  })
+                  setInput({
+                    useAllSamplers: true,
+                    useAllModels: false,
+                    useFavoriteModels: false
+                  })
+                } else {
+                  setInput({ useAllSamplers: false })
+                }
               }}
-              isSearchable={true}
-              value={samplerValue}
+              checked={input.useAllSamplers}
             />
-          </MaxWidth>
+          </Section>
         )}
-      </Section>
       <Section>
         <SubSectionTitle>
           Steps
@@ -833,7 +864,8 @@ const AdvancedOptionsPanel = ({
           </MaxWidth>
         </Section>
       ) : null}
-      {!input.useAllModels &&
+      {!input.useAllSamplers &&
+      !input.useAllModels &&
       !input.useFavoriteModels &&
       input.source_processing !==
         (SourceProcessing.InPainting || SourceProcessing.OutPaiting) ? (
@@ -860,7 +892,8 @@ const AdvancedOptionsPanel = ({
           />
         </Section>
       ) : null}
-      {!showMultiModel &&
+      {!input.useAllSamplers &&
+      !showMultiModel &&
       !input.useFavoriteModels &&
       input.source_processing !==
         (SourceProcessing.InPainting || SourceProcessing.OutPaiting) ? (
@@ -888,7 +921,8 @@ const AdvancedOptionsPanel = ({
           />
         </Section>
       ) : null}
-      {!showMultiModel &&
+      {!input.useAllSamplers &&
+      !showMultiModel &&
       !input.useAllModels &&
       input.source_processing !==
         (SourceProcessing.InPainting || SourceProcessing.OutPaiting) ? (
