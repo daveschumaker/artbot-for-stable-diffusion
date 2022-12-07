@@ -126,6 +126,15 @@ class CreateImageRequest {
       this.height = 512
     }
 
+    // Stable Diffusion models look best on at least 768 x 768
+    if (
+      models[0].indexOf('stable_diffusion_2') >= 0 &&
+      this.orientation === 'square'
+    ) {
+      this.width = 768
+      this.height = 768
+    }
+
     this.karras = Boolean(karras)
 
     if (models.length === 0) {
