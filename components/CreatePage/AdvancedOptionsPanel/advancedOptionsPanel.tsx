@@ -25,6 +25,7 @@ import { modelInfoStore } from '../../../store/modelStore'
 import Checkbox from '../../UI/Checkbox'
 import { MAX_IMAGES_PER_JOB } from '../../../constants'
 import GrainIcon from '../../icons/GrainIcon'
+import AppSettings from '../../../models/AppSettings'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -290,6 +291,8 @@ const AdvancedOptionsPanel = ({
   useEffect(() => {
     validateSteps()
   }, [input.sampler, validateSteps])
+
+  const favModels = AppSettings.get('favoriteModels') || {}
 
   return (
     <div>
@@ -791,30 +794,6 @@ const AdvancedOptionsPanel = ({
             </MaxWidth>
           </Section>
         )}
-      {!input.useAllModels ? (
-        <Section>
-          <SubSectionTitle>
-            Multi-model select
-            <Tooltip left="-140" width="240px">
-              Pick from multiple models that you might prefer.
-            </Tooltip>
-          </SubSectionTitle>
-          <Switch
-            onChange={() => {
-              if (!showMultiModel) {
-                trackEvent({
-                  event: 'USE_MULTI_MODEL_SELECT',
-                  context: '/pages/index'
-                })
-                setShowMultiModel(true)
-              } else {
-                setShowMultiModel(false)
-              }
-            }}
-            checked={showMultiModel}
-          />
-        </Section>
-      ) : null}
       {showMultiModel ? (
         <Section>
           <SubSectionTitle>
@@ -854,7 +833,37 @@ const AdvancedOptionsPanel = ({
           </MaxWidth>
         </Section>
       ) : null}
-      {!showMultiModel ? (
+      {!input.useAllModels &&
+      !input.useFavoriteModels &&
+      input.source_processing !==
+        (SourceProcessing.InPainting || SourceProcessing.OutPaiting) ? (
+        <Section>
+          <SubSectionTitle>
+            Multi-model select
+            <Tooltip left="-140" width="240px">
+              Pick from multiple models that you might prefer.
+            </Tooltip>
+          </SubSectionTitle>
+          <Switch
+            onChange={() => {
+              if (!showMultiModel) {
+                trackEvent({
+                  event: 'USE_MULTI_MODEL_SELECT',
+                  context: '/pages/index'
+                })
+                setShowMultiModel(true)
+              } else {
+                setShowMultiModel(false)
+              }
+            }}
+            checked={showMultiModel}
+          />
+        </Section>
+      ) : null}
+      {!showMultiModel &&
+      !input.useFavoriteModels &&
+      input.source_processing !==
+        (SourceProcessing.InPainting || SourceProcessing.OutPaiting) ? (
         <Section>
           <SubSectionTitle>
             Use all available models ({availableModels.length})
@@ -870,12 +879,40 @@ const AdvancedOptionsPanel = ({
                   event: 'USE_ALL_MODELS_CLICK',
                   context: '/pages/index'
                 })
-                setInput({ useAllModels: true, post_processing: [] })
+                setInput({ useAllModels: true })
               } else {
                 setInput({ useAllModels: false })
               }
             }}
             checked={input.useAllModels}
+          />
+        </Section>
+      ) : null}
+      {!showMultiModel &&
+      !input.useAllModels &&
+      input.source_processing !==
+        (SourceProcessing.InPainting || SourceProcessing.OutPaiting) ? (
+        <Section>
+          <SubSectionTitle>
+            Use favorite models ({Object.keys(favModels).length})
+            <Tooltip left="-140" width="240px">
+              Automatically generate an image for each model you have favorited.
+            </Tooltip>
+          </SubSectionTitle>
+          <Switch
+            disabled={Object.keys(favModels).length === 0}
+            onChange={() => {
+              if (!input.useFavoriteModels) {
+                trackEvent({
+                  event: 'USE_FAV_MODELS_CLICK',
+                  context: '/pages/index'
+                })
+                setInput({ useFavoriteModels: true })
+              } else {
+                setInput({ useFavoriteModels: false })
+              }
+            }}
+            checked={input.useFavoriteModels}
           />
         </Section>
       ) : null}
@@ -898,29 +935,27 @@ const AdvancedOptionsPanel = ({
           checked={input.karras}
         />
       </Section>
-      {!input.useAllModels && (
-        <Section>
-          <SubSectionTitle>
-            Post-processing
-            <Tooltip left="-20" width="240px">
-              Post-processing options such as face improvement and image
-              upscaling.
-            </Tooltip>
-          </SubSectionTitle>
-          <div className="flex flex-col gap-2 items-start">
-            <Checkbox
-              label={`GFPGAN (improves faces)`}
-              value={getPostProcessing('GFPGAN')}
-              onChange={() => handlePostProcessing('GFPGAN')}
-            />
-            <Checkbox
-              label={`RealESRGAN_x4plus (upscaler - max 1 image)`}
-              value={getPostProcessing(`RealESRGAN_x4plus`)}
-              onChange={() => handlePostProcessing(`RealESRGAN_x4plus`)}
-            />
-          </div>
-        </Section>
-      )}
+      <Section>
+        <SubSectionTitle>
+          Post-processing
+          <Tooltip left="-20" width="240px">
+            Post-processing options such as face improvement and image
+            upscaling.
+          </Tooltip>
+        </SubSectionTitle>
+        <div className="flex flex-col gap-2 items-start">
+          <Checkbox
+            label={`GFPGAN (improves faces)`}
+            value={getPostProcessing('GFPGAN')}
+            onChange={() => handlePostProcessing('GFPGAN')}
+          />
+          <Checkbox
+            label={`RealESRGAN_x4plus (upscaler - max 1 image)`}
+            value={getPostProcessing(`RealESRGAN_x4plus`)}
+            onChange={() => handlePostProcessing(`RealESRGAN_x4plus`)}
+          />
+        </div>
+      </Section>
       {!input.useAllModels &&
         input.post_processing.indexOf('RealESRGAN_x4plus') === -1 && (
           <Section>

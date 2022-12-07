@@ -16,7 +16,7 @@ let isPending = false
 const apiCooldown = () => {
   setTimeout(() => {
     isPending = false
-  }, 61000)
+  }, 31000)
 }
 
 export const getFinishedImage = async (
@@ -65,6 +65,15 @@ export const getFinishedImage = async (
       const [image] = generations
       const { model, seed, worker_id } = image
       let base64String = image.img
+
+      // Image is not done uploading to R2 yet.
+      if (image.img === 'R2') {
+        apiCooldown()
+        return {
+          success: false,
+          status: 'WAITING_FOR_PENDING_REQUEST'
+        }
+      }
 
       if (AppSettings.get('useR2')) {
         const resp = await fetch(`/artbot/api/img-from-url`, {

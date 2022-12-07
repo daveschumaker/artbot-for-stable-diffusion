@@ -18,6 +18,13 @@ import ServerMessage from '../components/ServerMessage'
 import LinkIcon from '../components/icons/LinkIcon'
 import styled from 'styled-components'
 import Linker from '../components/UI/Linker'
+import MenuButton from '../components/UI/MenuButton'
+import HeartIcon from '../components/icons/HeartIcon'
+import AppSettings from '../models/AppSettings'
+import ChevronDownIcon from '../components/icons/ChevronDownIcon'
+import ChevronRightIcon from '../components/icons/ChevronRightIcon'
+import DropDownMenu from '../components/UI/DropDownMenu'
+import DropDownMenuItem from '../components/UI/DropDownMenuItem'
 
 const StyledLinkIcon = styled(LinkIcon)`
   cursor: pointer;
@@ -51,16 +58,31 @@ export async function getServerSideProps() {
 
 const InfoPage = ({ availableModels, modelDetails }: any) => {
   const router = useRouter()
+
   const [componentState, setComponentState] = useComponentState({
     availableModels: availableModels,
+    favoriteModels: {},
     modelDetails: modelDetails,
     imageCounts: {},
     isLoading: false,
+    showOptionsMenu: false,
     sort: 'count',
     view: 'models'
   })
 
-  const sortModels = useCallback(() => {
+  const handleFavoriteClick = (model = '') => {
+    const favoriteModels = AppSettings.get('favoriteModels') || {}
+    if (!favoriteModels[model]) {
+      favoriteModels[model] = true
+    } else {
+      delete favoriteModels[model]
+    }
+
+    AppSettings.save('favoriteModels', favoriteModels)
+    setComponentState({ favoriteModels })
+  }
+
+  const sortModels = () => {
     const modelDetailsArray: Array<any> = []
 
     for (const model in componentState.modelDetails) {
@@ -70,14 +92,27 @@ const InfoPage = ({ availableModels, modelDetails }: any) => {
         }
       )
 
-      modelDetailsArray.push({
-        ...componentState.modelDetails[model],
-        // @ts-ignore
-        count: modelStats.count || 0,
-        numImages: componentState?.imageCounts[model] || 0,
-        // @ts-ignore
-        queued: modelStats?.queued || 0
-      })
+      if (router.query.show === 'favorite-models') {
+        if (componentState.favoriteModels[model]) {
+          modelDetailsArray.push({
+            ...componentState.modelDetails[model],
+            // @ts-ignore
+            count: modelStats.count || 0,
+            numImages: componentState?.imageCounts[model] || 0,
+            // @ts-ignore
+            queued: modelStats?.queued || 0
+          })
+        }
+      } else {
+        modelDetailsArray.push({
+          ...componentState.modelDetails[model],
+          // @ts-ignore
+          count: modelStats.count || 0,
+          numImages: componentState?.imageCounts[model] || 0,
+          // @ts-ignore
+          queued: modelStats?.queued || 0
+        })
+      }
     }
 
     modelDetailsArray.sort((a: any, b: any) => {
@@ -105,12 +140,12 @@ const InfoPage = ({ availableModels, modelDetails }: any) => {
     })
 
     return modelDetailsArray
-  }, [
-    componentState.imageCounts,
-    componentState.sort,
-    componentState.availableModels,
-    componentState.modelDetails
-  ])
+  }
+
+  useEffectOnce(() => {
+    const favoriteModels = AppSettings.get('favoriteModels') || {}
+    setComponentState({ favoriteModels })
+  })
 
   // const updateLocalCount = useCallback(async () => {
   //   const count: IModelCount = {}
@@ -145,29 +180,41 @@ const InfoPage = ({ availableModels, modelDetails }: any) => {
         <div key={`${name}_panel_${idx}`}>
           <a id={name} />
           <Panel className="mb-2 text-sm">
-            <div className="flex flex-row gap-1 items-center text-lg">
-              <Linker
-                href={`/info#${name}`}
-                onClick={() => {
-                  navigator?.clipboard
-                    ?.writeText(`https://tinybots.net/artbot/info/#${name}`)
-                    .then(() => {
-                      toast.success('Model URL copied!', {
-                        position: 'top-center',
-                        autoClose: 2500,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: false,
-                        draggable: false,
-                        progress: undefined,
-                        theme: 'light'
+            <div className="flex flex-row w-full items-center">
+              <div className="flex flex-row  items-center gap-1 inline-block w-1/2 text-xl">
+                <Linker
+                  href={`/info#${name}`}
+                  onClick={() => {
+                    navigator?.clipboard
+                      ?.writeText(`https://tinybots.net/artbot/info/#${name}`)
+                      .then(() => {
+                        toast.success('Model URL copied!', {
+                          pauseOnFocusLoss: false,
+                          position: 'top-center',
+                          autoClose: 2500,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: false,
+                          draggable: false,
+                          progress: undefined,
+                          theme: 'light'
+                        })
                       })
-                    })
-                }}
-              >
-                <StyledLinkIcon />
-              </Linker>
-              <strong>{name}</strong>
+                  }}
+                >
+                  <StyledLinkIcon />
+                </Linker>
+                <strong>{name}</strong>
+              </div>
+              <div className="flex flex-row justify-end w-1/2 items-center h-[38px] relative gap-2">
+                <MenuButton
+                  active={componentState.favoriteModels[name]}
+                  title="Save model as favorite"
+                  onClick={() => handleFavoriteClick(name)}
+                >
+                  <HeartIcon />
+                </MenuButton>
+              </div>
             </div>
             <div className="mb-2">
               {nsfw ? 'This model generates NSFW images. ' : ''}
@@ -284,7 +331,71 @@ const InfoPage = ({ availableModels, modelDetails }: any) => {
       <Head>
         <title>ArtBot - Info</title>
       </Head>
-      <PageTitle>General Information</PageTitle>
+      <div className="flex flex-row w-full items-center">
+        <div className="inline-block w-1/2">
+          <PageTitle>General Information</PageTitle>
+        </div>
+        <div className="flex flex-row justify-end w-1/2 items-start h-[38px] relative gap-2">
+          <MenuButton
+            active={componentState.showOptionsMenu}
+            title="View model details"
+            onClick={() => {
+              if (componentState.showOptionsMenu) {
+                setComponentState({
+                  showOptionsMenu: false
+                })
+              } else {
+                setComponentState({
+                  showOptionsMenu: true
+                })
+              }
+            }}
+          >
+            <div className="flex flex-row gap-1 pr-2">
+              {componentState.showOptionsMenu ? (
+                <ChevronDownIcon />
+              ) : (
+                <ChevronRightIcon />
+              )}
+              {!router.query.show &&
+                `
+                All models
+                `}
+              {router.query.show === 'favorite-models' && `Favorite models`}
+            </div>
+          </MenuButton>
+          {componentState.showOptionsMenu && (
+            <DropDownMenu>
+              <DropDownMenuItem
+                onClick={() => {
+                  setComponentState({
+                    showOptionsMenu: false
+                  })
+                  router.push(
+                    //@ts-ignore
+                    `/info`
+                  )
+                }}
+              >
+                All models
+              </DropDownMenuItem>
+              <DropDownMenuItem
+                onClick={() => {
+                  setComponentState({
+                    showOptionsMenu: false
+                  })
+                  router.push(
+                    //@ts-ignore
+                    `/info?show=favorite-models`
+                  )
+                }}
+              >
+                Favorite models
+              </DropDownMenuItem>
+            </DropDownMenu>
+          )}
+        </div>
+      </div>
       <ServerMessage />
       {componentState.isLoading && <SpinnerV2 />}
       {!componentState.isLoading && (

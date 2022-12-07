@@ -68,7 +68,8 @@ const defaultState: any = {
   source_processing: SourceProcessing.Prompt,
   post_processing: [],
   models: ['stable_diffusion'],
-  useAllModels: false
+  useAllModels: false,
+  useFavoriteModels: false
 }
 
 export async function getServerSideProps() {
@@ -146,7 +147,8 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
       source_processing: loadEditPrompt().source_processing,
       post_processing: [],
       models: loadEditPrompt().models,
-      useAllModels: false
+      useAllModels: false,
+      useFavoriteModels: false
     }
   }
 
@@ -288,7 +290,21 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
       }
     })
 
-    await createImageJob(new CreateImageRequest(input))
+    const inputToSubmit = { ...input }
+
+    if (input.useFavoriteModels) {
+      const favModels = AppSettings.get('favoriteModels') || {}
+
+      console.log(`Object.keys(favModels)`, Object.keys(favModels))
+
+      const modelsArray =
+        Object.keys(favModels).length > 0
+          ? (inputToSubmit.models = [...Object.keys(favModels)])
+          : 'stable_diffusion'
+      input.models = [...modelsArray]
+    }
+
+    await createImageJob(new CreateImageRequest(inputToSubmit))
 
     if (!AppSettings.get('stayOnCreate')) {
       if (AppSettings.get('saveInputOnCreate')) {

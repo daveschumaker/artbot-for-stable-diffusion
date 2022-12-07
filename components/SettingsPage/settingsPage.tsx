@@ -34,6 +34,8 @@ import ChevronRightIcon from '../../components/icons/ChevronRightIcon'
 import ChevronDownIcon from '../../components/icons/ChevronDownIcon'
 import AppSettings from '../../models/AppSettings'
 import { toast } from 'react-toastify'
+import DropDownMenu from '../UI/DropDownMenu'
+import DropDownMenuItem from '../UI/DropDownMenuItem'
 
 interface IWorkerChange {
   id: string
@@ -121,30 +123,6 @@ const WorkerId = styled.div`
 const WorkerStatus = styled.div`
   font-size: 14px;
   margin-top: 8px;
-`
-
-const DropDownMenu = styled.div`
-  background-color: ${(props) => props.theme.body};
-  border: 2px solid ${(props) => props.theme.navLinkActive};
-  border-radius: 4px;
-  /* padding: 8px; */
-  position: absolute;
-  top: 0;
-  width: 200px;
-  right: -2px;
-  top: 36px;
-  z-index: 10;
-`
-
-const MenuItem = styled.li`
-  cursor: pointer;
-  padding: 4px 8px;
-  width: 100%;
-
-  &:hover {
-    background-color: ${(props) => props.theme.navLinkActive};
-    color: ${(props) => props.theme.body};
-  }
 `
 
 const ShowOnMobile = styled.div`
@@ -335,47 +313,45 @@ const SettingsPage = () => {
             </MenuButton>
             {componentState.showOptionsMenu && (
               <DropDownMenu>
-                <ul>
-                  <MenuItem
-                    onClick={() => {
-                      setComponentState({
-                        showOptionsMenu: false
-                      })
-                      router.push(
-                        //@ts-ignore
-                        `/settings`
-                      )
-                    }}
-                  >
-                    Stable Horde settings
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      setComponentState({
-                        showOptionsMenu: false
-                      })
-                      router.push(
-                        //@ts-ignore
-                        `/settings?panel=workers`
-                      )
-                    }}
-                  >
-                    Manage workers
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      setComponentState({
-                        showOptionsMenu: false
-                      })
-                      router.push(
-                        //@ts-ignore
-                        `/settings?panel=prefs`
-                      )
-                    }}
-                  >
-                    ArtBot preferences
-                  </MenuItem>
-                </ul>
+                <DropDownMenuItem
+                  onClick={() => {
+                    setComponentState({
+                      showOptionsMenu: false
+                    })
+                    router.push(
+                      //@ts-ignore
+                      `/settings`
+                    )
+                  }}
+                >
+                  Stable Horde settings
+                </DropDownMenuItem>
+                <DropDownMenuItem
+                  onClick={() => {
+                    setComponentState({
+                      showOptionsMenu: false
+                    })
+                    router.push(
+                      //@ts-ignore
+                      `/settings?panel=workers`
+                    )
+                  }}
+                >
+                  Manage workers
+                </DropDownMenuItem>
+                <DropDownMenuItem
+                  onClick={() => {
+                    setComponentState({
+                      showOptionsMenu: false
+                    })
+                    router.push(
+                      //@ts-ignore
+                      `/settings?panel=prefs`
+                    )
+                  }}
+                >
+                  ArtBot preferences
+                </DropDownMenuItem>
               </DropDownMenu>
             )}
           </ShowOnMobile>

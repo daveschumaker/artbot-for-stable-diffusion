@@ -20,6 +20,7 @@ class ShareLinkDetails {
     stylePreset = 'none',
     triggers = [],
     width = 512,
+    orientation = '',
     orientationType = ''
   }) {
     const [model] = models
@@ -41,7 +42,7 @@ class ShareLinkDetails {
         [...post_processing],
         [...triggers],
         stylePreset,
-        orientationType
+        orientationType || orientation
       ]
     }
 
@@ -85,7 +86,7 @@ class ShareLinkDetails {
       karras,
       post_processing,
       triggers,
-      orientationType: orientationType ?? 'custom',
+      orientationType: orientationType || 'custom',
       stylePreset
     }
   }
