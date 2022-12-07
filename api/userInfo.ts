@@ -42,27 +42,33 @@ export const fetchUserDetails = async (apikey: string) => {
         )
         const workerData = await workerRes.json()
         const {
-          name,
           id,
+          kudos_rewards,
           maintenance_mode,
           models,
+          name,
           online,
+          performance,
           requests_fulfilled,
           team,
-          uptime,
-          performance
+          threads,
+          trusted,
+          uptime
         } = workerData
 
         workerInfo[id] = {
           id,
+          kudos_rewards,
           maintenance_mode,
           models,
           name,
           online,
+          performance,
           requests_fulfilled,
           team,
-          uptime,
-          performance
+          threads,
+          trusted,
+          uptime
         }
       }
 
