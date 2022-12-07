@@ -28,3 +28,14 @@ export const toBool = (value?: string | null) => {
     return false
   }
 }
+
+export const blobToBase64 = (blob: any) => {
+  return new Promise((resolve) => {
+    var reader = new FileReader()
+    reader.readAsDataURL(blob)
+    reader.onloadend = function () {
+      var base64data = reader.result
+      resolve(base64data)
+    }
+  })
+}

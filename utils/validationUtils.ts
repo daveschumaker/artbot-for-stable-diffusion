@@ -48,7 +48,7 @@ export const validSampler = (sampler: string) => {
   return samplers.indexOf(sampler) >= 0
 }
 
-export const isValidHttpUrl = (string: string) => {
+export const isValidHttpUrl = (string: string = '') => {
   let url
   try {
     url = new URL(string)

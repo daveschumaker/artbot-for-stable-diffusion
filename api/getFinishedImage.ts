@@ -1,5 +1,6 @@
-import AppSettings from '../models/AppSettings'
 import { getApiHostServer } from '../utils/appUtils'
+import { blobToBase64 } from '../utils/helperUtils'
+import { isValidHttpUrl } from '../utils/validationUtils'
 
 interface FinishedImageResponse {
   success: boolean
@@ -14,6 +15,8 @@ interface FinishedImageResponse {
 let isPending = false
 
 const apiCooldown = () => {
+  isPending = true
+
   setTimeout(() => {
     isPending = false
   }, 31000)
@@ -66,7 +69,9 @@ export const getFinishedImage = async (
       const { model, seed, worker_id } = image
       let base64String = image.img
 
-      // Image is not done uploading to R2 yet.
+      // Image is not done uploading to R2 yet(?).
+      // This should no longer happen, according to Db0
+      // Keeping this here for now.
       if (image.img === 'R2') {
         apiCooldown()
         return {
@@ -75,21 +80,22 @@ export const getFinishedImage = async (
         }
       }
 
-      if (AppSettings.get('useR2')) {
-        const resp = await fetch(`/artbot/api/img-from-url`, {
-          method: 'POST',
-          body: JSON.stringify({
-            imageUrl: base64String,
-            r2: true
-          }),
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-        const data = await resp.json()
+      if (isValidHttpUrl(image.img)) {
+        try {
+          const imageData = await fetch(`${image.img}`)
+          const blob = await imageData.blob()
+          const imageEncodedString = await blobToBase64(blob)
+          const [, extractedBase64String] =
+            // @ts-ignore
+            imageEncodedString?.split('data:image/webp;base64,') || ['', '']
 
-        // @ts-ignore
-        base64String = data.imgBase64String
+          base64String = extractedBase64String
+        } catch (err) {
+          return {
+            success: false,
+            status: 'MISSING_BASE64_STRING'
+          }
+        }
       }
 
       if (!base64String) {
