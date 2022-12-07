@@ -37,6 +37,20 @@ const FaqPage = () => {
     })
   })
 
+  const showToast = () => {
+    toast.success('FAQ URL copied!', {
+      pauseOnFocusLoss: false,
+      position: 'top-center',
+      autoClose: 2500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: false,
+      progress: undefined,
+      theme: 'light'
+    })
+  }
+
   return (
     <div className="mb-4">
       <Head>
@@ -52,18 +66,7 @@ const FaqPage = () => {
               onClick={() => {
                 navigator?.clipboard
                   ?.writeText(`https://tinybots.net/artbot/faq/#kudos`)
-                  .then(() => {
-                    toast.success('FAQ URL copied!', {
-                      position: 'top-center',
-                      autoClose: 2500,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: false,
-                      draggable: false,
-                      progress: undefined,
-                      theme: 'light'
-                    })
-                  })
+                  ?.then(() => showToast())
               }}
             >
               <StyledLinkIcon />
@@ -126,18 +129,7 @@ const FaqPage = () => {
               onClick={() => {
                 navigator?.clipboard
                   ?.writeText(`https://tinybots.net/artbot/faq/#syntax`)
-                  .then(() => {
-                    toast.success('FAQ URL copied!', {
-                      position: 'top-center',
-                      autoClose: 2500,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: false,
-                      draggable: false,
-                      progress: undefined,
-                      theme: 'light'
-                    })
-                  })
+                  ?.then(() => showToast())
               }}
             >
               <StyledLinkIcon />
@@ -178,18 +170,7 @@ const FaqPage = () => {
                   ?.writeText(
                     `https://tinybots.net/artbot/faq/#generation-time`
                   )
-                  .then(() => {
-                    toast.success('FAQ URL copied!', {
-                      position: 'top-center',
-                      autoClose: 2500,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: false,
-                      draggable: false,
-                      progress: undefined,
-                      theme: 'light'
-                    })
-                  })
+                  ?.then(() => showToast())
               }}
             >
               <StyledLinkIcon />
@@ -215,18 +196,7 @@ const FaqPage = () => {
                   ?.writeText(
                     `https://tinybots.net/artbot/faq/#requests-missing`
                   )
-                  .then(() => {
-                    toast.success('FAQ URL copied!', {
-                      position: 'top-center',
-                      autoClose: 2500,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: false,
-                      draggable: false,
-                      progress: undefined,
-                      theme: 'light'
-                    })
-                  })
+                  ?.then(() => showToast())
               }}
             >
               <StyledLinkIcon />
@@ -249,18 +219,7 @@ const FaqPage = () => {
               onClick={() => {
                 navigator?.clipboard
                   ?.writeText(`https://tinybots.net/artbot/faq/#kudos`)
-                  .then(() => {
-                    toast.success('FAQ URL copied!', {
-                      position: 'top-center',
-                      autoClose: 2500,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: false,
-                      draggable: false,
-                      progress: undefined,
-                      theme: 'light'
-                    })
-                  })
+                  ?.then(() => showToast())
               }}
             >
               <StyledLinkIcon />

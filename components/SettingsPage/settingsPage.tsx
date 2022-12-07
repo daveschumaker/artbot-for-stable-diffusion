@@ -33,6 +33,7 @@ import { appInfoStore } from '../../store/appStore'
 import ChevronRightIcon from '../../components/icons/ChevronRightIcon'
 import ChevronDownIcon from '../../components/icons/ChevronDownIcon'
 import AppSettings from '../../models/AppSettings'
+import { toast } from 'react-toastify'
 
 interface IWorkerChange {
   id: string
@@ -112,6 +113,7 @@ const WorkerTitle = styled.div`
 `
 
 const WorkerId = styled.div`
+  cursor: pointer;
   font-family: monospace;
   font-size: 14px;
 `
@@ -323,7 +325,12 @@ const SettingsPage = () => {
                 ) : (
                   <ChevronRightIcon />
                 )}
+                {!router.query.panel &&
+                  `
                 Stable Horde Settings
+                `}
+                {router.query.panel === 'workers' && `Manage Workers`}
+                {router.query.panel === 'prefs' && `ArtBot Prefs`}
               </div>
             </MenuButton>
             {componentState.showOptionsMenu && (
@@ -611,7 +618,27 @@ const SettingsPage = () => {
                           />
                           <strong>{worker.name}</strong>
                         </WorkerTitle>
-                        <WorkerId>id: {worker.id}</WorkerId>
+                        <WorkerId
+                          onClick={() => {
+                            navigator?.clipboard
+                              ?.writeText(`${worker.id}`)
+                              .then(() => {
+                                toast.success('Worker ID copied!', {
+                                  pauseOnFocusLoss: false,
+                                  position: 'top-center',
+                                  autoClose: 2500,
+                                  hideProgressBar: false,
+                                  closeOnClick: true,
+                                  pauseOnHover: false,
+                                  draggable: false,
+                                  progress: undefined,
+                                  theme: 'light'
+                                })
+                              })
+                          }}
+                        >
+                          id: {worker.id}
+                        </WorkerId>
                         <WorkerStatus>
                           <div>
                             Status:{' '}
@@ -627,6 +654,11 @@ const SettingsPage = () => {
                             Total uptime: {formatSeconds(worker.uptime)}
                           </div>
                           <div>Performance: {worker.performance}</div>
+                          <div>Threads: {worker.threads}</div>
+                          <div>
+                            Kudos earned:{' '}
+                            {worker?.kudos_rewards?.toLocaleString()}
+                          </div>
                           <div>
                             Requests completed:{' '}
                             {worker.requests_fulfilled?.toLocaleString()}

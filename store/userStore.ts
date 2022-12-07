@@ -8,11 +8,14 @@ export interface IWorker {
   id: string
   name: string
   team: ITeam
+  kudos_rewards: number
   online: boolean
   uptime: number
   maintenance_mode: boolean
   requests_fulfilled: number
   models: Array<string>
+  threads: number
+  trusted: boolean
   performance: string
 }
 

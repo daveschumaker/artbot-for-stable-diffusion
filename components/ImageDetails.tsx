@@ -283,6 +283,7 @@ const ImageDetails = ({
                 ?.writeText(`https://tinybots.net/artbot?share=${shareLink}`)
                 .then(() => {
                   toast.success('URL copied!', {
+                    pauseOnFocusLoss: false,
                     position: 'top-center',
                     autoClose: 2500,
                     hideProgressBar: false,

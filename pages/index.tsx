@@ -300,6 +300,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
       router.push('/pending')
     } else {
       toast.success('Image requested!', {
+        pauseOnFocusLoss: false,
         position: 'top-center',
         autoClose: 2500,
         hideProgressBar: false,
