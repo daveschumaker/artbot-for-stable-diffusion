@@ -125,6 +125,14 @@ const Changelog = () => {
             )
           </StyledLi>
           <StyledLi>Update style presets.</StyledLi>
+          <StyledLi>
+            Feature: Select favorite models and then generate images against
+            them. You can select your favorite Stable Diffusion models{' '}
+            <Linker href="/info" passHref>
+              here
+            </Linker>
+            .
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
