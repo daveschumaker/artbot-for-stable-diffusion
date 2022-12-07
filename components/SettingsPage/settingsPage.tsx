@@ -185,7 +185,21 @@ const SettingsPage = () => {
     const loadingWorkerStatus = { ...componentState.loadingWorkerStatus }
     loadingWorkerStatus[id] = true
 
-    setComponentState({ loadingWorkerStatus })
+    const optimisticWorkerData = { ...workers }
+    optimisticWorkerData[id].maintenance_mode = state === 'pause' ? true : false
+
+    setComponentState({
+      loadingWorkerStatus
+    })
+
+    const workerDetails = { ...workers[id] }
+
+    // TODO: Handle and make visible any errors.
+    // Optimistically set worker state.
+    setWorker({
+      ...workerDetails,
+      maintenance_mode: state === 'pause' ? true : false
+    })
 
     await fetch(`${getApiHostServer()}/api/v2/workers/${id}`, {
       body: JSON.stringify({
@@ -203,9 +217,10 @@ const SettingsPage = () => {
 
     await sleep(1000)
 
-    const workerRes = await fetch(`${getApiHostServer()}/api/v2/workers/${id}`)
-    const data = await workerRes.json()
-    setWorker(data)
+    // const workerRes = await fetch(`${getApiHostServer()}/api/v2/workers/${id}`)
+    // const data = await workerRes.json()
+    // console.log(`data`, data)
+    // setWorker(data)
 
     await fetchUserDetails(componentState.apiKey)
 
@@ -263,6 +278,8 @@ const SettingsPage = () => {
         const workerData = await workerRes.json()
         const { id } = workerData
         workerInfo[id] = { ...workerData }
+
+        await sleep(500)
       }
 
       setWorkers(workerInfo)
