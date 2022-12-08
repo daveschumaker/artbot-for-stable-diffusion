@@ -317,10 +317,9 @@ const InfoPage = ({ availableModels, modelDetails }: any) => {
   useEffect(() => {
     const hash = window.location.hash
     if (hash.length > 0) {
-      window.location.hash = ''
       window.location.hash = hash
     }
-  })
+  }, [])
 
   // useEffect(() => {
   //   updateLocalCount()

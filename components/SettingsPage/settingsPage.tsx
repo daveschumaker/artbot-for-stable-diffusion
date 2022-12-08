@@ -14,35 +14,22 @@ import Select from '../../components/UI/Select'
 import Tooltip from '../../components/UI/Tooltip'
 import {
   IWorkers,
-  setWorker,
   setWorkers,
   unsetUserInfo,
   userInfoStore
 } from '../../store/userStore'
 import Linker from '../../components/UI/Linker'
-import Panel from '../../components/UI/Panel'
-import PointIcon from '../../components/icons/PointIcon'
 import SpinnerV2 from '../../components/Spinner'
-import { formatSeconds } from '../../utils/helperUtils'
 import { sleep } from '../../utils/sleep'
-import PlayIcon from '../../components/icons/PlayIcon'
-import PauseIcon from '../../components/icons/PauseIcon'
 import { getApiHostServer } from '../../utils/appUtils'
 import MenuButton from '../../components/UI/MenuButton'
 import { appInfoStore } from '../../store/appStore'
 import ChevronRightIcon from '../../components/icons/ChevronRightIcon'
 import ChevronDownIcon from '../../components/icons/ChevronDownIcon'
 import AppSettings from '../../models/AppSettings'
-import { toast } from 'react-toastify'
 import DropDownMenu from '../UI/DropDownMenu'
 import DropDownMenuItem from '../UI/DropDownMenuItem'
-
-interface IWorkerChange {
-  id: string
-  name: string
-  state: string
-  team: string
-}
+import WorkerInfo from '../WorkerInfo'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -106,29 +93,6 @@ const OptionsPanel = styled.div`
   }
 `
 
-const WorkerTitle = styled.div`
-  align-items: center;
-  column-gap: 2px;
-  display: flex;
-  flex-direction: row;
-  margin-left: -8px;
-`
-
-const WorkerId = styled.div`
-  cursor: pointer;
-  font-family: monospace;
-  font-size: 14px;
-`
-
-const WorkerStatus = styled.div`
-  font-size: 14px;
-  margin-top: 8px;
-`
-
-const Spacer = styled.div`
-  margin-bottom: 8px;
-`
-
 const ShowOnMobile = styled.div`
   @media (min-width: 640px) {
     display: none;
@@ -178,54 +142,6 @@ const SettingsPage = () => {
 
     AppSettings.save('enableNoSleep', value)
     setComponentState({ enableNoSleep: value })
-  }
-
-  const handleWorkerChange = async (worker: IWorkerChange) => {
-    const { id, state, name, team } = worker
-    const loadingWorkerStatus = { ...componentState.loadingWorkerStatus }
-    loadingWorkerStatus[id] = true
-
-    const optimisticWorkerData = { ...workers }
-    optimisticWorkerData[id].maintenance_mode = state === 'pause' ? true : false
-
-    setComponentState({
-      loadingWorkerStatus
-    })
-
-    const workerDetails = { ...workers[id] }
-
-    // TODO: Handle and make visible any errors.
-    // Optimistically set worker state.
-    setWorker({
-      ...workerDetails,
-      maintenance_mode: state === 'pause' ? true : false
-    })
-
-    await fetch(`${getApiHostServer()}/api/v2/workers/${id}`, {
-      body: JSON.stringify({
-        maintenance: state === 'pause' ? true : false,
-        name,
-        team
-      }),
-      // @ts-ignore
-      headers: {
-        apikey: componentState.apiKey,
-        'Content-Type': 'application/json'
-      },
-      method: 'PUT'
-    })
-
-    await sleep(1000)
-
-    // const workerRes = await fetch(`${getApiHostServer()}/api/v2/workers/${id}`)
-    // const data = await workerRes.json()
-    // console.log(`data`, data)
-    // setWorker(data)
-
-    await fetchUserDetails(componentState.apiKey)
-
-    loadingWorkerStatus[id] = false
-    setComponentState({ loadingWorkerStatus })
   }
 
   const handleUpdateSelect = (key: string, obj: any) => {
@@ -598,135 +514,14 @@ const SettingsPage = () => {
                   {Object.keys(workers).map((key) => {
                     const worker = workers[key]
 
-                    let statusColor = 'green'
-                    if (worker.online && worker.maintenance_mode) {
-                      statusColor = 'yellow'
-                    } else if (!worker.online) {
-                      statusColor = 'red'
-                    }
-
                     return (
-                      <Panel key={worker.id}>
-                        <WorkerTitle>
-                          <PointIcon
-                            size={28}
-                            fill={statusColor}
-                            stroke={statusColor}
-                          />
-                          <strong>{worker.name}</strong>
-                        </WorkerTitle>
-                        <WorkerId
-                          onClick={() => {
-                            navigator?.clipboard
-                              ?.writeText(`${worker.id}`)
-                              .then(() => {
-                                toast.success('Worker ID copied!', {
-                                  pauseOnFocusLoss: false,
-                                  position: 'top-center',
-                                  autoClose: 2500,
-                                  hideProgressBar: false,
-                                  closeOnClick: true,
-                                  pauseOnHover: false,
-                                  draggable: false,
-                                  progress: undefined,
-                                  theme: 'light'
-                                })
-                              })
-                          }}
-                        >
-                          id: {worker.id}
-                        </WorkerId>
-                        <WorkerStatus>
-                          <div>
-                            Status:{' '}
-                            {worker.online &&
-                              worker.maintenance_mode &&
-                              'Paused'}
-                            {worker.online &&
-                              !worker.maintenance_mode &&
-                              'Online'}
-                            {!worker.online && 'Offline'}
-                          </div>
-                          <div>
-                            Total uptime: {formatSeconds(worker.uptime)}
-                          </div>
-                          <Spacer />
-                          <div>Threads: {worker.threads}</div>
-                          <div>Performance: {worker.performance}</div>
-                          <div>
-                            Avg time per request:{' '}
-                            {worker.requests_fulfilled > 0
-                              ? `${Math.round(
-                                  worker.uptime / worker.requests_fulfilled
-                                )} seconds`
-                              : 'N/A'}
-                          </div>
-                          <Spacer />
-                          <div>
-                            Kudos earned:{' '}
-                            {worker?.kudos_rewards?.toLocaleString()}
-                          </div>
-                          <div>
-                            Requests completed:{' '}
-                            {worker.requests_fulfilled?.toLocaleString()}
-                          </div>
-                        </WorkerStatus>
-                        {worker.online && (
-                          <div className="mt-4">
-                            {worker.online && !worker.maintenance_mode && (
-                              <Button
-                                btnType="secondary"
-                                disabled={
-                                  componentState.loadingWorkerStatus[worker.id]
-                                }
-                                onClick={() => {
-                                  handleWorkerChange({
-                                    id: worker.id,
-                                    state: 'pause',
-                                    name: worker.name,
-                                    team: worker.team?.id ?? ''
-                                  })
-                                }}
-                              >
-                                {componentState.loadingWorkerStatus[
-                                  worker.id
-                                ] ? (
-                                  'Updating...'
-                                ) : (
-                                  <>
-                                    <PauseIcon /> Pause worker
-                                  </>
-                                )}
-                              </Button>
-                            )}
-                            {worker.online && worker.maintenance_mode && (
-                              <Button
-                                disabled={
-                                  componentState.loadingWorkerStatus[worker.id]
-                                }
-                                onClick={() => {
-                                  handleWorkerChange({
-                                    id: worker.id,
-                                    state: 'start',
-                                    name: worker.name,
-                                    team: worker.team?.id ?? ''
-                                  })
-                                }}
-                              >
-                                {componentState.loadingWorkerStatus[
-                                  worker.id
-                                ] ? (
-                                  'Updating...'
-                                ) : (
-                                  <>
-                                    <PlayIcon /> Re-start worker
-                                  </>
-                                )}
-                              </Button>
-                            )}
-                          </div>
-                        )}
-                      </Panel>
+                      <WorkerInfo
+                        key={worker.id}
+                        loadingWorkerStatus={componentState.loadingWorkerStatus}
+                        setComponentState={setComponentState}
+                        worker={worker}
+                        workers={workers}
+                      />
                     )
                   })}
                 </Section>
