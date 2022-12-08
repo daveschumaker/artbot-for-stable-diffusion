@@ -10,7 +10,6 @@ import DropDownMenu from '../../components/UI/DropDownMenu'
 import DropDownMenuItem from '../../components/UI/DropDownMenuItem'
 import MenuButton from '../../components/UI/MenuButton'
 import PageTitle from '../../components/UI/PageTitle'
-import WorkerInfoPage from '../../components/WorkerInfoPage'
 import useComponentState from '../../hooks/useComponentState'
 
 const MenuSeparator = styled.div`
@@ -46,7 +45,6 @@ export async function getServerSideProps() {
 
 const InfoPage = ({ availableModels, modelDetails }: any) => {
   const router = useRouter()
-  console.log(`router?`, router.query)
   const [componentState, setComponentState] = useComponentState({
     showOptionsMenu: false
   })
@@ -147,18 +145,10 @@ const InfoPage = ({ availableModels, modelDetails }: any) => {
         </div>
         <ServerMessage />
       </Row>
-
-      {!router.query.infoSource ? (
-        <ModelInfoPage
-          availableModels={availableModels}
-          modelDetails={modelDetails}
-        />
-      ) : null}
-
-      {Array.isArray(router?.query?.infoSource) &&
-      router?.query?.infoSource[0] === 'workers' ? (
-        <WorkerInfoPage />
-      ) : null}
+      <ModelInfoPage
+        availableModels={availableModels}
+        modelDetails={modelDetails}
+      />
     </div>
   )
 }

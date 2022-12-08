@@ -26,7 +26,11 @@ const WorkerTitle = styled.div`
 `
 
 const WorkerId = styled.div`
+  align-items: center;
+  column-gap: 4px;
   cursor: pointer;
+  display: flex;
+  flex-direction: row;
   font-family: monospace;
   font-size: 14px;
 `
@@ -147,7 +151,8 @@ const WorkerInfo = ({
           })
         }}
       >
-        id: {worker.id} <CopyIcon />
+        <CopyIcon />
+        id: {worker.id}
       </WorkerId>
       <WorkerStatus>
         <div>
