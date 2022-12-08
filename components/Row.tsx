@@ -3,14 +3,16 @@ import styled from 'styled-components'
 
 interface IRowProps {
   children: React.ReactNode
+  className?: string
   onClick?: () => void
 }
 
 const StyledRow = styled.div`
   align-items: center;
+  column-gap: 8px;
   display: flex;
   flex-direction: row;
-  column-gap: 8px;
+  width: 100%;
 `
 
 const Row = (props: IRowProps) => {

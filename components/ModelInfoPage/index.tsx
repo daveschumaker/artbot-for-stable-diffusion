@@ -1,62 +1,29 @@
 /* eslint-disable @next/next/no-img-element */
-import Head from 'next/head'
 import React, { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 
-import { trackEvent } from '../api/telemetry'
-import PageTitle from '../components/UI/PageTitle'
-import Panel from '../components/UI/Panel'
-import TextButton from '../components/UI/TextButton'
-import useComponentState from '../hooks/useComponentState'
-import { useEffectOnce } from '../hooks/useEffectOnce'
-import { setAvailableModels, setModelDetails } from '../store/modelStore'
+import { trackEvent } from '../../api/telemetry'
+import Panel from '../../components/UI/Panel'
+import TextButton from '../../components/UI/TextButton'
+import useComponentState from '../../hooks/useComponentState'
+import { useEffectOnce } from '../../hooks/useEffectOnce'
+import { setAvailableModels, setModelDetails } from '../../store/modelStore'
 // import { filterCompletedByModel } from '../utils/db'
-import SpinnerV2 from '../components/Spinner'
+import SpinnerV2 from '../../components/Spinner'
 import Image from 'next/image'
-import ServerMessage from '../components/ServerMessage'
-import LinkIcon from '../components/icons/LinkIcon'
+import LinkIcon from '../../components/icons/LinkIcon'
 import styled from 'styled-components'
-import Linker from '../components/UI/Linker'
-import MenuButton from '../components/UI/MenuButton'
-import HeartIcon from '../components/icons/HeartIcon'
-import AppSettings from '../models/AppSettings'
-import ChevronDownIcon from '../components/icons/ChevronDownIcon'
-import ChevronRightIcon from '../components/icons/ChevronRightIcon'
-import DropDownMenu from '../components/UI/DropDownMenu'
-import DropDownMenuItem from '../components/UI/DropDownMenuItem'
+import Linker from '../../components/UI/Linker'
+import MenuButton from '../../components/UI/MenuButton'
+import HeartIcon from '../../components/icons/HeartIcon'
+import AppSettings from '../../models/AppSettings'
 
 const StyledLinkIcon = styled(LinkIcon)`
   cursor: pointer;
 `
 
-export async function getServerSideProps() {
-  let availableModels: Array<any> = []
-  let modelDetails: any = {}
-
-  try {
-    const availableModelsRes = await fetch(
-      `http://localhost:${process.env.PORT}/artbot/api/v1/models/available`
-    )
-    const availableModelsData = (await availableModelsRes.json()) || {}
-    availableModels = availableModelsData.models
-
-    const modelDetailsRes = await fetch(
-      `http://localhost:${process.env.PORT}/artbot/api/v1/models/details`
-    )
-    const modelDetailsData = (await modelDetailsRes.json()) || {}
-    modelDetails = modelDetailsData.models
-  } catch (err) {}
-
-  return {
-    props: {
-      availableModels,
-      modelDetails
-    }
-  }
-}
-
-const InfoPage = ({ availableModels, modelDetails }: any) => {
+const ModelInfoPage = ({ availableModels, modelDetails }: any) => {
   const router = useRouter()
 
   const [componentState, setComponentState] = useComponentState({
@@ -179,7 +146,7 @@ const InfoPage = ({ availableModels, modelDetails }: any) => {
       modelDetailsArray.push(
         <div key={`${name}_panel_${idx}`}>
           <a id={name} />
-          <Panel className="mb-2 text-sm">
+          <Panel className="mb-4 text-sm">
             <div className="flex flex-row w-full items-center">
               <div className="flex flex-row  items-center gap-1 inline-block w-1/2 text-xl">
                 <Linker
@@ -327,75 +294,6 @@ const InfoPage = ({ availableModels, modelDetails }: any) => {
 
   return (
     <div className="mb-4">
-      <Head>
-        <title>ArtBot - Info</title>
-      </Head>
-      <div className="flex flex-row w-full items-center">
-        <div className="inline-block w-1/2">
-          <PageTitle>General Information</PageTitle>
-        </div>
-        <div className="flex flex-row justify-end w-1/2 items-start h-[38px] relative gap-2">
-          <MenuButton
-            active={componentState.showOptionsMenu}
-            title="View model details"
-            onClick={() => {
-              if (componentState.showOptionsMenu) {
-                setComponentState({
-                  showOptionsMenu: false
-                })
-              } else {
-                setComponentState({
-                  showOptionsMenu: true
-                })
-              }
-            }}
-          >
-            <div className="flex flex-row gap-1 pr-2">
-              {componentState.showOptionsMenu ? (
-                <ChevronDownIcon />
-              ) : (
-                <ChevronRightIcon />
-              )}
-              {!router.query.show &&
-                `
-                All models
-                `}
-              {router.query.show === 'favorite-models' && `Favorite models`}
-            </div>
-          </MenuButton>
-          {componentState.showOptionsMenu && (
-            <DropDownMenu>
-              <DropDownMenuItem
-                onClick={() => {
-                  setComponentState({
-                    showOptionsMenu: false
-                  })
-                  router.push(
-                    //@ts-ignore
-                    `/info`
-                  )
-                }}
-              >
-                All models
-              </DropDownMenuItem>
-              <DropDownMenuItem
-                onClick={() => {
-                  setComponentState({
-                    showOptionsMenu: false
-                  })
-                  router.push(
-                    //@ts-ignore
-                    `/info?show=favorite-models`
-                  )
-                }}
-              >
-                Favorite models
-              </DropDownMenuItem>
-            </DropDownMenu>
-          )}
-        </div>
-      </div>
-      <ServerMessage />
       {componentState.isLoading && <SpinnerV2 />}
       {!componentState.isLoading && (
         <>
@@ -433,4 +331,4 @@ const InfoPage = ({ availableModels, modelDetails }: any) => {
   )
 }
 
-export default InfoPage
+export default ModelInfoPage

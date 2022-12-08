@@ -8,6 +8,7 @@ import { getApiHostServer } from '../../utils/appUtils'
 import { formatSeconds } from '../../utils/helperUtils'
 import { sleep } from '../../utils/sleep'
 import ChevronRightIcon from '../icons/ChevronRightIcon'
+import CopyIcon from '../icons/CopyIcon'
 import PauseIcon from '../icons/PauseIcon'
 import PlayIcon from '../icons/PlayIcon'
 import PointIcon from '../icons/PointIcon'
@@ -54,6 +55,7 @@ const ModelList = styled.ul`
 `
 
 const WorkerInfo = ({
+  editable,
   loadingWorkerStatus,
   setComponentState,
   worker,
@@ -145,7 +147,7 @@ const WorkerInfo = ({
           })
         }}
       >
-        id: {worker.id}
+        id: {worker.id} <CopyIcon />
       </WorkerId>
       <WorkerStatus>
         <div>
@@ -196,7 +198,7 @@ const WorkerInfo = ({
           </ModelList>
         ) : null}
       </WorkerStatus>
-      {worker.online && (
+      {editable !== false && worker.online && (
         <div className="mt-4">
           {worker.online && !worker.maintenance_mode && (
             <Button

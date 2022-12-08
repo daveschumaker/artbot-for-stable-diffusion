@@ -109,7 +109,15 @@ const Changelog = () => {
             samplers&quot; was selected and the image job had encountered an
             error. (Thanks, anonymous user!)
           </StyledLi>
-          <StyledLi></StyledLi>
+          <StyledLi>
+            Refactor: Split up some components for better reusability. In
+            addition to you being able to manage your own worker, you can also
+            see a{' '}
+            <Linker href="/info/workers" passHref>
+              list of all workers currently available on Stable Horde
+            </Linker>
+            , as well as their performance stats.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
