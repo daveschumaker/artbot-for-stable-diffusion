@@ -102,6 +102,34 @@ const Changelog = () => {
         </Section>
       </Panel>
       <Section>
+        <SubSectionTitle>2022.12.09</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Sounds like DNS propagation has taken awhile, but ArtBot seems to be
+            coming back online to various people around the world. I apologize
+            for any delays. I wish DNS updates would happen faster.
+          </StyledLi>
+          <StyledLi>
+            Fix: Issue where adding multiple models to an image request already
+            using stable_diffusion_2 would cause API payload validation errors
+            due to incorrect samplers. (
+            <Linker
+              href="https://github.com/daveschumaker/artbot-for-stable-diffusion/issues/21"
+              target="_blank"
+            >
+              Thanks honeypony on Discord!
+            </Linker>
+            )
+          </StyledLi>
+          <StyledLi>
+            UX: There have been few workers offering inpainting services lately
+            due to memory leaks and crashing issues when running an inpainting
+            model. Now, when no workers are available, the inpainting panel will
+            actually tell you this. No more mysterious wait times (hopefully).
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.12.08</SubSectionTitle>
         <StyledUl>
           <StyledLi>
