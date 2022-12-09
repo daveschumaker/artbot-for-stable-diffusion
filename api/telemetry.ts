@@ -53,7 +53,7 @@ export const trackEvent = async (obj: any = {}) => {
       headers: {
         'Content-Type': 'application/json'
       },
-      timeout: 3000
+      timeout: 1500
     })
   } catch (err) {
     // If nothing happens, it's fine to ignore this.
