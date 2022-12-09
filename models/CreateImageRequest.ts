@@ -147,6 +147,13 @@ class CreateImageRequest {
       this.models = ['stable_diffusion_inpainting']
     }
 
+    this.sampler = String(sampler)
+
+    // https://github.com/daveschumaker/artbot-for-stable-diffusion/issues/21
+    if (this.sampler === 'dpmsolver' && this.models.length > 1) {
+      this.sampler = 'k_euler_a'
+    }
+
     this.negative = String(negative)
     this.numImages = Number(numImages)
     this.parentJobId = String(parentJobId) || uuidv4()

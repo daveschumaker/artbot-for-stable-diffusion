@@ -855,7 +855,13 @@ const AdvancedOptionsPanel = ({
                   modelArray.push(model.value)
                 })
 
-                setInput({ models: [...modelArray] })
+                let sampler = input.sampler
+
+                if (input.sampler === 'dpmsolver' && modelArray.length > 1) {
+                  sampler = 'k_euler_a'
+                }
+
+                setInput({ models: [...modelArray], sampler })
               }}
               // @ts-ignore
               value={modelsValue}
