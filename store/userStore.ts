@@ -11,6 +11,7 @@ export interface IWorker {
   kudos_rewards: number
   online: boolean
   uptime: number
+  max_pixels: number
   maintenance_mode: boolean
   requests_fulfilled: number
   models: Array<string>

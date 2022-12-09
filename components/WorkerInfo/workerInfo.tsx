@@ -163,6 +163,7 @@ const WorkerInfo = ({
         <div>Total uptime: {formatSeconds(worker.uptime)}</div>
         <Spacer />
         <div>Threads: {worker.threads}</div>
+        <div>Max pixels: {worker.max_pixels?.toLocaleString()}</div>
         <div>Performance: {worker.performance}</div>
         <div>
           Avg time per request:{' '}
