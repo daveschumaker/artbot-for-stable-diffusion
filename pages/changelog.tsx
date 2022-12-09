@@ -102,6 +102,21 @@ const Changelog = () => {
         </Section>
       </Panel>
       <Section>
+        <SubSectionTitle>2022.12.08</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fun fact: ArtBot had been hosted on a Raspberry Pi running in our
+            hallway closet this whole time. I decided to do some server
+            updates... and broke everything. My apologies for the site being
+            down awhile today. However, ArtBot is now on a legit hosting
+            service. No more Raspberry Pi!
+          </StyledLi>
+          <StyledLi>
+            Enable fetching images from Cloudflare R2 by default.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.12.07</SubSectionTitle>
         <StyledUl>
           <StyledLi>

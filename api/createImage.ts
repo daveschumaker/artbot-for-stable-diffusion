@@ -102,7 +102,7 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
     censor_nsfw: !allowNsfw, // Show user NSFW images if created
     trusted_workers: useTrusted,
     models,
-    r2: AppSettings.get('useR2')
+    r2: true
   }
 
   if (triggers && triggers?.length > 0) {
