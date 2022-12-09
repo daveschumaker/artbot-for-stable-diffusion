@@ -8,7 +8,11 @@ import Panel from '../../components/UI/Panel'
 import TextButton from '../../components/UI/TextButton'
 import useComponentState from '../../hooks/useComponentState'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
-import { setAvailableModels, setModelDetails } from '../../store/modelStore'
+import {
+  modelInfoStore,
+  setAvailableModels,
+  setModelDetails
+} from '../../store/modelStore'
 // import { filterCompletedByModel } from '../utils/db'
 import SpinnerV2 from '../../components/Spinner'
 import Image from 'next/image'
@@ -18,6 +22,7 @@ import Linker from '../../components/UI/Linker'
 import MenuButton from '../../components/UI/MenuButton'
 import HeartIcon from '../../components/icons/HeartIcon'
 import AppSettings from '../../models/AppSettings'
+import { useStore } from 'statery'
 
 const StyledLinkIcon = styled(LinkIcon)`
   cursor: pointer;
@@ -25,6 +30,8 @@ const StyledLinkIcon = styled(LinkIcon)`
 
 const ModelInfoPage = ({ availableModels, modelDetails }: any) => {
   const router = useRouter()
+  const modelState = useStore(modelInfoStore)
+  const { inpaintingWorkers } = modelState
 
   const [componentState, setComponentState] = useComponentState({
     availableModels: availableModels,
@@ -297,11 +304,10 @@ const ModelInfoPage = ({ availableModels, modelDetails }: any) => {
       {componentState.isLoading && <SpinnerV2 />}
       {!componentState.isLoading && (
         <>
-          {availableModels.length > 1 ? (
-            <div className="mb-2">
-              Total models available: {availableModels.length}
-            </div>
-          ) : null}
+          <div className="">Workers w/ inpainting: {inpaintingWorkers}</div>
+          <div className="mb-2">
+            Total models available: {availableModels.length}
+          </div>
           <div className="flex flex-row gap-1 text-sm">
             <span className="mr-2">sort by:</span>{' '}
             {componentState.sort === 'name' && `(alphabetical)`}

@@ -45,6 +45,7 @@ export async function getServerSideProps() {
 
 const InfoPage = ({ availableModels, modelDetails }: any) => {
   const router = useRouter()
+
   const [componentState, setComponentState] = useComponentState({
     showOptionsMenu: false
   })

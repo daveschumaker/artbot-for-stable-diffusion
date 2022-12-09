@@ -12,6 +12,10 @@ import Uploader from '../Uploader'
 import { clearCanvasStore, setI2iUploaded } from '../../../store/canvasStore'
 import { SourceProcessing } from '../../../utils/promptUtils'
 import WarningPanel from '../WarningPanel'
+import { useStore } from 'statery'
+import { modelInfoStore } from '../../../store/modelStore'
+import AlertTriangleIcon from '../../icons/AlertTriangle'
+import Linker from '../../UI/Linker'
 
 interface LiProps {
   active?: boolean
@@ -53,6 +57,9 @@ const OptionsPanel = ({
 }: Props) => {
   const router = useRouter()
   const [activeNav, setActiveNav] = useState('advanced')
+
+  const modelState = useStore(modelInfoStore)
+  const { inpaintingWorkers } = modelState
 
   useEffect(() => {
     const { panel } = router.query
@@ -208,15 +215,38 @@ const OptionsPanel = ({
           />
         )}
 
+      {activeNav === 'inpainting' && inpaintingWorkers === 0 && (
+        <div className="flex flex-row gap-4">
+          <div className="w-[56px]">
+            <AlertTriangleIcon size={48} stroke="rgb(234 179 8)" />
+          </div>
+          <div>
+            Oh, no. There are currently no workers available within the Stable
+            Horde cluster that are offering inpainting models at this time.
+            Sorry. Please try again soon! Visit the{' '}
+            <Linker
+              href="https://discord.gg/3DxrhksKzn"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Stable Horde Discord channel
+            </Linker>{' '}
+            for more information.
+          </div>
+        </div>
+      )}
+
       {activeNav === 'inpainting' &&
         !input.source_image &&
-        input.source_processing !== SourceProcessing.InPainting && (
+        input.source_processing !== SourceProcessing.InPainting &&
+        inpaintingWorkers > 0 && (
           <Uploader handleSaveImage={handleSaveAction} type="inpainting" />
         )}
 
       {activeNav === 'inpainting' &&
         input.source_image &&
-        input.source_processing === SourceProcessing.Img2Img && (
+        input.source_processing === SourceProcessing.Img2Img &&
+        inpaintingWorkers > 0 && (
           <WarningPanel
             panelType="img2img"
             handleRemoveClick={() => {
