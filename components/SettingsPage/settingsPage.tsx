@@ -30,6 +30,7 @@ import AppSettings from '../../models/AppSettings'
 import DropDownMenu from '../UI/DropDownMenu'
 import DropDownMenuItem from '../UI/DropDownMenuItem'
 import WorkerInfo from '../WorkerInfo'
+import ImportExportPanel from '../ImportExportPanel'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -246,6 +247,7 @@ const SettingsPage = () => {
                 `}
                 {router.query.panel === 'workers' && `Manage Workers`}
                 {router.query.panel === 'prefs' && `ArtBot Prefs`}
+                {router.query.panel === 'import-export' && `Export`}
               </div>
             </MenuButton>
             {componentState.showOptionsMenu && (
@@ -289,6 +291,19 @@ const SettingsPage = () => {
                 >
                   ArtBot preferences
                 </DropDownMenuItem>
+                <DropDownMenuItem
+                  onClick={() => {
+                    setComponentState({
+                      showOptionsMenu: false
+                    })
+                    router.push(
+                      //@ts-ignore
+                      `/settings?panel=import-export`
+                    )
+                  }}
+                >
+                  Export
+                </DropDownMenuItem>
               </DropDownMenu>
             )}
           </ShowOnMobile>
@@ -310,6 +325,11 @@ const SettingsPage = () => {
             <li>
               <Linker href="/settings?panel=prefs" passHref>
                 ArtBot Preferences
+              </Linker>
+            </li>
+            <li>
+              <Linker href="/settings?panel=import-export" passHref>
+                Export
               </Linker>
             </li>
           </LinksList>
@@ -647,6 +667,11 @@ const SettingsPage = () => {
                   />
                 </MaxWidth>
               </Section>
+            </>
+          ) : null}
+          {router.query.panel === 'import-export' ? (
+            <>
+              <ImportExportPanel />
             </>
           ) : null}
         </OptionsPanel>

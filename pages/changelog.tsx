@@ -116,6 +116,21 @@ const Changelog = () => {
             </Linker>{' '}
             , voodoocode!)
           </StyledLi>
+          <StyledLi>
+            Feature: Bulk download of PNGs. The Stable Horde API has long
+            servered images in WebP to save bandwidth. Now, when you request a
+            bulk download of image data, they are automatically converted to
+            PNGs inside your browser. Note that this process may take some time
+            depending on your device and the number of images you&apos;ve
+            selected. (Thanks for the suggestion on Discord, honeypony!)
+          </StyledLi>
+          <StyledLi>
+            Feature: You can now export all image data at once from the{' '}
+            <Linker href="/settings?panel=import-export">settings page</Linker>.
+            On my local machine, I was able to export 2100 images and the
+            archive file was 1.4GB in size. An corresponding import feature will
+            come soon, allowing you to import your data to a different device.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

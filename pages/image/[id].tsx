@@ -18,7 +18,6 @@ import {
   updateCompletedJob
 } from '../../utils/db'
 import {
-  downloadImage,
   uploadImg2Img,
   uploadInpaint,
   upscaleImage
@@ -67,7 +66,6 @@ const ImagePage = () => {
 
   const [isInitialLoad, setIsInitialLoad] = useState(true)
   const [imageDetails, setImageDetails] = useState({})
-  const [pendingDownload, setPendingDownload] = useState(false)
   const [pendingUpscale, setPendingUpscale] = useState(false)
   const [relatedImages, setRelatedImages] = useState([])
   const [optimisticFavorite, setOptimisticFavorite] = useState(false)
@@ -127,31 +125,6 @@ const ImagePage = () => {
       const foundImages = await fetchRelatedImages(parentJobId)
       setRelatedImages(foundImages)
     }
-  }
-
-  const handleDownloadClick = async () => {
-    if (pendingDownload) {
-      return
-    }
-
-    setPendingDownload(true)
-
-    const imageDownload = await downloadImage(imageDetails)
-    const { success } = imageDownload
-
-    if (success) {
-      trackEvent({
-        event: 'DOWNLOAD_PNG',
-        context: '/pages/image/[id]'
-      })
-      trackGaEvent({
-        action: 'btn_download_png',
-        params: {
-          context: '/pages/image/[id]'
-        }
-      })
-    }
-    setPendingDownload(false)
   }
 
   const handleFavoriteClick = useCallback(async () => {
@@ -306,11 +279,6 @@ const ImagePage = () => {
           </div>
           <div className="mb-4">
             <PageTitle>Advanced Options</PageTitle>
-            <Section>
-              <OptionsLink onClick={() => handleDownloadClick()}>
-                [ download PNG {pendingDownload && '(processing...)'} ]
-              </OptionsLink>
-            </Section>
             <Section>
               {imageDetails.upscaled ? (
                 <div>[ upscaled image (already upscaled)]</div>

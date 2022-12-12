@@ -98,6 +98,14 @@ export const allPendingJobs = async (status?: string) => {
   }
 }
 
+export const allCompletedJobs = async () => {
+  try {
+    return await db?.completed?.orderBy('id')?.toArray()
+  } catch (err) {
+    return []
+  }
+}
+
 export const deleteDoneFromPending = async () => {
   const images = (await allPendingJobs(JobStatus.Done)) || []
   const ids = images.map((job: any) => job.id)

@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 
 import { deleteCompletedImage } from '../utils/db'
 import ConfirmationModal from './ConfirmationModal'
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import TrashIcon from './icons/TrashIcon'
 import { Button } from './UI/Button'
 import { trackEvent, trackGaEvent } from '../api/telemetry'
@@ -18,6 +18,9 @@ import ImageSquare from './ImageSquare'
 import { savePrompt, SourceProcessing } from '../utils/promptUtils'
 import ShareIcon from './icons/ShareIcon'
 import ShareLinkDetails from '../models/ShareableLink'
+import DownloadIcon from './icons/DownloadIcon'
+import useComponentState from '../hooks/useComponentState'
+import { downloadFile } from '../utils/imageUtils'
 
 interface ImageDetails {
   upscaled?: boolean
@@ -63,8 +66,10 @@ const ImageDetails = ({
 }: ImageDetailsProps) => {
   const router = useRouter()
 
-  const [pending, setPending] = useState(false)
-  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [componentState, setComponentState] = useComponentState({
+    pending: false,
+    showDeleteModal: false
+  })
 
   // Older images are missing the correct models field and can cause an exception
   // Check for updated models reference and modify as needed:
@@ -86,7 +91,7 @@ const ImageDetails = ({
       context: '/pages/image/[id]'
     })
 
-    setShowDeleteModal(false)
+    setComponentState({ showDeleteModal: false })
   }
 
   const handleCopyPromptClick = (imageDetails: any) => {
@@ -108,11 +113,11 @@ const ImageDetails = ({
 
   const handleRerollClick = useCallback(
     async (imageDetails: any) => {
-      if (pending) {
+      if (componentState.pending) {
         return
       }
 
-      setPending(true)
+      setComponentState({ pending: true })
 
       trackEvent({
         event: 'REROLL_IMAGE_CLICK',
@@ -136,17 +141,17 @@ const ImageDetails = ({
         router.push('/pending')
       }
     },
-    [pending, router]
+    [componentState.pending, router, setComponentState]
   )
 
   const modelName = imageDetails.models[0] || imageDetails.model
 
   return (
     <div className="mt-2 text-left">
-      {showDeleteModal && (
+      {componentState.showDeleteModal && (
         <ConfirmationModal
           onConfirmClick={() => handleDeleteImageClick(imageDetails.jobId)}
-          closeModal={() => setShowDeleteModal(false)}
+          closeModal={() => setComponentState({ showDeleteModal: false })}
         />
       )}
       <div className="pt-2 font-mono">{imageDetails.prompt}</div>
@@ -300,12 +305,20 @@ const ImageDetails = ({
             <span className="inline-block md:hidden">Share</span>
             <span className="hidden md:inline-block">Share link</span>
           </Button>
+          <Button
+            title="Download PNG"
+            // @ts-ignore
+            onClick={() => downloadFile(imageDetails)}
+          >
+            <DownloadIcon />
+            <span className="hidden md:inline-block">Download PNG</span>
+          </Button>
         </div>
         <div className="inline-block w-1/2 flex flex-row justify-end gap-2">
           <Button
             title="Request new image with same settings"
             onClick={() => handleRerollClick(imageDetails)}
-            disabled={pending}
+            disabled={componentState.pending}
           >
             <RefreshIcon className="mx-auto" />
             <MobileHideText>Reroll Image</MobileHideText>
@@ -313,7 +326,7 @@ const ImageDetails = ({
           <Button
             title="Delete image"
             btnType="secondary"
-            onClick={() => setShowDeleteModal(true)}
+            onClick={() => setComponentState({ showDeleteModal: true })}
           >
             <TrashIcon className="mx-auto" />
             <MobileHideText>Delete image</MobileHideText>

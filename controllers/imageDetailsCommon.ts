@@ -2,6 +2,7 @@ import RerollImageRequest from '../models/RerollImageRequest'
 import UpscaleImageRequest from '../models/UpscaleImageRequest'
 import { cloneFromImage, setI2iUploaded } from '../store/canvasStore'
 import { createImageJob } from '../utils/imageCache'
+import { downloadFile } from '../utils/imageUtils'
 import { createPendingRerollJob } from '../utils/pendingUtils'
 import { savePrompt, SourceProcessing } from '../utils/promptUtils'
 
@@ -81,36 +82,7 @@ export const uploadImg2Img = (imageDetails: any) => {
 }
 
 export const downloadImage = async (imageDetails: any) => {
-  const res = await fetch(`/artbot/api/get-png`, {
-    method: 'POST',
-    body: JSON.stringify({
-      imgString: imageDetails.base64String
-    }),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-  const data = await res.json()
-  const { success } = data
-
-  if (success) {
-    const filename = imageDetails.prompt
-      .replace(/[^a-z0-9]/gi, '_')
-      .toLowerCase()
-      .slice(0, 128)
-    var a = document.createElement('a')
-    a.href = 'data:image/png;base64,' + data.base64String
-    a.download = filename + '.png'
-    a.click()
-
-    return {
-      success: true
-    }
-  }
-
-  return {
-    success: false
-  }
+  downloadFile(imageDetails)
 }
 
 export const rerollImage = async (imageDetails: any) => {

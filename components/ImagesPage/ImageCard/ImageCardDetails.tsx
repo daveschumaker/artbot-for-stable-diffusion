@@ -93,21 +93,19 @@ const ImageDetails = ({
 
     setPendingDownload(true)
 
-    const imageDownload = await downloadImage(imageDetails)
-    const { success } = imageDownload
+    await downloadImage(imageDetails)
 
-    if (success) {
-      trackEvent({
-        event: 'DOWNLOAD_PNG',
+    trackEvent({
+      event: 'DOWNLOAD_PNG',
+      context: 'ImageCard'
+    })
+
+    trackGaEvent({
+      action: 'btn_download_png',
+      params: {
         context: 'ImageCard'
-      })
-      trackGaEvent({
-        action: 'btn_download_png',
-        params: {
-          context: 'ImageCard'
-        }
-      })
-    }
+      }
+    })
     setPendingDownload(false)
   }
 

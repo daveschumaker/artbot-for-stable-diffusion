@@ -5,6 +5,7 @@ import CloseIcon from '../icons/CloseIcon'
 interface ModalProps {
   children?: React.ReactNode | React.ReactNode[]
   handleClose(): void
+  hideCloseButton?: boolean
 }
 
 const CloseIconWrapper = styled.div`
@@ -51,9 +52,11 @@ const Modal = (props: ModalProps) => {
       <Overlay onClick={props.handleClose} />
       <StyledModal>
         {props.children}
-        <CloseIconWrapper onClick={props.handleClose}>
-          <CloseIcon />
-        </CloseIconWrapper>
+        {!props.hideCloseButton && (
+          <CloseIconWrapper onClick={props.handleClose}>
+            <CloseIcon />
+          </CloseIconWrapper>
+        )}
       </StyledModal>
     </>
   )

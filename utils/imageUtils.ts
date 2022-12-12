@@ -1,6 +1,8 @@
 import { createImage } from '../api/createImage'
 import { trackEvent } from '../api/telemetry'
 import { userInfoStore } from '../store/userStore'
+import { initBlob } from './blobUtils'
+import { SourceProcessing } from './promptUtils'
 import { stylePresets } from './stylePresets'
 import { isValidHttpUrl } from './validationUtils'
 
@@ -276,25 +278,17 @@ export const getBase64 = (file: Blob) => {
   })
 }
 
-export const base64toBlob = (base64Data: string, contentType: string) => {
-  contentType = contentType || ''
-  var sliceSize = 1024
-  var byteCharacters = atob(base64Data)
-  var bytesLength = byteCharacters.length
-  var slicesCount = Math.ceil(bytesLength / sliceSize)
-  var byteArrays = new Array(slicesCount)
+export const base64toBlob = async (base64Data: string, contentType: string) => {
+  try {
+    const base64Response = await fetch(
+      `data:${contentType};base64,${base64Data}`
+    )
+    const blob = await base64Response.blob()
 
-  for (var sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex) {
-    var begin = sliceIndex * sliceSize
-    var end = Math.min(begin + sliceSize, bytesLength)
-
-    var bytes = new Array(end - begin)
-    for (var offset = begin, i = 0; offset < end; ++i, ++offset) {
-      bytes[i] = byteCharacters[offset].charCodeAt(0)
-    }
-    byteArrays[sliceIndex] = new Uint8Array(bytes)
+    return blob
+  } catch (err) {
+    return ''
   }
-  return new Blob(byteArrays, { type: contentType })
 }
 
 export const imageDimensions = (fullDataString: string) => {
@@ -463,4 +457,99 @@ export const kudosCost = (
   kudos *= /k_heun|dpm_2|k_dpmpp_2s_a/.test(sampler) ? 2 : 1
   kudos *= n
   return Math.round(kudos)
+}
+
+export const downloadImages = async (
+  imageArray: Array<any> = [],
+  callback = () => {}
+) => {
+  initBlob()
+
+  const { downloadZip } = await import('client-zip')
+  const fileDetails: any = []
+  const fileArray: any = []
+
+  for (const imageId in imageArray) {
+    const image: any = imageArray[imageId]
+
+    let filename = `image_${imageId}.png`
+
+    if (image.prompt) {
+      filename =
+        image.prompt
+          .replace(/[^a-z0-9]/gi, '_')
+          .toLowerCase()
+          .slice(0, 125) + `_${imageId}.png`
+    }
+
+    const imageData = {
+      name: filename,
+      date: new Date(image.timestamp),
+      prompt: image.prompt,
+      negative_prompt: image.negative,
+      sampler: image.sampler,
+      model: image.models ? image.models[0] : image.model || 'stable_diffusion',
+      height: image.height,
+      width: image.width,
+      steps: Number(image.steps),
+      cfg_scale: Number(image.cfg_scale),
+      seed: image.seed
+    }
+
+    if (image.img2img || image.source_processing === SourceProcessing.Img2Img) {
+      // @ts-ignore
+      imageData.denoising_strength = image.denoising_strength
+    }
+
+    fileDetails.push(imageData)
+    try {
+      const input = await base64toBlob(image.base64String, 'image/webp')
+      if (input) {
+        // @ts-ignore
+        const newBlob = await input?.toPNG()
+
+        fileArray.push({
+          name: filename,
+          lastModified: new Date(image.timestamp),
+          input: newBlob
+        })
+      }
+    } catch (err) {
+      console.log(`Error converting image to PNG...`)
+      console.log(image.jobId)
+    }
+
+    callback()
+  }
+
+  const jsonDetails = {
+    name: '_image_details.json',
+    lastModified: new Date(),
+    input: JSON.stringify(fileDetails, null, 2)
+  }
+
+  const blob = await downloadZip([jsonDetails, ...fileArray]).blob()
+  const link = document.createElement('a')
+  link.href = URL.createObjectURL(blob)
+  link.download = 'artbot-image-export.zip'
+  link.click()
+  link.remove()
+}
+
+export const downloadFile = async (image: any) => {
+  initBlob()
+
+  const input = await base64toBlob(image.base64String, 'image/webp')
+
+  const filename =
+    image.prompt
+      .replace(/[^a-z0-9]/gi, '_')
+      .toLowerCase()
+      .slice(0, 124) + `.png`
+
+  // @ts-ignore
+  const newBlob = await input?.toPNG()
+
+  const { saveAs } = (await import('file-saver')).default
+  saveAs(newBlob, filename)
 }

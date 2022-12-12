@@ -29,11 +29,12 @@ import MenuButton from '../components/UI/MenuButton'
 import FilterIcon from '../components/icons/FilterIcon'
 import HeartIcon from '../components/icons/HeartIcon'
 import useComponentState from '../hooks/useComponentState'
-import { base64toBlob } from '../utils/imageUtils'
-import { SourceProcessing } from '../utils/promptUtils'
+import { downloadImages } from '../utils/imageUtils'
 import { useSwipeable } from 'react-swipeable'
 import { useEffectOnce } from '../hooks/useEffectOnce'
 import MasonryLayout from '../components/MasonryLayout'
+import Modal from '../components/Modal'
+import SpinnerV2 from '../components/Spinner'
 
 const DropDownMenu = styled.div`
   background-color: ${(props) => props.theme.body};
@@ -118,6 +119,7 @@ const ImagesPage = () => {
     deleteMode: false,
     deleteSelection: [],
     showDeleteModal: false,
+    showDownloadModal: false,
 
     offset: Number(router.query.offset) || 0,
     filterMode: router.query.filter || 'all',
@@ -325,74 +327,21 @@ const ImagesPage = () => {
       return
     }
 
-    const { downloadZip } = await import('client-zip')
-    const fileDetails: any = []
-    const fileArray: any = []
+    setComponentState({ showDownloadModal: true })
 
-    componentState.deleteSelection.forEach((id: number, i: number) => {
-      componentState.images.filter((image: any) => {
+    const imagesToDownload: Array<any> = []
+
+    componentState.deleteSelection.forEach((id: number) => {
+      componentState.images.filter(async (image: any) => {
         if (image.id === id) {
-          let filename = `image_${i}.webp`
-
-          if (image.prompt) {
-            filename =
-              image.prompt
-                .replace(/[^a-z0-9]/gi, '_')
-                .toLowerCase()
-                .slice(0, 125) + `_${i}.webp`
-          }
-
-          // Output image generation details to a JSON file. Helpful for people to
-          // reference what / how they created an image when they come back at a later time.
-          const imageData = {
-            name: filename,
-            date: new Date(image.timestamp),
-            prompt: image.prompt,
-            negative_prompt: image.negative,
-            sampler: image.sampler,
-            model: image.models
-              ? image.models[0]
-              : image.model || 'stable_diffusion',
-            height: image.height,
-            width: image.width,
-            steps: Number(image.steps),
-            cfg_scale: Number(image.cfg_scale),
-            seed: image.seed
-          }
-
-          if (
-            image.img2img ||
-            image.source_processing === SourceProcessing.Img2Img
-          ) {
-            // @ts-ignore
-            imageData.denoising_strength = image.denoising_strength
-          }
-
-          fileDetails.push(imageData)
-
-          const input = base64toBlob(image.base64String, 'image/webp')
-          fileArray.push({
-            name: filename,
-            lastModified: new Date(image.timestamp),
-            input
-          })
+          imagesToDownload.push(image)
         }
       })
     })
 
-    const jsonDetails = {
-      name: '_image_details.json',
-      lastModified: new Date(),
-      input: JSON.stringify(fileDetails, null, 2)
-    }
+    await downloadImages(imagesToDownload)
 
-    const blob = await downloadZip([jsonDetails, ...fileArray]).blob()
-    const link = document.createElement('a')
-    link.href = URL.createObjectURL(blob)
-    link.download = 'artbot-images.zip'
-    link.click()
-    link.remove()
-
+    setComponentState({ showDownloadModal: false })
     trackEvent({
       event: 'BULK_FILE_DOWNLOAD',
       context: '/pages/images',
@@ -520,6 +469,18 @@ const ImagesPage = () => {
 
   return (
     <div {...handlers}>
+      {componentState.showDownloadModal && (
+        <Modal hideCloseButton>
+          Downloading images
+          <div className="w-full flex flex-row text-sm mt-4 mb-4">
+            Processing selected images for download and converting to PNGs.
+            Please wait.
+          </div>
+          <div className="w-full flex flex-row justify-center">
+            <SpinnerV2 />
+          </div>
+        </Modal>
+      )}
       {componentState.showDeleteModal && (
         <ConfirmationModal
           multiImage={componentState.deleteSelection.length > 1}
