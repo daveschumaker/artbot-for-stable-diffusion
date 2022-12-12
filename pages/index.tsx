@@ -573,6 +573,51 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
         setInput={setInput}
         setHasValidationError={setHasValidationError}
       />
+      <div className="mt-4 w-full flex flex-col justify-end gap-2">
+        <div className="flex flex-row justify-end gap-2">
+          <Button
+            title="Clear current input"
+            btnType="secondary"
+            onClick={resetInput}
+          >
+            <span>
+              <TrashIcon />
+            </span>
+            <span className="hidden md:inline-block">Clear</span>
+          </Button>
+          <Button
+            title="Create new image"
+            onClick={() => {
+              window.scrollTo(0, 0)
+              handleSubmit
+            }}
+            disabled={hasValidationError || pending}
+            width="100px"
+          >
+            <span>{pending ? '' : <SquarePlusIcon />}</span>
+            {pending ? 'Creating...' : 'Create'}
+          </Button>
+        </div>
+        <div className="text-xs flex flex-row justify-end gap-2">
+          Generation cost:{' '}
+          <Linker href="/faq#kudos" passHref>
+            <>
+              {kudosCost(
+                input.width,
+                input.height,
+                input.steps,
+                input.numImages,
+                input.post_processing.indexOf('RealESRGAN_x4plus') === -1
+                  ? false
+                  : true,
+                input.post_processing.length,
+                input.sampler
+              )}{' '}
+              kudos
+            </>
+          </Linker>
+        </div>
+      </div>
     </main>
   )
 }

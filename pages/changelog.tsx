@@ -102,6 +102,23 @@ const Changelog = () => {
         </Section>
       </Panel>
       <Section>
+        <SubSectionTitle>2022.12.12</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            UX improvement: Added an additional &quot;create&quot; button below
+            the advanced options panel. (Thanks for the suggestion on{' '}
+            <Linker
+              href="https://discord.com/channels/781145214752129095/1038867597543882894"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Discord
+            </Linker>{' '}
+            , voodoocode!)
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.12.09</SubSectionTitle>
         <StyledUl>
           <StyledLi>

@@ -22,7 +22,7 @@ export const stylePresets = {
   },
   '19th century painting': {
     prompt:
-      '{p}, digitized painting, highly detailed, sharp focus, impasto brush strokes, acclaimed artwork by gaston bussiere, by j. c. leyendecker',
+      'digitized painting of a {p}, highly detailed, sharp focus, impasto brush strokes, acclaimed artwork by gaston bussiere, by j. c. leyendecker',
     model: 'stable_diffusion'
   },
   butter: {
@@ -42,8 +42,11 @@ export const stylePresets = {
   },
   abandoned: {
     prompt:
-      'Old found footage of hyper realistic {p}, abandoned, liminal space, horror, eerie, mysterious, noise and grain, dark hues, dark tones, single source of light, 35mm, Kodak Autochrome, floating particles, auto flash, auto focus',
-    model: 'stable_diffusion'
+      'Old found footage of hyper realistic {p}, abandoned, liminal space, horror, eerie, mysterious, noise and grain, dark hues, dark tones, single source of light, 35mm, Kodak Autochrome, floating particles, auto flash, auto focus###blurry, out of focus',
+    model: 'stable_diffusion_2.1',
+    sampler_name: 'dpmsolver',
+    width: 768,
+    height: 768
   },
   'witch land': {
     prompt:
@@ -62,7 +65,10 @@ export const stylePresets = {
   },
   ennui: {
     prompt: '{p}, black and white, foggy, negative, eerie',
-    model: 'stable_diffusion'
+    model: 'stable_diffusion_2.1',
+    sampler_name: 'dpmsolver',
+    width: 768,
+    height: 768
   },
   'dark fantasy': {
     prompt:
@@ -86,8 +92,11 @@ export const stylePresets = {
   },
   'wintersun temple': {
     prompt:
-      'elden ring style {p}, heron flying in a snow landscape with a japanese temple at the background, epic middle of a storm, wintersun cover, showing every detail of each snowflake in unreal engine 5, bright, dramatic light, cinematic luminous golden hour, lifey landscape, beautiful, vibrant, abandoned overgrown seas ###lowres, text, error, cropped, worst quality, jpeg artifacts, signature, watermark, deformed, frames',
-    model: 'stable_diffusion'
+      'elden ring style {p}, in a snow landscape with a japanese temple at the background, epic middle of a storm, wintersun cover, showing every detail of each snowflake in unreal engine 5, bright, dramatic light, cinematic luminous golden hour, lifey landscape, beautiful, vibrant, abandoned overgrown seas ###lowres, text, error, cropped, worst quality, jpeg artifacts, signature, watermark, deformed, frames',
+    model: 'stable_diffusion_2.1',
+    sampler_name: 'dpmsolver',
+    width: 768,
+    height: 768
   },
   'fantasy snowstorm': {
     prompt:
@@ -97,17 +106,26 @@ export const stylePresets = {
   'christmas church': {
     prompt:
       '{p} next to a church with christmas lights, snowy weather, village on side of mountain, swiss alps, pixar render, unreal 5, uhd, 8k, landscape, panorama',
-    model: 'stable_diffusion'
+    model: 'stable_diffusion_2.1',
+    sampler_name: 'dpmsolver',
+    width: 768,
+    height: 768
   },
   'log cabin': {
     prompt:
-      ' winter in the snow, concept art oil painting of a {p}, a log cabin by a river, christmas,extremely detailed, brush hard, artstation , fantasy by jama jurabaev, Paul Lehr, masterpiece, award winning, trending on artstation',
-    model: 'stable_diffusion'
+      'concept art oil painting of a {p} next to a christmas log cabin by a river, extremely detailed, brush hard, fantasy by jama jurabaev, Paul Lehr, masterpiece, award winning, trending on artstation',
+    model: 'stable_diffusion_2.1',
+    sampler_name: 'dpmsolver',
+    width: 768,
+    height: 768
   },
   'prehistoric winter': {
     prompt:
-      '{p}, epic iced snow landscape battles in prehistory, vasteness, Albert Bierstadt, valleys, luminous golden hour, lifey landscape, beautiful, vibrant, abandoned overgrown mountains ###lowres, text, error, cropped, worst quality, jpeg artifacts, signature, watermark, deformed',
-    model: 'stable_diffusion'
+      'epic {p} iced snow landscape battles in prehistory, vasteness, Albert Bierstadt, valleys, luminous golden hour, lifey landscape, beautiful, vibrant, abandoned overgrown mountains ###lowres, text, error, cropped, worst quality, jpeg artifacts, signature, watermark, deformed',
+    model: 'stable_diffusion_2.1',
+    sampler_name: 'dpmsolver',
+    width: 768,
+    height: 768
   },
   'warrior fairy': {
     prompt:
@@ -133,6 +151,21 @@ export const stylePresets = {
     prompt:
       '{p}, shadows, lights, outline, highly detailed, 1girl, anime###cropped, artifacts, lowres',
     model: 'Hentai Diffusion'
+  },
+  poison: {
+    prompt:
+      '{p}, shadows, lights, outline, highly detailed, 1girl, anime###cropped, artifacts, lowres',
+    model: 'Poison'
+  },
+  eimis: {
+    prompt:
+      '{p}, shadows, lights, outline, highly detailed, 1girl, anime###cropped, artifacts, lowres',
+    model: 'Eimis Anime Diffusion'
+  },
+  dawgsmix: {
+    prompt:
+      '{p}, shadows, lights, outline, highly detailed, 1girl, anime###cropped, artifacts, lowres',
+    model: 'Dawgsmix'
   },
   furry: {
     prompt:
@@ -287,6 +320,39 @@ export const stylePresets = {
   ghibli: {
     prompt: '{p}, ghibli style',
     model: 'Ghibli Diffusion'
+  },
+  'rpg portrait': {
+    prompt: '{p}',
+    model: 'RPG'
+  },
+  wavyfusion: {
+    prompt: '{p}, wa-vy style',
+    model: 'Wavyfusion'
+  },
+  papercutcraft: {
+    prompt: '{p}, papercutcraft style',
+    model: 'Papercutcraft'
+  },
+  papercut: {
+    prompt: '{p}, PaperCut',
+    model: 'Papercut Diffusion'
+  },
+  chroma: {
+    prompt:
+      '{p}, ChromaV5 award winning photography, extremely detailed, artstation, 8 k, incredible art',
+    model: 'ChromaV5'
+  },
+  kurzgesagt: {
+    prompt: '{p}, illustration style kurzgesagtish',
+    model: 'Kurzgesagtish'
+  },
+  squishmallow: {
+    prompt: '{p}, Squishmallow',
+    model: 'Squishmallow Diffusion'
+  },
+  dreamlike: {
+    prompt: '{p}, dreamlikeart',
+    model: 'Dreamlike Diffusion'
   },
   appicon: {
     prompt: '{p}, IconsMi',
