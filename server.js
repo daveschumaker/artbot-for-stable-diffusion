@@ -1,9 +1,13 @@
+require('dotenv').config()
 const express = require('express')
 const next = require('next')
 
 const { initModelDataFetch } = require('./server/cache/models')
+const { initLoadCount } = require('./server/cache/perf')
 const { initServerStatusFetch } = require('./server/cache/serverStatus')
 const routes = require('./server/routes/index.js')
+
+initLoadCount()
 
 const dev = process.env.NODE_ENV !== 'production'
 const hostname = 'localhost'

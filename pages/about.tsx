@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import Head from 'next/head'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { trackEvent } from '../api/telemetry'
 import FeedbackModal from '../components/Feedback'
@@ -42,9 +42,26 @@ const HelpfulLinks = styled.div`
 `
 
 const AboutPage = () => {
+  const [totalImages, setTotalImages] = useState(0)
   const [showFeedback, setShowFeedback] = useState(false)
 
+  const fetchImageCount = async () => {
+    const res = await fetch(`/artbot/api/image-count`)
+    const data = await res.json()
+    if (data.totalImages) {
+      setTotalImages(Number(data.totalImages))
+    }
+  }
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      fetchImageCount()
+    }, 5000)
+    return () => clearInterval(interval)
+  }, [])
+
   useEffectOnce(() => {
+    fetchImageCount()
     trackEvent({
       event: 'PAGE_VIEW',
       context: '/pages/about'
@@ -60,16 +77,17 @@ const AboutPage = () => {
         <title>ArtBot - About</title>
       </Head>
       <PageTitle>About ArtBot</PageTitle>
+      {totalImages ? (
+        <div className="mb-4 text-lg font-bold">
+          Total images generated: {totalImages.toLocaleString()} (and counting)
+        </div>
+      ) : null}
       <div className="mt-2">
         <HeroImage
           src="/artbot/painting_bot.png"
           alt="painting of a robot painting robots"
         />
         <HelpfulLinks className="mb-4 flex-wrap text-sm md:text-md">
-          <Linker href="https://www.buymeacoffee.com/davely" target="_blank">
-            Buy me a coffee
-          </Linker>
-          |
           <LinkButton onClick={() => setShowFeedback(true)}>
             Contact / Feedback
           </LinkButton>

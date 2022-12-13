@@ -45,6 +45,19 @@ export default async function handler(
     }
   }
 
+  if (data.event === 'IMAGE_RECEIVED_FROM_API') {
+    try {
+      await fetch(
+        `http://localhost:${process.env.PORT}/artbot/api/v1/status/new-image`,
+        {
+          method: 'POST'
+        }
+      )
+    } catch (err) {
+      // eh, it's okay if nothing happens.
+    }
+  }
+
   res.send({
     success: true
   })
