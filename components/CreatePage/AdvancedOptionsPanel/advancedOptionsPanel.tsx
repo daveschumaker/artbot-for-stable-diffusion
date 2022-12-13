@@ -26,6 +26,7 @@ import Checkbox from '../../UI/Checkbox'
 import { MAX_IMAGES_PER_JOB } from '../../../constants'
 import GrainIcon from '../../icons/GrainIcon'
 import AppSettings from '../../../models/AppSettings'
+import Slider from '../../UI/Slider'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -558,6 +559,24 @@ const AdvancedOptionsPanel = ({
             (1 - {maxSteps(input.sampler, loggedIn)})
           </div>
         </SubSectionTitle>
+        <div className="mb-4">
+          <Slider
+            defaultValue={input.steps}
+            value={input.steps}
+            min={1}
+            max={maxSteps(input.sampler, loggedIn)}
+            onChange={(nextValues: number) => {
+              const event = {
+                target: {
+                  name: 'steps',
+                  value: nextValues
+                }
+              }
+
+              handleChangeInput(event)
+            }}
+          />
+        </div>
         <MaxWidth
           // @ts-ignore
           maxWidth="120"
@@ -594,6 +613,24 @@ const AdvancedOptionsPanel = ({
           </Tooltip>
           <div className="block text-xs w-full">(1 - 30)</div>
         </SubSectionTitle>
+        <div className="mb-4">
+          <Slider
+            defaultValue={input.cfg_scale}
+            value={input.cfg_scale}
+            min={1}
+            max={30}
+            onChange={(nextValues: number) => {
+              const event = {
+                target: {
+                  name: 'cfg_scale',
+                  value: nextValues
+                }
+              }
+
+              handleChangeInput(event)
+            }}
+          />
+        </div>
         <MaxWidth
           // @ts-ignore
           maxWidth="120"
@@ -1005,6 +1042,24 @@ const AdvancedOptionsPanel = ({
                 (1 - {MAX_IMAGES_PER_JOB})
               </div>
             </SubSectionTitle>
+            <div className="mb-4">
+              <Slider
+                defaultValue={input.numImages}
+                value={input.numImages}
+                min={1}
+                max={MAX_IMAGES_PER_JOB}
+                onChange={(nextValues: number) => {
+                  const event = {
+                    target: {
+                      name: 'numImages',
+                      value: nextValues
+                    }
+                  }
+
+                  handleChangeInput(event)
+                }}
+              />
+            </div>
             <MaxWidth
               // @ts-ignore
               maxWidth="120"

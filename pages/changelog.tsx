@@ -102,6 +102,23 @@ const Changelog = () => {
         </Section>
       </Panel>
       <Section>
+        <SubSectionTitle>2022.12.13</SubSectionTitle>
+        <StyledLi>
+          MILESTONE: 1,500,000 images have been created with ArtBot!
+        </StyledLi>
+        <StyledUl>
+          <StyledLi>
+            UX improvement: Added sliders to the various inputs on the advanced
+            options panel. This is especially helpful for mobile users. (Thanks
+            for the suggestion on Discord, bigdawg!)
+          </StyledLi>
+          <StyledLi>
+            Added a pseudo-realtime counter for total number of images generated
+            with ArtBot on the <Linker href="/about">about page</Linker>
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.12.12</SubSectionTitle>
         <StyledUl>
           <StyledLi>
