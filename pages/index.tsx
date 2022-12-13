@@ -578,7 +578,10 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
           <Button
             title="Clear current input"
             btnType="secondary"
-            onClick={resetInput}
+            onClick={() => {
+              window.scrollTo(0, 0)
+              resetInput()
+            }}
           >
             <span>
               <TrashIcon />
@@ -589,7 +592,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
             title="Create new image"
             onClick={() => {
               window.scrollTo(0, 0)
-              handleSubmit
+              handleSubmit()
             }}
             disabled={hasValidationError || pending}
             width="100px"
