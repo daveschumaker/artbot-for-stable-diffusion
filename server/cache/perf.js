@@ -36,8 +36,9 @@ const initLoadCount = () => {
     process.env.PROD_COUNT_FILE &&
     fs.existsSync(process.env.PROD_COUNT_FILE)
   ) {
-    const data = fs.readFileSync(process.env.PROD_COUNT_FILE, 'utf8')
-    cache.totalImages = Number(data)
+    const data = fs.readFileSync(process.env.PROD_COUNT_FILE, 'utf8') || ''
+    const [totalImages] = data.split('#')
+    cache.totalImages = Number(totalImages)
 
     setInterval(() => {
       saveCache()
