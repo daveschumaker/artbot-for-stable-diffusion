@@ -1,6 +1,7 @@
 import { setAvailableModels } from '../store/modelStore'
 import { isAppActive } from '../utils/appUtils'
 
+let isInitial = true
 let isPending = false
 const fetchAvailableModels = async () => {
   if (isPending) {
@@ -24,14 +25,25 @@ const fetchAvailableModels = async () => {
   ]
 
   try {
-    const res = await fetch(`/artbot/api/models-available`)
+    const res = await fetch(
+      isInitial
+        ? `/artbot/api/models-available`
+        : `https://stablehorde.net/api/v2/status/models`
+    )
     const data = await res.json()
-    availableModels = data.models
+
+    if (Array.isArray(data)) {
+      availableModels = [...data]
+    } else {
+      availableModels = data.models
+    }
+
+    setAvailableModels(availableModels)
   } catch (err) {
     console.log(`Warning: Unable to fetch available models. API offline?`)
   } finally {
     isPending = false
-    setAvailableModels(availableModels)
+    isInitial = false
   }
 }
 

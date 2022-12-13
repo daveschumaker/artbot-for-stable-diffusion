@@ -104,6 +104,13 @@ export const initAppSettings = async () => {
     }
 
     fetchAvailableModels()
+  }, 20000)
+
+  setInterval(async () => {
+    if (!isAppActive()) {
+      return
+    }
+
     fetchModelDetails()
     deleteStalePending()
   }, 60000)
