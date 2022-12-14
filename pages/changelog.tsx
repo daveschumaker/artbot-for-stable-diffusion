@@ -102,11 +102,20 @@ const Changelog = () => {
         </Section>
       </Panel>
       <Section>
-        <SubSectionTitle>2022.12.13</SubSectionTitle>
-        <StyledLi>
-          MILESTONE: 1,500,000 images have been created with ArtBot!
-        </StyledLi>
+        <SubSectionTitle>2022.12.14</SubSectionTitle>
         <StyledUl>
+          <StyledLi>
+            Fix: Settings page option for allowing NSFW images to be generated
+            wasn&apos;t being respected.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
+        <SubSectionTitle>2022.12.13</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            MILESTONE: 1,500,000 images have been created with ArtBot!
+          </StyledLi>
           <StyledLi>
             UX improvement: Added sliders to the various inputs on the advanced
             options panel. This is especially helpful for mobile users. (Thanks

@@ -66,7 +66,7 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
     AppSettings.get('useTrusted') === undefined
       ? true
       : AppSettings.get('useTrusted')
-  const allowNsfw = AppSettings.get('allowNsfw') || false
+  const allowNsfw = AppSettings.get('allowNsfwImages') || false
 
   const {
     prompt,
