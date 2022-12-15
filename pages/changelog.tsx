@@ -102,6 +102,18 @@ const Changelog = () => {
         </Section>
       </Panel>
       <Section>
+        <SubSectionTitle>2022.12.15</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: Mobile scrolling issues on the prompt history panel.
+          </StyledLi>
+          <StyledLi>
+            UX: Can now select favorite prompts from prompt history and filter
+            by favorite prompts.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.12.14</SubSectionTitle>
         <StyledUl>
           <StyledLi>
