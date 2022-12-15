@@ -100,12 +100,15 @@ const InfoPage = ({ availableModels, modelDetails }: any) => {
             </div>
           </MenuButton>
           {componentState.showOptionsMenu && (
-            <DropDownMenu>
+            <DropDownMenu
+              handleClose={() => {
+                setComponentState({
+                  showOptionsMenu: false
+                })
+              }}
+            >
               <DropDownMenuItem
                 onClick={() => {
-                  setComponentState({
-                    showOptionsMenu: false
-                  })
                   router.push(
                     //@ts-ignore
                     `/info`
@@ -116,9 +119,6 @@ const InfoPage = ({ availableModels, modelDetails }: any) => {
               </DropDownMenuItem>
               <DropDownMenuItem
                 onClick={() => {
-                  setComponentState({
-                    showOptionsMenu: false
-                  })
                   router.push(
                     //@ts-ignore
                     `/info?show=favorite-models`
@@ -130,9 +130,6 @@ const InfoPage = ({ availableModels, modelDetails }: any) => {
               <MenuSeparator />
               <DropDownMenuItem
                 onClick={() => {
-                  setComponentState({
-                    showOptionsMenu: false
-                  })
                   router.push(
                     //@ts-ignore
                     `/info/workers`

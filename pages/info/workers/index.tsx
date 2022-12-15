@@ -152,12 +152,15 @@ const WorkerInfoPage = () => {
             </div>
           </MenuButton>
           {componentState.showOptionsMenu && (
-            <DropDownMenu>
+            <DropDownMenu
+              handleClose={() => {
+                setComponentState({
+                  showOptionsMenu: false
+                })
+              }}
+            >
               <DropDownMenuItem
                 onClick={() => {
-                  setComponentState({
-                    showOptionsMenu: false
-                  })
                   router.push(
                     //@ts-ignore
                     `/info`
@@ -168,9 +171,6 @@ const WorkerInfoPage = () => {
               </DropDownMenuItem>
               <DropDownMenuItem
                 onClick={() => {
-                  setComponentState({
-                    showOptionsMenu: false
-                  })
                   router.push(
                     //@ts-ignore
                     `/info?show=favorite-models`
@@ -182,9 +182,6 @@ const WorkerInfoPage = () => {
               <MenuSeparator />
               <DropDownMenuItem
                 onClick={() => {
-                  setComponentState({
-                    showOptionsMenu: false
-                  })
                   router.push(
                     //@ts-ignore
                     `/info/workers`

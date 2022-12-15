@@ -249,12 +249,15 @@ const SettingsPage = () => {
               </div>
             </MenuButton>
             {componentState.showOptionsMenu && (
-              <DropDownMenu>
+              <DropDownMenu
+                handleClose={() => {
+                  setComponentState({
+                    showOptionsMenu: false
+                  })
+                }}
+              >
                 <DropDownMenuItem
                   onClick={() => {
-                    setComponentState({
-                      showOptionsMenu: false
-                    })
                     router.push(
                       //@ts-ignore
                       `/settings`
@@ -265,9 +268,6 @@ const SettingsPage = () => {
                 </DropDownMenuItem>
                 <DropDownMenuItem
                   onClick={() => {
-                    setComponentState({
-                      showOptionsMenu: false
-                    })
                     router.push(
                       //@ts-ignore
                       `/settings?panel=workers`
@@ -278,9 +278,6 @@ const SettingsPage = () => {
                 </DropDownMenuItem>
                 <DropDownMenuItem
                   onClick={() => {
-                    setComponentState({
-                      showOptionsMenu: false
-                    })
                     router.push(
                       //@ts-ignore
                       `/settings?panel=prefs`
@@ -291,9 +288,6 @@ const SettingsPage = () => {
                 </DropDownMenuItem>
                 <DropDownMenuItem
                   onClick={() => {
-                    setComponentState({
-                      showOptionsMenu: false
-                    })
                     router.push(
                       //@ts-ignore
                       `/settings?panel=import-export`

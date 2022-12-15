@@ -35,34 +35,12 @@ import { useEffectOnce } from '../hooks/useEffectOnce'
 import MasonryLayout from '../components/MasonryLayout'
 import Modal from '../components/Modal'
 import SpinnerV2 from '../components/Spinner'
-
-const DropDownMenu = styled.div`
-  background-color: ${(props) => props.theme.body};
-  border: 2px solid ${(props) => props.theme.navLinkActive};
-  border-radius: 4px;
-  /* padding: 8px; */
-  position: absolute;
-  top: 0;
-  width: 200px;
-  right: -2px;
-  top: 36px;
-  z-index: 10;
-`
+import DropDownMenu from '../components/UI/DropDownMenu'
+import DropDownMenuItem from '../components/UI/DropDownMenuItem'
 
 const MenuSeparator = styled.div`
   width: 100%;
   border-bottom: 1px solid ${(props) => props.theme.navLinkActive};
-`
-
-const MenuItem = styled.li`
-  cursor: pointer;
-  padding: 4px 8px;
-  width: 100%;
-
-  &:hover {
-    background-color: ${(props) => props.theme.navLinkActive};
-    color: ${(props) => props.theme.body};
-  }
 `
 
 const NonLink = styled.div`
@@ -528,137 +506,134 @@ const ImagesPage = () => {
               <FilterIcon />
             </MenuButton>
             {componentState.showFilterMenu && (
-              <DropDownMenu>
-                <ul>
-                  <MenuItem
-                    onClick={() => {
-                      setComponentState({
-                        filterMode: 'all',
-                        isLoading: componentState.filterMode !== 'all',
-                        showFilterMenu: false
-                      })
+              <DropDownMenu
+                handleClose={() => {
+                  setComponentState({
+                    showFilterMenu: false
+                  })
+                }}
+              >
+                <DropDownMenuItem
+                  onClick={() => {
+                    setComponentState({
+                      filterMode: 'all',
+                      isLoading: componentState.filterMode !== 'all'
+                    })
 
-                      const newQuery = Object.assign({}, router.query)
-                      delete newQuery.filter
-                      delete newQuery.model
-                      router.push(
-                        //@ts-ignore
-                        `?${new URLSearchParams(newQuery).toString()}`
-                      )
-                    }}
-                  >
-                    Show all images
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      setComponentState({
-                        filterMode: 'favorited',
-                        isLoading: componentState.filterMode !== 'favorited',
-                        showFilterMenu: false
-                      })
+                    const newQuery = Object.assign({}, router.query)
+                    delete newQuery.filter
+                    delete newQuery.model
+                    router.push(
+                      //@ts-ignore
+                      `?${new URLSearchParams(newQuery).toString()}`
+                    )
+                  }}
+                >
+                  Show all images
+                </DropDownMenuItem>
+                <DropDownMenuItem
+                  onClick={() => {
+                    setComponentState({
+                      filterMode: 'favorited',
+                      isLoading: componentState.filterMode !== 'favorited'
+                    })
 
-                      const newQuery = Object.assign({}, router.query)
-                      newQuery.filter = 'favorited'
-                      router.push(
-                        //@ts-ignore
-                        `?${new URLSearchParams(newQuery).toString()}`
-                      )
-                    }}
-                  >
-                    Show favorited
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      setComponentState({
-                        filterMode: 'unfavorited',
-                        isLoading: componentState.filterMode !== 'unfavorited',
-                        showFilterMenu: false
-                      })
+                    const newQuery = Object.assign({}, router.query)
+                    newQuery.filter = 'favorited'
+                    router.push(
+                      //@ts-ignore
+                      `?${new URLSearchParams(newQuery).toString()}`
+                    )
+                  }}
+                >
+                  Show favorited
+                </DropDownMenuItem>
+                <DropDownMenuItem
+                  onClick={() => {
+                    setComponentState({
+                      filterMode: 'unfavorited',
+                      isLoading: componentState.filterMode !== 'unfavorited'
+                    })
 
-                      const newQuery = Object.assign({}, router.query)
-                      newQuery.filter = 'unfavorited'
-                      router.push(
-                        //@ts-ignore
-                        `?${new URLSearchParams(newQuery).toString()}`
-                      )
-                    }}
-                  >
-                    Show unfavorited
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      setComponentState({
-                        filterMode: 'upscaled',
-                        isLoading: componentState.filterMode !== 'upscaled',
-                        showFilterMenu: false
-                      })
+                    const newQuery = Object.assign({}, router.query)
+                    newQuery.filter = 'unfavorited'
+                    router.push(
+                      //@ts-ignore
+                      `?${new URLSearchParams(newQuery).toString()}`
+                    )
+                  }}
+                >
+                  Show unfavorited
+                </DropDownMenuItem>
+                <DropDownMenuItem
+                  onClick={() => {
+                    setComponentState({
+                      filterMode: 'upscaled',
+                      isLoading: componentState.filterMode !== 'upscaled'
+                    })
 
-                      const newQuery = Object.assign({}, router.query)
-                      newQuery.filter = 'upscaled'
-                      router.push(
-                        //@ts-ignore
-                        `?${new URLSearchParams(newQuery).toString()}`
-                      )
-                    }}
-                  >
-                    Show upscaled
-                  </MenuItem>
-                  <MenuSeparator />
-                  <MenuItem
-                    onClick={() => {
-                      setComponentState({
-                        filterMode: 'text2img',
-                        isLoading: componentState.filterMode !== 'text2img',
-                        showFilterMenu: false
-                      })
+                    const newQuery = Object.assign({}, router.query)
+                    newQuery.filter = 'upscaled'
+                    router.push(
+                      //@ts-ignore
+                      `?${new URLSearchParams(newQuery).toString()}`
+                    )
+                  }}
+                >
+                  Show upscaled
+                </DropDownMenuItem>
+                <MenuSeparator />
+                <DropDownMenuItem
+                  onClick={() => {
+                    setComponentState({
+                      filterMode: 'text2img',
+                      isLoading: componentState.filterMode !== 'text2img'
+                    })
 
-                      const newQuery = Object.assign({}, router.query)
-                      newQuery.filter = 'text2img'
-                      router.push(
-                        //@ts-ignore
-                        `?${new URLSearchParams(newQuery).toString()}`
-                      )
-                    }}
-                  >
-                    text2img
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      setComponentState({
-                        filterMode: 'img2img',
-                        isLoading: componentState.filterMode !== 'img2img',
-                        showFilterMenu: false
-                      })
+                    const newQuery = Object.assign({}, router.query)
+                    newQuery.filter = 'text2img'
+                    router.push(
+                      //@ts-ignore
+                      `?${new URLSearchParams(newQuery).toString()}`
+                    )
+                  }}
+                >
+                  text2img
+                </DropDownMenuItem>
+                <DropDownMenuItem
+                  onClick={() => {
+                    setComponentState({
+                      filterMode: 'img2img',
+                      isLoading: componentState.filterMode !== 'img2img'
+                    })
 
-                      const newQuery = Object.assign({}, router.query)
-                      newQuery.filter = 'img2img'
-                      router.push(
-                        //@ts-ignore
-                        `?${new URLSearchParams(newQuery).toString()}`
-                      )
-                    }}
-                  >
-                    img2img
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      setComponentState({
-                        filterMode: 'inpainting',
-                        isLoading: componentState.filterMode !== 'inpainting',
-                        showFilterMenu: false
-                      })
+                    const newQuery = Object.assign({}, router.query)
+                    newQuery.filter = 'img2img'
+                    router.push(
+                      //@ts-ignore
+                      `?${new URLSearchParams(newQuery).toString()}`
+                    )
+                  }}
+                >
+                  img2img
+                </DropDownMenuItem>
+                <DropDownMenuItem
+                  onClick={() => {
+                    setComponentState({
+                      filterMode: 'inpainting',
+                      isLoading: componentState.filterMode !== 'inpainting'
+                    })
 
-                      const newQuery = Object.assign({}, router.query)
-                      newQuery.filter = 'inpainting'
-                      router.push(
-                        //@ts-ignore
-                        `?${new URLSearchParams(newQuery).toString()}`
-                      )
-                    }}
-                  >
-                    inpainting
-                  </MenuItem>
-                </ul>
+                    const newQuery = Object.assign({}, router.query)
+                    newQuery.filter = 'inpainting'
+                    router.push(
+                      //@ts-ignore
+                      `?${new URLSearchParams(newQuery).toString()}`
+                    )
+                  }}
+                >
+                  inpainting
+                </DropDownMenuItem>
               </DropDownMenu>
             )}
           </div>
@@ -681,92 +656,90 @@ const ImagesPage = () => {
             <DotsVerticalIcon size={24} />
           </MenuButton>
           {componentState.showLayoutMenu && (
-            <DropDownMenu>
-              <ul>
-                {/* <MenuItem>Select images...</MenuItem>
+            <DropDownMenu
+              handleClose={() => {
+                setComponentState({ showLayoutMenu: false })
+              }}
+            >
+              {/* <MenuItem>Select images...</MenuItem>
                 <MenuSeparator /> */}
-                <MenuItem
-                  onClick={() => {
-                    setComponentState({
-                      layoutMode: 'grid',
-                      showLayoutMenu: false
-                    })
-                    localStorage.setItem('showLayout', 'grid')
-                    trackEvent({
-                      event: `MENU_CLICK`,
-                      action: 'grid_view',
-                      context: '/pages/images'
-                    })
-                  }}
-                >
-                  Square Grid
-                </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    setComponentState({
-                      layoutMode: 'layout',
-                      showLayoutMenu: false
-                    })
-                    localStorage.setItem('showLayout', 'layout')
-                    trackEvent({
-                      event: `MENU_CLICK`,
-                      action: 'layout_view',
-                      context: '/pages/images'
-                    })
-                  }}
-                >
-                  Dynamic Layout
-                </MenuItem>
-                <MenuSeparator />
-                <MenuItem
-                  onClick={() => {
-                    setComponentState({
-                      isLoading: true,
-                      showLayoutMenu: false,
-                      sortMode: 'new'
-                    })
-                    localStorage.setItem('imagePageSort', 'new')
-                    fetchImages()
+              <DropDownMenuItem
+                onClick={() => {
+                  setComponentState({
+                    layoutMode: 'grid'
+                  })
+                  localStorage.setItem('showLayout', 'grid')
+                  trackEvent({
+                    event: `MENU_CLICK`,
+                    action: 'grid_view',
+                    context: '/pages/images'
+                  })
+                }}
+              >
+                Square Grid
+              </DropDownMenuItem>
+              <DropDownMenuItem
+                onClick={() => {
+                  setComponentState({
+                    layoutMode: 'layout'
+                  })
+                  localStorage.setItem('showLayout', 'layout')
+                  trackEvent({
+                    event: `MENU_CLICK`,
+                    action: 'layout_view',
+                    context: '/pages/images'
+                  })
+                }}
+              >
+                Dynamic Layout
+              </DropDownMenuItem>
+              <MenuSeparator />
+              <DropDownMenuItem
+                onClick={() => {
+                  setComponentState({
+                    isLoading: true,
+                    sortMode: 'new'
+                  })
+                  localStorage.setItem('imagePageSort', 'new')
+                  fetchImages()
 
-                    const newQuery = Object.assign({}, router.query)
-                    delete newQuery.sort
-                    //@ts-ignore
-                    router.push(`?${new URLSearchParams(newQuery).toString()}`)
+                  const newQuery = Object.assign({}, router.query)
+                  delete newQuery.sort
+                  //@ts-ignore
+                  router.push(`?${new URLSearchParams(newQuery).toString()}`)
 
-                    trackEvent({
-                      event: `MENU_CLICK`,
-                      action: 'sort_new',
-                      context: '/pages/images'
-                    })
-                  }}
-                >
-                  Sort by Newest
-                </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    setComponentState({
-                      isLoading: true,
-                      showLayoutMenu: false,
-                      sortMode: 'old'
-                    })
-                    localStorage.setItem('imagePageSort', 'old')
-                    fetchImages()
+                  trackEvent({
+                    event: `MENU_CLICK`,
+                    action: 'sort_new',
+                    context: '/pages/images'
+                  })
+                }}
+              >
+                Sort by Newest
+              </DropDownMenuItem>
+              <DropDownMenuItem
+                onClick={() => {
+                  setComponentState({
+                    isLoading: true,
+                    sortMode: 'old'
+                  })
+                  localStorage.setItem('imagePageSort', 'old')
+                  fetchImages()
 
-                    const newQuery = Object.assign({}, router.query)
-                    newQuery.sort = 'old'
-                    //@ts-ignore
-                    router.push(`?${new URLSearchParams(newQuery).toString()}`)
+                  const newQuery = Object.assign({}, router.query)
+                  newQuery.sort = 'old'
+                  //@ts-ignore
+                  router.push(`?${new URLSearchParams(newQuery).toString()}`)
 
-                    trackEvent({
-                      event: `MENU_CLICK`,
-                      action: 'sort_old',
-                      context: '/pages/images'
-                    })
-                  }}
-                >
-                  Sort by Oldest
-                </MenuItem>
-              </ul>
+                  trackEvent({
+                    event: `MENU_CLICK`,
+                    action: 'sort_old',
+                    context: '/pages/images'
+                  })
+                }}
+              >
+                Sort by Oldest
+              </DropDownMenuItem>
             </DropDownMenu>
           )}
         </div>
