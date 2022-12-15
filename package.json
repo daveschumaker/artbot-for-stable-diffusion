@@ -49,8 +49,7 @@
     "react-toastify": "9.1.1",
     "sharp": "0.31.2",
     "statery": "0.6.3",
-    "styled-components": "5.3.6",
-    "tua-body-scroll-lock": "1.2.1"
+    "styled-components": "5.3.6"
   },
   "devDependencies": {
     "@types/autosize": "4.0.1",

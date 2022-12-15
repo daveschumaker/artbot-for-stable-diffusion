@@ -1,13 +1,9 @@
-import { lock, unlock } from 'tua-body-scroll-lock'
-import { createRef, useEffect } from 'react'
+import { useEffect } from 'react'
 import styled from 'styled-components'
 
 import CloseIcon from '../../icons/CloseIcon'
 import Overlay from '../Overlay'
-
-interface IProps {
-  ref: any
-}
+import { useScrollLock } from '../../../hooks/useScrollLock'
 
 const CloseIconWrapper = styled.div`
   cursor: pointer;
@@ -16,7 +12,7 @@ const CloseIconWrapper = styled.div`
   right: 8px;
 `
 
-const StyledInteractiveModal = styled.div<IProps>`
+const StyledInteractiveModal = styled.div`
   background-color: ${(props) => props.theme.body};
   border: 2px solid ${(props) => props.theme.border};
   border-radius: 8px;
@@ -32,6 +28,7 @@ const StyledInteractiveModal = styled.div<IProps>`
   @media (min-width: 640px) {
     width: 480px;
     min-height: 320px;
+    height: 480px;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
@@ -39,22 +36,19 @@ const StyledInteractiveModal = styled.div<IProps>`
 `
 
 const InteractiveModal = (props: any) => {
-  const ref = createRef()
+  const { lockScroll, unlockScroll } = useScrollLock()
 
   useEffect(() => {
-    lock()
+    lockScroll()
 
-    // @ts-ignore
-    unlock(ref)
-
-    return () => unlock()
+    return () => unlockScroll()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
     <>
       <Overlay handleClose={props.handleClose} />
-      <StyledInteractiveModal ref={ref}>
+      <StyledInteractiveModal>
         {props.children}
         <CloseIconWrapper onClick={props.handleClose}>
           <CloseIcon size={28} />
