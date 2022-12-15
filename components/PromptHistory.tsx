@@ -1,20 +1,22 @@
-import { useEffect } from 'react'
+import { forwardRef, useEffect } from 'react'
 import styled from 'styled-components'
 
 import useComponentState from '../hooks/useComponentState'
 import { PromptTypes } from '../types'
 import { db, getPrompts } from '../utils/db'
 import CopyIcon from './icons/CopyIcon'
+import HeartIcon from './icons/HeartIcon'
 import TrashIcon from './icons/TrashIcon'
 import { Button } from './UI/Button'
 import Input from './UI/Input'
 import PageTitle from './UI/PageTitle'
+import TextButton from './UI/TextButton'
 
 const PromptsList = styled.div`
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  top: 160px;
+  top: 180px;
   left: 16px;
   right: 16px;
   bottom: 16px;
@@ -31,7 +33,7 @@ const PromptsList = styled.div`
 
   @media (min-width: 640px) {
     top: 120px;
-    height: 360px;
+    /* height: 360px; */
   }
 `
 
@@ -69,15 +71,37 @@ const PromptText = styled.div`
   margin-right: 40px;
 `
 
-const PromptHistory = (props: any) => {
+const PromptHistory = forwardRef((props: any, ref: any) => {
   const [componentState, setComponentState] = useComponentState({
     filter: '',
-    prompts: []
+    prompts: [],
+    view: 'all'
   })
 
-  const fetchPrompts = async () => {
-    const prompts = await getPrompts(PromptTypes.PromptHistory)
+  const fetchPrompts = async (value?: string) => {
+    let prompts = []
+    if (value === 'favorites') {
+      prompts = await getPrompts(PromptTypes.PromptFavorite)
+    } else {
+      prompts = await getPrompts(
+        PromptTypes.PromptHistory,
+        PromptTypes.PromptFavorite
+      )
+    }
+
     setComponentState({ prompts })
+  }
+
+  const handleFavoriteClick = async (p: any) => {
+    const { id, promptType } = p
+    const newPromptType =
+      promptType === PromptTypes.PromptFavorite
+        ? PromptTypes.PromptHistory
+        : PromptTypes.PromptFavorite
+
+    await db.prompts.update(id, {
+      promptType: newPromptType
+    })
   }
 
   useEffect(() => {
@@ -143,7 +167,22 @@ const PromptHistory = (props: any) => {
           width="100%"
         />
       </div>
-      <PromptsList>
+      <div className="mb-2 flex flex-row justify-end">
+        <TextButton
+          onClick={() => {
+            if (componentState.view === 'all') {
+              setComponentState({ view: 'favorites' })
+              fetchPrompts('favorites')
+            } else {
+              setComponentState({ view: 'all' })
+              fetchPrompts()
+            }
+          }}
+        >
+          {componentState.view === 'all' ? `show favorites` : `show all`}
+        </TextButton>
+      </div>
+      <PromptsList ref={ref}>
         {filteredPrompts.map((p: any) => {
           return (
             <PromptWrapper key={`prompt_${p.id}`}>
@@ -166,6 +205,21 @@ const PromptHistory = (props: any) => {
                 <div className="flex flex-row gap-2">
                   <Button
                     onClick={() => {
+                      handleFavoriteClick(p)
+                      fetchPrompts(componentState.view)
+                    }}
+                  >
+                    <HeartIcon
+                      size={24}
+                      fill={
+                        p.promptType === PromptTypes.PromptFavorite
+                          ? 'currentColor'
+                          : 'none'
+                      }
+                    />
+                  </Button>
+                  <Button
+                    onClick={() => {
                       props.copyPrompt({ prompt: p.prompt })
                       props.handleClose()
                     }}
@@ -177,7 +231,7 @@ const PromptHistory = (props: any) => {
                     btnType="secondary"
                     onClick={async () => {
                       await db.prompts.bulkDelete([p.id])
-                      fetchPrompts()
+                      fetchPrompts(componentState.view)
                     }}
                   >
                     <TrashIcon size={24} />
@@ -190,6 +244,7 @@ const PromptHistory = (props: any) => {
       </PromptsList>
     </>
   )
-}
+})
 
+PromptHistory.displayName = 'PromptHistory'
 export default PromptHistory
