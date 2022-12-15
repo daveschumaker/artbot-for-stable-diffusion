@@ -12,6 +12,7 @@ interface InputProps {
   max?: number
   onBlur?: any
   onChange: any
+  placeholder?: string
   width?: string
   value: string
 }

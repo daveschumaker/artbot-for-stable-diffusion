@@ -5,7 +5,11 @@ import { useRouter } from 'next/router'
 
 import { createImageJob } from '../utils/imageCache'
 import PageTitle from '../components/UI/PageTitle'
-import { loadEditPrompt, SourceProcessing } from '../utils/promptUtils'
+import {
+  loadEditPrompt,
+  savePromptHistory,
+  SourceProcessing
+} from '../utils/promptUtils'
 import TextArea from '../components/UI/TextArea'
 import { Button } from '../components/UI/Button'
 import TrashIcon from '../components/icons/TrashIcon'
@@ -35,6 +39,10 @@ import AppSettings from '../models/AppSettings'
 import { kudosCost, orientationDetails } from '../utils/imageUtils'
 import { toast } from 'react-toastify'
 import Linker from '../components/UI/Linker'
+import InteractiveModal from '../components/UI/InteractiveModal/interactiveModal'
+import PromptHistory from '../components/PromptHistory'
+import MenuButton from '../components/UI/MenuButton'
+import HistoryIcon from '../components/icons/HistoryIcon'
 
 interface InputTarget {
   name: string
@@ -163,6 +171,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
     initialState.sampler = 'k_euler_a'
   }
 
+  const [showPromptHistory, setShowPromptHistory] = useState(false)
   const [hasValidationError, setHasValidationError] = useState(false)
   const [pending, setPending] = useState(false)
   const [hasError, setHasError] = useState('')
@@ -306,6 +315,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
       input.models = [...modelsArray]
     }
 
+    savePromptHistory(input.prompt)
     await createImageJob(new CreateImageRequest(inputToSubmit))
 
     if (!AppSettings.get('stayOnCreate')) {
@@ -449,6 +459,14 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
 
   return (
     <main>
+      {showPromptHistory && (
+        <InteractiveModal handleClose={() => setShowPromptHistory(false)}>
+          <PromptHistory
+            copyPrompt={setInput}
+            handleClose={() => setShowPromptHistory(false)}
+          />
+        </InteractiveModal>
+      )}
       {shareMode ? (
         <Head>
           <title>ArtBot - Shareable Link</title>
@@ -460,12 +478,27 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
           <meta name="twitter:image" content="" />
         </Head>
       ) : null}
-      <PageTitle>
-        Create new image{' '}
-        {input.source_processing === 'outpainting' && '(outpainting)'}
-        {input.source_processing === 'inpainting' && '(inpainting)'}
-        {input.source_processing === 'img2img' && '(img2img)'}
-      </PageTitle>
+      <div className="flex flex-row w-full items-center">
+        <div className="inline-block w-1/2">
+          <PageTitle>
+            Create new image{' '}
+            {input.source_processing === 'outpainting' && '(outpainting)'}
+            {input.source_processing === 'inpainting' && '(inpainting)'}
+            {input.source_processing === 'img2img' && '(img2img)'}
+          </PageTitle>
+        </div>
+        <div className="flex flex-row justify-end w-1/2 items-start h-[38px] relative gap-2">
+          <MenuButton
+            active={showPromptHistory}
+            title=""
+            onClick={() => {
+              setShowPromptHistory(true)
+            }}
+          >
+            <HistoryIcon size={24} />
+          </MenuButton>
+        </div>
+      </div>
       <ServerMessage />
       <div className="mt-2 mb-2">
         <div className="flex flex-row gap-[8px] items-start">
@@ -522,7 +555,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
             />
           </div>
           <div className="w-full sm:w-1/2 flex flex-col justify-end gap-2">
-            <div className="flex flex-row justify-end gap-2">
+            <div className="flex flex-row justify-end gap-2 mt-2 sm:mt-0">
               <Button
                 title="Clear current input"
                 btnType="secondary"

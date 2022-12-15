@@ -108,6 +108,16 @@ const Changelog = () => {
             Fix: Settings page option for allowing NSFW images to be generated
             wasn&apos;t being respected.
           </StyledLi>
+          <StyledLi>
+            UX: Refactored some stuff related to drop down menus. For the most
+            part, you won&apos;t see any changes, but you can now click outside
+            the dropdown menu to make it automatically close.
+          </StyledLi>
+          <StyledLi>
+            Feature: Prompt history! Click the handy clock icon at the top of
+            the create image page and you&apos;ll see a running list of all
+            prompts that you&apos;ve used (starting as of today).
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

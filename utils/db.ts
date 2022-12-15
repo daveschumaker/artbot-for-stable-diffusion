@@ -64,11 +64,15 @@ export const getDefaultPrompt = async () => {
 }
 
 export const getPrompts = async (promptType: string) => {
-  return await db.prompts
-    .filter(function (prompt: { promptType: string }) {
-      return prompt.promptType === promptType
-    })
-    ?.toArray()
+  return (
+    (await db?.prompts
+      ?.orderBy('timestamp')
+      ?.filter(function (prompt: { promptType: string }) {
+        return prompt.promptType === promptType
+      })
+      ?.reverse()
+      ?.toArray()) || []
+  )
 }
 
 // Fix interesting race condition where pending jobs appear in "all" jobs,

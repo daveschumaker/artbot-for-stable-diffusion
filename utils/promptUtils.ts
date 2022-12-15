@@ -1,3 +1,5 @@
+import { PromptTypes } from '../types'
+import { db } from './db'
 import { validSampler } from './validationUtils'
 
 export enum SourceProcessing {
@@ -162,4 +164,33 @@ export const promptMatrix = (initPrompt = '') => {
   })
 
   return newPromptsArray
+}
+
+export const savePromptHistory = async (prompt: string = '') => {
+  try {
+    const [lastPromptDetails = {}] =
+      (await db.prompts
+        .orderBy('timestamp')
+        .filter(function (entry: any) {
+          return entry.promptType === PromptTypes.PromptHistory
+        })
+        .limit(1)
+        .reverse()
+        .toArray()) || []
+
+    const { prompt: lastPrompt = '' } = lastPromptDetails
+
+    // Prevent storing prompt if it was the immediately preceding prompt.
+    if (prompt.toLowerCase() === lastPrompt.toLowerCase()) {
+      return
+    }
+  } catch (err) {
+    // Ah well
+  }
+
+  await db.prompts.add({
+    prompt: prompt,
+    promptType: PromptTypes.PromptHistory,
+    timestamp: Date.now()
+  })
 }

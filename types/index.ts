@@ -139,3 +139,10 @@ export interface ModelDetails {
   name: string
   count?: number
 }
+
+export enum PromptTypes {
+  DefaultNegative = 'defaultNegative',
+  Negative = 'negative',
+  PromptFavorite = 'promptFavorite',
+  PromptHistory = 'promptHistory'
+}
