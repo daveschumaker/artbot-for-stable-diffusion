@@ -752,47 +752,52 @@ const AdvancedOptionsPanel = ({
       </TwoPanel>
       {(input.img2img ||
         input.source_processing === SourceProcessing.Img2Img) && (
-        <div className="mt-8 w-full md:w-1/2">
-          <Section>
-            <div className="flex flex-row items-center justify-between">
-              <div className="w-[120px]">
-                <SubSectionTitle>
-                  Denoise{' '}
-                  <Tooltip width="200px">
-                    Amount of noise added to input image. Values that approach
-                    1.0 allow for lots of variations but will also produce
-                    images that are not semantically consistent with the input.
-                    Only available for img2img.
-                  </Tooltip>
-                  <div className="block text-xs w-full">(0.0 - 1.0)</div>
-                </SubSectionTitle>
+        <TwoPanel className="mt-4">
+          <SplitPanel>
+            <Section>
+              <div className="flex flex-row items-center justify-between">
+                <div className="w-[120px]">
+                  <SubSectionTitle>
+                    Denoise{' '}
+                    <Tooltip width="200px">
+                      Amount of noise added to input image. Values that approach
+                      1.0 allow for lots of variations but will also produce
+                      images that are not semantically consistent with the
+                      input. Only available for img2img.
+                    </Tooltip>
+                    <div className="block text-xs w-full">(0.0 - 1.0)</div>
+                  </SubSectionTitle>
+                </div>
+                <NumberInput
+                  // @ts-ignore
+                  className="mb-2"
+                  type="number"
+                  step={0.05}
+                  min={0}
+                  max={1.0}
+                  onMinusClick={() => {
+                    setInput({
+                      denoising_strength:
+                        Number(input.denoising_strength) - 0.05
+                    })
+                  }}
+                  onPlusClick={() => {
+                    setInput({
+                      denoising_strength:
+                        Number(input.denoising_strength) + 0.05
+                    })
+                  }}
+                  name="denoising_strength"
+                  onChange={handleChangeInput}
+                  // @ts-ignore
+                  value={Number(input.denoising_strength).toFixed(2)}
+                  width="110px"
+                />
               </div>
-              <NumberInput
-                // @ts-ignore
-                className="mb-2"
-                type="number"
-                step={0.05}
-                min={0}
-                max={1.0}
-                onMinusClick={() => {
-                  setInput({
-                    denoising_strength: Number(input.denoising_strength) - 0.05
-                  })
-                }}
-                onPlusClick={() => {
-                  setInput({
-                    denoising_strength: Number(input.denoising_strength) + 0.05
-                  })
-                }}
-                name="denoising_strength"
-                onChange={handleChangeInput}
-                // @ts-ignore
-                value={Number(input.denoising_strength).toFixed(2)}
-                width="110px"
-              />
-            </div>
-          </Section>
-        </div>
+            </Section>
+          </SplitPanel>
+          <SplitPanel></SplitPanel>
+        </TwoPanel>
       )}
       <Section>
         <SubSectionTitle>
