@@ -185,13 +185,13 @@ const AdvancedOptionsPanel = ({
     if (
       isNaN(input.steps) ||
       input.steps < 1 ||
-      input.steps > maxSteps(input.sampler, loggedIn)
+      input.steps > maxSteps({ sampler: input.sampler, loggedIn })
     ) {
       setErrorMessage({
-        steps: `Please enter a valid number between 1 and ${maxSteps(
-          input.sampler,
+        steps: `Please enter a valid number between 1 and ${maxSteps({
+          sampler: input.sampler,
           loggedIn
-        )}`
+        })}`
       })
     } else {
       setErrorMessage({ steps: null })
@@ -546,128 +546,138 @@ const AdvancedOptionsPanel = ({
             />
           </Section>
         )}
-      <Section>
-        <SubSectionTitle>
-          Steps
-          <Tooltip width="200px">
-            Fewer steps generally result in quicker image generations. Many
-            models achieve full coherence after a certain number of finite steps
-            (60 - 90). Keep your initial queries in the 30 - 50 range for best
-            results.
-          </Tooltip>
-          <div className="block text-xs w-full">
-            (1 - {maxSteps(input.sampler, loggedIn)})
-          </div>
-        </SubSectionTitle>
-        <div className="mb-4">
-          <Slider
-            defaultValue={input.steps}
-            value={input.steps}
-            min={1}
-            max={maxSteps(input.sampler, loggedIn)}
-            onChange={(nextValues: number) => {
-              const event = {
-                target: {
-                  name: 'steps',
-                  value: nextValues
-                }
-              }
+      <div className="flex flex-col w-full gap-2 md:gap-8 md:flex-row">
+        <div className="w-full md:w-1/2">
+          <Section>
+            <SubSectionTitle>
+              Steps
+              <Tooltip width="200px">
+                Fewer steps generally result in quicker image generations. Many
+                models achieve full coherence after a certain number of finite
+                steps (60 - 90). Keep your initial queries in the 30 - 50 range
+                for best results.
+              </Tooltip>
+              <div className="block text-xs w-full">
+                (1 - {maxSteps({ sampler: input.sampler, loggedIn })})
+              </div>
+            </SubSectionTitle>
+            <div className="mb-4">
+              <Slider
+                defaultValue={input.steps}
+                value={input.steps}
+                min={1}
+                max={maxSteps({
+                  sampler: input.sampler,
+                  loggedIn,
+                  isSlider: true
+                })}
+                onChange={(nextValues: number) => {
+                  const event = {
+                    target: {
+                      name: 'steps',
+                      value: nextValues
+                    }
+                  }
 
-              handleChangeInput(event)
-            }}
-          />
+                  handleChangeInput(event)
+                }}
+              />
+            </div>
+            <MaxWidth
+              // @ts-ignore
+              maxWidth="120"
+            >
+              <Input
+                // @ts-ignore
+                error={errorMessage.steps}
+                className="mb-2"
+                type="number"
+                min={1}
+                max={maxSteps({ sampler: input.sampler, loggedIn })}
+                name="steps"
+                onChange={handleChangeInput}
+                onBlur={() => {
+                  validateSteps()
+                }}
+                // @ts-ignore
+                value={input.steps}
+                width="100%"
+              />
+            </MaxWidth>
+            {errorMessage.steps && (
+              <div className="mb-2 text-red-500 text-lg font-bold">
+                {errorMessage.steps}
+              </div>
+            )}
+          </Section>
         </div>
-        <MaxWidth
-          // @ts-ignore
-          maxWidth="120"
-        >
-          <Input
-            // @ts-ignore
-            error={errorMessage.steps}
-            className="mb-2"
-            type="number"
-            min={1}
-            max={maxSteps(input.sampler, loggedIn)}
-            name="steps"
-            onChange={handleChangeInput}
-            onBlur={() => {
-              validateSteps()
-            }}
-            // @ts-ignore
-            value={input.steps}
-            width="100%"
-          />
-        </MaxWidth>
-        {errorMessage.steps && (
-          <div className="mb-2 text-red-500 text-lg font-bold">
-            {errorMessage.steps}
-          </div>
-        )}
-      </Section>
-      <Section>
-        <SubSectionTitle>
-          Guidance
-          <Tooltip width="200px">
-            Higher numbers follow the prompt more closely. Lower numbers give
-            more creativity.
-          </Tooltip>
-          <div className="block text-xs w-full">(1 - 30)</div>
-        </SubSectionTitle>
-        <div className="mb-4">
-          <Slider
-            defaultValue={input.cfg_scale}
-            value={input.cfg_scale}
-            min={1}
-            max={30}
-            onChange={(nextValues: number) => {
-              const event = {
-                target: {
-                  name: 'cfg_scale',
-                  value: nextValues
-                }
-              }
+        <div className="w-full md:w-1/2">
+          <Section>
+            <SubSectionTitle>
+              Guidance
+              <Tooltip width="200px">
+                Higher numbers follow the prompt more closely. Lower numbers
+                give more creativity.
+              </Tooltip>
+              <div className="block text-xs w-full">(1 - 30)</div>
+            </SubSectionTitle>
+            <div className="mb-4">
+              <Slider
+                defaultValue={input.cfg_scale}
+                value={input.cfg_scale}
+                min={1}
+                max={30}
+                onChange={(nextValues: number) => {
+                  const event = {
+                    target: {
+                      name: 'cfg_scale',
+                      value: nextValues
+                    }
+                  }
 
-              handleChangeInput(event)
-            }}
-          />
+                  handleChangeInput(event)
+                }}
+              />
+            </div>
+            <MaxWidth
+              // @ts-ignore
+              maxWidth="120"
+            >
+              <Input
+                // @ts-ignore
+                error={errorMessage.cfg_scale}
+                className="mb-2"
+                type="number"
+                min={1}
+                max={30}
+                name="cfg_scale"
+                onBlur={(e: any) => {
+                  if (
+                    isNaN(e.target.value) ||
+                    e.target.value < 1 ||
+                    e.target.value > 30
+                  ) {
+                    setErrorMessage({
+                      cfg_scale: 'Please enter a valid number between 1 and 30'
+                    })
+                  } else if (errorMessage.cfg_scale) {
+                    setErrorMessage({ cfg_scale: null })
+                  }
+                }}
+                onChange={handleChangeInput}
+                // @ts-ignore
+                value={input.cfg_scale}
+                width="100%"
+              />
+            </MaxWidth>
+            {errorMessage.cfg_scale && (
+              <div className="mb-2 text-red-500 text-lg font-bold">
+                {errorMessage.cfg_scale}
+              </div>
+            )}
+          </Section>
         </div>
-        <MaxWidth
-          // @ts-ignore
-          maxWidth="120"
-        >
-          <Input
-            // @ts-ignore
-            error={errorMessage.cfg_scale}
-            className="mb-2"
-            type="number"
-            min={1}
-            max={30}
-            name="cfg_scale"
-            onBlur={(e: any) => {
-              if (
-                isNaN(e.target.value) ||
-                e.target.value < 1 ||
-                e.target.value > 30
-              ) {
-                setErrorMessage({
-                  cfg_scale: 'Please enter a valid number between 1 and 30'
-                })
-              } else if (errorMessage.cfg_scale) {
-                setErrorMessage({ cfg_scale: null })
-              }
-            }}
-            onChange={handleChangeInput}
-            // @ts-ignore
-            value={input.cfg_scale}
-            width="100%"
-          />
-        </MaxWidth>
-        {errorMessage.cfg_scale && (
-          <div className="mb-2 text-red-500 text-lg font-bold">
-            {errorMessage.cfg_scale}
-          </div>
-        )}
-      </Section>
+      </div>
       {(input.img2img ||
         input.source_processing === SourceProcessing.Img2Img) && (
         <Section>
@@ -1035,68 +1045,70 @@ const AdvancedOptionsPanel = ({
       </Section>
       {!input.useAllModels &&
         input.post_processing.indexOf('RealESRGAN_x4plus') === -1 && (
-          <Section>
-            <SubSectionTitle>
-              Number of images
-              <div className="block text-xs w-full">
-                (1 - {MAX_IMAGES_PER_JOB})
-              </div>
-            </SubSectionTitle>
-            <div className="mb-4">
-              <Slider
-                defaultValue={input.numImages}
-                value={input.numImages}
-                min={1}
-                max={MAX_IMAGES_PER_JOB}
-                onChange={(nextValues: number) => {
-                  const event = {
-                    target: {
-                      name: 'numImages',
-                      value: nextValues
+          <div className="w-full md:w-1/2">
+            <Section>
+              <SubSectionTitle>
+                Number of images
+                <div className="block text-xs w-full">
+                  (1 - {MAX_IMAGES_PER_JOB})
+                </div>
+              </SubSectionTitle>
+              <div className="mb-4">
+                <Slider
+                  defaultValue={input.numImages}
+                  value={input.numImages}
+                  min={1}
+                  max={MAX_IMAGES_PER_JOB}
+                  onChange={(nextValues: number) => {
+                    const event = {
+                      target: {
+                        name: 'numImages',
+                        value: nextValues
+                      }
                     }
-                  }
 
-                  handleChangeInput(event)
-                }}
-              />
-            </div>
-            <MaxWidth
-              // @ts-ignore
-              maxWidth="120"
-            >
-              <Input
-                // @ts-ignore
-                className="mb-2"
-                error={errorMessage.numImages}
-                type="number"
-                min={1}
-                max={MAX_IMAGES_PER_JOB}
-                name="numImages"
-                onChange={handleChangeInput}
-                onBlur={(e: any) => {
-                  if (
-                    isNaN(e.target.value) ||
-                    e.target.value < 1 ||
-                    e.target.value > MAX_IMAGES_PER_JOB
-                  ) {
-                    setErrorMessage({
-                      numImages: `Please enter a valid number between 1 and ${MAX_IMAGES_PER_JOB}`
-                    })
-                  } else if (errorMessage.numImages) {
-                    setErrorMessage({ numImages: null })
-                  }
-                }}
-                // @ts-ignore
-                value={input.numImages}
-                width="100%"
-              />
-            </MaxWidth>
-            {errorMessage.numImages && (
-              <div className="mb-2 text-red-500 text-lg font-bold">
-                {errorMessage.numImages}
+                    handleChangeInput(event)
+                  }}
+                />
               </div>
-            )}
-          </Section>
+              <MaxWidth
+                // @ts-ignore
+                maxWidth="120"
+              >
+                <Input
+                  // @ts-ignore
+                  className="mb-2"
+                  error={errorMessage.numImages}
+                  type="number"
+                  min={1}
+                  max={MAX_IMAGES_PER_JOB}
+                  name="numImages"
+                  onChange={handleChangeInput}
+                  onBlur={(e: any) => {
+                    if (
+                      isNaN(e.target.value) ||
+                      e.target.value < 1 ||
+                      e.target.value > MAX_IMAGES_PER_JOB
+                    ) {
+                      setErrorMessage({
+                        numImages: `Please enter a valid number between 1 and ${MAX_IMAGES_PER_JOB}`
+                      })
+                    } else if (errorMessage.numImages) {
+                      setErrorMessage({ numImages: null })
+                    }
+                  }}
+                  // @ts-ignore
+                  value={input.numImages}
+                  width="100%"
+                />
+              </MaxWidth>
+              {errorMessage.numImages && (
+                <div className="mb-2 text-red-500 text-lg font-bold">
+                  {errorMessage.numImages}
+                </div>
+              )}
+            </Section>
+          </div>
         )}
     </div>
   )

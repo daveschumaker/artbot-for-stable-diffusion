@@ -1,7 +1,11 @@
 interface Samplers {
   [key: string]: number
 }
-export const maxSteps = (sampler: string, loggedIn: boolean = false) => {
+export const maxSteps = ({
+  sampler = '',
+  loggedIn = false,
+  isSlider = false
+}) => {
   const anonMaxSteps: Samplers = {
     k_dpm_2_a: 25,
     k_dpm_2: 25,
@@ -14,6 +18,10 @@ export const maxSteps = (sampler: string, loggedIn: boolean = false) => {
     k_dpmpp_2m: 50,
     k_dpmpp_2s_a: 50,
     random: 50
+  }
+
+  if (loggedIn && isSlider) {
+    return 150
   }
 
   if (loggedIn) {
