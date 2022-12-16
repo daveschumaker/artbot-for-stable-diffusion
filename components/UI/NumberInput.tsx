@@ -24,7 +24,7 @@ const PlusButton = styled(Button)`
 const InputsWrapper = styled.div`
   display: flex;
   flex-direction: row;
-  width: 140px;
+  width: 160px;
 `
 
 const NumberInput = (props: any) => {

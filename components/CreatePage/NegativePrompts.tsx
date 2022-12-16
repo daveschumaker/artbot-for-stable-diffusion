@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import SectionTitle from '../UI/SectionTitle'
 import SlidingPanel from '../UI/SlidingPanel'
 import styled from 'styled-components'
 import TextButton from '../UI/TextButton'
 import CloseIcon from '../icons/CloseIcon'
 import { db, getPrompts, setDefaultPrompt } from '../../utils/db'
+import { PromptTypes } from '../../types'
 
 interface Props {
   open: boolean
@@ -56,15 +57,15 @@ const PromptContainer = styled.div`
 const NegativePrompts = ({ open, handleClosePane, setInput }: Props) => {
   const [prompts, setPrompts] = useState<Array<string>>([])
 
-  const loadNegativePrompts = useCallback(async () => {
+  const loadNegativePrompts = async () => {
     try {
-      const result = await getPrompts('negative')
+      const result = await getPrompts(PromptTypes.Negative)
 
       if (Array.isArray(result)) {
         setPrompts(result)
       }
     } catch (err) {}
-  }, [])
+  }
 
   const saveDefaultPrompt = async (prompt: string) => {
     await setDefaultPrompt(prompt)
@@ -81,7 +82,8 @@ const NegativePrompts = ({ open, handleClosePane, setInput }: Props) => {
 
   useEffect(() => {
     loadNegativePrompts()
-  }, [loadNegativePrompts])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <SlidingPanel

@@ -66,7 +66,7 @@ export const getDefaultPrompt = async () => {
 export const getPrompts = async (promptType: string, promptType2?: string) => {
   return (
     (await db?.prompts
-      ?.orderBy('timestamp')
+      ?.orderBy('id')
       ?.filter(function (prompt: { promptType: string }) {
         if (promptType2 && prompt.promptType === promptType2) {
           return true
