@@ -102,11 +102,29 @@ const Changelog = () => {
         </Section>
       </Panel>
       <Section>
-        <SubSectionTitle>2022.12.15</SubSectionTitle>
+        <SubSectionTitle>2022.12.16</SubSectionTitle>
         <StyledUl>
           <StyledLi>
-            Fix: Mobile scrolling issues on the prompt history panel.
+            Fix: Issue with denoise strength number input overflowing outside
+            panel on mobile devices.(Thanks for reporting on{' '}
+            <Linker
+              href="https://discord.com/channels/781145214752129095/1038867597543882894"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Discord
+            </Linker>{' '}
+            , voodoocode!)!)
           </StyledLi>
+          <StyledLi>
+            Fix: Negative prompts not showing up. (Thanks for reporting,
+            anonymous user!)
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
+        <SubSectionTitle>2022.12.15</SubSectionTitle>
+        <StyledUl>
           <StyledLi>
             UX: Can now select favorite prompts from prompt history and filter
             by favorite prompts.
