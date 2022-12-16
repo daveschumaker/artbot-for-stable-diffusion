@@ -23,6 +23,7 @@ import MenuButton from '../../components/UI/MenuButton'
 import HeartIcon from '../../components/icons/HeartIcon'
 import AppSettings from '../../models/AppSettings'
 import { useStore } from 'statery'
+import ExternalLinkIcon from '../icons/ExternalLinkIcon'
 
 const StyledLinkIcon = styled(LinkIcon)`
   cursor: pointer;
@@ -143,8 +144,15 @@ const ModelInfoPage = ({ availableModels, modelDetails }: any) => {
     const modelDetailsArray: Array<React.ReactNode> = []
 
     sortModels().forEach((modelDetails, idx) => {
-      const { description, name, nsfw, trigger, showcases, style } =
-        modelDetails
+      const {
+        description,
+        homepage = '',
+        name,
+        nsfw,
+        trigger,
+        showcases,
+        style
+      } = modelDetails
 
       const modelStats = componentState.availableModels.filter((obj: any) => {
         return obj.name === name
@@ -190,6 +198,20 @@ const ModelInfoPage = ({ availableModels, modelDetails }: any) => {
                 </MenuButton>
               </div>
             </div>
+            {homepage && (
+              <div className="mb-2">
+                <Linker
+                  href={homepage}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span className="flex flex-row gap-2 items-center">
+                    view homepage
+                    <ExternalLinkIcon />
+                  </span>
+                </Linker>{' '}
+              </div>
+            )}
             <div className="mb-2">
               {nsfw ? 'This model generates NSFW images. ' : ''}
               {description}

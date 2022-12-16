@@ -1,4 +1,4 @@
-import { forwardRef, useEffect } from 'react'
+import { useEffect } from 'react'
 import styled from 'styled-components'
 
 import useComponentState from '../hooks/useComponentState'
@@ -70,7 +70,7 @@ const PromptText = styled.div`
   margin-right: 40px;
 `
 
-const PromptHistory = forwardRef((props: any, ref: any) => {
+const PromptHistory = (props: any) => {
   const [componentState, setComponentState] = useComponentState({
     filter: '',
     prompts: [],
@@ -115,42 +115,12 @@ const PromptHistory = forwardRef((props: any, ref: any) => {
     }
   })
 
-  if (!componentState.filter && filteredPrompts.length === 0) {
-    return (
-      <>
-        <PageTitle>Prompt History</PageTitle>
-        <div>Nothing to see here. Create an image, first!</div>
-      </>
-    )
-  }
-
-  if (componentState.filter && filteredPrompts.length === 0) {
-    return (
-      <>
-        <PageTitle>Prompt History</PageTitle>
-        <div>
-          <Input
-            // @ts-ignore
-            className="mb-2"
-            type="text"
-            name="filterPrompt"
-            placeholder="Filter prompts"
-            onChange={(e: any) => {
-              setComponentState({ filter: e.target.value })
-            }}
-            // @ts-ignore
-            value={componentState.filter}
-            width="100%"
-          />
-        </div>
-        <div>No prompts found.</div>
-      </>
-    )
-  }
-
   return (
     <>
-      <PageTitle>Prompt History</PageTitle>
+      <PageTitle>
+        {componentState.view === 'all' && `Prompt history`}
+        {componentState.view === 'favorites' && `Favorite prompts`}
+      </PageTitle>
       <div>
         <Input
           // @ts-ignore
@@ -166,7 +136,7 @@ const PromptHistory = forwardRef((props: any, ref: any) => {
           width="100%"
         />
       </div>
-      <div className="mb-2 flex flex-row justify-end">
+      <div className="mb-2 flex flex-row justify-between">
         <TextButton
           onClick={() => {
             if (componentState.view === 'all') {
@@ -180,8 +150,21 @@ const PromptHistory = forwardRef((props: any, ref: any) => {
         >
           {componentState.view === 'all' ? `show favorites` : `show all`}
         </TextButton>
+        <TextButton
+          onClick={() => {
+            setComponentState({ filter: '' })
+          }}
+        >
+          clear filter
+        </TextButton>
       </div>
-      <PromptsList ref={ref}>
+      {!componentState.filter && filteredPrompts.length === 0 && (
+        <div>Nothing to see here. Create an image, first!</div>
+      )}
+      {componentState.filter && filteredPrompts.length === 0 && (
+        <div>No prompts found.</div>
+      )}
+      <PromptsList>
         {filteredPrompts.map((p: any) => {
           return (
             <PromptWrapper key={`prompt_${p.id}`}>
@@ -243,7 +226,6 @@ const PromptHistory = forwardRef((props: any, ref: any) => {
       </PromptsList>
     </>
   )
-})
+}
 
-PromptHistory.displayName = 'PromptHistory'
 export default PromptHistory
