@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic'
 
 const DynamicSlider = dynamic(() => import('./slider'), {
-  // suspense: true
+  ssr: false
 })
 
 export default function Slider(props: any) {

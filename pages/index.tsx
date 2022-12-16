@@ -400,16 +400,16 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
       }
 
       if (localStorage.getItem('cfg_scale')) {
-        setInput({ cfg_scale: localStorage.getItem('cfg_scale') })
+        setInput({ cfg_scale: Number(localStorage.getItem('cfg_scale')) })
       }
 
       if (localStorage.getItem('steps')) {
-        setInput({ steps: localStorage.getItem('steps') })
+        setInput({ steps: Number(localStorage.getItem('steps')) })
       }
 
       if (localStorage.getItem('denoising_strength')) {
         setInput({
-          denoising_strength: localStorage.getItem('denoising_strength')
+          denoising_strength: Number(localStorage.getItem('denoising_strength'))
         })
       }
 

@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic'
 
 const DynamicSpinner = dynamic(() => import('./spinner'), {
-  // suspense: true
+  ssr: false
 })
 
 export default function SpinnerV2() {

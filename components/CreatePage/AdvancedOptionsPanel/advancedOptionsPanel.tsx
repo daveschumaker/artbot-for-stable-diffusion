@@ -23,10 +23,15 @@ import { db, getDefaultPrompt, setDefaultPrompt } from '../../../utils/db'
 import { trackEvent } from '../../../api/telemetry'
 import { modelInfoStore } from '../../../store/modelStore'
 import Checkbox from '../../UI/Checkbox'
-import { MAX_IMAGES_PER_JOB } from '../../../constants'
+import {
+  MAX_DIMENSIONS_LOGGED_IN,
+  MAX_DIMENSIONS_LOGGED_OUT,
+  MAX_IMAGES_PER_JOB
+} from '../../../constants'
 import GrainIcon from '../../icons/GrainIcon'
 import AppSettings from '../../../models/AppSettings'
 import Slider from '../../UI/Slider'
+import NumberInput from '../../UI/NumberInput'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -71,6 +76,25 @@ const MaxWidth = styled.div<MaxWidthProps>`
     `
     max-width: ${props.maxWidth}px;
   `}
+`
+
+const TwoPanel = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  @media (min-width: 640px) {
+    flex-direction: row;
+    column-gap: 32px;
+  }
+`
+
+const SplitPanel = styled.div`
+  width: 100%;
+
+  @media (min-width: 640px) {
+    width: 50%;
+  }
 `
 
 const orientationOptions = [
@@ -348,7 +372,11 @@ const AdvancedOptionsPanel = ({
           {orientationValue?.value === 'custom' && (
             <>
               <div className="block text-xs mt-4 w-full">
-                Max size for each dimension: {loggedIn ? 3072 : 1024} pixels
+                Max size for each dimension:{' '}
+                {loggedIn
+                  ? MAX_DIMENSIONS_LOGGED_IN
+                  : MAX_DIMENSIONS_LOGGED_OUT}{' '}
+                pixels
                 {loggedIn && input.height * input.width > 1024 * 1024 && (
                   <div className="text-red-500 font-bold">
                     WARNING: You will need to have enough kudos to complete this
@@ -358,11 +386,25 @@ const AdvancedOptionsPanel = ({
               </div>
               <div className="flex flex-col gap-4 justify-start">
                 <div className="mt-2 flex flex-row gap-4 items-center">
-                  <SubSectionTitle>Width</SubSectionTitle>
-                  <Input
+                  <div className="w-[80px]">
+                    <SubSectionTitle>Width</SubSectionTitle>
+                  </div>
+                  <NumberInput
                     // @ts-ignore
-                    type="text"
+                    type="number"
                     name="width"
+                    min={64}
+                    max={
+                      loggedIn
+                        ? MAX_DIMENSIONS_LOGGED_IN
+                        : MAX_DIMENSIONS_LOGGED_OUT
+                    }
+                    onMinusClick={() => {
+                      setInput({ width: Number(input.width) - 64 })
+                    }}
+                    onPlusClick={() => {
+                      setInput({ width: Number(input.width) + 64 })
+                    }}
                     error={errorMessage.width}
                     onChange={handleChangeInput}
                     onBlur={(e: any) => {
@@ -373,11 +415,16 @@ const AdvancedOptionsPanel = ({
                       if (
                         isNaN(e.target.value) ||
                         e.target.value < 64 ||
-                        e.target.value > (loggedIn ? 3072 : 1024)
+                        e.target.value >
+                          (loggedIn
+                            ? MAX_DIMENSIONS_LOGGED_IN
+                            : MAX_DIMENSIONS_LOGGED_OUT)
                       ) {
                         setErrorMessage({
                           width: `Please enter a valid number between 64 and ${
-                            loggedIn ? 3072 : 1024
+                            loggedIn
+                              ? MAX_DIMENSIONS_LOGGED_IN
+                              : MAX_DIMENSIONS_LOGGED_OUT
                           }`
                         })
                         return
@@ -402,12 +449,26 @@ const AdvancedOptionsPanel = ({
                   </div>
                 )}
                 <div className="flex flex-row gap-4 items-center">
-                  <SubSectionTitle>Height</SubSectionTitle>
-                  <Input
+                  <div className="w-[80px]">
+                    <SubSectionTitle>Height</SubSectionTitle>
+                  </div>
+                  <NumberInput
                     // @ts-ignore
                     className="mb-2"
-                    type="text"
+                    type="number"
                     name="height"
+                    min={64}
+                    max={
+                      loggedIn
+                        ? MAX_DIMENSIONS_LOGGED_IN
+                        : MAX_DIMENSIONS_LOGGED_OUT
+                    }
+                    onMinusClick={() => {
+                      setInput({ height: Number(input.height) - 64 })
+                    }}
+                    onPlusClick={() => {
+                      setInput({ height: Number(input.height) + 64 })
+                    }}
                     error={errorMessage.height}
                     onChange={handleChangeInput}
                     onBlur={(e: any) => {
@@ -418,11 +479,16 @@ const AdvancedOptionsPanel = ({
                       if (
                         isNaN(e.target.value) ||
                         e.target.value < 64 ||
-                        e.target.value > (loggedIn ? 3072 : 1024)
+                        e.target.value >
+                          (loggedIn
+                            ? MAX_DIMENSIONS_LOGGED_IN
+                            : MAX_DIMENSIONS_LOGGED_OUT)
                       ) {
                         setErrorMessage({
                           height: `Please enter a valid number between 64 and ${
-                            loggedIn ? 3072 : 1024
+                            loggedIn
+                              ? MAX_DIMENSIONS_LOGGED_IN
+                              : MAX_DIMENSIONS_LOGGED_OUT
                           }`
                         })
                         return
@@ -546,21 +612,45 @@ const AdvancedOptionsPanel = ({
             />
           </Section>
         )}
-      <div className="flex flex-col w-full gap-2 md:gap-8 md:flex-row">
-        <div className="w-full md:w-1/2">
+      <TwoPanel className="mt-4">
+        <SplitPanel>
           <Section>
-            <SubSectionTitle>
-              Steps
-              <Tooltip width="200px">
-                Fewer steps generally result in quicker image generations. Many
-                models achieve full coherence after a certain number of finite
-                steps (60 - 90). Keep your initial queries in the 30 - 50 range
-                for best results.
-              </Tooltip>
-              <div className="block text-xs w-full">
-                (1 - {maxSteps({ sampler: input.sampler, loggedIn })})
-              </div>
-            </SubSectionTitle>
+            <div className="flex flex-row items-center justify-between">
+              <SubSectionTitle>
+                Steps
+                <Tooltip width="200px">
+                  Fewer steps generally result in quicker image generations.
+                  Many models achieve full coherence after a certain number of
+                  finite steps (60 - 90). Keep your initial queries in the 30 -
+                  50 range for best results.
+                </Tooltip>
+                <div className="block text-xs w-full">
+                  (1 - {maxSteps({ sampler: input.sampler, loggedIn })})
+                </div>
+              </SubSectionTitle>
+              <NumberInput
+                // @ts-ignore
+                error={errorMessage.steps}
+                className="mb-2"
+                type="number"
+                min={1}
+                max={maxSteps({ sampler: input.sampler, loggedIn })}
+                onMinusClick={() => {
+                  setInput({ steps: input.steps - 1 })
+                }}
+                onPlusClick={() => {
+                  setInput({ steps: input.steps + 1 })
+                }}
+                name="steps"
+                onChange={handleChangeInput}
+                onBlur={() => {
+                  validateSteps()
+                }}
+                // @ts-ignore
+                value={Number(input.steps)}
+                width="100%"
+              />
+            </div>
             <div className="mb-4">
               <Slider
                 defaultValue={input.steps}
@@ -583,73 +673,37 @@ const AdvancedOptionsPanel = ({
                 }}
               />
             </div>
-            <MaxWidth
-              // @ts-ignore
-              maxWidth="120"
-            >
-              <Input
-                // @ts-ignore
-                error={errorMessage.steps}
-                className="mb-2"
-                type="number"
-                min={1}
-                max={maxSteps({ sampler: input.sampler, loggedIn })}
-                name="steps"
-                onChange={handleChangeInput}
-                onBlur={() => {
-                  validateSteps()
-                }}
-                // @ts-ignore
-                value={input.steps}
-                width="100%"
-              />
-            </MaxWidth>
             {errorMessage.steps && (
               <div className="mb-2 text-red-500 text-lg font-bold">
                 {errorMessage.steps}
               </div>
             )}
           </Section>
-        </div>
-        <div className="w-full md:w-1/2">
+        </SplitPanel>
+        <SplitPanel>
           <Section>
-            <SubSectionTitle>
-              Guidance
-              <Tooltip width="200px">
-                Higher numbers follow the prompt more closely. Lower numbers
-                give more creativity.
-              </Tooltip>
-              <div className="block text-xs w-full">(1 - 30)</div>
-            </SubSectionTitle>
-            <div className="mb-4">
-              <Slider
-                defaultValue={input.cfg_scale}
-                value={input.cfg_scale}
-                min={1}
-                max={30}
-                onChange={(nextValues: number) => {
-                  const event = {
-                    target: {
-                      name: 'cfg_scale',
-                      value: nextValues
-                    }
-                  }
-
-                  handleChangeInput(event)
-                }}
-              />
-            </div>
-            <MaxWidth
-              // @ts-ignore
-              maxWidth="120"
-            >
-              <Input
+            <div className="flex flex-row items-center justify-between">
+              <SubSectionTitle>
+                Guidance
+                <Tooltip width="200px">
+                  Higher numbers follow the prompt more closely. Lower numbers
+                  give more creativity.
+                </Tooltip>
+                <div className="block text-xs w-full">(1 - 30)</div>
+              </SubSectionTitle>
+              <NumberInput
                 // @ts-ignore
                 error={errorMessage.cfg_scale}
                 className="mb-2"
                 type="number"
                 min={1}
                 max={30}
+                onMinusClick={() => {
+                  setInput({ cfg_scale: input.cfg_scale - 1 })
+                }}
+                onPlusClick={() => {
+                  setInput({ cfg_scale: input.cfg_scale + 1 })
+                }}
                 name="cfg_scale"
                 onBlur={(e: any) => {
                   if (
@@ -669,47 +723,76 @@ const AdvancedOptionsPanel = ({
                 value={input.cfg_scale}
                 width="100%"
               />
-            </MaxWidth>
+            </div>
+            <div className="mb-4">
+              <Slider
+                defaultValue={input.cfg_scale}
+                value={input.cfg_scale}
+                min={1}
+                max={30}
+                onChange={(nextValues: number) => {
+                  const event = {
+                    target: {
+                      name: 'cfg_scale',
+                      value: nextValues
+                    }
+                  }
+
+                  handleChangeInput(event)
+                }}
+              />
+            </div>
             {errorMessage.cfg_scale && (
               <div className="mb-2 text-red-500 text-lg font-bold">
                 {errorMessage.cfg_scale}
               </div>
             )}
           </Section>
-        </div>
-      </div>
+        </SplitPanel>
+      </TwoPanel>
       {(input.img2img ||
         input.source_processing === SourceProcessing.Img2Img) && (
-        <Section>
-          <SubSectionTitle>
-            Denoise{' '}
-            <Tooltip width="200px">
-              Amount of noise added to input image. Values that approach 1.0
-              allow for lots of variations but will also produce images that are
-              not semantically consistent with the input. Only available for
-              img2img.
-            </Tooltip>
-            <div className="block text-xs w-full">(0.0 - 1.0)</div>
-          </SubSectionTitle>
-          <MaxWidth
-            // @ts-ignore
-            maxWidth="120"
-          >
-            <Input
-              // @ts-ignore
-              className="mb-2"
-              type="number"
-              step={0.05}
-              min={0}
-              max={1.0}
-              name="denoising_strength"
-              onChange={handleChangeInput}
-              // @ts-ignore
-              value={input.denoising_strength}
-              width="100%"
-            />
-          </MaxWidth>
-        </Section>
+        <div className="mt-8 w-full md:w-1/2">
+          <Section>
+            <div className="flex flex-row items-center justify-between">
+              <div className="w-[120px]">
+                <SubSectionTitle>
+                  Denoise{' '}
+                  <Tooltip width="200px">
+                    Amount of noise added to input image. Values that approach
+                    1.0 allow for lots of variations but will also produce
+                    images that are not semantically consistent with the input.
+                    Only available for img2img.
+                  </Tooltip>
+                  <div className="block text-xs w-full">(0.0 - 1.0)</div>
+                </SubSectionTitle>
+              </div>
+              <NumberInput
+                // @ts-ignore
+                className="mb-2"
+                type="number"
+                step={0.05}
+                min={0}
+                max={1.0}
+                onMinusClick={() => {
+                  setInput({
+                    denoising_strength: Number(input.denoising_strength) - 0.05
+                  })
+                }}
+                onPlusClick={() => {
+                  setInput({
+                    denoising_strength: Number(input.denoising_strength) + 0.05
+                  })
+                }}
+                name="denoising_strength"
+                onChange={handleChangeInput}
+                // @ts-ignore
+                value={Number(input.denoising_strength).toFixed(2)}
+                width="110px"
+              />
+            </div>
+          </Section>
+        </div>
       )}
       <Section>
         <SubSectionTitle>
@@ -1045,37 +1128,16 @@ const AdvancedOptionsPanel = ({
       </Section>
       {!input.useAllModels &&
         input.post_processing.indexOf('RealESRGAN_x4plus') === -1 && (
-          <div className="w-full md:w-1/2">
+          <div className="mt-8 w-full md:w-1/2">
             <Section>
-              <SubSectionTitle>
-                Number of images
-                <div className="block text-xs w-full">
-                  (1 - {MAX_IMAGES_PER_JOB})
-                </div>
-              </SubSectionTitle>
-              <div className="mb-4">
-                <Slider
-                  defaultValue={input.numImages}
-                  value={input.numImages}
-                  min={1}
-                  max={MAX_IMAGES_PER_JOB}
-                  onChange={(nextValues: number) => {
-                    const event = {
-                      target: {
-                        name: 'numImages',
-                        value: nextValues
-                      }
-                    }
-
-                    handleChangeInput(event)
-                  }}
-                />
-              </div>
-              <MaxWidth
-                // @ts-ignore
-                maxWidth="120"
-              >
-                <Input
+              <div className="flex flex-row items-center justify-between">
+                <SubSectionTitle>
+                  Number of images
+                  <div className="block text-xs w-full">
+                    (1 - {MAX_IMAGES_PER_JOB})
+                  </div>
+                </SubSectionTitle>
+                <NumberInput
                   // @ts-ignore
                   className="mb-2"
                   error={errorMessage.numImages}
@@ -1083,6 +1145,12 @@ const AdvancedOptionsPanel = ({
                   min={1}
                   max={MAX_IMAGES_PER_JOB}
                   name="numImages"
+                  onMinusClick={() => {
+                    setInput({ numImages: input.numImages - 1 })
+                  }}
+                  onPlusClick={() => {
+                    setInput({ numImages: input.numImages + 1 })
+                  }}
                   onChange={handleChangeInput}
                   onBlur={(e: any) => {
                     if (
@@ -1101,7 +1169,25 @@ const AdvancedOptionsPanel = ({
                   value={input.numImages}
                   width="100%"
                 />
-              </MaxWidth>
+              </div>
+              <div className="mb-4">
+                <Slider
+                  defaultValue={input.numImages}
+                  value={input.numImages}
+                  min={1}
+                  max={MAX_IMAGES_PER_JOB}
+                  onChange={(nextValues: number) => {
+                    const event = {
+                      target: {
+                        name: 'numImages',
+                        value: nextValues
+                      }
+                    }
+
+                    handleChangeInput(event)
+                  }}
+                />
+              </div>
               {errorMessage.numImages && (
                 <div className="mb-2 text-red-500 text-lg font-bold">
                   {errorMessage.numImages}

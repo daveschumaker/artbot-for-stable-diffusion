@@ -111,6 +111,15 @@ const Changelog = () => {
             UX: Can now select favorite prompts from prompt history and filter
             by favorite prompts.
           </StyledLi>
+          <StyledLi>
+            UX: Played around with slider arrangements and added plus / minus
+            buttons to any number input field.
+          </StyledLi>
+          <StyledLi>
+            Limit slider for logged in users to 150 steps (officially, you can
+            still go up to 500, but trying to select a lower value using the
+            slider was a pain). Thanks for the suggestion, anonymous user!
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
