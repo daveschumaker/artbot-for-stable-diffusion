@@ -897,6 +897,7 @@ const AdvancedOptionsPanel = ({
                   alt="Model example"
                   width="240"
                   height="240"
+                  loading="lazy"
                 />
               </MaxWidth>
             )}

@@ -29,7 +29,7 @@ export const GlobalStyles = createGlobalStyle<{ theme: DefaultTheme }>`
     font-family: 'Roboto Slab', "Times New Roman", serif;
     letter-spacing: 0.4px;
     margin: 0;
-    transition: all 0.50s linear;
+    /* transition: all 0.50s linear; */
   }
 
   body {

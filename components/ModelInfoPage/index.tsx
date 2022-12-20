@@ -15,7 +15,6 @@ import {
 } from '../../store/modelStore'
 // import { filterCompletedByModel } from '../utils/db'
 import SpinnerV2 from '../../components/Spinner'
-import Image from 'next/image'
 import LinkIcon from '../../components/icons/LinkIcon'
 import styled from 'styled-components'
 import Linker from '../../components/UI/Linker'
@@ -252,12 +251,13 @@ const ModelInfoPage = ({ availableModels, modelDetails }: any) => {
                         className="max-w-[490px]"
                         key={`${name}_showcase_${idx}`}
                       >
-                        <Image
+                        <img
                           className="rounded"
                           src={img}
                           alt={`Example of images created using ${name} model.`}
                           height={490}
                           width={490}
+                          loading="lazy"
                         />
                       </div>
                     )
