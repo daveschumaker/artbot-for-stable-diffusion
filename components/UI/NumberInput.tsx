@@ -46,12 +46,25 @@ const NumberInput = (props: any) => {
 
     onPlusClick()
   }
+
+  const handleKeyDown = (e: any) => {
+    e = e || window.event
+
+    if (e.keyCode == '38') {
+      e.preventDefault()
+      handlePlusClick()
+    } else if (e.keyCode == '40') {
+      e.preventDefault()
+      handleMinusClick()
+    }
+  }
+
   return (
     <InputsWrapper>
       <MinusButton onClick={handleMinusClick}>
         <MinusIcon />
       </MinusButton>
-      <StyledInput {...rest} />
+      <StyledInput onKeyDown={handleKeyDown} {...rest} />
       <PlusButton onClick={handlePlusClick}>
         <PlusIcon />
       </PlusButton>

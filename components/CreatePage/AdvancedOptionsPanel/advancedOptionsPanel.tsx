@@ -391,7 +391,7 @@ const AdvancedOptionsPanel = ({
                   </div>
                   <NumberInput
                     // @ts-ignore
-                    type="number"
+                    type="text"
                     name="width"
                     min={64}
                     max={
@@ -455,7 +455,7 @@ const AdvancedOptionsPanel = ({
                   <NumberInput
                     // @ts-ignore
                     className="mb-2"
-                    type="number"
+                    type="text"
                     name="height"
                     min={64}
                     max={
@@ -632,7 +632,7 @@ const AdvancedOptionsPanel = ({
                 // @ts-ignore
                 error={errorMessage.steps}
                 className="mb-2"
-                type="number"
+                type="text"
                 min={1}
                 max={maxSteps({ sampler: input.sampler, loggedIn })}
                 onMinusClick={() => {
@@ -695,7 +695,7 @@ const AdvancedOptionsPanel = ({
                 // @ts-ignore
                 error={errorMessage.cfg_scale}
                 className="mb-2"
-                type="number"
+                type="text"
                 min={1}
                 max={30}
                 onMinusClick={() => {
@@ -771,7 +771,7 @@ const AdvancedOptionsPanel = ({
                 <NumberInput
                   // @ts-ignore
                   className="mb-2"
-                  type="number"
+                  type="text"
                   step={0.05}
                   min={0}
                   max={1.0}
@@ -1146,7 +1146,7 @@ const AdvancedOptionsPanel = ({
                   // @ts-ignore
                   className="mb-2"
                   error={errorMessage.numImages}
-                  type="number"
+                  type="text"
                   min={1}
                   max={MAX_IMAGES_PER_JOB}
                   name="numImages"
