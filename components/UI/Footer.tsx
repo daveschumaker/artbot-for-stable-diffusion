@@ -47,23 +47,13 @@ export default function Footer() {
       <div>
         Web app created with ❤️ by{' '}
         <Linker
-          href="https://twitter.com/davely"
+          href="https://mastodon.world/@davely"
           target="_blank"
           rel="noopener noreferrer"
         >
-          dave.ly
+          @davely
         </Linker>
         .
-      </div>
-      <div>
-        Questions? Comments? Contact me on{' '}
-        <Linker
-          href="https://twitter.com/davely"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Twitter
-        </Linker>
       </div>
       <div>
         <Linker href="/about">about</Linker> | <Linker href="/faq">faq</Linker>{' '}

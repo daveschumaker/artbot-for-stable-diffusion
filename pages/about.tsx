@@ -79,7 +79,7 @@ const AboutPage = () => {
       <PageTitle>About ArtBot</PageTitle>
       {totalImages ? (
         <div className="mb-4 text-lg font-bold">
-          Total images generated: {totalImages.toLocaleString()} (and counting)
+          Total images generated: {totalImages.toLocaleString()}
         </div>
       ) : null}
       <div className="mt-2">
@@ -171,6 +171,14 @@ const AboutPage = () => {
             rel="noopener noreferrer"
           >
             @davely
+          </Linker>
+          , on Mastodon at{' '}
+          <Linker
+            href="https://mastodon.world/@davely"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            @davely@mastodon.world
           </Linker>{' '}
           or on Discord at{' '}
           <Linker
@@ -234,7 +242,7 @@ const AboutPage = () => {
             </Linker>
           </li>
           <li>
-            Mastondon:{' '}
+            Mastodon:{' '}
             <Linker href="https://mastodon.world/@davely" target="_blank">
               @davely@mastodon.world
             </Linker>
