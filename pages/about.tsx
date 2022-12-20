@@ -95,18 +95,21 @@ const AboutPage = () => {
           <Linker href="/faq">FAQ</Linker>|
           <Linker href="/info">General Info</Linker>
         </HelpfulLinks>
-        <Text>
-          ArtBot is an unofficial front-end web client designed for interacting
-          with the{' '}
-          <Linker
-            href="https://stablehorde.net/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Stable Horde
-          </Linker>{' '}
-          distributed cluster.
-        </Text>
+        <div className="mt-4">
+          <Text>
+            ArtBot is an unofficial front-end web client designed for
+            interacting with the{' '}
+            <Linker
+              href="https://stablehorde.net/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Stable Horde
+            </Linker>{' '}
+            distributed cluster.
+          </Text>
+        </div>
+
         <Text>
           Stable Horde is an open source platform that utilizes idle GPU power
           provided by a community of generous users that allows anyone to create

@@ -102,6 +102,16 @@ const Changelog = () => {
         </Section>
       </Panel>
       <Section>
+        <SubSectionTitle>2022.12.19</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix issue where selecting &quot;useAllModels&quot; after having
+            stable_diffusion_2 selected would try to request an incorrect
+            sampler for all remaining models.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.12.16</SubSectionTitle>
         <StyledUl>
           <StyledLi>

@@ -154,6 +154,10 @@ class CreateImageRequest {
       this.sampler = 'k_euler_a'
     }
 
+    if (this.sampler === 'dpmsolver' && useAllModels === true) {
+      this.sampler = 'k_euler_a'
+    }
+
     this.negative = String(negative)
     this.numImages = Number(numImages)
     this.parentJobId = String(parentJobId) || uuidv4()
