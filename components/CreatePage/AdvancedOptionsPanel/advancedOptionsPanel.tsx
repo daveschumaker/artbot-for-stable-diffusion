@@ -1143,8 +1143,14 @@ const AdvancedOptionsPanel = ({
                   context: '/pages/index'
                 })
                 setComponentState({
-                  showMultiModel: true,
-                  numImages: 1
+                  showMultiModel: true
+                })
+                setInput({
+                  numImages: 1,
+                  useAllSamplers: false,
+                  useAllModels: false,
+                  useFavoriteModels: false,
+                  useMultiSteps: false
                 })
               } else {
                 setComponentState({ showMultiModel: false })

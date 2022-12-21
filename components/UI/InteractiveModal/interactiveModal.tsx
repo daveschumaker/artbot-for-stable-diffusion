@@ -26,10 +26,11 @@ const StyledInteractiveModal = styled.div`
   z-index: 20;
 
   @media (min-width: 640px) {
-    width: 480px;
-    min-height: 320px;
-    height: 480px;
-    left: 50%;
+    width: calc(100% - 48px);
+    max-width: 752px;
+    /* min-height: 480px; */
+    height: 520px;
+    left: calc(50% - 8px);
     top: 50%;
     transform: translate(-50%, -50%);
   }

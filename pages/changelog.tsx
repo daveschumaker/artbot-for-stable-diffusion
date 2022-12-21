@@ -102,6 +102,28 @@ const Changelog = () => {
         </Section>
       </Panel>
       <Section>
+        <SubSectionTitle>2022.12.20</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fixed: Better handling of situations where someone may have selected
+            multiple images, then chose an option such as use all models. This
+            would create a ton of image requests (e.g., 8 images x 68 models =
+            544 images!)
+          </StyledLi>
+          <StyledLi>
+            Feature: Request multiple images by step count.
+            <AddedInfo>
+              Want to see how changing the number of steps affects image output?
+              You can now pass in a comma separated list of values on the create
+              image page and ArtBot will request multiple images. For example,
+              requesting am image with steps of &quot;2,4,16,24&quot; will
+              generate 4 images, each with a step associated with a specific
+              value found within that list.
+            </AddedInfo>
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.12.19</SubSectionTitle>
         <StyledUl>
           <StyledLi>
