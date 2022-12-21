@@ -64,6 +64,7 @@ const defaultState: any = {
   sampler: 'k_euler_a',
   cfg_scale: 9,
   steps: 20,
+  multiSteps: '',
   seed: '',
   denoising_strength: 0.75,
   karras: true,
@@ -78,7 +79,8 @@ const defaultState: any = {
   models: ['stable_diffusion'],
   useAllModels: false,
   useFavoriteModels: false,
-  useAllSamplers: false
+  useAllSamplers: false,
+  useMultiSteps: false
 }
 
 export async function getServerSideProps() {

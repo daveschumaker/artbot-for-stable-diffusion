@@ -299,8 +299,17 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
 }
 
 export const createImageJob = async (newImageRequest: CreateImageRequest) => {
-  // Check for prompt matrix
-  if (hasPromptMatrix(newImageRequest.prompt)) {
+  if (newImageRequest.useMultiSteps && newImageRequest.multiSteps.length > 0) {
+    for (const idx in newImageRequest.multiSteps) {
+      const imageRequest = Object.assign({}, newImageRequest)
+      imageRequest.steps = newImageRequest.multiSteps[idx]
+      imageRequest.useMultiSteps = false
+      imageRequest.multiSteps = []
+
+      await createPendingJob(imageRequest)
+    }
+  } else if (hasPromptMatrix(newImageRequest.prompt)) {
+    // Check for prompt matrix
     const matrixPrompts = [...promptMatrix(newImageRequest.prompt)]
 
     for (const idx in matrixPrompts) {

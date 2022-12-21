@@ -37,9 +37,11 @@ export interface IRequestParams {
   source_processing: SourceProcessing
   stylePreset: string
   steps: number
+  multiSteps: string
   triggers?: Array<string>
   useAllModels: boolean
   useAllSamplers: boolean
+  useMultiSteps: boolean
   width: number
 }
 
@@ -67,11 +69,13 @@ class CreateImageRequest {
   source_processing: SourceProcessing
   stylePreset: string
   steps: number
+  multiSteps: Array<number>
   timestamp?: number
   triggers: Array<string>
   upscaled?: boolean
   useAllModels: boolean
   useAllSamplers: boolean
+  useMultiSteps: boolean
   width: number
 
   constructor({
@@ -95,9 +99,11 @@ class CreateImageRequest {
     source_processing = SourceProcessing.Prompt,
     stylePreset = 'none',
     steps = 20,
+    multiSteps = '',
     triggers = [],
     useAllModels = false,
     useAllSamplers = false,
+    useMultiSteps = false,
     width = 512
   }: IRequestParams) {
     if (canvasStore) {
@@ -180,6 +186,22 @@ class CreateImageRequest {
     this.triggers = [...triggers]
     this.useAllModels = Boolean(useAllModels)
     this.useAllSamplers = Boolean(useAllSamplers)
+    this.useMultiSteps = Boolean(useMultiSteps)
+    this.multiSteps = []
+
+    if (useMultiSteps) {
+      let cleanMultiSteps = multiSteps.replace(`"`, '')
+      cleanMultiSteps = cleanMultiSteps.replace(`'`, '')
+
+      let values = cleanMultiSteps.split(',')
+      values.forEach((value) => {
+        if (isNaN(Number(value))) {
+          return
+        }
+
+        this.multiSteps.push(Number(value))
+      })
+    }
   }
 
   static getRandomModel() {

@@ -104,6 +104,7 @@ const PendingPage = () => {
   })
 
   useEffect(() => {
+    deleteDoneFromPending()
     setDone([])
   }, [])
 

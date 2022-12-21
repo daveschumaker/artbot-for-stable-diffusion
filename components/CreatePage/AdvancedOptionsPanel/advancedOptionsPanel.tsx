@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { useStore } from 'statery'
 import Switch from 'react-switch'
@@ -32,6 +32,7 @@ import GrainIcon from '../../icons/GrainIcon'
 import AppSettings from '../../../models/AppSettings'
 import Slider from '../../UI/Slider'
 import NumberInput from '../../UI/NumberInput'
+import useComponentState from '../../../hooks/useComponentState'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -189,8 +190,11 @@ const AdvancedOptionsPanel = ({
   const { loggedIn } = userState
 
   const [errorMessage, setErrorMessage, hasError] = useErrorMessage()
-  const [showMultiModel, setShowMultiModel] = useState(false)
-  const [showNegPane, setShowNegPane] = useState(false)
+
+  const [componentState, setComponentState] = useComponentState({
+    showMultiModel: false,
+    showNegPane: false
+  })
 
   const orientationValue = orientationOptions.filter((option) => {
     return input.orientationType === option.value
@@ -319,12 +323,59 @@ const AdvancedOptionsPanel = ({
 
   const favModels = AppSettings.get('favoriteModels') || {}
 
+  // Dynamically display various options
+  const showAllSamplersInput =
+    input.source_processing !== SourceProcessing.Img2Img &&
+    input.source_processing !== SourceProcessing.InPainting &&
+    !input.useAllModels &&
+    !input.useMultiSteps &&
+    !input.useFavoriteModels &&
+    !componentState.showMultiModel
+
+  const showMultiSamplerInput =
+    !input.useAllSamplers &&
+    !input.useAllModels &&
+    !input.useFavoriteModels &&
+    !componentState.showMultiModel
+
+  const showMultiModelSelect =
+    !input.useMultiSteps &&
+    !input.useAllSamplers &&
+    !input.useAllModels &&
+    !input.useFavoriteModels &&
+    input.source_processing !== SourceProcessing.InPainting &&
+    input.source_processing !== SourceProcessing.OutPaiting
+
+  const showUseAllModelsInput =
+    !input.useMultiSteps &&
+    !input.useAllSamplers &&
+    !componentState.showMultiModel &&
+    !input.useFavoriteModels &&
+    input.source_processing !== SourceProcessing.InPainting &&
+    input.source_processing !== SourceProcessing.OutPaiting
+
+  const showUseFavoriteModelsInput =
+    !input.useMultiSteps &&
+    !input.useAllSamplers &&
+    !componentState.showMultiModel &&
+    !input.useAllModels &&
+    input.source_processing !==
+      (SourceProcessing.InPainting || SourceProcessing.OutPaiting)
+
+  const showNumImagesInput =
+    !input.useAllModels &&
+    input.post_processing.indexOf('RealESRGAN_x4plus') === -1 &&
+    !input.useMultiSteps &&
+    !input.useAllSamplers &&
+    !input.useFavoriteModels &&
+    !componentState.showMultiModel
+
   return (
     <div>
-      {showNegPane ? (
+      {componentState.showNegPane ? (
         <NegativePrompts
-          open={showNegPane}
-          handleClosePane={() => setShowNegPane(false)}
+          open={componentState.showNegPane}
+          handleClosePane={() => setComponentState({ showNegPane: false })}
           setInput={setInput}
         />
       ) : null}
@@ -555,7 +606,9 @@ const AdvancedOptionsPanel = ({
         <FlexRow>
           <TextButton onClick={clearNegPrompt}>clear default</TextButton>
           <TextButton onClick={handleSaveNeg}>save as default</TextButton>
-          <TextButton onClick={() => setShowNegPane(true)}>load</TextButton>
+          <TextButton onClick={() => setComponentState({ showNegPane: true })}>
+            load
+          </TextButton>
         </FlexRow>
       </Section>
       {!input.useAllSamplers && (
@@ -583,102 +636,170 @@ const AdvancedOptionsPanel = ({
           )}
         </Section>
       )}
-      {input.source_processing !== SourceProcessing.Img2Img &&
-        input.source_processing !== SourceProcessing.InPainting && (
-          <Section>
-            <SubSectionTitle>
-              Use all samplers
-              <Tooltip left="-140" width="240px">
-                Automatically generate an image for sampler
-              </Tooltip>
-            </SubSectionTitle>
-            <Switch
-              onChange={() => {
-                if (!input.useAllSamplers) {
-                  trackEvent({
-                    event: 'USE_ALL_SAMPLERS_CLICK',
-                    context: '/pages/index'
-                  })
-                  setInput({
-                    useAllSamplers: true,
-                    useAllModels: false,
-                    useFavoriteModels: false
-                  })
-                } else {
-                  setInput({ useAllSamplers: false })
-                }
-              }}
-              checked={input.useAllSamplers}
-            />
-          </Section>
-        )}
+      {showAllSamplersInput && (
+        <Section>
+          <SubSectionTitle>
+            Use all samplers
+            <Tooltip left="-140" width="240px">
+              Automatically generate an image for sampler
+            </Tooltip>
+          </SubSectionTitle>
+          <Switch
+            onChange={() => {
+              if (!input.useAllSamplers) {
+                trackEvent({
+                  event: 'USE_ALL_SAMPLERS_CLICK',
+                  context: '/pages/index'
+                })
+                setInput({
+                  numImages: 1,
+                  useAllSamplers: true,
+                  useAllModels: false,
+                  useFavoriteModels: false,
+                  useMultiSteps: false
+                })
+              } else {
+                setInput({ useAllSamplers: false })
+              }
+            }}
+            checked={input.useAllSamplers}
+          />
+        </Section>
+      )}
       <TwoPanel className="mt-4">
         <SplitPanel>
-          <Section>
-            <div className="flex flex-row items-center justify-between">
-              <SubSectionTitle>
-                Steps
-                <Tooltip width="200px">
-                  Fewer steps generally result in quicker image generations.
-                  Many models achieve full coherence after a certain number of
-                  finite steps (60 - 90). Keep your initial queries in the 30 -
-                  50 range for best results.
-                </Tooltip>
-                <div className="block text-xs w-full">
-                  (1 - {maxSteps({ sampler: input.sampler, loggedIn })})
-                </div>
-              </SubSectionTitle>
-              <NumberInput
-                // @ts-ignore
-                error={errorMessage.steps}
-                className="mb-2"
-                type="text"
-                min={1}
-                max={maxSteps({ sampler: input.sampler, loggedIn })}
-                onMinusClick={() => {
-                  setInput({ steps: input.steps - 1 })
-                }}
-                onPlusClick={() => {
-                  setInput({ steps: input.steps + 1 })
-                }}
-                name="steps"
-                onChange={handleChangeInput}
-                onBlur={() => {
-                  validateSteps()
-                }}
-                // @ts-ignore
-                value={Number(input.steps)}
-                width="100%"
-              />
-            </div>
-            <div className="mb-4">
-              <Slider
-                defaultValue={input.steps}
-                value={input.steps}
-                min={1}
-                max={maxSteps({
-                  sampler: input.sampler,
-                  loggedIn,
-                  isSlider: true
-                })}
-                onChange={(nextValues: number) => {
-                  const event = {
-                    target: {
-                      name: 'steps',
-                      value: nextValues
-                    }
-                  }
-
-                  handleChangeInput(event)
-                }}
-              />
-            </div>
-            {errorMessage.steps && (
-              <div className="mb-2 text-red-500 text-lg font-bold">
-                {errorMessage.steps}
+          {!input.useMultiSteps && (
+            <Section>
+              <div className="flex flex-row items-center justify-between">
+                <SubSectionTitle>
+                  Steps
+                  <Tooltip width="200px">
+                    Fewer steps generally result in quicker image generations.
+                    Many models achieve full coherence after a certain number of
+                    finite steps (60 - 90). Keep your initial queries in the 30
+                    - 50 range for best results.
+                  </Tooltip>
+                  <div className="block text-xs w-full">
+                    (1 - {maxSteps({ sampler: input.sampler, loggedIn })})
+                  </div>
+                </SubSectionTitle>
+                <NumberInput
+                  // @ts-ignore
+                  error={errorMessage.steps}
+                  className="mb-2"
+                  type="text"
+                  min={1}
+                  max={maxSteps({ sampler: input.sampler, loggedIn })}
+                  onMinusClick={() => {
+                    setInput({ steps: input.steps - 1 })
+                  }}
+                  onPlusClick={() => {
+                    setInput({ steps: input.steps + 1 })
+                  }}
+                  name="steps"
+                  onChange={handleChangeInput}
+                  onBlur={() => {
+                    validateSteps()
+                  }}
+                  // @ts-ignore
+                  value={Number(input.steps)}
+                  width="100%"
+                />
               </div>
-            )}
-          </Section>
+              <div className="mb-4">
+                <Slider
+                  defaultValue={input.steps}
+                  value={input.steps}
+                  min={1}
+                  max={maxSteps({
+                    sampler: input.sampler,
+                    loggedIn,
+                    isSlider: true
+                  })}
+                  onChange={(nextValues: number) => {
+                    const event = {
+                      target: {
+                        name: 'steps',
+                        value: nextValues
+                      }
+                    }
+
+                    handleChangeInput(event)
+                  }}
+                />
+              </div>
+              {errorMessage.steps && (
+                <div className="mb-2 text-red-500 text-lg font-bold">
+                  {errorMessage.steps}
+                </div>
+              )}
+            </Section>
+          )}
+          {input.useMultiSteps && (
+            <Section>
+              <div className="flex flex-row items-center justify-between">
+                <div className="w-[220px] pr-2">
+                  <SubSectionTitle>
+                    Multi-steps
+                    <Tooltip width="200px">
+                      Comma separated values to create a series of images using
+                      multiple steps. Example: 3,6,9,12,15
+                    </Tooltip>
+                    <div className="block text-xs w-full">
+                      (1 - {maxSteps({ sampler: input.sampler, loggedIn })})
+                    </div>
+                  </SubSectionTitle>
+                </div>
+                <Input
+                  // @ts-ignore
+                  error={errorMessage.multiSteps}
+                  className="mb-2"
+                  type="text"
+                  name="multiSteps"
+                  onChange={handleChangeInput}
+                  placeholder="3,5,7,9"
+                  // onBlur={() => {
+                  //   validateSteps()
+                  // }}
+                  // @ts-ignore
+                  value={input.multiSteps}
+                  width="100%"
+                />
+              </div>
+              {errorMessage.steps && (
+                <div className="mb-2 text-red-500 text-lg font-bold">
+                  {errorMessage.steps}
+                </div>
+              )}
+            </Section>
+          )}
+          {showMultiSamplerInput && (
+            <Section>
+              <SubSectionTitle>
+                Use multiple steps
+                <Tooltip left="-140" width="240px">
+                  Provide a list of comma separated values to create a series of
+                  images using multiple steps: &quot;3,6,9,12,15&quot;
+                </Tooltip>
+              </SubSectionTitle>
+              <Switch
+                onChange={() => {
+                  if (!input.useMultiSteps) {
+                    setInput({
+                      useMultiSteps: true,
+                      numImages: 1,
+                      useAllModels: false,
+                      useFavoriteModels: false,
+                      useAllSamplers: false
+                    })
+                  } else {
+                    setInput({ useMultiSteps: false })
+                  }
+                }}
+                checked={input.useMultiSteps}
+              />
+            </Section>
+          )}
         </SplitPanel>
         <SplitPanel>
           <Section>
@@ -833,7 +954,7 @@ const AdvancedOptionsPanel = ({
       {input.source_processing !==
         (SourceProcessing.InPainting || SourceProcessing.OutPaiting) &&
         !input.useAllModels &&
-        !showMultiModel && (
+        !componentState.showMultiModel && (
           <Section>
             <SubSectionTitle>
               Model
@@ -961,7 +1082,7 @@ const AdvancedOptionsPanel = ({
             </MaxWidth>
           </Section>
         )}
-      {showMultiModel ? (
+      {componentState.showMultiModel ? (
         <Section>
           <SubSectionTitle>
             Select Models
@@ -1006,11 +1127,7 @@ const AdvancedOptionsPanel = ({
           </MaxWidth>
         </Section>
       ) : null}
-      {!input.useAllSamplers &&
-      !input.useAllModels &&
-      !input.useFavoriteModels &&
-      input.source_processing !==
-        (SourceProcessing.InPainting || SourceProcessing.OutPaiting) ? (
+      {showMultiModelSelect ? (
         <Section>
           <SubSectionTitle>
             Multi-model select
@@ -1020,25 +1137,24 @@ const AdvancedOptionsPanel = ({
           </SubSectionTitle>
           <Switch
             onChange={() => {
-              if (!showMultiModel) {
+              if (!componentState.showMultiModel) {
                 trackEvent({
                   event: 'USE_MULTI_MODEL_SELECT',
                   context: '/pages/index'
                 })
-                setShowMultiModel(true)
+                setComponentState({
+                  showMultiModel: true,
+                  numImages: 1
+                })
               } else {
-                setShowMultiModel(false)
+                setComponentState({ showMultiModel: false })
               }
             }}
-            checked={showMultiModel}
+            checked={componentState.showMultiModel}
           />
         </Section>
       ) : null}
-      {!input.useAllSamplers &&
-      !showMultiModel &&
-      !input.useFavoriteModels &&
-      input.source_processing !==
-        (SourceProcessing.InPainting || SourceProcessing.OutPaiting) ? (
+      {showUseAllModelsInput ? (
         <Section>
           <SubSectionTitle>
             Use all available models ({availableModels.length})
@@ -1054,7 +1170,13 @@ const AdvancedOptionsPanel = ({
                   event: 'USE_ALL_MODELS_CLICK',
                   context: '/pages/index'
                 })
-                setInput({ useAllModels: true })
+                setInput({
+                  useAllModels: true,
+                  useFavoriteModels: false,
+                  useMultiSteps: false,
+                  numImages: 1,
+                  useAllSamplers: false
+                })
               } else {
                 setInput({ useAllModels: false })
               }
@@ -1063,11 +1185,7 @@ const AdvancedOptionsPanel = ({
           />
         </Section>
       ) : null}
-      {!input.useAllSamplers &&
-      !showMultiModel &&
-      !input.useAllModels &&
-      input.source_processing !==
-        (SourceProcessing.InPainting || SourceProcessing.OutPaiting) ? (
+      {showUseFavoriteModelsInput ? (
         <Section>
           <SubSectionTitle>
             Use favorite models ({Object.keys(favModels).length})
@@ -1083,7 +1201,12 @@ const AdvancedOptionsPanel = ({
                   event: 'USE_FAV_MODELS_CLICK',
                   context: '/pages/index'
                 })
-                setInput({ useFavoriteModels: true })
+                setInput({
+                  useFavoriteModels: true,
+                  useAllSamplers: false,
+                  useMultiSteps: false,
+                  numImages: 1
+                })
               } else {
                 setInput({ useFavoriteModels: false })
               }
@@ -1132,76 +1255,75 @@ const AdvancedOptionsPanel = ({
           />
         </div>
       </Section>
-      {!input.useAllModels &&
-        input.post_processing.indexOf('RealESRGAN_x4plus') === -1 && (
-          <div className="mt-8 w-full md:w-1/2">
-            <Section>
-              <div className="flex flex-row items-center justify-between">
-                <SubSectionTitle>
-                  Number of images
-                  <div className="block text-xs w-full">
-                    (1 - {MAX_IMAGES_PER_JOB})
-                  </div>
-                </SubSectionTitle>
-                <NumberInput
-                  // @ts-ignore
-                  className="mb-2"
-                  error={errorMessage.numImages}
-                  type="text"
-                  min={1}
-                  max={MAX_IMAGES_PER_JOB}
-                  name="numImages"
-                  onMinusClick={() => {
-                    setInput({ numImages: input.numImages - 1 })
-                  }}
-                  onPlusClick={() => {
-                    setInput({ numImages: input.numImages + 1 })
-                  }}
-                  onChange={handleChangeInput}
-                  onBlur={(e: any) => {
-                    if (
-                      isNaN(e.target.value) ||
-                      e.target.value < 1 ||
-                      e.target.value > MAX_IMAGES_PER_JOB
-                    ) {
-                      setErrorMessage({
-                        numImages: `Please enter a valid number between 1 and ${MAX_IMAGES_PER_JOB}`
-                      })
-                    } else if (errorMessage.numImages) {
-                      setErrorMessage({ numImages: null })
-                    }
-                  }}
-                  // @ts-ignore
-                  value={input.numImages}
-                  width="100%"
-                />
-              </div>
-              <div className="mb-4">
-                <Slider
-                  defaultValue={input.numImages}
-                  value={input.numImages}
-                  min={1}
-                  max={MAX_IMAGES_PER_JOB}
-                  onChange={(nextValues: number) => {
-                    const event = {
-                      target: {
-                        name: 'numImages',
-                        value: nextValues
-                      }
-                    }
-
-                    handleChangeInput(event)
-                  }}
-                />
-              </div>
-              {errorMessage.numImages && (
-                <div className="mb-2 text-red-500 text-lg font-bold">
-                  {errorMessage.numImages}
+      {showNumImagesInput && (
+        <div className="mt-8 w-full md:w-1/2">
+          <Section>
+            <div className="flex flex-row items-center justify-between">
+              <SubSectionTitle>
+                Number of images
+                <div className="block text-xs w-full">
+                  (1 - {MAX_IMAGES_PER_JOB})
                 </div>
-              )}
-            </Section>
-          </div>
-        )}
+              </SubSectionTitle>
+              <NumberInput
+                // @ts-ignore
+                className="mb-2"
+                error={errorMessage.numImages}
+                type="text"
+                min={1}
+                max={MAX_IMAGES_PER_JOB}
+                name="numImages"
+                onMinusClick={() => {
+                  setInput({ numImages: input.numImages - 1 })
+                }}
+                onPlusClick={() => {
+                  setInput({ numImages: input.numImages + 1 })
+                }}
+                onChange={handleChangeInput}
+                onBlur={(e: any) => {
+                  if (
+                    isNaN(e.target.value) ||
+                    e.target.value < 1 ||
+                    e.target.value > MAX_IMAGES_PER_JOB
+                  ) {
+                    setErrorMessage({
+                      numImages: `Please enter a valid number between 1 and ${MAX_IMAGES_PER_JOB}`
+                    })
+                  } else if (errorMessage.numImages) {
+                    setErrorMessage({ numImages: null })
+                  }
+                }}
+                // @ts-ignore
+                value={input.numImages}
+                width="100%"
+              />
+            </div>
+            <div className="mb-4">
+              <Slider
+                defaultValue={input.numImages}
+                value={input.numImages}
+                min={1}
+                max={MAX_IMAGES_PER_JOB}
+                onChange={(nextValues: number) => {
+                  const event = {
+                    target: {
+                      name: 'numImages',
+                      value: nextValues
+                    }
+                  }
+
+                  handleChangeInput(event)
+                }}
+              />
+            </div>
+            {errorMessage.numImages && (
+              <div className="mb-2 text-red-500 text-lg font-bold">
+                {errorMessage.numImages}
+              </div>
+            )}
+          </Section>
+        </div>
+      )}
     </div>
   )
 }
