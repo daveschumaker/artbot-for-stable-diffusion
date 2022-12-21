@@ -116,10 +116,13 @@ const Changelog = () => {
               Want to see how changing the number of steps affects image output?
               You can now pass in a comma separated list of values on the create
               image page and ArtBot will request multiple images. For example,
-              requesting am image with steps of &quot;2,4,16,24&quot; will
+              requesting an image with steps of &quot;2,4,16,24&quot; will
               generate 4 images, each with a step associated with a specific
               value found within that list.
             </AddedInfo>
+          </StyledLi>
+          <StyledLi>
+            Typo fixed in above text ☝️. (Thanks, anonymous user!)
           </StyledLi>
         </StyledUl>
       </Section>
