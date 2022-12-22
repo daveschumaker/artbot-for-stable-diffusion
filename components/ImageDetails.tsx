@@ -62,7 +62,7 @@ const MobileHideText = styled.span`
 
 const ImageDetails = ({
   imageDetails,
-  onDelete = () => {}
+  onDelete = () => { }
 }: ImageDetailsProps) => {
   const router = useRouter()
 
@@ -282,6 +282,7 @@ const ImageDetails = ({
           <Button
             title="Share link"
             onClick={() => {
+              // DEV NOTE: Copy to clipboard does not work on non-https links.
               // @ts-ignore
               const shareLink = ShareLinkDetails.encode(imageDetails)
               navigator?.clipboard

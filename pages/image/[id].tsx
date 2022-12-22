@@ -29,6 +29,7 @@ import HeartIcon from '../../components/icons/HeartIcon'
 import { useSwipeable } from 'react-swipeable'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
 import MasonryLayout from '../../components/MasonryLayout'
+import { kudosCost } from '../../utils/imageUtils'
 
 const StyledImage = styled.img`
   box-shadow: 0 16px 38px -12px rgb(0 0 0 / 56%),
@@ -210,6 +211,17 @@ const ImagePage = () => {
     })
   })
 
+  const upscaleCost = kudosCost(
+    imageDetails.width,
+    imageDetails.height,
+    imageDetails.steps,
+    1, // numImages
+    true, // 'RealESRGAN_x4plus' upscale
+    imageDetails?.post_processing?.length ?? 0,
+    imageDetails.sampler
+  )
+
+
   return (
     <div>
       <Head>
@@ -284,7 +296,7 @@ const ImagePage = () => {
                 <div>[ upscaled image (already upscaled)]</div>
               ) : (
                 <OptionsLink onClick={() => handleUpscaleClick()}>
-                  [ upscale image {pendingUpscale && '(processing...)'} ]
+                  [ upscale image ({upscaleCost} kudos) {pendingUpscale && '(processing...)'} ]
                 </OptionsLink>
               )}
             </Section>
