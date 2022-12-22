@@ -218,11 +218,11 @@ const ModelInfoPage = ({ availableModels, modelDetails }: any) => {
             <div>
               <strong>Workers available:</strong> {modelStats[0]?.count || 0}
             </div>
-            <div>
+            {/* <div>
               <strong>Total performance:</strong>{' '}
               {modelStats[0]?.performance?.toLocaleString() || 'N/A'}{' '}
               mega-pixelsteps
-            </div>
+            </div> */}
             <div>
               <strong>Queued work:</strong>{' '}
               {modelStats[0]?.queued?.toLocaleString() || 'N/A'} mega-pixelsteps
