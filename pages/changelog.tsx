@@ -102,6 +102,25 @@ const Changelog = () => {
         </Section>
       </Panel>
       <Section>
+        <SubSectionTitle>2022.12.22</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: Restore ability for favorite models and multi-model select to
+            generate multiple images at a time. I thought I was fixing an
+            inadvertent bug I had introduced a long time ago. It turns out, it
+            was a useful feature. (Thanks for the feedback on{' '}
+            <Linker
+              href="https://discord.com/channels/781145214752129095/1038867597543882894"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Discord
+            </Linker>
+            , Black Drapion!)
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.12.20</SubSectionTitle>
         <StyledUl>
           <StyledLi>

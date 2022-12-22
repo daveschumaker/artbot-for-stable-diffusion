@@ -366,9 +366,7 @@ const AdvancedOptionsPanel = ({
     !input.useAllModels &&
     input.post_processing.indexOf('RealESRGAN_x4plus') === -1 &&
     !input.useMultiSteps &&
-    !input.useAllSamplers &&
-    !input.useFavoriteModels &&
-    !componentState.showMultiModel
+    !input.useAllSamplers
 
   return (
     <div>
@@ -1146,7 +1144,6 @@ const AdvancedOptionsPanel = ({
                   showMultiModel: true
                 })
                 setInput({
-                  numImages: 1,
                   useAllSamplers: false,
                   useAllModels: false,
                   useFavoriteModels: false,
@@ -1180,7 +1177,6 @@ const AdvancedOptionsPanel = ({
                   useAllModels: true,
                   useFavoriteModels: false,
                   useMultiSteps: false,
-                  numImages: 1,
                   useAllSamplers: false
                 })
               } else {
