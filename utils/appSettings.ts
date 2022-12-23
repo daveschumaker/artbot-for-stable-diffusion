@@ -97,6 +97,7 @@ export const initAppSettings = async () => {
   const apikey = AppSettings.get('apiKey') || ''
   fetchUserDetails(apikey)
   deleteStalePending()
+
   buildModelAvailability()
 
   setInterval(async () => {
@@ -112,7 +113,6 @@ export const initAppSettings = async () => {
       return
     }
 
-    fetchModelDetails()
     deleteStalePending()
   }, 60000)
 
