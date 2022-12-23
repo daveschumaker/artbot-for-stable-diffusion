@@ -145,7 +145,7 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
     }
   } else if (imageParams.useAllModels) {
     imageParams.numImages = 1
-    const models = modelInfoStore.state.availableModels
+    const models = validModelsArray()
 
     for (const model of models) {
       const { name: modelName } = model
