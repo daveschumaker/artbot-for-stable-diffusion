@@ -352,6 +352,9 @@ const ModelInfoPage = ({ availableModels, modelDetails }: any) => {
               images
             </TextButton> */}
           </div>
+          {router.query.show === 'favorite-models' && sortModels().length === 0 && (
+            <div>You currently have no favorite models selected. <Linker href="/info">View all models.</Linker></div>
+          )}
           <div>{renderModelDetails()}</div>
         </>
       )}

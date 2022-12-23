@@ -102,6 +102,23 @@ const Changelog = () => {
         </Section>
       </Panel>
       <Section>
+        <SubSectionTitle>2022.12.23</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Refactor: Made some changes in model selection. Now, you can select
+            any model available within the Stable Horde models database, even if
+            0 workers are available. In theory (hopefully, maybe), this means
+            that a worker running dynamic models will eventually load your
+            requested model. I am not entirely convinced that this works yet.
+          </StyledLi>
+          <StyledLi>
+            Small UX improvements: Links to specific model details from advanced
+            options panel. Links to view all favorite models. Display a warning
+            for models with limited or no worker availability.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.12.22</SubSectionTitle>
         <StyledUl>
           <StyledLi>
@@ -117,12 +134,6 @@ const Changelog = () => {
               Discord
             </Linker>
             , Black Drapion!)
-          </StyledLi>
-          <StyledLi>
-            Refactor: Made some changes in model selection. Now, you can select any model available
-            within the Stable Horde models database, even if 0 workers are available. In theory
-            (hopefully, maybe), this means that a worker running dynamic models will eventually load
-            your requested model.
           </StyledLi>
         </StyledUl>
       </Section>

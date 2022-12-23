@@ -1002,7 +1002,7 @@ const AdvancedOptionsPanel = ({
                 isSearchable={true}
               />
               <div className="mt-2 text-xs">
-                <Linker href="/info">[ View detailed model info ]</Linker>
+                <Linker href={`/info${input.models[0] !== 'random' ? `#${input.models[0]}` : ''}`}>[ View detailed model info ]</Linker>
               </div>
             </MaxWidth>
             {
@@ -1174,6 +1174,9 @@ const AdvancedOptionsPanel = ({
                 Automatically generate an image for each model currently available
                 on Stable Horde
               </Tooltip>
+              <div className="mt-1 mb-2 text-xs">
+                <Linker href="/info">[ View all model details ]</Linker>
+              </div>
             </>
           </SubSectionTitle>
           <Switch
@@ -1204,6 +1207,9 @@ const AdvancedOptionsPanel = ({
             <Tooltip left="-140" width="240px">
               Automatically generate an image for each model you have favorited.
             </Tooltip>
+            <div className="mt-1 mb-2 text-xs">
+              <Linker href="/info?show=favorite-models">[ View favorite models ]</Linker>
+            </div>
           </SubSectionTitle>
           <Switch
             disabled={Object.keys(favModels).length === 0}

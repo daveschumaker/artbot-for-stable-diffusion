@@ -54,13 +54,9 @@ export const buildModelAvailability = async () => {
   try {
     const modelAvailability = (await fetchAvailableModels()) || []
 
-    console.log(`modelAvailability`, modelAvailability)
-
     modelAvailability?.forEach((model) => {
       availableModelsMap[model.name] = { ...model }
     })
-
-    console.log(`availableModelsMap`, availableModelsMap)
   } catch (err) {
     // If nothing happens here, ignore it for now.
   } finally {
