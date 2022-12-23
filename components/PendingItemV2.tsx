@@ -33,7 +33,7 @@ const ModelWarning = styled.div`
   flex-direction: row;
   margin-bottom: 4px;
   margin-top: 4px;
-`;
+`
 
 const StyledContainer = styled.div`
   box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
@@ -262,17 +262,18 @@ const PendingItem = memo(({ jobDetails, jobId }) => {
               Sampler: {jobDetails.sampler}
               <br />
               Model: {!jobDetails.models[0] ? 'Random' : jobDetails.models[0]}
-              {
-                availableModels[jobDetails.models[0]].count <= 1 && (
-                  <>
-                    <div>
-                      <ModelWarning>
-                        <AlertTriangleIcon size={32} /> This model has limited availability.<br />Images may take a long time to generate.
-                      </ModelWarning>
-                    </div>
-                  </>
-                )
-              }
+              {availableModels[jobDetails.models[0]]?.count <= 1 && (
+                <>
+                  <div>
+                    <ModelWarning>
+                      <AlertTriangleIcon size={32} /> This model has limited
+                      availability.
+                      <br />
+                      Images may take a long time to generate.
+                    </ModelWarning>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </StyledImageInfoPanel>
@@ -280,7 +281,7 @@ const PendingItem = memo(({ jobDetails, jobId }) => {
           <div className="font-mono text-xs mt-2 text-red-400">
             <strong>Stable Horde API Error:</strong> {jobDetails.errorMessage}{' '}
             {jobDetails.errorMessage !==
-              'Unable to create image. Please try again soon.' ? (
+            'Unable to create image. Please try again soon.' ? (
               <>
                 Not sure what this means? Please visit the{' '}
                 <Linker
@@ -320,7 +321,7 @@ const PendingItem = memo(({ jobDetails, jobId }) => {
                 )}
                 <br />
                 {isNaN(jobDetails.wait_time) ||
-                  (jobDetails.wait_time === 0 && pctComplete === 0) ? (
+                (jobDetails.wait_time === 0 && pctComplete === 0) ? (
                   'Estimating time remaining...'
                 ) : (
                   <>
@@ -359,10 +360,10 @@ const PendingItem = memo(({ jobDetails, jobId }) => {
               jobDetails.jobStatus === JobStatus.Queued ||
               jobDetails.jobStatus === JobStatus.Requested ||
               jobDetails.jobStatus === JobStatus.Processing) && (
-                <div className="w-full font-mono text-xs">
-                  Created: {new Date(jobDetails.timestamp).toLocaleString()}
-                </div>
-              )}
+              <div className="w-full font-mono text-xs">
+                Created: {new Date(jobDetails.timestamp).toLocaleString()}
+              </div>
+            )}
             {jobDetails.jobStatus === JobStatus.Error && (
               <div className="font-mono text-xs mt-2 text-red-400">
                 Created: {new Date(jobDetails.timestamp).toLocaleString()}
