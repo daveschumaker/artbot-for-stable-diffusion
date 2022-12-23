@@ -30,7 +30,7 @@ import { getDefaultPrompt } from '../utils/db'
 import CreateImageRequest from '../models/CreateImageRequest'
 import ShareLinkDetails from '../models/ShareableLink'
 import Head from 'next/head'
-import { setAvailableModels, setModelDetails } from '../store/modelStore'
+import { setModelDetails } from '../store/modelStore'
 import ServerMessage from '../components/ServerMessage'
 import StylesDrodown from '../components/CreatePage/StylesDropdown'
 import { useStore } from 'statery'
@@ -442,7 +442,6 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
       context: '/pages/index'
     })
 
-    setAvailableModels(availableModels)
     setModelDetails(modelDetails)
 
     const restorePrompt = localStorage.getItem('reloadPrompt')

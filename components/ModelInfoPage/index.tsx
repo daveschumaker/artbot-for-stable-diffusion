@@ -8,12 +8,7 @@ import Panel from '../../components/UI/Panel'
 import TextButton from '../../components/UI/TextButton'
 import useComponentState from '../../hooks/useComponentState'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
-import {
-  modelInfoStore,
-  setAvailableModels,
-  setModelDetails
-} from '../../store/modelStore'
-// import { filterCompletedByModel } from '../utils/db'
+import { modelInfoStore } from '../../store/modelStore'
 import SpinnerV2 from '../../components/Spinner'
 import LinkIcon from '../../components/icons/LinkIcon'
 import styled from 'styled-components'
@@ -31,7 +26,9 @@ const StyledLinkIcon = styled(LinkIcon)`
 const ModelInfoPage = ({ availableModels, modelDetails }: any) => {
   const router = useRouter()
   const modelState = useStore(modelInfoStore)
-  const { inpaintingWorkers } = modelState
+  const workerModels = modelState.availableModels
+  const inpaintingWorkers =
+    workerModels?.['stable_diffusion_inpainting']?.count ?? 0
 
   const [componentState, setComponentState] = useComponentState({
     availableModels: availableModels,
@@ -304,9 +301,6 @@ const ModelInfoPage = ({ availableModels, modelDetails }: any) => {
       event: 'PAGE_VIEW',
       context: '/pages/info'
     })
-
-    setAvailableModels(availableModels)
-    setModelDetails(modelDetails)
   })
 
   // Handle scrolling to hash links after page loads.
@@ -352,9 +346,13 @@ const ModelInfoPage = ({ availableModels, modelDetails }: any) => {
               images
             </TextButton> */}
           </div>
-          {router.query.show === 'favorite-models' && sortModels().length === 0 && (
-            <div>You currently have no favorite models selected. <Linker href="/info">View all models.</Linker></div>
-          )}
+          {router.query.show === 'favorite-models' &&
+            sortModels().length === 0 && (
+              <div>
+                You currently have no favorite models selected.{' '}
+                <Linker href="/info">View all models.</Linker>
+              </div>
+            )}
           <div>{renderModelDetails()}</div>
         </>
       )}

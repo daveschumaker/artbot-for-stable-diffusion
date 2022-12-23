@@ -116,6 +116,11 @@ const Changelog = () => {
             options panel. Links to view all favorite models. Display a warning
             for models with limited or no worker availability.
           </StyledLi>
+          <StyledLi>
+            Fix: In my model refactor last night, I broke the counter for
+            checking if there are any workers supporting inpainting. This has
+            now been fixed.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

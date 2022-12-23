@@ -59,7 +59,9 @@ const OptionsPanel = ({
   const [activeNav, setActiveNav] = useState('advanced')
 
   const modelState = useStore(modelInfoStore)
-  const { inpaintingWorkers } = modelState
+  const workerModels = modelState.availableModels
+  const inpaintingWorkers =
+    workerModels?.['stable_diffusion_inpainting']?.count ?? 0
 
   useEffect(() => {
     const { panel } = router.query
