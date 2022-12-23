@@ -1,10 +1,10 @@
 import { MAX_IMAGES_PER_JOB } from '../constants'
 import CreateImageRequest from '../models/CreateImageRequest'
 import RerollImageRequest from '../models/RerollImageRequest'
-import { modelInfoStore } from '../store/modelStore'
 import { uuidv4 } from './appUtils'
 import { db } from './db'
 import { randomPropertyName } from './helperUtils'
+import { validModelsArray } from './modelUtils'
 import { stylePresets } from './stylePresets'
 
 const cloneImageParams = (

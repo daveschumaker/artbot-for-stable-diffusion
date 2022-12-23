@@ -118,6 +118,12 @@ const Changelog = () => {
             </Linker>
             , Black Drapion!)
           </StyledLi>
+          <StyledLi>
+            Refactor: Made some changes in model selection. Now, you can select any model available
+            within the Stable Horde models database, even if 0 workers are available. In theory
+            (hopefully, maybe), this means that a worker running dynamic models will eventually load
+            your requested model.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

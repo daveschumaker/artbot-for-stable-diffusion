@@ -10,7 +10,6 @@ import Input from '../../UI/Input'
 import Tooltip from '../../UI/Tooltip'
 import { Button } from '../../UI/Button'
 import TrashIcon from '../../icons/TrashIcon'
-import { ModelDetails } from '../../../types'
 import { SourceProcessing } from '../../../utils/promptUtils'
 import { nearestWholeMultiple } from '../../../utils/imageUtils'
 import { userInfoStore } from '../../../store/userStore'
@@ -33,6 +32,21 @@ import AppSettings from '../../../models/AppSettings'
 import Slider from '../../UI/Slider'
 import NumberInput from '../../UI/NumberInput'
 import useComponentState from '../../../hooks/useComponentState'
+import { validModelsArray } from '../../../utils/modelUtils'
+import AlertTriangleIcon from '../../icons/AlertTriangle'
+
+const ModelWarning = styled.div`
+  align-items: center;
+  color: #facc15;
+  column-gap: 4px;
+  display: flex;
+  font-size: 14px;
+  font-weight: 700;
+  height: 32px;
+  flex-direction: row;
+  margin-bottom: 4px;
+  margin-top: 4px;
+`;
 
 const Section = styled.div`
   padding-top: 16px;
@@ -109,20 +123,9 @@ const orientationOptions = [
   { value: 'random', label: 'Random!' }
 ]
 
-const modelerOptions = (models: Array<ModelDetails>) => {
-  const modelsArray = []
-  models.forEach((model) => {
-    modelsArray.push({
-      value: model.name,
-      label: `${model.name} (${model.count})`
-    })
-  })
-
-  if (!models || models?.length === 0) {
-    modelsArray.push({ value: 'stable_diffusion', label: 'stable_diffusion' })
-  } else {
-    modelsArray.push({ value: 'random', label: 'Random!' })
-  }
+const modelerOptions = () => {
+  const modelsArray = validModelsArray() || []
+  modelsArray.push({ name: 'random', value: 'random', label: 'Random!', count: 1 })
 
   return modelsArray
 }
@@ -256,7 +259,7 @@ const AdvancedOptionsPanel = ({
       })
 
       await setDefaultPrompt(trimInput)
-    } catch (err) {}
+    } catch (err) { }
   }, [input.negative])
 
   const getSelectedTrigger = useCallback(
@@ -360,7 +363,7 @@ const AdvancedOptionsPanel = ({
     !componentState.showMultiModel &&
     !input.useAllModels &&
     input.source_processing !==
-      (SourceProcessing.InPainting || SourceProcessing.OutPaiting)
+    (SourceProcessing.InPainting || SourceProcessing.OutPaiting)
 
   const showNumImagesInput =
     !input.useAllModels &&
@@ -465,16 +468,15 @@ const AdvancedOptionsPanel = ({
                         isNaN(e.target.value) ||
                         e.target.value < 64 ||
                         e.target.value >
-                          (loggedIn
-                            ? MAX_DIMENSIONS_LOGGED_IN
-                            : MAX_DIMENSIONS_LOGGED_OUT)
+                        (loggedIn
+                          ? MAX_DIMENSIONS_LOGGED_IN
+                          : MAX_DIMENSIONS_LOGGED_OUT)
                       ) {
                         setErrorMessage({
-                          width: `Please enter a valid number between 64 and ${
-                            loggedIn
-                              ? MAX_DIMENSIONS_LOGGED_IN
-                              : MAX_DIMENSIONS_LOGGED_OUT
-                          }`
+                          width: `Please enter a valid number between 64 and ${loggedIn
+                            ? MAX_DIMENSIONS_LOGGED_IN
+                            : MAX_DIMENSIONS_LOGGED_OUT
+                            }`
                         })
                         return
                       }
@@ -529,16 +531,15 @@ const AdvancedOptionsPanel = ({
                         isNaN(e.target.value) ||
                         e.target.value < 64 ||
                         e.target.value >
-                          (loggedIn
-                            ? MAX_DIMENSIONS_LOGGED_IN
-                            : MAX_DIMENSIONS_LOGGED_OUT)
+                        (loggedIn
+                          ? MAX_DIMENSIONS_LOGGED_IN
+                          : MAX_DIMENSIONS_LOGGED_OUT)
                       ) {
                         setErrorMessage({
-                          height: `Please enter a valid number between 64 and ${
-                            loggedIn
-                              ? MAX_DIMENSIONS_LOGGED_IN
-                              : MAX_DIMENSIONS_LOGGED_OUT
-                          }`
+                          height: `Please enter a valid number between 64 and ${loggedIn
+                            ? MAX_DIMENSIONS_LOGGED_IN
+                            : MAX_DIMENSIONS_LOGGED_OUT
+                            }`
                         })
                         return
                       }
@@ -871,53 +872,53 @@ const AdvancedOptionsPanel = ({
       </TwoPanel>
       {(input.img2img ||
         input.source_processing === SourceProcessing.Img2Img) && (
-        <TwoPanel className="mt-4">
-          <SplitPanel>
-            <Section>
-              <div className="flex flex-row items-center justify-between">
-                <div className="w-[120px]">
-                  <SubSectionTitle>
-                    Denoise{' '}
-                    <Tooltip width="200px">
-                      Amount of noise added to input image. Values that approach
-                      1.0 allow for lots of variations but will also produce
-                      images that are not semantically consistent with the
-                      input. Only available for img2img.
-                    </Tooltip>
-                    <div className="block text-xs w-full">(0.0 - 1.0)</div>
-                  </SubSectionTitle>
+          <TwoPanel className="mt-4">
+            <SplitPanel>
+              <Section>
+                <div className="flex flex-row items-center justify-between">
+                  <div className="w-[120px]">
+                    <SubSectionTitle>
+                      Denoise{' '}
+                      <Tooltip width="200px">
+                        Amount of noise added to input image. Values that approach
+                        1.0 allow for lots of variations but will also produce
+                        images that are not semantically consistent with the
+                        input. Only available for img2img.
+                      </Tooltip>
+                      <div className="block text-xs w-full">(0.0 - 1.0)</div>
+                    </SubSectionTitle>
+                  </div>
+                  <NumberInput
+                    // @ts-ignore
+                    className="mb-2"
+                    type="text"
+                    step={0.05}
+                    min={0}
+                    max={1.0}
+                    onMinusClick={() => {
+                      setInput({
+                        denoising_strength:
+                          Number(input.denoising_strength) - 0.05
+                      })
+                    }}
+                    onPlusClick={() => {
+                      setInput({
+                        denoising_strength:
+                          Number(input.denoising_strength) + 0.05
+                      })
+                    }}
+                    name="denoising_strength"
+                    onChange={handleChangeInput}
+                    // @ts-ignore
+                    value={Number(input.denoising_strength).toFixed(2)}
+                    width="110px"
+                  />
                 </div>
-                <NumberInput
-                  // @ts-ignore
-                  className="mb-2"
-                  type="text"
-                  step={0.05}
-                  min={0}
-                  max={1.0}
-                  onMinusClick={() => {
-                    setInput({
-                      denoising_strength:
-                        Number(input.denoising_strength) - 0.05
-                    })
-                  }}
-                  onPlusClick={() => {
-                    setInput({
-                      denoising_strength:
-                        Number(input.denoising_strength) + 0.05
-                    })
-                  }}
-                  name="denoising_strength"
-                  onChange={handleChangeInput}
-                  // @ts-ignore
-                  value={Number(input.denoising_strength).toFixed(2)}
-                  width="110px"
-                />
-              </div>
-            </Section>
-          </SplitPanel>
-          <SplitPanel></SplitPanel>
-        </TwoPanel>
-      )}
+              </Section>
+            </SplitPanel>
+            <SplitPanel></SplitPanel>
+          </TwoPanel>
+        )}
       <Section>
         <SubSectionTitle>
           Seed
@@ -961,9 +962,6 @@ const AdvancedOptionsPanel = ({
                 parentheses indicate number of works. Generally, these models
                 will generate images quicker.
               </Tooltip>
-              <div className="text-xs">
-                <Linker href="/info">[ View detailed model info ]</Linker>
-              </div>
             </SubSectionTitle>
             <MaxWidth
               // @ts-ignore
@@ -972,7 +970,7 @@ const AdvancedOptionsPanel = ({
               <SelectComponent
                 menuPlacement={'top'}
                 //@ts-ignore
-                options={modelerOptions(availableModels)}
+                options={modelerOptions()}
                 onChange={(obj: { value: string; label: string }) => {
                   if (router.query.model) {
                     router.push(
@@ -1003,7 +1001,17 @@ const AdvancedOptionsPanel = ({
                 value={modelsValue}
                 isSearchable={true}
               />
+              <div className="mt-2 text-xs">
+                <Linker href="/info">[ View detailed model info ]</Linker>
+              </div>
             </MaxWidth>
+            {
+              availableModels[input.models[0]]?.count <= 2 && (
+                <ModelWarning>
+                  <AlertTriangleIcon size={32} /> This model has limited availability. Images may take a long time to generate.
+                </ModelWarning>
+              )
+            }
             {modelDetails[input.models[0]]?.showcases && (
               <MaxWidth
                 // @ts-ignore
@@ -1033,7 +1041,7 @@ const AdvancedOptionsPanel = ({
                     `Style: ${modelDetails[input.models[0]].style}`}{' '}
                   {modelDetails[input.models[0]].nsfw && ` (nsfw)`}
                   {Array.isArray(modelDetails[input.models[0]]?.trigger) &&
-                  modelDetails[input.models[0]].trigger?.length === 1 ? (
+                    modelDetails[input.models[0]].trigger?.length === 1 ? (
                     <>
                       <br />
                       Trigger: &quot;
@@ -1048,8 +1056,8 @@ const AdvancedOptionsPanel = ({
               )}
 
               {Array.isArray(modelDetails[input.models[0]]?.trigger) &&
-              // @ts-ignore
-              modelDetails[input?.models[0]]?.trigger?.length > 1 ? (
+                // @ts-ignore
+                modelDetails[input?.models[0]]?.trigger?.length > 1 ? (
                 <div>
                   <div className="mt-2 text-md">Multi-trigger select</div>
                   <div className="text-xs">
@@ -1102,7 +1110,7 @@ const AdvancedOptionsPanel = ({
               isMulti
               menuPlacement={'top'}
               //@ts-ignore
-              options={modelerOptions(availableModels)}
+              options={modelerOptions()}
               onChange={(obj: Array<{ value: string; label: string }>) => {
                 const modelArray: Array<string> = []
 
@@ -1160,11 +1168,13 @@ const AdvancedOptionsPanel = ({
       {showUseAllModelsInput ? (
         <Section>
           <SubSectionTitle>
-            Use all available models ({availableModels.length})
-            <Tooltip left="-140" width="240px">
-              Automatically generate an image for each model currently available
-              on Stable Horde
-            </Tooltip>
+            <>
+              Use all available models ({validModelsArray()?.length})
+              <Tooltip left="-140" width="240px">
+                Automatically generate an image for each model currently available
+                on Stable Horde
+              </Tooltip>
+            </>
           </SubSectionTitle>
           <Switch
             onChange={() => {

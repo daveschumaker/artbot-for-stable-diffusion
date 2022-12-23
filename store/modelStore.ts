@@ -1,19 +1,16 @@
 import { makeStore } from 'statery'
+import { IStableDiffusionModel } from '../models/StableDiffusionModel'
 
 interface ModelStore {
   availableModelNames: Array<string>
-  availableModels: Array<AvailableModel>
+  availableModels: IAvailableModels
   modelDetails: IModelsDetails
   inpaintingWorkers: number
   sort: string
 }
 
-export interface AvailableModel {
-  count: number
-  eta: number
-  name: string
-  performance: number
-  queued: number
+export interface IAvailableModels {
+  [key: string]: IStableDiffusionModel
 }
 
 export interface IModelsDetails {
@@ -34,43 +31,47 @@ export interface IModelDetails {
 
 export const modelInfoStore = makeStore<ModelStore>({
   availableModelNames: [],
-  availableModels: [],
+  availableModels: {},
   inpaintingWorkers: 0,
   modelDetails: {},
   sort: 'count'
 })
 
-export const setAvailableModels = (models: Array<AvailableModel>) => {
-  // handle issue where API times out after already using web-app.
-  // error would overwrite existing models.
-  if (modelInfoStore.state.availableModels.length > 1 && models.length <= 1) {
-    return
-  }
+export const setAvailableModels = (models: {
+  [key: string]: IStableDiffusionModel
+}) => {
+  // models.sort((a: IStableDiffusionModel, b: IStableDiffusionModel) => {
+  //   if (typeof a.count === 'undefined' || isNaN(a.count)) {
+  //     return 0
+  //   }
 
-  models.sort((a, b) => {
-    if (a.count < b.count) {
-      return 1
-    }
-    if (a.count > b.count) {
-      return -1
-    }
-    return 0
-  })
+  //   if (typeof b.count === 'undefined' || isNaN(b.count)) {
+  //     return 0
+  //   }
 
-  let inpaintingWorkers = 0
-  const availableModels = models.filter((model) => {
-    if (model.name === 'stable_diffusion_inpainting') {
-      inpaintingWorkers = model.count
-      return false
-    }
+  //   if (a.count < b.count) {
+  //     return 1
+  //   }
+  //   if (a.count > b.count) {
+  //     return -1
+  //   }
+  //   return 0
+  // })
 
-    return true
-  })
+  // let inpaintingWorkers = 0
+  // const availableModels = models.filter((model) => {
+  //   if (model.name === 'stable_diffusion_inpainting') {
+  //     inpaintingWorkers = model.count
+  //     return false
+  //   }
+
+  //   return true
+  // })
 
   modelInfoStore.set(() => ({
-    availableModelNames: availableModels?.map((model) => model.name),
-    availableModels,
-    inpaintingWorkers
+    // availableModelNames: availableModels?.map((model) => model.name),
+    availableModels: { ...models }
+    // inpaintingWorkers
   }))
 }
 

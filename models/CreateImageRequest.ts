@@ -1,4 +1,3 @@
-import { modelInfoStore } from '../store/modelStore'
 import {
   ArtBotJobTypes,
   Common,
@@ -9,6 +8,7 @@ import {
 } from '../types'
 import { uuidv4 } from '../utils/appUtils'
 import { orientationDetails, randomSampler } from '../utils/imageUtils'
+import { validModelsArray } from '../utils/modelUtils'
 import { SourceProcessing } from '../utils/promptUtils'
 
 interface IRandomSampler {
@@ -205,8 +205,8 @@ class CreateImageRequest {
   }
 
   static getRandomModel() {
-    const currentModels = modelInfoStore.state.availableModelNames
-    return currentModels[Math.floor(Math.random() * currentModels.length)]
+    const currentModels = validModelsArray()
+    return currentModels[Math.floor(Math.random() * currentModels.length)].name
   }
 
   static getRandomOrientation() {

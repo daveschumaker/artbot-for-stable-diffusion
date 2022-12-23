@@ -1,6 +1,6 @@
 import NoSleep from 'nosleep.js'
 
-import fetchAvailableModels from '../api/fetchAvailableModels'
+import { buildModelAvailability } from '../api/fetchAvailableModels'
 import fetchModelDetails from '../api/fetchModelDetails'
 import { fetchUserDetails } from '../api/userInfo'
 import AppSettings from '../models/AppSettings'
@@ -97,13 +97,14 @@ export const initAppSettings = async () => {
   const apikey = AppSettings.get('apiKey') || ''
   fetchUserDetails(apikey)
   deleteStalePending()
+  buildModelAvailability()
 
   setInterval(async () => {
     if (!isAppActive()) {
       return
     }
 
-    fetchAvailableModels()
+    buildModelAvailability()
   }, 20000)
 
   setInterval(async () => {

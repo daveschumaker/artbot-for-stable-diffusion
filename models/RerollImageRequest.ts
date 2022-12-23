@@ -1,4 +1,3 @@
-import { modelInfoStore } from '../store/modelStore'
 import {
   ArtBotJobTypes,
   Common,
@@ -8,6 +7,7 @@ import {
 } from '../types'
 import { uuidv4 } from '../utils/appUtils'
 import { randomSampler } from '../utils/imageUtils'
+import { validModelsArray } from '../utils/modelUtils'
 import { SourceProcessing } from '../utils/promptUtils'
 
 export interface IRequestParams {
@@ -99,10 +99,10 @@ class RerollImageRequest {
     this.karras = Boolean(karras)
 
     if (models[0] === 'random') {
-      const currentModels = modelInfoStore.state.availableModelNames
+      const currentModels = validModelsArray()
       const randomModel =
         currentModels[Math.floor(Math.random() * currentModels.length)]
-      this.models = [randomModel]
+      this.models = [randomModel.name]
     } else {
       this.models = [...models]
     }

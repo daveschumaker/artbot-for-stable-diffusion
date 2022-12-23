@@ -1,9 +1,12 @@
+import StableDiffusionModel from '../models/StableDiffusionModel'
 import { setAvailableModels } from '../store/modelStore'
 import { isAppActive } from '../utils/appUtils'
+import fetchModelDetails from './fetchModelDetails'
 
 let isInitial = true
 let isPending = false
-const fetchAvailableModels = async () => {
+
+export const fetchAvailableModels = async () => {
   if (isPending) {
     return
   }
@@ -15,13 +18,10 @@ const fetchAvailableModels = async () => {
   isPending = true
 
   let availableModels = [
-    {
+    new StableDiffusionModel({
       name: 'stable_diffusion',
-      count: 1,
-      eta: 0,
-      performance: 0,
-      queued: 0
-    }
+      count: 1
+    })
   ]
 
   try {
@@ -33,18 +33,37 @@ const fetchAvailableModels = async () => {
     const data = await res.json()
 
     if (Array.isArray(data)) {
-      availableModels = [...data]
+      data.forEach((model) => {
+        availableModels.push(new StableDiffusionModel({ ...model }))
+      })
     } else {
       availableModels = data.models
     }
-
-    setAvailableModels(availableModels)
   } catch (err) {
     console.log(`Warning: Unable to fetch available models. API offline?`)
   } finally {
     isPending = false
     isInitial = false
+
+    return availableModels
   }
 }
 
-export default fetchAvailableModels
+export const buildModelAvailability = async () => {
+  const availableModelsMap = (await fetchModelDetails()) || {}
+  try {
+    const modelAvailability = (await fetchAvailableModels()) || []
+
+    console.log(`modelAvailability`, modelAvailability)
+
+    modelAvailability?.forEach((model) => {
+      availableModelsMap[model.name] = { ...model }
+    })
+
+    console.log(`availableModelsMap`, availableModelsMap)
+  } catch (err) {
+    // If nothing happens here, ignore it for now.
+  } finally {
+    setAvailableModels(availableModelsMap)
+  }
+}
