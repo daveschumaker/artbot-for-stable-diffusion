@@ -111,6 +111,7 @@ const SettingsPage = () => {
   const [componentState, setComponentState] = useComponentState({
     allowNsfwImages: false,
     apiKey: '',
+    disableSnowflakes: false,
     enableNoSleep: false,
     loadingWorkerStatus: {},
     panel: 'stableHorde',
@@ -176,6 +177,7 @@ const SettingsPage = () => {
     updateObj.stayOnCreate = AppSettings.get('stayOnCreate') || false
     updateObj.useBeta = AppSettings.get('useBeta') || false
     updateObj.useTrusted = AppSettings.get('useTrusted') || false
+    updateObj.disableSnowflakes = AppSettings.get('disableSnowflakes') || false
 
     setComponentState({ ...updateObj })
 
@@ -626,6 +628,35 @@ const SettingsPage = () => {
                       componentState.enableNoSleep
                         ? { value: true, label: 'Yes' }
                         : { value: false, label: 'No' }
+                    }
+                  />
+                </MaxWidth>
+              </Section>
+              <Section>
+                <SubSectionTitle>
+                  Disable snow flakes
+                  <div className="block text-xs mb-2 mt-2 w-full">
+                    Turn off snow flakes (a temporary feature enabled during
+                    Christmastime here in California). NOTE: Requires page
+                    reload.
+                  </div>
+                </SubSectionTitle>
+                <MaxWidth
+                  // @ts-ignore
+                  maxWidth="240"
+                >
+                  <Select
+                    options={[
+                      { value: true, label: 'Yes' },
+                      { value: false, label: 'No' }
+                    ]}
+                    onChange={(obj: any) =>
+                      handleUpdateSelect('disableSnowflakes', obj)
+                    }
+                    value={
+                      componentState.disableSnowflakes
+                        ? { value: true, label: 'Yes' }
+                        : { value: true, label: 'No' }
                     }
                   />
                 </MaxWidth>

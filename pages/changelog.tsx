@@ -119,6 +119,16 @@ const Changelog = () => {
             sort of thing signifies the holiday season for you? It definitely
             can&apos;t be snowflakes, right?)
           </StyledLi>
+          <StyledLi>
+            Feature: Added support for CodeFormers post-processing utility.
+          </StyledLi>
+          <StyledLi>
+            Feature: Fine! Add ability to{' '}
+            <Linker href="/settings?panel=prefs">
+              disable snowflakes on the settings page
+            </Linker>
+            .
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

@@ -1,4 +1,6 @@
+import { useEffect, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
+import AppSettings from '../models/AppSettings'
 
 const SnowflakesFall = keyframes`
     0% {
@@ -111,6 +113,18 @@ const Snowflake = styled.div`
 `
 
 const Snowflakes = () => {
+  const [enabled, setEnabled] = useState(true)
+
+  useEffect(() => {
+    if (AppSettings.get('disableSnowflakes')) {
+      setEnabled(false)
+    }
+  }, [])
+
+  if (!enabled) {
+    return null
+  }
+
   return (
     <SnowflakesWrapper aria-hidden="true">
       <Snowflake>❅</Snowflake>
