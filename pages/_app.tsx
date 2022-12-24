@@ -24,6 +24,7 @@ import ServerUpdateModal from '../components/ServerUpdateModal'
 import MobileFooter from '../components/MobileFooter'
 import { isAppActive } from '../utils/appUtils'
 import { ToastContainer } from 'react-toastify'
+import Snowflakes from '../components/SnowFlakes'
 
 initAppSettings()
 initDb()
@@ -183,6 +184,7 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
       </Head>
       <ToastContainer />
       <PollController />
+      <Snowflakes />
       <ContentWrapper>
         {showServerUpdateModal && <ServerUpdateModal />}
         <Header />

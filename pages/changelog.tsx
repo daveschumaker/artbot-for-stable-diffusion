@@ -93,14 +93,34 @@ const Changelog = () => {
           <SubSectionTitle>Ongoing issues:</SubSectionTitle>
           <StyledUl>
             <StyledLi>
-              There are backend issues with workers using inpainting models via
-              the Stable Horde API at the moment and I am waiting on a more
-              solid resolution. It may work for you, it may not. Seems to depend
-              on which worker is available at a given time.
+              2022.12.24 - Bulk downloads using the export option are a bit
+              buggy. I believe this is due to browser and device memory
+              limitations. I&apos;m investigating ways to make the downloads
+              easier (perhaps breaking them up into a series of files that you
+              would have to manually download).
+            </StyledLi>
+            <StyledLi>
+              2022.11.20 - There are backend issues with workers using
+              inpainting models via the Stable Horde API at the moment and I am
+              waiting on a more solid resolution. It may work for you, it may
+              not. Seems to depend on which worker is available at a given time.
             </StyledLi>
           </StyledUl>
         </Section>
       </Panel>
+      <Section>
+        <SubSectionTitle>2022.12.24</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Happy holidays and Merry Christmas! (If you&apos;re into that sort
+            of thing.) For those of us inhabiting the upper half of our planet,
+            it&apos;s winter time. ⛄️ I&apos;ve added some festive snowflakes
+            to celebrate. ❄️ (For those on the bottom half of the planet, what
+            sort of thing signifies the holiday season for you? It definitely
+            can&apos;t be snowflakes, right?)
+          </StyledLi>
+        </StyledUl>
+      </Section>
       <Section>
         <SubSectionTitle>2022.12.23</SubSectionTitle>
         <StyledUl>
