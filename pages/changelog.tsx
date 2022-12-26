@@ -118,6 +118,7 @@ const Changelog = () => {
             trigger words, you&apos;ll now see a dropdown button above the
             prompt field to choose various options.
           </StyledLi>
+          <StyledLi>Removed snowflakes... until next year!</StyledLi>
         </StyledUl>
       </Section>
       <Section>

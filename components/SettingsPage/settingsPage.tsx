@@ -632,7 +632,7 @@ const SettingsPage = () => {
                   />
                 </MaxWidth>
               </Section>
-              <Section>
+              {/* <Section>
                 <SubSectionTitle>
                   Disable snow flakes
                   <div className="block text-xs mb-2 mt-2 w-full">
@@ -660,7 +660,7 @@ const SettingsPage = () => {
                     }
                   />
                 </MaxWidth>
-              </Section>
+              </Section> */}
             </>
           ) : null}
           {router.query.panel === 'import-export' ? (
