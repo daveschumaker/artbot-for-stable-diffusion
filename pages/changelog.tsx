@@ -119,6 +119,7 @@ const Changelog = () => {
             prompt field to choose various options.
           </StyledLi>
           <StyledLi>Removed snowflakes... until next year!</StyledLi>
+          <StyledLi>Show model version on info page.</StyledLi>
         </StyledUl>
       </Section>
       <Section>

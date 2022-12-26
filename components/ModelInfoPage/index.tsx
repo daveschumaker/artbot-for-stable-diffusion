@@ -147,7 +147,8 @@ const ModelInfoPage = ({ availableModels, modelDetails }: any) => {
         nsfw,
         trigger,
         showcases,
-        style
+        style,
+        version
       } = modelDetails
 
       const modelStats = componentState.availableModels.filter((obj: any) => {
@@ -227,6 +228,9 @@ const ModelInfoPage = ({ availableModels, modelDetails }: any) => {
             <div className="mb-2">
               <strong>Estimated queue time:</strong> ~{modelStats[0]?.eta || 0}{' '}
               seconds
+            </div>
+            <div>
+              <strong>Version:</strong> {version}
             </div>
             <div>
               <strong>Style:</strong> {style}
