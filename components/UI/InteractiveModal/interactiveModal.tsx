@@ -39,19 +39,32 @@ const StyledInteractiveModal = styled.div`
 const InteractiveModal = (props: any) => {
   const { lockScroll, unlockScroll } = useScrollLock()
 
+  const keyDownHandler = (event: any) => {
+    if (event.key === 'Escape') {
+      event.preventDefault()
+      props?.handleClose()
+    }
+  }
+
   useEffect(() => {
     lockScroll()
 
-    return () => unlockScroll()
+    document.addEventListener('keydown', keyDownHandler)
+
+    return () => {
+      document.removeEventListener('keydown', keyDownHandler)
+      unlockScroll()
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
     <>
-      <Overlay handleClose={props.handleClose} />
+      <Overlay handleClose={props?.handleClose} />
       <StyledInteractiveModal>
         {props.children}
-        <CloseIconWrapper onClick={props.handleClose}>
+        <CloseIconWrapper onClick={props?.handleClose}>
           <CloseIcon size={28} />
         </CloseIconWrapper>
       </StyledInteractiveModal>

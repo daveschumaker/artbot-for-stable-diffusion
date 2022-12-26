@@ -43,6 +43,13 @@ import InteractiveModal from '../components/UI/InteractiveModal/interactiveModal
 import PromptHistory from '../components/PromptHistory'
 import MenuButton from '../components/UI/MenuButton'
 import HistoryIcon from '../components/icons/HistoryIcon'
+import PlusIcon from '../components/icons/PlusIcon'
+import Tooltip from '../components/UI/Tooltip'
+import useComponentState from '../hooks/useComponentState'
+import DropDownMenu from '../components/UI/DropDownMenu/dropDownMenu'
+import DropDownMenuItem from '../components/UI/DropDownMenuItem'
+import MinusIcon from '../components/icons/MinusIcon'
+import styled from 'styled-components'
 
 interface InputTarget {
   name: string
@@ -51,6 +58,16 @@ interface InputTarget {
 interface InputEvent {
   target: InputTarget
 }
+
+const ModelTriggerButton = styled.div`
+  align-items: center;
+  color: ${(props) => props.theme.navLinkActive};
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 4px;
+  position: relative;
+`
 
 const defaultState: any = {
   img2img: false,
@@ -172,6 +189,10 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
     initialState.models = ['stable_diffusion']
     initialState.sampler = 'k_euler_a'
   }
+
+  const [componentState, setComponentState] = useComponentState({
+    showTriggerWordsModal: false
+  })
 
   const [showPromptHistory, setShowPromptHistory] = useState(false)
   const [hasValidationError, setHasValidationError] = useState(false)
@@ -458,6 +479,9 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
     }
   })
 
+  const triggerString = modelDetails[input?.models[0]]?.trigger ?? ['']
+  const triggerArray = triggerString[0].split(', ')
+
   return (
     <main>
       {showPromptHistory && (
@@ -501,6 +525,59 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
         </div>
       </div>
       <ServerMessage />
+      {modelDetails[input?.models[0]]?.trigger && (
+        <>
+          <ModelTriggerButton
+            onClick={() => {
+              if (!componentState.showTriggerWordsModal) {
+                setComponentState({ showTriggerWordsModal: true })
+              } else {
+                setComponentState({ showTriggerWordsModal: false })
+              }
+            }}
+          >
+            <div className="mr-2">
+              {componentState.showTriggerWordsModal ? (
+                <MinusIcon />
+              ) : (
+                <PlusIcon />
+              )}
+            </div>
+            [ Model trigger ]
+            <Tooltip width="240px">
+              This model requires the use of certain trigger words in order to
+              fully utilize its abilities. Click here to add trigger words into
+              your prompt.
+            </Tooltip>
+          </ModelTriggerButton>
+          {componentState.showTriggerWordsModal && (
+            <div className="relative top-[-38px]">
+              <DropDownMenu
+                handleClose={() => {
+                  setComponentState({ showTriggerWordsModal: false })
+                }}
+                position="left"
+              >
+                {triggerArray.length > 0
+                  ? triggerArray.map((trigger: string, i: number) => {
+                      return (
+                        <DropDownMenuItem
+                          key={`${trigger}_${i}`}
+                          onClick={() => {
+                            setInput({ prompt: input.prompt + ` ${trigger} ` })
+                            setComponentState({ showTriggerWordsModal: false })
+                          }}
+                        >
+                          {trigger}
+                        </DropDownMenuItem>
+                      )
+                    })
+                  : null}
+              </DropDownMenu>
+            </div>
+          )}
+        </>
+      )}
       <div className="mt-2 mb-2">
         <div className="flex flex-row gap-[8px] items-start">
           {input.sourceImage && (

@@ -13,7 +13,7 @@ const StyledInfoTip = styled.span`
   display: inline-block;
   padding-left: 8px;
   position: relative;
-  top: 6px;
+  /* top: 6px; */
   /* z-index: 0; */
 `
 

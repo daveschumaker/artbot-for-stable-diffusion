@@ -109,6 +109,18 @@ const Changelog = () => {
         </Section>
       </Panel>
       <Section>
+        <SubSectionTitle>2022.12.26</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Feature: Removed the ability to automatically add trigger words to
+            select models... because you can now manually choose where and which
+            trigger words to add. If you select a model that requires the use of
+            trigger words, you&apos;ll now see a dropdown button above the
+            prompt field to choose various options.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.12.24</SubSectionTitle>
         <StyledUl>
           <StyledLi>

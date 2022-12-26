@@ -60,6 +60,12 @@ const SubSectionTitle = styled.div`
   padding-bottom: 8px;
 `
 
+const TextTooltipRow = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+`
+
 interface FlexRowProps {
   bottomPadding?: number
 }
@@ -266,29 +272,6 @@ const AdvancedOptionsPanel = ({
       await setDefaultPrompt(trimInput)
     } catch (err) {}
   }, [input.negative])
-
-  const getSelectedTrigger = useCallback(
-    (value: string) => {
-      return input.triggers.indexOf(value) >= 0
-    },
-    [input.triggers]
-  )
-
-  const handleMultiTrigger = useCallback(
-    (value: string) => {
-      const newTriggers = [...input.triggers]
-
-      const index = newTriggers.indexOf(value)
-      if (index > -1) {
-        newTriggers.splice(index, 1)
-      } else {
-        newTriggers.push(value)
-      }
-
-      setInput({ triggers: newTriggers })
-    },
-    [input.triggers, setInput]
-  )
 
   const getPostProcessing = useCallback(
     (value: string) => {
@@ -578,10 +561,12 @@ const AdvancedOptionsPanel = ({
       </Section>
       <Section>
         <SubSectionTitle>
-          Negative prompt
-          <Tooltip width="180px">
-            Add words or phrases to demphasize from your desired image
-          </Tooltip>
+          <TextTooltipRow>
+            Negative prompt
+            <Tooltip width="180px">
+              Add words or phrases to demphasize from your desired image
+            </Tooltip>
+          </TextTooltipRow>
         </SubSectionTitle>
         <FlexRow>
           <Input
@@ -642,10 +627,12 @@ const AdvancedOptionsPanel = ({
       {showAllSamplersInput && (
         <Section>
           <SubSectionTitle>
-            Use all samplers
-            <Tooltip left="-140" width="240px">
-              Automatically generate an image for sampler
-            </Tooltip>
+            <TextTooltipRow>
+              Use all samplers
+              <Tooltip left="-140" width="240px">
+                Automatically generate an image for sampler
+              </Tooltip>
+            </TextTooltipRow>
           </SubSectionTitle>
           <Switch
             onChange={() => {
@@ -675,13 +662,15 @@ const AdvancedOptionsPanel = ({
             <Section>
               <div className="flex flex-row items-center justify-between">
                 <SubSectionTitle>
-                  Steps
-                  <Tooltip width="200px">
-                    Fewer steps generally result in quicker image generations.
-                    Many models achieve full coherence after a certain number of
-                    finite steps (60 - 90). Keep your initial queries in the 30
-                    - 50 range for best results.
-                  </Tooltip>
+                  <TextTooltipRow>
+                    Steps
+                    <Tooltip width="200px">
+                      Fewer steps generally result in quicker image generations.
+                      Many models achieve full coherence after a certain number
+                      of finite steps (60 - 90). Keep your initial queries in
+                      the 30 - 50 range for best results.
+                    </Tooltip>
+                  </TextTooltipRow>
                   <div className="block text-xs w-full">
                     (1 - {maxSteps({ sampler: input.sampler, loggedIn })})
                   </div>
@@ -779,11 +768,13 @@ const AdvancedOptionsPanel = ({
           {showMultiSamplerInput && (
             <Section>
               <SubSectionTitle>
-                Use multiple steps
-                <Tooltip left="-140" width="240px">
-                  Provide a list of comma separated values to create a series of
-                  images using multiple steps: &quot;3,6,9,12,15&quot;
-                </Tooltip>
+                <TextTooltipRow>
+                  Use multiple steps
+                  <Tooltip left="-140" width="240px">
+                    Provide a list of comma separated values to create a series
+                    of images using multiple steps: &quot;3,6,9,12,15&quot;
+                  </Tooltip>
+                </TextTooltipRow>
               </SubSectionTitle>
               <Switch
                 onChange={() => {
@@ -808,11 +799,13 @@ const AdvancedOptionsPanel = ({
           <Section>
             <div className="flex flex-row items-center justify-between">
               <SubSectionTitle>
-                Guidance
-                <Tooltip width="200px">
-                  Higher numbers follow the prompt more closely. Lower numbers
-                  give more creativity.
-                </Tooltip>
+                <TextTooltipRow>
+                  Guidance
+                  <Tooltip width="200px">
+                    Higher numbers follow the prompt more closely. Lower numbers
+                    give more creativity.
+                  </Tooltip>
+                </TextTooltipRow>
                 <div className="block text-xs w-full">(1 - 30)</div>
               </SubSectionTitle>
               <NumberInput
@@ -925,8 +918,10 @@ const AdvancedOptionsPanel = ({
       )}
       <Section>
         <SubSectionTitle>
-          Seed
-          <Tooltip width="140px">Leave seed blank for random.</Tooltip>
+          <TextTooltipRow>
+            Seed
+            <Tooltip width="140px">Leave seed blank for random.</Tooltip>
+          </TextTooltipRow>
         </SubSectionTitle>
         <MaxWidth
           // @ts-ignore
@@ -960,12 +955,14 @@ const AdvancedOptionsPanel = ({
         !componentState.showMultiModel && (
           <Section>
             <SubSectionTitle>
-              Model
-              <Tooltip width="240px">
-                Models currently available within the horde. Numbers in
-                parentheses indicate number of works. Generally, these models
-                will generate images quicker.
-              </Tooltip>
+              <TextTooltipRow>
+                Model
+                <Tooltip width="240px">
+                  Models currently available within the horde. Numbers in
+                  parentheses indicate number of works. Generally, these models
+                  will generate images quicker.
+                </Tooltip>
+              </TextTooltipRow>
             </SubSectionTitle>
             <MaxWidth
               // @ts-ignore
@@ -1053,47 +1050,16 @@ const AdvancedOptionsPanel = ({
                   modelDetails[input.models[0]].trigger?.length === 1 ? (
                     <>
                       <br />
-                      Trigger: &quot;
+                      Trigger words: &quot;
                       {
                         //@ts-ignore
                         modelDetails[input.models[0]]?.trigger[0]
                       }
-                      &quot; (will be automatically added to your prompt)
+                      &quot;
                     </>
                   ) : null}
                 </div>
               )}
-
-              {Array.isArray(modelDetails[input.models[0]]?.trigger) &&
-              // @ts-ignore
-              modelDetails[input?.models[0]]?.trigger?.length > 1 ? (
-                <div>
-                  <div className="mt-2 text-md">Multi-trigger select</div>
-                  <div className="text-xs">
-                    This model allows you to mix and match multiple types of
-                    triggers.
-                  </div>
-                  <div className="mb-2 text-xs">
-                    Triggers will be automatically added to your prompt.
-                  </div>
-                  {
-                    //@ts-ignore
-                    modelDetails[input?.models[0]]?.trigger.map(
-                      (trigger: string, i: any) => {
-                        return (
-                          <div key={`trigger_${i}`}>
-                            <Checkbox
-                              label={trigger}
-                              value={getSelectedTrigger(trigger)}
-                              onChange={() => handleMultiTrigger(trigger)}
-                            />
-                          </div>
-                        )
-                      }
-                    )
-                  }
-                </div>
-              ) : null}
             </MaxWidth>
           </Section>
         )}
@@ -1145,10 +1111,12 @@ const AdvancedOptionsPanel = ({
       {showMultiModelSelect ? (
         <Section>
           <SubSectionTitle>
-            Multi-model select
-            <Tooltip left="-140" width="240px">
-              Pick from multiple models that you might prefer.
-            </Tooltip>
+            <TextTooltipRow>
+              Multi-model select
+              <Tooltip left="-140" width="240px">
+                Pick from multiple models that you might prefer.
+              </Tooltip>
+            </TextTooltipRow>
           </SubSectionTitle>
           <Switch
             onChange={() => {
@@ -1178,11 +1146,13 @@ const AdvancedOptionsPanel = ({
         <Section>
           <SubSectionTitle>
             <>
-              Use all available models ({validModelsArray()?.length})
-              <Tooltip left="-140" width="240px">
-                Automatically generate an image for each model currently
-                available on Stable Horde
-              </Tooltip>
+              <TextTooltipRow>
+                Use all available models ({validModelsArray()?.length})
+                <Tooltip left="-140" width="240px">
+                  Automatically generate an image for each model currently
+                  available on Stable Horde
+                </Tooltip>
+              </TextTooltipRow>
               <div className="mt-1 mb-2 text-xs">
                 <Linker href="/info">[ View all model details ]</Linker>
               </div>
@@ -1212,10 +1182,13 @@ const AdvancedOptionsPanel = ({
       {showUseFavoriteModelsInput ? (
         <Section>
           <SubSectionTitle>
-            Use favorite models ({Object.keys(favModels).length})
-            <Tooltip left="-140" width="240px">
-              Automatically generate an image for each model you have favorited.
-            </Tooltip>
+            <TextTooltipRow>
+              Use favorite models ({Object.keys(favModels).length})
+              <Tooltip left="-140" width="240px">
+                Automatically generate an image for each model you have
+                favorited.
+              </Tooltip>
+            </TextTooltipRow>
             <div className="mt-1 mb-2 text-xs">
               <Linker href="/info?show=favorite-models">
                 [ View favorite models ]
@@ -1246,11 +1219,13 @@ const AdvancedOptionsPanel = ({
       ) : null}
       <Section>
         <SubSectionTitle>
-          Enable karras
-          <Tooltip left="-20" width="240px">
-            Denoising magic. Dramatically improves image generation using fewer
-            steps. (Not all workers support this yet)
-          </Tooltip>
+          <TextTooltipRow>
+            Enable karras
+            <Tooltip left="-20" width="240px">
+              Denoising magic. Dramatically improves image generation using
+              fewer steps. (Not all workers support this yet)
+            </Tooltip>
+          </TextTooltipRow>
         </SubSectionTitle>
         <Switch
           onChange={() => {
@@ -1265,11 +1240,13 @@ const AdvancedOptionsPanel = ({
       </Section>
       <Section>
         <SubSectionTitle>
-          Post-processing
-          <Tooltip left="-20" width="240px">
-            Post-processing options such as face improvement and image
-            upscaling.
-          </Tooltip>
+          <TextTooltipRow>
+            Post-processing
+            <Tooltip left="-20" width="240px">
+              Post-processing options such as face improvement and image
+              upscaling.
+            </Tooltip>
+          </TextTooltipRow>
         </SubSectionTitle>
         <div className="flex flex-col gap-2 items-start">
           <Checkbox

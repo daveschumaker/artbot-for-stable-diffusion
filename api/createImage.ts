@@ -1,5 +1,4 @@
 import AppSettings from '../models/AppSettings'
-import { modelInfoStore } from '../store/modelStore'
 import { GenerateResponse } from '../types'
 import { getApiHostServer } from '../utils/appUtils'
 import { modifyPromptForStylePreset } from '../utils/imageUtils'
@@ -61,7 +60,6 @@ interface ParamsObject {
 }
 
 const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
-  const modelDetails = modelInfoStore.state.modelDetails
   const useTrusted =
     AppSettings.get('useTrusted') === undefined
       ? true
@@ -78,7 +76,6 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
     steps,
     models,
     karras,
-    triggers,
     source_image,
     source_processing,
     stylePreset,
@@ -103,12 +100,6 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
     trusted_workers: useTrusted,
     models,
     r2: true
-  }
-
-  if (triggers && triggers?.length > 0) {
-    apiParams.prompt = `${triggers.join(' ')} ${prompt}`
-  } else if (modelDetails[models[0]]?.trigger) {
-    apiParams.prompt = `${modelDetails[models[0]].trigger} ${prompt}`
   }
 
   if (seed) {
