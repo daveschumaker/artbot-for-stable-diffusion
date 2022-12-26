@@ -22,6 +22,7 @@ release.tar.gz
 .DS_Store
 build_info.json
 *.pem
+/analyze
 
 # debug
 npm-debug.log*

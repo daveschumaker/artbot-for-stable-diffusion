@@ -9,6 +9,7 @@ const nextConfig = {
   images: {
     domains: ['raw.githubusercontent.com']
   },
+  productionBrowserSourceMaps: process.env.ANALYZE === 'true' ? true : false,
   reactStrictMode: true,
   swcMinify: true
 }
