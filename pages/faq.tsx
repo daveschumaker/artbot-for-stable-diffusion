@@ -71,7 +71,7 @@ const FaqPage = () => {
             >
               <StyledLinkIcon />
             </Linker>
-            Why are kudos and why do they exist?
+            What are kudos and why do they exist?
           </Question>
           <div className="flex flex-col gap-4">
             <p>
