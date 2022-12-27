@@ -29,10 +29,14 @@ const StyledInteractiveModal = styled.div`
     width: calc(100% - 48px);
     max-width: 752px;
     /* min-height: 480px; */
-    height: 520px;
-    left: calc(50% - 8px);
+    height: 640px;
+    left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+  }
+
+  @media (min-width: 1280px) {
+    max-width: 1008px;
   }
 `
 
