@@ -564,7 +564,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
                         <DropDownMenuItem
                           key={`${trigger}_${i}`}
                           onClick={() => {
-                            setInput({ prompt: input.prompt + ` ${trigger} ` })
+                            setInput({ prompt: `${trigger} ` + input.prompt })
                             setComponentState({ showTriggerWordsModal: false })
                           }}
                         >
