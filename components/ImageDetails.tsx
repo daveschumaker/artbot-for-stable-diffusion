@@ -282,8 +282,12 @@ const ImageDetails = ({
               // DEV NOTE: Copy to clipboard does not work on non-https links.
               // @ts-ignore
               const shareLink = ShareLinkDetails.encode(imageDetails)
+              const hostname =
+                window.location.hostname === 'localhost'
+                  ? 'http://localhost:3000'
+                  : 'https://tinybots.net'
               navigator?.clipboard
-                ?.writeText(`https://tinybots.net/artbot?share=${shareLink}`)
+                ?.writeText(`${hostname}/artbot?share=${shareLink}`)
                 .then(() => {
                   toast.success('URL copied!', {
                     pauseOnFocusLoss: false,
