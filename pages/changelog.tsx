@@ -109,6 +109,37 @@ const Changelog = () => {
         </Section>
       </Panel>
       <Section>
+        <SubSectionTitle>2022.12.27</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Minor fix: Issues with showing correct dimensions for upscaled
+            images in some situations.
+          </StyledLi>
+          <StyledLi>
+            Minor fix: Correct hostname when copying links while running project
+            in local environment (e.g., localhost vs tinybots.net)
+          </StyledLi>
+          <StyledLi>
+            Minor fix: CSS alignment issues with popup modal that handles things
+            like feedback and prompt history. I&apos;d like to use this for some
+            additional features in the future, so this better prepares things in
+            advance.
+          </StyledLi>
+          <StyledLi>
+            Change model trigger behavior to default always adding trigger to
+            front of prompt.
+            <AddedInfo>
+              Thoughts behind this: Stable Diffusion tends to place more
+              emphasis on words at the beginning of a prompt. If you&apos;re
+              using a custom model, you probably want to trigger its special
+              behavior, so placing prompt at front seems to make the most sense.
+              Should this actually be a personal preference / configuration
+              option? Let me know.
+            </AddedInfo>
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.12.26</SubSectionTitle>
         <StyledUl>
           <StyledLi>
@@ -120,6 +151,9 @@ const Changelog = () => {
           </StyledLi>
           <StyledLi>Removed snowflakes... until next year!</StyledLi>
           <StyledLi>Show model version on info page.</StyledLi>
+          <StyledLi>
+            Hitting ESC should now close popup modals and drop down menus.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
