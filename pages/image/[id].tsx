@@ -221,6 +221,8 @@ const ImagePage = () => {
     imageDetails.sampler
   )
 
+  const imageUpscaled =
+    imageDetails?.post_processing?.indexOf('RealESRGAN_x4plus') >= 0
 
   return (
     <div>
@@ -292,11 +294,12 @@ const ImagePage = () => {
           <div className="mb-4">
             <PageTitle>Advanced Options</PageTitle>
             <Section>
-              {imageDetails.upscaled ? (
+              {imageUpscaled ? (
                 <div>[ upscaled image (already upscaled)]</div>
               ) : (
                 <OptionsLink onClick={() => handleUpscaleClick()}>
-                  [ upscale image ({upscaleCost} kudos) {pendingUpscale && '(processing...)'} ]
+                  [ upscale image ({upscaleCost} kudos){' '}
+                  {pendingUpscale && '(processing...)'} ]
                 </OptionsLink>
               )}
             </Section>

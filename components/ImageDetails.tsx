@@ -45,6 +45,7 @@ interface ImageDetails {
   karras: boolean
   worker_id?: string
   stylePreset: string
+  post_processing: Array<string>
   models: Array<string>
 }
 
@@ -62,7 +63,7 @@ const MobileHideText = styled.span`
 
 const ImageDetails = ({
   imageDetails,
-  onDelete = () => { }
+  onDelete = () => {}
 }: ImageDetailsProps) => {
   const router = useRouter()
 
@@ -145,6 +146,8 @@ const ImageDetails = ({
   )
 
   const modelName = imageDetails.models[0] || imageDetails.model
+  const imageUpscaled =
+    imageDetails?.post_processing?.indexOf('RealESRGAN_x4plus') >= 0
 
   return (
     <div className="mt-2 text-left">
@@ -176,7 +179,7 @@ const ImageDetails = ({
                 {imageDetails.parentJobId}
               </Linker>
             </li>
-            {imageDetails.upscaled && <li>UPSCALED IMAGE</li>}
+            {imageUpscaled && <li>UPSCALED IMAGE</li>}
             {imageDetails.img2img && <li>Source: img2img</li>}
             {imageDetails.negative && (
               <li>Negative prompt: {imageDetails.negative}</li>
@@ -186,17 +189,11 @@ const ImageDetails = ({
             )}
             <li>
               Height:{' '}
-              {imageDetails.upscaled
-                ? imageDetails.height * 4
-                : imageDetails.height}{' '}
-              px
+              {imageUpscaled ? imageDetails.height * 4 : imageDetails.height} px
             </li>
             <li>
               Width:{' '}
-              {imageDetails.upscaled
-                ? imageDetails.width * 4
-                : imageDetails.width}{' '}
-              px
+              {imageUpscaled ? imageDetails.width * 4 : imageDetails.width} px
             </li>
             <li>Sampler: {imageDetails.sampler}</li>
             <li>Karras: {imageDetails.karras ? 'true' : 'false'}</li>
