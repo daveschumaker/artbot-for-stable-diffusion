@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { useCallback, useEffect, useReducer, useState } from 'react'
+import { useCallback, useEffect, useReducer, useRef, useState } from 'react'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 
@@ -130,6 +130,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
   const appState = useStore(appInfoStore)
   const { buildId } = appState
 
+  const ref = useRef(null)
   const [build, setBuild] = useState(buildId)
 
   const router = useRouter()
@@ -564,8 +565,14 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
                         <DropDownMenuItem
                           key={`${trigger}_${i}`}
                           onClick={() => {
-                            setInput({ prompt: `${trigger} ` + input.prompt })
+                            setInput({
+                              prompt: `${trigger} ` + input.prompt + ` `
+                            })
                             setComponentState({ showTriggerWordsModal: false })
+                            if (ref && ref.current) {
+                              // @ts-ignore
+                              ref.current.focus()
+                            }
                           }}
                         >
                           {trigger}
@@ -611,6 +618,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
             // @ts-ignore
             onKeyDown={onEnterPress}
             value={input.prompt}
+            ref={ref}
           />
         </div>
         {hasValidationError && (

@@ -109,6 +109,16 @@ const Changelog = () => {
         </Section>
       </Panel>
       <Section>
+        <SubSectionTitle>2022.12.28</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>Minor fix: Typo on FAQ page.</StyledLi>
+          <StyledLi>
+            UX: After selecting text trigger from dropdown, automatically focus
+            text area so you can keep typing your prompt.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.12.27</SubSectionTitle>
         <StyledUl>
           <StyledLi>
