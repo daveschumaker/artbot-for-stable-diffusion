@@ -14,6 +14,7 @@ import MenuButton from '../../../components/UI/MenuButton'
 import PageTitle from '../../../components/UI/PageTitle'
 import useComponentState from '../../../hooks/useComponentState'
 import { useEffectOnce } from '../../../hooks/useEffectOnce'
+import SpinnerV2 from '../../../components/Spinner'
 
 const MenuSeparator = styled.div`
   width: 100%;
@@ -25,13 +26,12 @@ const WorkersList = styled.div`
   flex-direction: column;
   row-gap: 12px;
 `
-
 const WorkerInfoPage = () => {
   const router = useRouter()
   const [componentState, setComponentState] = useComponentState({
     isLoading: true,
     showOptionsMenu: false,
-    sort: 'kudos',
+    sort: 'requests_fulfilled',
     workers: []
   })
 
@@ -39,27 +39,12 @@ const WorkerInfoPage = () => {
     const resp = await fetch(`https://stablehorde.net/api/v2/workers`)
     const workers = await resp.json()
 
-    setComponentState({ workers })
+    setComponentState({ workers, isLoading: false })
   }
 
   useEffectOnce(() => {
     fetchWorkers()
   })
-
-  const getMenuTitle = () => {
-    if (
-      Array.isArray(router?.query?.infoSource) &&
-      router?.query?.infoSource[0] === 'workers'
-    ) {
-      return 'All workers'
-    }
-
-    if (router.query.show === 'favorite-models') {
-      return `Favorite models`
-    }
-
-    return 'All models'
-  }
 
   const sortedWorkers = componentState.workers.sort((a: any, b: any) => {
     if (componentState.sort === 'models') {
@@ -117,6 +102,23 @@ const WorkerInfoPage = () => {
     }
   })
 
+  const sortOptions = [
+    { value: 'name', label: 'Name' },
+    { value: 'requests_fulfilled', label: 'Completed' },
+    { value: 'kudos_rewards', label: 'Kudos' },
+    { value: 'models', label: 'Models' },
+    { value: 'speed_per', label: 'Speed' },
+    { value: 'uptime', label: 'Uptime' }
+  ]
+
+  const getSortOption = () => {
+    return sortOptions.filter((option) => {
+      return option.value === componentState.sort
+    })[0]
+  }
+
+  console.log(`getSort`, getSortOption())
+
   return (
     <div className="mb-4">
       <Head>
@@ -148,7 +150,7 @@ const WorkerInfoPage = () => {
               ) : (
                 <ChevronRightIcon />
               )}
-              {getMenuTitle()}
+              All workers
             </div>
           </MenuButton>
           {componentState.showOptionsMenu && (
@@ -198,31 +200,29 @@ const WorkerInfoPage = () => {
 
       <>
         <Row className="mb-2 justify-between">
-          Workers online: {componentState.workers.length}
+          Workers online:{' '}
+          {componentState.isLoading ? '...' : componentState.workers.length}
           <div className="flex flex-row gap-2 items-center">
             Sort:
             <SelectComponent
-              options={[
-                { value: 'name', label: 'Name' },
-                { value: 'requests_fulfilled', label: 'Completed' },
-                { value: 'kudos_rewards', label: 'Kudos' },
-                { value: 'models', label: 'Models' },
-                { value: 'speed_per', label: 'Speed' },
-                { value: 'uptime', label: 'Uptime' }
-              ]}
+              options={[...sortOptions]}
               onChange={(obj: { value: string; label: string }) => {
                 setComponentState({ sort: obj.value })
               }}
+              value={getSortOption()}
             />
           </div>
         </Row>
-        <WorkersList>
-          {sortedWorkers?.map((worker: any) => {
-            return (
-              <WorkerInfo editable={false} key={worker.id} worker={worker} />
-            )
-          })}
-        </WorkersList>
+        {componentState.isLoading && <SpinnerV2 />}
+        {!componentState.isLoading && (
+          <WorkersList>
+            {sortedWorkers?.map((worker: any) => {
+              return (
+                <WorkerInfo editable={false} key={worker.id} worker={worker} />
+              )
+            })}
+          </WorkersList>
+        )}
       </>
     </div>
   )

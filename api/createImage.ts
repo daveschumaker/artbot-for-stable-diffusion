@@ -44,6 +44,7 @@ interface ApiParams {
   source_processing?: string
   source_mask?: string
   r2?: boolean
+  workers?: Array<string>
 }
 
 interface ParamsObject {
@@ -84,6 +85,8 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
     denoising_strength
   } = imageDetails
 
+  const useWorkerId = AppSettings.get('useWorkerId') || ''
+
   const apiParams: ApiParams = {
     prompt,
     params: {
@@ -100,6 +103,10 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
     trusted_workers: useTrusted,
     models,
     r2: true
+  }
+
+  if (useWorkerId) {
+    apiParams.workers = [useWorkerId]
   }
 
   if (seed) {

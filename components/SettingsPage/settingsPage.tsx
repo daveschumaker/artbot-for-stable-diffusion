@@ -120,6 +120,7 @@ const SettingsPage = () => {
     stayOnCreate: false,
     showOptionsMenu: false,
     useBeta: false,
+    useWorkerId: '',
     useTrusted: true
   })
 
@@ -143,6 +144,12 @@ const SettingsPage = () => {
 
     AppSettings.save('enableNoSleep', value)
     setComponentState({ enableNoSleep: value })
+  }
+
+  const handleSetWorkerId = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const workerId = e.target.value || ''
+    AppSettings.save('useWorkerId', workerId.trim())
+    setComponentState({ useWorkerId: e.target.value })
   }
 
   const handleUpdateSelect = (key: string, obj: any) => {
@@ -176,6 +183,7 @@ const SettingsPage = () => {
     updateObj.saveInputOnCreate = AppSettings.get('saveInputOnCreate') || false
     updateObj.stayOnCreate = AppSettings.get('stayOnCreate') || false
     updateObj.useBeta = AppSettings.get('useBeta') || false
+    updateObj.useWorkerId = AppSettings.get('useWorkerId') || ''
     updateObj.useTrusted = AppSettings.get('useTrusted') || false
     updateObj.disableSnowflakes = AppSettings.get('disableSnowflakes') || false
 
@@ -449,6 +457,43 @@ const SettingsPage = () => {
                         : { value: false, label: 'All Workers' }
                     }
                   />
+                </MaxWidth>
+              </Section>
+              <Section>
+                <SubSectionTitle>
+                  Use specific worker
+                  <div className="block text-xs mb-2 mt-2 w-full">
+                    Send all of your image requests to a specific worker. Useful
+                    for debugging purposes or testing features available on
+                    particular workers.{' '}
+                    <Linker href="/info/workers" passHref>
+                      View all available workers
+                    </Linker>
+                  </div>
+                </SubSectionTitle>
+                <MaxWidth
+                  // @ts-ignore
+                  maxWidth="480"
+                >
+                  <Input
+                    type="text"
+                    name="steps"
+                    onChange={handleSetWorkerId}
+                    value={componentState.useWorkerId}
+                  />
+                  <div className="flex gap-2 mt-2 justify-start">
+                    <Button
+                      btnType="secondary"
+                      onClick={() => {
+                        unsetUserInfo()
+                        setComponentState({ useWorkerId: '' })
+                        AppSettings.save('useWorkerId', '')
+                      }}
+                    >
+                      Clear
+                    </Button>
+                    <Button onClick={() => {}}>Save</Button>
+                  </div>
                 </MaxWidth>
               </Section>
               {showBetaOption && (
