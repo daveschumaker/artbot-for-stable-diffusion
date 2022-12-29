@@ -109,7 +109,27 @@ const Changelog = () => {
         </Section>
       </Panel>
       <Section>
+        <SubSectionTitle>2022.12.29</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Feature: Option to use a specific worker on the{' '}
+            <Linker href="/settings">
+              disable snowflakes on the settings page
+            </Linker>
+            . Useful for debugging purposes, testing your own worker, or testing
+            new features.
+          </StyledLi>
+          <StyledLi>
+            Minor fix: Loading spinner on workers page, type on drop down.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2022.12.28</SubSectionTitle>
+        <StyledLi>
+          MILESTONE: 🎉🎉🎉 2,000,000 images have been created with ArtBot!
+          🎉🎉🎉
+        </StyledLi>
         <StyledUl>
           <StyledLi>Minor fix: Typo on FAQ page.</StyledLi>
           <StyledLi>
