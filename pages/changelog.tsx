@@ -113,24 +113,24 @@ const Changelog = () => {
         <StyledUl>
           <StyledLi>
             Feature: Option to use a specific worker on the{' '}
-            <Linker href="/settings">
-              disable snowflakes on the settings page
-            </Linker>
-            . Useful for debugging purposes, testing your own worker, or testing
-            new features.
+            <Linker href="/settings">settings page</Linker>. Useful for
+            debugging purposes, testing your own worker, or testing new
+            features.
           </StyledLi>
           <StyledLi>
-            Minor fix: Loading spinner on workers page, type on drop down.
+            Minor fix: Loading spinner on{' '}
+            <Linker href="/info/workers">workers page</Linker>, typo on drop
+            down.
           </StyledLi>
         </StyledUl>
       </Section>
       <Section>
         <SubSectionTitle>2022.12.28</SubSectionTitle>
-        <StyledLi>
-          MILESTONE: 🎉🎉🎉 2,000,000 images have been created with ArtBot!
-          🎉🎉🎉
-        </StyledLi>
         <StyledUl>
+          <StyledLi>
+            MILESTONE: 🎉🎉🎉 2,000,000 images have been created with ArtBot!
+            🎉🎉🎉
+          </StyledLi>
           <StyledLi>Minor fix: Typo on FAQ page.</StyledLi>
           <StyledLi>
             UX: After selecting text trigger from dropdown, automatically focus
