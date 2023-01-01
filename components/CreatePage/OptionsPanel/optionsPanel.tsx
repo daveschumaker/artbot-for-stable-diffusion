@@ -89,6 +89,7 @@ const OptionsPanel = ({
     setInput({
       height: data.height,
       width: data.width,
+      orientationType: 'custom',
       imageType: data.imageType,
       source_image: data.source_image,
       source_mask: '',

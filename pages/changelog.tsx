@@ -54,7 +54,7 @@ const LinkButton = styled.div`
 /** TEMPLATE
 
 <Section>
-  <SubSectionTitle>2022.10.27</SubSectionTitle>
+  <SubSectionTitle>2023.01.01</SubSectionTitle>
   <StyledUl>
     <StyledLi>test</StyledLi>
   </StyledUl>
@@ -108,6 +108,19 @@ const Changelog = () => {
           </StyledUl>
         </Section>
       </Panel>
+      <Section>
+        <SubSectionTitle>2023.01.01</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>Happy New Year!</StyledLi>
+          <StyledLi>
+            Fix: When importing an image for use with inpainting, automatically
+            set custom dimensions of image request based on size of your painted
+            image. (You can still change the size, but I find that this helps
+            with preventing squashed images when inpainting if you forget to
+            change the size).
+          </StyledLi>
+        </StyledUl>
+      </Section>
       <Section>
         <SubSectionTitle>2022.12.29</SubSectionTitle>
         <StyledUl>
