@@ -93,21 +93,40 @@ const Changelog = () => {
           <SubSectionTitle>Ongoing issues:</SubSectionTitle>
           <StyledUl>
             <StyledLi>
+              2023.01.02 - Thanks to some backend changes with the Stable Horde
+              API, it seems like backend issues with inpainting are starting to
+              be resolved. Let&apos;s cross our fingers!
+            </StyledLi>
+            <StyledLi>
               2022.12.24 - Bulk downloads using the export option are a bit
               buggy. I believe this is due to browser and device memory
               limitations. I&apos;m investigating ways to make the downloads
               easier (perhaps breaking them up into a series of files that you
-              would have to manually download).
-            </StyledLi>
-            <StyledLi>
-              2022.11.20 - There are backend issues with workers using
-              inpainting models via the Stable Horde API at the moment and I am
-              waiting on a more solid resolution. It may work for you, it may
-              not. Seems to depend on which worker is available at a given time.
+              would have to manually download). In the meantime, you can
+              optionally download 100 images at a time on from the{' '}
+              <Linker href="/images">images page</Linker> or groups of your
+              favorite images. (I know that some of you have thousands of images
+              and this is not ideal at the moment.)
             </StyledLi>
           </StyledUl>
         </Section>
       </Panel>
+      <Section>
+        <SubSectionTitle>2023.01.02</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: Issue with importing image for use with inpainting when image
+            width is smaller than canvas width.
+          </StyledLi>
+          <StyledLi>
+            Fix: After yesterday&apos;s fix related to automatically adding
+            image dimensions, we now automatically set custom dimensions for
+            images imported via inpainting to nearest integer divisble by 64 --
+            this is something that Stable Diffusion requires. (You can override
+            this, should you want to.)
+          </StyledLi>
+        </StyledUl>
+      </Section>
       <Section>
         <SubSectionTitle>2023.01.01</SubSectionTitle>
         <StyledUl>
