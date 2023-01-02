@@ -3,7 +3,11 @@ import styled from 'styled-components'
 import { useDropzone } from 'react-dropzone'
 
 import PlusIcon from '../icons/PlusIcon'
-import { getBase64, imageDimensions } from '../../utils/imageUtils'
+import {
+  getBase64,
+  imageDimensions,
+  nearestWholeMultiple
+} from '../../utils/imageUtils'
 
 const imgConfig = {
   quality: 0.9,

@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import 'fabric-history'
 
 import { debounce } from '../../utils/debounce'
-import { getBase64 } from '../../utils/imageUtils'
+import { getBase64, nearestWholeMultiple } from '../../utils/imageUtils'
 import { Button } from '../UI/Button'
 import BrushIcon from '../icons/BrushIcon'
 import EraserIcon from '../icons/EraserIcon'
@@ -490,8 +490,8 @@ const Inpaint = ({ handleRemoveClick, setInput }: Props) => {
       source_mask: data.mask,
       source_processing: 'inpainting',
       orientation: 'custom',
-      height: canvasRef.current.height,
-      width: canvasRef.current.width
+      height: nearestWholeMultiple(canvasRef.current.height || 512),
+      width: nearestWholeMultiple(canvasRef.current.width || 512)
     })
   }
 

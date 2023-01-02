@@ -16,6 +16,7 @@ import { useStore } from 'statery'
 import { modelInfoStore } from '../../../store/modelStore'
 import AlertTriangleIcon from '../../icons/AlertTriangle'
 import Linker from '../../UI/Linker'
+import { nearestWholeMultiple } from '../../../utils/imageUtils'
 
 interface LiProps {
   active?: boolean
@@ -87,8 +88,8 @@ const OptionsPanel = ({
     })
 
     setInput({
-      height: data.height,
-      width: data.width,
+      height: nearestWholeMultiple(data.height),
+      width: nearestWholeMultiple(data.width),
       orientationType: 'custom',
       imageType: data.imageType,
       source_image: data.source_image,
