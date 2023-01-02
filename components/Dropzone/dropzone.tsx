@@ -77,9 +77,9 @@ export default function Dropzone(props: UploaderProps) {
           imageType,
           source_image: imgBase64String,
           //@ts-ignore
-          height: imageDetails?.height,
+          height: nearestWholeMultiple(imageDetails?.height),
           //@ts-ignore
-          width: imageDetails?.width
+          width: nearestWholeMultiple(imageDetails?.width)
         })
       }
 
