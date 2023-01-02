@@ -343,11 +343,10 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
     await createImageJob(new CreateImageRequest(inputToSubmit))
 
     if (!AppSettings.get('stayOnCreate')) {
-      if (AppSettings.get('saveInputOnCreate')) {
+      if (!AppSettings.get('saveInputOnCreate')) {
         clearInputCache()
+        clearCanvasStore()
       }
-
-      clearCanvasStore()
 
       router.push('/pending')
     } else {

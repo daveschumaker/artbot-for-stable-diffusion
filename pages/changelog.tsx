@@ -125,6 +125,10 @@ const Changelog = () => {
             this is something that Stable Diffusion requires. (You can override
             this, should you want to.)
           </StyledLi>
+          <StyledLi>
+            Fix: In some instances, image settings and requests were not reset
+            if option to preserve settings was disabled.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
