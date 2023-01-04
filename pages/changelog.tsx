@@ -112,6 +112,19 @@ const Changelog = () => {
         </Section>
       </Panel>
       <Section>
+        <SubSectionTitle>2023.01.03</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: Resolve issue with image sizes resetting to 512x512 after
+            encountering an API error.
+          </StyledLi>
+          <StyledLi>
+            Fix: Ensure old inpainting canvas has been removed prior to
+            importing / uploading a brand new image.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.01.02</SubSectionTitle>
         <StyledUl>
           <StyledLi>
@@ -128,6 +141,10 @@ const Changelog = () => {
           <StyledLi>
             Fix: In some instances, image settings and requests were not reset
             if option to preserve settings was disabled.
+          </StyledLi>
+          <StyledLi>
+            Attempt to fix inpainting scaling issues when importing via a mobile
+            device.
           </StyledLi>
         </StyledUl>
       </Section>
