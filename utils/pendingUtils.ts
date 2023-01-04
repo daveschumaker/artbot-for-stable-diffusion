@@ -1,4 +1,4 @@
-import { MAX_IMAGES_PER_JOB } from '../constants'
+import { DEFAULT_SAMPLER_ARRAY, MAX_IMAGES_PER_JOB } from '../constants'
 import CreateImageRequest from '../models/CreateImageRequest'
 import RerollImageRequest from '../models/RerollImageRequest'
 import { uuidv4 } from './appUtils'
@@ -104,18 +104,7 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
     imageParams.numImages = 1
 
     // TODO: Blarg. Should not hard code this. Constants, man. CONSTANTS.
-    let samplerArray = [
-      'k_dpm_2_a',
-      'k_dpm_2',
-      'k_euler_a',
-      'k_euler',
-      'k_heun',
-      'k_lms',
-      'k_dpm_fast',
-      'k_dpm_adaptive',
-      'k_dpmpp_2m',
-      'k_dpmpp_2s_a'
-    ]
+    let samplerArray = [...DEFAULT_SAMPLER_ARRAY]
 
     if (imageParams.models[0] === 'stable_diffusion_2') {
       samplerArray = ['dpmsolver']
