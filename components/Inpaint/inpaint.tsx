@@ -17,6 +17,8 @@ import {
   storeCanvas
 } from '../../store/canvasStore'
 import { getCanvasHeight, getPanelWidth } from '../../utils/fabricUtils'
+import { SourceProcessing } from '../../utils/promptUtils'
+// import DownloadIcon from '../icons/DownloadIcon'
 
 interface IHistory {
   path: fabric.Path
@@ -47,9 +49,14 @@ const StyledCanvas = styled.canvas<CanvasProps>`
 interface Props {
   handleRemoveClick: any
   setInput: any
+  paintType?: SourceProcessing
 }
 
-const Inpaint = ({ handleRemoveClick, setInput }: Props) => {
+const Inpaint = ({
+  handleRemoveClick,
+  setInput,
+  paintType = SourceProcessing.InPainting
+}: Props) => {
   const [, setDrawMode] = useState<string>('paint')
 
   const brushRef = useRef<any>(null)
@@ -246,7 +253,8 @@ const Inpaint = ({ handleRemoveClick, setInput }: Props) => {
   const makeInvisibleDrawLayer = (height = 512, width = 768) => {
     const newDrawLayer = new fabric.Canvas(null)
 
-    newDrawLayer.backgroundColor = 'black'
+    newDrawLayer.backgroundColor =
+      paintType === SourceProcessing.InPainting ? 'black' : 'white'
     newDrawLayer.selection = false
     newDrawLayer.setHeight(height)
     newDrawLayer.setWidth(width)
@@ -346,6 +354,14 @@ const Inpaint = ({ handleRemoveClick, setInput }: Props) => {
       return
     }
 
+    let pathColor = 'white'
+    let backgroundColor = 'black'
+
+    if (paintType === SourceProcessing.Img2Img) {
+      pathColor = 'black'
+      backgroundColor = 'white'
+    }
+
     newPath.path.selectable = false
     newPath.path.opacity = 1
 
@@ -354,9 +370,10 @@ const Inpaint = ({ handleRemoveClick, setInput }: Props) => {
 
     if (!eraseOverride && drawModeRef.current === 'erase') {
       newPath.visibleDrawPath.globalCompositeOperation = 'destination-out'
-      newPath.drawPath.stroke = 'black'
+      newPath.drawPath.stroke = backgroundColor
     } else {
       newPath.visibleDrawPath.globalCompositeOperation = 'source-over'
+      newPath.drawPath.stroke = pathColor
     }
     drawLayerRef.current.add(newPath.drawPath)
     visibleDrawLayerRef.current.addWithUpdate(newPath.visibleDrawPath)
@@ -484,11 +501,17 @@ const Inpaint = ({ handleRemoveClick, setInput }: Props) => {
         .split(',')[1]
     }
 
+    let source_processing = SourceProcessing.InPainting
+
+    if (paintType === SourceProcessing.Img2Img) {
+      source_processing = SourceProcessing.Img2Img
+    }
+
     setInput({
       imageType: 'image/webp',
       source_image: data.image,
       source_mask: data.mask,
-      source_processing: 'inpainting',
+      source_processing,
       orientation: 'custom',
       height: nearestWholeMultiple(canvasRef.current.height || 512),
       width: nearestWholeMultiple(canvasRef.current.width || 512)
