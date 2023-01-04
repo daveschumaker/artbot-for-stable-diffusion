@@ -154,6 +154,9 @@ const PendingItem = memo(({ jobDetails, jobId }) => {
       deletePendingJobFromApi(jobId)
     }
 
+    // Fixes https://github.com/daveschumaker/artbot-for-stable-diffusion/issues/23
+    jobDetails.orientationType = jobDetails.orientation
+
     const clonedParams = new CreateImageRequest(jobDetails)
     clonedParams.useAllModels = false
     clonedParams.useAllSamplers = false
