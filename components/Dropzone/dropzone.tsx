@@ -3,7 +3,11 @@ import styled from 'styled-components'
 import { useDropzone } from 'react-dropzone'
 
 import PlusIcon from '../icons/PlusIcon'
-import { getBase64, imageDimensions } from '../../utils/imageUtils'
+import {
+  getBase64,
+  imageDimensions,
+  nearestWholeMultiple
+} from '../../utils/imageUtils'
 
 const imgConfig = {
   quality: 0.9,
@@ -77,9 +81,9 @@ export default function Dropzone(props: UploaderProps) {
           imageType,
           source_image: imgBase64String,
           //@ts-ignore
-          height: imageDetails?.height,
+          height: nearestWholeMultiple(imageDetails?.height),
           //@ts-ignore
-          width: imageDetails?.width
+          width: nearestWholeMultiple(imageDetails?.width)
         })
       }
 
