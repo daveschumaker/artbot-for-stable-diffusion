@@ -112,6 +112,22 @@ const Changelog = () => {
         </Section>
       </Panel>
       <Section>
+        <SubSectionTitle>2023.01.04</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Feature: Proper kudos cost and image generation numbers on the
+            create page.
+            <AddedInfo>
+              When you create a new image request using combinations of various
+              settings (like a prompt matrix, multiple steps, all samplers,
+              etc), image counts can inflate pretty quickly. You now have more
+              visibility into how many images you are requesting from the Stable
+              Horde API, as well as updated kudos costs (total and per image).
+            </AddedInfo>
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.01.03</SubSectionTitle>
         <StyledUl>
           <StyledLi>

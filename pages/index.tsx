@@ -488,6 +488,32 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
 
   const triggerString = modelDetails[input?.models[0]]?.trigger ?? ['']
   const triggerArray = triggerString[0].split(', ')
+  const totalImagesRequested = countImagesToGenerate({
+    numImages: input.numImages,
+    useMultiSteps: input.useMultiSteps,
+    multiSteps: input.multiSteps,
+    prompt: input.prompt,
+    models: input.models,
+    useAllModels: input.useAllModels,
+    useFavoriteModels: input.useFavoriteModels,
+    useAllSamplers: input.useAllSamplers
+  })
+  const totalKudosCost = kudosCost(
+    input.width,
+    input.height,
+    input.steps,
+    totalImagesRequested || 1,
+    input.post_processing.indexOf('RealESRGAN_x4plus') === -1 ? false : true,
+    input.post_processing.length,
+    input.sampler
+  )
+
+  const kudosPerImage =
+    totalImagesRequested < 1 ||
+    isNaN(totalKudosCost) ||
+    isNaN(totalImagesRequested)
+      ? 'N/A'
+      : Number(totalKudosCost / totalImagesRequested).toFixed(2)
 
   return (
     <main>
@@ -671,32 +697,26 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
                 {pending ? 'Creating...' : 'Create'}
               </Button>
             </div>
-            <div>
-              Num Images:{' '}
-              {countImagesToGenerate({
-                numImages: input.numImages,
-                useMultiSteps: input.useMultiSteps,
-                multiSteps: input.multiSteps
-              })}
-            </div>
-            <div className="text-xs flex flex-row justify-end gap-2">
-              Generation cost:{' '}
-              <Linker href="/faq#kudos" passHref>
-                <>
-                  {kudosCost(
-                    input.width,
-                    input.height,
-                    input.steps,
-                    input.numImages,
-                    input.post_processing.indexOf('RealESRGAN_x4plus') === -1
-                      ? false
-                      : true,
-                    input.post_processing.length,
-                    input.sampler
-                  )}{' '}
-                  kudos
-                </>
-              </Linker>
+            <div className="flex flex-row justify-end">
+              <div className="flex flex-col justify-end">
+                <div className="text-xs flex flex-row justify-end gap-2">
+                  Images requested:{' '}
+                  <strong>{' ' + totalImagesRequested}</strong>
+                </div>
+                <div className="text-xs flex flex-row justify-end gap-2">
+                  {' '}
+                  Generation cost:{' '}
+                  <Linker href="/faq#kudos" passHref>
+                    <>{totalKudosCost} kudos</>
+                  </Linker>
+                </div>
+                <div className="text-xs flex flex-row justify-end gap-2">
+                  Per image:{' '}
+                  <Linker href="/faq#kudos" passHref>
+                    <>{kudosPerImage} kudos</>
+                  </Linker>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -737,24 +757,25 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
             {pending ? 'Creating...' : 'Create'}
           </Button>
         </div>
-        <div className="text-xs flex flex-row justify-end gap-2">
-          Generation cost:{' '}
-          <Linker href="/faq#kudos" passHref>
-            <>
-              {kudosCost(
-                input.width,
-                input.height,
-                input.steps,
-                input.numImages,
-                input.post_processing.indexOf('RealESRGAN_x4plus') === -1
-                  ? false
-                  : true,
-                input.post_processing.length,
-                input.sampler
-              )}{' '}
-              kudos
-            </>
-          </Linker>
+        <div className="flex flex-row justify-end">
+          <div className="flex flex-col justify-end">
+            <div className="text-xs flex flex-row justify-end gap-2">
+              Images requested: <strong>{' ' + totalImagesRequested}</strong>
+            </div>
+            <div className="text-xs flex flex-row justify-end gap-2">
+              {' '}
+              Generation cost:{' '}
+              <Linker href="/faq#kudos" passHref>
+                <>{totalKudosCost} kudos</>
+              </Linker>
+            </div>
+            <div className="text-xs flex flex-row justify-end gap-2">
+              Per image:{' '}
+              <Linker href="/faq#kudos" passHref>
+                <>{kudosPerImage} kudos</>
+              </Linker>
+            </div>
+          </div>
         </div>
       </div>
     </main>

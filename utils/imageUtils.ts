@@ -5,6 +5,10 @@ import { initBlob } from './blobUtils'
 import { SourceProcessing } from './promptUtils'
 import { stylePresets } from './stylePresets'
 import { isValidHttpUrl } from './validationUtils'
+import { hasPromptMatrix, promptMatrix } from './promptUtils'
+import { validModelsArray } from './modelUtils'
+import AppSettings from '../models/AppSettings'
+import { DEFAULT_SAMPLER_ARRAY } from '../constants'
 
 interface CreateImageJob {
   base64String?: string
@@ -561,6 +565,8 @@ interface ICountImages {
   useFavoriteModels?: boolean
   useAllSamplers?: boolean
   useMultiSteps?: boolean
+  prompt?: string
+  models?: Array<string>
 }
 
 export const countImagesToGenerate = ({
@@ -569,7 +575,9 @@ export const countImagesToGenerate = ({
   useAllModels = false,
   useFavoriteModels = false,
   useAllSamplers = false,
-  useMultiSteps = false
+  useMultiSteps = false,
+  models = [],
+  prompt = ''
 }: ICountImages) => {
   let imageCount = numImages
 
@@ -585,6 +593,40 @@ export const countImagesToGenerate = ({
     })
 
     imageCount = imageCount * splitCount
+  }
+
+  if (hasPromptMatrix(prompt)) {
+    const matrixPrompts = [...promptMatrix(prompt)] || ['']
+    imageCount = imageCount * matrixPrompts.length
+  }
+
+  if (models.length > 1) {
+    imageCount = imageCount * models.length
+  }
+
+  if (useAllModels) {
+    const modelsArray = validModelsArray() || ['']
+    imageCount = imageCount * modelsArray.length
+  }
+
+  if (useFavoriteModels) {
+    const favModels = AppSettings.get('favoriteModels') || {}
+    const favModelCount =
+      Object.keys(favModels).length > 0 ? Object.keys(favModels).length : 1
+    imageCount = imageCount * favModelCount
+  }
+
+  if (useAllSamplers) {
+    let samplerCount = DEFAULT_SAMPLER_ARRAY.length
+
+    if (
+      models[0] === 'stable_diffusion_2.0' ||
+      models[0] === 'stable_diffusion_2.1'
+    ) {
+      samplerCount = 1
+    }
+
+    imageCount = imageCount * samplerCount
   }
 
   return imageCount
