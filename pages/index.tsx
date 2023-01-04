@@ -146,7 +146,10 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
 
   let initialState: any = defaultState
 
-  if (loadModel === 'stable_diffusion_2.0') {
+  if (
+    loadModel === 'stable_diffusion_2.0' ||
+    loadModel === 'stable_diffusion_2.1'
+  ) {
     initialState.models = [loadModel]
     initialState.sampler = 'dpmsolver'
   } else if (loadModel) {

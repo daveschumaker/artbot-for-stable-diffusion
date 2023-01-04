@@ -142,7 +142,10 @@ const modelerOptions = () => {
 }
 
 const samplerOptions = (input: any) => {
-  if (input.models[0] === 'stable_diffusion_2.0') {
+  if (
+    input.models[0] === 'stable_diffusion_2.0' ||
+    input.models[0] === 'stable_diffusion_2.1'
+  ) {
     return [{ value: 'dpmsolver', label: 'dpmsolver' }]
   }
 
@@ -983,7 +986,10 @@ const AdvancedOptionsPanel = ({
                     )
                   }
 
-                  if (obj.value === 'stable_diffusion_2.0') {
+                  if (
+                    obj.value === 'stable_diffusion_2.0' ||
+                    obj.value === 'stable_diffusion_2.1'
+                  ) {
                     setInput({
                       models: [obj.value],
                       sampler: 'dpmsolver'
@@ -1169,7 +1175,8 @@ const AdvancedOptionsPanel = ({
                   useAllModels: true,
                   useFavoriteModels: false,
                   useMultiSteps: false,
-                  useAllSamplers: false
+                  useAllSamplers: false,
+                  numImages: 1
                 })
               } else {
                 setInput({ useAllModels: false })
@@ -1206,8 +1213,7 @@ const AdvancedOptionsPanel = ({
                 setInput({
                   useFavoriteModels: true,
                   useAllSamplers: false,
-                  useMultiSteps: false,
-                  numImages: 1
+                  useMultiSteps: false
                 })
               } else {
                 setInput({ useFavoriteModels: false })

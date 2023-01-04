@@ -56,7 +56,10 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
       clonedParams = cloneImageParams(imageParams)
       clonedParams.models = [model]
 
-      if (model === 'stable_diffusion_2.0') {
+      if (
+        model === 'stable_diffusion_2.0' ||
+        model === 'stable_diffusion_2.1'
+      ) {
         clonedParams.sampler = 'dpmsolver'
       }
 
@@ -158,7 +161,10 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
       clonedParams = cloneImageParams(imageParams)
       clonedParams.models = [modelName]
 
-      if (modelName === 'stable_diffusion_2.0') {
+      if (
+        modelName === 'stable_diffusion_2.0' ||
+        modelName === 'stable_diffusion_2.1'
+      ) {
         clonedParams.sampler = 'dpmsolver'
       }
 
