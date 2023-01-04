@@ -79,6 +79,7 @@ const OptionsPanel = ({
   }, [router.query])
 
   const handleSaveAction = async (data: any) => {
+    clearCanvasStore() // Handle bug where previous canvas may show up.
     const newBase64String = `data:${data.imageType};base64,${data.source_image}`
 
     setI2iUploaded({

@@ -51,7 +51,7 @@ export const getPanelWidth = (windowWidth: number) => {
   }
 
   if (windowWidth < 640) {
-    containerWidth = windowWidth - 46
+    containerWidth = windowWidth - 58
   }
 
   return containerWidth
