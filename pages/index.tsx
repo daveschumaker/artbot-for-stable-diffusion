@@ -36,7 +36,11 @@ import StylesDrodown from '../components/CreatePage/StylesDropdown'
 import { useStore } from 'statery'
 import { appInfoStore } from '../store/appStore'
 import AppSettings from '../models/AppSettings'
-import { kudosCost, orientationDetails } from '../utils/imageUtils'
+import {
+  countImagesToGenerate,
+  kudosCost,
+  orientationDetails
+} from '../utils/imageUtils'
 import { toast } from 'react-toastify'
 import Linker from '../components/UI/Linker'
 import InteractiveModal from '../components/UI/InteractiveModal/interactiveModal'
@@ -663,6 +667,14 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
                 <span>{pending ? '' : <SquarePlusIcon />}</span>
                 {pending ? 'Creating...' : 'Create'}
               </Button>
+            </div>
+            <div>
+              Num Images:{' '}
+              {countImagesToGenerate({
+                numImages: input.numImages,
+                useMultiSteps: input.useMultiSteps,
+                multiSteps: input.multiSteps
+              })}
             </div>
             <div className="text-xs flex flex-row justify-end gap-2">
               Generation cost:{' '}

@@ -553,3 +553,39 @@ export const downloadFile = async (image: any) => {
   const { saveAs } = (await import('file-saver')).default
   saveAs(newBlob, filename)
 }
+
+interface ICountImages {
+  numImages: number
+  multiSteps?: string
+  useAllModels?: boolean
+  useFavoriteModels?: boolean
+  useAllSamplers?: boolean
+  useMultiSteps?: boolean
+}
+
+export const countImagesToGenerate = ({
+  numImages = 0,
+  multiSteps = '',
+  useAllModels = false,
+  useFavoriteModels = false,
+  useAllSamplers = false,
+  useMultiSteps = false
+}: ICountImages) => {
+  let imageCount = numImages
+
+  if (useMultiSteps) {
+    let splitSteps = multiSteps.split(',') || []
+    let splitCount = 0
+
+    splitSteps.forEach((split) => {
+      // @ts-ignore
+      if (!isNaN(split) && split) {
+        splitCount++
+      }
+    })
+
+    imageCount = imageCount * splitCount
+  }
+
+  return imageCount
+}
