@@ -1,5 +1,5 @@
 import StableDiffusionModel from '../models/StableDiffusionModel'
-import { setAvailableModels } from '../store/modelStore'
+import { modelInfoStore, setAvailableModels } from '../store/modelStore'
 import { isAppActive } from '../utils/appUtils'
 import fetchModelDetails from './fetchModelDetails'
 
@@ -50,18 +50,24 @@ export const fetchAvailableModels = async () => {
 }
 
 export const buildModelAvailability = async () => {
-  let modelAvailability = []
+  let modelAvailability: any = []
   const availableModelsMap = (await fetchModelDetails()) || {}
   try {
     modelAvailability = (await fetchAvailableModels()) || []
 
-    modelAvailability?.forEach((model) => {
+    modelAvailability?.forEach((model: any) => {
       availableModelsMap[model.name] = { ...model }
     })
   } catch (err) {
     // If nothing happens here, ignore it for now.
   } finally {
-    if (modelAvailability.length > 0) {
+    const currentModelCount = Object.keys(
+      modelInfoStore.state.availableModels
+    ).length
+
+    const validCount = currentModelCount > 1 && modelAvailability.length > 1
+
+    if (validCount || currentModelCount === 0) {
       setAvailableModels(availableModelsMap)
     }
   }
