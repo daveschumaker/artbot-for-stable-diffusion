@@ -9,6 +9,7 @@ import useComponentState from '../../hooks/useComponentState'
 import { requestIterrogate } from '../../api/requestInterrogate'
 import SpinnerV2 from '../Spinner'
 import { checkInterrogate } from '../../api/checkInterrogate'
+import Head from 'next/head'
 
 interface FlexRowProps {
   bottomPadding?: number
@@ -243,6 +244,9 @@ const Interrogate = () => {
 
   return (
     <>
+      <Head>
+        <title>ArtBot - Interrogate Image</title>
+      </Head>
       <PageTitle>Interrogate Image</PageTitle>
       <Section>
         <SubSectionTitle>
@@ -250,21 +254,18 @@ const Interrogate = () => {
           <div className="block text-xs mb-2 w-full">
             {componentState.interrogationType.value === 'caption' && (
               <>
-                Caption: Stable Diffusion attempts to generate a caption that
-                best describes an image.
+                Caption: Attempts to generate a caption that best describes an
+                image.
               </>
             )}
             {componentState.interrogationType.value === 'interrogation' && (
               <>
-                Interrogation: Stable Diffusion attempts to generate a list of
-                words and confidence levels that describe an image.
+                Interrogation: Attempts to generate a list of words and
+                confidence levels that describe an image.
               </>
             )}
             {componentState.interrogationType.value === 'nsfw' && (
-              <>
-                Interrogation: Stable Diffusion attempts to determine if an
-                image contains NSFW.
-              </>
+              <>Interrogation: Attempts to determine if an image is NSFW.</>
             )}
           </div>
         </SubSectionTitle>
