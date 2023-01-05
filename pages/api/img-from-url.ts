@@ -1,5 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import sizeOf from 'buffer-image-size'
 import sharp from 'sharp'
+import ufs from '../../server/utils/fileSize'
 
 type Data = {
   success: boolean
@@ -66,6 +68,15 @@ export default async function handler(
 
   const { imageUrl, r2 = false } = req.body
 
+  const fileSize = await ufs(imageUrl)
+
+  if (fileSize > 10000000) {
+    return res.send({
+      success: false,
+      status: 'ERROR_IMAGE_SIZE'
+    })
+  }
+
   const resp = await fetch(imageUrl)
   const imageType = resp.headers.get('Content-Type')
 
@@ -74,7 +85,10 @@ export default async function handler(
   // @ts-ignore
   const imgBuffer = await resp.buffer()
 
-  if (!r2) {
+  var dimensions = sizeOf(imgBuffer)
+  const shouldResize = dimensions.height > 1024 || dimensions.width > 1024
+
+  if (!r2 && shouldResize) {
     converted = await resizeImage(imgBuffer)
   } else {
     converted = await getDataUrl(imgBuffer)
