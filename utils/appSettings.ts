@@ -1,7 +1,6 @@
 import NoSleep from 'nosleep.js'
 
 import { buildModelAvailability } from '../api/fetchAvailableModels'
-import fetchModelDetails from '../api/fetchModelDetails'
 import { fetchUserDetails } from '../api/userInfo'
 import AppSettings from '../models/AppSettings'
 

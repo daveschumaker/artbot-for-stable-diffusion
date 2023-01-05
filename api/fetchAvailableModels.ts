@@ -50,9 +50,10 @@ export const fetchAvailableModels = async () => {
 }
 
 export const buildModelAvailability = async () => {
+  let modelAvailability = []
   const availableModelsMap = (await fetchModelDetails()) || {}
   try {
-    const modelAvailability = (await fetchAvailableModels()) || []
+    modelAvailability = (await fetchAvailableModels()) || []
 
     modelAvailability?.forEach((model) => {
       availableModelsMap[model.name] = { ...model }
@@ -60,6 +61,8 @@ export const buildModelAvailability = async () => {
   } catch (err) {
     // If nothing happens here, ignore it for now.
   } finally {
-    setAvailableModels(availableModelsMap)
+    if (modelAvailability.length > 0) {
+      setAvailableModels(availableModelsMap)
+    }
   }
 }
