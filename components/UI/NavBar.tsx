@@ -16,6 +16,7 @@ import InfoIcon from '../icons/InfoIcon'
 import PhotoIcon from '../icons/PhotoIcon'
 import PhotoPlusIcon from '../icons/PhotoPlusIcon'
 import SettingsIcon from '../icons/SettingsIcon'
+import ZoomQuestionIcon from '../icons/ZoomQuestionIcon'
 
 const StyledNavBar = styled.nav`
   display: none;
@@ -43,7 +44,7 @@ interface LiProps {
 const StyledLi = styled.li<LiProps>`
   border-bottom: 2px solid transparent;
   color: ${(props) => props.theme.navLinkNormal};
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   padding: 4px 8px;
   text-align: left;
@@ -94,6 +95,12 @@ export default function NavBar() {
           <StyledLi active={isActiveRoute('/')}>
             <IconCreate className="inline-block mr-1 pb-1" />
             Create
+          </StyledLi>
+        </Link>
+        <Link href="/interrogate" passHref>
+          <StyledLi active={isActiveRoute('/interrogate')}>
+            <ZoomQuestionIcon className="inline-block mr-1 pb-1" />
+            Interrogate
           </StyledLi>
         </Link>
         <Link href="/pending" passHref>
