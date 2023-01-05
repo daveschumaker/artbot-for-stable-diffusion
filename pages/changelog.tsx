@@ -140,6 +140,12 @@ const Changelog = () => {
               Horde API, as well as updated kudos costs (total and per image).
             </AddedInfo>
           </StyledLi>
+          <StyledLi>
+            Feature: Added a new slide out menu system that&apos;s available
+            across the app on both mobile and desktop devices. ArtBot is
+            starting to get a lot of options, so this is a nice way to list
+            everything available on the site.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

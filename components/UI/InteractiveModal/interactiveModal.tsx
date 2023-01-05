@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import CloseIcon from '../../icons/CloseIcon'
 import Overlay from '../Overlay'
-import { useScrollLock } from '../../../hooks/useScrollLock'
+import { lockScroll, unlockScroll } from '../../../utils/appUtils'
 
 const CloseIconWrapper = styled.div`
   cursor: pointer;
@@ -41,8 +41,6 @@ const StyledInteractiveModal = styled.div`
 `
 
 const InteractiveModal = (props: any) => {
-  const { lockScroll, unlockScroll } = useScrollLock()
-
   const keyDownHandler = (event: any) => {
     if (event.key === 'Escape') {
       event.preventDefault()
