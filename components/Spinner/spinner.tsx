@@ -1,10 +1,14 @@
 import styled from 'styled-components'
 
-const StyledSVG = styled.svg`
+interface StyleProps {
+  size: number
+}
+
+const StyledSVG = styled.svg<StyleProps>`
   animation: rotate 2s linear infinite;
   z-index: 2;
-  width: 50px;
-  height: 50px;
+  width: ${(props) => props.size}px;
+  height: ${(props) => props.size}px;
 
   @keyframes rotate {
     100% {
@@ -35,9 +39,9 @@ const StyledCircle = styled.circle`
   }
 `
 
-export default function SpinnerV2() {
+export default function SpinnerV2({ size = 50 }) {
   return (
-    <StyledSVG viewBox="0 0 50 50">
+    <StyledSVG viewBox={`0 0 50 50`} size={size}>
       <StyledCircle
         cx="25"
         cy="25"
