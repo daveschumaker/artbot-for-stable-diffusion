@@ -93,11 +93,6 @@ const Changelog = () => {
           <SubSectionTitle>Ongoing issues:</SubSectionTitle>
           <StyledUl>
             <StyledLi>
-              2023.01.02 - Thanks to some backend changes with the Stable Horde
-              API, it seems like backend issues with inpainting are starting to
-              be resolved. Let&apos;s cross our fingers!
-            </StyledLi>
-            <StyledLi>
               2022.12.24 - Bulk downloads using the export option are a bit
               buggy. I believe this is due to browser and device memory
               limitations. I&apos;m investigating ways to make the downloads
@@ -119,6 +114,11 @@ const Changelog = () => {
             the image details page. Looks like I broke this due to my model
             refactor waaaaaay back on 2022.12.22. (Thanks for reporting,
             anonymous user!)
+          </StyledLi>
+          <StyledLi>
+            UX: On mobile devices, swap out icon on mobile footer for the
+            interrogate page, as it is a more useful link. (Thanks for the
+            feedback, anonymous user!)
           </StyledLi>
         </StyledUl>
       </Section>
