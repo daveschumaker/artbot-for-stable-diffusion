@@ -12,6 +12,8 @@ import { checkInterrogate } from '../../api/checkInterrogate'
 import Head from 'next/head'
 import Checkbox from '../UI/Checkbox'
 import Linker from '../UI/Linker'
+import { useEffectOnce } from '../../hooks/useEffectOnce'
+import AlertTriangleIcon from '../icons/AlertTriangle'
 
 interface FlexRowProps {
   bottomPadding?: number
@@ -91,6 +93,7 @@ const Interrogate = () => {
     sourceType: SourceType.none,
     source_image: '',
     sourceImageType: '',
+    queuedWork: null,
     results: {
       caption: '',
       nsfw: null,
@@ -100,7 +103,8 @@ const Interrogate = () => {
       caption: true,
       tags: false,
       nsfw: false
-    }
+    },
+    workers: null
   })
 
   const validOptions = useCallback(() => {
@@ -315,6 +319,24 @@ const Interrogate = () => {
     componentState.jobPending
   ])
 
+  const fetchHordeStatus = useCallback(async () => {
+    const res = await fetch('https://stablehorde.net/api/v2/status/performance')
+    const data = (await res.json()) || {}
+
+    const { interrogator_count, queued_forms } = data
+
+    if (interrogator_count >= 0) {
+      setComponentState({
+        queuedWork: queued_forms,
+        workers: data.interrogator_count
+      })
+    }
+  }, [setComponentState])
+
+  useEffectOnce(() => {
+    fetchHordeStatus()
+  })
+
   const renderInterrogationKeys = () => {
     const sortedKeys: any = []
     const elements: any = []
@@ -367,6 +389,14 @@ const Interrogate = () => {
         <title>ArtBot - Interrogate Image (img2text)</title>
       </Head>
       <PageTitle>Interrogate Image (img2text)</PageTitle>
+      {componentState.workers === 0 ? (
+        <SubSectionTitle>
+          <div className="flex flex-row items-center text-amber-500">
+            <AlertTriangleIcon size={32} /> Warning: There are currently no
+            workers available to process interrogation requests.
+          </div>
+        </SubSectionTitle>
+      ) : null}
       <SubSectionTitle>
         Discover AI generated descriptions, suggested tags, or even predicted
         NSFW status for a given image. For more information,{' '}
