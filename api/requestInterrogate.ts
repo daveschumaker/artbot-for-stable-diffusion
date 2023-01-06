@@ -2,14 +2,14 @@ import AppSettings from '../models/AppSettings'
 import { getApiHostServer } from '../utils/appUtils'
 
 interface IParams {
-  interrogationType: string
+  interrogationTypes: Array<any>
   source_image: string
 }
 
 let isPending = false
 
 export const requestIterrogate = async ({
-  interrogationType = 'caption',
+  interrogationTypes = [],
   source_image = ''
 }: IParams) => {
   const apikey = AppSettings.get('apiKey')?.trim() || '0000000000'
@@ -31,11 +31,7 @@ export const requestIterrogate = async ({
   }
 
   const apiParams = {
-    forms: [
-      {
-        name: interrogationType
-      }
-    ],
+    forms: [...interrogationTypes],
     source_image
   }
 

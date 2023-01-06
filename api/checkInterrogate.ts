@@ -16,7 +16,6 @@ export const checkInterrogate = async (jobId: string) => {
       `${getApiHostServer()}/api/v2/interrogate/status/${jobId}`
     )
     isPending = false
-    const statusCode = res.status
     const data = await res.json()
 
     return {

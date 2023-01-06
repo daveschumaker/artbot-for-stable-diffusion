@@ -112,6 +112,30 @@ const Changelog = () => {
         </Section>
       </Panel>
       <Section>
+        <SubSectionTitle>2023.01.05</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Feature: More improvements to{' '}
+            <Linker href="/interrogate">image interrogation</Linker>. You can
+            now upload images directly from your own device. Go ahead, I know
+            you want to see how the API describes your face or your kid&apos;s
+            most recent drawing! Also, you can now select multiple types of
+            interrogations to run at once (caption, tags, nsfw).
+          </StyledLi>
+          <StyledLi>
+            Neat: ArtBot was{' '}
+            <Linker
+              href="https://www.pcworld.com/article/1431633/meet-stable-horde-the-setihome-of-ai-art.html"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              mentioned in an article
+            </Linker>{' '}
+            about the Stable Horde in a recent post in PC World magazine. 😎
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.01.04</SubSectionTitle>
         <StyledUl>
           <StyledLi>

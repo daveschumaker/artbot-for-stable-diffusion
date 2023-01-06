@@ -9,7 +9,7 @@ interface Props {
 const CheckBox = styled.div`
   display: flex;
   gap: 20px;
-  justify-content: center;
+  justify-content: flex-start;
 `
 
 interface ILabel {
