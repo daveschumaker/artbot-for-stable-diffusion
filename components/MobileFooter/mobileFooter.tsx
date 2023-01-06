@@ -7,7 +7,6 @@ import HourglassIcon from '../icons/HourglassIcon'
 import PhotoIcon from '../icons/PhotoIcon'
 import SettingsIcon from '../icons/SettingsIcon'
 import Link from 'next/link'
-import HelpIcon from '../icons/HelpIcon'
 import { useEffect, useState } from 'react'
 import { isInstalledPwa } from '../../utils/appUtils'
 import { useStore } from 'statery'
@@ -16,6 +15,7 @@ import {
   setNewImageReady,
   setShowImageReadyToast
 } from '../../store/appStore'
+import ZoomQuestionIcon from '../icons/ZoomQuestionIcon'
 
 interface StyledFooterProps {
   isPwa: boolean
@@ -98,7 +98,7 @@ const StyledHourglassIcon = styled(HourglassIcon)`
 const StyledPhotoIcon = styled(PhotoIcon)`
   ${IconCss}
 `
-const StyledHelpIcon = styled(HelpIcon)`
+const StyledHelpIcon = styled(ZoomQuestionIcon)`
   ${IconCss}
 `
 
@@ -158,9 +158,9 @@ export default function MobileFooter() {
             <StyledPhotoIcon size={32} active={isActive('/images')} />
           </Link>
         </NavIconWrapper>
-        <NavIconWrapper active={isActive('/about')}>
-          <Link href="/about">
-            <StyledHelpIcon size={32} active={isActive('/about')} />
+        <NavIconWrapper active={isActive('/interrogate')}>
+          <Link href="/interrogate">
+            <StyledHelpIcon size={32} active={isActive('/interrogate')} />
           </Link>
         </NavIconWrapper>
         <NavIconWrapper active={isActive('/settings')}>
