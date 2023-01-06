@@ -19,7 +19,7 @@ const Wrapper = styled.div`
 
 const MenuWrapper = styled.div`
   cursor: pointer;
-  margin-right: 16px;
+  margin-right: 8px;
 
   &:hover {
     color: rgb(20, 184, 166);
@@ -51,7 +51,7 @@ export default function Header() {
           }
         }}
       >
-        <MenuIcon />
+        <MenuIcon size={36} />
       </MenuWrapper>
       <div className="mt-2 w-1/2 inline-block">
         <Link href="/">
