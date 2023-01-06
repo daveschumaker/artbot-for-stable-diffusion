@@ -47,6 +47,7 @@ interface ImageDetails {
   stylePreset: string
   post_processing: Array<string>
   models: Array<string>
+  source_processing: SourceProcessing
 }
 
 interface ImageDetailsProps {
@@ -148,6 +149,9 @@ const ImageDetails = ({
   const modelName = imageDetails.models[0] || imageDetails.model
   const imageUpscaled =
     imageDetails?.post_processing?.indexOf('RealESRGAN_x4plus') >= 0
+  const isImg2Img =
+    imageDetails.source_processing === SourceProcessing.Img2Img ||
+    imageDetails.img2img
 
   return (
     <div className="mt-2 text-left">
@@ -180,7 +184,7 @@ const ImageDetails = ({
               </Linker>
             </li>
             {imageUpscaled && <li>UPSCALED IMAGE</li>}
-            {imageDetails.img2img && <li>Source: img2img</li>}
+            {isImg2Img && <li>Source: img2img</li>}
             {imageDetails.negative && (
               <li>Negative prompt: {imageDetails.negative}</li>
             )}
@@ -212,8 +216,10 @@ const ImageDetails = ({
             <li>Seed: {imageDetails.seed}</li>
             <li>Steps: {imageDetails.steps}</li>
             <li>cfg scale: {imageDetails.cfg_scale}</li>
-            {imageDetails.img2img && imageDetails.denoising_strength && (
-              <li>Denoise: {imageDetails.denoising_strength}</li>
+            {isImg2Img && imageDetails.denoising_strength && (
+              <li>
+                Denoise: {Number(imageDetails.denoising_strength).toFixed(2)}
+              </li>
             )}
           </ul>
         </div>

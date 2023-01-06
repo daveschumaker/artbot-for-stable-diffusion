@@ -112,6 +112,17 @@ const Changelog = () => {
         </Section>
       </Panel>
       <Section>
+        <SubSectionTitle>2023.01.06</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: Recently created img2img images do not show a denoise value on
+            the image details page. Looks like I broke this due to my model
+            refactor waaaaaay back on 2022.12.22. (Thanks for reporting,
+            anonymous user!)
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.01.05</SubSectionTitle>
         <StyledUl>
           <StyledLi>
