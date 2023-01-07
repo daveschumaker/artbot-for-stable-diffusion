@@ -30,6 +30,7 @@ import { useSwipeable } from 'react-swipeable'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
 import MasonryLayout from '../../components/MasonryLayout'
 import { kudosCost } from '../../utils/imageUtils'
+import RelatedImages from '../../components/ImagePage/RelatedImages'
 
 const StyledImage = styled.img`
   box-shadow: 0 16px 38px -12px rgb(0 0 0 / 56%),
@@ -76,6 +77,13 @@ const ImagePage = () => {
     return el.jobId === id
   })
 
+  const findRelatedImages = useCallback(async (parentJobId = '') => {
+    if (parentJobId) {
+      const foundImages = await fetchRelatedImages(parentJobId)
+      setRelatedImages(foundImages)
+    }
+  }, [])
+
   const fetchImageDetails = useCallback(async () => {
     const data = (await getImageDetails(id)) || {}
     setIsInitialLoad(false)
@@ -85,7 +93,7 @@ const ImagePage = () => {
     if (data?.base64String) {
       findRelatedImages(data.parentJobId)
     }
-  }, [id])
+  }, [findRelatedImages, id])
 
   const handleDeleteImageClick = async () => {
     router.push(`/images`)
@@ -120,13 +128,6 @@ const ImagePage = () => {
       router.push('/pending')
     }
   }, [imageDetails, pendingUpscale, router])
-
-  const findRelatedImages = async (parentJobId = '') => {
-    if (parentJobId) {
-      const foundImages = await fetchRelatedImages(parentJobId)
-      setRelatedImages(foundImages)
-    }
-  }
 
   const handleFavoriteClick = useCallback(async () => {
     const newFavStatus = imageDetails.favorited ? false : true
@@ -354,42 +355,11 @@ const ImagePage = () => {
 
       {!isInitialLoad && relatedImages.length > 1 && (
         <div className="pt-2 border-0 border-t-2 border-dashed border-slate-500">
-          <PageTitle>Related images</PageTitle>
-          <div className="mt-4 flex gap-y-2.5 flex-wrap gap-x-2.5">
-            <MasonryLayout columns={imageColumns} gap={8}>
-              {relatedImages.map(
-                (image: {
-                  jobId: string
-                  base64String: string
-                  prompt: string
-                  timestamp: number
-                  seed: number
-                }) => {
-                  return (
-                    <LazyLoad key={image.jobId} once>
-                      <Link
-                        href={`/image/${image.jobId}`}
-                        passHref
-                        onClick={() => {
-                          setOptimisticFavorite(false)
-                        }}
-                      >
-                        <img
-                          src={'data:image/webp;base64,' + image.base64String}
-                          style={{
-                            borderRadius: '4px',
-                            width: '100%',
-                            display: 'block'
-                          }}
-                          alt={image.prompt}
-                        />
-                      </Link>
-                    </LazyLoad>
-                  )
-                }
-              )}
-            </MasonryLayout>
-          </div>
+          <RelatedImages
+            jobId={imageDetails.parentJobId}
+            images={relatedImages}
+            updateRelatedImages={findRelatedImages}
+          />
         </div>
       )}
     </div>
