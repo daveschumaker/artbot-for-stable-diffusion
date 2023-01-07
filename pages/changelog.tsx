@@ -819,15 +819,15 @@ const Changelog = () => {
               for creating such an awesome project! Here&apos;s to the next
               million. 😎
             </AddedInfo>
-            <StyledLi>
-              Feature: Shareable links. This is something I&apos;ve wanted to do
-              for awhile and StableUI (the other big Stable Horde web UI),
-              recently implemented it. Now you can share your ArtBot image
-              generations with others. For example:{' '}
-              <Linker href="https://tinybots.net/artbot?share=N4IgDgTg9gtmAuIBcIDKMCWAbDA7A5gAQCGEGAzvFAMYTHzmEAWUWAJnkVqfgKaHkc1XoygAzZsRgAaQgCNexAK7wMYpVhK42AgJ4wYveGWrFNY4sPKyo2QmGJ5VBWXNJQAjkv6VdWXiDSILi8+PQYAG4BKIHgpFLkyADaIBEAjIEArGkATNIA7ABsABxBANYA+rwavBAVxIE5ACzSAJxBxfnFAMwlTa3FsZTEcv4VHGLq5BhQuIHG3tIpAOIAYgAKywCCAHIgALpL+-sAvkA">
-                Smiling aristocrats holding slices of ham.
-              </Linker>
-            </StyledLi>
+          </StyledLi>
+          <StyledLi>
+            Feature: Shareable links. This is something I&apos;ve wanted to do
+            for awhile and StableUI (the other big Stable Horde web UI),
+            recently implemented it. Now you can share your ArtBot image
+            generations with others. For example:{' '}
+            <Linker href="https://tinybots.net/artbot?share=N4IgDgTg9gtmAuIBcIDKMCWAbDA7A5gAQCGEGAzvFAMYTHzmEAWUWAJnkVqfgKaHkc1XoygAzZsRgAaQgCNexAK7wMYpVhK42AgJ4wYveGWrFNY4sPKyo2QmGJ5VBWXNJQAjkv6VdWXiDSILi8+PQYAG4BKIHgpFLkyADaIBEAjIEArGkATNIA7ABsABxBANYA+rwavBAVxIE5ACzSAJxBxfnFAMwlTa3FsZTEcv4VHGLq5BhQuIHG3tIpAOIAYgAKywCCAHIgALpL+-sAvkA">
+              Smiling aristocrats holding slices of ham.
+            </Linker>
           </StyledLi>
         </StyledUl>
       </Section>
@@ -942,10 +942,10 @@ const Changelog = () => {
             >
               (Thanks to Florian for the PR)
             </Linker>
-            <StyledLi>
-              Fix: Trusted worker option on settings page would not remember
-              value after leaving tab.
-            </StyledLi>
+          </StyledLi>
+          <StyledLi>
+            Fix: Trusted worker option on settings page would not remember value
+            after leaving tab.
           </StyledLi>
         </StyledUl>
       </Section>
