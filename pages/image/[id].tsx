@@ -3,7 +3,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
-import LazyLoad from 'react-lazyload'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
 
@@ -11,7 +10,6 @@ import ImageDetails from '../../components/ImageDetails'
 import PageTitle from '../../components/UI/PageTitle'
 
 import Spinner from '../../components/Spinner'
-import { useWindowSize } from '../../hooks/useWindowSize'
 import {
   fetchRelatedImages,
   getImageDetails,
@@ -28,7 +26,6 @@ import MenuButton from '../../components/UI/MenuButton'
 import HeartIcon from '../../components/icons/HeartIcon'
 import { useSwipeable } from 'react-swipeable'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
-import MasonryLayout from '../../components/MasonryLayout'
 import { kudosCost } from '../../utils/imageUtils'
 import RelatedImages from '../../components/ImagePage/RelatedImages'
 
@@ -62,7 +59,6 @@ const ImagePage = () => {
     onSwipedRight: () => handleKeyPress(null, 'right'),
     preventScrollOnSwipe: true
   })
-  const size = useWindowSize()
   const router = useRouter()
   const { id } = router.query
 
@@ -195,15 +191,6 @@ const ImagePage = () => {
   }, [handleKeyPress])
 
   const noImageFound = !isInitialLoad && !imageDetails?.base64String
-
-  let imageColumns = 2
-  // @ts-ignore
-  if (size?.width > 1280) {
-    imageColumns = 4
-    // @ts-ignore
-  } else if (size?.width > 800) {
-    imageColumns = 3
-  }
 
   useEffectOnce(() => {
     trackEvent({
