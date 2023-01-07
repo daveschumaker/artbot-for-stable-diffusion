@@ -110,6 +110,13 @@ const Changelog = () => {
         <SubSectionTitle>2023.01.06</SubSectionTitle>
         <StyledUl>
           <StyledLi>
+            A lot of cool improvements today, thanks to the power of{' '}
+            <LinkButton onClick={() => setShowFeedback(true)}>
+              feedback
+            </LinkButton>
+            . Thank you!
+          </StyledLi>
+          <StyledLi>
             Fix: Recently created img2img images do not show a denoise value on
             the image details page. Looks like I broke this due to my model
             refactor waaaaaay back on 2022.12.22. (Thanks for reporting,
@@ -119,6 +126,10 @@ const Changelog = () => {
             UX: On mobile devices, swap out icon on mobile footer for the
             interrogate page, as it is a more useful link. (Thanks for the
             feedback, anonymous user!)
+          </StyledLi>
+          <StyledLi>
+            Feature: Ability to bulk delete related images from the image
+            details page. (Thanks for the suggestion, anonymous user!)
           </StyledLi>
         </StyledUl>
       </Section>
@@ -1050,10 +1061,10 @@ const Changelog = () => {
             images, sometimes ArtBot would forget what model you had originally
             selected and revert to the default model (&quot;stable
             diffusion&quot;).
-            <StyledLi>
-              Fix: Selecting random in the models dropdown never actually
-              selected a random model.
-            </StyledLi>
+          </StyledLi>
+          <StyledLi>
+            Fix: Selecting random in the models dropdown never actually selected
+            a random model.
           </StyledLi>
         </StyledUl>
       </Section>
