@@ -12,6 +12,7 @@ import ZoomQuestionIcon from '../icons/ZoomQuestionIcon'
 import Overlay from '../UI/Overlay'
 import QuestionMarkIcon from '../icons/QuestionMarkIcon'
 import LineDashedIcon from '../icons/LineDashedIcon'
+import StarsIcon from '../icons/StarsIcon'
 
 interface IProps {
   handleClose: () => void
@@ -163,6 +164,14 @@ const Menu = (props: IProps) => {
           >
             <ZoomQuestionIcon />
             Interrogate
+          </MenuOption>
+          <MenuOption
+            onClick={() => {
+              navigateToLink('/rate')
+            }}
+          >
+            <StarsIcon />
+            Rate Images
           </MenuOption>
           <MenuOption
             onClick={() => {

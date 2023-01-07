@@ -16,6 +16,7 @@ import InfoIcon from '../icons/InfoIcon'
 import PhotoIcon from '../icons/PhotoIcon'
 import PhotoPlusIcon from '../icons/PhotoPlusIcon'
 import SettingsIcon from '../icons/SettingsIcon'
+import StarsIcon from '../icons/StarsIcon'
 import ZoomQuestionIcon from '../icons/ZoomQuestionIcon'
 
 const StyledNavBar = styled.nav`
@@ -101,6 +102,12 @@ export default function NavBar() {
           <StyledLi active={isActiveRoute('/interrogate')}>
             <ZoomQuestionIcon className="inline-block mr-1 pb-1" />
             Interrogate
+          </StyledLi>
+        </Link>
+        <Link href="/rate" passHref>
+          <StyledLi active={isActiveRoute('/rate')}>
+            <StarsIcon className="inline-block mr-1 pb-1" />
+            Rate
           </StyledLi>
         </Link>
         <Link href="/pending" passHref>
