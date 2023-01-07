@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import React, { useCallback, useEffect } from 'react'
+import Switch from 'react-switch'
 import { useStore } from 'statery'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
@@ -119,6 +120,7 @@ const SettingsPage = () => {
     saveInputOnCreate: false,
     stayOnCreate: false,
     showOptionsMenu: false,
+    shareImagesExternally: false,
     useBeta: false,
     useWorkerId: '',
     useTrusted: true
@@ -158,6 +160,11 @@ const SettingsPage = () => {
     setComponentState({ [key]: value })
   }
 
+  const handleSwitchSelect = (key: string, value: boolean) => {
+    AppSettings.save(key, value)
+    setComponentState({ [key]: value })
+  }
+
   const handleApiInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     AppSettings.save('apiKey', e.target.value)
     setComponentState({ apiKey: e.target.value })
@@ -186,6 +193,13 @@ const SettingsPage = () => {
     updateObj.useWorkerId = AppSettings.get('useWorkerId') || ''
     updateObj.useTrusted = AppSettings.get('useTrusted') || false
     updateObj.disableSnowflakes = AppSettings.get('disableSnowflakes') || false
+    updateObj.shareImagesExternally =
+      AppSettings.get('shareImagesExternally') || false
+
+    // if (!userStore.username) {
+    //   AppSettings.save('shareImagesExternally', true)
+    //   updateObj.shareImagesExternally = true
+    // }
 
     setComponentState({ ...updateObj })
 
@@ -401,6 +415,42 @@ const SettingsPage = () => {
                     </Button>
                   </div>
                 </MaxWidth>
+              </Section>
+              <Section>
+                <SubSectionTitle>
+                  Share images with LAION
+                  <div className="block text-xs mt-2 mb-2 w-full">
+                    Automatically and anonymously share images with LAION (the
+                    non-profit that helped to train Stable Diffusion) for use in
+                    aesthetic training in order to improve future models. See{' '}
+                    <Linker
+                      href="https://discord.com/channels/781145214752129095/1038867597543882894"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      this announcement
+                    </Linker>{' '}
+                    on Discord for more information.{' '}
+                    <strong>
+                      NOTE: This option is automatically enabled for users
+                      without a valid API key.
+                    </strong>
+                  </div>
+                </SubSectionTitle>
+                <Switch
+                  onChange={() => {
+                    if (!userStore.username) {
+                      return
+                    }
+
+                    if (componentState.shareImagesExternally) {
+                      handleSwitchSelect('shareImagesExternally', false)
+                    } else {
+                      handleSwitchSelect('shareImagesExternally', true)
+                    }
+                  }}
+                  checked={componentState.shareImagesExternally}
+                />
               </Section>
               <Section>
                 <SubSectionTitle>

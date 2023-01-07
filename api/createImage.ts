@@ -44,6 +44,7 @@ interface ApiParams {
   source_processing?: string
   source_mask?: string
   r2?: boolean
+  shared?: boolean
   workers?: Array<string>
 }
 
@@ -66,6 +67,7 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
       ? true
       : AppSettings.get('useTrusted')
   const allowNsfw = AppSettings.get('allowNsfwImages') || false
+  const shareImage = AppSettings.get('shareImagesExternally') || false
 
   const {
     prompt,
@@ -102,7 +104,8 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
     censor_nsfw: !allowNsfw, // Show user NSFW images if created
     trusted_workers: useTrusted,
     models,
-    r2: true
+    r2: true,
+    shared: shareImage
   }
 
   if (useWorkerId) {
