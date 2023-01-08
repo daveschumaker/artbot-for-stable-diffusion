@@ -60,6 +60,11 @@ class AppSettings {
     this.saveAll(data)
   }
 
+  // NOTE: Does the same thing as "save" but more inline with getter / setter API.
+  static set(key: string, val: any) {
+    this.save(key, val)
+  }
+
   static saveAll(params: IAppSettingsParams) {
     try {
       // Save version in case we update settings params at a later time.
