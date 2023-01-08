@@ -14,6 +14,7 @@ import Checkbox from '../UI/Checkbox'
 import Linker from '../UI/Linker'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
 import AlertTriangleIcon from '../icons/AlertTriangle'
+import AppSettings from '../../models/AppSettings'
 
 interface FlexRowProps {
   bottomPadding?: number
@@ -100,9 +101,13 @@ const Interrogate = () => {
       tags: {}
     },
     interrogations: {
-      caption: true,
-      tags: false,
-      nsfw: false
+      caption:
+        (AppSettings.get(`interrogationSetting-caption`) !== true &&
+          AppSettings.get(`interrogationSetting-caption`)) !== false
+          ? true
+          : AppSettings.get(`interrogationSetting-caption`),
+      tags: AppSettings.get(`interrogationSetting-tags`) || false,
+      nsfw: AppSettings.get(`interrogationSetting-nsfw`) || false
     },
     workers: null
   })
@@ -379,6 +384,11 @@ const Interrogate = () => {
   const handleCheckboxClick = (type: string) => {
     const interrogations = Object.assign({}, componentState.interrogations)
     interrogations[type] = !componentState.interrogations[type]
+
+    AppSettings.set(
+      `interrogationSetting-${type}`,
+      !componentState.interrogations[type]
+    )
 
     setComponentState({ interrogations })
   }
