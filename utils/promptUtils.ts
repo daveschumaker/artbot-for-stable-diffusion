@@ -17,6 +17,7 @@ interface SavePrompt {
   cfg_scale: number
   orientation: string
   karras: boolean
+  seed?: string
   height: number
   width: number
   steps: number
@@ -43,6 +44,7 @@ let initPromptDetails: SavePrompt = {
   cfg_scale: 9.0,
   orientation: '',
   karras: false,
+  seed: '',
   steps: 25,
   height: 512,
   width: 512,
@@ -66,6 +68,7 @@ export const savePrompt = ({
   prompt = '',
   orientation = '',
   karras = false,
+  seed = '',
   sampler = 'k_euler_a',
   cfg_scale = 9.0,
   steps = 25,
@@ -88,6 +91,7 @@ export const savePrompt = ({
     prompt,
     orientation,
     karras,
+    seed,
     sampler: samplerValid ? sampler : 'k_euler_a',
     cfg_scale,
     steps,

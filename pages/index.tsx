@@ -172,7 +172,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
       sampler: loadEditPrompt().sampler,
       cfg_scale: loadEditPrompt().cfg_scale,
       steps: loadEditPrompt().steps,
-      seed: '',
+      seed: loadEditPrompt().seed,
       denoising_strength: loadEditPrompt().denoising_strength,
       karras: loadEditPrompt().karras,
       parentJobId: loadEditPrompt().parentJobId,

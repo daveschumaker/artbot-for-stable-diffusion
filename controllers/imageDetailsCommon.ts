@@ -15,6 +15,7 @@ export const copyEditPrompt = (imageDetails: any) => {
     karras: imageDetails.karras,
     height: imageDetails.height,
     width: imageDetails.width,
+    seed: imageDetails.seed,
     cfg_scale: imageDetails.cfg_scale,
     parentJobId: imageDetails.parentJobId,
     negative: imageDetails.negative,
