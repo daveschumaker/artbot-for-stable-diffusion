@@ -29,11 +29,15 @@ const StarButton = styled(StarIcon)`
 `
 
 const StarWrapper = styled.div`
+  align-items: center;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  row-gap: 4px;
 `
 
 const SubTitle = styled.div`
-  font-size: 16px;
+  font-size: 14px;
   padding-bottom: 8px;
 `
 
@@ -100,6 +104,7 @@ const Rate = () => {
       const res = await fetch('https://droom.cloud/api/rating/new')
       const statusCode = res.status
 
+      // NOTE: It appears nothing actually happens here.
       if (statusCode === 429) {
         setTimeout(() => {
           fetchImage()
@@ -109,11 +114,9 @@ const Rate = () => {
 
       data = (await res.json()) || {}
     } catch (err) {
-      console.log(`Something happened while trying to fetch an image.`)
-      console.log(err)
       setTimeout(() => {
         fetchImage()
-      }, 500)
+      }, 300)
       return
     } finally {
       if (data.id) {
@@ -183,7 +186,7 @@ const Rate = () => {
       } finally {
         setTimeout(() => {
           fetchImage()
-        }, 500)
+        }, 250)
       }
     },
     [
@@ -219,11 +222,14 @@ const Rate = () => {
 
   useEffectOnce(() => {
     pending = false
-    // fetchImage()
-    //     // setComponentState({
-    //     //   imageUrl: 'https://placekitten.com/g/200/300',
-    //     //   initialLoad: false
-    //     // })
+
+    // console.log(`userStore`, userInfoStore.state)
+
+    // setTimeout(() => {
+    //   if (userStore.username && !pending) {
+    //     fetchImage()
+    //   }
+    // }, 500)
   })
 
   const renderStars = () => {
@@ -255,6 +261,7 @@ const Rate = () => {
           }}
         >
           <StarButton size={24} fill={filled ? '#fcba03' : 'none'} />
+          {value}
         </StarWrapper>
       )
     }
@@ -334,10 +341,7 @@ const Rate = () => {
               </ImageOverlay>
             )}
           </ImageContainer>
-          <RatingContainer>
-            {renderStars()}{' '}
-            {componentState.activeStar > 0 ? componentState.activeStar : ''}
-          </RatingContainer>
+          <RatingContainer>{renderStars()}</RatingContainer>
           <div className="mt-2 text-sm">
             <div>Images rated: {componentState.imagesRated}</div>
             <div>Kudos earned: {componentState.kudosEarned}</div>

@@ -107,7 +107,16 @@ const Changelog = () => {
         </Section>
       </Panel>
       <Section>
-        <SubSectionTitle>2023.01.06</SubSectionTitle>
+        <SubSectionTitle>2023.01.08</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>UX: Add number below stars on rating page.</StyledLi>
+          <StyledLi>
+            Fix: Copy prompt on image details page now copies the key as well.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
+        <SubSectionTitle>2023.01.07</SubSectionTitle>
         <StyledUl>
           <StyledLi>
             Feature: Help improve future versions of Stable Diffusion by{' '}
