@@ -32,6 +32,7 @@ import DropDownMenu from '../UI/DropDownMenu'
 import DropDownMenuItem from '../UI/DropDownMenuItem'
 import WorkerInfo from '../WorkerInfo'
 import ImportExportPanel from '../ImportExportPanel'
+import ExternalLinkIcon from '../icons/ExternalLinkIcon'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -586,9 +587,23 @@ const SettingsPage = () => {
                 ) : null}
                 {(Array.isArray(worker_ids) && worker_ids.length === 0) ||
                 !componentState.apiKey ? (
-                  <Section>
-                    You currently have no active workers on Stable Horde.
-                  </Section>
+                  <>
+                    <Section>
+                      You currently have no active workers on Stable Horde.
+                    </Section>
+                    <Section>
+                      <Linker
+                        href="https://bit.ly/SimpleHordeColab"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <div className="flex flex-row items-center gap-2">
+                          Create your own Stable Horde worker using Google
+                          Colab. <ExternalLinkIcon />
+                        </div>
+                      </Linker>
+                    </Section>
+                  </>
                 ) : null}
                 <Section className="flex flex-col gap-2">
                   {Object.keys(workers).map((key) => {

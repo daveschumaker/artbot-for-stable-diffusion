@@ -113,6 +113,19 @@ const Changelog = () => {
           <StyledLi>
             Fix: Copy prompt on image details page now copies the key as well.
           </StyledLi>
+          <StyledLi>
+            Minor fix: Persist image2text interrogation options.
+          </StyledLi>
+          <StyledLi>
+            Added a link to Google Colab that allows you to easily setup a
+            Stable Horde worker. Help out the community, earn kudos and learn a
+            bit of Python while you&apos;re at it!
+          </StyledLi>
+          <StyledLi>
+            Feature: Add option to send an existing image from your library to
+            the image2text interrogation feature. (Thanks for the suggestion,
+            anonymous user!)
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

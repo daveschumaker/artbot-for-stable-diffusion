@@ -15,6 +15,10 @@ import Linker from '../UI/Linker'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
 import AlertTriangleIcon from '../icons/AlertTriangle'
 import AppSettings from '../../models/AppSettings'
+import { useRouter } from 'next/router'
+import { getImageForInterrogation } from '../../utils/interrogateUtils'
+import PlusIcon from '../icons/PlusIcon'
+import RecycleIcon from '../icons/RecycleIcon'
 
 interface FlexRowProps {
   bottomPadding?: number
@@ -84,15 +88,24 @@ enum SourceType {
 }
 
 const Interrogate = () => {
-  const [componentState, setComponentState] = useComponentState({
+  const router = useRouter()
+
+  let source_image = ''
+  let sourceType = SourceType.none
+  if (router.query['user-share'] === 'true') {
+    sourceType = SourceType.upload
+    source_image = getImageForInterrogation()
+  }
+
+  const initState = {
     apiError: '',
     imgUrl: '',
     interrogationType: { value: 'caption', label: 'Caption' },
     jobId: '',
     jobComplete: false,
     jobPending: false,
-    sourceType: SourceType.none,
-    source_image: '',
+    sourceType: sourceType,
+    source_image: source_image,
     sourceImageType: '',
     queuedWork: null,
     results: {
@@ -110,6 +123,10 @@ const Interrogate = () => {
       nsfw: AppSettings.get(`interrogationSetting-nsfw`) || false
     },
     workers: null
+  }
+
+  const [componentState, setComponentState] = useComponentState({
+    ...initState
   })
 
   const validOptions = useCallback(() => {
@@ -324,6 +341,16 @@ const Interrogate = () => {
     componentState.jobPending
   ])
 
+  useEffectOnce(() => {
+    if (router.query['user-share'] === 'true') {
+      submitInterrogation({
+        source_image: getImageForInterrogation()
+      })
+    } else {
+      setComponentState({ ...initState })
+    }
+  })
+
   const fetchHordeStatus = useCallback(async () => {
     const res = await fetch('https://stablehorde.net/api/v2/status/performance')
     const data = (await res.json()) || {}
@@ -453,38 +480,82 @@ const Interrogate = () => {
           onChange={() => handleCheckboxClick('nsfw')}
         />
       </OptionsWrapper>
+      {componentState.jobComplete && (
+        <Section>
+          <div className="flex flex-row gap-2">
+            <Button
+              onClick={() => {
+                setComponentState({ ...initState })
+                router.replace('/interrogate')
+              }}
+            >
+              <PlusIcon />
+              New
+            </Button>
+            <Button
+              onClick={() => {
+                submitInterrogation({
+                  source_image: componentState.source_image
+                })
+              }}
+            >
+              <RecycleIcon /> Retry?
+            </Button>
+          </div>
+        </Section>
+      )}
+      {router.query['user-share'] === 'true' && (
+        <Section>
+          <SubSectionTitle>
+            <strong>Interrogate image from your library</strong>
+          </SubSectionTitle>
+          <div>
+            <img
+              alt={componentState.results.caption}
+              src={`data:${componentState.sourceImageType};base64,${componentState.source_image}`}
+            />
+          </div>
+        </Section>
+      )}
+      {!componentState.jobPending && !componentState.jobComplete && (
+        <Section>
+          <SubSectionTitle>
+            <strong>Upload an image from a URL</strong>
+          </SubSectionTitle>
+          <FlexRow bottomPadding={8}>
+            <span style={{ lineHeight: '40px', marginRight: '16px' }}>
+              URL:
+            </span>
+            <Input
+              className="mb-2"
+              type="text"
+              name="img-url"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setComponentState({
+                  imgUrl: e.target.value,
+                  sourceType: SourceType.url
+                })
+              }
+              value={componentState.imgUrl}
+              width="100%"
+            />
+            <Button
+              title="Upload image from URL"
+              btnType="primary"
+              onClick={() =>
+                submitInterrogation({ source_image: componentState.imgUrl })
+              }
+              width="120px"
+              disabled={componentState.jobPending}
+            >
+              {componentState.jobPending ? 'Loading...' : 'Send'}
+            </Button>
+          </FlexRow>
+          <Dropzone handleUpload={handleRequest} type={'interrogate'} />
+        </Section>
+      )}
+
       <Section>
-        <SubSectionTitle>
-          <strong>Upload an image from a URL</strong>
-        </SubSectionTitle>
-        <FlexRow bottomPadding={8}>
-          <span style={{ lineHeight: '40px', marginRight: '16px' }}>URL:</span>
-          <Input
-            className="mb-2"
-            type="text"
-            name="img-url"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setComponentState({
-                imgUrl: e.target.value,
-                sourceType: SourceType.url
-              })
-            }
-            value={componentState.imgUrl}
-            width="100%"
-          />
-          <Button
-            title="Upload image from URL"
-            btnType="primary"
-            onClick={() =>
-              submitInterrogation({ source_image: componentState.imgUrl })
-            }
-            width="120px"
-            disabled={componentState.jobPending}
-          >
-            {componentState.jobPending ? 'Loading...' : 'Send'}
-          </Button>
-        </FlexRow>
-        <Dropzone handleUpload={handleRequest} type={'interrogate'} />
         <ContentWrapper>
           {componentState.apiError && (
             <>
@@ -493,21 +564,28 @@ const Interrogate = () => {
               </div>
             </>
           )}
-          {componentState.jobPending && <SpinnerV2 />}
-          {componentState.jobComplete && (
-            <>
-              <div className="mb-2">------------</div>
-            </>
+          {componentState.jobPending && (
+            <Section>
+              <SubSectionTitle>
+                <strong>Waiting for interrogation results</strong>
+              </SubSectionTitle>
+              <SpinnerV2 />
+            </Section>
           )}
           {componentState.jobComplete &&
             componentState.sourceImageType &&
             componentState.source_image && (
-              <div>
-                <img
-                  alt={componentState.results.caption}
-                  src={`data:${componentState.sourceImageType};base64,${componentState.source_image}`}
-                />
-              </div>
+              <Section>
+                <SubSectionTitle>
+                  <strong>Image interrogation results</strong>
+                </SubSectionTitle>
+                <div>
+                  <img
+                    alt={componentState.results.caption}
+                    src={`data:${componentState.sourceImageType};base64,${componentState.source_image}`}
+                  />
+                </div>
+              </Section>
             )}
           {componentState.jobComplete &&
             componentState.interrogations.caption === true && (

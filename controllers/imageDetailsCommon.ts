@@ -3,8 +3,13 @@ import UpscaleImageRequest from '../models/UpscaleImageRequest'
 import { cloneFromImage, setI2iUploaded } from '../store/canvasStore'
 import { createImageJob } from '../utils/imageCache'
 import { downloadFile } from '../utils/imageUtils'
+import { setImageForInterrogation } from '../utils/interrogateUtils'
 import { createPendingRerollJob } from '../utils/pendingUtils'
 import { savePrompt, SourceProcessing } from '../utils/promptUtils'
+
+export const interrogateImage = (imageDetails: any) => {
+  setImageForInterrogation(imageDetails)
+}
 
 export const copyEditPrompt = (imageDetails: any) => {
   savePrompt({

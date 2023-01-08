@@ -16,6 +16,7 @@ import {
   updateCompletedJob
 } from '../../utils/db'
 import {
+  interrogateImage,
   uploadImg2Img,
   uploadInpaint,
   upscaleImage
@@ -281,6 +282,20 @@ const ImagePage = () => {
           </div>
           <div className="mb-4">
             <PageTitle>Advanced Options</PageTitle>
+            <Section>
+              <OptionsLink
+                onClick={() => {
+                  trackEvent({
+                    event: 'USE_IMG_FOR_INTERROGATE',
+                    context: '/pages/image/[id]'
+                  })
+                  interrogateImage(imageDetails)
+                  router.push(`/interrogate?user-share=true`)
+                }}
+              >
+                [ interrogate image (image2text) ]
+              </OptionsLink>
+            </Section>
             <Section>
               {imageUpscaled ? (
                 <div>[ upscaled image (already upscaled)]</div>
