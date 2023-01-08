@@ -110,6 +110,18 @@ const Changelog = () => {
         <SubSectionTitle>2023.01.06</SubSectionTitle>
         <StyledUl>
           <StyledLi>
+            Feature: Help improve future versions of Stable Diffusion by{' '}
+            <Linker href="/rate">rating images</Linker>. Each image you rate
+            currently gives a reward of 5 kudos. For those of you who
+            aren&apos;t able to run a Stable Horde instance on your local
+            machine, this could be a great way to earn kudos.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
+        <SubSectionTitle>2023.01.06</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
             A lot of cool improvements today, thanks to the power of{' '}
             <LinkButton onClick={() => setShowFeedback(true)}>
               feedback

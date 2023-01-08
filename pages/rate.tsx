@@ -44,18 +44,39 @@ const LinkDetails = styled.span`
 `
 
 const ImageContainer = styled.div`
-  align-items: flex-start;
+  display: inline-block;
+  position: relative;
+  max-width: 100%;
+  max-height: 480px;
+
+  @media (min-width: 640px) {
+    max-height: 512px;
+    max-width: 512px;
+  }
+`
+
+const ImageOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  width: 100%;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(0, 0, 0, 0.6);
 `
 
 const Image = styled.img`
   box-shadow: 0 16px 38px -12px rgb(0 0 0 / 56%),
     0 4px 25px 0px rgb(0 0 0 / 12%), 0 8px 10px -5px rgb(0 0 0 / 20%);
-  max-height: 512px;
-  max-width: 512px;
+  max-width: 100%;
+  max-height: 480px;
+
+  @media (min-width: 640px) {
+    max-height: 512px;
+    max-width: 512px;
+  }
 `
 
 let pending = false
@@ -74,16 +95,41 @@ const Rate = () => {
   })
 
   const fetchImage = useCallback(async () => {
-    const res = await fetch('https://droom.cloud/api/rating/new')
-    const data = await res.json()
-    const { id, url, dataset_id } = data
+    let data: any = {}
+    try {
+      const res = await fetch('https://droom.cloud/api/rating/new')
+      const statusCode = res.status
 
-    setComponentState({
-      datasetId: dataset_id,
-      imageId: id,
-      imageUrl: url,
-      initialLoad: false
-    })
+      if (statusCode === 429) {
+        setTimeout(() => {
+          fetchImage()
+        }, 500)
+        return
+      }
+
+      data = (await res.json()) || {}
+    } catch (err) {
+      console.log(`Something happened while trying to fetch an image.`)
+      console.log(err)
+      setTimeout(() => {
+        fetchImage()
+      }, 500)
+      return
+    } finally {
+      if (data.id) {
+        setComponentState({
+          activeStar: 0,
+          datasetId: data.dataset_id,
+          imageId: data.id,
+          imageUrl: data.url,
+          initialLoad: false,
+          pending: false,
+          rating: null
+        })
+
+        pending = false
+      }
+    }
   }, [setComponentState])
 
   const rateImage = useCallback(
@@ -117,13 +163,13 @@ const Rate = () => {
         )
 
         const data = await res.json()
-        const { success, transfered } = data
+        const { success } = data
 
         if (success) {
           let totalRated = AppSettings.get('imagesRated') || 0
           let kudosEarned = AppSettings.get('kudosEarnedByRating') || 0
           totalRated++
-          kudosEarned += transfered
+          kudosEarned += 5
 
           AppSettings.save('imagesRated', totalRated)
           AppSettings.save('kudosEarnedByRating', kudosEarned)
@@ -136,17 +182,8 @@ const Rate = () => {
       } catch (err) {
       } finally {
         setTimeout(() => {
-          setComponentState({
-            activeStar: 0,
-            rating: null,
-            imageUrl: '',
-            initialLoad: true,
-            pending: false
-          })
-
-          pending = false
           fetchImage()
-        }, 4500)
+        }, 500)
       }
     },
     [
@@ -217,7 +254,7 @@ const Rate = () => {
             rateImage(value)
           }}
         >
-          <StarButton size={32} fill={filled ? '#fcba03' : 'none'} />
+          <StarButton size={24} fill={filled ? '#fcba03' : 'none'} />
         </StarWrapper>
       )
     }
@@ -291,10 +328,15 @@ const Rate = () => {
           </div>
           <ImageContainer>
             <Image src={componentState.imageUrl} alt="Rate this image" />
+            {componentState.pending && (
+              <ImageOverlay>
+                <SpinnerV2 />
+              </ImageOverlay>
+            )}
           </ImageContainer>
           <RatingContainer>
-            {renderStars()}
-            {componentState.pending ? <SpinnerV2 /> : null}
+            {renderStars()}{' '}
+            {componentState.activeStar > 0 ? componentState.activeStar : ''}
           </RatingContainer>
           <div className="mt-2 text-sm">
             <div>Images rated: {componentState.imagesRated}</div>

@@ -155,6 +155,12 @@ const PendingPage = () => {
           </Linker>
         </div>
       )}
+      {sorted.length > 0 && (
+        <div className="mt-2 mb-2">
+          Why not <Linker href="/rate">rate some images</Linker> (and earn
+          kudos) while you wait?
+        </div>
+      )}
       {sorted.length > 0 &&
         sorted.map((job: { jobId: string; prompt: string }) => {
           return (
