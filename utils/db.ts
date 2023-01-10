@@ -374,6 +374,26 @@ export const getImageDetails = async (jobId: string) => {
     .first()
 }
 
+export const getNextImageDetails = async (id: number) => {
+  return await db.completed
+    .orderBy('id')
+    .filter(function (job: { id: number }) {
+      return job.id > id
+    })
+    .limit(2)
+    .first()
+}
+
+export const getPrevImageDetails = async (id: number) => {
+  return await db.completed
+    .orderBy('id')
+    .reverse()
+    .filter(function (job: { id: number }) {
+      return job.id < id
+    })
+    .first()
+}
+
 export const deleteCompletedImage = async (jobId: string) => {
   await db.completed
     .filter(function (job: { jobId: string }) {
