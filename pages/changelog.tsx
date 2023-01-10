@@ -107,6 +107,20 @@ const Changelog = () => {
         </Section>
       </Panel>
       <Section>
+        <SubSectionTitle>2023.01.09</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: Better error handling if the aesthics rating server goes
+            offline.
+          </StyledLi>
+          <StyledLi>
+            Split star rating component out so that is more reusable. (Will help
+            an upcoming feature where you can rate your own images and send the
+            result to LAION)
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.01.08</SubSectionTitle>
         <StyledUl>
           <StyledLi>UX: Add number below stars on rating page.</StyledLi>
