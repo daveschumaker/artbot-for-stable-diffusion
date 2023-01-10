@@ -37,6 +37,7 @@ import Modal from '../components/Modal'
 import SpinnerV2 from '../components/Spinner'
 import DropDownMenu from '../components/UI/DropDownMenu'
 import DropDownMenuItem from '../components/UI/DropDownMenuItem'
+import ImageModal from '../components/ImageModal'
 
 const MenuSeparator = styled.div`
   width: 100%;
@@ -98,6 +99,7 @@ const ImagesPage = () => {
     deleteSelection: [],
     showDeleteModal: false,
     showDownloadModal: false,
+    showImageModal: false,
 
     offset: Number(router.query.offset) || 0,
     filterMode: router.query.filter || 'all',
@@ -355,6 +357,12 @@ const ImagesPage = () => {
     }
   }, [componentState.showFilterMenu, setComponentState])
 
+  const showImageModal = (jobId: string) => {
+    setComponentState({
+      showImageModal: jobId
+    })
+  }
+
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       if (componentState.deleteMode && e.keyCode === 27) {
@@ -367,17 +375,22 @@ const ImagesPage = () => {
 
       if (componentState.deleteMode && e.keyCode === 13) {
         setComponentState({ showDeleteModal: true })
-      } else if (e.keyCode === 37) {
+      } else if (e.keyCode === 37 && componentState.showImageModal === false) {
         //left
         handleLoadMore('prev')
-      } else if (e.keyCode === 39) {
+      } else if (e.keyCode === 39 && componentState.showImageModal === false) {
         // right
         handleLoadMore('next')
       }
     }
     window.addEventListener('keydown', handleKeyPress)
     return () => window.removeEventListener('keydown', handleKeyPress)
-  }, [componentState.deleteMode, handleLoadMore, setComponentState])
+  }, [
+    componentState.deleteMode,
+    componentState.showImageModal,
+    handleLoadMore,
+    setComponentState
+  ])
 
   useEffectOnce(() => {
     trackEvent({
@@ -413,7 +426,8 @@ const ImagesPage = () => {
     setComponentState(updateObject)
   }, [router.query, setComponentState])
 
-  const LinkEl = componentState.deleteMode ? NonLink : Link
+  // const LinkEl = componentState.deleteMode ? NonLink : Link
+  const LinkEl = NonLink
 
   const countDescriptor = () => {
     let string = ``
@@ -447,6 +461,12 @@ const ImagesPage = () => {
 
   return (
     <div {...handlers}>
+      {componentState.showImageModal && (
+        <ImageModal
+          handleClose={() => setComponentState({ showImageModal: false })}
+          jobId={componentState.showImageModal}
+        />
+      )}
       {componentState.showDownloadModal && (
         <Modal hideCloseButton>
           Downloading images
@@ -847,7 +867,10 @@ const ImagesPage = () => {
                 }) => {
                   return (
                     <LazyLoad key={image.jobId} once>
-                      <div className="relative">
+                      <div
+                        className="relative"
+                        onClick={() => showImageModal(image.jobId)}
+                      >
                         <LinkEl
                           href={`/image/${image.jobId}`}
                           passHref
