@@ -4,8 +4,8 @@ import { useCallback, useEffect } from 'react'
 import { useStore } from 'statery'
 import styled from 'styled-components'
 import ExternalLinkIcon from '../components/icons/ExternalLinkIcon'
-import StarIcon from '../components/icons/StarIcon'
 import SpinnerV2 from '../components/Spinner'
+import StarRating from '../components/StarRating/starRating'
 import Linker from '../components/UI/Linker'
 import PageTitle from '../components/UI/PageTitle'
 import useComponentState from '../hooks/useComponentState'
@@ -13,28 +13,7 @@ import { useEffectOnce } from '../hooks/useEffectOnce'
 import AppSettings from '../models/AppSettings'
 import { userInfoStore } from '../store/userStore'
 
-const RatingContainer = styled.div`
-  align-items: center;
-  display: flex;
-  flex-direction: row;
-  column-gap: 8px;
-  margin-top: 16px;
-  height: 50px;
-`
-
-const StarButton = styled(StarIcon)`
-  /* &:hover {
-    fill: yellow;
-  } */
-`
-
-const StarWrapper = styled.div`
-  align-items: center;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  row-gap: 4px;
-`
+const MAX_ERROR_COUNT = 30
 
 const SubTitle = styled.div`
   font-size: 14px;
@@ -83,11 +62,13 @@ const Image = styled.img`
   }
 `
 
+let errorCount = 0
 let pending = false
 const Rate = () => {
   const userStore = useStore(userInfoStore)
   const [componentState, setComponentState] = useComponentState({
     activeStar: 0,
+    showError: false,
     datasetId: '',
     imageId: null,
     imageUrl: '',
@@ -101,25 +82,36 @@ const Rate = () => {
   const fetchImage = useCallback(async () => {
     let data: any = {}
     try {
-      const res = await fetch('https://droom.cloud/api/rating/new')
-      const statusCode = res.status
-
-      // NOTE: It appears nothing actually happens here.
-      if (statusCode === 429) {
-        setTimeout(() => {
-          fetchImage()
-        }, 500)
+      if (pending) {
         return
       }
 
+      if (errorCount >= MAX_ERROR_COUNT) {
+        setComponentState({
+          initialLoad: false,
+          pending: false,
+          showError: true
+        })
+
+        pending = false
+        return
+      }
+
+      pending = true
+      const res = await fetch('https://droom.cloud/api/rating/new')
       data = (await res.json()) || {}
     } catch (err) {
+      errorCount++
       setTimeout(() => {
+        pending = false
         fetchImage()
       }, 300)
       return
     } finally {
       if (data.id) {
+        pending = false
+        errorCount = 0
+
         setComponentState({
           activeStar: 0,
           datasetId: data.dataset_id,
@@ -127,10 +119,9 @@ const Rate = () => {
           imageUrl: data.url,
           initialLoad: false,
           pending: false,
-          rating: null
+          rating: null,
+          showError: false
         })
-
-        pending = false
       }
     }
   }, [setComponentState])
@@ -177,9 +168,11 @@ const Rate = () => {
           AppSettings.save('imagesRated', totalRated)
           AppSettings.save('kudosEarnedByRating', kudosEarned)
 
+          errorCount = 0
           setComponentState({
             imagesRated: totalRated,
-            kudosEarned
+            kudosEarned,
+            showError: false
           })
         }
       } catch (err) {
@@ -221,53 +214,9 @@ const Rate = () => {
   }, [fetchImage, userStore.username])
 
   useEffectOnce(() => {
+    errorCount = 0
     pending = false
-
-    // console.log(`userStore`, userInfoStore.state)
-
-    // setTimeout(() => {
-    //   if (userStore.username && !pending) {
-    //     fetchImage()
-    //   }
-    // }, 500)
   })
-
-  const renderStars = () => {
-    const count = 10
-    const elements = []
-
-    for (let i = 0; i < count; i++) {
-      const value = i + 1
-      const filled =
-        componentState.rating >= value || componentState.activeStar >= value
-      elements.push(
-        <StarWrapper
-          key={`star_${value}`}
-          onMouseEnter={() => {
-            if (pending) {
-              return
-            }
-
-            setComponentState({ activeStar: value })
-          }}
-          onMouseLeave={() => setComponentState({ activeStar: 0 })}
-          onClick={() => {
-            if (pending) {
-              return
-            }
-
-            setComponentState({ rating: value })
-            rateImage(value)
-          }}
-        >
-          <StarButton size={24} fill={filled ? '#fcba03' : 'none'} />
-          {value}
-        </StarWrapper>
-      )
-    }
-
-    return elements
-  }
 
   return (
     <>
@@ -313,6 +262,11 @@ const Rate = () => {
           </SubTitle>
         </>
       )}
+      {componentState.showError && (
+        <div className="text-red-500 font-bold flex flex-row gap-2">
+          ERROR: Unable to complete this request. Please try again later.
+        </div>
+      )}
       {userStore.username && componentState.initialLoad && (
         <>
           <SubTitle>Loading new image...</SubTitle>
@@ -341,7 +295,10 @@ const Rate = () => {
               </ImageOverlay>
             )}
           </ImageContainer>
-          <RatingContainer>{renderStars()}</RatingContainer>
+          <StarRating
+            disabled={componentState.pending}
+            onStarClick={rateImage}
+          />
           <div className="mt-2 text-sm">
             <div>Images rated: {componentState.imagesRated}</div>
             <div>Kudos earned: {componentState.kudosEarned}</div>
