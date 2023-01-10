@@ -107,6 +107,15 @@ const Changelog = () => {
         </Section>
       </Panel>
       <Section>
+        <SubSectionTitle>2023.01.10</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: My refactoring of the star rating component broke... the star
+            rating component. 😩
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.01.09</SubSectionTitle>
         <StyledUl>
           <StyledLi>

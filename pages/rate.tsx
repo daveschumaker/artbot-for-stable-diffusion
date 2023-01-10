@@ -169,17 +169,23 @@ const Rate = () => {
           AppSettings.save('kudosEarnedByRating', kudosEarned)
 
           errorCount = 0
+          pending = false
           setComponentState({
             imagesRated: totalRated,
             kudosEarned,
             showError: false
           })
+
+          setTimeout(() => {
+            fetchImage()
+          }, 100)
         }
       } catch (err) {
-      } finally {
+        errorCount++
         setTimeout(() => {
-          fetchImage()
-        }, 250)
+          pending = false
+          rateImage(rating)
+        }, 300)
       }
     },
     [
