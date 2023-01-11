@@ -285,6 +285,10 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
       return
     }
 
+    if (totalImagesRequested > 1 && input.seed) {
+      return
+    }
+
     setPending(true)
 
     if (!input?.prompt || input?.prompt.trim() === '') {
@@ -512,6 +516,22 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
     isNaN(totalImagesRequested)
       ? 'N/A'
       : Number(totalKudosCost / totalImagesRequested).toFixed(2)
+
+  const fixedSeedErrorMsg =
+    'Warning: Using a fixed seed with multiple images. Please remove seed.'
+  if (
+    hasError !== fixedSeedErrorMsg &&
+    totalImagesRequested > 1 &&
+    input.seed
+  ) {
+    setHasError(fixedSeedErrorMsg)
+  } else if (
+    hasError === fixedSeedErrorMsg &&
+    totalImagesRequested > 1 &&
+    !input.seed
+  ) {
+    setHasError('')
+  }
 
   return (
     <main>

@@ -949,6 +949,15 @@ const AdvancedOptionsPanel = ({
             >
               <GrainIcon />
             </Button>
+            <Button
+              btnType="secondary"
+              title="Generate random number"
+              onClick={() => {
+                setInput({ seed: '' })
+              }}
+            >
+              <TrashIcon />
+            </Button>
           </div>
         </MaxWidth>
       </Section>
