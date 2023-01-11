@@ -1,9 +1,13 @@
-import { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import CloseIcon from '../../icons/CloseIcon'
 import Overlay from '../Overlay'
 import { lockScroll, unlockScroll } from '../../../utils/appUtils'
+
+interface IStyle {
+  height: number | null
+}
 
 const CloseIconWrapper = styled.div`
   cursor: pointer;
@@ -12,7 +16,7 @@ const CloseIconWrapper = styled.div`
   right: 8px;
 `
 
-const StyledInteractiveModal = styled.div`
+const StyledInteractiveModal = styled.div<IStyle>`
   background-color: ${(props) => props.theme.body};
   border: 2px solid ${(props) => props.theme.border};
   border-radius: 8px;
@@ -27,12 +31,14 @@ const StyledInteractiveModal = styled.div`
 
   @media (min-width: 640px) {
     width: calc(100% - 48px);
-    max-width: 752px;
+    /* max-width: 752px; */
     /* min-height: 480px; */
-    height: 640px;
+    height: ${(props) => (props.height ? props.height + 'px' : '512px')};
+    max-height: ${(props) => (props.height ? props.height + 'px' : '512px')};
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+    transition: all 150ms ease;
   }
 
   @media (min-width: 1280px) {
@@ -40,7 +46,31 @@ const StyledInteractiveModal = styled.div`
   }
 `
 
+const ContentWrapper = styled.div`
+  position: fixed;
+  top: 86px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+
+  overflow-y: auto;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;
+  * {
+    -ms-overflow-style: none;
+  }
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  @media (min-width: 640px) {
+    top: 40px;
+  }
+`
+
 const InteractiveModal = (props: any) => {
+  const [height, setHeight] = useState(512)
+
   const keyDownHandler = (event: any) => {
     if (event.key === 'Escape') {
       event.preventDefault()
@@ -61,11 +91,17 @@ const InteractiveModal = (props: any) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  useEffect(() => {
+    if (!isNaN(props.setDynamicHeight) && props.setDynamicHeight !== null) {
+      setHeight(props.setDynamicHeight + 56)
+    }
+  }, [props.setDynamicHeight])
+
   return (
     <>
       <Overlay handleClose={props?.handleClose} />
-      <StyledInteractiveModal>
-        {props.children}
+      <StyledInteractiveModal height={height}>
+        <ContentWrapper>{props.children}</ContentWrapper>
         <CloseIconWrapper onClick={props?.handleClose}>
           <CloseIcon size={28} />
         </CloseIconWrapper>
