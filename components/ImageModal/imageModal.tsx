@@ -6,10 +6,9 @@ import {
   getNextImageDetails,
   getPrevImageDetails
 } from '../../utils/db'
-import ChevronLeftIcon from '../icons/ChevronLeftIcon'
-import ChevronRightIcon from '../icons/ChevronRightIcon'
 import SpinnerV2 from '../Spinner'
 import InteractiveModal from '../UI/InteractiveModal/interactiveModal'
+import ImageNavWrapper from './ImageNavWrapper'
 
 interface IProps {
   jobId: string
@@ -34,21 +33,6 @@ const ContentWrapper = styled.div`
   }
 `
 
-const ImageContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  max-width: 100%;
-`
-
-const StyledImage = styled.img`
-  border-radius: 4px;
-  box-shadow: 0 16px 38px -12px rgb(0 0 0 / 56%),
-    0 4px 25px 0px rgb(0 0 0 / 12%), 0 8px 6px -5px rgb(0 0 0 / 20%);
-  max-height: 512px;
-`
-
 const TextWrapper = styled.div`
   padding-top: 24px;
   margin: 0 16px;
@@ -68,58 +52,6 @@ const ImageDetails = styled.div`
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     Liberation Mono, Courier New, monospace;
   margin: 0 16px;
-`
-
-const ImageOverlay = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgb(0, 0, 0, 0.6);
-`
-
-const NavContainer = styled.div`
-  width: 100%;
-  position: relative;
-`
-
-interface INavButtonProps {
-  action: string
-}
-
-const NextPrevButton = styled.div<INavButtonProps>`
-  user-select: none;
-  background-color: white;
-  display: flex;
-  border-radius: 50%;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 50px;
-  width: 50px;
-  position: absolute;
-  right: 8px;
-  cursor: pointer;
-  top: 0;
-  bottom: 0;
-  margin: auto 0;
-  border: 1px solid black;
-  box-shadow: 2px 2px 4px 1px rgba(0, 0, 0, 0.75);
-
-  ${(props) =>
-    props.action === 'NEXT'
-      ? `
-    right: 8px;
-  `
-      : 'left: 8px;'};
-
-  &:active {
-    transform: scale(0.98);
-  }
 `
 
 const ImageModal = ({ jobId, handleClose }: IProps) => {
@@ -250,27 +182,6 @@ const ImageModal = ({ jobId, handleClose }: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [componentState.base64String])
 
-  const ImageNavButton = ({ action = '' }) => {
-    return (
-      <NextPrevButton
-        action={action}
-        onClick={() => {
-          if (action === 'NEXT') {
-            fetchImageDetails('next', componentState.id)
-          } else {
-            fetchImageDetails('prev', componentState.id)
-          }
-        }}
-      >
-        {action === 'NEXT' ? (
-          <ChevronRightIcon stroke="#000000" />
-        ) : (
-          <ChevronLeftIcon stroke="#000000" />
-        )}
-      </NextPrevButton>
-    )
-  }
-
   return (
     <StyledModal
       handleClose={handleClose}
@@ -283,23 +194,12 @@ const ImageModal = ({ jobId, handleClose }: IProps) => {
       )}
       {!componentState.initialLoad && componentState.base64String && (
         <ContentWrapper ref={ref}>
-          <NavContainer
-          // onMouseEnter={() => setComponentState({ mouseHover: true })}
-          // onMouseLeave={() => setComponentState({ mouseHover: false })}
-          >
-            <ImageContainer>
-              <StyledImage
-                src={'data:image/webp;base64,' + componentState.base64String}
-              />
-              <ImageNavButton action="PREV" />
-              <ImageNavButton action="NEXT" />
-              {componentState.loading && (
-                <ImageOverlay>
-                  <SpinnerV2 />
-                </ImageOverlay>
-              )}
-            </ImageContainer>
-          </NavContainer>
+          <ImageNavWrapper
+            loading={componentState.loading}
+            base64String={componentState.base64String}
+            fetchImageDetails={fetchImageDetails}
+            id={componentState.id}
+          />
           <TextWrapper>{componentState.prompt}</TextWrapper>
           <ImageDetails>
             Steps: {componentState.steps} | Guidance: {componentState.cfg_scale}{' '}
