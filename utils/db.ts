@@ -324,11 +324,7 @@ export const fetchRelatedImages = async (
 }
 
 export const getPendingJobDetails = async (jobId: string) => {
-  return await db.pending
-    .filter(function (job: { jobId: string }) {
-      return job.jobId === jobId
-    })
-    .first()
+  return await db.pending.where('jobId').equals(jobId).first()
 }
 
 // @ts-ignore
@@ -367,11 +363,7 @@ export const deleteAllPendingErrors = async () => {
 }
 
 export const getImageDetails = async (jobId: string) => {
-  return await db.completed
-    .filter(function (job: { jobId: string }) {
-      return job.jobId === jobId
-    })
-    .first()
+  return await db.completed.where('jobId').equals(jobId).first()
 }
 
 export const getNextImageDetails = async (id: number) => {
