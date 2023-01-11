@@ -6,6 +6,8 @@ interface FinishedImageResponse {
   success: boolean
   status?: string
   jobId?: string
+  worker_name?: string
+  hordeImageId?: string
   base64String?: string
   seed?: string
   model?: string
@@ -66,7 +68,7 @@ export const getFinishedImage = async (
     isPending = false
     if (Array.isArray(generations)) {
       const [image] = generations
-      const { model, seed, worker_id } = image
+      const { model, seed, id: hordeImageId, worker_id, worker_name } = image
       let base64String = image.img
 
       // Image is not done uploading to R2 yet(?).
@@ -107,11 +109,13 @@ export const getFinishedImage = async (
 
       return {
         success: true,
+        hordeImageId,
         jobId,
         model,
         base64String,
         seed,
-        worker_id
+        worker_id,
+        worker_name
       }
     }
 
