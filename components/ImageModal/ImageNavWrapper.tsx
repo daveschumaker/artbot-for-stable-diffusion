@@ -40,6 +40,7 @@ const StyledImage = styled.img`
 
 interface IProps {
   base64String: string
+  disableNav?: boolean
   fetchImageDetails(action: string, id: number): void
   handleClose(): void
   id: number
@@ -49,6 +50,7 @@ interface IProps {
 
 const ImageNavWrapper = ({
   base64String,
+  disableNav,
   fetchImageDetails,
   handleClose,
   id,
@@ -61,19 +63,23 @@ const ImageNavWrapper = ({
 
   const handlers = useSwipeable({
     onSwipedLeft: () => {
+      if (disableNav) return
       setSwiping(true)
       fetchImageDetails('next', id)
     },
     onSwipedRight: () => {
+      if (disableNav) return
       setSwiping(true)
       fetchImageDetails('prev', id)
     },
     onSwipedDown: () => {
+      if (disableNav) return
       setSwiping(true)
       handleClose()
     },
     preventScrollOnSwipe: true,
     onTouchEndOrOnMouseUp: () => {
+      if (disableNav) return
       setTimeout(() => {
         setSwiping(false)
       }, 100)
@@ -107,7 +113,7 @@ const ImageNavWrapper = ({
         <Linker href={`/image/${jobId}`} passHref tabIndex={0}>
           <StyledImage src={'data:image/webp;base64,' + base64String} />
         </Linker>
-        {mouseHover && (
+        {!disableNav && mouseHover && (
           <>
             <ImageNavButton
               action="PREV"
