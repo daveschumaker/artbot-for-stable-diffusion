@@ -175,10 +175,10 @@ const ImageModal = ({ jobId, handleClose }: IProps) => {
     const handleKeyPress = (e: KeyboardEvent) => {
       if (e.keyCode === 37) {
         //left
-        handleLoadMore('next')
+        handleLoadMore('prev')
       } else if (e.keyCode === 39) {
         // right
-        handleLoadMore('prev')
+        handleLoadMore('next')
       } else if (e.keyCode == 27) {
         // esc
         handleClose()
