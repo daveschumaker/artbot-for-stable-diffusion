@@ -375,19 +375,11 @@ export const getPrevImageDetails = async (id: number) => {
 }
 
 export const deleteCompletedImage = async (jobId: string) => {
-  await db.completed
-    .filter(function (job: { jobId: string }) {
-      return job.jobId === jobId
-    })
-    .delete()
+  await db.completed.where('jobId').equals(jobId).delete()
 }
 
 export const deletePendingJobFromDb = async (jobId: string) => {
-  await db.pending
-    .filter(function (job: { jobId: string }) {
-      return job.jobId === jobId
-    })
-    .delete()
+  await db.pending.where('jobId').equals(jobId).delete()
 }
 
 export const imageCount = async () => {
