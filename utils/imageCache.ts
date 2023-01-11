@@ -470,6 +470,7 @@ export const checkCurrentJob = async (imageDetails: any) => {
       await updatePendingJob(
         imageDetails.id,
         Object.assign({}, job, {
+          timestamp: Date.now(),
           jobStatus: JobStatus.Done
         })
       )

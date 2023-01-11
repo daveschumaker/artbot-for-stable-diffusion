@@ -123,7 +123,7 @@ const SettingsPage = () => {
     saveInputOnCreate: false,
     stayOnCreate: false,
     showOptionsMenu: false,
-    shareImagesExternally: false,
+    shareImagesExternally: AppSettings.get('shareImagesExternally'),
     useBeta: false,
     useWorkerId: '',
     useTrusted: true
