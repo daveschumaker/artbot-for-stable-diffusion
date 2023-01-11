@@ -37,6 +37,12 @@ class AppSettings {
     this.useTrusted = Boolean(useTrusted)
   }
 
+  static delete(key: string) {
+    const data = this.load()
+    delete data[key]
+    this.saveAll(data)
+  }
+
   static get(item: string) {
     const data = this.load()
 

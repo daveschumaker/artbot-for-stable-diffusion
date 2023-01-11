@@ -4,11 +4,11 @@ import { getApiHostServer, isAppActive } from '../utils/appUtils'
 let isPending = false
 export const fetchUserDetails = async (apikey: string) => {
   if (!apikey || isPending) {
-    return
+    return { status: 'pending' }
   }
 
   if (!isAppActive()) {
-    return
+    return { status: 'app inactive' }
   }
 
   isPending = true
@@ -76,12 +76,16 @@ export const fetchUserDetails = async (apikey: string) => {
 
       setWorkers(workerInfo)
     }
-  } catch (err) {
-    console.log(`Warning: Unable to fetch user details. API offline?`)
-  } finally {
+
     isPending = false
     return {
       success: true
+    }
+  } catch (err) {
+    console.log(`Warning: Unable to fetch user details. API offline?`)
+    isPending = false
+    return {
+      success: false
     }
   }
 }

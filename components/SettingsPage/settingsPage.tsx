@@ -33,6 +33,7 @@ import DropDownMenuItem from '../UI/DropDownMenuItem'
 import WorkerInfo from '../WorkerInfo'
 import ImportExportPanel from '../ImportExportPanel'
 import ExternalLinkIcon from '../icons/ExternalLinkIcon'
+import { useEffectOnce } from '../../hooks/useEffectOnce'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -113,6 +114,7 @@ const SettingsPage = () => {
   const [componentState, setComponentState] = useComponentState({
     allowNsfwImages: false,
     apiKey: '',
+    apiErrorMsg: '',
     disableSnowflakes: false,
     enableNoSleep: false,
     loadingWorkerStatus: {},
@@ -167,12 +169,27 @@ const SettingsPage = () => {
   }
 
   const handleApiInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    AppSettings.save('apiKey', e.target.value)
     setComponentState({ apiKey: e.target.value })
   }
 
   const handleSaveApiKey = async () => {
-    await fetchUserDetails(componentState.apiKey)
+    try {
+      const data = await fetchUserDetails(componentState.apiKey)
+      const { success } = data
+
+      if (success === true) {
+        AppSettings.save('apiKey', componentState.apiKey)
+        setComponentState({ apiErrorMsg: '' })
+      } else if (success === false) {
+        setComponentState({ apiErrorMsg: 'Error: Unable to load API key.' })
+        handleSwitchSelect('shareImagesExternally', true)
+        AppSettings.delete('apiKey')
+      }
+    } catch (err) {
+      setComponentState({ apiErrorMsg: 'Error: Unable to load API key.' })
+      handleSwitchSelect('shareImagesExternally', true)
+      AppSettings.delete('apiKey')
+    }
   }
 
   const handleBetaSelect = (obj: any) => {
@@ -231,6 +248,16 @@ const SettingsPage = () => {
       fetchWorkerData()
     }
   }, [fetchWorkerData, router.query.panel])
+
+  useEffectOnce(() => {
+    setTimeout(() => {
+      const apiKey = AppSettings.get('apiKey')
+
+      if (!apiKey) {
+        handleSwitchSelect('shareImagesExternally', true)
+      }
+    }, 250)
+  })
 
   return (
     <div>
@@ -375,6 +402,11 @@ const SettingsPage = () => {
                     </a>
                     . Stored in browser using LocalStorage.
                   </div>
+                  {componentState.apiErrorMsg && (
+                    <div className="text-red-500 font-bold flex flex-row gap-2">
+                      {componentState.apiErrorMsg}
+                    </div>
+                  )}
                 </SubSectionTitle>
                 <MaxWidth
                   // @ts-ignore
@@ -439,6 +471,7 @@ const SettingsPage = () => {
                   </div>
                 </SubSectionTitle>
                 <Switch
+                  disabled={!componentState.apiKey}
                   onChange={() => {
                     if (!userStore.username) {
                       return
