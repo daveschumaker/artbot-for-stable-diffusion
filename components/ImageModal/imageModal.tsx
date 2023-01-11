@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import useComponentState from '../../hooks/useComponentState'
 import {
@@ -18,12 +18,8 @@ const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* padding-top: 16px; */
-  position: fixed;
-  top: 84px;
-  left: 16px;
-  right: 16px;
-  bottom: 16px;
+  position: relative;
+  margin: 0 8px 16px 8px;
 
   overflow-y: auto;
   -ms-overflow-style: none; /* IE and Edge */
@@ -34,14 +30,12 @@ const ContentWrapper = styled.div`
   ::-webkit-scrollbar {
     display: none;
   }
-
-  @media (min-width: 640px) {
-    top: 40px;
-  }
 `
 
 const ImageContainer = styled.div`
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   position: relative;
   max-width: 100%;
 `
@@ -50,11 +44,12 @@ const StyledImage = styled.img`
   border-radius: 4px;
   box-shadow: 0 16px 38px -12px rgb(0 0 0 / 56%),
     0 4px 25px 0px rgb(0 0 0 / 12%), 0 8px 6px -5px rgb(0 0 0 / 20%);
-  /* max-height: 512px; */
+  max-height: 512px;
 `
 
 const TextWrapper = styled.div`
   padding-top: 24px;
+  margin: 0 16px;
 `
 
 const StyledModal = styled(InteractiveModal)`
@@ -70,6 +65,7 @@ const ImageDetails = styled.div`
   font-size: 12px;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     Liberation Mono, Courier New, monospace;
+  margin: 0 16px;
 `
 
 const ImageOverlay = styled.div`
@@ -85,6 +81,7 @@ const ImageOverlay = styled.div`
 `
 
 const ImageModal = ({ jobId, handleClose }: IProps) => {
+  const ref = useRef<any>(null)
   const [componentState, setComponentState] = useComponentState({
     initialLoad: true,
     id: null,
@@ -96,7 +93,9 @@ const ImageModal = ({ jobId, handleClose }: IProps) => {
     cfg_scale: null,
     sampler: null,
     model: null,
-    seed: null
+    seed: null,
+    containerHeight: 512,
+    imageMaxHeight: 700
   })
 
   const fetchImageDetails = useCallback(
@@ -122,7 +121,6 @@ const ImageModal = ({ jobId, handleClose }: IProps) => {
       }
 
       const { base64String, jobId, prompt } = data
-      console.log(`dattaaa?`, data)
 
       if (!data.id) {
         setComponentState({
@@ -188,15 +186,39 @@ const ImageModal = ({ jobId, handleClose }: IProps) => {
     return () => window.removeEventListener('keydown', handleKeyPress)
   }, [handleClose, handleLoadMore, setComponentState])
 
+  useEffect(() => {
+    if (ref?.current?.clientHeight) {
+      setTimeout(() => {
+        let containerHeight = ref?.current?.clientHeight ?? 0
+        let imageHeight = containerHeight
+
+        if (window.innerHeight <= containerHeight) {
+          containerHeight = window.innerHeight - 80
+          imageHeight = window.innerHeight - 170
+        }
+
+        setComponentState({
+          containerHeight: containerHeight,
+          imageMaxHeight: imageHeight
+        })
+      }, 100)
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [componentState.base64String])
+
   return (
-    <StyledModal handleClose={handleClose}>
+    <StyledModal
+      handleClose={handleClose}
+      setDynamicHeight={componentState.containerHeight}
+    >
       {componentState.initialLoad && (
         <ContentWrapper>
           <SpinnerV2 />
         </ContentWrapper>
       )}
       {!componentState.initialLoad && componentState.base64String && (
-        <ContentWrapper>
+        <ContentWrapper ref={ref}>
           <ImageContainer>
             <StyledImage
               src={'data:image/webp;base64,' + componentState.base64String}
