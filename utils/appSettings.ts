@@ -94,6 +94,11 @@ export const initAppSettings = async () => {
   await trackNewSession()
 
   const apikey = AppSettings.get('apiKey') || ''
+
+  if (!apikey) {
+    AppSettings.set('shareImagesExternally', true)
+  }
+
   fetchUserDetails(apikey)
   deleteStalePending()
 

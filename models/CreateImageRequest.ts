@@ -10,6 +10,7 @@ import { uuidv4 } from '../utils/appUtils'
 import { orientationDetails, randomSampler } from '../utils/imageUtils'
 import { validModelsArray } from '../utils/modelUtils'
 import { SourceProcessing } from '../utils/promptUtils'
+import AppSettings from './AppSettings'
 
 interface IRandomSampler {
   source_processing: string
@@ -64,6 +65,7 @@ class CreateImageRequest {
   prompt: string
   sampler: string
   seed: string
+  shareImagesExternally: boolean
   source_image: string
   source_mask: string
   source_processing: SourceProcessing
@@ -188,6 +190,7 @@ class CreateImageRequest {
     this.useAllSamplers = Boolean(useAllSamplers)
     this.useMultiSteps = Boolean(useMultiSteps)
     this.multiSteps = []
+    this.shareImagesExternally = AppSettings.get('shareImagesExternally')
 
     if (useMultiSteps) {
       let cleanMultiSteps = multiSteps.replace(`"`, '')

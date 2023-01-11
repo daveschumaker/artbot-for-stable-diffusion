@@ -337,8 +337,6 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
     if (input.useFavoriteModels) {
       const favModels = AppSettings.get('favoriteModels') || {}
 
-      console.log(`Object.keys(favModels)`, Object.keys(favModels))
-
       const modelsArray =
         Object.keys(favModels).length > 0
           ? (inputToSubmit.models = [...Object.keys(favModels)])
