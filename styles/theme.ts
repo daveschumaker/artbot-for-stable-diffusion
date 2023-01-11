@@ -15,6 +15,7 @@ export const lightTheme = {
   linkActive: '#5eedde',
   waitingImageBackground: '#d4d4d4',
   secondaryBackground: '#f3f3ef',
+  overlayBackground: '#ffffff',
 
   buttonPrimary: '#6AB7C6',
   buttonPrimaryActive: '#8fc9d4',
@@ -37,6 +38,7 @@ export const darkTheme = {
   linkActive: '#17cfbb',
   waitingImageBackground: 'black',
   secondaryBackground: 'rgb(30,30,30)',
+  overlayBackground: '#000000',
 
   buttonPrimary: '#6AB7C6',
   buttonPrimaryActive: '#8fc9d4',

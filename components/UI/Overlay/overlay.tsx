@@ -6,18 +6,20 @@ export interface IOverlayProps {
 }
 
 const StyledOverlay = styled.div<IOverlayProps>`
-  ${(props) =>
-    !props.disableBackground &&
-    `
-    background-color: white;
-    `}
-  opacity: 0.4;
+  background-color: ${(props: any) => props.theme.overlayBackground};
+  opacity: 0.8;
   position: fixed;
   top: 0;
   right: 0;
   left: 0;
   bottom: 0;
   z-index: 20;
+
+  ${(props) =>
+    props.disableBackground &&
+    `
+    background-color: unset;
+    `}
 `
 
 const Overlay = (props: IOverlayProps) => {
