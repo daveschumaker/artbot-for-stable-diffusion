@@ -1,6 +1,9 @@
+import { useRouter } from 'next/router'
 import React, { useState } from 'react'
+import { useSwipeable } from 'react-swipeable'
 import styled from 'styled-components'
 import SpinnerV2 from '../Spinner'
+import Linker from '../UI/Linker'
 import ImageNavButton from './ImageNavButton'
 
 const NavContainer = styled.div`
@@ -37,26 +40,73 @@ const StyledImage = styled.img`
 
 interface IProps {
   base64String: string
-  loading: boolean
   fetchImageDetails(action: string, id: number): void
+  handleClose(): void
   id: number
+  jobId: string
+  loading: boolean
 }
 
 const ImageNavWrapper = ({
   base64String,
   fetchImageDetails,
+  handleClose,
   id,
+  jobId,
   loading
 }: IProps) => {
+  const router = useRouter()
   const [mouseHover, setMouseHover] = useState(false)
+  const [swiping, setSwiping] = useState(false)
+
+  const handlers = useSwipeable({
+    onSwipedLeft: () => {
+      setSwiping(true)
+      fetchImageDetails('next', id)
+    },
+    onSwipedRight: () => {
+      setSwiping(true)
+      fetchImageDetails('prev', id)
+    },
+    onSwipedDown: () => {
+      setSwiping(true)
+      handleClose()
+    },
+    preventScrollOnSwipe: true,
+    onTouchEndOrOnMouseUp: () => {
+      setTimeout(() => {
+        setSwiping(false)
+      }, 100)
+    }
+  })
+
+  const handleTouchEnd = (e: any) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    if (swiping) {
+      return
+    }
+
+    router.push(`/image/${jobId}`)
+  }
 
   return (
     <NavContainer
-      onMouseEnter={() => setMouseHover(true)}
-      onMouseLeave={() => setMouseHover(false)}
+      onTouchEnd={handleTouchEnd}
+      onMouseEnter={() => {
+        if (swiping) return
+        setMouseHover(true)
+      }}
+      onMouseLeave={() => {
+        if (swiping) return
+        setMouseHover(false)
+      }}
     >
-      <ImageContainer>
-        <StyledImage src={'data:image/webp;base64,' + base64String} />
+      <ImageContainer {...handlers}>
+        <Linker href={`/image/${jobId}`} passHref tabIndex={0}>
+          <StyledImage src={'data:image/webp;base64,' + base64String} />
+        </Linker>
         {mouseHover && (
           <>
             <ImageNavButton

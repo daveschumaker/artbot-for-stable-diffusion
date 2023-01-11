@@ -198,7 +198,9 @@ const ImageModal = ({ jobId, handleClose }: IProps) => {
             loading={componentState.loading}
             base64String={componentState.base64String}
             fetchImageDetails={fetchImageDetails}
+            handleClose={handleClose}
             id={componentState.id}
+            jobId={componentState.jobId}
           />
           <TextWrapper>{componentState.prompt}</TextWrapper>
           <ImageDetails>
