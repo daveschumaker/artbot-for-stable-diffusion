@@ -282,7 +282,7 @@ const ImagesPage = () => {
   }
 
   const handleImageClick = useCallback(
-    (id: string) => {
+    (e: any, id: string, jobId: string) => {
       let newArray: Array<string> = [...componentState.deleteSelection]
       if (componentState.deleteMode) {
         const index = newArray.indexOf(id)
@@ -291,9 +291,16 @@ const ImagesPage = () => {
         } else {
           newArray.push(id)
         }
-      }
 
-      setComponentState({ deleteSelection: newArray })
+        setComponentState({ deleteSelection: newArray })
+      } else {
+        e.preventDefault()
+        e.stopPropagation()
+
+        setComponentState({
+          showImageModal: jobId
+        })
+      }
     },
     [
       componentState.deleteMode,
@@ -356,12 +363,6 @@ const ImagesPage = () => {
       })
     }
   }, [componentState.showFilterMenu, setComponentState])
-
-  const showImageModal = (jobId: string) => {
-    setComponentState({
-      showImageModal: jobId
-    })
-  }
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
@@ -426,8 +427,7 @@ const ImagesPage = () => {
     setComponentState(updateObject)
   }, [router.query, setComponentState])
 
-  // const LinkEl = componentState.deleteMode ? NonLink : Link
-  const LinkEl = NonLink
+  const LinkEl = componentState.deleteMode ? NonLink : Link
 
   const countDescriptor = () => {
     let string = ``
@@ -867,14 +867,13 @@ const ImagesPage = () => {
                 }) => {
                   return (
                     <LazyLoad key={image.jobId} once>
-                      <div
-                        className="relative"
-                        onClick={() => showImageModal(image.jobId)}
-                      >
+                      <div className="relative">
                         <LinkEl
                           href={`/image/${image.jobId}`}
                           passHref
-                          onClick={() => handleImageClick(image.id)}
+                          onClick={(e) =>
+                            handleImageClick(e, image.id, image.jobId)
+                          }
                           tabIndex={0}
                         >
                           <img
@@ -931,7 +930,9 @@ const ImagesPage = () => {
                         <LinkEl
                           href={`/image/${image.jobId}`}
                           passHref
-                          onClick={() => handleImageClick(image.id)}
+                          onClick={(e) =>
+                            handleImageClick(e, image.id, image.jobId)
+                          }
                           tabIndex={0}
                         >
                           <ImageSquare
