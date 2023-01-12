@@ -10,6 +10,7 @@ import PageTitle from '../components/UI/PageTitle'
 import useComponentState from '../hooks/useComponentState'
 import { useEffectOnce } from '../hooks/useEffectOnce'
 import AppSettings from '../models/AppSettings'
+import { clientHeader } from '../utils/appUtils'
 
 const MAX_ERROR_COUNT = 30
 
@@ -99,6 +100,7 @@ const Rate = () => {
       const res = await fetch('https://ratings.droom.cloud/api/v1/rating/new', {
         headers: {
           'Content-Type': 'application/json',
+          'Client-Agent': clientHeader(),
           apikey: componentState.apiKey
         }
       })
@@ -154,6 +156,7 @@ const Rate = () => {
             body: JSON.stringify(ratingData),
             headers: {
               'Content-Type': 'application/json',
+              'Client-Agent': clientHeader(),
               apikey: componentState.apiKey
             }
           }
