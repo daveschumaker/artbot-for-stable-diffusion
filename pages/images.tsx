@@ -376,11 +376,15 @@ const ImagesPage = () => {
 
       if (componentState.deleteMode && e.keyCode === 13) {
         setComponentState({ showDeleteModal: true })
-      } else if (e.keyCode === 37 && componentState.showImageModal === false) {
-        //left
+      } else if (
+        e.key === 'ArrowLeft' &&
+        componentState.showImageModal === false
+      ) {
         handleLoadMore('prev')
-      } else if (e.keyCode === 39 && componentState.showImageModal === false) {
-        // right
+      } else if (
+        e.key === 'ArrowRight' &&
+        componentState.showImageModal === false
+      ) {
         handleLoadMore('next')
       }
     }

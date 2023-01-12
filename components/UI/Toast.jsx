@@ -8,7 +8,6 @@ import { getImageDetails } from '../../utils/db'
 import ImageSquare from '../ImageSquare'
 import CloseIcon from '../icons/CloseIcon'
 import Linker from './Linker'
-import { useRouter } from 'next/router'
 
 const StyledToast = styled.div`
   align-items: center;
@@ -48,7 +47,6 @@ const StyledTextPanel = styled.div`
 `
 
 export default function Toast({ handleClose, handleImageClick, jobId, showImageReadyToast }) {
-  const router = useRouter()
   const [imageDetails, setImageDetails] = useState({})
 
   const fetchImageDetails = async (jobId) => {
@@ -66,7 +64,6 @@ export default function Toast({ handleClose, handleImageClick, jobId, showImageR
         type: 'new_img'
       }
     })
-    router.push(`/image/${jobId}`)
     handleImageClick()
 
     setShowImageReadyToast(false)
