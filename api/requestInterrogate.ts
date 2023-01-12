@@ -1,5 +1,5 @@
 import AppSettings from '../models/AppSettings'
-import { getApiHostServer } from '../utils/appUtils'
+import { clientHeader, getApiHostServer } from '../utils/appUtils'
 
 interface IParams {
   interrogationTypes: Array<any>
@@ -42,6 +42,7 @@ export const requestIterrogate = async ({
       body: JSON.stringify(apiParams),
       headers: {
         'Content-Type': 'application/json',
+        'Client-Agent': clientHeader(),
         apikey: apikey
       }
     })

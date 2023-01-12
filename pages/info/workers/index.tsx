@@ -15,6 +15,7 @@ import PageTitle from '../../../components/UI/PageTitle'
 import useComponentState from '../../../hooks/useComponentState'
 import { useEffectOnce } from '../../../hooks/useEffectOnce'
 import SpinnerV2 from '../../../components/Spinner'
+import { clientHeader } from '../../../utils/appUtils'
 
 const MenuSeparator = styled.div`
   width: 100%;
@@ -36,7 +37,12 @@ const WorkerInfoPage = () => {
   })
 
   const fetchWorkers = async () => {
-    const resp = await fetch(`https://stablehorde.net/api/v2/workers`)
+    const resp = await fetch(`https://stablehorde.net/api/v2/workers`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Client-Agent': clientHeader()
+      }
+    })
     const workers = await resp.json()
 
     setComponentState({ workers, isLoading: false })

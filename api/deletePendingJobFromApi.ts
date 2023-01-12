@@ -1,4 +1,4 @@
-import { getApiHostServer } from '../utils/appUtils'
+import { clientHeader, getApiHostServer } from '../utils/appUtils'
 
 export const deletePendingJobFromApi = async (jobId: string) => {
   if (!jobId) {
@@ -9,7 +9,10 @@ export const deletePendingJobFromApi = async (jobId: string) => {
 
   try {
     await fetch(`${getApiHostServer()}/api/v2/generate/status/${jobId}`, {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: {
+        'Client-Agent': clientHeader()
+      }
     })
   } catch (err) {
     console.log(`Warning: Unable to send delete image request. API offline?`)

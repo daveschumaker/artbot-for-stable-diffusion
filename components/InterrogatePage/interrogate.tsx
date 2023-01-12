@@ -19,6 +19,7 @@ import { useRouter } from 'next/router'
 import { getImageForInterrogation } from '../../utils/interrogateUtils'
 import PlusIcon from '../icons/PlusIcon'
 import RecycleIcon from '../icons/RecycleIcon'
+import { clientHeader } from '../../utils/appUtils'
 
 interface FlexRowProps {
   bottomPadding?: number
@@ -156,7 +157,8 @@ const Interrogate = () => {
         imageUrl: componentState.imgUrl
       }),
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Client-Agent': clientHeader()
       }
     })
     const data = await resp.json()
@@ -352,7 +354,15 @@ const Interrogate = () => {
   })
 
   const fetchHordeStatus = useCallback(async () => {
-    const res = await fetch('https://stablehorde.net/api/v2/status/performance')
+    const res = await fetch(
+      'https://stablehorde.net/api/v2/status/performance',
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Client-Agent': clientHeader()
+        }
+      }
+    )
     const data = (await res.json()) || {}
 
     const { interrogator_count, queued_forms } = data

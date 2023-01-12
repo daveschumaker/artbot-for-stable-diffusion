@@ -4,6 +4,7 @@ import { RATE_IMAGE_CUTOFF_SEC } from '../../constants'
 import AppSettings from '../../models/AppSettings'
 import { getImageDetails, updateCompletedJob } from '../../utils/db'
 import StarRating from '../StarRating'
+import { clientHeader } from '../../utils/appUtils'
 
 interface IProps {
   jobId: string
@@ -78,7 +79,8 @@ const RateMyImage = ({ jobId }: IProps) => {
           method: 'POST',
           body: JSON.stringify(ratingData),
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Client-Agent': clientHeader()
           }
         }
       )

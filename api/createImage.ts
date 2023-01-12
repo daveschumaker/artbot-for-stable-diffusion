@@ -1,6 +1,6 @@
 import AppSettings from '../models/AppSettings'
 import { GenerateResponse } from '../types'
-import { getApiHostServer } from '../utils/appUtils'
+import { clientHeader, getApiHostServer } from '../utils/appUtils'
 import { modifyPromptForStylePreset } from '../utils/imageUtils'
 import { SourceProcessing } from '../utils/promptUtils'
 import { trackEvent } from './telemetry'
@@ -183,6 +183,7 @@ export const createImage = async (
       body: JSON.stringify(imageParams),
       headers: {
         'Content-Type': 'application/json',
+        'Client-Agent': clientHeader(),
         apikey: apikey
       }
     })

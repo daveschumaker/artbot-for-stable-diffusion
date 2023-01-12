@@ -1,5 +1,5 @@
 import { IWorker, setUserInfo, setWorkers } from '../store/userStore'
-import { getApiHostServer, isAppActive } from '../utils/appUtils'
+import { clientHeader, getApiHostServer, isAppActive } from '../utils/appUtils'
 
 let isPending = false
 export const fetchUserDetails = async (apikey: string) => {
@@ -15,7 +15,8 @@ export const fetchUserDetails = async (apikey: string) => {
   try {
     const res = await fetch(`${getApiHostServer()}/api/v2/find_user`, {
       headers: {
-        apikey
+        apikey,
+        'Client-Agent': clientHeader()
       }
     })
     const userDetails = await res.json()
@@ -38,7 +39,13 @@ export const fetchUserDetails = async (apikey: string) => {
 
       for (const idx in worker_ids) {
         const workerRes = await fetch(
-          `${getApiHostServer()}/api/v2/workers/${worker_ids[idx]}`
+          `${getApiHostServer()}/api/v2/workers/${worker_ids[idx]}`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'Client-Agent': clientHeader()
+            }
+          }
         )
         const workerData = await workerRes.json()
         const {

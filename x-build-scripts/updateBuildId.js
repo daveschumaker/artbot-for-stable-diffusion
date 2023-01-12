@@ -1,14 +1,15 @@
 const fs = require('fs')
 const buildFile = './build_info.json'
 
+const zeroPad = (n, digits) => n.toString().padStart(digits, '0')
+
 const date = new Date()
 const buildArr = [
   date.getFullYear(),
-  date.getMonth(),
-  '_',
-  date.getHours(),
-  date.getMinutes(),
-  date.getSeconds()
+  zeroPad(date.getMonth() + 1, 2),
+  zeroPad(date.getDate(), 2),
+  zeroPad(date.getHours(), 2),
+  zeroPad(date.getMinutes(), 2)
 ]
 
 const buildInfo = {

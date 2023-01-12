@@ -1,4 +1,4 @@
-import { getApiHostServer } from '../utils/appUtils'
+import { clientHeader, getApiHostServer } from '../utils/appUtils'
 
 interface CheckResponse {
   success: boolean
@@ -28,7 +28,13 @@ export const checkImageStatus = async (
   isPending = true
   try {
     const res = await fetch(
-      `${getApiHostServer()}/api/v2/generate/check/${jobId}`
+      `${getApiHostServer()}/api/v2/generate/check/${jobId}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Client-Agent': clientHeader()
+        }
+      }
     )
 
     const statusCode = res.status

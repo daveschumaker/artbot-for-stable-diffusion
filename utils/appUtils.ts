@@ -1,5 +1,11 @@
 import { HORDE_DEV, HORDE_PROD } from '../constants'
 import AppSettings from '../models/AppSettings'
+import { appInfoStore } from '../store/appStore'
+
+export const clientHeader = () => {
+  const buildId = appInfoStore.state.buildId
+  return `ArtBot:v.${buildId}:(discord)rockbandit#4910`
+}
 
 export const isAppActive = () => {
   if (AppSettings.get('runInBackground')) {

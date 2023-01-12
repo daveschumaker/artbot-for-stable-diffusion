@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { fetchUserDetails } from '../../api/userInfo'
 import AppSettings from '../../models/AppSettings'
 import { setWorker } from '../../store/userStore'
-import { getApiHostServer } from '../../utils/appUtils'
+import { clientHeader, getApiHostServer } from '../../utils/appUtils'
 import { formatSeconds } from '../../utils/helperUtils'
 import { sleep } from '../../utils/sleep'
 import ChevronRightIcon from '../icons/ChevronRightIcon'
@@ -104,7 +104,8 @@ const WorkerInfo = ({
       // @ts-ignore
       headers: {
         apikey: AppSettings.get('apiKey'),
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Client-Agent': clientHeader()
       },
       method: 'PUT'
     })

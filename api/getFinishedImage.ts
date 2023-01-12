@@ -1,4 +1,4 @@
-import { getApiHostServer } from '../utils/appUtils'
+import { clientHeader, getApiHostServer } from '../utils/appUtils'
 import { blobToBase64 } from '../utils/helperUtils'
 import { isValidHttpUrl } from '../utils/validationUtils'
 
@@ -49,7 +49,8 @@ export const getFinishedImage = async (
       {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Client-Agent': clientHeader()
         }
       }
     )

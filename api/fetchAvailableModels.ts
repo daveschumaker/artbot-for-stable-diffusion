@@ -1,6 +1,6 @@
 import StableDiffusionModel from '../models/StableDiffusionModel'
 import { modelInfoStore, setAvailableModels } from '../store/modelStore'
-import { isAppActive } from '../utils/appUtils'
+import { clientHeader, isAppActive } from '../utils/appUtils'
 import fetchModelDetails from './fetchModelDetails'
 
 let isInitial = true
@@ -28,7 +28,13 @@ export const fetchAvailableModels = async () => {
     const res = await fetch(
       isInitial
         ? `/artbot/api/models-available`
-        : `https://stablehorde.net/api/v2/status/models`
+        : `https://stablehorde.net/api/v2/status/models`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Client-Agent': clientHeader()
+        }
+      }
     )
     const data = await res.json()
 

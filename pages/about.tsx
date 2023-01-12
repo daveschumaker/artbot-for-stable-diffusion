@@ -182,11 +182,11 @@ const AboutPage = () => {
           </Linker>{' '}
           or on Discord at{' '}
           <Linker
-            href="https://discordapp.com/users/bitbandit#4910"
+            href="https://discordapp.com/users/rockbandit#4910"
             target="_blank"
             rel="noopener noreferrer"
           >
-            bitbandit#4910
+            rockbandit#4910
           </Linker>
           . If you have found this service useful, I&apos;d be grateful if you
           were to consider{' '}
@@ -224,11 +224,11 @@ const AboutPage = () => {
           <li>
             Discord (Profile):{' '}
             <Linker
-              href="https://discordapp.com/users/bitbandit#4910"
+              href="https://discordapp.com/users/rockbandit#4910"
               target="_blank"
               rel="noopener noreferrer"
             >
-              bitbandit#4910
+              rockbandit#4910
             </Linker>
           </li>
           <li>

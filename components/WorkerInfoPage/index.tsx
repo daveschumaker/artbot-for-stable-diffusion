@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import useComponentState from '../../hooks/useComponentState'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
+import { clientHeader } from '../../utils/appUtils'
 import Row from '../Row'
 import SelectComponent from '../UI/Select'
 import WorkerInfo from '../WorkerInfo'
@@ -19,7 +20,12 @@ const WorkerInfoPage = () => {
   })
 
   const fetchWorkers = async () => {
-    const resp = await fetch(`https://stablehorde.net/api/v2/workers`)
+    const resp = await fetch(`https://stablehorde.net/api/v2/workers`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Client-Agent': clientHeader()
+      }
+    })
     const workers = await resp.json()
 
     setComponentState({ workers })

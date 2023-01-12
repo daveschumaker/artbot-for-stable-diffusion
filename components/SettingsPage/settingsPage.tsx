@@ -22,7 +22,7 @@ import {
 import Linker from '../../components/UI/Linker'
 import SpinnerV2 from '../../components/Spinner'
 import { sleep } from '../../utils/sleep'
-import { getApiHostServer } from '../../utils/appUtils'
+import { clientHeader, getApiHostServer } from '../../utils/appUtils'
 import MenuButton from '../../components/UI/MenuButton'
 import { appInfoStore } from '../../store/appStore'
 import ChevronRightIcon from '../../components/icons/ChevronRightIcon'
@@ -230,7 +230,13 @@ const SettingsPage = () => {
 
       for (const idx in worker_ids) {
         const workerRes = await fetch(
-          `${getApiHostServer()}/api/v2/workers/${worker_ids[idx]}`
+          `${getApiHostServer()}/api/v2/workers/${worker_ids[idx]}`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'Client-Agent': clientHeader()
+            }
+          }
         )
         const workerData = await workerRes.json()
         const { id } = workerData
