@@ -143,6 +143,12 @@ const Changelog = () => {
             UX: Helpful warning if you&apos;re trying to create a new batch of
             images but have a fixed seed.
           </StyledLi>
+          <StyledLi>Show rate image button on pending items page.</StyledLi>
+          <StyledLi>
+            When clicking on the image finished toast popup in the corner of the
+            screen, load the image modal so you can instantly rate your image
+            (if applicable).
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
