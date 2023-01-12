@@ -1,4 +1,4 @@
-import { useState } from 'react'
+// import { useState } from 'react'
 import { useEffect } from 'react'
 import { useStore } from 'statery'
 
@@ -14,12 +14,12 @@ import {
 } from '../store/multiStore'
 import { isAppActive } from '../utils/appUtils'
 import { hackyMultiJobCheck } from '../utils/imageCache'
-import ImageModal from './ImageModal'
+// import ImageModal from './ImageModal'
 
 const PollController = () => {
   const appState = useStore(appInfoStore)
   const multiState = useStore(multiStore)
-  const [showImageModal, setShowImageModal] = useState<boolean | string>(false)
+  // const [showImageModal, setShowImageModal] = useState<boolean | string>(false)
 
   const { newImageReady, showImageReadyToast } = appState
 
@@ -72,7 +72,8 @@ const PollController = () => {
           handleClose={handleCloseToast}
           jobId={newImageReady}
           showImageReadyToast={showImageReadyToast}
-          handleImageClick={() => setShowImageModal(newImageReady)}
+          handleImageClick={() => {}}
+          // handleImageClick={() => setShowImageModal(newImageReady)}
         />
       )}
     </>
