@@ -107,6 +107,16 @@ const Changelog = () => {
         </Section>
       </Panel>
       <Section>
+        <SubSectionTitle>2023.01.12</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: Swiping or using arrow keys when viewing modal from image
+            gallery made the underlying gallery page change.
+          </StyledLi>
+          <StyledLi>Updated ratings API endpoint</StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.01.11</SubSectionTitle>
         <StyledUl>
           <StyledLi>

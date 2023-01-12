@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import Head from 'next/head'
 import { useCallback, useEffect } from 'react'
-import { useStore } from 'statery'
 import styled from 'styled-components'
 import ExternalLinkIcon from '../components/icons/ExternalLinkIcon'
 import SpinnerV2 from '../components/Spinner'
@@ -11,7 +10,6 @@ import PageTitle from '../components/UI/PageTitle'
 import useComponentState from '../hooks/useComponentState'
 import { useEffectOnce } from '../hooks/useEffectOnce'
 import AppSettings from '../models/AppSettings'
-import { userInfoStore } from '../store/userStore'
 
 const MAX_ERROR_COUNT = 30
 
@@ -65,8 +63,8 @@ const Image = styled.img`
 let errorCount = 0
 let pending = false
 const Rate = () => {
-  const userStore = useStore(userInfoStore)
   const [componentState, setComponentState] = useComponentState({
+    apiKey: '',
     activeStar: 0,
     showError: false,
     datasetId: '',
@@ -98,7 +96,12 @@ const Rate = () => {
       }
 
       pending = true
-      const res = await fetch('https://droom.cloud/api/rating/new')
+      const res = await fetch('https://ratings.droom.cloud/api/v1/rating/new', {
+        headers: {
+          'Content-Type': 'application/json',
+          apikey: componentState.apiKey
+        }
+      })
       data = (await res.json()) || {}
     } catch (err) {
       errorCount++
@@ -124,7 +127,7 @@ const Rate = () => {
         })
       }
     }
-  }, [setComponentState])
+  }, [componentState.apiKey, setComponentState])
 
   const rateImage = useCallback(
     async (rating: number) => {
@@ -140,30 +143,30 @@ const Rate = () => {
 
       const ratingData = {
         rating,
-        datasetId: componentState.datasetId,
-        horde_id: userStore.username || ''
+        datasetId: componentState.datasetId
       }
 
       try {
         const res = await fetch(
-          `https://droom.cloud/api/rating/${componentState.imageId}`,
+          `https://ratings.droom.cloud/api/v1/rating/${componentState.imageId}`,
           {
             method: 'POST',
             body: JSON.stringify(ratingData),
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              apikey: componentState.apiKey
             }
           }
         )
 
         const data = await res.json()
-        const { success } = data
+        const { reward } = data
 
-        if (success) {
+        if (reward) {
           let totalRated = AppSettings.get('imagesRated') || 0
           let kudosEarned = AppSettings.get('kudosEarnedByRating') || 0
           totalRated++
-          kudosEarned += 5
+          kudosEarned += reward
 
           AppSettings.save('imagesRated', totalRated)
           AppSettings.save('kudosEarnedByRating', kudosEarned)
@@ -189,11 +192,11 @@ const Rate = () => {
       }
     },
     [
+      componentState.apiKey,
       componentState.datasetId,
       componentState.imageId,
       fetchImage,
-      setComponentState,
-      userStore.username
+      setComponentState
     ]
   )
 
@@ -212,17 +215,21 @@ const Rate = () => {
       return
     }
 
-    if (userStore.username && !pending) {
+    if (componentState.apiKey && !pending) {
       setTimeout(() => {
         fetchImage()
       }, 500)
     }
-  }, [fetchImage, userStore.username])
+  }, [componentState.apiKey, fetchImage])
 
   useEffectOnce(() => {
     errorCount = 0
     pending = false
   })
+
+  useEffect(() => {
+    setComponentState({ apiKey: AppSettings.get('apiKey') })
+  }, [setComponentState])
 
   return (
     <>
@@ -246,7 +253,7 @@ const Rate = () => {
         (the non-profit which helped trained Stable Diffusion) improve their
         library.
       </SubTitle>
-      {!userStore.username && (
+      {!componentState.apiKey && (
         <>
           <SubTitle>
             Log in with your API key on the{' '}
@@ -273,7 +280,7 @@ const Rate = () => {
           ERROR: Unable to complete this request. Please try again later.
         </div>
       )}
-      {userStore.username && componentState.initialLoad && (
+      {componentState.apiKey && componentState.initialLoad && (
         <>
           <SubTitle>Loading new image...</SubTitle>
           <SubTitle>
@@ -282,7 +289,7 @@ const Rate = () => {
         </>
       )}
 
-      {userStore.username &&
+      {componentState.apiKey &&
       !componentState.initialLoad &&
       componentState.imageUrl ? (
         <div>
