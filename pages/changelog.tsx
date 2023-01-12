@@ -149,6 +149,13 @@ const Changelog = () => {
             screen, load the image modal so you can instantly rate your image
             (if applicable).
           </StyledLi>
+          <StyledLi>
+            Fix: I had added a fixed seed warning when generating multiple
+            images with a fixed seed, but forgot to take into account the
+            scenario where you WANT a fixed seed (multiple models, multiple
+            steps). Now, I just show a warning, but do not block you. (Thanks
+            for the feedback, anonymous user!)
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
