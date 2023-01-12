@@ -22,6 +22,7 @@ import CreateImageRequest from '../models/CreateImageRequest'
 import Linker from './UI/Linker'
 import { useStore } from 'statery'
 import { modelInfoStore } from '../store/modelStore'
+import { RATE_IMAGE_CUTOFF_SEC } from '../constants'
 
 const ModelWarning = styled.div`
   align-items: center;
@@ -102,6 +103,7 @@ const StyledButtonContainer = styled.div`
   flex-direction: row;
   flex-shrink: 0;
   justify-content: flex-end;
+  column-gap: 8px;
 `
 
 const MobileHideText = styled.span`
@@ -109,6 +111,10 @@ const MobileHideText = styled.span`
   @media (min-width: 640px) {
     display: inline-block;
   }
+`
+
+const ImageContainer = styled.div`
+  cursor: pointer;
 `
 
 const StyledImage = styled(ImageSquare)``
@@ -218,6 +224,12 @@ const PendingItem = memo(({ jobDetails, jobId, onImageClick = () => {} }) => {
     4 * jobDetails.initWaitTime < 60 ? 60 : 4 * jobDetails.initWaitTime
   const jobStalled =
     elapsedTimeSec > minJobWaitTime && !jobDone && remainingTime < 3
+
+  const currentTimestamp = Date.now() / 1000
+  const jobTimestamp = jobDetails.timestamp / 1000
+
+  const jobTimeDiff = currentTimestamp - jobTimestamp < RATE_IMAGE_CUTOFF_SEC
+  const canRate = !jobDetails.userRating && jobDetails.shareImagesExternally
 
   return (
     <StyledContainer>
@@ -380,6 +392,11 @@ const PendingItem = memo(({ jobDetails, jobId, onImageClick = () => {} }) => {
             )}
           </div>
           <StyledButtonContainer>
+            {jobDetails.jobStatus === JobStatus.Done &&
+              jobTimeDiff &&
+              canRate && (
+                <Button onClick={() => onImageClick(jobId)}>Rate image</Button>
+              )}
             {jobDetails.jobStatus === JobStatus.Done && (
               <Button
                 onClick={() => {
