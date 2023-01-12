@@ -233,13 +233,13 @@ const PendingItem = memo(({ jobDetails, jobId, onImageClick = () => {} }) => {
               <SpinnerV2 />
             ) : null}
             {jobDetails.jobStatus === JobStatus.Done && (
-              <div onClick={() => onImageClick(jobId)}>
+              <ImageContainer onClick={() => onImageClick(jobId)}>
                 <StyledImage
                   // @ts-ignore
                   imageDetails={jobDetails}
                   size={100}
                 />
-              </div>
+              </ImageContainer>
               // <Link
               //   href={`/image/${jobId}`}
               //   onClick={() => {
