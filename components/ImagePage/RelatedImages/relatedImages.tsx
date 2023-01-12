@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from 'next/link'
+import React, { useEffect } from 'react'
 import { useCallback } from 'react'
 import LazyLoad from 'react-lazyload'
 import styled from 'styled-components'
@@ -14,6 +15,7 @@ import MasonryLayout from '../../MasonryLayout'
 import MenuButton from '../../UI/MenuButton'
 import PageTitle from '../../UI/PageTitle'
 import TextButton from '../../UI/TextButton'
+import ImageModalController from './ImageModalController'
 
 const NonLink = styled.div`
   cursor: pointer;
@@ -57,19 +59,25 @@ const ButtonContainer = styled.div`
 `
 
 const RelatedImages = ({
-  jobId,
+  imageId,
+  parentJobId,
   images = [],
+  onModalOpen = () => {},
   updateRelatedImages = () => {}
 }: {
-  jobId: string
+  imageId: string
+  parentJobId: string
   images: Array<any>
-  updateRelatedImages: () => void
+  onModalOpen: (value: boolean) => void
+  updateRelatedImages: (parentJobId: string) => void
 }) => {
   const size = useWindowSize()
   const [componentState, setComponentState] = useComponentState({
     deleteMode: false,
     deleteSelection: [],
-    showDeleteModal: false
+    showDeleteModal: false,
+    showImageModal: false,
+    initialIndexJobId: 0
   })
 
   let imageColumns = 2
@@ -92,9 +100,7 @@ const RelatedImages = ({
     })
 
     await bulkDeleteImages(componentState.deleteSelection)
-
-    // @ts-ignore
-    await updateRelatedImages(jobId)
+    await updateRelatedImages(parentJobId)
 
     setComponentState({
       deleteMode: false,
@@ -103,8 +109,13 @@ const RelatedImages = ({
     })
   }
 
+  const handleAfterDelete = async () => {
+    await updateRelatedImages(parentJobId)
+  }
+
   const handleImageClick = useCallback(
-    (id: string) => {
+    // @ts-ignore
+    ({ e, id, jobId }) => {
       let newArray: Array<string> = [...componentState.deleteSelection]
       if (componentState.deleteMode) {
         const index = newArray.indexOf(id)
@@ -113,6 +124,15 @@ const RelatedImages = ({
         } else {
           newArray.push(id)
         }
+      } else {
+        e.preventDefault()
+        e.stopPropagation()
+
+        onModalOpen(true)
+        setComponentState({
+          showImageModal: jobId,
+          initialIndexJobId: jobId
+        })
       }
 
       setComponentState({ deleteSelection: newArray })
@@ -120,14 +140,44 @@ const RelatedImages = ({
     [
       componentState.deleteMode,
       componentState.deleteSelection,
+      onModalOpen,
       setComponentState
     ]
   )
 
+  useEffect(() => {
+    if (componentState.showImageModal) {
+      onModalOpen(false)
+      setComponentState({ showImageModal: false })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [imageId])
+
   const LinkEl = componentState.deleteMode ? NonLink : Link
+
+  const filteredImages = images.filter((image) => {
+    return image.jobId !== imageId
+  })
+
+  if (filteredImages.length === 0) {
+    return null
+  }
 
   return (
     <>
+      {componentState.showImageModal && (
+        <ImageModalController
+          onAfterDelete={handleAfterDelete}
+          handleClose={() => {
+            onModalOpen(false)
+            setComponentState({
+              showImageModal: false
+            })
+          }}
+          imageList={images}
+          initialIndexJobId={componentState.initialIndexJobId}
+        />
+      )}
       {componentState.showDeleteModal && (
         <ConfirmationModal
           multiImage={componentState.deleteSelection.length > 1}
@@ -211,7 +261,7 @@ const RelatedImages = ({
       </div>
       <div className="mt-4 flex gap-y-2.5 flex-wrap gap-x-2.5">
         <MasonryLayout columns={imageColumns} gap={8}>
-          {images.map(
+          {filteredImages.map(
             (image: {
               id: string
               favorited: boolean
@@ -227,7 +277,13 @@ const RelatedImages = ({
                     <LinkEl
                       href={`/image/${image.jobId}`}
                       passHref
-                      onClick={() => handleImageClick(image.id)}
+                      onClick={(e) =>
+                        handleImageClick({
+                          e,
+                          id: image.id,
+                          jobId: image.jobId
+                        })
+                      }
                     >
                       <img
                         src={'data:image/webp;base64,' + image.base64String}
@@ -267,4 +323,11 @@ const RelatedImages = ({
   )
 }
 
-export default RelatedImages
+function areEqual(prevProps: any, nextProps: any) {
+  const imageIdEqual = prevProps.imageId === nextProps.imageId
+  const listEqual = prevProps.images === nextProps.images
+
+  return imageIdEqual && listEqual
+}
+
+export default React.memo(RelatedImages, areEqual)

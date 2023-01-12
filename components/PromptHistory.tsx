@@ -32,7 +32,7 @@ const PromptsList = styled.div`
   }
 
   @media (min-width: 640px) {
-    top: 148px;
+    top: 164px;
   }
 `
 

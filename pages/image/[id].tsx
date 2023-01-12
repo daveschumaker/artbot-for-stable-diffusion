@@ -68,8 +68,8 @@ const ImagePage = () => {
   const [pendingUpscale, setPendingUpscale] = useState(false)
   const [relatedImages, setRelatedImages] = useState([])
   const [optimisticFavorite, setOptimisticFavorite] = useState(false)
+  const [imageModalOpen, setImageModalOpen] = useState(false)
 
-  const maxLength = relatedImages.length
   const currentIndex = relatedImages.findIndex((el) => {
     return el.jobId === id
   })
@@ -77,7 +77,19 @@ const ImagePage = () => {
   const findRelatedImages = useCallback(async (parentJobId = '') => {
     if (parentJobId) {
       const foundImages = await fetchRelatedImages(parentJobId)
-      setRelatedImages(foundImages)
+      const sortedImages = foundImages.sort((a = {}, b = {}) => {
+        if (a.id < b.id) {
+          return 1
+        }
+
+        if (a.id > b.id) {
+          return -1
+        }
+
+        return 0
+      })
+
+      setRelatedImages(sortedImages)
     }
   }, [])
 
@@ -153,28 +165,30 @@ const ImagePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
 
+  const maxLength = relatedImages.length
+
   const handleKeyPress = useCallback(
     (e: any, swipeDir) => {
       if (maxLength <= 1) {
         return
       }
 
+      if (imageModalOpen) return
+
       if (e === null && swipeDir) {
         e = {}
         if (swipeDir === 'left') {
-          e.keyCode = 39
+          e.key = 'ArrowLeft'
         } else if (swipeDir === 'right') {
-          e.keyCode = 37
+          e.key = 'ArrowRight'
         }
       }
 
-      if (e.keyCode === 37) {
-        //left
+      if (e.key === 'ArrowLeft') {
         if (currentIndex !== 0) {
           router.replace(`/image/${relatedImages[currentIndex - 1].jobId}`)
         }
-      } else if (e.keyCode === 39) {
-        // right
+      } else if (e.key === 'ArrowRight') {
         if (currentIndex < maxLength - 1) {
           router.replace(`/image/${relatedImages[currentIndex + 1].jobId}`)
         }
@@ -182,7 +196,14 @@ const ImagePage = () => {
         handleFavoriteClick()
       }
     },
-    [maxLength, currentIndex, router, relatedImages, handleFavoriteClick]
+    [
+      maxLength,
+      imageModalOpen,
+      currentIndex,
+      router,
+      relatedImages,
+      handleFavoriteClick
+    ]
   )
 
   useEffect(() => {
@@ -358,9 +379,14 @@ const ImagePage = () => {
       {!isInitialLoad && relatedImages.length > 1 && (
         <div className="pt-2 border-0 border-t-2 border-dashed border-slate-500">
           <RelatedImages
-            jobId={imageDetails.parentJobId}
+            onAfterDelete={() => findRelatedImages(imageDetails.parentJobId)}
+            onModalOpen={setImageModalOpen}
+            imageId={imageDetails.jobId}
+            parentJobId={imageDetails.parentJobId}
             images={relatedImages}
-            updateRelatedImages={findRelatedImages}
+            updateRelatedImages={() =>
+              findRelatedImages(imageDetails.parentJobId)
+            }
           />
         </div>
       )}

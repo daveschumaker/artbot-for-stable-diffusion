@@ -41,9 +41,9 @@ const StyledImage = styled.img`
 interface IProps {
   base64String: string
   disableNav?: boolean
-  fetchImageDetails(action: string, id: number): void
   handleClose(): void
-  id: number
+  handleLoadNext(): void
+  handleLoadPrev(): void
   jobId: string
   loading: boolean
 }
@@ -51,9 +51,8 @@ interface IProps {
 const ImageNavWrapper = ({
   base64String,
   disableNav,
-  fetchImageDetails,
-  handleClose,
-  id,
+  handleLoadNext = () => {},
+  handleLoadPrev = () => {},
   jobId,
   loading
 }: IProps) => {
@@ -65,17 +64,19 @@ const ImageNavWrapper = ({
     onSwipedLeft: () => {
       if (disableNav) return
       setSwiping(true)
-      fetchImageDetails('next', id)
+      handleLoadNext()
     },
     onSwipedRight: () => {
       if (disableNav) return
       setSwiping(true)
-      fetchImageDetails('prev', id)
+      handleLoadPrev()
+    },
+    onSwipedUp: () => {
+      setSwiping(true)
     },
     onSwipedDown: () => {
-      if (disableNav) return
       setSwiping(true)
-      handleClose()
+      // handleClose()
     },
     preventScrollOnSwipe: true,
     onTouchEndOrOnMouseUp: () => {
@@ -115,16 +116,8 @@ const ImageNavWrapper = ({
         </Linker>
         {!disableNav && mouseHover && (
           <>
-            <ImageNavButton
-              action="PREV"
-              fetchImageDetails={fetchImageDetails}
-              id={id}
-            />
-            <ImageNavButton
-              action="NEXT"
-              fetchImageDetails={fetchImageDetails}
-              id={id}
-            />
+            <ImageNavButton action="PREV" handleOnClick={handleLoadPrev} />
+            <ImageNavButton action="NEXT" handleOnClick={handleLoadNext} />
           </>
         )}
         {loading && (
@@ -140,9 +133,8 @@ const ImageNavWrapper = ({
 function areEqual(prevProps: IProps, nextProps: IProps) {
   const base64StringEqual = prevProps.base64String === nextProps.base64String
   const loadingEqual = prevProps.loading === nextProps.loading
-  const idEqual = prevProps.id === nextProps.id
 
-  return base64StringEqual && loadingEqual && idEqual
+  return base64StringEqual && loadingEqual
 }
 
 export default React.memo(ImageNavWrapper, areEqual)

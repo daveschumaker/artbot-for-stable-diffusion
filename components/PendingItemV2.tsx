@@ -10,7 +10,6 @@ import TrashIcon from './icons/TrashIcon'
 import Panel from './UI/Panel'
 import { trackEvent, trackGaEvent } from '../api/telemetry'
 import ImageSquare from './ImageSquare'
-import Link from 'next/link'
 import SpinnerV2 from './Spinner'
 import PhotoUpIcon from './icons/PhotoUpIcon'
 import AlertTriangleIcon from './icons/AlertTriangle'
@@ -115,7 +114,7 @@ const MobileHideText = styled.span`
 const StyledImage = styled(ImageSquare)``
 
 // @ts-ignore
-const PendingItem = memo(({ jobDetails, jobId }) => {
+const PendingItem = memo(({ jobDetails, jobId, onImageClick = () => {} }) => {
   const router = useRouter()
   const modelState = useStore(modelInfoStore)
   const { availableModels } = modelState
@@ -234,18 +233,25 @@ const PendingItem = memo(({ jobDetails, jobId }) => {
               <SpinnerV2 />
             ) : null}
             {jobDetails.jobStatus === JobStatus.Done && (
-              <Link
-                href={`/image/${jobId}`}
-                onClick={() => {
-                  clearNewImageNotification()
-                }}
-              >
+              <div onClick={() => onImageClick(jobId)}>
                 <StyledImage
                   // @ts-ignore
                   imageDetails={jobDetails}
                   size={100}
                 />
-              </Link>
+              </div>
+              // <Link
+              //   href={`/image/${jobId}`}
+              //   onClick={() => {
+              //     clearNewImageNotification()
+              //   }}
+              // >
+              //   <StyledImage
+              //     // @ts-ignore
+              //     imageDetails={jobDetails}
+              //     size={100}
+              //   />
+              // </Link>
             )}
             {jobDetails.jobStatus === JobStatus.Waiting && (
               <PhotoUpIcon size={48} />

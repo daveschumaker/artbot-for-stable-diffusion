@@ -4,9 +4,11 @@ import styled from 'styled-components'
 import CloseIcon from '../../icons/CloseIcon'
 import Overlay from '../Overlay'
 import { lockScroll, unlockScroll } from '../../../utils/appUtils'
+import { useSwipeable } from 'react-swipeable'
 
 interface IStyle {
   height: number | null
+  startAnimation: boolean
 }
 
 const CloseIconWrapper = styled.div`
@@ -14,6 +16,18 @@ const CloseIconWrapper = styled.div`
   position: absolute;
   top: 8px;
   right: 8px;
+`
+
+const SwipeCapture = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 75px;
+
+  @media (min-width: 640px) {
+    display: none;
+  }
 `
 
 const StyledInteractiveModal = styled.div<IStyle>`
@@ -29,6 +43,15 @@ const StyledInteractiveModal = styled.div<IStyle>`
   position: fixed;
   z-index: 20;
 
+  transform: translateY(110%);
+  transition: all 250ms ease-in-out;
+
+  ${(props) =>
+    props.startAnimation &&
+    `
+    transform: translateX(0%);
+  `}
+
   @media (min-width: 640px) {
     width: calc(100% - 48px);
     /* max-width: 752px; */
@@ -38,7 +61,7 @@ const StyledInteractiveModal = styled.div<IStyle>`
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    transition: all 150ms ease;
+    transition: all 50ms ease;
   }
 
   @media (min-width: 1280px) {
@@ -48,10 +71,11 @@ const StyledInteractiveModal = styled.div<IStyle>`
 
 const ContentWrapper = styled.div`
   position: fixed;
-  top: 86px;
+  top: 40px;
   left: 0px;
   right: 0px;
   bottom: 0px;
+  margin: 0 8px;
 
   overflow-y: auto;
   -ms-overflow-style: none; /* IE and Edge */
@@ -69,13 +93,29 @@ const ContentWrapper = styled.div`
 `
 
 const InteractiveModal = (props: any) => {
+  const { handleClose = () => {} } = props
+  const [startAnimation, setStartAnimation] = useState(false)
   const [height, setHeight] = useState(512)
+
+  const handlers = useSwipeable({
+    onSwipedDown: () => {
+      onClose()
+    },
+    preventScrollOnSwipe: true
+  })
 
   const keyDownHandler = (event: any) => {
     if (event.key === 'Escape') {
       event.preventDefault()
       props?.handleClose()
     }
+  }
+
+  const onClose = () => {
+    setStartAnimation(false)
+    setTimeout(() => {
+      handleClose()
+    }, 150)
   }
 
   useEffect(() => {
@@ -97,12 +137,17 @@ const InteractiveModal = (props: any) => {
     }
   }, [props.setDynamicHeight])
 
+  useEffect(() => {
+    setStartAnimation(true)
+  }, [])
+
   return (
     <>
-      <Overlay handleClose={props?.handleClose} />
-      <StyledInteractiveModal height={height}>
+      <Overlay handleClose={onClose} />
+      <StyledInteractiveModal height={height} startAnimation={startAnimation}>
         <ContentWrapper>{props.children}</ContentWrapper>
-        <CloseIconWrapper onClick={props?.handleClose}>
+        <SwipeCapture {...handlers} />
+        <CloseIconWrapper onClick={onClose}>
           <CloseIcon size={28} />
         </CloseIconWrapper>
       </StyledInteractiveModal>

@@ -37,7 +37,7 @@ import Modal from '../components/Modal'
 import SpinnerV2 from '../components/Spinner'
 import DropDownMenu from '../components/UI/DropDownMenu'
 import DropDownMenuItem from '../components/UI/DropDownMenuItem'
-import ImageModal from '../components/ImageModal'
+import ImageModalController from '../components/ImagesPage/ImageModalController'
 
 const MenuSeparator = styled.div`
   width: 100%;
@@ -366,7 +366,7 @@ const ImagesPage = () => {
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      if (componentState.deleteMode && e.keyCode === 27) {
+      if (componentState.deleteMode && e.key === 'Escape') {
         setComponentState({
           deleteMode: false,
           deleteSelection: [],
@@ -462,9 +462,10 @@ const ImagesPage = () => {
   return (
     <div {...handlers}>
       {componentState.showImageModal && (
-        <ImageModal
+        <ImageModalController
+          onAfterDelete={fetchImages}
           handleClose={() => setComponentState({ showImageModal: false })}
-          jobId={componentState.showImageModal}
+          imageId={componentState.showImageModal}
         />
       )}
       {componentState.showDownloadModal && (
@@ -482,7 +483,7 @@ const ImagesPage = () => {
       {componentState.showDeleteModal && (
         <ConfirmationModal
           multiImage={componentState.deleteSelection.length > 1}
-          onConfirmClick={() => handleDeleteImageClick()}
+          onConfirmClick={handleDeleteImageClick}
           closeModal={() => {
             setComponentState({
               deleteMode: false,

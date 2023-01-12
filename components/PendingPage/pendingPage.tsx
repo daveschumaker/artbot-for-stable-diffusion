@@ -5,6 +5,7 @@ import { JobStatus } from '../../types'
 import {
   db,
   deleteAllPendingErrors,
+  deleteCompletedImage,
   deleteDoneFromPending
 } from '../../utils/db'
 import PendingItem from '../PendingItemV2'
@@ -12,6 +13,7 @@ import ServerMessage from '../ServerMessage'
 import Linker from '../UI/Linker'
 import PageTitle from '../UI/PageTitle'
 import TextButton from '../UI/TextButton'
+import ImageModalController from './ImageModalController'
 
 const PendingPage = () => {
   const [filter, setFilter] = useState('all')
@@ -19,6 +21,7 @@ const PendingPage = () => {
   const pendingImages =
     useLiveQuery(() => db?.pending?.orderBy('id')?.toArray()) || []
   const [done, setDone] = useState([])
+  const [showImageModal, setShowImageModal] = useState(false)
 
   const processDone = useCallback(() => {
     const updateDone: any = [...done]
@@ -42,6 +45,16 @@ const PendingPage = () => {
       setDone(updateDone)
     }
   }, [done, pendingImages])
+
+  const deleteImage = async (imageId: string) => {
+    await deleteCompletedImage(imageId)
+
+    const updatedList = done.filter((image: { jobId: string }) => {
+      return image.jobId !== imageId
+    })
+
+    setDone(updatedList)
+  }
 
   const processPending = () => {
     const processing: any = []
@@ -122,6 +135,17 @@ const PendingPage = () => {
 
   return (
     <div style={{ overflowAnchor: 'none' }}>
+      {showImageModal && (
+        <ImageModalController
+          onAfterDelete={() => {}}
+          handleDeleteImage={deleteImage}
+          handleClose={() => {
+            setShowImageModal(false)
+          }}
+          imageList={done}
+          initialIndexJobId={showImageModal}
+        />
+      )}
       <PageTitle>Your pending images</PageTitle>
       <ServerMessage />
       {pendingImages.length > 0 ? (
@@ -165,6 +189,8 @@ const PendingPage = () => {
         sorted.map((job: { jobId: string; prompt: string }) => {
           return (
             <PendingItem
+              //@ts-ignore
+              onImageClick={setShowImageModal}
               //@ts-ignore
               jobDetails={job}
               //@ts-ignore

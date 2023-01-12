@@ -123,9 +123,7 @@ const Menu = (props: IProps) => {
 
   return (
     <>
-      {props.show && (
-        <Overlay handleClose={props.handleClose} disableBackground />
-      )}
+      {props.show && <Overlay handleClose={props.handleClose} />}
       <MenuOverlay show={props.show}>
         <CloseWrapper onClick={props.handleClose}>
           <CloseIcon size={32} />

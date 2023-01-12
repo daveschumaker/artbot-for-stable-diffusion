@@ -107,6 +107,45 @@ const Changelog = () => {
         </Section>
       </Panel>
       <Section>
+        <SubSectionTitle>2023.01.11</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Feature: You can now rate your recently created images and
+            automatically send the results to LAION, via the Stable Horde.
+            Provided you&apos;ve created the image within the past 20 minutes
+            and you have sharing enabled on the{' '}
+            <Linker href="/settings">settings page</Linker>, you&apos;ll be able
+            to rate your image based on your aesthetic preferences. How do you
+            rate an image? You use the...
+          </StyledLi>
+          <StyledLi>
+            Feature: ...newly created image modal! This will pop up in various
+            places around the site (pending page, images page, image details
+            page when looking at related images). It allows you to quickly
+            navigate between tons of images. On a mobile device, swipe on the
+            picture. On a computer, hit the arrow keys. For those who like the
+            bevy of options provided on the image details page, fear not: you
+            can still access them (though it is one additional click) from the
+            modal.
+          </StyledLi>
+          <StyledLi>
+            Feature: Just kidding... sort of. Images should still detect middle
+            clicks, so for those of you who like to visit the images page and
+            middle click / open a bunch of images in new tabs, this should still
+            work!
+          </StyledLi>
+          <StyledLi>
+            UX: Drastically speed up image lookups from IndexedDb. I was using a
+            fairly unoptimized query, which would cause lots of spinners when
+            loading image details pages. NO MORE! (Hopefully)
+          </StyledLi>
+          <StyledLi>
+            UX: Helpful warning if you&apos;re trying to create a new batch of
+            images but have a fixed seed.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.01.10</SubSectionTitle>
         <StyledUl>
           <StyledLi>
@@ -119,7 +158,7 @@ const Changelog = () => {
         <SubSectionTitle>2023.01.09</SubSectionTitle>
         <StyledUl>
           <StyledLi>
-            Fix: Better error handling if the aesthics rating server goes
+            Fix: Better error handling if the aesthetic rating server goes
             offline.
           </StyledLi>
           <StyledLi>

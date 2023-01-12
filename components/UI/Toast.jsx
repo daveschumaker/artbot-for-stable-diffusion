@@ -1,5 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-import { useRouter } from 'next/router'
 import styled from 'styled-components'
 
 import { setNewImageReady, setShowImageReadyToast } from '../../store/appStore'
@@ -9,6 +8,7 @@ import { getImageDetails } from '../../utils/db'
 import ImageSquare from '../ImageSquare'
 import CloseIcon from '../icons/CloseIcon'
 import Linker from './Linker'
+import { useRouter } from 'next/router'
 
 const StyledToast = styled.div`
   align-items: center;
@@ -47,7 +47,7 @@ const StyledTextPanel = styled.div`
   padding-left: 8px;
 `
 
-export default function Toast({ handleClose, jobId, showImageReadyToast }) {
+export default function Toast({ handleClose, handleImageClick, jobId, showImageReadyToast }) {
   const router = useRouter()
   const [imageDetails, setImageDetails] = useState({})
 
@@ -67,6 +67,7 @@ export default function Toast({ handleClose, jobId, showImageReadyToast }) {
       }
     })
     router.push(`/image/${jobId}`)
+    handleImageClick()
 
     setShowImageReadyToast(false)
     setNewImageReady('')
@@ -93,7 +94,7 @@ export default function Toast({ handleClose, jobId, showImageReadyToast }) {
       {isActive && (
         <>
           <div>
-            <Linker href={`/image/${jobId}`} onClick={handleClick}>
+            <Linker disableLinkClick href={`/image/${jobId}`} onClick={handleClick}>
               <ImageSquare imageDetails={imageDetails} size={80} />
             </Linker>
           </div>

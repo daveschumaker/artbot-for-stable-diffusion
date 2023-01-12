@@ -8,7 +8,7 @@ const ConfirmationModal = ({
   useEffect(() => {
     // @ts-ignore
     const handleKeyPress = (e) => {
-      if (e.keyCode === 27) {
+      if (e.key === 'Escape') {
         closeModal()
       }
 

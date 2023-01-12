@@ -39,22 +39,12 @@ const NextPrevButton = styled.div<INavButtonProps>`
 
 interface IProps {
   action: string
-  fetchImageDetails(action: string, id: number): void
-  id: number
+  handleOnClick(): void
 }
 
-const ImageNavButton = ({ action, fetchImageDetails, id }: IProps) => {
+const ImageNavButton = ({ action, handleOnClick = () => {} }: IProps) => {
   return (
-    <NextPrevButton
-      action={action}
-      onClick={() => {
-        if (action === 'NEXT') {
-          fetchImageDetails('next', id)
-        } else {
-          fetchImageDetails('prev', id)
-        }
-      }}
-    >
+    <NextPrevButton action={action} onClick={handleOnClick}>
       {action === 'NEXT' ? (
         <ChevronRightIcon stroke="#000000" />
       ) : (
