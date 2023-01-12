@@ -87,8 +87,14 @@ const ButtonContainer = styled.div`
 
 const ImagesPage = () => {
   const handlers = useSwipeable({
-    onSwipedLeft: () => handleLoadMore('next'),
-    onSwipedRight: () => handleLoadMore('prev'),
+    onSwipedLeft: () => {
+      if (componentState.showImageModal) return
+      handleLoadMore('next')
+    },
+    onSwipedRight: () => {
+      if (componentState.showImageModal) return
+      handleLoadMore('prev')
+    },
     preventScrollOnSwipe: true
   })
   const router = useRouter()
@@ -215,9 +221,11 @@ const ImagesPage = () => {
       }
 
       if (btn === 'prev') {
+        if (componentState.showImageModal) return
         newNum =
           componentState.offset - 100 < 0 ? 0 : componentState.offset - 100
       } else {
+        if (componentState.showImageModal) return
         newNum =
           componentState.offset + 100 > componentState.totalImages
             ? componentState.offset
@@ -380,11 +388,13 @@ const ImagesPage = () => {
         e.key === 'ArrowLeft' &&
         componentState.showImageModal === false
       ) {
+        if (componentState.showImageModal) return
         handleLoadMore('prev')
       } else if (
         e.key === 'ArrowRight' &&
         componentState.showImageModal === false
       ) {
+        if (componentState.showImageModal) return
         handleLoadMore('next')
       }
     }
