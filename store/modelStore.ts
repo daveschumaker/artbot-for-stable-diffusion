@@ -24,7 +24,7 @@ export interface IModelDetails {
   name: string
   nsfw: boolean
   style: string
-  trigger?: string
+  trigger?: Array<string>
   type: string
   version: string
 }

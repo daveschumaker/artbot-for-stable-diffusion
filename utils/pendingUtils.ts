@@ -6,6 +6,7 @@ import { db } from './db'
 import { randomPropertyName } from './helperUtils'
 import { validModelsArray } from './modelUtils'
 import { stylePresets } from './stylePresets'
+import { modelInfoStore } from '../store/modelStore'
 
 const cloneImageParams = (
   imageParams: CreateImageRequest | RerollImageRequest
@@ -35,6 +36,30 @@ export const createPendingRerollJob = async (
       success: true
     }
   }
+}
+
+export const addTriggerToPrompt = ({
+  prompt,
+  model
+}: {
+  prompt: string
+  model: string
+}) => {
+  let triggers = ''
+  if (modelInfoStore.state.modelDetails[model]) {
+    const triggerArray =
+      modelInfoStore?.state?.modelDetails[model]?.trigger ?? []
+
+    if (triggerArray.length > 0) {
+      triggers = triggerArray.join(' ')
+    }
+  }
+
+  if (triggers) {
+    return `${triggers} ${prompt}`
+  }
+
+  return prompt
 }
 
 export const createPendingJob = async (imageParams: CreateImageRequest) => {
@@ -75,6 +100,11 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
           if (clonedParams.models[0] === 'random') {
             clonedParams.models = [CreateImageRequest.getRandomModel()]
           }
+
+          clonedParams.prompt = addTriggerToPrompt({
+            prompt,
+            model: clonedParams.models[0]
+          })
 
           if (clonedParams.orientation === 'random') {
             clonedParams = {
@@ -143,7 +173,10 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
       const { name: modelName } = model
 
       // It doesn't make sense to include this in all models mode.
-      if (modelName === 'stable_diffusion_inpainting') {
+      if (
+        modelName === 'stable_diffusion_inpainting' ||
+        modelName === 'Stable Diffusion 2 Depth'
+      ) {
         return
       }
 
@@ -160,6 +193,11 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
       if (clonedParams.models[0] === 'random') {
         clonedParams.models = [CreateImageRequest.getRandomModel()]
       }
+
+      clonedParams.prompt = addTriggerToPrompt({
+        prompt,
+        model: clonedParams.models[0]
+      })
 
       if (clonedParams.orientation === 'random') {
         clonedParams = {
