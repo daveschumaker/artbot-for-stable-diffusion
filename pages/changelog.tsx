@@ -106,6 +106,30 @@ const Changelog = () => {
           </StyledUl>
         </Section>
       </Panel>
+      {/* ///// START CHANGE LOG ////// */}
+      <Section>
+        <SubSectionTitle>2023.01.13</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: When using multi-models or all-models option, automatically add
+            trigger word to beginning of the prompt. (Should this be optional?
+            This should probably optionaly, eh?)
+          </StyledLi>
+          <StyledLi>
+            UX: Reverse order of image direction. Most recent image should be
+            left, right? (e.g., if you hit left arrow or swipe from the left
+            side, you should be going toward more recent images?) See{' '}
+            <Linker
+              href="https://github.com/daveschumaker/artbot-for-stable-diffusion/issues/24"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Github #24
+            </Linker>
+            .
+          </StyledLi>
+        </StyledUl>
+      </Section>
       <Section>
         <SubSectionTitle>2023.01.12</SubSectionTitle>
         <StyledUl>
