@@ -64,12 +64,12 @@ const ImageNavWrapper = ({
     onSwipedLeft: () => {
       if (disableNav) return
       setSwiping(true)
-      handleLoadNext()
+      handleLoadPrev()
     },
     onSwipedRight: () => {
       if (disableNav) return
       setSwiping(true)
-      handleLoadPrev()
+      handleLoadNext()
     },
     onSwipedUp: () => {
       setSwiping(true)

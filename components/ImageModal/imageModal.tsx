@@ -118,10 +118,10 @@ const ImageModal = ({
     const handleKeyPress = (e: KeyboardEvent) => {
       if (e.key === 'ArrowLeft') {
         if (disableNav) return
-        handleLoadMore('prev')
+        handleLoadMore('next')
       } else if (e.key === 'ArrowRight') {
         if (disableNav) return
-        handleLoadMore('next')
+        handleLoadMore('prev')
       } else if (e.key === 'Escape') {
         handleClose()
       } else if (e.key === 'Delete') {
