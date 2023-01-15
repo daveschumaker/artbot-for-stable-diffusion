@@ -8,7 +8,7 @@ import {
 } from '../types'
 import { uuidv4 } from '../utils/appUtils'
 import { orientationDetails, randomSampler } from '../utils/imageUtils'
-import { validModelsArray } from '../utils/modelUtils'
+import { getModelVersion, validModelsArray } from '../utils/modelUtils'
 import { SourceProcessing } from '../utils/promptUtils'
 import AppSettings from './AppSettings'
 
@@ -25,6 +25,7 @@ export interface IRequestParams {
   imageMimeType: ImageMimeType
   karras: boolean
   models: Array<string>
+  modelVersion: string
   negative?: string
   numImages: number
   orientationType: string
@@ -57,6 +58,7 @@ class CreateImageRequest {
   jobTimestamp: number
   karras: boolean
   models: Array<string>
+  modelVersion: string
   negative: string
   numImages: number
   orientation: string
@@ -191,6 +193,13 @@ class CreateImageRequest {
     this.useMultiSteps = Boolean(useMultiSteps)
     this.multiSteps = []
     this.shareImagesExternally = AppSettings.get('shareImagesExternally')
+
+    if (this.models.length === 1 && this.models[0] !== 'random') {
+      this.modelVersion = getModelVersion(this.models[0])
+    } else {
+      // PendingUtils will set modelVersion in the case of random images, multiple images, etc.
+      this.modelVersion = ''
+    }
 
     if (useMultiSteps) {
       let cleanMultiSteps = multiSteps.replace(`"`, '')

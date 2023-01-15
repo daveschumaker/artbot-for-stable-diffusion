@@ -4,7 +4,7 @@ import RerollImageRequest from '../models/RerollImageRequest'
 import { uuidv4 } from './appUtils'
 import { db } from './db'
 import { randomPropertyName } from './helperUtils'
-import { validModelsArray } from './modelUtils'
+import { getModelVersion, validModelsArray } from './modelUtils'
 import { stylePresets } from './stylePresets'
 import { modelInfoStore } from '../store/modelStore'
 
@@ -100,6 +100,7 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
           if (clonedParams.models[0] === 'random') {
             clonedParams.models = [CreateImageRequest.getRandomModel()]
           }
+          clonedParams.modelVersion = getModelVersion(clonedParams.models[0])
 
           clonedParams.prompt = addTriggerToPrompt({
             prompt,
@@ -147,6 +148,7 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
       if (clonedParams.models[0] === 'random') {
         clonedParams.models = [CreateImageRequest.getRandomModel()]
       }
+      clonedParams.modelVersion = getModelVersion(clonedParams.models[0])
 
       if (clonedParams.orientation === 'random') {
         clonedParams = {
@@ -193,6 +195,7 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
       if (clonedParams.models[0] === 'random') {
         clonedParams.models = [CreateImageRequest.getRandomModel()]
       }
+      clonedParams.modelVersion = getModelVersion(clonedParams.models[0])
 
       clonedParams.prompt = addTriggerToPrompt({
         prompt,
@@ -240,6 +243,7 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
       if (clonedParams.models[0] === 'random') {
         clonedParams.models = [CreateImageRequest.getRandomModel()]
       }
+      clonedParams.modelVersion = getModelVersion(clonedParams.models[0])
 
       if (clonedParams.orientation === 'random') {
         clonedParams = {

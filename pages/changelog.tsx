@@ -108,6 +108,33 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.01.14</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Save model version on image create and show in image details.{' '}
+            <Linker
+              href="https://github.com/daveschumaker/artbot-for-stable-diffusion/issues/29"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Github #29
+            </Linker>
+            <AddedInfo>
+              This is something I hadn&apos;t been doing before now. There are a
+              lot of models now available on the Stable Horde (100 at the time
+              of this writing!). And many of the models are being updated by
+              their maintainers. Some models can drastically change output
+              between differing versions, meaning that the same parameters and
+              seed given to a different version of a particilar model will
+              result in a completely different image. In an effort to give more
+              transparency into how your images have been created, ArtBot will
+              now save the version of the model that was created with your
+              image.
+            </AddedInfo>
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.01.13</SubSectionTitle>
         <StyledUl>
           <StyledLi>

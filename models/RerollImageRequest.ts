@@ -7,7 +7,7 @@ import {
 } from '../types'
 import { uuidv4 } from '../utils/appUtils'
 import { randomSampler } from '../utils/imageUtils'
-import { validModelsArray } from '../utils/modelUtils'
+import { getModelVersion, validModelsArray } from '../utils/modelUtils'
 import { SourceProcessing } from '../utils/promptUtils'
 
 export interface IRequestParams {
@@ -45,6 +45,7 @@ class RerollImageRequest {
   jobTimestamp: number
   karras: boolean
   models: Array<string>
+  modelVersion: string
   negative: string
   numImages: number
   orientation: string
@@ -106,6 +107,8 @@ class RerollImageRequest {
     } else {
       this.models = [...models]
     }
+
+    this.modelVersion = getModelVersion(this.models[0])
 
     this.negative = String(negative)
     this.numImages = 1

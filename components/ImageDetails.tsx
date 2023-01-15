@@ -39,6 +39,7 @@ interface ImageDetails {
   denoising_strength?: number
   parentJobId?: string
   model?: string
+  modelVersion: string
   imageType?: string
   source_image?: string
   orientation: string
@@ -213,6 +214,9 @@ const ImageDetails = ({
                 </Linker>
               </li>
             ) : null}
+            {imageDetails.modelVersion && (
+              <li>Model version: {imageDetails.modelVersion}</li>
+            )}
             <li>Seed: {imageDetails.seed}</li>
             <li>Steps: {imageDetails.steps}</li>
             <li>cfg scale: {imageDetails.cfg_scale}</li>

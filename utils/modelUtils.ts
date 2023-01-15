@@ -1,5 +1,13 @@
 import { modelInfoStore } from '../store/modelStore'
 
+export const getModelVersion = (modelName: string) => {
+  if (modelInfoStore.state.modelDetails[modelName]) {
+    return modelInfoStore.state.modelDetails[modelName].version || ''
+  }
+
+  return ''
+}
+
 // Hide things like inpainting models and other things we don't care for.
 export const validModelsArray = (sort = 'workers') => {
   const modelsArray = []
