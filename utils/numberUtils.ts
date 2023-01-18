@@ -1,4 +1,4 @@
-const plural = (diff, bucket) => {
+const plural = (diff: number, bucket: number) => {
   if (Math.floor(diff / bucket) === 1) {
     return ''
   } else {

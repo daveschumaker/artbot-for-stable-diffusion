@@ -1,5 +1,17 @@
+import AppSettings from '../models/AppSettings'
 import { IWorker, setUserInfo, setWorkers } from '../store/userStore'
 import { clientHeader, getApiHostServer, isAppActive } from '../utils/appUtils'
+import { uuidv4 } from '../utils/appUtils'
+
+export const setUserId = () => {
+  const artbot_uuid = AppSettings.get('artbot_uuid')
+
+  if (artbot_uuid) {
+    return
+  }
+
+  AppSettings.set('artbot_uuid', uuidv4())
+}
 
 let isPending = false
 export const fetchUserDetails = async (apikey: string) => {

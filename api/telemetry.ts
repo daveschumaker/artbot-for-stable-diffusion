@@ -36,6 +36,9 @@ export const trackEvent = async (obj: any = {}) => {
     return
   }
 
+  // Add artbot_uuid for debugging flow
+  obj.data = { ...obj.data, artbot_uuid: AppSettings.get('artbot_uuid') }
+
   // @ts-ignore
   // const { event } = obj
 

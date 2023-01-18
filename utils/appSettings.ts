@@ -1,7 +1,7 @@
 import NoSleep from 'nosleep.js'
 
 import { buildModelAvailability } from '../api/fetchAvailableModels'
-import { fetchUserDetails } from '../api/userInfo'
+import { fetchUserDetails, setUserId } from '../api/userInfo'
 import AppSettings from '../models/AppSettings'
 
 // @ts-ignore
@@ -100,6 +100,7 @@ export const initAppSettings = async () => {
   }
 
   fetchUserDetails(apikey)
+  setUserId()
   deleteStalePending()
 
   buildModelAvailability()

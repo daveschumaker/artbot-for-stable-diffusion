@@ -8,6 +8,7 @@ import Modal from './Modal'
 import SectionTitle from './UI/SectionTitle'
 import Text from './UI/Text'
 import TextArea from './UI/TextArea'
+import { userInfoStore } from '../store/userStore'
 
 const FlexRow = styled.div`
   width: 100%;
@@ -54,6 +55,8 @@ const FeedbackModal = ({ handleClose }: { handleClose: () => void }) => {
     trackEvent({
       event: 'FEEDBACK_FORM',
       data: {
+        stablehorder_username: userInfoStore.state.username || '',
+        kudos: userInfoStore.state.kudos,
         input: inputText,
         totalImages
       }

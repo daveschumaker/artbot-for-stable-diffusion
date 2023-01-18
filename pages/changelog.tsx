@@ -103,6 +103,14 @@ const Changelog = () => {
               favorite images. (I know that some of you have thousands of images
               and this is not ideal at the moment.)
             </StyledLi>
+            <StyledLi>
+              2023.01.17 - There have been a few messages about users not
+              receiving kudos after rating a number of images. I am not exactly
+              sure what is happening but I am attempting to log some more data
+              in order to work with the Stable Horde team in order to resolve
+              this. If this is happening to you, let me know and send me your
+              Stable Horde username (viewable from the settings page).
+            </StyledLi>
           </StyledUl>
         </Section>
       </Panel>
@@ -117,7 +125,11 @@ const Changelog = () => {
             </Linker>{' '}
             page. Keep track of the latest models added to Stable Horde (and
             ArtBot), as well as any version bumps (or models being removed...
-            ::sad trombone::)
+            ::sad trombone::). Thanks for the suggestion, anonymous user!
+          </StyledLi>
+          <StyledLi>
+            Added some additional telemetry in order to track down a pesky issue
+            related to kudos not updating after rating images.
           </StyledLi>
         </StyledUl>
       </Section>
