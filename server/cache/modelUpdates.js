@@ -40,6 +40,10 @@ const storageActions = {
   }
 }
 
+const loadInitChanges = () => {
+  storageActions.load()
+}
+
 const modelActions = {
   add(modelName, version) {
     return {
@@ -127,5 +131,6 @@ const fetchModelChanges = () => {
 
 module.exports = {
   fetchModelChanges,
+  loadInitChanges,
   modelDiff
 }

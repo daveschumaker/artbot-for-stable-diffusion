@@ -198,7 +198,7 @@ const Menu = (props: IProps) => {
           <SubOptions>
             <SubOption
               onClick={() => {
-                navigateToLink('/info')
+                navigateToLink('/info/models')
               }}
             >
               <LineDashedIcon />
@@ -206,7 +206,15 @@ const Menu = (props: IProps) => {
             </SubOption>
             <SubOption
               onClick={() => {
-                navigateToLink('/info?show=favorite-models')
+                navigateToLink('/info/models/updates')
+              }}
+            >
+              <LineDashedIcon />
+              Model Updates
+            </SubOption>
+            <SubOption
+              onClick={() => {
+                navigateToLink('/info/models?show=favorite-models')
               }}
             >
               <LineDashedIcon />
@@ -218,7 +226,7 @@ const Menu = (props: IProps) => {
               }}
             >
               <LineDashedIcon />
-              Workers
+              Worker details
             </SubOption>
           </SubOptions>
           <MenuOption

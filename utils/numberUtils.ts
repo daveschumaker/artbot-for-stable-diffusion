@@ -1,3 +1,11 @@
+const plural = (diff, bucket) => {
+  if (Math.floor(diff / bucket) === 1) {
+    return ''
+  } else {
+    return 's'
+  }
+}
+
 export const relativeTimeSec = ({
   now,
   compare
@@ -14,24 +22,34 @@ export const relativeTimeSec = ({
 
   const difference = seconds - oldTimestamp
   let output = ``
+
   if (difference < 60) {
-    // Less than a minute has passed:
-    output = `${difference} seconds ago`
+    output = `${difference} second${plural} ago`
   } else if (difference < 3600) {
-    // Less than an hour has passed:
-    output = `${Math.floor(difference / 60)} minutes ago`
+    output = `${Math.floor(difference / 60)} minute${plural(
+      difference,
+      60
+    )} ago`
   } else if (difference < 86400) {
-    // Less than a day has passed:
-    output = `${Math.floor(difference / 3600)} hours ago`
+    output = `${Math.floor(difference / 3600)} hour${plural(
+      difference,
+      3600
+    )} ago`
   } else if (difference < 2620800) {
-    // Less than a month has passed:
-    output = `${Math.floor(difference / 86400)} days ago`
+    output = `${Math.floor(difference / 86400)} day${plural(
+      difference,
+      86400
+    )} ago`
   } else if (difference < 31449600) {
-    // Less than a year has passed:
-    output = `${Math.floor(difference / 2620800)} months ago`
+    output = `${Math.floor(difference / 2620800)} month${plural(
+      difference,
+      2620800
+    )} ago`
   } else {
-    // More than a year has passed:
-    output = `${Math.floor(difference / 31449600)} years ago`
+    output = `${Math.floor(difference / 31449600)} year${plural(
+      difference,
+      31449600
+    )} ago`
   }
 
   return output

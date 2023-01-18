@@ -5,7 +5,7 @@ const { build } = buildInfo
 // Temporarily import a static version of available models
 // in order to get page up and running while API loads.
 const availableModels = require('./availableModels.json')
-const { modelDiff } = require('./modelUpdates')
+const { modelDiff, loadInitChanges } = require('./modelUpdates')
 
 const cache = {
   availableFetchTimestamp: 0,
@@ -99,6 +99,7 @@ const fetchModelDetails = async () => {
 
 const initModelDataFetch = async () => {
   try {
+    loadInitChanges()
     fetchAvailableModels()
     fetchModelDetails()
 

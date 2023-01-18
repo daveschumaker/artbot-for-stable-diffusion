@@ -1,8 +1,8 @@
-const { getAvailableModels, getModelDetails } = require('../cache/models.js')
-
 const express = require('express')
-const { fetchModelChanges } = require('../cache/modelUpdates.js')
 const router = express.Router()
+
+const { getAvailableModels, getModelDetails } = require('../cache/models.js')
+const { fetchModelChanges } = require('../cache/modelUpdates.js')
 
 router.get('/available', async (req, res) => {
   const { timestamp, models } = getAvailableModels()
