@@ -62,7 +62,9 @@ const Image = styled.img`
 `
 
 let errorCount = 0
-let pending = false
+let imagePending = false
+let ratingPending = false
+
 const Rate = () => {
   const [componentState, setComponentState] = useComponentState({
     apiKey: '',
@@ -74,29 +76,29 @@ const Rate = () => {
     imagesRated: 0,
     kudosEarned: 0,
     initialLoad: true,
-    pending: false,
-    rating: null
+    imagePending: false,
+    ratingPending: false
   })
 
   const fetchImage = useCallback(async () => {
     let data: any = {}
     try {
-      if (pending) {
+      if (imagePending) {
         return
       }
 
       if (errorCount >= MAX_ERROR_COUNT) {
         setComponentState({
           initialLoad: false,
-          pending: false,
+          imagePending: false,
           showError: true
         })
 
-        pending = false
+        imagePending = false
         return
       }
 
-      pending = true
+      imagePending = true
       const res = await fetch('https://ratings.droom.cloud/api/v1/rating/new', {
         headers: {
           'Content-Type': 'application/json',
@@ -108,13 +110,13 @@ const Rate = () => {
     } catch (err) {
       errorCount++
       setTimeout(() => {
-        pending = false
+        imagePending = false
         fetchImage()
       }, 300)
       return
     } finally {
       if (data.id) {
-        pending = false
+        imagePending = false
         errorCount = 0
 
         setComponentState({
@@ -123,7 +125,7 @@ const Rate = () => {
           imageId: data.id,
           imageUrl: data.url,
           initialLoad: false,
-          pending: false,
+          imagePending: false,
           rating: null,
           showError: false
         })
@@ -133,14 +135,15 @@ const Rate = () => {
 
   const rateImage = useCallback(
     async (rating: number) => {
-      if (pending) {
+      if (ratingPending) {
         return
       }
 
-      pending = true
+      ratingPending = true
 
       setComponentState({
-        pending: true
+        imagePending: true,
+        ratingPending: true
       })
 
       const ratingData = {
@@ -163,6 +166,8 @@ const Rate = () => {
         )
 
         const data = await res.json()
+        fetchImage()
+
         const { reward } = data
 
         if (reward) {
@@ -175,21 +180,18 @@ const Rate = () => {
           AppSettings.save('kudosEarnedByRating', kudosEarned)
 
           errorCount = 0
-          pending = false
+          ratingPending = false
           setComponentState({
             imagesRated: totalRated,
             kudosEarned,
-            showError: false
+            showError: false,
+            ratingPending: false
           })
-
-          setTimeout(() => {
-            fetchImage()
-          }, 100)
         }
       } catch (err) {
         errorCount++
         setTimeout(() => {
-          pending = false
+          ratingPending = false
           rateImage(rating)
         }, 300)
       }
@@ -214,11 +216,11 @@ const Rate = () => {
   }, [setComponentState])
 
   useEffect(() => {
-    if (pending) {
+    if (imagePending) {
       return
     }
 
-    if (componentState.apiKey && !pending) {
+    if (componentState.apiKey && !imagePending) {
       setTimeout(() => {
         fetchImage()
       }, 500)
@@ -227,7 +229,9 @@ const Rate = () => {
 
   useEffectOnce(() => {
     errorCount = 0
-    pending = false
+
+    imagePending = false
+    ratingPending = false
   })
 
   useEffect(() => {
@@ -305,14 +309,14 @@ const Rate = () => {
           </div>
           <ImageContainer>
             <Image src={componentState.imageUrl} alt="Rate this image" />
-            {componentState.pending && (
+            {componentState.imagePending && (
               <ImageOverlay>
                 <SpinnerV2 />
               </ImageOverlay>
             )}
           </ImageContainer>
           <StarRating
-            disabled={componentState.pending}
+            disabled={componentState.ratingPending}
             onStarClick={rateImage}
           />
           <div className="mt-2 text-sm">

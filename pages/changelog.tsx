@@ -111,6 +111,11 @@ const Changelog = () => {
               this. If this is happening to you, let me know and send me your
               Stable Horde username (viewable from the settings page).
             </StyledLi>
+            <StyledLi>
+              Minor fix: Changed how API calls were made to the request
+              endpoint. Hopefully this slightly speeds up your ability to rate
+              images.
+            </StyledLi>
           </StyledUl>
         </Section>
       </Panel>
