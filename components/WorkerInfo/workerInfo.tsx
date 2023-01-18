@@ -196,7 +196,7 @@ const WorkerInfo = ({
             {sortedModels.map((model: string) => {
               return (
                 <li key={`${worker.id}_${model}`}>
-                  <Linker href={`/info#${model}`} passHref>
+                  <Linker href={`/info/models#${model}`} passHref>
                     - {model}
                   </Linker>
                 </li>

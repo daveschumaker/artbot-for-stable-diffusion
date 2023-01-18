@@ -108,6 +108,20 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.01.17</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Feature: New{' '}
+            <Linker href="/info/models/updates" passHref>
+              model updates
+            </Linker>{' '}
+            page. Keep track of the latest models added to Stable Horde (and
+            ArtBot), as well as any version bumps (or models being removed...
+            ::sad trombone::)
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.01.14</SubSectionTitle>
         <StyledUl>
           <StyledLi>

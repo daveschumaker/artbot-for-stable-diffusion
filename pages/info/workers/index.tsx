@@ -1,26 +1,16 @@
 import Head from 'next/head'
-import { useRouter } from 'next/router'
 import styled from 'styled-components'
 
 import SelectComponent from '../../../components/UI/Select'
 import WorkerInfo from '../../../components/WorkerInfo'
-import ChevronDownIcon from '../../../components/icons/ChevronDownIcon'
-import ChevronRightIcon from '../../../components/icons/ChevronRightIcon'
 import Row from '../../../components/Row'
 import ServerMessage from '../../../components/ServerMessage'
-import DropDownMenu from '../../../components/UI/DropDownMenu'
-import DropDownMenuItem from '../../../components/UI/DropDownMenuItem'
-import MenuButton from '../../../components/UI/MenuButton'
 import PageTitle from '../../../components/UI/PageTitle'
 import useComponentState from '../../../hooks/useComponentState'
 import { useEffectOnce } from '../../../hooks/useEffectOnce'
 import SpinnerV2 from '../../../components/Spinner'
 import { clientHeader } from '../../../utils/appUtils'
-
-const MenuSeparator = styled.div`
-  width: 100%;
-  border-bottom: 1px solid ${(props) => props.theme.navLinkActive};
-`
+import InfoPageMenuButton from '../../../components/InfoPage/Menu'
 
 const WorkersList = styled.div`
   display: flex;
@@ -28,7 +18,6 @@ const WorkersList = styled.div`
   row-gap: 12px;
 `
 const WorkerInfoPage = () => {
-  const router = useRouter()
   const [componentState, setComponentState] = useComponentState({
     isLoading: true,
     showOptionsMenu: false,
@@ -128,78 +117,14 @@ const WorkerInfoPage = () => {
   return (
     <div className="mb-4">
       <Head>
-        <title>ArtBot - Info</title>
+        <title>ArtBot - Distributed Worker Details for Stable Horde</title>
       </Head>
       <Row>
         <div className="inline-block w-1/2">
-          <PageTitle>General Information</PageTitle>
+          <PageTitle>Worker Details</PageTitle>
         </div>
         <div className="flex flex-row justify-end w-1/2 items-start h-[38px] relative gap-2">
-          <MenuButton
-            active={componentState.showOptionsMenu}
-            title="View model details"
-            onClick={() => {
-              if (componentState.showOptionsMenu) {
-                setComponentState({
-                  showOptionsMenu: false
-                })
-              } else {
-                setComponentState({
-                  showOptionsMenu: true
-                })
-              }
-            }}
-          >
-            <div className="flex flex-row gap-1 pr-2">
-              {componentState.showOptionsMenu ? (
-                <ChevronDownIcon />
-              ) : (
-                <ChevronRightIcon />
-              )}
-              All workers
-            </div>
-          </MenuButton>
-          {componentState.showOptionsMenu && (
-            <DropDownMenu
-              handleClose={() => {
-                setComponentState({
-                  showOptionsMenu: false
-                })
-              }}
-            >
-              <DropDownMenuItem
-                onClick={() => {
-                  router.push(
-                    //@ts-ignore
-                    `/info`
-                  )
-                }}
-              >
-                All models
-              </DropDownMenuItem>
-              <DropDownMenuItem
-                onClick={() => {
-                  router.push(
-                    //@ts-ignore
-                    `/info?show=favorite-models`
-                  )
-                }}
-              >
-                Favorite models
-              </DropDownMenuItem>
-              <MenuSeparator />
-              <DropDownMenuItem
-                onClick={() => {
-                  router.push(
-                    //@ts-ignore
-                    `/info/workers`
-                  )
-                }}
-              >
-                All workers
-              </DropDownMenuItem>
-            </DropDownMenu>
-          )}
+          <InfoPageMenuButton title="All workers" />
         </div>
         <ServerMessage />
       </Row>

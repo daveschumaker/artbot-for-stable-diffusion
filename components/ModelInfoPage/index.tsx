@@ -162,10 +162,12 @@ const ModelInfoPage = ({ availableModels, modelDetails }: any) => {
             <div className="flex flex-row w-full items-center">
               <div className="flex flex-row  items-center gap-1 inline-block w-1/2 text-xl">
                 <Linker
-                  href={`/info#${name}`}
+                  href={`/info/models#${name}`}
                   onClick={() => {
                     navigator?.clipboard
-                      ?.writeText(`https://tinybots.net/artbot/info/#${name}`)
+                      ?.writeText(
+                        `https://tinybots.net/artbot/info/models#${name}`
+                      )
                       .then(() => {
                         toast.success('Model URL copied!', {
                           pauseOnFocusLoss: false,

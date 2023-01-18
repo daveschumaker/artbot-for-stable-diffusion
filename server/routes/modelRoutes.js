@@ -1,6 +1,7 @@
 const { getAvailableModels, getModelDetails } = require('../cache/models.js')
 
 const express = require('express')
+const { fetchModelChanges } = require('../cache/modelUpdates.js')
 const router = express.Router()
 
 router.get('/available', async (req, res) => {
@@ -20,6 +21,17 @@ router.get('/details', async (req, res) => {
     success: true,
     timestamp,
     models
+  })
+})
+
+router.get('/updates', async (req, res) => {
+  const changes = fetchModelChanges()
+  const timestamp = Date.now()
+
+  res.send({
+    success: true,
+    changes,
+    timestamp
   })
 })
 

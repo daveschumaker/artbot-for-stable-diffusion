@@ -23,6 +23,7 @@ release.tar.gz
 build_info.json
 *.pem
 /analyze
+/ArtBot_ModelChanges
 
 # debug
 npm-debug.log*
