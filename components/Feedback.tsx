@@ -55,7 +55,7 @@ const FeedbackModal = ({ handleClose }: { handleClose: () => void }) => {
     trackEvent({
       event: 'FEEDBACK_FORM',
       data: {
-        stablehorder_username: userInfoStore.state.username || '',
+        stablehorde_username: userInfoStore.state.username || '',
         kudos: userInfoStore.state.kudos,
         input: inputText,
         totalImages

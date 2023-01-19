@@ -116,6 +116,24 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.01.19</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: Issue where typing anything in denoising strength field would
+            result in a value of &quot;NaN&quot;. (Thanks for reporting on{' '}
+            <Linker
+              href="https://discord.com/channels/781145214752129095/1038867597543882894"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Discord
+            </Linker>{' '}
+            , voodoocode!
+          </StyledLi>
+          )
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.01.18</SubSectionTitle>
         <StyledUl>
           <StyledLi>
@@ -642,7 +660,7 @@ const Changelog = () => {
         <StyledUl>
           <StyledLi>
             Fix: Issue with denoise strength number input overflowing outside
-            panel on mobile devices.(Thanks for reporting on{' '}
+            panel on mobile devices. (Thanks for reporting on{' '}
             <Linker
               href="https://discord.com/channels/781145214752129095/1038867597543882894"
               target="_blank"

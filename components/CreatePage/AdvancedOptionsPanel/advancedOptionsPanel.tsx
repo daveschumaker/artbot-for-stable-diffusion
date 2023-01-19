@@ -971,23 +971,79 @@ const AdvancedOptionsPanel = ({
                   step={0.05}
                   min={0}
                   max={1.0}
+                  onBlur={(e: any) => {
+                    if (Number(e.target.value < 0)) {
+                      PromptInputSettings.set('denoising_strength', 0)
+                      setInput({ denoising_strength: 0 })
+                      return
+                    }
+
+                    if (Number(e.target.value > 1.0)) {
+                      PromptInputSettings.set('denoising_strength', 1)
+                      setInput({ denoising_strength: 1 })
+                      return
+                    }
+
+                    if (isNaN(e.target.value)) {
+                      PromptInputSettings.set('denoising_strength', 0.5)
+                      setInput({ denoising_strength: 0.5 })
+                      return
+                    }
+
+                    if (
+                      isNaN(e.target.value) ||
+                      e.target.value < 0 ||
+                      e.target.value > 1.0
+                    ) {
+                      if (initialLoad) {
+                        return
+                      }
+
+                      setErrorMessage({
+                        denoising_strength: `Please enter a valid number between 0 and 1.0`
+                      })
+                    } else if (errorMessage.denoising_strength) {
+                      setErrorMessage({ denoising_strength: null })
+                    }
+                  }}
                   onMinusClick={() => {
-                    const value = input.denoising_strength - 0.05
-                    PromptInputSettings.set('denoising_strength', value)
-                    setInput({ denoising_strength: value })
+                    if (isNaN(input.denoising_strength)) {
+                      input.denoising_strength = 0.5
+                    }
+
+                    if (Number(input.denoising_strength) > 1) {
+                      PromptInputSettings.set('denoising_strength', 1)
+                      setInput({ denoising_strength: 1 })
+                      return
+                    }
+
+                    const value = Number(input.denoising_strength) - 0.05
+                    const niceNumber = Number(value).toFixed(2)
+                    PromptInputSettings.set('denoising_strength', niceNumber)
+                    setInput({ denoising_strength: niceNumber })
                   }}
                   onPlusClick={() => {
-                    const value = input.denoising_strength + 0.05
-                    PromptInputSettings.set('denoising_strength', value)
-                    setInput({ denoising_strength: value })
+                    if (isNaN(input.denoising_strength)) {
+                      input.denoising_strength = 0.5
+                    }
+
+                    const value = Number(input.denoising_strength) + 0.05
+                    const niceNumber = Number(value).toFixed(2)
+                    PromptInputSettings.set('denoising_strength', niceNumber)
+                    setInput({ denoising_strength: niceNumber })
                   }}
                   name="denoising_strength"
                   onChange={handleChangeInput}
                   // @ts-ignore
-                  value={Number(input.denoising_strength).toFixed(2)}
+                  value={input.denoising_strength}
                   width="110px"
                 />
               </div>
+              {errorMessage.denoising_strength && (
+                <div className="mb-2 text-red-500 text-lg font-bold">
+                  {errorMessage.denoising_strength}
+                </div>
+              )}
             </Section>
           </SplitPanel>
           <SplitPanel></SplitPanel>
