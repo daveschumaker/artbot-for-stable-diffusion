@@ -45,8 +45,8 @@ const OptionsRow = styled.div`
   display: flex;
   flex-direction: row;
   column-gap: 8px;
-  margin-top: 8px;
-  justify-content: flex-start;
+  margin-top: 12px;
+  justify-content: center;
   width: 100%;
 `
 

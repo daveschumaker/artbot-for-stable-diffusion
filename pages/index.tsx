@@ -17,7 +17,6 @@ import SquarePlusIcon from '../components/icons/SquarePlusIcon'
 import { trackEvent, trackGaEvent } from '../api/telemetry'
 import CloseIcon from '../components/icons/CloseIcon'
 import ImageSquare from '../components/ImageSquare'
-import { validSampler } from '../utils/validationUtils'
 import OptionsPanel from '../components/CreatePage/OptionsPanel'
 import { clearCanvasStore, getCanvasStore } from '../store/canvasStore'
 import {
@@ -54,6 +53,7 @@ import DropDownMenu from '../components/UI/DropDownMenu/dropDownMenu'
 import DropDownMenuItem from '../components/UI/DropDownMenuItem'
 import MinusIcon from '../components/icons/MinusIcon'
 import styled from 'styled-components'
+import PromptInputSettings from '../models/PromptInputSettings'
 
 interface InputTarget {
   name: string
@@ -229,20 +229,15 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
     const inputName = event.target.name
     const inputValue = event.target.value
 
-    if (inputName === 'sampler') {
-      localStorage.setItem('sampler', event.target.value)
-    }
-
-    if (inputName === 'cfg_scale') {
-      localStorage.setItem('cfg_scale', event.target.value)
-    }
-
-    if (inputName === 'denoising_strength') {
-      localStorage.setItem('denoising_strength', event.target.value)
-    }
-
-    if (inputName === 'steps') {
-      localStorage.setItem('steps', event.target.value)
+    if (inputName !== 'prompt' && inputName !== 'seed') {
+      PromptInputSettings.set(inputName, inputValue)
+    } else if (
+      AppSettings.get('savePromptOnCreate') &&
+      inputName === 'prompt'
+    ) {
+      PromptInputSettings.set('prompt', inputValue)
+    } else if (AppSettings.get('saveSeedOnCreate') && inputName === 'seed') {
+      PromptInputSettings.set('seed', inputValue)
     }
 
     setInput({ [inputName]: inputValue })
@@ -258,7 +253,6 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
 
   const handleOrientationSelect = (orientation: string, options?: any) => {
     const details = orientationDetails(orientation, input.height, input.width)
-    localStorage.setItem('orientation', orientation)
 
     setInput({
       orientationType: orientation,
@@ -391,61 +385,22 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
 
   const updateDefaultInput = async () => {
     if (!editMode && !shareMode) {
-      if (localStorage.getItem('orientation')) {
-        const orientation = localStorage.getItem('orientation') || 'square'
-        const imageOrientation = orientationDetails(orientation)
+      const updateObject = PromptInputSettings.load()
+      delete updateObject.v
 
-        setInput({
-          orientationType: imageOrientation.orientation,
-          height: imageOrientation.height,
-          width: imageOrientation.width
-        })
+      if (!AppSettings.get('savePromptOnCreate')) {
+        delete updateObject.prompt
       }
 
-      if (localStorage.getItem('sampler')) {
-        setInput({ sampler: localStorage.getItem('sampler') })
+      if (!AppSettings.get('saveSeedOnCreate')) {
+        delete updateObject.seed
       }
 
-      if (
-        loadModel &&
-        loadModel !== 'stable_diffusion_2.0' &&
-        localStorage.getItem('sampler')
-      ) {
-        const valid = validSampler(localStorage.getItem('sampler') || '')
-        setInput({
-          sampler: valid ? localStorage.getItem('sampler') : 'k_euler_a'
-        })
-      } else if (
-        loadModel === 'stable_diffusion_2.0' ||
-        localStorage.getItem('model') === 'stable_diffusion_2.0'
-      ) {
-        setInput({
-          models: ['stable_diffusion_2.0'],
-          sampler: 'dpmsolver'
-        })
-      } else if (localStorage.getItem('model')) {
-        setInput({ models: [localStorage.getItem('model')] })
-      }
+      setInput({ ...updateObject })
 
-      if (localStorage.getItem('cfg_scale')) {
-        setInput({ cfg_scale: Number(localStorage.getItem('cfg_scale')) })
-      }
-
-      if (localStorage.getItem('steps')) {
-        setInput({ steps: Number(localStorage.getItem('steps')) })
-      }
-
-      if (localStorage.getItem('denoising_strength')) {
-        setInput({
-          denoising_strength: Number(localStorage.getItem('denoising_strength'))
-        })
-      }
-
-      const negativePrompts = (await getDefaultPrompt()) || []
-      if (negativePrompts.length > 0) {
-        const [defaultPrompt] = negativePrompts
-        setInput({
-          negative: defaultPrompt.prompt || ''
+      if (PromptInputSettings.load().showMultiModel) {
+        setComponentState({
+          showMultiModel: true
         })
       }
     }
@@ -459,6 +414,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
     if (!editMode && !shareMode) {
       updateDefaultInput()
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -612,8 +568,13 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
                           <DropDownMenuItem
                             key={`${trigger}_${i}`}
                             onClick={() => {
+                              const value = `${trigger} ` + input.prompt + ` `
+                              if (AppSettings.get('savePromptOnCreate')) {
+                                PromptInputSettings.set('prompt', value)
+                              }
+
                               setInput({
-                                prompt: `${trigger} ` + input.prompt + ` `
+                                prompt: value
                               })
                               setComponentState({
                                 showTriggerWordsModal: false
@@ -675,7 +636,12 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
             Please correct all input errors before continuing
           </div>
         )}
-        {hasError && (
+        {hasError && hasError === fixedSeedErrorMsg && (
+          <div className="mt-2 text-amber-400 font-semibold">
+            {fixedSeedErrorMsg}
+          </div>
+        )}
+        {hasError && hasError !== fixedSeedErrorMsg && (
           <div className="mt-2 text-red-500 font-semibold">
             Error: {hasError}
           </div>

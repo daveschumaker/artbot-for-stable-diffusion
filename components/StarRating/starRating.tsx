@@ -8,7 +8,7 @@ const RatingContainer = styled.div`
   display: flex;
   flex-direction: row;
   column-gap: 8px;
-  margin-top: 16px;
+  margin-top: 12px;
   height: 50px;
 `
 

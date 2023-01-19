@@ -120,7 +120,11 @@ const SettingsPage = () => {
     loadingWorkerStatus: {},
     panel: 'stableHorde',
     runInBackground: false,
-    saveInputOnCreate: false,
+    saveInputOnCreate: false, // DEPRECATE
+
+    savePromptOnCreate: false,
+    saveSeedOnCreate: false,
+
     stayOnCreate: false,
     showOptionsMenu: false,
     shareImagesExternally: AppSettings.get('shareImagesExternally'),
@@ -205,7 +209,12 @@ const SettingsPage = () => {
     updateObj.apiKey = AppSettings.get('apiKey') || ''
     updateObj.enableNoSleep = AppSettings.get('enableNoSleep') || false
     updateObj.runInBackground = AppSettings.get('runInBackground') || false
-    updateObj.saveInputOnCreate = AppSettings.get('saveInputOnCreate') || false
+
+    updateObj.saveInputOnCreate = AppSettings.get('saveInputOnCreate') || false // DEPRECATE
+    updateObj.savePromptOnCreate =
+      AppSettings.get('savePromptOnCreate') || false
+    updateObj.saveSeedOnCreate = AppSettings.get('saveSeedOnCreate') || false
+
     updateObj.stayOnCreate = AppSettings.get('stayOnCreate') || false
     updateObj.useBeta = AppSettings.get('useBeta') || false
     updateObj.useWorkerId = AppSettings.get('useWorkerId') || ''
@@ -390,7 +399,7 @@ const SettingsPage = () => {
               <Section>
                 <PageTitle as="h2">Stable Horde Settings</PageTitle>
                 <SubSectionTitle>
-                  API key
+                  <strong>API key</strong>
                   <Tooltip width="220px">
                     Leave blank for anonymous access. An API key gives higher
                     priority access to the Stable Horde distributed cluster,
@@ -457,7 +466,7 @@ const SettingsPage = () => {
               </Section>
               <Section>
                 <SubSectionTitle>
-                  Share images with LAION
+                  <strong>Share images with LAION</strong>
                   <div className="block text-xs mt-2 mb-2 w-full">
                     Automatically and anonymously share images with LAION (the
                     non-profit that helped to train Stable Diffusion) for use in
@@ -494,7 +503,7 @@ const SettingsPage = () => {
               </Section>
               <Section>
                 <SubSectionTitle>
-                  Allow NSFW images
+                  <strong>Allow NSFW images</strong>
                   <div className="block text-xs mt-2 mb-2 w-full">
                     Workers attempt to block NSFW queries. Images flagged by
                     NSFW filter will be blacked out.
@@ -522,7 +531,7 @@ const SettingsPage = () => {
               </Section>
               <Section>
                 <SubSectionTitle>
-                  Worker type
+                  <strong>Worker type</strong>
                   <div className="block text-xs mb-2 mt-2 w-full">
                     Request images from all workers or trusted only. Potential
                     risk if untrusted worker is a troll. Trusted is safer, but
@@ -551,7 +560,7 @@ const SettingsPage = () => {
               </Section>
               <Section>
                 <SubSectionTitle>
-                  Use specific worker
+                  <strong>Use specific worker</strong>
                   <div className="block text-xs mb-2 mt-2 w-full">
                     Send all of your image requests to a specific worker. Useful
                     for debugging purposes or testing features available on
@@ -667,7 +676,7 @@ const SettingsPage = () => {
               <Section>
                 <PageTitle as="h2">ArtBot Preferences</PageTitle>
                 <SubSectionTitle>
-                  Stay on create page?
+                  <strong>Stay on create page?</strong>
                   <div className="block text-xs mb-2 mt-2 w-full">
                     After clicking &quot;create&quot; on the image generation
                     page, stay on the page, rather than show pending items.
@@ -695,36 +704,43 @@ const SettingsPage = () => {
               </Section>
               <Section>
                 <SubSectionTitle>
-                  Save input on create?
+                  <strong>Save on create?</strong>
                   <div className="block text-xs mb-2 mt-2 w-full">
                     After clicking &quot;create&quot; on the image generation
-                    page, preserve all settings. To remove settings between
-                    generations, you will need to click the clear button.
+                    page, preserve the following settings. (All other settings
+                    will be remembered.)
                   </div>
                 </SubSectionTitle>
-                <MaxWidth
-                  // @ts-ignore
-                  maxWidth="240"
-                >
-                  <Select
-                    options={[
-                      { value: true, label: 'Yes' },
-                      { value: false, label: 'No' }
-                    ]}
-                    onChange={(obj: any) =>
-                      handleUpdateSelect('saveInputOnCreate', obj)
-                    }
-                    value={
-                      componentState.saveInputOnCreate
-                        ? { value: true, label: 'Yes' }
-                        : { value: true, label: 'No' }
-                    }
+                <div className="flex flex-row gap-2 mt-2">
+                  <div className="w-[100px]">Prompt?</div>
+                  <Switch
+                    onChange={() => {
+                      if (componentState.savePromptOnCreate) {
+                        handleSwitchSelect('savePromptOnCreate', false)
+                      } else {
+                        handleSwitchSelect('savePromptOnCreate', true)
+                      }
+                    }}
+                    checked={componentState.savePromptOnCreate}
                   />
-                </MaxWidth>
+                </div>
+                <div className="flex flex-row gap-2 mt-2">
+                  <div className="w-[100px]">Seed?</div>
+                  <Switch
+                    onChange={() => {
+                      if (componentState.saveSeedOnCreate) {
+                        handleSwitchSelect('saveSeedOnCreate', false)
+                      } else {
+                        handleSwitchSelect('saveSeedOnCreate', true)
+                      }
+                    }}
+                    checked={componentState.saveSeedOnCreate}
+                  />
+                </div>
               </Section>
               <Section>
                 <SubSectionTitle>
-                  Run in background?
+                  <strong>Run in background?</strong>
                   <div className="block text-xs mb-2 mt-2 w-full">
                     By default, ArtBot only runs in the active browser tab in
                     order to try and help prevent your IP address from being
@@ -753,7 +769,7 @@ const SettingsPage = () => {
               </Section>
               <Section>
                 <SubSectionTitle>
-                  Stay awake?
+                  <strong>Stay awake?</strong>
                   <div className="block text-xs mb-2 mt-2 w-full">
                     On mobile devices, this option will keep your screen awake.
                     This is useful if you&apos;re generating a lot of images and

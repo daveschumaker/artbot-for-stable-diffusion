@@ -111,15 +111,26 @@ const Changelog = () => {
               this. If this is happening to you, let me know and send me your
               Stable Horde username (viewable from the settings page).
             </StyledLi>
-            <StyledLi>
-              Minor fix: Changed how API calls were made to the request
-              endpoint. Hopefully this slightly speeds up your ability to rate
-              images.
-            </StyledLi>
           </StyledUl>
         </Section>
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
+      <Section>
+        <SubSectionTitle>2023.01.18</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: Image creation page would sometimes forget various parameters
+            under certain scenarios. I believe this is now fixed. (Thanks to
+            &quot;💫.&quot; on Discord for reporting this.)
+          </StyledLi>
+          <StyledLi>
+            On the <Linker href="/settings">settings page</Linker>, I&apos;ve
+            added more granular options for preserving both prompt and seed
+            after creating an image. (All other options should be remembered and
+            automatically saved as you change them).
+          </StyledLi>
+        </StyledUl>
+      </Section>
       <Section>
         <SubSectionTitle>2023.01.17</SubSectionTitle>
         <StyledUl>
@@ -135,6 +146,10 @@ const Changelog = () => {
           <StyledLi>
             Added some additional telemetry in order to track down a pesky issue
             related to kudos not updating after rating images.
+          </StyledLi>
+          <StyledLi>
+            Minor fix: Changed how API calls were made to the rating endpoint.
+            Hopefully this slightly speeds up your ability to rate images.
           </StyledLi>
         </StyledUl>
       </Section>

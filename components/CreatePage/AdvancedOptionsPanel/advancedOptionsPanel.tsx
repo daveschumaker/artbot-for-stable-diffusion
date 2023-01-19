@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useStore } from 'statery'
 import Switch from 'react-switch'
@@ -34,6 +34,7 @@ import NumberInput from '../../UI/NumberInput'
 import useComponentState from '../../../hooks/useComponentState'
 import { validModelsArray } from '../../../utils/modelUtils'
 import AlertTriangleIcon from '../../icons/AlertTriangle'
+import PromptInputSettings from '../../../models/PromptInputSettings'
 
 const ModelWarning = styled.div`
   align-items: center;
@@ -209,9 +210,11 @@ const AdvancedOptionsPanel = ({
   const [errorMessage, setErrorMessage, hasError] = useErrorMessage()
 
   const [componentState, setComponentState] = useComponentState({
-    showMultiModel: false,
+    showMultiModel: PromptInputSettings.get('showMultiModel') || false,
     showNegPane: false
   })
+
+  const [initialLoad, setInitialLoad] = useState(true)
 
   const orientationValue = orientationOptions.filter((option) => {
     return input.orientationType === option.value
@@ -227,11 +230,19 @@ const AdvancedOptionsPanel = ({
   })[0]
 
   const validateSteps = useCallback(() => {
+    if (initialLoad) {
+      return
+    }
+
     if (
       isNaN(input.steps) ||
       input.steps < 1 ||
       input.steps > maxSteps({ sampler: input.sampler, loggedIn })
     ) {
+      if (initialLoad) {
+        return
+      }
+
       setErrorMessage({
         steps: `Please enter a valid number between 1 and ${maxSteps({
           sampler: input.sampler,
@@ -241,10 +252,18 @@ const AdvancedOptionsPanel = ({
     } else {
       setErrorMessage({ steps: null })
     }
-  }, [input.sampler, input.steps, loggedIn, setErrorMessage])
+  }, [initialLoad, input.sampler, input.steps, loggedIn, setErrorMessage])
+
+  useEffect(() => {
+    // Handle condition where error message briefly appears on screen on initial load.
+    setTimeout(() => {
+      setInitialLoad(false)
+    }, 750)
+  }, [])
 
   const clearNegPrompt = () => {
     setDefaultPrompt('')
+    PromptInputSettings.set('negative', '')
     setInput({ negative: '' })
   }
 
@@ -302,14 +321,19 @@ const AdvancedOptionsPanel = ({
         newPost.push(value)
       }
 
+      PromptInputSettings.set('post_processing', newPost)
       setInput({ post_processing: newPost })
     },
     [input.post_processing, setInput]
   )
 
   useEffect(() => {
+    if (initialLoad) {
+      return
+    }
+
     setHasValidationError(hasError)
-  }, [hasError, setHasValidationError])
+  }, [hasError, initialLoad, setHasValidationError])
 
   useEffect(() => {
     validateSteps()
@@ -400,6 +424,7 @@ const AdvancedOptionsPanel = ({
           <SelectComponent
             options={orientationOptions}
             onChange={(obj: { value: string; label: string }) => {
+              PromptInputSettings.set('orientationType', obj.value)
               handleOrientationSelect(obj.value)
 
               if (obj.value !== 'custom') {
@@ -440,10 +465,14 @@ const AdvancedOptionsPanel = ({
                         : MAX_DIMENSIONS_LOGGED_OUT
                     }
                     onMinusClick={() => {
-                      setInput({ width: Number(input.width) - 64 })
+                      const value = Number(input.width) - 64
+                      PromptInputSettings.set('width', value)
+                      setInput({ width: value })
                     }}
                     onPlusClick={() => {
-                      setInput({ width: Number(input.width) + 64 })
+                      const value = Number(input.width) + 64
+                      PromptInputSettings.set('width', value)
+                      setInput({ width: value })
                     }}
                     error={errorMessage.width}
                     onChange={handleChangeInput}
@@ -460,6 +489,10 @@ const AdvancedOptionsPanel = ({
                             ? MAX_DIMENSIONS_LOGGED_IN
                             : MAX_DIMENSIONS_LOGGED_OUT)
                       ) {
+                        if (initialLoad) {
+                          return
+                        }
+
                         setErrorMessage({
                           width: `Please enter a valid number between 64 and ${
                             loggedIn
@@ -474,6 +507,10 @@ const AdvancedOptionsPanel = ({
                         setErrorMessage({ width: null })
                       }
 
+                      PromptInputSettings.set(
+                        'width',
+                        nearestWholeMultiple(e.target.value)
+                      )
                       setInput({
                         width: nearestWholeMultiple(e.target.value)
                       })
@@ -504,10 +541,14 @@ const AdvancedOptionsPanel = ({
                         : MAX_DIMENSIONS_LOGGED_OUT
                     }
                     onMinusClick={() => {
-                      setInput({ height: Number(input.height) - 64 })
+                      const value = Number(input.height) - 64
+                      PromptInputSettings.set('height', value)
+                      setInput({ height: value })
                     }}
                     onPlusClick={() => {
-                      setInput({ height: Number(input.height) + 64 })
+                      const value = Number(input.height) + 64
+                      PromptInputSettings.set('height', value)
+                      setInput({ height: value })
                     }}
                     error={errorMessage.height}
                     onChange={handleChangeInput}
@@ -524,6 +565,10 @@ const AdvancedOptionsPanel = ({
                             ? MAX_DIMENSIONS_LOGGED_IN
                             : MAX_DIMENSIONS_LOGGED_OUT)
                       ) {
+                        if (initialLoad) {
+                          return
+                        }
+
                         setErrorMessage({
                           height: `Please enter a valid number between 64 and ${
                             loggedIn
@@ -538,6 +583,10 @@ const AdvancedOptionsPanel = ({
                         setErrorMessage({ height: null })
                       }
 
+                      PromptInputSettings.set(
+                        'height',
+                        nearestWholeMultiple(e.target.value)
+                      )
                       setInput({
                         height: nearestWholeMultiple(e.target.value)
                       })
@@ -586,7 +635,8 @@ const AdvancedOptionsPanel = ({
             title="Clear current input"
             btnType="secondary"
             onClick={() => {
-              return setInput({
+              PromptInputSettings.set('negative', '')
+              setInput({
                 negative: ''
               })
             }}
@@ -617,8 +667,8 @@ const AdvancedOptionsPanel = ({
               <SelectComponent
                 options={samplerOptions(input)}
                 onChange={(obj: { value: string; label: string }) => {
+                  PromptInputSettings.set('sampler', obj.value)
                   setInput({ sampler: obj.value })
-                  localStorage.setItem('sampler', obj.value)
                 }}
                 isSearchable={true}
                 value={samplerValue}
@@ -651,7 +701,14 @@ const AdvancedOptionsPanel = ({
                   useFavoriteModels: false,
                   useMultiSteps: false
                 })
+
+                PromptInputSettings.set('numImages', 1)
+                PromptInputSettings.set('useAllSamplers', true)
+                PromptInputSettings.set('useAllModels', false)
+                PromptInputSettings.set('useFavoriteModels', false)
+                PromptInputSettings.set('useMultiSteps', false)
               } else {
+                PromptInputSettings.set('useAllSamplers', false)
                 setInput({ useAllSamplers: false })
               }
             }}
@@ -686,10 +743,14 @@ const AdvancedOptionsPanel = ({
                   min={1}
                   max={maxSteps({ sampler: input.sampler, loggedIn })}
                   onMinusClick={() => {
-                    setInput({ steps: input.steps - 1 })
+                    const value = input.steps - 1
+                    PromptInputSettings.set('steps', value)
+                    setInput({ steps: value })
                   }}
                   onPlusClick={() => {
-                    setInput({ steps: input.steps + 1 })
+                    const value = input.steps + 1
+                    PromptInputSettings.set('steps', value)
+                    setInput({ steps: value })
                   }}
                   name="steps"
                   onChange={handleChangeInput}
@@ -789,7 +850,14 @@ const AdvancedOptionsPanel = ({
                       useFavoriteModels: false,
                       useAllSamplers: false
                     })
+
+                    PromptInputSettings.set('useMultiSteps', true)
+                    PromptInputSettings.set('numImages', 1)
+                    PromptInputSettings.set('useAllModels', false)
+                    PromptInputSettings.set('useFavoriteModels', false)
+                    PromptInputSettings.set('useAllSamplers', false)
                   } else {
+                    PromptInputSettings.set('useMultiSteps', false)
                     setInput({ useMultiSteps: false })
                   }
                 }}
@@ -819,10 +887,14 @@ const AdvancedOptionsPanel = ({
                 min={1}
                 max={30}
                 onMinusClick={() => {
-                  setInput({ cfg_scale: input.cfg_scale - 1 })
+                  const value = input.cfg_scale - 1
+                  PromptInputSettings.set('cfg_scale', value)
+                  setInput({ cfg_scale: value })
                 }}
                 onPlusClick={() => {
-                  setInput({ cfg_scale: input.cfg_scale + 1 })
+                  const value = input.cfg_scale + 1
+                  PromptInputSettings.set('cfg_scale', value)
+                  setInput({ cfg_scale: value })
                 }}
                 name="cfg_scale"
                 onBlur={(e: any) => {
@@ -831,6 +903,10 @@ const AdvancedOptionsPanel = ({
                     e.target.value < 1 ||
                     e.target.value > 30
                   ) {
+                    if (initialLoad) {
+                      return
+                    }
+
                     setErrorMessage({
                       cfg_scale: 'Please enter a valid number between 1 and 30'
                     })
@@ -896,16 +972,14 @@ const AdvancedOptionsPanel = ({
                   min={0}
                   max={1.0}
                   onMinusClick={() => {
-                    setInput({
-                      denoising_strength:
-                        Number(input.denoising_strength) - 0.05
-                    })
+                    const value = input.denoising_strength - 0.05
+                    PromptInputSettings.set('denoising_strength', value)
+                    setInput({ denoising_strength: value })
                   }}
                   onPlusClick={() => {
-                    setInput({
-                      denoising_strength:
-                        Number(input.denoising_strength) + 0.05
-                    })
+                    const value = input.denoising_strength + 0.05
+                    PromptInputSettings.set('denoising_strength', value)
+                    setInput({ denoising_strength: value })
                   }}
                   name="denoising_strength"
                   onChange={handleChangeInput}
@@ -944,7 +1018,11 @@ const AdvancedOptionsPanel = ({
             <Button
               title="Generate random number"
               onClick={() => {
-                setInput({ seed: Math.abs((Math.random() * 2 ** 32) | 0) })
+                const value = Math.abs((Math.random() * 2 ** 32) | 0)
+                if (AppSettings.get('saveSeedOnCreate')) {
+                  PromptInputSettings.set('seed', value)
+                }
+                setInput({ seed: value })
               }}
             >
               <GrainIcon />
@@ -953,6 +1031,7 @@ const AdvancedOptionsPanel = ({
               btnType="secondary"
               title="Generate random number"
               onClick={() => {
+                PromptInputSettings.set('seed', '')
                 setInput({ seed: '' })
               }}
             >
@@ -964,7 +1043,8 @@ const AdvancedOptionsPanel = ({
       {input.source_processing !==
         (SourceProcessing.InPainting || SourceProcessing.OutPaiting) &&
         !input.useAllModels &&
-        !componentState.showMultiModel && (
+        !componentState.showMultiModel &&
+        !input.useFavoriteModels && (
           <Section>
             <SubSectionTitle>
               <TextTooltipRow>
@@ -995,23 +1075,24 @@ const AdvancedOptionsPanel = ({
                     )
                   }
 
-                  if (
-                    obj.value === 'stable_diffusion_2.0' ||
-                    obj.value === 'stable_diffusion_2.1'
-                  ) {
+                  if (obj.value === 'stable_diffusion_2.0') {
                     setInput({
                       models: [obj.value],
                       sampler: 'dpmsolver'
                     })
-                    localStorage.setItem('sampler', 'dpmsolver')
-                  } else if (input.sampler === 'dpmsolver') {
+                    PromptInputSettings.set('models', [obj.value])
+                    PromptInputSettings.set('sampler', 'dpmsolver')
+                  } else if (
+                    input.sampler === 'dpmsolver' &&
+                    obj.value !== 'stable_diffusion_2.0'
+                  ) {
                     setInput({ models: [obj.value], sampler: 'k_euler_a' })
-                    localStorage.setItem('sampler', 'k_euler_a')
+                    PromptInputSettings.set('models', [obj.value])
+                    PromptInputSettings.set('sampler', 'k_euler_a')
                   } else {
+                    PromptInputSettings.set('models', [obj.value])
                     setInput({ models: [obj.value] })
                   }
-
-                  localStorage.setItem('model', obj.value)
                 }}
                 // @ts-ignore
                 value={modelsValue}
@@ -1114,6 +1195,8 @@ const AdvancedOptionsPanel = ({
                   sampler = 'k_euler_a'
                 }
 
+                PromptInputSettings.set('models', [...modelArray])
+                PromptInputSettings.set('sampler', sampler)
                 setInput({ models: [...modelArray], sampler })
               }}
               // @ts-ignore
@@ -1149,8 +1232,22 @@ const AdvancedOptionsPanel = ({
                   useFavoriteModels: false,
                   useMultiSteps: false
                 })
+
+                PromptInputSettings.set('showMultiModel', true)
+                PromptInputSettings.set('useAllSamplers', false)
+                PromptInputSettings.set('useAllModels', false)
+                PromptInputSettings.set('useFavoriteModels', false)
+                PromptInputSettings.set('useMultiSteps', false)
               } else {
-                setComponentState({ showMultiModel: false })
+                PromptInputSettings.set('showMultiModel', false)
+                PromptInputSettings.set('models', [input.models[0]])
+
+                setComponentState({
+                  showMultiModel: false
+                })
+                setInput({
+                  models: [input.models[0]]
+                })
               }
             }}
             checked={componentState.showMultiModel}
@@ -1187,7 +1284,14 @@ const AdvancedOptionsPanel = ({
                   useAllSamplers: false,
                   numImages: 1
                 })
+
+                PromptInputSettings.set('useAllModels', true)
+                PromptInputSettings.set('useFavoriteModels', false)
+                PromptInputSettings.set('useMultiSteps', false)
+                PromptInputSettings.set('useAllSamplers', false)
+                PromptInputSettings.set('numImages', false)
               } else {
+                PromptInputSettings.set('useAllModels', false)
                 setInput({ useAllModels: false })
               }
             }}
@@ -1224,7 +1328,11 @@ const AdvancedOptionsPanel = ({
                   useAllSamplers: false,
                   useMultiSteps: false
                 })
+                PromptInputSettings.set('useFavoriteModels', true)
+                PromptInputSettings.set('useAllSamplers', false)
+                PromptInputSettings.set('useMultiSteps', false)
               } else {
+                PromptInputSettings.set('useFavoriteModels', false)
                 setInput({ useFavoriteModels: false })
               }
             }}
@@ -1245,8 +1353,10 @@ const AdvancedOptionsPanel = ({
         <Switch
           onChange={() => {
             if (!input.karras) {
+              PromptInputSettings.set('karras', true)
               setInput({ karras: true })
             } else {
+              PromptInputSettings.set('karras', false)
               setInput({ karras: false })
             }
           }}
@@ -1300,10 +1410,14 @@ const AdvancedOptionsPanel = ({
                 max={MAX_IMAGES_PER_JOB}
                 name="numImages"
                 onMinusClick={() => {
-                  setInput({ numImages: input.numImages - 1 })
+                  const value = input.numImages - 1
+                  PromptInputSettings.set('numImages', value)
+                  setInput({ numImages: value })
                 }}
                 onPlusClick={() => {
-                  setInput({ numImages: input.numImages + 1 })
+                  const value = input.numImages + 1
+                  PromptInputSettings.set('numImages', value)
+                  setInput({ numImages: value })
                 }}
                 onChange={handleChangeInput}
                 onBlur={(e: any) => {
@@ -1312,6 +1426,10 @@ const AdvancedOptionsPanel = ({
                     e.target.value < 1 ||
                     e.target.value > MAX_IMAGES_PER_JOB
                   ) {
+                    if (initialLoad) {
+                      return
+                    }
+
                     setErrorMessage({
                       numImages: `Please enter a valid number between 1 and ${MAX_IMAGES_PER_JOB}`
                     })

@@ -14,13 +14,31 @@ class LocalStorageController {
     this.version = Number(version)
   }
 
+  init() {
+    if (typeof window === 'undefined') {
+      return
+    }
+
+    if (!this.load()) {
+      localStorage.setItem(this.localStorageKey, '')
+    }
+  }
+
   delete(key: string) {
+    if (typeof window === 'undefined') {
+      return
+    }
+
     const data = this.load()
     delete data[key]
     this.saveAll(data)
   }
 
   get(item: string) {
+    if (typeof window === 'undefined') {
+      return
+    }
+
     const data = this.load()
 
     if (data[item] === 'true') {
@@ -33,6 +51,10 @@ class LocalStorageController {
   }
 
   load() {
+    if (typeof window === 'undefined') {
+      return
+    }
+
     try {
       const string = localStorage.getItem(this.localStorageKey) || ''
       const data = JSON.parse(string)
@@ -44,6 +66,10 @@ class LocalStorageController {
   }
 
   save(key: string, val: any = '') {
+    if (typeof window === 'undefined') {
+      return
+    }
+
     if (!key) {
       return
     }
@@ -59,6 +85,10 @@ class LocalStorageController {
   }
 
   saveAll(params: any) {
+    if (typeof window === 'undefined') {
+      return
+    }
+
     try {
       // Save version in case we update params at a later time.
       const data = { v: this.version, ...params }

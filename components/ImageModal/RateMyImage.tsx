@@ -145,11 +145,7 @@ const RateMyImage = ({ jobId }: IProps) => {
     }
   }
 
-  return (
-    <div>
-      <StarRating disabled={pending} onStarClick={rateImage} />
-    </div>
-  )
+  return <StarRating disabled={pending} onStarClick={rateImage} />
 }
 
 export default RateMyImage

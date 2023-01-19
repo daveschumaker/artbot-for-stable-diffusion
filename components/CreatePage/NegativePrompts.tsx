@@ -6,6 +6,7 @@ import TextButton from '../UI/TextButton'
 import CloseIcon from '../icons/CloseIcon'
 import { db, getPrompts, setDefaultPrompt } from '../../utils/db'
 import { PromptTypes } from '../../types'
+import PromptInputSettings from '../../models/PromptInputSettings'
 
 interface Props {
   open: boolean
@@ -110,6 +111,7 @@ const NegativePrompts = ({ open, handleClosePane, setInput }: Props) => {
                   <div className="mt-2 mb-1 flex flex-row gap-2">
                     <TextButton
                       onClick={() => {
+                        PromptInputSettings.set('negative', prompt.prompt)
                         updatePrompt(prompt.prompt)
                       }}
                     >
@@ -117,6 +119,7 @@ const NegativePrompts = ({ open, handleClosePane, setInput }: Props) => {
                     </TextButton>
                     <TextButton
                       onClick={() => {
+                        PromptInputSettings.set('negative', prompt.prompt)
                         saveDefaultPrompt(prompt.prompt)
                       }}
                     >

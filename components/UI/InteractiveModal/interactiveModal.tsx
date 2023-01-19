@@ -53,6 +53,7 @@ const StyledInteractiveModal = styled.div<IStyle>`
   `}
 
   @media (min-width: 640px) {
+    max-width: 864px;
     width: calc(100% - 48px);
     /* max-width: 752px; */
     /* min-height: 480px; */
@@ -65,7 +66,8 @@ const StyledInteractiveModal = styled.div<IStyle>`
   }
 
   @media (min-width: 1280px) {
-    max-width: 1008px;
+    max-width: 1088px;
+    width: calc(100% - 48px);
   }
 `
 
