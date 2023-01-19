@@ -952,8 +952,8 @@ const AdvancedOptionsPanel = ({
           <SplitPanel>
             <Section>
               <div className="flex flex-row items-center justify-between">
-                <div className="w-[120px]">
-                  <SubSectionTitle>
+                <SubSectionTitle>
+                  <TextTooltipRow>
                     Denoise{' '}
                     <Tooltip width="200px">
                       Amount of noise added to input image. Values that approach
@@ -961,9 +961,9 @@ const AdvancedOptionsPanel = ({
                       images that are not semantically consistent with the
                       input. Only available for img2img.
                     </Tooltip>
-                    <div className="block text-xs w-full">(0.0 - 1.0)</div>
-                  </SubSectionTitle>
-                </div>
+                  </TextTooltipRow>
+                  <div className="block text-xs w-full">(0.0 - 1.0)</div>
+                </SubSectionTitle>
                 <NumberInput
                   // @ts-ignore
                   className="mb-2"
@@ -1046,7 +1046,9 @@ const AdvancedOptionsPanel = ({
               )}
             </Section>
           </SplitPanel>
-          <SplitPanel></SplitPanel>
+          <SplitPanel>
+            <Section></Section>
+          </SplitPanel>
         </TwoPanel>
       )}
       <Section>
