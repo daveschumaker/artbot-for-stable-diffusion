@@ -40,10 +40,12 @@ export interface IRequestParams {
   stylePreset: string
   steps: number
   multiSteps: string
+  multiGuidance: string
   triggers?: Array<string>
   useAllModels: boolean
   useAllSamplers: boolean
   useMultiSteps: boolean
+  useMultiGuidance: boolean
   width: number
 }
 
@@ -74,12 +76,14 @@ class CreateImageRequest {
   stylePreset: string
   steps: number
   multiSteps: Array<number>
+  multiGuidance: Array<number>
   timestamp?: number
   triggers: Array<string>
   upscaled?: boolean
   useAllModels: boolean
   useAllSamplers: boolean
   useMultiSteps: boolean
+  useMultiGuidance: boolean
   width: number
 
   constructor({
@@ -103,10 +107,12 @@ class CreateImageRequest {
     source_processing = SourceProcessing.Prompt,
     stylePreset = 'none',
     steps = 20,
+    multiGuidance = '',
     multiSteps = '',
     triggers = [],
     useAllModels = false,
     useAllSamplers = false,
+    useMultiGuidance = false,
     useMultiSteps = false,
     width = 512
   }: IRequestParams) {
@@ -192,6 +198,9 @@ class CreateImageRequest {
     this.useAllSamplers = Boolean(useAllSamplers)
     this.useMultiSteps = Boolean(useMultiSteps)
     this.multiSteps = []
+    this.useMultiGuidance = Boolean(useMultiGuidance)
+    this.multiGuidance = []
+
     this.shareImagesExternally = AppSettings.get('shareImagesExternally')
 
     if (this.models.length === 1 && this.models[0] !== 'random') {
@@ -212,6 +221,20 @@ class CreateImageRequest {
         }
 
         this.multiSteps.push(Number(value))
+      })
+    }
+
+    if (useMultiGuidance) {
+      let cleanMulti = multiGuidance.replace(`"`, '')
+      cleanMulti = cleanMulti.replace(`'`, '')
+
+      let values = cleanMulti.split(',')
+      values.forEach((value) => {
+        if (isNaN(Number(value))) {
+          return
+        }
+
+        this.multiGuidance.push(Number(value))
       })
     }
   }

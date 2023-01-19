@@ -86,6 +86,7 @@ const defaultState: any = {
   cfg_scale: 9,
   steps: 20,
   multiSteps: '',
+  multiGuidance: '',
   seed: '',
   denoising_strength: 0.75,
   karras: true,
@@ -101,7 +102,8 @@ const defaultState: any = {
   useAllModels: false,
   useFavoriteModels: false,
   useAllSamplers: false,
-  useMultiSteps: false
+  useMultiSteps: false,
+  useMultiGuidance: false
 }
 
 export async function getServerSideProps() {
@@ -446,6 +448,8 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
     numImages: input.numImages,
     useMultiSteps: input.useMultiSteps,
     multiSteps: input.multiSteps,
+    useMultiGuidance: input.useMultiGuidance,
+    multiGuidance: input.multiGuidance,
     prompt: input.prompt,
     models: input.models,
     useAllModels: input.useAllModels,

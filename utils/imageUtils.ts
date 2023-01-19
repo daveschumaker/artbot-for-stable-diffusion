@@ -561,10 +561,12 @@ export const downloadFile = async (image: any) => {
 interface ICountImages {
   numImages: number
   multiSteps?: string
+  multiGuidance?: string
   useAllModels?: boolean
   useFavoriteModels?: boolean
   useAllSamplers?: boolean
   useMultiSteps?: boolean
+  useMultiGuidance?: boolean
   prompt?: string
   models?: Array<string>
 }
@@ -572,9 +574,11 @@ interface ICountImages {
 export const countImagesToGenerate = ({
   numImages = 0,
   multiSteps = '',
+  multiGuidance = '',
   useAllModels = false,
   useFavoriteModels = false,
   useAllSamplers = false,
+  useMultiGuidance = false,
   useMultiSteps = false,
   models = [],
   prompt = ''
@@ -586,6 +590,20 @@ export const countImagesToGenerate = ({
     let splitCount = 0
 
     splitSteps.forEach((split) => {
+      // @ts-ignore
+      if (!isNaN(split) && split) {
+        splitCount++
+      }
+    })
+
+    imageCount = imageCount * splitCount
+  }
+
+  if (useMultiGuidance) {
+    let splitGuidance = multiGuidance.split(',') || []
+    let splitCount = 0
+
+    splitGuidance.forEach((split) => {
       // @ts-ignore
       if (!isNaN(split) && split) {
         splitCount++

@@ -308,6 +308,19 @@ export const createImageJob = async (newImageRequest: CreateImageRequest) => {
 
       await createPendingJob(imageRequest)
     }
+  }
+  if (
+    newImageRequest.useMultiGuidance &&
+    newImageRequest.multiGuidance.length > 0
+  ) {
+    for (const idx in newImageRequest.multiGuidance) {
+      const imageRequest = Object.assign({}, newImageRequest)
+      imageRequest.cfg_scale = newImageRequest.multiGuidance[idx]
+      imageRequest.useMultiGuidance = false
+      imageRequest.multiGuidance = []
+
+      await createPendingJob(imageRequest)
+    }
   } else if (hasPromptMatrix(newImageRequest.prompt)) {
     // Check for prompt matrix
     const matrixPrompts = [...promptMatrix(newImageRequest.prompt)]

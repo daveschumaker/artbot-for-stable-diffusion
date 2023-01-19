@@ -49,6 +49,11 @@ const ModelWarning = styled.div`
   margin-top: 4px;
 `
 
+const NoSliderSpacer = styled.div`
+  height: 14px;
+  margin-bottom: 16px;
+`
+
 const Section = styled.div`
   padding-top: 16px;
 
@@ -346,12 +351,10 @@ const AdvancedOptionsPanel = ({
     input.source_processing !== SourceProcessing.Img2Img &&
     input.source_processing !== SourceProcessing.InPainting &&
     !input.useAllModels &&
-    !input.useMultiSteps &&
     !input.useFavoriteModels &&
     !componentState.showMultiModel
 
   const showMultiSamplerInput =
-    !input.useAllSamplers &&
     !input.useAllModels &&
     !input.useFavoriteModels &&
     !componentState.showMultiModel
@@ -688,6 +691,7 @@ const AdvancedOptionsPanel = ({
             </TextTooltipRow>
           </SubSectionTitle>
           <Switch
+            disabled={input.useMultiGuidance || input.useMultiSteps}
             onChange={() => {
               if (!input.useAllSamplers) {
                 trackEvent({
@@ -796,11 +800,13 @@ const AdvancedOptionsPanel = ({
               <div className="flex flex-row items-center justify-between">
                 <div className="w-[220px] pr-2">
                   <SubSectionTitle>
-                    Multi-steps
-                    <Tooltip width="200px">
-                      Comma separated values to create a series of images using
-                      multiple steps. Example: 3,6,9,12,15
-                    </Tooltip>
+                    <TextTooltipRow>
+                      Multi-steps
+                      <Tooltip width="210px">
+                        Comma separated values to create a series of images
+                        using multiple steps. Example: 3,6,9,12,15
+                      </Tooltip>
+                    </TextTooltipRow>
                     <div className="block text-xs w-full">
                       (1 - {maxSteps({ sampler: input.sampler, loggedIn })})
                     </div>
@@ -827,6 +833,7 @@ const AdvancedOptionsPanel = ({
                   {errorMessage.steps}
                 </div>
               )}
+              <NoSliderSpacer />
             </Section>
           )}
           {showMultiSamplerInput && (
@@ -841,6 +848,7 @@ const AdvancedOptionsPanel = ({
                 </TextTooltipRow>
               </SubSectionTitle>
               <Switch
+                disabled={input.useMultiGuidance || input.useAllSamplers}
                 onChange={() => {
                   if (!input.useMultiSteps) {
                     setInput({
@@ -867,83 +875,164 @@ const AdvancedOptionsPanel = ({
           )}
         </SplitPanel>
         <SplitPanel>
-          <Section>
-            <div className="flex flex-row items-center justify-between">
+          {!input.useMultiGuidance && (
+            <Section>
+              <div className="flex flex-row items-center justify-between">
+                <SubSectionTitle>
+                  <TextTooltipRow>
+                    Guidance
+                    <Tooltip width="200px">
+                      Higher numbers follow the prompt more closely. Lower
+                      numbers give more creativity.
+                    </Tooltip>
+                  </TextTooltipRow>
+                  <div className="block text-xs w-full">(1 - 30)</div>
+                </SubSectionTitle>
+                <NumberInput
+                  // @ts-ignore
+                  error={errorMessage.cfg_scale}
+                  className="mb-2"
+                  type="text"
+                  min={1}
+                  max={30}
+                  onMinusClick={() => {
+                    const value = input.cfg_scale - 1
+                    PromptInputSettings.set('cfg_scale', value)
+                    setInput({ cfg_scale: value })
+                  }}
+                  onPlusClick={() => {
+                    const value = input.cfg_scale + 1
+                    PromptInputSettings.set('cfg_scale', value)
+                    setInput({ cfg_scale: value })
+                  }}
+                  name="cfg_scale"
+                  onBlur={(e: any) => {
+                    if (
+                      isNaN(e.target.value) ||
+                      e.target.value < 1 ||
+                      e.target.value > 30
+                    ) {
+                      if (initialLoad) {
+                        return
+                      }
+
+                      setErrorMessage({
+                        cfg_scale:
+                          'Please enter a valid number between 1 and 30'
+                      })
+                    } else if (errorMessage.cfg_scale) {
+                      setErrorMessage({ cfg_scale: null })
+                    }
+                  }}
+                  onChange={handleChangeInput}
+                  // @ts-ignore
+                  value={input.cfg_scale}
+                  width="100%"
+                />
+              </div>
+              <div className="mb-4">
+                <Slider
+                  defaultValue={input.cfg_scale}
+                  value={input.cfg_scale}
+                  min={1}
+                  max={30}
+                  onChange={(nextValues: number) => {
+                    const event = {
+                      target: {
+                        name: 'cfg_scale',
+                        value: nextValues
+                      }
+                    }
+
+                    handleChangeInput(event)
+                  }}
+                />
+              </div>
+              {errorMessage.cfg_scale && (
+                <div className="mb-2 text-red-500 text-lg font-bold">
+                  {errorMessage.cfg_scale}
+                </div>
+              )}
+            </Section>
+          )}
+          {input.useMultiGuidance && (
+            <Section>
+              <div className="flex flex-row items-center justify-between">
+                <div className="w-[220px] pr-2">
+                  <SubSectionTitle>
+                    <TextTooltipRow>
+                      Guidance
+                      <Tooltip width="200px">
+                        Comma separated values to create a series of images
+                        using multiple steps. Example: 3,6,9,12,15
+                      </Tooltip>
+                    </TextTooltipRow>
+                    <div className="block text-xs w-full">(1 - 30)</div>
+                  </SubSectionTitle>
+                </div>
+                <Input
+                  // @ts-ignore
+                  error={errorMessage.multiGuidance}
+                  className="mb-2"
+                  type="text"
+                  name="multiGuidance"
+                  onChange={handleChangeInput}
+                  placeholder="3,5,7,9"
+                  // onBlur={() => {
+                  //   validateSteps()
+                  // }}
+                  // @ts-ignore
+                  value={input.multiGuidance}
+                  width="100%"
+                />
+              </div>
+              {errorMessage.multiGuidance && (
+                <div className="mb-2 text-red-500 text-lg font-bold">
+                  {errorMessage.multiGuidance}
+                </div>
+              )}
+              <NoSliderSpacer />
+            </Section>
+          )}
+          {showMultiSamplerInput && (
+            <Section>
               <SubSectionTitle>
                 <TextTooltipRow>
-                  Guidance
-                  <Tooltip width="200px">
-                    Higher numbers follow the prompt more closely. Lower numbers
-                    give more creativity.
+                  Use multiple guidance
+                  <Tooltip left="-140" width="240px">
+                    Provide a list of comma separated values to create a series
+                    of images using multiple guidance: &quot;3,6,9,12,15&quot;
                   </Tooltip>
                 </TextTooltipRow>
-                <div className="block text-xs w-full">(1 - 30)</div>
               </SubSectionTitle>
-              <NumberInput
-                // @ts-ignore
-                error={errorMessage.cfg_scale}
-                className="mb-2"
-                type="text"
-                min={1}
-                max={30}
-                onMinusClick={() => {
-                  const value = input.cfg_scale - 1
-                  PromptInputSettings.set('cfg_scale', value)
-                  setInput({ cfg_scale: value })
-                }}
-                onPlusClick={() => {
-                  const value = input.cfg_scale + 1
-                  PromptInputSettings.set('cfg_scale', value)
-                  setInput({ cfg_scale: value })
-                }}
-                name="cfg_scale"
-                onBlur={(e: any) => {
-                  if (
-                    isNaN(e.target.value) ||
-                    e.target.value < 1 ||
-                    e.target.value > 30
-                  ) {
-                    if (initialLoad) {
-                      return
-                    }
-
-                    setErrorMessage({
-                      cfg_scale: 'Please enter a valid number between 1 and 30'
+              <Switch
+                disabled={input.useMultiSteps || input.useAllSamplers}
+                onChange={() => {
+                  if (!input.useMultiGuidance) {
+                    setInput({
+                      useMultiGuidance: true,
+                      useMultiSteps: false,
+                      numImages: 1,
+                      useAllModels: false,
+                      useFavoriteModels: false,
+                      useAllSamplers: false
                     })
-                  } else if (errorMessage.cfg_scale) {
-                    setErrorMessage({ cfg_scale: null })
-                  }
-                }}
-                onChange={handleChangeInput}
-                // @ts-ignore
-                value={input.cfg_scale}
-                width="100%"
-              />
-            </div>
-            <div className="mb-4">
-              <Slider
-                defaultValue={input.cfg_scale}
-                value={input.cfg_scale}
-                min={1}
-                max={30}
-                onChange={(nextValues: number) => {
-                  const event = {
-                    target: {
-                      name: 'cfg_scale',
-                      value: nextValues
-                    }
-                  }
 
-                  handleChangeInput(event)
+                    PromptInputSettings.set('useMultiGuidance', true)
+                    PromptInputSettings.set('useMultiSteps', false)
+                    PromptInputSettings.set('numImages', 1)
+                    PromptInputSettings.set('useAllModels', false)
+                    PromptInputSettings.set('useFavoriteModels', false)
+                    PromptInputSettings.set('useAllSamplers', false)
+                  } else {
+                    PromptInputSettings.set('useMultiGuidance', false)
+                    setInput({ useMultiGuidance: false })
+                  }
                 }}
+                checked={input.useMultiGuidance}
               />
-            </div>
-            {errorMessage.cfg_scale && (
-              <div className="mb-2 text-red-500 text-lg font-bold">
-                {errorMessage.cfg_scale}
-              </div>
-            )}
-          </Section>
+            </Section>
+          )}
         </SplitPanel>
       </TwoPanel>
       {(input.img2img ||
