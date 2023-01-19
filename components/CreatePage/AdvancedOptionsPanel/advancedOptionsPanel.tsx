@@ -1036,7 +1036,26 @@ const AdvancedOptionsPanel = ({
                   onChange={handleChangeInput}
                   // @ts-ignore
                   value={input.denoising_strength}
-                  width="110px"
+                  width="100%"
+                />
+              </div>
+              <div className="mb-4">
+                <Slider
+                  defaultValue={input.denoising_strength}
+                  value={input.denoising_strength}
+                  min={0}
+                  max={1}
+                  step={0.05}
+                  onChange={(nextValues: number) => {
+                    const event = {
+                      target: {
+                        name: 'denoising_strength',
+                        value: nextValues
+                      }
+                    }
+
+                    handleChangeInput(event)
+                  }}
                 />
               </div>
               {errorMessage.denoising_strength && (
