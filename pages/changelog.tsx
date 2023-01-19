@@ -128,9 +128,19 @@ const Changelog = () => {
             >
               Discord
             </Linker>{' '}
-            , voodoocode!
+            , voodoocode!)
           </StyledLi>
-          )
+          <StyledLi>
+            Fix: Settings page fetches latest kudos count when loaded. This
+            should fix the issue where it appeared you did&apos;t receive kudos
+            after rating an image (but you actually did, the user info cache was
+            just stale).
+          </StyledLi>
+          <StyledLi>
+            Feature: Now request multiple images using multiple guidance
+            strengths. It works similar to the multi-step request feature added
+            on <strong>2022.12.20</strong>.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
