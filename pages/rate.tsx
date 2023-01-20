@@ -41,13 +41,15 @@ const LinkDetails = styled.span`
 `
 
 const ImageContainer = styled.div`
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   position: relative;
   max-width: 100%;
-  max-height: 480px;
+  height: 360px;
 
   @media (min-width: 640px) {
-    max-height: 512px;
+    height: 512px;
     max-width: 512px;
   }
 `
@@ -61,19 +63,21 @@ const ImageOverlay = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgb(0, 0, 0, 0.6);
 `
 
-const Image = styled.img`
+const Image = styled.img<{ pending?: boolean }>`
   box-shadow: 0 16px 38px -12px rgb(0 0 0 / 56%),
     0 4px 25px 0px rgb(0 0 0 / 12%), 0 8px 10px -5px rgb(0 0 0 / 20%);
   max-width: 100%;
-  max-height: 480px;
+  max-height: 100%;
+  filter: brightness(100%);
+  transition: all 250ms ease-in-out;
 
-  @media (min-width: 640px) {
-    max-height: 512px;
-    max-width: 512px;
-  }
+  ${(props) =>
+    props.pending &&
+    `
+    filter: brightness(40%);
+  `}
 `
 
 let errorCount = 0
@@ -301,22 +305,6 @@ const Rate = () => {
         <title>ArtBot - Rate images</title>
       </Head>
       <PageTitle>Rate images</PageTitle>
-      <SubTitle>
-        Earn{' '}
-        <Linker href="/faq#kudos" passHref>
-          kudos
-        </Linker>{' '}
-        by rating images based on aesthetic preferences. This system will help{' '}
-        <Linker
-          href="https://laion.ai/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <>LAION</>
-        </Linker>{' '}
-        (the non-profit which helped trained Stable Diffusion) improve their
-        library.
-      </SubTitle>
       {!componentState.apiKey && (
         <>
           <SubTitle>
@@ -359,7 +347,11 @@ const Rate = () => {
         <div>
           <div className="flex flex-col align-center items-center w-full">
             <ImageContainer>
-              <Image src={componentState.imageUrl} alt="Rate this image" />
+              <Image
+                pending={componentState.imagePending}
+                src={componentState.imageUrl}
+                alt="Rate this image"
+              />
               {componentState.imagePending && (
                 <ImageOverlay>
                   <SpinnerV2 />
@@ -392,12 +384,28 @@ const Rate = () => {
               </div>
             </div>
           </div>
-          <div className="mt-2 text-sm">
+          <div className="mb-2 mt-2 flex flex-row gap-2 text-sm">
             <div>Images rated: {componentState.imagesRated}</div>
             <div>Kudos earned: {componentState.kudosEarned}</div>
           </div>
         </div>
       ) : null}
+      <SubTitle>
+        Earn{' '}
+        <Linker href="/faq#kudos" passHref>
+          kudos
+        </Linker>{' '}
+        by rating images based on aesthetic preferences. This system will help{' '}
+        <Linker
+          href="https://laion.ai/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <>LAION</>
+        </Linker>{' '}
+        (the non-profit which helped trained Stable Diffusion) improve their
+        library.
+      </SubTitle>
     </>
   )
 }

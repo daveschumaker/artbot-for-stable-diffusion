@@ -103,14 +103,6 @@ const Changelog = () => {
               favorite images. (I know that some of you have thousands of images
               and this is not ideal at the moment.)
             </StyledLi>
-            <StyledLi>
-              2023.01.17 - There have been a few messages about users not
-              receiving kudos after rating a number of images. I am not exactly
-              sure what is happening but I am attempting to log some more data
-              in order to work with the Stable Horde team in order to resolve
-              this. If this is happening to you, let me know and send me your
-              Stable Horde username (viewable from the settings page).
-            </StyledLi>
           </StyledUl>
         </Section>
       </Panel>
@@ -140,6 +132,11 @@ const Changelog = () => {
             Feature: Now request multiple images using multiple guidance
             strengths. It works similar to the multi-step request feature added
             on <strong>2022.12.20</strong>.
+          </StyledLi>
+          <StyledLi>
+            Feature: Implement Stable Horde&apos;s artifact / image quality
+            rating endpoint. Now, rate images for presence of artifacts, in
+            addition to aesthetic taste.
           </StyledLi>
         </StyledUl>
       </Section>
