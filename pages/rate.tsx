@@ -22,11 +22,11 @@ interface IQualityMap {
 // Meanwhile, you rate images aesthetically from worst (1) to best (10). Lining these up is confusing
 // and counter-intuitive.
 const QUALITY_MAP: IQualityMap = {
-  1: 5,
-  2: 4,
-  3: 3,
-  4: 2,
-  5: 1
+  1: 4,
+  2: 3,
+  3: 2,
+  4: 1,
+  5: 0
 }
 
 const SubTitle = styled.div`
@@ -44,9 +44,15 @@ const ImageContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+<<<<<<< HEAD
   position: relative;
   max-width: 100%;
   height: 360px;
+=======
+  max-width: 100%;
+  height: 480px;
+  position: relative;
+>>>>>>> 27cf87c (chore: image loading improvements)
 
   @media (min-width: 640px) {
     height: 512px;
@@ -65,7 +71,7 @@ const ImageOverlay = styled.div`
   justify-content: center;
 `
 
-const Image = styled.img<{ pending?: boolean }>`
+const Image = styled.img<{ pending?: boolean; status?: string }>`
   box-shadow: 0 16px 38px -12px rgb(0 0 0 / 56%),
     0 4px 25px 0px rgb(0 0 0 / 12%), 0 8px 10px -5px rgb(0 0 0 / 20%);
   max-width: 100%;
@@ -78,8 +84,33 @@ const Image = styled.img<{ pending?: boolean }>`
     `
     filter: brightness(40%);
   `}
+
+  ${(props) =>
+    props.status === 'hide' &&
+    `
+    opacity: 1;
+    position: absolute;
+    transform: translateX(-500%);
+  `}
+
+    ${(props) =>
+    props.status === 'stage' &&
+    `
+    transition: all 5ms ease-in-out;
+    opacity: 0;
+    position: absolute;
+    transform: translateX(500%);
+  `}
+
+  ${(props) =>
+    props.status === 'show' &&
+    `
+    opacity: 1;
+    transition: all 250ms ease-in-out;
+  `}
 `
 
+let activeImage = 0
 let errorCount = 0
 let imagePending = false
 let ratingPending = false
@@ -98,7 +129,12 @@ const Rate = () => {
     imagePending: false,
     ratingPending: false,
     rateImage: 0,
-    rateQuality: 0
+    rateQuality: 0,
+
+    imageOneStatus: 'show',
+    imageTwoStatus: 'stage',
+    imageOneUrl: '',
+    imageTwoUrl: ''
   })
 
   const fetchImage = useCallback(async () => {
@@ -150,6 +186,18 @@ const Rate = () => {
           imagePending: false,
           showError: false
         })
+
+        if (activeImage === 1) {
+          activeImage = 2
+          setComponentState({
+            imageTwoUrl: data.url
+          })
+        } else {
+          activeImage = 1
+          setComponentState({
+            imageOneUrl: data.url
+          })
+        }
       }
     }
   }, [componentState.apiKey, setComponentState])
@@ -196,7 +244,6 @@ const Rate = () => {
     const ratingData = {
       artifacts: QUALITY_MAP[componentState.rateQuality],
       rating: componentState.rateImage
-      // datasetId: componentState.datasetId
     }
 
     try {
@@ -233,14 +280,6 @@ const Rate = () => {
           kudosEarned,
           showError: false
         })
-
-        // Add a slight delay before we clear rating on stars due to image loading issues.
-        setTimeout(() => {
-          ratingPending = false
-          setComponentState({
-            ratingPending: false
-          })
-        }, 250)
       }
     } catch (err) {
       errorCount++
@@ -345,12 +384,47 @@ const Rate = () => {
       !componentState.initialLoad &&
       componentState.imageUrl ? (
         <div>
-          <div className="flex flex-col align-center items-center w-full">
+          <div className="flex flex-col align-center items-center w-full overflow-x-hidden">
             <ImageContainer>
               <Image
+                status={componentState.imageOneStatus}
                 pending={componentState.imagePending}
-                src={componentState.imageUrl}
+                src={componentState.imageOneUrl}
                 alt="Rate this image"
+                onLoad={() => {
+                  ratingPending = false
+                  setComponentState({
+                    imageOneStatus: 'show',
+                    imageTwoStatus: 'hide',
+                    ratingPending: false
+                  })
+
+                  setTimeout(() => {
+                    setComponentState({
+                      imageTwoStatus: 'stage'
+                    })
+                  }, 250)
+                }}
+              />
+              <Image
+                status={componentState.imageTwoStatus}
+                pending={componentState.imagePending}
+                src={componentState.imageTwoUrl}
+                alt="Rate this image"
+                onLoad={() => {
+                  ratingPending = false
+                  setComponentState({
+                    imageOneStatus: 'hide',
+                    imageTwoStatus: 'show',
+                    ratingPending: false
+                  })
+
+                  setTimeout(() => {
+                    setComponentState({
+                      imageOneStatus: 'stage'
+                    })
+                  }, 250)
+                }}
               />
               {componentState.imagePending && (
                 <ImageOverlay>
