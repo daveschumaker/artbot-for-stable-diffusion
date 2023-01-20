@@ -8,7 +8,7 @@ const RatingContainer = styled.div`
   display: flex;
   flex-direction: row;
   column-gap: 8px;
-  margin-top: 12px;
+  margin-top: 8px;
   height: 50px;
 `
 
@@ -21,11 +21,16 @@ const StarWrapper = styled.div`
 `
 
 interface IProps {
+  count?: number
   disabled: boolean
   onStarClick(value: number): void
 }
 
-const StarRating = ({ disabled = false, onStarClick = () => {} }: IProps) => {
+const StarRating = ({
+  count = 10,
+  disabled = false,
+  onStarClick = () => {}
+}: IProps) => {
   const [componentState, setComponentState] = useComponentState({
     activeStar: 0,
     rating: null
@@ -41,7 +46,6 @@ const StarRating = ({ disabled = false, onStarClick = () => {} }: IProps) => {
   }, [disabled, setComponentState])
 
   const renderStars = () => {
-    const count = 10
     const elements = []
 
     for (let i = 0; i < count; i++) {
@@ -69,7 +73,7 @@ const StarRating = ({ disabled = false, onStarClick = () => {} }: IProps) => {
           }}
         >
           <StarIcon size={24} fill={filled ? '#fcba03' : 'none'} />
-          {value}
+          <span className="text-xs">{value}</span>
         </StarWrapper>
       )
     }

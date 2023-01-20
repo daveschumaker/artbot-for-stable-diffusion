@@ -14,6 +14,21 @@ import { clientHeader } from '../utils/appUtils'
 
 const MAX_ERROR_COUNT = 30
 
+interface IQualityMap {
+  [key: number]: number
+}
+
+// Stable Horde API does something silly where you rate image quality from best (1) to worst (5).
+// Meanwhile, you rate images aesthetically from worst (1) to best (10). Lining these up is confusing
+// and counter-intuitive.
+const QUALITY_MAP: IQualityMap = {
+  1: 5,
+  2: 4,
+  3: 3,
+  4: 2,
+  5: 1
+}
+
 const SubTitle = styled.div`
   font-size: 14px;
   padding-bottom: 8px;
@@ -77,7 +92,9 @@ const Rate = () => {
     kudosEarned: 0,
     initialLoad: true,
     imagePending: false,
-    ratingPending: false
+    ratingPending: false,
+    rateImage: 0,
+    rateQuality: 0
   })
 
   const fetchImage = useCallback(async () => {
@@ -120,90 +137,122 @@ const Rate = () => {
         errorCount = 0
 
         setComponentState({
-          activeStar: 0,
+          rateImage: 0,
+          rateQuality: 0,
           datasetId: data.dataset_id,
           imageId: data.id,
           imageUrl: data.url,
           initialLoad: false,
           imagePending: false,
-          rating: null,
           showError: false
         })
       }
     }
   }, [componentState.apiKey, setComponentState])
 
+  const rateQuality = (rating: number) => {
+    if (ratingPending) {
+      return
+    }
+
+    setComponentState({
+      rateQuality: rating
+    })
+  }
+
   const rateImage = useCallback(
-    async (rating: number) => {
+    (rating: number) => {
       if (ratingPending) {
         return
       }
 
-      ratingPending = true
-
       setComponentState({
-        imagePending: true,
-        ratingPending: true
+        rateImage: rating
       })
+    },
+    [setComponentState]
+  )
 
-      const ratingData = {
-        rating,
-        datasetId: componentState.datasetId
-      }
+  const rateImageRequest = useCallback(async () => {
+    if (ratingPending) {
+      return
+    }
 
-      try {
-        const res = await fetch(
-          `https://ratings.droom.cloud/api/v1/rating/${componentState.imageId}`,
-          {
-            method: 'POST',
-            body: JSON.stringify(ratingData),
-            headers: {
-              'Content-Type': 'application/json',
-              'Client-Agent': clientHeader(),
-              apikey: componentState.apiKey
-            }
+    if (componentState.rateImage === 0 && componentState.rateQuality === 0) {
+      return
+    }
+
+    ratingPending = true
+
+    setComponentState({
+      imagePending: true,
+      ratingPending: true
+    })
+
+    const ratingData = {
+      artifacts: QUALITY_MAP[componentState.rateQuality],
+      rating: componentState.rateImage
+      // datasetId: componentState.datasetId
+    }
+
+    try {
+      const res = await fetch(
+        `https://ratings.droom.cloud/api/v1/rating/${componentState.imageId}`,
+        {
+          method: 'POST',
+          body: JSON.stringify(ratingData),
+          headers: {
+            'Content-Type': 'application/json',
+            'Client-Agent': clientHeader(),
+            apikey: componentState.apiKey
           }
-        )
-
-        const data = await res.json()
-        fetchImage()
-
-        const { reward } = data
-
-        if (reward) {
-          let totalRated = AppSettings.get('imagesRated') || 0
-          let kudosEarned = AppSettings.get('kudosEarnedByRating') || 0
-          totalRated++
-          kudosEarned += reward
-
-          AppSettings.save('imagesRated', totalRated)
-          AppSettings.save('kudosEarnedByRating', kudosEarned)
-
-          errorCount = 0
-          ratingPending = false
-          setComponentState({
-            imagesRated: totalRated,
-            kudosEarned,
-            showError: false,
-            ratingPending: false
-          })
         }
-      } catch (err) {
-        errorCount++
+      )
+
+      const data = await res.json()
+      fetchImage()
+
+      const { reward } = data
+
+      if (reward) {
+        let totalRated = AppSettings.get('imagesRated') || 0
+        let kudosEarned = AppSettings.get('kudosEarnedByRating') || 0
+        totalRated++
+        kudosEarned += reward
+
+        AppSettings.save('imagesRated', totalRated)
+        AppSettings.save('kudosEarnedByRating', kudosEarned)
+
+        errorCount = 0
+        setComponentState({
+          imagesRated: totalRated,
+          kudosEarned,
+          showError: false
+        })
+
+        // Add a slight delay before we clear rating on stars due to image loading issues.
         setTimeout(() => {
           ratingPending = false
-          rateImage(rating)
-        }, 300)
+          setComponentState({
+            ratingPending: false
+          })
+        }, 250)
       }
-    },
-    [
-      componentState.apiKey,
-      componentState.datasetId,
-      componentState.imageId,
-      fetchImage,
-      setComponentState
-    ]
-  )
+    } catch (err) {
+      errorCount++
+      setTimeout(() => {
+        ratingPending = false
+        rateImageRequest()
+      }, 300)
+    }
+  }, [
+    componentState.apiKey,
+    componentState.imageId,
+    componentState.rateImage,
+    componentState.rateQuality,
+    fetchImage,
+    setComponentState
+  ])
 
   useEffect(() => {
     let totalRated = AppSettings.get('imagesRated') || 0
@@ -233,6 +282,14 @@ const Rate = () => {
     imagePending = false
     ratingPending = false
   })
+
+  useEffect(() => {
+    if (componentState.rateImage === 0 || componentState.rateQuality === 0) {
+      return
+    }
+
+    rateImageRequest()
+  }, [componentState.rateImage, componentState.rateQuality, rateImageRequest])
 
   useEffect(() => {
     setComponentState({ apiKey: AppSettings.get('apiKey') })
@@ -300,25 +357,41 @@ const Rate = () => {
       !componentState.initialLoad &&
       componentState.imageUrl ? (
         <div>
-          <div className="mb-2">
-            <strong>Rate this image:</strong>
-            <div>
-              Rating criteria: How much do <em>you</em> like this image?
+          <div className="flex flex-col align-center items-center w-full">
+            <ImageContainer>
+              <Image src={componentState.imageUrl} alt="Rate this image" />
+              {componentState.imagePending && (
+                <ImageOverlay>
+                  <SpinnerV2 />
+                </ImageOverlay>
+              )}
+            </ImageContainer>
+            <div className="mt-4 flex flex-col align-center items-center w-full">
+              <div>
+                How much do <em>you</em> like this image?
+              </div>
+              <div className="flex flex-row items-center gap-2">
+                <span className="text-xs">worst</span>
+                <StarRating
+                  disabled={componentState.ratingPending}
+                  onStarClick={rateImage}
+                />
+                <span className="text-xs">best</span>
+              </div>
             </div>
-            <div>1 (worst) - 10 (best)</div>
+            <div className="mt-2 flex flex-col align-center items-center w-full">
+              <div>Image quality?</div>
+              <div className="flex flex-row items-center gap-2">
+                <span className="text-xs">worst</span>
+                <StarRating
+                  count={5}
+                  disabled={componentState.ratingPending}
+                  onStarClick={rateQuality}
+                />
+                <span className="text-xs">best</span>
+              </div>
+            </div>
           </div>
-          <ImageContainer>
-            <Image src={componentState.imageUrl} alt="Rate this image" />
-            {componentState.imagePending && (
-              <ImageOverlay>
-                <SpinnerV2 />
-              </ImageOverlay>
-            )}
-          </ImageContainer>
-          <StarRating
-            disabled={componentState.ratingPending}
-            onStarClick={rateImage}
-          />
           <div className="mt-2 text-sm">
             <div>Images rated: {componentState.imagesRated}</div>
             <div>Kudos earned: {componentState.kudosEarned}</div>
