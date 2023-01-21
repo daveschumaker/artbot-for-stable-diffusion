@@ -108,6 +108,21 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.01.20</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Small improvements to how new images are loaded after rating a new
+            image (trying to cut down on perceived delays while waiting for new
+            image to load).
+          </StyledLi>
+          <StyledLi>
+            Added an optional contact field to the feedback form. Some of you
+            have really interesting suggestions... or bugs, and I would love to
+            be able to reach out to know more.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.01.19</SubSectionTitle>
         <StyledUl>
           <StyledLi>
