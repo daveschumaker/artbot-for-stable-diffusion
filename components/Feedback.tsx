@@ -9,6 +9,7 @@ import SectionTitle from './UI/SectionTitle'
 import Text from './UI/Text'
 import TextArea from './UI/TextArea'
 import { userInfoStore } from '../store/userStore'
+import Input from './UI/Input'
 
 const FlexRow = styled.div`
   width: 100%;
@@ -43,6 +44,7 @@ const FeedbackSuccess = styled.div`
 
 const FeedbackModal = ({ handleClose }: { handleClose: () => void }) => {
   const [feedbackSent, setFeedbackSent] = useState(false)
+  const [contactInput, setContactInput] = useState('')
   const [inputText, setInputText] = useState('')
 
   const handleSubmit = async () => {
@@ -55,6 +57,7 @@ const FeedbackModal = ({ handleClose }: { handleClose: () => void }) => {
     trackEvent({
       event: 'FEEDBACK_FORM',
       data: {
+        contact: contactInput,
         stablehorde_username: userInfoStore.state.username || '',
         kudos: userInfoStore.state.kudos,
         input: inputText,
@@ -75,11 +78,28 @@ const FeedbackModal = ({ handleClose }: { handleClose: () => void }) => {
           </FeedbackSuccess>
         )}
         {!feedbackSent && (
-          <StyledTextArea
-            maxLength={1024}
-            onChange={(e) => setInputText(e.target.value)}
-            value={inputText}
-          />
+          <div className="flex flex-col gap-2">
+            <div>
+              <span>Contact (optional)</span>
+              <Input
+                autoFocus
+                tabIndex={0}
+                placeholder="Email, Discord, etc"
+                onChange={(e: any) => {
+                  setContactInput(e.target.value)
+                }}
+                value={contactInput}
+              />
+            </div>
+            <div>
+              <span>Feedback:</span>
+              <StyledTextArea
+                maxLength={1024}
+                onChange={(e) => setInputText(e.target.value)}
+                value={inputText}
+              />
+            </div>
+          </div>
         )}
         <FlexRow>
           <Button onClick={handleSubmit} disabled={feedbackSent}>

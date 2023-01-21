@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 interface InputProps {
+  autoFocus?: boolean
   name?: string
   type?: string
   className?: string
@@ -13,6 +14,7 @@ interface InputProps {
   onBlur?: any
   onChange: any
   placeholder?: string
+  tabIndex?: number
   width?: string
   value: string
 }
