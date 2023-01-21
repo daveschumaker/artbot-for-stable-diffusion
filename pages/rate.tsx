@@ -44,19 +44,12 @@ const ImageContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-<<<<<<< HEAD
+  width: 100%;
+  height: 400px;
   position: relative;
-  max-width: 100%;
-  height: 360px;
-=======
-  max-width: 100%;
-  height: 480px;
-  position: relative;
->>>>>>> 27cf87c (chore: image loading improvements)
 
   @media (min-width: 640px) {
     height: 512px;
-    max-width: 512px;
   }
 `
 
@@ -74,10 +67,22 @@ const ImageOverlay = styled.div`
 const Image = styled.img<{ pending?: boolean; status?: string }>`
   box-shadow: 0 16px 38px -12px rgb(0 0 0 / 56%),
     0 4px 25px 0px rgb(0 0 0 / 12%), 0 8px 10px -5px rgb(0 0 0 / 20%);
-  max-width: 100%;
-  max-height: 100%;
   filter: brightness(100%);
   transition: all 250ms ease-in-out;
+  height: auto;
+  width: auto;
+  max-height: 400px;
+
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+
+  @media (min-width: 640px) {
+    max-height: 512px;
+    max-width: 512px;
+  }
 
   ${(props) =>
     props.pending &&
@@ -106,6 +111,9 @@ const Image = styled.img<{ pending?: boolean; status?: string }>`
     props.status === 'show' &&
     `
     opacity: 1;
+    position: absolute;
+    left: 0;
+    right: 0;
     transition: all 250ms ease-in-out;
   `}
 `
@@ -432,7 +440,7 @@ const Rate = () => {
                 </ImageOverlay>
               )}
             </ImageContainer>
-            <div className="mt-4 flex flex-col align-center items-center w-full">
+            <div className="mt-2 flex flex-col align-center items-center w-full">
               <div>
                 How much do <em>you</em> like this image?
               </div>
@@ -446,7 +454,7 @@ const Rate = () => {
               </div>
             </div>
             <div className="mt-2 flex flex-col align-center items-center w-full">
-              <div>Image quality?</div>
+              <div>Image quality? (flaws, artifacts, etc)</div>
               <div className="flex flex-row items-center gap-2">
                 <span className="text-xs">worst</span>
                 <StarRating
