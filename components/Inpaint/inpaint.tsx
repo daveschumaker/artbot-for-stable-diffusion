@@ -1,7 +1,6 @@
 import { useRef, useState } from 'react'
 import { fabric } from 'fabric'
 import styled from 'styled-components'
-import 'fabric-history'
 
 import { debounce } from '../../utils/debounce'
 import { getBase64, nearestWholeMultiple } from '../../utils/imageUtils'

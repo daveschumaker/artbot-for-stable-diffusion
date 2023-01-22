@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { fabric } from 'fabric'
-import 'fabric-history'
 import styled from 'styled-components'
 
 //@ts-ignore
