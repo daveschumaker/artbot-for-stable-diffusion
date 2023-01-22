@@ -444,36 +444,41 @@ const Rate = () => {
               <div className="flex flex-row items-center gap-2">
                 <span className="text-xs">worst</span>
                 <StarRating
-                  count={5}
+                  count={6}
                   disabled={componentState.ratingPending}
                   onStarClick={rateQuality}
+                  startValue={0}
                 />
                 <span className="text-xs">best</span>
               </div>
             </div>
           </div>
-          <div className="mb-2 mt-2 flex flex-row gap-2 text-sm">
-            <div>Images rated: {componentState.imagesRated}</div>
-            <div>Kudos earned: {componentState.kudosEarned}</div>
-          </div>
+          {componentState.apiKey !== ANON_API_KEY && (
+            <div className="mb-2 mt-2 flex flex-row gap-2 text-sm">
+              <div>Images rated: {componentState.imagesRated}</div>
+              <div>Kudos earned: {componentState.kudosEarned}</div>
+            </div>
+          )}
         </div>
       ) : null}
-      <SubTitle>
-        Earn{' '}
-        <Linker href="/faq#kudos" passHref>
-          kudos
-        </Linker>{' '}
-        by rating images based on aesthetic preferences. This system will help{' '}
-        <Linker
-          href="https://laion.ai/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <>LAION</>
-        </Linker>{' '}
-        (the non-profit which helped trained Stable Diffusion) improve their
-        library.
-      </SubTitle>
+      {componentState.apiKey !== ANON_API_KEY && (
+        <SubTitle>
+          Earn{' '}
+          <Linker href="/faq#kudos" passHref>
+            kudos
+          </Linker>{' '}
+          by rating images based on aesthetic preferences. This system will help{' '}
+          <Linker
+            href="https://laion.ai/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <>LAION</>
+          </Linker>{' '}
+          (the non-profit which helped trained Stable Diffusion) improve their
+          library.
+        </SubTitle>
+      )}
     </>
   )
 }
