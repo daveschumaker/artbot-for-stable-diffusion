@@ -108,6 +108,19 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.01.21</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Feature: Artifact and image quality ratings added to recently
+            created images.
+          </StyledLi>
+          <StyledLi>
+            Feature: Anonymous users can now rate images (but you will need to
+            log in to receive kudos)
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.01.20</SubSectionTitle>
         <StyledUl>
           <StyledLi>
