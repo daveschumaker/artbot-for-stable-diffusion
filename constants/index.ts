@@ -1,3 +1,4 @@
+export const ANON_API_KEY = '0000000000'
 export const HORDE_PROD = 'https://stablehorde.net'
 export const HORDE_DEV = 'https://dev.stablehorde.net'
 export const CREATE_NEW_JOB_INTERVAL = 1000 // ms between new job requests

@@ -24,34 +24,40 @@ interface IProps {
   count?: number
   disabled: boolean
   onStarClick(value: number): void
+  startValue?: number
 }
 
 const StarRating = ({
   count = 10,
   disabled = false,
+  startValue = 1,
   onStarClick = () => {}
 }: IProps) => {
   const [componentState, setComponentState] = useComponentState({
-    activeStar: 0,
-    rating: null
+    activeStar: -Infinity,
+    rating: -Infinity
   })
 
   useEffect(() => {
     if (!disabled) {
       setComponentState({
-        activeStar: 0,
-        rating: null
+        activeStar: -Infinity,
+        rating: -Infinity
       })
     }
   }, [disabled, setComponentState])
 
   const renderStars = () => {
     const elements = []
+    let initValue = startValue - 1
 
     for (let i = 0; i < count; i++) {
-      const value = i + 1
+      const value = initValue + i + 1
       const filled =
-        componentState.rating >= value || componentState.activeStar >= value
+        (componentState.activeStar >= 0 &&
+          componentState.activeStar >= value) ||
+        (componentState.rating >= 0 && componentState.rating >= value)
+
       elements.push(
         <StarWrapper
           key={`star_${value}`}
@@ -60,9 +66,11 @@ const StarRating = ({
               return
             }
 
-            setComponentState({ activeStar: value })
+            setComponentState({
+              activeStar: value
+            })
           }}
-          onMouseLeave={() => setComponentState({ activeStar: 0 })}
+          onMouseLeave={() => setComponentState({ activeStar: -Infinity })}
           onClick={() => {
             if (disabled) {
               return

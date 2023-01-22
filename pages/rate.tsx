@@ -7,7 +7,7 @@ import SpinnerV2 from '../components/Spinner'
 import StarRating from '../components/StarRating/starRating'
 import Linker from '../components/UI/Linker'
 import PageTitle from '../components/UI/PageTitle'
-import { RATING_QUALITY_MAP } from '../constants'
+import { ANON_API_KEY, RATING_QUALITY_MAP } from '../constants'
 import useComponentState from '../hooks/useComponentState'
 import { useEffectOnce } from '../hooks/useEffectOnce'
 import AppSettings from '../models/AppSettings'
@@ -122,8 +122,9 @@ const Rate = () => {
     initialLoad: true,
     imagePending: false,
     ratingPending: false,
-    rateImage: 0,
-    rateQuality: 0,
+
+    rateImage: -Infinity,
+    rateQuality: -Infinity,
 
     imageOneStatus: 'show',
     imageTwoStatus: 'stage',
@@ -171,8 +172,8 @@ const Rate = () => {
         errorCount = 0
 
         setComponentState({
-          rateImage: 0,
-          rateQuality: 0,
+          rateImage: -Infinity,
+          rateQuality: -Infinity,
           datasetId: data.dataset_id,
           imageId: data.id,
           imageUrl: data.url,
@@ -224,7 +225,7 @@ const Rate = () => {
       return
     }
 
-    if (componentState.rateImage === 0 && componentState.rateQuality === 0) {
+    if (componentState.rateImage < 0 || componentState.rateQuality < 0) {
       return
     }
 
@@ -265,8 +266,10 @@ const Rate = () => {
         totalRated++
         kudosEarned += reward
 
-        AppSettings.save('imagesRated', totalRated)
-        AppSettings.save('kudosEarnedByRating', kudosEarned)
+        if (componentState.apiKey !== ANON_API_KEY) {
+          AppSettings.save('imagesRated', totalRated)
+          AppSettings.save('kudosEarnedByRating', kudosEarned)
+        }
 
         errorCount = 0
         setComponentState({
@@ -314,6 +317,7 @@ const Rate = () => {
   }, [componentState.apiKey, fetchImage])
 
   useEffectOnce(() => {
+    activeImage = 0
     errorCount = 0
 
     imagePending = false
@@ -321,7 +325,10 @@ const Rate = () => {
   })
 
   useEffect(() => {
-    if (componentState.rateImage === 0 || componentState.rateQuality === 0) {
+    if (
+      componentState.rateImage === -Infinity ||
+      componentState.rateQuality === -Infinity
+    ) {
       return
     }
 
@@ -329,7 +336,7 @@ const Rate = () => {
   }, [componentState.rateImage, componentState.rateQuality, rateImageRequest])
 
   useEffect(() => {
-    setComponentState({ apiKey: AppSettings.get('apiKey') })
+    setComponentState({ apiKey: AppSettings.get('apiKey') || ANON_API_KEY })
   }, [setComponentState])
 
   return (
@@ -338,12 +345,15 @@ const Rate = () => {
         <title>ArtBot - Rate images</title>
       </Head>
       <PageTitle>Rate images</PageTitle>
-      {!componentState.apiKey && (
+      {componentState.apiKey === ANON_API_KEY && (
         <>
           <SubTitle>
             Log in with your API key on the{' '}
-            <Linker href="/settings">settings page</Linker> in order to begin
-            rating images and receive kudo awards.
+            <Linker href="/settings">settings page</Linker> to receive{' '}
+            <Linker href="/faq#kudos" passHref>
+              kudos
+            </Linker>{' '}
+            awards for rating images.
           </SubTitle>
           <SubTitle>
             Don&apos;t have a Stable Horde account?{' '}
@@ -365,7 +375,7 @@ const Rate = () => {
           ERROR: Unable to complete this request. Please try again later.
         </div>
       )}
-      {componentState.apiKey && componentState.initialLoad && (
+      {componentState.initialLoad && (
         <>
           <SubTitle>Loading new image...</SubTitle>
           <SubTitle>
@@ -374,9 +384,7 @@ const Rate = () => {
         </>
       )}
 
-      {componentState.apiKey &&
-      !componentState.initialLoad &&
-      componentState.imageUrl ? (
+      {!componentState.initialLoad && componentState.imageUrl ? (
         <div>
           <div className="flex flex-col align-center items-center w-full overflow-x-hidden">
             <ImageContainer>
