@@ -20,7 +20,7 @@
     "update:build-id": "node ./x-build-scripts/updateBuildId.js"
   },
   "dependencies": {
-    "@next/bundle-analyzer": "13.1.1",
+    "@next/bundle-analyzer": "13.1.4",
     "autosize": "5.0.2",
     "browser-image-resizer": "2.4.1",
     "buffer-image-size": "0.6.4",
@@ -33,7 +33,7 @@
     "fabric-history": "1.7.0",
     "file-saver": "2.0.5",
     "lz-string": "1.4.4",
-    "next": "13.1.1",
+    "next": "13.1.4",
     "next-dark-mode": "3.0.0",
     "node-abort-controller": "3.0.1",
     "node-fetch": "2.6.7",
