@@ -7,27 +7,13 @@ import SpinnerV2 from '../components/Spinner'
 import StarRating from '../components/StarRating/starRating'
 import Linker from '../components/UI/Linker'
 import PageTitle from '../components/UI/PageTitle'
+import { RATING_QUALITY_MAP } from '../constants'
 import useComponentState from '../hooks/useComponentState'
 import { useEffectOnce } from '../hooks/useEffectOnce'
 import AppSettings from '../models/AppSettings'
 import { clientHeader } from '../utils/appUtils'
 
 const MAX_ERROR_COUNT = 30
-
-interface IQualityMap {
-  [key: number]: number
-}
-
-// Stable Horde API does something silly where you rate image quality from best (1) to worst (5).
-// Meanwhile, you rate images aesthetically from worst (1) to best (10). Lining these up is confusing
-// and counter-intuitive.
-const QUALITY_MAP: IQualityMap = {
-  1: 4,
-  2: 3,
-  3: 2,
-  4: 1,
-  5: 0
-}
 
 const SubTitle = styled.div`
   font-size: 14px;
@@ -250,7 +236,7 @@ const Rate = () => {
     })
 
     const ratingData = {
-      artifacts: QUALITY_MAP[componentState.rateQuality],
+      artifacts: RATING_QUALITY_MAP[componentState.rateQuality],
       rating: componentState.rateImage
     }
 

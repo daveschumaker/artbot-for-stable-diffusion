@@ -20,3 +20,19 @@ export const DEFAULT_SAMPLER_ARRAY = [
   'k_dpmpp_2m',
   'k_dpmpp_2s_a'
 ]
+
+interface IQualityMap {
+  [key: number]: number
+}
+
+// Stable Horde API does something silly where you rate image quality from best (0) to worst (5).
+// Meanwhile, you rate images aesthetically from worst (1) to best (10). Lining these up is confusing
+// and counter-intuitive.
+export const RATING_QUALITY_MAP: IQualityMap = {
+  1: 5,
+  2: 4,
+  3: 3,
+  4: 2,
+  5: 1,
+  6: 0
+}
