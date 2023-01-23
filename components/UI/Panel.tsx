@@ -12,6 +12,7 @@ const StyledPanel = styled.div<PanelProps>`
   border-radius: 4px;
   padding: 8px;
   width: 100%;
+  overflow-x: hidden;
 
   @media (min-width: 640px) {
     padding: 16px;

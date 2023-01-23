@@ -29,10 +29,10 @@ const InputsWrapper = styled.div`
 
 const NumberInput = (props: any) => {
   const { value, max, min } = props
-  const { onMinusClick, onPlusClick, ...rest } = props
+  const { onMinusClick, onPlusClick, disabled, ...rest } = props
 
   const handleMinusClick = () => {
-    if (Number(value) <= min) {
+    if (Number(value) <= min || disabled) {
       return
     }
 
@@ -40,7 +40,7 @@ const NumberInput = (props: any) => {
   }
 
   const handlePlusClick = () => {
-    if (Number(value) >= max) {
+    if (Number(value || disabled) >= max) {
       return
     }
 
@@ -49,6 +49,10 @@ const NumberInput = (props: any) => {
 
   const handleKeyDown = (e: any) => {
     e = e || window.event
+
+    if (disabled) {
+      return
+    }
 
     if (e.keyCode == '38') {
       e.preventDefault()
@@ -61,11 +65,11 @@ const NumberInput = (props: any) => {
 
   return (
     <InputsWrapper>
-      <MinusButton onClick={handleMinusClick}>
+      <MinusButton disabled={disabled} onClick={handleMinusClick}>
         <MinusIcon />
       </MinusButton>
-      <StyledInput onKeyDown={handleKeyDown} {...rest} />
-      <PlusButton onClick={handlePlusClick}>
+      <StyledInput disabled={disabled} onKeyDown={handleKeyDown} {...rest} />
+      <PlusButton disabled={disabled} onClick={handlePlusClick}>
         <PlusIcon />
       </PlusButton>
     </InputsWrapper>

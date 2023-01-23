@@ -776,11 +776,11 @@ const AdvancedOptionsPanel = ({
                     loggedIn,
                     isSlider: true
                   })}
-                  onChange={(nextValues: number) => {
+                  onChange={(e: any) => {
                     const event = {
                       target: {
                         name: 'steps',
-                        value: nextValues
+                        value: e.target.value
                       }
                     }
 
@@ -936,11 +936,11 @@ const AdvancedOptionsPanel = ({
                   value={input.cfg_scale}
                   min={1}
                   max={30}
-                  onChange={(nextValues: number) => {
+                  onChange={(e: any) => {
                     const event = {
                       target: {
                         name: 'cfg_scale',
-                        value: nextValues
+                        value: e.target.value
                       }
                     }
 
@@ -1128,18 +1128,25 @@ const AdvancedOptionsPanel = ({
                   width="100%"
                 />
               </div>
+              {input.source_processing === SourceProcessing.InPainting &&
+                input.models[0] === 'stable_diffusion_inpainting' && (
+                  <div className="mt-0 text-sm text-slate-500">
+                    Note: Denoise disabled when inpainting model is used.
+                  </div>
+                )}
               <div className="mb-4">
                 <Slider
                   defaultValue={input.denoising_strength}
+                  disabled={input.models[0] === 'stable_diffusion_inpainting'}
                   value={input.denoising_strength}
                   min={0}
                   max={1}
                   step={0.05}
-                  onChange={(nextValues: number) => {
+                  onChange={(e: any) => {
                     const event = {
                       target: {
                         name: 'denoising_strength',
-                        value: nextValues
+                        value: e.target.value
                       }
                     }
 

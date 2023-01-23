@@ -210,7 +210,6 @@ const Inpaint = ({
   // }
 
   ///////////////////////
-
   const initCanvas = ({ height = 512, width = 768 } = {}) => {
     const innerWidth = window.innerWidth
     const containerWidth = getPanelWidth(innerWidth)
@@ -331,6 +330,7 @@ const Inpaint = ({
   const onPathCreated = async (e: any) => {
     const path = { path: e.path }
     await pathCreate(path)
+
     redoHistory.push(path)
 
     if (canvasRef.current) {
@@ -579,6 +579,7 @@ const Inpaint = ({
         drawLayerRef.current = new fabric.Canvas(null)
         drawLayerRef.current.setHeight(height)
         drawLayerRef.current.setWidth(width)
+        // @ts-ignore
         drawLayerRef.current.loadFromJSON(getCanvasStore().drawLayerRef)
 
         canvasRef.current.isDrawingMode = true

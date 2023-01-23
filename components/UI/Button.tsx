@@ -54,7 +54,7 @@ const StyledButton = styled.button<ButtonProps>`
   ${(props) =>
     props.disabled &&
     `
-    background-color: gray;
+    background-color: #b7b7b5;
   `}
 `
 
