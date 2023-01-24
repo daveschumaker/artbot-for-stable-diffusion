@@ -489,6 +489,33 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
     setHasError('')
   }
 
+  useEffect(() => {
+    const modelerOptions = (imageParams: any) => {
+      const modelsArray = validModelsArray({ imageParams }) || []
+      modelsArray.push({
+        name: 'random',
+        value: 'random',
+        label: 'Random!',
+        count: 1
+      })
+
+      return modelsArray
+    }
+
+    const modelExists = modelerOptions(input).filter((option) => {
+      return input?.models?.indexOf(option.value) >= 0
+    })
+
+    // Handle state where an incorrect model might be cached
+    // e.g., "stable_diffusion_inpainting" when first loading page.
+    if (!modelExists || modelExists.length === 0) {
+      setInput({
+        models: ['stable_diffusion'],
+        sampler: 'k_euler_a'
+      })
+    }
+  }, [input])
+
   return (
     <main>
       {showPromptHistory && (
