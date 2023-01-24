@@ -122,6 +122,10 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
     apiParams.params.denoising_strength = Number(denoising_strength) || 0.75
     apiParams.source_image = source_image
     apiParams.source_processing = 'img2img'
+
+    if (source_mask) {
+      apiParams.source_mask = source_mask
+    }
   }
 
   if (
