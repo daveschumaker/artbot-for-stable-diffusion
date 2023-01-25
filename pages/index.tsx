@@ -54,6 +54,7 @@ import DropDownMenuItem from '../components/UI/DropDownMenuItem'
 import MinusIcon from '../components/icons/MinusIcon'
 import styled from 'styled-components'
 import PromptInputSettings from '../models/PromptInputSettings'
+import { validModelsArray } from '../utils/modelUtils'
 
 interface InputTarget {
   name: string
@@ -148,10 +149,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
 
   let initialState: any = defaultState
 
-  if (
-    loadModel === 'stable_diffusion_2.0' ||
-    loadModel === 'stable_diffusion_2.1'
-  ) {
+  if (loadModel === 'stable_diffusion_2.0') {
     initialState.models = [loadModel]
     initialState.sampler = 'dpmsolver'
   } else if (loadModel) {
@@ -444,18 +442,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
 
   const triggerString = modelDetails[input?.models[0]]?.trigger ?? ['']
   const triggerArray = triggerString[0].split(', ')
-  const totalImagesRequested = countImagesToGenerate({
-    numImages: input.numImages,
-    useMultiSteps: input.useMultiSteps,
-    multiSteps: input.multiSteps,
-    useMultiGuidance: input.useMultiGuidance,
-    multiGuidance: input.multiGuidance,
-    prompt: input.prompt,
-    models: input.models,
-    useAllModels: input.useAllModels,
-    useFavoriteModels: input.useFavoriteModels,
-    useAllSamplers: input.useAllSamplers
-  })
+  const totalImagesRequested = countImagesToGenerate(input)
   const totalKudosCost = kudosCost(
     input.width,
     input.height,

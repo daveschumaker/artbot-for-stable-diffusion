@@ -155,6 +155,10 @@ const ModelInfoPage = ({ availableModels, modelDetails }: any) => {
         return obj.name === name
       })
 
+      if (name === 'stable_diffusion_1.4') {
+        return
+      }
+
       modelDetailsArray.push(
         <div key={`${name}_panel_${idx}`}>
           <a id={name} />

@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useStore } from 'statery'
 import Switch from 'react-switch'
-import { useRouter } from 'next/router'
 
 import SelectComponent from '../../UI/Select'
 import Input from '../../UI/Input'
@@ -20,7 +19,6 @@ import Linker from '../../UI/Linker'
 import NegativePrompts from '../NegativePrompts'
 import { db, getDefaultPrompt, setDefaultPrompt } from '../../../utils/db'
 import { trackEvent } from '../../../api/telemetry'
-import { modelInfoStore } from '../../../store/modelStore'
 import Checkbox from '../../UI/Checkbox'
 import {
   MAX_DIMENSIONS_LOGGED_IN,
@@ -33,43 +31,16 @@ import Slider from '../../UI/Slider'
 import NumberInput from '../../UI/NumberInput'
 import useComponentState from '../../../hooks/useComponentState'
 import { validModelsArray } from '../../../utils/modelUtils'
-import AlertTriangleIcon from '../../icons/AlertTriangle'
 import PromptInputSettings from '../../../models/PromptInputSettings'
-
-const ModelWarning = styled.div`
-  align-items: center;
-  color: #facc15;
-  column-gap: 4px;
-  display: flex;
-  font-size: 14px;
-  font-weight: 700;
-  height: 32px;
-  flex-direction: row;
-  margin-bottom: 4px;
-  margin-top: 4px;
-`
+import Section from '../../UI/Section'
+import SubSectionTitle from '../../UI/SubSectionTitle'
+import TextTooltipRow from '../../UI/TextTooltipRow'
+import MaxWidth from '../../UI/MaxWidth'
+import SelectModel from './SelectModel'
 
 const NoSliderSpacer = styled.div`
   height: 14px;
   margin-bottom: 16px;
-`
-
-const Section = styled.div`
-  padding-top: 16px;
-
-  &:first-child {
-    padding-top: 0;
-  }
-`
-
-const SubSectionTitle = styled.div`
-  padding-bottom: 8px;
-`
-
-const TextTooltipRow = styled.div`
-  align-items: center;
-  display: flex;
-  flex-direction: row;
 `
 
 interface FlexRowProps {
@@ -88,20 +59,6 @@ const FlexRow = styled.div<FlexRowProps>`
     props.bottomPadding &&
     `
     padding-bottom: ${props.bottomPadding}px;
-  `}
-`
-
-interface MaxWidthProps {
-  maxWidth?: number
-}
-
-const MaxWidth = styled.div<MaxWidthProps>`
-  width: 100%;
-
-  ${(props) =>
-    props.maxWidth &&
-    `
-    max-width: ${props.maxWidth}px;
   `}
 `
 
@@ -135,23 +92,8 @@ const orientationOptions = [
   { value: 'random', label: 'Random!' }
 ]
 
-const modelerOptions = () => {
-  const modelsArray = validModelsArray() || []
-  modelsArray.push({
-    name: 'random',
-    value: 'random',
-    label: 'Random!',
-    count: 1
-  })
-
-  return modelsArray
-}
-
 const samplerOptions = (input: any) => {
-  if (
-    input.models[0] === 'stable_diffusion_2.0' ||
-    input.models[0] === 'stable_diffusion_2.1'
-  ) {
+  if (input.models[0] === 'stable_diffusion_2.0') {
     return [{ value: 'dpmsolver', label: 'dpmsolver' }]
   }
 
@@ -205,13 +147,8 @@ const AdvancedOptionsPanel = ({
   setInput,
   setHasValidationError
 }: Props) => {
-  const router = useRouter()
   const userState = useStore(userInfoStore)
-  const modelState = useStore(modelInfoStore)
-
-  const { availableModels, modelDetails } = modelState
   const { loggedIn } = userState
-
   const [errorMessage, setErrorMessage, hasError] = useErrorMessage()
 
   const [componentState, setComponentState] = useComponentState({
@@ -225,14 +162,26 @@ const AdvancedOptionsPanel = ({
     return input.orientationType === option.value
   })[0]
 
-  // @ts-ignore
-  const modelsValue = modelerOptions(availableModels).filter((option) => {
-    return input?.models?.indexOf(option.value) >= 0
-  })
-
   const samplerValue = samplerOptions(input).filter((option) => {
     return input.sampler === option.value
   })[0]
+
+  const modelerOptions = (imageParams: any) => {
+    const modelsArray = validModelsArray({ imageParams }) || []
+    modelsArray.push({
+      name: 'random',
+      value: 'random',
+      label: 'Random!',
+      count: 1
+    })
+
+    return modelsArray
+  }
+
+  // @ts-ignore
+  const modelsValue = modelerOptions(input).filter((option) => {
+    return input?.models?.indexOf(option.value) >= 0
+  })
 
   const validateSteps = useCallback(() => {
     if (initialLoad) {
@@ -658,9 +607,10 @@ const AdvancedOptionsPanel = ({
       {!input.useAllSamplers && (
         <Section>
           <SubSectionTitle>Sampler</SubSectionTitle>
-          {input.source_processing === SourceProcessing.InPainting ? (
-            <div className="mt-2 text-sm text-slate-500">
-              Note: Sampler disabled when inpainting is used.
+          {input.source_processing === SourceProcessing.InPainting &&
+          input.models[0] === 'stable_diffusion_inpainting' ? (
+            <div className="mt-0 text-sm text-slate-500">
+              Note: Sampler disabled when inpainting model is used.
             </div>
           ) : (
             <MaxWidth
@@ -1036,7 +986,8 @@ const AdvancedOptionsPanel = ({
         </SplitPanel>
       </TwoPanel>
       {(input.img2img ||
-        input.source_processing === SourceProcessing.Img2Img) && (
+        input.source_processing === SourceProcessing.Img2Img ||
+        input.source_processing === SourceProcessing.InPainting) && (
         <TwoPanel className="mt-4">
           <SplitPanel>
             <Section>
@@ -1058,6 +1009,7 @@ const AdvancedOptionsPanel = ({
                   className="mb-2"
                   type="text"
                   step={0.05}
+                  disabled={input.models[0] === 'stable_diffusion_inpainting'}
                   min={0}
                   max={1.0}
                   onBlur={(e: any) => {
@@ -1213,124 +1165,15 @@ const AdvancedOptionsPanel = ({
           </div>
         </MaxWidth>
       </Section>
-      {input.source_processing !==
-        (SourceProcessing.InPainting || SourceProcessing.OutPaiting) &&
+      {input.source_processing !== SourceProcessing.OutPaiting &&
         !input.useAllModels &&
         !componentState.showMultiModel &&
         !input.useFavoriteModels && (
-          <Section>
-            <SubSectionTitle>
-              <TextTooltipRow>
-                Model
-                <Tooltip width="240px">
-                  Models currently available within the horde. Numbers in
-                  parentheses indicate number of works. Generally, these models
-                  will generate images quicker.
-                </Tooltip>
-              </TextTooltipRow>
-            </SubSectionTitle>
-            <MaxWidth
-              // @ts-ignore
-              maxWidth="480"
-            >
-              <SelectComponent
-                menuPlacement={'top'}
-                //@ts-ignore
-                options={modelerOptions()}
-                onChange={(obj: { value: string; label: string }) => {
-                  if (router.query.model) {
-                    router.push(
-                      {
-                        pathname: '/'
-                      },
-                      undefined,
-                      { scroll: false }
-                    )
-                  }
-
-                  if (obj.value === 'stable_diffusion_2.0') {
-                    setInput({
-                      models: [obj.value],
-                      sampler: 'dpmsolver'
-                    })
-                    PromptInputSettings.set('models', [obj.value])
-                    PromptInputSettings.set('sampler', 'dpmsolver')
-                  } else if (
-                    input.sampler === 'dpmsolver' &&
-                    obj.value !== 'stable_diffusion_2.0'
-                  ) {
-                    setInput({ models: [obj.value], sampler: 'k_euler_a' })
-                    PromptInputSettings.set('models', [obj.value])
-                    PromptInputSettings.set('sampler', 'k_euler_a')
-                  } else {
-                    PromptInputSettings.set('models', [obj.value])
-                    setInput({ models: [obj.value] })
-                  }
-                }}
-                // @ts-ignore
-                value={modelsValue}
-                isSearchable={true}
-              />
-              <div className="mt-2 text-xs">
-                <Linker
-                  href={`/info${
-                    input.models[0] !== 'random' ? `#${input.models[0]}` : ''
-                  }`}
-                >
-                  [ View detailed model info ]
-                </Linker>
-              </div>
-            </MaxWidth>
-            {availableModels[input.models[0]]?.count <= 2 && (
-              <ModelWarning>
-                <AlertTriangleIcon size={32} /> This model has limited
-                availability. Images may take a long time to generate.
-              </ModelWarning>
-            )}
-            {modelDetails[input.models[0]]?.showcases && (
-              <MaxWidth
-                // @ts-ignore
-                maxWidth="240"
-                className="mt-2"
-              >
-                Example:
-                <img
-                  src={modelDetails[input.models[0]]?.showcases[0]}
-                  alt="Model example"
-                  width="240"
-                  height="240"
-                  loading="lazy"
-                />
-              </MaxWidth>
-            )}
-            <MaxWidth
-              // @ts-ignore
-              maxWidth="480"
-            >
-              {modelDetails[input.models[0]] && (
-                <div className="mt-2 text-xs">
-                  {modelDetails[input.models[0]].description &&
-                    `${modelDetails[input.models[0]].description}`}
-                  <br />
-                  {modelDetails[input.models[0]].style &&
-                    `Style: ${modelDetails[input.models[0]].style}`}{' '}
-                  {modelDetails[input.models[0]].nsfw && ` (nsfw)`}
-                  {Array.isArray(modelDetails[input.models[0]]?.trigger) &&
-                  modelDetails[input.models[0]].trigger?.length === 1 ? (
-                    <>
-                      <br />
-                      Trigger words: &quot;
-                      {
-                        //@ts-ignore
-                        modelDetails[input.models[0]]?.trigger[0]
-                      }
-                      &quot;
-                    </>
-                  ) : null}
-                </div>
-              )}
-            </MaxWidth>
-          </Section>
+          <SelectModel
+            input={input}
+            modelerOptions={modelerOptions}
+            setInput={setInput}
+          />
         )}
       {componentState.showMultiModel ? (
         <Section>
@@ -1354,7 +1197,7 @@ const AdvancedOptionsPanel = ({
               isMulti
               menuPlacement={'top'}
               //@ts-ignore
-              options={modelerOptions()}
+              options={modelerOptions(input)}
               onChange={(obj: Array<{ value: string; label: string }>) => {
                 const modelArray: Array<string> = []
 
@@ -1432,7 +1275,13 @@ const AdvancedOptionsPanel = ({
           <SubSectionTitle>
             <>
               <TextTooltipRow>
-                Use all available models ({validModelsArray()?.length})
+                Use all available models (
+                {
+                  validModelsArray({
+                    imageParams: input
+                  })?.length
+                }
+                )
                 <Tooltip left="-140" width="240px">
                   Automatically generate an image for each model currently
                   available on Stable Horde
@@ -1621,11 +1470,11 @@ const AdvancedOptionsPanel = ({
                 value={input.numImages}
                 min={1}
                 max={MAX_IMAGES_PER_JOB}
-                onChange={(nextValues: number) => {
+                onChange={(e: any) => {
                   const event = {
                     target: {
                       name: 'numImages',
-                      value: nextValues
+                      value: e.target.value
                     }
                   }
 

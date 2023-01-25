@@ -571,18 +571,19 @@ interface ICountImages {
   models?: Array<string>
 }
 
-export const countImagesToGenerate = ({
-  numImages = 0,
-  multiSteps = '',
-  multiGuidance = '',
-  useAllModels = false,
-  useFavoriteModels = false,
-  useAllSamplers = false,
-  useMultiGuidance = false,
-  useMultiSteps = false,
-  models = [],
-  prompt = ''
-}: ICountImages) => {
+export const countImagesToGenerate = (imageParams: ICountImages) => {
+  const {
+    numImages = 0,
+    multiSteps = '',
+    multiGuidance = '',
+    useAllModels = false,
+    useFavoriteModels = false,
+    useAllSamplers = false,
+    useMultiGuidance = false,
+    useMultiSteps = false,
+    models = [],
+    prompt = ''
+  } = imageParams
   let imageCount = numImages
 
   if (useMultiSteps) {
@@ -623,7 +624,8 @@ export const countImagesToGenerate = ({
   }
 
   if (useAllModels) {
-    const modelsArray = validModelsArray() || ['']
+    // @ts-ignore
+    const modelsArray = validModelsArray({ imageParams }) || ['']
     imageCount = imageCount * modelsArray.length
   }
 

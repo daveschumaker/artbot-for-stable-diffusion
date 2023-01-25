@@ -111,8 +111,8 @@ export interface IBase64String {
 export interface ICanvas {
   cached: boolean
   canvasRef: any
-  imageLayerRef: any
-  drawLayerRef: any
+  drawLayer: any
+  maskLayer: any
   visibleCanvas: any
   height: any
   width: any

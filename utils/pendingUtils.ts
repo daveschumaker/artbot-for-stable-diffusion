@@ -98,7 +98,9 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
           }
 
           if (clonedParams.models[0] === 'random') {
-            clonedParams.models = [CreateImageRequest.getRandomModel()]
+            clonedParams.models = [
+              CreateImageRequest.getRandomModel({ imageParams: clonedParams })
+            ]
           }
           clonedParams.modelVersion = getModelVersion(clonedParams.models[0])
 
@@ -142,11 +144,13 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
     }
 
     for (const sampler of samplerArray) {
-      clonedParams = cloneImageParams(imageParams)
+      clonedParams = await cloneImageParams(imageParams)
       clonedParams.sampler = sampler
 
       if (clonedParams.models[0] === 'random') {
-        clonedParams.models = [CreateImageRequest.getRandomModel()]
+        clonedParams.models = [
+          CreateImageRequest.getRandomModel({ imageParams: clonedParams })
+        ]
       }
       clonedParams.modelVersion = getModelVersion(clonedParams.models[0])
 
@@ -169,7 +173,7 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
     }
   } else if (imageParams.useAllModels) {
     imageParams.numImages = 1
-    const models = validModelsArray()
+    const models = validModelsArray({ imageParams })
 
     for (const model of models) {
       const { name: modelName } = model
@@ -182,18 +186,17 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
         return
       }
 
-      clonedParams = cloneImageParams(imageParams)
+      clonedParams = await cloneImageParams(imageParams)
       clonedParams.models = [modelName]
 
-      if (
-        modelName === 'stable_diffusion_2.0' ||
-        modelName === 'stable_diffusion_2.1'
-      ) {
+      if (modelName === 'stable_diffusion_2.0') {
         clonedParams.sampler = 'dpmsolver'
       }
 
       if (clonedParams.models[0] === 'random') {
-        clonedParams.models = [CreateImageRequest.getRandomModel()]
+        clonedParams.models = [
+          CreateImageRequest.getRandomModel({ imageParams: clonedParams })
+        ]
       }
       clonedParams.modelVersion = getModelVersion(clonedParams.models[0])
 
@@ -241,7 +244,9 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
       }
 
       if (clonedParams.models[0] === 'random') {
-        clonedParams.models = [CreateImageRequest.getRandomModel()]
+        clonedParams.models = [
+          CreateImageRequest.getRandomModel({ imageParams: clonedParams })
+        ]
       }
       clonedParams.modelVersion = getModelVersion(clonedParams.models[0])
 

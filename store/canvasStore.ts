@@ -5,8 +5,8 @@ import { IBase64String, ICanvas } from '../types'
 let i2iCanvas: ICanvas = {
   cached: false,
   canvasRef: null,
-  imageLayerRef: null,
-  drawLayerRef: null,
+  drawLayer: null,
+  maskLayer: null,
   visibleCanvas: null,
   height: null,
   width: null
@@ -46,8 +46,8 @@ export const clearCanvasStore = () => {
   i2iCanvas = {
     cached: false,
     canvasRef: null,
-    imageLayerRef: null,
-    drawLayerRef: null,
+    drawLayer: null,
+    maskLayer: null,
     visibleCanvas: null,
     height: null,
     width: null
