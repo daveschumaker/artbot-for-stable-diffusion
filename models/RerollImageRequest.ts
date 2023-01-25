@@ -99,17 +99,6 @@ class RerollImageRequest {
 
     this.karras = Boolean(karras)
 
-    if (models[0] === 'random') {
-      const currentModels = validModelsArray()
-      const randomModel =
-        currentModels[Math.floor(Math.random() * currentModels.length)]
-      this.models = [randomModel.name]
-    } else {
-      this.models = [...models]
-    }
-
-    this.modelVersion = getModelVersion(this.models[0])
-
     this.negative = String(negative)
     this.numImages = 1
     this.parentJobId = String(parentJobId) || uuidv4()
@@ -139,6 +128,17 @@ class RerollImageRequest {
     this.stylePreset = stylePreset
     this.steps = Number(steps)
     this.triggers = [...triggers]
+
+    if (models[0] === 'random') {
+      const currentModels = validModelsArray({ imageParams: this })
+      const randomModel =
+        currentModels[Math.floor(Math.random() * currentModels.length)]
+      this.models = [randomModel.name]
+    } else {
+      this.models = [...models]
+    }
+
+    this.modelVersion = getModelVersion(this.models[0])
   }
 }
 

@@ -104,7 +104,9 @@ const defaultState: any = {
   useFavoriteModels: false,
   useAllSamplers: false,
   useMultiSteps: false,
-  useMultiGuidance: false
+  useMultiGuidance: false,
+  canvasData: null,
+  maskData: null
 }
 
 export async function getServerSideProps() {

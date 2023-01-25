@@ -6,17 +6,13 @@ import Panel from '../../UI/Panel'
 import SectionTitle from '../../UI/SectionTitle'
 import AdvancedOptionsPanel from '../AdvancedOptionsPanel'
 import Img2ImgPanel from '../Img2ImgPanel'
-import InpaintingPanel from '../InpaintingPanel'
-import PainterPanel from '../PainterPanel'
+// import PainterPanel from '../PainterPanel'
 import Uploader from '../Uploader'
 import { clearCanvasStore, setI2iUploaded } from '../../../store/canvasStore'
 import { SourceProcessing } from '../../../utils/promptUtils'
 import WarningPanel from '../WarningPanel'
-import { useStore } from 'statery'
-import { modelInfoStore } from '../../../store/modelStore'
-import AlertTriangleIcon from '../../icons/AlertTriangle'
-import Linker from '../../UI/Linker'
 import { nearestWholeMultiple } from '../../../utils/imageUtils'
+import Editor from '../../Fabric/Editor'
 
 interface LiProps {
   active?: boolean
@@ -59,18 +55,13 @@ const OptionsPanel = ({
   const router = useRouter()
   const [activeNav, setActiveNav] = useState('advanced')
 
-  const modelState = useStore(modelInfoStore)
-  const workerModels = modelState.availableModels
-  const inpaintingWorkers =
-    workerModels?.['stable_diffusion_inpainting']?.count ?? 0
-
   useEffect(() => {
     const { panel } = router.query
 
     if (panel === 'inpainting') {
       setActiveNav('inpainting')
     } else if (panel === 'painter') {
-      setActiveNav('painter')
+      // setActiveNav('painter')
     } else if (panel === 'img2img') {
       setActiveNav('img2img')
     } else {
@@ -104,7 +95,7 @@ const OptionsPanel = ({
       <SectionTitle>
         {activeNav === 'advanced' && `Advanced Options`}
         {activeNav === 'img2img' && `img2img upload`}
-        {activeNav === 'painter' && `Painter`}
+        {/* {activeNav === 'painter' && `Painter`} */}
         {activeNav === 'inpainting' && `Inpainting`}
       </SectionTitle>
       <ul className="flex flex-row gap-2 md:gap-8 mb-3 text-sm md:text-base">
@@ -180,7 +171,7 @@ const OptionsPanel = ({
           />
         )}
 
-      {activeNav === 'painter' &&
+      {/* {activeNav === 'painter' &&
         input.source_image &&
         input.source_processing === SourceProcessing.InPainting && (
           <WarningPanel
@@ -195,32 +186,46 @@ const OptionsPanel = ({
               })
             }}
           />
-        )}
+        )} */}
 
-      {activeNav === 'painter' &&
+      {/* {activeNav === 'painter' &&
         input.source_processing !== SourceProcessing.InPainting && (
           <PainterPanel setActiveNav={setActiveNav} setInput={setInput} />
-        )}
+        )} */}
 
       {activeNav === 'inpainting' &&
         input.source_image &&
         input.source_processing === SourceProcessing.InPainting && (
-          <InpaintingPanel
-            input={input}
-            setInput={setInput}
-            handleRemoveClick={() => {
-              clearCanvasStore()
-              setInput({
-                imageType: '',
-                source_image: '',
-                source_mask: '',
-                source_processing: SourceProcessing.Prompt
-              })
-            }}
-          />
+          <>
+            {/* <InpaintingPanel
+              input={input}
+              setInput={setInput}
+              handleRemoveClick={() => {
+                clearCanvasStore()
+                setInput({
+                  imageType: '',
+                  source_image: '',
+                  source_mask: '',
+                  source_processing: SourceProcessing.Prompt
+                })
+              }}
+            /> */}
+            <Editor
+              setInput={setInput}
+              handleRemoveClick={() => {
+                clearCanvasStore()
+                setInput({
+                  imageType: '',
+                  source_image: '',
+                  source_mask: '',
+                  source_processing: SourceProcessing.Prompt
+                })
+              }}
+            />
+          </>
         )}
 
-      {activeNav === 'inpainting' && inpaintingWorkers === 0 && (
+      {/* {activeNav === 'inpainting' && inpaintingWorkers === 0 && (
         <div className="flex flex-row gap-4">
           <div className="w-[56px]">
             <AlertTriangleIcon size={48} stroke="rgb(234 179 8)" />
@@ -239,19 +244,17 @@ const OptionsPanel = ({
             for more information.
           </div>
         </div>
-      )}
+      )} */}
 
       {activeNav === 'inpainting' &&
         !input.source_image &&
-        input.source_processing !== SourceProcessing.InPainting &&
-        inpaintingWorkers > 0 && (
+        input.source_processing !== SourceProcessing.InPainting && (
           <Uploader handleSaveImage={handleSaveAction} type="inpainting" />
         )}
 
       {activeNav === 'inpainting' &&
         input.source_image &&
-        input.source_processing === SourceProcessing.Img2Img &&
-        inpaintingWorkers > 0 && (
+        input.source_processing === SourceProcessing.Img2Img && (
           <WarningPanel
             panelType="img2img"
             handleRemoveClick={() => {

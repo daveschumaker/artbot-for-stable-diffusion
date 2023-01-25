@@ -47,6 +47,8 @@ export interface IRequestParams {
   useMultiSteps: boolean
   useMultiGuidance: boolean
   width: number
+  canvasData: any
+  maskData: any
 }
 
 class CreateImageRequest {
@@ -85,6 +87,8 @@ class CreateImageRequest {
   useMultiSteps: boolean
   useMultiGuidance: boolean
   width: number
+  canvasData: any
+  maskData: any
 
   constructor({
     canvasStore,
@@ -114,7 +118,9 @@ class CreateImageRequest {
     useAllSamplers = false,
     useMultiGuidance = false,
     useMultiSteps = false,
-    width = 512
+    width = 512,
+    canvasData = null,
+    maskData = null
   }: IRequestParams) {
     if (canvasStore) {
       this.canvasStore = canvasStore
@@ -159,9 +165,9 @@ class CreateImageRequest {
 
     this.models = [...models]
 
-    if (source_processing === 'inpainting') {
-      this.models = ['stable_diffusion_inpainting']
-    }
+    // if (source_processing === 'inpainting') {
+    //   this.models = ['stable_diffusion_inpainting']
+    // }
 
     this.sampler = String(sampler)
 
@@ -186,7 +192,10 @@ class CreateImageRequest {
     this.source_processing = source_processing
     this.stylePreset = stylePreset
 
-    if (source_processing === SourceProcessing.Img2Img) {
+    if (
+      source_processing === SourceProcessing.Img2Img ||
+      source_processing === SourceProcessing.InPainting
+    ) {
       this.denoising_strength = Number(denoising_strength)
     } else {
       this.denoising_strength = Common.Empty
@@ -237,10 +246,13 @@ class CreateImageRequest {
         this.multiGuidance.push(Number(value))
       })
     }
+
+    this.canvasData = canvasData
+    this.maskData = maskData
   }
 
-  static getRandomModel() {
-    const currentModels = validModelsArray()
+  static getRandomModel(imageParams: any) {
+    const currentModels = validModelsArray({ imageParams })
     return currentModels[Math.floor(Math.random() * currentModels.length)].name
   }
 

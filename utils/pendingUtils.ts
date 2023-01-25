@@ -7,8 +7,10 @@ import { randomPropertyName } from './helperUtils'
 import { getModelVersion, validModelsArray } from './modelUtils'
 import { stylePresets } from './stylePresets'
 import { modelInfoStore } from '../store/modelStore'
+import { SourceProcessing } from './promptUtils'
+import CreateCanvas from '../models/CreateCanvas'
 
-const cloneImageParams = (
+const cloneImageParams = async (
   imageParams: CreateImageRequest | RerollImageRequest
 ) => {
   const clonedParams = Object.assign({}, imageParams)
@@ -19,13 +21,28 @@ const cloneImageParams = (
   clonedParams.jobId = uuidv4()
   clonedParams.timestamp = Date.now()
 
+  if (
+    clonedParams.source_processing === SourceProcessing.InPainting &&
+    clonedParams.models[0] !== 'stable_diffusion_inpainting'
+  ) {
+    clonedParams.source_processing = SourceProcessing.Img2Img
+
+    // TODO: Importing this causes Fabric to be built as part of
+    // app chunk, doubling size of initial JS library. Find a way to split this out.
+    //@ts-ignore
+    clonedParams.source_mask = await CreateCanvas.invert(
+      `data:image/webp;base64,${clonedParams.source_mask}`,
+      true
+    )
+  }
+
   return clonedParams
 }
 
 export const createPendingRerollJob = async (
   imageParams: RerollImageRequest
 ) => {
-  const clonedParams = cloneImageParams(imageParams)
+  const clonedParams = await cloneImageParams(imageParams)
 
   try {
     await db.pending.add({
@@ -77,14 +94,11 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
   let clonedParams
 
   if (imageParams.models.length > 1) {
-    imageParams.models.forEach(async (model) => {
-      clonedParams = cloneImageParams(imageParams)
+    for (const model of imageParams.models) {
+      clonedParams = await cloneImageParams(imageParams)
       clonedParams.models = [model]
 
-      if (
-        model === 'stable_diffusion_2.0' ||
-        model === 'stable_diffusion_2.1'
-      ) {
+      if (model === 'stable_diffusion_2.0') {
         clonedParams.sampler = 'dpmsolver'
       }
 
@@ -128,7 +142,7 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
           })
         }
       } catch (err) {}
-    })
+    }
 
     return {
       success: true
@@ -234,7 +248,7 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
 
     // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
     for (const _num of count) {
-      clonedParams = cloneImageParams(imageParams)
+      clonedParams = await cloneImageParams(imageParams)
 
       if (clonedParams.stylePreset === 'random') {
         clonedParams.stylePreset = randomPropertyName(stylePresets)
