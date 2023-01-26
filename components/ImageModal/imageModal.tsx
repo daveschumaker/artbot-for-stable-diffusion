@@ -3,7 +3,9 @@ import React from 'react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import useComponentState from '../../hooks/useComponentState'
+import { downloadFile } from '../../utils/imageUtils'
 import ConfirmationModal from '../ConfirmationModal'
+import DownloadIcon from '../icons/DownloadIcon'
 import LinkIcon from '../icons/LinkIcon'
 import TrashIcon from '../icons/TrashIcon'
 import SpinnerV2 from '../Spinner'
@@ -188,6 +190,14 @@ const ImageModal = ({
               }}
             >
               <LinkIcon /> Image Details
+            </Button>
+            <Button
+              title="Download PNG"
+              // @ts-ignore
+              onClick={() => downloadFile(imageDetails)}
+            >
+              <DownloadIcon />
+              <span className="hidden md:inline-block">Download PNG</span>
             </Button>
             <Button btnType="secondary" onClick={() => handleDeleteImage()}>
               <TrashIcon /> Delete
