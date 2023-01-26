@@ -46,6 +46,7 @@ export interface CreateImageJob {
   base64String?: string
   initWaitTime?: number
   canvasStore?: any
+  tiling: boolean
   post_processing: Array<string>
 
   has_source_mask?: boolean

@@ -28,6 +28,7 @@ interface CreateImageJob {
   negative?: string
   source_image?: string
   source_mask?: string
+  tiling: boolean
   stylePreset: string
   denoising_strength?: number
   post_processing: Array<string>
