@@ -25,6 +25,7 @@ interface ImageDetails {
   karras: boolean
   models: Array<string>
   triggers?: Array<string>
+  tiling: boolean
   source_image?: string
   source_processing?: string
   stylePreset: string
@@ -57,6 +58,7 @@ interface ParamsObject {
   steps: number
   denoising_strength?: number
   karras: boolean
+  tiling: boolean
   post_processing?: Array<string>
   n: number
 }
@@ -79,6 +81,7 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
     steps,
     models,
     karras,
+    tiling,
     source_image,
     source_processing,
     stylePreset,
@@ -97,6 +100,7 @@ const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
       height: Number(height),
       width: Number(width),
       steps: Number(steps),
+      tiling,
       karras,
       n: 1
     },

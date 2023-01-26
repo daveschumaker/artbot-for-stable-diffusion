@@ -256,7 +256,10 @@ export const filterCompletedJobs = async ({
     }
 
     if (filterType === 'inpainting') {
-      return entry.source_processing === SourceProcessing.InPainting
+      return (
+        entry.source_processing === SourceProcessing.InPainting ||
+        entry.source_mask
+      )
     }
 
     if (filterType === 'upscaled') {

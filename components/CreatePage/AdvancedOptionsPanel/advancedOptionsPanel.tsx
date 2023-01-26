@@ -718,7 +718,6 @@ const AdvancedOptionsPanel = ({
               </div>
               <div className="mb-4">
                 <Slider
-                  defaultValue={input.steps}
                   value={input.steps}
                   min={1}
                   max={maxSteps({
@@ -882,7 +881,6 @@ const AdvancedOptionsPanel = ({
               </div>
               <div className="mb-4">
                 <Slider
-                  defaultValue={input.cfg_scale}
                   value={input.cfg_scale}
                   min={1}
                   max={30}
@@ -1088,7 +1086,6 @@ const AdvancedOptionsPanel = ({
                 )}
               <div className="mb-4">
                 <Slider
-                  defaultValue={input.denoising_strength}
                   disabled={input.models[0] === 'stable_diffusion_inpainting'}
                   value={input.denoising_strength}
                   min={0}
@@ -1118,6 +1115,34 @@ const AdvancedOptionsPanel = ({
           </SplitPanel>
         </TwoPanel>
       )}
+      <Section>
+        <SubSectionTitle>
+          <TextTooltipRow>
+            Tiling
+            <Tooltip width="240px">
+              Attempt to create seamless, repeatable textures. Note: This will
+              not work for img2img or inpainting requests.
+            </Tooltip>
+          </TextTooltipRow>
+        </SubSectionTitle>
+        <MaxWidth
+          // @ts-ignore
+          maxWidth="240"
+        >
+          <Switch
+            onChange={() => {
+              if (!input.tiling) {
+                setInput({ tiling: true })
+                PromptInputSettings.set('tiling', true)
+              } else {
+                setInput({ tiling: false })
+                PromptInputSettings.set('tiling', false)
+              }
+            }}
+            checked={input.tiling}
+          />
+        </MaxWidth>
+      </Section>
       <Section>
         <SubSectionTitle>
           <TextTooltipRow>
@@ -1466,7 +1491,6 @@ const AdvancedOptionsPanel = ({
             </div>
             <div className="mb-4">
               <Slider
-                defaultValue={input.numImages}
                 value={input.numImages}
                 min={1}
                 max={MAX_IMAGES_PER_JOB}

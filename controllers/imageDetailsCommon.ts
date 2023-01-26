@@ -24,6 +24,7 @@ export const copyEditPrompt = (imageDetails: any) => {
     cfg_scale: imageDetails.cfg_scale,
     parentJobId: imageDetails.parentJobId,
     negative: imageDetails.negative,
+    tiling: imageDetails.tiling,
     models: imageDetails?.models[0]
       ? imageDetails.models
       : [imageDetails.model || 'stable_diffusion']

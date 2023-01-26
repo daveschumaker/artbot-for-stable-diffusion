@@ -150,6 +150,12 @@ const Changelog = () => {
             in the menu. (Thanks to Stable Horde user, Underwater_Silver, for
             the suggestion)
           </StyledLi>
+          <StyledLi>
+            Feature: Stable Horde recently added support for attempting to
+            create tiled images. This is handy for creating fun backgrounds.
+            Check it out, in the advanced options tab. (Note: It does not work
+            for img2img or inpainting requests.)
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

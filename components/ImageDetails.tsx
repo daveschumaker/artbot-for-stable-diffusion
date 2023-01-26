@@ -43,6 +43,7 @@ interface ImageDetails {
   imageType?: string
   source_image?: string
   orientation: string
+  tiling: boolean
   karras: boolean
   worker_id?: string
   stylePreset: string
@@ -225,6 +226,7 @@ const ImageDetails = ({
                 Denoise: {Number(imageDetails.denoising_strength).toFixed(2)}
               </li>
             )}
+            <li>tiled: {imageDetails.tiling ? 'true' : 'false'}</li>
           </ul>
         </div>
         {imageDetails.source_image && (
@@ -250,6 +252,7 @@ const ImageDetails = ({
                     prompt: imageDetails.prompt,
                     sampler: imageDetails.sampler,
                     steps: imageDetails.steps,
+                    tiling: imageDetails.tiling,
                     orientation: imageDetails.orientation,
                     height: imageDetails.height,
                     width: imageDetails.width,

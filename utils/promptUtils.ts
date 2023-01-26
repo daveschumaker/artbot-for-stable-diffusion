@@ -24,6 +24,7 @@ interface SavePrompt {
   parentJobId: string
   negative?: string
   triggers?: Array<string>
+  tiling: boolean
   source_image?: string
   source_processing?:
     | SourceProcessing.Prompt
@@ -51,6 +52,7 @@ let initPromptDetails: SavePrompt = {
   parentJobId: '',
   negative: '',
   triggers: [],
+  tiling: false,
   source_image: '',
   source_processing: SourceProcessing.Prompt,
   source_mask: '',
@@ -77,6 +79,7 @@ export const savePrompt = ({
   parentJobId = '',
   negative = '',
   triggers = [],
+  tiling = false,
   source_image = '',
   source_processing = SourceProcessing.Prompt,
   source_mask = '',
@@ -100,6 +103,7 @@ export const savePrompt = ({
     parentJobId,
     negative,
     triggers,
+    tiling,
     source_image,
     source_processing,
     source_mask,

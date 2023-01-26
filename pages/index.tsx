@@ -94,6 +94,7 @@ const defaultState: any = {
   parentJobId: '',
   negative: '',
   triggers: [],
+  tiling: false,
   source_image: '',
   source_mask: '',
   stylePreset: 'none',
@@ -163,28 +164,10 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
     initialState = { ...defaultState, ...shareParams }
   } else if (editMode) {
     initialState = {
+      ...loadEditPrompt(),
       upscaled: false,
-      img2img: loadEditPrompt().img2img,
-      imageType: loadEditPrompt().imageType,
-      orientationType: loadEditPrompt().orientation,
-      height: loadEditPrompt().height,
-      width: loadEditPrompt().width,
       numImages: 1,
-      prompt: loadEditPrompt().prompt,
-      sampler: loadEditPrompt().sampler,
-      cfg_scale: loadEditPrompt().cfg_scale,
-      steps: loadEditPrompt().steps,
-      seed: loadEditPrompt().seed,
-      denoising_strength: loadEditPrompt().denoising_strength,
-      karras: loadEditPrompt().karras,
-      parentJobId: loadEditPrompt().parentJobId,
-      negative: loadEditPrompt().negative,
-      triggers: loadEditPrompt().triggers,
-      source_image: loadEditPrompt().source_image,
-      source_mask: loadEditPrompt().source_mask,
-      source_processing: loadEditPrompt().source_processing,
       post_processing: [],
-      models: loadEditPrompt().models,
       useAllModels: false,
       useFavoriteModels: false,
       useAllSamplers: false
@@ -501,6 +484,17 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
       setInput({
         models: ['stable_diffusion'],
         sampler: 'k_euler_a'
+      })
+    }
+
+    // Handle state where tiling is incorrectly set in case of img2img or inpainting
+    if (
+      input.source_mask ||
+      input.source_image ||
+      input.models[0] === 'Stable Diffusion 2 Depth'
+    ) {
+      setInput({
+        tiling: false
       })
     }
   }, [input])

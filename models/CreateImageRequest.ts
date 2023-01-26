@@ -41,6 +41,7 @@ export interface IRequestParams {
   steps: number
   multiSteps: string
   multiGuidance: string
+  tiling: boolean
   triggers?: Array<string>
   useAllModels: boolean
   useAllSamplers: boolean
@@ -80,6 +81,7 @@ class CreateImageRequest {
   multiSteps: Array<number>
   multiGuidance: Array<number>
   timestamp?: number
+  tiling: boolean
   triggers: Array<string>
   upscaled?: boolean
   useAllModels: boolean
@@ -113,6 +115,7 @@ class CreateImageRequest {
     steps = 20,
     multiGuidance = '',
     multiSteps = '',
+    tiling = false,
     triggers = [],
     useAllModels = false,
     useAllSamplers = false,
@@ -249,6 +252,12 @@ class CreateImageRequest {
 
     this.canvasData = canvasData
     this.maskData = maskData
+
+    this.tiling = tiling
+
+    if (this.source_image || this.source_mask) {
+      this.tiling = false
+    }
   }
 
   static getRandomModel(imageParams: any) {
