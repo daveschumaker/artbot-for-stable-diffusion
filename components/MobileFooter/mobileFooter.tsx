@@ -15,7 +15,7 @@ import {
   setNewImageReady,
   setShowImageReadyToast
 } from '../../store/appStore'
-import ZoomQuestionIcon from '../icons/ZoomQuestionIcon'
+import StarsIcon from '../icons/StarsIcon'
 
 interface StyledFooterProps {
   isPwa: boolean
@@ -98,7 +98,7 @@ const StyledHourglassIcon = styled(HourglassIcon)`
 const StyledPhotoIcon = styled(PhotoIcon)`
   ${IconCss}
 `
-const StyledHelpIcon = styled(ZoomQuestionIcon)`
+const StyledStarsIcon = styled(StarsIcon)`
   ${IconCss}
 `
 
@@ -158,9 +158,9 @@ export default function MobileFooter() {
             <StyledPhotoIcon size={32} active={isActive('/images')} />
           </Link>
         </NavIconWrapper>
-        <NavIconWrapper active={isActive('/interrogate')}>
-          <Link href="/interrogate">
-            <StyledHelpIcon size={32} active={isActive('/interrogate')} />
+        <NavIconWrapper active={isActive('/rate')}>
+          <Link href="/rate">
+            <StyledStarsIcon size={32} active={isActive('/rate')} />
           </Link>
         </NavIconWrapper>
         <NavIconWrapper active={isActive('/settings')}>

@@ -143,6 +143,13 @@ const Changelog = () => {
               try it out!
             </AddedInfo>
           </StyledLi>
+          <StyledLi>
+            UX: On mobile devices, replace interrogation icon / link with rating
+            icon / link. The ratings page is used more (at least on desktop) and
+            arguably more important. You can still find the interrogation page
+            in the menu. (Thanks to Stable Horde user, Underwater_Silver, for
+            the suggestion)
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
