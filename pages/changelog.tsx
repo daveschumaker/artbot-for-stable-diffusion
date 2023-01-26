@@ -108,6 +108,44 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.01.26</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Been pretty heads down lately and have been working on various
+            things in the background. Among them:
+          </StyledLi>
+          <StyledLi>
+            Better inpainting: Inpainting on ArtBot has always kind of...
+            sucked. And it&apos;s been missing a feature added to Stable Horde
+            awhile back: img2img masking, which was releaded way back at the{' '}
+            <Linker
+              href="https://discord.com/channels/781145214752129095/1020695869927981086/1038557043046494279"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              beginning of November
+            </Linker>
+            . I made some improvements around this experience and tried to give
+            the interface a slightly updated coat of paint.
+            <AddedInfo>
+              Inpainting and img2img masking aren&apos;t exactly the same thing,
+              though from an end-user perspective, they both work in a very
+              similar fashion -- you paint a part of an image that you want
+              changed, type in a description and voila! With inpainting, you are
+              limited to a very specific model (stable_diffusion_inpainting,
+              based on SD v2). With img2img mask, you can use any model. Also,
+              due to how resource intensive inpainting is, there are not many
+              workers currently running the stable_diffusion_inpainting model,
+              which has resulted in a ton of issues on ArtBot (error messages
+              saying: &quot;No workers available, try again later.&quot;).
+              Things should work much better now! Head on over to the{' '}
+              <Linker href="/?panel=inpainting">inpainting panel</Linker> and
+              try it out!
+            </AddedInfo>
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.01.21</SubSectionTitle>
         <StyledUl>
           <StyledLi>
