@@ -89,8 +89,9 @@ const FaqPage = () => {
             </p>
             <p>
               They are awarded to users for contributing GPU power to the
-              distributed cluster. Other ways to get kudos are to participate in
-              the{' '}
+              distributed cluster. Other ways to get kudos are to{' '}
+              <Linker href="/rate">rate images</Linker> for aesthetics training
+              , participate in the{' '}
               <Linker
                 href="https://discord.com/channels/781145214752129095/1027506429139095562"
                 target="_blank"
