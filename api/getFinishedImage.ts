@@ -10,6 +10,7 @@ interface FinishedImageResponse {
   hordeImageId?: string
   base64String?: string
   seed?: string
+  canRate?: boolean
   model?: string
   worker_id?: string
 }
@@ -56,7 +57,7 @@ export const getFinishedImage = async (
     )
 
     const data = await res.json()
-    const { generations, message } = data
+    const { generations, message, shared } = data
 
     if (message === '2 per 1 minute') {
       apiCooldown()
@@ -115,6 +116,7 @@ export const getFinishedImage = async (
         model,
         base64String,
         seed,
+        canRate: shared ? true : false,
         worker_id,
         worker_name
       }
