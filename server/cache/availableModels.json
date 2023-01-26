@@ -1,338 +1,723 @@
 [
   {
-    "performance": 595028.7,
-    "queued": 185597952.0,
-    "eta": 23,
-    "name": "stable_diffusion_2.0",
-    "count": 13
-  },
-  {
-    "performance": 690945.4,
-    "queued": 82558976.0,
-    "eta": 2,
-    "name": "stable_diffusion",
-    "count": 40
-  },
-  {
-    "performance": 735898.1,
-    "queued": 0.0,
+    "performance": 1000000,
+    "queued": 0,
     "eta": 0,
-    "name": "Yiffy",
-    "count": 15
+    "name": "T-Shirt Diffusion",
+    "count": 1
   },
   {
-    "performance": 682671.7,
-    "queued": 224051200.0,
-    "eta": 13,
-    "name": "Anything Diffusion",
-    "count": 25
-  },
-  {
-    "performance": 1407254.2,
-    "queued": 235929600.0,
-    "eta": 41,
-    "name": "Microworlds",
-    "count": 4
-  },
-  {
-    "performance": 1215482.0,
-    "queued": 0.0,
-    "eta": 0,
-    "name": "Tron Legacy Diffusion",
-    "count": 3
-  },
-  {
-    "performance": 467107.4,
-    "queued": 17498112.0,
-    "eta": 5,
-    "name": "Elden Ring Diffusion",
-    "count": 7
-  },
-  {
-    "performance": 1164675.7,
-    "queued": 23592960.0,
-    "eta": 3,
-    "name": "Robo-Diffusion",
-    "count": 6
-  },
-  {
-    "performance": 1582100.8,
-    "queued": 0.0,
-    "eta": 0,
-    "name": "Comic-Diffusion",
-    "count": 6
-  },
-  {
-    "performance": 816641.6,
-    "queued": 65536000.0,
-    "eta": 7,
-    "name": "Zeipher Female Model",
-    "count": 11
-  },
-  {
-    "performance": 868512.2,
-    "queued": 0.0,
-    "eta": 0,
-    "name": "Borderlands",
-    "count": 4
-  },
-  {
-    "performance": 1406393.1,
-    "queued": 0.0,
-    "eta": 0,
-    "name": "Dungeons and Diffusion",
-    "count": 5
-  },
-  {
-    "performance": 1227722.0,
-    "queued": 0.0,
-    "eta": 0,
-    "name": "Voxel Art Diffusion",
-    "count": 5
-  },
-  {
-    "performance": 892497.7,
-    "queued": 0.0,
-    "eta": 0,
-    "name": "App Icon Diffusion",
-    "count": 5
-  },
-  {
-    "performance": 1673357.9,
-    "queued": 0.0,
-    "eta": 0,
-    "name": "Nitro Diffusion",
-    "count": 3
-  },
-  {
-    "performance": 1778975.5,
-    "queued": 0.0,
-    "eta": 0,
-    "name": "Papercut Diffusion",
-    "count": 3
-  },
-  {
-    "performance": 1807552.5,
-    "queued": 12740198.4,
-    "eta": 1,
-    "name": "Mega Merge Diffusion",
-    "count": 5
-  },
-  {
-    "performance": 1259608.1,
-    "queued": 0.0,
-    "eta": 0,
-    "name": "Furry Epoch",
-    "count": 8
-  },
-  {
-    "performance": 997377.0,
-    "queued": 40140800.0,
-    "eta": 5,
-    "name": "Zack3D",
-    "count": 7
-  },
-  {
-    "performance": 1300796.8,
-    "queued": 16384000.0,
-    "eta": 1,
-    "name": "trinart",
-    "count": 8
-  },
-  {
-    "performance": 1940805.8,
-    "queued": 13107200.0,
-    "eta": 0,
-    "name": "waifu_diffusion",
-    "count": 17
-  },
-  {
-    "performance": 534334.3,
-    "queued": 79298560.0,
-    "eta": 13,
-    "name": "Hentai Diffusion",
-    "count": 11
-  },
-  {
-    "performance": 1808010.2,
-    "queued": 0.0,
-    "eta": 0,
-    "name": "Ghibli Diffusion",
-    "count": 4
-  },
-  {
-    "performance": 681700.6,
-    "queued": 0.0,
-    "eta": 0,
-    "name": "AIO Pixel Art",
-    "count": 4
-  },
-  {
-    "performance": 1875537.1,
-    "queued": 0.0,
-    "eta": 0,
-    "name": "Arcane Diffusion",
-    "count": 6
-  },
-  {
-    "performance": 812627.9,
-    "queued": 0.0,
-    "eta": 0,
-    "name": "Archer Diffusion",
-    "count": 3
-  },
-  {
-    "performance": 1185834.8,
-    "queued": 27525120.0,
-    "eta": 5,
-    "name": "BubblyDubbly",
-    "count": 4
-  },
-  {
-    "performance": 2019479.7,
-    "queued": 0.0,
-    "eta": 0,
-    "name": "Classic Animation Diffusion",
-    "count": 2
-  },
-  {
-    "performance": 1758015.6,
-    "queued": 0.0,
-    "eta": 0,
-    "name": "Clazy",
-    "count": 2
-  },
-  {
-    "performance": 694339.6,
-    "queued": 0.0,
+    "performance": 1000000,
+    "queued": 0,
     "eta": 0,
     "name": "colorbook",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Papercutcraft",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Redshift Diffusion",
     "count": 2
   },
   {
-    "performance": 1494211.5,
-    "queued": 0.0,
+    "performance": 1000000,
+    "queued": 147668992,
+    "eta": 73,
+    "name": "HASDX",
+    "count": 2
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Mega Merge Diffusion",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Healy's Anime Blend",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Sci-Fi Diffusion",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Borderlands",
+    "count": 2
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Voxel Art Diffusion",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Sygil-Dev Diffusion",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Elden Ring Diffusion",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Future Diffusion",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
     "eta": 0,
     "name": "Cyberpunk Anime Diffusion",
-    "count": 4
+    "count": 2
   },
   {
-    "performance": 970920.6,
-    "queued": 0.0,
+    "performance": 1000000,
+    "queued": 0,
     "eta": 0,
-    "name": "Fantasy Card Diffusion",
-    "count": 3
+    "name": "Microworlds",
+    "count": 1
   },
   {
-    "performance": 829448.2,
-    "queued": 0.0,
-    "eta": 0,
-    "name": "Guohua Diffusion",
-    "count": 4
+    "performance": 1000000,
+    "queued": 24780800,
+    "eta": 12,
+    "name": "Vintedois Diffusion",
+    "count": 2
   },
   {
-    "performance": 2027669.6,
-    "queued": 0.0,
-    "eta": 0,
-    "name": "JWST Deep Space Diffusion",
-    "count": 4
-  },
-  {
-    "performance": 1142361.3,
-    "queued": 0.0,
-    "eta": 0,
-    "name": "Knollingcase",
-    "count": 4
-  },
-  {
-    "performance": 311065.5,
-    "queued": 27525120.0,
-    "eta": 7,
-    "name": "Midjourney Diffusion",
-    "count": 12
-  },
-  {
-    "performance": 1118143.3,
-    "queued": 17694720.0,
-    "eta": 5,
-    "name": "Midjourney PaintArt",
-    "count": 3
-  },
-  {
-    "performance": 2504017.4,
-    "queued": 0.0,
+    "performance": 1000000,
+    "queued": 0,
     "eta": 0,
     "name": "mo-di-diffusion",
-    "count": 5
+    "count": 2
   },
   {
-    "performance": 1280740.6,
-    "queued": 0.0,
+    "performance": 1000000,
+    "queued": 0,
     "eta": 0,
-    "name": "Ranma Diffusion",
+    "name": "Min Illust Background",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Robo-Diffusion",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 36495360,
+    "eta": 18,
+    "name": "stable_diffusion_inpainting",
+    "count": 2
+  },
+  {
+    "performance": 1000000,
+    "queued": 101416960,
+    "eta": 33,
+    "name": "Zeipher Female Model",
+    "count": 3
+  },
+  {
+    "performance": 1000000,
+    "queued": 7864320,
+    "eta": 7,
+    "name": "AIO Pixel Art",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Dungeons and Diffusion",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 94371840,
+    "eta": 94,
+    "name": "trinart",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 695992320,
+    "eta": 173,
+    "name": "Yiffy",
     "count": 4
   },
   {
-    "performance": 1794640.4,
-    "queued": 0.0,
+    "performance": 1000000,
+    "queued": 0,
     "eta": 0,
-    "name": "Redshift Diffusion",
-    "count": 7
+    "name": "DreamLikeSamKuvshinov",
+    "count": 1
   },
   {
-    "performance": 2514997.9,
-    "queued": 29491200.0,
-    "eta": 2,
-    "name": "Samdoesarts Ultmerge",
-    "count": 4
-  },
-  {
-    "performance": 1683846.4,
-    "queued": 0.0,
+    "performance": 1000000,
+    "queued": 0,
     "eta": 0,
-    "name": "Spider-Verse Diffusion",
-    "count": 5
+    "name": "Midjourney PaintArt",
+    "count": 2
   },
   {
-    "performance": 1041465.0,
-    "queued": 0.0,
+    "performance": 1000000,
+    "queued": 37380096,
+    "eta": 37,
+    "name": "App Icon Diffusion",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Smoke Diffusion",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Inkpunk Diffusion",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Supermarionation",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Moedel",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "DnD Item",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 44564480,
+    "eta": 14,
+    "name": "Zack3D",
+    "count": 3
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Fantasy Card Diffusion",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 158908416,
+    "eta": 7,
+    "name": "stable_diffusion",
+    "count": 21
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
     "eta": 0,
     "name": "Synthwave",
     "count": 2
   },
   {
-    "performance": 883851.2,
-    "queued": 0.0,
+    "performance": 1000000,
+    "queued": 19660800,
+    "eta": 9,
+    "name": "Anygen",
+    "count": 2
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
     "eta": 0,
-    "name": "Van Gogh Diffusion",
+    "name": "Furry Epoch",
+    "count": 2
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Asim Simpsons",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "PortraitPlus",
+    "count": 2
+  },
+  {
+    "performance": 1000000,
+    "queued": 184729600,
+    "eta": 18,
+    "name": "Anything Diffusion",
+    "count": 10
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Tron Legacy Diffusion",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 176947200,
+    "eta": 44,
+    "name": "stable_diffusion_2.0",
     "count": 4
   },
   {
-    "performance": 1977150.0,
-    "queued": 0.0,
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Clazy",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Valorant Diffusion",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 295936000,
+    "eta": 73,
+    "name": "Realistic Vision",
+    "count": 4
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Papercut Diffusion",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Stable Diffusion 2 Depth",
+    "count": 2
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "ChromaV5",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "stable_diffusion_2.1",
+    "count": 9
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "DucHaiten",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Dark Victorian Diffusion",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Guohua Diffusion",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Analog Diffusion",
+    "count": 2
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
     "eta": 0,
     "name": "vectorartz",
-    "count": 5
+    "count": 2
   },
   {
-    "performance": 727580.4,
-    "queued": 0.0,
-    "eta": 0,
-    "name": "Xynthii-Diffusion",
-    "count": 4
+    "performance": 1000000,
+    "queued": 16588800,
+    "eta": 16,
+    "name": "Classic Animation Diffusion",
+    "count": 1
   },
   {
-    "performance": 1316149.6,
-    "queued": 0.0,
-    "eta": 0,
-    "name": "Inkpunk Diffusion",
+    "performance": 1000000,
+    "queued": 49807360,
+    "eta": 16,
+    "name": "Eimis Anime Diffusion",
     "count": 3
   },
   {
-    "performance": 1060814.0,
-    "queued": 0.0,
+    "performance": 1000000,
+    "queued": 0,
     "eta": 0,
-    "name": "stable_diffusion_inpainting",
-    "count": 4
+    "name": "Microscopic",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Ranma Diffusion",
+    "count": 2
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Dreamlike Diffusion",
+    "count": 2
+  },
+  {
+    "performance": 1000000,
+    "queued": 13107200,
+    "eta": 6,
+    "name": "3DKX",
+    "count": 2
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "GTA5 Artwork Diffusion",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Poison",
+    "count": 6
+  },
+  {
+    "performance": 1000000,
+    "queued": 58245120,
+    "eta": 11,
+    "name": "Midjourney Diffusion",
+    "count": 5
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "PPP",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Samdoesarts Ultmerge",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "kurzgesagt",
+    "count": 2
+  },
+  {
+    "performance": 1000000,
+    "queued": 55296000,
+    "eta": 27,
+    "name": "Dreamshaper",
+    "count": 2
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Elldreth's Lucid Mix",
+    "count": 2
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Dreamlike Photoreal",
+    "count": 2
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Trinart Characters",
+    "count": 2
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Arcane Diffusion",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "JWST Deep Space Diffusion",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "RPG",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Hassanblend",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 50528256,
+    "eta": 25,
+    "name": "Lawlas's yiff mix",
+    "count": 2
+  },
+  {
+    "performance": 1000000,
+    "queued": 192102400,
+    "eta": 27,
+    "name": "waifu_diffusion",
+    "count": 7
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "ModernArt Diffusion",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 5898240,
+    "eta": 5,
+    "name": "Sonic Diffusion",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Darkest Diffusion",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Balloon Art",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Comic-Diffusion",
+    "count": 2
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Eternos",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "MoistMix",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Marvel Diffusion",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Van Gogh Diffusion",
+    "count": 2
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Double Exposure Diffusion",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Squishmallow Diffusion",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Funko Diffusion",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Zelda BOTW",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Hentai Diffusion",
+    "count": 3
+  },
+  {
+    "performance": 1000000,
+    "queued": 614989825,
+    "eta": 204,
+    "name": "Protogen Infinity",
+    "count": 3
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Ghibli Diffusion",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Seek.art MEGA",
+    "count": 2
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Knollingcase",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Spider-Verse Diffusion",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "ACertainThing",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 13107200,
+    "eta": 6,
+    "name": "Wavyfusion",
+    "count": 2
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "DGSpitzer Art Diffusion",
+    "count": 2
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Ultraskin",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "Nitro Diffusion",
+    "count": 1
+  },
+  {
+    "performance": 1000000,
+    "queued": 0,
+    "eta": 0,
+    "name": "ProtoGen",
+    "count": 1
   }
 ]
