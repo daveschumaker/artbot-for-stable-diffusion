@@ -34,6 +34,7 @@ import WorkerInfo from '../WorkerInfo'
 import ImportExportPanel from '../ImportExportPanel'
 import ExternalLinkIcon from '../icons/ExternalLinkIcon'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
+import MaxWidth from '../UI/MaxWidth'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -45,20 +46,6 @@ const Section = styled.div`
 
 const SubSectionTitle = styled.div`
   padding-bottom: 8px;
-`
-
-interface MaxWidthProps {
-  maxWidth: number
-}
-
-const MaxWidth = styled.div<MaxWidthProps>`
-  width: 100%;
-
-  ${(props) =>
-    props.maxWidth &&
-    `
-    max-width: ${props.maxWidth}px;
-  `}
 `
 
 const SettingsWrapper = styled.div`
