@@ -6,6 +6,7 @@ import useComponentState from '../../hooks/useComponentState'
 import { downloadFile } from '../../utils/imageUtils'
 import ConfirmationModal from '../ConfirmationModal'
 import DownloadIcon from '../icons/DownloadIcon'
+import EyeIcon from '../icons/EyeIcon'
 import LinkIcon from '../icons/LinkIcon'
 import TrashIcon from '../icons/TrashIcon'
 import SpinnerV2 from '../Spinner'
@@ -94,7 +95,8 @@ const ImageModal = ({
     loading: true,
     containerHeight: 512,
     imageMaxHeight: 700,
-    mouseHover: false
+    mouseHover: false,
+    showTiles: false
   })
 
   const handleDeleteImage = () => {
@@ -174,15 +176,26 @@ const ImageModal = ({
       )}
       {!loading && imageDetails.base64String && (
         <ContentWrapper ref={ref}>
-          <ImageNavWrapper
-            loading={imageDetails.loading}
-            base64String={imageDetails.base64String}
-            disableNav={disableNav}
-            handleLoadNext={handleLoadNext}
-            handleLoadPrev={handleLoadPrev}
-            handleClose={handleClose}
-            jobId={imageDetails.jobId}
-          />
+          {componentState.showTiles && (
+            <div
+              className={`w-full h-[512px] bg-repeat`}
+              style={{
+                backgroundImage: `url("data:image/webp;base64,${imageDetails.base64String}")`,
+                backgroundSize: '128px'
+              }}
+            />
+          )}
+          {!componentState.showTiles && (
+            <ImageNavWrapper
+              loading={imageDetails.loading}
+              base64String={imageDetails.base64String}
+              disableNav={disableNav}
+              handleLoadNext={handleLoadNext}
+              handleLoadPrev={handleLoadPrev}
+              handleClose={handleClose}
+              jobId={imageDetails.jobId}
+            />
+          )}
           <OptionsRow>
             <Button
               onClick={() => {
@@ -191,6 +204,22 @@ const ImageModal = ({
             >
               <LinkIcon /> Image Details
             </Button>
+            {imageDetails.tiling && (
+              <Button
+                title="View tiles"
+                // @ts-ignore
+                onClick={() => {
+                  if (componentState.showTiles) {
+                    setComponentState({ showTiles: false })
+                  } else {
+                    setComponentState({ showTiles: true })
+                  }
+                }}
+              >
+                <EyeIcon />
+                <span className="hidden md:inline-block">Show tiles</span>
+              </Button>
+            )}
             <Button
               title="Download PNG"
               // @ts-ignore
