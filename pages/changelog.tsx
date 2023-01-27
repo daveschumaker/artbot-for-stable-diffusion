@@ -125,6 +125,11 @@ const Changelog = () => {
             together on the model details page. Thanks to voodoocode on Discord
             for reporting this.
           </StyledLi>
+          <StyledLi>
+            Fix: On the image creation page, the trigger word dropdown would
+            only show a single trigger if there were multiple trigger words.
+            Thanks to Airic on Discord for reporting this.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

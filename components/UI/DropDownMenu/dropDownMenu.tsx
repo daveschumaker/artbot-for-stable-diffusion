@@ -4,7 +4,7 @@ import { IDropDownMenuItem } from '../DropDownMenuItem/dropDownMenuItem'
 import Overlay from '../Overlay'
 
 interface Props {
-  children: Array<any>
+  children: React.ReactNode
   handleClose: () => void
   position?: string
 }

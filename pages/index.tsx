@@ -425,8 +425,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
     }
   })
 
-  const triggerString = modelDetails[input?.models[0]]?.trigger ?? ['']
-  const triggerArray = triggerString[0].split(', ')
+  const triggerArray = [...(modelDetails[input?.models[0]]?.trigger ?? '')]
   const totalImagesRequested = countImagesToGenerate(input)
   const totalKudosCost = kudosCost(
     input.width,
@@ -576,7 +575,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
                   }}
                   position="left"
                 >
-                  {triggerArray.length > 0
+                  {triggerArray && triggerArray.length > 0
                     ? triggerArray.map((trigger: string, i: number) => {
                         return (
                           <DropDownMenuItem
