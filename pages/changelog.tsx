@@ -156,6 +156,11 @@ const Changelog = () => {
             Check it out, in the advanced options tab. (Note: It does not work
             for img2img or inpainting requests.)
           </StyledLi>
+          <StyledLi>
+            Fix: Copy prompt from the image details page forgot image
+            orientation and resolution settings. (Thanks for reporting on
+            Discord, Saw Dagon)
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
