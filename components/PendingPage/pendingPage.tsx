@@ -5,6 +5,7 @@ import { JobStatus } from '../../types'
 import {
   db,
   deleteAllPendingErrors,
+  deleteAllPendingJobs,
   deleteCompletedImage,
   deleteDoneFromPending
 } from '../../utils/db'
@@ -162,6 +163,11 @@ const PendingPage = () => {
           <TextButton onClick={() => setFilter('error')}>
             error ({error.length})
           </TextButton>
+          <div className="mb-2">
+            <TextButton color="red" onClick={deleteAllPendingJobs}>
+              delete pending jobs
+            </TextButton>
+          </div>
         </div>
       ) : null}
       {error.length > 2 ? (

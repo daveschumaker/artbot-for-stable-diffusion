@@ -130,6 +130,12 @@ const Changelog = () => {
             only show a single trigger if there were multiple trigger words.
             Thanks to Airic on Discord for reporting this.
           </StyledLi>
+          <StyledLi>
+            Feature: Add a link to delete all pending jobs. Useful when you
+            (accidentally... ah hem, I am guilty) queue up about 700 images
+            thanks to prompt matrices, multi-guidance, etc. Thanks to
+            &quot;💫.&quot; on Discord for suggesting this.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

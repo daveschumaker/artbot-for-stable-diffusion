@@ -365,6 +365,17 @@ export const deleteAllPendingErrors = async () => {
     .delete()
 }
 
+export const deleteAllPendingJobs = async () => {
+  await db.pending
+    .filter(function (job: { jobStatus: string }) {
+      return (
+        job.jobStatus === JobStatus.Queued ||
+        job.jobStatus === JobStatus.Waiting
+      )
+    })
+    .delete()
+}
+
 export const getImageDetails = async (jobId: string) => {
   return await db.completed.where('jobId').equals(jobId).first()
 }
