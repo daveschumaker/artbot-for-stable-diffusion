@@ -217,9 +217,10 @@ const RateMyImage = ({ jobId }: IProps) => {
         <div className="flex flex-row items-center gap-2">
           <span className="text-xs">worst</span>
           <StarRating
-            count={5}
+            count={6}
             disabled={componentState.ratingPending}
             onStarClick={rateQuality}
+            startValue={0}
           />
           <span className="text-xs">best</span>
         </div>

@@ -108,6 +108,17 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.01.27</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: Star count was incorrect when rating your own recently created
+            images. (It was 5, should be 6. Hey, I didn&apos;t make the rules!
+            Just using what the API provides). Thanks to &quot;💫.&quot; on
+            Discord for reporting this.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.01.26</SubSectionTitle>
         <StyledUl>
           <StyledLi>
