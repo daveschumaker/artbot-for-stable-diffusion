@@ -114,6 +114,7 @@ const Changelog = () => {
             MILESTONE: 🎉🎉🎉 3,000,000 images have been created with ArtBot!
             You are all amazing. 🎉🎉🎉
           </StyledLi>
+          <StyledLi>It&apos;s bug fixes all the way down!</StyledLi>
           <StyledLi>
             Fix: Star count was incorrect when rating your own recently created
             images. (It was 5, should be 6. Hey, I didn&apos;t make the rules!
@@ -136,6 +137,13 @@ const Changelog = () => {
             thanks to prompt matrices, multi-guidance, etc. Thanks to
             &quot;💫.&quot; on Discord for suggesting this.
           </StyledLi>
+          <StyledLi>
+            Fix: After uploading an image to the inpainting tool, the web app
+            would get stuck in an infinite loop, which prevented you from
+            clicking on links in the bottom navbar (if on mobile devices).
+            Thanks to Stable Horde user Underwater_Silver for the feedback on
+            this!
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
@@ -148,7 +156,7 @@ const Changelog = () => {
           <StyledLi>
             Better inpainting: Inpainting on ArtBot has always kind of...
             sucked. And it&apos;s been missing a feature added to Stable Horde
-            awhile back: img2img masking, which was releaded way back at the{' '}
+            awhile back: img2img masking, which was released way back at the{' '}
             <Linker
               href="https://discord.com/channels/781145214752129095/1020695869927981086/1038557043046494279"
               target="_blank"

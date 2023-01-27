@@ -4,7 +4,7 @@ import { IDropDownMenuItem } from '../DropDownMenuItem/dropDownMenuItem'
 import Overlay from '../Overlay'
 
 interface Props {
-  children: React.ReactNode
+  children: any
   handleClose: () => void
   position?: string
 }
@@ -35,7 +35,7 @@ const StyledDropDownMenu = styled.div<StyleProps>`
 `
 const DropDownMenu = ({
   children,
-  handleClose = () => {},
+  handleClose = () => { },
   position = ''
 }: Props) => {
   const keyDownHandler = (event: any) => {

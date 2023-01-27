@@ -87,7 +87,7 @@ const PendingPage = () => {
     return [processing, queued, waiting, error]
   }
 
-  const [processing, queued, waiting, error] = processPending()
+  const [processing = [], queued = [], waiting = [], error = []] = processPending()
 
   const sorted = [
     ...done,
@@ -117,6 +117,8 @@ const PendingPage = () => {
     }
   })
 
+  const waitingCount = processing.length + queued.length
+
   useEffect(() => {
     deleteDoneFromPending()
     setDone([])
@@ -138,7 +140,7 @@ const PendingPage = () => {
     <div style={{ overflowAnchor: 'none' }}>
       {showImageModal && (
         <ImageModalController
-          onAfterDelete={() => {}}
+          onAfterDelete={() => { }}
           handleDeleteImage={deleteImage}
           handleClose={() => {
             setShowImageModal(false)
@@ -163,11 +165,13 @@ const PendingPage = () => {
           <TextButton onClick={() => setFilter('error')}>
             error ({error.length})
           </TextButton>
-          <div className="mb-2">
-            <TextButton color="red" onClick={deleteAllPendingJobs}>
-              delete pending jobs
-            </TextButton>
-          </div>
+          {waitingCount > 0 && (
+            <div className="mb-2">
+              <TextButton color="red" onClick={deleteAllPendingJobs}>
+                delete pending jobs
+              </TextButton>
+            </div>
+          )}
         </div>
       ) : null}
       {error.length > 2 ? (
