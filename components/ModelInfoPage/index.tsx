@@ -243,7 +243,8 @@ const ModelInfoPage = ({ availableModels, modelDetails }: any) => {
             </div>
             {trigger ? (
               <div>
-                <strong>Triggers:</strong> {trigger}
+                <strong>Trigger words:</strong> &quot;{trigger.join('", "')}
+                &quot;
               </div>
             ) : null}
             {showcases && showcases.length > 0 ? (

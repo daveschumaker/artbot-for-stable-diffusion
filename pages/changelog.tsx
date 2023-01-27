@@ -111,10 +111,19 @@ const Changelog = () => {
         <SubSectionTitle>2023.01.27</SubSectionTitle>
         <StyledUl>
           <StyledLi>
+            MILESTONE: 🎉🎉🎉 3,000,000 images have been created with ArtBot!
+            You are all amazing. 🎉🎉🎉
+          </StyledLi>
+          <StyledLi>
             Fix: Star count was incorrect when rating your own recently created
             images. (It was 5, should be 6. Hey, I didn&apos;t make the rules!
             Just using what the API provides). Thanks to &quot;💫.&quot; on
             Discord for reporting this.
+          </StyledLi>
+          <StyledLi>
+            Fix: When a model has multiple trigger words, the trigger words run
+            together on the model details page. Thanks to voodoocode on Discord
+            for reporting this.
           </StyledLi>
         </StyledUl>
       </Section>
