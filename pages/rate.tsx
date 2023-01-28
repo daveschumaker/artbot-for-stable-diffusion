@@ -109,6 +109,12 @@ let errorCount = 0
 let imagePending = false
 let ratingPending = false
 
+const nextImageDetails = {
+  datasetId: null,
+  imageId: null,
+  imageUrl: null
+}
+
 const Rate = () => {
   const [componentState, setComponentState] = useComponentState({
     apiKey: '',
@@ -132,25 +138,24 @@ const Rate = () => {
     imageTwoUrl: ''
   })
 
-  const fetchImage = useCallback(async () => {
+  interface IFetchParams {
+    getNextImage?: Boolean
+  }
+
+  const fetchImage = useCallback(async (options: IFetchParams = {}) => {
+    const { getNextImage = false } = options
+
     let data: any = {}
     try {
-      if (imagePending) {
-        return
-      }
-
       if (errorCount >= MAX_ERROR_COUNT) {
         setComponentState({
           initialLoad: false,
           imagePending: false,
           showError: true
         })
-
-        imagePending = false
         return
       }
 
-      imagePending = true
       const res = await fetch('https://ratings.droom.cloud/api/v1/rating/new', {
         headers: {
           'Content-Type': 'application/json',
@@ -162,35 +167,39 @@ const Rate = () => {
     } catch (err) {
       errorCount++
       setTimeout(() => {
-        imagePending = false
-        fetchImage()
+        fetchImage({ getNextImage })
       }, 300)
       return
     } finally {
       if (data.id) {
-        imagePending = false
         errorCount = 0
 
-        setComponentState({
-          rateImage: -Infinity,
-          rateQuality: -Infinity,
-          datasetId: data.dataset_id,
-          imageId: data.id,
-          imageUrl: data.url,
-          initialLoad: false,
-          imagePending: false,
-          showError: false
-        })
+        if (getNextImage) {
+          nextImageDetails.datasetId = data.dataset_id
+          nextImageDetails.imageId = data.id
+          nextImageDetails.imageUrl = data.url
 
-        if (activeImage === 1) {
-          activeImage = 2
-          setComponentState({
-            imageTwoUrl: data.url
-          })
+          if (activeImage === 1) {
+            setComponentState({
+              imageTwoUrl: data.url
+            })
+          } else {
+            setComponentState({
+              imageOneUrl: data.url
+            })
+          }
         } else {
           activeImage = 1
           setComponentState({
-            imageOneUrl: data.url
+            rateImage: -Infinity,
+            rateQuality: -Infinity,
+            datasetId: data.dataset_id,
+            imageOneUrl: data.url,
+            imageId: data.id,
+            imageUrl: data.url,
+            initialLoad: false,
+            imagePending: false,
+            showError: false
           })
         }
       }
@@ -219,6 +228,49 @@ const Rate = () => {
     },
     [setComponentState]
   )
+
+  const loadNextImage = useCallback(() => {
+    const updateState = {
+      rateImage: -Infinity,
+      rateQuality: -Infinity,
+      initialLoad: false,
+      imagePending: false,
+      showError: false,
+      ratingPending: false,
+
+      imageOneStatus: '',
+      imageTwoStatus: '',
+    }
+
+    if (activeImage === 1) {
+      activeImage = 2
+      ratingPending = false
+      updateState.imageOneStatus = 'hide'
+      updateState.imageTwoStatus = 'show'
+
+      setTimeout(() => {
+        setComponentState({
+          imageOneStatus: 'stage'
+        })
+      }, 250)
+
+    } else {
+      activeImage = 1
+      ratingPending = false
+      updateState.imageOneStatus = 'show'
+      updateState.imageTwoStatus = 'hide'
+
+      setTimeout(() => {
+        setComponentState({
+          imageTwoStatus: 'stage'
+        })
+      }, 250)
+    }
+
+    setComponentState({
+      ...updateState
+    })
+  }, [setComponentState])
 
   const rateImageRequest = useCallback(async () => {
     if (ratingPending) {
@@ -256,8 +308,7 @@ const Rate = () => {
       )
 
       const data = await res.json()
-      fetchImage()
-
+      fetchImage({ getNextImage: true })
       const { reward } = data
 
       if (reward) {
@@ -277,6 +328,8 @@ const Rate = () => {
           kudosEarned,
           showError: false
         })
+
+        loadNextImage()
       }
     } catch (err) {
       errorCount++
@@ -285,14 +338,7 @@ const Rate = () => {
         rateImageRequest()
       }, 300)
     }
-  }, [
-    componentState.apiKey,
-    componentState.imageId,
-    componentState.rateImage,
-    componentState.rateQuality,
-    fetchImage,
-    setComponentState
-  ])
+  }, [componentState.apiKey, componentState.imageId, componentState.rateImage, componentState.rateQuality, fetchImage, loadNextImage, setComponentState])
 
   useEffect(() => {
     let totalRated = AppSettings.get('imagesRated') || 0
@@ -303,18 +349,6 @@ const Rate = () => {
       kudosEarned
     })
   }, [setComponentState])
-
-  useEffect(() => {
-    if (imagePending) {
-      return
-    }
-
-    if (componentState.apiKey && !imagePending) {
-      setTimeout(() => {
-        fetchImage()
-      }, 500)
-    }
-  }, [componentState.apiKey, fetchImage])
 
   useEffectOnce(() => {
     activeImage = 0
@@ -335,9 +369,24 @@ const Rate = () => {
     rateImageRequest()
   }, [componentState.rateImage, componentState.rateQuality, rateImageRequest])
 
+  // Neet to set API key on initial load
   useEffect(() => {
     setComponentState({ apiKey: AppSettings.get('apiKey') || ANON_API_KEY })
   }, [setComponentState])
+
+  useEffect(() => {
+    if (imagePending) {
+      return
+    }
+
+    if (componentState.apiKey && !imagePending) {
+      setTimeout(() => {
+        fetchImage().then(() => {
+          fetchImage({ getNextImage: true })
+        })
+      }, 250)
+    }
+  }, [componentState.apiKey, fetchImage])
 
   return (
     <>
@@ -393,40 +442,12 @@ const Rate = () => {
                 pending={componentState.imagePending}
                 src={componentState.imageOneUrl}
                 alt="Rate this image"
-                onLoad={() => {
-                  ratingPending = false
-                  setComponentState({
-                    imageOneStatus: 'show',
-                    imageTwoStatus: 'hide',
-                    ratingPending: false
-                  })
-
-                  setTimeout(() => {
-                    setComponentState({
-                      imageTwoStatus: 'stage'
-                    })
-                  }, 250)
-                }}
               />
               <Image
                 status={componentState.imageTwoStatus}
                 pending={componentState.imagePending}
                 src={componentState.imageTwoUrl}
                 alt="Rate this image"
-                onLoad={() => {
-                  ratingPending = false
-                  setComponentState({
-                    imageOneStatus: 'hide',
-                    imageTwoStatus: 'show',
-                    ratingPending: false
-                  })
-
-                  setTimeout(() => {
-                    setComponentState({
-                      imageOneStatus: 'stage'
-                    })
-                  }, 250)
-                }}
               />
               {componentState.imagePending && (
                 <ImageOverlay>
