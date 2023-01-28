@@ -108,6 +108,21 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.01.28</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            UX: Queue up an additional image in background of rating tab -- this
+            makes rating images seem faster!
+          </StyledLi>
+          <StyledLi>
+            Fix: Clean up some logic related to the pending items page. It was a
+            bit messy, prone to errors, sometimes the image preview you clicked
+            on showed a different image in the popup modal. Just a sucky
+            experience overall. Hopefully, things will work better now.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.01.27</SubSectionTitle>
         <StyledUl>
           <StyledLi>

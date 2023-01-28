@@ -1,6 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useCallback, useEffect, useState } from 'react'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
+import { clearCompletedJob, getCompletedJobs, resetCompleted, setCompletedJob } from '../../store/pendingItemsCache'
 import { JobStatus } from '../../types'
 import {
   db,
@@ -21,13 +22,10 @@ const PendingPage = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const pendingImages =
     useLiveQuery(() => db?.pending?.orderBy('id')?.toArray()) || []
-  const [done, setDone] = useState([])
+  const [done, setDone] = useState<Array<any>>([])
   const [showImageModal, setShowImageModal] = useState(false)
 
   const processDone = useCallback(() => {
-    const updateDone: any = [...done]
-    let updated = false
-
     pendingImages.forEach((job: any) => {
       const DONE = job.jobStatus === JobStatus.Done
 
@@ -37,24 +35,16 @@ const PendingPage = () => {
           return _job.id === job.id
         }).length === 0
       ) {
-        updated = true
-        updateDone.push(job)
+        setCompletedJob(job)
+        setDone(getCompletedJobs())
       }
     })
-
-    if (updated) {
-      setDone(updateDone)
-    }
   }, [done, pendingImages])
 
   const deleteImage = async (imageId: string) => {
     await deleteCompletedImage(imageId)
-
-    const updatedList = done.filter((image: { jobId: string }) => {
-      return image.jobId !== imageId
-    })
-
-    setDone(updatedList)
+    clearCompletedJob(imageId)
+    setDone(getCompletedJobs())
   }
 
   const processPending = () => {
@@ -90,7 +80,7 @@ const PendingPage = () => {
   const [processing = [], queued = [], waiting = [], error = []] = processPending()
 
   const sorted = [
-    ...done,
+    ...done.reverse(),
     ...processing,
     ...queued,
     ...waiting,
@@ -120,16 +110,12 @@ const PendingPage = () => {
   const waitingCount = processing.length + queued.length
 
   useEffect(() => {
-    deleteDoneFromPending()
-    setDone([])
-  }, [])
-
-  useEffect(() => {
     processDone()
   }, [processDone])
 
   useEffectOnce(() => {
     deleteDoneFromPending()
+    setDone(getCompletedJobs())
 
     return () => {
       deleteDoneFromPending()
@@ -165,6 +151,16 @@ const PendingPage = () => {
           <TextButton onClick={() => setFilter('error')}>
             error ({error.length})
           </TextButton>
+          {done.length > 0 && (
+            <div className="mb-2">
+              <TextButton onClick={() => {
+                resetCompleted()
+                setDone(getCompletedJobs())
+              }}>
+                clear completed
+              </TextButton>
+            </div>
+          )}
           {waitingCount > 0 && (
             <div className="mb-2">
               <TextButton color="red" onClick={deleteAllPendingJobs}>
@@ -195,6 +191,19 @@ const PendingPage = () => {
           kudos) while you wait?
         </div>
       )}
+
+      {pendingImages.length === 0 && done.length > 0 && (
+        <>
+          <PageTitle as="h2">Recently completed images</PageTitle>
+          <div className="mb-2">
+            <TextButton onClick={() => {
+              resetCompleted()
+              setDone(getCompletedJobs())
+            }}>Clear all completed</TextButton>
+          </div>
+        </>
+      )}
+
       {sorted.length > 0 &&
         sorted.map((job: { jobId: string; prompt: string }) => {
           return (
