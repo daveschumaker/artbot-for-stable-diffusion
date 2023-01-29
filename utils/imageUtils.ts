@@ -74,6 +74,7 @@ export const randomSampler = (steps: number, isImg2Img: boolean) => {
     samplerArray.push('k_dpm_adaptive')
     samplerArray.push('k_dpmpp_2m')
     samplerArray.push('k_dpmpp_2s_a')
+    samplerArray.push('k_dpmpp_sde')
   }
 
   if (loggedIn || steps <= 25) {

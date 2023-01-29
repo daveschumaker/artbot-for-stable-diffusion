@@ -120,6 +120,7 @@ const Changelog = () => {
             on showed a different image in the popup modal. Just a sucky
             experience overall. Hopefully, things will work better now.
           </StyledLi>
+          <StyledLi>Feat: Support for newly implemented &quot;k_dpmpp_sde&quot; sampler (commonly known as &quot;DPM++ SDE or DPM++ SDE Karras&quot; in other UIs)</StyledLi>
         </StyledUl>
       </Section>
       <Section>

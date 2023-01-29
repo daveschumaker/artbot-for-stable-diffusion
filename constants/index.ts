@@ -19,7 +19,8 @@ export const DEFAULT_SAMPLER_ARRAY = [
   'k_dpm_fast',
   'k_dpm_adaptive',
   'k_dpmpp_2m',
-  'k_dpmpp_2s_a'
+  'k_dpmpp_2s_a',
+  'k_dpmpp_sde'
 ]
 
 interface IQualityMap {
