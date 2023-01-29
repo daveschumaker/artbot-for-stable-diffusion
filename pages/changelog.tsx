@@ -120,7 +120,17 @@ const Changelog = () => {
             on showed a different image in the popup modal. Just a sucky
             experience overall. Hopefully, things will work better now.
           </StyledLi>
-          <StyledLi>Feat: Support for newly implemented &quot;k_dpmpp_sde&quot; sampler (commonly known as &quot;DPM++ SDE or DPM++ SDE Karras&quot; in other UIs)</StyledLi>
+          <StyledLi>
+            Feature: Support for newly implemented &quot;k_dpmpp_sde&quot;
+            sampler (commonly known as &quot;DPM++ SDE or DPM++ SDE Karras&quot;
+            in other UIs)
+          </StyledLi>
+          <StyledLi>
+            Feature: On mobile devices, the image modal will now have an
+            additional share button that uses your device&apos;s native share
+            panel -- for those instances where you want to share / post an image
+            somewhere.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

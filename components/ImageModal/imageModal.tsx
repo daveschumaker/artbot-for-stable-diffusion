@@ -3,11 +3,12 @@ import React from 'react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import useComponentState from '../../hooks/useComponentState'
-import { downloadFile } from '../../utils/imageUtils'
+import { base64toBlob, downloadFile } from '../../utils/imageUtils'
 import ConfirmationModal from '../ConfirmationModal'
 import DownloadIcon from '../icons/DownloadIcon'
 import EyeIcon from '../icons/EyeIcon'
 import LinkIcon from '../icons/LinkIcon'
+import ShareIcon from '../icons/ShareIcon'
 import TrashIcon from '../icons/TrashIcon'
 import SpinnerV2 from '../Spinner'
 import { Button } from '../UI/Button'
@@ -81,7 +82,7 @@ const ImageDetails = styled.div`
 const ImageModal = ({
   disableNav = false,
   handleClose,
-  handleDeleteImageClick = () => {},
+  handleDeleteImageClick = () => { },
   handleLoadNext,
   handleLoadPrev,
   imageDetails = {},
@@ -117,6 +118,25 @@ const ImageModal = ({
     },
     [handleLoadNext, handleLoadPrev, setComponentState]
   )
+
+  const handleShareClick = async () => {
+    try {
+      const blob = await base64toBlob(imageDetails.base64String, 'image/webp')
+
+      await navigator.share({
+        text: `"${imageDetails.prompt}"\n\nvia: https://tinybots.net/artbot\n`,
+        // url: 'https://tinybots.net/artbot',
+        files: [
+          new File([blob], 'image.png', {
+            // @ts-ignore
+            type: blob.type,
+          }),
+        ],
+      })
+    } catch (error) {
+      console.log('Sharing failed!', error)
+    }
+  }
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
@@ -228,6 +248,13 @@ const ImageModal = ({
               <DownloadIcon />
               <span className="hidden md:inline-block">Download PNG</span>
             </Button>
+            {
+              // @ts-ignore
+              navigator.share && (
+                <Button onClick={() => handleShareClick()}>
+                  <ShareIcon />
+                </Button>
+              )}
             <Button btnType="secondary" onClick={() => handleDeleteImage()}>
               <TrashIcon /> Delete
             </Button>
