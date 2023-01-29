@@ -17,6 +17,7 @@ export const maxSteps = ({
     k_dpm_adaptive: 50,
     k_dpmpp_2m: 50,
     k_dpmpp_2s_a: 50,
+    k_dpmpp_sde: 50,
     random: 50
   }
 
@@ -44,6 +45,7 @@ export const validSampler = (sampler: string) => {
     'k_dpm_adaptive',
     'k_dpmpp_2m',
     'k_dpmpp_2s_a',
+    'k_dpmpp_sde',
     'random'
   ]
 
