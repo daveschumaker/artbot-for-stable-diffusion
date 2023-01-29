@@ -9,8 +9,6 @@ import DownloadIcon from '../icons/DownloadIcon'
 import { Button } from '../UI/Button'
 import PageTitle from '../UI/PageTitle'
 
-initBlob()
-
 const Section = styled.div`
   padding-top: 16px;
 
@@ -55,6 +53,8 @@ const ImportExportPanel = () => {
   }
 
   useEffectOnce(() => {
+    initBlob()
+
     getImageCount()
   })
 

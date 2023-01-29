@@ -117,6 +117,12 @@ const Changelog = () => {
             click on something to rate or delete. Thanks to &quot;💫.&quot; on
             Discord for reporting this.
           </StyledLi>
+          <StyledLi>
+            UX: Add option to disable swiping between pages on{' '}
+            <Linker href="/images">image gallery page</Linker> for mobile
+            devices. Thanks to &quot;Black Drapion&quot; on Discord for the
+            suggestion.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

@@ -103,6 +103,7 @@ const SettingsPage = () => {
     apiKey: '',
     apiErrorMsg: '',
     disableSnowflakes: false,
+    enableGallerySwipe: true,
     enableNoSleep: false,
     loadingWorkerStatus: {},
     panel: 'stableHorde',
@@ -196,6 +197,8 @@ const SettingsPage = () => {
     updateObj.apiKey = AppSettings.get('apiKey') || ''
     updateObj.enableNoSleep = AppSettings.get('enableNoSleep') || false
     updateObj.runInBackground = AppSettings.get('runInBackground') || false
+    updateObj.enableGallerySwipe =
+      AppSettings.get('enableGallerySwipe') === false ? false : true
 
     updateObj.saveInputOnCreate = AppSettings.get('saveInputOnCreate') || false // DEPRECATE
     updateObj.savePromptOnCreate =
@@ -781,6 +784,31 @@ const SettingsPage = () => {
                         ? { value: true, label: 'Yes' }
                         : { value: false, label: 'No' }
                     }
+                  />
+                </MaxWidth>
+              </Section>
+              <Section>
+                <SubSectionTitle>
+                  <strong>Enable page swipe on image gallery page?</strong>
+                  <div className="block text-xs mb-2 mt-2 w-full">
+                    On mobile devices, this option allows you to swipe between
+                    full pages of images on the{' '}
+                    <Linker href="/images">images gallery page</Linker>.
+                  </div>
+                </SubSectionTitle>
+                <MaxWidth
+                  // @ts-ignore
+                  maxWidth="240"
+                >
+                  <Switch
+                    onChange={() => {
+                      if (componentState.enableGallerySwipe) {
+                        handleSwitchSelect('enableGallerySwipe', false)
+                      } else {
+                        handleSwitchSelect('enableGallerySwipe', true)
+                      }
+                    }}
+                    checked={componentState.enableGallerySwipe}
                   />
                 </MaxWidth>
               </Section>

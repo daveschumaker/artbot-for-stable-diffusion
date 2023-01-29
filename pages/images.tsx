@@ -38,6 +38,7 @@ import SpinnerV2 from '../components/Spinner'
 import DropDownMenu from '../components/UI/DropDownMenu'
 import DropDownMenuItem from '../components/UI/DropDownMenuItem'
 import ImageModalController from '../components/ImagesPage/ImageModalController'
+import AppSettings from '../models/AppSettings'
 
 const MenuSeparator = styled.div`
   width: 100%;
@@ -88,10 +89,18 @@ const ButtonContainer = styled.div`
 const ImagesPage = () => {
   const handlers = useSwipeable({
     onSwipedLeft: () => {
+      if (AppSettings.get('enableGallerySwipe') === false) {
+        return
+      }
+
       if (componentState.showImageModal) return
       handleLoadMore('next')
     },
     onSwipedRight: () => {
+      if (AppSettings.get('enableGallerySwipe') === false) {
+        return
+      }
+
       if (componentState.showImageModal) return
       handleLoadMore('prev')
     },
