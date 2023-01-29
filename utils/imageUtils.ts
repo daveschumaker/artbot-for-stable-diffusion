@@ -431,10 +431,12 @@ export const modifyPromptForStylePreset = ({
 
   // Handle negative prompt
   if (presetNeg || negative) {
-    newPrompt =
-      newPrompt +
-      ' ### ' +
-      [presetNeg ? presetNeg + ', ' : '', negative].join('')
+    let neg = presetNeg + ' ' + negative
+    let negRegex = /{np}/i
+    newPrompt = newPrompt.replace(negRegex, ' ### ' + neg.trim())
+  } else {
+    let negRegex = /{np}/i
+    newPrompt = newPrompt.replace(negRegex, '')
   }
 
   return newPrompt

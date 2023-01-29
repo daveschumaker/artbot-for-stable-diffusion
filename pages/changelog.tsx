@@ -108,6 +108,18 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.01.29</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>Update styles dropdown on the create image page.</StyledLi>
+          <StyledLi>
+            Fix: Remove reverse sort order for completed items page. It caused
+            items to jump around, which was problematic if you were trying to
+            click on something to rate or delete. Thanks to &quot;💫.&quot; on
+            Discord for reporting this.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.01.28</SubSectionTitle>
         <StyledUl>
           <StyledLi>
