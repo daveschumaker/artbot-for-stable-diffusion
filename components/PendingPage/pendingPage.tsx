@@ -141,6 +141,7 @@ const PendingPage = () => {
     initialLoad()
     return () => {
       deleteDoneFromPending()
+      setShowImageModal(false)
     }
   })
 

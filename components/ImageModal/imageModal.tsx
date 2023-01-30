@@ -235,6 +235,7 @@ const ImageModal = ({
           <OptionsRow>
             <Button
               onClick={() => {
+                handleClose()
                 router.push(`/image/${imageDetails.jobId}`)
               }}
             >
@@ -281,8 +282,17 @@ const ImageModal = ({
               <RateMyImage jobId={imageDetails.jobId} />
             )}
           <TextWrapper>
-            <div onClick={handleClose}>
-              <Linker href={`/image/${imageDetails.jobId}`} passHref>
+            <div
+              onClick={() => {
+                handleClose()
+                router.push(`/image/${imageDetails.jobId}`)
+              }}
+            >
+              <Linker
+                href={`/image/${imageDetails.jobId}`}
+                disableLinkClick
+                passHref
+              >
                 <LinkIcon />
               </Linker>
             </div>

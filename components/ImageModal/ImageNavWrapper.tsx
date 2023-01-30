@@ -41,7 +41,7 @@ const StyledImage = styled.img`
 interface IProps {
   base64String: string
   disableNav?: boolean
-  handleClose(): void
+  handleClose?: () => void
   handleLoadNext(): void
   handleLoadPrev(): void
   jobId: string
@@ -51,6 +51,7 @@ interface IProps {
 const ImageNavWrapper = ({
   base64String,
   disableNav,
+  handleClose = () => {},
   handleLoadNext = () => {},
   handleLoadPrev = () => {},
   jobId,
@@ -111,7 +112,14 @@ const ImageNavWrapper = ({
       }}
     >
       <ImageContainer {...handlers}>
-        <Linker href={`/image/${jobId}`} passHref tabIndex={0}>
+        <Linker
+          href={`/image/${jobId}`}
+          onClick={() => {
+            handleClose()
+          }}
+          passHref
+          tabIndex={0}
+        >
           <StyledImage src={'data:image/webp;base64,' + base64String} />
         </Linker>
         {!disableNav && mouseHover && (
