@@ -8,6 +8,7 @@ interface IProps {
   imageList: Array<any>
   initialIndexJobId: string | boolean
   onAfterDelete(): void
+  reverseButtons?: boolean
 }
 
 interface IImageDetails {
@@ -20,7 +21,8 @@ const ImageModalController = ({
   handleDeleteImage = () => {},
   initialIndexJobId = '',
   imageList = [],
-  onAfterDelete = () => {}
+  onAfterDelete = () => {},
+  reverseButtons = false
 }: IProps) => {
   const [loading, setLoading] = useState(true)
   const [idx, setIdx] = useState(0)
@@ -89,6 +91,7 @@ const ImageModalController = ({
       handleLoadPrev={handleLoadPrev}
       imageDetails={imageDetails}
       loading={loading}
+      reverseButtons={reverseButtons}
     />
   )
 }

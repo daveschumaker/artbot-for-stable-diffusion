@@ -376,13 +376,17 @@ const PendingItem = memo(({ jobDetails, jobId, onImageClick = () => {} }) => {
                 <br />
               </div>
             )}
-            {(jobDetails.jobStatus === JobStatus.Done ||
-              jobDetails.jobStatus === JobStatus.Waiting ||
+            {(jobDetails.jobStatus === JobStatus.Waiting ||
               jobDetails.jobStatus === JobStatus.Queued ||
               jobDetails.jobStatus === JobStatus.Requested ||
               jobDetails.jobStatus === JobStatus.Processing) && (
               <div className="w-full font-mono text-xs">
                 Created: {new Date(jobDetails.timestamp).toLocaleString()}
+              </div>
+            )}
+            {jobDetails.jobStatus === JobStatus.Done && (
+              <div className="w-full font-mono text-xs">
+                Completed: {new Date(jobDetails.timestamp).toLocaleString()}
               </div>
             )}
             {jobDetails.jobStatus === JobStatus.Error && (
