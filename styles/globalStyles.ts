@@ -6,30 +6,14 @@ interface DefaultTheme {
 }
 
 export const GlobalStyles = createGlobalStyle<{ theme: DefaultTheme }>`
-  @font-face{
-    font-family: "Roboto Slab"
-    font-size: 16px
-    line-height: 1.6;
-  }
-
-  @font-face{
-    font-size: 16px
-    line-height: 1.6
-    letter-spacing: 0.1px
-    word-spacing: -0.7px
-    visibility: visible
-    font-family: "Times New Roman";
-  }
-
   body, html {
     background: #080B0C;
     background: ${({ theme }) => theme.body};
     color: ${({ theme }) => theme.text};
     padding: 0;
-    font-family: 'Roboto Slab', "Times New Roman", serif;
+    font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
     letter-spacing: 0.4px;
     margin: 0;
-    /* transition: all 0.50s linear; */
   }
 
   body {
