@@ -37,6 +37,7 @@ import SubSectionTitle from '../../UI/SubSectionTitle'
 import TextTooltipRow from '../../UI/TextTooltipRow'
 import MaxWidth from '../../UI/MaxWidth'
 import SelectModel from './SelectModel'
+import { modelInfoStore } from '../../../store/modelStore'
 
 const NoSliderSpacer = styled.div`
   height: 14px;
@@ -148,6 +149,9 @@ const AdvancedOptionsPanel = ({
   setInput,
   setHasValidationError
 }: Props) => {
+  const modelState = useStore(modelInfoStore)
+  const { availableModels, availableModelNames } = modelState
+
   const userState = useStore(userInfoStore)
   const { loggedIn } = userState
   const [errorMessage, setErrorMessage, hasError] = useErrorMessage()
@@ -155,7 +159,8 @@ const AdvancedOptionsPanel = ({
   const [componentState, setComponentState] = useComponentState({
     showMultiModel: PromptInputSettings.get('showMultiModel') || false,
     showNegPane: false,
-    totalModelsCount: 0
+    totalModelsCount: availableModelNames.length,
+    favoriteModelsCount: 0
   })
 
   const [initialLoad, setInitialLoad] = useState(true)
@@ -223,7 +228,7 @@ const AdvancedOptionsPanel = ({
     })?.length
 
     setComponentState({ totalModelsCount })
-  }, [input, setComponentState])
+  }, [availableModels, input, setComponentState])
 
   const clearNegPrompt = () => {
     setDefaultPrompt('')
@@ -303,7 +308,12 @@ const AdvancedOptionsPanel = ({
     validateSteps()
   }, [input.sampler, validateSteps])
 
-  const favModels = AppSettings.get('favoriteModels') || {}
+  useEffect(() => {
+    const favModels = AppSettings.get('favoriteModels') || {}
+    const favoriteModelsCount = Object.keys(favModels).length
+
+    setComponentState({ favoriteModelsCount })
+  }, [input, setComponentState])
 
   // Dynamically display various options
   const showAllSamplersInput =
@@ -1354,7 +1364,7 @@ const AdvancedOptionsPanel = ({
         <Section>
           <SubSectionTitle>
             <TextTooltipRow>
-              Use favorite models ({Object.keys(favModels).length})
+              Use favorite models ({componentState.favoriteModelsCount})
               <Tooltip left="-140" width="240px">
                 Automatically generate an image for each model you have
                 favorited.
@@ -1367,7 +1377,9 @@ const AdvancedOptionsPanel = ({
             </div>
           </SubSectionTitle>
           <Switch
-            disabled={Object.keys(favModels).length === 0}
+            disabled={
+              Object.keys(componentState.favoriteModelsCount).length === 0
+            }
             onChange={() => {
               if (!input.useFavoriteModels) {
                 trackEvent({

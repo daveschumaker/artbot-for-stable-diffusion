@@ -1,10 +1,15 @@
 require('dotenv').config()
+const fs = require('fs')
 const LocalStorage = require('node-localstorage').LocalStorage
 const __DEV__ = process.env.NODE_ENV !== 'production'
 
-const dataPath = __DEV__
+let dataPath = __DEV__
   ? process.env.DEV_MODEL_CHANGE_DB
   : process.env.PROD_MODEL_CHANGE_DB
+
+if (!fs.existsSync(dataPath)) {
+  dataPath = './ArtBot_ModelChanges'
+}
 
 const localStorage = new LocalStorage(dataPath, 10485760)
 
