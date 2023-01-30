@@ -31,6 +31,20 @@ export default async function handler(
 
   data.useragent = req.headers['user-agent']
 
+  if (data.event === 'FEEDBACK_FORM') {
+    try {
+      await fetch(`http://localhost:4001/api/v1/artbot/feedback`, {
+        method: 'POST',
+        body: JSON.stringify(req.body),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    } catch (err) {
+      // eh, it's okay if nothing happens.
+    }
+  }
+
   if (process.env.TELEMETRY_API) {
     try {
       await fetch(process.env.TELEMETRY_API, {
