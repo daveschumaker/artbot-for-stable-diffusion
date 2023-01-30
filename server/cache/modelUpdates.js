@@ -3,11 +3,15 @@ const fs = require('fs')
 const LocalStorage = require('node-localstorage').LocalStorage
 const __DEV__ = process.env.NODE_ENV !== 'production'
 
-let dataPath = __DEV__
-  ? process.env.DEV_MODEL_CHANGE_DB
-  : process.env.PROD_MODEL_CHANGE_DB
+let dataPath = ''
 
-if (!fs.existsSync(dataPath)) {
+if (process.env.DEV_MODEL_CHANGE_DB && process.env.PROD_MODEL_CHANGE_DB) {
+  dataPath = __DEV__
+    ? process.env.DEV_MODEL_CHANGE_DB
+    : process.env.PROD_MODEL_CHANGE_DB
+}
+
+if (typeof dataPath === 'undefined' || !dataPath || !fs.existsSync(dataPath)) {
   dataPath = './ArtBot_ModelChanges'
 }
 
