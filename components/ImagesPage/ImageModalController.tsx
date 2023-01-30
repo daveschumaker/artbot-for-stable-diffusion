@@ -11,6 +11,7 @@ interface IProps {
   handleClose(): void
   imageId: string
   onAfterDelete(): void
+  reverseButtons?: boolean
 }
 
 interface IImageDetails {
@@ -20,7 +21,8 @@ interface IImageDetails {
 const ImageModalController = ({
   handleClose = () => {},
   imageId,
-  onAfterDelete = () => {}
+  onAfterDelete = () => {},
+  reverseButtons = false
 }: IProps) => {
   const [loading, setLoading] = useState(true)
   const [imageDetails, setImageDetails] = useState<IImageDetails>({
@@ -76,6 +78,7 @@ const ImageModalController = ({
       handleLoadPrev={handleLoadPrev}
       imageDetails={imageDetails}
       loading={loading}
+      reverseButtons={reverseButtons}
     />
   )
 }

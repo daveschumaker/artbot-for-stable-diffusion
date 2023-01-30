@@ -25,6 +25,7 @@ interface IProps {
   handleLoadPrev(): void
   imageDetails: any
   loading?: boolean
+  reverseButtons?: boolean
 }
 
 const ContentWrapper = styled.div`
@@ -82,11 +83,12 @@ const ImageDetails = styled.div`
 const ImageModal = ({
   disableNav = false,
   handleClose,
-  handleDeleteImageClick = () => { },
+  handleDeleteImageClick = () => {},
   handleLoadNext,
   handleLoadPrev,
   imageDetails = {},
-  loading = false
+  loading = false,
+  reverseButtons = false
 }: IProps) => {
   const router = useRouter()
   const [showDeleteModal, setShowDeleteModal] = useState(false)
@@ -129,9 +131,9 @@ const ImageModal = ({
         files: [
           new File([blob], 'image.png', {
             // @ts-ignore
-            type: blob.type,
-          }),
-        ],
+            type: blob.type
+          })
+        ]
       })
     } catch (error) {
       console.log('Sharing failed!', error)
@@ -142,10 +144,18 @@ const ImageModal = ({
     const handleKeyPress = (e: KeyboardEvent) => {
       if (e.key === 'ArrowLeft') {
         if (disableNav) return
-        handleLoadMore('next')
+        if (reverseButtons) {
+          handleLoadMore('prev')
+        } else {
+          handleLoadMore('next')
+        }
       } else if (e.key === 'ArrowRight') {
         if (disableNav) return
-        handleLoadMore('prev')
+        if (reverseButtons) {
+          handleLoadMore('next')
+        } else {
+          handleLoadMore('prev')
+        }
       } else if (e.key === 'Escape') {
         handleClose()
       } else if (e.key === 'Delete') {
@@ -154,7 +164,13 @@ const ImageModal = ({
     }
     window.addEventListener('keydown', handleKeyPress)
     return () => window.removeEventListener('keydown', handleKeyPress)
-  }, [disableNav, handleClose, handleLoadMore, setComponentState])
+  }, [
+    disableNav,
+    handleClose,
+    handleLoadMore,
+    reverseButtons,
+    setComponentState
+  ])
 
   useEffect(() => {
     if (ref?.current?.clientHeight) {
@@ -254,7 +270,8 @@ const ImageModal = ({
                 <Button onClick={() => handleShareClick()}>
                   <ShareIcon />
                 </Button>
-              )}
+              )
+            }
             <Button btnType="secondary" onClick={() => handleDeleteImage()}>
               <TrashIcon /> Delete
             </Button>
