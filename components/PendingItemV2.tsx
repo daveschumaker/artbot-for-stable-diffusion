@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from 'react'
+import { memo, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
 
@@ -120,10 +120,10 @@ const ImageContainer = styled.div`
 const StyledImage = styled(ImageSquare)``
 
 interface IProps {
-  handleCloseClick?: () => void
+  handleCloseClick?: (jobId: string) => void
   jobDetails: any
   jobId: string
-  onImageClick?: () => void
+  onImageClick?: (jobId: string) => void
 }
 
 const PendingItem = memo(
@@ -144,8 +144,6 @@ const PendingItem = memo(
     const serverHasJob =
       jobDetails?.jobStatus === JobStatus.Queued ||
       jobDetails?.jobStatus === JobStatus.Processing
-
-    const [hidePanel, setHidePanel] = useState(false)
 
     const handleDeleteJob = async () => {
       if (serverHasJob) {
@@ -229,7 +227,7 @@ const PendingItem = memo(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    if (!jobDetails || hidePanel) {
+    if (!jobDetails) {
       return null
     }
 
