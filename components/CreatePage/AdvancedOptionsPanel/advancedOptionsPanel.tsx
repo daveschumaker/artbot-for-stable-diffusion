@@ -154,7 +154,8 @@ const AdvancedOptionsPanel = ({
 
   const [componentState, setComponentState] = useComponentState({
     showMultiModel: PromptInputSettings.get('showMultiModel') || false,
-    showNegPane: false
+    showNegPane: false,
+    totalModelsCount: 0
   })
 
   const [initialLoad, setInitialLoad] = useState(true)
@@ -216,6 +217,14 @@ const AdvancedOptionsPanel = ({
     }, 750)
   }, [])
 
+  useEffect(() => {
+    const totalModelsCount = validModelsArray({
+      imageParams: input
+    })?.length
+
+    setComponentState({ totalModelsCount })
+  }, [input, setComponentState])
+
   const clearNegPrompt = () => {
     setDefaultPrompt('')
     PromptInputSettings.set('negative', '')
@@ -247,7 +256,7 @@ const AdvancedOptionsPanel = ({
       })
 
       await setDefaultPrompt(trimInput)
-    } catch (err) { }
+    } catch (err) {}
   }, [input.negative])
 
   const getPostProcessing = useCallback(
@@ -331,7 +340,7 @@ const AdvancedOptionsPanel = ({
     !componentState.showMultiModel &&
     !input.useAllModels &&
     input.source_processing !==
-    (SourceProcessing.InPainting || SourceProcessing.OutPaiting)
+      (SourceProcessing.InPainting || SourceProcessing.OutPaiting)
 
   const showNumImagesInput =
     !input.useAllModels && !input.useMultiSteps && !input.useAllSamplers
@@ -438,19 +447,20 @@ const AdvancedOptionsPanel = ({
                         isNaN(e.target.value) ||
                         e.target.value < 64 ||
                         e.target.value >
-                        (loggedIn
-                          ? MAX_DIMENSIONS_LOGGED_IN
-                          : MAX_DIMENSIONS_LOGGED_OUT)
+                          (loggedIn
+                            ? MAX_DIMENSIONS_LOGGED_IN
+                            : MAX_DIMENSIONS_LOGGED_OUT)
                       ) {
                         if (initialLoad) {
                           return
                         }
 
                         setErrorMessage({
-                          width: `Please enter a valid number between 64 and ${loggedIn
+                          width: `Please enter a valid number between 64 and ${
+                            loggedIn
                               ? MAX_DIMENSIONS_LOGGED_IN
                               : MAX_DIMENSIONS_LOGGED_OUT
-                            }`
+                          }`
                         })
                         return
                       }
@@ -513,19 +523,20 @@ const AdvancedOptionsPanel = ({
                         isNaN(e.target.value) ||
                         e.target.value < 64 ||
                         e.target.value >
-                        (loggedIn
-                          ? MAX_DIMENSIONS_LOGGED_IN
-                          : MAX_DIMENSIONS_LOGGED_OUT)
+                          (loggedIn
+                            ? MAX_DIMENSIONS_LOGGED_IN
+                            : MAX_DIMENSIONS_LOGGED_OUT)
                       ) {
                         if (initialLoad) {
                           return
                         }
 
                         setErrorMessage({
-                          height: `Please enter a valid number between 64 and ${loggedIn
+                          height: `Please enter a valid number between 64 and ${
+                            loggedIn
                               ? MAX_DIMENSIONS_LOGGED_IN
                               : MAX_DIMENSIONS_LOGGED_OUT
-                            }`
+                          }`
                         })
                         return
                       }
@@ -607,7 +618,7 @@ const AdvancedOptionsPanel = ({
         <Section>
           <SubSectionTitle>Sampler</SubSectionTitle>
           {input.source_processing === SourceProcessing.InPainting &&
-            input.models[0] === 'stable_diffusion_inpainting' ? (
+          input.models[0] === 'stable_diffusion_inpainting' ? (
             <div className="mt-0 text-sm text-slate-500">
               Note: Sampler disabled when inpainting model is used.
             </div>
@@ -985,135 +996,135 @@ const AdvancedOptionsPanel = ({
       {(input.img2img ||
         input.source_processing === SourceProcessing.Img2Img ||
         input.source_processing === SourceProcessing.InPainting) && (
-          <TwoPanel className="mt-4">
-            <SplitPanel>
-              <Section>
-                <div className="flex flex-row items-center justify-between">
-                  <SubSectionTitle>
-                    <TextTooltipRow>
-                      Denoise{' '}
-                      <Tooltip width="200px">
-                        Amount of noise added to input image. Values that approach
-                        1.0 allow for lots of variations but will also produce
-                        images that are not semantically consistent with the
-                        input. Only available for img2img.
-                      </Tooltip>
-                    </TextTooltipRow>
-                    <div className="block text-xs w-full">(0.0 - 1.0)</div>
-                  </SubSectionTitle>
-                  <NumberInput
-                    // @ts-ignore
-                    className="mb-2"
-                    type="text"
-                    step={0.05}
-                    disabled={input.models[0] === 'stable_diffusion_inpainting'}
-                    min={0}
-                    max={1.0}
-                    onBlur={(e: any) => {
-                      if (Number(e.target.value < 0)) {
-                        PromptInputSettings.set('denoising_strength', 0)
-                        setInput({ denoising_strength: 0 })
+        <TwoPanel className="mt-4">
+          <SplitPanel>
+            <Section>
+              <div className="flex flex-row items-center justify-between">
+                <SubSectionTitle>
+                  <TextTooltipRow>
+                    Denoise{' '}
+                    <Tooltip width="200px">
+                      Amount of noise added to input image. Values that approach
+                      1.0 allow for lots of variations but will also produce
+                      images that are not semantically consistent with the
+                      input. Only available for img2img.
+                    </Tooltip>
+                  </TextTooltipRow>
+                  <div className="block text-xs w-full">(0.0 - 1.0)</div>
+                </SubSectionTitle>
+                <NumberInput
+                  // @ts-ignore
+                  className="mb-2"
+                  type="text"
+                  step={0.05}
+                  disabled={input.models[0] === 'stable_diffusion_inpainting'}
+                  min={0}
+                  max={1.0}
+                  onBlur={(e: any) => {
+                    if (Number(e.target.value < 0)) {
+                      PromptInputSettings.set('denoising_strength', 0)
+                      setInput({ denoising_strength: 0 })
+                      return
+                    }
+
+                    if (Number(e.target.value > 1.0)) {
+                      PromptInputSettings.set('denoising_strength', 1)
+                      setInput({ denoising_strength: 1 })
+                      return
+                    }
+
+                    if (isNaN(e.target.value)) {
+                      PromptInputSettings.set('denoising_strength', 0.5)
+                      setInput({ denoising_strength: 0.5 })
+                      return
+                    }
+
+                    if (
+                      isNaN(e.target.value) ||
+                      e.target.value < 0 ||
+                      e.target.value > 1.0
+                    ) {
+                      if (initialLoad) {
                         return
                       }
 
-                      if (Number(e.target.value > 1.0)) {
-                        PromptInputSettings.set('denoising_strength', 1)
-                        setInput({ denoising_strength: 1 })
-                        return
-                      }
+                      setErrorMessage({
+                        denoising_strength: `Please enter a valid number between 0 and 1.0`
+                      })
+                    } else if (errorMessage.denoising_strength) {
+                      setErrorMessage({ denoising_strength: null })
+                    }
+                  }}
+                  onMinusClick={() => {
+                    if (isNaN(input.denoising_strength)) {
+                      input.denoising_strength = 0.5
+                    }
 
-                      if (isNaN(e.target.value)) {
-                        PromptInputSettings.set('denoising_strength', 0.5)
-                        setInput({ denoising_strength: 0.5 })
-                        return
-                      }
+                    if (Number(input.denoising_strength) > 1) {
+                      PromptInputSettings.set('denoising_strength', 1)
+                      setInput({ denoising_strength: 1 })
+                      return
+                    }
 
-                      if (
-                        isNaN(e.target.value) ||
-                        e.target.value < 0 ||
-                        e.target.value > 1.0
-                      ) {
-                        if (initialLoad) {
-                          return
-                        }
+                    const value = Number(input.denoising_strength) - 0.05
+                    const niceNumber = Number(value).toFixed(2)
+                    PromptInputSettings.set('denoising_strength', niceNumber)
+                    setInput({ denoising_strength: niceNumber })
+                  }}
+                  onPlusClick={() => {
+                    if (isNaN(input.denoising_strength)) {
+                      input.denoising_strength = 0.5
+                    }
 
-                        setErrorMessage({
-                          denoising_strength: `Please enter a valid number between 0 and 1.0`
-                        })
-                      } else if (errorMessage.denoising_strength) {
-                        setErrorMessage({ denoising_strength: null })
-                      }
-                    }}
-                    onMinusClick={() => {
-                      if (isNaN(input.denoising_strength)) {
-                        input.denoising_strength = 0.5
-                      }
-
-                      if (Number(input.denoising_strength) > 1) {
-                        PromptInputSettings.set('denoising_strength', 1)
-                        setInput({ denoising_strength: 1 })
-                        return
-                      }
-
-                      const value = Number(input.denoising_strength) - 0.05
-                      const niceNumber = Number(value).toFixed(2)
-                      PromptInputSettings.set('denoising_strength', niceNumber)
-                      setInput({ denoising_strength: niceNumber })
-                    }}
-                    onPlusClick={() => {
-                      if (isNaN(input.denoising_strength)) {
-                        input.denoising_strength = 0.5
-                      }
-
-                      const value = Number(input.denoising_strength) + 0.05
-                      const niceNumber = Number(value).toFixed(2)
-                      PromptInputSettings.set('denoising_strength', niceNumber)
-                      setInput({ denoising_strength: niceNumber })
-                    }}
-                    name="denoising_strength"
-                    onChange={handleChangeInput}
-                    // @ts-ignore
-                    value={input.denoising_strength}
-                    width="100%"
-                  />
-                </div>
-                {input.source_processing === SourceProcessing.InPainting &&
-                  input.models[0] === 'stable_diffusion_inpainting' && (
-                    <div className="mt-0 text-sm text-slate-500">
-                      Note: Denoise disabled when inpainting model is used.
-                    </div>
-                  )}
-                <div className="mb-4">
-                  <Slider
-                    disabled={input.models[0] === 'stable_diffusion_inpainting'}
-                    value={input.denoising_strength}
-                    min={0}
-                    max={1}
-                    step={0.05}
-                    onChange={(e: any) => {
-                      const event = {
-                        target: {
-                          name: 'denoising_strength',
-                          value: e.target.value
-                        }
-                      }
-
-                      handleChangeInput(event)
-                    }}
-                  />
-                </div>
-                {errorMessage.denoising_strength && (
-                  <div className="mb-2 text-red-500 text-lg font-bold">
-                    {errorMessage.denoising_strength}
+                    const value = Number(input.denoising_strength) + 0.05
+                    const niceNumber = Number(value).toFixed(2)
+                    PromptInputSettings.set('denoising_strength', niceNumber)
+                    setInput({ denoising_strength: niceNumber })
+                  }}
+                  name="denoising_strength"
+                  onChange={handleChangeInput}
+                  // @ts-ignore
+                  value={input.denoising_strength}
+                  width="100%"
+                />
+              </div>
+              {input.source_processing === SourceProcessing.InPainting &&
+                input.models[0] === 'stable_diffusion_inpainting' && (
+                  <div className="mt-0 text-sm text-slate-500">
+                    Note: Denoise disabled when inpainting model is used.
                   </div>
                 )}
-              </Section>
-            </SplitPanel>
-            <SplitPanel>
-              <Section></Section>
-            </SplitPanel>
-          </TwoPanel>
-        )}
+              <div className="mb-4">
+                <Slider
+                  disabled={input.models[0] === 'stable_diffusion_inpainting'}
+                  value={input.denoising_strength}
+                  min={0}
+                  max={1}
+                  step={0.05}
+                  onChange={(e: any) => {
+                    const event = {
+                      target: {
+                        name: 'denoising_strength',
+                        value: e.target.value
+                      }
+                    }
+
+                    handleChangeInput(event)
+                  }}
+                />
+              </div>
+              {errorMessage.denoising_strength && (
+                <div className="mb-2 text-red-500 text-lg font-bold">
+                  {errorMessage.denoising_strength}
+                </div>
+              )}
+            </Section>
+          </SplitPanel>
+          <SplitPanel>
+            <Section></Section>
+          </SplitPanel>
+        </TwoPanel>
+      )}
       <Section>
         <SubSectionTitle>
           <TextTooltipRow>
@@ -1299,13 +1310,7 @@ const AdvancedOptionsPanel = ({
           <SubSectionTitle>
             <>
               <TextTooltipRow>
-                Use all available models (
-                {
-                  validModelsArray({
-                    imageParams: input
-                  })?.length
-                }
-                )
+                Use all available models ({componentState.totalModelsCount})
                 <Tooltip left="-140" width="240px">
                   Automatically generate an image for each model currently
                   available on Stable Horde

@@ -92,39 +92,40 @@ export default function NavBar() {
   return (
     <StyledNavBar>
       <StyledUl>
-        <Link href="/" passHref>
-          <StyledLi active={isActiveRoute('/')}>
+        <StyledLi active={isActiveRoute('/')}>
+          <Link href="/" passHref>
             <IconCreate className="inline-block mr-1 pb-1" />
             Create
-          </StyledLi>
-        </Link>
-        <Link href="/interrogate" passHref>
-          <StyledLi active={isActiveRoute('/interrogate')}>
+          </Link>
+        </StyledLi>
+        <StyledLi active={isActiveRoute('/interrogate')}>
+          <Link href="/interrogate" passHref>
             <ZoomQuestionIcon className="inline-block mr-1 pb-1" />
             Interrogate
-          </StyledLi>
-        </Link>
-        <Link href="/rate" passHref>
-          <StyledLi active={isActiveRoute('/rate')}>
+          </Link>
+        </StyledLi>
+        <StyledLi active={isActiveRoute('/rate')}>
+          <Link href="/rate" passHref>
             <StarsIcon className="inline-block mr-1 pb-1" />
             Rate
-          </StyledLi>
-        </Link>
-        <Link href="/pending" passHref>
-          <StyledLi active={isActiveRoute('/pending')}>
+          </Link>
+        </StyledLi>
+        <StyledLi active={isActiveRoute('/pending')}>
+          <Link href="/pending" passHref>
             <HourglassIcon className="inline-block mr-[2-px] pb-1" />
             Pending
-          </StyledLi>
-        </Link>
-        <Link
-          href="/images"
-          passHref
-          onClick={() => {
-            clearNewImageNotification()
-            handleForceReload()
-          }}
-        >
-          <StyledLi active={isActiveRoute('/images')}>
+          </Link>
+        </StyledLi>
+
+        <StyledLi active={isActiveRoute('/images')}>
+          <Link
+            href="/images"
+            passHref
+            onClick={() => {
+              clearNewImageNotification()
+              handleForceReload()
+            }}
+          >
             {newImageReady ? (
               <PhotoPlusIcon
                 className="inline-block mr-[2-px] pb-1"
@@ -134,20 +135,20 @@ export default function NavBar() {
               <PhotoIcon className="inline-block mr-[2-px] pb-1" />
             )}
             Images
-          </StyledLi>
-        </Link>
-        <Link href="/info" passHref>
-          <StyledLi active={isActiveRoute('/info')}>
+          </Link>
+        </StyledLi>
+        <StyledLi active={isActiveRoute('/info')}>
+          <Link href="/info" passHref>
             <InfoIcon className="inline-block mr-1 pb-1" />
             Info
-          </StyledLi>
-        </Link>
-        <Link href="/settings" passHref>
-          <StyledLi active={isActiveRoute('/settings')}>
+          </Link>
+        </StyledLi>
+        <StyledLi active={isActiveRoute('/settings')}>
+          <Link href="/settings" passHref>
             <SettingsIcon className="inline-block mr-[2-px] pb-1" />
             Settings
-          </StyledLi>
-        </Link>
+          </Link>
+        </StyledLi>
       </StyledUl>
     </StyledNavBar>
   )
