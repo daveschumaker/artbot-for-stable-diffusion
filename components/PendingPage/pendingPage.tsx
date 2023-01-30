@@ -4,6 +4,7 @@ import { useEffectOnce } from '../../hooks/useEffectOnce'
 import {
   clearCompletedJob,
   getCompletedJobs,
+  initRecentJobs,
   resetCompleted,
   setCompletedJob
 } from '../../store/pendingItemsCache'
@@ -33,17 +34,12 @@ const PendingPage = () => {
   // On modal open (or close), freeze state of completed jobs so modal doesn't jump around.
   const [jobsForModal, setJobsForModal] = useState<Array<any>>([])
 
-  const processDone = useCallback(() => {
-    pendingImages.forEach((job: any) => {
+  const processDone = useCallback(async () => {
+    pendingImages.forEach(async (job: any) => {
       const DONE = job.jobStatus === JobStatus.Done
 
-      if (
-        DONE &&
-        done.filter((_job: any) => {
-          return _job.id === job.id
-        }).length === 0
-      ) {
-        setCompletedJob(job)
+      if (DONE) {
+        await setCompletedJob(job)
         setDone(getCompletedJobs())
 
         if (!showImageModal) {
@@ -51,12 +47,20 @@ const PendingPage = () => {
         }
       }
     })
-  }, [done, pendingImages, showImageModal])
+  }, [pendingImages, showImageModal])
 
-  const deleteImage = async (imageId: string) => {
-    await deleteCompletedImage(imageId)
-    clearCompletedJob(imageId)
+  const deleteImage = async (jobId: string) => {
+    await deleteCompletedImage(jobId)
+    await clearCompletedJob(jobId)
+
     setDone(getCompletedJobs())
+    setJobsForModal(getCompletedJobs())
+  }
+
+  const onClosePanel = async (jobId: string) => {
+    await clearCompletedJob(jobId)
+    setDone(getCompletedJobs())
+    setJobsForModal(getCompletedJobs())
   }
 
   const processPending = () => {
@@ -122,14 +126,19 @@ const PendingPage = () => {
 
   const waitingCount = processing.length + queued.length
 
+  const initialLoad = async () => {
+    await initRecentJobs()
+    setDone(getCompletedJobs())
+    setJobsForModal(getCompletedJobs())
+  }
+
   useEffect(() => {
     processDone()
   }, [processDone])
 
   useEffectOnce(() => {
     deleteDoneFromPending()
-    setDone(getCompletedJobs())
-
+    initialLoad()
     return () => {
       deleteDoneFromPending()
     }
@@ -139,6 +148,7 @@ const PendingPage = () => {
     <div style={{ overflowAnchor: 'none' }}>
       {showImageModal && (
         <ImageModalController
+          reverseButtons
           onAfterDelete={() => {}}
           handleDeleteImage={deleteImage}
           handleClose={() => {
@@ -232,8 +242,12 @@ const PendingPage = () => {
         sorted.map((job: { jobId: string; prompt: string }) => {
           return (
             <PendingItem
+              handleCloseClick={() => {
+                onClosePanel(job.jobId)
+              }}
               //@ts-ignore
               onImageClick={setShowImageModal}
+              // onHideClick={}
               //@ts-ignore
               jobDetails={job}
               //@ts-ignore

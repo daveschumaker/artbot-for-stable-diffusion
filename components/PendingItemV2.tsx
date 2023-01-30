@@ -119,342 +119,359 @@ const ImageContainer = styled.div`
 
 const StyledImage = styled(ImageSquare)``
 
-// @ts-ignore
-const PendingItem = memo(({ jobDetails, jobId, onImageClick = () => {} }) => {
-  const router = useRouter()
-  const modelState = useStore(modelInfoStore)
-  const { availableModels } = modelState
+interface IProps {
+  handleCloseClick?: () => void
+  jobDetails: any
+  jobId: string
+  onImageClick?: () => void
+}
 
-  const processDoneOrError =
-    jobDetails?.jobStatus === JobStatus.Done ||
-    jobDetails?.jobStatus === JobStatus.Error
+const PendingItem = memo(
+  ({
+    handleCloseClick = () => {},
+    jobDetails,
+    jobId,
+    onImageClick = () => {}
+  }: IProps) => {
+    const router = useRouter()
+    const modelState = useStore(modelInfoStore)
+    const { availableModels } = modelState
 
-  const serverHasJob =
-    jobDetails?.jobStatus === JobStatus.Queued ||
-    jobDetails?.jobStatus === JobStatus.Processing
+    const processDoneOrError =
+      jobDetails?.jobStatus === JobStatus.Done ||
+      jobDetails?.jobStatus === JobStatus.Error
 
-  const [hidePanel, setHidePanel] = useState(false)
+    const serverHasJob =
+      jobDetails?.jobStatus === JobStatus.Queued ||
+      jobDetails?.jobStatus === JobStatus.Processing
 
-  const handleDeleteJob = async () => {
-    if (serverHasJob) {
-      deletePendingJobFromApi(jobId)
-    }
+    const [hidePanel, setHidePanel] = useState(false)
 
-    trackEvent({
-      event: 'DELETE_PENDING_JOB',
-      context: '/pages/pending'
-    })
-
-    deletePendingJobFromDb(jobId)
-  }
-
-  const handleEditClick = async () => {
-    await deletePendingJobFromDb(jobId)
-    savePrompt({ ...jobDetails })
-    router.push(`/?edit=true`)
-  }
-
-  const handleRetryJob = async () => {
-    if (serverHasJob) {
-      deletePendingJobFromApi(jobId)
-    }
-
-    // Fixes https://github.com/daveschumaker/artbot-for-stable-diffusion/issues/23
-    jobDetails.orientationType = jobDetails.orientation
-
-    const clonedParams = new CreateImageRequest(jobDetails)
-    clonedParams.useAllModels = false
-    clonedParams.useAllSamplers = false
-    clonedParams.numImages = 1
-
-    trackEvent({
-      event: 'RETRY_JOB',
-      context: '/pages/pending'
-    })
-
-    await createImageJob(clonedParams)
-    await deletePendingJobFromDb(jobId)
-    window.scrollTo(0, 0)
-  }
-
-  const clearNewImageNotification = () => {
-    setShowImageReadyToast(false)
-    setNewImageReady('')
-  }
-
-  const handleRemovePanel = () => {
-    deletePendingJobFromDb(jobId)
-    setHidePanel(true)
-  }
-
-  const timeDiff = jobDetails?.initWaitTime - jobDetails?.wait_time || 0
-  let remainingTime = jobDetails?.initWaitTime - timeDiff || 0
-  const elapsedTimeSec = Math.round((Date.now() - jobDetails?.timestamp) / 1000)
-  let pctComplete = Math.round(
-    (elapsedTimeSec / jobDetails?.initWaitTime) * 100
-  )
-
-  if (isNaN(pctComplete)) {
-    pctComplete = 0
-  }
-
-  if (pctComplete > 95) {
-    pctComplete = 95
-  }
-
-  if (remainingTime <= 1) {
-    remainingTime = 1
-  }
-
-  useEffect(() => {
-    return () => {
-      if (jobDetails && jobDetails.jobStatus === JobStatus.Done) {
-        deletePendingJobFromDb(jobDetails.jobId)
+    const handleDeleteJob = async () => {
+      if (serverHasJob) {
+        deletePendingJobFromApi(jobId)
       }
+
+      trackEvent({
+        event: 'DELETE_PENDING_JOB',
+        context: '/pages/pending'
+      })
+
+      deletePendingJobFromDb(jobId)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
-  if (!jobDetails || hidePanel) {
-    return null
-  }
+    const handleEditClick = async () => {
+      await deletePendingJobFromDb(jobId)
+      savePrompt({ ...jobDetails })
+      router.push(`/?edit=true`)
+    }
 
-  const jobDone = jobDetails.jobStatus === JobStatus.Done
-  const minJobWaitTime =
-    4 * jobDetails.initWaitTime < 60 ? 60 : 4 * jobDetails.initWaitTime
-  const jobStalled =
-    elapsedTimeSec > minJobWaitTime && !jobDone && remainingTime < 3
+    const handleRetryJob = async () => {
+      if (serverHasJob) {
+        deletePendingJobFromApi(jobId)
+      }
 
-  const currentTimestamp = Date.now() / 1000
-  const jobTimestamp = jobDetails.timestamp / 1000
+      // Fixes https://github.com/daveschumaker/artbot-for-stable-diffusion/issues/23
+      jobDetails.orientationType = jobDetails.orientation
 
-  const jobTimeDiff = currentTimestamp - jobTimestamp < RATE_IMAGE_CUTOFF_SEC
-  const canRate = !jobDetails.userRating && jobDetails.shareImagesExternally
+      const clonedParams = new CreateImageRequest(jobDetails)
+      clonedParams.useAllModels = false
+      clonedParams.useAllSamplers = false
+      clonedParams.numImages = 1
 
-  return (
-    <StyledContainer>
-      <StyledPanel>
-        {processDoneOrError ? (
-          <StyledCloseButton onClick={handleRemovePanel}>
-            <CloseIcon width={2} />
-          </StyledCloseButton>
-        ) : null}
-        <StyledImageInfoPanel>
-          <ImageWaiting>
-            {serverHasJob || jobDetails.jobStatus === JobStatus.Requested ? (
-              <SpinnerV2 />
-            ) : null}
-            {jobDetails.jobStatus === JobStatus.Done && (
-              <ImageContainer onClick={() => onImageClick(jobId)}>
-                <StyledImage
-                  // @ts-ignore
-                  imageDetails={jobDetails}
-                  size={100}
-                />
-              </ImageContainer>
-              // <Link
-              //   href={`/image/${jobId}`}
-              //   onClick={() => {
-              //     clearNewImageNotification()
-              //   }}
-              // >
-              //   <StyledImage
-              //     // @ts-ignore
-              //     imageDetails={jobDetails}
-              //     size={100}
-              //   />
-              // </Link>
-            )}
-            {jobDetails.jobStatus === JobStatus.Waiting && (
-              <PhotoUpIcon size={48} />
-            )}
-            {jobDetails.jobStatus === JobStatus.Error && (
-              <AlertTriangleIcon size={48} stroke="rgb(234 179 8)" />
-            )}
-          </ImageWaiting>
-          <div className="flex flex-col flex-grow">
-            <StyledPrompt className="flex-grow">
-              {jobDetails.upscaled && <div>[ UPSCALING ]</div>}
-              <div className="italic">{jobDetails.prompt}</div>
-            </StyledPrompt>
-            <div className="w-full font-mono text-xs mt-2">
-              Steps: {jobDetails.steps}
-              <br />
-              Sampler: {jobDetails.sampler}
-              <br />
-              Model: {!jobDetails.models[0] ? 'Random' : jobDetails.models[0]}
-              {availableModels[jobDetails.models[0]]?.count <= 1 && (
-                <>
-                  <div>
-                    <ModelWarning>
-                      <AlertTriangleIcon size={32} /> This model has limited
-                      availability.
-                      <br />
-                      Images may take a long time to generate.
-                    </ModelWarning>
-                  </div>
-                </>
+      trackEvent({
+        event: 'RETRY_JOB',
+        context: '/pages/pending'
+      })
+
+      await createImageJob(clonedParams)
+      await deletePendingJobFromDb(jobId)
+      window.scrollTo(0, 0)
+    }
+
+    const clearNewImageNotification = () => {
+      setShowImageReadyToast(false)
+      setNewImageReady('')
+    }
+
+    const handleRemovePanel = () => {
+      deletePendingJobFromDb(jobId)
+      handleCloseClick(jobId)
+    }
+
+    const timeDiff = jobDetails?.initWaitTime - jobDetails?.wait_time || 0
+    let remainingTime = jobDetails?.initWaitTime - timeDiff || 0
+    const elapsedTimeSec = Math.round(
+      (Date.now() - jobDetails?.timestamp) / 1000
+    )
+    let pctComplete = Math.round(
+      (elapsedTimeSec / jobDetails?.initWaitTime) * 100
+    )
+
+    if (isNaN(pctComplete)) {
+      pctComplete = 0
+    }
+
+    if (pctComplete > 95) {
+      pctComplete = 95
+    }
+
+    if (remainingTime <= 1) {
+      remainingTime = 1
+    }
+
+    useEffect(() => {
+      return () => {
+        if (jobDetails && jobDetails.jobStatus === JobStatus.Done) {
+          deletePendingJobFromDb(jobDetails.jobId)
+        }
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    if (!jobDetails || hidePanel) {
+      return null
+    }
+
+    const jobDone = jobDetails.jobStatus === JobStatus.Done
+    const minJobWaitTime =
+      4 * jobDetails.initWaitTime < 60 ? 60 : 4 * jobDetails.initWaitTime
+    const jobStalled =
+      elapsedTimeSec > minJobWaitTime && !jobDone && remainingTime < 3
+
+    const currentTimestamp = Date.now() / 1000
+    const jobTimestamp = jobDetails.timestamp / 1000
+
+    const jobTimeDiff = currentTimestamp - jobTimestamp < RATE_IMAGE_CUTOFF_SEC
+    const canRate = !jobDetails.userRating && jobDetails.shareImagesExternally
+
+    return (
+      <StyledContainer>
+        <StyledPanel>
+          {processDoneOrError ? (
+            <StyledCloseButton onClick={handleRemovePanel}>
+              <CloseIcon width={2} />
+            </StyledCloseButton>
+          ) : null}
+          <StyledImageInfoPanel>
+            <ImageWaiting>
+              {serverHasJob || jobDetails.jobStatus === JobStatus.Requested ? (
+                <SpinnerV2 />
+              ) : null}
+              {jobDetails.jobStatus === JobStatus.Done && (
+                <ImageContainer onClick={() => onImageClick(jobId)}>
+                  <StyledImage
+                    // @ts-ignore
+                    imageDetails={jobDetails}
+                    size={100}
+                  />
+                </ImageContainer>
+                // <Link
+                //   href={`/image/${jobId}`}
+                //   onClick={() => {
+                //     clearNewImageNotification()
+                //   }}
+                // >
+                //   <StyledImage
+                //     // @ts-ignore
+                //     imageDetails={jobDetails}
+                //     size={100}
+                //   />
+                // </Link>
               )}
-            </div>
-          </div>
-        </StyledImageInfoPanel>
-        {jobDetails.jobStatus === JobStatus.Error ? (
-          <div className="font-mono text-xs mt-2 text-red-400">
-            <strong>Stable Horde API Error:</strong> {jobDetails.errorMessage}{' '}
-            {jobDetails.errorMessage !==
-            'Unable to create image. Please try again soon.' ? (
-              <>
-                Not sure what this means? Please visit the{' '}
-                <Linker
-                  href="https://discord.gg/3DxrhksKzn"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Stable Horde Discord channel
-                </Linker>{' '}
-                for more information.
-              </>
-            ) : null}
-          </div>
-        ) : null}
-        {jobStalled ? (
-          <div className="font-mono text-xs mt-2">
-            <strong>Warning:</strong> Job seems to have stalled. This can happen
-            if a worker goes offline or crashes without completing the request.
-            You can automatically cancel and retry this request or continue to
-            wait.
-          </div>
-        ) : null}
-        <StyledInfoDiv>
-          <div className="flex flex-grow flex-col justify-end">
-            {jobDetails.jobStatus === JobStatus.Requested && (
+              {jobDetails.jobStatus === JobStatus.Waiting && (
+                <PhotoUpIcon size={48} />
+              )}
+              {jobDetails.jobStatus === JobStatus.Error && (
+                <AlertTriangleIcon size={48} stroke="rgb(234 179 8)" />
+              )}
+            </ImageWaiting>
+            <div className="flex flex-col flex-grow">
+              <StyledPrompt className="flex-grow">
+                {jobDetails.upscaled && <div>[ UPSCALING ]</div>}
+                <div className="italic">{jobDetails.prompt}</div>
+              </StyledPrompt>
               <div className="w-full font-mono text-xs mt-2">
-                Image requested
+                Steps: {jobDetails.steps}
                 <br />
-                Waiting for response...
-              </div>
-            )}
-            {jobDetails.jobStatus === JobStatus.Queued && (
-              <div className="w-full font-mono text-xs mt-2">
-                Request queued{' '}
-                {isNaN(jobDetails.queue_position) ? null : (
-                  <>(queue position: {jobDetails.queue_position})</>
-                )}
+                Sampler: {jobDetails.sampler}
                 <br />
-                {isNaN(jobDetails.wait_time) ||
-                (jobDetails.wait_time === 0 && pctComplete === 0) ? (
-                  'Estimating time remaining...'
-                ) : (
+                Model: {!jobDetails.models[0] ? 'Random' : jobDetails.models[0]}
+                {availableModels[jobDetails.models[0]]?.count <= 1 && (
                   <>
-                    Estimated time remaining: {jobDetails.wait_time}s (
-                    {pctComplete.toFixed(0)}
-                    %)
+                    <div>
+                      <ModelWarning>
+                        <AlertTriangleIcon size={32} /> This model has limited
+                        availability.
+                        <br />
+                        Images may take a long time to generate.
+                      </ModelWarning>
+                    </div>
                   </>
                 )}
               </div>
-            )}
-            {jobDetails.jobStatus === JobStatus.Processing && (
-              <div className="w-full font-mono text-xs mt-2">
-                Processing
-                <br />
-                Estimated time remaining: {jobDetails.wait_time}s (
-                {pctComplete.toFixed(0)}
-                %)
-              </div>
-            )}
-            {jobDetails.jobStatus === JobStatus.Waiting && (
-              <div className="w-full font-mono text-xs mt-2">
-                Waiting to submit image request
-                <br />
-                <br />
-              </div>
-            )}
-            {jobDetails.jobStatus === JobStatus.Done && (
-              <div className="w-full font-mono text-xs mt-2">
-                Image request complete
-                <br />
-                <br />
-              </div>
-            )}
-            {(jobDetails.jobStatus === JobStatus.Waiting ||
-              jobDetails.jobStatus === JobStatus.Queued ||
-              jobDetails.jobStatus === JobStatus.Requested ||
-              jobDetails.jobStatus === JobStatus.Processing) && (
-              <div className="w-full font-mono text-xs">
-                Created: {new Date(jobDetails.timestamp).toLocaleString()}
-              </div>
-            )}
-            {jobDetails.jobStatus === JobStatus.Done && (
-              <div className="w-full font-mono text-xs">
-                Completed: {new Date(jobDetails.timestamp).toLocaleString()}
-              </div>
-            )}
-            {jobDetails.jobStatus === JobStatus.Error && (
-              <div className="font-mono text-xs mt-2 text-red-400">
-                Created: {new Date(jobDetails.timestamp).toLocaleString()}
-              </div>
-            )}
-          </div>
-          <StyledButtonContainer>
-            {jobDetails.jobStatus === JobStatus.Done &&
-              jobTimeDiff &&
-              canRate && (
-                <Button onClick={() => onImageClick(jobId)}>Rate image</Button>
+            </div>
+          </StyledImageInfoPanel>
+          {jobDetails.jobStatus === JobStatus.Error ? (
+            <div className="font-mono text-xs mt-2 text-red-400">
+              <strong>Stable Horde API Error:</strong> {jobDetails.errorMessage}{' '}
+              {jobDetails.errorMessage !==
+              'Unable to create image. Please try again soon.' ? (
+                <>
+                  Not sure what this means? Please visit the{' '}
+                  <Linker
+                    href="https://discord.gg/3DxrhksKzn"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Stable Horde Discord channel
+                  </Linker>{' '}
+                  for more information.
+                </>
+              ) : null}
+            </div>
+          ) : null}
+          {jobStalled ? (
+            <div className="font-mono text-xs mt-2">
+              <strong>Warning:</strong> Job seems to have stalled. This can
+              happen if a worker goes offline or crashes without completing the
+              request. You can automatically cancel and retry this request or
+              continue to wait.
+            </div>
+          ) : null}
+          <StyledInfoDiv>
+            <div className="flex flex-grow flex-col justify-end">
+              {jobDetails.jobStatus === JobStatus.Requested && (
+                <div className="w-full font-mono text-xs mt-2">
+                  Image requested
+                  <br />
+                  Waiting for response...
+                </div>
               )}
-            {jobDetails.jobStatus === JobStatus.Done && (
-              <Button
-                onClick={() => {
-                  clearNewImageNotification()
-                  trackEvent({
-                    event: 'VIEW_IMAGE_BTN_CLICK',
-                    context: '/pages/pending'
-                  })
-                  trackGaEvent({
-                    action: 'pending_view_image_btn',
-                    params: {
-                      context: '/pages/pending'
-                    }
-                  })
-                  router.push(`/image/${jobDetails.jobId}`)
-                }}
-              >
-                View
-              </Button>
-            )}
-            {jobDetails.jobStatus !== JobStatus.Done && (
-              <div className="flex flex-row gap-2">
-                {jobDetails.jobStatus === JobStatus.Error && (
-                  <Button onClick={handleEditClick}>Edit</Button>
+              {jobDetails.jobStatus === JobStatus.Queued && (
+                <div className="w-full font-mono text-xs mt-2">
+                  Request queued{' '}
+                  {isNaN(jobDetails.queue_position) ? null : (
+                    <>(queue position: {jobDetails.queue_position})</>
+                  )}
+                  <br />
+                  {isNaN(jobDetails.wait_time) ||
+                  (jobDetails.wait_time === 0 && pctComplete === 0) ? (
+                    'Estimating time remaining...'
+                  ) : (
+                    <>
+                      Estimated time remaining: {jobDetails.wait_time}s (
+                      {pctComplete.toFixed(0)}
+                      %)
+                    </>
+                  )}
+                </div>
+              )}
+              {jobDetails.jobStatus === JobStatus.Processing && (
+                <div className="w-full font-mono text-xs mt-2">
+                  Processing
+                  <br />
+                  Estimated time remaining: {jobDetails.wait_time}s (
+                  {pctComplete.toFixed(0)}
+                  %)
+                </div>
+              )}
+              {jobDetails.jobStatus === JobStatus.Waiting && (
+                <div className="w-full font-mono text-xs mt-2">
+                  Waiting to submit image request
+                  <br />
+                  <br />
+                </div>
+              )}
+              {jobDetails.jobStatus === JobStatus.Done && (
+                <div className="w-full font-mono text-xs mt-2">
+                  Image request complete
+                  <br />
+                  <br />
+                </div>
+              )}
+              {(jobDetails.jobStatus === JobStatus.Waiting ||
+                jobDetails.jobStatus === JobStatus.Queued ||
+                jobDetails.jobStatus === JobStatus.Requested ||
+                jobDetails.jobStatus === JobStatus.Processing) && (
+                <div className="w-full font-mono text-xs">
+                  Created: {new Date(jobDetails.timestamp).toLocaleString()}
+                </div>
+              )}
+              {jobDetails.jobStatus === JobStatus.Done && (
+                <div className="w-full font-mono text-xs">
+                  Completed: {new Date(jobDetails.timestamp).toLocaleString()}
+                </div>
+              )}
+              {jobDetails.jobStatus === JobStatus.Error && (
+                <div className="font-mono text-xs mt-2 text-red-400">
+                  Created: {new Date(jobDetails.timestamp).toLocaleString()}
+                </div>
+              )}
+            </div>
+            <StyledButtonContainer>
+              {jobDetails.jobStatus === JobStatus.Done &&
+                jobTimeDiff &&
+                canRate && (
+                  <Button onClick={() => onImageClick(jobId)}>
+                    Rate image
+                  </Button>
                 )}
-                {jobDetails.jobStatus === JobStatus.Error || jobStalled ? (
-                  <Button onClick={handleRetryJob}>Retry?</Button>
-                ) : null}
-                <Button btnType="secondary" onClick={handleDeleteJob}>
-                  <TrashIcon />
-                  <MobileHideText>
-                    {jobDetails.jobStatus === JobStatus.Error
-                      ? 'Remove'
-                      : 'Cancel'}
-                  </MobileHideText>
+              {jobDetails.jobStatus === JobStatus.Done && (
+                <Button
+                  onClick={() => {
+                    clearNewImageNotification()
+                    trackEvent({
+                      event: 'VIEW_IMAGE_BTN_CLICK',
+                      context: '/pages/pending'
+                    })
+                    trackGaEvent({
+                      action: 'pending_view_image_btn',
+                      params: {
+                        context: '/pages/pending'
+                      }
+                    })
+                    router.push(`/image/${jobDetails.jobId}`)
+                  }}
+                >
+                  View
                 </Button>
-              </div>
-            )}
-          </StyledButtonContainer>
-        </StyledInfoDiv>
-        {serverHasJob && (
-          <ProgressBarPosition>
-            <ProgressBar pct={pctComplete} />
-          </ProgressBarPosition>
-        )}
-        {jobDetails.jobStatus === JobStatus.Done && (
-          <ProgressBarPosition>
-            <ProgressBar pct={100} />
-          </ProgressBarPosition>
-        )}
-      </StyledPanel>
-    </StyledContainer>
-  )
-})
+              )}
+              {jobDetails.jobStatus !== JobStatus.Done && (
+                <div className="flex flex-row gap-2">
+                  {jobDetails.jobStatus === JobStatus.Error && (
+                    <Button onClick={handleEditClick}>Edit</Button>
+                  )}
+                  {jobDetails.jobStatus === JobStatus.Error || jobStalled ? (
+                    <Button onClick={handleRetryJob}>Retry?</Button>
+                  ) : null}
+                  <Button btnType="secondary" onClick={handleDeleteJob}>
+                    <TrashIcon />
+                    <MobileHideText>
+                      {jobDetails.jobStatus === JobStatus.Error
+                        ? 'Remove'
+                        : 'Cancel'}
+                    </MobileHideText>
+                  </Button>
+                </div>
+              )}
+            </StyledButtonContainer>
+          </StyledInfoDiv>
+          {serverHasJob && (
+            <ProgressBarPosition>
+              <ProgressBar pct={pctComplete} />
+            </ProgressBarPosition>
+          )}
+          {jobDetails.jobStatus === JobStatus.Done && (
+            <ProgressBarPosition>
+              <ProgressBar pct={100} />
+            </ProgressBarPosition>
+          )}
+        </StyledPanel>
+      </StyledContainer>
+    )
+  }
+)
 
 PendingItem.displayName = 'PendingItem'
 export default PendingItem

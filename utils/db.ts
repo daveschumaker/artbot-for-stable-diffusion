@@ -312,6 +312,13 @@ export const fetchCompletedJobs = async ({
   }
 }
 
+export const fetchCompletedJobsById = async ({ ids = [] } = {}) => {
+  return await db?.completed
+    .where('jobId')
+    .anyOf([...ids])
+    .toArray()
+}
+
 export const fetchRelatedImages = async (
   parentJobId: string,
   limit?: number
