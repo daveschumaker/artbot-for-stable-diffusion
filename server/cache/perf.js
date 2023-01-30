@@ -10,13 +10,15 @@ const saveCache = () => {
     return
   }
 
-  fs.writeFile(
-    process.env.PROD_COUNT_FILE,
-    String(cache.totalImages),
-    function (err) {
-      if (err) return console.log(err)
-    }
-  )
+  if (process.env.PROD_COUNT_FILE) {
+    fs.writeFile(
+      process.env.PROD_COUNT_FILE,
+      String(cache.totalImages),
+      function (err) {
+        if (err) return console.log(err)
+      }
+    )
+  }
 }
 
 const getImageCount = () => {

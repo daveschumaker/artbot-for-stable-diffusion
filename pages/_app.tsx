@@ -121,21 +121,25 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
   return (
     <ThemeProvider theme={darkModeActive ? darkTheme : lightTheme}>
       <GlobalStyles />
-      <Script
-        strategy="lazyOnload"
-        src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
-      />
+      {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS ? (
+        <>
+          <Script
+            strategy="lazyOnload"
+            src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
+          />
 
-      <Script id="analytics" strategy="lazyOnload">
-        {`
+          <Script id="analytics" strategy="lazyOnload">
+            {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
           gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}', {
-          page_path: window.location.pathname,
+            page_path: window.location.pathname,
           });
-      `}
-      </Script>
+          `}
+          </Script>
+        </>
+      ) : null}
       <Head>
         <title>
           ArtBot - Create images with Stable Diffusion, utilizing the Stable
