@@ -74,7 +74,7 @@ const AboutPage = () => {
         <FeedbackModal handleClose={() => setShowFeedback(false)} />
       )}
       <Head>
-        <title>ArtBot - About</title>
+        <title>About - ArtBot for Stable Diffusion</title>
       </Head>
       <PageTitle>About ArtBot</PageTitle>
       {totalImages ? (

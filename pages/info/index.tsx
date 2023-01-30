@@ -7,7 +7,7 @@ const InfoPage = () => {
   return (
     <div className="mb-4">
       <Head>
-        <title>ArtBot - General Information</title>
+        <title>General Information - ArtBot</title>
       </Head>
       <Row>
         <div className="inline-block w-1/2">

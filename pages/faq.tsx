@@ -54,7 +54,7 @@ const FaqPage = () => {
   return (
     <div className="mb-4">
       <Head>
-        <title>ArtBot - FAQ</title>
+        <title>FAQ - ArtBot for Stable Diffusion</title>
       </Head>
       <PageTitle>FAQ</PageTitle>
       <div className="text-md flex flex-col gap-4">

@@ -517,7 +517,7 @@ const ImagesPage = () => {
         />
       )}
       <Head>
-        <title>ArtBot - Your images</title>
+        <title>Your images - ArtBot for Stable Diffusion</title>
       </Head>
       <div className="flex flex-row w-full items-center">
         <div className="inline-block w-1/2">

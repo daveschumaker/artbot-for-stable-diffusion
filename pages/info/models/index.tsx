@@ -53,7 +53,19 @@ const InfoPage = ({ availableModels, modelDetails }: any) => {
   return (
     <div className="mb-4">
       <Head>
-        <title>ArtBot - Stable Diffusion Model Details</title>
+        <title>Stable Horde Model Details - ArtBot</title>
+        <meta
+          name="twitter:title"
+          content="Model Information for Stable Horde"
+        />
+        <meta
+          name="twitter:description"
+          content="Detailed information for all Stable Diffusion models currently available on Stable Horde."
+        />
+        <meta
+          name="twitter:image"
+          content="https://tinybots.net/artbot/robot_clipboard.png"
+        />
       </Head>
       <Row>
         <div className="inline-block w-1/2">

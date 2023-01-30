@@ -14,7 +14,7 @@ const PendingPage = () => {
   return (
     <>
       <Head>
-        <title>ArtBot - Pending images</title>
+        <title>Pending images - ArtBot for Stable Diffusion</title>
       </Head>
       <PendingPageComponent />
     </>

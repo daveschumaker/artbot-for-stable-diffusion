@@ -21,7 +21,7 @@ export default function NotFoundPage() {
 
   return (
     <div>
-      <PageTitle>404</PageTitle>
+      <PageTitle>404 - ArtBot for Stable Diffusion</PageTitle>
       There is nothing for you here...
       <img
         src="/artbot/sad-robot.svg"

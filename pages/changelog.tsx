@@ -79,7 +79,7 @@ const Changelog = () => {
         <FeedbackModal handleClose={() => setShowFeedback(false)} />
       )}
       <Head>
-        <title>ArtBot - Changelog</title>
+        <title>Changelog - ArtBot for Stable Diffusion</title>
       </Head>
       <PageTitle>Changelog</PageTitle>
       <div className="mb-4">
@@ -122,6 +122,13 @@ const Changelog = () => {
             <Linker href="/images">image gallery page</Linker> for mobile
             devices. Thanks to &quot;Black Drapion&quot; on Discord for the
             suggestion.
+          </StyledLi>
+          <StyledLi>
+            Minor updates to the contact form, as well as HTML metadata. (Sadly,
+            this has nothing to do with embedding data within images, which has
+            been a popular request. If you happen to know of a way client-side
+            way to do this within the context of a web browser, please let me
+            know!)
           </StyledLi>
         </StyledUl>
       </Section>

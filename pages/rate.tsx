@@ -142,69 +142,75 @@ const Rate = () => {
     getNextImage?: Boolean
   }
 
-  const fetchImage = useCallback(async (options: IFetchParams = {}) => {
-    const { getNextImage = false } = options
+  const fetchImage = useCallback(
+    async (options: IFetchParams = {}) => {
+      const { getNextImage = false } = options
 
-    let data: any = {}
-    try {
-      if (errorCount >= MAX_ERROR_COUNT) {
-        setComponentState({
-          initialLoad: false,
-          imagePending: false,
-          showError: true
-        })
-        return
-      }
-
-      const res = await fetch('https://ratings.droom.cloud/api/v1/rating/new', {
-        headers: {
-          'Content-Type': 'application/json',
-          'Client-Agent': clientHeader(),
-          apikey: componentState.apiKey
-        }
-      })
-      data = (await res.json()) || {}
-    } catch (err) {
-      errorCount++
-      setTimeout(() => {
-        fetchImage({ getNextImage })
-      }, 300)
-      return
-    } finally {
-      if (data.id) {
-        errorCount = 0
-
-        if (getNextImage) {
-          nextImageDetails.datasetId = data.dataset_id
-          nextImageDetails.imageId = data.id
-          nextImageDetails.imageUrl = data.url
-
-          if (activeImage === 1) {
-            setComponentState({
-              imageTwoUrl: data.url
-            })
-          } else {
-            setComponentState({
-              imageOneUrl: data.url
-            })
-          }
-        } else {
-          activeImage = 1
+      let data: any = {}
+      try {
+        if (errorCount >= MAX_ERROR_COUNT) {
           setComponentState({
-            rateImage: -Infinity,
-            rateQuality: -Infinity,
-            datasetId: data.dataset_id,
-            imageOneUrl: data.url,
-            imageId: data.id,
-            imageUrl: data.url,
             initialLoad: false,
             imagePending: false,
-            showError: false
+            showError: true
           })
+          return
+        }
+
+        const res = await fetch(
+          'https://ratings.droom.cloud/api/v1/rating/new',
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'Client-Agent': clientHeader(),
+              apikey: componentState.apiKey
+            }
+          }
+        )
+        data = (await res.json()) || {}
+      } catch (err) {
+        errorCount++
+        setTimeout(() => {
+          fetchImage({ getNextImage })
+        }, 300)
+        return
+      } finally {
+        if (data.id) {
+          errorCount = 0
+
+          if (getNextImage) {
+            nextImageDetails.datasetId = data.dataset_id
+            nextImageDetails.imageId = data.id
+            nextImageDetails.imageUrl = data.url
+
+            if (activeImage === 1) {
+              setComponentState({
+                imageTwoUrl: data.url
+              })
+            } else {
+              setComponentState({
+                imageOneUrl: data.url
+              })
+            }
+          } else {
+            activeImage = 1
+            setComponentState({
+              rateImage: -Infinity,
+              rateQuality: -Infinity,
+              datasetId: data.dataset_id,
+              imageOneUrl: data.url,
+              imageId: data.id,
+              imageUrl: data.url,
+              initialLoad: false,
+              imagePending: false,
+              showError: false
+            })
+          }
         }
       }
-    }
-  }, [componentState.apiKey, setComponentState])
+    },
+    [componentState.apiKey, setComponentState]
+  )
 
   const rateQuality = (rating: number) => {
     if (ratingPending) {
@@ -239,7 +245,7 @@ const Rate = () => {
       ratingPending: false,
 
       imageOneStatus: '',
-      imageTwoStatus: '',
+      imageTwoStatus: ''
     }
 
     if (activeImage === 1) {
@@ -253,7 +259,6 @@ const Rate = () => {
           imageOneStatus: 'stage'
         })
       }, 250)
-
     } else {
       activeImage = 1
       ratingPending = false
@@ -338,7 +343,15 @@ const Rate = () => {
         rateImageRequest()
       }, 300)
     }
-  }, [componentState.apiKey, componentState.imageId, componentState.rateImage, componentState.rateQuality, fetchImage, loadNextImage, setComponentState])
+  }, [
+    componentState.apiKey,
+    componentState.imageId,
+    componentState.rateImage,
+    componentState.rateQuality,
+    fetchImage,
+    loadNextImage,
+    setComponentState
+  ])
 
   useEffect(() => {
     let totalRated = AppSettings.get('imagesRated') || 0
@@ -391,7 +404,16 @@ const Rate = () => {
   return (
     <>
       <Head>
-        <title>ArtBot - Rate images</title>
+        <title>Rate images - ArtBot for Stable Diffusion</title>
+        <meta name="twitter:title" content="Rate images with ArtBot" />
+        <meta
+          name="twitter:description"
+          content="Give aesthetics ratings for images created with Stable Diffusion and help improve future models."
+        />
+        <meta
+          name="twitter:image"
+          content="https://tinybots.net/artbot/robot_judge.png"
+        />
       </Head>
       <PageTitle>Rate images</PageTitle>
       {componentState.apiKey === ANON_API_KEY && (

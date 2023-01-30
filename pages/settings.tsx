@@ -20,7 +20,16 @@ const SettingsPage = () => {
   return (
     <>
       <Head>
-        <title>ArtBot - Settings</title>
+        <title>Settings and Preferences - ArtBot for Stable Diffusion</title>
+        <meta name="twitter:title" content="ArtBot Settings" />
+        <meta
+          name="twitter:description"
+          content="Manage your preferences for ArtBot and the Stable Horde"
+        />
+        <meta
+          name="twitter:image"
+          content="https://tinybots.net/artbot/robot_gears.png"
+        />
       </Head>
       <SettingsPageComponent />
     </>
