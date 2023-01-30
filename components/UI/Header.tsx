@@ -5,6 +5,7 @@ import MenuIcon from '../icons/MenuIcon'
 import Menu from '../Menu'
 import { useState } from 'react'
 import { lockScroll, unlockScroll } from '../../utils/appUtils'
+import Image from 'next/image'
 
 const Wrapper = styled.div`
   align-items: center;
@@ -56,7 +57,7 @@ export default function Header() {
       <div className="mt-2 w-1/2 inline-block">
         <Link href="/">
           <div className="inline-block">
-            <img
+            <Image
               src="/artbot/artbot-logo.png"
               height={32}
               width={32}
