@@ -12,6 +12,7 @@ export const getModelVersion = (modelName: string) => {
 // Hide things like inpainting models and other things we don't care for.
 export const validModelsArray = ({
   imageParams = {
+    source_image: '',
     source_mask: '',
     source_processing: SourceProcessing.Prompt
   },
@@ -30,6 +31,14 @@ export const validModelsArray = ({
     if (
       availableModels[key].name === 'stable_diffusion_inpainting' &&
       inpainting === false
+    ) {
+      continue
+    }
+
+    // pix2pix cannot do txt2img.
+    if (
+      availableModels[key].name === 'pix2pix' &&
+      (!imageParams.source_image || imageParams.source_mask)
     ) {
       continue
     }

@@ -117,7 +117,10 @@ const WorkerInfoPage = () => {
   return (
     <div className="mb-4">
       <Head>
-        <title>ArtBot - Distributed Worker Details for Stable Horde</title>
+        <title>
+          Distributed Worker Details for Stable Horde - ArtBot for Stable
+          Diffusion
+        </title>
       </Head>
       <Row>
         <div className="inline-block w-1/2">

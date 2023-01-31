@@ -13,6 +13,7 @@ import { SourceProcessing } from '../../../utils/promptUtils'
 import WarningPanel from '../WarningPanel'
 import { nearestWholeMultiple } from '../../../utils/imageUtils'
 import Editor from '../../Fabric/Editor'
+import Head from 'next/head'
 
 interface LiProps {
   active?: boolean
@@ -197,6 +198,9 @@ const OptionsPanel = ({
         input.source_image &&
         input.source_processing === SourceProcessing.InPainting && (
           <>
+            <Head>
+              <title>Inpainting - ArtBot for Stable Diffusion</title>
+            </Head>
             {/* <InpaintingPanel
               input={input}
               setInput={setInput}
@@ -249,24 +253,34 @@ const OptionsPanel = ({
       {activeNav === 'inpainting' &&
         !input.source_image &&
         input.source_processing !== SourceProcessing.InPainting && (
-          <Uploader handleSaveImage={handleSaveAction} type="inpainting" />
+          <>
+            <Head>
+              <title>Inpainting - ArtBot for Stable Diffusion</title>
+            </Head>
+            <Uploader handleSaveImage={handleSaveAction} type="inpainting" />
+          </>
         )}
 
       {activeNav === 'inpainting' &&
         input.source_image &&
         input.source_processing === SourceProcessing.Img2Img && (
-          <WarningPanel
-            panelType="img2img"
-            handleRemoveClick={() => {
-              clearCanvasStore()
-              setInput({
-                imageType: '',
-                source_image: '',
-                source_mask: '',
-                source_processing: SourceProcessing.Prompt
-              })
-            }}
-          />
+          <>
+            <Head>
+              <title>Inpainting - ArtBot for Stable Diffusion</title>
+            </Head>
+            <WarningPanel
+              panelType="img2img"
+              handleRemoveClick={() => {
+                clearCanvasStore()
+                setInput({
+                  imageType: '',
+                  source_image: '',
+                  source_mask: '',
+                  source_processing: SourceProcessing.Prompt
+                })
+              }}
+            />
+          </>
         )}
     </Panel>
   )

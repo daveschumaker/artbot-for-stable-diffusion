@@ -237,7 +237,7 @@ const ImagePage = () => {
   return (
     <div>
       <Head>
-        <title>ArtBot - Image details</title>
+        <title>Image details - ArtBot for Stable Diffusion</title>
       </Head>
       <div className="flex flex-row w-full items-center">
         <div className="inline-block w-1/2">

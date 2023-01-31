@@ -8,6 +8,7 @@ import TrashIcon from '../../icons/TrashIcon'
 import { SourceProcessing } from '../../../utils/promptUtils'
 import Uploader from '../Uploader'
 import PhotoUpIcon from '../../icons/PhotoUpIcon'
+import Head from 'next/head'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -56,6 +57,9 @@ const Img2ImgPanel = ({ input, saveForInpaint, setInput }: Props) => {
 
   return (
     <div>
+      <Head>
+        <title>img2img - ArtBot for Stable Diffusion</title>
+      </Head>
       <Section>
         {!input.source_image && (
           <Uploader handleSaveImage={saveImage} type="img2img" />

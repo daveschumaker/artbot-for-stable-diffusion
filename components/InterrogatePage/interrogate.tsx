@@ -9,7 +9,6 @@ import useComponentState from '../../hooks/useComponentState'
 import { requestIterrogate } from '../../api/requestInterrogate'
 import SpinnerV2 from '../Spinner'
 import { checkInterrogate } from '../../api/checkInterrogate'
-import Head from 'next/head'
 import Checkbox from '../UI/Checkbox'
 import Linker from '../UI/Linker'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
@@ -432,9 +431,6 @@ const Interrogate = () => {
 
   return (
     <>
-      <Head>
-        <title>ArtBot - Interrogate Image (img2text)</title>
-      </Head>
       <PageTitle>Interrogate Image (img2text)</PageTitle>
       {componentState.workers === 0 ? (
         <SubSectionTitle>

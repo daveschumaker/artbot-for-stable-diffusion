@@ -108,6 +108,21 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.01.31</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: When adjusting the a slider on the image creation page and then
+            trying to type something into the number field, the value would be
+            appended to whatever existed in the number field. Thanks to Hinaloth
+            on Discord for reporting this.
+          </StyledLi>
+          <StyledLi>
+            Fix: Use favorite models button was disabled. Thanks to Anon69 on
+            Discord for reporting this.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.01.30</SubSectionTitle>
         <StyledUl>
           <StyledLi>
