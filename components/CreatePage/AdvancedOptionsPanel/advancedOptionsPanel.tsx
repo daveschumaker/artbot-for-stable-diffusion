@@ -749,7 +749,7 @@ const AdvancedOptionsPanel = ({
                     const event = {
                       target: {
                         name: 'steps',
-                        value: e.target.value
+                        value: Number(e.target.value)
                       }
                     }
 
@@ -1115,7 +1115,7 @@ const AdvancedOptionsPanel = ({
                     const event = {
                       target: {
                         name: 'denoising_strength',
-                        value: e.target.value
+                        value: Number(e.target.value)
                       }
                     }
 
@@ -1512,7 +1512,7 @@ const AdvancedOptionsPanel = ({
                   const event = {
                     target: {
                       name: 'numImages',
-                      value: e.target.value
+                      value: Number(e.target.value)
                     }
                   }
 
