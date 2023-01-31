@@ -108,6 +108,43 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.01.30</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Biggest and most obvious change -- getting rid of the imported
+            Google font and defaulting to Helvetica. I was using Roboto (hah!),
+            and thought it made things look more fun. But I did&apos;t really
+            like relying on Google for the font, plus the slight performance hit
+            was a turn off (which Chrome&apos;s own Lighthouse utility called
+            out). So, we&apos;re going to try this Helvetica thing.
+          </StyledLi>
+          <StyledLi>
+            Fixed some lazy loading issues from the main image creation page.
+            Things should be <em>snappier!</em> Also, I was able to get a
+            Lighthouse score of 100 on my local machine after this. It&apos;ll
+            be interesting to see how that shakes out on production.
+          </StyledLi>
+          <StyledLi>
+            Would you believe I am still working on issues related to the
+            Pending Items page? I think I have them fixed finally. Really.
+            Hopefully.
+          </StyledLi>
+          <StyledLi>
+            Updated the README.md file in the ArtBot project&apos;s{' '}
+            <Linker
+              href="https://github.com/daveschumaker/artbot-for-stable-diffusion"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Github page
+            </Linker>
+            . This should better help people who are curious about the project
+            (or even want to contribute) get it up and running on their own
+            machines.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.01.29</SubSectionTitle>
         <StyledUl>
           <StyledLi>Update styles dropdown on the create image page.</StyledLi>
