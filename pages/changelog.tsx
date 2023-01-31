@@ -120,6 +120,15 @@ const Changelog = () => {
             Fix: Use favorite models button was disabled. Thanks to Anon69 on
             Discord for reporting this.
           </StyledLi>
+          <StyledLi>
+            Fix: Plus and minus buttons appended a value, rather than added a
+            value to any number input. (e.g., 10 + 1 = 101 instead of 11).
+            Thanks to Hinaloth on Discord for reporting this.
+          </StyledLi>
+          <StyledLi>
+            Update: CFG Strength / Guidane scale minimum steps changed from 1.0
+            to 0.5
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

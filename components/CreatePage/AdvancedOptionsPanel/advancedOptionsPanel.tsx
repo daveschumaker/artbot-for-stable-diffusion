@@ -862,15 +862,16 @@ const AdvancedOptionsPanel = ({
                   error={errorMessage.cfg_scale}
                   className="mb-2"
                   type="text"
-                  min={1}
+                  min={0.5}
                   max={30}
+                  step={0.5}
                   onMinusClick={() => {
-                    const value = input.cfg_scale - 1
+                    const value = input.cfg_scale - 0.5
                     PromptInputSettings.set('cfg_scale', value)
                     setInput({ cfg_scale: value })
                   }}
                   onPlusClick={() => {
-                    const value = input.cfg_scale + 1
+                    const value = input.cfg_scale + 0.5
                     PromptInputSettings.set('cfg_scale', value)
                     setInput({ cfg_scale: value })
                   }}
@@ -904,11 +905,12 @@ const AdvancedOptionsPanel = ({
                   value={input.cfg_scale}
                   min={1}
                   max={30}
+                  step={0.5}
                   onChange={(e: any) => {
                     const event = {
                       target: {
                         name: 'cfg_scale',
-                        value: e.target.value
+                        value: Number(e.target.value)
                       }
                     }
 
