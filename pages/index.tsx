@@ -126,7 +126,7 @@ export async function getServerSideProps() {
     )
     const modelDetailsData = (await modelDetailsRes.json()) || {}
     modelDetails = modelDetailsData.models
-  } catch (err) { }
+  } catch (err) {}
 
   return {
     props: {
@@ -172,15 +172,6 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
       useFavoriteModels: false,
       useAllSamplers: false
     }
-  }
-
-  const hasModel = availableModels.filter((model: any) => {
-    return model.name === initialState.models[0]
-  })
-
-  if (hasModel.length === 0) {
-    initialState.models = ['stable_diffusion']
-    initialState.sampler = 'k_euler_a'
   }
 
   const [componentState, setComponentState] = useComponentState({
@@ -403,6 +394,19 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  useEffect(() => {
+    const hasModel = availableModels.filter((model: any) => {
+      return model.name === input.models[0]
+    })
+
+    if (hasModel.length === 0) {
+      setComponentState({
+        models: ['stable_diffusion'],
+        sampler: 'k_euler_a'
+      })
+    }
+  }, [availableModels, input.models, setComponentState])
+
   useEffectOnce(() => {
     trackEvent({
       event: 'PAGE_VIEW',
@@ -439,8 +443,8 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
 
   const kudosPerImage =
     totalImagesRequested < 1 ||
-      isNaN(totalKudosCost) ||
-      isNaN(totalImagesRequested)
+    isNaN(totalKudosCost) ||
+    isNaN(totalImagesRequested)
       ? 'N/A'
       : Number(totalKudosCost / totalImagesRequested).toFixed(2)
 
@@ -463,24 +467,26 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
   useEffect(() => {
     const { source_mask, source_image, tiling, models = [] } = input || {}
 
-    if (models[0] === 'stable_diffusion_inpainting' || models[0] === 'Stable Diffusion 2 Depth') {
-
-      const modelerOptions = (imageParams: any) => {
-        const modelsArray = validModelsArray({ imageParams }) || []
-        modelsArray.push({
-          name: 'random',
-          value: 'random',
-          label: 'Random!',
-          count: 1
-        })
-
-        return modelsArray
-      }
-
-      const modelExists = modelerOptions(input).filter((option) => {
-        return input?.models?.indexOf(option.value) >= 0
+    const modelerOptions = (imageParams: any) => {
+      const modelsArray = validModelsArray({ imageParams }) || []
+      modelsArray.push({
+        name: 'random',
+        value: 'random',
+        label: 'Random!',
+        count: 1
       })
 
+      return modelsArray
+    }
+
+    const modelExists = modelerOptions(input).filter((option) => {
+      return input?.models?.indexOf(option.value) >= 0
+    })
+
+    if (
+      models[0] === 'stable_diffusion_inpainting' ||
+      models[0] === 'Stable Diffusion 2 Depth'
+    ) {
       // Handle state where an incorrect model might be cached
       // e.g., "stable_diffusion_inpainting" when first loading page.
       if (!modelExists || modelExists.length === 0) {
@@ -491,11 +497,19 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
       }
     }
 
+    if (modelExists.length === 0) {
+      setInput({
+        models: ['stable_diffusion'],
+        sampler: 'k_euler_a'
+      })
+    }
+
     // Handle state where tiling is incorrectly set in case of img2img or inpainting
     if (
       (source_mask ||
         source_image ||
-        models[0] === 'Stable Diffusion 2 Depth') && tiling === true
+        models[0] === 'Stable Diffusion 2 Depth') &&
+      tiling === true
     ) {
       setInput({
         tiling: false
@@ -582,31 +596,31 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
                 >
                   {triggerArray && triggerArray.length > 0
                     ? triggerArray.map((trigger: string, i: number) => {
-                      return (
-                        <DropDownMenuItem
-                          key={`${trigger}_${i}`}
-                          onClick={() => {
-                            const value = `${trigger} ` + input.prompt + ` `
-                            if (AppSettings.get('savePromptOnCreate')) {
-                              PromptInputSettings.set('prompt', value)
-                            }
+                        return (
+                          <DropDownMenuItem
+                            key={`${trigger}_${i}`}
+                            onClick={() => {
+                              const value = `${trigger} ` + input.prompt + ` `
+                              if (AppSettings.get('savePromptOnCreate')) {
+                                PromptInputSettings.set('prompt', value)
+                              }
 
-                            setInput({
-                              prompt: value
-                            })
-                            setComponentState({
-                              showTriggerWordsModal: false
-                            })
-                            if (ref && ref.current) {
-                              // @ts-ignore
-                              ref.current.focus()
-                            }
-                          }}
-                        >
-                          {trigger}
-                        </DropDownMenuItem>
-                      )
-                    })
+                              setInput({
+                                prompt: value
+                              })
+                              setComponentState({
+                                showTriggerWordsModal: false
+                              })
+                              if (ref && ref.current) {
+                                // @ts-ignore
+                                ref.current.focus()
+                              }
+                            }}
+                          >
+                            {trigger}
+                          </DropDownMenuItem>
+                        )
+                      })
                     : null}
                 </DropDownMenu>
               </div>
