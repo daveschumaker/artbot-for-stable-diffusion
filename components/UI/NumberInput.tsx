@@ -68,7 +68,12 @@ const NumberInput = (props: any) => {
       <MinusButton disabled={disabled} onClick={handleMinusClick}>
         <MinusIcon />
       </MinusButton>
-      <StyledInput disabled={disabled} onKeyDown={handleKeyDown} {...rest} />
+      <StyledInput
+        disabled={disabled}
+        onKeyDown={handleKeyDown}
+        {...rest}
+        selectAll
+      />
       <PlusButton disabled={disabled} onClick={handlePlusClick}>
         <PlusIcon />
       </PlusButton>

@@ -1377,9 +1377,7 @@ const AdvancedOptionsPanel = ({
             </div>
           </SubSectionTitle>
           <Switch
-            disabled={
-              Object.keys(componentState.favoriteModelsCount).length === 0
-            }
+            disabled={componentState.favoriteModelsCount === 0}
             onChange={() => {
               if (!input.useFavoriteModels) {
                 trackEvent({

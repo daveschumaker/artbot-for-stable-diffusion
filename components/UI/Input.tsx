@@ -14,6 +14,7 @@ interface InputProps {
   onBlur?: any
   onChange: any
   placeholder?: string
+  selectAll?: boolean
   tabIndex?: number
   width?: string
   value: string
@@ -33,8 +34,24 @@ const StyledInput = styled.input<InputProps>`
 `
 
 const Input = (props: InputProps) => {
-  const { children, ...rest } = props
-  return <StyledInput {...rest}>{children}</StyledInput>
+  const { children, selectAll = false, ...rest } = props
+
+  const handleFocus = (e: any) => {
+    e.target.select()
+  }
+
+  return (
+    <StyledInput
+      onFocus={(e) => {
+        if (selectAll) {
+          handleFocus(e)
+        }
+      }}
+      {...rest}
+    >
+      {children}
+    </StyledInput>
+  )
 }
 
 export default Input
