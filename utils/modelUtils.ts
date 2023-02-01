@@ -36,10 +36,7 @@ export const validModelsArray = ({
     }
 
     // pix2pix cannot do txt2img.
-    if (
-      availableModels[key].name === 'pix2pix' &&
-      (!imageParams.source_image || imageParams.source_mask)
-    ) {
+    if (availableModels[key].name === 'pix2pix' && !imageParams.source_image) {
       continue
     }
 
