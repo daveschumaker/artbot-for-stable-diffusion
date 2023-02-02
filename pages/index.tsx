@@ -55,6 +55,7 @@ import MinusIcon from '../components/icons/MinusIcon'
 import styled from 'styled-components'
 import PromptInputSettings from '../models/PromptInputSettings'
 import { validModelsArray } from '../utils/modelUtils'
+import { userInfoStore } from '../store/userStore'
 
 interface InputTarget {
   name: string
@@ -138,7 +139,10 @@ export async function getServerSideProps() {
 
 const Home: NextPage = ({ availableModels, modelDetails }: any) => {
   const appState = useStore(appInfoStore)
+  const userInfo = useStore(userInfoStore)
+
   const { buildId } = appState
+  const { loggedIn } = userInfo
 
   const ref = useRef(null)
   const [build, setBuild] = useState(buildId)
@@ -712,22 +716,26 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
             <div className="flex flex-row justify-end">
               <div className="flex flex-col justify-end">
                 <div className="text-xs flex flex-row justify-end gap-2">
-                  Images requested:{' '}
+                  Images to request:{' '}
                   <strong>{' ' + totalImagesRequested}</strong>
                 </div>
-                <div className="text-xs flex flex-row justify-end gap-2">
-                  {' '}
-                  Generation cost:{' '}
-                  <Linker href="/faq#kudos" passHref>
-                    <>{totalKudosCost} kudos</>
-                  </Linker>
-                </div>
-                <div className="text-xs flex flex-row justify-end gap-2">
-                  Per image:{' '}
-                  <Linker href="/faq#kudos" passHref>
-                    <>{kudosPerImage} kudos</>
-                  </Linker>
-                </div>
+                {loggedIn && (
+                  <>
+                    <div className="text-xs flex flex-row justify-end gap-2">
+                      {' '}
+                      Generation cost:{' '}
+                      <Linker href="/faq#kudos" passHref>
+                        <>{totalKudosCost} kudos</>
+                      </Linker>
+                    </div>
+                    <div className="text-xs flex flex-row justify-end gap-2">
+                      Per image:{' '}
+                      <Linker href="/faq#kudos" passHref>
+                        <>{kudosPerImage} kudos</>
+                      </Linker>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>

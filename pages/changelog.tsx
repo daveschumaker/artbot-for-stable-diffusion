@@ -54,7 +54,7 @@ const LinkButton = styled.div`
 /** TEMPLATE
 
 <Section>
-  <SubSectionTitle>2023.01.01</SubSectionTitle>
+  <SubSectionTitle>2023.02.01</SubSectionTitle>
   <StyledUl>
     <StyledLi>test</StyledLi>
   </StyledUl>
@@ -107,6 +107,27 @@ const Changelog = () => {
         </Section>
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
+      <Section>
+        <SubSectionTitle>2023.02.01</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Pix2Pix incoming! Soon. It&apos;s currently in testing from one
+            worker on the Stable Horde. Give it a try! I loves high step counts.
+            And you can also add an image mask to specifically target an area of
+            the image. (e.g., I highlight my dog&apos;s face and say &quot;put
+            sunglasses on it&quot;)
+          </StyledLi>
+          <StyledLi>
+            UX: Hide{' '}
+            <Linker href="/faq#kudos" passHref>
+              kudos cost
+            </Linker>{' '}
+            for image generation from non-logged in users. It&apos;s unintuitive
+            at first and might turn some people off from creating anything.
+            Props to ResidentChiefNZ on Discord for the suggestion.
+          </StyledLi>
+        </StyledUl>
+      </Section>
       <Section>
         <SubSectionTitle>2023.01.31</SubSectionTitle>
         <StyledUl>

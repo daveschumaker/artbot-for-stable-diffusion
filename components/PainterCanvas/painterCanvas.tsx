@@ -409,7 +409,6 @@ const PaintCanvas = ({ setActiveNav, setInput }: Props) => {
                   triangle="top-right"
                   color={brushColor}
                   onChange={changeBrushColor}
-                  style={{ backgroundColor: 'white' }}
                 />
               </WrappedPicker>
             </>
