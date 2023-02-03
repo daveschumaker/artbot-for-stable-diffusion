@@ -60,7 +60,7 @@ interface IOptions {
 class ImageParamsForApi {
   constructor(imageDetails: IArtBotImageDetails, options: IOptions = {}) {
     const useTrusted =
-      AppSettings.get('useTrusted') === undefined
+      typeof AppSettings.get('useTrusted') === 'undefined'
         ? true
         : AppSettings.get('useTrusted')
     const allowNsfw = AppSettings.get('allowNsfwImages') || false
