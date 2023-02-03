@@ -16,6 +16,7 @@ const StyledTextArea = styled.textarea`
   color: ${(props) => props.theme.inputColor};
   font-size: 16px;
   min-height: 40px;
+  overflow-y: scroll;
 `
 
 type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement>

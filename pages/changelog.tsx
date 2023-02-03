@@ -114,6 +114,10 @@ const Changelog = () => {
             Fix: Update links to view detailed model info on image creation
             page. Thanks to voodoocode on Discord for reporting this.
           </StyledLi>
+          <StyledLi>
+            UX: Add scrollbar to prompt input text area to better help with
+            accessibility. Thanks to kindagami on Discord for suggesting this.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
