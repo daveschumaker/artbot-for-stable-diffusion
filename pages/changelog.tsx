@@ -118,6 +118,10 @@ const Changelog = () => {
             UX: Add scrollbar to prompt input text area to better help with
             accessibility. Thanks to kindagami on Discord for suggesting this.
           </StyledLi>
+          <StyledLi>
+            UX: Make negative prompt field a text area instead of input, giving
+            a bit more visibility into what you have typed.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

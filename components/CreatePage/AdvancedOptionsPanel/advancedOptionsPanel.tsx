@@ -38,6 +38,7 @@ import TextTooltipRow from '../../UI/TextTooltipRow'
 import MaxWidth from '../../UI/MaxWidth'
 import SelectModel from './SelectModel'
 import { modelInfoStore } from '../../../store/modelStore'
+import TextArea from '../../UI/TextArea'
 
 const NoSliderSpacer = styled.div`
   height: 14px;
@@ -593,15 +594,12 @@ const AdvancedOptionsPanel = ({
           </TextTooltipRow>
         </SubSectionTitle>
         <FlexRow>
-          <Input
-            // @ts-ignore
-            className="mb-2"
-            type="text"
+          <TextArea
             name="negative"
+            className="block bg-white p-2.5 w-full text-lg text-black rounded-lg max-h-[250px] border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Image prompt..."
             onChange={handleChangeInput}
-            // @ts-ignore
             value={input.negative}
-            width="100%"
           />
           <Button
             title="Clear current input"
