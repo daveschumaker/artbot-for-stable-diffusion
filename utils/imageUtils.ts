@@ -411,12 +411,17 @@ export const modifyPromptForStylePreset = ({
   negative = '',
   stylePreset = 'none'
 }: IPresetParams) => {
-  // @ts-ignore
-  const presetTextFromStyle = { ...stylePresets[stylePreset] }
+  let stylePresetPrompt = ''
+  let stylePresetNeg = ''
 
-  // Split any negative prompt from presetTextFromStyle (so we can combine with user's existing negative prompt)
-  let [stylePresetPrompt = '', stylePresetNeg = ''] =
-    presetTextFromStyle.prompt.split('###')
+  if (stylePreset !== 'none') {
+    // @ts-ignore
+    const presetTextFromStyle = { ...stylePresets[stylePreset] }
+
+    // Split any negative prompt from presetTextFromStyle (so we can combine with user's existing negative prompt)
+    stylePresetPrompt = presetTextFromStyle.prompt.split('###')[0] || ''
+    stylePresetNeg = presetTextFromStyle.prompt.split('###')[1] || ''
+  }
 
   // If it exists, split negative part off of whole prompt,
   // so it can be combined with preset negative prompt.
@@ -430,7 +435,8 @@ export const modifyPromptForStylePreset = ({
     const regex = /{p}/i
     stylePresetPrompt = stylePresetPrompt.replace(regex, initPrompt.trim())
   } else {
-    stylePreset = initPrompt
+    stylePresetPrompt = initPrompt
+    stylePresetNeg = splitNegative.trim()
   }
 
   // Handle negative prompt

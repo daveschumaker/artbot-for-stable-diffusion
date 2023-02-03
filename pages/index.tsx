@@ -38,6 +38,7 @@ import AppSettings from '../models/AppSettings'
 import {
   countImagesToGenerate,
   kudosCost,
+  modifyPromptForStylePreset,
   orientationDetails
 } from '../utils/imageUtils'
 import { toast } from 'react-toastify'
@@ -521,6 +522,12 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
     }
   }, [input])
 
+  const modifiedPrompt = modifyPromptForStylePreset({
+    prompt: input.prompt,
+    negative: input.negative,
+    stylePreset: input.stylePreset
+  })
+
   return (
     <main>
       {showPromptHistory && (
@@ -667,6 +674,14 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
             ref={ref}
           />
         </div>
+        {modifiedPrompt.length > 300 && (
+          <div className="mt-2 text-amber-400 font-semibold">
+            Warning: Your prompt length (plus any modifiers such as negative
+            prompt or model triggers) exceeds <strong>300 characters</strong>.
+            Anything exceeding this limit will potentially be ignored by Stable
+            Diffusion.
+          </div>
+        )}
         {hasValidationError && (
           <div className="mt-2 text-red-500 font-semibold">
             Please correct all input errors before continuing
