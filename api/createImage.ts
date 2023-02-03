@@ -4,8 +4,6 @@ import ImageParamsForApi, {
 } from '../models/ImageParamsForApi'
 import { GenerateResponse } from '../types'
 import { clientHeader, getApiHostServer } from '../utils/appUtils'
-import { modifyPromptForStylePreset } from '../utils/imageUtils'
-import { SourceProcessing } from '../utils/promptUtils'
 import { trackEvent } from './telemetry'
 
 interface CreateImageResponse {
