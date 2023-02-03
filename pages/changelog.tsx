@@ -103,10 +103,6 @@ const Changelog = () => {
               favorite images. (I know that some of you have thousands of images
               and this is not ideal at the moment.)
             </StyledLi>
-            <StyledLi>
-              Fix: Use trusted workers was always set to true, regardless of
-              your preferences. This might help speed up image requests!
-            </StyledLi>
           </StyledUl>
         </Section>
       </Panel>
@@ -119,6 +115,10 @@ const Changelog = () => {
             pending items page. I often see people on Discord report receiving
             some sort of ambigious error from Stable Horde. This should help
             with debugging what went wrong.
+          </StyledLi>
+          <StyledLi>
+            Fix: Use trusted workers was always set to true, regardless of your
+            preferences. This might help speed up image requests!
           </StyledLi>
         </StyledUl>
       </Section>
