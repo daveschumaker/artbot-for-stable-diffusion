@@ -25,7 +25,7 @@ interface CreateImageJob {
   numImages?: number
   parentJobId?: string
   models: Array<string>
-  negative?: string
+  negative: string
   source_image?: string
   source_mask?: string
   tiling: boolean

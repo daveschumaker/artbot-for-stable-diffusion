@@ -24,7 +24,6 @@ import { useStore } from 'statery'
 import { modelInfoStore } from '../store/modelStore'
 import { RATE_IMAGE_CUTOFF_SEC } from '../constants'
 import DisplayRawData from './DisplayRawData'
-import ImageParamsForApi from '../models/ImageParamsForApi'
 
 const ModelWarning = styled.div`
   align-items: center;

@@ -33,7 +33,7 @@ export interface CreateImageJob {
   useTrusted?: boolean
   parentJobId?: string
   models: Array<string>
-  negative?: string
+  negative: string
   allowNsfw?: boolean
   source_image?: string
   source_mask?: string
