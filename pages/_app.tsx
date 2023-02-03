@@ -24,6 +24,8 @@ import ServerUpdateModal from '../components/ServerUpdateModal'
 import MobileFooter from '../components/MobileFooter'
 import { isAppActive } from '../utils/appUtils'
 import { ToastContainer } from 'react-toastify'
+import AdContainer from '../components/AdContainer'
+import { useRouter } from 'next/router'
 
 initAppSettings()
 initDb()
@@ -35,6 +37,7 @@ interface MyAppProps extends AppProps {
 }
 
 function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
+  const router = useRouter()
   const { darkModeActive } = darkMode
   const [showServerUpdateModal, setShowServerUpdateModal] = useState(false)
   const appState = useStore(appInfoStore)
@@ -193,6 +196,14 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
         <NavBar />
         <Component {...pageProps} />
         <Footer />
+        <div className="fixed right-[16px] bottom-[8px] hidden adCol:block max-w-[156px]">
+          <AdContainer
+            code="CVAIKKQM"
+            placement="tinybotsnet"
+            key={router.pathname}
+            minSize={1440}
+          />
+        </div>
       </ContentWrapper>
       <MobileFooter />
     </ThemeProvider>

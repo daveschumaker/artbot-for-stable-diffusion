@@ -122,6 +122,22 @@ const Changelog = () => {
             UX: Make negative prompt field a text area instead of input, giving
             a bit more visibility into what you have typed.
           </StyledLi>
+          <StyledLi>
+            Added some (hopefully unobstrusive) ads from{' '}
+            <Linker
+              href="https://www.carbonads.net/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Carbon
+            </Linker>
+            . It&apos;s a network geared toward creators and developers. I am
+            hoping it doesn&apos;t cheapen ArtBot and the little bit of
+            potential income from it will be used to support the site (server
+            costs ~$15 / mo) and donate some extra dollars to Stable Horde for
+            their awesome service. If it really affects your experience with
+            ArtBot, please let me know!
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

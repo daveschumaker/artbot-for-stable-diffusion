@@ -697,8 +697,8 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
             Error: {hasError}
           </div>
         )}
-        <div className="mt-4 mb-4 w-full flex flex-col sm:flex-row gap-2 sm:justify-end items-start">
-          <div className="w-full sm:w-1/2 flex flex-row justify-start gap-2 items-center">
+        <div className="mt-4 mb-4 w-full flex flex-row sm:flex-row gap-2 sm:justify-end items-start">
+          <div className="w-1/2 flex flex-col md:flex-row justify-start gap-2 items-start md:items-center">
             Style:{' '}
             <StylesDrodown
               input={input}
@@ -706,8 +706,8 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
               isSearchable={true}
             />
           </div>
-          <div className="w-full sm:w-1/2 flex flex-col justify-end gap-2">
-            <div className="flex flex-row justify-end gap-2 mt-2 sm:mt-0">
+          <div className="w-1/2 flex flex-col justify-start gap-2">
+            <div className="flex flex-row justify-end gap-2 sm:mt-0">
               <Button
                 title="Clear current input"
                 btnType="secondary"

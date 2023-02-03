@@ -5,6 +5,9 @@ module.exports = {
     './components/**/*.{js,ts,jsx,tsx}'
   ],
   theme: {
+    screens: {
+      adCol: '1400px'
+    },
     extend: {
       keyframes: {
         fill: {
