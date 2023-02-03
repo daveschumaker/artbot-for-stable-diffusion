@@ -200,7 +200,7 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
           <AdContainer
             code="CVAIKKQM"
             placement="tinybotsnet"
-            key={router.pathname}
+            key={router.asPath}
             minSize={1440}
           />
         </div>
