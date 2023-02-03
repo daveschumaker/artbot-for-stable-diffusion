@@ -48,6 +48,14 @@ export const validModelsArray = ({
       continue
     }
 
+    // Depth2Image cannot do text2img
+    if (
+      availableModels[key].name === 'Stable Diffusion 2 Depth' &&
+      img2img !== true
+    ) {
+      continue
+    }
+
     // Per Discord, stable_diffusion_2.1 cannot do img2img.
     if (
       availableModels[key].name === 'stable_diffusion_2.1' &&
