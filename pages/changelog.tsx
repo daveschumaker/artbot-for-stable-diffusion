@@ -120,6 +120,19 @@ const Changelog = () => {
             Fix: Use trusted workers was always set to true, regardless of your
             preferences. This might help speed up image requests!
           </StyledLi>
+          <StyledLi>
+            When using a style preset, negative prompts were all sorts of
+            screwed up (thanks to me). I have fixed behavior around this (as
+            well as some more robust prompt validation logic).
+          </StyledLi>
+          <StyledLi>
+            Feature: Warnings for excessive prompt lengths. Stable Diffusion
+            only parses prompts that are ~77 tokens in length (about 300
+            characters). Anything exceeding this will be ignored. ArtBot now
+            shows a warning if you hit this limit. (You can still submit an
+            image request -- but the prompt exceeding this may not affect your
+            image).
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
