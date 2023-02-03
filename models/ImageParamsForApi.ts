@@ -146,16 +146,12 @@ class ImageParamsForApi {
       apiParams.params.post_processing = []
     }
 
-    if (stylePreset && stylePreset !== 'none') {
-      apiParams.prompt = modifyPromptForStylePreset({ prompt, stylePreset })
-    }
-
-    negative = negative?.trim()
-    if (negative && apiParams.prompt.indexOf('###') === -1) {
-      apiParams.prompt += ' ### ' + negative
-    } else if (negative && apiParams.prompt.indexOf('###') >= 0) {
-      apiParams.prompt += ' ' + negative
-    }
+    // Handle style presets, as well as adding any negative prompts to input prompt string
+    apiParams.prompt = modifyPromptForStylePreset({
+      prompt,
+      negative,
+      stylePreset
+    })
 
     // Strip source_image and _source mask from object if we want to show request details if error occurred.
     if (hasError === true) {

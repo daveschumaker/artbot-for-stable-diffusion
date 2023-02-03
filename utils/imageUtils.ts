@@ -402,39 +402,51 @@ export const nearestWholeMultiple = (input: number, X = 64) => {
 
 interface IPresetParams {
   prompt: string
+  negative: string
   stylePreset: string
 }
 
 export const modifyPromptForStylePreset = ({
   prompt = '',
+  negative = '',
   stylePreset = 'none'
 }: IPresetParams) => {
   // @ts-ignore
-  const presetText = { ...stylePresets[stylePreset] }
+  const presetTextFromStyle = { ...stylePresets[stylePreset] }
 
-  // Split any negative prompt from presetText (so we can combine with user's existing negative prompt)
-  let [newPrompt = '', presetNeg = ''] = presetText?.prompt
-    ? presetText.prompt.split('###')
-    : []
+  // Split any negative prompt from presetTextFromStyle (so we can combine with user's existing negative prompt)
+  let [stylePresetPrompt = '', stylePresetNeg = ''] =
+    presetTextFromStyle.prompt.split('###')
 
-  // Split negative prompt so it can be combined with preset negative prompt.
-  const [initPrompt = '', negative = ''] = prompt.split('###')
+  // If it exists, split negative part off of whole prompt,
+  // so it can be combined with preset negative prompt.
+  let [initPrompt = '', splitNegative = ''] = prompt.split('###')
 
-  // Replace key in preset style text
-  const regex = /{p}/i
-  newPrompt = newPrompt.replace(regex, initPrompt.trim())
+  // Combine negative split from prompt with actual negative string:
+  splitNegative = splitNegative + ' ' + negative.trim()
 
-  // Handle negative prompt
-  if (presetNeg || negative) {
-    let neg = presetNeg + ' ' + negative
-    let negRegex = /{np}/i
-    newPrompt = newPrompt.replace(negRegex, ' ### ' + neg.trim())
+  if (stylePreset !== 'none') {
+    // Replace key in preset style text
+    const regex = /{p}/i
+    stylePresetPrompt = stylePresetPrompt.replace(regex, initPrompt.trim())
   } else {
-    let negRegex = /{np}/i
-    newPrompt = newPrompt.replace(negRegex, '')
+    stylePreset = initPrompt
   }
 
-  return newPrompt
+  // Handle negative prompt
+  if (stylePresetNeg && splitNegative.trim()) {
+    let negRegex = /{np}/i
+    stylePresetNeg = stylePresetNeg.replace(negRegex, splitNegative.trim())
+    stylePresetPrompt = stylePresetPrompt + ' ### ' + stylePresetNeg
+  } else if (stylePresetNeg && stylePresetNeg.indexOf('{np}') >= 0) {
+    let negRegex = /{np}/i
+    stylePresetNeg = stylePresetNeg.replace(negRegex, '')
+    stylePresetPrompt = stylePresetPrompt + ' ### ' + stylePresetNeg
+  } else if (stylePresetNeg && stylePresetNeg.indexOf('{np}') === -1) {
+    stylePresetPrompt = stylePresetPrompt + ' ### ' + stylePresetNeg
+  }
+
+  return stylePresetPrompt
 }
 
 export const kudosCost = (
