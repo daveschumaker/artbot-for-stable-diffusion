@@ -1,4 +1,7 @@
 import AppSettings from '../models/AppSettings'
+import ImageParamsForApi, {
+  IArtBotImageDetails
+} from '../models/ImageParamsForApi'
 import { GenerateResponse } from '../types'
 import { clientHeader, getApiHostServer } from '../utils/appUtils'
 import { modifyPromptForStylePreset } from '../utils/imageUtils'
@@ -13,153 +16,10 @@ interface CreateImageResponse {
   message?: string
 }
 
-interface ImageDetails {
-  img2img?: boolean
-  prompt: string
-  sampler: string
-  cfg_scale: number
-  height: number
-  width: number
-  seed?: string
-  steps: number
-  karras: boolean
-  models: Array<string>
-  triggers?: Array<string>
-  tiling: boolean
-  source_image?: string
-  source_processing?: string
-  stylePreset: string
-  post_processing: Array<string>
-  source_mask?: string
-  denoising_strength?: number
-}
-
-interface ApiParams {
-  prompt: string
-  params: ParamsObject
-  nsfw: boolean
-  censor_nsfw: boolean
-  trusted_workers: boolean
-  models: Array<string>
-  source_image?: string
-  source_processing?: string
-  source_mask?: string
-  r2?: boolean
-  shared?: boolean
-  workers?: Array<string>
-}
-
-interface ParamsObject {
-  sampler_name: string
-  cfg_scale: number
-  height: number
-  width: number
-  seed?: string
-  steps: number
-  denoising_strength?: number
-  karras: boolean
-  tiling: boolean
-  post_processing?: Array<string>
-  n: number
-}
-
-const mapImageDetailsToApi = (imageDetails: ImageDetails) => {
-  const useTrusted =
-    AppSettings.get('useTrusted') === undefined
-      ? true
-      : AppSettings.get('useTrusted')
-  const allowNsfw = AppSettings.get('allowNsfwImages') || false
-  const shareImage = AppSettings.get('shareImagesExternally') || false
-
-  const {
-    prompt,
-    sampler,
-    cfg_scale,
-    height,
-    width,
-    seed,
-    steps,
-    models,
-    karras,
-    tiling,
-    source_image,
-    source_processing,
-    stylePreset,
-    post_processing,
-    source_mask,
-    denoising_strength
-  } = imageDetails
-
-  const useWorkerId = AppSettings.get('useWorkerId') || ''
-
-  const apiParams: ApiParams = {
-    prompt,
-    params: {
-      cfg_scale: Number(cfg_scale),
-      sampler_name: sampler,
-      height: Number(height),
-      width: Number(width),
-      steps: Number(steps),
-      tiling,
-      karras,
-      n: 1
-    },
-    nsfw: allowNsfw, // Use workers that allow NSFW images
-    censor_nsfw: !allowNsfw, // Show user NSFW images if created
-    trusted_workers: useTrusted,
-    models,
-    r2: true,
-    shared: shareImage
-  }
-
-  if (useWorkerId) {
-    apiParams.workers = [useWorkerId]
-  }
-
-  if (seed) {
-    apiParams.params.seed = seed
-  } else {
-    apiParams.params.seed = ''
-  }
-
-  if (source_processing === SourceProcessing.Img2Img) {
-    apiParams.params.denoising_strength = Number(denoising_strength) || 0.75
-    apiParams.source_image = source_image
-    apiParams.source_processing = 'img2img'
-
-    if (source_mask) {
-      apiParams.source_mask = source_mask
-    }
-  }
-
-  if (
-    source_processing ===
-    (SourceProcessing.InPainting || SourceProcessing.OutPaiting)
-  ) {
-    apiParams.params.denoising_strength = Number(denoising_strength) || 0.75
-    apiParams.source_image = source_image
-    apiParams.source_processing = source_processing
-    apiParams.source_mask = source_mask
-    apiParams.models = ['stable_diffusion_inpainting']
-  }
-
-  if (post_processing.length > 0) {
-    apiParams.params.post_processing = post_processing
-  } else {
-    apiParams.params.post_processing = []
-  }
-
-  if (stylePreset && stylePreset !== 'none') {
-    apiParams.prompt = modifyPromptForStylePreset({ prompt, stylePreset })
-  }
-
-  return apiParams
-}
-
 let isPending = false
 
 export const createImage = async (
-  imageDetails: ImageDetails
+  imageDetails: IArtBotImageDetails
 ): Promise<CreateImageResponse> => {
   const apikey = AppSettings.get('apiKey')?.trim() || '0000000000'
 
@@ -180,10 +40,7 @@ export const createImage = async (
   }
 
   isPending = true
-  const imageParams = mapImageDetailsToApi(imageDetails)
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  const { source_image = '', source_mask = '', ...rest } = imageParams
+  const imageParams = new ImageParamsForApi(imageDetails)
 
   try {
     const resp = await fetch(`${getApiHostServer()}/api/v2/generate/async`, {
@@ -210,7 +67,9 @@ export const createImage = async (
         action: 'UNTRUSTED_IP',
         context: 'createImageApi',
         data: {
-          imageParams: { ...rest }
+          imageParams: {
+            ...new ImageParamsForApi(imageDetails, { hasError: true })
+          }
         }
       })
       return {
@@ -227,7 +86,9 @@ export const createImage = async (
         action: 'INVALID_PARAMS',
         context: 'createImageApi',
         data: {
-          imageParams: { ...rest },
+          imageParams: {
+            ...new ImageParamsForApi(imageDetails, { hasError: true })
+          },
           message,
           statusCode
         }
@@ -246,7 +107,9 @@ export const createImage = async (
         action: 'INVALID_API_KEY',
         context: 'createImageApi',
         data: {
-          imageParams: { ...rest },
+          imageParams: {
+            ...new ImageParamsForApi(imageDetails, { hasError: true })
+          },
           message,
           statusCode
         }
@@ -265,7 +128,9 @@ export const createImage = async (
         action: 'FORBIDDEN_REQUEST',
         context: 'createImageApi',
         data: {
-          imageParams: { ...rest },
+          imageParams: {
+            ...new ImageParamsForApi(imageDetails, { hasError: true })
+          },
           message,
           statusCode
         }
@@ -336,7 +201,9 @@ export const createImage = async (
       event: 'UNKNOWN_ERROR',
       content: 'createImageApi',
       data: {
-        imageParams: { ...rest },
+        imageParams: {
+          ...new ImageParamsForApi(imageDetails, { hasError: true })
+        },
         // @ts-ignore
         errMsg: err?.message || ''
       }

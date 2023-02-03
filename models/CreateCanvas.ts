@@ -205,7 +205,7 @@ class CreateCanvas {
       source_image: '',
       source_mask: '',
       source_processing: SourceProcessing.InPainting,
-      orientation: 'custom',
+      orientationType: 'custom',
       height: nearestWholeMultiple(this.canvas.height || 512),
       width: nearestWholeMultiple(this.canvas.width || 512),
       canvasData: this.canvas.toObject(),

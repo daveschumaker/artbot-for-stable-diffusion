@@ -186,12 +186,6 @@ export const createNewImage = async (imageParams: CreateImageJob) => {
     clonedParams.prompt = clonedParams.prompt.substring(0, 1024)
   }
 
-  // Image Validation
-  clonedParams.negative = clonedParams?.negative?.trim()
-  if (clonedParams?.negative) {
-    clonedParams.prompt += ' ### ' + clonedParams.negative
-  }
-
   if (
     isNaN(clonedParams.steps) ||
     clonedParams.steps > 200 ||

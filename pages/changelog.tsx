@@ -108,6 +108,17 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.02.02</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Feature: Add an option to view image generation parameters from the
+            pending items page. I often see people on Discord report receiving
+            some sort of ambigious error from Stable Horde. This should help
+            with debugging what went wrong.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.02.01</SubSectionTitle>
         <StyledUl>
           <StyledLi>

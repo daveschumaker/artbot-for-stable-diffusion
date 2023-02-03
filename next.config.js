@@ -7,7 +7,7 @@ const nextConfig = {
   basePath: '/artbot',
   distDir: 'build',
   images: {
-    domains: ['raw.githubusercontent.com']
+    domains: ['huggingface.co', 'raw.githubusercontent.com']
   },
   productionBrowserSourceMaps: process.env.ANALYZE === 'true' ? true : false,
   reactStrictMode: true,
