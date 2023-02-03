@@ -87,7 +87,7 @@ const SelectModel = ({ input, setInput, modelerOptions }: IProps) => {
         />
         <div className="mt-2 text-xs">
           <Linker
-            href={`/info${
+            href={`/info/models${
               input.models[0] !== 'random' ? `#${input.models[0]}` : ''
             }`}
           >

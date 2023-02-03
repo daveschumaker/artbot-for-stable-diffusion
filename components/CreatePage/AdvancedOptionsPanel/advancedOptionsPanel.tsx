@@ -1232,7 +1232,9 @@ const AdvancedOptionsPanel = ({
               generate images quicker.
             </Tooltip>
             <div className="text-xs">
-              <Linker href="/info">[ View detailed model info ]</Linker>
+              <Linker href={`/info/models#${input.models[0]}`}>
+                [ View detailed model info ]
+              </Linker>
             </div>
           </SubSectionTitle>
           <MaxWidth
@@ -1329,7 +1331,7 @@ const AdvancedOptionsPanel = ({
                 </Tooltip>
               </TextTooltipRow>
               <div className="mt-1 mb-2 text-xs">
-                <Linker href="/info">[ View all model details ]</Linker>
+                <Linker href="/info/models">[ View all model details ]</Linker>
               </div>
             </>
           </SubSectionTitle>
@@ -1373,7 +1375,7 @@ const AdvancedOptionsPanel = ({
               </Tooltip>
             </TextTooltipRow>
             <div className="mt-1 mb-2 text-xs">
-              <Linker href="/info?show=favorite-models">
+              <Linker href="/info/models?show=favorite-models">
                 [ View favorite models ]
               </Linker>
             </div>

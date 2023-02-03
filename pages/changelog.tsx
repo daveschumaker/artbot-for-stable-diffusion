@@ -108,6 +108,15 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.02.03</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: Update links to view detailed model info on image creation
+            page. Thanks to voodoocode on Discord for reporting this.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.02.02</SubSectionTitle>
         <StyledUl>
           <StyledLi>
