@@ -26,7 +26,7 @@ const StyledToast = styled.div`
   top: ${(props) => (props.active ? '8px' : '-200px')};
   transition: all 0.4s;
   width: 300px;
-  z-index: 10;
+  z-index: 20;
 `
 
 const StyledClose = styled.div`
