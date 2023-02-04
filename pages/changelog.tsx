@@ -112,6 +112,15 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.02.04</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: On mobile devices, ad unit would show above delete confirmation
+            modal. Thanks to gunsalem on Discord for reporting.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.02.03</SubSectionTitle>
         <StyledUl>
           <StyledLi>
