@@ -142,6 +142,12 @@ const Changelog = () => {
             their awesome service. If it really affects your experience with
             ArtBot, please let me know!
           </StyledLi>
+          <StyledLi>
+            Fix: Entering text in number field and then clicking plus or minus
+            appended 1 to the value instead of adding it, similar to the issue
+            on 2023.01.31. Thanks to Stable Horde user goxryX-mipja for
+            reporting this.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

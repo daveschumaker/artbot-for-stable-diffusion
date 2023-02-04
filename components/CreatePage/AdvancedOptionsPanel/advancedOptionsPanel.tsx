@@ -272,6 +272,17 @@ const AdvancedOptionsPanel = ({
     [input.post_processing]
   )
 
+  const handleNumberInput = (e: any) => {
+    const event = {
+      target: {
+        name: e.target.name,
+        value: Number(e.target.value)
+      }
+    }
+
+    handleChangeInput(event)
+  }
+
   const handlePostProcessing = useCallback(
     (value: string) => {
       const newPost = [...input.post_processing]
@@ -725,7 +736,7 @@ const AdvancedOptionsPanel = ({
                     setInput({ steps: value })
                   }}
                   name="steps"
-                  onChange={handleChangeInput}
+                  onChange={handleNumberInput}
                   onBlur={() => {
                     validateSteps()
                   }}
@@ -892,7 +903,7 @@ const AdvancedOptionsPanel = ({
                       setErrorMessage({ cfg_scale: null })
                     }
                   }}
-                  onChange={handleChangeInput}
+                  onChange={handleNumberInput}
                   // @ts-ignore
                   value={input.cfg_scale}
                   width="100%"
@@ -1092,7 +1103,7 @@ const AdvancedOptionsPanel = ({
                     setInput({ denoising_strength: niceNumber })
                   }}
                   name="denoising_strength"
-                  onChange={handleChangeInput}
+                  onChange={handleNumberInput}
                   // @ts-ignore
                   value={input.denoising_strength}
                   width="100%"
@@ -1482,7 +1493,7 @@ const AdvancedOptionsPanel = ({
                   PromptInputSettings.set('numImages', value)
                   setInput({ numImages: value })
                 }}
-                onChange={handleChangeInput}
+                onChange={handleNumberInput}
                 onBlur={(e: any) => {
                   if (
                     isNaN(e.target.value) ||
