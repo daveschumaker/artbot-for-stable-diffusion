@@ -118,6 +118,15 @@ const Changelog = () => {
             Fix: On mobile devices, ad unit would show above delete confirmation
             modal. Thanks to gunsalem on Discord for reporting.
           </StyledLi>
+          <StyledLi>
+            Fix: Shareable links did not load proper model. Thanks to Gigachad
+            on Discord for reporting.
+          </StyledLi>
+          <StyledLi>
+            Non-user facing: Split up some code related to the FAQ in order to
+            better show specific content around various parts of ArtBot (not
+            implemented yet).
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
