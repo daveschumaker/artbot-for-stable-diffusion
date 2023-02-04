@@ -73,7 +73,7 @@ class ShareLinkDetails {
       orientationType
     ] = params
 
-    return {
+    const decoded = {
       prompt,
       negative,
       height,
@@ -89,6 +89,10 @@ class ShareLinkDetails {
       orientationType: orientationType || 'custom',
       stylePreset
     }
+
+    // console.log(`Decoded Share Link Details`, decoded)
+
+    return decoded
   }
 }
 

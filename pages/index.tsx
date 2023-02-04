@@ -404,13 +404,13 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
       return model.name === input.models[0]
     })
 
-    if (hasModel.length === 0) {
+    if (hasModel.length === 0 && !shareMode) {
       setComponentState({
         models: ['stable_diffusion'],
         sampler: 'k_euler_a'
       })
     }
-  }, [availableModels, input.models, setComponentState])
+  }, [availableModels, input.models, setComponentState, shareMode])
 
   useEffectOnce(() => {
     trackEvent({
@@ -494,7 +494,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
     ) {
       // Handle state where an incorrect model might be cached
       // e.g., "stable_diffusion_inpainting" when first loading page.
-      if (!modelExists || modelExists.length === 0) {
+      if (!shareMode && (!modelExists || modelExists.length === 0)) {
         setInput({
           models: ['stable_diffusion'],
           sampler: 'k_euler_a'
@@ -502,7 +502,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
       }
     }
 
-    if (modelExists.length === 0) {
+    if (!shareMode && modelExists.length === 0) {
       setInput({
         models: ['stable_diffusion'],
         sampler: 'k_euler_a'
@@ -520,7 +520,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
         tiling: false
       })
     }
-  }, [input])
+  }, [input, shareMode])
 
   const modifiedPrompt = modifyPromptForStylePreset({
     prompt: input.prompt,
