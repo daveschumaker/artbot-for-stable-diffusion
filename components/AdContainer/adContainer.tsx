@@ -1,10 +1,10 @@
 import clsx from 'clsx'
-import { useRef } from 'react'
+import React, { useRef } from 'react'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
 
-export default function AdContainer({
-  code,
-  placement,
+function AdContainer({
+  code = 'CWYD62QI',
+  placement = 'tinybotsnet',
   minSize = 1440,
   maxSize = Infinity
 }: {
@@ -47,9 +47,12 @@ export default function AdContainer({
 
   return (
     <div
+      id="_adUnit"
       className={clsx(classes)}
       //@ts-ignore
       ref={reference}
     />
   )
 }
+
+export default AdContainer

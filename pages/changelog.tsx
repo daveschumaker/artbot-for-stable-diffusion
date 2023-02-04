@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { useEffectOnce } from '../hooks/useEffectOnce'
 import { trackEvent } from '../api/telemetry'
 import Panel from '../components/UI/Panel'
+import AdContainer from '../components/AdContainer'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -87,6 +88,9 @@ const Changelog = () => {
         <LinkButton onClick={() => setShowFeedback(true)}>
           Contact me!
         </LinkButton>
+      </div>
+      <div className="w-full">
+        <AdContainer minSize={0} maxSize={640} />
       </div>
       <Panel>
         <Section>

@@ -16,6 +16,7 @@ import {
   deleteCompletedImage,
   deleteDoneFromPending
 } from '../../utils/db'
+import AdContainer from '../AdContainer'
 import PendingItem from '../PendingItemV2'
 import ServerMessage from '../ServerMessage'
 import Linker from '../UI/Linker'
@@ -238,6 +239,10 @@ const PendingPage = () => {
           </div>
         </>
       )}
+
+      <div className="w-full">
+        <AdContainer minSize={0} maxSize={640} />
+      </div>
 
       {sorted.length > 0 &&
         sorted.map((job: { jobId: string; prompt: string }) => {

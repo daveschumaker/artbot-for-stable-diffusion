@@ -21,6 +21,7 @@ import ShareLinkDetails from '../models/ShareableLink'
 import DownloadIcon from './icons/DownloadIcon'
 import useComponentState from '../hooks/useComponentState'
 import { downloadFile } from '../utils/imageUtils'
+import AdContainer from './AdContainer'
 
 interface ImageDetails {
   upscaled?: boolean
@@ -229,6 +230,11 @@ const ImageDetails = ({
             <li>tiled: {imageDetails.tiling ? 'true' : 'false'}</li>
           </ul>
         </div>
+        {!imageDetails.source_image && (
+          <div className="max-w-[200px] pl-[16px] items-start">
+            <AdContainer minSize={0} maxSize={1400} />
+          </div>
+        )}
         {imageDetails.source_image && (
           <div>
             <div className="mb-2">img2img source:</div>

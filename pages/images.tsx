@@ -39,6 +39,7 @@ import DropDownMenu from '../components/UI/DropDownMenu'
 import DropDownMenuItem from '../components/UI/DropDownMenuItem'
 import ImageModalController from '../components/ImagesPage/ImageModalController'
 import AppSettings from '../models/AppSettings'
+import AdContainer from '../components/AdContainer'
 
 const MenuSeparator = styled.div`
   width: 100%;
@@ -874,6 +875,9 @@ const ImagesPage = () => {
             </Link>
           </div>
         )}
+      <div className="w-full">
+        <AdContainer minSize={0} maxSize={640} key={router.asPath} />
+      </div>
       <div className={defaultStyle}>
         {!componentState.isLoading &&
           componentState.images.length > 0 &&
