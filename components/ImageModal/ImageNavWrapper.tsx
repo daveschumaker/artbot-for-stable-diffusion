@@ -85,7 +85,9 @@ const ImageNavWrapper = ({
       setTimeout(() => {
         setSwiping(false)
       }, 100)
-    }
+    },
+    swipeDuration: 250,
+    delta: 150
   })
 
   const handleTouchEnd = (e: any) => {

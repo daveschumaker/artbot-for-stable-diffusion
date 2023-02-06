@@ -32,7 +32,7 @@ const SwipeCapture = styled.div`
 
 const StyledInteractiveModal = styled.div<IStyle>`
   background-color: ${(props) => props.theme.body};
-  border: 2px solid ${(props) => props.theme.border};
+  border-top: 2px solid ${(props) => props.theme.border};
   border-radius: 8px;
   opacity: 1;
   top: 40px;
@@ -53,6 +53,7 @@ const StyledInteractiveModal = styled.div<IStyle>`
   `}
 
   @media (min-width: 640px) {
+    border: 2px solid ${(props) => props.theme.border};
     max-width: 864px;
     width: calc(100% - 48px);
     /* max-width: 752px; */
@@ -103,7 +104,9 @@ const InteractiveModal = (props: any) => {
     onSwipedDown: () => {
       onClose()
     },
-    preventScrollOnSwipe: true
+    preventScrollOnSwipe: true,
+    swipeDuration: 250,
+    delta: 150
   })
 
   const keyDownHandler = (event: any) => {

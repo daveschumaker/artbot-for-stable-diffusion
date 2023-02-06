@@ -105,7 +105,9 @@ const ImagesPage = () => {
       if (componentState.showImageModal) return
       handleLoadMore('prev')
     },
-    preventScrollOnSwipe: true
+    preventScrollOnSwipe: true,
+    swipeDuration: 250,
+    delta: 150
   })
   const router = useRouter()
   const size = useWindowSize()
@@ -843,7 +845,6 @@ const ImagesPage = () => {
           </>
         )}
       </div>
-      {componentState.isLoading && <Spinner />}
       {!componentState.isLoading &&
         componentState.images.length === 0 &&
         componentState.filterMode !== 'all' && (
@@ -878,6 +879,7 @@ const ImagesPage = () => {
       <div className="w-full">
         <AdContainer minSize={0} maxSize={640} key={router.asPath} />
       </div>
+      {componentState.isLoading && <Spinner />}
       <div className={defaultStyle}>
         {!componentState.isLoading &&
           componentState.images.length > 0 &&

@@ -112,6 +112,16 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.02.06</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            UX: Change some behavior related to swiping between pages / images
+            on mobile devices. Previously, it was way too sensitive. It should
+            be a bit more forgiving now.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.02.04</SubSectionTitle>
         <StyledUl>
           <StyledLi>
@@ -145,7 +155,7 @@ const Changelog = () => {
             a bit more visibility into what you have typed.
           </StyledLi>
           <StyledLi>
-            Added some (hopefully unobstrusive) ads from{' '}
+            Added some (hopefully unobtrusive) ads from{' '}
             <Linker
               href="https://www.carbonads.net/"
               target="_blank"
@@ -174,7 +184,7 @@ const Changelog = () => {
           <StyledLi>
             Feature: Add an option to view image generation parameters from the
             pending items page. I often see people on Discord report receiving
-            some sort of ambigious error from Stable Horde. This should help
+            some sort of ambiguous error from Stable Horde. This should help
             with debugging what went wrong.
           </StyledLi>
           <StyledLi>
@@ -236,7 +246,7 @@ const Changelog = () => {
             Thanks to Hinaloth on Discord for reporting this.
           </StyledLi>
           <StyledLi>
-            Update: CFG Strength / Guidane scale minimum steps changed from 1.0
+            Update: CFG Strength / Guidance scale minimum steps changed from 1.0
             to 0.5
           </StyledLi>
         </StyledUl>
@@ -541,7 +551,7 @@ const Changelog = () => {
               of this writing!). And many of the models are being updated by
               their maintainers. Some models can drastically change output
               between differing versions, meaning that the same parameters and
-              seed given to a different version of a particilar model will
+              seed given to a different version of a particular model will
               result in a completely different image. In an effort to give more
               transparency into how your images have been created, ArtBot will
               now save the version of the model that was created with your
@@ -556,7 +566,7 @@ const Changelog = () => {
           <StyledLi>
             Fix: When using multi-models or all-models option, automatically add
             trigger word to beginning of the prompt. (Should this be optional?
-            This should probably optionaly, eh?)
+            This should probably optional, eh?)
           </StyledLi>
           <StyledLi>
             UX: Reverse order of image direction. Most recent image should be
@@ -613,7 +623,7 @@ const Changelog = () => {
           </StyledLi>
           <StyledLi>
             UX: Drastically speed up image lookups from IndexedDb. I was using a
-            fairly unoptimized query, which would cause lots of spinners when
+            fairly un-optimized query, which would cause lots of spinners when
             loading image details pages. NO MORE! (Hopefully)
           </StyledLi>
           <StyledLi>
@@ -803,7 +813,7 @@ const Changelog = () => {
           <StyledLi>
             Fix: After yesterday&apos;s fix related to automatically adding
             image dimensions, we now automatically set custom dimensions for
-            images imported via inpainting to nearest integer divisble by 64 --
+            images imported via inpainting to nearest integer divisible by 64 --
             this is something that Stable Diffusion requires. (You can override
             this, should you want to.)
           </StyledLi>
@@ -1098,10 +1108,10 @@ const Changelog = () => {
             , voodoocode!)
           </StyledLi>
           <StyledLi>
-            Feature: Bulk download of PNGs. The Stable Horde API has long
-            servered images in WebP to save bandwidth. Now, when you request a
-            bulk download of image data, they are automatically converted to
-            PNGs inside your browser. Note that this process may take some time
+            Feature: Bulk download of PNGs. The Stable Horde API has long served
+            images in WebP to save bandwidth. Now, when you request a bulk
+            download of image data, they are automatically converted to PNGs
+            inside your browser. Note that this process may take some time
             depending on your device and the number of images you&apos;ve
             selected. (Thanks for the suggestion on Discord, honeypony!)
           </StyledLi>
@@ -1268,7 +1278,7 @@ const Changelog = () => {
         <StyledUl>
           <StyledLi>
             Shareable model information. Do you want to know more about{' '}
-            <Linker href="/info#Clazy" passHref>
+            <Linker href="/info/models#Clazy" passHref>
               Clazy?
             </Linker>{' '}
             Or maybe share the details about this particular model with a
@@ -1854,7 +1864,7 @@ const Changelog = () => {
           </StyledLi>
           <StyledLi>
             Added some validation to various input fields inside advanced
-            options, as well as subtext defining the requiered parameters.
+            options, as well as subtext defining the required parameters.
           </StyledLi>
           <StyledLi>
             Temporarily removed painter page while I refactor a few things to
