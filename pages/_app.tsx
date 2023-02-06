@@ -204,8 +204,8 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
       </Head>
       <ToastContainer />
       <PollController />
-      <Header />
       <ContentWrapper>
+        <Header />
         {showServerUpdateModal && <ServerUpdateModal />}
         <NavBar />
         <Component {...pageProps} />

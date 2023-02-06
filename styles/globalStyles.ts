@@ -12,8 +12,7 @@ export const GlobalStyles = createGlobalStyle<{ theme: DefaultTheme }>`
   }
 
   body, html {
-    background: #080B0C;
-    background: ${({ theme }) => theme.body};
+    background-color: ${({ theme }) => theme.body};
     color: ${({ theme }) => theme.text};
     padding: 0;
     font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;

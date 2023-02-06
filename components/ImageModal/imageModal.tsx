@@ -65,6 +65,7 @@ const TextWrapper = styled.div`
 
 const StyledModal = styled(InteractiveModal)`
   overflow-y: auto;
+  z-index: 30;
   @media (min-width: 640px) {
     height: auto;
     max-height: 100vh;

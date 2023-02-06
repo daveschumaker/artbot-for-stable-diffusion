@@ -27,9 +27,9 @@ const MenuOverlay = styled.div<IStyledProps>`
   background-color: ${(props) => props.theme.secondaryBackground};
   /* border-right: 1px solid gray; */
   box-shadow: 2px 0 8px #000000;
-  bottom: 68px;
+  bottom: 0;
   left: 0;
-  padding: 16px;
+  padding-top: calc(env(safe-area-inset-top) + 32px) 16px 16px 16px;
   position: fixed;
   top: 0;
   transform: translateX(-110%);
@@ -51,7 +51,7 @@ const MenuOverlay = styled.div<IStyledProps>`
 const CloseWrapper = styled.div`
   cursor: pointer;
   position: absolute;
-  top: 8px;
+  top: calc(env(safe-area-inset-top) + 4px);
   left: 8px;
 
   &:hover {
@@ -62,7 +62,7 @@ const CloseWrapper = styled.div`
 const MenuOptions = styled.ul`
   /* margin-top: 36px; */
   position: fixed;
-  top: 48px;
+  top: calc(env(safe-area-inset-top) + 48px);
   left: 12px;
   right: 16px;
   bottom: 8px;

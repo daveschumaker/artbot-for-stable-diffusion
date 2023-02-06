@@ -249,7 +249,7 @@ const PendingItem = memo(
         <StyledPanel>
           {processDoneOrError ? (
             <StyledCloseButton onClick={handleRemovePanel}>
-              <CloseIcon width={2} />
+              <CloseIcon width={2} stroke="white" />
             </StyledCloseButton>
           ) : null}
           <StyledImageInfoPanel>
@@ -290,7 +290,7 @@ const PendingItem = memo(
                 {jobDetails.upscaled && <div>[ UPSCALING ]</div>}
                 <div className="italic">{jobDetails.prompt}</div>
               </StyledPrompt>
-              <div className="w-full font-mono text-xs mt-2">
+              <div className="w-full font-mono text-xs mt-2 text-white">
                 Steps: {jobDetails.steps}
                 <br />
                 Sampler: {jobDetails.sampler}

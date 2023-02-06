@@ -14,6 +14,7 @@ const Wrapper = styled.div`
   flex-direction: row;
   left: 0;
   padding-top: env(safe-area-inset-top);
+  padding-left: 8px;
   padding-bottom: 8px;
   position: fixed;
   right: 0;
@@ -24,6 +25,7 @@ const Wrapper = styled.div`
     position: relative;
     margin-bottom: 2px;
     padding-bottom: 0;
+    padding-left: 0;
   }
 `
 
@@ -33,22 +35,6 @@ const MenuWrapper = styled.div`
 
   &:hover {
     color: rgb(20, 184, 166);
-  }
-`
-
-const StyledHeaderWrapper = styled.div`
-  margin-left: 12px;
-  margin-right: 12px;
-
-  @media (min-width: 640px) {
-    margin: auto auto 0 auto;
-    max-width: 768px;
-    width: calc(100% - 32px);
-  }
-
-  @media (min-width: 1280px) {
-    margin: auto auto 0 auto;
-    max-width: 1024px;
   }
 `
 
@@ -66,41 +52,39 @@ export default function Header() {
   }
 
   return (
-    <StyledHeaderWrapper>
-      <Wrapper>
-        <Menu handleClose={() => closeMenu()} show={showMenu} />
-        <MenuWrapper
-          onClick={() => {
-            if (showMenu) {
-              closeMenu()
-            } else {
-              openMenu()
-            }
-          }}
-        >
-          <MenuIcon size={36} />
-        </MenuWrapper>
-        <div className="mt-2 w-1/2 inline-block">
-          <Link href="/">
-            <div className="inline-block">
-              <Image
-                src="/artbot/artbot-logo.png"
-                height={32}
-                width={32}
-                alt="AI ArtBot logo"
-              />
-            </div>
-            <div className="inline-block">
-              <h1 className="ml-2 pt-1 inline-block h-8 text-[30px] font-bold leading-7 text-teal-500">
-                ArtBot
-              </h1>
-            </div>
-          </Link>
-        </div>
-        <div className="mt-2 w-1/2 inline-block text-right">
-          <div className="mt-3"></div>
-        </div>
-      </Wrapper>
-    </StyledHeaderWrapper>
+    <Wrapper>
+      <Menu handleClose={() => closeMenu()} show={showMenu} />
+      <MenuWrapper
+        onClick={() => {
+          if (showMenu) {
+            closeMenu()
+          } else {
+            openMenu()
+          }
+        }}
+      >
+        <MenuIcon size={36} />
+      </MenuWrapper>
+      <div className="mt-2 w-1/2 inline-block">
+        <Link href="/">
+          <div className="inline-block">
+            <Image
+              src="/artbot/artbot-logo.png"
+              height={32}
+              width={32}
+              alt="AI ArtBot logo"
+            />
+          </div>
+          <div className="inline-block">
+            <h1 className="ml-2 pt-1 inline-block h-8 text-[30px] font-bold leading-7 text-teal-500">
+              ArtBot
+            </h1>
+          </div>
+        </Link>
+      </div>
+      <div className="mt-2 w-1/2 inline-block text-right">
+        <div className="mt-3"></div>
+      </div>
+    </Wrapper>
   )
 }

@@ -13,7 +13,7 @@ const StyledOverlay = styled.div<IOverlayProps>`
   right: 0;
   left: 0;
   bottom: 0;
-  z-index: 20;
+  z-index: 25;
 
   ${(props) =>
     props.disableBackground &&
@@ -26,6 +26,7 @@ const Overlay = (props: IOverlayProps) => {
   const { disableBackground = false, handleClose = () => {} } = props
   return (
     <StyledOverlay
+      className="StyledOverlay"
       disableBackground={disableBackground}
       onClick={handleClose}
     />

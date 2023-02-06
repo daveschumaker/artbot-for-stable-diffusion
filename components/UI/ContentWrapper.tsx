@@ -10,6 +10,7 @@ interface StyleProps {
 }
 
 const StyledContent = styled.div<StyleProps>`
+  background-color: ${(props) => props.theme.body};
   margin-top: 48px;
   margin-left: 12px;
   margin-right: 12px;
