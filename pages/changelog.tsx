@@ -119,6 +119,14 @@ const Changelog = () => {
             on mobile devices. Previously, it was way too sensitive. It should
             be a bit more forgiving now.
           </StyledLi>
+          <StyledLi>
+            Feature: Added some very simple performance stats fetched from the
+            Stable Horde API to the{' '}
+            <Linker href="/info" passHref>
+              general info page
+            </Linker>
+            .
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

@@ -10,7 +10,7 @@ interface StyleProps {
 }
 
 const StyledContent = styled.div<StyleProps>`
-  margin-top: auto;
+  margin-top: 48px;
   margin-left: 12px;
   margin-right: 12px;
   margin-bottom: 80px;

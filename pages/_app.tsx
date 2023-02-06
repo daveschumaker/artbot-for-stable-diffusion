@@ -186,13 +186,23 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
           name="apple-mobile-web-app-status-bar-style"
           content="black-translucent"
         ></meta>
+        <meta
+          name="theme-color"
+          content="#f3f3ef"
+          media="(prefers-color-scheme: light)"
+        ></meta>
+        <meta
+          name="theme-color"
+          content="#080B0C"
+          media="(prefers-color-scheme: dark)"
+        ></meta>
         <link rel="icon" type="image/x-icon" href="/artbot/favicon.ico"></link>
       </Head>
       <ToastContainer />
       <PollController />
+      <Header />
       <ContentWrapper>
         {showServerUpdateModal && <ServerUpdateModal />}
-        <Header />
         <NavBar />
         <Component {...pageProps} />
         <Footer />

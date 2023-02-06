@@ -35,7 +35,7 @@ const MenuOverlay = styled.div<IStyledProps>`
   transform: translateX(-110%);
   transition: all 250ms ease-in-out;
   width: 300px;
-  z-index: 20;
+  z-index: 30;
 
   @media (min-width: 640px) {
     height: 100vh;
@@ -67,7 +67,7 @@ const MenuOptions = styled.ul`
   right: 16px;
   bottom: 8px;
   overflow-y: auto;
-  margin-bottom: 56px;
+  /* margin-bottom: 56px; */
 
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none;

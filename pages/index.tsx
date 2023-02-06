@@ -552,7 +552,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
       <div className="flex flex-row w-full items-center">
         <div className="inline-block w-1/2">
           <PageTitle>
-            Create new image{' '}
+            New image{' '}
             {input.source_processing === 'outpainting' && '(outpainting)'}
             {input.source_processing === 'inpainting' && '(inpainting)'}
             {input.source_processing === 'img2img' && '(img2img)'}
@@ -701,7 +701,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
           </div>
         )}
         <div className="mt-1 mb-4 w-full flex flex-row gap-2 justify-end items-start">
-          <div className="w-1/2 flex flex-col justify-start gap-2 items-start md:flex-row md:items-center">
+          <div className="w-1/2 text-sm flex flex-row justify-start gap-2 items-center">
             Style:{' '}
             <StylesDropdown
               input={input}
