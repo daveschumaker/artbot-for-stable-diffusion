@@ -31,7 +31,7 @@ import ShareLinkDetails from '../models/ShareableLink'
 import Head from 'next/head'
 import { setModelDetails } from '../store/modelStore'
 import ServerMessage from '../components/ServerMessage'
-import StylesDrodown from '../components/CreatePage/StylesDropdown'
+import StylesDropdown from '../components/CreatePage/StylesDropdown'
 import { useStore } from 'statery'
 import { appInfoStore } from '../store/appStore'
 import AppSettings from '../models/AppSettings'
@@ -700,10 +700,10 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
             Error: {hasError}
           </div>
         )}
-        <div className="mt-4 mb-4 w-full flex flex-row sm:flex-row gap-2 sm:justify-end items-start">
-          <div className="w-1/2 flex flex-col md:flex-row justify-start gap-2 items-start md:items-center">
+        <div className="mt-1 mb-4 w-full flex flex-row gap-2 justify-end items-start">
+          <div className="w-1/2 flex flex-col justify-start gap-2 items-start md:flex-row md:items-center">
             Style:{' '}
-            <StylesDrodown
+            <StylesDropdown
               input={input}
               setInput={setInput}
               isSearchable={true}
