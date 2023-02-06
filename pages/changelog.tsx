@@ -131,6 +131,10 @@ const Changelog = () => {
             On mobile devices, fix some issues with header (and content
             appearing within safe area on iOS).
           </StyledLi>
+          <StyledLi>
+            Fix a number of z-index issues with various parts of the UI after
+            the recent fixed header update.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
