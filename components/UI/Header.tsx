@@ -13,6 +13,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
   left: 0;
+  padding-top: env(safe-area-inset-top);
   padding-bottom: 8px;
   position: fixed;
   right: 0;

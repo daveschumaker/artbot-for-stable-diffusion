@@ -127,6 +127,10 @@ const Changelog = () => {
             </Linker>
             .
           </StyledLi>
+          <StyledLi>
+            On mobile devices, fix some issues with header (and content
+            appearing within safe area on iOS).
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

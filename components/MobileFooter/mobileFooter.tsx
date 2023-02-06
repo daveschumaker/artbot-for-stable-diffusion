@@ -26,6 +26,7 @@ interface NavIconWrapperProps {
 }
 
 const StyledFooter = styled.div<StyledFooterProps>`
+  align-items: flex-start;
   background-color: ${(props) => props.theme.body};
   border-top: 1px solid ${(props) => props.theme.text};
   position: fixed;
@@ -33,7 +34,7 @@ const StyledFooter = styled.div<StyledFooterProps>`
   display: flex;
   height: 68px;
   left: 0;
-  padding-bottom: 16px;
+  /* padding-bottom: 16px; */
   right: 0;
   z-index: 10;
 
@@ -54,6 +55,7 @@ const NavIcons = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  padding-bottom: env(safe-area-inset-bottom);
   width: 100%;
 `
 
