@@ -11,7 +11,6 @@ interface StyleProps {
 
 const StyledContent = styled.div<StyleProps>`
   background-color: ${(props) => props.theme.body};
-  margin-top: 48px;
   margin-left: 12px;
   margin-right: 12px;
   margin-bottom: 80px;
@@ -20,9 +19,8 @@ const StyledContent = styled.div<StyleProps>`
   justify-content: flex-start;
   min-height: 100vh;
   padding-top: 8px;
-  padding-bottom: ${(props) => (props.isPwa ? '100px' : 0)};
+  padding-bottom: ${(props) => (props.isPwa ? '120px' : 0)};
   position: relative;
-  /* width: 100%; */
 
   @media (min-width: 640px) {
     margin: auto auto 0 auto;
@@ -36,7 +34,6 @@ const StyledContent = styled.div<StyleProps>`
     max-width: 1024px;
   }
 `
-// className="pb-[68px] md:pb-2 px-4 md:px-2"
 export default function ContentWrapper(props: ContentWrapperProps) {
   const [isPwa, setIsPwa] = useState(false)
 

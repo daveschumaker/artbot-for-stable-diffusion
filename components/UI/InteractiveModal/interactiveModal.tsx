@@ -35,13 +35,13 @@ const StyledInteractiveModal = styled.div<IStyle>`
   border-top: 2px solid ${(props) => props.theme.border};
   border-radius: 8px;
   opacity: 1;
-  top: 80px;
+  top: 120px;
   left: 0;
   right: 0;
   bottom: 0;
   padding: 24px 16px 16px 16px;
   position: fixed;
-  z-index: 25;
+  z-index: 30;
 
   transform: translateY(110%);
   transition: all 250ms ease-in-out;

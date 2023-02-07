@@ -23,7 +23,7 @@ const StyledToast = styled.div`
   padding: 8px;
   position: fixed;
   right: 8px;
-  top: ${(props) => (props.active ? '8px' : '-200px')};
+  top: ${(props) => (props.active ? 'calc(env(safe-area-inset-top) + 8px)' : '-200px')};
   transition: all 0.4s;
   width: 300px;
   z-index: 25;
