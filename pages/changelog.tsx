@@ -135,6 +135,12 @@ const Changelog = () => {
             Fix a number of z-index issues with various parts of the UI after
             the recent fixed header update.
           </StyledLi>
+          <StyledLi>
+            Fix: A few more pesky z-index issues like unable to select dropdown
+            menu on settings page (thanks for reporting, anonymous user!) and
+            being unable to use model triggers on the create image page (thanks
+            to Ano for reporting this via Discord).
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
