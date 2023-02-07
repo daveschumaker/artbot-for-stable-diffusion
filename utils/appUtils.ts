@@ -74,9 +74,11 @@ function isiOS() {
 let scrollOffset = 0
 
 export const lockScroll = () => {
+  const scrollBarCompensation = window.innerWidth - document.body.offsetWidth
+
   document.body.dataset.scrollLock = 'true'
   document.body.style.overflow = 'hidden'
-  document.body.style.paddingRight = 'var(--scrollbar-compensation)'
+  document.body.style.paddingRight = `${scrollBarCompensation}px`
 
   if (isiOS()) {
     scrollOffset = window.pageYOffset
