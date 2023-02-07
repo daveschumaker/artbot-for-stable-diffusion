@@ -41,6 +41,7 @@ const Img2ImgPanel = ({ input, saveForInpaint, setInput }: Props) => {
       imageType,
       height,
       width,
+      orientationType: 'custom',
       source_image,
       source_processing: SourceProcessing.Img2Img
     })
