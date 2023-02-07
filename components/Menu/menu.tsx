@@ -13,6 +13,7 @@ import Overlay from '../UI/Overlay'
 import QuestionMarkIcon from '../icons/QuestionMarkIcon'
 import LineDashedIcon from '../icons/LineDashedIcon'
 import StarsIcon from '../icons/StarsIcon'
+import SettingsIcon from '../icons/SettingsIcon'
 
 interface IProps {
   handleClose: () => void
@@ -85,7 +86,7 @@ const MenuOption = styled.li`
   cursor: pointer;
   display: flex;
   flex-direction: row;
-  font-size: 20px;
+  font-size: 16px;
   margin-bottom: 12px;
 
   &:hover {
@@ -247,11 +248,11 @@ const Menu = (props: IProps) => {
           </MenuOption>
           <MenuOption
             onClick={() => {
-              navigateToLink('/about')
+              navigateToLink('/settings')
             }}
           >
-            <HelpIcon />
-            About
+            <SettingsIcon />
+            Settings
           </MenuOption>
           <SubOptions>
             <SubOption
@@ -279,6 +280,14 @@ const Menu = (props: IProps) => {
               ArtBot Prefs
             </SubOption>
           </SubOptions>
+          <MenuOption
+            onClick={() => {
+              navigateToLink('/about')
+            }}
+          >
+            <HelpIcon />
+            About
+          </MenuOption>
         </MenuOptions>
       </MenuOverlay>
     </>

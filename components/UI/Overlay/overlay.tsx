@@ -13,7 +13,7 @@ const StyledOverlay = styled.div<IOverlayProps>`
   right: 0;
   left: 0;
   bottom: 0;
-  z-index: 25;
+  z-index: 30;
 
   ${(props) =>
     props.disableBackground &&

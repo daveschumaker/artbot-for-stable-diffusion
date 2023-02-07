@@ -97,7 +97,7 @@ export default function Toast({ handleClose, handleImageClick, jobId, showImageR
           </div>
           <StyledTextPanel>
             <div>Your new image is ready.</div>
-            <Linker href={`/image/${jobId}`} onClick={handleClick}>
+            <Linker disableLinkClick href={`/image/${jobId}`} onClick={handleClick}>
               Check it out!
             </Linker >
           </StyledTextPanel>
