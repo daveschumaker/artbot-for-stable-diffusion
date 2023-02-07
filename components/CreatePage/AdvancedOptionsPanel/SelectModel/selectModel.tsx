@@ -14,6 +14,7 @@ import SelectComponent from '../../../UI/Select'
 import SubSectionTitle from '../../../UI/SubSectionTitle'
 import TextTooltipRow from '../../../UI/TextTooltipRow'
 import Tooltip from '../../../UI/Tooltip'
+import { MODEL_LIMITED_BY_WORKERS } from '../../../../constants'
 
 interface IProps {
   input: any
@@ -95,7 +96,7 @@ const SelectModel = ({ input, setInput, modelerOptions }: IProps) => {
           </Linker>
         </div>
       </MaxWidth>
-      {availableModels[input.models[0]]?.count <= 2 && (
+      {availableModels[input.models[0]]?.count <= MODEL_LIMITED_BY_WORKERS && (
         <div className="mb-2">
           <ModelWarning>
             <AlertTriangleIcon size={32} /> This model has limited availability.

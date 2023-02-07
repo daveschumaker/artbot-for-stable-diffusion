@@ -22,7 +22,7 @@ import CreateImageRequest from '../models/CreateImageRequest'
 import Linker from './UI/Linker'
 import { useStore } from 'statery'
 import { modelInfoStore } from '../store/modelStore'
-import { RATE_IMAGE_CUTOFF_SEC } from '../constants'
+import { MODEL_LIMITED_BY_WORKERS, RATE_IMAGE_CUTOFF_SEC } from '../constants'
 import DisplayRawData from './DisplayRawData'
 
 const ModelWarning = styled.div`
@@ -296,7 +296,8 @@ const PendingItem = memo(
                 Sampler: {jobDetails.sampler}
                 <br />
                 Model: {!jobDetails.models[0] ? 'Random' : jobDetails.models[0]}
-                {availableModels[jobDetails.models[0]]?.count <= 1 && (
+                {availableModels[jobDetails.models[0]]?.count <=
+                  MODEL_LIMITED_BY_WORKERS && (
                   <>
                     <div>
                       <ModelWarning>

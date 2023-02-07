@@ -23,6 +23,8 @@ export const DEFAULT_SAMPLER_ARRAY = [
   'k_dpmpp_sde'
 ]
 
+export const MODEL_LIMITED_BY_WORKERS = 3
+
 interface IQualityMap {
   [key: number]: number
 }
