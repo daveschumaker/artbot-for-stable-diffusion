@@ -125,6 +125,10 @@ const Changelog = () => {
             Removed the &quot;NoSleep&quot; option for mobile devices, because
             it did not work.
           </StyledLi>
+          <StyledLi>
+            Attempting to fix an issue with inpainting / img2img masks not being
+            properly set. Thanks to FlameMind on Discord for reporting this.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

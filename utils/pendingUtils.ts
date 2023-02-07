@@ -20,10 +20,15 @@ const cloneImageParams = async (
   clonedParams.jobId = uuidv4()
   clonedParams.timestamp = Date.now()
 
-  if (
+  const hasImg2ImgMask =
+    clonedParams.source_processing === SourceProcessing.Img2Img &&
+    clonedParams.source_mask
+
+  const needsImg2ImgMask =
     clonedParams.source_processing === SourceProcessing.InPainting &&
     clonedParams.models[0] !== 'stable_diffusion_inpainting'
-  ) {
+
+  if (hasImg2ImgMask || needsImg2ImgMask) {
     clonedParams.source_processing = SourceProcessing.Img2Img
 
     // TODO: Importing this causes Fabric to be built as part of
