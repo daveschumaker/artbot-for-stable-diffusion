@@ -7,16 +7,12 @@
     "analyze:dev": "ANALYZE=true npm run dev",
     "dev": "npm run update:build-id && PORT=3000 node server.js",
     "build": "npm run update:build-id && next build",
-    "deploy:prod": "npm run build && node ./x-build-scripts/release-deploy.js --prod",
-    "deploy:staging": "npm run build && node ./x-build-scripts/release-deploy.js --staging",
     "lint": "next lint",
     "pm2:start-prod": "pm2 start ecosystem.config.js --only horde-js",
     "pm2:stop-prod": "pm2 delete ecosystem.config.js --only horde-js",
     "pm2:start-staging": "pm2 start ecosystem.config.js --only horde-js-staging",
     "pm2:stop-staging": "pm2 delete ecosystem.config.js --only horde-js-staging",
     "postinstall": "node ./x-build-scripts/post-install.js",
-    "rollback:prod": "node ./x-build-scripts/release-rollback.js --prod",
-    "rollback:staging": "node ./x-build-scripts/release-rollback.js --staging",
     "start": "NODE_ENV=production node server.js",
     "update:build-id": "node ./x-build-scripts/updateBuildId.js"
   },
@@ -73,7 +69,6 @@
     "eslint": "8.33.0",
     "eslint-config-next": "13.1.6",
     "postcss": "8.4.21",
-    "ssh-deploy-release": "4.0.1",
     "tailwindcss": "3.2.4",
     "typescript": "4.9.5"
   }
