@@ -1,7 +1,7 @@
-import React, { ReactElement, useEffect } from 'react'
+import React, { ReactElement, useEffect, useRef } from 'react'
 import styled from 'styled-components'
+import { useOnClickOutside } from '../../../hooks/useOnClickOutside'
 import { IDropDownMenuItem } from '../DropDownMenuItem/dropDownMenuItem'
-import Overlay from '../Overlay'
 
 interface Props {
   children: any
@@ -11,6 +11,7 @@ interface Props {
 
 interface StyleProps {
   position?: string
+  ref?: any
 }
 
 const StyledDropDownMenu = styled.div<StyleProps>`
@@ -23,7 +24,7 @@ const StyledDropDownMenu = styled.div<StyleProps>`
   width: 240px;
   right: -2px;
   top: 36px;
-  z-index: 20;
+  z-index: 15;
 
   ${(props) => {
     if (props.position === 'left') {
@@ -35,9 +36,16 @@ const StyledDropDownMenu = styled.div<StyleProps>`
 `
 const DropDownMenu = ({
   children,
-  handleClose = () => { },
+  handleClose = () => {},
   position = ''
 }: Props) => {
+  const ref = useRef()
+  useOnClickOutside(ref, () => {
+    setTimeout(() => {
+      handleClose()
+    }, 200)
+  })
+
   const keyDownHandler = (event: any) => {
     if (event.key === 'Escape') {
       event.preventDefault()
@@ -56,8 +64,7 @@ const DropDownMenu = ({
 
   return (
     <>
-      <Overlay disableBackground handleClose={handleClose} />
-      <StyledDropDownMenu position={position}>
+      <StyledDropDownMenu position={position} ref={ref}>
         <ul>
           {React.Children.map(
             children,
