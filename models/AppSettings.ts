@@ -1,7 +1,6 @@
 interface IAppSettingsParams {
   allowNsfwImages: boolean
   apiKey: string
-  enableNoSleep: boolean
   runInBackground: boolean
   saveInputOnCreate: boolean
   useBeta: boolean
@@ -11,7 +10,6 @@ interface IAppSettingsParams {
 class AppSettings {
   allowNsfwImages: boolean
   apiKey: string
-  enableNoSleep: boolean
   runInBackground: boolean
   saveInputOnCreate: boolean
   useBeta: boolean
@@ -21,7 +19,6 @@ class AppSettings {
     const {
       allowNsfwImages = false,
       apiKey = '',
-      enableNoSleep = false,
       runInBackground = false,
       saveInputOnCreate = false,
       useBeta = false,
@@ -30,7 +27,6 @@ class AppSettings {
 
     this.allowNsfwImages = Boolean(allowNsfwImages)
     this.apiKey = String(apiKey)
-    this.enableNoSleep = Boolean(enableNoSleep)
     this.runInBackground = Boolean(runInBackground)
     this.saveInputOnCreate = Boolean(saveInputOnCreate)
     this.useBeta = Boolean(useBeta)

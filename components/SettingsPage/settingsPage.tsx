@@ -4,7 +4,6 @@ import Switch from 'react-switch'
 import { useStore } from 'statery'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
-import NoSleep from 'nosleep.js'
 
 import useComponentState from '../../hooks/useComponentState'
 import { fetchUserDetails } from '../../api/userInfo'
@@ -104,7 +103,6 @@ const SettingsPage = () => {
     apiErrorMsg: '',
     disableSnowflakes: false,
     enableGallerySwipe: true,
-    enableNoSleep: false,
     loadingWorkerStatus: {},
     panel: 'stableHorde',
     runInBackground: false,
@@ -120,28 +118,6 @@ const SettingsPage = () => {
     useWorkerId: '',
     useTrusted: true
   })
-
-  const handleNoSleep = (obj: any) => {
-    const { value } = obj
-    const noSleep = new NoSleep()
-
-    if (value) {
-      noSleep.disable()
-      document.addEventListener(
-        'click',
-        function enableNoSleep() {
-          document.removeEventListener('click', enableNoSleep, false)
-          noSleep.enable()
-        },
-        false
-      )
-    } else {
-      noSleep.disable()
-    }
-
-    AppSettings.save('enableNoSleep', value)
-    setComponentState({ enableNoSleep: value })
-  }
 
   const handleSetWorkerId = (e: React.ChangeEvent<HTMLInputElement>) => {
     const workerId = e.target.value || ''
@@ -195,7 +171,6 @@ const SettingsPage = () => {
 
     updateObj.allowNsfwImages = AppSettings.get('allowNsfwImages') || false
     updateObj.apiKey = AppSettings.get('apiKey') || ''
-    updateObj.enableNoSleep = AppSettings.get('enableNoSleep') || false
     updateObj.runInBackground = AppSettings.get('runInBackground') || false
     updateObj.enableGallerySwipe =
       AppSettings.get('enableGallerySwipe') === false ? false : true
@@ -751,36 +726,6 @@ const SettingsPage = () => {
                     }
                     value={
                       componentState.runInBackground
-                        ? { value: true, label: 'Yes' }
-                        : { value: false, label: 'No' }
-                    }
-                  />
-                </MaxWidth>
-              </Section>
-              <Section>
-                <SubSectionTitle>
-                  <strong>Stay awake?</strong>
-                  <div className="block text-xs mb-2 mt-2 w-full">
-                    On mobile devices, this option will keep your screen awake.
-                    This is useful if you&apos;re generating a lot of images and
-                    want the process to continue. <strong>Note:</strong> This
-                    uses an audio API to stay awake, and will prevent you from
-                    listening to other audio apps on your mobile device while on
-                    this page.
-                  </div>
-                </SubSectionTitle>
-                <MaxWidth
-                  // @ts-ignore
-                  maxWidth="240"
-                >
-                  <Select
-                    options={[
-                      { value: true, label: 'Yes' },
-                      { value: false, label: 'No' }
-                    ]}
-                    onChange={handleNoSleep}
-                    value={
-                      componentState.enableNoSleep
                         ? { value: true, label: 'Yes' }
                         : { value: false, label: 'No' }
                     }

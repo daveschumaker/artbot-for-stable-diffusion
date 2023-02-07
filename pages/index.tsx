@@ -509,6 +509,10 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
       })
     }
 
+    if (isNaN(input.numImages)) {
+      setInput({ numImages: 1 })
+    }
+
     // Handle state where tiling is incorrectly set in case of img2img or inpainting
     if (
       (source_mask ||

@@ -21,6 +21,7 @@ const presetOptions = () => {
 }
 
 const StyledDropdown = styled(SelectComponent)`
+  font-size: 16px;
   width: 100%;
 
   @media (min-width: 640px) {

@@ -38,7 +38,8 @@ const SelectComponent = (props: SelectProps) => {
       ...provided,
       backgroundColor: theme.inputBackground,
       borderColor: theme.inputColor,
-      color: theme.inputColor
+      color: theme.inputColor,
+      fontSize: '16px'
     }),
     input: (provided: CSSProperties) => ({
       ...provided,

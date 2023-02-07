@@ -87,7 +87,7 @@ const MenuOption = styled.li`
   display: flex;
   flex-direction: row;
   font-size: 16px;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 
   &:hover {
     color: rgb(20, 184, 166);
@@ -99,7 +99,7 @@ const SubOptions = styled.div`
   flex-direction: column;
   margin-top: -8px;
   padding-left: 32px;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 `
 
 const SubOption = styled.div`

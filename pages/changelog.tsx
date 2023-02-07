@@ -112,6 +112,22 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.02.07</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: More work attempting to fix some issues with fixed header on
+            mobile devices. If you&apos;re having issues where some UI elements
+            get stuck underneath the fixed header and you cannot access them,
+            please let me know! (Also, please send along what device / browser
+            this is happening with.)
+          </StyledLi>
+          <StyledLi>
+            Removed the &quot;NoSleep&quot; option for mobile devices, because
+            it did not work.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.02.06</SubSectionTitle>
         <StyledUl>
           <StyledLi>
