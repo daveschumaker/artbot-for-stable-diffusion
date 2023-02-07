@@ -48,6 +48,28 @@ const initLoadCount = () => {
   }
 }
 
+const countTotal = async () => {
+  const data = {
+    totalImages: cache.totalImages
+  }
+  try {
+    await fetch(`http://localhost:4001/api/v1/artbot/counter`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+  } catch (err) {
+    // eh, it's okay if nothing happens.
+  }
+}
+
+// Once an hour, update counter with latest total image count.
+setInterval(() => {
+  countTotal()
+}, 60000 * 60)
+
 module.exports = {
   getImageCount,
   initLoadCount,
