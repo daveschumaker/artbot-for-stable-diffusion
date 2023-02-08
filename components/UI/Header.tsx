@@ -63,7 +63,7 @@ export default function Header() {
           }
         }}
       >
-        <MenuIcon size={36} />
+        <MenuIcon size={32} />
       </MenuWrapper>
       <div className="mt-2 w-1/2 inline-block">
         <Link href="/">
@@ -76,7 +76,7 @@ export default function Header() {
             />
           </div>
           <div className="inline-block">
-            <h1 className="ml-2 pt-1 inline-block h-8 text-[30px] font-bold leading-7 text-teal-500">
+            <h1 className="ml-2 pt-1 inline-block h-8 text-[24px] md:text-[30px] font-bold leading-7 text-teal-500">
               ArtBot
             </h1>
           </div>

@@ -129,6 +129,22 @@ const Changelog = () => {
             Attempting to fix an issue with inpainting / img2img masks not being
             properly set. Thanks to FlameMind on Discord for reporting this.
           </StyledLi>
+          <StyledLi>
+            FIXED! Content appearing under the header on mobile devices. To the
+            beautiful, brave, anonymous soul who wrote in to tell me what device
+            you were using when you encountered this issue, THANK YOU! (A
+            7th-gen iPod touch, effective screen width of 320px. Wow!) A quick
+            test using XCode&apos;s handy iOS simulator verified what was
+            happening. I had no idea. Thank you! For those following along at
+            home,{' '}
+            <Linker
+              href="https://imgur.com/gallery/bpFhCXE"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              this is what they were dealing with.
+            </Linker>
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

@@ -32,11 +32,15 @@ const StyledFooter = styled.div<StyledFooterProps>`
   position: fixed;
   bottom: 0;
   display: flex;
-  height: 68px;
+  height: 48px;
   left: 0;
   /* padding-bottom: 16px; */
   right: 0;
   z-index: 10;
+
+  @media (min-width: 340px) {
+    height: 68px;
+  }
 
   ${(props) =>
     props.isPwa &&
@@ -65,9 +69,13 @@ const NavIconWrapper = styled.div<NavIconWrapperProps>`
   color: black;
   display: flex;
   justify-content: center;
-  height: 51px;
+  height: 38px;
   padding-top: 8px;
   width: 40px;
+
+  @media (min-width: 340px) {
+    height: 51px;
+  }
 
   ${(props) =>
     props.active &&
