@@ -9,7 +9,6 @@ import PencilIcon from '../../icons/PencilIcon'
 import RedoIcon from '../../icons/RedoIcon'
 import TrashIcon from '../../icons/TrashIcon'
 import UndoIcon from '../../icons/UndoIcon'
-import Overlay from '../../UI/Overlay'
 import CreateCanvas from '../../../models/CreateCanvas'
 import DropDown from './components/DropDown'
 
