@@ -56,6 +56,14 @@ export const createImage = async (
     const { id, message = '' }: GenerateResponse = data
     isPending = false
 
+    if (message.indexOf('unethical images') >= 0) {
+      return {
+        success: false,
+        status: 'QUESTIONABLE_PROMPT_ERROR',
+        message
+      }
+    }
+
     if (
       message === 'Only Trusted users are allowed to perform this operation'
     ) {
@@ -206,6 +214,10 @@ export const createImage = async (
         errMsg: err?.message || ''
       }
     })
+
+    console.log(`--- createImage: Unknown Error ---`)
+    console.log(err)
+
     return {
       success: false,
       status: 'UNKNOWN_ERROR',

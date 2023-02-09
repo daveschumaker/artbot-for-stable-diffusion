@@ -112,6 +112,17 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.02.09</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: In some situations, when ArtBot received an error response from
+            the Stable Horde API, the error would cascade down and affect all
+            pending jobs. I&apos;ve added some new logic that should prevent
+            this from occurring in certain scenarios.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.02.08</SubSectionTitle>
         <StyledUl>
           <StyledLi>
