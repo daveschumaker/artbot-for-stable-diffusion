@@ -33,7 +33,7 @@ const DeleteConfirmModal = ({
     <>
       <Overlay handleClose={closeModal} />
       <div
-        className="z-20 fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2"
+        className="z-30 fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2"
         aria-labelledby="modal-title"
         role="dialog"
         aria-modal="true"

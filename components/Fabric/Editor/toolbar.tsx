@@ -11,6 +11,7 @@ import TrashIcon from '../../icons/TrashIcon'
 import UndoIcon from '../../icons/UndoIcon'
 import Overlay from '../../UI/Overlay'
 import CreateCanvas from '../../../models/CreateCanvas'
+import DropDown from './components/DropDown'
 
 const ToolBarButton = ({ active, children, onClick = () => {} }: any) => {
   const classes = [
@@ -64,9 +65,10 @@ const ToolBar = ({
     `rounded-[4px]`,
     'relative',
     'mb-[8px]',
-    'gap-[4px]',
+    'md:gap-[4px]',
     'justify-between',
-    'p-[8px]',
+    'p-[2px]',
+    'md:p-[8px]',
     'shadow-md',
     'select-none'
   ]
@@ -156,31 +158,9 @@ const ToolBar = ({
         </ToolBarButton>
       </div>
       {showAdjustmentMenu && (
-        <>
-          <Overlay
-            disableBackground
-            handleClose={() => setShowAdjustmentMenu(false)}
-          />
-          <div
-            className={clsx([
-              'flex',
-              'flex-row',
-              'items-center',
-              'bg-[#ffffff]',
-              `rounded-[4px]`,
-              'absolute',
-              'mb-[8px]',
-              'gap-[4px]',
-              'justify-between',
-              'p-[8px]',
-              'shadow-md',
-              'z-20',
-              'top-[47px]',
-              'left-0',
-              'min-w-[320px]'
-            ])}
-          >
-            <div className="w-full">
+        <DropDown handleClose={() => setShowAdjustmentMenu(false)}>
+          <div className="flex flex-col w-full">
+            <div className="w-full mb-2">
               <div className="text-gray-900">
                 <small>
                   <strong>Brush size ({brushSize} px)</strong>
@@ -190,15 +170,15 @@ const ToolBar = ({
                 <input
                   className="w-full"
                   type="range"
-                  min="10"
-                  max="90"
+                  min={10}
+                  max="120"
                   onChange={handleWidth}
                   value={brushSize}
                 />
               </div>
             </div>
           </div>
-        </>
+        </DropDown>
       )}
     </div>
   )

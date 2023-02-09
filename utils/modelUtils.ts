@@ -64,14 +64,14 @@ export const validModelsArray = ({
       continue
     }
 
-    // This model is borked and we shuld never ever show it.
+    // This model is borked and we should never ever show it.
     if (availableModels[key].name === 'stable_diffusion_1.4') {
       continue
     }
 
     let displayName = availableModels[key].name
     if (availableModels[key].name === 'stable_diffusion_inpainting') {
-      displayName = 'Stable Diffusion v.2.0 Inpainting'
+      displayName = 'Stable Diffusion v1.5 Inpainting'
     }
 
     modelsArray.push({

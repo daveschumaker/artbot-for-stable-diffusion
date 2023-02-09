@@ -112,6 +112,23 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.02.08</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Minor fix: delete button not working on inpainting tab.
+          </StyledLi>
+          <StyledLi>
+            Minor fix: change brush size slider not working on inpainting tab.
+          </StyledLi>
+          <StyledLi>
+            Renamed &quot;Stable Diffusion v.2.0 Inpainting&quot; model because
+            it was incorrect. It&apos;s actually &quot;Stable Diffusion v.1.5
+            Inpainting&quot;. (Thanks to FlameMind on Discord for reporting
+            this).
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.02.07</SubSectionTitle>
         <StyledUl>
           <StyledLi>
