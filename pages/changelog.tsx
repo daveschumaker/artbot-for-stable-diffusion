@@ -126,6 +126,12 @@ const Changelog = () => {
             Inpainting&quot;. (Thanks to FlameMind on Discord for reporting
             this).
           </StyledLi>
+          <StyledLi>
+            Added a border to the mask and erase brushes in inpainting mode.
+            This should make it a bit easier to see where you&apos;re painting
+            if the background is white or red. Thanks to &quot;💫.&quot; on
+            Discord for suggesting this.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

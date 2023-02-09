@@ -18,6 +18,7 @@ class CreateCanvas {
   }
   drawLayer: fabric.Group
   imageLayer: fabric.Group | null
+  isMouseDown: boolean
   erasing: boolean
   height: number
   redoHistory: Array<any>
@@ -52,6 +53,8 @@ class CreateCanvas {
     this.undoHistory = []
     this.redoHistory = []
     this.historyIndex = -1
+
+    this.isMouseDown = false
 
     document.addEventListener('keyup', this.handleKeyInput)
   }
@@ -168,8 +171,8 @@ class CreateCanvas {
       originY: 'center',
       angle: 0,
       fill: '',
-      stroke: 'red',
-      strokeWidth: 3,
+      stroke: 'black',
+      strokeWidth: 1,
       opacity: 0
     })
 
@@ -188,11 +191,41 @@ class CreateCanvas {
     this.canvas.add(this.drawLayer)
     this.initBrushPreview()
     this.updateBrush()
-
-    this.canvas.on('path:created', this.onPathCreated)
-    this.canvas.on('mouse:move', this.onMouseMove)
+    this.initCanvasEvents()
     this.updateCanvas()
   }
+
+  initCanvasEvents = () => {
+    if (!this.canvas) {
+      return
+    }
+
+    this.canvas.on('path:created', this.onPathCreated)
+    this.canvas.on('mouse:move', (e: any) => {
+      this.onMouseMove(e)
+    })
+
+    this.canvas.on('mouse:down', () => {
+      if (!this.brushPreview) {
+        return
+      }
+
+      this.isMouseDown = true
+      this.brushPreview.set('strokeWidth', 0)
+      this.brushPreview.set('stroke', '')
+    })
+
+    this.canvas.on('mouse:up', () => {
+      if (!this.brushPreview) {
+        return
+      }
+
+      this.isMouseDown = false
+      this.brushPreview.set('strokeWidth', 1)
+      this.brushPreview.set('stroke', 'black')
+    })
+  }
+
   autoSave = () => {
     if (!this.canvas) {
       return
@@ -420,12 +453,12 @@ class CreateCanvas {
     this.brushPreview.top = pointer.y
     this.brushPreview.opacity = 0.5
 
-    if (this.erasing) {
-      this.brushPreview.set('strokeWidth', 3)
+    if (this.erasing && this.isMouseDown) {
+      this.brushPreview.set('fill', '')
+    } else if (this.erasing) {
       this.brushPreview.set('fill', 'red')
       this.updateBrush({ color: 'red' })
     } else {
-      this.brushPreview.set('strokeWidth', 0)
       this.brushPreview.set('fill', 'white')
       this.updateBrush({ color: 'white' })
     }
@@ -553,7 +586,13 @@ class CreateCanvas {
     // this.canvas.dispose()
   }
 
-  updateBrush = ({ color, width }: { color?: string; width?: number } = {}) => {
+  updateBrush = ({
+    color,
+    width
+  }: {
+    color?: string
+    width?: number
+  } = {}) => {
     if (!this.canvas) {
       return
     }
