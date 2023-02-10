@@ -6,7 +6,7 @@ export enum SourceProcessing {
   Prompt = 'prompt',
   Img2Img = 'img2img',
   InPainting = 'inpainting',
-  OutPaiting = 'outpainting'
+  OutPainting = 'outpainting'
 }
 interface SavePrompt {
   img2img: boolean
@@ -31,7 +31,7 @@ interface SavePrompt {
     | SourceProcessing.Prompt
     | SourceProcessing.Img2Img
     | SourceProcessing.InPainting
-    | SourceProcessing.OutPaiting
+    | SourceProcessing.OutPainting
   source_mask?: string
   denoising_strength?: number
   models: Array<string>

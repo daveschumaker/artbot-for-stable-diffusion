@@ -346,7 +346,7 @@ const AdvancedOptionsPanel = ({
     !input.useAllModels &&
     !input.useFavoriteModels &&
     input.source_processing !== SourceProcessing.InPainting &&
-    input.source_processing !== SourceProcessing.OutPaiting
+    input.source_processing !== SourceProcessing.OutPainting
 
   const showUseAllModelsInput =
     !input.useMultiSteps &&
@@ -354,7 +354,7 @@ const AdvancedOptionsPanel = ({
     !componentState.showMultiModel &&
     !input.useFavoriteModels &&
     input.source_processing !== SourceProcessing.InPainting &&
-    input.source_processing !== SourceProcessing.OutPaiting
+    input.source_processing !== SourceProcessing.OutPainting
 
   const showUseFavoriteModelsInput =
     !input.useMultiSteps &&
@@ -362,7 +362,7 @@ const AdvancedOptionsPanel = ({
     !componentState.showMultiModel &&
     !input.useAllModels &&
     input.source_processing !==
-      (SourceProcessing.InPainting || SourceProcessing.OutPaiting)
+      (SourceProcessing.InPainting || SourceProcessing.OutPainting)
 
   const showNumImagesInput =
     !input.useAllModels && !input.useMultiSteps && !input.useAllSamplers

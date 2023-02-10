@@ -164,7 +164,7 @@ const OptionsPanel = ({
         )}
       {activeNav === 'img2img' &&
         input.source_processing !==
-          (SourceProcessing.InPainting || SourceProcessing.OutPaiting) && (
+          (SourceProcessing.InPainting || SourceProcessing.OutPainting) && (
           <Img2ImgPanel
             input={input}
             setInput={setInput}

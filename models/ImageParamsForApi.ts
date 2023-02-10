@@ -156,11 +156,11 @@ class ImageParamsForApi {
     // Strip source_image and _source mask from object if we want to show request details if error occurred.
     if (hasError === true) {
       if (apiParams.source_image) {
-        apiParams.source_image = '[true] (string removed for logging error)'
+        apiParams.source_image = '[true] (string removed for log output)'
       }
 
       if (apiParams.source_mask) {
-        apiParams.source_mask = '[true] (string removed for logging error)'
+        apiParams.source_mask = '[true] (string removed for log output)'
       }
     }
 
