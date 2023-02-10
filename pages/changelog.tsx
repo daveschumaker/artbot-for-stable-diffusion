@@ -120,6 +120,14 @@ const Changelog = () => {
             pending jobs. I&apos;ve added some new logic that should prevent
             this from occurring in certain scenarios.
           </StyledLi>
+          <StyledLi>
+            Feature: The fix is in! (The hires fix, that is, courtesy of some
+            recent additions to the Stable Horde API). This allows you to create
+            images at higher resolutions without inadvertently making
+            multi-headed monstrosities. How does it work? It partially renders
+            image at a lower resolution before upscaling it and adding more
+            detail.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

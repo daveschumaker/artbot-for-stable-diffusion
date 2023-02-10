@@ -93,6 +93,7 @@ const defaultState: any = {
   seed: '',
   denoising_strength: 0.75,
   karras: true,
+  hires: false,
   parentJobId: '',
   negative: '',
   triggers: [],

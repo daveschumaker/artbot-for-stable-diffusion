@@ -24,6 +24,7 @@ export interface IRequestParams {
   height: number
   imageMimeType: ImageMimeType
   karras: boolean
+  hires: boolean
   models: Array<string>
   modelVersion: string
   negative?: string
@@ -62,6 +63,7 @@ class CreateImageRequest {
   jobStatus: JobStatus
   jobTimestamp: number
   karras: boolean
+  hires: boolean
   models: Array<string>
   modelVersion: string
   negative: string
@@ -99,6 +101,7 @@ class CreateImageRequest {
     height = 512,
     imageMimeType = ImageMimeType.WebP,
     karras = true,
+    hires = false,
     models = [],
     negative = '',
     numImages = 1,
@@ -161,6 +164,7 @@ class CreateImageRequest {
     }
 
     this.karras = Boolean(karras)
+    this.hires = Boolean(hires)
 
     if (models.length === 0) {
       sampler = 'k_euler_a'

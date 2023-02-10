@@ -28,6 +28,7 @@ export interface IArtBotImageDetails {
   seed?: string
   steps: number
   karras: boolean
+  hires: boolean
   models: Array<string>
   triggers?: Array<string>
   tiling: boolean
@@ -48,6 +49,7 @@ interface ParamsObject {
   steps: number
   denoising_strength?: number
   karras: boolean
+  hires_fix: boolean
   tiling: boolean
   post_processing?: Array<string>
   n: number
@@ -77,6 +79,7 @@ class ImageParamsForApi {
       steps,
       models,
       karras,
+      hires,
       tiling,
       source_image,
       source_processing,
@@ -99,6 +102,7 @@ class ImageParamsForApi {
         steps: Number(steps),
         tiling,
         karras,
+        hires_fix: hires,
         n: 1
       },
       nsfw: allowNsfw, // Use workers that allow NSFW images
@@ -131,7 +135,7 @@ class ImageParamsForApi {
 
     if (
       source_processing ===
-      (SourceProcessing.InPainting || SourceProcessing.OutPaiting)
+      (SourceProcessing.InPainting || SourceProcessing.OutPainting)
     ) {
       apiParams.params.denoising_strength = Number(denoising_strength) || 0.75
       apiParams.source_image = source_image

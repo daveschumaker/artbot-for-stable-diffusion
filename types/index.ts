@@ -25,6 +25,7 @@ export interface CreateImageJob {
   timestamp?: number
   cfg_scale: number
   karras: boolean
+  hires: boolean
   steps: number
   sampler: string
   apikey?: string

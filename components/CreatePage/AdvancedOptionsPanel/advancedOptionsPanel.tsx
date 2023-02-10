@@ -39,6 +39,7 @@ import MaxWidth from '../../UI/MaxWidth'
 import SelectModel from './SelectModel'
 import { modelInfoStore } from '../../../store/modelStore'
 import TextArea from '../../UI/TextArea'
+import HiresFix from './HiresFix'
 
 const NoSliderSpacer = styled.div`
   height: 14px;
@@ -1221,7 +1222,7 @@ const AdvancedOptionsPanel = ({
           </div>
         </MaxWidth>
       </Section>
-      {input.source_processing !== SourceProcessing.OutPaiting &&
+      {input.source_processing !== SourceProcessing.OutPainting &&
         !input.useAllModels &&
         !componentState.showMultiModel &&
         !input.useFavoriteModels && (
@@ -1437,6 +1438,7 @@ const AdvancedOptionsPanel = ({
           checked={input.karras}
         />
       </Section>
+      <HiresFix input={input} setInput={setInput} />
       <Section>
         <SubSectionTitle>
           <TextTooltipRow>
