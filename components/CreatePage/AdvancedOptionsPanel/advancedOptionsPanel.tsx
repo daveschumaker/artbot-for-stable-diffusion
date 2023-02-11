@@ -40,29 +40,11 @@ import SelectModel from './SelectModel'
 import { modelInfoStore } from '../../../store/modelStore'
 import TextArea from '../../UI/TextArea'
 import HiresFix from './HiresFix'
+import FlexRow from '../../UI/FlexRow'
 
 const NoSliderSpacer = styled.div`
   height: 14px;
   margin-bottom: 16px;
-`
-
-interface FlexRowProps {
-  bottomPadding?: number
-}
-
-const FlexRow = styled.div<FlexRowProps>`
-  align-items: flex-start;
-  display: flex;
-  flex-direction: row;
-  flex-shrink: 0;
-  gap: 8px;
-  width: 100%;
-
-  ${(props) =>
-    props.bottomPadding &&
-    `
-    padding-bottom: ${props.bottomPadding}px;
-  `}
 `
 
 const TwoPanel = styled.div`

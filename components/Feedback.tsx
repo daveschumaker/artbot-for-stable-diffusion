@@ -10,13 +10,7 @@ import Text from './UI/Text'
 import TextArea from './UI/TextArea'
 import { userInfoStore } from '../store/userStore'
 import Input from './UI/Input'
-
-const FlexRow = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-`
+import FlexRow from './UI/FlexRow'
 
 const Wrapper = styled.div`
   color: ${(props) => props.theme.text};
@@ -101,7 +95,7 @@ const FeedbackModal = ({ handleClose }: { handleClose: () => void }) => {
             </div>
           </div>
         )}
-        <FlexRow>
+        <FlexRow justify="flex-end">
           <Button onClick={handleSubmit} disabled={feedbackSent}>
             {feedbackSent ? 'Message sent!' : 'Send Message'}
           </Button>

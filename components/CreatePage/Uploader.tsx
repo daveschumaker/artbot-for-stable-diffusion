@@ -3,26 +3,8 @@ import styled from 'styled-components'
 import { getImageFromUrl } from '../../utils/imageUtils'
 import Dropzone from '../Dropzone/dropzone'
 import { Button } from '../UI/Button'
+import FlexRow from '../UI/FlexRow'
 import Input from '../UI/Input'
-
-interface FlexRowProps {
-  bottomPadding?: number
-}
-
-const FlexRow = styled.div<FlexRowProps>`
-  align-items: flex-start;
-  display: flex;
-  flex-direction: row;
-  flex-shrink: 0;
-  gap: 8px;
-  width: 100%;
-
-  ${(props) =>
-    props.bottomPadding &&
-    `
-    padding-bottom: ${props.bottomPadding}px;
-  `}
-`
 
 const SubSectionTitle = styled.div`
   padding-bottom: 8px;
@@ -59,7 +41,7 @@ const Uploader = ({ handleSaveImage, type = 'img2img' }: Props) => {
       <SubSectionTitle>
         Upload an image from your device or import from URL
       </SubSectionTitle>
-      <FlexRow bottomPadding={8}>
+      <FlexRow paddingBottom="8px">
         <span style={{ lineHeight: '40px', marginRight: '16px' }}>URL:</span>
         <Input
           className="mb-2"

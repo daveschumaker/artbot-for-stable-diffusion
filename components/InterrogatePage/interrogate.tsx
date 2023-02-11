@@ -19,28 +19,10 @@ import { getImageForInterrogation } from '../../utils/interrogateUtils'
 import PlusIcon from '../icons/PlusIcon'
 import RecycleIcon from '../icons/RecycleIcon'
 import { clientHeader } from '../../utils/appUtils'
-
-interface FlexRowProps {
-  bottomPadding?: number
-}
+import FlexRow from '../UI/FlexRow'
 
 const ContentWrapper = styled.div`
   padding-top: 16px;
-`
-
-const FlexRow = styled.div<FlexRowProps>`
-  align-items: flex-start;
-  display: flex;
-  flex-direction: row;
-  flex-shrink: 0;
-  gap: 8px;
-  width: 100%;
-
-  ${(props) =>
-    props.bottomPadding &&
-    `
-    padding-bottom: ${props.bottomPadding}px;
-  `}
 `
 
 const Section = styled.div`
@@ -528,7 +510,7 @@ const Interrogate = () => {
           <SubSectionTitle>
             <strong>Upload an image from a URL</strong>
           </SubSectionTitle>
-          <FlexRow bottomPadding={8}>
+          <FlexRow paddingBottom="8px">
             <span style={{ lineHeight: '40px', marginRight: '16px' }}>
               URL:
             </span>
