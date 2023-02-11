@@ -121,6 +121,13 @@ const Changelog = () => {
             the CLIP network will stop processing a prompt before being sent to
             a Stable Diffusion model.
           </StyledLi>
+          <StyledLi>
+            Feature: In the{' '}
+            <Linker href="/settings?panel=prefs">ArtBot settings panel</Linker>,
+            there is now an option that will preserve canvas / mask settings
+            between image generations. Thanks to FlameMind on Discord for the
+            suggestion.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

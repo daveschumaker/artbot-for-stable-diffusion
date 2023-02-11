@@ -325,9 +325,23 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
     await createImageJob(new CreateImageRequest(inputToSubmit))
 
     if (!AppSettings.get('stayOnCreate')) {
+      // Store parameters for potentially restoring inpainting data if needed
+      let inpaintCache = {
+        orientationType: input.orientationType,
+        height: input.height,
+        width: input.width,
+        source_processing: input.source_processing,
+        source_image: input.source_image,
+        source_mask: input.source_mask
+      }
       if (!AppSettings.get('saveInputOnCreate')) {
         clearInputCache()
+      }
+
+      if (!AppSettings.get('saveCanvasOnCreate')) {
         clearCanvasStore()
+      } else {
+        setInputCache({ ...inpaintCache })
       }
 
       router.push('/pending')

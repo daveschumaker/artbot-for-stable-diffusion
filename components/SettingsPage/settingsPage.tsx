@@ -110,6 +110,7 @@ const SettingsPage = () => {
 
     savePromptOnCreate: false,
     saveSeedOnCreate: false,
+    saveCanvasOnCreate: false,
 
     stayOnCreate: false,
     showOptionsMenu: false,
@@ -179,6 +180,8 @@ const SettingsPage = () => {
     updateObj.savePromptOnCreate =
       AppSettings.get('savePromptOnCreate') || false
     updateObj.saveSeedOnCreate = AppSettings.get('saveSeedOnCreate') || false
+    updateObj.saveCanvasOnCreate =
+      AppSettings.get('saveCanvasOnCreate') || false
 
     updateObj.stayOnCreate = AppSettings.get('stayOnCreate') || false
     updateObj.useBeta = AppSettings.get('useBeta') || false
@@ -676,8 +679,8 @@ const SettingsPage = () => {
                     will be remembered.)
                   </div>
                 </SubSectionTitle>
-                <div className="flex flex-row gap-2 mt-2">
-                  <div className="w-[100px]">Prompt?</div>
+                <div className="flex flex-row gap-2 mt-2 items-center">
+                  <div className="w-[100px] text-sm">Prompt?</div>
                   <Switch
                     onChange={() => {
                       if (componentState.savePromptOnCreate) {
@@ -689,8 +692,8 @@ const SettingsPage = () => {
                     checked={componentState.savePromptOnCreate}
                   />
                 </div>
-                <div className="flex flex-row gap-2 mt-2">
-                  <div className="w-[100px]">Seed?</div>
+                <div className="flex flex-row gap-2 mt-2 items-center">
+                  <div className="w-[100px] text-sm">Seed?</div>
                   <Switch
                     onChange={() => {
                       if (componentState.saveSeedOnCreate) {
@@ -700,6 +703,19 @@ const SettingsPage = () => {
                       }
                     }}
                     checked={componentState.saveSeedOnCreate}
+                  />
+                </div>
+                <div className="flex flex-row gap-2 mt-2 items-center">
+                  <div className="w-[100px] text-sm">Canvas</div>
+                  <Switch
+                    onChange={() => {
+                      if (componentState.saveCanvasOnCreate) {
+                        handleSwitchSelect('saveCanvasOnCreate', false)
+                      } else {
+                        handleSwitchSelect('saveCanvasOnCreate', true)
+                      }
+                    }}
+                    checked={componentState.saveCanvasOnCreate}
                   />
                 </div>
               </Section>
