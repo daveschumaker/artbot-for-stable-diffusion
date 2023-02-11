@@ -22,6 +22,7 @@ interface CreateImageJob {
   sampler: string
   karras: boolean
   hires: boolean
+  clipskip: number
   seed?: string
   numImages?: number
   parentJobId?: string

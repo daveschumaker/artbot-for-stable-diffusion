@@ -94,6 +94,7 @@ const defaultState: any = {
   denoising_strength: 0.75,
   karras: true,
   hires: false,
+  clipskip: 1,
   parentJobId: '',
   negative: '',
   triggers: [],

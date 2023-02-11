@@ -112,6 +112,18 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.02.11</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Feature: Enable support for CLIP skip, a new feature available on
+            the Stable Horde. What is it? It controls how early to stop
+            processing a prompt. The higher the value (max of 12), the earlier
+            the CLIP network will stop processing a prompt before being sent to
+            a Stable Diffusion model.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.02.09</SubSectionTitle>
         <StyledUl>
           <StyledLi>

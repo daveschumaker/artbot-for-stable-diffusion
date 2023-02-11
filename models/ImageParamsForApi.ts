@@ -29,6 +29,7 @@ export interface IArtBotImageDetails {
   steps: number
   karras: boolean
   hires: boolean
+  clipskip: number
   models: Array<string>
   triggers?: Array<string>
   tiling: boolean
@@ -50,6 +51,7 @@ interface ParamsObject {
   denoising_strength?: number
   karras: boolean
   hires_fix: boolean
+  clip_skip: number
   tiling: boolean
   post_processing?: Array<string>
   n: number
@@ -80,6 +82,7 @@ class ImageParamsForApi {
       models,
       karras,
       hires,
+      clipskip,
       tiling,
       source_image,
       source_processing,
@@ -103,6 +106,7 @@ class ImageParamsForApi {
         tiling,
         karras,
         hires_fix: hires,
+        clip_skip: clipskip,
         n: 1
       },
       nsfw: allowNsfw, // Use workers that allow NSFW images

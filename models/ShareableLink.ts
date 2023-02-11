@@ -10,6 +10,8 @@ class ShareLinkDetails {
     cfg_scale = 7,
     height = 512,
     karras = true,
+    hires = false,
+    clipskip = 1,
     models = [],
     negative = '',
     post_processing = [],
@@ -42,7 +44,9 @@ class ShareLinkDetails {
         [...post_processing],
         [...triggers],
         stylePreset,
-        orientationType || orientation
+        orientationType || orientation || 'custom',
+        hires,
+        clipskip
       ]
     }
 
@@ -70,7 +74,9 @@ class ShareLinkDetails {
       post_processing,
       triggers,
       stylePreset,
-      orientationType
+      orientationType,
+      hires,
+      clipskip
     ] = params
 
     const decoded = {
@@ -87,7 +93,9 @@ class ShareLinkDetails {
       post_processing,
       triggers,
       orientationType: orientationType || 'custom',
-      stylePreset
+      stylePreset,
+      hires,
+      clipskip
     }
 
     // console.log(`Decoded Share Link Details`, decoded)

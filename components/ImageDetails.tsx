@@ -46,6 +46,8 @@ interface ImageDetails {
   orientation: string
   tiling: boolean
   karras: boolean
+  hires: boolean
+  clipskip: number
   worker_id?: string
   stylePreset: string
   post_processing: Array<string>
@@ -204,6 +206,10 @@ const ImageDetails = ({
             </li>
             <li>Sampler: {imageDetails.sampler}</li>
             <li>Karras: {imageDetails.karras ? 'true' : 'false'}</li>
+            <li>Hi-res fix: {imageDetails.hires ? 'true' : 'false'}</li>
+            <li>
+              CLIP skip: {imageDetails.clipskip ? imageDetails.clipskip : 1}
+            </li>
             {modelName ? (
               <li>
                 Model:{' '}

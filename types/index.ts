@@ -26,6 +26,7 @@ export interface CreateImageJob {
   cfg_scale: number
   karras: boolean
   hires: boolean
+  clipskip: number
   steps: number
   sampler: string
   apikey?: string

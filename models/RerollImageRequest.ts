@@ -18,6 +18,8 @@ export interface IRequestParams {
   height: number
   imageMimeType: ImageMimeType
   karras: boolean
+  hires: boolean
+  clipskip: number
   models: Array<string>
   negative?: string
   orientation: string
@@ -44,6 +46,8 @@ class RerollImageRequest {
   jobStatus: JobStatus
   jobTimestamp: number
   karras: boolean
+  hires: boolean
+  clipskip: number
   models: Array<string>
   modelVersion: string
   negative: string
@@ -69,6 +73,8 @@ class RerollImageRequest {
     height = 512,
     imageMimeType = ImageMimeType.WebP,
     karras = true,
+    hires = false,
+    clipskip = 1,
     models = [],
     negative = '',
     orientation = 'square',
@@ -98,6 +104,8 @@ class RerollImageRequest {
     this.height = Number(height)
 
     this.karras = Boolean(karras)
+    this.hires = Boolean(hires)
+    this.clipskip = Number(clipskip)
 
     this.negative = String(negative)
     this.numImages = 1

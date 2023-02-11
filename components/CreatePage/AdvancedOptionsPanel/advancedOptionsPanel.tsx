@@ -41,6 +41,7 @@ import { modelInfoStore } from '../../../store/modelStore'
 import TextArea from '../../UI/TextArea'
 import HiresFix from './HiresFix'
 import FlexRow from '../../UI/FlexRow'
+import ClipSkip from './ClipSkip'
 
 const NoSliderSpacer = styled.div`
   height: 14px;
@@ -1449,6 +1450,16 @@ const AdvancedOptionsPanel = ({
           />
         </div>
       </Section>
+      <div className="mt-8 w-full md:w-1/2">
+        <ClipSkip
+          input={input}
+          setInput={setInput}
+          handleChangeInput={handleChangeInput}
+          handleNumberInput={handleNumberInput}
+          setErrorMessage={setErrorMessage}
+          errorMessage={errorMessage}
+        />
+      </div>
       {showNumImagesInput && (
         <div className="mt-8 w-full md:w-1/2">
           <Section>
