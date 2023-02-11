@@ -1,20 +1,10 @@
-import styled from 'styled-components'
+import React from 'react'
 
-const StyledSectionTitle = styled.h2`
-  font-size: 16px;
-  font-weight: 700;
-
-  @media (min-width: 640px) {
-    font-size: 20px;
-  }
-`
-
-// @ts-ignore
-const SectionTitle = (props) => {
+const SectionTitle = ({ children }: { children: React.ReactNode }) => {
   return (
-    <StyledSectionTitle className="mt-0 mb-2 text-teal-500">
-      {props.children}
-    </StyledSectionTitle>
+    <div className="mt-0 mb-2 text-teal-500 text-[16px] font-[700] md:text-[20px]">
+      {children}
+    </div>
   )
 }
 

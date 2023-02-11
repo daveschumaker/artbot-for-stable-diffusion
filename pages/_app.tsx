@@ -205,7 +205,7 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
       <PollController />
       <ContentWrapper>
         <Header />
-        <div className="absolute mx-auto w-full pb-[88px] md:pb-[0] top-[54px] md:relative">
+        <div className="absolute mx-auto w-full pb-[88px] md:pb-[0] top-[54px] md:top-[2px] md:relative">
           <ToastContainer
             style={{ marginTop: `calc(env(safe-area-inset-top))` }}
           />

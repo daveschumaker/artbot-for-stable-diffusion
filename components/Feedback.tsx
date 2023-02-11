@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 
 import { trackEvent } from '../api/telemetry'
@@ -12,14 +12,13 @@ import { userInfoStore } from '../store/userStore'
 import Input from './UI/Input'
 import FlexRow from './UI/FlexRow'
 
-const Wrapper = styled.div`
-  color: ${(props) => props.theme.text};
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  justify-content: space-between;
-  position: relative;
-`
+const Wrapper = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <div className="flex flex-col h-full space-between relative text-light dark:text-dark">
+      {children}
+    </div>
+  )
+}
 
 const StyledTextArea = styled(TextArea)`
   padding: 8px;
