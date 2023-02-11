@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import styled from 'styled-components'
 
 import { trackEvent } from '../api/telemetry'
 import { imageCount } from '../utils/db'
@@ -19,21 +18,6 @@ const Wrapper = ({ children }: { children: React.ReactNode }) => {
     </div>
   )
 }
-
-const StyledTextArea = styled(TextArea)`
-  padding: 8px;
-  margin-bottom: 8px;
-  max-height: 120px;
-  width: 100%;
-`
-
-const FeedbackSuccess = styled.div`
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  height: 120px;
-  width: 100%;
-`
 
 const FeedbackModal = ({ handleClose }: { handleClose: () => void }) => {
   const [feedbackSent, setFeedbackSent] = useState(false)
@@ -66,9 +50,9 @@ const FeedbackModal = ({ handleClose }: { handleClose: () => void }) => {
         <SectionTitle>Feedback</SectionTitle>
         <Text>Comments, suggestions, bugs?</Text>
         {feedbackSent && (
-          <FeedbackSuccess>
+          <div className="align-center flex justify-center h-[120px] w-full">
             Your message has been sent. Thank you!
-          </FeedbackSuccess>
+          </div>
         )}
         {!feedbackSent && (
           <div className="flex flex-col gap-2">
@@ -86,7 +70,8 @@ const FeedbackModal = ({ handleClose }: { handleClose: () => void }) => {
             </div>
             <div>
               <span>Feedback:</span>
-              <StyledTextArea
+              <TextArea
+                className="p-[8px] mb-[8px] w-full max-h-[120px]"
                 maxLength={1024}
                 onChange={(e) => setInputText(e.target.value)}
                 value={inputText}
