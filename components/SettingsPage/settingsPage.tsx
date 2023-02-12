@@ -650,25 +650,18 @@ const SettingsPage = () => {
                     page, stay on the page, rather than show pending items.
                   </div>
                 </SubSectionTitle>
-                <MaxWidth
-                  // @ts-ignore
-                  maxWidth="240"
-                >
-                  <Select
-                    options={[
-                      { value: true, label: 'Yes' },
-                      { value: false, label: 'No' }
-                    ]}
-                    onChange={(obj: any) =>
-                      handleUpdateSelect('stayOnCreate', obj)
-                    }
-                    value={
-                      componentState.stayOnCreate
-                        ? { value: true, label: 'Yes' }
-                        : { value: true, label: 'No' }
-                    }
+                <div className="flex flex-row gap-2 items-center">
+                  <Switch
+                    onChange={() => {
+                      if (componentState.stayOnCreate) {
+                        handleSwitchSelect('stayOnCreate', false)
+                      } else {
+                        handleSwitchSelect('stayOnCreate', true)
+                      }
+                    }}
+                    checked={componentState.stayOnCreate}
                   />
-                </MaxWidth>
+                </div>
               </Section>
               <Section>
                 <SubSectionTitle>
@@ -728,25 +721,18 @@ const SettingsPage = () => {
                     throttled. You may disable this behavior if you wish.
                   </div>
                 </SubSectionTitle>
-                <MaxWidth
-                  // @ts-ignore
-                  maxWidth="240"
-                >
-                  <Select
-                    options={[
-                      { value: true, label: 'Yes' },
-                      { value: false, label: 'No' }
-                    ]}
-                    onChange={(obj: any) =>
-                      handleUpdateSelect('runInBackground', obj)
-                    }
-                    value={
-                      componentState.runInBackground
-                        ? { value: true, label: 'Yes' }
-                        : { value: false, label: 'No' }
-                    }
+                <div className="flex flex-row gap-2 items-center">
+                  <Switch
+                    onChange={() => {
+                      if (componentState.runInBackground) {
+                        handleSwitchSelect('runInBackground', false)
+                      } else {
+                        handleSwitchSelect('runInBackground', true)
+                      }
+                    }}
+                    checked={componentState.runInBackground}
                   />
-                </MaxWidth>
+                </div>
               </Section>
               <Section>
                 <SubSectionTitle>
