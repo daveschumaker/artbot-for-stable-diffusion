@@ -1,4 +1,5 @@
 import AppSettings from '../models/AppSettings'
+import { setHordeStatus } from '../store/appStore'
 import { IWorker, setUserInfo, setWorkers } from '../store/userStore'
 import { clientHeader, getApiHostServer, isAppActive } from '../utils/appUtils'
 import { uuidv4 } from '../utils/appUtils'
@@ -31,6 +32,7 @@ export const fetchUserDetails = async (apikey: string) => {
         'Client-Agent': clientHeader()
       }
     })
+
     const userDetails = await res.json()
     const {
       kudos = 0,
@@ -97,12 +99,14 @@ export const fetchUserDetails = async (apikey: string) => {
     }
 
     isPending = false
+    setHordeStatus(true)
     return {
       success: true
     }
   } catch (err) {
     console.log(`Warning: Unable to fetch user details. API offline?`)
     isPending = false
+    setHordeStatus(false)
     return {
       success: false
     }

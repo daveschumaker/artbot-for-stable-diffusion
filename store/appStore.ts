@@ -7,6 +7,7 @@ interface AppStore {
   showBetaOption: boolean
   newImageReady: string
   showImageReadyToast: boolean
+  stableHordeApiOnline: boolean
 }
 
 export const appInfoStore = makeStore<AppStore>({
@@ -15,7 +16,8 @@ export const appInfoStore = makeStore<AppStore>({
   serverMessage: '',
   showBetaOption: false,
   newImageReady: '',
-  showImageReadyToast: false
+  showImageReadyToast: false,
+  stableHordeApiOnline: true
 })
 
 export const setShowBetaOption = (val: boolean) => {
@@ -27,6 +29,12 @@ export const setShowBetaOption = (val: boolean) => {
 export const setBuildId = (id: string) => {
   appInfoStore.set(() => ({
     buildId: id
+  }))
+}
+
+export const setHordeStatus = (val: boolean) => {
+  appInfoStore.set(() => ({
+    stableHordeApiOnline: val
   }))
 }
 

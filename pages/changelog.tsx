@@ -112,6 +112,16 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.02.12</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Added a helpful automated error message that shows up on every page
+            if ArtBot is unable to connect to the Stable Horde backend API
+            (...like this exact moment as I am deploying this).
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.02.11</SubSectionTitle>
         <StyledUl>
           <StyledLi>

@@ -100,14 +100,7 @@ export const initAppSettings = async () => {
       return
     }
 
+    fetchUserDetails(apikey)
     deleteStalePending()
   }, 60000)
-
-  setInterval(async () => {
-    if (!isAppActive()) {
-      return
-    }
-
-    fetchUserDetails(apikey)
-  }, 300000)
 }

@@ -41,7 +41,7 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
   const { darkModeActive } = darkMode
   const [showServerUpdateModal, setShowServerUpdateModal] = useState(false)
   const appState = useStore(appInfoStore)
-  const { buildId } = appState
+  const { buildId, stableHordeApiOnline } = appState
 
   const fetchAppInfo = useCallback(async () => {
     if (!isAppActive()) {
@@ -211,6 +211,13 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
           />
           {showServerUpdateModal && <ServerUpdateModal />}
           <NavBar />
+          {!stableHordeApiOnline && (
+            <div className="text-sm border-2 border-rose-600 py-1 px-2 rounded mb-2 text-red-500">
+              <strong>Warning:</strong> ArtBot is currently unable to connect to
+              the Stable Horde API backend as it is currently unavailable.
+              Please try again soon.
+            </div>
+          )}
           <Component {...pageProps} />
           <Footer />
           <div className="fixed right-[16px] bottom-[8px] hidden adCol:block max-w-[156px]">
