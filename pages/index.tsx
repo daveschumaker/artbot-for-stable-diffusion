@@ -15,8 +15,6 @@ import { Button } from '../components/UI/Button'
 import TrashIcon from '../components/icons/TrashIcon'
 import SquarePlusIcon from '../components/icons/SquarePlusIcon'
 import { trackEvent, trackGaEvent } from '../api/telemetry'
-import CloseIcon from '../components/icons/CloseIcon'
-import ImageSquare from '../components/ImageSquare'
 import OptionsPanel from '../components/CreatePage/OptionsPanel'
 import { clearCanvasStore, getCanvasStore } from '../store/canvasStore'
 import {
@@ -74,6 +72,23 @@ const ModelTriggerButton = styled.div`
   flex-direction: row;
   margin-bottom: 4px;
   position: relative;
+`
+
+interface IStickyArea {
+  fixed?: boolean
+}
+
+const StickyTextArea = styled.div<IStickyArea>`
+  background-color: ${(props) => props.theme.body};
+  padding-bottom: 4px;
+  position: sticky;
+  position: -webkit-sticky;
+  position: -moz-sticky;
+  position: -o-sticky;
+  position: -ms-sticky;
+  top: calc(52px + env(safe-area-inset-top));
+  z-index: 30;
+  width: 100%;
 `
 
 const defaultState: any = {
@@ -663,42 +678,17 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
             )}
           </>
         )}
-      <div className="mt-2 mb-2">
-        <div className="flex flex-row gap-[8px] items-start">
-          {input.sourceImage && (
-            <ImageSquare
-              imageDetails={{ base64String: input.sourceImage }}
-              imageType={input.imageType}
-              size={120}
-            />
-          )}
-          {input.sourceImage && (
-            <div
-              className="absolute top-[2px] right-[2px] bg-blue-500 cursor-pointer"
-              onClick={() => {
-                setInput({
-                  img2img: false,
-                  imgType: '',
-                  source_image: '',
-                  source_processing: SourceProcessing.Prompt,
-                  source_mask: ''
-                })
-              }}
-            >
-              <CloseIcon />
-            </div>
-          )}
-          <TextArea
-            name="prompt"
-            className="block bg-white p-2.5 w-full text-lg text-black rounded-lg max-h-[250px] border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Image prompt..."
-            onChange={handleChangeValue}
-            // @ts-ignore
-            onKeyDown={onEnterPress}
-            value={input.prompt}
-            ref={ref}
-          />
-        </div>
+      <StickyTextArea>
+        <TextArea
+          name="prompt"
+          className="block bg-white p-2.5 w-full text-lg text-black rounded-lg max-h-[250px] border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Image prompt..."
+          onChange={handleChangeValue}
+          // @ts-ignore
+          onKeyDown={onEnterPress}
+          value={input.prompt}
+          ref={ref}
+        />
         {modifiedPrompt.length > 300 && (
           <div className="mt-2 text-amber-400 font-semibold text-sm">
             Warning: Your prompt length (plus any modifiers such as negative
@@ -783,7 +773,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
             </div>
           </div>
         </div>
-      </div>
+      </StickyTextArea>
       <OptionsPanel
         handleChangeInput={handleChangeValue}
         handleImageUpload={handleImageUpload}
@@ -792,55 +782,6 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
         setInput={setInput}
         setHasValidationError={setHasValidationError}
       />
-      <div className="mt-4 w-full flex flex-col justify-end gap-2">
-        <div className="flex flex-row justify-end gap-2">
-          <Button
-            title="Clear current input"
-            btnType="secondary"
-            onClick={() => {
-              window.scrollTo(0, 0)
-              resetInput()
-            }}
-          >
-            <span>
-              <TrashIcon />
-            </span>
-            <span className="hidden md:inline-block">Clear</span>
-          </Button>
-          <Button
-            title="Create new image"
-            onClick={() => {
-              window.scrollTo(0, 0)
-              handleSubmit()
-            }}
-            disabled={hasValidationError || pending}
-            width="100px"
-          >
-            <span>{pending ? '' : <SquarePlusIcon />}</span>
-            {pending ? 'Creating...' : 'Create'}
-          </Button>
-        </div>
-        <div className="flex flex-row justify-end">
-          <div className="flex flex-col justify-end">
-            <div className="text-xs flex flex-row justify-end gap-2">
-              Images requested: <strong>{' ' + totalImagesRequested}</strong>
-            </div>
-            <div className="text-xs flex flex-row justify-end gap-2">
-              {' '}
-              Generation cost:{' '}
-              <Linker href="/faq#kudos" passHref>
-                <>{totalKudosCost} kudos</>
-              </Linker>
-            </div>
-            <div className="text-xs flex flex-row justify-end gap-2">
-              Per image:{' '}
-              <Linker href="/faq#kudos" passHref>
-                <>{kudosPerImage} kudos</>
-              </Linker>
-            </div>
-          </div>
-        </div>
-      </div>
     </main>
   )
 }

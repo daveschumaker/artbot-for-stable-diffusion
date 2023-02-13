@@ -150,7 +150,6 @@ export default function Header() {
         <div
           className="hidden tablet:flex flex-row grow justify-end gap-2"
           role="navigation"
-          aria-label="Main"
         >
           <Link href="/" passHref tabIndex={0}>
             <NavItem active={isActiveRoute('/')}>
