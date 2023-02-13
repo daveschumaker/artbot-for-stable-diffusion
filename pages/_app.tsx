@@ -8,7 +8,6 @@ import { initAppSettings } from '../utils/appSettings'
 import ContentWrapper from '../components/UI/ContentWrapper'
 import Footer from '../components/UI/Footer'
 import Header from '../components/UI/Header'
-import NavBar from '../components/UI/NavBar'
 import PollController from '../components/PollController'
 
 import 'react-toastify/dist/ReactToastify.css'
@@ -205,12 +204,12 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
       <PollController />
       <ContentWrapper>
         <Header />
-        <div className="absolute mx-auto w-full pb-[88px] md:pb-[0] top-[54px] md:top-[2px] md:relative">
+        <div className="absolute mx-auto w-full pb-[88px] md:pb-[0] top-[52px] md:top-[54px] md:relative">
           <ToastContainer
             style={{ marginTop: `calc(env(safe-area-inset-top))` }}
           />
           {showServerUpdateModal && <ServerUpdateModal />}
-          <NavBar />
+          {/* <NavBar /> */}
           {!stableHordeApiOnline && (
             <div className="text-sm border-2 border-rose-600 py-1 px-2 rounded mb-2 text-red-500">
               <strong>Warning:</strong> ArtBot is currently unable to connect to

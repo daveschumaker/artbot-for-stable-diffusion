@@ -17,7 +17,8 @@ module.exports = {
         }
       },
       screens: {
-        adCol: '1400px'
+        adCol: '1400px',
+        tablet: '640px'
       }
     }
   },

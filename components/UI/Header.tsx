@@ -3,9 +3,22 @@ import styled from 'styled-components'
 import Link from 'next/link'
 import MenuIcon from '../icons/MenuIcon'
 import Menu from '../Menu'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { lockScroll, unlockScroll } from '../../utils/appUtils'
 import Image from 'next/image'
+import IconCreate from '../icons/CreateIcon'
+import HourglassIcon from '../icons/HourglassIcon'
+import PhotoIcon from '../icons/PhotoIcon'
+import InfoIcon from '../icons/InfoIcon'
+import SettingsIcon from '../icons/SettingsIcon'
+import { useRouter } from 'next/router'
+import { useStore } from 'statery'
+import {
+  appInfoStore,
+  setNewImageReady,
+  setShowImageReadyToast
+} from '../../store/appStore'
+import PhotoPlusIcon from '../icons/PhotoPlusIcon'
 
 const Wrapper = styled.div`
   background-color: ${(props) => props.theme.body};
@@ -22,10 +35,16 @@ const Wrapper = styled.div`
   z-index: 20;
 
   @media (min-width: 640px) {
-    position: relative;
-    margin-bottom: 2px;
-    padding-bottom: 0;
-    padding-left: 0;
+    margin: auto auto 0 auto;
+    max-width: 768px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    width: calc(100% - 32px);
+  }
+
+  @media (min-width: 1280px) {
+    margin: auto auto 0 auto;
+    max-width: 1024px;
   }
 `
 
@@ -38,7 +57,35 @@ const MenuWrapper = styled.div`
   }
 `
 
+const NavItem = ({
+  active = false,
+  children
+}: {
+  active?: boolean
+  children: React.ReactNode
+}) => {
+  const styles: any = {}
+
+  if (active) {
+    styles.color = '#14B8A6'
+    styles.borderBottom = `2px solid #14B8A6`
+  }
+
+  return (
+    <div
+      className="flex flex-row gap-[2px] pb-[4px] items-center text-[14px] font-[600] cursor-pointer hover:text-[#14B8A6]"
+      style={{ ...styles }}
+    >
+      {children}
+    </div>
+  )
+}
+
 export default function Header() {
+  const router = useRouter()
+  const { pathname } = router
+  const appState = useStore(appInfoStore)
+  const { newImageReady } = appState
   const [showMenu, setShowMenu] = useState(false)
 
   const closeMenu = () => {
@@ -49,6 +96,25 @@ export default function Header() {
   const openMenu = () => {
     lockScroll()
     setShowMenu(true)
+  }
+
+  const clearNewImageNotification = () => {
+    setShowImageReadyToast(false)
+    setNewImageReady('')
+  }
+
+  const handleForceReload = () => {
+    if ('/images' === pathname) {
+      window.location.reload()
+    }
+  }
+
+  const isActiveRoute = (page: string) => {
+    if (page === pathname) {
+      return true
+    }
+
+    return false
   }
 
   return (
@@ -63,27 +129,72 @@ export default function Header() {
           }
         }}
       >
-        <MenuIcon size={32} />
+        <MenuIcon size={28} />
       </MenuWrapper>
-      <div className="mt-2 w-1/2 inline-block">
+      <div className="mt-[8px] tablet:mt-0 w-full flex flex-row items-center">
         <Link href="/">
           <div className="inline-block">
             <Image
               src="/artbot/artbot-logo.png"
-              height={32}
-              width={32}
+              height={30}
+              width={30}
               alt="AI ArtBot logo"
             />
           </div>
           <div className="inline-block">
-            <h1 className="ml-2 pt-1 inline-block h-8 text-[24px] md:text-[30px] font-bold leading-7 text-teal-500">
+            <h1 className="ml-2 pt-1 inline-block h-8 text-[24px] md:text-[28px] font-bold leading-7 text-teal-500">
               ArtBot
             </h1>
           </div>
         </Link>
-      </div>
-      <div className="mt-2 w-1/2 inline-block text-right">
-        <div className="mt-3"></div>
+        <div
+          className="hidden tablet:flex flex-row grow justify-end gap-2"
+          role="navigation"
+          aria-label="Main"
+        >
+          <Link href="/" passHref tabIndex={0}>
+            <NavItem active={isActiveRoute('/')}>
+              <IconCreate size={20} />
+              Create
+            </NavItem>
+          </Link>
+          <Link href="/pending" passHref tabIndex={0}>
+            <NavItem active={isActiveRoute('/pending')}>
+              <HourglassIcon size={20} />
+              Pending
+            </NavItem>
+          </Link>
+          <Link
+            href="/images"
+            passHref
+            onClick={() => {
+              clearNewImageNotification()
+              handleForceReload()
+            }}
+            tabIndex={0}
+          >
+            <NavItem active={isActiveRoute('/images')}>
+              {newImageReady ? (
+                <PhotoPlusIcon size={20} stroke={'red'} />
+              ) : (
+                <PhotoIcon size={20} />
+              )}
+              Images
+            </NavItem>
+          </Link>
+          <Link href="/info" passHref tabIndex={0}>
+            <NavItem active={isActiveRoute('/info')}>
+              <InfoIcon size={20} />
+              Info
+            </NavItem>
+          </Link>
+          <Link href="/settings" passHref tabIndex={0}>
+            <NavItem active={isActiveRoute('/settings')}>
+              <SettingsIcon size={20} />
+              Settings
+            </NavItem>
+          </Link>
+        </div>
       </div>
     </Wrapper>
   )
