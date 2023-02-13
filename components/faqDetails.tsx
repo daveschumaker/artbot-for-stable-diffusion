@@ -118,14 +118,25 @@ export const FaqSyntax = () => {
       </Question>
       <div className="flex flex-col gap-4">
         <p>
-          As currently implemented, prompt weighting does not exist on Stable
-          Horde. However, syntax for prompt weighting using the Stable Horde API
-          is coming soon.
+          Prompt weighting is available on ArtBot thanks to the Stable Horde. To
+          utilize prompt weighting, use the following syntax: subject in
+          parenthesis separated by a colon, followed by a number. e.g.,
+          (flower:1.2) Example:
+          <MonoFont>
+            A beautiful photograph of a (blue:1.2) and (red:0.8) flower
+          </MonoFont>
         </p>
         <p>
-          Currently, the only syntax supported through ArtBot is using a prompt
-          matrix -- anything inside brackets separated by a pipe character. That
-          looks like this:{' '}
+          Any integer greater than 1.0 denotes something you want to give extra
+          strength to (e.g., 1.2 = 120%). Anything below 1.0 is something you
+          want to deemphasize. Other Stable Diffusion UIs, such as
+          Automatic1111, utilize multiple parens and brackets (e.g.,
+          ((stronger)) and [[[weaker]]]). That syntax is <strong>not</strong>{' '}
+          supported on ArtBot.
+        </p>
+        <p>
+          ArtBot also supports using a prompt matrix -- anything inside brackets
+          separated by a pipe character. That looks like this:{' '}
           <MonoFont>{`{thing one|thing two|thing three}`}</MonoFont>
         </p>
         <p>
