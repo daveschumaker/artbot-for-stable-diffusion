@@ -40,7 +40,7 @@ export const GlobalStyles = createGlobalStyle<{ theme: DefaultTheme }>`
 
   @media (prefers-color-scheme: dark) {
     body {
-      background-color: #080B0C;
+      background-color: #222222;
     }
   }
   `

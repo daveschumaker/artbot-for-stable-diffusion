@@ -1,7 +1,7 @@
 import { colors, colorsV2 } from './variables'
 
 export const lightTheme = {
-  body: '#f3f3ef',
+  body: '#f2f2f2',
   text: '#344c50',
   grayText: '#ffffff',
   cardBackground: colorsV2.darkAccent,
@@ -24,7 +24,7 @@ export const lightTheme = {
 }
 export const darkTheme = {
   // body: '#344c50',
-  body: '#080B0C',
+  body: '#222222',
   text: '#f3f3ef',
   grayText: '#f3f3ef',
   cardBackground: colorsV2.darkAccent,
