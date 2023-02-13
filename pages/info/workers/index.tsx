@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import styled from 'styled-components'
 
 import SelectComponent from '../../../components/UI/Select'
 import WorkerInfo from '../../../components/WorkerInfo'
@@ -12,11 +11,6 @@ import SpinnerV2 from '../../../components/Spinner'
 import { clientHeader } from '../../../utils/appUtils'
 import InfoPageMenuButton from '../../../components/InfoPage/Menu'
 
-const WorkersList = styled.div`
-  display: flex;
-  flex-direction: column;
-  row-gap: 12px;
-`
 const WorkerInfoPage = () => {
   const [componentState, setComponentState] = useComponentState({
     isLoading: true,
@@ -149,13 +143,13 @@ const WorkerInfoPage = () => {
         </Row>
         {componentState.isLoading && <SpinnerV2 />}
         {!componentState.isLoading && (
-          <WorkersList>
+          <div className={`flex flex-col gap-[12px]`}>
             {sortedWorkers?.map((worker: any) => {
               return (
                 <WorkerInfo editable={false} key={worker.id} worker={worker} />
               )
             })}
-          </WorkersList>
+          </div>
         )}
       </>
     </div>

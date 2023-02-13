@@ -119,6 +119,12 @@ const Changelog = () => {
             if ArtBot is unable to connect to the Stable Horde backend API
             (...like this exact moment as I am deploying this).
           </StyledLi>
+          <StyledLi>
+            Fix: Issue with canvas settings being preserved beween image
+            generation requests, depending on settings. Thanks to FlameMind and
+            Gigachad on Discord for reporting this and providing some video
+            examples of what was happening.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

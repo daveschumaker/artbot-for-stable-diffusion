@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
+import clsx from 'clsx'
 import Image from 'next/image'
-import styled from 'styled-components'
+
 interface ImageDetails {
   base64String: string
   prompt?: string
@@ -11,17 +12,6 @@ interface ImageSquareProps {
   size?: number
   imageType?: string
 }
-
-interface StyledProps {
-  size: number
-}
-
-const StyledImageWrapper = styled.div<StyledProps>`
-  overflow: hidden;
-  position: relative;
-  height: ${(props) => props.size}px;
-  width: ${(props) => props.size}px;
-`
 
 export default function ImageSquare({
   imageDetails,
@@ -34,8 +24,13 @@ export default function ImageSquare({
     base64String = `data:image/webp;base64,${imageDetails.base64String}`
   }
 
+  const classes = ['overflow-hidden', 'relative']
+
   return (
-    <StyledImageWrapper size={size}>
+    <div
+      className={clsx(classes)}
+      style={{ width: `${size}px`, height: `${size}px` }}
+    >
       <Image
         fill
         src={base64String}
@@ -43,6 +38,6 @@ export default function ImageSquare({
         className="mx-auto rounded"
         style={{ objectFit: 'cover' }}
       />
-    </StyledImageWrapper>
+    </div>
   )
 }

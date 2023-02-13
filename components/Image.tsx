@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import styled from 'styled-components'
+import clsx from 'clsx'
 
 interface ImageProps {
   alt: string
@@ -8,18 +8,6 @@ interface ImageProps {
   height: number
   width: number
 }
-
-interface StyledProps {
-  height: number
-  width: number
-}
-
-const ImageWrapper = styled.div<StyledProps>`
-  overflow: hidden;
-  position: relative;
-  height: ${(props) => props.height};
-  width: ${(props) => props.width};
-`
 
 const Image = ({
   alt = '',
@@ -32,10 +20,15 @@ const Image = ({
     return null
   }
 
+  const classes = ['overflow-hidden', 'relative']
+
   return (
-    <ImageWrapper height={height} width={width}>
+    <div
+      className={clsx(classes)}
+      style={{ width: `${width}px`, height: `${height}px` }}
+    >
       <img src={`data:${imageType};base64,${base64String}`} alt={alt} />
-    </ImageWrapper>
+    </div>
   )
 }
 

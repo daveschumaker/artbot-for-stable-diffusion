@@ -1,5 +1,4 @@
 import React from 'react'
-import styled from 'styled-components'
 
 interface IRowProps {
   children: React.ReactNode
@@ -7,17 +6,13 @@ interface IRowProps {
   onClick?: () => void
 }
 
-const StyledRow = styled.div`
-  align-items: center;
-  column-gap: 8px;
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-`
-
 const Row = (props: IRowProps) => {
   const { children, ...rest } = props
-  return <StyledRow {...rest}>{children}</StyledRow>
+  return (
+    <div className={`flex flex-row w-full gap-[8px] items-center`} {...rest}>
+      {children}
+    </div>
+  )
 }
 
 export default Row
