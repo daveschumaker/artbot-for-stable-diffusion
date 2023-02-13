@@ -324,16 +324,17 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
     savePromptHistory(input.prompt)
     await createImageJob(new CreateImageRequest(inputToSubmit))
 
+    // Store parameters for potentially restoring inpainting data if needed
+    let inpaintCache = {
+      orientationType: input.orientationType,
+      height: input.height,
+      width: input.width,
+      source_processing: input.source_processing,
+      source_image: input.source_image,
+      source_mask: input.source_mask
+    }
+
     if (!AppSettings.get('stayOnCreate')) {
-      // Store parameters for potentially restoring inpainting data if needed
-      let inpaintCache = {
-        orientationType: input.orientationType,
-        height: input.height,
-        width: input.width,
-        source_processing: input.source_processing,
-        source_image: input.source_image,
-        source_mask: input.source_mask
-      }
       if (!AppSettings.get('saveInputOnCreate')) {
         clearInputCache()
       }
@@ -346,6 +347,10 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
 
       router.push('/pending')
     } else {
+      if (AppSettings.get('saveCanvasOnCreate')) {
+        setInput({ ...inpaintCache })
+      }
+
       toast.success('Image requested!', {
         pauseOnFocusLoss: false,
         position: 'top-center',

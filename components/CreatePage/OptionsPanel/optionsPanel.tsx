@@ -196,7 +196,8 @@ const OptionsPanel = ({
 
       {activeNav === 'inpainting' &&
         input.source_image &&
-        input.source_processing === SourceProcessing.InPainting && (
+        (input.source_processing === SourceProcessing.InPainting ||
+          input.source_mask) && (
           <>
             <Head>
               <title>Inpainting - ArtBot for Stable Diffusion</title>
@@ -228,27 +229,6 @@ const OptionsPanel = ({
             />
           </>
         )}
-
-      {/* {activeNav === 'inpainting' && inpaintingWorkers === 0 && (
-        <div className="flex flex-row gap-4">
-          <div className="w-[56px]">
-            <AlertTriangleIcon size={48} stroke="rgb(234 179 8)" />
-          </div>
-          <div>
-            Oh, no. There are currently no workers available within the Stable
-            Horde cluster that are offering inpainting models at this time.
-            Sorry. Please try again soon! Visit the{' '}
-            <Linker
-              href="https://discord.gg/3DxrhksKzn"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Stable Horde Discord channel
-            </Linker>{' '}
-            for more information.
-          </div>
-        </div>
-      )} */}
 
       {activeNav === 'inpainting' &&
         !input.source_image &&
