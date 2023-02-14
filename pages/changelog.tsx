@@ -112,6 +112,29 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.02.13</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Some UI refactoring in today&apos;s update: For non-mobile devices,
+            the navbar you see at the top of the screen has been modified and
+            folded into the header itself (rather than as a separate row).
+          </StyledLi>
+          <StyledLi>
+            On the image creation page, I&apos;ve changed the text area for the
+            prompt to be fixed to the top of the screen as you scroll down. Is
+            this okay? Is this annoying? Should it be a personal setting? Let me
+            know! (FYI, I have disabled it on the inpainting panel, so you have
+            max screen real estate for that mode)
+          </StyledLi>
+          <StyledLi>
+            Below the advanced options panel, I removed the create image button.
+            It sounds like this was an unpopular opinion. So, it&apos;s back!
+            Thanks to Saw Dagon on Discord for letting me know how important
+            they found it.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.02.12</SubSectionTitle>
         <StyledUl>
           <StyledLi>

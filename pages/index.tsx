@@ -75,20 +75,27 @@ const ModelTriggerButton = styled.div`
 `
 
 interface IStickyArea {
+  disableFixed?: boolean
   fixed?: boolean
 }
 
 const StickyTextArea = styled.div<IStickyArea>`
   background-color: ${(props) => props.theme.body};
   padding-bottom: 4px;
-  position: sticky;
-  position: -webkit-sticky;
-  position: -moz-sticky;
-  position: -o-sticky;
-  position: -ms-sticky;
-  top: calc(52px + env(safe-area-inset-top));
+  position: relative;
   z-index: 20;
   width: 100%;
+
+  ${(props) =>
+    !props.disableFixed &&
+    `
+    top: calc(52px + env(safe-area-inset-top));
+    position: sticky;
+    position: -webkit-sticky;
+    position: -moz-sticky;
+    position: -o-sticky;
+    position: -ms-sticky;
+  `}
 `
 
 const defaultState: any = {
@@ -671,7 +678,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
             )}
           </>
         )}
-      <StickyTextArea>
+      <StickyTextArea disableFixed={query && query.panel ? true : false}>
         <TextArea
           name="prompt"
           className="block bg-white p-2.5 w-full text-lg text-black rounded-lg max-h-[250px] border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
@@ -775,6 +782,53 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
         setInput={setInput}
         setHasValidationError={setHasValidationError}
       />
+      <div className="w-full mt-2 flex flex-col justify-end gap-2">
+        <div className="flex flex-row justify-end gap-2 sm:mt-0">
+          <Button
+            title="Clear current input"
+            btnType="secondary"
+            onClick={resetInput}
+          >
+            <span>
+              <TrashIcon />
+            </span>
+            <span className="hidden md:inline-block">Clear</span>
+          </Button>
+          <Button
+            title="Create new image"
+            onClick={handleSubmit}
+            disabled={hasValidationError || pending}
+            width="100px"
+          >
+            <span>{pending ? '' : <SquarePlusIcon />}</span>
+            {pending ? 'Creating...' : 'Create'}
+          </Button>
+        </div>
+        <div className="flex flex-row justify-end">
+          <div className="flex flex-col justify-end">
+            <div className="text-xs flex flex-row justify-end gap-2">
+              Images to request: <strong>{' ' + totalImagesRequested}</strong>
+            </div>
+            {loggedIn && (
+              <>
+                <div className="text-xs flex flex-row justify-end gap-2">
+                  {' '}
+                  Generation cost:{' '}
+                  <Linker href="/faq#kudos" passHref>
+                    <>{totalKudosCost} kudos</>
+                  </Linker>
+                </div>
+                <div className="text-xs flex flex-row justify-end gap-2">
+                  Per image:{' '}
+                  <Linker href="/faq#kudos" passHref>
+                    <>{kudosPerImage} kudos</>
+                  </Linker>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
     </main>
   )
 }

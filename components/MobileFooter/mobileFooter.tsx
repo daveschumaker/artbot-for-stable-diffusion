@@ -30,7 +30,7 @@ const StyledFooter = styled.div<StyledFooterProps>`
   background-color: ${(props) => props.theme.body};
   border-top: 1px solid ${(props) => props.theme.text};
   position: fixed;
-  bottom: 0;
+  bottom: -1px;
   display: flex;
   height: 48px;
   left: 0;
