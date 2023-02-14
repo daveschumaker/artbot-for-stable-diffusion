@@ -86,16 +86,18 @@ const StickyTextArea = styled.div<IStickyArea>`
   z-index: 20;
   width: 100%;
 
-  ${(props) =>
-    !props.disableFixed &&
-    `
-    top: calc(52px + env(safe-area-inset-top));
-    position: sticky;
-    position: -webkit-sticky;
-    position: -moz-sticky;
-    position: -o-sticky;
-    position: -ms-sticky;
-  `}
+  @media (min-width: 640px) {
+    ${(props) =>
+      !props.disableFixed &&
+      `
+      top: calc(52px + env(safe-area-inset-top));
+      position: sticky;
+      position: -webkit-sticky;
+      position: -moz-sticky;
+      position: -o-sticky;
+      position: -ms-sticky;
+      `}
+  }
 `
 
 const defaultState: any = {

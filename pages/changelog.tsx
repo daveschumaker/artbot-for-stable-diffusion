@@ -120,11 +120,11 @@ const Changelog = () => {
             folded into the header itself (rather than as a separate row).
           </StyledLi>
           <StyledLi>
-            On the image creation page, I&apos;ve changed the text area for the
-            prompt to be fixed to the top of the screen as you scroll down. Is
-            this okay? Is this annoying? Should it be a personal setting? Let me
-            know! (FYI, I have disabled it on the inpainting panel, so you have
-            max screen real estate for that mode)
+            On the image creation page, for non-mobile devices, I&apos;ve
+            changed the text area for the prompt to be fixed to the top of the
+            screen as you scroll down. Is this okay? Is this annoying? Should it
+            be a personal setting? Let me know! (FYI, I have disabled it on the
+            inpainting panel, so you have max screen real estate for that mode)
           </StyledLi>
           <StyledLi>
             Below the advanced options panel, I removed the create image button.
