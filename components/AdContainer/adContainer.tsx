@@ -57,4 +57,4 @@ function AdContainer({
   )
 }
 
-export default AdContainer
+export default React.memo(AdContainer)

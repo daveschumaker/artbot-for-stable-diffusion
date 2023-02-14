@@ -538,13 +538,6 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
       }
     }
 
-    if (!shareMode && modelExists.length === 0) {
-      setInput({
-        models: ['stable_diffusion'],
-        sampler: 'k_euler_a'
-      })
-    }
-
     if (isNaN(input.numImages)) {
       setInput({ numImages: 1 })
     }
