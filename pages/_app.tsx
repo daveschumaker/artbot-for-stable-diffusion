@@ -25,6 +25,7 @@ import { isAppActive } from '../utils/appUtils'
 import { ToastContainer } from 'react-toastify'
 import AdContainer from '../components/AdContainer'
 import { useRouter } from 'next/router'
+import { useWindowSize } from '../hooks/useWindowSize'
 
 initAppSettings()
 initDb()
@@ -39,6 +40,8 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
   const router = useRouter()
   const { darkModeActive } = darkMode
   const [showServerUpdateModal, setShowServerUpdateModal] = useState(false)
+  const size = useWindowSize()
+
   const appState = useStore(appInfoStore)
   const { buildId, stableHordeApiOnline } = appState
 
@@ -119,6 +122,17 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
 
     return () => clearInterval(interval)
   }, [fetchAppInfo])
+
+  let sizeOverride = false
+  if (typeof size.width !== 'undefined') {
+    if (size?.width > 1130 && size?.width < 1279) {
+      sizeOverride = true
+    } else if (size?.width > 1440) {
+      sizeOverride = true
+    } else {
+      sizeOverride = false
+    }
+  }
 
   return (
     <ThemeProvider theme={darkModeActive ? darkTheme : lightTheme}>
@@ -219,14 +233,17 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
           )}
           <Component {...pageProps} />
           <Footer />
-          <div className="fixed right-[16px] bottom-[8px] hidden adCol:block max-w-[156px]">
-            <AdContainer
-              code="CWYD62QI"
-              placement="tinybotsnet"
-              key={router.asPath}
-              minSize={1440}
-            />
-          </div>
+          {sizeOverride && (
+            <div className="fixed right-[16px] bottom-[8px] max-w-[156px] fixed">
+              <AdContainer
+                code="CWYD62QI"
+                placement="tinybotsnet"
+                key={router.asPath}
+                minSize={1440}
+                override={sizeOverride}
+              />
+            </div>
+          )}
         </div>
       </ContentWrapper>
       <MobileFooter />

@@ -6,12 +6,14 @@ function AdContainer({
   code = 'CWYD62QI',
   placement = 'tinybotsnet',
   minSize = 1440,
-  maxSize = Infinity
+  maxSize = Infinity,
+  override = false
 }: {
   code: string
   placement: string
   minSize?: number
   maxSize?: number
+  override?: false
 }) {
   const reference = useRef<HTMLInputElement | undefined>()
 
@@ -35,15 +37,17 @@ function AdContainer({
   const classes = ['flex', 'justify-center', 'my-2', `w-full`]
 
   if (typeof window !== 'undefined') {
-    if (window.innerWidth < minSize) {
+    if (!override && window.innerWidth < minSize) {
       return null
     }
-    if (window.innerWidth > maxSize) {
+    if (!override && window.innerWidth > maxSize) {
       return null
     }
   } else {
     return null
   }
+
+  console.log(`ad hello`)
 
   return (
     <div

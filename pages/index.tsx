@@ -87,7 +87,7 @@ const StickyTextArea = styled.div<IStickyArea>`
   position: -o-sticky;
   position: -ms-sticky;
   top: calc(52px + env(safe-area-inset-top));
-  z-index: 30;
+  z-index: 20;
   width: 100%;
 `
 
