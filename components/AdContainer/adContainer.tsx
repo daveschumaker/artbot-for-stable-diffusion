@@ -47,8 +47,6 @@ function AdContainer({
     return null
   }
 
-  console.log(`ad hello`)
-
   return (
     <div
       id="_adUnit"
