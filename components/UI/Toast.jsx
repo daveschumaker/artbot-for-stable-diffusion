@@ -26,7 +26,7 @@ const StyledToast = styled.div`
   top: ${(props) => (props.active ? 'calc(env(safe-area-inset-top) + 8px)' : '-200px')};
   transition: all 0.4s;
   width: 300px;
-  z-index: 25;
+  z-index: 26;
 `
 
 const StyledClose = styled.div`

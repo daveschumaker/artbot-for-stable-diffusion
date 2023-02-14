@@ -3,6 +3,7 @@ import styled from 'styled-components'
 export interface IOverlayProps {
   disableBackground?: boolean
   handleClose?: () => void
+  zIndex?: number
 }
 
 const StyledOverlay = styled.div<IOverlayProps>`
@@ -20,15 +21,22 @@ const StyledOverlay = styled.div<IOverlayProps>`
     `
     background-color: unset;
     `}
+
+  ${(props) =>
+    props.zIndex &&
+    `
+    z-index: ${props.zIndex};
+    `}
 `
 
 const Overlay = (props: IOverlayProps) => {
-  const { disableBackground = false, handleClose = () => {} } = props
+  const { disableBackground = false, handleClose = () => {}, zIndex } = props
   return (
     <StyledOverlay
       className="StyledOverlay"
       disableBackground={disableBackground}
       onClick={handleClose}
+      zIndex={zIndex}
     />
   )
 }

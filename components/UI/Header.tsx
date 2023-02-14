@@ -32,7 +32,7 @@ const Wrapper = styled.div`
   position: fixed;
   right: 0;
   top: 0;
-  z-index: 30;
+  z-index: 25;
 
   @media (min-width: 640px) {
     margin: auto auto 0 auto;

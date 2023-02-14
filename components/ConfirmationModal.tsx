@@ -26,14 +26,14 @@ const ConfirmationModal = ({
 
   return (
     <Portal>
-      <Overlay handleClose={closeModal} />
+      <Overlay handleClose={closeModal} zIndex={35} />
       <div
-        className="relative z-30 opacity-100"
+        className="relative opacity-100 z-[35]"
         aria-labelledby="modal-title"
         role="dialog"
         aria-modal="true"
       >
-        <div className="left-0 right-0 fixed top-[80px] mx-auto mt-4 w-[320px] md:w-[480px] transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+        <div className="left-0 right-0 fixed top-[80px] mx-auto mt-4 w-[320px] md:w-[480px] transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg z-[35]">
           <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div className="sm:flex sm:items-start">
               <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">

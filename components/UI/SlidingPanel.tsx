@@ -17,6 +17,7 @@ const StyledSlidingPanel = styled(SlidingPane)`
   margin-bottom: 100px;
   max-width: 768px;
   width: 100%;
+  z-index: 32;
 
   @media (min-width: 768px) {
     border: 1px solid ${(props) => props.theme.text};

@@ -89,7 +89,7 @@ const NegativePrompts = ({ open, handleClosePane, setInput }: Props) => {
   return (
     <SlidingPanel
       className="mb-[200px] flex content-center"
-      overlayClassName="flex flex-row justify-center"
+      overlayClassName="flex flex-row justify-center z-30"
       open={open}
       handleClosePane={handleClosePane}
     >
