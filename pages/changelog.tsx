@@ -112,6 +112,23 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.02.14</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: More pesky z-index issues. (This time, with the negative prompt
+            modal being hidden).
+          </StyledLi>
+          <StyledLi>
+            Disabled the fixed prompt area. It was causing too many issues. Back
+            to the drawing board. Thank you for the feedback, everyone!
+          </StyledLi>
+          <StyledLi>
+            Removed the character counter. Thanks to some recent improvements,
+            Stable Horde can no accept prompts with more than 77 tokens!
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.02.13</SubSectionTitle>
         <StyledUl>
           <StyledLi>

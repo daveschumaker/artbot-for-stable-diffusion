@@ -86,10 +86,10 @@ const StickyTextArea = styled.div<IStickyArea>`
   z-index: 20;
   width: 100%;
 
-  @media (min-width: 640px) {
+  /* @media (min-width: 640px) {
     ${(props) =>
-      !props.disableFixed &&
-      `
+    !props.disableFixed &&
+    `
       top: calc(52px + env(safe-area-inset-top));
       position: sticky;
       position: -webkit-sticky;
@@ -97,7 +97,7 @@ const StickyTextArea = styled.div<IStickyArea>`
       position: -o-sticky;
       position: -ms-sticky;
       `}
-  }
+  } */
 `
 
 const defaultState: any = {
@@ -564,12 +564,6 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
     }
   }, [input, shareMode])
 
-  const modifiedPrompt = modifyPromptForStylePreset({
-    prompt: input.prompt,
-    negative: input.negative,
-    stylePreset: input.stylePreset
-  })
-
   return (
     <main>
       {showPromptHistory && (
@@ -691,17 +685,6 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
           value={input.prompt}
           ref={ref}
         />
-        {modifiedPrompt.length > 300 && (
-          <div className="mt-2 text-amber-400 font-semibold text-sm">
-            Warning: Your prompt length (plus any modifiers such as negative
-            prompt or model triggers) exceeds <strong>300 characters</strong>.
-            Anything exceeding this limit will potentially be ignored by Stable
-            Diffusion. (You can still attempt to submit this request.)
-          </div>
-        )}
-        <div className="mt-2 text-xs">
-          Total characters: {modifiedPrompt.length} / 300
-        </div>
         {hasValidationError && (
           <div className="mt-2 text-red-500 font-semibold">
             Please correct all input errors before continuing
@@ -717,7 +700,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
             Error: {hasError}
           </div>
         )}
-        <div className="mt-1 mb-4 w-full flex flex-row gap-2 justify-end items-start">
+        <div className="mt-2 mb-4 w-full flex flex-row gap-2 justify-end items-start">
           <div className="w-1/2 text-sm flex flex-row justify-start gap-2 items-center">
             Style:{' '}
             <StylesDropdown
