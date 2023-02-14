@@ -36,7 +36,6 @@ import AppSettings from '../models/AppSettings'
 import {
   countImagesToGenerate,
   kudosCost,
-  modifyPromptForStylePreset,
   orientationDetails
 } from '../utils/imageUtils'
 import { toast } from 'react-toastify'
