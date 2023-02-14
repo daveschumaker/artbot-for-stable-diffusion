@@ -633,7 +633,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
               </Tooltip>
             </ModelTriggerButton>
             {componentState.showTriggerWordsModal && (
-              <div className="relative top-[-38px]">
+              <div className="relative top-[-38px] z-[21]">
                 <DropDownMenu
                   handleClose={() => {
                     setComponentState({ showTriggerWordsModal: false })

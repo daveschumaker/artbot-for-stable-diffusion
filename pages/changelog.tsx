@@ -124,7 +124,12 @@ const Changelog = () => {
           </StyledLi>
           <StyledLi>
             Removed the character counter. Thanks to some recent improvements,
-            Stable Horde can no accept prompts with more than 77 tokens!
+            Stable Horde can now accept prompts with more than 77 tokens! So get
+            your Shakespeare on and submit those ridiculously huge prompts!
+          </StyledLi>
+          <StyledLi>
+            Fix: Model trigger drop down was hidden. Thanks to TheGlosser for
+            reporting on Discord.
           </StyledLi>
         </StyledUl>
       </Section>
