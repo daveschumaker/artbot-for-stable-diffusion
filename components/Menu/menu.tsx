@@ -19,10 +19,6 @@ import { appInfoStore, setShowAppMenu } from '../../store/appStore'
 import { useEffect } from 'react'
 import { lockScroll, unlockScroll } from '../../utils/appUtils'
 
-interface IProps {
-  show?: boolean
-}
-
 interface IStyledProps {
   show?: boolean
 }
