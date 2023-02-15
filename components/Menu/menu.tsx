@@ -14,9 +14,12 @@ import QuestionMarkIcon from '../icons/QuestionMarkIcon'
 import LineDashedIcon from '../icons/LineDashedIcon'
 import StarsIcon from '../icons/StarsIcon'
 import SettingsIcon from '../icons/SettingsIcon'
+import { useStore } from 'statery'
+import { appInfoStore, setShowAppMenu } from '../../store/appStore'
+import { useEffect } from 'react'
+import { lockScroll, unlockScroll } from '../../utils/appUtils'
 
 interface IProps {
-  handleClose: () => void
   show?: boolean
 }
 
@@ -114,19 +117,33 @@ const SubOption = styled.div`
   }
 `
 
-const Menu = (props: IProps) => {
+const Menu = () => {
   const router = useRouter()
+  const appState = useStore(appInfoStore)
+  const { showAppMenu } = appState
+
+  const handleClose = () => {
+    setShowAppMenu(false)
+  }
 
   const navigateToLink = (path: string) => {
-    props.handleClose()
+    handleClose()
     router.push(path)
   }
 
+  useEffect(() => {
+    if (showAppMenu) {
+      lockScroll()
+    } else {
+      unlockScroll()
+    }
+  }, [showAppMenu])
+
   return (
     <>
-      {props.show && <Overlay handleClose={props.handleClose} />}
-      <MenuOverlay show={props.show}>
-        <CloseWrapper onClick={props.handleClose}>
+      {showAppMenu && <Overlay handleClose={handleClose} />}
+      <MenuOverlay show={showAppMenu}>
+        <CloseWrapper onClick={handleClose}>
           <CloseIcon size={32} />
         </CloseWrapper>
         <MenuOptions>

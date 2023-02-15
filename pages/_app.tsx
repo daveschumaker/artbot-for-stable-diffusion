@@ -11,7 +11,6 @@ import Header from '../components/UI/Header'
 import PollController from '../components/PollController'
 
 import 'react-toastify/dist/ReactToastify.css'
-import { GlobalStyles } from '../styles/globalStyles'
 import { lightTheme, darkTheme } from '../styles/theme'
 import '../styles/globals.css'
 
@@ -26,6 +25,7 @@ import { ToastContainer } from 'react-toastify'
 import AdContainer from '../components/AdContainer'
 import { useRouter } from 'next/router'
 import { useWindowSize } from '../hooks/useWindowSize'
+import Menu from '../components/Menu'
 
 initAppSettings()
 initDb()
@@ -43,7 +43,7 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
   const size = useWindowSize()
 
   const appState = useStore(appInfoStore)
-  const { buildId, stableHordeApiOnline } = appState
+  const { buildId, stableHordeApiOnline, showAppMenu } = appState
 
   const fetchAppInfo = useCallback(async () => {
     if (!isAppActive()) {
@@ -136,7 +136,6 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
 
   return (
     <ThemeProvider theme={darkModeActive ? darkTheme : lightTheme}>
-      <GlobalStyles />
       {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS ? (
         <>
           <Script
@@ -217,8 +216,9 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
       </Head>
       <PollController />
       <ContentWrapper>
+        <Menu show={showAppMenu} />
         <Header />
-        <div className="absolute mx-auto w-full pb-[88px] md:pb-[0] top-[52px] md:top-[54px] md:relative">
+        <div className="absolute mx-auto w-full pb-[88px] md:pb-[0] top-[52px] md:top-[44px] md:relative">
           <ToastContainer
             style={{ marginTop: `calc(env(safe-area-inset-top))` }}
           />
@@ -234,7 +234,7 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
           <Component {...pageProps} />
           <Footer />
           {sizeOverride && (
-            <div className="fixed right-[16px] bottom-[8px] max-w-[156px] fixed">
+            <div className="fixed right-[16px] bottom-[8px] max-w-[156px]">
               <AdContainer
                 code="CWYD62QI"
                 placement="tinybotsnet"
