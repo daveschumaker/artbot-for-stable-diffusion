@@ -5,32 +5,17 @@ import Tooltip from '../../../UI/Tooltip'
 import Switch from 'react-switch'
 import PromptInputSettings from '../../../../models/PromptInputSettings'
 import { useEffect, useState } from 'react'
-import { countImagesToGenerate } from '../../../../utils/imageUtils'
-
 const HiresFix = ({ input, setInput }: any) => {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    const totalImagesRequested = countImagesToGenerate(input)
-
-    if ((input.numImages > 1 || totalImagesRequested > 1) && input.hires) {
-      setError('Cannot use when generating >1 image.')
-      setInput({ hires: false })
-      return
-    }
-
     if ((input.source_image || input.source_mask) && input.hires) {
       setError('Can only be used for text2img requests')
       setInput({ hires: false })
       return
     }
 
-    if (
-      error &&
-      input.numImages === 1 &&
-      !input.source_image &&
-      !input.source_mask
-    ) {
+    if (error && !input.source_image && !input.source_mask) {
       setError('')
     }
   }, [error, input, setInput])

@@ -131,6 +131,16 @@ const Changelog = () => {
             Fix: Model trigger drop down was hidden. Thanks to TheGlosser for
             reporting on Discord.
           </StyledLi>
+          <StyledLi>
+            Refactor: Changed some behind-the-scenes logic on how the navbar and
+            slide out menu work. In theory, it shouldn&apos;t affect things --
+            just getting some architecture ready for future UI improvements.
+          </StyledLi>
+          <StyledLi>
+            Feature: Hi-res fix can now work on multiple images at a time.
+            Thanks to ResidentChiefNZ on Discord for letting me know this is now
+            possible on the Horde!
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
