@@ -2,6 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  min-height: calc(100% + env(safe-area-inset-top));
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+    env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+body,
+html {
+  background-color: #f2f2f2;
+  color: #344c50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  letter-spacing: 0.4px;
+}
+
+body {
+  min-height: calc(100% + env(safe-area-inset-top));
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+    env(safe-area-inset-bottom) env(safe-area-inset-left);
+  width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.canvas-container {
+  margin: 0 auto;
+}
+
+@media (prefers-color-scheme: dark) {
+  body,
+  html {
+    background-color: #222222;
+    color: #f3f3ef;
+  }
+}
+
+/* Carbon Ads */
 #carbonads * {
   margin: initial;
   padding: initial;
@@ -173,5 +220,15 @@
 
   input[type='range']:disabled::-moz-range-thumb {
     background-color: #b7b7b5;
+  }
+}
+
+@layer utilities {
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }
