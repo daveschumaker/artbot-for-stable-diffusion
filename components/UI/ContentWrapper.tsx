@@ -11,8 +11,7 @@ const Content = ({ children }: { children: React.ReactNode }) => {
     'w-[calc(100%-16px)]',
     'sm:max-w-[768px]',
     'xl:max-w-[1024px]',
-    '2xl:max-w-[1280px]',
-    '4xl:max-w-[1536px]'
+    '2xl:max-w-[1280px]'
   ]
   return <div className={clsx(classes)}>{children}</div>
 }

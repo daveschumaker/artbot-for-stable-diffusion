@@ -127,7 +127,9 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
   if (typeof size.width !== 'undefined') {
     if (size?.width > 1130 && size?.width < 1279) {
       sizeOverride = true
-    } else if (size?.width > 1440) {
+    } else if (size?.width > 1388 && size?.width < 1440) {
+      sizeOverride = true
+    } else if (size?.width > 1639) {
       sizeOverride = true
     } else {
       sizeOverride = false

@@ -32,8 +32,7 @@ const Header = () => {
           'py-[8px]',
           'sm:max-w-[768px]',
           'xl:max-w-[1024px]',
-          '2xl:max-w-[1280px]',
-          '4xl:max-w-[1536px]'
+          '2xl:max-w-[1280px]'
         )}
       >
         <div
