@@ -9,7 +9,6 @@ interface MenuButtonProps {
 }
 
 const StyledMenuButton = styled.button<MenuButtonProps>`
-  background-color: ${(props) => props.theme.body};
   border: 2px solid ${(props) => props.theme.navLinkActive};
   border-radius: 4px;
   color: ${(props) => props.theme.navLinkActive};

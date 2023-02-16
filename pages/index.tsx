@@ -79,7 +79,6 @@ interface IStickyArea {
 }
 
 const StickyTextArea = styled.div<IStickyArea>`
-  background-color: ${(props) => props.theme.body};
   padding-bottom: 4px;
   position: relative;
   z-index: 20;
