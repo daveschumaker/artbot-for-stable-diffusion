@@ -27,7 +27,6 @@ const Overlay = styled.div`
 `
 
 const StyledModal = styled.div`
-  background-color: ${(props) => props.theme.body};
   border: 1px solid ${(props) => props.theme.text};
   border-radius: 8px;
   opacity: 1;

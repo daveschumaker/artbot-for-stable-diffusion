@@ -16,7 +16,6 @@ interface Props {
 }
 
 const Content = styled.div`
-  background-color: ${(props) => props.theme.body};
   margin-bottom: 140px;
 
   @media (min-width: 640px) {
@@ -37,7 +36,6 @@ const StyledCloseButton = styled.div`
 
 const FixedHeader = styled.div`
   position: fixed;
-  background-color: ${(props) => props.theme.body};
   top: 0;
   left: 0;
   right: 0;
