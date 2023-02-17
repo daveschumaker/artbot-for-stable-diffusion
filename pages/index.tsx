@@ -50,10 +50,10 @@ import useComponentState from '../hooks/useComponentState'
 import DropDownMenu from '../components/UI/DropDownMenu/dropDownMenu'
 import DropDownMenuItem from '../components/UI/DropDownMenuItem'
 import MinusIcon from '../components/icons/MinusIcon'
-import styled from 'styled-components'
 import PromptInputSettings from '../models/PromptInputSettings'
 import { validModelsArray } from '../utils/modelUtils'
 import { userInfoStore } from '../store/userStore'
+import styles from '../styles/index.module.css'
 
 interface InputTarget {
   name: string
@@ -62,42 +62,6 @@ interface InputTarget {
 interface InputEvent {
   target: InputTarget
 }
-
-const ModelTriggerButton = styled.div`
-  align-items: center;
-  color: ${(props) => props.theme.navLinkActive};
-  cursor: pointer;
-  display: flex;
-  flex-direction: row;
-  margin-bottom: 4px;
-  position: relative;
-`
-
-interface IStickyArea {
-  disableFixed?: boolean
-  fixed?: boolean
-}
-
-const StickyTextArea = styled.div<IStickyArea>`
-  background-color: ${(props) => props.theme.body};
-  padding-bottom: 4px;
-  position: relative;
-  z-index: 20;
-  width: 100%;
-
-  /* @media (min-width: 640px) {
-    ${(props) =>
-    !props.disableFixed &&
-    `
-      top: calc(52px + env(safe-area-inset-top));
-      position: sticky;
-      position: -webkit-sticky;
-      position: -moz-sticky;
-      position: -o-sticky;
-      position: -ms-sticky;
-      `}
-  } */
-`
 
 const defaultState: any = {
   img2img: false,
@@ -609,7 +573,8 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
       {input.source_processing !== 'inpainting' &&
         modelDetails[input?.models[0]]?.trigger && (
           <>
-            <ModelTriggerButton
+            <div
+              className={styles['model-trigger-btn']}
               onClick={() => {
                 if (!componentState.showTriggerWordsModal) {
                   setComponentState({ showTriggerWordsModal: true })
@@ -631,7 +596,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
                 fully utilize its abilities. Click here to add trigger words
                 into your prompt.
               </Tooltip>
-            </ModelTriggerButton>
+            </div>
             {componentState.showTriggerWordsModal && (
               <div className="relative top-[-38px] z-[21]">
                 <DropDownMenu
@@ -673,7 +638,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
             )}
           </>
         )}
-      <StickyTextArea disableFixed={query && query.panel ? true : false}>
+      <div className={styles['sticky-text-area']}>
         <TextArea
           name="prompt"
           className="block bg-white p-2.5 w-full text-lg text-black rounded-lg max-h-[250px] border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
@@ -757,7 +722,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
             </div>
           </div>
         </div>
-      </StickyTextArea>
+      </div>
       <OptionsPanel
         handleChangeInput={handleChangeValue}
         handleImageUpload={handleImageUpload}
