@@ -1,5 +1,6 @@
 import React from 'react'
-import styled from 'styled-components'
+import clsx from 'clsx'
+import styles from './input.module.css'
 
 interface InputProps {
   autoFocus?: boolean
@@ -20,19 +21,6 @@ interface InputProps {
   value: string
 }
 
-const StyledInput = styled.input<InputProps>`
-  background-color: ${(props) => props.theme.inputBackground};
-  border-radius: 4px;
-  border: 1px solid ${(props) => props.theme.inputColor};
-  color: ${(props) => props.theme.inputColor};
-  font-size: 16px;
-  height: 40px;
-  padding: 8px;
-  width: ${(props) => (props.width ? props.width : '100%')};
-
-  ${(props) => props.error && `border: 1px solid red;`}
-`
-
 const Input = (props: InputProps) => {
   const { children, selectAll = false, ...rest } = props
 
@@ -41,16 +29,18 @@ const Input = (props: InputProps) => {
   }
 
   return (
-    <StyledInput
+    <input
+      className={clsx(styles['styled-input'], props.error && styles['error'])}
       onFocus={(e) => {
         if (selectAll) {
           handleFocus(e)
         }
       }}
+      width={props.width || '100%'}
       {...rest}
     >
       {children}
-    </StyledInput>
+    </input>
   )
 }
 

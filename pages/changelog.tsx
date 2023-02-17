@@ -23,8 +23,18 @@ const AddedInfo = ({ children }: { children: React.ReactNode }) => {
   return <div className={styles['more-info']}>{children}</div>
 }
 
-const LinkButton = ({ children }: { children: React.ReactNode }) => {
-  return <div className={styles['link-btn']}>{children}</div>
+const LinkButton = ({
+  children,
+  onClick = () => {}
+}: {
+  children: React.ReactNode
+  onClick: () => void
+}) => {
+  return (
+    <div className={styles['link-btn']} onClick={onClick}>
+      {children}
+    </div>
+  )
 }
 
 /** TEMPLATE
