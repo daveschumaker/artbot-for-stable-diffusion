@@ -103,13 +103,15 @@ const Changelog = () => {
             It&apos;s been quiet around these parts. Too quiet...
           </StyledLi>
           <StyledLi>
-            Been heads down with real work lately, but also working on a bunch
-            of under-the-hood / tech debt.
+            Been heads down with real work lately, but fear not! I&apos;ve also
+            working on a bunch of under-the-hood / tech debt related to ArtBot.
           </StyledLi>
           <StyledLi>
             Not a lot of obvious user-facing stuff today. Updated a number of UI
             components to use NextJS built-in support for CSS modules instead of
-            Styled Components.
+            Styled Components. All of this work is ahead of some bigger UX
+            improvements that I&apos;d like to soon roll out for the desktop
+            experience.
           </StyledLi>
         </StyledUl>
       </Section>
