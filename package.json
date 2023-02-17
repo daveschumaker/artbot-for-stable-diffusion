@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@next/bundle-analyzer": "13.1.6",
+    "@szhsin/react-menu": "^3.4.1",
     "autosize": "5.0.2",
     "browser-image-resizer": "2.4.1",
     "buffer-image-size": "0.6.4",
