@@ -31,6 +31,7 @@ const SwipeCapture = styled.div`
 `
 
 const StyledInteractiveModal = styled.div<IStyle>`
+  background-color: ${(props) => props.theme.body};
   border-top: 2px solid ${(props) => props.theme.border};
   border-radius: 8px;
   opacity: 1;

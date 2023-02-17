@@ -47,6 +47,7 @@
     "react-swipeable": "7.0.0",
     "react-switch": "7.0.0",
     "react-toastify": "9.1.1",
+    "react-tooltip": "^5.8.1",
     "sharp": "0.31.3",
     "statery": "0.6.3",
     "styled-components": "5.3.6"

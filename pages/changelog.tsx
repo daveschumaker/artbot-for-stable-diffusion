@@ -97,6 +97,23 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.02.17</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            It&apos;s been quiet around these parts. Too quiet...
+          </StyledLi>
+          <StyledLi>
+            Been heads down with real work lately, but also working on a bunch
+            of under-the-hood / tech debt.
+          </StyledLi>
+          <StyledLi>
+            Not a lot of obvious user-facing stuff today. Updated a number of UI
+            components to use NextJS built-in support for CSS modules instead of
+            Styled Components.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.02.14</SubSectionTitle>
         <StyledUl>
           <StyledLi>

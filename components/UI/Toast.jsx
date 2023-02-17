@@ -11,6 +11,7 @@ import Linker from './Linker'
 
 const StyledToast = styled.div`
   align-items: center;
+  background-color: ${(props) => props.theme.body};
   border-radius: 4px;
   border: 2px solid ${(props) => props.theme.border};
   box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);

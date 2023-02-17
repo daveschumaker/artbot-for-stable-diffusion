@@ -44,16 +44,12 @@ import InteractiveModal from '../components/UI/InteractiveModal/interactiveModal
 import PromptHistory from '../components/PromptHistory'
 import MenuButton from '../components/UI/MenuButton'
 import HistoryIcon from '../components/icons/HistoryIcon'
-import PlusIcon from '../components/icons/PlusIcon'
-import Tooltip from '../components/UI/Tooltip'
 import useComponentState from '../hooks/useComponentState'
-import DropDownMenu from '../components/UI/DropDownMenu/dropDownMenu'
-import DropDownMenuItem from '../components/UI/DropDownMenuItem'
-import MinusIcon from '../components/icons/MinusIcon'
 import PromptInputSettings from '../models/PromptInputSettings'
 import { validModelsArray } from '../utils/modelUtils'
 import { userInfoStore } from '../store/userStore'
 import styles from '../styles/index.module.css'
+import TriggerDropdown from '../components/CreatePage/TriggerDropdown'
 
 interface InputTarget {
   name: string
@@ -168,7 +164,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
     }
   }
 
-  const [componentState, setComponentState] = useComponentState({
+  const [, setComponentState] = useComponentState({
     showTriggerWordsModal: false
   })
 
@@ -570,79 +566,17 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
         </div>
       </div>
       <ServerMessage />
-      {input.source_processing !== 'inpainting' &&
-        modelDetails[input?.models[0]]?.trigger && (
-          <>
-            <div
-              className={styles['model-trigger-btn']}
-              onClick={() => {
-                if (!componentState.showTriggerWordsModal) {
-                  setComponentState({ showTriggerWordsModal: true })
-                } else {
-                  setComponentState({ showTriggerWordsModal: false })
-                }
-              }}
-            >
-              <div className="mr-2">
-                {componentState.showTriggerWordsModal ? (
-                  <MinusIcon />
-                ) : (
-                  <PlusIcon />
-                )}
-              </div>
-              [ Model trigger ]
-              <Tooltip width="240px">
-                This model requires the use of certain trigger words in order to
-                fully utilize its abilities. Click here to add trigger words
-                into your prompt.
-              </Tooltip>
-            </div>
-            {componentState.showTriggerWordsModal && (
-              <div className="relative top-[-38px] z-[21]">
-                <DropDownMenu
-                  handleClose={() => {
-                    setComponentState({ showTriggerWordsModal: false })
-                  }}
-                  position="left"
-                >
-                  {triggerArray && triggerArray.length > 0
-                    ? triggerArray.map((trigger: string, i: number) => {
-                        return (
-                          <DropDownMenuItem
-                            key={`${trigger}_${i}`}
-                            onClick={() => {
-                              const value = `${trigger} ` + input.prompt + ` `
-                              if (AppSettings.get('savePromptOnCreate')) {
-                                PromptInputSettings.set('prompt', value)
-                              }
-
-                              setInput({
-                                prompt: value
-                              })
-                              setComponentState({
-                                showTriggerWordsModal: false
-                              })
-                              if (ref && ref.current) {
-                                // @ts-ignore
-                                ref.current.focus()
-                              }
-                            }}
-                          >
-                            {trigger}
-                          </DropDownMenuItem>
-                        )
-                      })
-                    : null}
-                </DropDownMenu>
-              </div>
-            )}
-          </>
-        )}
+      {modelDetails[input?.models[0]]?.trigger && (
+        <TriggerDropdown
+          setInput={setInput}
+          prompt={input.prompt}
+          triggerArray={triggerArray}
+        />
+      )}
       <div className={styles['sticky-text-area']}>
         <TextArea
           name="prompt"
-          // className="block bg-[#ffffff] dark:bg-[rgb(42, 48, 60)] p-2.5 w-full text-lg rounded-lg max-h-[250px] border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-          placeholder="Image prompt..."
+          placeholder="Describe your image..."
           onChange={handleChangeValue}
           // @ts-ignore
           onKeyDown={onEnterPress}
