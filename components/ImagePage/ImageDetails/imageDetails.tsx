@@ -1,27 +1,30 @@
 /* eslint-disable @next/next/no-img-element */
 import { useRouter } from 'next/router'
-import styled from 'styled-components'
 import { toast } from 'react-toastify'
-
-import { deleteCompletedImage } from '../utils/db'
-import ConfirmationModal from './ConfirmationModal'
 import { useCallback } from 'react'
-import TrashIcon from './icons/TrashIcon'
-import { Button } from './UI/Button'
-import { trackEvent, trackGaEvent } from '../api/telemetry'
-import RefreshIcon from './icons/RefreshIcon'
-import UploadIcon from './icons/UploadIcon'
-import { copyEditPrompt, rerollImage } from '../controllers/imageDetailsCommon'
-import Linker from './UI/Linker'
-import CopyIcon from './icons/CopyIcon'
-import ImageSquare from './ImageSquare'
-import { savePrompt, SourceProcessing } from '../utils/promptUtils'
-import ShareIcon from './icons/ShareIcon'
-import ShareLinkDetails from '../models/ShareableLink'
-import DownloadIcon from './icons/DownloadIcon'
-import useComponentState from '../hooks/useComponentState'
-import { downloadFile } from '../utils/imageUtils'
-import AdContainer from './AdContainer'
+
+import { deleteCompletedImage } from '../../../utils/db'
+import ConfirmationModal from '../../ConfirmationModal'
+import TrashIcon from '../../icons/TrashIcon'
+import { Button } from '../../UI/Button'
+import { trackEvent, trackGaEvent } from '../../../api/telemetry'
+import RefreshIcon from '../../icons/RefreshIcon'
+import UploadIcon from '../../icons/UploadIcon'
+import {
+  copyEditPrompt,
+  rerollImage
+} from '../../../controllers/imageDetailsCommon'
+import Linker from '../../UI/Linker'
+import CopyIcon from '../../icons/CopyIcon'
+import ImageSquare from '../../ImageSquare'
+import { savePrompt, SourceProcessing } from '../../../utils/promptUtils'
+import ShareIcon from '../../icons/ShareIcon'
+import ShareLinkDetails from '../../../models/ShareableLink'
+import DownloadIcon from '../../icons/DownloadIcon'
+import useComponentState from '../../../hooks/useComponentState'
+import { downloadFile } from '../../../utils/imageUtils'
+import AdContainer from '../../AdContainer'
+import styles from './imageDetails.module.css'
 
 interface ImageDetails {
   upscaled?: boolean
@@ -59,13 +62,6 @@ interface ImageDetailsProps {
   imageDetails: ImageDetails
   onDelete: () => void
 }
-
-const MobileHideText = styled.span`
-  display: none;
-  @media (min-width: 718px) {
-    display: inline-block;
-  }
-`
 
 const ImageDetails = ({
   imageDetails,
@@ -341,14 +337,14 @@ const ImageDetails = ({
             <span className="hidden md:inline-block">Download PNG</span>
           </Button>
         </div>
-        <div className="inline-block w-1/2 flex flex-row justify-end gap-2">
+        <div className="w-1/2 flex flex-row justify-end gap-2">
           <Button
             title="Request new image with same settings"
             onClick={() => handleRerollClick(imageDetails)}
             disabled={componentState.pending}
           >
             <RefreshIcon className="mx-auto" />
-            <MobileHideText>Reroll Image</MobileHideText>
+            <span className={styles['mobile-hide-text']}>Reroll Image</span>
           </Button>
           <Button
             title="Delete image"
@@ -356,7 +352,7 @@ const ImageDetails = ({
             onClick={() => setComponentState({ showDeleteModal: true })}
           >
             <TrashIcon className="mx-auto" />
-            <MobileHideText>Delete image</MobileHideText>
+            <span className={styles['mobile-hide-text']}>Delete image</span>
           </Button>
         </div>
       </div>

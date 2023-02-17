@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
 
-import ImageDetails from '../../components/ImageDetails'
+import ImageDetails from '../../components/ImagePage/ImageDetails'
 import PageTitle from '../../components/UI/PageTitle'
 
 import Spinner from '../../components/Spinner'
