@@ -1,56 +1,31 @@
 import Head from 'next/head'
 import PageTitle from '../components/UI/PageTitle'
-import styled from 'styled-components'
 import Linker from '../components/UI/Linker'
 import FeedbackModal from '../components/Feedback'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useEffectOnce } from '../hooks/useEffectOnce'
 import { trackEvent } from '../api/telemetry'
 import Panel from '../components/UI/Panel'
 import AdContainer from '../components/AdContainer'
+import Section from '../components/UI/Section'
+import SubSectionTitle from '../components/UI/SubSectionTitle'
+import styles from '../styles/changelog.module.css'
 
-const Section = styled.div`
-  padding-top: 16px;
+const StyledUl = ({ children }: { children: React.ReactNode }) => {
+  return <ul className={styles['styled-ul']}>{children}</ul>
+}
 
-  &:first-child {
-    padding-top: 0;
-  }
-`
+const StyledLi = ({ children }: { children: React.ReactNode }) => {
+  return <li className={styles['styled-li']}>{children}</li>
+}
 
-const SubSectionTitle = styled.div`
-  font-weight: 700;
-  padding-bottom: 8px;
-`
+const AddedInfo = ({ children }: { children: React.ReactNode }) => {
+  return <div className={styles['more-info']}>{children}</div>
+}
 
-const StyledUl = styled.ul`
-  margin-left: 8px;
-`
-
-const StyledLi = styled.li`
-  list-style: square;
-  margin-left: 16px;
-  margin-bottom: 8px;
-`
-
-const AddedInfo = styled.div`
-  border-left: 2px solid ${(props) => props.theme.text};
-  font-size: 14px;
-  margin-top: 8px;
-  margin-bottom: 8px;
-  margin-left: 16px;
-  padding-left: 8px;
-`
-
-const LinkButton = styled.div`
-  display: inline-block;
-  cursor: pointer;
-  color: ${(props) => props.theme.link};
-  font-weight: 600;
-
-  &:hover {
-    color: ${(props) => props.theme.linkActive};
-  }
-`
+const LinkButton = ({ children }: { children: React.ReactNode }) => {
+  return <div className={styles['link-btn']}>{children}</div>
+}
 
 /** TEMPLATE
 

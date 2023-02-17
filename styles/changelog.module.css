@@ -1,0 +1,43 @@
+.styled-ul {
+  margin-left: 8px;
+}
+
+.styled-li {
+  list-style: square;
+  margin-left: 16px;
+  margin-bottom: 8px;
+}
+
+.more-info {
+  border-left: 2px solid #344c50;
+  font-size: 14px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  margin-left: 16px;
+  padding-left: 8px;
+}
+
+.link-btn {
+  display: inline-block;
+  cursor: pointer;
+  color: #17cfbb;
+  font-weight: 600;
+}
+
+.link-btn:hover {
+  color: #5eedde;
+}
+
+@media (prefers-color-scheme: dark) {
+  .more-info {
+    border-left: 2px solid #f3f3ef;
+  }
+
+  .link-btn {
+    color: #5eedde;
+  }
+
+  .link-btn:hover {
+    color: #17cfbb;
+  }
+}
