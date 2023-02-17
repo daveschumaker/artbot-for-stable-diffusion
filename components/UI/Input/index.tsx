@@ -22,7 +22,7 @@ interface InputProps {
 }
 
 const Input = (props: InputProps) => {
-  const { children, selectAll = false, ...rest } = props
+  const { children, className, selectAll = false, ...rest } = props
 
   const handleFocus = (e: any) => {
     e.target.select()
@@ -30,7 +30,11 @@ const Input = (props: InputProps) => {
 
   return (
     <input
-      className={clsx(styles['styled-input'], props.error && styles['error'])}
+      className={clsx(
+        styles['styled-input'],
+        props.error && styles['error'],
+        className
+      )}
       onFocus={(e) => {
         if (selectAll) {
           handleFocus(e)

@@ -7,17 +7,7 @@ import React, {
   TextareaHTMLAttributes
 } from 'react'
 import autosize from 'autosize'
-import styled from 'styled-components'
-
-const StyledTextArea = styled.textarea`
-  background-color: ${(props) => props.theme.inputBackground};
-  border: 1px solid ${(props) => props.theme.inputColor};
-  border-radius: 4px;
-  color: ${(props) => props.theme.inputColor};
-  font-size: 16px;
-  min-height: 40px;
-  overflow-y: scroll;
-`
+import styles from './textarea.module.css'
 
 type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement>
 type RefType = HTMLTextAreaElement | null
@@ -47,7 +37,8 @@ const TextAreaAutoSize = (
   }, [])
 
   return (
-    <StyledTextArea
+    <textarea
+      className={styles['styled-textarea']}
       {...props}
       ref={(node) => {
         textareaRef.current = node

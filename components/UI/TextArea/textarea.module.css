@@ -1,0 +1,21 @@
+.styled-textarea {
+  background-color: #ffffff;
+  border: 1px solid #282828;
+  border-radius: 4px;
+  color: #282828;
+  font-size: 16px;
+  min-height: 80px;
+  max-height: 320px;
+  width: 100%;
+  padding: 4px 8px;
+  max-height: 250px;
+  overflow-y: scroll;
+}
+
+@media (prefers-color-scheme: dark) {
+  .styled-textarea {
+    background-color: rgb(42, 48, 60);
+    border: 1px solid #e1e1e1;
+    color: #e1e1e1;
+  }
+}

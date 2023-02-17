@@ -641,7 +641,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
       <div className={styles['sticky-text-area']}>
         <TextArea
           name="prompt"
-          className="block bg-white p-2.5 w-full text-lg text-black rounded-lg max-h-[250px] border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+          // className="block bg-[#ffffff] dark:bg-[rgb(42, 48, 60)] p-2.5 w-full text-lg rounded-lg max-h-[250px] border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
           placeholder="Image prompt..."
           onChange={handleChangeValue}
           // @ts-ignore

@@ -591,7 +591,6 @@ const AdvancedOptionsPanel = ({
         <FlexRow>
           <TextArea
             name="negative"
-            className="block bg-white p-2.5 w-full text-lg text-black rounded-lg max-h-[250px] border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
             placeholder="Image prompt..."
             onChange={handleChangeInput}
             value={input.negative}
