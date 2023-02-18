@@ -8,7 +8,6 @@ import SelectComponent from '../../UI/Select'
 import Input from '../../UI/Input'
 import Tooltip from '../../UI/Tooltip'
 import { Button } from '../../UI/Button'
-import TrashIcon from '../../icons/TrashIcon'
 import { SourceProcessing } from '../../../utils/promptUtils'
 import { nearestWholeMultiple } from '../../../utils/imageUtils'
 import { userInfoStore } from '../../../store/userStore'
@@ -42,6 +41,7 @@ import TextArea from '../../UI/TextArea'
 import HiresFix from './HiresFix'
 import FlexRow from '../../UI/FlexRow'
 import ClipSkip from './ClipSkip'
+import ArrowBarLeftIcon from '../../icons/ArrowBarLeftIcon'
 
 const NoSliderSpacer = styled.div`
   height: 14px;
@@ -605,7 +605,7 @@ const AdvancedOptionsPanel = ({
               })
             }}
           >
-            <TrashIcon />
+            <ArrowBarLeftIcon />
           </Button>
         </FlexRow>
         <FlexRow>
@@ -1199,7 +1199,7 @@ const AdvancedOptionsPanel = ({
                 setInput({ seed: '' })
               }}
             >
-              <TrashIcon />
+              <ArrowBarLeftIcon />
             </Button>
           </div>
         </MaxWidth>

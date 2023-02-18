@@ -2,7 +2,11 @@ import SelectComponent from '../../UI/Select'
 import { sortedPresets, stylePresets } from '../../../utils/stylePresets'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
-
+import PhotoIcon from '../../icons/PhotoIcon'
+import ArrowBarLeftIcon from '../../icons/ArrowBarLeftIcon'
+import { Button } from '../../UI/Button'
+import { Tooltip } from 'react-tooltip'
+import styles from './stylesDropdown.module.css'
 interface IProps {
   input: any
   setInput(obj: any): any
@@ -60,11 +64,35 @@ const StylesDrodown = ({ input, setInput }: IProps) => {
   }, [input?.stylePreset])
 
   return (
-    <StyledDropdown
-      onChange={handleSelect}
-      options={presetOptions()}
-      value={presetValue}
-    />
+    <div className="flex flex-row items-center gap-2 w-full">
+      <a id="styles-dropdown-tooltip">
+        <PhotoIcon size={32} />
+      </a>
+      <StyledDropdown
+        onChange={handleSelect}
+        options={presetOptions()}
+        value={presetValue}
+      />
+      <Tooltip
+        anchorSelect="#styles-dropdown-tooltip"
+        className={styles['tooltip-wrapper']}
+        place="bottom"
+      >
+        <div className={styles.tooltip}>
+          Predefined community styles that will automatically select a model and
+          add relevant prompt and negative prompt parameters when submitted to
+          the Stable Horde API.
+        </div>
+      </Tooltip>
+      <Button
+        btnType="secondary"
+        onClick={() => {
+          setInput({ stylePreset: 'none' })
+        }}
+      >
+        <ArrowBarLeftIcon />
+      </Button>
+    </div>
   )
 }
 

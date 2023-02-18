@@ -15,6 +15,11 @@
 .menu-item {
   cursor: pointer;
   font-size: 18px;
+  padding-bottom: 8px;
+}
+
+.menu-item:last-child {
+  padding-bottom: 0;
 }
 
 .menu-item:hover {
