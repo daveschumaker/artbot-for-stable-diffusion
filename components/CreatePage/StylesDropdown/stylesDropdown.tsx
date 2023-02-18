@@ -6,6 +6,8 @@ import PhotoIcon from '../../icons/PhotoIcon'
 import ArrowBarLeftIcon from '../../icons/ArrowBarLeftIcon'
 import { Button } from '../../UI/Button'
 import { Tooltip } from 'react-tooltip'
+import 'react-tooltip/dist/react-tooltip.css'
+
 import styles from './stylesDropdown.module.css'
 interface IProps {
   input: any
