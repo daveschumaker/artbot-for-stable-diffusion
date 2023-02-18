@@ -11,7 +11,7 @@ const nextConfig = {
   },
   productionBrowserSourceMaps: process.env.ANALYZE === 'true' ? true : false,
   reactStrictMode: true,
-  swcMinify: true
+  swcMinify: false // Set to false for now due to issue with React-tooltip
 }
 
 module.exports = withBundleAnalyzer(nextConfig)
