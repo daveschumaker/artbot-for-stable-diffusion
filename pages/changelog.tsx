@@ -97,6 +97,22 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.02.18</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: Dropdown menu on image page was missing background, allowing
+            underlying content to bleed through.
+          </StyledLi>
+          <StyledLi>
+            Feature: On any image details page, you can click the img2img source
+            picture (if it exists) and now view the original image provided to
+            Stable Diffusion. If the image used inpainting or a mask, you can
+            also toggle the mask on / off, as well as clone the mask and modify
+            it as part of a new image request.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.02.17</SubSectionTitle>
         <StyledUl>
           <StyledLi>

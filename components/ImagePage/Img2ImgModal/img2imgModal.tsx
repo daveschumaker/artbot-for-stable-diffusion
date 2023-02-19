@@ -72,17 +72,19 @@ const Img2ImgModal = ({
           )}
         </div>
         <div className={styles['options-wrapper']}>
-          <Button
-            onClick={() => {
-              if (componentState.viewMask) {
-                setComponentState({ viewMask: false })
-              } else {
-                setComponentState({ viewMask: true })
-              }
-            }}
-          >
-            <EyeIcon /> Toggle mask
-          </Button>
+          {source_mask && (
+            <Button
+              onClick={() => {
+                if (componentState.viewMask) {
+                  setComponentState({ viewMask: false })
+                } else {
+                  setComponentState({ viewMask: true })
+                }
+              }}
+            >
+              <EyeIcon /> Toggle mask
+            </Button>
+          )}
           <Button
             onClick={() => {
               uploadImg2Img(imageDetails, { useSourceImg: true })
@@ -99,18 +101,20 @@ const Img2ImgModal = ({
           >
             New inpaint
           </Button>
-          <Button
-            onClick={() => {
-              uploadInpaint(imageDetails, {
-                clone: true,
-                useSourceImg: true,
-                useSourceMask: true
-              })
-              router.push(`/?panel=inpainting&edit=true`)
-            }}
-          >
-            Clone mask
-          </Button>
+          {source_mask && (
+            <Button
+              onClick={() => {
+                uploadInpaint(imageDetails, {
+                  clone: true,
+                  useSourceImg: true,
+                  useSourceMask: true
+                })
+                router.push(`/?panel=inpainting&edit=true`)
+              }}
+            >
+              Clone mask
+            </Button>
+          )}
         </div>
       </div>
     </InteractiveModal>
