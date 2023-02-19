@@ -64,11 +64,14 @@ const TextWrapper = styled.div`
 `
 
 const StyledModal = styled(InteractiveModal)`
+  height: 100%;
   overflow-y: auto;
   z-index: 30;
   @media (min-width: 640px) {
-    height: auto;
-    max-height: 100vh;
+    /* height: auto; */
+    /* max-height: 100vh; */
+    height: calc(100% - 256px);
+    max-height: 900px;
   }
 `
 

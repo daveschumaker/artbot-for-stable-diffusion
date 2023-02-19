@@ -5,6 +5,7 @@ import CloseIcon from '../../icons/CloseIcon'
 import Overlay from '../Overlay'
 import { lockScroll, unlockScroll } from '../../../utils/appUtils'
 import { useSwipeable } from 'react-swipeable'
+import clsx from 'clsx'
 
 interface IStyle {
   height: number | null
@@ -58,8 +59,9 @@ const StyledInteractiveModal = styled.div<IStyle>`
     width: calc(100% - 48px);
     /* max-width: 752px; */
     /* min-height: 480px; */
-    height: ${(props) => (props.height ? props.height + 'px' : '512px')};
-    max-height: ${(props) => (props.height ? props.height + 'px' : '512px')};
+    /* height: ${(props) => (props.height ? props.height + 'px' : '512px')}; */
+    /* max-height: ${(props) =>
+      props.height ? props.height + 'px' : '512px'}; */
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
@@ -96,7 +98,11 @@ const ContentWrapper = styled.div`
 `
 
 const InteractiveModal = (props: any) => {
-  const { handleClose = () => {} } = props
+  const {
+    className = '',
+    handleClose = () => {},
+    setDynamicHeight = 512
+  } = props
   const [startAnimation, setStartAnimation] = useState(false)
   const [height, setHeight] = useState(512)
 
@@ -137,10 +143,10 @@ const InteractiveModal = (props: any) => {
   }, [])
 
   useEffect(() => {
-    if (!isNaN(props.setDynamicHeight) && props.setDynamicHeight !== null) {
-      setHeight(props.setDynamicHeight + 56)
+    if (!isNaN(setDynamicHeight) && setDynamicHeight !== null) {
+      setHeight(setDynamicHeight + 56)
     }
-  }, [props.setDynamicHeight])
+  }, [setDynamicHeight])
 
   useEffect(() => {
     setStartAnimation(true)
@@ -149,7 +155,11 @@ const InteractiveModal = (props: any) => {
   return (
     <>
       <Overlay handleClose={onClose} />
-      <StyledInteractiveModal height={height} startAnimation={startAnimation}>
+      <StyledInteractiveModal
+        className={clsx(className)}
+        height={setDynamicHeight}
+        startAnimation={startAnimation}
+      >
         <ContentWrapper>{props.children}</ContentWrapper>
         <SwipeCapture {...handlers} />
         <CloseIconWrapper onClick={onClose}>

@@ -11,6 +11,8 @@ import TrashIcon from '../../icons/TrashIcon'
 import UndoIcon from '../../icons/UndoIcon'
 import CreateCanvas from '../../../models/CreateCanvas'
 import DropDown from './components/DropDown'
+// import { Button } from '../../UI/Button'
+// import DownloadIcon from '../../icons/DownloadIcon'
 
 const ToolBarButton = ({ active, children, onClick = () => {} }: any) => {
   const classes = [

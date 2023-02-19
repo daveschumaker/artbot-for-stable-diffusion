@@ -23,7 +23,7 @@ const Editor = ({ handleRemoveClick, setInput }: IProps) => {
     //@ts-ignore
     setRef(myCanvas)
 
-    if (getCanvasStore().drawLayer) {
+    if (getCanvasStore().drawLayer || getCanvasStore().clonedCanvasObj) {
       myCanvas.restoreCanvas()
     }
 

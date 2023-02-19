@@ -1,6 +1,11 @@
 import RerollImageRequest from '../models/RerollImageRequest'
 import UpscaleImageRequest from '../models/UpscaleImageRequest'
-import { cloneFromImage, setI2iUploaded } from '../store/canvasStore'
+import {
+  clearCanvasStore,
+  cloneFromImage,
+  setI2iUploaded,
+  storeCanvas
+} from '../store/canvasStore'
 import { createImageJob } from '../utils/imageCache'
 import { downloadFile } from '../utils/imageUtils'
 import { setImageForInterrogation } from '../utils/interrogateUtils'
@@ -33,9 +38,17 @@ export const copyEditPrompt = (imageDetails: any) => {
   })
 }
 
-export const uploadInpaint = (imageDetails: any, clone = false) => {
+export const uploadInpaint = (imageDetails: any, options: any = {}) => {
+  const { clone = false, useSourceImg = false, useSourceMask = false } = options
+  clearCanvasStore()
+
   if (clone) {
+    storeCanvas('drawLayer', imageDetails.canvasData)
     cloneFromImage(imageDetails.canvasStore)
+  }
+
+  if (useSourceMask) {
+    storeCanvas('maskLayer', imageDetails.maskData)
   }
 
   const i2iBase64String = {
@@ -43,6 +56,11 @@ export const uploadInpaint = (imageDetails: any, clone = false) => {
     width: imageDetails.width,
     height: imageDetails.height
   }
+
+  if (useSourceImg) {
+    i2iBase64String.base64String = `data:image/webp;base64,${imageDetails.source_image}`
+  }
+
   setI2iUploaded(i2iBase64String)
 
   savePrompt({
@@ -59,9 +77,11 @@ export const uploadInpaint = (imageDetails: any, clone = false) => {
     cfg_scale: imageDetails.cfg_scale,
     parentJobId: imageDetails.parentJobId,
     negative: imageDetails.negative,
-    source_image: imageDetails.base64String,
+    source_image: useSourceImg
+      ? imageDetails.source_image
+      : imageDetails.base64String,
     source_processing: SourceProcessing.InPainting,
-    source_mask: imageDetails.source_mask,
+    source_mask: '',
     denoising_strength: imageDetails.denoising_strength,
     models: imageDetails?.models[0]
       ? imageDetails.models
@@ -69,7 +89,10 @@ export const uploadInpaint = (imageDetails: any, clone = false) => {
   })
 }
 
-export const uploadImg2Img = (imageDetails: any) => {
+export const uploadImg2Img = (imageDetails: any, options: any = {}) => {
+  clearCanvasStore()
+  const { useSourceImg = false } = options
+
   savePrompt({
     imageType: imageDetails.imageType,
     prompt: imageDetails.prompt,
@@ -84,7 +107,9 @@ export const uploadImg2Img = (imageDetails: any) => {
     cfg_scale: imageDetails.cfg_scale,
     parentJobId: imageDetails.parentJobId,
     negative: imageDetails.negative,
-    source_image: imageDetails.base64String,
+    source_image: useSourceImg
+      ? imageDetails.source_image
+      : imageDetails.base64String,
     source_processing: SourceProcessing.Img2Img,
     source_mask: '',
     denoising_strength: imageDetails.denoising_strength,

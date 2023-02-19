@@ -366,7 +366,7 @@ const ImagePage = () => {
                       context: '/pages/image/[id]'
                     })
                     const clone = true
-                    uploadInpaint(imageDetails, clone)
+                    uploadInpaint(imageDetails, { clone })
                     router.push(`/?panel=inpainting&edit=true`)
                   }}
                 >

@@ -12,8 +12,10 @@ let i2iCanvas: ICanvas = {
   width: null
 }
 
+let clonedCanvasObj: any = null
+
 export const getCanvasStore = () => {
-  return i2iCanvas
+  return { ...i2iCanvas, clonedCanvasObj }
 }
 
 export const storeCanvas = (canvasType: string, data: any) => {
@@ -39,7 +41,7 @@ export const getI2IString = () => {
 
 // Restore canvas image + mask data from image
 export const cloneFromImage = (canvasObj: ICanvas) => {
-  i2iCanvas = canvasObj
+  clonedCanvasObj = canvasObj
 }
 
 export const clearCanvasStore = () => {
@@ -58,4 +60,6 @@ export const clearCanvasStore = () => {
     height: 0,
     width: 0
   }
+
+  clonedCanvasObj = null
 }

@@ -9,7 +9,6 @@ import TrashIcon from '../../icons/TrashIcon'
 import { Button } from '../../UI/Button'
 import { trackEvent, trackGaEvent } from '../../../api/telemetry'
 import RefreshIcon from '../../icons/RefreshIcon'
-import UploadIcon from '../../icons/UploadIcon'
 import {
   copyEditPrompt,
   rerollImage
@@ -17,7 +16,7 @@ import {
 import Linker from '../../UI/Linker'
 import CopyIcon from '../../icons/CopyIcon'
 import ImageSquare from '../../ImageSquare'
-import { savePrompt, SourceProcessing } from '../../../utils/promptUtils'
+import { SourceProcessing } from '../../../utils/promptUtils'
 import ShareIcon from '../../icons/ShareIcon'
 import ShareLinkDetails from '../../../models/ShareableLink'
 import DownloadIcon from '../../icons/DownloadIcon'
@@ -25,6 +24,8 @@ import useComponentState from '../../../hooks/useComponentState'
 import { downloadFile } from '../../../utils/imageUtils'
 import AdContainer from '../../AdContainer'
 import styles from './imageDetails.module.css'
+import Img2ImgModal from '../Img2ImgModal'
+import { useWindowSize } from '../../../hooks/useWindowSize'
 
 interface ImageDetails {
   upscaled?: boolean
@@ -68,10 +69,12 @@ const ImageDetails = ({
   onDelete = () => {}
 }: ImageDetailsProps) => {
   const router = useRouter()
+  const size = useWindowSize()
 
   const [componentState, setComponentState] = useComponentState({
     pending: false,
-    showDeleteModal: false
+    showDeleteModal: false,
+    showImg2ImgModal: false
   })
 
   // Older images are missing the correct models field and can cause an exception
@@ -154,8 +157,27 @@ const ImageDetails = ({
     imageDetails.source_processing === SourceProcessing.Img2Img ||
     imageDetails.img2img
 
+  let showAd = false
+  if (typeof size.width !== 'undefined') {
+    if (size?.width > 1130 && size?.width < 1279) {
+      showAd = false
+    } else if (size?.width > 1388 && size?.width < 1440) {
+      showAd = false
+    } else if (size?.width > 1639) {
+      showAd = false
+    } else {
+      showAd = true
+    }
+  }
+
   return (
     <div className="mt-2 text-left">
+      {componentState.showImg2ImgModal && (
+        <Img2ImgModal
+          handleClose={() => setComponentState({ showImg2ImgModal: false })}
+          imageDetails={imageDetails}
+        />
+      )}
       {componentState.showDeleteModal && (
         <ConfirmationModal
           onConfirmClick={() => handleDeleteImageClick(imageDetails.jobId)}
@@ -232,7 +254,7 @@ const ImageDetails = ({
             <li>tiled: {imageDetails.tiling ? 'true' : 'false'}</li>
           </ul>
         </div>
-        {!imageDetails.source_image && (
+        {!imageDetails.source_image && showAd && (
           <div className="max-w-[200px] pl-[16px] items-start">
             <AdContainer minSize={0} maxSize={1400} />
           </div>
@@ -240,45 +262,21 @@ const ImageDetails = ({
         {imageDetails.source_image && (
           <div>
             <div className="mb-2">img2img source:</div>
-            <div className="relative">
+            <div
+              className="relative cursor-pointer"
+              onClick={() => setComponentState({ showImg2ImgModal: true })}
+            >
               <ImageSquare
                 imageDetails={{ base64String: imageDetails.source_image }}
                 imageType={imageDetails.imageType}
                 size={120}
               />
-              <div
-                className="absolute top-0 right-0 bg-blue-500 cursor-pointer p-[1px]"
-                onClick={() => {
-                  trackEvent({
-                    event: 'NEW_PROMPT_FROM_ORIGINAL_IMG2IMG_SRC',
-                    context: '/pages/image/[id]'
-                  })
-
-                  savePrompt({
-                    img2img: true,
-                    imageType: imageDetails.imageType,
-                    prompt: imageDetails.prompt,
-                    sampler: imageDetails.sampler,
-                    steps: imageDetails.steps,
-                    tiling: imageDetails.tiling,
-                    orientation: imageDetails.orientation,
-                    height: imageDetails.height,
-                    width: imageDetails.width,
-                    cfg_scale: imageDetails.cfg_scale,
-                    parentJobId: imageDetails.parentJobId,
-                    negative: imageDetails.negative,
-                    source_image: imageDetails.source_image,
-                    source_processing: SourceProcessing.Img2Img,
-                    denoising_strength: imageDetails.denoising_strength,
-                    models: imageDetails?.models[0]
-                      ? imageDetails.models
-                      : [imageDetails.model || 'stable_diffusion']
-                  })
-                  router.push(`/?panel=img2img&edit=true`)
-                }}
-              >
-                <UploadIcon />
-              </div>
+            </div>
+            <div
+              className="mt-2 flex flex-row justify-center cursor-pointer text-cyan-500 font-[700]"
+              onClick={() => setComponentState({ showImg2ImgModal: true })}
+            >
+              view details
             </div>
           </div>
         )}
@@ -287,7 +285,7 @@ const ImageDetails = ({
         Created: {new Date(imageDetails.timestamp).toLocaleString()}
       </div>
       <div className="mt-2 w-full flex flex-row">
-        <div className="inline-block w-3/4 flex flex-row gap-2">
+        <div className="w-3/4 flex flex-row gap-2">
           <Button
             title="Copy and re-edit prompt"
             // @ts-ignore

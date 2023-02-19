@@ -89,7 +89,7 @@ class CreateCanvas {
       return
     }
 
-    const { height, width } = getCanvasStore()
+    const { height, width, clonedCanvasObj, maskLayer } = getCanvasStore()
 
     this.height = height
     this.width = width
@@ -97,6 +97,31 @@ class CreateCanvas {
     this.canvas.setWidth(width)
 
     this.canvas.clear()
+
+    if (clonedCanvasObj) {
+      this.canvas.loadFromJSON(clonedCanvasObj, () => {
+        if (!this.canvas) {
+          return
+        }
+
+        const objects = this.canvas.getObjects()
+        console.log(`objects?`, objects)
+
+        // @ts-ignore
+        this.drawLayer = objects[1]
+
+        // @ts-ignore
+        this.brushPreview = objects[2]
+
+        if (maskLayer) {
+          this.createMaskLayer()
+          this?.maskLayer?.loadFromJSON(maskLayer, () => {})
+        }
+
+        this.canvas.isDrawingMode = true
+      })
+      return
+    }
 
     this.canvas.loadFromJSON(getCanvasStore().drawLayer, () => {
       if (!this.canvas) {
@@ -241,6 +266,7 @@ class CreateCanvas {
       orientationType: 'custom',
       height: nearestWholeMultiple(this.canvas.height || 512),
       width: nearestWholeMultiple(this.canvas.width || 512),
+      canvasStore: this.canvas.toJSON(),
       canvasData: this.canvas.toObject(),
       maskData: null
     }
