@@ -1,26 +1,51 @@
 import { fabric } from 'fabric'
-import { getCanvasStore, getI2IString, storeCanvas } from '../store/canvasStore'
+import {
+  getCanvasStore,
+  getI2IString,
+  getSavedDrawingState,
+  getSavedHistoryState,
+  saveDrawingState,
+  saveHistoryState,
+  storeCanvas
+} from '../store/canvasStore'
 import { debounce } from '../utils/debounce'
 import { getCanvasHeight } from '../utils/fabricUtils'
 import { nearestWholeMultiple } from '../utils/imageUtils'
 import { SourceProcessing } from '../utils/promptUtils'
+import CanvasSettings from './CanvasSettings'
+
+fabric.Object.NUM_FRACTION_DIGITS = 15
+
+export let hoveredColor: string = '#ffffff'
 
 interface IParams {
+  bgColor: string
   canvas: fabric.Canvas
+  canvasId?: string
+  canvasType?: string
+  height?: number
+  width?: number
   setInput: (data: any) => void
 }
+
 class CreateCanvas {
+  bgColor: string
   canvas: fabric.Canvas | null
+  canvasType: string
   brushPreview: fabric.Circle | null
   brushSettings: {
     color: string
+    eraseColor: string
+    opacity: number
     width: number
   }
+  canvasId: string
   drawLayer: fabric.Group
   imageLayer: fabric.Group | null
   isMouseDown: boolean
   erasing: boolean
   height: number
+  historyProcessing: boolean
   redoHistory: Array<any>
   undoHistory: Array<any>
   historyIndex: number
@@ -29,20 +54,35 @@ class CreateCanvas {
   width: number
   maskPathColor: string
   maskBackgroundColor: string
+  isPickingColor: boolean
+  colorPickerCallback: (value: string) => void
 
-  constructor({ canvas, setInput = () => {} }: IParams) {
+  constructor({
+    bgColor = '#ffffff',
+    canvas,
+    canvasId = 'canvas',
+    canvasType = 'inpainting',
+    setInput = () => {},
+    height = 512,
+    width = 512
+  }: IParams) {
+    this.bgColor = bgColor
     this.setInput = setInput
     this.canvas = canvas
+    this.canvasId = String(canvasId)
+    this.canvasType = String(canvasType)
     this.brushPreview = null
     this.drawLayer = this.makeNewLayer({})
     this.imageLayer = null
     this.maskLayer = null
-    this.height = 512
-    this.width = 512
+    this.height = Number(height)
+    this.width = Number(width)
 
     this.brushSettings = {
+      opacity: 1,
       width: 20,
-      color: 'white'
+      color: canvasType === 'inpainting' ? 'white' : 'black',
+      eraseColor: canvasType === 'inpainting' ? 'red' : 'white'
     }
 
     this.maskPathColor = 'white'
@@ -54,9 +94,14 @@ class CreateCanvas {
     this.redoHistory = []
     this.historyIndex = -1
 
+    document.addEventListener('keyup', this.handleKeyInput)
+
+    this.historyProcessing = false
+
     this.isMouseDown = false
 
-    document.addEventListener('keyup', this.handleKeyInput)
+    this.isPickingColor = false
+    this.colorPickerCallback = () => {}
   }
 
   static asyncClone = async (object: any) => {
@@ -72,11 +117,18 @@ class CreateCanvas {
   }
 
   static init = ({
+    bgColor = 'white',
     height = 512,
-    width = 512
-  }: { height?: number; width?: number } = {}) => {
-    return new fabric.Canvas('canvas', {
-      backgroundColor: 'white',
+    width = 512,
+    canvasId = 'canvas'
+  }: {
+    bgColor?: string
+    height?: number
+    width?: number
+    canvasId?: string
+  } = {}) => {
+    return new fabric.Canvas(canvasId, {
+      backgroundColor: bgColor,
       // renderOnAddRemove: true,
       isDrawingMode: false,
       height,
@@ -89,39 +141,33 @@ class CreateCanvas {
       return
     }
 
-    const { height, width, clonedCanvasObj, maskLayer } = getCanvasStore()
+    if (this.canvasType === 'drawing' && getSavedDrawingState()) {
+      this.undoHistory = [...getSavedHistoryState().undo]
+      this.redoHistory = [...getSavedHistoryState().redo]
 
+      this.height = getSavedDrawingState().canvasHeight
+      this.width = getSavedDrawingState().canvasWidth
+
+      this.canvas.remove(this.drawLayer)
+      this.drawLayer = fabric.util.object.clone(
+        getSavedDrawingState().savedDrawingState
+      )
+      this.canvas.add(this.drawLayer)
+
+      this.canvas.setHeight(getSavedDrawingState().canvasHeight)
+      this.canvas.setWidth(getSavedDrawingState().canvasWidth)
+
+      this.canvas.isDrawingMode = true
+      this.updateCanvas()
+      return
+    }
+
+    this.canvas.clear()
+    const { height, width } = getCanvasStore()
     this.height = height
     this.width = width
     this.canvas.setHeight(height)
     this.canvas.setWidth(width)
-
-    this.canvas.clear()
-
-    if (clonedCanvasObj) {
-      this.canvas.loadFromJSON(clonedCanvasObj, () => {
-        if (!this.canvas) {
-          return
-        }
-
-        const objects = this.canvas.getObjects()
-        console.log(`objects?`, objects)
-
-        // @ts-ignore
-        this.drawLayer = objects[1]
-
-        // @ts-ignore
-        this.brushPreview = objects[2]
-
-        if (maskLayer) {
-          this.createMaskLayer()
-          this?.maskLayer?.loadFromJSON(maskLayer, () => {})
-        }
-
-        this.canvas.isDrawingMode = true
-      })
-      return
-    }
 
     this.canvas.loadFromJSON(getCanvasStore().drawLayer, () => {
       if (!this.canvas) {
@@ -135,10 +181,13 @@ class CreateCanvas {
       // @ts-ignore
       this.brushPreview = objects[2]
 
-      this.createMaskLayer()
-      this?.maskLayer?.loadFromJSON(getCanvasStore().maskLayer, () => {})
+      if (getCanvasStore().maskLayer) {
+        this.createMaskLayer()
+        this?.maskLayer?.loadFromJSON(getCanvasStore().maskLayer, () => {})
+      }
 
       this.canvas.isDrawingMode = true
+      this.updateCanvas()
     })
   }
 
@@ -189,6 +238,10 @@ class CreateCanvas {
   }
 
   initBrushPreview = () => {
+    if (!this.canvas) {
+      return
+    }
+
     this.brushPreview = new fabric.Circle({
       radius: this.brushSettings.width,
       left: 0,
@@ -201,10 +254,37 @@ class CreateCanvas {
       opacity: 0
     })
 
-    this.canvas?.add(this.brushPreview)
+    const objects = this.canvas.getObjects()
+    this.canvas?.insertAt(this.brushPreview, objects.length, false)
+
+    // this.canvas?.add(this.brushPreview)
   }
 
-  attachLayers = () => {
+  initDrawing = () => {
+    if (!this.canvas) {
+      return
+    }
+
+    this.canvas.setHeight(this.height)
+    this.canvas.setWidth(this.width)
+
+    // Cloning initPaint behavior
+    this.canvas.isDrawingMode = true
+    this.createDrawLayer({ opacity: 1.0 })
+
+    this.canvas.add(this.drawLayer)
+    this.initBrushPreview()
+    this.updateBrush()
+    this.initCanvasEvents()
+    this.updateCanvas()
+
+    this.updateBrush({
+      color: CanvasSettings.get('brushColor') || '#000000',
+      width: CanvasSettings.get('brushSize') || 20
+    })
+  }
+
+  initInpainting = () => {
     if (!this.canvas) {
       return
     }
@@ -218,6 +298,10 @@ class CreateCanvas {
     this.updateBrush()
     this.initCanvasEvents()
     this.updateCanvas()
+
+    this.updateBrush({
+      width: CanvasSettings.get('brushSize') || 20
+    })
   }
 
   initCanvasEvents = () => {
@@ -225,12 +309,12 @@ class CreateCanvas {
       return
     }
 
-    this.canvas.on('path:created', this.onPathCreated)
-    this.canvas.on('mouse:move', (e: any) => {
+    const handleMouseMove = (e: any) => {
       this.onMouseMove(e)
-    })
+      this.getColorFromCanvas(e)
+    }
 
-    this.canvas.on('mouse:down', () => {
+    const handleMouseDown = () => {
       if (!this.brushPreview) {
         return
       }
@@ -238,9 +322,9 @@ class CreateCanvas {
       this.isMouseDown = true
       this.brushPreview.set('strokeWidth', 0)
       this.brushPreview.set('stroke', '')
-    })
+    }
 
-    this.canvas.on('mouse:up', () => {
+    const handleMouseUp = () => {
       if (!this.brushPreview) {
         return
       }
@@ -248,7 +332,16 @@ class CreateCanvas {
       this.isMouseDown = false
       this.brushPreview.set('strokeWidth', 1)
       this.brushPreview.set('stroke', 'black')
-    })
+
+      if (this.isPickingColor) {
+        this.colorPickerCallback(hoveredColor)
+      }
+    }
+
+    this.canvas.on('path:created', this.onPathCreated)
+    this.canvas.on('mouse:move', handleMouseMove)
+    this.canvas.on('mouse:down', handleMouseDown)
+    this.canvas.on('mouse:up', handleMouseUp)
   }
 
   autoSave = () => {
@@ -256,13 +349,16 @@ class CreateCanvas {
       return
     }
 
-    // TODO: Save imageLayer and maskLayer to image job for later look ups! (And to seletively toggle mask)
+    // TODO: Save imageLayer and maskLayer to image job for later look ups! (And to selectively toggle mask)
 
     const data = {
       imageType: 'image/webp',
       source_image: '',
       source_mask: '',
-      source_processing: SourceProcessing.InPainting,
+      source_processing:
+        this.canvasType === 'drawing'
+          ? SourceProcessing.Img2Img
+          : SourceProcessing.InPainting,
       orientationType: 'custom',
       height: nearestWholeMultiple(this.canvas.height || 512),
       width: nearestWholeMultiple(this.canvas.width || 512),
@@ -272,6 +368,22 @@ class CreateCanvas {
     }
 
     storeCanvas('drawLayer', data.canvasData)
+
+    if (this.canvasType === 'drawing') {
+      saveHistoryState({
+        undo: [...this.undoHistory],
+        redo: [...this.redoHistory]
+      })
+      saveDrawingState(
+        fabric.util.object.clone(this.drawLayer),
+        this.height,
+        this.width
+      )
+
+      data.source_image = this?.canvas
+        ?.toDataURL({ format: 'webp' })
+        .split(',')[1]
+    }
 
     if (this.imageLayer) {
       data.source_image = this?.imageLayer
@@ -335,13 +447,48 @@ class CreateCanvas {
   }
 
   download = (base64Data: string, fileName = 'test') => {
+    const ext = this.canvasType === 'drawing' ? '.png' : '.webp'
     const linkSource = `${base64Data}`
     const downloadLink = document.createElement('a')
     downloadLink.setAttribute('id', 'temp-download-link')
     downloadLink.href = linkSource
-    downloadLink.download = fileName.substring(0, 255) + '.webp' // Only get first 255 characters so we don't break the max file name limit
+    downloadLink.download = fileName.substring(0, 255) + ext // Only get first 255 characters so we don't break the max file name limit
     downloadLink.click()
     downloadLink.remove()
+  }
+
+  clear = () => {
+    if (!this.canvas) {
+      return
+    }
+
+    this.undoHistory = []
+    this.redoHistory = []
+    this.historyIndex = -1
+
+    this.canvas.remove(this.drawLayer)
+    this.canvas.clear()
+    this.canvas.remove(...this.canvas.getObjects())
+  }
+
+  reset = () => {
+    if (!this.canvas) {
+      return
+    }
+
+    this.undoHistory = []
+    this.redoHistory = []
+    this.historyIndex = -1
+
+    if (this.canvasType === 'drawing') {
+      this.canvas.remove(this.drawLayer)
+      this.createDrawLayer({ opacity: 1.0 })
+      this.canvas.add(this.drawLayer)
+      this.canvas.isDrawingMode = true
+      this.updateCanvas()
+    } else {
+      this.canvas.clear()
+    }
   }
 
   importImage() {
@@ -441,23 +588,25 @@ class CreateCanvas {
   }
 
   toggleErase = (bool: boolean) => {
+    this.colorPicker(false)
+
     if (bool === true) {
       this.erasing = true
-      this.updateBrush({ color: 'red' })
+      this.updateBrush({ color: this.brushSettings.eraseColor, erasing: true })
     } else if (bool === false) {
       this.erasing = false
-      this.updateBrush({ color: 'white' })
+      this.updateBrush({ color: this.brushSettings.color })
     } else if (this.erasing) {
       this.erasing = false
-      this.updateBrush({ color: 'white' })
+      this.updateBrush({ color: this.brushSettings.color })
     } else {
       this.erasing = true
-      this.updateBrush({ color: 'red' })
+      this.updateBrush({ color: this.brushSettings.eraseColor, erasing: true })
     }
   }
 
   debounceBrushPreview = debounce(() => {
-    if (!this.brushPreview || !this.canvas) {
+    if (!this.brushPreview || !this.canvas || this.isPickingColor) {
       return
     }
 
@@ -479,14 +628,31 @@ class CreateCanvas {
     this.brushPreview.top = pointer.y
     this.brushPreview.opacity = 0.5
 
+    if (this.isPickingColor) {
+      this.brushPreview.opacity = 1
+
+      this.brushPreview.set('fill', '')
+      this.brushPreview.set('radius', 20)
+      this.brushPreview.set('strokeWidth', 10)
+      // this.debounceBrushPreview()
+      this.updateCanvas()
+      return
+    }
+
     if (this.erasing && this.isMouseDown) {
       this.brushPreview.set('fill', '')
     } else if (this.erasing) {
       this.brushPreview.set('fill', 'red')
-      this.updateBrush({ color: 'red' })
+      this.updateBrush({ color: 'red', erasing: true })
     } else {
-      this.brushPreview.set('fill', 'white')
-      this.updateBrush({ color: 'white' })
+      this.brushPreview.set(
+        'fill',
+        this.canvasType === 'inpainting' ? 'white' : this.brushSettings.color
+      )
+      this.updateBrush({
+        color:
+          this.canvasType === 'inpainting' ? 'white' : this.brushSettings.color
+      })
     }
 
     this.brushPreview.set('radius', this.brushSettings.width / 2)
@@ -495,7 +661,7 @@ class CreateCanvas {
   }
 
   clonePath = async (newPath: any, undoAction: boolean = false) => {
-    if (!this.canvas || !this.drawLayer || !this.maskLayer) {
+    if (!this.canvas || !this.drawLayer) {
       return
     }
 
@@ -506,42 +672,61 @@ class CreateCanvas {
     newPath.path.selectable = false
     newPath.path.opacity = 1
 
-    newPath.maskPath = (await CreateCanvas.asyncClone(
-      newPath.path
-    )) as fabric.Path
     newPath.drawPath = (await CreateCanvas.asyncClone(
       newPath.path
     )) as fabric.Path
 
     if ((undoAction && newPath.erasing) || (!undoAction && this.erasing)) {
       newPath.drawPath.globalCompositeOperation = 'destination-out'
-      newPath.maskPath.stroke =
-        this.maskPathColor === 'white' ? 'black' : 'white'
     } else {
       newPath.drawPath.globalCompositeOperation = 'source-over'
-      newPath.maskPath.stroke = this.maskPathColor
     }
 
-    this.maskLayer.add(newPath.maskPath)
+    if (this.maskLayer && this.canvasType === 'inpainting') {
+      newPath.maskPath = (await CreateCanvas.asyncClone(
+        newPath.path
+      )) as fabric.Path
+
+      if ((undoAction && newPath.erasing) || (!undoAction && this.erasing)) {
+        newPath.maskPath.stroke =
+          this.maskPathColor === 'white' ? 'black' : 'white'
+      } else {
+        newPath.maskPath.stroke = this.maskPathColor
+      }
+
+      this.maskLayer.add(newPath.maskPath)
+    }
+
     this.drawLayer.addWithUpdate(newPath.drawPath)
     this.canvas.remove(newPath.path)
     this.updateCanvas()
+
+    return newPath
   }
 
   onPathCreated = async (e: any) => {
+    if (!this.canvas || this.historyProcessing) {
+      return
+    }
+
     const path = { path: e.path }
 
-    await this.clonePath(path)
+    const updatedPath = await this.clonePath(path)
 
-    this.undoHistory.push(path)
+    this.undoHistory.push(updatedPath)
     this.redoHistory = []
     this.historyIndex = -1
 
     this.autoSave()
   }
 
-  saveToDisk = async ({ inverted = true }: { inverted?: boolean } = {}) => {
+  saveToDisk = async ({ inverted = false }: { inverted?: boolean } = {}) => {
     if (!this.canvas) {
+      return
+    }
+
+    if (this.canvasType === 'drawing') {
+      this.download(this.canvas.toDataURL({ format: 'png' }), this.canvasId)
       return
     }
 
@@ -549,13 +734,14 @@ class CreateCanvas {
       image: '',
       mask: ''
     }
+
     if (this.imageLayer) {
       data.image = this.imageLayer.toDataURL({ format: 'webp' }).split(',')[1]
       this.download(this.imageLayer.toDataURL({ format: 'webp' }), 'image')
     }
 
     if (this.canvas) {
-      this.download(this.canvas.toDataURL({ format: 'webp' }), 'canvas')
+      this.download(this.canvas.toDataURL({ format: 'webp' }), this.canvasId)
     }
 
     if (this.maskLayer) {
@@ -580,10 +766,14 @@ class CreateCanvas {
     }
 
     if (this.undoHistory.length > 0) {
-      const path = this.undoHistory.pop()
-      this.redoHistory.push(path)
-      this.drawLayer.remove(path.drawPath)
-      this.maskLayer?.remove(path.maskPath)
+      const history = this.undoHistory.pop()
+      this.redoHistory.push(history)
+
+      this.drawLayer.remove(history.drawPath)
+
+      if (this.maskLayer) {
+        this.maskLayer?.remove(history.maskPath)
+      }
 
       this.updateCanvas()
 
@@ -609,14 +799,20 @@ class CreateCanvas {
     }
 
     document.removeEventListener('keyup', this.handleKeyInput)
-    // this.canvas.dispose()
+
+    // @ts-ignore
+    this.canvas.__eventListeners = {}
   }
 
   updateBrush = ({
     color,
+    erasing = false,
+    opacity = 1,
     width
   }: {
     color?: string
+    erasing?: boolean
+    opacity?: number
     width?: number
   } = {}) => {
     if (!this.canvas) {
@@ -627,13 +823,19 @@ class CreateCanvas {
       this.brushSettings.width = width
     }
 
-    if (color) {
+    if (color && !erasing) {
       this.brushSettings.color = color
+    }
+
+    if (opacity && !erasing) {
+      this.brushSettings.opacity = opacity
     }
 
     this.canvas.freeDrawingCursor = 'crosshair'
     const brush = this.canvas.freeDrawingBrush
-    brush.color = this.brushSettings.color
+    brush.color = erasing
+      ? this.brushSettings.eraseColor
+      : this.brushSettings.color
     brush.width = this.brushSettings.width
 
     if (this.brushPreview) {
@@ -649,6 +851,66 @@ class CreateCanvas {
     }
 
     this.canvas.renderAll()
+  }
+
+  colorPicker = (
+    enabled: boolean = false,
+    callback: (value: string) => void = () => {}
+  ) => {
+    if (!this.canvas) {
+      return
+    }
+
+    this.colorPickerCallback = callback
+
+    if (enabled === true) {
+      this.isPickingColor = true
+      this.canvas.isDrawingMode = false
+      this.canvas.selection = false
+      this.canvas.hoverCursor = 'crosshair'
+
+      if (this.brushPreview) {
+        this.brushPreview.set('fill', '')
+        this.brushPreview.set('strokeWidth', 3)
+      }
+    } else {
+      this.isPickingColor = false
+      this.canvas.isDrawingMode = true
+      this.canvas.selection = false
+    }
+  }
+
+  getColorFromCanvas = (e: any) => {
+    if (!this.canvas || !this.isPickingColor) {
+      return
+    }
+
+    // @ts-ignore
+    const canvasContext = this.canvas.getContext('2d')
+    const mousePointer = this.canvas.getPointer(e.e)
+    // @ts-ignore
+    const x = parseInt(mousePointer.x)
+    // @ts-ignore
+    const y = parseInt(mousePointer.y)
+    // get the color array for the pixel under the mouse
+    const pixel = canvasContext.getImageData(x, y, 1, 1).data
+    const color = {
+      r: pixel[0],
+      g: pixel[1],
+      b: pixel[2],
+      a: pixel[3]
+    }
+
+    console.log(`color:`, color)
+    hoveredColor = `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`
+
+    if (this.brushPreview) {
+      this.brushPreview.set('stroke', hoveredColor)
+    }
+
+    return new fabric.Color(
+      `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`
+    ).toHex()
   }
 }
 

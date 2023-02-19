@@ -46,9 +46,6 @@ const clonePath = async (path: any) => {
   maskLayer.add(path.maskPath)
   drawLayer.addWithUpdate(path.drawPath)
 
-  console.log(`maskLayer?`, maskLayer)
-  console.log(`drawLayer?`, drawLayer)
-
   canvas.remove(path.path)
   updateCanvas()
 }

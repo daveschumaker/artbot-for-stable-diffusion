@@ -1,24 +1,56 @@
 import React, { useRef, useState } from 'react'
 import { useEffectOnce } from '../../../hooks/useEffectOnce'
-import { getCanvasStore } from '../../../store/canvasStore'
+import {
+  clearCanvasStore,
+  getCanvasStore,
+  resetSavedDrawingState
+} from '../../../store/canvasStore'
 import CreateCanvas from '../../../models/CreateCanvas'
-import ToolBar from './toolbar'
+import ToolBar from './components/toolbar'
 
 interface IProps {
+  canvasId?: string
+  canvasType?: string
   handleRemoveClick: () => void
   setInput: () => void
 }
 
-const Editor = ({ handleRemoveClick, setInput }: IProps) => {
+const Editor = ({
+  canvasId = 'canvas',
+  canvasType = 'inpainting',
+  handleRemoveClick,
+  setInput
+}: IProps) => {
   const canvas = useRef(null)
   const [ref, setRef] = useState()
+  const [canvasState, setCanvasState] = useState(null)
 
-  useEffectOnce(() => {
+  const initCanvas = (
+    height: number,
+    width: number,
+    bgColor: string = '#ffffff'
+  ) => {
     // @ts-ignore
-    canvas.current = CreateCanvas.init()
-    // @ts-ignore
-    const myCanvas = new CreateCanvas({ canvas: canvas.current, setInput })
-    myCanvas.attachLayers()
+    canvas.current = CreateCanvas.init({
+      canvasId,
+      bgColor
+    })
+    const myCanvas = new CreateCanvas({
+      // @ts-ignore
+      canvas: canvas.current,
+      canvasId,
+      canvasType,
+      setInput,
+      height,
+      width,
+      bgColor
+    })
+
+    if (canvasType === 'inpainting') {
+      myCanvas.initInpainting()
+    } else if (canvasType === 'drawing') {
+      myCanvas.initDrawing()
+    }
 
     //@ts-ignore
     setRef(myCanvas)
@@ -26,6 +58,40 @@ const Editor = ({ handleRemoveClick, setInput }: IProps) => {
     if (getCanvasStore().drawLayer || getCanvasStore().clonedCanvasObj) {
       myCanvas.restoreCanvas()
     }
+
+    // @ts-ignore
+    setCanvasState(myCanvas)
+    return myCanvas
+  }
+
+  const handleNewCanvas = (height: number, width: number, bgColor: string) => {
+    if (!canvas.current || !canvasState) {
+      return
+    }
+
+    // @ts-ignore
+    canvasState.clear()
+
+    // @ts-ignore
+    canvas?.current?.dispose()
+    canvas.current = null
+    clearCanvasStore()
+    resetSavedDrawingState()
+
+    initCanvas(height, width, bgColor)
+  }
+
+  useEffectOnce(() => {
+    let height = 512
+    let width = 512
+
+    if (canvasType === 'drawing') {
+      let container = document.querySelector('#canvas-wrapper')
+      // @ts-ignore
+      width = container?.offsetWidth || 512
+    }
+
+    const myCanvas = initCanvas(height, width)
 
     return () => {
       if (!canvas.current) {
@@ -45,10 +111,12 @@ const Editor = ({ handleRemoveClick, setInput }: IProps) => {
       <ToolBar
         // @ts-ignore
         canvas={ref}
+        canvasType={canvasType}
+        handleNewCanvas={handleNewCanvas}
         handleRemoveClick={handleRemoveClick}
       />
       <div className="w-full" id="canvas-wrapper">
-        <canvas id="canvas" />
+        <canvas id={canvasId} />
       </div>
     </div>
   )

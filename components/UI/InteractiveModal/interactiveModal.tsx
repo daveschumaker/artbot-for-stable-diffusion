@@ -9,6 +9,7 @@ import clsx from 'clsx'
 
 interface IStyle {
   height: number | null
+  maxWidth?: number
   startAnimation: boolean
 }
 
@@ -55,7 +56,7 @@ const StyledInteractiveModal = styled.div<IStyle>`
 
   @media (min-width: 640px) {
     border: 2px solid ${(props) => props.theme.border};
-    max-width: 864px;
+    max-width: ${(props) => props.maxWidth || '864px'};
     width: calc(100% - 48px);
     /* max-width: 752px; */
     /* min-height: 480px; */
@@ -158,8 +159,9 @@ const InteractiveModal = (props: any) => {
       <Overlay handleClose={onClose} />
       <StyledInteractiveModal
         className={clsx(className)}
-        height={setDynamicHeight}
+        height={height}
         startAnimation={startAnimation}
+        maxWidth={props.maxWidth}
       >
         <ContentWrapper>{props.children}</ContentWrapper>
         <SwipeCapture {...handlers} />

@@ -63,3 +63,61 @@ export const clearCanvasStore = () => {
 
   clonedCanvasObj = null
 }
+
+//// SIMPLE SAVE STATE SOLUTION
+interface ISavedHistory {
+  undo: Array<any>
+  redo: Array<any>
+}
+
+let savedDrawingState: any = null
+let canvasHeight = 512
+let canvasWidth = 512
+
+let savedHistory: ISavedHistory = {
+  undo: [],
+  redo: []
+}
+
+export const getSavedDrawingState = (): {
+  savedDrawingState: any
+  canvasHeight: number
+  canvasWidth: number
+} => {
+  if (savedDrawingState === null || !savedDrawingState) {
+    // @ts-ignore
+    return false
+  }
+
+  return {
+    savedDrawingState,
+    canvasHeight,
+    canvasWidth
+  }
+}
+
+export const getSavedHistoryState = () => {
+  return {
+    undo: [...savedHistory.undo],
+    redo: [...savedHistory.redo]
+  }
+}
+
+export const saveDrawingState = (data: any, height = 512, width = 512) => {
+  savedDrawingState = data
+  canvasHeight = height
+  canvasWidth = width
+}
+
+export const saveHistoryState = ({ undo, redo }: { undo: any; redo: any }) => {
+  savedHistory.undo = [...undo]
+  savedHistory.redo = [...redo]
+}
+
+export const resetSavedDrawingState = () => {
+  savedDrawingState = null
+  savedHistory = {
+    undo: [],
+    redo: []
+  }
+}

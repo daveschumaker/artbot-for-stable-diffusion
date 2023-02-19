@@ -16,7 +16,11 @@ import TrashIcon from '../components/icons/TrashIcon'
 import SquarePlusIcon from '../components/icons/SquarePlusIcon'
 import { trackEvent, trackGaEvent } from '../api/telemetry'
 import OptionsPanel from '../components/CreatePage/OptionsPanel'
-import { clearCanvasStore, getCanvasStore } from '../store/canvasStore'
+import {
+  clearCanvasStore,
+  getCanvasStore,
+  resetSavedDrawingState
+} from '../store/canvasStore'
 import {
   clearInputCache,
   getInputCache,
@@ -284,6 +288,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
 
     if (!AppSettings.get('stayOnCreate')) {
       if (!AppSettings.get('saveInputOnCreate')) {
+        resetSavedDrawingState()
         clearInputCache()
       }
 

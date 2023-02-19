@@ -1,3 +1,5 @@
+import { IOrientation } from '../types'
+
 export const ANON_API_KEY = '0000000000'
 export const HORDE_PROD = 'https://stablehorde.net'
 export const HORDE_DEV = 'https://dev.stablehorde.net'
@@ -53,3 +55,24 @@ export const RATING_QUALITY_MAP: IQualityMap = {
   5: 1,
   6: 0
 }
+
+export const ORIENTATION_OPTIONS: Array<IOrientation> = [
+  {
+    value: 'landscape-16x9',
+    label: 'Landscape (16 x 9)',
+    width: 16,
+    height: 9
+  },
+  { value: 'landscape', label: 'Landscape (3 x 2)', width: 3, height: 2 },
+  { value: 'portrait', label: 'Portrait (2 x 3)', width: 2, height: 3 },
+  {
+    value: 'phone-bg',
+    label: 'Phone background (9 x 21)',
+    width: 9,
+    height: 21
+  },
+  { value: 'ultrawide', label: 'Ultrawide (21 x 9)', width: 21, height: 9 },
+  { value: 'square', label: 'Square', width: 1, height: 1 },
+  { value: 'custom', label: 'Custom' },
+  { value: 'random', label: 'Random!' }
+]

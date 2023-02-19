@@ -61,8 +61,8 @@ const OptionsPanel = ({
 
     if (panel === 'inpainting') {
       setActiveNav('inpainting')
-    } else if (panel === 'painter') {
-      // setActiveNav('painter')
+    } else if (panel === 'draw') {
+      setActiveNav('draw')
     } else if (panel === 'img2img') {
       setActiveNav('img2img')
     } else {
@@ -95,9 +95,9 @@ const OptionsPanel = ({
     <Panel>
       <SectionTitle>
         {activeNav === 'advanced' && `Advanced Options`}
-        {activeNav === 'img2img' && `img2img upload`}
-        {/* {activeNav === 'painter' && `Painter`} */}
-        {activeNav === 'inpainting' && `Inpainting`}
+        {activeNav === 'img2img' && `Img2Img (source file)`}
+        {activeNav === 'draw' && `Draw (img2img)`}
+        {activeNav === 'inpainting' && `Inpainting / mask`}
       </SectionTitle>
       <ul className="flex flex-row gap-2 md:gap-8 mb-3 text-sm md:text-base">
         <NavItem
@@ -118,15 +118,15 @@ const OptionsPanel = ({
         >
           [ img2img ]
         </NavItem>
-        {/* <NavItem
-          active={activeNav === 'painter'}
+        <NavItem
+          active={activeNav === 'draw'}
           onClick={() => {
-            router.push(`?panel=painter`)
-            setActiveNav('painter')
+            router.push(`?panel=draw`)
+            setActiveNav('draw')
           }}
         >
-          [ painter ]
-        </NavItem> */}
+          [ draw ]
+        </NavItem>
         <NavItem
           active={activeNav === 'inpainting'}
           onClick={() => {
@@ -172,8 +172,7 @@ const OptionsPanel = ({
           />
         )}
 
-      {/* {activeNav === 'painter' &&
-        input.source_image &&
+      {activeNav === 'draw' &&
         input.source_processing === SourceProcessing.InPainting && (
           <WarningPanel
             panelType="inpainting"
@@ -187,12 +186,27 @@ const OptionsPanel = ({
               })
             }}
           />
-        )} */}
+        )}
 
-      {/* {activeNav === 'painter' &&
+      {activeNav === 'draw' &&
         input.source_processing !== SourceProcessing.InPainting && (
-          <PainterPanel setActiveNav={setActiveNav} setInput={setInput} />
-        )} */}
+          <>
+            <Editor
+              canvasId="drawing-canvas"
+              canvasType="drawing"
+              setInput={setInput}
+              handleRemoveClick={() => {
+                clearCanvasStore()
+                setInput({
+                  imageType: '',
+                  source_image: '',
+                  source_mask: '',
+                  source_processing: SourceProcessing.Prompt
+                })
+              }}
+            />
+          </>
+        )}
 
       {activeNav === 'inpainting' &&
         input.source_image &&
@@ -216,6 +230,8 @@ const OptionsPanel = ({
               }}
             /> */}
             <Editor
+              canvasId="inpainting-canvas"
+              canvasType="inpainting"
               setInput={setInput}
               handleRemoveClick={() => {
                 clearCanvasStore()

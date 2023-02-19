@@ -142,6 +142,12 @@ export interface ModelDetails {
   name: string
   count?: number
 }
+export interface IOrientation {
+  value: string
+  label: string
+  width?: number
+  height?: number
+}
 
 export enum PromptTypes {
   DefaultNegative = 'defaultNegative',
