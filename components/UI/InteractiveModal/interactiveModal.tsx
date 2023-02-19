@@ -104,7 +104,7 @@ const InteractiveModal = (props: any) => {
     setDynamicHeight = 512
   } = props
   const [startAnimation, setStartAnimation] = useState(false)
-  const [height, setHeight] = useState(512)
+  const [, setHeight] = useState(512)
 
   const handlers = useSwipeable({
     onSwipedDown: () => {
