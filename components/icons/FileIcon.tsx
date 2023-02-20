@@ -1,11 +1,15 @@
 // Modified via: https://tabler-icons.io/
 
-const DownloadIcon = ({
+const FileIcon = ({
   className,
-  size = 24
+  fill = 'none',
+  size = 24,
+  stroke = 'currentColor'
 }: {
   className?: string
+  fill?: string
   size?: number
+  stroke?: string
 }) => {
   return (
     <svg
@@ -15,17 +19,16 @@ const DownloadIcon = ({
       height={size}
       viewBox="0 0 24 24"
       strokeWidth="1"
-      stroke="currentColor"
-      fill="none"
+      stroke={stroke}
+      fill={fill}
       strokeLinecap="round"
       strokeLinejoin="round"
     >
       <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-      <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"></path>
-      <polyline points="7 11 12 16 17 11"></polyline>
-      <line x1="12" y1="4" x2="12" y2="16"></line>
+      <path d="M14 3v4a1 1 0 0 0 1 1h4"></path>
+      <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"></path>
     </svg>
   )
 }
 
-export default DownloadIcon
+export default FileIcon

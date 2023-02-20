@@ -17,7 +17,8 @@ const DropDownItem = ({
     'active:bg-[#f3f3f3]',
     'text-neutral-900',
     'w-full',
-    'p-2',
+    'px-2',
+    'py-[4px]',
     'text-sm',
     'rounded-md'
   ]

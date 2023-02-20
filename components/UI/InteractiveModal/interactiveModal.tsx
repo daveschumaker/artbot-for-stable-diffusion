@@ -70,7 +70,7 @@ const StyledInteractiveModal = styled.div<IStyle>`
   }
 
   @media (min-width: 1280px) {
-    max-width: 1088px;
+    max-width: ${(props) => props.maxWidth || '1088px'};
     width: calc(100% - 48px);
   }
 `
@@ -105,7 +105,7 @@ const InteractiveModal = (props: any) => {
     setDynamicHeight = 512
   } = props
   const [startAnimation, setStartAnimation] = useState(false)
-  const [, setHeight] = useState(512)
+  const [height, setHeight] = useState(512)
 
   const handlers = useSwipeable({
     onSwipedDown: () => {

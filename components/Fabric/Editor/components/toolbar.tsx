@@ -21,6 +21,8 @@ import NewCanvas from './NewCanvas'
 import ColorPickerIcon from '../../../icons/ColorPickerIcon'
 import { nearestWholeMultiple } from '../../../../utils/imageUtils'
 import CanvasSettings from '../../../../models/CanvasSettings'
+import FileIcon from '../../../icons/FileIcon'
+import PhotoCheck from '../../../icons/PhotoCheck'
 
 const ToolBarButton = ({
   active,
@@ -255,7 +257,7 @@ const ToolBar = ({
             setShowMainMenu(false)
           }}
         >
-          <div className="flex flex-col gap-4 w-full">
+          <div className="flex flex-col w-full">
             <DropDownItem
               handleClick={() => {
                 lockScroll()
@@ -267,20 +269,22 @@ const ToolBar = ({
                 }
               }}
             >
+              <FileIcon size={20} />
               New canvas...
             </DropDownItem>
-            <MinusIcon stroke="black" />
+            <div className="w-full pt-[4px] mb-[4px] border-b-[1px] border-b-slate-300 h-[3px] flex flex-row" />
             <DropDownItem
               handleClick={() => {
                 canvas.saveToDisk()
               }}
             >
-              <DownloadIcon />
+              <DownloadIcon size={20} />
               Download
             </DropDownItem>
-            <DropDownItem>Import image</DropDownItem>
-            <DropDownItem>Test1</DropDownItem>
-            <DropDownItem>Test1</DropDownItem>
+            <DropDownItem>
+              <PhotoCheck size={20} />
+              Import img2img
+            </DropDownItem>
           </div>
         </DropDown>
       )}

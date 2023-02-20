@@ -38,7 +38,13 @@ const NewCanvas = ({
       <div className="px-4">
         <PageTitle>New canvas</PageTitle>
         <div>
-          <SubSectionTitle>Select orientation</SubSectionTitle>
+          <SubSectionTitle>
+            Select orientation
+            <div className="mb-2 text-sm font-[400]">
+              Note: Image size will be scaled to your device&apos;s current
+              viewport.
+            </div>
+          </SubSectionTitle>
           <SelectComponent
             className="z-30"
             options={filterOrientations}

@@ -1,8 +1,5 @@
 .styled-modal {
-<<<<<<< HEAD
   height: 100%;
-=======
->>>>>>> 86f6254 (feat: new draw panel)
   overflow-y: auto;
   z-index: 30;
 }
@@ -65,14 +62,9 @@
   }
 
   .styled-modal {
-<<<<<<< HEAD
     /* height: auto;
     max-height: 100vh; */
     height: calc(100% - 256px);
     max-height: 900px;
-=======
-    height: auto;
-    max-height: 100vh;
->>>>>>> 86f6254 (feat: new draw panel)
   }
 }

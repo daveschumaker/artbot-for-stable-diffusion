@@ -23,7 +23,7 @@ const DropDown = ({
           `rounded-[4px]`,
           'absolute',
           'mb-[8px]',
-          'gap-[4px]',
+          // 'gap-[2px]',
           'justify-between',
           'p-[8px]',
           'shadow-md',
