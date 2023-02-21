@@ -367,6 +367,10 @@ class CreateCanvas {
       maskData: null
     }
 
+    // Temporarily clone and remove brush layer on autosave so brush outline isn't saved to canvas
+    // @ts-ignore
+    this.canvas.remove(this.brushPreview)
+
     storeCanvas('drawLayer', data.canvasData)
 
     if (this.canvasType === 'drawing') {
@@ -401,6 +405,7 @@ class CreateCanvas {
     }
 
     this.setInput({ ...data })
+    this.initBrushPreview()
   }
 
   handleKeyInput = (e: any) => {
