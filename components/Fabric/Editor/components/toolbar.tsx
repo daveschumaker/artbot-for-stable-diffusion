@@ -15,7 +15,6 @@ import CreateCanvas from '../../../../models/CreateCanvas'
 import MenuIcon from '../../../icons/MenuIcon'
 import DropDown from './DropDown'
 import DropDownItem from './DropDownItem'
-import MinusIcon from '../../../icons/MinusIcon'
 import DownloadIcon from '../../../icons/DownloadIcon'
 import NewCanvas from './NewCanvas'
 import ColorPickerIcon from '../../../icons/ColorPickerIcon'
@@ -23,6 +22,7 @@ import { nearestWholeMultiple } from '../../../../utils/imageUtils'
 import CanvasSettings from '../../../../models/CanvasSettings'
 import FileIcon from '../../../icons/FileIcon'
 import PhotoCheck from '../../../icons/PhotoCheck'
+import { setI2iUploaded } from '../../../../store/canvasStore'
 
 const ToolBarButton = ({
   active,
@@ -65,12 +65,18 @@ const ToolBar = ({
   canvas,
   canvasType = 'inpainting',
   handleNewCanvas,
-  handleRemoveClick
+  handleRemoveClick,
+  source_image,
+  source_image_height,
+  source_image_width
 }: {
   canvas: CreateCanvas
   canvasType?: string
   handleNewCanvas: any
   handleRemoveClick(): void
+  source_image?: string
+  source_image_height?: number
+  source_image_width?: number
 }) => {
   const [activeBrush, setActiveBrush] = useState('paint')
   const [showAdjustmentMenu, setShowAdjustmentMenu] = useState(false)
@@ -281,7 +287,28 @@ const ToolBar = ({
               <DownloadIcon size={20} />
               Download
             </DropDownItem>
-            <DropDownItem>
+            <DropDownItem
+              handleClick={() => {
+                if (
+                  !source_image ||
+                  !source_image_height ||
+                  !source_image_width
+                ) {
+                  return
+                }
+
+                const newBase64String = `data:image/webp;base64,${source_image}`
+
+                setI2iUploaded({
+                  base64String: newBase64String,
+                  height: source_image_height,
+                  width: source_image_width
+                })
+
+                setShowMainMenu(false)
+                canvas.importImage()
+              }}
+            >
               <PhotoCheck size={20} />
               Import img2img
             </DropDownItem>

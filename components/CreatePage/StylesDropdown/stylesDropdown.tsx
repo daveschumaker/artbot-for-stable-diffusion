@@ -31,7 +31,8 @@ const StyledDropdown = styled(SelectComponent)`
   width: 100%;
 
   @media (min-width: 640px) {
-    width: 180px;
+    max-width: 300px;
+    width: calc(100% - 56px);
   }
 `
 

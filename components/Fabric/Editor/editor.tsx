@@ -13,12 +13,18 @@ interface IProps {
   canvasType?: string
   handleRemoveClick: () => void
   setInput: () => void
+  source_image?: string
+  source_image_height?: number
+  source_image_width?: number
 }
 
 const Editor = ({
   canvasId = 'canvas',
   canvasType = 'inpainting',
   handleRemoveClick,
+  source_image,
+  source_image_height,
+  source_image_width,
   setInput
 }: IProps) => {
   const canvas = useRef(null)
@@ -114,6 +120,9 @@ const Editor = ({
         canvasType={canvasType}
         handleNewCanvas={handleNewCanvas}
         handleRemoveClick={handleRemoveClick}
+        source_image={source_image}
+        source_image_height={source_image_height}
+        source_image_width={source_image_width}
       />
       <div className="w-full" id="canvas-wrapper">
         <canvas id={canvasId} />

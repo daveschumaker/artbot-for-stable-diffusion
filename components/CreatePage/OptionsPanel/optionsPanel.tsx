@@ -204,6 +204,9 @@ const OptionsPanel = ({
                   source_processing: SourceProcessing.Prompt
                 })
               }}
+              source_image={input.source_image}
+              source_image_height={input.height}
+              source_image_width={input.width}
             />
           </>
         )}

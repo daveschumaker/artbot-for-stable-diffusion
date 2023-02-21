@@ -60,7 +60,7 @@ const StyledInteractiveModal = styled.div<IStyle>`
     width: calc(100% - 48px);
     /* max-width: 752px; */
     /* min-height: 480px; */
-    /* height: ${(props) => (props.height ? props.height + 'px' : '512px')}; */
+    height: ${(props) => (props.height ? props.height + 'px' : '512px')};
     /* max-height: ${(props) =>
       props.height ? props.height + 'px' : '512px'}; */
     left: 50%;

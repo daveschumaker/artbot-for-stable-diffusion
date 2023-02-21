@@ -6,6 +6,7 @@ import {
   uploadInpaint
 } from '../../../controllers/imageDetailsCommon'
 import useComponentState from '../../../hooks/useComponentState'
+import { useWindowSize } from '../../../hooks/useWindowSize'
 import EyeIcon from '../../icons/EyeIcon'
 import { Button } from '../../UI/Button'
 import InteractiveModal from '../../UI/InteractiveModal/interactiveModal'
@@ -19,6 +20,7 @@ const Img2ImgModal = ({
   handleClose: () => void
   imageDetails: any
 }) => {
+  const size = useWindowSize()
   const router = useRouter()
   const { source_image, source_mask } = imageDetails
 
@@ -48,6 +50,11 @@ const Img2ImgModal = ({
       }, 100)
     }
   }, [imageDetails.source_image, setComponentState])
+
+  let isMobile = false
+  if (size && size.width) {
+    isMobile = size.width < 640 || false
+  }
 
   return (
     <InteractiveModal
@@ -81,6 +88,7 @@ const Img2ImgModal = ({
                   setComponentState({ viewMask: true })
                 }
               }}
+              width={isMobile ? '100%' : ''}
             >
               <EyeIcon /> Toggle mask
             </Button>
@@ -90,6 +98,7 @@ const Img2ImgModal = ({
               uploadImg2Img(imageDetails, { useSourceImg: true })
               router.push(`/?panel=img2img&edit=true`)
             }}
+            width={isMobile ? '100%' : ''}
           >
             New img2img
           </Button>
@@ -98,6 +107,7 @@ const Img2ImgModal = ({
               uploadInpaint(imageDetails, { clone: false, useSourceImg: true })
               router.push(`/?panel=inpainting&edit=true`)
             }}
+            width={isMobile ? '100%' : ''}
           >
             New inpaint
           </Button>
@@ -111,6 +121,7 @@ const Img2ImgModal = ({
                 })
                 router.push(`/?panel=inpainting&edit=true`)
               }}
+              width={isMobile ? '100%' : ''}
             >
               Clone mask
             </Button>

@@ -76,7 +76,7 @@ const StyledModal = styled(InteractiveModal)`
     /* height: auto; */
     /* max-height: 100vh; */
     height: calc(100% - 256px);
-    max-height: 900px;
+    max-height: 750px;
   }
 `
 

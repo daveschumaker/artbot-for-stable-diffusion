@@ -34,7 +34,11 @@ const NewCanvas = ({
   })
 
   return (
-    <InteractiveModal handleClose={handleClose} maxWidth="480px">
+    <InteractiveModal
+      handleClose={handleClose}
+      maxWidth="480px"
+      setDynamicHeight={340}
+    >
       <div className="px-4">
         <PageTitle>New canvas</PageTitle>
         <div>
