@@ -39,6 +39,7 @@ export interface IArtBotImageDetails {
   post_processing: Array<string>
   source_mask?: string
   denoising_strength?: number
+  control_type?: string
 }
 
 interface ParamsObject {
@@ -49,6 +50,7 @@ interface ParamsObject {
   seed?: string
   steps: number
   denoising_strength?: number
+  control_type?: string
   karras: boolean
   hires_fix: boolean
   clip_skip: number
@@ -89,7 +91,8 @@ class ImageParamsForApi {
       stylePreset,
       post_processing,
       source_mask,
-      denoising_strength
+      denoising_strength,
+      control_type
     } = imageDetails
     let negative = imageDetails.negative || ''
 
@@ -152,6 +155,10 @@ class ImageParamsForApi {
       apiParams.params.post_processing = post_processing
     } else {
       apiParams.params.post_processing = []
+    }
+
+    if (control_type) {
+      apiParams.params.control_type = control_type
     }
 
     // Handle style presets, as well as adding any negative prompts to input prompt string

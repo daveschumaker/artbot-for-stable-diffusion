@@ -97,6 +97,26 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.02.21</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Feature: Thanks to the hard work of hlky and ResidentChiefNZ,
+            ControlNET is now available for img2img requests on the Stable
+            Horde! Select any model from the models dropdown then select a
+            relevant control type.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
+        <SubSectionTitle>2023.02.20</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            MILESTONE: 🎉🎉🎉 4,000,000 images have been created with ArtBot!
+            🎉🎉🎉
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.02.18</SubSectionTitle>
         <StyledUl>
           <StyledLi>

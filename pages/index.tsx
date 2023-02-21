@@ -75,6 +75,7 @@ const defaultState: any = {
   multiGuidance: '',
   seed: '',
   denoising_strength: 0.75,
+  control_type: 'none',
   karras: true,
   hires: false,
   clipskip: 1,

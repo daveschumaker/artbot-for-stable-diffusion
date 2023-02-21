@@ -36,6 +36,7 @@ interface SavePrompt {
     | SourceProcessing.OutPainting
   source_mask?: string
   denoising_strength?: number
+  control_type?: string
   models: Array<string>
 }
 
@@ -91,6 +92,7 @@ export const savePrompt = ({
   source_processing = SourceProcessing.Prompt,
   source_mask = '',
   denoising_strength = 0.75,
+  control_type = '',
   models = ['stable_diffusion']
 } = {}) => {
   const samplerValid = validSampler(sampler)
@@ -117,6 +119,7 @@ export const savePrompt = ({
     source_processing,
     source_mask,
     denoising_strength,
+    control_type,
     models
   }
 }

@@ -21,6 +21,7 @@ export interface IRequestParams {
   canvasStore?: ICanvas
   cfg_scale: number
   denoising_strength?: number
+  control_type?: string
   height: number
   imageMimeType: ImageMimeType
   karras: boolean
@@ -58,6 +59,7 @@ class CreateImageRequest {
   canvasStore?: ICanvas
   cfg_scale: number
   denoising_strength: number | Common.Empty
+  control_type: string
   height: number
   imageMimeType: ImageMimeType
   jobId?: string
@@ -100,6 +102,7 @@ class CreateImageRequest {
     canvasStore,
     cfg_scale = 7,
     denoising_strength = 0.75,
+    control_type = 'none',
     height = 512,
     imageMimeType = ImageMimeType.WebP,
     karras = true,
@@ -210,6 +213,12 @@ class CreateImageRequest {
       this.denoising_strength = Number(denoising_strength)
     } else {
       this.denoising_strength = Common.Empty
+    }
+
+    this.control_type = String(control_type)
+
+    if (!source_image || source_mask) {
+      this.control_type = ''
     }
 
     this.steps = Number(steps)

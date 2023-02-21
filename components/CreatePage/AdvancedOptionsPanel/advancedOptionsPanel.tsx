@@ -20,6 +20,7 @@ import { db, getDefaultPrompt, setDefaultPrompt } from '../../../utils/db'
 import { trackEvent } from '../../../api/telemetry'
 import Checkbox from '../../UI/Checkbox'
 import {
+  CONTROL_TYPE_ARRAY,
   MAX_DIMENSIONS_LOGGED_IN,
   MAX_DIMENSIONS_LOGGED_OUT,
   MAX_IMAGES_PER_JOB
@@ -350,6 +351,12 @@ const AdvancedOptionsPanel = ({
 
   const showNumImagesInput =
     !input.useAllModels && !input.useMultiSteps && !input.useAllSamplers
+
+  let controlTypeValue = { value: 'none', label: 'none' }
+
+  if (CONTROL_TYPE_ARRAY.indexOf(input.control_type) >= 0) {
+    controlTypeValue = { value: input.control_type, label: input.control_type }
+  }
 
   return (
     <div>
@@ -1128,6 +1135,35 @@ const AdvancedOptionsPanel = ({
             <Section></Section>
           </SplitPanel>
         </TwoPanel>
+      )}
+      {(input.img2img ||
+        input.source_processing === SourceProcessing.Img2Img ||
+        input.source_processing === SourceProcessing.InPainting) && (
+        <Section>
+          <SubSectionTitle>Control Type</SubSectionTitle>
+          <MaxWidth
+            // @ts-ignore
+            maxWidth="240"
+          >
+            <SelectComponent
+              options={CONTROL_TYPE_ARRAY.map((value) => {
+                if (value === '') {
+                  return { value: 'none', label: 'none' }
+                }
+
+                return { value, label: value }
+              })}
+              onChange={(obj: { value: string; label: string }) => {
+                console.log(`obj???`, obj.value)
+
+                PromptInputSettings.set('control_type', obj.value)
+                setInput({ control_type: obj.value })
+              }}
+              isSearchable={false}
+              value={controlTypeValue}
+            />
+          </MaxWidth>
+        </Section>
       )}
       <Section>
         <SubSectionTitle>

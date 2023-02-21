@@ -113,6 +113,7 @@ export const uploadImg2Img = (imageDetails: any, options: any = {}) => {
     source_processing: SourceProcessing.Img2Img,
     source_mask: '',
     denoising_strength: imageDetails.denoising_strength,
+    control_type: imageDetails.control_type,
     models: imageDetails?.models[0]
       ? imageDetails.models
       : [imageDetails.model || 'stable_diffusion']
