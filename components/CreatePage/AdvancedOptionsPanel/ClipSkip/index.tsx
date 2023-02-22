@@ -11,16 +11,12 @@ const ClipSkip = ({
   input,
   setInput,
   handleChangeInput,
-  handleNumberInput,
-  setErrorMessage,
-  errorMessage
+  handleNumberInput
 }: {
   input: any
   setInput: any
   handleChangeInput(event: object): void
   handleNumberInput(obj: object): void
-  setErrorMessage(obj: object): void
-  errorMessage: any
 }) => {
   useEffect(() => {
     if (
@@ -47,7 +43,6 @@ const ClipSkip = ({
         <NumberInput
           // @ts-ignore
           className="mb-2"
-          error={errorMessage.clipSkip}
           type="text"
           min={1}
           max={12}
@@ -70,8 +65,6 @@ const ClipSkip = ({
               e.target.value > 12
             ) {
               setInput({ clipskip: 1 })
-            } else if (errorMessage.clipskip) {
-              setErrorMessage({ clipskip: null })
             }
           }}
           // @ts-ignore
@@ -96,11 +89,6 @@ const ClipSkip = ({
           }}
         />
       </div>
-      {errorMessage.clipskip && (
-        <div className="mb-2 text-red-500 text-lg font-bold">
-          {errorMessage.clipskip}
-        </div>
-      )}
     </Section>
   )
 }

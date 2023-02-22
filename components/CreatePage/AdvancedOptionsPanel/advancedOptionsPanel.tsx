@@ -1491,8 +1491,6 @@ const AdvancedOptionsPanel = ({
           setInput={setInput}
           handleChangeInput={handleChangeInput}
           handleNumberInput={handleNumberInput}
-          setErrorMessage={setErrorMessage}
-          errorMessage={errorMessage}
         />
       </div>
       {showNumImagesInput && (
