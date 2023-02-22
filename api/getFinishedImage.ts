@@ -15,23 +15,27 @@ interface FinishedImageResponse {
   worker_id?: string
 }
 
-let isPending = false
+let isCoolingOff = false
 
 const apiCooldown = () => {
-  isPending = true
+  if (isCoolingOff) {
+    return
+  }
+
+  isCoolingOff = true
 
   setTimeout(() => {
-    isPending = false
-  }, 31000)
+    isCoolingOff = false
+  }, 30000)
 }
 
 export const getFinishedImage = async (
   jobId: string
 ): Promise<FinishedImageResponse> => {
-  if (isPending) {
+  if (isCoolingOff) {
     return {
       success: false,
-      status: 'HAS_PENDING_JOB'
+      status: 'API_COOLDOWN'
     }
   }
 
@@ -41,8 +45,6 @@ export const getFinishedImage = async (
       status: 'MISSING_JOBID'
     }
   }
-
-  isPending = true
 
   try {
     const res = await fetch(
@@ -56,20 +58,39 @@ export const getFinishedImage = async (
       }
     )
 
+    const status = res.status
     const data = await res.json()
-    const { generations, message, shared } = data
 
-    if (message === '2 per 1 minute') {
+    const { generations, message, shared, faulted } = data
+
+    if (message === '2 per 1 minute' || status === 429) {
       apiCooldown()
       return {
         success: false,
-        status: 'WAITING_FOR_PENDING_REQUEST'
+        status: 'WAITING_FOR_PENDING_REQUEST',
+        jobId
       }
     }
 
-    isPending = false
+    if (faulted) {
+      return {
+        success: false,
+        status: 'WORKER_GENERATION_ERROR',
+        jobId
+      }
+    }
+
     if (Array.isArray(generations)) {
       const [image] = generations
+
+      if (!generations || !image) {
+        return {
+          success: false,
+          status: 'WORKER_GENERATION_ERROR',
+          jobId
+        }
+      }
+
       const { model, seed, id: hordeImageId, worker_id, worker_name } = image
       let base64String = image.img
 
@@ -77,10 +98,10 @@ export const getFinishedImage = async (
       // This should no longer happen, according to Db0
       // Keeping this here for now.
       if (image.img === 'R2') {
-        apiCooldown()
         return {
           success: false,
-          status: 'WAITING_FOR_PENDING_REQUEST'
+          status: 'WAITING_FOR_PENDING_REQUEST',
+          jobId
         }
       }
 
@@ -97,7 +118,8 @@ export const getFinishedImage = async (
         } catch (err) {
           return {
             success: false,
-            status: 'MISSING_BASE64_STRING'
+            status: 'MISSING_BASE64_STRING',
+            jobId
           }
         }
       }
@@ -105,7 +127,8 @@ export const getFinishedImage = async (
       if (!base64String) {
         return {
           success: false,
-          status: 'MISSING_BASE64_STRING'
+          status: 'MISSING_BASE64_STRING',
+          jobId
         }
       }
 
@@ -124,12 +147,14 @@ export const getFinishedImage = async (
 
     return {
       success: false,
-      status: 'UNKNOWN_ERROR'
+      status: 'UNKNOWN_ERROR',
+      jobId
     }
   } catch (err) {
     return {
       success: false,
-      status: 'UNKNOWN_ERROR'
+      status: 'UNKNOWN_ERROR',
+      jobId
     }
   }
 }

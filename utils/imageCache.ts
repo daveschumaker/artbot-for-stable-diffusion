@@ -374,7 +374,8 @@ export const getImage = async (jobId: string) => {
     return {
       success: false,
       status,
-      message: ''
+      message: '',
+      jobId
     }
   }
 }
@@ -468,6 +469,53 @@ export const checkCurrentJob = async (imageDetails: any) => {
   if (jobDetails?.done) {
     const imageDetails = await getPendingJobDetails(jobId)
     const imgDetailsFromApi: FinishedImage = await getImage(jobId)
+
+    if (imgDetailsFromApi?.status === 'WORKER_GENERATION_ERROR') {
+      const jobTimestamp = imageDetails.timestamp / 1000
+      const currentTimestamp = Date.now() / 1000
+
+      if (currentTimestamp - jobTimestamp > 60) {
+        await updatePendingJob(
+          imageDetails.id,
+          Object.assign({}, imageDetails, {
+            jobStatus: JobStatus.Error,
+            errorMessage:
+              'The worker GPU processing this request encountered an error. Retry?'
+          })
+        )
+      }
+
+      return {
+        success: false,
+        status: 'NOT_FOUND'
+      }
+    }
+
+    if (imgDetailsFromApi?.status === 'NOT_FOUND') {
+      const jobTimestamp = imageDetails.timestamp / 1000
+      const currentTimestamp = Date.now() / 1000
+
+      if (currentTimestamp - jobTimestamp > 300) {
+        await updatePendingJob(
+          imageDetails.id,
+          Object.assign({}, imageDetails, {
+            jobStatus: JobStatus.Error,
+            errorMessage:
+              'Job has gone stale and has been removed from the Stable Horde backend. Retry?'
+          })
+        )
+
+        return {
+          success: false,
+          status: 'NOT_FOUND'
+        }
+      }
+
+      return {
+        success: false,
+        status: 'NOT_FOUND'
+      }
+    }
 
     if (
       imageDetails &&
