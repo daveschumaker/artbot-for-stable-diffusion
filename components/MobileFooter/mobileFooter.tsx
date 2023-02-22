@@ -71,7 +71,10 @@ export default function MobileFooter() {
             )}
           >
             {newImageReady && (
-              <span className="opacity-1 inline-block w-3 h-3 mr-1 bg-red-600 rounded-full absolute l-[4px]"></span>
+              <span
+                className="opacity-1 inline-block w-3 h-3 mr-1 bg-red-600 rounded-full"
+                style={{ position: 'absolute', top: '20px', left: '2px' }}
+              ></span>
             )}
             <PhotoIcon className={clsx(styles['svg'])} size={32} />
           </div>
