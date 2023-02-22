@@ -39,6 +39,7 @@ import Linker from '../components/UI/Linker'
 import { createImageJob } from '../utils/imageCache'
 import CreateImageRequest from '../models/CreateImageRequest'
 import { useRouter } from 'next/router'
+import Head from 'next/head'
 
 const ControlNet = () => {
   const router = useRouter()
@@ -194,6 +195,9 @@ const ControlNet = () => {
 
   return (
     <>
+      <Head>
+        <title>ControlNet - ArtBot for Stable Diffusion</title>
+      </Head>
       <PageTitle>ControlNet</PageTitle>
       <Section first>
         <SubSectionTitle>Step 1. Upload an image</SubSectionTitle>
@@ -488,7 +492,6 @@ const ControlNet = () => {
           setInput={setInput}
         />
       </Section>
-
       <Section>
         <SubSectionTitle>
           <TextTooltipRow>
