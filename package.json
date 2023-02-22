@@ -7,6 +7,8 @@
     "analyze:dev": "ANALYZE=true npm run dev",
     "dev": "npm run update:build-id && PORT=3000 node server.js",
     "build": "npm run update:build-id && next build",
+    "build:prod": "npm run install:prod && npm run build",
+    "install:prod": "npm install --platform=linux --arch=x64",
     "lint": "next lint",
     "pm2:start-prod": "pm2 start ecosystem.config.js --only horde-js",
     "pm2:stop-prod": "pm2 delete ecosystem.config.js --only horde-js",
