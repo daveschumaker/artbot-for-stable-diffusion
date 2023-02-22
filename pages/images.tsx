@@ -107,7 +107,8 @@ const ImagesPage = () => {
     },
     preventScrollOnSwipe: true,
     swipeDuration: 250,
-    delta: 150
+    trackTouch: true,
+    delta: 35
   })
   const router = useRouter()
   const size = useWindowSize()

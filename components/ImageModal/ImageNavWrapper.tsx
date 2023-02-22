@@ -87,7 +87,8 @@ const ImageNavWrapper = ({
       }, 100)
     },
     swipeDuration: 250,
-    delta: 150
+    trackTouch: true,
+    delta: 35
   })
 
   const handleTouchEnd = (e: any) => {

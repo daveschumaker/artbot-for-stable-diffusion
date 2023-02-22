@@ -24,7 +24,7 @@ const SwipeCapture = styled.div`
   top: 0;
   left: 0;
   right: 0;
-  height: 75px;
+  height: 150px;
 
   @media (min-width: 640px) {
     display: none;
@@ -36,7 +36,7 @@ const StyledInteractiveModal = styled.div<IStyle>`
   border-top: 2px solid ${(props) => props.theme.border};
   border-radius: 8px;
   opacity: 1;
-  top: 60px;
+  top: 80px;
   left: 0;
   right: 0;
   bottom: 0;
@@ -112,7 +112,8 @@ const InteractiveModal = (props: any) => {
     },
     preventScrollOnSwipe: true,
     swipeDuration: 250,
-    delta: 150
+    trackTouch: true,
+    delta: 35
   })
 
   const keyDownHandler = (event: any) => {

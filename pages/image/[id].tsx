@@ -59,8 +59,9 @@ const ImagePage = () => {
     onSwipedLeft: () => handleKeyPress(null, 'left'),
     onSwipedRight: () => handleKeyPress(null, 'right'),
     preventScrollOnSwipe: true,
+    trackTouch: true,
     swipeDuration: 250,
-    delta: 150
+    delta: 35
   })
   const router = useRouter()
   const { id } = router.query
