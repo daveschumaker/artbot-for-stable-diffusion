@@ -609,10 +609,12 @@ const AdvancedOptionsPanel = ({
       {!input.useAllSamplers && (
         <Section>
           <SubSectionTitle>Sampler</SubSectionTitle>
-          {input.source_processing === SourceProcessing.InPainting &&
-          input.models[0] === 'stable_diffusion_inpainting' ? (
-            <div className="mt-0 text-sm text-slate-500">
-              Note: Sampler disabled when inpainting model is used.
+          {(input.source_processing === SourceProcessing.InPainting &&
+            input.models[0] === 'stable_diffusion_inpainting') ||
+          (input.source_image && input.control_type !== 'none') ? (
+            <div className="mt-[-6px] text-sm text-slate-500 dark:text-slate-400 font-[600]">
+              Note: Sampler disabled when controlnet or inpainting model is
+              used.
             </div>
           ) : (
             <MaxWidth
@@ -620,6 +622,10 @@ const AdvancedOptionsPanel = ({
               maxWidth="240"
             >
               <SelectComponent
+                isDisabled={
+                  input.models[0] === 'stable_diffusion_inpainting' ||
+                  input.controlType !== 'none'
+                }
                 options={samplerOptions(input)}
                 onChange={(obj: { value: string; label: string }) => {
                   PromptInputSettings.set('sampler', obj.value)
@@ -994,93 +1000,124 @@ const AdvancedOptionsPanel = ({
           <SplitPanel>
             <Section>
               <div className="flex flex-row items-center justify-between">
-                <SubSectionTitle>
-                  <TextTooltipRow>
-                    Denoise{' '}
-                    <Tooltip width="200px">
-                      Amount of noise added to input image. Values that approach
-                      1.0 allow for lots of variations but will also produce
-                      images that are not semantically consistent with the
-                      input. Only available for img2img.
-                    </Tooltip>
-                  </TextTooltipRow>
-                  <div className="block text-xs w-full">(0.0 - 1.0)</div>
-                </SubSectionTitle>
-                <NumberInput
-                  // @ts-ignore
-                  className="mb-2"
-                  type="text"
-                  step={0.05}
-                  disabled={input.models[0] === 'stable_diffusion_inpainting'}
-                  min={0}
-                  max={1.0}
-                  onBlur={(e: any) => {
-                    if (Number(e.target.value < 0)) {
-                      PromptInputSettings.set('denoising_strength', 0)
-                      setInput({ denoising_strength: 0 })
-                      return
-                    }
-
-                    if (Number(e.target.value > 1.0)) {
-                      PromptInputSettings.set('denoising_strength', 1)
-                      setInput({ denoising_strength: 1 })
-                      return
-                    }
-
-                    if (isNaN(e.target.value)) {
-                      PromptInputSettings.set('denoising_strength', 0.5)
-                      setInput({ denoising_strength: 0.5 })
-                      return
-                    }
-
-                    if (
-                      isNaN(e.target.value) ||
-                      e.target.value < 0 ||
-                      e.target.value > 1.0
-                    ) {
-                      if (initialLoad) {
-                        return
+                {input.source_image && input.control_type !== 'none' && (
+                  <div className="flex flex-col">
+                    <SubSectionTitle>
+                      <TextTooltipRow>
+                        Denoise{' '}
+                        <Tooltip width="200px">
+                          Amount of noise added to input image. Values that
+                          approach 1.0 allow for lots of variations but will
+                          also produce images that are not semantically
+                          consistent with the input. Only available for img2img.
+                        </Tooltip>
+                      </TextTooltipRow>
+                    </SubSectionTitle>
+                    <div className="mt-[-6px] text-sm text-slate-500 dark:text-slate-400 font-[600]">
+                      Note: Denoise disabled when controlnet is used.
+                    </div>
+                  </div>
+                )}
+                {(input.control_type === 'none' ||
+                  input.control_type === '') && (
+                  <>
+                    <SubSectionTitle>
+                      <TextTooltipRow>
+                        Denoise{' '}
+                        <Tooltip width="200px">
+                          Amount of noise added to input image. Values that
+                          approach 1.0 allow for lots of variations but will
+                          also produce images that are not semantically
+                          consistent with the input. Only available for img2img.
+                        </Tooltip>
+                      </TextTooltipRow>
+                      <div className="block text-xs w-full">(0.0 - 1.0)</div>
+                    </SubSectionTitle>
+                    <NumberInput
+                      // @ts-ignore
+                      className="mb-2"
+                      type="text"
+                      step={0.05}
+                      disabled={
+                        input.models[0] === 'stable_diffusion_inpainting'
                       }
+                      min={0}
+                      max={1.0}
+                      onBlur={(e: any) => {
+                        if (Number(e.target.value < 0)) {
+                          PromptInputSettings.set('denoising_strength', 0)
+                          setInput({ denoising_strength: 0 })
+                          return
+                        }
 
-                      setErrorMessage({
-                        denoising_strength: `Please enter a valid number between 0 and 1.0`
-                      })
-                    } else if (errorMessage.denoising_strength) {
-                      setErrorMessage({ denoising_strength: null })
-                    }
-                  }}
-                  onMinusClick={() => {
-                    if (isNaN(input.denoising_strength)) {
-                      input.denoising_strength = 0.5
-                    }
+                        if (Number(e.target.value > 1.0)) {
+                          PromptInputSettings.set('denoising_strength', 1)
+                          setInput({ denoising_strength: 1 })
+                          return
+                        }
 
-                    if (Number(input.denoising_strength) > 1) {
-                      PromptInputSettings.set('denoising_strength', 1)
-                      setInput({ denoising_strength: 1 })
-                      return
-                    }
+                        if (isNaN(e.target.value)) {
+                          PromptInputSettings.set('denoising_strength', 0.5)
+                          setInput({ denoising_strength: 0.5 })
+                          return
+                        }
 
-                    const value = Number(input.denoising_strength) - 0.05
-                    const niceNumber = Number(value).toFixed(2)
-                    PromptInputSettings.set('denoising_strength', niceNumber)
-                    setInput({ denoising_strength: niceNumber })
-                  }}
-                  onPlusClick={() => {
-                    if (isNaN(input.denoising_strength)) {
-                      input.denoising_strength = 0.5
-                    }
+                        if (
+                          isNaN(e.target.value) ||
+                          e.target.value < 0 ||
+                          e.target.value > 1.0
+                        ) {
+                          if (initialLoad) {
+                            return
+                          }
 
-                    const value = Number(input.denoising_strength) + 0.05
-                    const niceNumber = Number(value).toFixed(2)
-                    PromptInputSettings.set('denoising_strength', niceNumber)
-                    setInput({ denoising_strength: niceNumber })
-                  }}
-                  name="denoising_strength"
-                  onChange={handleNumberInput}
-                  // @ts-ignore
-                  value={input.denoising_strength}
-                  width="100%"
-                />
+                          setErrorMessage({
+                            denoising_strength: `Please enter a valid number between 0 and 1.0`
+                          })
+                        } else if (errorMessage.denoising_strength) {
+                          setErrorMessage({ denoising_strength: null })
+                        }
+                      }}
+                      onMinusClick={() => {
+                        if (isNaN(input.denoising_strength)) {
+                          input.denoising_strength = 0.5
+                        }
+
+                        if (Number(input.denoising_strength) > 1) {
+                          PromptInputSettings.set('denoising_strength', 1)
+                          setInput({ denoising_strength: 1 })
+                          return
+                        }
+
+                        const value = Number(input.denoising_strength) - 0.05
+                        const niceNumber = Number(value).toFixed(2)
+                        PromptInputSettings.set(
+                          'denoising_strength',
+                          niceNumber
+                        )
+                        setInput({ denoising_strength: niceNumber })
+                      }}
+                      onPlusClick={() => {
+                        if (isNaN(input.denoising_strength)) {
+                          input.denoising_strength = 0.5
+                        }
+
+                        const value = Number(input.denoising_strength) + 0.05
+                        const niceNumber = Number(value).toFixed(2)
+                        PromptInputSettings.set(
+                          'denoising_strength',
+                          niceNumber
+                        )
+                        setInput({ denoising_strength: niceNumber })
+                      }}
+                      name="denoising_strength"
+                      onChange={handleNumberInput}
+                      // @ts-ignore
+                      value={input.denoising_strength}
+                      width="100%"
+                    />
+                  </>
+                )}
               </div>
               {input.source_processing === SourceProcessing.InPainting &&
                 input.models[0] === 'stable_diffusion_inpainting' && (
@@ -1088,25 +1125,27 @@ const AdvancedOptionsPanel = ({
                     Note: Denoise disabled when inpainting model is used.
                   </div>
                 )}
-              <div className="mb-4">
-                <Slider
-                  disabled={input.models[0] === 'stable_diffusion_inpainting'}
-                  value={input.denoising_strength}
-                  min={0}
-                  max={1}
-                  step={0.05}
-                  onChange={(e: any) => {
-                    const event = {
-                      target: {
-                        name: 'denoising_strength',
-                        value: Number(e.target.value)
+              {(input.control_type === 'none' || input.control_type === '') && (
+                <div className="mb-4">
+                  <Slider
+                    disabled={input.models[0] === 'stable_diffusion_inpainting'}
+                    value={input.denoising_strength}
+                    min={0}
+                    max={1}
+                    step={0.05}
+                    onChange={(e: any) => {
+                      const event = {
+                        target: {
+                          name: 'denoising_strength',
+                          value: Number(e.target.value)
+                        }
                       }
-                    }
 
-                    handleChangeInput(event)
-                  }}
-                />
-              </div>
+                      handleChangeInput(event)
+                    }}
+                  />
+                </div>
+              )}
               {errorMessage.denoising_strength && (
                 <div className="mb-2 text-red-500 text-lg font-bold">
                   {errorMessage.denoising_strength}
@@ -1119,16 +1158,26 @@ const AdvancedOptionsPanel = ({
           </SplitPanel>
         </TwoPanel>
       )}
-      {(input.img2img ||
-        input.source_processing === SourceProcessing.Img2Img ||
-        input.source_processing === SourceProcessing.InPainting) && (
-        <Section>
-          <SubSectionTitle>Control Type</SubSectionTitle>
+      <Section>
+        <SubSectionTitle>Control Type</SubSectionTitle>
+        {!input.source_image && (
+          <div className="mt-[-6px] text-sm text-slate-500 dark:text-slate-400 font-[600]">
+            <MaxWidth
+              // @ts-ignore
+              maxWidth="360"
+            >
+              <strong>Note:</strong> ControlNet can only be used for img2img
+              requests. Please upload an image to use this feature.
+            </MaxWidth>
+          </div>
+        )}
+        {input.source_image && (
           <MaxWidth
             // @ts-ignore
             maxWidth="240"
           >
             <SelectComponent
+              isDisabled={!input.source_image}
               options={CONTROL_TYPE_ARRAY.map((value) => {
                 if (value === '') {
                   return { value: 'none', label: 'none' }
@@ -1139,13 +1188,17 @@ const AdvancedOptionsPanel = ({
               onChange={(obj: { value: string; label: string }) => {
                 PromptInputSettings.set('control_type', obj.value)
                 setInput({ control_type: obj.value })
+
+                if (obj.value !== 'none') {
+                  setInput({ karras: false, hires: false })
+                }
               }}
               isSearchable={false}
               value={controlTypeValue}
             />
           </MaxWidth>
-        </Section>
-      )}
+        )}
+      </Section>
       <Section>
         <SubSectionTitle>
           <TextTooltipRow>
@@ -1421,8 +1474,14 @@ const AdvancedOptionsPanel = ({
               fewer steps. (Not all workers support this yet)
             </Tooltip>
           </TextTooltipRow>
+          {input.source_image && input.controlType !== 'none' && (
+            <div className="mt-[-4px] text-sm text-slate-500 dark:text-slate-400 font-[600]">
+              <strong>Note:</strong> Cannot be used for controlnet requests
+            </div>
+          )}
         </SubSectionTitle>
         <Switch
+          disabled={input.source_image && input.control_type !== 'none'}
           onChange={() => {
             if (!input.karras) {
               PromptInputSettings.set('karras', true)

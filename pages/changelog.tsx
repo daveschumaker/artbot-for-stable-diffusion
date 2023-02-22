@@ -107,6 +107,10 @@ const Changelog = () => {
             started and removes options that are&apos;t currently available.{' '}
             <Linker href="/controlnet">Check it out!</Linker>
           </StyledLi>
+          <StyledLi>
+            UX: Added some better tips and notes related to disabled parameters
+            when using ControlNet (e.g., no hires_fix, no karras).
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

@@ -32,7 +32,7 @@ const HiresFix = ({ input, setInput }: any) => {
           </Tooltip>
         </TextTooltipRow>
         {error && (
-          <div className="text-sm">
+          <div className="mt-[-6px] text-sm text-slate-500 dark:text-slate-400 font-[600]">
             <strong>Note:</strong> {error}
           </div>
         )}
