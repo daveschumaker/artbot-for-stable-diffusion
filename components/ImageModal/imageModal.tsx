@@ -103,7 +103,8 @@ const ImageModal = ({
     containerHeight: 512,
     imageMaxHeight: 700,
     mouseHover: false,
-    showTiles: false
+    showTiles: false,
+    showSourceImg: false
   })
 
   const handleDeleteImage = () => {
@@ -228,7 +229,11 @@ const ImageModal = ({
           {!componentState.showTiles && (
             <ImageNavWrapper
               loading={imageDetails.loading}
-              base64String={imageDetails.base64String}
+              base64String={
+                componentState.showSourceImage && imageDetails.source_image
+                  ? imageDetails.source_image
+                  : imageDetails.base64String
+              }
               disableNav={disableNav}
               handleLoadNext={handleLoadNext}
               handleLoadPrev={handleLoadPrev}
@@ -245,6 +250,20 @@ const ImageModal = ({
             >
               <LinkIcon /> Image Details
             </Button>
+            {imageDetails.source_image && (
+              <Button
+                onClick={() => {
+                  if (componentState.showSourceImage) {
+                    setComponentState({ showSourceImage: false })
+                  } else {
+                    setComponentState({ showSourceImage: true })
+                  }
+                }}
+              >
+                <EyeIcon />{' '}
+                {componentState.showSourceImage ? 'Hide Source' : 'View Source'}
+              </Button>
+            )}
             {imageDetails.tiling && (
               <Button
                 title="View tiles"
@@ -252,7 +271,7 @@ const ImageModal = ({
                 onClick={() => {
                   if (componentState.showTiles) {
                     setComponentState({ showTiles: false })
-                  } else {
+                  } else if (imageDetails.source_image) {
                     setComponentState({ showTiles: true })
                   }
                 }}
