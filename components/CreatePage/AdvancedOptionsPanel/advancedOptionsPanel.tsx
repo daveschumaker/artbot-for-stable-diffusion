@@ -1304,6 +1304,7 @@ const AdvancedOptionsPanel = ({
             maxWidth="480"
           >
             <SelectComponent
+              isMulti
               menuPlacement={'top'}
               //@ts-ignore
               options={modelerOptions(input)}

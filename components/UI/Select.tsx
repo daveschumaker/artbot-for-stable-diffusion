@@ -11,7 +11,8 @@ interface Theme {
 
 interface SelectProps {
   className?: string
-  isDisabled?: Boolean
+  isDisabled?: boolean
+  isMulti?: boolean
   name?: string
   onChange: any
   width?: string

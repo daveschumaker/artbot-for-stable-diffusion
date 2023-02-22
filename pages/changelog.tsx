@@ -111,6 +111,10 @@ const Changelog = () => {
             UX: Added some better tips and notes related to disabled parameters
             when using ControlNet (e.g., no hires_fix, no karras).
           </StyledLi>
+          <StyledLi>
+            Fix: Issue with multi-model select. Thanks for reporting on Discord,
+            FORTTE!
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
