@@ -1,0 +1,12 @@
+.two-panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .two-panel {
+    flex-direction: row;
+    column-gap: 32px;
+  }
+}

@@ -2,10 +2,12 @@ import clsx from 'clsx'
 import React from 'react'
 
 const FlexRow = ({
+  className,
   children,
   paddingBottom,
   justify
 }: {
+  className?: string
   children: React.ReactNode
   justify?: string
   paddingBottom?: string
@@ -24,7 +26,7 @@ const FlexRow = ({
     classes.push(`pb-[${paddingBottom}]`)
   }
 
-  return <div className={clsx(classes)}>{children}</div>
+  return <div className={clsx(classes, className)}>{children}</div>
 }
 
 export default FlexRow

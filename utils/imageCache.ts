@@ -449,7 +449,7 @@ export const checkCurrentJob = async (imageDetails: any) => {
     const imgDetailsFromApi: FinishedImage = await getImage(jobId)
 
     if (imgDetailsFromApi?.status === 'WORKER_GENERATION_ERROR') {
-      const jobTimestamp = imageDetails.timestamp / 1000
+      const jobTimestamp = imageDetails?.timestamp / 1000 || 0
       const currentTimestamp = Date.now() / 1000
 
       if (currentTimestamp - jobTimestamp > 60) {

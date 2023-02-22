@@ -43,29 +43,12 @@ import HiresFix from './HiresFix'
 import FlexRow from '../../UI/FlexRow'
 import ClipSkip from './ClipSkip'
 import ArrowBarLeftIcon from '../../icons/ArrowBarLeftIcon'
+import TwoPanel from '../../UI/TwoPanel'
+import SplitPanel from '../../UI/SplitPanel'
 
 const NoSliderSpacer = styled.div`
   height: 14px;
   margin-bottom: 16px;
-`
-
-const TwoPanel = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-
-  @media (min-width: 640px) {
-    flex-direction: row;
-    column-gap: 32px;
-  }
-`
-
-const SplitPanel = styled.div`
-  width: 100%;
-
-  @media (min-width: 640px) {
-    width: 50%;
-  }
 `
 
 const orientationOptions = [
@@ -598,7 +581,7 @@ const AdvancedOptionsPanel = ({
         <FlexRow>
           <TextArea
             name="negative"
-            placeholder="Image prompt..."
+            placeholder="Words to deemphasize from image"
             onChange={handleChangeInput}
             value={input.negative}
           />

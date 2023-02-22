@@ -1,0 +1,9 @@
+.split-panel {
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .split-panel {
+    width: 50%;
+  }
+}
