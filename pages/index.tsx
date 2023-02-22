@@ -453,7 +453,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
       return modelsArray
     }
 
-    const modelExists = modelerOptions(input).filter((option) => {
+    const modelExists = modelerOptions(input).filter((option: any) => {
       return input?.models?.indexOf(option.value) >= 0
     })
 

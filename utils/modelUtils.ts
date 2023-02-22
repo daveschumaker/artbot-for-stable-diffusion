@@ -23,7 +23,7 @@ export const validModelsArray = ({
     imageParams.source_processing === SourceProcessing.InPainting
   const inpainting = imageParams.source_mask ? true : false
 
-  const modelsArray = []
+  const modelsArray: any = []
   const availableModels =
     JSON.parse(JSON.stringify(modelInfoStore.state.availableModels)) || {}
 
@@ -82,7 +82,7 @@ export const validModelsArray = ({
     })
 
     if (sort === 'workers') {
-      modelsArray.sort((a, b) => {
+      modelsArray.sort((a: any, b: any) => {
         if (typeof a.count === 'undefined' || isNaN(a.count)) {
           return 0
         }
