@@ -48,9 +48,9 @@ interface CheckImage {
 interface FinishedImage {
   success: boolean
   base64String?: string
+  status?: string
 }
 
-let pendingCheckRequest = false
 export const checkImageJob = async (jobId: string): Promise<CheckImage> => {
   if (!jobId || !jobId?.trim()) {
     return {
@@ -59,20 +59,10 @@ export const checkImageJob = async (jobId: string): Promise<CheckImage> => {
     }
   }
 
-  if (pendingCheckRequest) {
-    return {
-      success: false,
-      status: 'Waiting for pending request...'
-    }
-  }
-
-  pendingCheckRequest = true
-
   try {
     const data: CheckImage = await checkImageStatus(jobId)
 
     const { success, status = '' } = data
-    pendingCheckRequest = false
 
     if (status === 'NOT_FOUND') {
       await deletePendingJobFromDb(jobId)
@@ -92,7 +82,6 @@ export const checkImageJob = async (jobId: string): Promise<CheckImage> => {
       ...data
     }
   } catch (err) {
-    pendingCheckRequest = false
     return {
       success: false,
       status: 'SOME_ERROR'
@@ -340,16 +329,7 @@ export const createImageJob = async (newImageRequest: CreateImageRequest) => {
   }
 }
 
-let pendingImageRequest = false
 export const getImage = async (jobId: string) => {
-  if (pendingImageRequest) {
-    return {
-      success: false,
-      status: 'WAITING_FOR_PENDING_REQUEST',
-      message: ''
-    }
-  }
-
   if (!jobId || !jobId?.trim()) {
     return {
       success: false,
@@ -358,11 +338,9 @@ export const getImage = async (jobId: string) => {
     }
   }
 
-  pendingImageRequest = true
   const data = await getFinishedImage(jobId)
   const { status = '' } = data
 
-  pendingImageRequest = false
   if (data?.success) {
     return {
       jobId,
