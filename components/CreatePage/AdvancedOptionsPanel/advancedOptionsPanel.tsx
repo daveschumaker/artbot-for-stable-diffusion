@@ -1154,8 +1154,6 @@ const AdvancedOptionsPanel = ({
                 return { value, label: value }
               })}
               onChange={(obj: { value: string; label: string }) => {
-                console.log(`obj???`, obj.value)
-
                 PromptInputSettings.set('control_type', obj.value)
                 setInput({ control_type: obj.value })
               }}
