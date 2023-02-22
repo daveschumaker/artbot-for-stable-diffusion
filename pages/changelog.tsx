@@ -105,6 +105,9 @@ const Changelog = () => {
             Horde! Select any model from the models dropdown then select a
             relevant control type.
           </StyledLi>
+          <StyledLi>
+            Fix: Sending wrong value to API in control_type field.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

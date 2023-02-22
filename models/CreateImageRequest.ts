@@ -217,7 +217,7 @@ class CreateImageRequest {
 
     this.control_type = String(control_type)
 
-    if (!source_image || source_mask) {
+    if (!source_image || source_mask || control_type === 'none') {
       this.control_type = ''
     }
 

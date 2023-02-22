@@ -157,7 +157,7 @@ class ImageParamsForApi {
       apiParams.params.post_processing = []
     }
 
-    if (control_type) {
+    if (control_type && control_type !== 'none') {
       apiParams.params.control_type = control_type
     }
 
