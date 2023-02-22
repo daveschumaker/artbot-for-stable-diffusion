@@ -50,6 +50,7 @@ import { validModelsArray } from '../utils/modelUtils'
 import { userInfoStore } from '../store/userStore'
 import styles from '../styles/index.module.css'
 import TriggerDropdown from '../components/CreatePage/TriggerDropdown'
+import DefaultPromptInput from '../models/DefaultPromptInput'
 
 interface InputTarget {
   name: string
@@ -59,44 +60,7 @@ interface InputEvent {
   target: InputTarget
 }
 
-const defaultState: any = {
-  img2img: false,
-  upscaled: false,
-  imageType: '',
-  orientationType: 'square',
-  height: 512,
-  width: 512,
-  numImages: 1,
-  prompt: '',
-  sampler: 'k_euler_a',
-  cfg_scale: 9,
-  steps: 20,
-  multiSteps: '',
-  multiGuidance: '',
-  seed: '',
-  denoising_strength: 0.75,
-  control_type: 'none',
-  karras: true,
-  hires: false,
-  clipskip: 1,
-  parentJobId: '',
-  negative: '',
-  triggers: [],
-  tiling: false,
-  source_image: '',
-  source_mask: '',
-  stylePreset: 'none',
-  source_processing: SourceProcessing.Prompt,
-  post_processing: [],
-  models: ['stable_diffusion'],
-  useAllModels: false,
-  useFavoriteModels: false,
-  useAllSamplers: false,
-  useMultiSteps: false,
-  useMultiGuidance: false,
-  canvasData: null,
-  maskData: null
-}
+const defaultState: DefaultPromptInput = new DefaultPromptInput()
 
 export async function getServerSideProps() {
   let availableModels: Array<any> = []
