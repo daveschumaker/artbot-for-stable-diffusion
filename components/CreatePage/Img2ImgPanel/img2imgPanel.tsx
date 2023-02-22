@@ -9,6 +9,7 @@ import { SourceProcessing } from '../../../utils/promptUtils'
 import Uploader from '../Uploader'
 import PhotoUpIcon from '../../icons/PhotoUpIcon'
 import Head from 'next/head'
+import PromptInputSettings from '../../../models/PromptInputSettings'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -30,12 +31,16 @@ interface Props {
 const Img2ImgPanel = ({ input, saveForInpaint, setInput }: Props) => {
   const router = useRouter()
 
-  const saveImage = ({
+  const handleSaveImage = ({
     imageType = '',
     source_image = '',
     height = 512,
     width = 512
   }) => {
+    PromptInputSettings.set('orientationType', 'custom')
+    PromptInputSettings.set('height', height)
+    PromptInputSettings.set('width', width)
+
     setInput({
       img2img: true,
       imageType,
@@ -63,7 +68,7 @@ const Img2ImgPanel = ({ input, saveForInpaint, setInput }: Props) => {
       </Head>
       <Section>
         {!input.source_image && (
-          <Uploader handleSaveImage={saveImage} type="img2img" />
+          <Uploader handleSaveImage={handleSaveImage} type="img2img" />
         )}
         {input.source_image && (
           <>
