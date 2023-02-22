@@ -97,6 +97,19 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.02.22</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Feature: ControlNet is ridiculously cool to play with! The backend
+            Stable Horde volunteers are still debugging some issues related to
+            it, so if you&apos; re having trouble, hang tight! I&apos;ve added a
+            new page specifically for ControlNet, which simplifies getting
+            started and removes options that are&apos;t currently available.{' '}
+            <Linker href="/controlnet">Check it out!</Linker>
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.02.21</SubSectionTitle>
         <StyledUl>
           <StyledLi>

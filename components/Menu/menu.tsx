@@ -154,6 +154,14 @@ const Menu = () => {
           <SubOptions>
             <SubOption
               onClick={() => {
+                navigateToLink('/controlnet')
+              }}
+            >
+              <LineDashedIcon />
+              ControlNet
+            </SubOption>
+            <SubOption
+              onClick={() => {
                 navigateToLink('/?panel=img2img')
               }}
             >
