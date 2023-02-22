@@ -48,11 +48,16 @@ const ContentWrapper = styled.div`
 
 const OptionsRow = styled.div`
   display: flex;
-  flex-direction: row;
-  column-gap: 8px;
+  flex-direction: column;
+  row-gap: 8px;
   margin-top: 12px;
   justify-content: center;
   width: 100%;
+
+  @media (min-width: 640px) {
+    column-gap: 8px;
+    flex-direction: row;
+  }
 `
 
 const TextWrapper = styled.div`
@@ -195,6 +200,8 @@ const ImageModal = ({
       }, 100)
     }
   }, [imageDetails.base64String, setComponentState])
+
+  console.log(`imageDetails`, imageDetails)
 
   return (
     <StyledModal

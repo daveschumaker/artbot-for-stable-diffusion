@@ -26,8 +26,8 @@
 
 .options-wrapper {
   display: flex;
-  flex-direction: row;
-  column-gap: 8px;
+  flex-direction: column;
+  row-gap: 8px;
   margin-top: 12px;
   justify-content: center;
   width: 100%;
@@ -56,6 +56,11 @@
 }
 
 @media (min-width: 640px) {
+  .options-wrapper {
+    column-gap: 8px;
+    flex-direction: row;
+  }
+
   .styled-modal {
     /* height: auto;
     max-height: 100vh; */
