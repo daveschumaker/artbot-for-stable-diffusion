@@ -622,10 +622,6 @@ const AdvancedOptionsPanel = ({
               maxWidth="240"
             >
               <SelectComponent
-                isDisabled={
-                  input.models[0] === 'stable_diffusion_inpainting' ||
-                  input.controlType !== 'none'
-                }
                 options={samplerOptions(input)}
                 onChange={(obj: { value: string; label: string }) => {
                   PromptInputSettings.set('sampler', obj.value)

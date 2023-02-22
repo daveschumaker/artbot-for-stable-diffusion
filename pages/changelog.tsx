@@ -115,6 +115,10 @@ const Changelog = () => {
             Fix: Issue with multi-model select. Thanks for reporting on Discord,
             FORTTE!
           </StyledLi>
+          <StyledLi>
+            Fix: I broke the sampler select dropdown. It is now fixed! Thanks to
+            Hinaloth on Discord for reporting this!
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

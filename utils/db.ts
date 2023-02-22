@@ -399,6 +399,10 @@ export const deleteCompletedImage = async (jobId: string) => {
   await db.completed.where('jobId').equals(jobId).delete()
 }
 
+export const deleteCompletedImageById = async (id: number) => {
+  await db.completed.where('id').equals(id).delete()
+}
+
 export const deletePendingJobFromDb = async (jobId: string) => {
   await db.pending.where('jobId').equals(jobId).delete()
 }
