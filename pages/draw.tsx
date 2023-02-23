@@ -1,3 +1,4 @@
+import Head from 'next/head'
 import Editor from '../components/Fabric/Editor'
 import PageTitle from '../components/UI/PageTitle'
 import Section from '../components/UI/Section'
@@ -6,6 +7,13 @@ import styles from '../styles/drawpage.module.css'
 const DrawPage = () => {
   return (
     <>
+      <Head>
+        <title>Draw Something - ArtBot for Stable Diffusion</title>
+        <meta
+          name="twitter:image"
+          content="https://tinybots.net/artbot/robots_drawing.png"
+        />
+      </Head>
       <PageTitle>
         Draw<sup className={styles.super}>something</sup>
       </PageTitle>
