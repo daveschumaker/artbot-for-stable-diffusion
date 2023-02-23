@@ -645,7 +645,9 @@ const AdvancedOptionsPanel = ({
             </TextTooltipRow>
           </SubSectionTitle>
           <Switch
-            disabled={input.useMultiGuidance || input.useMultiSteps}
+            disabled={
+              input.useMultiGuidance || input.useMultiSteps ? true : false
+            }
             onChange={() => {
               if (!input.useAllSamplers) {
                 trackEvent({
@@ -801,7 +803,9 @@ const AdvancedOptionsPanel = ({
                 </TextTooltipRow>
               </SubSectionTitle>
               <Switch
-                disabled={input.useMultiGuidance || input.useAllSamplers}
+                disabled={
+                  input.useMultiGuidance || input.useAllSamplers ? true : false
+                }
                 onChange={() => {
                   if (!input.useMultiSteps) {
                     setInput({
@@ -960,7 +964,9 @@ const AdvancedOptionsPanel = ({
                 </TextTooltipRow>
               </SubSectionTitle>
               <Switch
-                disabled={input.useMultiSteps || input.useAllSamplers}
+                disabled={
+                  input.useMultiSteps || input.useAllSamplers ? true : false
+                }
                 onChange={() => {
                   if (!input.useMultiGuidance) {
                     setInput({
@@ -1438,7 +1444,7 @@ const AdvancedOptionsPanel = ({
             </div>
           </SubSectionTitle>
           <Switch
-            disabled={componentState.favoriteModelsCount === 0}
+            disabled={componentState.favoriteModelsCount === 0 ? true : false}
             onChange={() => {
               if (!input.useFavoriteModels) {
                 trackEvent({
@@ -1478,7 +1484,9 @@ const AdvancedOptionsPanel = ({
           )}
         </SubSectionTitle>
         <Switch
-          disabled={input.source_image && input.control_type !== 'none'}
+          disabled={
+            input.source_image && input.control_type !== 'none' ? true : false
+          }
           onChange={() => {
             if (!input.karras) {
               PromptInputSettings.set('karras', true)
