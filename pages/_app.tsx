@@ -26,6 +26,7 @@ import AdContainer from '../components/AdContainer'
 import { useRouter } from 'next/router'
 import { useWindowSize } from '../hooks/useWindowSize'
 import Menu from '../components/Menu'
+import Linker from '../components/UI/Linker'
 
 initAppSettings()
 initDb()
@@ -230,9 +231,36 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
             <div className="text-sm border-2 border-rose-600 py-1 px-2 rounded mb-2 text-red-500">
               <strong>Warning:</strong> ArtBot is currently unable to connect to
               the Stable Horde API backend as it is currently unavailable.
-              Please try again soon.
+              Please try again soon or{' '}
+              <Linker
+                href="https://discord.gg/3DxrhksKzn"
+                target="_blank"
+                rel="noreferrer"
+              >
+                check Discord
+              </Linker>{' '}
+              for more information.
             </div>
           )}
+          <div
+            id="global-server-message"
+            className="text-sm border-2 border-rose-600 py-1 px-2 rounded mb-2 text-red-500"
+          >
+            <strong>WARNING!</strong> The Stable Horde API is currently
+            experiencing *significant* delays due to backend issues. Requests
+            may take a long time to complete or fail. Please try again soon or{' '}
+            <Linker
+              href="https://discord.gg/3DxrhksKzn"
+              target="_blank"
+              rel="noreferrer"
+            >
+              check Discord
+            </Linker>{' '}
+            for more information.
+            <div className="mt-2 text-sm text-[black] dark:text-[white]">
+              Updated: 5:23 AM Thursday, February 23, 2023 UTC
+            </div>
+          </div>
           <Component {...pageProps} />
           <Footer />
           {sizeOverride && (

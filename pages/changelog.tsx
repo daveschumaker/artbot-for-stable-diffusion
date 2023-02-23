@@ -119,6 +119,14 @@ const Changelog = () => {
             Fix: I broke the sampler select dropdown. It is now fixed! Thanks to
             Hinaloth on Discord for reporting this!
           </StyledLi>
+          <StyledLi>
+            Fixed: Incorrect background color for negative prompt library.
+            THanks to gunsalem on Discord for reporting this!
+          </StyledLi>
+          <StyledLi>
+            Looks like the Stable Horde backend is choking right now. Put up a
+            global server message.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
