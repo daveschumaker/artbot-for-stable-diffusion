@@ -12,6 +12,7 @@ interface Props {
 }
 
 const StyledSlidingPanel = styled(SlidingPane)`
+  background-color: ${(props) => props.theme.body};
   border-top: 1px solid ${(props) => props.theme.text};
   margin-bottom: 100px;
   max-width: 768px;
