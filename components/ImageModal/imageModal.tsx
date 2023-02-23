@@ -201,8 +201,6 @@ const ImageModal = ({
     }
   }, [imageDetails.base64String, setComponentState])
 
-  console.log(`imageDetails`, imageDetails)
-
   return (
     <StyledModal
       handleClose={handleClose}

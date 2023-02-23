@@ -21,8 +21,9 @@ import ColorPickerIcon from '../../../icons/ColorPickerIcon'
 import { nearestWholeMultiple } from '../../../../utils/imageUtils'
 import CanvasSettings from '../../../../models/CanvasSettings'
 import FileIcon from '../../../icons/FileIcon'
-import PhotoCheck from '../../../icons/PhotoCheck'
-import { setI2iUploaded } from '../../../../store/canvasStore'
+import { setBase64FromDraw } from '../../../../store/canvasStore'
+import UploadIcon from '../../../icons/UploadIcon'
+import { useRouter } from 'next/router'
 
 const ToolBarButton = ({
   active,
@@ -65,10 +66,7 @@ const ToolBar = ({
   canvas,
   canvasType = 'inpainting',
   handleNewCanvas,
-  handleRemoveClick,
-  source_image,
-  source_image_height,
-  source_image_width
+  handleRemoveClick
 }: {
   canvas: CreateCanvas
   canvasType?: string
@@ -78,6 +76,7 @@ const ToolBar = ({
   source_image_height?: number
   source_image_width?: number
 }) => {
+  const router = useRouter()
   const [activeBrush, setActiveBrush] = useState('paint')
   const [showAdjustmentMenu, setShowAdjustmentMenu] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
@@ -98,20 +97,20 @@ const ToolBar = ({
     width: number
     bgColor: string
   }) => {
-    let container = document.querySelector('#canvas-wrapper')
-    // @ts-ignore
-    const maxWidth = container?.offsetWidth || 512
-    const getHeight = nearestWholeMultiple(
-      Math.floor((maxWidth * height) / width),
-      64
-    )
-    let normalizeWidth = nearestWholeMultiple(maxWidth, 64)
+    // let container = document.querySelector('#canvas-wrapper')
+    // // @ts-ignore
+    // const maxWidth = container?.offsetWidth || 512
+    // const getHeight = nearestWholeMultiple(
+    //   Math.floor((maxWidth * height) / width),
+    //   64
+    // )
+    // let normalizeWidth = nearestWholeMultiple(maxWidth, 64)
 
-    if (normalizeWidth >= maxWidth) {
-      normalizeWidth -= 64
-    }
+    // if (normalizeWidth >= maxWidth) {
+    //   normalizeWidth -= 64
+    // }
 
-    handleNewCanvas(getHeight, normalizeWidth, bgColor)
+    handleNewCanvas(height, width, bgColor)
     setShowMainMenu(false)
     setShowNewModal(false)
   }
@@ -135,6 +134,7 @@ const ToolBar = ({
     `rounded-[4px]`,
     'relative',
     'mb-[8px]',
+    'md:mb-[16px]',
     'md:gap-[4px]',
     'justify-between',
     'p-[2px]',
@@ -281,13 +281,48 @@ const ToolBar = ({
             <div className="w-full pt-[4px] mb-[4px] border-b-[1px] border-b-slate-300 h-[3px] flex flex-row" />
             <DropDownItem
               handleClick={() => {
+                const data: { base64: string; height: number; width: number } =
+                  canvas.exportToDataUrl()
+                const { base64 = '', height = 512, width = 512 } = data
+
+                setBase64FromDraw({
+                  base64,
+                  height,
+                  width
+                })
+                router.push('/controlnet?drawing=true')
+              }}
+            >
+              <UploadIcon size={20} />
+              Use for ControlNet
+            </DropDownItem>
+            <DropDownItem
+              handleClick={() => {
+                const data: { base64: string; height: number; width: number } =
+                  canvas.exportToDataUrl()
+                const { base64 = '', height = 512, width = 512 } = data
+
+                setBase64FromDraw({
+                  base64,
+                  height,
+                  width
+                })
+                router.push('/?drawing=true')
+              }}
+            >
+              <UploadIcon size={20} />
+              Use for img2img
+            </DropDownItem>
+            <div className="w-full pt-[4px] mb-[4px] border-b-[1px] border-b-slate-300 h-[3px] flex flex-row" />
+            <DropDownItem
+              handleClick={() => {
                 canvas.saveToDisk()
               }}
             >
               <DownloadIcon size={20} />
               Download
             </DropDownItem>
-            <DropDownItem
+            {/* <DropDownItem
               handleClick={() => {
                 if (
                   !source_image ||
@@ -311,7 +346,7 @@ const ToolBar = ({
             >
               <PhotoCheck size={20} />
               Import img2img
-            </DropDownItem>
+            </DropDownItem> */}
           </div>
         </DropDown>
       )}

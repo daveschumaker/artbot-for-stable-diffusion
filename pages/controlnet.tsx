@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { useCallback, useReducer, useState } from 'react'
+import { useCallback, useEffect, useReducer, useState } from 'react'
 import { useStore } from 'statery'
 import SelectModel from '../components/CreatePage/AdvancedOptionsPanel/SelectModel/selectModel'
 import Uploader from '../components/CreatePage/Uploader'
@@ -22,7 +22,7 @@ import Tooltip from '../components/UI/Tooltip'
 import TwoPanel from '../components/UI/TwoPanel'
 import { CONTROL_TYPE_ARRAY } from '../constants'
 import DefaultPromptInput from '../models/DefaultPromptInput'
-import { setI2iUploaded } from '../store/canvasStore'
+import { getBase64FromDraw, setI2iUploaded } from '../store/canvasStore'
 import { userInfoStore } from '../store/userStore'
 import {
   countImagesToGenerate,
@@ -41,6 +41,8 @@ import CreateImageRequest from '../models/CreateImageRequest'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 
+let cacheSessionSettings: any = null
+
 const ControlNet = () => {
   const router = useRouter()
   const userState = useStore(userInfoStore)
@@ -49,9 +51,14 @@ const ControlNet = () => {
   const [pending, setPending] = useState(false)
   const [hasError, setHasError] = useState('')
 
-  const [input, setInput] = useReducer((state: any, newState: any) => {
-    return { ...state, ...newState }
-  }, new DefaultPromptInput())
+  const [input, setInput] = useReducer(
+    (state: any, newState: any) => {
+      return { ...state, ...newState }
+    },
+    cacheSessionSettings !== null
+      ? cacheSessionSettings
+      : new DefaultPromptInput({ control_type: 'canny' })
+  )
 
   const handleChangeInput = (event: InputEvent) => {
     if (!event || !event.target) {
@@ -98,6 +105,20 @@ const ControlNet = () => {
     [input.post_processing, setInput]
   )
 
+  const handleImportDrawing = () => {
+    const data = getBase64FromDraw()
+
+    setInput({
+      height: nearestWholeMultiple(data.height),
+      width: nearestWholeMultiple(data.width),
+      orientationType: 'custom',
+      imageType: 'image/webp',
+      source_image: data.base64,
+      source_mask: '',
+      source_processing: SourceProcessing.Img2Img
+    })
+  }
+
   const handleSaveImage = (data: any) => {
     const newBase64String = `data:${data.imageType};base64,${data.source_image}`
 
@@ -137,7 +158,7 @@ const ControlNet = () => {
     [input.post_processing]
   )
 
-  let controlTypeValue = { value: 'none', label: 'none' }
+  let controlTypeValue = { value: 'canny', label: 'canny' }
 
   if (CONTROL_TYPE_ARRAY.indexOf(input.control_type) >= 0) {
     controlTypeValue = {
@@ -146,7 +167,7 @@ const ControlNet = () => {
     }
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     if (pending) {
       return
     }
@@ -169,7 +190,17 @@ const ControlNet = () => {
 
     await createImageJob(new CreateImageRequest(inputToSubmit))
     router.push('/pending')
-  }
+  }, [input, pending, router])
+
+  useEffect(() => {
+    cacheSessionSettings = { ...input }
+  }, [input])
+
+  useEffect(() => {
+    if (router.query.drawing) {
+      handleImportDrawing()
+    }
+  }, [router.query.drawing])
 
   const totalImagesRequested = countImagesToGenerate(input)
   let totalKudosCost = kudosCost(
@@ -206,7 +237,7 @@ const ControlNet = () => {
             <Uploader handleSaveImage={handleSaveImage} type="inpainting" />
           )}
           {input.source_image && (
-            <div className="flex flex-row w-full align-center">
+            <div className="flex flex-row w-full align-center justify-center">
               <img
                 src={`data:${input.imageType};base64,${input.source_image}`}
                 alt="Uploaded image for ControlNet"
@@ -234,10 +265,7 @@ const ControlNet = () => {
             title="Clear current input"
             btnType="secondary"
             onClick={() => {
-              // PromptInputSettings.set('negative', '')
-              setInput({
-                prompt: ''
-              })
+              setInput({ ...new DefaultPromptInput() })
             }}
           >
             <ArrowBarLeftIcon />
@@ -274,6 +302,30 @@ const ControlNet = () => {
       </Section>
       <Section>
         <SubSectionTitle>Step 3. Advanced settings</SubSectionTitle>
+        <Section>
+          <SubSectionTitle>Control Type</SubSectionTitle>
+          <MaxWidth
+            // @ts-ignore
+            maxWidth="240"
+          >
+            <SelectComponent
+              options={CONTROL_TYPE_ARRAY.filter((val) => val !== '').map(
+                (value) => {
+                  return { value, label: value }
+                }
+              )}
+              onChange={(obj: { value: string; label: string }) => {
+                setInput({ control_type: obj.value })
+
+                if (obj.value !== 'none') {
+                  setInput({ karras: false, hires: false })
+                }
+              }}
+              isSearchable={false}
+              value={controlTypeValue}
+            />
+          </MaxWidth>
+        </Section>
         <TwoPanel>
           <SplitPanel>
             <Section>
@@ -415,32 +467,6 @@ const ControlNet = () => {
             </Section>
           </SplitPanel>
         </TwoPanel>
-      </Section>
-      <Section>
-        <SubSectionTitle>Control Type</SubSectionTitle>
-        <MaxWidth
-          // @ts-ignore
-          maxWidth="240"
-        >
-          <SelectComponent
-            options={CONTROL_TYPE_ARRAY.map((value) => {
-              if (value === '') {
-                return { value: 'none', label: 'none' }
-              }
-
-              return { value, label: value }
-            })}
-            onChange={(obj: { value: string; label: string }) => {
-              setInput({ control_type: obj.value })
-
-              if (obj.value !== 'none') {
-                setInput({ karras: false, hires: false })
-              }
-            }}
-            isSearchable={false}
-            value={controlTypeValue}
-          />
-        </MaxWidth>
       </Section>
       <Section>
         <SubSectionTitle>
@@ -597,7 +623,10 @@ const ControlNet = () => {
               <Button
                 title="Clear current input"
                 btnType="secondary"
-                onClick={() => setInput({ ...new DefaultPromptInput() })}
+                onClick={() => {
+                  setInput({ ...new DefaultPromptInput() })
+                  window.scrollTo(0, 0)
+                }}
               >
                 <span>
                   <TrashIcon />

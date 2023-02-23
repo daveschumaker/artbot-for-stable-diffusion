@@ -344,6 +344,22 @@ class CreateCanvas {
     this.canvas.on('mouse:up', handleMouseUp)
   }
 
+  exportToDataUrl = () => {
+    if (!this.canvas) {
+      return {
+        base64: '',
+        height: 512,
+        width: 512
+      }
+    }
+
+    return {
+      base64: this?.canvas?.toDataURL({ format: 'webp' }).split(',')[1],
+      height: this.height,
+      width: this.width
+    }
+  }
+
   autoSave = () => {
     if (!this.canvas) {
       return
@@ -906,7 +922,6 @@ class CreateCanvas {
       a: pixel[3]
     }
 
-    console.log(`color:`, color)
     hoveredColor = `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`
 
     if (this.brushPreview) {

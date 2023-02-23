@@ -18,6 +18,7 @@ import { useStore } from 'statery'
 import { appInfoStore, setShowAppMenu } from '../../store/appStore'
 import { useEffect } from 'react'
 import { lockScroll, unlockScroll } from '../../utils/appUtils'
+import PencilIcon from '../icons/PencilIcon'
 
 interface IStyledProps {
   show?: boolean
@@ -177,6 +178,14 @@ const Menu = () => {
               Inpainting
             </SubOption>
           </SubOptions>
+          <MenuOption
+            onClick={() => {
+              navigateToLink('/draw')
+            }}
+          >
+            <PencilIcon />
+            Draw
+          </MenuOption>
           <MenuOption
             onClick={() => {
               navigateToLink('/interrogate')

@@ -1,0 +1,8 @@
+.super {
+  font-weight: 300;
+  font-size: 10px;
+  letter-spacing: 1px;
+  margin-left: 2px;
+  position: absolute;
+  top: 10px;
+}

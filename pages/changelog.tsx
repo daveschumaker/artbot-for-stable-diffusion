@@ -104,6 +104,14 @@ const Changelog = () => {
             using this option from the image modal. Thanks for reporting this on
             Discord, gunsalem!
           </StyledLi>
+          <StyledLi>
+            Feature: DRAW MODE! Get your scribbles on. I had implemented a paint
+            tool waaaaaay back on October 28, 2022. Then I ended up removing it
+            only a few days later because I wasn&apos;t happy with how it turned
+            out. It has returned! Check out the{' '}
+            <Linker href="/draw">draw page</Linker>. It&apos;s perfect for{' '}
+            <Linker href="/controlnet">ControlNet</Linker>.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

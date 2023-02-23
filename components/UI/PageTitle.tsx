@@ -25,7 +25,7 @@ const PageTitle = (props) => {
   const Element = as === 'h2' ? StyledPageTitleH2 : StyledPageTitle
 
   return (
-    <Element className="mt-0 mb-2 text-teal-500" {...rest}>
+    <Element className="mt-0 mb-2 text-teal-500 relative" {...rest}>
       {children}
     </Element>
   )

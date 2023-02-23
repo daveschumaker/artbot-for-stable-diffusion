@@ -18,6 +18,7 @@ import { trackEvent, trackGaEvent } from '../api/telemetry'
 import OptionsPanel from '../components/CreatePage/OptionsPanel'
 import {
   clearCanvasStore,
+  getBase64FromDraw,
   getCanvasStore,
   resetSavedDrawingState
 } from '../store/canvasStore'
@@ -108,6 +109,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
   const editMode = query.edit
   const loadModel = query.model
   const shareMode = query.share
+  const loadDrawing = query.drawing
 
   let initialState: any = defaultState
 
@@ -121,6 +123,15 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
   if (shareMode) {
     const shareParams = ShareLinkDetails.decode(shareMode as string) || {}
     initialState = { ...defaultState, ...shareParams }
+  } else if (loadDrawing) {
+    initialState = {
+      ...defaultState,
+      source_image: getBase64FromDraw().base64,
+      orientationType: 'custom',
+      height: getBase64FromDraw().height,
+      width: getBase64FromDraw().width,
+      source_processing: SourceProcessing.Img2Img
+    }
   } else if (editMode) {
     initialState = {
       ...loadEditPrompt(),
@@ -339,7 +350,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
   }
 
   const updateDefaultInput = async () => {
-    if (!editMode && !shareMode) {
+    if (!editMode && !shareMode && !loadDrawing) {
       const updateObject = PromptInputSettings.load()
       delete updateObject.v
 
@@ -366,7 +377,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
   }, [watchBuild])
 
   useEffect(() => {
-    if (!editMode && !shareMode) {
+    if (!editMode && !shareMode && !loadDrawing) {
       updateDefaultInput()
     }
 
@@ -401,7 +412,13 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
       initialState = { ...defaultState, ...shareParams }
       setInput({ ...initialState })
       localStorage.removeItem('reloadPrompt')
-    } else if (!editMode && !shareMode && !loadModel && getInputCache()) {
+    } else if (
+      !loadDrawing &&
+      !editMode &&
+      !shareMode &&
+      !loadModel &&
+      getInputCache()
+    ) {
       setInput({ ...getInputCache() })
     } else if (editMode) {
       setInput({ ...loadEditPrompt() })
@@ -520,7 +537,8 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
             New image{' '}
             {input.source_processing === 'outpainting' && '(outpainting)'}
             {input.source_processing === 'inpainting' && '(inpainting)'}
-            {input.source_processing === 'img2img' && '(img2img)'}
+            {input.source_processing === SourceProcessing.Img2Img &&
+              '(img2img)'}
           </PageTitle>
         </div>
         <div className="flex flex-row justify-end w-1/2 items-start h-[38px] relative gap-2">

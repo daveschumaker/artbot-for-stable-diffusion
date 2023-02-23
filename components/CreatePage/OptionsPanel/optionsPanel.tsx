@@ -96,7 +96,7 @@ const OptionsPanel = ({
       <SectionTitle>
         {activeNav === 'advanced' && `Advanced Options`}
         {activeNav === 'img2img' && `Img2Img (source file)`}
-        {activeNav === 'draw' && `Draw (img2img)`}
+        {/* {activeNav === 'draw' && `Draw (img2img)`} */}
         {activeNav === 'inpainting' && `Inpainting / mask`}
       </SectionTitle>
       <ul className="flex flex-row gap-2 md:gap-8 mb-3 text-sm md:text-base">
@@ -118,7 +118,7 @@ const OptionsPanel = ({
         >
           [ img2img ]
         </NavItem>
-        <NavItem
+        {/* <NavItem
           active={activeNav === 'draw'}
           onClick={() => {
             router.push(`?panel=draw`)
@@ -126,7 +126,7 @@ const OptionsPanel = ({
           }}
         >
           [ draw ]
-        </NavItem>
+        </NavItem> */}
         <NavItem
           active={activeNav === 'inpainting'}
           onClick={() => {
@@ -172,7 +172,7 @@ const OptionsPanel = ({
           />
         )}
 
-      {activeNav === 'draw' &&
+      {/* {activeNav === 'draw' &&
         input.source_processing === SourceProcessing.InPainting && (
           <WarningPanel
             panelType="inpainting"
@@ -186,9 +186,9 @@ const OptionsPanel = ({
               })
             }}
           />
-        )}
+        )} */}
 
-      {activeNav === 'draw' &&
+      {/* {activeNav === 'draw' &&
         input.source_processing !== SourceProcessing.InPainting && (
           <>
             <Editor
@@ -209,7 +209,7 @@ const OptionsPanel = ({
               source_image_width={input.width}
             />
           </>
-        )}
+        )} */}
 
       {activeNav === 'inpainting' &&
         input.source_image &&

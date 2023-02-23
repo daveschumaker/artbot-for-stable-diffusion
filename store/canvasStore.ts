@@ -121,3 +121,42 @@ export const resetSavedDrawingState = () => {
     redo: []
   }
 }
+
+// ANOTHER HACKY THING. SAVE BASE64
+let base64FromDraw: string | null = null
+let drawHeight: number | null = null
+let drawWidth: number | null = null
+
+interface IDrawParams {
+  base64: string
+  height: number
+  width: number
+}
+
+export const setBase64FromDraw = ({ base64, height, width }: IDrawParams) => {
+  base64FromDraw = base64
+  drawHeight = height
+  drawWidth = width
+}
+
+export const getBase64FromDraw = (): IDrawParams => {
+  if (base64FromDraw === null || drawHeight === null || drawWidth === null) {
+    return {
+      base64: '',
+      height: 512,
+      width: 512
+    }
+  }
+
+  return {
+    base64: base64FromDraw,
+    height: drawHeight,
+    width: drawWidth
+  }
+}
+
+export const clearBase64FromDraw = () => {
+  base64FromDraw = null
+  drawHeight = null
+  drawWidth = null
+}

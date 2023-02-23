@@ -1,5 +1,11 @@
 import { SourceProcessing } from '../utils/promptUtils'
 
+interface IParams {
+  control_type?: string
+  source_image?: string
+  height?: number
+  width?: number
+}
 class DefaultPromptInput {
   img2img: boolean
   upscaled: boolean
@@ -38,13 +44,18 @@ class DefaultPromptInput {
   canvasData: any | null
   maskData: any | null
 
-  constructor() {
+  constructor({
+    control_type = 'none',
+    source_image = '',
+    height = 512,
+    width = 512
+  }: IParams = {}) {
     this.img2img = false
     this.upscaled = false
     this.imageType = ''
     this.orientationType = 'square'
-    this.height = 512
-    this.width = 512
+    this.height = Number(height)
+    this.width = Number(width)
     this.numImages = 1
     this.prompt = ''
     this.sampler = 'k_euler_a'
@@ -54,7 +65,7 @@ class DefaultPromptInput {
     this.multiGuidance = ''
     this.seed = ''
     this.denoising_strength = 0.75
-    this.control_type = 'none'
+    this.control_type = String(control_type)
     this.karras = true
     this.hires = false
     this.clipskip = 1
@@ -62,7 +73,7 @@ class DefaultPromptInput {
     this.negative = ''
     this.triggers = []
     this.tiling = false
-    this.source_image = ''
+    this.source_image = source_image
     this.source_mask = ''
     this.stylePreset = 'none'
     this.source_processing = SourceProcessing.Prompt

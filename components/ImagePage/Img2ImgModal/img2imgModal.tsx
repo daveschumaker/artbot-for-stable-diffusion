@@ -7,6 +7,7 @@ import {
 } from '../../../controllers/imageDetailsCommon'
 import useComponentState from '../../../hooks/useComponentState'
 import { useWindowSize } from '../../../hooks/useWindowSize'
+import { setBase64FromDraw } from '../../../store/canvasStore'
 import EyeIcon from '../../icons/EyeIcon'
 import { Button } from '../../UI/Button'
 import InteractiveModal from '../../UI/InteractiveModal/interactiveModal'
@@ -95,12 +96,26 @@ const Img2ImgModal = ({
           )}
           <Button
             onClick={() => {
+              // Kinda hacky since it's using the load drawing method.
+              setBase64FromDraw({
+                base64: imageDetails.source_image,
+                height: imageDetails.height,
+                width: imageDetails.width
+              })
+              router.push(`/controlnet?drawing=true`)
+            }}
+            width={isMobile ? '100%' : ''}
+          >
+            Use for ControlNet
+          </Button>
+          <Button
+            onClick={() => {
               uploadImg2Img(imageDetails, { useSourceImg: true })
               router.push(`/?panel=img2img&edit=true`)
             }}
             width={isMobile ? '100%' : ''}
           >
-            New img2img
+            Use for img2img
           </Button>
           <Button
             onClick={() => {
@@ -109,7 +124,7 @@ const Img2ImgModal = ({
             }}
             width={isMobile ? '100%' : ''}
           >
-            New inpaint
+            Use for inpaint
           </Button>
           {source_mask && (
             <Button

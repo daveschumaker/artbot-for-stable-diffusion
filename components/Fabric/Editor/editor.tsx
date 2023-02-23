@@ -95,6 +95,10 @@ const Editor = ({
       let container = document.querySelector('#canvas-wrapper')
       // @ts-ignore
       width = container?.offsetWidth || 512
+
+      if (width > 1024) {
+        width = 1024
+      }
     }
 
     const myCanvas = initCanvas(height, width)

@@ -2,6 +2,10 @@ import { useState } from 'react'
 import { HexAlphaColorPicker } from 'react-colorful'
 import { ORIENTATION_OPTIONS } from '../../../../constants'
 import { IOrientation } from '../../../../types'
+import {
+  calculateAspectRatioFit,
+  nearestWholeMultiple
+} from '../../../../utils/imageUtils'
 import CloseIcon from '../../../icons/CloseIcon'
 import { Button } from '../../../UI/Button'
 import InteractiveModal from '../../../UI/InteractiveModal/interactiveModal'
@@ -95,9 +99,21 @@ const NewCanvas = ({
           <Button
             onClick={() => {
               if (orientationValue.height && orientationValue.width) {
+                // get width of canvas area
+                let container = document.querySelector('#canvas-wrapper')
+                // @ts-ignore
+                const canvasWidth = container?.offsetWidth || 512
+
+                const resized = calculateAspectRatioFit(
+                  orientationValue.width,
+                  orientationValue.height,
+                  canvasWidth > 1024 ? 1024 : canvasWidth,
+                  1024
+                )
+
                 handleOnCreateClick({
-                  height: orientationValue.height,
-                  width: orientationValue.width,
+                  height: nearestWholeMultiple(resized.height),
+                  width: nearestWholeMultiple(resized.width),
                   bgColor: color
                 })
               }
