@@ -242,7 +242,7 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
               for more information.
             </div>
           )}
-          <div
+          {/* <div
             id="global-server-message"
             className="text-sm border-2 border-rose-600 py-1 px-2 rounded mb-2 text-red-500"
           >
@@ -260,7 +260,7 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
             <div className="mt-2 text-sm text-[black] dark:text-[white]">
               Updated: 5:23 AM Thursday, February 23, 2023 UTC
             </div>
-          </div>
+          </div> */}
           <Component {...pageProps} />
           <Footer />
           {sizeOverride && (
