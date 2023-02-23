@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { deleteCompletedImage, getImageDetails } from '../../utils/db'
+import { deleteCompletedImageById, getImageDetails } from '../../utils/db'
 import ImageModal from '../ImageModal'
 
 interface IProps {
@@ -29,7 +29,7 @@ const PollingImageController = ({
   }, [imageId])
 
   const handleDeleteImageClick = async () => {
-    await deleteCompletedImage(imageId)
+    await deleteCompletedImageById(imageDetails.id)
     onAfterDelete()
     handleClose()
   }

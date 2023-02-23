@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import {
-  deleteCompletedImage,
+  deleteCompletedImageById,
   getImageDetails,
   getNextImageDetails,
   getPrevImageDetails
@@ -36,7 +36,7 @@ const ImageModalController = ({
   }, [imageId])
 
   const handleDeleteImageClick = async () => {
-    await deleteCompletedImage(imageId)
+    await deleteCompletedImageById(imageDetails.id)
     onAfterDelete()
     handleClose()
   }

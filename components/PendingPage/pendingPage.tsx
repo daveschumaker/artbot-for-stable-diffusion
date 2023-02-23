@@ -13,7 +13,7 @@ import {
   db,
   deleteAllPendingErrors,
   deleteAllPendingJobs,
-  deleteCompletedImage,
+  deleteCompletedImageById,
   deleteDoneFromPending
 } from '../../utils/db'
 import AdContainer from '../AdContainer'
@@ -50,8 +50,8 @@ const PendingPage = () => {
     })
   }, [pendingImages, showImageModal])
 
-  const deleteImage = async (jobId: string) => {
-    await deleteCompletedImage(jobId)
+  const handleDeleteImage = async (id: number, jobId: string) => {
+    await deleteCompletedImageById(id)
     await clearCompletedJob(jobId)
 
     setDone(getCompletedJobs())
@@ -152,7 +152,7 @@ const PendingPage = () => {
         <ImageModalController
           reverseButtons
           onAfterDelete={() => {}}
-          handleDeleteImage={deleteImage}
+          handleDeleteImage={handleDeleteImage}
           handleClose={() => {
             setShowImageModal(false)
             setJobsForModal(getCompletedJobs())

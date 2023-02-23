@@ -97,6 +97,16 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.02.23</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: Issue where sometimes the wrong image would be deleted when
+            using this option from the image modal. Thanks for reporting this on
+            Discord, gunsalem!
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.02.22</SubSectionTitle>
         <StyledUl>
           <StyledLi>
@@ -121,7 +131,7 @@ const Changelog = () => {
           </StyledLi>
           <StyledLi>
             Fixed: Incorrect background color for negative prompt library.
-            THanks to gunsalem on Discord for reporting this!
+            Thanks to gunsalem on Discord for reporting this!
           </StyledLi>
           <StyledLi>
             Looks like the Stable Horde backend is choking right now. Put up a

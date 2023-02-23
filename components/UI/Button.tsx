@@ -27,6 +27,10 @@ const StyledButton = styled.button<ButtonProps>`
   padding: 2px 8px;
   width: ${(props) => props.width};
 
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
   ${(props) =>
     props.btnType === 'secondary' &&
     `

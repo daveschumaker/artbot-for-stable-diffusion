@@ -20,7 +20,7 @@ import RateMyImage from './RateMyImage'
 interface IProps {
   disableNav?: boolean
   handleClose(): void
-  handleDeleteImageClick(imageId: string): void
+  handleDeleteImageClick(imageId: string, jobId?: string): void
   handleLoadNext(): void
   handleLoadPrev(): void
   imageDetails: any
@@ -212,7 +212,7 @@ const ImageModal = ({
         <ConfirmationModal
           onConfirmClick={() => {
             setShowDeleteModal(false)
-            handleDeleteImageClick(imageDetails.jobId)
+            handleDeleteImageClick(imageDetails.id)
           }}
           closeModal={() => setShowDeleteModal(false)}
         />

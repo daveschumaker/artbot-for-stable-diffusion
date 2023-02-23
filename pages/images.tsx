@@ -171,15 +171,6 @@ const ImagesPage = () => {
   ])
 
   const handleDeleteImageClick = async () => {
-    trackEvent({
-      event: 'BULK_DELETE_CLICK',
-      context: 'ImagesPage',
-      data: {
-        totalImages: componentState.totalImages,
-        numImagesDeleted: componentState.deleteSelection.length
-      }
-    })
-
     await bulkDeleteImages(componentState.deleteSelection)
     await getImageCount()
     await fetchImages()

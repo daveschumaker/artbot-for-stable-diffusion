@@ -107,7 +107,7 @@ const ImagePage = () => {
     }
   }, [findRelatedImages, id])
 
-  const handleDeleteImageClick = async () => {
+  const afterDeleteImageClick = async () => {
     router.push(`/images`)
   }
 
@@ -301,7 +301,7 @@ const ImagePage = () => {
             </div>
             <ImageDetails
               imageDetails={imageDetails}
-              onDelete={handleDeleteImageClick}
+              onDelete={afterDeleteImageClick}
             />
           </div>
           <div className="mb-4">

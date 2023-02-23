@@ -5,7 +5,7 @@ import ImageModal from '../ImageModal'
 
 interface IProps {
   handleClose(): void
-  handleDeleteImage(imageId: string): void
+  handleDeleteImage(imageId: number, jobId: string): void
   imageList: Array<any>
   initialIndexJobId: string | boolean
   onAfterDelete(): void
@@ -42,8 +42,8 @@ const ImageModalController = ({
     setLoading(false)
   }, [idx, imageList])
 
-  const handleDeleteImageClick = async (imageId: string) => {
-    handleDeleteImage(imageId)
+  const handleDeleteImageClick = async () => {
+    handleDeleteImage(imageDetails.id, imageDetails.jobId)
     onAfterDelete()
     handleClose()
   }
