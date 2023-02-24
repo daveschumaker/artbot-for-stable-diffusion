@@ -224,15 +224,15 @@ const ImagePage = () => {
     })
   })
 
-  const upscaleCost = kudosCost(
-    imageDetails.width,
-    imageDetails.height,
-    imageDetails.steps,
-    1, // numImages
-    true, // 'RealESRGAN_x4plus' upscale
-    imageDetails?.post_processing?.length ?? 0,
-    imageDetails.sampler
-  )
+  const upscaleCost = kudosCost({
+    width: imageDetails.width,
+    height: imageDetails.height,
+    steps: imageDetails.steps,
+    numImages: 1, // numImages
+    postProcessors: imageDetails?.post_processing || [],
+    sampler: imageDetails.sampler,
+    control_type: imageDetails?.control_type || 'none'
+  })
 
   const imageUpscaled =
     imageDetails?.post_processing?.indexOf('RealESRGAN_x4plus') >= 0

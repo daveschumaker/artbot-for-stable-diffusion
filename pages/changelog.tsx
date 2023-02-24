@@ -135,6 +135,10 @@ const Changelog = () => {
             My apologies for minor UI consistencies around the site as I go and
             update various parts of the interface at different times.
           </StyledLi>
+          <StyledLi>
+            Fix: Boy, this is awkward. I broke the image details page. But it is
+            now fixed! Thanks to ANK95 on Discord for reporting.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
