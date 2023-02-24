@@ -47,6 +47,9 @@ import Head from 'next/head'
 import { useEffectOnce } from '../hooks/useEffectOnce'
 import { IModelDetails, modelInfoStore } from '../store/modelStore'
 
+// Kind of a hacky way to persist output of image over the course of a session.
+let cachedImageDetails = {}
+
 const ControlNet = () => {
   const router = useRouter()
   const modelState = useStore(modelInfoStore)
@@ -142,6 +145,12 @@ const ControlNet = () => {
       width: data.width
     })
 
+    cachedImageDetails = {
+      source_image: data.source_image,
+      height: data.height,
+      width: data.width
+    }
+
     setInput({
       height: nearestWholeMultiple(data.height),
       width: nearestWholeMultiple(data.width),
@@ -214,7 +223,12 @@ const ControlNet = () => {
   useEffectOnce(() => {
     const string = localStorage.getItem('controlnetPageInput')
     const cached = string ? JSON.parse(string) : {}
-    const updateObj = Object.assign({}, new DefaultPromptInput(), cached)
+    const updateObj = Object.assign(
+      {},
+      new DefaultPromptInput(),
+      cached,
+      cachedImageDetails
+    )
 
     setInput({ ...updateObj })
   })
@@ -266,14 +280,17 @@ const ControlNet = () => {
                 alt="Uploaded image for ControlNet"
                 style={{
                   boxShadow: '2px 2px 4px 1px rgba(0, 0, 0, 0.75)',
-                  maxWidth: `100%`,
-                  maxHeight: `100%`
+                  margin: '0 auto',
+                  maxWidth: `1024px`,
+                  maxHeight: `100%`,
+                  width: '100%'
                 }}
               />
               <div className="flex flex-row w-full justify-end mt-2">
                 <Button
                   btnType="secondary"
                   onClick={() => {
+                    cachedImageDetails = {}
                     setInput({ source_image: '' })
                     clearBase64FromDraw()
                   }}
