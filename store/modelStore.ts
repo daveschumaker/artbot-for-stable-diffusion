@@ -19,6 +19,7 @@ export interface IModelsDetails {
 
 export interface IModelDetails {
   description: string
+  baseline: string
   homepage: string
   showcases: Array<string>
   name: string

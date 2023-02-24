@@ -1,25 +1,30 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useState } from 'react'
 import { useStore } from 'statery'
 import {
   appInfoStore,
   setNewImageReady,
   setShowImageReadyToast
 } from '../../../store/appStore'
+import ChevronDownIcon from '../../icons/ChevronDownIcon'
 import IconCreate from '../../icons/CreateIcon'
 import HourglassIcon from '../../icons/HourglassIcon'
 import InfoIcon from '../../icons/InfoIcon'
 import PhotoIcon from '../../icons/PhotoIcon'
 import PhotoPlusIcon from '../../icons/PhotoPlusIcon'
 import SettingsIcon from '../../icons/SettingsIcon'
+import DropDown from '../DropDownV2/DropDownMenu'
+import DropDownItem from '../DropDownV2/DropDownMenuItem'
 
 const NavItem = ({
   active = false,
-  children
+  children,
+  onClick = () => {}
 }: {
   active?: boolean
   children: React.ReactNode
+  onClick?: () => void
 }) => {
   const styles: any = {}
 
@@ -30,8 +35,9 @@ const NavItem = ({
 
   return (
     <div
-      className="flex flex-row gap-[2px] pb-[4px] items-center text-[14px] font-[600] cursor-pointer hover:text-[#14B8A6]"
+      className="flex flex-row relative gap-[2px] pb-[4px] items-center text-[14px] font-[600] cursor-pointer hover:text-[#14B8A6]"
       style={{ ...styles }}
+      onClick={onClick}
     >
       {children}
     </div>
@@ -43,6 +49,9 @@ const NavBar = () => {
   const { pathname } = router
   const appState = useStore(appInfoStore)
   const { newImageReady } = appState
+
+  const [showCreateMenu, setShowCreateMenu] = useState(false)
+  const [showInfoMenu, setShowInfoMenu] = useState(false)
 
   const clearNewImageNotification = () => {
     setShowImageReadyToast(false)
@@ -68,12 +77,46 @@ const NavBar = () => {
       className="hidden tablet:flex flex-row grow justify-end gap-2"
       role="navigation"
     >
-      <Link href="/" passHref tabIndex={0}>
-        <NavItem active={isActiveRoute('/')}>
-          <IconCreate size={20} />
-          Create
+      <div className="flex flex-row gap-[0px] relative">
+        <Link href="/" passHref tabIndex={0}>
+          <NavItem active={isActiveRoute('/')}>
+            <IconCreate size={20} />
+            Create
+          </NavItem>
+        </Link>
+        <NavItem
+          active={isActiveRoute('/')}
+          onClick={() => {
+            setShowCreateMenu(true)
+          }}
+        >
+          <ChevronDownIcon size={20} />
         </NavItem>
-      </Link>
+        {showCreateMenu && (
+          <DropDown
+            handleClose={() => {
+              setShowCreateMenu(false)
+            }}
+          >
+            <DropDownItem
+              handleClick={() => {
+                setShowCreateMenu(false)
+                router.push('/controlnet')
+              }}
+            >
+              ControlNet
+            </DropDownItem>
+            <DropDownItem
+              handleClick={() => {
+                setShowCreateMenu(false)
+                router.push('/draw')
+              }}
+            >
+              Draw
+            </DropDownItem>
+          </DropDown>
+        )}
+      </div>
       <Link href="/pending" passHref tabIndex={0}>
         <NavItem active={isActiveRoute('/pending')}>
           <HourglassIcon size={20} />
@@ -98,12 +141,62 @@ const NavBar = () => {
           Images
         </NavItem>
       </Link>
-      <Link href="/info" passHref tabIndex={0}>
-        <NavItem active={isActiveRoute('/info')}>
-          <InfoIcon size={20} />
-          Info
+      <div className="flex flex-row gap-[0px] relative">
+        <Link href="/info" passHref tabIndex={0}>
+          <NavItem active={isActiveRoute('/info')}>
+            <InfoIcon size={20} />
+            Info
+          </NavItem>
+        </Link>
+        <NavItem
+          active={isActiveRoute('/info')}
+          onClick={() => {
+            setShowInfoMenu(true)
+          }}
+        >
+          <ChevronDownIcon size={20} />
         </NavItem>
-      </Link>
+        {showInfoMenu && (
+          <DropDown
+            handleClose={() => {
+              setShowInfoMenu(false)
+            }}
+          >
+            <DropDownItem
+              handleClick={() => {
+                setShowInfoMenu(false)
+                router.push('/info/models')
+              }}
+            >
+              Model Details
+            </DropDownItem>
+            <DropDownItem
+              handleClick={() => {
+                setShowInfoMenu(false)
+                router.push('/info/models/updates')
+              }}
+            >
+              Model Updates
+            </DropDownItem>
+            <DropDownItem
+              handleClick={() => {
+                setShowInfoMenu(false)
+                router.push('/info/models?show=favorite-models')
+              }}
+            >
+              Favorite Models
+            </DropDownItem>
+            <DropDownItem
+              handleClick={() => {
+                setShowInfoMenu(false)
+                router.push('/info/workers')
+              }}
+            >
+              Worker Details
+            </DropDownItem>
+          </DropDown>
+        )}
+      </div>
       <Link href="/settings" passHref tabIndex={0}>
         <NavItem active={isActiveRoute('/settings')}>
           <SettingsIcon size={20} />

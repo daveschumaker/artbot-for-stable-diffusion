@@ -27,6 +27,7 @@ const fetchModelDetails = async () => {
     for (const model in models) {
       const {
         description,
+        baseline,
         homepage,
         showcases,
         name,
@@ -40,6 +41,7 @@ const fetchModelDetails = async () => {
       if (type === 'ckpt') {
         modelDetails[name] = {
           description,
+          baseline,
           homepage,
           showcases,
           name,

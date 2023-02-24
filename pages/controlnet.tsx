@@ -22,7 +22,11 @@ import Tooltip from '../components/UI/Tooltip'
 import TwoPanel from '../components/UI/TwoPanel'
 import { CONTROL_TYPE_ARRAY } from '../constants'
 import DefaultPromptInput from '../models/DefaultPromptInput'
-import { getBase64FromDraw, setI2iUploaded } from '../store/canvasStore'
+import {
+  clearBase64FromDraw,
+  getBase64FromDraw,
+  setI2iUploaded
+} from '../store/canvasStore'
 import { userInfoStore } from '../store/userStore'
 import {
   countImagesToGenerate,
@@ -40,25 +44,30 @@ import { createImageJob } from '../utils/imageCache'
 import CreateImageRequest from '../models/CreateImageRequest'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
-
-let cacheSessionSettings: any = null
+import { useEffectOnce } from '../hooks/useEffectOnce'
+import { IModelDetails, modelInfoStore } from '../store/modelStore'
 
 const ControlNet = () => {
   const router = useRouter()
+  const modelState = useStore(modelInfoStore)
   const userState = useStore(userInfoStore)
   const { loggedIn } = userState
+  const { modelDetails } = modelState
 
   const [pending, setPending] = useState(false)
   const [hasError, setHasError] = useState('')
 
-  const [input, setInput] = useReducer(
-    (state: any, newState: any) => {
-      return { ...state, ...newState }
-    },
-    cacheSessionSettings !== null
-      ? cacheSessionSettings
-      : new DefaultPromptInput({ control_type: 'canny' })
-  )
+  const [input, setInput] = useReducer((state: any, newState: any) => {
+    return { ...state, ...newState }
+  }, new DefaultPromptInput({ control_type: 'canny' }))
+
+  const handleCacheInput = (params: DefaultPromptInput) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+    const { source_image, ...inputParams } = params
+
+    const string = JSON.stringify(inputParams)
+    localStorage.setItem('controlnetPageInput', string)
+  }
 
   const handleChangeInput = (event: InputEvent) => {
     if (!event || !event.target) {
@@ -141,14 +150,19 @@ const ControlNet = () => {
 
   const modelerOptions = (imageParams: any) => {
     const modelsArray = validModelsArray({ imageParams }) || []
-    modelsArray.push({
-      name: 'random',
-      value: 'random',
-      label: 'Random!',
-      count: 1
+
+    const filteredArray = modelsArray.filter((model: IModelDetails) => {
+      return modelDetails[model.name].baseline === 'stable diffusion 1'
     })
 
-    return modelsArray
+    // modelsArray.push({
+    //   name: 'random',
+    //   value: 'random',
+    //   label: 'Random!',
+    //   count: 1
+    // })
+
+    return filteredArray
   }
 
   const getPostProcessing = useCallback(
@@ -192,8 +206,16 @@ const ControlNet = () => {
     router.push('/pending')
   }, [input, pending, router])
 
+  useEffectOnce(() => {
+    const string = localStorage.getItem('controlnetPageInput')
+    const cached = string ? JSON.parse(string) : {}
+    const updateObj = Object.assign({}, new DefaultPromptInput(), cached)
+
+    setInput({ ...updateObj })
+  })
+
   useEffect(() => {
-    cacheSessionSettings = { ...input }
+    handleCacheInput(input)
   }, [input])
 
   useEffect(() => {
@@ -237,7 +259,7 @@ const ControlNet = () => {
             <Uploader handleSaveImage={handleSaveImage} type="inpainting" />
           )}
           {input.source_image && (
-            <div className="flex flex-row w-full align-center justify-center">
+            <div className="flex flex-col w-full align-center justify-center">
               <img
                 src={`data:${input.imageType};base64,${input.source_image}`}
                 alt="Uploaded image for ControlNet"
@@ -247,6 +269,18 @@ const ControlNet = () => {
                   maxHeight: `100%`
                 }}
               />
+              <div className="flex flex-row w-full justify-end mt-2">
+                <Button
+                  btnType="secondary"
+                  onClick={() => {
+                    setInput({ source_image: '' })
+                    clearBase64FromDraw()
+                  }}
+                >
+                  <TrashIcon />
+                  Remove image?
+                </Button>
+              </div>
             </div>
           )}
         </div>
@@ -631,7 +665,7 @@ const ControlNet = () => {
                 <span>
                   <TrashIcon />
                 </span>
-                <span className="hidden md:inline-block">Clear</span>
+                <span className="hidden md:inline-block">Reset?</span>
               </Button>
               <Button
                 title="Create new image"

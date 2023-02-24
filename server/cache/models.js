@@ -63,6 +63,7 @@ const fetchModelDetails = async () => {
       for (const model in data) {
         const {
           description,
+          baseline,
           homepage,
           showcases,
           name,
@@ -76,6 +77,7 @@ const fetchModelDetails = async () => {
         if (type === 'ckpt') {
           modelDetails[name] = {
             description,
+            baseline,
             homepage,
             showcases,
             name,
@@ -89,6 +91,7 @@ const fetchModelDetails = async () => {
       }
 
       delete modelDetails.LDSR
+      delete modelDetails['stable_diffusion_1.4']
       modelDiff(modelDetails)
 
       cache.details = { ...modelDetails }
