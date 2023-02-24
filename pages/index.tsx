@@ -427,15 +427,15 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
 
   const triggerArray = [...(modelDetails[input?.models[0]]?.trigger ?? '')]
   const totalImagesRequested = countImagesToGenerate(input)
-  const totalKudosCost = kudosCost(
-    input.width,
-    input.height,
-    input.steps,
-    totalImagesRequested || 1,
-    input.post_processing.indexOf('RealESRGAN_x4plus') === -1 ? false : true,
-    input.post_processing.length,
-    input.sampler
-  )
+  const totalKudosCost = kudosCost({
+    width: input.width,
+    height: input.height,
+    steps: input.steps,
+    numImages: totalImagesRequested,
+    postProcessors: input.post_processing,
+    sampler: input.sampler,
+    control_type: input.control_type
+  })
 
   const kudosPerImage =
     totalImagesRequested < 1 ||

@@ -57,9 +57,14 @@ const ControlNet = () => {
   const [pending, setPending] = useState(false)
   const [hasError, setHasError] = useState('')
 
+  const initialInput = {
+    ...new DefaultPromptInput(),
+    control_type: 'canny'
+  }
+
   const [input, setInput] = useReducer((state: any, newState: any) => {
     return { ...state, ...newState }
-  }, new DefaultPromptInput({ control_type: 'canny' }))
+  }, initialInput)
 
   const handleCacheInput = (params: DefaultPromptInput) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
@@ -225,19 +230,15 @@ const ControlNet = () => {
   }, [router.query.drawing])
 
   const totalImagesRequested = countImagesToGenerate(input)
-  let totalKudosCost = kudosCost(
-    input.width,
-    input.height,
-    input.steps,
-    totalImagesRequested || 1,
-    input.post_processing.indexOf('RealESRGAN_x4plus') === -1 ? false : true,
-    input.post_processing.length,
-    input.sampler
-  )
-
-  if (controlTypeValue.value !== 'none') {
-    totalKudosCost = totalKudosCost * 3
-  }
+  const totalKudosCost = kudosCost({
+    width: input.width,
+    height: input.height,
+    steps: input.steps,
+    numImages: totalImagesRequested,
+    postProcessors: input.post_processing,
+    sampler: input.sampler,
+    control_type: input.control_type
+  })
 
   const kudosPerImage =
     totalImagesRequested < 1 ||

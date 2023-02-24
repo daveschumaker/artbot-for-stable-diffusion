@@ -457,28 +457,39 @@ export const modifyPromptForStylePreset = ({
   return stylePresetPrompt
 }
 
-export const kudosCost = (
-  width: number,
-  height: number,
-  steps: number,
-  n: number,
-  hasUpscaler: boolean,
-  numPostProcessors: number,
+export const kudosCost = ({
+  width,
+  height,
+  steps,
+  numImages,
+  postProcessors,
+  sampler,
+  control_type
+}: {
+  width: number
+  height: number
+  steps: number
+  numImages: number
+  postProcessors: Array<string>
   sampler: string
-): number => {
+  control_type: string
+}): number => {
   const result =
-    Math.pow(width * height - 64 * 64, 1.75) /
+    Math.pow((width as number) * (height as number) - 64 * 64, 1.75) /
     Math.pow(1024 * 1024 - 64 * 64, 1.75)
-  let kudos = 0.1232 * steps + result * (0.1232 * steps * 8.75)
-  if (hasUpscaler) {
-    kudos *= 1.3
-  }
-  if (numPostProcessors > 0) {
-    kudos = kudos * (1 + 0.2 * numPostProcessors)
-  }
-  kudos *= /k_heun|dpm_2|k_dpmpp_2s_a/.test(sampler) ? 2 : 1
-  kudos *= n
-  return Math.round(kudos)
+
+  let kudos =
+    0.1232 * (steps as number) + result * (0.1232 * (steps as number) * 8.75)
+
+  const processingCost =
+    kudos *
+    numImages *
+    (/dpm_2|dpm_2_a|k_heun/.test(sampler) ? 2 : 1) *
+    (1 + (postProcessors.includes('RealESRGAN_x4plus') ? 0.2 * 1 + 0.3 : 0))
+
+  return Math.round(
+    control_type !== 'none' ? processingCost * 3 : processingCost
+  )
 }
 
 export const downloadImages = async (
