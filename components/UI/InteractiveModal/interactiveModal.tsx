@@ -20,6 +20,13 @@ const CloseIconWrapper = styled.div`
   right: 8px;
 `
 
+const LeftIconWrapper = styled.div`
+  cursor: pointer;
+  position: absolute;
+  top: 8px;
+  left: 8px;
+`
+
 const SwipeCapture = styled.div`
   position: absolute;
   top: 0;
@@ -102,7 +109,8 @@ const InteractiveModal = (props: any) => {
   const {
     className = '',
     handleClose = () => {},
-    setDynamicHeight = 512
+    setDynamicHeight = 512,
+    leftButton
   } = props
   const [startAnimation, setStartAnimation] = useState(false)
   const [height, setHeight] = useState(512)
@@ -168,6 +176,7 @@ const InteractiveModal = (props: any) => {
         <CloseIconWrapper onClick={onClose}>
           <CloseIcon size={28} />
         </CloseIconWrapper>
+        {leftButton && <LeftIconWrapper>{leftButton}</LeftIconWrapper>}
       </StyledInteractiveModal>
     </>
   )

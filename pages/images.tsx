@@ -920,7 +920,7 @@ const ImagesPage = () => {
                           {image.favorited && (
                             <StyledHeartIcon
                               fill="#14B8A6"
-                              width={2}
+                              width={1}
                               size={32}
                               shadow
                             />
@@ -974,7 +974,7 @@ const ImagesPage = () => {
                           {image.favorited && (
                             <StyledHeartIcon
                               fill="#14B8A6"
-                              width={2}
+                              width={1}
                               size={32}
                               shadow
                             />

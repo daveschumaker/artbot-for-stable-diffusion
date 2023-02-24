@@ -3,10 +3,12 @@ import React from 'react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import useComponentState from '../../hooks/useComponentState'
+import { updateCompletedJob } from '../../utils/db'
 import { base64toBlob, downloadFile } from '../../utils/imageUtils'
 import ConfirmationModal from '../ConfirmationModal'
 import DownloadIcon from '../icons/DownloadIcon'
 import EyeIcon from '../icons/EyeIcon'
+import HeartIcon from '../icons/HeartIcon'
 import LinkIcon from '../icons/LinkIcon'
 import ShareIcon from '../icons/ShareIcon'
 import TrashIcon from '../icons/TrashIcon'
@@ -109,7 +111,8 @@ const ImageModal = ({
     imageMaxHeight: 700,
     mouseHover: false,
     showTiles: false,
-    showSourceImg: false
+    showSourceImg: false,
+    favorited: false
   })
 
   const handleDeleteImage = () => {
@@ -201,10 +204,35 @@ const ImageModal = ({
     }
   }, [imageDetails.base64String, setComponentState])
 
+  useEffect(() => {
+    if (imageDetails.favorited && !componentState.favorited) {
+      setComponentState({ favorited: true })
+    } else if (!imageDetails.favorited && componentState.favorited) {
+      setComponentState({ favorited: false })
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [imageDetails])
+
   return (
     <StyledModal
       handleClose={handleClose}
       setDynamicHeight={componentState.containerHeight}
+      leftButton={
+        <div
+          onClick={async () => {
+            await updateCompletedJob(
+              imageDetails.id,
+              Object.assign({}, imageDetails, {
+                favorited: !componentState.favorited
+              })
+            )
+            setComponentState({ favorited: !componentState.favorited })
+          }}
+        >
+          <HeartIcon fill={componentState.favorited ? '#14B8A6' : undefined} />
+        </div>
+      }
     >
       {showDeleteModal && (
         <ConfirmationModal

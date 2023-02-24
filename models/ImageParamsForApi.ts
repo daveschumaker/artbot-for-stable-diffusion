@@ -43,7 +43,7 @@ export interface IArtBotImageDetails {
 }
 
 interface ParamsObject {
-  sampler_name: string
+  sampler_name?: string // Optional due to controlNet
   cfg_scale: number
   height: number
   width: number
@@ -52,7 +52,7 @@ interface ParamsObject {
   denoising_strength?: number
   control_type?: string
   karras: boolean
-  hires_fix: boolean
+  hires_fix?: boolean // Optional due to img2img not being supported
   clip_skip: number
   tiling: boolean
   post_processing?: Array<string>
@@ -157,7 +157,7 @@ class ImageParamsForApi {
       apiParams.params.post_processing = []
     }
 
-    if (control_type && control_type !== 'none') {
+    if (control_type && control_type !== 'none' && source_image) {
       apiParams.params.control_type = control_type
     }
 
@@ -177,6 +177,18 @@ class ImageParamsForApi {
       if (apiParams.source_mask) {
         apiParams.source_mask = '[true] (string removed for log output)'
       }
+    }
+
+    // Things to remove
+    if (control_type && control_type !== 'none' && source_image) {
+      delete apiParams.params.denoising_strength
+      delete apiParams.params.sampler_name
+      apiParams.params.karras = false
+      apiParams.params.hires_fix = false
+    }
+
+    if (source_image) {
+      delete apiParams.params.hires_fix
     }
 
     return apiParams

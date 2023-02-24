@@ -98,6 +98,18 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.02.24</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: Incorrect kudos cost. Thanks for letting me know on Discord,
+            &quot;Bottom create button gang&quot;!
+          </StyledLi>
+          <StyledLi>
+            Feature: Add ability to favorite image from image modal.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.02.23</SubSectionTitle>
         <StyledUl>
           <StyledLi>
