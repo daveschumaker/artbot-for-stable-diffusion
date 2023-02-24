@@ -487,9 +487,11 @@ export const kudosCost = ({
     (/dpm_2|dpm_2_a|k_heun/.test(sampler) ? 2 : 1) *
     (1 + (postProcessors.includes('RealESRGAN_x4plus') ? 0.2 * 1 + 0.3 : 0))
 
-  return Math.round(
-    control_type !== 'none' ? processingCost * 3 : processingCost
-  )
+  if (!control_type || control_type === 'none') {
+    return Math.round(processingCost)
+  } else {
+    return Math.round(processingCost * 3)
+  }
 }
 
 export const downloadImages = async (
