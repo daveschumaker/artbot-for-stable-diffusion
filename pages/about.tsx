@@ -75,6 +75,7 @@ const AboutPage = () => {
       )}
       <Head>
         <title>About - ArtBot for Stable Diffusion</title>
+        <meta name="twitter:title" content="ArtBot - About" />
       </Head>
       <PageTitle>About ArtBot</PageTitle>
       {totalImages ? (

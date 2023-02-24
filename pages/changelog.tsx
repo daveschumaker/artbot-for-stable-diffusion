@@ -66,6 +66,7 @@ const Changelog = () => {
       )}
       <Head>
         <title>Changelog - ArtBot for Stable Diffusion</title>
+        <meta name="twitter:title" content="ArtBot - Changelog" />
       </Head>
       <PageTitle>Changelog</PageTitle>
       <div className="mb-4">
@@ -111,6 +112,28 @@ const Changelog = () => {
             out. It has returned! Check out the{' '}
             <Linker href="/draw">draw page</Linker>. It&apos;s perfect for{' '}
             <Linker href="/controlnet">ControlNet</Linker>.
+          </StyledLi>
+          <StyledLi>
+            Fix: A few quality of life improvements when using the{' '}
+            <Linker href="/controlnet">ControlNet page</Linker>: added a
+            dropdown menu with an option to stay on the page after clicking
+            &quot;create&quot;. Also added more robust logic for persisting
+            settings between image generations (or if you navigate away from the
+            ControlNet page). You can also remove an existing image while
+            preserving the rest of the ControlNet settings.
+          </StyledLi>
+          <StyledLi>
+            UI: On desktop devices, I added a dropdown caret to the NavBar to
+            quickly access various features related to create mode (e.g.,
+            ControlNet and Draw)
+          </StyledLi>
+          <StyledLi>
+            Fix: Kudos cost calculations should be much more accurate (though
+            not exact and I am still working on that).
+          </StyledLi>
+          <StyledLi>
+            My apologies for minor UI consistencies around the site as I go and
+            update various parts of the interface at different times.
           </StyledLi>
         </StyledUl>
       </Section>

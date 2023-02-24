@@ -246,6 +246,7 @@ const SettingsPage = () => {
     <div>
       <Head>
         <title>Settings - ArtBot for Stable Diffusion</title>
+        <meta name="twitter:title" content="ArtBot - Settings" />
       </Head>
       <div className="flex flex-row w-full items-center">
         <div className="inline-block w-1/4">

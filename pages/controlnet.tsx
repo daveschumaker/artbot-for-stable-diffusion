@@ -46,6 +46,14 @@ import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { useEffectOnce } from '../hooks/useEffectOnce'
 import { IModelDetails, modelInfoStore } from '../store/modelStore'
+import MenuButton from '../components/UI/MenuButton'
+import DotsVerticalIcon from '../components/icons/DotsVerticalIcon'
+import DropDown from '../components/UI/DropDownV2/DropDownMenu'
+import DropDownItem from '../components/UI/DropDownV2/DropDownMenuItem'
+import SquareIcon from '../components/icons/SquareIcon'
+import AppSettings from '../models/AppSettings'
+import CheckboxIcon from '../components/icons/CheckboxIcon'
+import { toast } from 'react-toastify'
 
 // Kind of a hacky way to persist output of image over the course of a session.
 let cachedImageDetails = {}
@@ -59,6 +67,8 @@ const ControlNet = () => {
 
   const [pending, setPending] = useState(false)
   const [hasError, setHasError] = useState('')
+  const [stayOnPage, setStayOnPage] = useState(false)
+  const [showOptionsMenu, setShowOptionsMenu] = useState(false)
 
   const initialInput = {
     ...new DefaultPromptInput(),
@@ -217,8 +227,29 @@ const ControlNet = () => {
     const inputToSubmit = { ...input }
 
     await createImageJob(new CreateImageRequest(inputToSubmit))
-    router.push('/pending')
-  }, [input, pending, router])
+
+    if (!stayOnPage) {
+      router.push('/pending')
+    } else {
+      toast.success(
+        `${totalImagesRequested > 1 ? 'Images' : 'Image'} requested!`,
+        {
+          pauseOnFocusLoss: false,
+          position: 'top-center',
+          autoClose: 2500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          theme: 'light'
+        }
+      )
+
+      setHasError('')
+      setPending(false)
+    }
+  }, [input, pending, router, stayOnPage])
 
   useEffectOnce(() => {
     const string = localStorage.getItem('controlnetPageInput')
@@ -231,6 +262,8 @@ const ControlNet = () => {
     )
 
     setInput({ ...updateObj })
+
+    setStayOnPage(AppSettings.get('controlNetPageStay') === true ? true : false)
   })
 
   useEffect(() => {
@@ -265,8 +298,43 @@ const ControlNet = () => {
     <>
       <Head>
         <title>ControlNet - ArtBot for Stable Diffusion</title>
+        <meta name="twitter:title" content="ArtBot - ControlNet" />
       </Head>
-      <PageTitle>ControlNet</PageTitle>
+      <div className="flex flex-row w-full items-center">
+        <div className="inline-block w-1/2">
+          <PageTitle>ControlNet</PageTitle>
+        </div>
+        <div className="flex flex-row justify-end w-1/2 items-start h-[38px] relative gap-2">
+          <MenuButton
+            // active={componentState.showLayoutMenu}
+            title="Change layout"
+            onClick={() => {
+              setShowOptionsMenu(true)
+            }}
+          >
+            <DotsVerticalIcon size={24} />
+          </MenuButton>
+          {showOptionsMenu && (
+            <DropDown
+              alignRight
+              handleClose={() => {
+                setShowOptionsMenu(false)
+              }}
+              style={{ top: '38px' }}
+            >
+              <DropDownItem
+                handleClick={() => {
+                  AppSettings.set('controlNetPageStay', !stayOnPage)
+                  setStayOnPage(!stayOnPage)
+                }}
+              >
+                {stayOnPage === true ? <CheckboxIcon /> : <SquareIcon />}
+                Stay on page?
+              </DropDownItem>
+            </DropDown>
+          )}
+        </div>
+      </div>
       <Section first>
         <SubSectionTitle>Step 1. Upload an image</SubSectionTitle>
         <div>
@@ -663,7 +731,7 @@ const ControlNet = () => {
       </Section>
       {hasError && (
         <Section>
-          <div className="mt-2 text-red-500 font-semibold">
+          <div className="mt-2 text-red-500 font-semibold w-full flex flex-row justify-end">
             Error: {hasError}
           </div>
         </Section>

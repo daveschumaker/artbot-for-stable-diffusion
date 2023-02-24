@@ -9,6 +9,7 @@ const DrawPage = () => {
     <>
       <Head>
         <title>Draw Something - ArtBot for Stable Diffusion</title>
+        <meta name="twitter:title" content="ArtBot - Draw Something" />
         <meta
           name="twitter:image"
           content="https://tinybots.net/artbot/robots_drawing.png"

@@ -218,6 +218,7 @@ const OptionsPanel = ({
           <>
             <Head>
               <title>Inpainting - ArtBot for Stable Diffusion</title>
+              <meta name="twitter:title" content="ArtBot - Inpainting" />
             </Head>
             {/* <InpaintingPanel
               input={input}

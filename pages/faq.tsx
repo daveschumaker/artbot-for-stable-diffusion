@@ -23,6 +23,7 @@ const FaqPage = () => {
     <div className="mb-4">
       <Head>
         <title>FAQ - ArtBot for Stable Diffusion</title>
+        <meta name="twitter:title" content="ArtBot - FAQ" />
       </Head>
       <PageTitle>FAQ</PageTitle>
       <div className="text-md flex flex-col gap-4">

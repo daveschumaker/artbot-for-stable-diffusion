@@ -65,6 +65,10 @@ const Img2ImgPanel = ({ input, saveForInpaint, setInput }: Props) => {
     <div>
       <Head>
         <title>img2img - ArtBot for Stable Diffusion</title>
+        <meta
+          name="twitter:title"
+          content="img2img - ArtBot for Stable Diffusion"
+        />
       </Head>
       <Section>
         {!input.source_image && (
