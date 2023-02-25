@@ -1,5 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import {
+  findFilteredIndexById,
+  getNextFilteredItem,
+  getPrevFilteredItem
+} from '../../store/filteredImagesCache'
+import {
   deleteCompletedImageById,
   getImageDetails,
   getNextImageDetails,
@@ -12,6 +17,7 @@ interface IProps {
   imageId: string
   onAfterDelete(): void
   reverseButtons?: boolean
+  useFilteredItems?: boolean
 }
 
 interface IImageDetails {
@@ -23,7 +29,8 @@ const ImageModalController = ({
   handleClose = () => {},
   imageId,
   onAfterDelete = () => {},
-  reverseButtons = false
+  reverseButtons = false,
+  useFilteredItems = false
 }: IProps) => {
   const [loading, setLoading] = useState(true)
   const [imageDetails, setImageDetails] = useState<IImageDetails>({
@@ -44,7 +51,16 @@ const ImageModalController = ({
   }
 
   const handleLoadNext = async () => {
-    const data = (await getNextImageDetails(imageDetails.timestamp)) || {}
+    let data
+    if (useFilteredItems) {
+      const idx = findFilteredIndexById(imageDetails.id)
+      data = getNextFilteredItem(idx)
+      setImageDetails(data)
+      setLoading(false)
+      return
+    }
+
+    data = (await getNextImageDetails(imageDetails.timestamp)) || {}
     if (data.id) {
       setImageDetails(data)
     }
@@ -52,12 +68,21 @@ const ImageModalController = ({
   }
 
   const handleLoadPrev = async () => {
+    let data
+    if (useFilteredItems) {
+      const idx = findFilteredIndexById(imageDetails.id)
+      data = getPrevFilteredItem(idx)
+      setImageDetails(data)
+      setLoading(false)
+      return
+    }
+
     if (imageDetails.id <= 1) {
       setLoading(false)
       return
     }
 
-    const data = (await getPrevImageDetails(imageDetails.timestamp)) || {}
+    data = (await getPrevImageDetails(imageDetails.timestamp)) || {}
     if (data.id) {
       setImageDetails(data)
     }

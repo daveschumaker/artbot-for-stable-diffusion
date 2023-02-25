@@ -40,6 +40,7 @@ import DropDownMenuItem from '../components/UI/DropDownMenuItem'
 import ImageModalController from '../components/ImagesPage/ImageModalController'
 import AppSettings from '../models/AppSettings'
 import AdContainer from '../components/AdContainer'
+import { setFilteredItemsArray } from '../store/filteredImagesCache'
 
 const MenuSeparator = styled.div`
   width: 100%;
@@ -159,6 +160,7 @@ const ImagesPage = () => {
         filterType: componentState.filterMode,
         model: router.query.model as string
       })
+      setFilteredItemsArray(data)
     }
     await getImageCount()
     setComponentState({ images: data, isLoading: false })
@@ -484,6 +486,7 @@ const ImagesPage = () => {
           onAfterDelete={fetchImages}
           handleClose={() => setComponentState({ showImageModal: false })}
           imageId={componentState.showImageModal}
+          useFilteredItems={componentState.filterMode !== 'all'}
         />
       )}
       {componentState.showDownloadModal && (

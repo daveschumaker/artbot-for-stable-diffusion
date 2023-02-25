@@ -127,8 +127,9 @@ const ImageNavWrapper = ({
         </Linker>
         {!disableNav && mouseHover && (
           <>
-            <ImageNavButton action="PREV" handleOnClick={handleLoadPrev} />
-            <ImageNavButton action="NEXT" handleOnClick={handleLoadNext} />
+            {/* Yes, the names make no sense here. Whatever, just go with it. */}
+            <ImageNavButton action="PREV" handleOnClick={handleLoadNext} />
+            <ImageNavButton action="NEXT" handleOnClick={handleLoadPrev} />
           </>
         )}
         {loading && (
