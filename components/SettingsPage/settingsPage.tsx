@@ -529,11 +529,11 @@ const SettingsPage = () => {
               </Section>
               <Section>
                 <SubSectionTitle>
-                  <strong>Use specific worker</strong>
+                  <strong>Use a specific worker ID</strong>
                   <div className="block text-xs mb-2 mt-2 w-full">
-                    Send all of your image requests to a specific worker. Useful
-                    for debugging purposes or testing features available on
-                    particular workers.{' '}
+                    Enter worker ID to send all of your image requests to a
+                    specific worker. Useful for debugging purposes or testing
+                    features available on particular workers.{' '}
                     <Linker href="/info/workers" passHref>
                       View all available workers
                     </Linker>
@@ -548,6 +548,7 @@ const SettingsPage = () => {
                     name="steps"
                     onChange={handleSetWorkerId}
                     value={componentState.useWorkerId}
+                    placeholder="Worker ID"
                   />
                   <div className="flex gap-2 mt-2 justify-start">
                     <Button

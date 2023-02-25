@@ -107,6 +107,37 @@ const Changelog = () => {
           <StyledLi>
             Feature: Add ability to favorite image from image modal.
           </StyledLi>
+          <StyledLi>
+            Fix: When filtering images on the /images page, the resulting image
+            modal when end up showing all images (if you tried to navigate left
+            or right), instead of just the filtered images. This was less than
+            ideal.
+          </StyledLi>
+          <StyledLi>
+            Fix: On image modal, navigating left and right with arrow keys did
+            not match behavior or click left and right button on sides of image.
+            Thanks for reporting this on{' '}
+            <Linker
+              href="https://github.com/daveschumaker/artbot-for-stable-diffusion/issues/41"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Github
+            </Linker>
+            , LastZolex!
+          </StyledLi>
+          <StyledLi>
+            UX: Add better instructions that worker ID is required when trying
+            to use a specific worker. Thanks for reporting on{' '}
+            <Linker
+              href="https://github.com/daveschumaker/artbot-for-stable-diffusion/issues/45"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Github
+            </Linker>
+            , vadi2!
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
