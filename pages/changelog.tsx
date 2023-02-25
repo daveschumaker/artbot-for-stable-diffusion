@@ -98,6 +98,18 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.02.25</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            UX: Pressing &quot;enter&quot; within the prompt text area no longer
+            automatically submits the request. This made sense when prompt
+            length was limited to around 77 tokens, but no that those
+            restrictions have been loosened, you can go wild! Thanks for
+            suggesting this on Discord, ban kai!
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.02.24</SubSectionTitle>
         <StyledUl>
           <StyledLi>

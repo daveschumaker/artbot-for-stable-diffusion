@@ -330,13 +330,6 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
     }
   }
 
-  const onEnterPress = (e: KeyboardEvent) => {
-    if (e.keyCode == 13 && e.shiftKey == false) {
-      e.preventDefault()
-      handleSubmit()
-    }
-  }
-
   const resetInput = async () => {
     const defaultPromptResult = (await getDefaultPrompt()) || []
     const [defaultPrompt = {}] = defaultPromptResult
@@ -566,8 +559,6 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
           name="prompt"
           placeholder="Describe your image..."
           onChange={handleChangeValue}
-          // @ts-ignore
-          onKeyDown={onEnterPress}
           value={input.prompt}
           ref={ref}
         />
