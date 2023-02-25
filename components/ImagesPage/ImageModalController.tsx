@@ -16,6 +16,7 @@ interface IProps {
 
 interface IImageDetails {
   id: number
+  timestamp: number
 }
 
 const ImageModalController = ({
@@ -26,7 +27,8 @@ const ImageModalController = ({
 }: IProps) => {
   const [loading, setLoading] = useState(true)
   const [imageDetails, setImageDetails] = useState<IImageDetails>({
-    id: 0
+    id: 0,
+    timestamp: 0
   })
 
   const loadImageData = useCallback(async () => {
@@ -42,7 +44,7 @@ const ImageModalController = ({
   }
 
   const handleLoadNext = async () => {
-    const data = (await getNextImageDetails(imageDetails.id)) || {}
+    const data = (await getNextImageDetails(imageDetails.timestamp)) || {}
     if (data.id) {
       setImageDetails(data)
     }
@@ -55,7 +57,7 @@ const ImageModalController = ({
       return
     }
 
-    const data = (await getPrevImageDetails(imageDetails.id)) || {}
+    const data = (await getPrevImageDetails(imageDetails.timestamp)) || {}
     if (data.id) {
       setImageDetails(data)
     }

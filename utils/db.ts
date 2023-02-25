@@ -387,12 +387,17 @@ export const getImageDetails = async (jobId: string) => {
   return await db.completed.where('jobId').equals(jobId).first()
 }
 
-export const getNextImageDetails = async (id: number) => {
-  return await db.completed.where('id').above(id).limit(1).first()
+export const getNextImageDetails = async (timestamp: number) => {
+  return await db.completed.where('timestamp').above(timestamp).limit(1).first()
 }
 
-export const getPrevImageDetails = async (id: number) => {
-  return await db.completed.where('id').below(id).reverse().limit(1).first()
+export const getPrevImageDetails = async (timestamp: number) => {
+  return await db.completed
+    .where('timestamp')
+    .below(timestamp)
+    .reverse()
+    .limit(1)
+    .first()
 }
 
 export const deleteCompletedImage = async (jobId: string) => {
