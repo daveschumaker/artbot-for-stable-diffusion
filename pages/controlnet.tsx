@@ -205,6 +205,8 @@ const ControlNet = () => {
     }
   }
 
+  const totalImagesRequested = countImagesToGenerate(input)
+
   const handleSubmit = useCallback(async () => {
     if (pending) {
       return
@@ -249,7 +251,7 @@ const ControlNet = () => {
       setHasError('')
       setPending(false)
     }
-  }, [input, pending, router, stayOnPage])
+  }, [input, pending, router, stayOnPage, totalImagesRequested])
 
   useEffectOnce(() => {
     const string = localStorage.getItem('controlnetPageInput')
@@ -276,7 +278,6 @@ const ControlNet = () => {
     }
   }, [router.query.drawing])
 
-  const totalImagesRequested = countImagesToGenerate(input)
   const totalKudosCost = kudosCost({
     width: input.width,
     height: input.height,
@@ -437,7 +438,7 @@ const ControlNet = () => {
               onChange={(obj: { value: string; label: string }) => {
                 setInput({ control_type: obj.value })
 
-                if (obj.value !== 'none') {
+                if (obj.value) {
                   setInput({ karras: false, hires: false })
                 }
               }}

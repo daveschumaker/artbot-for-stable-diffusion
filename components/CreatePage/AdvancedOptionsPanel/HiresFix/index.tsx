@@ -31,6 +31,11 @@ const HiresFix = ({ input, setInput }: any) => {
             when requesting higher resolution images.
           </Tooltip>
         </TextTooltipRow>
+        {input.source_image && (
+          <div className="mt-[-4px] text-sm text-slate-500 dark:text-slate-400 font-[600]">
+            <strong>Note:</strong> Cannot be used for img2img requests
+          </div>
+        )}
         {error && (
           <div className="mt-[-6px] text-sm text-slate-500 dark:text-slate-400 font-[600]">
             <strong>Note:</strong> {error}
@@ -38,7 +43,7 @@ const HiresFix = ({ input, setInput }: any) => {
         )}
       </SubSectionTitle>
       <Switch
-        disabled={error ? true : false}
+        disabled={input.source_image || error ? true : false}
         onChange={() => {
           if (!input.hires) {
             PromptInputSettings.set('hires', true)

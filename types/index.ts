@@ -155,3 +155,16 @@ export enum PromptTypes {
   PromptFavorite = 'promptFavorite',
   PromptHistory = 'promptHistory'
 }
+
+export enum ControlTypes {
+  None = '',
+  Canny = 'canny',
+  Hed = 'hed',
+  Depth = 'depth',
+  Normal = 'normal',
+  Openpose = 'openpose',
+  Seg = 'seg',
+  Scribble = 'scribble',
+  FakeScribbles = 'fakescribbles',
+  Hough = 'hough'
+}

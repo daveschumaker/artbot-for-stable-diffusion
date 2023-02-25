@@ -335,11 +335,18 @@ const AdvancedOptionsPanel = ({
   const showNumImagesInput =
     !input.useAllModels && !input.useMultiSteps && !input.useAllSamplers
 
-  let controlTypeValue = { value: 'none', label: 'none' }
+  let controlTypeValue = { value: '', label: 'none' }
 
   if (CONTROL_TYPE_ARRAY.indexOf(input.control_type) >= 0) {
-    controlTypeValue = { value: input.control_type, label: input.control_type }
+    if (input.control_type) {
+      controlTypeValue = {
+        value: input.control_type,
+        label: input.control_type
+      }
+    }
   }
+
+  console.log(`input`, input)
 
   return (
     <div>
@@ -611,7 +618,7 @@ const AdvancedOptionsPanel = ({
           <SubSectionTitle>Sampler</SubSectionTitle>
           {(input.source_processing === SourceProcessing.InPainting &&
             input.models[0] === 'stable_diffusion_inpainting') ||
-          (input.source_image && input.control_type !== 'none') ? (
+          (input.source_image && input.control_type !== '') ? (
             <div className="mt-[-6px] text-sm text-slate-500 dark:text-slate-400 font-[600]">
               Note: Sampler disabled when controlnet or inpainting model is
               used.
@@ -1002,7 +1009,7 @@ const AdvancedOptionsPanel = ({
           <SplitPanel>
             <Section>
               <div className="flex flex-row items-center justify-between">
-                {input.source_image && input.control_type !== 'none' && (
+                {input.source_image && input.control_type !== '' && (
                   <div className="flex flex-col">
                     <SubSectionTitle>
                       <TextTooltipRow>
@@ -1020,8 +1027,7 @@ const AdvancedOptionsPanel = ({
                     </div>
                   </div>
                 )}
-                {(input.control_type === 'none' ||
-                  input.control_type === '') && (
+                {input.control_type === '' && (
                   <>
                     <SubSectionTitle>
                       <TextTooltipRow>
@@ -1127,7 +1133,7 @@ const AdvancedOptionsPanel = ({
                     Note: Denoise disabled when inpainting model is used.
                   </div>
                 )}
-              {(input.control_type === 'none' || input.control_type === '') && (
+              {input.control_type === '' && (
                 <div className="mb-4">
                   <Slider
                     disabled={input.models[0] === 'stable_diffusion_inpainting'}
@@ -1182,7 +1188,7 @@ const AdvancedOptionsPanel = ({
               isDisabled={!input.source_image}
               options={CONTROL_TYPE_ARRAY.map((value) => {
                 if (value === '') {
-                  return { value: 'none', label: 'none' }
+                  return { value: '', label: 'none' }
                 }
 
                 return { value, label: value }
@@ -1191,12 +1197,16 @@ const AdvancedOptionsPanel = ({
                 PromptInputSettings.set('control_type', obj.value)
                 setInput({ control_type: obj.value })
 
-                if (obj.value !== 'none') {
+                if (obj.value !== '') {
                   setInput({ karras: false, hires: false })
                 }
               }}
               isSearchable={false}
-              value={controlTypeValue}
+              value={
+                controlTypeValue
+                  ? controlTypeValue
+                  : { value: '', label: 'none' }
+              }
             />
           </MaxWidth>
         )}
@@ -1477,16 +1487,14 @@ const AdvancedOptionsPanel = ({
               fewer steps. (Not all workers support this yet)
             </Tooltip>
           </TextTooltipRow>
-          {input.source_image && input.controlType !== 'none' && (
+          {input.source_image && input.control_type && (
             <div className="mt-[-4px] text-sm text-slate-500 dark:text-slate-400 font-[600]">
               <strong>Note:</strong> Cannot be used for controlnet requests
             </div>
           )}
         </SubSectionTitle>
         <Switch
-          disabled={
-            input.source_image && input.control_type !== 'none' ? true : false
-          }
+          disabled={input.source_image && input.control_type ? true : false}
           onChange={() => {
             if (!input.karras) {
               PromptInputSettings.set('karras', true)

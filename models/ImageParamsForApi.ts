@@ -157,7 +157,7 @@ class ImageParamsForApi {
       apiParams.params.post_processing = []
     }
 
-    if (control_type && control_type !== 'none' && source_image) {
+    if (control_type && control_type !== '' && source_image) {
       apiParams.params.control_type = control_type
     }
 
@@ -180,7 +180,7 @@ class ImageParamsForApi {
     }
 
     // Things to remove
-    if (control_type && control_type !== 'none' && source_image) {
+    if (control_type && control_type !== '' && source_image) {
       delete apiParams.params.denoising_strength
       delete apiParams.params.sampler_name
       apiParams.params.karras = false

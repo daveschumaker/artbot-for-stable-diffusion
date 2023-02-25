@@ -487,7 +487,7 @@ export const kudosCost = ({
     (/dpm_2|dpm_2_a|k_heun/.test(sampler) ? 2 : 1) *
     (1 + (postProcessors.includes('RealESRGAN_x4plus') ? 0.2 * 1 + 0.3 : 0))
 
-  if (!control_type || control_type === 'none') {
+  if (!control_type) {
     return Math.round(processingCost)
   } else {
     return Math.round(processingCost * 3)
