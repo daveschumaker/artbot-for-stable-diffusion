@@ -263,8 +263,12 @@ const ControlNet = () => {
       cachedImageDetails
     )
 
-    setInput({ ...updateObj })
+    // Handle the incorrect decision I had earlier made to set empty value of control_type to 'none' instead of just ''.
+    if (updateObj.control_type === 'none' || updateObj.control_type === '') {
+      updateObj.control_type = ''
+    }
 
+    setInput({ ...updateObj })
     setStayOnPage(AppSettings.get('controlNetPageStay') === true ? true : false)
   })
 
@@ -340,7 +344,7 @@ const ControlNet = () => {
         <SubSectionTitle>Step 1. Upload an image</SubSectionTitle>
         <div>
           {!input.source_image && (
-            <Uploader handleSaveImage={handleSaveImage} type="inpainting" />
+            <Uploader handleSaveImage={handleSaveImage} type="ControlNet" />
           )}
           {input.source_image && (
             <div className="flex flex-col w-full align-center justify-center">

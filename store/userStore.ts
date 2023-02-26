@@ -26,12 +26,22 @@ export interface ITeam {
 }
 
 interface UserStore {
+  records: any
   username: string
   kudos: number
+  kudos_details: IKudosDetails
   loggedIn: boolean
   trusted: boolean
   worker_ids: Array<string> | null
   workers: IWorkers
+}
+
+interface IKudosDetails {
+  accumulated: number
+  awarded: number
+  gifted: number
+  received: number
+  recurring: number
 }
 
 interface UserInfo {

@@ -18,7 +18,7 @@ const imgConfig = {
 interface UploaderProps {
   children?: React.ReactNode
   handleUpload: any
-  type: string
+  type?: string
 }
 
 const StyledIcon = styled(PlusIcon)`

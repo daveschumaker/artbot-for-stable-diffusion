@@ -157,6 +157,16 @@ class CreateCanvas {
       this.canvas.setHeight(getSavedDrawingState().canvasHeight)
       this.canvas.setWidth(getSavedDrawingState().canvasWidth)
 
+      if (getSavedDrawingState().savedDrawingBaseImage) {
+        this.imageLayer = fabric.util.object.clone(
+          getSavedDrawingState().savedDrawingBaseImage
+        )
+
+        if (this.imageLayer) {
+          this.canvas.insertAt(this.imageLayer, 0, false)
+        }
+      }
+
       this.canvas.isDrawingMode = true
       this.updateCanvas()
       return
@@ -390,6 +400,8 @@ class CreateCanvas {
     storeCanvas('drawLayer', data.canvasData)
 
     if (this.canvasType === 'drawing') {
+      let baseImage = this.imageLayer ? this.imageLayer : false
+
       saveHistoryState({
         undo: [...this.undoHistory],
         redo: [...this.redoHistory]
@@ -397,7 +409,8 @@ class CreateCanvas {
       saveDrawingState(
         fabric.util.object.clone(this.drawLayer),
         this.height,
-        this.width
+        this.width,
+        baseImage
       )
 
       data.source_image = this?.canvas
@@ -502,6 +515,11 @@ class CreateCanvas {
     this.historyIndex = -1
 
     if (this.canvasType === 'drawing') {
+      if (this.imageLayer) {
+        this.canvas.remove(this.imageLayer)
+        this.imageLayer = null
+      }
+
       this.canvas.remove(this.drawLayer)
       this.createDrawLayer({ opacity: 1.0 })
       this.canvas.add(this.drawLayer)

@@ -71,6 +71,7 @@ interface ISavedHistory {
 }
 
 let savedDrawingState: any = null
+let savedDrawingBaseImage: any = false
 let canvasHeight = 512
 let canvasWidth = 512
 
@@ -83,6 +84,7 @@ export const getSavedDrawingState = (): {
   savedDrawingState: any
   canvasHeight: number
   canvasWidth: number
+  savedDrawingBaseImage?: any
 } => {
   if (savedDrawingState === null || !savedDrawingState) {
     // @ts-ignore
@@ -92,7 +94,8 @@ export const getSavedDrawingState = (): {
   return {
     savedDrawingState,
     canvasHeight,
-    canvasWidth
+    canvasWidth,
+    savedDrawingBaseImage
   }
 }
 
@@ -103,10 +106,16 @@ export const getSavedHistoryState = () => {
   }
 }
 
-export const saveDrawingState = (data: any, height = 512, width = 512) => {
+export const saveDrawingState = (
+  data: any,
+  height = 512,
+  width = 512,
+  baseImage: any
+) => {
   savedDrawingState = data
   canvasHeight = height
   canvasWidth = width
+  savedDrawingBaseImage = baseImage
 }
 
 export const saveHistoryState = ({ undo, redo }: { undo: any; redo: any }) => {
@@ -116,6 +125,7 @@ export const saveHistoryState = ({ undo, redo }: { undo: any; redo: any }) => {
 
 export const resetSavedDrawingState = () => {
   savedDrawingState = null
+  savedDrawingBaseImage = null
   savedHistory = {
     undo: [],
     redo: []

@@ -20,9 +20,13 @@ import NewCanvas from './NewCanvas'
 import ColorPickerIcon from '../../../icons/ColorPickerIcon'
 import CanvasSettings from '../../../../models/CanvasSettings'
 import FileIcon from '../../../icons/FileIcon'
-import { setBase64FromDraw } from '../../../../store/canvasStore'
+import {
+  setBase64FromDraw,
+  setI2iUploaded
+} from '../../../../store/canvasStore'
 import UploadIcon from '../../../icons/UploadIcon'
 import { useRouter } from 'next/router'
+import UploadImage from './UploadImage'
 
 const ToolBarButton = ({
   active,
@@ -80,8 +84,9 @@ const ToolBar = ({
   const [showAdjustmentMenu, setShowAdjustmentMenu] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [brushSize, setBrushSize] = useState(20)
-  const [showNewModal, setShowNewModal] = useState(false)
 
+  const [showNewModal, setShowNewModal] = useState(false)
+  const [showUploadModal, setShowUploadModal] = useState(false)
   const [showMainMenu, setShowMainMenu] = useState(false)
 
   const [color, setColor] = useState('#000000')
@@ -112,6 +117,20 @@ const ToolBar = ({
     handleNewCanvas(height, width, bgColor)
     setShowMainMenu(false)
     setShowNewModal(false)
+  }
+
+  const handleUploadImage = (data: any) => {
+    const newBase64String = `data:${data.imageType};base64,${data.source_image}`
+
+    setI2iUploaded({
+      base64String: newBase64String,
+      height: data.height,
+      width: data.width
+    })
+
+    canvas.importImage()
+    setShowMainMenu(false)
+    setShowUploadModal(false)
   }
 
   const handleWidth = (e: any) => {
@@ -277,6 +296,20 @@ const ToolBar = ({
               <FileIcon size={20} />
               New canvas...
             </DropDownItem>
+            <DropDownItem
+              handleClick={() => {
+                lockScroll()
+
+                if (showUploadModal) {
+                  setShowUploadModal(false)
+                } else {
+                  setShowUploadModal(true)
+                }
+              }}
+            >
+              <UploadIcon size={20} />
+              Upload image
+            </DropDownItem>
             <div className="w-full pt-[4px] mb-[4px] border-b-[1px] border-b-slate-300 h-[3px] flex flex-row" />
             <DropDownItem
               handleClick={() => {
@@ -390,6 +423,14 @@ const ToolBar = ({
             </div>
           </div>
         </DropDown>
+      )}
+      {showUploadModal && (
+        <UploadImage
+          handleSaveImage={handleUploadImage}
+          handleClose={() => {
+            setShowUploadModal(false)
+          }}
+        />
       )}
       {showNewModal && (
         <NewCanvas

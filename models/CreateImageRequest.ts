@@ -102,7 +102,7 @@ class CreateImageRequest {
     canvasStore,
     cfg_scale = 7,
     denoising_strength = 0.75,
-    control_type = 'none',
+    control_type = '',
     height = 512,
     imageMimeType = ImageMimeType.WebP,
     karras = true,

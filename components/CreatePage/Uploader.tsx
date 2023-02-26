@@ -12,7 +12,7 @@ const SubSectionTitle = styled.div`
 
 interface Props {
   handleSaveImage: any
-  type: string
+  type?: string
 }
 
 const Uploader = ({ handleSaveImage, type = 'img2img' }: Props) => {
