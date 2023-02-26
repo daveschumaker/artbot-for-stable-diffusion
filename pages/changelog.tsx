@@ -107,6 +107,24 @@ const Changelog = () => {
             restrictions have been loosened, you can go wild! Thanks for
             suggesting this on Discord, ban kai!
           </StyledLi>
+          <StyledLi>
+            Fix: Stale values for control_type resulted in wildly incorrect
+            kudos calculations when using text2img mode. Thanks to Hinaloth and
+            lili for reporting this on Discord.
+          </StyledLi>
+          <StyledLi>
+            When creating a new drawing canvas, attempt to pin the narrow margin
+            to a max value of 512 pixels (due to worker processing constraints).
+            Thanks to ResidentChiefNZ for the suggestion on Discord.
+          </StyledLi>
+          <StyledLi>
+            Fix: Payload validation error due to stale control_type value.
+            Thanks to etchebeast for reporting this on Discord.
+          </StyledLi>
+          <StyledLi>
+            Feature: Upload an image to the drawing canvas. Thanks to DethInHFIL
+            for the suggestion on Discord.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

@@ -54,6 +54,14 @@ interface UserInfo {
 export const userInfoStore = makeStore<UserStore>({
   username: '',
   kudos: 0,
+  records: {},
+  kudos_details: {
+    accumulated: 0,
+    awarded: 0,
+    gifted: 0,
+    received: 0,
+    recurring: 0
+  },
   worker_ids: null,
   trusted: false,
   loggedIn: false,
