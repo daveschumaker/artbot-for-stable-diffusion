@@ -104,11 +104,30 @@ const NewCanvas = ({
                 // @ts-ignore
                 const canvasWidth = container?.offsetWidth || 512
 
+                // Attempt to pin narrow margin to 512
+                // due to potential worker constraints on image sizes
+                let maxWidth = canvasWidth > 1024 ? 1024 : canvasWidth
+                let maxHeight = 1024
+
+                if (orientationValue.width > orientationValue.height) {
+                  maxHeight = 512
+                }
+
+                if (orientationValue.width < orientationValue.height) {
+                  maxWidth = 512
+                  maxHeight = 1024
+                }
+
+                if (orientationValue.width === orientationValue.height) {
+                  maxWidth = 512
+                  maxHeight = 512
+                }
+
                 const resized = calculateAspectRatioFit(
                   orientationValue.width,
                   orientationValue.height,
-                  canvasWidth > 1024 ? 1024 : canvasWidth,
-                  1024
+                  maxWidth,
+                  maxHeight
                 )
 
                 handleOnCreateClick({
