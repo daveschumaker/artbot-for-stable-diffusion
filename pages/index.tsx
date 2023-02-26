@@ -355,6 +355,10 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
         delete updateObject.seed
       }
 
+      if (!updateObject.source_image && updateObject.control_type) {
+        updateObject.control_type = ''
+      }
+
       setInput({ ...updateObject })
 
       if (PromptInputSettings.load().showMultiModel) {

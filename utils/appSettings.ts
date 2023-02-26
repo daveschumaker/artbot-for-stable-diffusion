@@ -1,6 +1,7 @@
 import { buildModelAvailability } from '../api/fetchAvailableModels'
 import { fetchUserDetails, setUserId } from '../api/userInfo'
 import AppSettings from '../models/AppSettings'
+import PromptInputSettings from '../models/PromptInputSettings'
 
 // @ts-ignore
 import { trackNewSession } from './analytics'
@@ -59,6 +60,10 @@ export const updateAppConfig = () => {
   localStorage.removeItem('preserveCreateSettings')
   localStorage.removeItem('runBackground')
   localStorage.removeItem('useBeta')
+
+  if (PromptInputSettings.get('control_type') === 'none') {
+    PromptInputSettings.set('control_type', '')
+  }
 }
 
 export const initAppSettings = async () => {
