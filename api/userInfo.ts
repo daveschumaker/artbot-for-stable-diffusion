@@ -35,7 +35,9 @@ export const fetchUserDetails = async (apikey: string) => {
 
     const userDetails = await res.json()
     const {
+      records = {},
       kudos = 0,
+      kudos_details = {},
       trusted = false,
       username = '',
       worker_ids = null
@@ -43,6 +45,9 @@ export const fetchUserDetails = async (apikey: string) => {
 
     setUserInfo({
       kudos,
+      //@ts-ignore
+      kudos_details,
+      records,
       trusted,
       username,
       worker_ids
