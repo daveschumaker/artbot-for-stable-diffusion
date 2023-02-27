@@ -27,6 +27,7 @@ import { useRouter } from 'next/router'
 import { useWindowSize } from '../hooks/useWindowSize'
 import Menu from '../components/Menu'
 import Linker from '../components/UI/Linker'
+import ErrorBoundary from '../components/ErrorBoundary'
 
 initAppSettings()
 initDb()
@@ -261,7 +262,9 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
               Updated: 5:23 AM Thursday, February 23, 2023 UTC
             </div>
           </div> */}
-          <Component {...pageProps} />
+          <ErrorBoundary>
+            <Component {...pageProps} />
+          </ErrorBoundary>
           <Footer />
           {sizeOverride && (
             <div className="fixed right-[16px] bottom-[8px] max-w-[156px]">

@@ -2,6 +2,16 @@ import { HORDE_DEV, HORDE_PROD } from '../constants'
 import AppSettings from '../models/AppSettings'
 import { appInfoStore } from '../store/appStore'
 
+export const logError = async (data: any) => {
+  await fetch(`/artbot/api/log-error`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+}
+
 export const clientHeader = () => {
   const buildId = appInfoStore.state.buildId
   return `ArtBot:v.${buildId}:(discord)rockbandit#4910`

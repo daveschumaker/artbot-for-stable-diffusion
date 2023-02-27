@@ -1,4 +1,17 @@
 import React from 'react'
+import styled from 'styled-components'
+import { userInfoStore } from '../store/userStore'
+import { logError } from '../utils/appUtils'
+import PageTitle from './UI/PageTitle'
+
+const StyledLink = styled.a`
+  color: ${(props) => props.theme.link};
+  font-weight: 600;
+
+  &:hover {
+    color: ${(props) => props.theme.linkActive};
+  }
+`
 
 class ErrorBoundary extends React.Component {
   constructor(props: any) {
@@ -13,19 +26,44 @@ class ErrorBoundary extends React.Component {
     return { hasError: true }
   }
 
-  componentDidCatch(error: any, errorInfo: any) {
+  componentDidCatch(error: any, errorInfo: any = {}) {
+    const { username } = userInfoStore.state
+
+    console.log(error)
+
     // You can also log the error to an error reporting service
     // logErrorToMyService(error, errorInfo)
-    console.log(`--- ERROR`)
-    console.log(error)
-    console.log(errorInfo)
+    logError({
+      path: window.location.href,
+      errorInfo: errorInfo?.componentStack,
+      username
+    })
   }
 
   render() {
     // @ts-ignore
     if (this.state.hasError) {
       // You can render any custom fallback UI
-      return <h1>Something went wrong.</h1>
+      return (
+        <>
+          <PageTitle>An unexpected error has occurred.</PageTitle>
+          <div>
+            ArtBot encountered an error while attempting to process this
+            request.
+          </div>
+
+          <div>
+            This is probably Dave&apos;s fault. An error log has automatically
+            been created.
+          </div>
+
+          <div className="mt-[8px]">
+            Please visit the{' '}
+            <StyledLink href="/artbot/contact">contact form</StyledLink> if
+            you&apos;d like to provide more information about what happened.
+          </div>
+        </>
+      )
     }
 
     // @ts-ignore
