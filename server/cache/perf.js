@@ -1,4 +1,6 @@
 require('dotenv').config()
+const cron = require('node-cron')
+const fetch = require('node-fetch')
 const fs = require('fs')
 
 const cache = {
@@ -40,6 +42,7 @@ const initLoadCount = () => {
   ) {
     const data = fs.readFileSync(process.env.PROD_COUNT_FILE, 'utf8') || ''
     const [totalImages] = data.split('#')
+
     cache.totalImages = Number(totalImages)
 
     setInterval(() => {
@@ -48,9 +51,9 @@ const initLoadCount = () => {
   }
 }
 
-const countTotal = async () => {
+const logCountTotal = async () => {
   const data = {
-    totalImages: cache.totalImages
+    totalImages: getImageCount()
   }
   try {
     await fetch(`http://localhost:4001/api/v1/artbot/counter`, {
@@ -65,10 +68,9 @@ const countTotal = async () => {
   }
 }
 
-// Once an hour, update counter with latest total image count.
-setInterval(() => {
-  countTotal()
-}, 60000 * 60)
+cron.schedule('0 * * * *', () => {
+  logCountTotal()
+})
 
 module.exports = {
   getImageCount,
