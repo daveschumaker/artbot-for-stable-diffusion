@@ -1,6 +1,9 @@
 import Dexie from 'dexie'
+import { setUnsupportedBrowser } from '../store/appStore'
 import { JobStatus } from '../types'
 import { SourceProcessing } from './promptUtils'
+
+let unsupportedBrowser = false
 
 export class MySubClassedDexie extends Dexie {
   completed: any
@@ -58,7 +61,9 @@ export const getDefaultPrompt = async () => {
         .limit(1)
         ?.toArray()) || []
     )
-  } catch (err) {
+  } catch (err: any) {
+    unsupportedBrowser = true
+    setUnsupportedBrowser(true)
     return []
   }
 }
@@ -101,7 +106,9 @@ export const allPendingJobs = async (status?: string) => {
         }
       })
       ?.toArray()
-  } catch (err) {
+  } catch (err: any) {
+    unsupportedBrowser = true
+    setUnsupportedBrowser(true)
     return []
   }
 }

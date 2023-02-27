@@ -9,6 +9,7 @@ interface AppStore {
   showImageReadyToast: boolean
   stableHordeApiOnline: boolean
   showAppMenu: boolean
+  unsupportedBrowser: boolean
 }
 
 export const appInfoStore = makeStore<AppStore>({
@@ -19,8 +20,15 @@ export const appInfoStore = makeStore<AppStore>({
   newImageReady: '',
   showImageReadyToast: false,
   stableHordeApiOnline: true,
-  showAppMenu: false
+  showAppMenu: false,
+  unsupportedBrowser: false
 })
+
+export const setUnsupportedBrowser = (val: boolean = false) => {
+  appInfoStore.set(() => ({
+    unsupportedBrowser: val
+  }))
+}
 
 export const setShowAppMenu = (val: boolean = false) => {
   appInfoStore.set(() => ({

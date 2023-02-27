@@ -45,7 +45,8 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
   const size = useWindowSize()
 
   const appState = useStore(appInfoStore)
-  const { buildId, stableHordeApiOnline, showAppMenu } = appState
+  const { buildId, stableHordeApiOnline, showAppMenu, unsupportedBrowser } =
+    appState
 
   const fetchAppInfo = useCallback(async () => {
     if (!isAppActive()) {
@@ -228,6 +229,19 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
           />
           {showServerUpdateModal && <ServerUpdateModal />}
           {/* <NavBar /> */}
+          {unsupportedBrowser && (
+            <div className="text-sm border-2 border-rose-600 py-1 px-2 rounded mb-2 text-red-500">
+              <div className="mb-[8px]">
+                <strong>WARNING:</strong> The current state of this web browser
+                does not support the IndexedDb browser API.
+              </div>
+              <div className="mb-[8px]">
+                Due to this, ArtBot will not work. (The commonly happens when
+                using Firefox&apos;s private browsing mode.) Please try using a
+                different browser or exit private mode in Firefox.
+              </div>
+            </div>
+          )}
           {!stableHordeApiOnline && (
             <div className="text-sm border-2 border-rose-600 py-1 px-2 rounded mb-2 text-red-500">
               <strong>Warning:</strong> ArtBot is currently unable to connect to

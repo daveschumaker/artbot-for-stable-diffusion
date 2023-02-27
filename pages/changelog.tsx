@@ -115,6 +115,11 @@ const Changelog = () => {
             additional 2 kudos. This also includes weights added to the negative
             prompt.
           </StyledLi>
+          <StyledLi>
+            Show error message for unsupported browser (specifically, Firefox in
+            private browsing mode, as it does not support the IndexedDb browser
+            API)
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
