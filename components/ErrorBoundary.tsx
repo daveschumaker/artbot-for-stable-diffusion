@@ -29,13 +29,13 @@ class ErrorBoundary extends React.Component {
   componentDidCatch(error: any, errorInfo: any = {}) {
     const { username } = userInfoStore.state
 
-    console.log(error)
-
     // You can also log the error to an error reporting service
     // logErrorToMyService(error, errorInfo)
     logError({
       path: window.location.href,
+      errorMessage: error?.message,
       errorInfo: errorInfo?.componentStack,
+      errorType: 'client-side',
       username
     })
   }
@@ -47,20 +47,38 @@ class ErrorBoundary extends React.Component {
       return (
         <>
           <PageTitle>An unexpected error has occurred.</PageTitle>
-          <div>
+          <div className="mb-[8px]">
             ArtBot encountered an error while attempting to process this
-            request.
+            request. You can attempt to{' '}
+            <StyledLink href={window.location.href}>
+              reload this page
+            </StyledLink>{' '}
+            and see if the problem resolves itself.
           </div>
-
-          <div>
-            This is probably Dave&apos;s fault. An error log has automatically
-            been created.
+          <div className="mb-[8px]">
+            Otherwise, this is probably Dave&apos;s fault. An error log has
+            automatically been created.
           </div>
-
-          <div className="mt-[8px]">
-            Please visit the{' '}
+          <div className="mb-[8px]">
+            Please hit the{' '}
             <StyledLink href="/artbot/contact">contact form</StyledLink> if
-            you&apos;d like to provide more information about what happened.
+            you&apos;d like to provide more information about what happened or{' '}
+            <StyledLink
+              href="https://discord.com/channels/781145214752129095/1038867597543882894"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              visit the ArtBot channel
+            </StyledLink>{' '}
+            on the{' '}
+            <StyledLink
+              href="https://discord.gg/3DxrhksKzn"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Stable Horde Discord server
+            </StyledLink>{' '}
+            .
           </div>
         </>
       )

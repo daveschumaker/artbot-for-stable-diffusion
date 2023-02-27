@@ -176,15 +176,12 @@ const ControlNet = () => {
     const modelsArray = validModelsArray({ imageParams }) || []
 
     const filteredArray = modelsArray.filter((model: IModelDetails) => {
-      return modelDetails[model.name].baseline === 'stable diffusion 1'
-    })
+      if (!modelDetails[model.name]) {
+        return
+      }
 
-    // modelsArray.push({
-    //   name: 'random',
-    //   value: 'random',
-    //   label: 'Random!',
-    //   count: 1
-    // })
+      return modelDetails[model.name]?.baseline === 'stable diffusion 1'
+    })
 
     return filteredArray
   }

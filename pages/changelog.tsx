@@ -101,6 +101,15 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.02.27</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: I broke the ControlNet page. Back in business, now! Thanks to
+            Eleiber on Discord for reporting this.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.02.26</SubSectionTitle>
         <StyledUl>
           <StyledLi>Only minor updates today...</StyledLi>

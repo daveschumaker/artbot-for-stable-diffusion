@@ -346,8 +346,6 @@ const AdvancedOptionsPanel = ({
     }
   }
 
-  console.log(`input`, input)
-
   return (
     <div>
       {componentState.showNegPane ? (
