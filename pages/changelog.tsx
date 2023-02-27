@@ -101,6 +101,21 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.02.26</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>Only minor updates today...</StyledLi>
+          <StyledLi>
+            Discrete route for{' '}
+            <Linker href="/contact">contact / feedback</Linker> (since the modal
+            was buried away on the about page and up above).
+          </StyledLi>
+          <StyledLi>
+            Added an error boundary and automated error logging to better
+            capture some pesky errors that people have encountered.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.02.25</SubSectionTitle>
         <StyledUl>
           <StyledLi>
