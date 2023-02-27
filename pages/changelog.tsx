@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import PageTitle from '../components/UI/PageTitle'
 import Linker from '../components/UI/Linker'
-import FeedbackModal from '../components/Feedback'
+import FeedbackForm from '../components/FeedbackForm'
 import React, { useState } from 'react'
 import { useEffectOnce } from '../hooks/useEffectOnce'
 import { trackEvent } from '../api/telemetry'
@@ -10,6 +10,7 @@ import AdContainer from '../components/AdContainer'
 import Section from '../components/UI/Section'
 import SubSectionTitle from '../components/UI/SubSectionTitle'
 import styles from '../styles/changelog.module.css'
+import Modal from '../components/Modal'
 
 const StyledUl = ({ children }: { children: React.ReactNode }) => {
   return <ul className={styles['styled-ul']}>{children}</ul>
@@ -62,7 +63,9 @@ const Changelog = () => {
   return (
     <div className="mb-4">
       {showFeedback && (
-        <FeedbackModal handleClose={() => setShowFeedback(false)} />
+        <Modal handleClose={() => setShowFeedback(false)}>
+          <FeedbackForm />
+        </Modal>
       )}
       <Head>
         <title>Changelog - ArtBot for Stable Diffusion</title>

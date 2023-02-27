@@ -318,6 +318,16 @@ const Menu = () => {
             <HelpIcon />
             About
           </MenuOption>
+          <SubOptions>
+            <SubOption
+              onClick={() => {
+                navigateToLink('/contact')
+              }}
+            >
+              <LineDashedIcon />
+              Contact
+            </SubOption>
+          </SubOptions>
         </MenuOptions>
       </MenuOverlay>
     </>

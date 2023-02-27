@@ -3,13 +3,13 @@ import React, { useState } from 'react'
 import { trackEvent } from '../api/telemetry'
 import { imageCount } from '../utils/db'
 import { Button } from './UI/Button'
-import Modal from './Modal'
 import SectionTitle from './UI/SectionTitle'
 import Text from './UI/Text'
 import TextArea from './UI/TextArea'
 import { userInfoStore } from '../store/userStore'
 import Input from './UI/Input'
 import FlexRow from './UI/FlexRow'
+import PageTitle from './UI/PageTitle'
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -19,7 +19,11 @@ const Wrapper = ({ children }: { children: React.ReactNode }) => {
   )
 }
 
-const FeedbackModal = ({ handleClose }: { handleClose: () => void }) => {
+const FeedbackForm = ({
+  isContactPage = false
+}: {
+  isContactPage?: boolean
+}) => {
   const [feedbackSent, setFeedbackSent] = useState(false)
   const [contactInput, setContactInput] = useState('')
   const [inputText, setInputText] = useState('')
@@ -44,10 +48,11 @@ const FeedbackModal = ({ handleClose }: { handleClose: () => void }) => {
   }
 
   return (
-    // @ts-ignore
-    <Modal handleClose={handleClose}>
+    <>
       <Wrapper>
-        <SectionTitle>Feedback</SectionTitle>
+        {isContactPage && <PageTitle>Send feedback</PageTitle>}
+
+        {!isContactPage && <SectionTitle>Feedback</SectionTitle>}
         <Text>Comments, suggestions, bugs?</Text>
         {feedbackSent && (
           <div className="align-center flex justify-center h-[120px] w-full">
@@ -68,11 +73,10 @@ const FeedbackModal = ({ handleClose }: { handleClose: () => void }) => {
                 value={contactInput}
               />
             </div>
-            <div>
+            <div className="mb-[8px]">
               <span>Feedback:</span>
               <TextArea
-                className="p-[8px] mb-[8px] w-full max-h-[120px]"
-                maxLength={1024}
+                maxLength={2048}
                 onChange={(e) => setInputText(e.target.value)}
                 value={inputText}
               />
@@ -85,8 +89,8 @@ const FeedbackModal = ({ handleClose }: { handleClose: () => void }) => {
           </Button>
         </FlexRow>
       </Wrapper>
-    </Modal>
+    </>
   )
 }
 
-export default FeedbackModal
+export default FeedbackForm

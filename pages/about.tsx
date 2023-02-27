@@ -3,7 +3,8 @@ import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { trackEvent } from '../api/telemetry'
-import FeedbackModal from '../components/Feedback'
+import FeedbackForm from '../components/FeedbackForm'
+import Modal from '../components/Modal'
 import Linker from '../components/UI/Linker'
 
 import PageTitle from '../components/UI/PageTitle'
@@ -71,7 +72,9 @@ const AboutPage = () => {
   return (
     <AboutWrapper>
       {showFeedback && (
-        <FeedbackModal handleClose={() => setShowFeedback(false)} />
+        <Modal handleClose={() => setShowFeedback(false)}>
+          <FeedbackForm />
+        </Modal>
       )}
       <Head>
         <title>About - ArtBot for Stable Diffusion</title>
