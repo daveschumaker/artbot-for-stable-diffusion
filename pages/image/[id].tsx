@@ -231,7 +231,9 @@ const ImagePage = () => {
     numImages: 1, // numImages
     postProcessors: imageDetails?.post_processing || [],
     sampler: imageDetails.sampler,
-    control_type: imageDetails.source_image ? imageDetails.control_type : ''
+    control_type: imageDetails.source_image ? imageDetails.control_type : '',
+    prompt: imageDetails.prompt,
+    negativePrompt: imageDetails.negative
   })
 
   const imageUpscaled =

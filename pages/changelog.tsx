@@ -107,6 +107,14 @@ const Changelog = () => {
             Fix: I broke the ControlNet page. Back in business, now! Thanks to
             Eleiber on Discord for reporting this.
           </StyledLi>
+          <StyledLi>
+            Due to a Stable Horde API change related to processing power,
+            I&apos;ve update kudos costs for images with weights. Each weight
+            added to a prompt now adds an additional one kudo cost. e.g.,
+            &quot;a (zombie:1.5) (clown:1.2) dancing a jig&quot; would cost an
+            additional 2 kudos. This also includes weights added to the negative
+            prompt.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

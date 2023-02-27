@@ -431,7 +431,9 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
     numImages: totalImagesRequested,
     postProcessors: input.post_processing,
     sampler: input.sampler,
-    control_type: input.source_image ? input.control_type : ''
+    control_type: input.source_image ? input.control_type : '',
+    prompt: input.prompt,
+    negativePrompt: input.negative
   })
 
   const kudosPerImage =

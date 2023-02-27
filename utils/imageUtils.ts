@@ -464,7 +464,9 @@ export const kudosCost = ({
   numImages,
   postProcessors,
   sampler,
-  control_type
+  control_type,
+  prompt = '',
+  negativePrompt = ''
 }: {
   width: number
   height: number
@@ -473,7 +475,12 @@ export const kudosCost = ({
   postProcessors: Array<string>
   sampler: string
   control_type: string
+  prompt: string
+  negativePrompt: string
 }): number => {
+  const combinePrompts = `${prompt} ${negativePrompt}`
+  const numWeights = combinePrompts.match(/\(.+?\)/g) || []
+
   const result =
     Math.pow((width as number) * (height as number) - 64 * 64, 1.75) /
     Math.pow(1024 * 1024 - 64 * 64, 1.75)
@@ -487,10 +494,13 @@ export const kudosCost = ({
     (/dpm_2|dpm_2_a|k_heun/.test(sampler) ? 2 : 1) *
     (1 + (postProcessors.includes('RealESRGAN_x4plus') ? 0.2 * 1 + 0.3 : 0))
 
+  const weightedCost = numWeights.length * numImages
+  const totalCost = processingCost + weightedCost
+
   if (!control_type) {
-    return Math.round(processingCost)
+    return Math.round(totalCost)
   } else {
-    return Math.round(processingCost * 3)
+    return Math.round(totalCost * 3)
   }
 }
 
