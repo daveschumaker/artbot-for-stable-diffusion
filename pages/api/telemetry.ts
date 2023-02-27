@@ -14,28 +14,13 @@ export default async function handler(
   }
 
   const data = { ...req.body }
-  let ip
-
-  if (req.headers['x-forwarded-for']) {
-    // @ts-ignore
-    ip = req.headers['x-forwarded-for'].split(',')[0]
-  } else if (req.headers['x-real-ip']) {
-    ip = req?.connection?.remoteAddress
-  } else {
-    ip = req?.connection?.remoteAddress
-  }
-
-  if (ip) {
-    data.ip = ip
-  }
-
   data.useragent = req.headers['user-agent']
 
   if (data.event === 'FEEDBACK_FORM') {
     try {
       await fetch(`http://localhost:4001/api/v1/artbot/feedback`, {
         method: 'POST',
-        body: JSON.stringify(req.body),
+        body: JSON.stringify(data),
         headers: {
           'Content-Type': 'application/json'
         }

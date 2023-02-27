@@ -1,3 +1,4 @@
+import Head from 'next/head'
 import React from 'react'
 import styled from 'styled-components'
 import { userInfoStore } from '../store/userStore'
@@ -46,6 +47,9 @@ class ErrorBoundary extends React.Component {
       // You can render any custom fallback UI
       return (
         <>
+          <Head>
+            <title>Unexpected Error - ArtBot for Stable Diffusion</title>
+          </Head>
           <PageTitle>An unexpected error has occurred.</PageTitle>
           <div className="mb-[8px]">
             ArtBot encountered an error while attempting to process this

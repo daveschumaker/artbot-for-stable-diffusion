@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
 import PageTitle from '../components/UI/PageTitle'
@@ -39,6 +40,9 @@ export default function ErrorPage({ err }: { err: any }) {
 
   return (
     <div>
+      <Head>
+        <title>Unexpected Error - ArtBot for Stable Diffusion</title>
+      </Head>
       <PageTitle>An unexpected error has occurred.</PageTitle>
       <div className="mb-[8px]">
         ArtBot encountered an error while attempting to process this request.

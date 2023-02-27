@@ -4,7 +4,16 @@ const fetch = require('node-fetch')
 const fs = require('fs')
 
 const cache = {
+  previousHour: null,
   totalImages: 0
+}
+
+const adjustCount = (number) => {
+  if (number === 0 || isNaN(number)) {
+    return
+  }
+
+  cache.totalImages = Number(number)
 }
 
 const saveCache = () => {
@@ -55,6 +64,13 @@ const logCountTotal = async () => {
   const data = {
     totalImages: getImageCount()
   }
+
+  if (cache.previousHour !== null) {
+    data.velocity1hr = getImageCount() - cache.previousHour
+  }
+
+  cache.previousHour = getImageCount()
+
   try {
     await fetch(`http://localhost:4001/api/v1/artbot/counter`, {
       method: 'POST',
@@ -63,8 +79,14 @@ const logCountTotal = async () => {
         'Content-Type': 'application/json'
       }
     })
+    return {
+      success: true
+    }
   } catch (err) {
     // eh, it's okay if nothing happens.
+    return {
+      success: true
+    }
   }
 }
 
@@ -73,6 +95,7 @@ cron.schedule('0 * * * *', () => {
 })
 
 module.exports = {
+  adjustCount,
   getImageCount,
   initLoadCount,
   updateImageCount
