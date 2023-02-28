@@ -62,8 +62,14 @@ export const getDefaultPrompt = async () => {
         ?.toArray()) || []
     )
   } catch (err: any) {
-    unsupportedBrowser = true
-    setUnsupportedBrowser(true)
+    if (
+      err.message.indexOf(
+        'A mutation operation was attempted on a database that did not allow mutations'
+      ) >= 0
+    ) {
+      unsupportedBrowser = true
+      setUnsupportedBrowser(true)
+    }
     return []
   }
 }
@@ -107,8 +113,14 @@ export const allPendingJobs = async (status?: string) => {
       })
       ?.toArray()
   } catch (err: any) {
-    unsupportedBrowser = true
-    setUnsupportedBrowser(true)
+    if (
+      err.message.indexOf(
+        'A mutation operation was attempted on a database that did not allow mutations'
+      ) >= 0
+    ) {
+      unsupportedBrowser = true
+      setUnsupportedBrowser(true)
+    }
     return []
   }
 }
