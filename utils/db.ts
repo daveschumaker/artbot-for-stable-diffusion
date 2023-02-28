@@ -3,8 +3,6 @@ import { setUnsupportedBrowser } from '../store/appStore'
 import { JobStatus } from '../types'
 import { SourceProcessing } from './promptUtils'
 
-let unsupportedBrowser = false
-
 export class MySubClassedDexie extends Dexie {
   completed: any
   pending: any
@@ -67,7 +65,6 @@ export const getDefaultPrompt = async () => {
         'A mutation operation was attempted on a database that did not allow mutations'
       ) >= 0
     ) {
-      unsupportedBrowser = true
       setUnsupportedBrowser(true)
     }
     return []
@@ -118,10 +115,18 @@ export const allPendingJobs = async (status?: string) => {
         'A mutation operation was attempted on a database that did not allow mutations'
       ) >= 0
     ) {
-      unsupportedBrowser = true
       setUnsupportedBrowser(true)
     }
     return []
+  }
+}
+
+// Useful for fetching date user first used site.
+export const fetchFirstCompletedJob = async () => {
+  try {
+    return await db?.completed?.orderBy('id')?.limit(1).first()
+  } catch (err) {
+    return {}
   }
 }
 

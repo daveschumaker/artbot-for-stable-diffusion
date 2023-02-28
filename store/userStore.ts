@@ -30,7 +30,7 @@ interface UserStore {
   username: string
   kudos: number
   kudos_details: IKudosDetails
-  loggedIn: boolean
+  loggedIn: boolean | null
   trusted: boolean
   worker_ids: Array<string> | null
   workers: IWorkers
@@ -47,6 +47,8 @@ interface IKudosDetails {
 interface UserInfo {
   username: string
   kudos: number
+  kudos_details: IKudosDetails
+  records: any
   trusted: boolean
   worker_ids: Array<string> | null
 }
@@ -67,6 +69,12 @@ export const userInfoStore = makeStore<UserStore>({
   loggedIn: false,
   workers: {}
 })
+
+export const setLoggedInState = (bool: boolean | null) => {
+  userInfoStore.set(() => ({
+    loggedIn: bool
+  }))
+}
 
 export const unsetUserInfo = () => {
   userInfoStore.set(() => ({
@@ -97,12 +105,16 @@ export const setWorkers = (workers: IWorkers) => {
 export const setUserInfo = ({
   username,
   kudos,
+  kudos_details,
+  records,
   trusted,
   worker_ids = null
 }: UserInfo) => {
   userInfoStore.set(() => ({
     username,
     kudos,
+    kudos_details,
+    records,
     trusted,
     worker_ids,
     loggedIn: username ? true : false

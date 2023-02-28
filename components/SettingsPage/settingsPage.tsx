@@ -379,7 +379,7 @@ const SettingsPage = () => {
                     <a
                       href="https://stablehorde.net/"
                       target="_blank"
-                      rel="noreferrer"
+                      rel="noopener noreferrer"
                       className="text-cyan-500"
                     >
                       stablehorde.net

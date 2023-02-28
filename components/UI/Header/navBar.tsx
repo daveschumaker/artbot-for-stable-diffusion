@@ -52,6 +52,7 @@ const NavBar = () => {
 
   const [showCreateMenu, setShowCreateMenu] = useState(false)
   const [showInfoMenu, setShowInfoMenu] = useState(false)
+  const [showSettingsMenu, setShowSettingsMenu] = useState(false)
 
   const clearNewImageNotification = () => {
     setShowImageReadyToast(false)
@@ -158,6 +159,7 @@ const NavBar = () => {
         </NavItem>
         {showInfoMenu && (
           <DropDown
+            alignRight
             handleClose={() => {
               setShowInfoMenu(false)
             }}
@@ -197,12 +199,39 @@ const NavBar = () => {
           </DropDown>
         )}
       </div>
-      <Link href="/settings" passHref tabIndex={0}>
-        <NavItem active={isActiveRoute('/settings')}>
-          <SettingsIcon size={20} />
-          Settings
+      <div className="flex flex-row gap-[0px] relative">
+        <Link href="/settings" passHref tabIndex={0}>
+          <NavItem active={isActiveRoute('/settings')}>
+            <SettingsIcon size={20} />
+            Settings
+          </NavItem>
+        </Link>
+        <NavItem
+          active={isActiveRoute('/settings')}
+          onClick={() => {
+            setShowSettingsMenu(true)
+          }}
+        >
+          <ChevronDownIcon size={20} />
         </NavItem>
-      </Link>
+        {showSettingsMenu && (
+          <DropDown
+            alignRight
+            handleClose={() => {
+              setShowSettingsMenu(false)
+            }}
+          >
+            <DropDownItem
+              handleClick={() => {
+                setShowSettingsMenu(false)
+                router.push('/profile')
+              }}
+            >
+              User Profile
+            </DropDownItem>
+          </DropDown>
+        )}
+      </div>
     </nav>
   )
 }

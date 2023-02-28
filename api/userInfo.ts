@@ -1,6 +1,12 @@
 import AppSettings from '../models/AppSettings'
 import { setHordeStatus } from '../store/appStore'
-import { IWorker, setUserInfo, setWorkers } from '../store/userStore'
+import {
+  IWorker,
+  setLoggedInState,
+  setUserInfo,
+  setWorkers,
+  userInfoStore
+} from '../store/userStore'
 import { clientHeader, getApiHostServer, isAppActive } from '../utils/appUtils'
 import { uuidv4 } from '../utils/appUtils'
 
@@ -16,7 +22,15 @@ export const setUserId = () => {
 
 let isPending = false
 export const fetchUserDetails = async (apikey: string) => {
-  if (!apikey || isPending) {
+  if (!apikey) {
+    setLoggedInState(false)
+    return {
+      success: false
+    }
+  }
+
+  if (isPending) {
+    setLoggedInState(null)
     return { status: 'pending' }
   }
 
@@ -25,6 +39,11 @@ export const fetchUserDetails = async (apikey: string) => {
   }
 
   isPending = true
+
+  if (!userInfoStore.state.loggedIn) {
+    setLoggedInState(null)
+  }
+
   try {
     const res = await fetch(`${getApiHostServer()}/api/v2/find_user`, {
       headers: {
@@ -34,6 +53,7 @@ export const fetchUserDetails = async (apikey: string) => {
     })
 
     const userDetails = await res.json()
+
     const {
       records = {},
       kudos = 0,

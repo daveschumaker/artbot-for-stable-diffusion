@@ -120,6 +120,10 @@ const Changelog = () => {
             private browsing mode, as it does not support the IndexedDb browser
             API)
           </StyledLi>
+          <StyledLi>
+            Feature: Handy <Linker href="/profile">user profile page</Linker> if
+            you&apos;re logged in with your Stable Horde API key.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

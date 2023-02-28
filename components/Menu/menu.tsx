@@ -19,6 +19,7 @@ import { appInfoStore, setShowAppMenu } from '../../store/appStore'
 import { useEffect } from 'react'
 import { lockScroll, unlockScroll } from '../../utils/appUtils'
 import PencilIcon from '../icons/PencilIcon'
+import RobotIcon from '../icons/RobotIcon'
 
 interface IStyledProps {
   show?: boolean
@@ -310,6 +311,14 @@ const Menu = () => {
               ArtBot Prefs
             </SubOption>
           </SubOptions>
+          <MenuOption
+            onClick={() => {
+              navigateToLink('/profile')
+            }}
+          >
+            <RobotIcon />
+            User Profile
+          </MenuOption>
           <MenuOption
             onClick={() => {
               navigateToLink('/about')

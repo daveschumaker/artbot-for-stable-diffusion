@@ -167,7 +167,11 @@ const AdvancedOptionsPanel = ({
     if (
       isNaN(input.steps) ||
       input.steps < 1 ||
-      input.steps > maxSteps({ sampler: input.sampler, loggedIn })
+      input.steps >
+        maxSteps({
+          sampler: input.sampler,
+          loggedIn: loggedIn === true ? true : false
+        })
     ) {
       if (initialLoad) {
         return
@@ -176,7 +180,7 @@ const AdvancedOptionsPanel = ({
       setErrorMessage({
         steps: `Please enter a valid number between 1 and ${maxSteps({
           sampler: input.sampler,
-          loggedIn
+          loggedIn: loggedIn === true ? true : false
         })}`
       })
     } else {
@@ -401,16 +405,17 @@ const AdvancedOptionsPanel = ({
             <>
               <div className="block text-xs mt-4 w-full">
                 Max size for each dimension:{' '}
-                {loggedIn
+                {loggedIn === true
                   ? MAX_DIMENSIONS_LOGGED_IN
                   : MAX_DIMENSIONS_LOGGED_OUT}{' '}
                 pixels
-                {loggedIn && input.height * input.width > 1024 * 1024 && (
-                  <div className="text-red-500 font-bold">
-                    WARNING: You will need to have enough kudos to complete this
-                    request.
-                  </div>
-                )}
+                {loggedIn === true &&
+                  input.height * input.width > 1024 * 1024 && (
+                    <div className="text-red-500 font-bold">
+                      WARNING: You will need to have enough kudos to complete
+                      this request.
+                    </div>
+                  )}
               </div>
               <div className="flex flex-col gap-4 justify-start">
                 <div className="mt-2 flex flex-row gap-4 items-center">
@@ -423,7 +428,7 @@ const AdvancedOptionsPanel = ({
                     name="width"
                     min={64}
                     max={
-                      loggedIn
+                      loggedIn === true
                         ? MAX_DIMENSIONS_LOGGED_IN
                         : MAX_DIMENSIONS_LOGGED_OUT
                     }
@@ -448,7 +453,7 @@ const AdvancedOptionsPanel = ({
                         isNaN(e.target.value) ||
                         e.target.value < 64 ||
                         e.target.value >
-                          (loggedIn
+                          (loggedIn === true
                             ? MAX_DIMENSIONS_LOGGED_IN
                             : MAX_DIMENSIONS_LOGGED_OUT)
                       ) {
@@ -458,7 +463,7 @@ const AdvancedOptionsPanel = ({
 
                         setErrorMessage({
                           width: `Please enter a valid number between 64 and ${
-                            loggedIn
+                            loggedIn === true
                               ? MAX_DIMENSIONS_LOGGED_IN
                               : MAX_DIMENSIONS_LOGGED_OUT
                           }`
@@ -499,7 +504,7 @@ const AdvancedOptionsPanel = ({
                     name="height"
                     min={64}
                     max={
-                      loggedIn
+                      loggedIn === true
                         ? MAX_DIMENSIONS_LOGGED_IN
                         : MAX_DIMENSIONS_LOGGED_OUT
                     }
@@ -524,7 +529,7 @@ const AdvancedOptionsPanel = ({
                         isNaN(e.target.value) ||
                         e.target.value < 64 ||
                         e.target.value >
-                          (loggedIn
+                          (loggedIn === true
                             ? MAX_DIMENSIONS_LOGGED_IN
                             : MAX_DIMENSIONS_LOGGED_OUT)
                       ) {
@@ -534,7 +539,7 @@ const AdvancedOptionsPanel = ({
 
                         setErrorMessage({
                           height: `Please enter a valid number between 64 and ${
-                            loggedIn
+                            loggedIn === true
                               ? MAX_DIMENSIONS_LOGGED_IN
                               : MAX_DIMENSIONS_LOGGED_OUT
                           }`
@@ -697,7 +702,12 @@ const AdvancedOptionsPanel = ({
                     </Tooltip>
                   </TextTooltipRow>
                   <div className="block text-xs w-full">
-                    (1 - {maxSteps({ sampler: input.sampler, loggedIn })})
+                    (1 -{' '}
+                    {maxSteps({
+                      sampler: input.sampler,
+                      loggedIn: loggedIn === true ? true : false
+                    })}
+                    )
                   </div>
                 </SubSectionTitle>
                 <NumberInput
@@ -706,7 +716,10 @@ const AdvancedOptionsPanel = ({
                   className="mb-2"
                   type="text"
                   min={1}
-                  max={maxSteps({ sampler: input.sampler, loggedIn })}
+                  max={maxSteps({
+                    sampler: input.sampler,
+                    loggedIn: loggedIn === true ? true : false
+                  })}
                   onMinusClick={() => {
                     const value = input.steps - 1
                     PromptInputSettings.set('steps', value)
@@ -733,7 +746,7 @@ const AdvancedOptionsPanel = ({
                   min={1}
                   max={maxSteps({
                     sampler: input.sampler,
-                    loggedIn,
+                    loggedIn: loggedIn === true ? true : false,
                     isSlider: true
                   })}
                   onChange={(e: any) => {
@@ -768,7 +781,12 @@ const AdvancedOptionsPanel = ({
                       </Tooltip>
                     </TextTooltipRow>
                     <div className="block text-xs w-full">
-                      (1 - {maxSteps({ sampler: input.sampler, loggedIn })})
+                      (1 -{' '}
+                      {maxSteps({
+                        sampler: input.sampler,
+                        loggedIn: loggedIn === true ? true : false
+                      })}
+                      )
                     </div>
                   </SubSectionTitle>
                 </div>
