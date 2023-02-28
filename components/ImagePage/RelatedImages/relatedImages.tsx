@@ -11,7 +11,9 @@ import { bulkDeleteImages } from '../../../utils/db'
 import ConfirmationModal from '../../ConfirmationModal'
 import CircleCheckIcon from '../../icons/CircleCheckIcon'
 import HeartIcon from '../../icons/HeartIcon'
+import TrashIcon from '../../icons/TrashIcon'
 import MasonryLayout from '../../MasonryLayout'
+import FloatingActionButton from '../../UI/FloatingActionButton'
 import MenuButton from '../../UI/MenuButton'
 import PageTitle from '../../UI/PageTitle'
 import TextButton from '../../UI/TextButton'
@@ -164,7 +166,19 @@ const RelatedImages = ({
   }
 
   return (
-    <>
+    <div className="relative">
+      {componentState.deleteMode && (
+        <FloatingActionButton
+          onClick={() => {
+            if (componentState.deleteSelection.length > 0) {
+              setComponentState({ showDeleteModal: true })
+            }
+          }}
+        >
+          <TrashIcon />
+          DELETE ({componentState.deleteSelection.length})?
+        </FloatingActionButton>
+      )}
       {componentState.showImageModal && (
         <ImageModalController
           onAfterDelete={handleAfterDelete}
@@ -319,7 +333,7 @@ const RelatedImages = ({
           )}
         </MasonryLayout>
       </div>
-    </>
+    </div>
   )
 }
 

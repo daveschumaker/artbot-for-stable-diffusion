@@ -41,6 +41,8 @@ import ImageModalController from '../components/ImagesPage/ImageModalController'
 import AppSettings from '../models/AppSettings'
 import AdContainer from '../components/AdContainer'
 import { setFilteredItemsArray } from '../store/filteredImagesCache'
+import FloatingActionButton from '../components/UI/FloatingActionButton'
+import TrashIcon from '../components/icons/TrashIcon'
 
 const MenuSeparator = styled.div`
   width: 100%;
@@ -359,12 +361,17 @@ const ImagesPage = () => {
   }
 
   const handleSelectAll = () => {
-    let delArray: Array<string> = []
+    let delArray: Array<string> = [...componentState.deleteSelection]
+
     componentState.images.forEach((image: { id: string }) => {
-      delArray.push(image.id)
+      if (delArray.indexOf(image.id) === -1) {
+        delArray.push(image.id)
+      }
     })
 
-    setComponentState({ deleteSelection: delArray })
+    setComponentState({
+      deleteSelection: delArray
+    })
   }
 
   const handleFilterButtonClick = useCallback(() => {
@@ -480,7 +487,22 @@ const ImagesPage = () => {
   }
 
   return (
-    <div {...handlers}>
+    <div className="relative" {...handlers}>
+      {componentState.deleteMode && (
+        <FloatingActionButton
+          onClick={() => {
+            if (componentState.deleteSelection.length > 0) {
+              setComponentState({ showDeleteModal: true })
+            }
+          }}
+        >
+          <TrashIcon />
+          DELETE
+          {componentState.deleteSelection.length > 0
+            ? ` (${componentState.deleteSelection.length})?`
+            : '?'}
+        </FloatingActionButton>
+      )}
       {componentState.showImageModal && (
         <ImageModalController
           onAfterDelete={fetchImages}
