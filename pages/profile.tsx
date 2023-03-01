@@ -134,19 +134,23 @@ const ProfilePage = () => {
             </div>
           </div>
           <div className={styles['info-wrapper']}>
-            <div className={styles['info-wrapper-title']}>Images requested</div>
+            <div className={styles['info-wrapper-title']}>
+              Images you&apos;ve requested
+            </div>
             <div className={styles['info-wrapper-details']}>
               {records.request.image.toLocaleString()}
             </div>
           </div>
           <div className={styles['info-wrapper']}>
-            <div className={styles['info-wrapper-title']}>Images generated</div>
+            <div className={styles['info-wrapper-title']}>
+              Images generated from your workers
+            </div>
             <div className={styles['info-wrapper-details']}>
               {records.fulfillment.image.toLocaleString()}
             </div>
           </div>
           <div className={styles['info-wrapper']}>
-            <div className={styles['info-wrapper-title']}>Workers</div>
+            <div className={styles['info-wrapper-title']}>Your Workers</div>
             <div className={styles['info-wrapper-details']}>
               {worker_ids === null ? 0 : worker_ids.length.toLocaleString()}
             </div>

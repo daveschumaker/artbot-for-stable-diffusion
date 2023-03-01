@@ -116,6 +116,7 @@ const nextImageDetails = {
 }
 
 const Rate = () => {
+  const DRAMA_MODE = true // ratings provider has disabled rating system for all UIs for some reason.
   const [componentState, setComponentState] = useComponentState({
     apiKey: '',
     activeStar: 0,

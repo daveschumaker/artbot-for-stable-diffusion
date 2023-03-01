@@ -236,7 +236,7 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
                 does not support the IndexedDb browser API.
               </div>
               <div className="mb-[8px]">
-                Due to this, ArtBot will not work. (The commonly happens when
+                Due to this, ArtBot will not work. (This commonly happens when
                 using Firefox&apos;s private browsing mode.) Please try using a
                 different browser or exit private mode in Firefox.
               </div>
