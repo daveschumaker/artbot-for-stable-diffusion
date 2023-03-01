@@ -51,7 +51,7 @@ const fetchModelDetails = async () => {
     let modelDetails = {}
 
     const resp = await fetch(
-      `https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/db.json`,
+      `https://raw.githubusercontent.com/db0/AI-Horde-image-model-reference/main/db.json`,
       {
         method: 'GET'
       }
