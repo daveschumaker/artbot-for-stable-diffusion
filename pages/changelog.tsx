@@ -41,7 +41,7 @@ const LinkButton = ({
 /** TEMPLATE
 
 <Section>
-  <SubSectionTitle>2023.02.01</SubSectionTitle>
+  <SubSectionTitle>2023.03.01</SubSectionTitle>
   <StyledUl>
     <StyledLi>test</StyledLi>
   </StyledUl>
@@ -96,10 +96,33 @@ const Changelog = () => {
               favorite images. (I know that some of you have thousands of images
               and this is not ideal at the moment.)
             </StyledLi>
+            <StyledLi>
+              2023.03.01 - It sounds like the image mask sometimes isn&apos;t
+              respected when doing img2img or inpainting request. Investigating.
+            </StyledLi>
+            <StyledLi>
+              2023.03.01 - Stale kudos calculation costs when going back to
+              create page after viewing pending page.
+            </StyledLi>
           </StyledUl>
         </Section>
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
+      <Section>
+        <SubSectionTitle>2023.03.01</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: Model details page pulling data from an invalid GitHub repo.
+          </StyledLi>
+          <StyledLi>
+            I had to disable to ratings page due to some issues outside of
+            ArtBot&apos;s control. hlky, who has generously helped to setup and
+            run the image rating system for Stable Horde has taken the whole
+            thing down for... reasons. (I am not exactly sure what, myself)
+            Hopefully it will be back soon.
+          </StyledLi>
+        </StyledUl>
+      </Section>
       <Section>
         <SubSectionTitle>2023.02.27</SubSectionTitle>
         <StyledUl>

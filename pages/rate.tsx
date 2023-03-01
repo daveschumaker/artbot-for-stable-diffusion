@@ -401,6 +401,34 @@ const Rate = () => {
     }
   }, [componentState.apiKey, fetchImage])
 
+  if (DRAMA_MODE) {
+    return (
+      <>
+        <Head>
+          <title>Rate images - ArtBot for Stable Diffusion</title>
+          <meta name="twitter:title" content="Rate images with ArtBot" />
+          <meta
+            name="twitter:description"
+            content="Give aesthetics ratings for images created with Stable Diffusion and help improve future models."
+          />
+          <meta
+            name="twitter:image"
+            content="https://tinybots.net/artbot/robot_judge.png"
+          />
+        </Head>
+        <PageTitle>Rate images (disabled)</PageTitle>
+        <SubTitle>
+          <div className="mb-[8px]">
+            <strong>March 1st, 2023</strong>
+          </div>
+          Due to issues with third-party rating service that are outside of
+          ArtBot&apos; control, ratings have been (temporarily?) disabled. I
+          will share here when I have more information.
+        </SubTitle>
+      </>
+    )
+  }
+
   return (
     <>
       <Head>
