@@ -131,7 +131,7 @@ export const fetchUserDetails = async (apikey: string) => {
   } catch (err) {
     console.log(`Warning: Unable to fetch user details. API offline?`)
     isPending = false
-    setHordeStatus(false)
+    // setHordeStatus(false) // TODO: Re-visit this and use heartbeat
     return {
       success: false
     }
