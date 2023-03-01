@@ -104,6 +104,14 @@ const Changelog = () => {
               2023.03.01 - Stale kudos calculation costs when going back to
               create page after viewing pending page.
             </StyledLi>
+            <StyledLi>
+              2023.03.01 - I&apos;ve heard the random &quot;server
+              updated!&quot; popups that you can&apos;t escape from happen at
+              the most inopportune times. I am going to investigate a way where
+              I can message that server updates are incoming around 5 or 10
+              minutes ahead of time and give you a chance to save your work.
+              Stay tuned.
+            </StyledLi>
           </StyledUl>
         </Section>
       </Panel>
@@ -111,6 +119,9 @@ const Changelog = () => {
       <Section>
         <SubSectionTitle>2023.03.01</SubSectionTitle>
         <StyledUl>
+          <StyledLi>
+            Updates are a bit slow because I am feeling under the weather. 😵‍💫
+          </StyledLi>
           <StyledLi>
             Fix: Model details page pulling data from an invalid GitHub repo.
           </StyledLi>
