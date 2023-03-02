@@ -10,7 +10,6 @@ import {
 } from '../store/canvasStore'
 import { debounce } from '../utils/debounce'
 import { getCanvasHeight } from '../utils/fabricUtils'
-import { nearestWholeMultiple } from '../utils/imageUtils'
 import { SourceProcessing } from '../utils/promptUtils'
 import CanvasSettings from './CanvasSettings'
 
@@ -386,8 +385,13 @@ class CreateCanvas {
           ? SourceProcessing.Img2Img
           : SourceProcessing.InPainting,
       orientationType: 'custom',
-      height: nearestWholeMultiple(this.canvas.height || 512),
-      width: nearestWholeMultiple(this.canvas.width || 512),
+
+      // H x W are set on initial canvas load. Not sure why I had set this as part of autosave.
+      // It ends up overwriting the initial image settings for some reason.
+      // e.g., an imported image for inpainting is 896 x 576 and this ends up resizing it to:
+      // 512 x
+      // height: nearestWholeMultiple(this.canvas.height || 512),
+      // width: nearestWholeMultiple(this.canvas.width || 512),
       canvasStore: this.canvas.toJSON(),
       canvasData: this.canvas.toObject(),
       maskData: null
