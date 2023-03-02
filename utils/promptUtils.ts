@@ -38,6 +38,9 @@ interface SavePrompt {
   denoising_strength?: number
   control_type?: string
   models: Array<string>
+  canvasStore?: any
+  canvasData?: any
+  maskData?: any
 }
 
 let initPromptDetails: SavePrompt = {
@@ -63,7 +66,10 @@ let initPromptDetails: SavePrompt = {
   source_processing: SourceProcessing.Prompt,
   source_mask: '',
   denoising_strength: 0.75,
-  models: ['stable_diffusion']
+  models: ['stable_diffusion'],
+  canvasStore: '',
+  canvasData: '',
+  maskData: ''
 }
 
 let promptDetails: SavePrompt = Object.assign({}, initPromptDetails)
@@ -93,7 +99,10 @@ export const savePrompt = ({
   source_mask = '',
   denoising_strength = 0.75,
   control_type = '',
-  models = ['stable_diffusion']
+  models = ['stable_diffusion'],
+  canvasStore,
+  canvasData,
+  maskData
 } = {}) => {
   const samplerValid = validSampler(sampler)
   promptDetails = {
@@ -120,7 +129,10 @@ export const savePrompt = ({
     source_mask,
     denoising_strength,
     control_type,
-    models
+    models,
+    canvasStore,
+    canvasData,
+    maskData
   }
 }
 
