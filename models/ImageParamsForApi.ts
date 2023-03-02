@@ -161,6 +161,11 @@ class ImageParamsForApi {
       apiParams.params.control_type = control_type
     }
 
+    // Handle a very poor decision on my part
+    if (control_type === 'none') {
+      apiParams.params.control_type = ''
+    }
+
     // Handle style presets, as well as adding any negative prompts to input prompt string
     apiParams.prompt = modifyPromptForStylePreset({
       prompt,
