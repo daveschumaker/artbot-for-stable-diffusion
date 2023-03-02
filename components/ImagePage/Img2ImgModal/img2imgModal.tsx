@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import clsx from 'clsx'
 import { useRouter } from 'next/router'
 import { useEffect, useRef } from 'react'
 import {
@@ -8,6 +9,7 @@ import {
 import useComponentState from '../../../hooks/useComponentState'
 import { useWindowSize } from '../../../hooks/useWindowSize'
 import { setBase64FromDraw } from '../../../store/canvasStore'
+import { SourceProcessing } from '../../../utils/promptUtils'
 import EyeIcon from '../../icons/EyeIcon'
 import { Button } from '../../UI/Button'
 import InteractiveModal from '../../UI/InteractiveModal/interactiveModal'
@@ -73,7 +75,11 @@ const Img2ImgModal = ({
           />
           {componentState.viewMask && (
             <img
-              className={styles['src-img-mask']}
+              className={clsx(
+                styles['src-img-mask'],
+                imageDetails.source_processing === SourceProcessing.Img2Img &&
+                  styles['invert-mask']
+              )}
               src={'data:image/webp;base64,' + source_mask}
               alt="source image mask for img2img request"
             />
