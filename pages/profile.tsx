@@ -120,9 +120,19 @@ const ProfilePage = () => {
       {loggedIn && (
         <>
           <div className={styles['info-wrapper']}>
-            <div className={styles['info-wrapper-title']}>Available Kudos</div>
+            <div className={styles['info-wrapper-title']}>
+              Currently Available Kudos
+            </div>
             <div className={styles['info-wrapper-details']}>
               {kudos.toLocaleString()}
+            </div>
+          </div>
+          <div className={styles['info-wrapper']}>
+            <div className={styles['info-wrapper-title']}>
+              Kudos gifted to you
+            </div>
+            <div className={styles['info-wrapper-details']}>
+              {Math.abs(kudos_details.received).toLocaleString()}
             </div>
           </div>
           <div className={styles['info-wrapper']}>
