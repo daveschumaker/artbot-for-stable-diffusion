@@ -45,7 +45,7 @@ class DefaultPromptInput {
   maskData: any | null
 
   constructor({
-    control_type = 'none',
+    control_type = '',
     source_image = '',
     height = 512,
     width = 512

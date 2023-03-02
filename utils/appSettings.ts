@@ -66,6 +66,14 @@ export const updateAppConfig = () => {
   }
 }
 
+// Use to fix any issues related to local storage values
+// due to bad decisions on my part.
+export const fixLocalStorage = () => {
+  if (PromptInputSettings.get('control_type') === 'none') {
+    PromptInputSettings.set('control_type', '')
+  }
+}
+
 export const initAppSettings = async () => {
   if (typeof window === 'undefined') {
     return
@@ -86,6 +94,7 @@ export const initAppSettings = async () => {
     AppSettings.set('shareImagesExternally', true)
   }
 
+  fixLocalStorage()
   fetchUserDetails(apikey)
   setUserId()
   deleteStalePending()

@@ -81,7 +81,11 @@ export const uploadInpaint = (imageDetails: any, options: any = {}) => {
       ? imageDetails.source_image
       : imageDetails.base64String,
     source_processing: SourceProcessing.InPainting,
+
+    // Don't set source_mask here, in case of img2img mask (which is inverted), it will be inverted again.
+    // Use CreateCanvas class to restore mask and then automatically add to input the correct way.
     source_mask: '',
+
     denoising_strength: imageDetails.denoising_strength,
     models: imageDetails?.models[0]
       ? imageDetails.models
