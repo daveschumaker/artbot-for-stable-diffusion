@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 import { createImageJob } from '../utils/imageCache'
 import PageTitle from '../components/UI/PageTitle'
 import {
+  clearSavedInputCache,
   loadEditPrompt,
   savePromptHistory,
   SourceProcessing
@@ -261,7 +262,6 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
         numImages: input.numImages,
         model: input.models,
         source: input.source_processing,
-        prompt: input.prompt,
         post_processing: input.post_processing
       }
     })
@@ -285,6 +285,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
     }
 
     savePromptHistory(input.prompt)
+    clearSavedInputCache()
     await createImageJob(new CreateImageRequest(inputToSubmit))
 
     // Store parameters for potentially restoring inpainting data if needed

@@ -128,7 +128,7 @@ export const loadEditPrompt = () => {
   return Object.assign({}, promptDetails)
 }
 
-export const clearPrompt = () => {
+export const clearSavedInputCache = () => {
   promptDetails = Object.assign({}, initPromptDetails)
 }
 
