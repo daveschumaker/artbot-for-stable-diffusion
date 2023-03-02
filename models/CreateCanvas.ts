@@ -9,7 +9,8 @@ import {
   storeCanvas
 } from '../store/canvasStore'
 import { debounce } from '../utils/debounce'
-import { getCanvasHeight } from '../utils/fabricUtils'
+import { getCanvasHeight, getMaxValidCanvasWidth } from '../utils/fabricUtils'
+import { nearestWholeMultiple } from '../utils/imageUtils'
 import { SourceProcessing } from '../utils/promptUtils'
 import CanvasSettings from './CanvasSettings'
 
@@ -118,7 +119,6 @@ class CreateCanvas {
   static init = ({
     bgColor = 'white',
     height = 512,
-    width = 512,
     canvasId = 'canvas'
   }: {
     bgColor?: string
@@ -131,7 +131,7 @@ class CreateCanvas {
       // renderOnAddRemove: true,
       isDrawingMode: false,
       height,
-      width
+      width: getMaxValidCanvasWidth()
     })
   }
 
@@ -192,7 +192,22 @@ class CreateCanvas {
 
       if (getCanvasStore().maskLayer) {
         this.createMaskLayer()
-        this?.maskLayer?.loadFromJSON(getCanvasStore().maskLayer, () => {})
+        this.maskLayer?.loadFromJSON(getCanvasStore().maskLayer, () => {
+          if (!this.maskLayer) {
+            return
+          }
+
+          this.maskLayer.setHeight(this.height)
+          this.maskLayer.setWidth(this.width)
+
+          this.setInput({
+            source_mask: this.maskLayer
+              .toDataURL({ format: 'webp' })
+              .split(',')[1]
+          })
+
+          this.maskLayer.renderAll()
+        })
       }
 
       this.canvas.isDrawingMode = true
@@ -550,9 +565,7 @@ class CreateCanvas {
       fabric.Image.fromURL(fullDataString, (image) => {
         // const innerWidth = window.innerWidth
         // const containerWidth = getPanelWidth(innerWidth)
-        let container = document.querySelector('#canvas-wrapper')
-        // @ts-ignore
-        const containerWidth = container?.offsetWidth || 512
+        const containerWidth = getMaxValidCanvasWidth()
         let newHeight = image.height || 512
         let newWidth = containerWidth
 
@@ -582,20 +595,35 @@ class CreateCanvas {
           newWidth = image.width
         }
 
-        this.height = newHeight
+        // Finally, we need to ensure that image has dimensions that are divisible by 64
+        this.height =
+          nearestWholeMultiple(newHeight) > newHeight
+            ? nearestWholeMultiple(newHeight) - 64
+            : nearestWholeMultiple(newHeight)
         this.width = newWidth
 
-        canvas.setHeight(newHeight)
-        canvas.setWidth(newWidth)
+        canvas.setHeight(this.height)
+        canvas.setWidth(this.width)
 
         this.imageLayer = this.makeNewLayer({
           image,
-          layerHeight: newHeight,
-          layerWidth: newWidth
+          layerHeight: this.height,
+          layerWidth: this.width
         })
 
         canvas.insertAt(this.imageLayer, 0, false)
         this.createMaskLayer()
+        this.updateCanvas()
+
+        // Once image has been properly imported and setup, store all relevant data on input object
+        this.setInput({
+          height: this.height,
+          width: this.width,
+          source_image: image
+            .toDataURL({ format: 'webp', height: this.height })
+            .split(',')[1]
+        })
+
         return resolve(true)
       })
     })

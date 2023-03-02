@@ -1,3 +1,5 @@
+import { nearestWholeMultiple } from './imageUtils'
+
 interface GetCanvasHeight {
   baseHeight?: number
   baseWidth?: number
@@ -20,6 +22,18 @@ interface GetCanvasWidth {
   baseHeight?: number
   baseWidth?: number
   foundHeight: number
+}
+
+export const getMaxValidCanvasWidth = () => {
+  let container = document.querySelector('#canvas-wrapper')
+  // @ts-ignore
+  let containerWidth = container?.offsetWidth || 512
+  containerWidth =
+    nearestWholeMultiple(containerWidth) > containerWidth
+      ? nearestWholeMultiple(containerWidth) - 64
+      : nearestWholeMultiple(containerWidth)
+
+  return containerWidth
 }
 
 export const getCanvasWidth = ({

@@ -38,17 +38,20 @@ export const copyEditPrompt = (imageDetails: any) => {
   })
 }
 
+/**
+ * Can be used to upload an existing image from your ArtBot library as a new inpainting image
+ * or can be used to clone a previously used source_image and image mask.
+ * @param imageDetails
+ * @param options
+ */
 export const uploadInpaint = (imageDetails: any, options: any = {}) => {
-  const { clone = false, useSourceImg = false, useSourceMask = false } = options
+  const { clone = false, useSourceImg = false } = options
   clearCanvasStore()
 
   if (clone) {
     storeCanvas('drawLayer', imageDetails.canvasData)
-    cloneFromImage(imageDetails.canvasStore)
-  }
-
-  if (useSourceMask) {
     storeCanvas('maskLayer', imageDetails.maskData)
+    cloneFromImage(imageDetails.canvasStore)
   }
 
   const i2iBase64String = {
@@ -77,9 +80,10 @@ export const uploadInpaint = (imageDetails: any, options: any = {}) => {
     cfg_scale: imageDetails.cfg_scale,
     parentJobId: imageDetails.parentJobId,
     negative: imageDetails.negative,
-    source_image: useSourceImg
-      ? imageDetails.source_image
-      : imageDetails.base64String,
+    source_image:
+      useSourceImg || clone
+        ? imageDetails.source_image
+        : imageDetails.base64String,
     source_processing: SourceProcessing.InPainting,
 
     // Don't set source_mask here, in case of img2img mask (which is inverted), it will be inverted again.
@@ -89,7 +93,11 @@ export const uploadInpaint = (imageDetails: any, options: any = {}) => {
     denoising_strength: imageDetails.denoising_strength,
     models: imageDetails?.models[0]
       ? imageDetails.models
-      : [imageDetails.model || 'stable_diffusion']
+      : [imageDetails.model || 'stable_diffusion'],
+
+    canvasStore: clone ? imageDetails.canvasStore : null,
+    canvasData: clone ? imageDetails.canvasData : null,
+    maskData: clone ? imageDetails.maskData : null
   })
 }
 

@@ -97,14 +97,6 @@ const Changelog = () => {
               and this is not ideal at the moment.)
             </StyledLi>
             <StyledLi>
-              2023.03.01 - It sounds like the image mask sometimes isn&apos;t
-              respected when doing img2img or inpainting request. Investigating.
-            </StyledLi>
-            <StyledLi>
-              2023.03.01 - Stale kudos calculation costs when going back to
-              create page after viewing pending page.
-            </StyledLi>
-            <StyledLi>
               2023.03.01 - I&apos;ve heard the random &quot;server
               updated!&quot; popups that you can&apos;t escape from happen at
               the most inopportune times. I am going to investigate a way where
@@ -116,6 +108,27 @@ const Changelog = () => {
         </Section>
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
+      <Section>
+        <SubSectionTitle>2023.03.01</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: Issue with invalid control_type setting resulting in invalid
+            payload validation errors. Thanks to Breaker for reporting this on
+            Discord.
+          </StyledLi>
+          <StyledLi>
+            Fix: inpainting and img2img masks would sometimes not utilize the
+            existing mask. Thanks to dreamy for the detailed bug report related
+            to this on Discord.
+          </StyledLi>
+          <StyledLi>
+            I *think* I&apos;ve fixed some issues related to stale a input
+            cache, which was related to previous prompts not saving or being
+            used correctly, incorrect kudos calculations, and a few other
+            things. Do let me know if you still encounter issues!
+          </StyledLi>
+        </StyledUl>
+      </Section>
       <Section>
         <SubSectionTitle>2023.03.01</SubSectionTitle>
         <StyledUl>
