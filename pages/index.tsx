@@ -68,9 +68,13 @@ interface InputEvent {
 
 const defaultState: DefaultPromptInput = new DefaultPromptInput()
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context: any) {
   let availableModels: Array<any> = []
   let modelDetails: any = {}
+  let shortlinkImageParams: any = ''
+
+  const { query } = context
+  const { i } = query
 
   try {
     const availableModelsRes = await fetch(
@@ -84,17 +88,30 @@ export async function getServerSideProps() {
     )
     const modelDetailsData = (await modelDetailsRes.json()) || {}
     modelDetails = modelDetailsData.models
+
+    if (i) {
+      const res = await fetch(
+        `http://localhost:${process.env.PORT}/artbot/api/get-shortlink?shortlink=${query.i}`
+      )
+      const data = (await res.json()) || {}
+      shortlinkImageParams = data.imageParams || null
+    }
   } catch (err) {}
 
   return {
     props: {
       availableModels,
-      modelDetails
+      modelDetails,
+      shortlinkImageParams
     }
   }
 }
 
-const Home: NextPage = ({ availableModels, modelDetails }: any) => {
+const Home: NextPage = ({
+  availableModels,
+  modelDetails,
+  shortlinkImageParams
+}: any) => {
   const appState = useStore(appInfoStore)
   const userInfo = useStore(userInfoStore)
 
@@ -111,6 +128,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
   const loadModel = query.model
   const shareMode = query.share
   const loadDrawing = query.drawing
+  const loadShortlink = query.i
 
   let initialState: any = defaultState
 
@@ -124,6 +142,26 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
   if (shareMode) {
     const shareParams = ShareLinkDetails.decode(shareMode as string) || {}
     initialState = { ...defaultState, ...shareParams }
+  } else if (loadShortlink && shortlinkImageParams) {
+    // TODO: Map imageParamsForApi BACK to this.
+    const { imageParams } = shortlinkImageParams
+    initialState = {
+      ...defaultState,
+      prompt: imageParams.prompt,
+      models: imageParams.models,
+      cfg_scale: imageParams.params.cfg_scale,
+      clipskip: imageParams.clip_skip,
+      orientationType: 'custom',
+      height: imageParams.params.height,
+      width: imageParams.params.width,
+      hires: imageParams.params.hires_fix,
+      karras: imageParams.params.karras,
+      post_processing: imageParams.params.post_processing,
+      sampler: imageParams.params.sampler_name,
+      seed: imageParams.params.seed,
+      steps: imageParams.params.steps,
+      tiling: imageParams.params.tiling
+    }
   } else if (loadDrawing) {
     initialState = {
       ...defaultState,
@@ -344,7 +382,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
   }
 
   const updateDefaultInput = async () => {
-    if (!editMode && !shareMode && !loadDrawing) {
+    if (!editMode && !shareMode && !loadDrawing && !loadShortlink) {
       const updateObject = PromptInputSettings.load()
       delete updateObject.v
 
@@ -375,7 +413,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
   }, [watchBuild])
 
   useEffect(() => {
-    if (!editMode && !shareMode && !loadDrawing) {
+    if (!editMode && !shareMode && !loadDrawing && !loadShortlink) {
       updateDefaultInput()
     }
 
@@ -387,13 +425,19 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
       return model.name === input.models[0]
     })
 
-    if (hasModel.length === 0 && !shareMode) {
+    if (hasModel.length === 0 && !shareMode && !loadShortlink) {
       setComponentState({
         models: ['stable_diffusion'],
         sampler: 'k_euler_a'
       })
     }
-  }, [availableModels, input.models, setComponentState, shareMode])
+  }, [
+    availableModels,
+    input.models,
+    loadShortlink,
+    setComponentState,
+    shareMode
+  ])
 
   useEffectOnce(() => {
     trackEvent({
@@ -415,6 +459,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
       !editMode &&
       !shareMode &&
       !loadModel &&
+      !loadShortlink &&
       getInputCache()
     ) {
       setInput({ ...getInputCache() })
@@ -485,7 +530,11 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
     ) {
       // Handle state where an incorrect model might be cached
       // e.g., "stable_diffusion_inpainting" when first loading page.
-      if (!shareMode && (!modelExists || modelExists.length === 0)) {
+      if (
+        !shareMode &&
+        !loadShortlink &&
+        (!modelExists || modelExists.length === 0)
+      ) {
         setInput({
           models: ['stable_diffusion'],
           sampler: 'k_euler_a'
@@ -508,7 +557,7 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
         tiling: false
       })
     }
-  }, [input, shareMode])
+  }, [input, loadShortlink, shareMode])
 
   return (
     <main>
@@ -520,6 +569,20 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
           />
         </InteractiveModal>
       )}
+      {loadShortlink ? (
+        <Head>
+          <title>ArtBot - Shareable Link</title>
+          <meta name="twitter:title" content="🤖 ArtBot - Shareable Link" />
+          <meta
+            name="twitter:description"
+            content={`Prompt: "${input.prompt}"`}
+          />
+          <meta
+            name="twitter:image"
+            content={`https://0ea8-23-93-101-54.ngrok.io/artbot/i/${loadShortlink}`}
+          />
+        </Head>
+      ) : null}
       {shareMode ? (
         <Head>
           <title>ArtBot - Shareable Link</title>

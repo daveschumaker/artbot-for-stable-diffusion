@@ -124,6 +124,13 @@ const Changelog = () => {
             hostname for the API when rating an image. Thanks to the mighty db0
             on Discord for reporting this.
           </StyledLi>
+          <StyledLi>
+            Feature: Oh, boy. I built out a custom shortlink microservice for
+            sharing image prompts. Now, the shareable URL is rather reasonable.
+            Before, it encoded the entire image parameters object, which would
+            result in URLs that were like 1000 characters long. Note: These
+            shareable links will only works for text2img requests.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

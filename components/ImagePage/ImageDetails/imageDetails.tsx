@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import { useCallback } from 'react'
 
-import { deleteCompletedImage } from '../../../utils/db'
+import { deleteCompletedImage, updateCompletedJob } from '../../../utils/db'
 import ConfirmationModal from '../../ConfirmationModal'
 import TrashIcon from '../../icons/TrashIcon'
 import { Button } from '../../UI/Button'
@@ -18,7 +18,6 @@ import CopyIcon from '../../icons/CopyIcon'
 import ImageSquare from '../../ImageSquare'
 import { SourceProcessing } from '../../../utils/promptUtils'
 import ShareIcon from '../../icons/ShareIcon'
-import ShareLinkDetails from '../../../models/ShareableLink'
 import DownloadIcon from '../../icons/DownloadIcon'
 import useComponentState from '../../../hooks/useComponentState'
 import { downloadFile } from '../../../utils/imageUtils'
@@ -26,8 +25,12 @@ import AdContainer from '../../AdContainer'
 import styles from './imageDetails.module.css'
 import Img2ImgModal from '../Img2ImgModal'
 import { useWindowSize } from '../../../hooks/useWindowSize'
+import ImageParamsForApi from '../../../models/ImageParamsForApi'
+import { userInfoStore } from '../../../store/userStore'
+import { createShortlink } from '../../../api/createShortlink'
 
 interface ImageDetails {
+  id: number
   upscaled?: boolean
   img2img?: boolean
   jobId: string
@@ -47,6 +50,7 @@ interface ImageDetails {
   modelVersion: string
   imageType?: string
   source_image?: string
+  shortlink?: string
   orientation: string
   tiling: boolean
   karras: boolean
@@ -73,6 +77,8 @@ const ImageDetails = ({
 
   const [componentState, setComponentState] = useComponentState({
     pending: false,
+    shortlinkPending: false,
+    shortlink: '',
     showDeleteModal: false,
     showImg2ImgModal: false
   })
@@ -115,6 +121,70 @@ const ImageDetails = ({
     })
 
     router.push(`/?edit=true`)
+  }
+
+  const copyShortlink = (shortlink: string) => {
+    const hostname =
+      window.location.hostname === 'localhost'
+        ? 'http://localhost:3000'
+        : 'https://tinybots.net'
+    navigator?.clipboard
+      ?.writeText(`${hostname}/artbot?i=${shortlink}`)
+      .then(() => {
+        toast.success('URL copied!', {
+          pauseOnFocusLoss: false,
+          position: 'top-center',
+          autoClose: 2500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          theme: 'light'
+        })
+      })
+  }
+
+  const getShortlink = async () => {
+    if (imageDetails.shortlink || componentState.shortlink) {
+      console.log(
+        `shortlink already exists!!!`,
+        imageDetails.shortlink || componentState.shortlink
+      )
+      copyShortlink(imageDetails.shortlink || componentState.shortlink)
+      return
+    }
+
+    if (componentState.shortlinkPending) {
+      return
+    }
+
+    setComponentState({ shortlinkPending: true })
+
+    const data = {
+      // @ts-ignore
+      imageParams: new ImageParamsForApi(imageDetails),
+      imageBase64: imageDetails.base64String,
+      username: userInfoStore.state.username
+    }
+
+    const shortlinkData = await createShortlink(data)
+    const { shortlink } = shortlinkData
+
+    if (shortlink) {
+      await updateCompletedJob(
+        imageDetails.id,
+        Object.assign({}, imageDetails, {
+          shortlink
+        })
+      )
+
+      copyShortlink(shortlink)
+    }
+
+    console.log(`shortlinkData?`, shortlinkData)
+
+    setComponentState({ shortlinkPending: false, shortlink })
   }
 
   const handleRerollClick = useCallback(
@@ -295,37 +365,18 @@ const ImageDetails = ({
             <span className="inline-block md:hidden">Copy</span>
             <span className="hidden md:inline-block">Copy prompt</span>
           </Button>
-          <Button
-            title="Share link"
-            onClick={() => {
-              // DEV NOTE: Copy to clipboard does not work on non-https links.
-              // @ts-ignore
-              const shareLink = ShareLinkDetails.encode(imageDetails)
-              const hostname =
-                window.location.hostname === 'localhost'
-                  ? 'http://localhost:3000'
-                  : 'https://tinybots.net'
-              navigator?.clipboard
-                ?.writeText(`${hostname}/artbot?share=${shareLink}`)
-                .then(() => {
-                  toast.success('URL copied!', {
-                    pauseOnFocusLoss: false,
-                    position: 'top-center',
-                    autoClose: 2500,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: false,
-                    draggable: false,
-                    progress: undefined,
-                    theme: 'light'
-                  })
-                })
-            }}
-          >
-            <ShareIcon />
-            <span className="inline-block md:hidden">Share</span>
-            <span className="hidden md:inline-block">Share link</span>
-          </Button>
+          {imageDetails.source_processing === SourceProcessing.Prompt && (
+            <Button
+              title="Share link"
+              onClick={async () => {
+                getShortlink()
+              }}
+            >
+              <ShareIcon />
+              <span className="inline-block md:hidden">Share</span>
+              <span className="hidden md:inline-block">Share link</span>
+            </Button>
+          )}
           <Button
             title="Download PNG"
             // @ts-ignore
