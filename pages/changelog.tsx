@@ -119,6 +119,11 @@ const Changelog = () => {
             yet), just reload the page for now. Note: rating your own images is
             temporarily disabled. It will be online soon™!
           </StyledLi>
+          <StyledLi>
+            Fix: Okay, NOW image rating is back for real. I forgot to update the
+            hostname for the API when rating an image. Thanks to the mighty db0
+            on Discord for reporting this.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

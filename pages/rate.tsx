@@ -7,7 +7,7 @@ import SpinnerV2 from '../components/Spinner'
 import StarRating from '../components/StarRating/starRating'
 import Linker from '../components/UI/Linker'
 import PageTitle from '../components/UI/PageTitle'
-import { ANON_API_KEY, RATING_QUALITY_MAP } from '../constants'
+import { ANON_API_KEY, RATING_API, RATING_QUALITY_MAP } from '../constants'
 import useComponentState from '../hooks/useComponentState'
 import { useEffectOnce } from '../hooks/useEffectOnce'
 import AppSettings from '../models/AppSettings'
@@ -158,16 +158,13 @@ const Rate = () => {
           return
         }
 
-        const res = await fetch(
-          'https://ratings.aihorde.net/api/v1/rating/new',
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'Client-Agent': clientHeader(),
-              apikey: componentState.apiKey
-            }
+        const res = await fetch(`${RATING_API}t/api/v1/rating/new`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Client-Agent': clientHeader(),
+            apikey: componentState.apiKey
           }
-        )
+        })
         data = (await res.json()) || {}
       } catch (err) {
         errorCount++
@@ -301,7 +298,7 @@ const Rate = () => {
 
     try {
       const res = await fetch(
-        `https://ratings.droom.cloud/api/v1/rating/${componentState.imageId}`,
+        `${RATING_API}/api/v1/rating/${componentState.imageId}`,
         {
           method: 'POST',
           body: JSON.stringify(ratingData),
@@ -383,7 +380,7 @@ const Rate = () => {
     rateImageRequest()
   }, [componentState.rateImage, componentState.rateQuality, rateImageRequest])
 
-  // Neet to set API key on initial load
+  // Need to set API key on initial load
   useEffect(() => {
     setComponentState({ apiKey: AppSettings.get('apiKey') || ANON_API_KEY })
   }, [setComponentState])
