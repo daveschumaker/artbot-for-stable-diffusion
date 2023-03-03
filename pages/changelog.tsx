@@ -132,6 +132,10 @@ const Changelog = () => {
             shareable links will only works for text2img requests. Thanks to
             Gigachad on Discord for the suggestion.
           </StyledLi>
+          <StyledLi>
+            By fixing ratings, I broke them even more. Thanks to Litnine on
+            Discord for letting me know!
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
