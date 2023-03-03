@@ -25,6 +25,8 @@ import { modelInfoStore } from '../store/modelStore'
 import { MODEL_LIMITED_BY_WORKERS, RATE_IMAGE_CUTOFF_SEC } from '../constants'
 import DisplayRawData from './DisplayRawData'
 
+const RATINGS_ENABLED = false
+
 const ModelWarning = styled.div`
   align-items: center;
   color: #facc15;
@@ -413,7 +415,8 @@ const PendingItem = memo(
               )}
             </div>
             <StyledButtonContainer>
-              {jobDetails.jobStatus === JobStatus.Done &&
+              {RATINGS_ENABLED &&
+                jobDetails.jobStatus === JobStatus.Done &&
                 jobTimeDiff &&
                 canRate && (
                   <Button onClick={() => onImageClick(jobId)}>

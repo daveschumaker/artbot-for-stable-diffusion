@@ -116,7 +116,7 @@ const nextImageDetails = {
 }
 
 const Rate = () => {
-  const DRAMA_MODE = true // ratings provider has disabled rating system for all UIs for some reason.
+  const DRAMA_MODE = false // ratings provider has disabled rating system for all UIs for some reason.
   const [componentState, setComponentState] = useComponentState({
     apiKey: '',
     activeStar: 0,
@@ -159,7 +159,7 @@ const Rate = () => {
         }
 
         const res = await fetch(
-          'https://ratings.droom.cloud/api/v1/rating/new',
+          'https://ratings.aihorde.net/api/v1/rating/new',
           {
             headers: {
               'Content-Type': 'application/json',

@@ -109,6 +109,19 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.03.03</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            <Linker href="/rate">Image rating is back!</Linker>. db0 has been
+            doing some work restoring the database and getting things back in
+            order. It should mostly be online now. If you encounter any broken
+            images (essentially, something has&apos;t been upload to the server
+            yet), just reload the page for now. Note: rating your own images is
+            temporarily disabled. It will be online soon™!
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.03.02</SubSectionTitle>
         <StyledUl>
           <StyledLi>

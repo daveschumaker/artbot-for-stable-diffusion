@@ -19,6 +19,8 @@ import Linker from '../UI/Linker'
 import ImageNavWrapper from './ImageNavWrapper'
 import RateMyImage from './RateMyImage'
 
+const RATINGS_ENABLED = false
+
 interface IProps {
   disableNav?: boolean
   handleClose(): void
@@ -328,7 +330,8 @@ const ImageModal = ({
               <TrashIcon /> Delete
             </Button>
           </OptionsRow>
-          {!imageDetails.hasUserRating &&
+          {RATINGS_ENABLED &&
+            !imageDetails.hasUserRating &&
             imageDetails.shareImagesExternally && (
               <RateMyImage jobId={imageDetails.jobId} />
             )}
