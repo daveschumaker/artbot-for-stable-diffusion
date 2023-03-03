@@ -22,7 +22,7 @@ interface InputProps {
 }
 
 const Input = (props: InputProps) => {
-  const { children, className, selectAll = false, ...rest } = props
+  const { children, className, selectAll = false, value = '', ...rest } = props
 
   const handleFocus = (e: any) => {
     e.target.select()
@@ -41,6 +41,7 @@ const Input = (props: InputProps) => {
         }
       }}
       width={props.width || '100%'}
+      value={value}
       {...rest}
     >
       {children}

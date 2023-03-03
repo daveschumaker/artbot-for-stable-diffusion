@@ -68,7 +68,7 @@ const ClipSkip = ({
             }
           }}
           // @ts-ignore
-          value={input.clipskip}
+          value={input.clipskip || 1}
           width="100%"
         />
       </div>
