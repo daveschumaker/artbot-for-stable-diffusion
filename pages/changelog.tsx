@@ -109,7 +109,7 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
-        <SubSectionTitle>2023.03.01</SubSectionTitle>
+        <SubSectionTitle>2023.03.02</SubSectionTitle>
         <StyledUl>
           <StyledLi>
             Fix: Issue with invalid control_type setting resulting in invalid
@@ -126,6 +126,11 @@ const Changelog = () => {
             cache, which was related to previous prompts not saving or being
             used correctly, incorrect kudos calculations, and a few other
             things. Do let me know if you still encounter issues!
+          </StyledLi>
+          <StyledLi>
+            Various improvements to the{' '}
+            <Linker href="/info/workers">worker details page</Linker>, along
+            with easier way to select a specific worker to send jobs to.
           </StyledLi>
         </StyledUl>
       </Section>
