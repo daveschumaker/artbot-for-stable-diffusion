@@ -129,7 +129,8 @@ const Changelog = () => {
             sharing image prompts. Now, the shareable URL is rather reasonable.
             Before, it encoded the entire image parameters object, which would
             result in URLs that were like 1000 characters long. Note: These
-            shareable links will only works for text2img requests.
+            shareable links will only works for text2img requests. Thanks to
+            Gigachad on Discord for the suggestion.
           </StyledLi>
         </StyledUl>
       </Section>
