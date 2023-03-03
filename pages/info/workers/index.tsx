@@ -13,7 +13,6 @@ import styles from './workers.module.css'
 import { useForceUpdate } from '../../../hooks/useForceUpdate'
 import Linker from '../../../components/UI/Linker'
 import styled from 'styled-components'
-import { clientHeader } from '../../../utils/appUtils'
 
 const ModelList = styled.ul`
   display: flex;

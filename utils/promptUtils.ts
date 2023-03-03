@@ -100,9 +100,9 @@ export const savePrompt = ({
   denoising_strength = 0.75,
   control_type = '',
   models = ['stable_diffusion'],
-  canvasStore,
-  canvasData,
-  maskData
+  canvasStore = null,
+  canvasData = null,
+  maskData = null
 } = {}) => {
   const samplerValid = validSampler(sampler)
   promptDetails = {
