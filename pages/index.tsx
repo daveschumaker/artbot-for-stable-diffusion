@@ -579,7 +579,7 @@ const Home: NextPage = ({
           />
           <meta
             name="twitter:image"
-            content={`https://0ea8-23-93-101-54.ngrok.io/artbot/i/${loadShortlink}`}
+            content={`https://tinybots.net/artbot/i/${loadShortlink}`}
           />
         </Head>
       ) : null}

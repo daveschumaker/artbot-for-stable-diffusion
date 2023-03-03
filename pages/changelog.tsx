@@ -136,6 +136,10 @@ const Changelog = () => {
             By fixing ratings, I broke them even more. Thanks to Litnine on
             Discord for letting me know!
           </StyledLi>
+          <StyledLi>
+            Argh! Sorry for all the sudden updates. Had a few hot fixes for
+            things I had broke. This should be it for today!
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
