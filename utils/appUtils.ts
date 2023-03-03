@@ -1,6 +1,5 @@
 import { HORDE_DEV, HORDE_PROD } from '../constants'
 import AppSettings from '../models/AppSettings'
-import { appInfoStore } from '../store/appStore'
 
 export const logError = async (data: any) => {
   await fetch(`/artbot/api/log-error`, {
@@ -13,8 +12,7 @@ export const logError = async (data: any) => {
 }
 
 export const clientHeader = () => {
-  const buildId = appInfoStore.state.buildId
-  return `ArtBot:v.${buildId}:(discord)rockbandit#4910`
+  return `ArtBot:v.1:(discord)rockbandit#4910`
 }
 
 export const isAppActive = () => {

@@ -1,6 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useCallback, useEffect, useState } from 'react'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
+import AppSettings from '../../models/AppSettings'
 import {
   clearCompletedJob,
   getCompletedJobs,
@@ -238,6 +239,13 @@ const PendingPage = () => {
             </TextButton>
           </div>
         </>
+      )}
+
+      {AppSettings.get('useWorkerId') && (
+        <div className="mt-4 mb-4 text-amber-400 font-semibold rounded border border-amber-400 p-[8px]">
+          FYI: You are currently sending jobs to only one worker. Jobs may not
+          complete if worker is not available or under heavy load.
+        </div>
       )}
 
       <div className="w-full">

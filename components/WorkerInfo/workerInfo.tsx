@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import clsx from 'clsx'
 import { toast } from 'react-toastify'
 import styled from 'styled-components'
 import { fetchUserDetails } from '../../api/userInfo'
@@ -7,15 +7,17 @@ import { setWorker } from '../../store/userStore'
 import { clientHeader, getApiHostServer } from '../../utils/appUtils'
 import { formatSeconds } from '../../utils/helperUtils'
 import { sleep } from '../../utils/sleep'
+import CheckboxIcon from '../icons/CheckboxIcon'
+import ChevronDownIcon from '../icons/ChevronDownIcon'
 import ChevronRightIcon from '../icons/ChevronRightIcon'
 import CopyIcon from '../icons/CopyIcon'
 import PauseIcon from '../icons/PauseIcon'
 import PlayIcon from '../icons/PlayIcon'
 import PointIcon from '../icons/PointIcon'
+import SquareIcon from '../icons/SquareIcon'
 import Row from '../Row'
 import { Button } from '../UI/Button'
-import Linker from '../UI/Linker'
-import Panel from '../UI/Panel'
+import styles from './workerInfo.module.css'
 
 const WorkerTitle = styled.div`
   align-items: center;
@@ -45,28 +47,23 @@ const Spacer = styled.div`
 `
 
 const ExpandModels = styled(Row)`
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  column-gap: 8px;
   cursor: pointer;
 `
 
-const ModelList = styled.ul`
-  border-left: 1px solid white;
-  display: flex;
-  flex-direction: column;
-  margin-left: 8px;
-  padding-top: 8px;
-  padding-left: 16px;
-  row-gap: 8px;
-`
-
 const WorkerInfo = ({
+  forceUpdate,
   editable,
   loadingWorkerStatus,
   setComponentState,
+  showModels,
+  showModelClick,
   worker,
   workers
 }: any) => {
-  const [showModels, setShowModels] = useState(false)
-
   let statusColor = 'green'
   if (worker.online && worker.maintenance_mode) {
     statusColor = 'yellow'
@@ -118,93 +115,128 @@ const WorkerInfo = ({
     setComponentState({ loadingWorkerStatus: { ...updateWorkerLoadingState } })
   }
 
-  const sortedModels =
-    worker?.models?.sort((a: string = '', b: string = '') => {
-      if (a.toLowerCase() < b.toLowerCase()) {
-        return -1
-      }
-      if (a.toLowerCase() > b.toLowerCase()) {
-        return 1
-      }
-      return 0
-    }) ?? []
-
   return (
-    <Panel key={worker.id}>
-      <WorkerTitle>
-        <PointIcon size={28} fill={statusColor} stroke={statusColor} />
-        <strong>{worker.name}</strong>
-      </WorkerTitle>
-      <WorkerId
-        onClick={() => {
-          navigator?.clipboard?.writeText(`${worker.id}`).then(() => {
-            toast.success('Worker ID copied!', {
-              pauseOnFocusLoss: false,
-              position: 'top-center',
-              autoClose: 2500,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: false,
-              draggable: false,
-              progress: undefined,
-              theme: 'light'
-            })
-          })
-        }}
-      >
-        <CopyIcon />
-        id: {worker.id}
-      </WorkerId>
-      <WorkerStatus>
-        <div>
-          Status: {worker.online && worker.maintenance_mode && 'Paused'}
-          {worker.online && !worker.maintenance_mode && 'Online'}
-          {!worker.online && 'Offline'}
-        </div>
-        <div>Total uptime: {formatSeconds(worker.uptime)}</div>
-        <Spacer />
-        <div>Threads: {worker.threads}</div>
-        <div>Max pixels: {worker.max_pixels?.toLocaleString()}</div>
-        <div>Performance: {worker.performance}</div>
-        <div>
-          Avg time per request:{' '}
-          {worker.requests_fulfilled > 0
-            ? `${Number(worker.uptime / worker.requests_fulfilled).toFixed(
-                4
-              )} seconds`
-            : 'N/A'}
-        </div>
-        <Spacer />
-        <div>Kudos earned: {worker?.kudos_rewards?.toLocaleString()}</div>
-        <div>
-          Requests completed: {worker.requests_fulfilled?.toLocaleString()}
-        </div>
-        <Spacer />
-        <ExpandModels
+    <div
+      className={clsx(styles.wrapper, showModels && styles['expand-panel'])}
+      key={worker.id}
+    >
+      <div>
+        <WorkerTitle>
+          <a
+            // @ts-ignore
+            name={worker.id}
+          />
+          <PointIcon size={28} fill={statusColor} stroke={statusColor} />
+          <strong>{worker.name}</strong>
+        </WorkerTitle>
+        <WorkerId
           onClick={() => {
-            if (showModels) {
-              setShowModels(false)
-            } else {
-              setShowModels(true)
-            }
+            navigator?.clipboard?.writeText(`${worker.id}`).then(() => {
+              toast.success('Worker ID copied!', {
+                pauseOnFocusLoss: false,
+                position: 'top-center',
+                autoClose: 2500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: false,
+                progress: undefined,
+                theme: 'light'
+              })
+            })
           }}
         >
-          <ChevronRightIcon /> Models ({worker?.models?.length ?? 0})
-        </ExpandModels>
-        {showModels ? (
-          <ModelList>
-            {sortedModels.map((model: string) => {
-              return (
-                <li key={`${worker.id}_${model}`}>
-                  <Linker href={`/info/models#${model}`} passHref>
-                    - {model}
-                  </Linker>
-                </li>
-              )
-            })}
-          </ModelList>
-        ) : null}
-      </WorkerStatus>
+          <CopyIcon />
+          id: {worker.id}
+        </WorkerId>
+        {worker.info && (
+          <div className="mt-2 text-sm italic">{worker.info}</div>
+        )}
+        <WorkerStatus>
+          <div>
+            Status:{' '}
+            <strong>
+              {worker.online && worker.maintenance_mode && 'Paused'}
+              {worker.online && !worker.maintenance_mode && 'Online'}
+              {!worker.online && 'Offline'}
+            </strong>
+          </div>
+          <div>
+            Total uptime: <strong>{formatSeconds(worker.uptime)}</strong>
+          </div>
+          <Spacer />
+          <div>
+            Threads: <strong>{worker.threads}</strong>
+          </div>
+          <div>
+            Max resolution (1:1):{' '}
+            <strong>
+              {Math.floor(Math.sqrt(worker.max_pixels))} x{' '}
+              {Math.floor(Math.sqrt(worker.max_pixels))}
+            </strong>
+          </div>
+          <div>
+            Max pixels: <strong>{worker.max_pixels?.toLocaleString()}</strong>
+          </div>
+          <div>
+            Performance: <strong>{worker.performance}</strong>
+          </div>
+          <div>
+            Avg time per request:{' '}
+            <strong>
+              {worker.requests_fulfilled > 0
+                ? `${Number(worker.uptime / worker.requests_fulfilled).toFixed(
+                    4
+                  )} seconds`
+                : 'N/A'}
+            </strong>
+          </div>
+          <Spacer />
+          <div>
+            Kudos earned:{' '}
+            <strong>{worker?.kudos_rewards?.toLocaleString()}</strong>
+          </div>
+          <div>
+            Requests completed:{' '}
+            <strong>{worker.requests_fulfilled?.toLocaleString()}</strong>
+          </div>
+          <Spacer />
+        </WorkerStatus>
+      </div>
+      <div className={styles['model-spacer']} />
+      <ExpandModels onClick={showModelClick}>
+        {showModels ? <ChevronDownIcon /> : <ChevronRightIcon />}
+        Models ({worker?.models?.length ?? 0})
+      </ExpandModels>
+      <div
+        className={clsx(
+          styles['use-worker-row'],
+          showModels && styles['worker-row-padding']
+        )}
+      >
+        {AppSettings.get('useWorkerId') === worker.id ? (
+          <Button
+            btnType="secondary"
+            onClick={() => {
+              AppSettings.save('useWorkerId', '')
+              forceUpdate()
+            }}
+          >
+            <CheckboxIcon />
+            Unset worker
+          </Button>
+        ) : (
+          <Button
+            onClick={() => {
+              AppSettings.save('useWorkerId', worker.id)
+              forceUpdate()
+            }}
+          >
+            <SquareIcon />
+            Use worker
+          </Button>
+        )}
+      </div>
       {editable !== false && worker.online && (
         <div className="mt-4">
           {worker.online && !worker.maintenance_mode && (
@@ -246,7 +278,7 @@ const WorkerInfo = ({
           )}
         </div>
       )}
-    </Panel>
+    </div>
   )
 }
 

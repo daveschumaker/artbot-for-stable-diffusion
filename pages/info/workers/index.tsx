@@ -8,11 +8,63 @@ import PageTitle from '../../../components/UI/PageTitle'
 import useComponentState from '../../../hooks/useComponentState'
 import { useEffectOnce } from '../../../hooks/useEffectOnce'
 import SpinnerV2 from '../../../components/Spinner'
-import { clientHeader } from '../../../utils/appUtils'
 import InfoPageMenuButton from '../../../components/InfoPage/Menu'
+import styles from './workers.module.css'
+import { useForceUpdate } from '../../../hooks/useForceUpdate'
+import Linker from '../../../components/UI/Linker'
+import styled from 'styled-components'
+import { clientHeader } from '../../../utils/appUtils'
+
+const ModelList = styled.ul`
+  display: flex;
+  flex-direction: column;
+  margin-left: 8px;
+  padding-top: 4px;
+  padding-left: 16px;
+  row-gap: 4px;
+`
+
+const WorkerModelDetails = ({
+  className,
+  id,
+  models
+}: {
+  className: any
+  id: string
+  models: any
+}) => {
+  const sortedModels =
+    models?.sort((a: string = '', b: string = '') => {
+      if (a.toLowerCase() < b.toLowerCase()) {
+        return -1
+      }
+      if (a.toLowerCase() > b.toLowerCase()) {
+        return 1
+      }
+      return 0
+    }) ?? []
+
+  return (
+    <div className={className}>
+      <ModelList>
+        {sortedModels.map((model: string) => {
+          return (
+            <li key={`${id}_${model}`}>
+              <Linker href={`/info/models#${model}`} passHref>
+                {model}
+              </Linker>
+            </li>
+          )
+        })}
+      </ModelList>
+    </div>
+  )
+}
 
 const WorkerInfoPage = () => {
+  const forceUpdate = useForceUpdate()
   const [componentState, setComponentState] = useComponentState({
+    showModelsForWorkerId: '',
     isLoading: true,
     showOptionsMenu: false,
     sort: 'requests_fulfilled',
@@ -20,15 +72,15 @@ const WorkerInfoPage = () => {
   })
 
   const fetchWorkers = async () => {
-    const resp = await fetch(`https://stablehorde.net/api/v2/workers`, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Client-Agent': clientHeader()
-      }
-    })
-    const workers = await resp.json()
+    const resp = await fetch(`/artbot/api/worker-details`)
+    const data = (await resp.json()) || {}
+    const { workers = [] } = data
 
-    setComponentState({ workers, isLoading: false })
+    const filteredWorkers = workers.filter((worker: any) => {
+      return worker.type === 'image'
+    })
+
+    setComponentState({ workers: filteredWorkers, isLoading: false })
   }
 
   useEffectOnce(() => {
@@ -106,8 +158,6 @@ const WorkerInfoPage = () => {
     })[0]
   }
 
-  console.log(`getSort`, getSortOption())
-
   return (
     <div className="mb-4">
       <Head>
@@ -115,6 +165,7 @@ const WorkerInfoPage = () => {
           Distributed Worker Details for Stable Horde - ArtBot for Stable
           Diffusion
         </title>
+        <meta name="robots" content="noindex"></meta>
       </Head>
       <Row>
         <div className="inline-block w-1/2">
@@ -143,10 +194,35 @@ const WorkerInfoPage = () => {
         </Row>
         {componentState.isLoading && <SpinnerV2 />}
         {!componentState.isLoading && (
-          <div className={`flex flex-col gap-[12px]`}>
+          <div className={styles.wrapper}>
             {sortedWorkers?.map((worker: any) => {
               return (
-                <WorkerInfo editable={false} key={worker.id} worker={worker} />
+                <>
+                  <WorkerInfo
+                    showModels={
+                      componentState.showModelsForWorkerId === worker.id
+                    }
+                    showModelClick={() => {
+                      if (componentState.showModelsForWorkerId !== worker.id) {
+                        setComponentState({ showModelsForWorkerId: worker.id })
+                        window.location.href = `#${worker.id}`
+                      } else {
+                        setComponentState({ showModelsForWorkerId: '' })
+                      }
+                    }}
+                    editable={false}
+                    key={worker.id}
+                    worker={worker}
+                    forceUpdate={forceUpdate}
+                  />
+                  {componentState.showModelsForWorkerId === worker.id && (
+                    <WorkerModelDetails
+                      className={styles['worker-details']}
+                      id={worker.id}
+                      models={worker.models}
+                    />
+                  )}
+                </>
               )
             })}
           </div>

@@ -1,6 +1,4 @@
 const fetch = require('node-fetch')
-const buildInfo = require('../../build_info.json')
-const { build } = buildInfo
 
 // Temporarily import a static version of available models
 // in order to get page up and running while API loads.
@@ -34,7 +32,7 @@ const fetchAvailableModels = async () => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Client-Agent': `ArtBot:v.${build}:(discord)rockbandit#4910`
+        'Client-Agent': `ArtBot:v.1:(discord)rockbandit#4910`
       }
     })
     const data = await resp.json()

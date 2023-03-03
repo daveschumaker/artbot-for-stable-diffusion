@@ -5,6 +5,7 @@ const next = require('next')
 const { initModelDataFetch } = require('./server/cache/models')
 const { initLoadCount } = require('./server/cache/perf')
 const { initServerStatusFetch } = require('./server/cache/serverStatus')
+const { initWorkerDetailsFetch } = require('./server/cache/workerDetails')
 const routes = require('./server/routes/index.js')
 
 initLoadCount()
@@ -24,6 +25,7 @@ app.prepare().then(async () => {
 
     initModelDataFetch()
     initServerStatusFetch()
+    initWorkerDetailsFetch()
 
     server.get('/', (req, res) => {
       res.redirect('/artbot')

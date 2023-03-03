@@ -510,8 +510,6 @@ const Home: NextPage = ({ availableModels, modelDetails }: any) => {
     }
   }, [input, shareMode])
 
-  console.log(`input?`, input)
-
   return (
     <main>
       {showPromptHistory && (

@@ -1,0 +1,14 @@
+.wrapper {
+  display: grid;
+  grid-auto-flow: dense;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-gap: 16px;
+  width: 100%;
+}
+
+.worker-details {
+  border: solid 2px #7e5a6c;
+  border-radius: 4px;
+  padding: 8px;
+  grid-column: 1 / -1;
+}
