@@ -158,7 +158,7 @@ const Rate = () => {
           return
         }
 
-        const res = await fetch(`${RATING_API}t/api/v1/rating/new`, {
+        const res = await fetch(`${RATING_API}/api/v1/rating/new`, {
           headers: {
             'Content-Type': 'application/json',
             'Client-Agent': clientHeader(),
