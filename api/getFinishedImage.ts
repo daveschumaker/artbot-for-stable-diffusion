@@ -109,12 +109,8 @@ export const getFinishedImage = async (
         try {
           const imageData = await fetch(`${image.img}`)
           const blob = await imageData.blob()
-          const imageEncodedString = await blobToBase64(blob)
-          const [, extractedBase64String] =
-            // @ts-ignore
-            imageEncodedString?.split('data:image/webp;base64,') || ['', '']
-
-          base64String = extractedBase64String
+          const base64 = (await blobToBase64(blob)) as string
+          base64String = base64.split(',')[1]
         } catch (err) {
           return {
             success: false,
