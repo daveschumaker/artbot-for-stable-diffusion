@@ -109,6 +109,16 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.03.04</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: ArtBot was unable to fetch images from temporary backend
+            storage after a recent update to the location of that service. Back
+            in business!
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.03.03</SubSectionTitle>
         <StyledUl>
           <StyledLi>
