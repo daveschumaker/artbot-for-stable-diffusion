@@ -571,8 +571,11 @@ const Home: NextPage = ({
       )}
       {loadShortlink ? (
         <Head>
-          <title>ArtBot - Shareable Link</title>
-          <meta name="twitter:title" content="🤖 ArtBot - Shareable Link" />
+          <title>ArtBot - Shareable Link created with {input.models[0]}</title>
+          <meta
+            name="twitter:title"
+            content={`🤖 ArtBot - Shareable Link created with ${input.models[0]}`}
+          />
           <meta
             name="twitter:description"
             content={`Prompt: "${input.prompt}"`}
