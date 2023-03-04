@@ -19,7 +19,7 @@ export const maxSteps = ({
     k_dpmpp_2m: 50,
     k_dpmpp_2s_a: 50,
     k_dpmpp_sde: 50,
-    random: 50
+    random: 25
   }
 
   if (loggedIn && isSlider) {
@@ -50,7 +50,7 @@ interface IHasImg {
 }
 
 export const hasSourceImg = (input: IHasImg) => {
-  if (input.source_image) {
+  if (input.source_image && typeof input.source_image === 'string') {
     return true
   }
 
