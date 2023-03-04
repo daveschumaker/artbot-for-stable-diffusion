@@ -1,4 +1,9 @@
-import { hasSourceImg, maxSteps } from './validationUtils'
+import {
+  hasSourceImg,
+  isValidHttpUrl,
+  maxSteps,
+  validSampler
+} from './validationUtils'
 
 describe('validationUtils', () => {
   describe('anonMaxSteps', () => {
@@ -53,7 +58,72 @@ describe('validationUtils', () => {
 
     testCases.forEach((instance) => {
       test(instance.description, () => {
+        // @ts-ignore
         expect(hasSourceImg(instance.input)).toBe(instance.result)
+      })
+    })
+  })
+
+  describe('validSampler', () => {
+    const testCases = [
+      {
+        description: 'pass in known sampler',
+        sampler: 'k_euler',
+        result: true
+      },
+      {
+        description: 'pass in "random" as sampler',
+        sampler: 'random',
+        result: true
+      },
+      {
+        description: 'pass in known invalid sampler',
+        sampler: 'huehuehuehehehehexyz',
+        result: false
+      },
+      {
+        description: 'pass in empty value for sampler',
+        sampler: '',
+        result: false
+      }
+    ]
+
+    testCases.forEach((instance) => {
+      test(instance.description, () => {
+        // @ts-ignore
+        expect(validSampler(instance.sampler)).toBe(instance.result)
+      })
+    })
+  })
+
+  describe('isValidHttpUrl', () => {
+    const testCases = [
+      {
+        description: 'pass in http url',
+        string: 'http://tinybots.net',
+        result: true
+      },
+      {
+        description: 'pass in https url',
+        string: 'https://tinybots.net',
+        result: true
+      },
+      {
+        description: 'pass in string without protocol',
+        string: 'tinybots.net',
+        result: false
+      },
+      {
+        description: 'pass in url with invalid protocol',
+        string: 'tel://1234567890',
+        result: false
+      }
+    ]
+
+    testCases.forEach((instance) => {
+      test(instance.description, () => {
+        // @ts-ignore
+        expect(isValidHttpUrl(instance.string)).toBe(instance.result)
       })
     })
   })
