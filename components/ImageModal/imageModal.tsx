@@ -3,6 +3,7 @@ import React from 'react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import useComponentState from '../../hooks/useComponentState'
+import { useWindowSize } from '../../hooks/useWindowSize'
 import { updateCompletedJob } from '../../utils/db'
 import { base64toBlob, downloadFile } from '../../utils/imageUtils'
 import ConfirmationModal from '../ConfirmationModal'
@@ -73,8 +74,12 @@ const StyledModal = styled(InteractiveModal)`
   z-index: 30;
   @media (min-width: 640px) {
     /* height: auto; */
-    /* max-height: 100vh; */
-    height: calc(100% - 256px);
+    /* max-height: 100vh; */s
+    height: ${
+      // @ts-ignore
+      (props) => {
+      props.windowHeight <= 768 ? 'calc(100% - 32px)' : 'calc(100% - 256px)'}
+    };
     max-height: 750px;
   }
 `
@@ -98,6 +103,7 @@ const ImageModal = ({
   loading = false,
   reverseButtons = false
 }: IProps) => {
+  const size = useWindowSize()
   const router = useRouter()
   const [showDeleteModal, setShowDeleteModal] = useState(false)
 
@@ -213,6 +219,7 @@ const ImageModal = ({
 
   return (
     <StyledModal
+      windowHeight={size.height}
       handleClose={handleClose}
       setDynamicHeight={componentState.containerHeight}
       leftButton={
