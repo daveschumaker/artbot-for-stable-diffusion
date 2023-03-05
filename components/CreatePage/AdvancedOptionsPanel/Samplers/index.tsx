@@ -14,7 +14,7 @@ import { samplerOptions } from './samplers.controller'
 interface IProps {
   input: DefaultPromptInput
   setInput: (obj: any) => void
-  showMultiModel: boolean
+  showMultiModel?: boolean
 }
 
 const Samplers = ({ input, setInput, showMultiModel = false }: IProps) => {
