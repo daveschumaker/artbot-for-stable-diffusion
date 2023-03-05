@@ -45,6 +45,7 @@ import ClipSkip from './ClipSkip'
 import ArrowBarLeftIcon from '../../icons/ArrowBarLeftIcon'
 import TwoPanel from '../../UI/TwoPanel'
 import SplitPanel from '../../UI/SplitPanel'
+import Samplers from './Samplers'
 
 const NoSliderSpacer = styled.div`
   height: 14px;
@@ -61,46 +62,6 @@ const orientationOptions = [
   { value: 'custom', label: 'Custom' },
   { value: 'random', label: 'Random!' }
 ]
-
-const samplerOptions = (input: any) => {
-  if (input.models[0] === 'stable_diffusion_2.0') {
-    return [{ value: 'dpmsolver', label: 'dpmsolver' }]
-  }
-
-  const options = [
-    { value: 'k_dpm_2_a', label: 'k_dpm_2_a' },
-    { value: 'k_dpm_2', label: 'k_dpm_2' },
-    { value: 'k_euler_a', label: 'k_euler_a' },
-    { value: 'k_euler', label: 'k_euler' },
-    { value: 'k_heun', label: 'k_heun' },
-    { value: 'k_lms', label: 'k_lms' }
-  ]
-
-  // Temporarily hide options due to issues with Stable Horde backend.
-  // Temporarily hide DDIM and PLMS based on convo with db0:
-  // DDIM never worked in nataili. That reminds me, @Stable Horde: Integrator can you hide DDIM and PLMS until we get them working properly?
-  // if (!img2img) {
-  //   options.unshift({ value: 'PLMS', label: 'PLMS' })
-  //   options.unshift({ value: 'DDIM', label: 'DDIM' })
-  // }
-
-  // Per hlky, these samplers do not currently work for img2img
-  if (
-    !input.img2img &&
-    input.source_processing !== SourceProcessing.Img2Img &&
-    input.source_processing !== SourceProcessing.InPainting
-  ) {
-    options.push({ value: 'k_dpm_fast', label: 'k_dpm_fast' })
-    options.push({ value: 'k_dpm_adaptive', label: 'k_dpm_adaptive' })
-    options.push({ value: 'k_dpmpp_2m', label: 'k_dpmpp_2m' })
-    options.push({ value: 'k_dpmpp_2s_a', label: 'k_dpmpp_2s_a' })
-    options.push({ value: 'k_dpmpp_sde', label: 'k_dpmpp_sde' })
-  }
-
-  options.push({ value: 'random', label: 'random' })
-
-  return options
-}
 
 interface Props {
   handleChangeInput: any
@@ -136,10 +97,6 @@ const AdvancedOptionsPanel = ({
 
   const orientationValue = orientationOptions.filter((option) => {
     return input.orientationType === option.value
-  })[0]
-
-  const samplerValue = samplerOptions(input).filter((option) => {
-    return input.sampler === option.value
   })[0]
 
   const modelerOptions = (imageParams: any) => {
@@ -300,12 +257,6 @@ const AdvancedOptionsPanel = ({
   }, [input, setComponentState])
 
   // Dynamically display various options
-  const showAllSamplersInput =
-    input.source_processing !== SourceProcessing.Img2Img &&
-    input.source_processing !== SourceProcessing.InPainting &&
-    !input.useAllModels &&
-    !input.useFavoriteModels &&
-    !componentState.showMultiModel
 
   const showMultiSamplerInput =
     !input.useAllModels &&
@@ -616,76 +567,11 @@ const AdvancedOptionsPanel = ({
           </TextButton>
         </FlexRow>
       </Section>
-      {!input.useAllSamplers && (
-        <Section>
-          <SubSectionTitle>Sampler</SubSectionTitle>
-          {(input.source_processing === SourceProcessing.InPainting &&
-            input.models[0] === 'stable_diffusion_inpainting') ||
-          (input.source_image && input.control_type !== '') ? (
-            <div className="mt-[-6px] text-sm text-slate-500 dark:text-slate-400 font-[600]">
-              Note: Sampler disabled when controlnet or inpainting model is
-              used.
-            </div>
-          ) : (
-            <MaxWidth
-              // @ts-ignore
-              maxWidth="240"
-            >
-              <SelectComponent
-                options={samplerOptions(input)}
-                onChange={(obj: { value: string; label: string }) => {
-                  PromptInputSettings.set('sampler', obj.value)
-                  setInput({ sampler: obj.value })
-                }}
-                isSearchable={true}
-                value={samplerValue}
-              />
-            </MaxWidth>
-          )}
-        </Section>
-      )}
-      {showAllSamplersInput && (
-        <Section>
-          <SubSectionTitle>
-            <TextTooltipRow>
-              Use all samplers
-              <Tooltip left="-140" width="240px">
-                Automatically generate an image for sampler
-              </Tooltip>
-            </TextTooltipRow>
-          </SubSectionTitle>
-          <Switch
-            disabled={
-              input.useMultiGuidance || input.useMultiSteps ? true : false
-            }
-            onChange={() => {
-              if (!input.useAllSamplers) {
-                trackEvent({
-                  event: 'USE_ALL_SAMPLERS_CLICK',
-                  context: '/pages/index'
-                })
-                setInput({
-                  numImages: 1,
-                  useAllSamplers: true,
-                  useAllModels: false,
-                  useFavoriteModels: false,
-                  useMultiSteps: false
-                })
-
-                PromptInputSettings.set('numImages', 1)
-                PromptInputSettings.set('useAllSamplers', true)
-                PromptInputSettings.set('useAllModels', false)
-                PromptInputSettings.set('useFavoriteModels', false)
-                PromptInputSettings.set('useMultiSteps', false)
-              } else {
-                PromptInputSettings.set('useAllSamplers', false)
-                setInput({ useAllSamplers: false })
-              }
-            }}
-            checked={input.useAllSamplers}
-          />
-        </Section>
-      )}
+      <Samplers
+        input={input}
+        setInput={setInput}
+        showMultiModel={componentState.showMultiModel}
+      />
       <TwoPanel className="mt-4">
         <SplitPanel>
           {!input.useMultiSteps && (
