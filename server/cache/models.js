@@ -49,7 +49,7 @@ const fetchModelDetails = async () => {
     let modelDetails = {}
 
     const resp = await fetch(
-      `https://raw.githubusercontent.com/db0/AI-Horde-image-model-reference/main/db.json`,
+      `https://raw.githubusercontent.com/db0/AI-Horde-image-model-reference/main/stable_diffusion.json`,
       {
         method: 'GET'
       }
