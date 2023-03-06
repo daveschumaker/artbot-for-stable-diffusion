@@ -34,6 +34,7 @@ import ImportExportPanel from '../ImportExportPanel'
 import ExternalLinkIcon from '../icons/ExternalLinkIcon'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
 import MaxWidth from '../UI/MaxWidth'
+import AlertDialogBox from '../UI/AlertDialogBox'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -114,6 +115,7 @@ const SettingsPage = () => {
 
     stayOnCreate: false,
     showOptionsMenu: false,
+    showResetConfirmation: false,
     shareImagesExternally: AppSettings.get('shareImagesExternally'),
     useBeta: false,
     useWorkerId: '',
@@ -648,6 +650,19 @@ const SettingsPage = () => {
           ) : null}
           {router.query.panel === 'prefs' ? (
             <>
+              {componentState.showResetConfirmation && (
+                <AlertDialogBox
+                  title="Are you sure you want to reset your preferences?"
+                  message="This option will reset all user settings (e.g., API key, image download preferences, stored input values, etc). Your images will be safe. Please save your API key before continuing."
+                  onConfirmClick={() => {
+                    localStorage.clear()
+                    window.location.reload()
+                  }}
+                  closeModal={() => {
+                    setComponentState({ showResetConfirmation: false })
+                  }}
+                />
+              )}
               <Section>
                 <PageTitle as="h2">ArtBot Preferences</PageTitle>
                 <SubSectionTitle>
@@ -793,6 +808,36 @@ const SettingsPage = () => {
                     }}
                     checked={componentState.enableGallerySwipe}
                   />
+                </MaxWidth>
+              </Section>
+              <Section>
+                <SubSectionTitle>
+                  <strong>Reset local storage?</strong>
+                  <div className="block text-xs mb-2 mt-2 w-full">
+                    In some instances, ArtBot settings have been corrupted. Use
+                    this option to reset all user settings (e.g., API key, image
+                    download preferences, stored input values, etc).
+                  </div>
+                  <div className="block text-xs mb-2 mt-2 w-full">
+                    Please save your <strong>API key</strong> before doing this!
+                  </div>
+                  <div className="block text-xs mb-2 mt-2 w-full">
+                    The image database will not be touched and your images will
+                    still be available.
+                  </div>
+                </SubSectionTitle>
+                <MaxWidth
+                  // @ts-ignore
+                  maxWidth="240"
+                >
+                  <Button
+                    btnType="secondary"
+                    onClick={() =>
+                      setComponentState({ showResetConfirmation: true })
+                    }
+                  >
+                    Reset Preferences?
+                  </Button>
                 </MaxWidth>
               </Section>
               {/* <Section>
