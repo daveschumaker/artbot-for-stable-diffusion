@@ -43,10 +43,6 @@
   font-size: 15px;
 }
 
-.NavigationMenuTrigger:focus,
-.NavigationMenuLink:focus {
-  box-shadow: 0 0 0 2px black;
-}
 .NavigationMenuTrigger:hover,
 .NavigationMenuLink:hover {
   color: #14b8a6;
@@ -183,18 +179,12 @@
   font-size: 15px;
   line-height: 1;
 }
-.ListItemLink:focus {
-  box-shadow: 0 0 0 2px #f2f2f2;
-}
 
 .ListItemLink:hover {
   background-color: #f2f2f2;
 }
 
 @media (prefers-color-scheme: dark) {
-  .ListItemLink:focus {
-    box-shadow: 0 0 0 2px #222222;
-  }
   .ListItemLink:hover {
     background-color: #222222;
   }
@@ -211,38 +201,6 @@
   font-size: 12px;
   line-height: 1.4;
   font-weight: initial;
-}
-
-.Callout {
-  display: flex;
-  justify-content: flex-end;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, var(--purple9) 0%, var(--indigo9) 100%);
-  border-radius: 6px;
-  padding: 25px;
-  text-decoration: none;
-  outline: none;
-  user-select: none;
-}
-.Callout:focus {
-  box-shadow: 0 0 0 2px var(--violet7);
-}
-
-.CalloutHeading {
-  color: white;
-  font-size: 18px;
-  font-weight: 500;
-  line-height: 1.2;
-  margin-top: 16px;
-  margin-bottom: 7px;
-}
-
-.CalloutText {
-  color: var(--mauve4);
-  font-size: 14px;
-  line-height: 1.3;
 }
 
 .ViewportPosition {
