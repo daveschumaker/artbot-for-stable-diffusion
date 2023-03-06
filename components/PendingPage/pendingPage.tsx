@@ -147,6 +147,12 @@ const PendingPage = () => {
     }
   })
 
+  useEffect(() => {
+    return () => {
+      resetCompleted()
+    }
+  }, [])
+
   return (
     <div style={{ overflowAnchor: 'none' }}>
       {showImageModal && (

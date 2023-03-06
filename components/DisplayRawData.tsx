@@ -37,6 +37,7 @@ const DisplayRawData = ({ data }: { data: any }) => {
 
     if (obj.base64String) {
       delete obj.base64String
+      delete obj.thumbnail
     }
 
     if (obj.source_image) {

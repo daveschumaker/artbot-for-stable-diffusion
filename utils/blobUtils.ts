@@ -34,7 +34,7 @@ function convertBlob(
       canvas.width = image.width
       canvas.height = image.height
       ctx.drawImage(image, 0, 0)
-      let result = dataURItoBlob(canvas.toDataURL(type))
+      let result = dataURItoBlob(canvas.toDataURL(type, 1))
       if (callback) callback(result)
       else resolve(result)
     }
