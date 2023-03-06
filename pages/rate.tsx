@@ -136,7 +136,9 @@ const Rate = () => {
     imageOneStatus: 'show',
     imageTwoStatus: 'stage',
     imageOneUrl: '',
-    imageTwoUrl: ''
+    imageOneId: '',
+    imageTwoUrl: '',
+    imageTwoId: ''
   })
 
   interface IFetchParams {
@@ -183,11 +185,13 @@ const Rate = () => {
 
             if (activeImage === 1) {
               setComponentState({
-                imageTwoUrl: data.url
+                imageTwoUrl: data.url,
+                imageTwoId: data.id
               })
             } else {
               setComponentState({
-                imageOneUrl: data.url
+                imageOneUrl: data.url,
+                imageOneId: data.id
               })
             }
           } else {
@@ -197,6 +201,7 @@ const Rate = () => {
               rateQuality: -Infinity,
               datasetId: data.dataset_id,
               imageOneUrl: data.url,
+              imageOneId: data.id,
               imageId: data.id,
               imageUrl: data.url,
               initialLoad: false,
@@ -297,18 +302,20 @@ const Rate = () => {
     }
 
     try {
-      const res = await fetch(
-        `${RATING_API}/api/v1/rating/${componentState.imageId}`,
-        {
-          method: 'POST',
-          body: JSON.stringify(ratingData),
-          headers: {
-            'Content-Type': 'application/json',
-            'Client-Agent': clientHeader(),
-            apikey: componentState.apiKey
-          }
+      const imageId =
+        activeImage === 1
+          ? componentState.imageOneId
+          : componentState.imageTwoId
+
+      const res = await fetch(`${RATING_API}/api/v1/rating/${imageId}`, {
+        method: 'POST',
+        body: JSON.stringify(ratingData),
+        headers: {
+          'Content-Type': 'application/json',
+          'Client-Agent': clientHeader(),
+          apikey: componentState.apiKey
         }
-      )
+      })
 
       const data = await res.json()
       fetchImage({ getNextImage: true })

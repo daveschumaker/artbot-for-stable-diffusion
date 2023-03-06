@@ -109,6 +109,24 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.03.05</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            I really, really, really fucked up image ratings. Awhile back
+            (2023.01.28), I implemented a handy carousel component that slides
+            in new images as you rate them. In my infinite wisdom, I forgot to
+            update the image id that was sent to the rating API. Thus, as you
+            rated images, your ratings were actually only being sent for
+            whatever the first image that loaded on the rating page. db0, the
+            Stable Horde creator, will have to delete nearly 550K suspect
+            ratings from ArtBot. Ugggh. 😫
+          </StyledLi>
+          <StyledLi>
+            Fix: Ratings are now submitted for the correct image.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.03.04</SubSectionTitle>
         <StyledUl>
           <StyledLi>
