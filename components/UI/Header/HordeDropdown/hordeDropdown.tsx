@@ -107,12 +107,20 @@ const HordeDropdown = () => {
       <div className="font-[700] mb-[8px]">Stable Horde Performance</div>
       <div className="font-mono text-[12px] pl-[8px]">
         <div>
-          - <strong>{hordePerformance.queued_requests.toLocaleString()}</strong>{' '}
+          -{' '}
+          <strong>
+            {hordePerformance.queued_requests
+              ? hordePerformance.queued_requests.toLocaleString()
+              : ''}
+          </strong>{' '}
           pending image requests (
           <strong>
-            {Math.floor(
-              hordePerformance.queued_megapixelsteps
-            ).toLocaleString()}{' '}
+            {hordePerformance.queued_megapixelsteps &&
+            !isNaN(hordePerformance.queued_megapixelsteps)
+              ? Math.floor(
+                  hordePerformance.queued_megapixelsteps
+                ).toLocaleString()
+              : ''}{' '}
             megapixelsteps
           </strong>
           )
@@ -124,7 +132,10 @@ const HordeDropdown = () => {
         <div className="mt-[8px]">
           -{' '}
           <strong>
-            {Math.floor(hordePerformance.queued_forms.toLocaleString())}
+            {hordePerformance.queued_forms &&
+            !isNaN(hordePerformance.queued_forms)
+              ? Math.floor(hordePerformance.queued_forms.toLocaleString())
+              : ''}
           </strong>{' '}
           pending interrogation requests
         </div>
@@ -135,20 +146,27 @@ const HordeDropdown = () => {
         </div>
         <div className="mt-[8px]">
           - Currently processing about{' '}
-          <strong>{Math.floor(requestsPerMinute)}</strong> image requests per
-          minute (
           <strong>
-            {Math.floor(
-              hordePerformance.past_minute_megapixelsteps
-            ).toLocaleString()}{' '}
+            {requestsPerMinute ? Math.floor(requestsPerMinute) : ''}
+          </strong>{' '}
+          image requests per minute (
+          <strong>
+            {hordePerformance.past_minute_megapixelsteps &&
+            !isNaN(hordePerformance.past_minute_megapixelsteps)
+              ? Math.floor(
+                  hordePerformance.past_minute_megapixelsteps
+                ).toLocaleString()
+              : ''}{' '}
             megapixelsteps
           </strong>
           ).
         </div>
         <div className="mt-[8px]">
           - At this rate, it will take approximately{' '}
-          <strong>{Math.floor(minutesToClear)} minutes</strong> to clear the
-          queue.
+          <strong>
+            {!isNaN(minutesToClear) ? Math.floor(minutesToClear) : ''} minutes
+          </strong>{' '}
+          to clear the queue.
         </div>
       </div>
       {worker_ids && worker_ids?.length > 0 && (
