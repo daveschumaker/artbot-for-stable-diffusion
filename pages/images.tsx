@@ -515,8 +515,8 @@ const ImagesPage = () => {
         <Modal hideCloseButton>
           Downloading images
           <div className="w-full flex flex-row text-sm mt-4 mb-4">
-            Processing selected images for download and converting to PNGs.
-            Please wait.
+            Processing selected images for download and converting to{' '}
+            {AppSettings.get('imageDownloadFormat') || 'JPG'}s. Please wait.
           </div>
           <div className="w-full flex flex-row justify-center">
             <SpinnerV2 />
