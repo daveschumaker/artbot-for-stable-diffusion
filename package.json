@@ -21,6 +21,8 @@
   },
   "dependencies": {
     "@next/bundle-analyzer": "13.2.1",
+    "@radix-ui/colors": "0.1.8",
+    "@radix-ui/react-navigation-menu": "1.1.1",
     "@szhsin/react-menu": "3.4.1",
     "autosize": "5.0.2",
     "browser-image-resizer": "2.4.1",

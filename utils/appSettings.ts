@@ -1,4 +1,5 @@
 import { buildModelAvailability } from '../api/fetchAvailableModels'
+import { fetchHordePerformance } from '../api/fetchHordePerformance'
 import { fetchUserDetails, setUserId } from '../api/userInfo'
 import AppSettings from '../models/AppSettings'
 import PromptInputSettings from '../models/PromptInputSettings'
@@ -95,6 +96,7 @@ export const initAppSettings = async () => {
   }
 
   fixLocalStorage()
+  fetchHordePerformance()
   fetchUserDetails(apikey)
   setUserId()
   deleteStalePending()
@@ -114,6 +116,7 @@ export const initAppSettings = async () => {
       return
     }
 
+    fetchHordePerformance()
     fetchUserDetails(apikey)
     deleteStalePending()
   }, 60000)

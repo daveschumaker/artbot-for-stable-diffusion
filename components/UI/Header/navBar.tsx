@@ -1,69 +1,17 @@
+/* eslint-disable react/display-name */
+import React from 'react'
+import clsx from 'clsx'
+import * as NavigationMenu from '@radix-ui/react-navigation-menu'
+import styles from './navBar.module.css'
+import ChevronDownIcon from '../../icons/ChevronDownIcon'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
-import { useStore } from 'statery'
-import {
-  appInfoStore,
-  setNewImageReady,
-  setShowImageReadyToast
-} from '../../../store/appStore'
-import ChevronDownIcon from '../../icons/ChevronDownIcon'
-import IconCreate from '../../icons/CreateIcon'
-import HourglassIcon from '../../icons/HourglassIcon'
-import InfoIcon from '../../icons/InfoIcon'
-import PhotoIcon from '../../icons/PhotoIcon'
-import PhotoPlusIcon from '../../icons/PhotoPlusIcon'
-import SettingsIcon from '../../icons/SettingsIcon'
-import DropDown from '../DropDownV2/DropDownMenu'
-import DropDownItem from '../DropDownV2/DropDownMenuItem'
-
-const NavItem = ({
-  active = false,
-  children,
-  onClick = () => {}
-}: {
-  active?: boolean
-  children: React.ReactNode
-  onClick?: () => void
-}) => {
-  const styles: any = {}
-
-  if (active) {
-    styles.color = '#14B8A6'
-    styles.borderBottom = `2px solid #14B8A6`
-  }
-
-  return (
-    <div
-      className="flex flex-row relative gap-[2px] pb-[4px] items-center text-[14px] font-[600] cursor-pointer hover:text-[#14B8A6]"
-      style={{ ...styles }}
-      onClick={onClick}
-    >
-      {children}
-    </div>
-  )
-}
+import AnalyticsIcon from '../../icons/AnalyticsIcon'
+import HordeDropdown from './HordeDropdown'
 
 const NavBar = () => {
   const router = useRouter()
   const { pathname } = router
-  const appState = useStore(appInfoStore)
-  const { newImageReady } = appState
-
-  const [showCreateMenu, setShowCreateMenu] = useState(false)
-  const [showInfoMenu, setShowInfoMenu] = useState(false)
-  const [showSettingsMenu, setShowSettingsMenu] = useState(false)
-
-  const clearNewImageNotification = () => {
-    setShowImageReadyToast(false)
-    setNewImageReady('')
-  }
-
-  const handleForceReload = () => {
-    if ('/images' === pathname) {
-      window.location.reload()
-    }
-  }
 
   const isActiveRoute = (page: string) => {
     if (page === pathname) {
@@ -74,166 +22,168 @@ const NavBar = () => {
   }
 
   return (
-    <nav
-      className="hidden tablet:flex flex-row grow justify-end gap-2"
-      role="navigation"
-    >
-      <div className="flex flex-row gap-[0px] relative">
-        <Link href="/" passHref tabIndex={0}>
-          <NavItem active={isActiveRoute('/')}>
-            <IconCreate size={20} />
-            Create
-          </NavItem>
-        </Link>
-        <NavItem
-          active={isActiveRoute('/')}
-          onClick={() => {
-            setShowCreateMenu(true)
-          }}
-        >
-          <ChevronDownIcon size={20} />
-        </NavItem>
-        {showCreateMenu && (
-          <DropDown
-            handleClose={() => {
-              setShowCreateMenu(false)
-            }}
+    <NavigationMenu.Root className={styles.NavigationMenuRoot}>
+      <NavigationMenu.List className={styles.NavigationMenuList}>
+        <NavigationMenu.Item>
+          <NavigationMenu.Trigger
+            className={clsx(
+              styles.NavigationMenuTrigger,
+              isActiveRoute('/') && styles.isActive,
+              isActiveRoute('/controlnet') && styles.isActive,
+              isActiveRoute('/draw') && styles.isActive
+            )}
           >
-            <DropDownItem
-              handleClick={() => {
-                setShowCreateMenu(false)
-                router.push('/controlnet')
-              }}
-            >
-              ControlNet
-            </DropDownItem>
-            <DropDownItem
-              handleClick={() => {
-                setShowCreateMenu(false)
-                router.push('/draw')
-              }}
-            >
-              Draw
-            </DropDownItem>
-          </DropDown>
-        )}
-      </div>
-      <Link href="/pending" passHref tabIndex={0}>
-        <NavItem active={isActiveRoute('/pending')}>
-          <HourglassIcon size={20} />
-          Pending
-        </NavItem>
-      </Link>
-      <Link
-        href="/images"
-        passHref
-        onClick={() => {
-          clearNewImageNotification()
-          handleForceReload()
-        }}
-        tabIndex={0}
-      >
-        <NavItem active={isActiveRoute('/images')}>
-          {newImageReady ? (
-            <PhotoPlusIcon size={20} stroke={'red'} />
-          ) : (
-            <PhotoIcon size={20} />
-          )}
-          Images
-        </NavItem>
-      </Link>
-      <div className="flex flex-row gap-[0px] relative">
-        <Link href="/info" passHref tabIndex={0}>
-          <NavItem active={isActiveRoute('/info')}>
-            <InfoIcon size={20} />
-            Info
-          </NavItem>
-        </Link>
-        <NavItem
-          active={isActiveRoute('/info')}
-          onClick={() => {
-            setShowInfoMenu(true)
-          }}
-        >
-          <ChevronDownIcon size={20} />
-        </NavItem>
-        {showInfoMenu && (
-          <DropDown
-            alignRight
-            handleClose={() => {
-              setShowInfoMenu(false)
-            }}
+            <Link className={styles.NavigationMenuLink} href="/">
+              Create
+            </Link>
+            <ChevronDownIcon className={styles.CaretDown} />
+          </NavigationMenu.Trigger>
+          <NavigationMenu.Content className={styles.NavigationMenuContent}>
+            <ul className={clsx(styles.List, styles.one)}>
+              <ListItem href="/" title="Create">
+                Create a new image using a prompt, image, or painting.
+              </ListItem>
+              <ListItem href="/controlnet" title="ControlNet">
+                Easily get started with ControlNet
+              </ListItem>
+              <ListItem href="/draw" title="Draw">
+                Draw and paint your own image and use it as source material for
+                Stable Diffusion.
+              </ListItem>
+            </ul>
+          </NavigationMenu.Content>
+        </NavigationMenu.Item>
+
+        <NavigationMenu.Item>
+          <Link
+            className={clsx(
+              styles.NavigationMenuLink,
+              isActiveRoute('/pending') && styles.isActive
+            )}
+            href="/pending"
           >
-            <DropDownItem
-              handleClick={() => {
-                setShowInfoMenu(false)
-                router.push('/info/models')
-              }}
-            >
-              Model Details
-            </DropDownItem>
-            <DropDownItem
-              handleClick={() => {
-                setShowInfoMenu(false)
-                router.push('/info/models/updates')
-              }}
-            >
-              Model Updates
-            </DropDownItem>
-            <DropDownItem
-              handleClick={() => {
-                setShowInfoMenu(false)
-                router.push('/info/models?show=favorite-models')
-              }}
-            >
-              Favorite Models
-            </DropDownItem>
-            <DropDownItem
-              handleClick={() => {
-                setShowInfoMenu(false)
-                router.push('/info/workers')
-              }}
-            >
-              Worker Details
-            </DropDownItem>
-          </DropDown>
-        )}
-      </div>
-      <div className="flex flex-row gap-[0px] relative">
-        <Link href="/settings" passHref tabIndex={0}>
-          <NavItem active={isActiveRoute('/settings')}>
-            <SettingsIcon size={20} />
-            Settings
-          </NavItem>
-        </Link>
-        <NavItem
-          active={isActiveRoute('/settings')}
-          onClick={() => {
-            setShowSettingsMenu(true)
-          }}
-        >
-          <ChevronDownIcon size={20} />
-        </NavItem>
-        {showSettingsMenu && (
-          <DropDown
-            alignRight
-            handleClose={() => {
-              setShowSettingsMenu(false)
-            }}
+            Pending
+          </Link>
+        </NavigationMenu.Item>
+
+        <NavigationMenu.Item>
+          <Link
+            className={clsx(
+              styles.NavigationMenuLink,
+              isActiveRoute('/images') && styles.isActive
+            )}
+            href="/images"
           >
-            <DropDownItem
-              handleClick={() => {
-                setShowSettingsMenu(false)
-                router.push('/profile')
-              }}
+            Images
+          </Link>
+        </NavigationMenu.Item>
+
+        <NavigationMenu.Item>
+          <NavigationMenu.Trigger className={styles.NavigationMenuTrigger}>
+            <Link
+              className={clsx(
+                styles.NavigationMenuLink,
+                isActiveRoute('/info/models') && styles.isActive,
+                isActiveRoute('/info/updates') && styles.isActive,
+                isActiveRoute('/info/workers') && styles.isActive,
+                isActiveRoute('/info') && styles.isActive
+              )}
+              href="/info"
             >
-              User Profile
-            </DropDownItem>
-          </DropDown>
-        )}
+              Info
+            </Link>
+            <ChevronDownIcon className={styles.CaretDown} />
+          </NavigationMenu.Trigger>
+          <NavigationMenu.Content className={styles.NavigationMenuContent}>
+            <ul className={clsx(styles.List, styles.one)}>
+              <ListItem href="/info/models" title="Model Details">
+                Detailed information about all models currently available on the
+                Stable Horde.
+              </ListItem>
+              <ListItem href="/models/updates" title="Model Updates">
+                The latest information on new models and updated models.
+              </ListItem>
+              <ListItem
+                href="/info/models?show=favorite-models"
+                title="Favorite Models"
+              >
+                A list of your favorite models.
+              </ListItem>
+              <ListItem href="/info/workers" title="Worker Details">
+                Information about various GPU workers provided by volunteers of
+                the Stable Horde.
+              </ListItem>
+            </ul>
+          </NavigationMenu.Content>
+        </NavigationMenu.Item>
+
+        <NavigationMenu.Item>
+          <NavigationMenu.Trigger
+            className={clsx(
+              styles.NavigationMenuTrigger,
+              isActiveRoute('/profile') && styles.isActive,
+              isActiveRoute('/settings') && styles.isActive
+            )}
+          >
+            <Link className={styles.NavigationMenuLink} href="/settings">
+              Settings
+            </Link>
+            <ChevronDownIcon className={styles.CaretDown} />
+          </NavigationMenu.Trigger>
+          <NavigationMenu.Content className={styles.NavigationMenuContent}>
+            <ul className={clsx(styles.List, styles.one)}>
+              <ListItem href="/profile" title="User Profile">
+                Information about images you&apos;ve requested and / or
+                generated on the Stable Horde.
+              </ListItem>
+              <ListItem href="/settings" title="Stable Horde Settings">
+                Settings specifically related to your Stable Horde account.
+              </ListItem>
+              <ListItem href="/settings?panel=prefs" title="ArtBot Preferences">
+                Preferences related to ArtBot.
+              </ListItem>
+              <ListItem href="/settings?panel=workers" title="Manage Workers">
+                View statistics and manage any workers you are running on the
+                Stable Horde.
+              </ListItem>
+            </ul>
+          </NavigationMenu.Content>
+        </NavigationMenu.Item>
+
+        <NavigationMenu.Item>
+          <NavigationMenu.Trigger className={styles.NavigationMenuTrigger}>
+            <AnalyticsIcon />
+          </NavigationMenu.Trigger>
+          <NavigationMenu.Content className={styles.NavigationMenuContent}>
+            <HordeDropdown />
+          </NavigationMenu.Content>
+        </NavigationMenu.Item>
+
+        <NavigationMenu.Indicator className={styles.NavigationMenuIndicator}>
+          <div className={styles.Arrow} />
+        </NavigationMenu.Indicator>
+      </NavigationMenu.List>
+
+      <div className={styles.ViewportPosition}>
+        <NavigationMenu.Viewport className={styles.NavigationMenuViewport} />
       </div>
-    </nav>
+    </NavigationMenu.Root>
   )
 }
+
+const ListItem = ({ className, children, href, title, ...props }: any) => (
+  <li>
+    <Link
+      className={clsx(styles.ListItemLink, className)}
+      href={href}
+      {...props}
+    >
+      <>
+        <div className={styles.ListItemHeading}>{title}</div>
+        <p className={styles.ListItemText}>{children}</p>
+      </>
+    </Link>
+  </li>
+)
 
 export default NavBar

@@ -10,6 +10,7 @@ interface AppStore {
   stableHordeApiOnline: boolean
   showAppMenu: boolean
   unsupportedBrowser: boolean
+  hordePerformance: object
 }
 
 export const appInfoStore = makeStore<AppStore>({
@@ -21,8 +22,15 @@ export const appInfoStore = makeStore<AppStore>({
   showImageReadyToast: false,
   stableHordeApiOnline: true,
   showAppMenu: false,
-  unsupportedBrowser: false
+  unsupportedBrowser: false,
+  hordePerformance: {}
 })
+
+export const setHordePerformance = (obj: object) => {
+  appInfoStore.set(() => ({
+    hordePerformance: obj
+  }))
+}
 
 export const setUnsupportedBrowser = (val: boolean = false) => {
   appInfoStore.set(() => ({

@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express = require('express')
 const next = require('next')
+const { initHordePerfMonitor } = require('./server/cache/hordeInfo')
 
 const { initModelDataFetch } = require('./server/cache/models')
 const { initLoadCount } = require('./server/cache/perf')
@@ -26,6 +27,7 @@ app.prepare().then(async () => {
     initModelDataFetch()
     initServerStatusFetch()
     initWorkerDetailsFetch()
+    initHordePerfMonitor()
 
     server.get('/', (req, res) => {
       res.redirect('/artbot')
