@@ -1,5 +1,6 @@
 import { buildModelAvailability } from '../api/fetchAvailableModels'
 import { fetchHordePerformance } from '../api/fetchHordePerformance'
+import fetchMyWorkers from '../api/fetchMyWorkers'
 import { fetchUserDetails, setUserId } from '../api/userInfo'
 import AppSettings from '../models/AppSettings'
 import PromptInputSettings from '../models/PromptInputSettings'
@@ -97,11 +98,11 @@ export const initAppSettings = async () => {
 
   fixLocalStorage()
   fetchHordePerformance()
-  fetchUserDetails(apikey)
+  await fetchUserDetails(apikey)
   setUserId()
   deleteStalePending()
-
   buildModelAvailability()
+  fetchMyWorkers()
 
   setInterval(async () => {
     if (!isAppActive()) {
@@ -109,6 +110,7 @@ export const initAppSettings = async () => {
     }
 
     buildModelAvailability()
+    fetchHordePerformance()
   }, 20000)
 
   setInterval(async () => {
@@ -116,8 +118,8 @@ export const initAppSettings = async () => {
       return
     }
 
-    fetchHordePerformance()
-    fetchUserDetails(apikey)
+    await fetchUserDetails(apikey)
     deleteStalePending()
+    fetchMyWorkers()
   }, 60000)
 }

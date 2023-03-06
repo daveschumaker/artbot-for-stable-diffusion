@@ -8,10 +8,30 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import AnalyticsIcon from '../../icons/AnalyticsIcon'
 import HordeDropdown from './HordeDropdown'
+import PointIcon from '../../icons/PointIcon'
+import { useStore } from 'statery'
+import { userInfoStore } from '../../../store/userStore'
+
+const ListItem = ({ className, children, href, title, ...props }: any) => (
+  <li>
+    <Link
+      className={clsx(styles.ListItemLink, className)}
+      href={href}
+      {...props}
+    >
+      <>
+        <div className={styles.ListItemHeading}>{title}</div>
+        <p className={styles.ListItemText}>{children}</p>
+      </>
+    </Link>
+  </li>
+)
 
 const NavBar = () => {
   const router = useRouter()
   const { pathname } = router
+
+  const { workers } = useStore(userInfoStore)
 
   const isActiveRoute = (page: string) => {
     if (page === pathname) {
@@ -21,10 +41,43 @@ const NavBar = () => {
     return false
   }
 
+  let isActive = false
+  let isPaused = false
+  let isOffline = false
+
+  if (Object.keys(workers).length > 0) {
+    {
+      Object.keys(workers).forEach((workerId) => {
+        const { maintenance_mode, online } = workers[workerId]
+        if (!online) {
+          isOffline = true
+        }
+
+        if (online && maintenance_mode) {
+          isPaused = true
+        }
+
+        if (online && !maintenance_mode) {
+          isActive = true
+        }
+      })
+    }
+  }
+
+  let workerBadgeColor = 'red'
+
+  if (isActive && !isPaused) {
+    workerBadgeColor = 'green'
+  }
+
+  if (isPaused) {
+    workerBadgeColor = 'orange'
+  }
+
   return (
     <NavigationMenu.Root className={styles.NavigationMenuRoot}>
       <NavigationMenu.List className={styles.NavigationMenuList}>
-        <NavigationMenu.Item>
+        <NavigationMenu.Item className={styles.NavigationMenuItem}>
           <NavigationMenu.Trigger
             className={clsx(
               styles.NavigationMenuTrigger,
@@ -54,7 +107,7 @@ const NavBar = () => {
           </NavigationMenu.Content>
         </NavigationMenu.Item>
 
-        <NavigationMenu.Item>
+        <NavigationMenu.Item className={styles.NavigationMenuItem}>
           <Link
             className={clsx(
               styles.NavigationMenuLink,
@@ -66,7 +119,7 @@ const NavBar = () => {
           </Link>
         </NavigationMenu.Item>
 
-        <NavigationMenu.Item>
+        <NavigationMenu.Item className={styles.NavigationMenuItem}>
           <Link
             className={clsx(
               styles.NavigationMenuLink,
@@ -78,7 +131,7 @@ const NavBar = () => {
           </Link>
         </NavigationMenu.Item>
 
-        <NavigationMenu.Item>
+        <NavigationMenu.Item className={styles.NavigationMenuItem}>
           <NavigationMenu.Trigger className={styles.NavigationMenuTrigger}>
             <Link
               className={clsx(
@@ -117,7 +170,7 @@ const NavBar = () => {
           </NavigationMenu.Content>
         </NavigationMenu.Item>
 
-        <NavigationMenu.Item>
+        <NavigationMenu.Item className={styles.NavigationMenuItem}>
           <NavigationMenu.Trigger
             className={clsx(
               styles.NavigationMenuTrigger,
@@ -151,8 +204,17 @@ const NavBar = () => {
         </NavigationMenu.Item>
 
         <NavigationMenu.Item>
-          <NavigationMenu.Trigger className={styles.NavigationMenuTrigger}>
-            <AnalyticsIcon />
+          <NavigationMenu.Trigger
+            className={clsx(styles.NavigationMenuTrigger, styles.AnalyticsIcon)}
+          >
+            {(isActive || isPaused || isOffline) && (
+              <PointIcon
+                className={styles.WorkerStatus}
+                fill={workerBadgeColor}
+                stroke="white"
+              />
+            )}
+            <AnalyticsIcon size={32} />
           </NavigationMenu.Trigger>
           <NavigationMenu.Content className={styles.NavigationMenuContent}>
             <HordeDropdown />
@@ -170,20 +232,5 @@ const NavBar = () => {
     </NavigationMenu.Root>
   )
 }
-
-const ListItem = ({ className, children, href, title, ...props }: any) => (
-  <li>
-    <Link
-      className={clsx(styles.ListItemLink, className)}
-      href={href}
-      {...props}
-    >
-      <>
-        <div className={styles.ListItemHeading}>{title}</div>
-        <p className={styles.ListItemText}>{children}</p>
-      </>
-    </Link>
-  </li>
-)
 
 export default NavBar

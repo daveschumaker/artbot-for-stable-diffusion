@@ -66,7 +66,7 @@ const WorkerInfo = ({
 }: any) => {
   let statusColor = 'green'
   if (worker.online && worker.maintenance_mode) {
-    statusColor = 'yellow'
+    statusColor = 'orange'
   } else if (!worker.online) {
     statusColor = 'red'
   }

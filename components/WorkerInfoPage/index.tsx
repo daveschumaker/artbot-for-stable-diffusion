@@ -115,7 +115,6 @@ const WorkerInfoPage = () => {
       </Row>
       <WorkersList>
         {sortedWorkers?.map((worker: any) => {
-          console.log(`worker`, worker)
           return <WorkerInfo editable={false} key={worker.id} worker={worker} />
         })}
       </WorkersList>

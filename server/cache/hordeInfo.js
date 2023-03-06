@@ -18,7 +18,7 @@ const initHordePerfMonitor = () => {
   fetchHordePerformance()
   setInterval(() => {
     fetchHordePerformance()
-  }, 60000)
+  }, 15000)
 }
 
 module.exports = {

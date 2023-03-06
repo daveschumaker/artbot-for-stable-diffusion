@@ -1,14 +1,18 @@
 .NavigationMenuRoot {
+  display: flex;
+  position: relative;
+  justify-content: flex-end;
+  flex-grow: 1;
+  z-index: 1;
+}
+
+.NavigationMenuItem {
   display: none;
 }
 
 @media (min-width: 640px) {
-  .NavigationMenuRoot {
-    display: flex;
-    position: relative;
-    justify-content: flex-end;
-    flex-grow: 1;
-    z-index: 1;
+  .NavigationMenuItem {
+    display: block;
   }
 }
 
@@ -19,7 +23,6 @@
   background-color: #f2f2f2;
   border-radius: 6px;
   list-style: none;
-  box-shadow: 0 2px 10px var(--blackA7);
   margin: 0;
 }
 
@@ -31,23 +34,29 @@
 
 .NavigationMenuTrigger,
 .NavigationMenuLink {
-  padding: 4px 0 4px 8px;
+  padding: 2px 0 2px 8px;
   outline: none;
   user-select: none;
   font-weight: 500;
   line-height: 1;
   border-radius: 4px;
   font-size: 15px;
-  color: var(--violet11);
 }
 
 .NavigationMenuTrigger:focus,
 .NavigationMenuLink:focus {
-  box-shadow: 0 0 0 2px var(--violet7);
+  box-shadow: 0 0 0 2px black;
 }
 .NavigationMenuTrigger:hover,
 .NavigationMenuLink:hover {
   color: #14b8a6;
+}
+
+.AnalyticsIcon {
+  justify-content: center;
+  height: 40px;
+  width: 40px;
+  padding: 2px;
 }
 
 .isActive {
@@ -192,14 +201,14 @@
 }
 
 .ListItemHeading {
+  font-size: 14px;
   font-weight: 500;
   line-height: 1.2;
   margin-bottom: 5px;
-  color: var(--violet12);
 }
 
 .ListItemText {
-  color: var(--mauve11);
+  font-size: 12px;
   line-height: 1.4;
   font-weight: initial;
 }
@@ -260,10 +269,16 @@
   position: relative;
   top: 70%;
   background-color: white;
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   transform: rotate(45deg);
   border-top-left-radius: 2px;
+}
+
+.WorkerStatus {
+  position: absolute;
+  top: -2px;
+  right: -2px;
 }
 
 @media (prefers-color-scheme: dark) {
