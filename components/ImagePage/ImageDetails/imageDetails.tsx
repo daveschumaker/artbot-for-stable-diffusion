@@ -378,12 +378,12 @@ const ImageDetails = ({
             </Button>
           )}
           <Button
-            title="Download PNG"
+            title="Download"
             // @ts-ignore
             onClick={() => downloadFile(imageDetails)}
           >
             <DownloadIcon />
-            <span className="hidden md:inline-block">Download PNG</span>
+            <span className="hidden md:inline-block">Download</span>
           </Button>
         </div>
         <div className="w-1/2 flex flex-row justify-end gap-2">

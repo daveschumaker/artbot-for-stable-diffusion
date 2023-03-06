@@ -78,7 +78,8 @@ const StyledModal = styled(InteractiveModal)`
     height: ${
       // @ts-ignore
       (props) => {
-      props.windowHeight <= 768 ? 'calc(100% - 32px)' : 'calc(100% - 256px)'}
+        props.windowHeight <= 768 ? 'calc(100% - 32px)' : 'calc(100% - 256px)'
+      }
     };
     max-height: 750px;
   }
@@ -318,12 +319,12 @@ const ImageModal = ({
               </Button>
             )}
             <Button
-              title="Download PNG"
+              title="Download"
               // @ts-ignore
               onClick={() => downloadFile(imageDetails)}
             >
               <DownloadIcon />
-              <span className="hidden md:inline-block">Download PNG</span>
+              <span className="hidden md:inline-block">Download</span>
             </Button>
             {
               // @ts-ignore

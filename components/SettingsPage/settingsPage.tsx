@@ -117,7 +117,8 @@ const SettingsPage = () => {
     shareImagesExternally: AppSettings.get('shareImagesExternally'),
     useBeta: false,
     useWorkerId: '',
-    useTrusted: true
+    useTrusted: true,
+    imageDownloadFormat: 'jpg'
   })
 
   const handleSetWorkerId = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -190,6 +191,8 @@ const SettingsPage = () => {
     updateObj.disableSnowflakes = AppSettings.get('disableSnowflakes') || false
     updateObj.shareImagesExternally =
       AppSettings.get('shareImagesExternally') || false
+    updateObj.imageDownloadFormat =
+      AppSettings.get('imageDownloadFormat') || 'jpg'
 
     // if (!userStore.username) {
     //   AppSettings.save('shareImagesExternally', true)
@@ -483,6 +486,7 @@ const SettingsPage = () => {
                   maxWidth="240"
                 >
                   <Select
+                    isSearchable={false}
                     options={[
                       { value: true, label: 'Yes' },
                       { value: false, label: 'No' }
@@ -512,6 +516,7 @@ const SettingsPage = () => {
                   maxWidth="240"
                 >
                   <Select
+                    isSearchable={false}
                     onChange={(obj: any) =>
                       handleUpdateSelect('useTrusted', obj)
                     }
@@ -713,6 +718,35 @@ const SettingsPage = () => {
                     checked={componentState.saveCanvasOnCreate}
                   />
                 </div>
+              </Section>
+              <Section>
+                <SubSectionTitle>
+                  <strong>Preferred image format</strong>
+                  <div className="block text-xs mb-2 mt-2 w-full">
+                    Choose your preferred format when downloading images from
+                    ArtBot
+                  </div>
+                </SubSectionTitle>
+                <MaxWidth
+                  // @ts-ignore
+                  maxWidth="240"
+                >
+                  <Select
+                    isSearchable={false}
+                    onChange={(obj: any) => {
+                      handleUpdateSelect('imageDownloadFormat', obj)
+                    }}
+                    options={[
+                      { value: 'jpg', label: 'jpg' },
+                      { value: 'png', label: 'png' },
+                      { value: 'webp', label: 'webp' }
+                    ]}
+                    value={{
+                      value: componentState.imageDownloadFormat,
+                      label: componentState.imageDownloadFormat
+                    }}
+                  />
+                </MaxWidth>
               </Section>
               <Section>
                 <SubSectionTitle>

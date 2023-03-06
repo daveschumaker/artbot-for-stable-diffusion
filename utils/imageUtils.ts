@@ -517,14 +517,15 @@ export const downloadImages = async (
   for (const imageId in imageArray) {
     const image: any = imageArray[imageId]
 
-    let filename = `image_${imageId}.png`
+    let fileType = AppSettings.get('imageDownloadFormat') || 'jpg'
+    let filename = `image_${imageId}.${fileType}`
 
     if (image.prompt) {
       filename =
         image.prompt
           .replace(/[^a-z0-9]/gi, '_')
           .toLowerCase()
-          .slice(0, 125) + `_${imageId}.png`
+          .slice(0, 125) + `_${imageId}.${fileType}`
     }
 
     const imageData = {
@@ -548,10 +549,24 @@ export const downloadImages = async (
 
     fileDetails.push(imageData)
     try {
-      const input = await base64toBlob(image.base64String, 'image/webp')
+      const input = await base64toBlob(image.base64String, `image/${fileType}`)
       if (input) {
-        // @ts-ignore
-        const newBlob = await input?.toPNG()
+        let newBlob
+
+        if (fileType === 'png') {
+          // @ts-ignore
+          newBlob = await input?.toPNG()
+        }
+
+        if (fileType === 'jpg') {
+          // @ts-ignore
+          newBlob = await input?.toJPEG()
+        }
+
+        if (fileType === 'webp') {
+          // @ts-ignore
+          newBlob = await input?.toWebP()
+        }
 
         fileArray.push({
           name: filename,
@@ -560,7 +575,7 @@ export const downloadImages = async (
         })
       }
     } catch (err) {
-      console.log(`Error converting image to PNG...`)
+      console.log(`Error converting image to ${fileType}...`)
       console.log(image.jobId)
     }
 
@@ -583,17 +598,31 @@ export const downloadImages = async (
 
 export const downloadFile = async (image: any) => {
   initBlob()
-
-  const input = await base64toBlob(image.base64String, 'image/webp')
+  const fileType = AppSettings.get('imageDownloadFormat') || 'jpg'
+  const input = await base64toBlob(image.base64String, `image/${fileType}`)
 
   const filename =
     image.prompt
       .replace(/[^a-z0-9]/gi, '_')
       .toLowerCase()
-      .slice(0, 124) + `.png`
+      .slice(0, 124) + `.${fileType}`
 
-  // @ts-ignore
-  const newBlob = await input?.toPNG()
+  let newBlob
+
+  if (fileType === 'png') {
+    // @ts-ignore
+    newBlob = await input?.toPNG()
+  }
+
+  if (fileType === 'jpg') {
+    // @ts-ignore
+    newBlob = await input?.toJPEG()
+  }
+
+  if (fileType === 'webp') {
+    // @ts-ignore
+    newBlob = await input?.toWebP()
+  }
 
   const { saveAs } = (await import('file-saver')).default
   saveAs(newBlob, filename)
