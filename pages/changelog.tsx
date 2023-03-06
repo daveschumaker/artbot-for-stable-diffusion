@@ -118,11 +118,20 @@ const Changelog = () => {
             update the image id that was sent to the rating API. Thus, as you
             rated images, your ratings were actually only being sent for
             whatever the first image that loaded on the rating page. db0, the
-            Stable Horde creator, will have to delete nearly 550K suspect
+            Stable Horde creator, will have to delete nearly 338K suspect
             ratings from ArtBot. Ugggh. 😫
           </StyledLi>
           <StyledLi>
             Fix: Ratings are now submitted for the correct image.
+          </StyledLi>
+          <StyledLi>
+            Feature: Select your preferred image download type (jpg, png, or
+            webp) in the ArtBot settings panel.
+          </StyledLi>
+          <StyledLi>
+            Feature: New Stable Horde performance dropdown so you can see
+            current load on the Horde, as well as a quick status of any running
+            worker.
           </StyledLi>
         </StyledUl>
       </Section>
