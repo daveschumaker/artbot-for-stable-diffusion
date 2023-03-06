@@ -4,6 +4,7 @@ import Image from 'next/image'
 
 interface ImageDetails {
   base64String: string
+  thumbnail: string
   prompt?: string
 }
 
@@ -18,10 +19,14 @@ export default function ImageSquare({
   size = 180,
   imageType = 'image/webp'
 }: ImageSquareProps) {
-  let base64String = `data:${imageType};base64,${imageDetails.base64String}`
+  let base64String = `data:${imageType};base64,${
+    imageDetails.thumbnail || imageDetails.base64String
+  }`
 
   if (!imageType) {
-    base64String = `data:image/webp;base64,${imageDetails.base64String}`
+    base64String = `data:image/webp;base64,${
+      imageDetails.thumbnail || imageDetails.base64String
+    }`
   }
 
   const classes = ['overflow-hidden', 'relative']

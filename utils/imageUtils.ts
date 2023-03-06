@@ -731,3 +731,36 @@ export const countImagesToGenerate = (imageParams: ICountImages) => {
 
   return imageCount
 }
+
+export const dataUrlToFile = async (
+  dataUrl: string,
+  fileName: string
+): Promise<File> => {
+  const res: Response = await fetch(`data:image/webp;base64,` + dataUrl)
+  const blob: Blob = await res.blob()
+  return new File([blob], fileName, { type: 'image/webp' })
+}
+
+export const generateBase64Thumbnail = async (
+  base64: string,
+  jobId: string
+) => {
+  let fullDataString: any
+  const file = await dataUrlToFile(base64, `${jobId}.webp`)
+  const { readAndCompressImage } = await import('browser-image-resizer')
+  let resizedImage = await readAndCompressImage(file, {
+    maxWidth: 320,
+    quality: 0.9
+  })
+
+  if (resizedImage) {
+    fullDataString = await getBase64(resizedImage)
+  }
+
+  if (!fullDataString) {
+    return
+  }
+
+  const [, imgBase64String] = fullDataString.split(';base64,')
+  return imgBase64String
+}

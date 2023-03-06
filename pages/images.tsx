@@ -909,6 +909,7 @@ const ImagesPage = () => {
                   favorited: boolean
                   jobId: string
                   base64String: string
+                  thumbnail: string
                   prompt: string
                   timestamp: number
                   seed: number
@@ -925,7 +926,10 @@ const ImagesPage = () => {
                           tabIndex={0}
                         >
                           <img
-                            src={'data:image/webp;base64,' + image.base64String}
+                            src={
+                              'data:image/webp;base64,' +
+                              (image.thumbnail || image.base64String)
+                            }
                             style={{
                               borderRadius: '4px',
                               width: '100%',
@@ -967,6 +971,7 @@ const ImagesPage = () => {
                   id: string
                   jobId: string
                   base64String: string
+                  thumbnail: string
                   prompt: string
                   timestamp: number
                   seed: number
@@ -1019,6 +1024,7 @@ const ImagesPage = () => {
             (image: {
               jobId: string
               base64String: string
+              thumbnail: string
               prompt: string
               timestamp: number
               seed: number

@@ -281,6 +281,7 @@ const RelatedImages = ({
               favorited: boolean
               jobId: string
               base64String: string
+              thumbnail: string
               prompt: string
               timestamp: number
               seed: number
@@ -300,7 +301,10 @@ const RelatedImages = ({
                       }
                     >
                       <img
-                        src={'data:image/webp;base64,' + image.base64String}
+                        src={
+                          'data:image/webp;base64,' +
+                          (image.thumbnail || image.base64String)
+                        }
                         style={{
                           borderRadius: '4px',
                           width: '100%',

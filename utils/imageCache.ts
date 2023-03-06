@@ -12,7 +12,7 @@ import {
   updateAllPendingJobs,
   updatePendingJob
 } from './db'
-import { createNewImage } from './imageUtils'
+import { createNewImage, generateBase64Thumbnail } from './imageUtils'
 import { createPendingJob } from './pendingUtils'
 import { sleep } from './sleep'
 import {
@@ -504,9 +504,15 @@ export const checkCurrentJob = async (imageDetails: any) => {
       imageDetails.jobStatus = JobStatus.Done
       imageDetails.timestamp = Date.now()
 
+      const thumbnail = await generateBase64Thumbnail(
+        imgDetailsFromApi.base64String,
+        jobId
+      )
+
       const job = {
         ...imageDetails,
-        ...imgDetailsFromApi
+        ...imgDetailsFromApi,
+        thumbnail
       }
       await updatePendingJob(
         imageDetails.id,
