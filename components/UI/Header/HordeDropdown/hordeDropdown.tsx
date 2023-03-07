@@ -109,14 +109,13 @@ const HordeDropdown = () => {
         <div>
           -{' '}
           <strong>
-            {hordePerformance.queued_requests
+            {!isNaN(hordePerformance.queued_requests)
               ? hordePerformance.queued_requests.toLocaleString()
               : ''}
           </strong>{' '}
           pending image requests (
           <strong>
-            {hordePerformance.queued_megapixelsteps &&
-            !isNaN(hordePerformance.queued_megapixelsteps)
+            {!isNaN(hordePerformance.queued_megapixelsteps)
               ? Math.floor(
                   hordePerformance.queued_megapixelsteps
                 ).toLocaleString()
@@ -132,8 +131,7 @@ const HordeDropdown = () => {
         <div className="mt-[8px]">
           -{' '}
           <strong>
-            {hordePerformance.queued_forms &&
-            !isNaN(hordePerformance.queued_forms)
+            {!isNaN(hordePerformance.queued_forms)
               ? Math.floor(hordePerformance.queued_forms.toLocaleString())
               : ''}
           </strong>{' '}
@@ -151,8 +149,7 @@ const HordeDropdown = () => {
           </strong>{' '}
           image requests per minute (
           <strong>
-            {hordePerformance.past_minute_megapixelsteps &&
-            !isNaN(hordePerformance.past_minute_megapixelsteps)
+            {!isNaN(hordePerformance.past_minute_megapixelsteps)
               ? Math.floor(
                   hordePerformance.past_minute_megapixelsteps
                 ).toLocaleString()
