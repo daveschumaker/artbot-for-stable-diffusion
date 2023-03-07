@@ -104,6 +104,12 @@ const Changelog = () => {
               minutes ahead of time and give you a chance to save your work.
               Stay tuned.
             </StyledLi>
+            <StyledLi>
+              2023.03.06 - The pending items page sucks! It really sucks! I am
+              definitely encountering issues myself (and seeing tons of Chrome
+              out-of-memory error logs come through). I will revisit this whole
+              thing soon.
+            </StyledLi>
           </StyledUl>
         </Section>
       </Panel>
