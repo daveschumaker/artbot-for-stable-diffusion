@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Switch from 'react-switch'
 import { useStore } from 'statery'
 import styled from 'styled-components'
@@ -35,6 +35,7 @@ import ExternalLinkIcon from '../icons/ExternalLinkIcon'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
 import MaxWidth from '../UI/MaxWidth'
 import AlertDialogBox from '../UI/AlertDialogBox'
+import { generateThumbnails } from '../../utils/db'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -97,6 +98,10 @@ const SettingsPage = () => {
 
   const { worker_ids, workers } = userStore
   const { showBetaOption } = appStore
+
+  const [processState, setProcessState] = useState('')
+  const [totalToProcess, setTotalToProcess] = useState(0)
+  const [currentProcessIdx, setCurrentProcessIdx] = useState(0)
 
   const [componentState, setComponentState] = useComponentState({
     allowNsfwImages: false,
@@ -808,6 +813,46 @@ const SettingsPage = () => {
                     }}
                     checked={componentState.enableGallerySwipe}
                   />
+                </MaxWidth>
+              </Section>
+              <Section>
+                <SubSectionTitle>
+                  <strong>Generate thumbnails?</strong>
+                  <div className="block text-xs mb-2 mt-2 w-full">
+                    ArtBot recently implemented image thumbnails to help the
+                    image gallery become more performant, especially on mobile
+                    devices. Older images, created before 2023.03.06, will not
+                    have image thumbnails. If you wish, you may manually kick
+                    off this process.
+                  </div>
+                  <div className="block text-xs mb-2 w-full">
+                    <strong>WARNING:</strong> Depending on the number of images,
+                    this could take some time. (On my iPhone 14 Pro, it took
+                    about 100 seconds to process 3,000 images)
+                  </div>
+                  {totalToProcess > 0 && (
+                    <div className="block text-xs mb-2 w-full">
+                      {processState} {currentProcessIdx} of {totalToProcess}{' '}
+                      {processState === 'Analyzing' ? 'images' : 'thumbnails'}.
+                    </div>
+                  )}
+                </SubSectionTitle>
+                <MaxWidth
+                  // @ts-ignore
+                  maxWidth="240"
+                >
+                  <Button
+                    onClick={() => {
+                      // @ts-ignore
+                      generateThumbnails(({ total, current, state }) => {
+                        setTotalToProcess(total)
+                        setCurrentProcessIdx(current)
+                        setProcessState(state)
+                      })
+                    }}
+                  >
+                    Generate thumbnails
+                  </Button>
                 </MaxWidth>
               </Section>
               <Section>

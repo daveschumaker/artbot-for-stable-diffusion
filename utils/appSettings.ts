@@ -8,7 +8,7 @@ import PromptInputSettings from '../models/PromptInputSettings'
 // @ts-ignore
 import { trackNewSession } from './analytics'
 import { isAppActive } from './appUtils'
-import { deleteStalePending } from './db'
+import { deleteStalePending, generateThumbnails } from './db'
 
 export const updateShowGrid = () => {
   if (localStorage.getItem('showGrid') === 'true') {

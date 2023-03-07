@@ -133,6 +133,14 @@ const Changelog = () => {
             current load on the Horde, as well as a quick status of any running
             worker.
           </StyledLi>
+          <StyledLi>
+            Automatically generate and process thumbnails for all new images.
+            This will keep the image gallery much more performant, especially on
+            mobile devices. Thanks to Litnine on Discord for raising awarness
+            about this issue! There is also a setting on the{' '}
+            <Linker href="/settings?panel=prefs">ArtBot settings panel</Linker>{' '}
+            to manually process thumbnails for all previously created images.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

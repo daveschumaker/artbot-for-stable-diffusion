@@ -4,7 +4,7 @@ import Image from 'next/image'
 
 interface ImageDetails {
   base64String: string
-  thumbnail: string
+  thumbnail?: string
   prompt?: string
 }
 

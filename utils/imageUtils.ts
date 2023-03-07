@@ -746,12 +746,27 @@ export const generateBase64Thumbnail = async (
   jobId: string
 ) => {
   let fullDataString: any
-  const file = await dataUrlToFile(base64, `${jobId}.webp`)
+  let file: any
+
+  try {
+    file = await dataUrlToFile(base64, `${jobId}.webp`)
+  } catch (err) {
+    console.log(`dataUrlToFile`, dataUrlToFile)
+    return
+  }
+
   const { readAndCompressImage } = await import('browser-image-resizer')
-  let resizedImage = await readAndCompressImage(file, {
-    maxWidth: 320,
-    quality: 0.9
-  })
+
+  let resizedImage: any
+  try {
+    resizedImage = await readAndCompressImage(file, {
+      maxWidth: 320,
+      quality: 0.9
+    })
+  } catch (err) {
+    console.log(`readAndCompressImage`, err)
+    return
+  }
 
   if (resizedImage) {
     fullDataString = await getBase64(resizedImage)

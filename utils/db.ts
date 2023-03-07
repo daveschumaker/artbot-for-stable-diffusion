@@ -1,6 +1,7 @@
 import Dexie from 'dexie'
 import { setUnsupportedBrowser } from '../store/appStore'
 import { JobStatus } from '../types'
+import { generateBase64Thumbnail } from './imageUtils'
 import { SourceProcessing } from './promptUtils'
 
 export class MySubClassedDexie extends Dexie {
@@ -29,6 +30,56 @@ export class MySubClassedDexie extends Dexie {
 }
 
 export const db = new MySubClassedDexie()
+
+export const generateThumbnails = async (cb = ({}: {}) => {}) => {
+  let total = await countCompletedJobs()
+  let current = 0
+
+  cb({
+    total,
+    current
+  })
+
+  let imageIds: Array<number> = []
+
+  await db.completed.each((record: any) => {
+    current++
+
+    if (!record.thumbnail) {
+      imageIds.push(record.id)
+    }
+
+    cb({
+      total,
+      current,
+      state: 'Analyzing'
+    })
+  })
+
+  current = 0
+  total = imageIds.length
+  for (const id in imageIds) {
+    current++
+    cb({
+      total,
+      current,
+      state: 'Processing'
+    })
+    const record = await db.completed.where('id').equals(imageIds[id]).first()
+
+    if (record.thumbnail) {
+      continue
+    } else {
+      const thumbnail = await generateBase64Thumbnail(
+        record.base64String,
+        record.jobId
+      )
+
+      console.log(`Updating thumbnail for image id: ${record.id}`)
+      await db.completed.where('id').equals(imageIds[id]).modify({ thumbnail })
+    }
+  }
+}
 
 export const setDefaultPrompt = async (prompt: string) => {
   const result = (await getDefaultPrompt()) || []
