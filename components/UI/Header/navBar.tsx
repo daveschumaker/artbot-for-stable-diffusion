@@ -43,16 +43,11 @@ const NavBar = () => {
 
   let isActive = false
   let isPaused = false
-  let isOffline = false
 
   if (Object.keys(workers).length > 0) {
     {
       Object.keys(workers).forEach((workerId) => {
         const { maintenance_mode, online } = workers[workerId]
-        if (!online) {
-          isOffline = true
-        }
-
         if (online && maintenance_mode) {
           isPaused = true
         }
