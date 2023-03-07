@@ -758,7 +758,7 @@ export const generateBase64Thumbnail = async (
   let file: any
 
   try {
-    file = await dataUrlToFile(base64, `${jobId}.webp`)
+    file = dataUrlToFile(base64, `${jobId}.webp`)
   } catch (err) {
     console.log(`dataUrlToFile`, dataUrlToFile)
     return

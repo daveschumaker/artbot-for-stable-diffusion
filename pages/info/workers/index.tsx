@@ -3,7 +3,6 @@ import Head from 'next/head'
 import SelectComponent from '../../../components/UI/Select'
 import WorkerInfo from '../../../components/WorkerInfo'
 import Row from '../../../components/Row'
-import ServerMessage from '../../../components/ServerMessage'
 import PageTitle from '../../../components/UI/PageTitle'
 import useComponentState from '../../../hooks/useComponentState'
 import { useEffectOnce } from '../../../hooks/useEffectOnce'
@@ -173,7 +172,6 @@ const WorkerInfoPage = () => {
         <div className="flex flex-row justify-end w-1/2 items-start h-[38px] relative gap-2">
           <InfoPageMenuButton title="All workers" />
         </div>
-        <ServerMessage />
       </Row>
 
       <>

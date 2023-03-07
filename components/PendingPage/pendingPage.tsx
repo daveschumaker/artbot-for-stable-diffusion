@@ -19,7 +19,6 @@ import {
 } from '../../utils/db'
 import AdContainer from '../AdContainer'
 import PendingItem from '../PendingItemV2'
-import ServerMessage from '../ServerMessage'
 import Linker from '../UI/Linker'
 import PageTitle from '../UI/PageTitle'
 import TextButton from '../UI/TextButton'
@@ -169,7 +168,6 @@ const PendingPage = () => {
         />
       )}
       <PageTitle>Your pending images</PageTitle>
-      <ServerMessage />
       {pendingImages.length > 0 ? (
         <div className="flex flex-row gap-2 mb-4">
           <TextButton onClick={() => setFilter('all')}>

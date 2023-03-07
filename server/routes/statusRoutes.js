@@ -1,6 +1,6 @@
 const buildInfo = require('../../build_info.json')
 const { build } = buildInfo
-const { getServerSettings } = require('../cache/serverStatus.js')
+const { getClusterSettings } = require('../cache/serverStatus.js')
 
 const express = require('express')
 const {
@@ -48,14 +48,9 @@ router.post('/new-image', async (req, res) => {
   })
 })
 
-router.get('/message', async (req, res) => {
-  const { message, enrollPct, showBetaOption } = getServerSettings()
-
+router.get('/cluster-settings', async (req, res) => {
   res.send({
-    success: true,
-    message,
-    enrollPct,
-    showBetaOption
+    ...getClusterSettings()
   })
 })
 

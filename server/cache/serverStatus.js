@@ -1,49 +1,43 @@
 const fetch = require('node-fetch')
 
-const cache = {
-  message: '',
-  enrollPct: 0,
-  showBetaOption: false
-}
+let clusterSettings = {}
 
-const getServerSettings = () => {
+const getClusterSettings = () => {
   return {
-    message: cache.message,
-    enrollPct: cache.enrollPct,
-    showBetaOption: cache.showBetaOption
+    ...clusterSettings
   }
 }
 
-const fetchServerMessage = async () => {
-  if (!process.env.MESSAGE_SERVICE) {
+const fetchClusterSettings = async () => {
+  if (!process.env.CLUSTER_SETTINGS_SERVICE) {
     return
   }
 
   try {
-    const resp = await fetch(`${process.env.MESSAGE_SERVICE}`, {
+    const resp = await fetch(`${process.env.CLUSTER_SETTINGS_SERVICE}`, {
       method: 'GET'
     })
-    const data = (await resp.json()) || {}
+    const data = await resp.json()
 
     if (typeof data === 'object' && !Array.isArray(data) && data !== null) {
-      cache.message = data.message
-      cache.enrollPct = data.enrollPct || 0
-      cache.showBetaOption = data.showBetaOption || false
+      clusterSettings = { ...data }
     }
-  } catch (err) {}
+  } catch (err) {
+    // If cluster settings are offline, do nothing, as we don't want to overwrite existing data.
+  }
 }
 
 const initServerStatusFetch = async () => {
   try {
-    fetchServerMessage()
+    fetchClusterSettings()
 
     setInterval(() => {
-      fetchServerMessage()
+      fetchClusterSettings()
     }, 10000)
   } catch (err) {}
 }
 
 module.exports = {
-  getServerSettings,
+  getClusterSettings,
   initServerStatusFetch
 }

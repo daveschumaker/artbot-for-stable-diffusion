@@ -4,16 +4,18 @@ import Panel from '../UI/Panel'
 
 const ServerMessage = () => {
   const appState = useStore(appInfoStore)
-  const { serverMessage } = appState
+  const { clusterSettings } = appState
+  const { serverMessage } = clusterSettings
 
-  if (!serverMessage) {
+  if (!serverMessage || !serverMessage.title) {
     return null
   }
 
   return (
     <div className="mt-2 mb-4">
       <Panel>
-        <div dangerouslySetInnerHTML={{ __html: serverMessage }} />
+        <div className="font-[700] mb-2">{serverMessage.title}</div>
+        <div dangerouslySetInnerHTML={{ __html: serverMessage.content }} />
       </Panel>
     </div>
   )

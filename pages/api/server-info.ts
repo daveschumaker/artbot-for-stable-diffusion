@@ -4,9 +4,7 @@ import buildInfo from '../../build_info.json'
 type Data = {
   success: boolean
   build?: string
-  message?: string
-  enrollPct?: number
-  showBetaOption?: boolean
+  clusterSettings?: string
 }
 
 export default async function handler(
@@ -18,29 +16,28 @@ export default async function handler(
   }
 
   const { build } = buildInfo
-  let message = ''
-  let enrollPct = 0
-  let showBetaOption = false
+  let clusterSettings
 
   try {
     const resp = await fetch(
-      `http://localhost:${process.env.PORT}/artbot/api/v1/status/message`,
+      `http://localhost:${process.env.PORT}/artbot/api/v1/status/cluster-settings`,
       {
         method: 'GET'
       }
     )
 
-    const data = (await resp.json()) || {}
-    message = data.message
-    enrollPct = data.enrollPct
-    showBetaOption = data.showBetaOption
-  } catch (err) {}
+    const data = await resp.json()
+
+    if (typeof data === 'object' && !Array.isArray(data) && data !== null) {
+      clusterSettings = { ...data }
+    }
+  } catch (err) {
+    // If an error occurs, do nothing, as we don't want to overwrite existing settings.
+  }
 
   res.send({
     success: true,
     build,
-    message,
-    enrollPct,
-    showBetaOption
+    clusterSettings
   })
 }

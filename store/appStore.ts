@@ -1,4 +1,5 @@
 import { makeStore } from 'statery'
+import { IClusterSettings } from './clusterSettings'
 
 interface AppStore {
   buildId: string
@@ -11,6 +12,7 @@ interface AppStore {
   showAppMenu: boolean
   unsupportedBrowser: boolean
   hordePerformance: object
+  clusterSettings: IClusterSettings
 }
 
 export const appInfoStore = makeStore<AppStore>({
@@ -23,8 +25,17 @@ export const appInfoStore = makeStore<AppStore>({
   stableHordeApiOnline: true,
   showAppMenu: false,
   unsupportedBrowser: false,
-  hordePerformance: {}
+  hordePerformance: {},
+  clusterSettings: {
+    forceReloadOnServerUpdate: true
+  }
 })
+
+export const setClusterSettings = (obj: IClusterSettings) => {
+  appInfoStore.set(() => ({
+    clusterSettings: obj
+  }))
+}
 
 export const setHordePerformance = (obj: object) => {
   appInfoStore.set(() => ({

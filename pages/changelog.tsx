@@ -115,7 +115,7 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
-        <SubSectionTitle>2023.03.05</SubSectionTitle>
+        <SubSectionTitle>2023.03.06</SubSectionTitle>
         <StyledUl>
           <StyledLi>
             I really, really, really fucked up image ratings. Awhile back
@@ -146,6 +146,18 @@ const Changelog = () => {
             about this issue! There is also a setting on the{' '}
             <Linker href="/settings?panel=prefs">ArtBot settings panel</Linker>{' '}
             to manually process thumbnails for all previously created images.
+          </StyledLi>
+          <StyledLi>
+            Thumbnail logic isn&apos;t working in certain instances. Added some
+            debugging logic to investigate. (Of course, it works fine on my
+            local machine, but the moment I push it live...)
+          </StyledLi>
+          <StyledLi>
+            I setup a way to post global messages to ArtBot without having to
+            push server updates. Going forward, I should be able to easily do
+            things like post notifications if there are network issues or warn
+            everyone about incoming server updates and give you a chance to save
+            your work.
           </StyledLi>
         </StyledUl>
       </Section>

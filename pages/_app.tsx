@@ -16,7 +16,7 @@ import '../styles/globals.css'
 
 import { initDb } from '../utils/db'
 import { useCallback, useEffect, useState } from 'react'
-import { appInfoStore, setBuildId, setServerMessage } from '../store/appStore'
+import { appInfoStore, setBuildId, setClusterSettings } from '../store/appStore'
 import { useStore } from 'statery'
 import ServerUpdateModal from '../components/ServerUpdateModal'
 import MobileFooter from '../components/MobileFooter'
@@ -28,6 +28,7 @@ import { useWindowSize } from '../hooks/useWindowSize'
 import Menu from '../components/Menu'
 import Linker from '../components/UI/Linker'
 import ErrorBoundary from '../components/ErrorBoundary'
+import ServerMessage from '../components/ServerMessage'
 
 initAppSettings()
 initDb()
@@ -61,55 +62,25 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
       waitingForServerInfoRes = true
       const res = await fetch('/artbot/api/server-info')
       const data = await res.json()
-      const {
-        build,
-        message = ''
-        // enrollPct = 0,
-        // showBetaOption = false
-      } = data
+      const { build, clusterSettings } = data
       waitingForServerInfoRes = false
 
-      // If user has manually opted in or out of beta
-      // then ignore setting A/B test params.
-      // const userBetaOption =
-      //   localStorage.getItem('useBeta') === 'userTrue' ||
-      //   localStorage.getItem('useBeta') === 'userFalse'
-
-      // if (!userBetaOption) {
-      //   if (Number(localStorage.getItem('enrollPct')) !== enrollPct) {
-      //     localStorage.setItem('enrollPct', enrollPct)
-
-      //     const enrollValue = String(Math.random())
-      //     localStorage.setItem('enrollValue', enrollValue)
-
-      //     if (Number(enrollValue) <= enrollPct) {
-      //       localStorage.setItem('useBeta', 'true')
-      //     }
-      //   }
-
-      //   if (!localStorage.getItem('enrollPct') || enrollPct === 0) {
-      //     localStorage.removeItem('enrollPct')
-      //     localStorage.removeItem('enrollValue')
-      //     localStorage.setItem('useBeta', 'false')
-      //   }
-      // }
-
-      // if (!showBetaOption) {
-      //   localStorage.removeItem('enrollPct')
-      //   localStorage.removeItem('enrollValue')
-      //   localStorage.removeItem('useBeta')
-      //   setShowBetaOption(false)
-      // } else {
-      //   setShowBetaOption(true)
-      // }
-
-      setServerMessage(message)
+      if (clusterSettings) {
+        setClusterSettings(clusterSettings)
+      }
 
       if (!buildId) {
         setBuildId(build)
       } else if (buildId !== build) {
         setBuildId(build)
-        setShowServerUpdateModal(true)
+
+        if (appInfoStore.state.clusterSettings.forceReloadOnServerUpdate) {
+          setShowServerUpdateModal(true)
+        } else {
+          console.log(
+            'Application was just updated in the background. Reload this page for the latest code.'
+          )
+        }
       }
     } catch (err) {
       console.log(`Unable to fetch latest server-info. Connectivity issue?`)
@@ -228,6 +199,7 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
             style={{ marginTop: `calc(env(safe-area-inset-top))` }}
           />
           {showServerUpdateModal && <ServerUpdateModal />}
+          <ServerMessage />
           {/* <NavBar /> */}
           {unsupportedBrowser && (
             <div className="text-sm border-2 border-rose-600 py-1 px-2 rounded mb-2 text-red-500">

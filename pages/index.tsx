@@ -34,7 +34,6 @@ import CreateImageRequest from '../models/CreateImageRequest'
 import ShareLinkDetails from '../models/ShareableLink'
 import Head from 'next/head'
 import { setModelDetails } from '../store/modelStore'
-import ServerMessage from '../components/ServerMessage'
 import StylesDropdown from '../components/CreatePage/StylesDropdown'
 import { useStore } from 'statery'
 import { appInfoStore } from '../store/appStore'
@@ -619,7 +618,6 @@ const Home: NextPage = ({
           </MenuButton>
         </div>
       </div>
-      <ServerMessage />
       {modelDetails[input?.models[0]]?.trigger && (
         <TriggerDropdown
           setInput={setInput}

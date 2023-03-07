@@ -3,7 +3,6 @@ import { useRouter } from 'next/router'
 import InfoPageMenuButton from '../../../components/InfoPage/Menu'
 import ModelInfoPage from '../../../components/ModelInfoPage'
 import Row from '../../../components/Row'
-import ServerMessage from '../../../components/ServerMessage'
 import PageTitle from '../../../components/UI/PageTitle'
 
 export async function getServerSideProps() {
@@ -78,7 +77,6 @@ const InfoPage = ({ availableModels, modelDetails }: any) => {
         <div className="flex flex-row justify-end w-1/2 items-start h-[38px] relative gap-2">
           <InfoPageMenuButton title={getMenuTitle()} />
         </div>
-        <ServerMessage />
       </Row>
       <ModelInfoPage
         availableModels={availableModels}
