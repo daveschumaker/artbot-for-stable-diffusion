@@ -97,14 +97,6 @@ const Changelog = () => {
               and this is not ideal at the moment.)
             </StyledLi>
             <StyledLi>
-              2023.03.01 - I&apos;ve heard the random &quot;server
-              updated!&quot; popups that you can&apos;t escape from happen at
-              the most inopportune times. I am going to investigate a way where
-              I can message that server updates are incoming around 5 or 10
-              minutes ahead of time and give you a chance to save your work.
-              Stay tuned.
-            </StyledLi>
-            <StyledLi>
               2023.03.06 - The pending items page sucks! It really sucks! I am
               definitely encountering issues myself (and seeing tons of Chrome
               out-of-memory error logs come through). I will revisit this whole
@@ -114,6 +106,15 @@ const Changelog = () => {
         </Section>
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
+      <Section>
+        <SubSectionTitle>2023.03.01</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            UI: Remove persistant red dot for offline workers. Thanks to
+            Gigachad on Discord for the suggestion.
+          </StyledLi>
+        </StyledUl>
+      </Section>
       <Section>
         <SubSectionTitle>2023.03.06</SubSectionTitle>
         <StyledUl>

@@ -207,7 +207,7 @@ const NavBar = () => {
           <NavigationMenu.Trigger
             className={clsx(styles.NavigationMenuTrigger, styles.AnalyticsIcon)}
           >
-            {(isActive || isPaused || isOffline) && (
+            {(isActive || isPaused) && (
               <PointIcon
                 className={styles.WorkerStatus}
                 fill={workerBadgeColor}
