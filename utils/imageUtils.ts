@@ -732,13 +732,22 @@ export const countImagesToGenerate = (imageParams: ICountImages) => {
   return imageCount
 }
 
-export const dataUrlToFile = async (
+export const dataUrlToFile = (
   dataUrl: string,
-  fileName: string
-): Promise<File> => {
-  const res: Response = await fetch(`data:image/webp;base64,` + dataUrl)
-  const blob: Blob = await res.blob()
-  return new File([blob], fileName, { type: 'image/webp' })
+  filename: string
+): File | undefined => {
+  dataUrl = `data:image/webp;base64,` + dataUrl
+  const arr = dataUrl.split(',')
+  if (arr.length < 2) {
+    return undefined
+  }
+  const mimeArr = arr[0].match(/:(.*?);/)
+  if (!mimeArr || mimeArr.length < 2) {
+    return undefined
+  }
+  const mime = mimeArr[1]
+  const buff = Buffer.from(arr[1], 'base64')
+  return new File([buff], filename, { type: mime })
 }
 
 export const generateBase64Thumbnail = async (
