@@ -1,6 +1,8 @@
+import memoizee from 'memoizee'
 import { IWorker, setWorkers, userInfoStore } from '../store/userStore'
 import { clientHeader, getApiHostServer } from '../utils/appUtils'
-const fetchMyWorkers = async () => {
+
+const _fetchMyWorkers = async () => {
   const { worker_ids } = userInfoStore.state
 
   if (!worker_ids || worker_ids.length === 0) {
@@ -60,5 +62,8 @@ const fetchMyWorkers = async () => {
     }
   }
 }
+export const fetchMyWorkers = memoizee(_fetchMyWorkers, {
+  maxAge: 5000
+})
 
 export default fetchMyWorkers

@@ -403,7 +403,7 @@ export const _fetchCompletedJobsById = async (ids = []) => {
     .toArray()
 }
 export const fetchCompletedJobsById = memoize(_fetchCompletedJobsById, {
-  maxAge: 30000
+  maxAge: 2500
 })
 
 export const fetchRelatedImages = async (

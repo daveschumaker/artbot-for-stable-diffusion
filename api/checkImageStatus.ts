@@ -1,3 +1,4 @@
+import memoizee from 'memoizee'
 import { clientHeader, getApiHostServer } from '../utils/appUtils'
 
 interface CheckResponse {
@@ -28,7 +29,7 @@ const apiCooldown = () => {
   }, 10000)
 }
 
-export const checkImageStatus = async (
+export const _checkImageStatus = async (
   jobId: string
 ): Promise<CheckResponse> => {
   if (isCoolingOff) {
@@ -83,3 +84,6 @@ export const checkImageStatus = async (
     }
   }
 }
+export const checkImageStatus = memoizee(_checkImageStatus, {
+  maxAge: 5000
+})

@@ -410,7 +410,7 @@ const PendingItem = memo(
               )}
               {jobDetails.jobStatus === JobStatus.Error && (
                 <div className="font-mono text-xs mt-2 text-red-400">
-                  Created: {new Date(jobDetails.timestamp).toLocaleString()}
+                  Created: {new Date(jobDetails.jobTimestamp).toLocaleString()}
                 </div>
               )}
             </div>

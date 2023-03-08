@@ -1,5 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useCallback, useEffect, useState } from 'react'
+import LazyLoad from 'react-lazyload'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
 import AppSettings from '../../models/AppSettings'
 import {
@@ -259,19 +260,20 @@ const PendingPage = () => {
       {sorted.length > 0 &&
         sorted.map((job: { jobId: string; prompt: string }) => {
           return (
-            <PendingItem
-              handleCloseClick={() => {
-                onClosePanel(job.jobId)
-              }}
-              //@ts-ignore
-              onImageClick={setShowImageModal}
-              // onHideClick={}
-              //@ts-ignore
-              jobDetails={job}
-              //@ts-ignore
-              jobId={job.jobId}
-              key={job.jobId}
-            />
+            <LazyLoad key={job.jobId} height={236}>
+              <PendingItem
+                handleCloseClick={() => {
+                  onClosePanel(job.jobId)
+                }}
+                //@ts-ignore
+                onImageClick={setShowImageModal}
+                // onHideClick={}
+                //@ts-ignore
+                jobDetails={job}
+                //@ts-ignore
+                jobId={job.jobId}
+              />
+            </LazyLoad>
           )
         })}
     </div>

@@ -23,7 +23,7 @@ const _updateJobDetails = async () => {
   completedJobsV2 = [...sortedJobs]
   ImageJobs.set('completed', [...completedJobIds])
 }
-export const updateJobDetails = memoize(_updateJobDetails, { maxAge: 10000 })
+export const updateJobDetails = memoize(_updateJobDetails, { maxAge: 2500 })
 
 export const initRecentJobs = async () => {
   if (Array.isArray(ImageJobs.get('completed'))) {
@@ -42,12 +42,12 @@ const _setCompletedJob = async (jobDetails: { jobId: string }) => {
     updateJobDetails()
   }
 }
-export const setCompletedJob = memoize(_setCompletedJob, { maxAge: 10000 })
+export const setCompletedJob = memoize(_setCompletedJob, { maxAge: 2500 })
 
 export const _getCompletedJobs = () => {
   return [...completedJobsV2]
 }
-export const getCompletedJobs = memoize(_getCompletedJobs, { maxAge: 5000 })
+export const getCompletedJobs = memoize(_getCompletedJobs, { maxAge: 2500 })
 
 export const clearCompletedJob = async (jobId: string) => {
   completedJobIds = completedJobIds.filter((id) => {
