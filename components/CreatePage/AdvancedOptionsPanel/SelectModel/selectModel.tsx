@@ -110,7 +110,9 @@ const SelectModel = ({ input, setInput, modelerOptions }: IProps) => {
           maxWidth="240"
           className="mt-2"
         >
-          Example:
+          <div className="mb-2 text-sm">
+            Example output using {input.models[0]}
+          </div>
           <Image
             src={modelDetails[input.models[0]]?.showcases[0]}
             alt="Model example"

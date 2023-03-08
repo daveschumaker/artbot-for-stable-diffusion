@@ -92,3 +92,9 @@ export const isValidHttpUrl = (string: string = '') => {
   }
   return url.protocol === 'http:' || url.protocol === 'https:'
 }
+
+export const validatePromptSafety = (prompt: string) => {
+  prompt = prompt.toLowerCase()
+  const regex = /girl|boy|student|young|lit[tl]le|\blil\b|small|tiny/gm
+  return prompt.match(regex)
+}

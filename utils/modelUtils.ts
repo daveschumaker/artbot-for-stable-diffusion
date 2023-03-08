@@ -16,8 +16,10 @@ export const validModelsArray = ({
     source_mask: '',
     source_processing: SourceProcessing.Prompt
   },
-  sort = 'workers'
+  sort = 'workers',
+  filterNsfw = false
 } = {}) => {
+  const modelDetails = modelInfoStore.state.modelDetails
   const img2img =
     imageParams.source_processing === SourceProcessing.Img2Img ||
     imageParams.source_processing === SourceProcessing.InPainting
@@ -28,6 +30,11 @@ export const validModelsArray = ({
     JSON.parse(JSON.stringify(modelInfoStore.state.availableModels)) || {}
 
   for (const key in availableModels) {
+    const modelName = availableModels[key].name
+    if (filterNsfw && modelDetails[modelName]?.nsfw === true) {
+      continue
+    }
+
     if (
       availableModels[key].name === 'stable_diffusion_inpainting' &&
       inpainting === false

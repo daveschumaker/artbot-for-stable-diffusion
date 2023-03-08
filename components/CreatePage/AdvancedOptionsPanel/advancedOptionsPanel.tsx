@@ -82,6 +82,7 @@ const AdvancedOptionsPanel = ({
   const modelState = useStore(modelInfoStore)
   const { availableModels, availableModelNames } = modelState
 
+  const [filterNsfwModels, setFilterNsfwModels] = useState(false)
   const userState = useStore(userInfoStore)
   const { loggedIn } = userState
   const [errorMessage, setErrorMessage, hasError] = useErrorMessage()
@@ -100,7 +101,8 @@ const AdvancedOptionsPanel = ({
   })[0]
 
   const modelerOptions = (imageParams: any) => {
-    const modelsArray = validModelsArray({ imageParams }) || []
+    const modelsArray =
+      validModelsArray({ imageParams, filterNsfw: filterNsfwModels }) || []
     modelsArray.push({
       name: 'random',
       value: 'random',
@@ -1246,6 +1248,21 @@ const AdvancedOptionsPanel = ({
           </MaxWidth>
         </Section>
       ) : null}
+      <div className="mt-2 flex flex-row items-center gap-2 text-[700]">
+        Filter out NSFW models?{' '}
+        <Switch
+          checked={filterNsfwModels}
+          onChange={() => {
+            if (filterNsfwModels) {
+              AppSettings.set('filterNsfwModels', false)
+              setFilterNsfwModels(false)
+            } else {
+              AppSettings.set('filterNsfwModels', true)
+              setFilterNsfwModels(true)
+            }
+          }}
+        />
+      </div>
       {showMultiModelSelect ? (
         <Section>
           <SubSectionTitle>
@@ -1299,7 +1316,7 @@ const AdvancedOptionsPanel = ({
           <SubSectionTitle>
             <>
               <TextTooltipRow>
-                Use all available models ({componentState.totalModelsCount})
+                Use all available models ({modelerOptions(input).length - 1})
                 <Tooltip left="-140" width="240px">
                   Automatically generate an image for each model currently
                   available on Stable Horde

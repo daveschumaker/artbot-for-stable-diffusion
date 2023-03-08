@@ -57,6 +57,8 @@ import styles from '../styles/index.module.css'
 import TriggerDropdown from '../components/CreatePage/TriggerDropdown'
 import DefaultPromptInput from '../models/DefaultPromptInput'
 import { logDataForDebugging } from '../utils/debugTools'
+import { validatePromptSafety } from '../utils/validationUtils'
+import AlertTriangleIcon from '../components/icons/AlertTriangle'
 
 interface InputTarget {
   name: string
@@ -187,6 +189,7 @@ const Home: NextPage = ({
     showTriggerWordsModal: false
   })
 
+  const [flaggedPromptError, setFlaggedPromptError] = useState(false)
   const [showPromptHistory, setShowPromptHistory] = useState(false)
   const [hasValidationError, setHasValidationError] = useState(false)
   const [pending, setPending] = useState(false)
@@ -444,6 +447,25 @@ const Home: NextPage = ({
   }
 
   useEffect(() => {
+    const promptFlagged = validatePromptSafety(input.prompt)
+    const hasNsfwModel =
+      input?.models?.filter((model: string) => {
+        if (!model) {
+          return false
+        }
+
+        return modelDetails[model].nsfw === true
+      }) || []
+
+    if (promptFlagged && !flaggedPromptError && hasNsfwModel.length > 0) {
+      setFlaggedPromptError(true)
+    }
+    if ((!promptFlagged && flaggedPromptError) || hasNsfwModel.length === 0) {
+      setFlaggedPromptError(false)
+    }
+  }, [input.prompt, input.models, flaggedPromptError, modelDetails])
+
+  useEffect(() => {
     watchBuild()
   }, [watchBuild])
 
@@ -666,6 +688,18 @@ const Home: NextPage = ({
         />
       )}
       <div className={styles['sticky-text-area']}>
+        {flaggedPromptError && (
+          <div className="mb-4 bg-red-500 rounded-md px-4 py-2 font-[500] flex flex-row items-center gap-2 text-white">
+            <div>
+              <AlertTriangleIcon size={38} />
+            </div>
+            <div>
+              You are about to send a prompt that likely violates the Stable
+              Horde terms of use and may be rejected by the API. Please edit
+              your prompt or choose a non-NSFW model and try again.
+            </div>
+          </div>
+        )}
         <TextArea
           name="prompt"
           placeholder="Describe your image..."
