@@ -210,7 +210,7 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
 
       const skipSetErrorOnAll =
         status === 'UNKNOWN_ERROR' || status === 'QUESTIONABLE_PROMPT_ERROR'
-      if (imageParams.parentJobId && skipSetErrorOnAll) {
+      if (imageParams.parentJobId && !skipSetErrorOnAll) {
         await updateAllPendingJobs(imageParams.parentJobId, {
           jobStatus: JobStatus.Error,
           errorMessage: message
