@@ -86,7 +86,7 @@ const NegativePrompts = ({ open, handleClosePane, setInput }: Props) => {
 
   return (
     <SlidingPanel
-      className="mb-[200px] flex content-center"
+      className="mb-[200px] flex content-center bg-[#f2f2f2] dark:bg-[#222222]"
       overlayClassName="flex flex-row justify-center z-30"
       open={open}
       handleClosePane={handleClosePane}
@@ -98,11 +98,14 @@ const NegativePrompts = ({ open, handleClosePane, setInput }: Props) => {
             <CloseIcon width={2} />
           </StyledCloseButton>
         </FixedHeader>
-        <Content className="pt-[32px] mb-[100px]">
+        <Content className="pt-[32px] mb-[100px] bg-[#f2f2f2] dark:bg-[#222222]">
           {prompts.length === 0 && <div>Nothing here yet!</div>}
           {prompts.map((prompt: any, i) => {
             return (
-              <PromptContainer key={`negative_prompt_${i}`}>
+              <PromptContainer
+                key={`negative_prompt_${i}`}
+                className="text-[#222222] dark:text-[#f2f2f2]"
+              >
                 {prompt.prompt}
 
                 <div className="flex flex-row gap-2 place-content-between items-end">

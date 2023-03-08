@@ -116,6 +116,15 @@ const Changelog = () => {
             patience and continuing to work with me on this.
           </StyledLi>
           <StyledLi>Added some error logging around image ratings.</StyledLi>
+          <StyledLi>
+            Various performance improvements: memoize some expensive calls to
+            image database, memoize API calls to Stable Horde, and lazy load
+            items on the Pending Items page (fun fact -- I was working on
+            another performance issue where someone has 56K images they&apos;ve
+            generated with ArtBot! So, I queued up something like 2,000 images
+            and boy was the pending page slow. It crashed the tab in Chrome!
+            Hopefully, it will work much better for you now!)
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
