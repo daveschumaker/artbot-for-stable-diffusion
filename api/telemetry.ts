@@ -1,4 +1,5 @@
 import AppSettings from '../models/AppSettings'
+import { logToConsole } from '../utils/debugTools'
 import serverFetchWithTimeout from '../utils/serverFetchWithTimeout'
 
 interface Params {
@@ -29,15 +30,16 @@ export const trackEvent = async (obj: any = {}) => {
     obj.data = { ...obj.data, useBeta }
   }
 
+  // Add artbot_uuid for debugging flow
+  obj.data = { ...obj.data, artbot_uuid: AppSettings.get('artbot_uuid') }
+  logToConsole({ data: obj, name: 'Telemetry', debugKey: 'DEBUG_TELEMETRY' })
+
   if (
     typeof window !== 'undefined' &&
     window.location.host.indexOf('localhost') >= 0
   ) {
     return
   }
-
-  // Add artbot_uuid for debugging flow
-  obj.data = { ...obj.data, artbot_uuid: AppSettings.get('artbot_uuid') }
 
   // @ts-ignore
   // const { event } = obj

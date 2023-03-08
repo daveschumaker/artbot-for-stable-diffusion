@@ -2,6 +2,7 @@
 import Head from 'next/head'
 import { useCallback, useEffect } from 'react'
 import styled from 'styled-components'
+import { trackEvent } from '../api/telemetry'
 import ExternalLinkIcon from '../components/icons/ExternalLinkIcon'
 import SpinnerV2 from '../components/Spinner'
 import StarRating from '../components/StarRating/starRating'
@@ -11,6 +12,7 @@ import { ANON_API_KEY, RATING_API, RATING_QUALITY_MAP } from '../constants'
 import useComponentState from '../hooks/useComponentState'
 import { useEffectOnce } from '../hooks/useEffectOnce'
 import AppSettings from '../models/AppSettings'
+import { userInfoStore } from '../store/userStore'
 import { clientHeader } from '../utils/appUtils'
 
 const MAX_ERROR_COUNT = 30
@@ -114,6 +116,8 @@ const nextImageDetails = {
   imageId: null,
   imageUrl: null
 }
+
+let ratingTime = Date.now()
 
 const Rate = () => {
   const DRAMA_MODE = false // ratings provider has disabled rating system for all UIs for some reason.
@@ -301,12 +305,10 @@ const Rate = () => {
       rating: componentState.rateImage
     }
 
-    try {
-      const imageId =
-        activeImage === 1
-          ? componentState.imageOneId
-          : componentState.imageTwoId
+    const imageId =
+      activeImage === 1 ? componentState.imageOneId : componentState.imageTwoId
 
+    try {
       const res = await fetch(`${RATING_API}/api/v1/rating/${imageId}`, {
         method: 'POST',
         body: JSON.stringify(ratingData),
@@ -322,6 +324,21 @@ const Rate = () => {
       const { reward } = data
 
       if (reward) {
+        let newTime = Date.now()
+        let timeDiff = (newTime - ratingTime) / 1000
+        ratingTime = newTime
+
+        trackEvent({
+          event: 'RATED_EXTERNAL_IMAGE',
+          data: {
+            imageId: imageId,
+            loggedIn: userInfoStore.state.loggedIn,
+            timeBetweenSec: Math.round(timeDiff * 100) / 100,
+            rating: ratingData.rating,
+            artifacts: ratingData.artifacts
+          }
+        })
+
         let totalRated = AppSettings.get('imagesRated') || 0
         let kudosEarned = AppSettings.get('kudosEarnedByRating') || 0
         totalRated++
@@ -341,8 +358,17 @@ const Rate = () => {
 
         loadNextImage()
       }
-    } catch (err) {
+    } catch (err: any) {
       errorCount++
+      trackEvent({
+        event: 'RATE_IMAGE_ERROR',
+        data: {
+          imageId: imageId,
+          loggedIn: userInfoStore.state.loggedIn,
+          error: err.message
+        }
+      })
+
       setTimeout(() => {
         ratingPending = false
         rateImageRequest()
@@ -350,7 +376,8 @@ const Rate = () => {
     }
   }, [
     componentState.apiKey,
-    componentState.imageId,
+    componentState.imageOneId,
+    componentState.imageTwoId,
     componentState.rateImage,
     componentState.rateQuality,
     fetchImage,
@@ -374,6 +401,7 @@ const Rate = () => {
 
     imagePending = false
     ratingPending = false
+    ratingTime = Date.now()
   })
 
   useEffect(() => {

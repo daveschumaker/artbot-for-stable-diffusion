@@ -107,7 +107,7 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
-        <SubSectionTitle>2023.03.01</SubSectionTitle>
+        <SubSectionTitle>2023.03.07</SubSectionTitle>
         <StyledUl>
           <StyledLi>
             UI: Remove persistant red dot for offline workers. Thanks to
