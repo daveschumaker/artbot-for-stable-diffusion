@@ -29,6 +29,7 @@ import { useSwipeable } from 'react-swipeable'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
 import { kudosCost } from '../../utils/imageUtils'
 import RelatedImages from '../../components/ImagePage/RelatedImages'
+import { getRelatedImages } from './image.controller'
 
 const StyledImage = styled.img`
   box-shadow: 0 16px 38px -12px rgb(0 0 0 / 56%),
@@ -78,22 +79,8 @@ const ImagePage = () => {
   })
 
   const findRelatedImages = useCallback(async (parentJobId = '') => {
-    if (parentJobId) {
-      const foundImages = await fetchRelatedImages(parentJobId)
-      const sortedImages = foundImages.sort((a = {}, b = {}) => {
-        if (a.id < b.id) {
-          return 1
-        }
-
-        if (a.id > b.id) {
-          return -1
-        }
-
-        return 0
-      })
-
-      setRelatedImages(sortedImages)
-    }
+    const result = await getRelatedImages(parentJobId)
+    setRelatedImages(result)
   }, [])
 
   const fetchImageDetails = useCallback(async () => {
@@ -188,11 +175,14 @@ const ImagePage = () => {
       }
 
       if (e.key === 'ArrowLeft') {
-        if (currentIndex !== 0) {
+        if (currentIndex !== 0 && relatedImages[currentIndex - 1]?.jobId) {
           router.replace(`/image/${relatedImages[currentIndex - 1].jobId}`)
         }
       } else if (e.key === 'ArrowRight') {
-        if (currentIndex < maxLength - 1) {
+        if (
+          currentIndex < maxLength - 1 &&
+          relatedImages[currentIndex + 1]?.jobId
+        ) {
           router.replace(`/image/${relatedImages[currentIndex + 1].jobId}`)
         }
       } else if (e.keyCode === 70) {

@@ -1,10 +1,11 @@
+import memoize from 'memoizee'
 import ImageJobs from '../models/ImageJobs'
 import { fetchCompletedJobsById } from '../utils/db'
 
 let completedJobsV2: Array<any> = []
 let completedJobIds: Array<string> = []
 
-const updateJobDetails = async () => {
+const _updateJobDetails = async () => {
   // @ts-ignore
   const updatedJobs = await fetchCompletedJobsById({ ids: completedJobIds })
 
@@ -22,6 +23,7 @@ const updateJobDetails = async () => {
   completedJobsV2 = [...sortedJobs]
   ImageJobs.set('completed', [...completedJobIds])
 }
+export const updateJobDetails = memoize(_updateJobDetails, { maxAge: 10000 })
 
 export const initRecentJobs = async () => {
   if (Array.isArray(ImageJobs.get('completed'))) {
@@ -32,7 +34,7 @@ export const initRecentJobs = async () => {
   }
 }
 
-export const setCompletedJob = async (jobDetails: { jobId: string }) => {
+const _setCompletedJob = async (jobDetails: { jobId: string }) => {
   const exists = completedJobIds.indexOf(jobDetails.jobId) >= 0
 
   if (!exists) {
@@ -40,10 +42,12 @@ export const setCompletedJob = async (jobDetails: { jobId: string }) => {
     updateJobDetails()
   }
 }
+export const setCompletedJob = memoize(_setCompletedJob, { maxAge: 10000 })
 
-export const getCompletedJobs = () => {
+export const _getCompletedJobs = () => {
   return [...completedJobsV2]
 }
+export const getCompletedJobs = memoize(_getCompletedJobs, { maxAge: 5000 })
 
 export const clearCompletedJob = async (jobId: string) => {
   completedJobIds = completedJobIds.filter((id) => {

@@ -146,11 +146,11 @@ const PendingPage = () => {
     }
   })
 
-  useEffect(() => {
-    return () => {
-      resetCompleted()
-    }
-  }, [])
+  // useEffect(() => {
+  //   return () => {
+  //     resetCompleted()
+  //   }
+  // }, [])
 
   return (
     <div style={{ overflowAnchor: 'none' }}>

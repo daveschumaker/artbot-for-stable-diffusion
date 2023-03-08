@@ -1,4 +1,6 @@
 import Dexie from 'dexie'
+import memoize from 'memoizee'
+
 import { setUnsupportedBrowser } from '../store/appStore'
 import { JobStatus } from '../types'
 import { generateBase64Thumbnail } from './imageUtils'
@@ -148,7 +150,7 @@ export const deleteStalePending = async () => {
     ?.delete()
 }
 
-export const allPendingJobs = async (status?: string) => {
+const _allPendingJobs = async (status?: string) => {
   try {
     return await db?.pending
       ?.orderBy('id')
@@ -171,6 +173,7 @@ export const allPendingJobs = async (status?: string) => {
     return []
   }
 }
+export const allPendingJobs = memoize(_allPendingJobs, { maxAge: 10000 })
 
 // Useful for fetching date user first used site.
 export const fetchFirstCompletedJob = async () => {
@@ -181,13 +184,16 @@ export const fetchFirstCompletedJob = async () => {
   }
 }
 
-export const allCompletedJobs = async () => {
+export const _allCompletedJobs = async () => {
   try {
     return await db?.completed?.orderBy('id')?.toArray()
   } catch (err) {
     return []
   }
 }
+export const allCompletedJobs = memoize(_allCompletedJobs, {
+  maxAge: 10000
+})
 
 export const deleteDoneFromPending = async () => {
   const images = (await allPendingJobs(JobStatus.Done)) || []
@@ -200,7 +206,7 @@ export const bulkDeleteImages = async (images: Array<string>) => {
   return db.completed.bulkDelete(images)
 }
 
-export const getAllPendingJobsByStatus = async (
+export const _getAllPendingJobsByStatus = async (
   status: string,
   limit: number = 5
 ) => {
@@ -212,6 +218,9 @@ export const getAllPendingJobsByStatus = async (
     })
     .toArray()
 }
+export const getAllPendingJobsByStatus = memoize(_getAllPendingJobsByStatus, {
+  maxAge: 10000
+})
 
 export const countCompletedJobs = async () => {
   return await db?.completed?.orderBy('timestamp').count()
@@ -408,9 +417,12 @@ export const fetchRelatedImages = async (
     .toArray()
 }
 
-export const getPendingJobDetails = async (jobId: string) => {
+export const _getPendingJobDetails = async (jobId: string) => {
   return await db.pending.where('jobId').equals(jobId).first()
 }
+export const getPendingJobDetails = memoize(_getPendingJobDetails, {
+  maxAge: 10000
+})
 
 // @ts-ignore
 export const updateCompletedJob = async (tableId: number, updatedObject) => {
@@ -458,15 +470,21 @@ export const deleteAllPendingJobs = async () => {
     .delete()
 }
 
-export const getImageDetails = async (jobId: string) => {
+export const _getImageDetails = async (jobId: string) => {
   return await db.completed.where('jobId').equals(jobId).first()
 }
+export const getImageDetails = memoize(_getImageDetails, {
+  maxAge: 30000
+})
 
-export const getNextImageDetails = async (timestamp: number) => {
+export const _getNextImageDetails = async (timestamp: number) => {
   return await db.completed.where('timestamp').above(timestamp).limit(1).first()
 }
+export const getNextImageDetails = memoize(_getNextImageDetails, {
+  maxAge: 30000
+})
 
-export const getPrevImageDetails = async (timestamp: number) => {
+export const _getPrevImageDetails = async (timestamp: number) => {
   return await db.completed
     .where('timestamp')
     .below(timestamp)
@@ -474,6 +492,9 @@ export const getPrevImageDetails = async (timestamp: number) => {
     .limit(1)
     .first()
 }
+export const getPrevImageDetails = memoize(_getPrevImageDetails, {
+  maxAge: 30000
+})
 
 export const deleteCompletedImage = async (jobId: string) => {
   await db.completed.where('jobId').equals(jobId).delete()
