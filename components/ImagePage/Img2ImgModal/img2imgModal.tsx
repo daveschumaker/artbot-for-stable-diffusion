@@ -9,6 +9,7 @@ import {
 import useComponentState from '../../../hooks/useComponentState'
 import { useWindowSize } from '../../../hooks/useWindowSize'
 import { setBase64FromDraw } from '../../../store/canvasStore'
+import { setInputCache } from '../../../store/inputCache'
 import { SourceProcessing } from '../../../utils/promptUtils'
 import EyeIcon from '../../icons/EyeIcon'
 import { Button } from '../../UI/Button'
@@ -108,6 +109,18 @@ const Img2ImgModal = ({
                 height: imageDetails.height,
                 width: imageDetails.width
               })
+
+              const inputToSave = {
+                loadInputForControlNet: true,
+                prompt: imageDetails.prompt,
+                negative: imageDetails.negative,
+                models: imageDetails.models,
+                steps: imageDetails.steps,
+                cfg_scale: imageDetails.cfg_scale
+              }
+
+              setInputCache(inputToSave)
+
               router.push(`/controlnet?drawing=true`)
             }}
             width={isMobile ? '100%' : ''}

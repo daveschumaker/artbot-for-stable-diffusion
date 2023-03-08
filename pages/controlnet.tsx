@@ -54,6 +54,7 @@ import SquareIcon from '../components/icons/SquareIcon'
 import AppSettings from '../models/AppSettings'
 import CheckboxIcon from '../components/icons/CheckboxIcon'
 import { toast } from 'react-toastify'
+import { getInputCache } from '../store/inputCache'
 
 // Kind of a hacky way to persist output of image over the course of a session.
 let cachedImageDetails = {}
@@ -135,7 +136,7 @@ const ControlNet = () => {
   const handleImportDrawing = () => {
     const data = getBase64FromDraw()
 
-    setInput({
+    const inputToLoad = {
       height: nearestWholeMultiple(data.height),
       width: nearestWholeMultiple(data.width),
       orientationType: 'custom',
@@ -143,7 +144,36 @@ const ControlNet = () => {
       source_image: data.base64,
       source_mask: '',
       source_processing: SourceProcessing.Img2Img
-    })
+    }
+
+    const importInput = getInputCache() || {}
+
+    if (importInput.loadInputForControlNet && importInput.prompt) {
+      // @ts-ignore
+      inputToLoad.prompt = importInput.prompt
+    }
+
+    if (importInput.loadInputForControlNet && importInput.negative) {
+      // @ts-ignore
+      inputToLoad.negative = importInput.negative
+    }
+
+    if (importInput.loadInputForControlNet && importInput.models) {
+      // @ts-ignore
+      inputToLoad.models = importInput.models
+    }
+
+    if (importInput.loadInputForControlNet && importInput.steps) {
+      // @ts-ignore
+      inputToLoad.steps = importInput.steps
+    }
+
+    if (importInput.loadInputForControlNet && importInput.cfg_scale) {
+      // @ts-ignore
+      inputToLoad.cfg_scale = importInput.cfg_scale
+    }
+
+    setInput(inputToLoad)
   }
 
   const handleSaveImage = (data: any) => {
@@ -389,7 +419,7 @@ const ControlNet = () => {
             title="Clear current input"
             btnType="secondary"
             onClick={() => {
-              setInput({ ...new DefaultPromptInput() })
+              setInput({ prompt: '' })
             }}
           >
             <ArrowBarLeftIcon />
