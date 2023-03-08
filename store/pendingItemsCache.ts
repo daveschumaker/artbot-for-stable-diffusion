@@ -5,7 +5,7 @@ import { fetchCompletedJobsById } from '../utils/db'
 let completedJobsV2: Array<any> = []
 let completedJobIds: Array<string> = []
 
-const _updateJobDetails = async () => {
+const _updateJobDetails = async (jobId?: string) => {
   // @ts-ignore
   const updatedJobs = await fetchCompletedJobsById(completedJobIds)
 
@@ -22,6 +22,8 @@ const _updateJobDetails = async () => {
 
   completedJobsV2 = [...sortedJobs]
   ImageJobs.set('completed', [...completedJobIds])
+
+  return jobId || true
 }
 export const updateJobDetails = memoize(_updateJobDetails, { maxAge: 2500 })
 
@@ -39,12 +41,14 @@ const _setCompletedJob = async (jobDetails: { jobId: string }) => {
 
   if (!exists) {
     completedJobIds.push(jobDetails.jobId)
-    updateJobDetails()
+    updateJobDetails(jobDetails.jobId)
   }
 }
 export const setCompletedJob = memoize(_setCompletedJob, { maxAge: 2500 })
 
-export const _getCompletedJobs = () => {
+// Passsing in for memoization purposes.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+export const _getCompletedJobs = (jobId?: string) => {
   return [...completedJobsV2]
 }
 export const getCompletedJobs = memoize(_getCompletedJobs, { maxAge: 2500 })
@@ -54,7 +58,7 @@ export const clearCompletedJob = async (jobId: string) => {
     return id !== jobId
   })
 
-  await updateJobDetails()
+  await updateJobDetails(jobId)
 }
 
 export const resetCompleted = () => {

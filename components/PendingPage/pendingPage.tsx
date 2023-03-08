@@ -42,10 +42,10 @@ const PendingPage = () => {
 
       if (DONE) {
         await setCompletedJob(job)
-        setDone(getCompletedJobs())
+        setDone(getCompletedJobs(job.jobId))
 
         if (!showImageModal) {
-          setJobsForModal(getCompletedJobs())
+          setJobsForModal(getCompletedJobs(job.jobId))
         }
       }
     })
@@ -61,8 +61,8 @@ const PendingPage = () => {
 
   const onClosePanel = async (jobId: string) => {
     await clearCompletedJob(jobId)
-    setDone(getCompletedJobs())
-    setJobsForModal(getCompletedJobs())
+    setDone(getCompletedJobs(jobId))
+    setJobsForModal(getCompletedJobs(jobId))
   }
 
   const processPending = () => {
@@ -260,7 +260,7 @@ const PendingPage = () => {
       {sorted.length > 0 &&
         sorted.map((job: { jobId: string; prompt: string }) => {
           return (
-            <LazyLoad key={job.jobId} height={236}>
+            <LazyLoad key={job.jobId} height={236} offset={600}>
               <PendingItem
                 handleCloseClick={() => {
                   onClosePanel(job.jobId)
