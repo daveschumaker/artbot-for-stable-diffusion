@@ -9,6 +9,7 @@ import PromptInputSettings from '../models/PromptInputSettings'
 import { trackNewSession } from './analytics'
 import { isAppActive } from './appUtils'
 import { deleteStalePending } from './db'
+import { initWindowLogger } from './debugTools'
 
 export const updateShowGrid = () => {
   if (localStorage.getItem('showGrid') === 'true') {
@@ -96,6 +97,7 @@ export const initAppSettings = async () => {
     AppSettings.set('shareImagesExternally', true)
   }
 
+  initWindowLogger()
   fixLocalStorage()
   fetchHordePerformance()
   await fetchUserDetails(apikey)

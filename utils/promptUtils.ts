@@ -1,5 +1,6 @@
 import { PromptTypes } from '../types'
 import { db } from './db'
+import { logDataForDebugging } from './debugTools'
 import { validSampler } from './validationUtils'
 
 export enum SourceProcessing {
@@ -137,6 +138,10 @@ export const savePrompt = ({
 }
 
 export const loadEditPrompt = () => {
+  logDataForDebugging({
+    name: 'promtUtils#loadEditPrompt',
+    data: Object.assign({}, promptDetails)
+  })
   return Object.assign({}, promptDetails)
 }
 

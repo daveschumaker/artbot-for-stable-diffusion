@@ -857,6 +857,29 @@ const SettingsPage = () => {
               </Section>
               <Section>
                 <SubSectionTitle>
+                  <strong>Download debugging logs?</strong>
+                  <div className="block text-xs mb-2 mt-2 w-full">
+                    This is really only used in case you&apos;re encountering
+                    some issues with ArtBot and are asked to provide some
+                    additional logs.
+                  </div>
+                </SubSectionTitle>
+                <MaxWidth
+                  // @ts-ignore
+                  maxWidth="240"
+                >
+                  <Button
+                    onClick={() => {
+                      //@ts-ignore
+                      window.artbotDownloadLogs()
+                    }}
+                  >
+                    Download
+                  </Button>
+                </MaxWidth>
+              </Section>
+              <Section>
+                <SubSectionTitle>
                   <strong>Reset local storage?</strong>
                   <div className="block text-xs mb-2 mt-2 w-full">
                     In some instances, ArtBot settings have been corrupted. Use

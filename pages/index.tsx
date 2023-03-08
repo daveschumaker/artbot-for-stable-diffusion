@@ -56,6 +56,7 @@ import { userInfoStore } from '../store/userStore'
 import styles from '../styles/index.module.css'
 import TriggerDropdown from '../components/CreatePage/TriggerDropdown'
 import DefaultPromptInput from '../models/DefaultPromptInput'
+import { logDataForDebugging } from '../utils/debugTools'
 
 interface InputTarget {
   name: string
@@ -323,6 +324,41 @@ const Home: NextPage = ({
 
     savePromptHistory(input.prompt)
     clearSavedInputCache()
+    logDataForDebugging({
+      name: 'index#handle_submit.CreateImageRequest',
+      data: new CreateImageRequest(inputToSubmit)
+    })
+
+    //////// TODO: REMOVE ME when kudos debugging is complete:
+    const kudos = kudosCost({
+      width: input.width,
+      height: input.height,
+      steps: input.steps,
+      numImages: totalImagesRequested,
+      postProcessors: input.post_processing,
+      sampler: input.sampler,
+      control_type: input.source_image ? input.control_type : '',
+      prompt: input.prompt,
+      negativePrompt: input.negative
+    })
+
+    logDataForDebugging({
+      name: 'index#handle_submit.PredictedKudosCost',
+      data: {
+        totalCalculatedKudos: kudos,
+        totalImagesRequested: countImagesToGenerate(input),
+        width: input.width,
+        height: input.height,
+        steps: input.steps,
+        numImages: totalImagesRequested,
+        postProcessors: input.post_processing,
+        sampler: input.sampler,
+        control_type: input.source_image ? input.control_type : '',
+        prompt: input.prompt,
+        negativePrompt: input.negative
+      }
+    })
+
     await createImageJob(new CreateImageRequest(inputToSubmit))
 
     // Store parameters for potentially restoring inpainting data if needed
@@ -461,6 +497,10 @@ const Home: NextPage = ({
       !loadShortlink &&
       getInputCache()
     ) {
+      logDataForDebugging({
+        name: 'index#useEffectOnce.getInputCache',
+        data: { ...getInputCache() }
+      })
       setInput({ ...getInputCache() })
     } else if (editMode) {
       setInput({ ...loadEditPrompt() })

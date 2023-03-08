@@ -501,7 +501,7 @@ export const initDb = () => {
 
 if (typeof window !== 'undefined') {
   // @ts-ignore
-  window.artbotDb = db
+  window._artbotDb = db
   // @ts-ignore
-  window.artbotDb.getImageDetails = getImageDetails
+  window._artbotDb.getImageDetails = getImageDetails
 }

@@ -107,6 +107,18 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.03.08</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>A few minor updates at the moment:</StyledLi>
+          <StyledLi>
+            Added debugging logic to capture some issues around kudos cost
+            calculations.Thanks to Hinaloth and lili on Discord for their
+            patience and continuing to work with me on this.
+          </StyledLi>
+          <StyledLi>Added some error logging around image ratings.</StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.03.07</SubSectionTitle>
         <StyledUl>
           <StyledLi>
