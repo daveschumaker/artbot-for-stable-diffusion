@@ -173,6 +173,11 @@ const ControlNet = () => {
       inputToLoad.cfg_scale = importInput.cfg_scale
     }
 
+    if (importInput.loadInputForControlNet && importInput.control_type) {
+      // @ts-ignore
+      inputToLoad.control_type = importInput.control_type
+    }
+
     setInput(inputToLoad)
   }
 

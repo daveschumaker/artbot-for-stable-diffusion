@@ -116,7 +116,8 @@ const Img2ImgModal = ({
                 negative: imageDetails.negative,
                 models: imageDetails.models,
                 steps: imageDetails.steps,
-                cfg_scale: imageDetails.cfg_scale
+                cfg_scale: imageDetails.cfg_scale,
+                control_type: imageDetails.control_type
               }
 
               setInputCache(inputToSave)
