@@ -10,11 +10,7 @@ import ImageDetails from '../../components/ImagePage/ImageDetails'
 import PageTitle from '../../components/UI/PageTitle'
 
 import Spinner from '../../components/Spinner'
-import {
-  fetchRelatedImages,
-  getImageDetails,
-  updateCompletedJob
-} from '../../utils/db'
+import { getImageDetails, updateCompletedJob } from '../../utils/db'
 import {
   interrogateImage,
   uploadImg2Img,
@@ -29,7 +25,7 @@ import { useSwipeable } from 'react-swipeable'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
 import { kudosCost } from '../../utils/imageUtils'
 import RelatedImages from '../../components/ImagePage/RelatedImages'
-import { getRelatedImages } from './image.controller'
+import { getRelatedImages } from '../../components/ImagePage/image.controller'
 
 const StyledImage = styled.img`
   box-shadow: 0 16px 38px -12px rgb(0 0 0 / 56%),

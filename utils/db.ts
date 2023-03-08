@@ -396,12 +396,15 @@ export const fetchCompletedJobs = async ({
   }
 }
 
-export const fetchCompletedJobsById = async ({ ids = [] } = {}) => {
+export const _fetchCompletedJobsById = async (ids = []) => {
   return await db?.completed
     .where('jobId')
     .anyOf([...ids])
     .toArray()
 }
+export const fetchCompletedJobsById = memoize(_fetchCompletedJobsById, {
+  maxAge: 30000
+})
 
 export const fetchRelatedImages = async (
   parentJobId: string,
@@ -474,7 +477,7 @@ export const _getImageDetails = async (jobId: string) => {
   return await db.completed.where('jobId').equals(jobId).first()
 }
 export const getImageDetails = memoize(_getImageDetails, {
-  maxAge: 30000
+  maxAge: 120000
 })
 
 export const _getNextImageDetails = async (timestamp: number) => {

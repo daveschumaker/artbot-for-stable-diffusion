@@ -7,7 +7,7 @@ let completedJobIds: Array<string> = []
 
 const _updateJobDetails = async () => {
   // @ts-ignore
-  const updatedJobs = await fetchCompletedJobsById({ ids: completedJobIds })
+  const updatedJobs = await fetchCompletedJobsById(completedJobIds)
 
   const sortedJobs = updatedJobs.sort((a: any, b: any) => {
     if (a.timestamp > b.timestamp) {
