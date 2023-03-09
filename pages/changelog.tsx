@@ -120,6 +120,10 @@ const Changelog = () => {
             Disabling favoriting an image from the popup modal for a bit. It is
             BUGGY.
           </StyledLi>
+          <StyledLi>
+            Fixed issue related to sharing image generation parameters for
+            images that have been upscaled.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

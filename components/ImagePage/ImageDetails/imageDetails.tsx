@@ -164,16 +164,18 @@ const ImageDetails = ({
 
     setComponentState({ shortlinkPending: true })
 
+    const resizedImage = await generateBase64Thumbnail(
+      imageDetails.base64String,
+      imageDetails.jobId,
+      512,
+      768,
+      0.7
+    )
+
     const data = {
       // @ts-ignore
       imageParams: new ImageParamsForApi(imageDetails),
-      imageBase64: generateBase64Thumbnail(
-        imageDetails.base64String,
-        imageDetails.jobId,
-        512,
-        768,
-        0.8
-      ),
+      imageBase64: resizedImage,
       username: userInfoStore.state.username
     }
 
