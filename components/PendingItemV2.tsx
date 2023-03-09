@@ -258,18 +258,6 @@ const PendingItem = memo(
                     size={100}
                   />
                 </ImageContainer>
-                // <Link
-                //   href={`/image/${jobId}`}
-                //   onClick={() => {
-                //     clearNewImageNotification()
-                //   }}
-                // >
-                //   <StyledImage
-                //     // @ts-ignore
-                //     imageDetails={jobDetails}
-                //     size={100}
-                //   />
-                // </Link>
               )}
               {jobDetails.jobStatus === JobStatus.Waiting && (
                 <PhotoUpIcon size={48} />

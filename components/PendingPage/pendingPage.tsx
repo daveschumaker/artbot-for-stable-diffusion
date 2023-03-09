@@ -1,23 +1,17 @@
 import { useLiveQuery } from 'dexie-react-hooks'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import LazyLoad from 'react-lazyload'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
 import AppSettings from '../../models/AppSettings'
-import {
-  clearCompletedJob,
-  getCompletedJobs,
-  initRecentJobs,
-  resetCompleted,
-  setCompletedJob,
-  _updateJobDetails
-} from '../../store/pendingItemsCache'
+import { setImagesForModalCache } from '../../store/pendingItemsCache'
 import { JobStatus } from '../../types'
 import {
   db,
   deleteAllPendingErrors,
   deleteAllPendingJobs,
   deleteCompletedImageById,
-  deleteDoneFromPending
+  deleteDoneFromPending,
+  deletePendingJobFromDb
 } from '../../utils/db'
 import AdContainer from '../AdContainer'
 import PendingItem from '../PendingItemV2'
@@ -31,76 +25,69 @@ const PendingPage = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const pendingImages =
     useLiveQuery(() => db?.pending?.orderBy('id')?.toArray()) || []
-  const [done, setDone] = useState<Array<any>>([])
-  const [showImageModal, setShowImageModal] = useState(false)
-
-  // On modal open (or close), freeze state of completed jobs so modal doesn't jump around.
-  const [jobsForModal, setJobsForModal] = useState<Array<any>>([])
-
-  const processDone = useCallback(async () => {
-    pendingImages.forEach(async (job: any) => {
-      const DONE = job.jobStatus === JobStatus.Done
-
-      if (DONE) {
-        await setCompletedJob(job)
-        setDone(getCompletedJobs(job.jobId))
-
-        if (!showImageModal) {
-          setJobsForModal(getCompletedJobs(job.jobId))
-        }
-      }
-    })
-  }, [pendingImages, showImageModal])
+  const [showImageModal, setShowImageModal] = useState<string | boolean>(false)
 
   const handleDeleteImage = async (id: number, jobId: string) => {
     await deleteCompletedImageById(id)
-    await clearCompletedJob(jobId)
-    await _updateJobDetails()
-
-    setDone(getCompletedJobs())
-    setJobsForModal(getCompletedJobs())
+    await deletePendingJobFromDb(jobId)
   }
 
   const onClosePanel = async (jobId: string) => {
-    await clearCompletedJob(jobId)
-    await _updateJobDetails()
-
-    setDone(getCompletedJobs(jobId))
-    setJobsForModal(getCompletedJobs(jobId))
+    await deletePendingJobFromDb(jobId)
   }
 
-  const processPending = () => {
+  const processPending = useCallback(() => {
+    const done: any = []
     const processing: any = []
     const queued: any = []
     const waiting: any = []
     const error: any = []
 
-    pendingImages.forEach((job: any) => {
-      if (job.jobStatus === JobStatus.Processing) {
-        processing.push(job)
-      }
+    pendingImages
+      .sort((a: any, b: any) => {
+        if (a.timestamp > b.timestamp) {
+          return 1
+        }
+        if (a.timestamp < b.timestamp) {
+          return -1
+        }
+        return 0
+      })
+      .forEach((job: any) => {
+        if (job.jobStatus === JobStatus.Done) {
+          done.push(job)
+        }
 
-      if (
-        job.jobStatus === JobStatus.Queued ||
-        job.jobStatus === JobStatus.Requested
-      ) {
-        queued.push(job)
-      }
+        if (job.jobStatus === JobStatus.Processing) {
+          processing.push(job)
+        }
 
-      if (job.jobStatus === JobStatus.Waiting) {
-        waiting.push(job)
-      }
+        if (
+          job.jobStatus === JobStatus.Queued ||
+          job.jobStatus === JobStatus.Requested
+        ) {
+          queued.push(job)
+        }
 
-      if (job.jobStatus === JobStatus.Error) {
-        error.push(job)
-      }
-    })
+        if (job.jobStatus === JobStatus.Waiting) {
+          waiting.push(job)
+        }
 
-    return [processing, queued, waiting, error]
-  }
+        if (job.jobStatus === JobStatus.Error) {
+          error.push(job)
+        }
+      })
 
-  const [processing = [], queued = [], waiting = [], error = []] =
+    return [done, processing, queued, waiting, error]
+  }, [pendingImages])
+
+  const [done = [], processing = [], queued = [], waiting = [], error = []] =
     processPending()
+
+  const handleShowModalClick = (jobId: string) => {
+    setImagesForModalCache([...done])
+    setShowImageModal(jobId)
+  }
 
   const sorted = [
     ...done,
@@ -120,8 +107,7 @@ const PendingPage = () => {
     if (filter === 'processing') {
       return (
         job.jobStatus === JobStatus.Processing ||
-        job.jobStatus === JobStatus.Requested ||
-        job.jobStatus === JobStatus.Queued
+        job.jobStatus === JobStatus.Requested
       )
     }
 
@@ -132,30 +118,11 @@ const PendingPage = () => {
 
   const waitingCount = processing.length + queued.length
 
-  const initialLoad = async () => {
-    await initRecentJobs()
-    setDone(getCompletedJobs())
-    setJobsForModal(getCompletedJobs())
-  }
-
-  useEffect(() => {
-    processDone()
-  }, [processDone])
-
   useEffectOnce(() => {
-    deleteDoneFromPending()
-    initialLoad()
     return () => {
-      deleteDoneFromPending()
       setShowImageModal(false)
     }
   })
-
-  // useEffect(() => {
-  //   return () => {
-  //     resetCompleted()
-  //   }
-  // }, [])
 
   return (
     <div style={{ overflowAnchor: 'none' }}>
@@ -166,9 +133,8 @@ const PendingPage = () => {
           handleDeleteImage={handleDeleteImage}
           handleClose={() => {
             setShowImageModal(false)
-            setJobsForModal(getCompletedJobs())
           }}
-          imageList={jobsForModal}
+          imageList={done}
           initialIndexJobId={showImageModal}
         />
       )}
@@ -182,7 +148,7 @@ const PendingPage = () => {
             done ({done.length})
           </TextButton>
           <TextButton onClick={() => setFilter('processing')}>
-            processing ({processing.length + queued.length})
+            processing ({processing.length})
           </TextButton>
           <TextButton onClick={() => setFilter('error')}>
             error ({error.length})
@@ -197,8 +163,7 @@ const PendingPage = () => {
             <div className="mb-2">
               <TextButton
                 onClick={() => {
-                  resetCompleted()
-                  setDone(getCompletedJobs())
+                  deleteDoneFromPending()
                 }}
               >
                 clear completed
@@ -240,8 +205,7 @@ const PendingPage = () => {
           <div className="mb-2">
             <TextButton
               onClick={() => {
-                resetCompleted()
-                setDone(getCompletedJobs())
+                deleteDoneFromPending()
               }}
             >
               Clear all completed
@@ -270,7 +234,7 @@ const PendingPage = () => {
                   onClosePanel(job.jobId)
                 }}
                 //@ts-ignore
-                onImageClick={setShowImageModal}
+                onImageClick={handleShowModalClick}
                 // onHideClick={}
                 //@ts-ignore
                 jobDetails={job}

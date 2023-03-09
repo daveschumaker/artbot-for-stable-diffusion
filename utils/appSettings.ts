@@ -8,7 +8,6 @@ import PromptInputSettings from '../models/PromptInputSettings'
 // @ts-ignore
 import { trackNewSession } from './analytics'
 import { isAppActive } from './appUtils'
-import { deleteStalePending } from './db'
 import { initWindowLogger } from './debugTools'
 
 export const updateShowGrid = () => {
@@ -102,7 +101,6 @@ export const initAppSettings = async () => {
   fetchHordePerformance()
   await fetchUserDetails(apikey)
   setUserId()
-  deleteStalePending()
   buildModelAvailability()
   fetchMyWorkers()
 
@@ -121,7 +119,6 @@ export const initAppSettings = async () => {
     }
 
     await fetchUserDetails(apikey)
-    deleteStalePending()
     fetchMyWorkers()
   }, 60000)
 }
