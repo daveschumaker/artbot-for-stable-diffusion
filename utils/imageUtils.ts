@@ -180,13 +180,13 @@ export const createNewImage = async (imageParams: CreateImageJob) => {
    * here, too, just so someone can't send Shakespeare
    * novels inside a payload.
    */
-  clonedParams.prompt = imageParams.prompt.trim()
-  if (clonedParams?.prompt?.length > 1024) {
-    console.log(
-      `Warning: prompt length of ${clonedParams.prompt.length} is greater than 1024 chars. Prompt will be shortned.`
-    )
-    clonedParams.prompt = clonedParams.prompt.substring(0, 1024)
-  }
+  // clonedParams.prompt = imageParams.prompt.trim()
+  // if (clonedParams?.prompt?.length > 1024) {
+  //   console.log(
+  //     `Warning: prompt length of ${clonedParams.prompt.length} is greater than 1024 chars. Prompt will be shortned.`
+  //   )
+  //   clonedParams.prompt = clonedParams.prompt.substring(0, 1024)
+  // }
 
   if (
     isNaN(clonedParams.steps) ||

@@ -509,23 +509,23 @@ export const checkCurrentJob = async (imageDetails: any) => {
         ...imgDetailsFromApi
       }
 
+      const thumbnail = await generateBase64Thumbnail(
+        imgDetailsFromApi.base64String,
+        jobId
+      )
       await updatePendingJob(
         imageDetails.id,
         Object.assign({}, job, {
           timestamp: Date.now(),
-          jobStatus: JobStatus.Done
+          jobStatus: JobStatus.Done,
+          thumbnail
         })
       )
       // Catch a potential race condition where the same jobId can be added twice.
       // This might happen when multiple tabs are open.
       try {
-        const thumbnail = await generateBase64Thumbnail(
-          imgDetailsFromApi.base64String,
-          jobId
-        )
-
         // @ts-ignore
-        if (window.DEBUG_ARTBOT) {
+        if (window.DEBUG_THUMBNAIL) {
           console.log(``)
           console.log(`imgDetailsFromApi?`, imgDetailsFromApi)
           console.log(`thumbnail generated?`, thumbnail)

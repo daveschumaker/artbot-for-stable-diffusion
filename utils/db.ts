@@ -150,7 +150,7 @@ export const deleteStalePending = async () => {
     ?.delete()
 }
 
-const _allPendingJobs = async (status?: string) => {
+export const allPendingJobs = async (status?: string) => {
   try {
     return await db?.pending
       ?.orderBy('id')
@@ -173,7 +173,6 @@ const _allPendingJobs = async (status?: string) => {
     return []
   }
 }
-export const allPendingJobs = memoize(_allPendingJobs, { maxAge: 10000 })
 
 // Useful for fetching date user first used site.
 export const fetchFirstCompletedJob = async () => {

@@ -1,4 +1,4 @@
-import { memo, useEffect } from 'react'
+import { memo } from 'react'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
 
@@ -220,15 +220,6 @@ const PendingItem = memo(
     if (remainingTime <= 1) {
       remainingTime = 1
     }
-
-    useEffect(() => {
-      return () => {
-        if (jobDetails && jobDetails.jobStatus === JobStatus.Done) {
-          deletePendingJobFromDb(jobDetails.jobId)
-        }
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
 
     if (!jobDetails) {
       return null
