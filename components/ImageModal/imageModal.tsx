@@ -4,12 +4,10 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import useComponentState from '../../hooks/useComponentState'
 import { useWindowSize } from '../../hooks/useWindowSize'
-import { updateCompletedJob } from '../../utils/db'
 import { base64toBlob, downloadFile } from '../../utils/imageUtils'
 import ConfirmationModal from '../ConfirmationModal'
 import DownloadIcon from '../icons/DownloadIcon'
 import EyeIcon from '../icons/EyeIcon'
-import HeartIcon from '../icons/HeartIcon'
 import LinkIcon from '../icons/LinkIcon'
 import ShareIcon from '../icons/ShareIcon'
 import TrashIcon from '../icons/TrashIcon'
@@ -223,21 +221,22 @@ const ImageModal = ({
       windowHeight={size.height}
       handleClose={handleClose}
       setDynamicHeight={componentState.containerHeight}
-      leftButton={
-        <div
-          onClick={async () => {
-            await updateCompletedJob(
-              imageDetails.id,
-              Object.assign({}, imageDetails, {
-                favorited: !componentState.favorited
-              })
-            )
-            setComponentState({ favorited: !componentState.favorited })
-          }}
-        >
-          <HeartIcon fill={componentState.favorited ? '#14B8A6' : undefined} />
-        </div>
-      }
+      // leftButton={
+      //   <div
+      //     onClick={async () => {
+      //       await updateCompletedJob(
+      //         imageDetails.id,
+      //         Object.assign({}, imageDetails, {
+      //           favorited: !componentState.favorited
+      //         })
+      //       )
+      //       await handleFavoriteClick()
+      //       setComponentState({ favorited: !componentState.favorited })
+      //     }}
+      //   >
+      //     <HeartIcon fill={componentState.favorited ? '#14B8A6' : undefined} />
+      //   </div>
+      // }
     >
       {showDeleteModal && (
         <ConfirmationModal

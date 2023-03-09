@@ -112,6 +112,14 @@ const Changelog = () => {
             to recent memoization change. Now properly busting the cache! Thanks
             to Litnine on Discord for reporting this.
           </StyledLi>
+          <StyledLi>
+            Added some additional logging around errors that occur when
+            generating an image.
+          </StyledLi>
+          <StyledLi>
+            Disabling favoriting an image from the popup modal for a bit. It is
+            BUGGY.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
