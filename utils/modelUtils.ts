@@ -31,7 +31,12 @@ export const validModelsArray = ({
 
   for (const key in availableModels) {
     const modelName = availableModels[key].name
-    if (filterNsfw && modelDetails[modelName]?.nsfw === true) {
+    if (
+      filterNsfw &&
+      modelDetails &&
+      modelDetails[modelName] &&
+      modelDetails[modelName]?.nsfw === true
+    ) {
       continue
     }
 

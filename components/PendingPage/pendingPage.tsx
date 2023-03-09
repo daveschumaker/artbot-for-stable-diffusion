@@ -8,7 +8,8 @@ import {
   getCompletedJobs,
   initRecentJobs,
   resetCompleted,
-  setCompletedJob
+  setCompletedJob,
+  _updateJobDetails
 } from '../../store/pendingItemsCache'
 import { JobStatus } from '../../types'
 import {
@@ -54,6 +55,7 @@ const PendingPage = () => {
   const handleDeleteImage = async (id: number, jobId: string) => {
     await deleteCompletedImageById(id)
     await clearCompletedJob(jobId)
+    await _updateJobDetails()
 
     setDone(getCompletedJobs())
     setJobsForModal(getCompletedJobs())
@@ -61,6 +63,8 @@ const PendingPage = () => {
 
   const onClosePanel = async (jobId: string) => {
     await clearCompletedJob(jobId)
+    await _updateJobDetails()
+
     setDone(getCompletedJobs(jobId))
     setJobsForModal(getCompletedJobs(jobId))
   }

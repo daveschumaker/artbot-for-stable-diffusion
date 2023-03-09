@@ -5,7 +5,7 @@ import { fetchCompletedJobsById } from '../utils/db'
 let completedJobsV2: Array<any> = []
 let completedJobIds: Array<string> = []
 
-const _updateJobDetails = async (jobId?: string) => {
+export const _updateJobDetails = async (jobId?: string) => {
   // @ts-ignore
   const updatedJobs = await fetchCompletedJobsById(completedJobIds)
 
@@ -58,7 +58,8 @@ export const clearCompletedJob = async (jobId: string) => {
     return id !== jobId
   })
 
-  await updateJobDetails(jobId)
+  await _updateJobDetails(jobId)
+  return jobId
 }
 
 export const resetCompleted = () => {

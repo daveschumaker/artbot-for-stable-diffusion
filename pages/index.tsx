@@ -454,7 +454,7 @@ const Home: NextPage = ({
           return false
         }
 
-        return modelDetails[model].nsfw === true
+        return modelDetails[model] && modelDetails[model].nsfw === true
       }) || []
 
     if (promptFlagged && !flaggedPromptError && hasNsfwModel.length > 0) {

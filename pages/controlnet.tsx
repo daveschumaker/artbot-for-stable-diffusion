@@ -338,6 +338,14 @@ const ControlNet = () => {
       <Head>
         <title>ControlNet - ArtBot for Stable Diffusion</title>
         <meta name="twitter:title" content="ArtBot - ControlNet" />
+        <meta
+          name="twitter:description"
+          content="Use a source image and text prompt to better control diffusion models, and create amazing images with generative AI."
+        />
+        <meta
+          name="twitter:image"
+          content="https://tinybots.net/artbot/robot_control.jpg"
+        />
       </Head>
       <div className="flex flex-row w-full items-center">
         <div className="inline-block w-1/2">
