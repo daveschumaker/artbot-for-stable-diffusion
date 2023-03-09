@@ -38,6 +38,8 @@ interface CreateImageJob {
   has_source_image?: boolean
   has_source_mask?: boolean
   canvasStore?: any
+  canvasData?: any
+  maskData?: any
 }
 
 interface OrientationLookup {
@@ -222,17 +224,34 @@ export const createNewImage = async (imageParams: CreateImageJob) => {
         clonedParams.has_source_mask = true
       }
 
-      delete clonedParams.base64String
-      delete clonedParams.source_image
-      delete clonedParams.source_mask
-      delete clonedParams.canvasStore
+      if (clonedParams.source_image) {
+        clonedParams.source_image = '[ true ]'
+      }
+
+      if (clonedParams.source_mask) {
+        clonedParams.source_mask = '[ true ]'
+      }
+
+      if (clonedParams.maskData) {
+        clonedParams.maskData = '[ true ]'
+      }
+
+      if (clonedParams.canvasData) {
+        clonedParams.canvasData = '[ true ]'
+      }
+
+      if (clonedParams.canvasStore) {
+        clonedParams.canvasStore = '[ true ]'
+      }
 
       trackEvent({
         event: 'ERROR',
         action: 'UNABLE_TO_CREATE_IMAGE',
         context: 'imageUtils',
         data: {
-          imageParams: clonedParams
+          imageParams: clonedParams,
+          status,
+          message
         }
       })
       return {
@@ -241,7 +260,7 @@ export const createNewImage = async (imageParams: CreateImageJob) => {
         status
       }
     }
-  } catch (err) {
+  } catch (err: any) {
     if (clonedParams.source_image) {
       clonedParams.has_source_image = true
     }
@@ -260,7 +279,8 @@ export const createNewImage = async (imageParams: CreateImageJob) => {
       action: 'UNABLE_TO_CREATE_IMAGE',
       context: 'imageUtils',
       data: {
-        imageParams: clonedParams
+        imageParams: clonedParams,
+        errorMessage: err.message
       }
     })
     return {
