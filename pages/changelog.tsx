@@ -107,6 +107,11 @@ const Changelog = () => {
             Minor: Added an exclusion check for certain words used to trigger
             NSFW models.
           </StyledLi>
+          <StyledLi>
+            Fix: Favorite button appeared to be broken on image details page due
+            to recent memoization change. Now properly busting the cache! Thanks
+            to Litnine on Discord for reporting this.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

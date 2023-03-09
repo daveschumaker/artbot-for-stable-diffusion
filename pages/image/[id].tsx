@@ -126,6 +126,7 @@ const ImagePage = () => {
 
   const handleFavoriteClick = useCallback(async () => {
     const newFavStatus = imageDetails.favorited ? false : true
+    getImageDetails.delete(id) // bust memoization cache
     setOptimisticFavorite(newFavStatus)
 
     if (newFavStatus) {
