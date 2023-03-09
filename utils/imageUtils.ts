@@ -772,7 +772,10 @@ export const dataUrlToFile = (
 
 export const generateBase64Thumbnail = async (
   base64: string,
-  jobId: string
+  jobId: string,
+  maxWidth: number = 320,
+  maxHeight: number = 768,
+  quality: number = 0.9
 ) => {
   let fullDataString: any
   let file: any
@@ -789,8 +792,9 @@ export const generateBase64Thumbnail = async (
   let resizedImage: any
   try {
     resizedImage = await readAndCompressImage(file, {
-      maxWidth: 320,
-      quality: 0.9
+      maxHeight,
+      maxWidth,
+      quality
     })
   } catch (err) {
     console.log(`readAndCompressImage`, err)

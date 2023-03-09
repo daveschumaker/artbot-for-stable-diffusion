@@ -20,7 +20,10 @@ import { SourceProcessing } from '../../../utils/promptUtils'
 import ShareIcon from '../../icons/ShareIcon'
 import DownloadIcon from '../../icons/DownloadIcon'
 import useComponentState from '../../../hooks/useComponentState'
-import { downloadFile } from '../../../utils/imageUtils'
+import {
+  downloadFile,
+  generateBase64Thumbnail
+} from '../../../utils/imageUtils'
 import AdContainer from '../../AdContainer'
 import styles from './imageDetails.module.css'
 import Img2ImgModal from '../Img2ImgModal'
@@ -164,7 +167,13 @@ const ImageDetails = ({
     const data = {
       // @ts-ignore
       imageParams: new ImageParamsForApi(imageDetails),
-      imageBase64: imageDetails.base64String,
+      imageBase64: generateBase64Thumbnail(
+        imageDetails.base64String,
+        imageDetails.jobId,
+        512,
+        768,
+        0.8
+      ),
       username: userInfoStore.state.username
     }
 
