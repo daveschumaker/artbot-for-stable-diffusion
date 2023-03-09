@@ -9,6 +9,7 @@ export interface IDropDownMenuItem {
 
 const StyledMenuItem = styled.li`
   cursor: pointer;
+  font-size: 14px;
   padding: 6px 16px;
   width: 100%;
 

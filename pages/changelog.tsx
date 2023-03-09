@@ -96,12 +96,6 @@ const Changelog = () => {
               favorite images. (I know that some of you have thousands of images
               and this is not ideal at the moment.)
             </StyledLi>
-            <StyledLi>
-              2023.03.06 - The pending items page sucks! It really sucks! I am
-              definitely encountering issues myself (and seeing tons of Chrome
-              out-of-memory error logs come through). I will revisit this whole
-              thing soon.
-            </StyledLi>
           </StyledUl>
         </Section>
       </Panel>
@@ -124,6 +118,11 @@ const Changelog = () => {
             generated with ArtBot! So, I queued up something like 2,000 images
             and boy was the pending page slow. It crashed the tab in Chrome!
             Hopefully, it will work much better for you now!)
+          </StyledLi>
+          <StyledLi>
+            A few more improvements related the pending items page. Remove some
+            memoization that was incorrectly applied to an API call, which was
+            resulting in some funky image requests. Things should now be stable.
           </StyledLi>
         </StyledUl>
       </Section>

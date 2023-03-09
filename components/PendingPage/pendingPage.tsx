@@ -1,6 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useCallback, useState } from 'react'
 import LazyLoad from 'react-lazyload'
+import styled from 'styled-components'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
 import AppSettings from '../../models/AppSettings'
 import { setImagesForModalCache } from '../../store/pendingItemsCache'
@@ -14,18 +15,31 @@ import {
   deletePendingJobFromDb
 } from '../../utils/db'
 import AdContainer from '../AdContainer'
+import CheckboxIcon from '../icons/CheckboxIcon'
+import DotsVerticalIcon from '../icons/DotsVerticalIcon'
+import SquareIcon from '../icons/SquareIcon'
 import PendingItem from '../PendingItemV2'
+import DropDownMenu from '../UI/DropDownMenu/dropDownMenu'
+import DropDownMenuItem from '../UI/DropDownMenuItem'
 import Linker from '../UI/Linker'
+import MenuButton from '../UI/MenuButton'
 import PageTitle from '../UI/PageTitle'
 import TextButton from '../UI/TextButton'
 import ImageModalController from './ImageModalController'
+
+const MenuSeparator = styled.div`
+  width: 100%;
+  border-bottom: 1px solid ${(props) => props.theme.navLinkActive};
+`
 
 const PendingPage = () => {
   const [filter, setFilter] = useState('all')
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const pendingImages =
     useLiveQuery(() => db?.pending?.orderBy('id')?.toArray()) || []
+
   const [showImageModal, setShowImageModal] = useState<string | boolean>(false)
+  const [showMenu, setShowMenu] = useState(false)
 
   const handleDeleteImage = async (id: number, jobId: string) => {
     await deleteCompletedImageById(id)
@@ -120,6 +134,9 @@ const PendingPage = () => {
 
   useEffectOnce(() => {
     return () => {
+      if (AppSettings.get('autoClearPending')) {
+        deleteDoneFromPending()
+      }
       setShowImageModal(false)
     }
   })
@@ -138,7 +155,82 @@ const PendingPage = () => {
           initialIndexJobId={showImageModal}
         />
       )}
-      <PageTitle>Your pending images</PageTitle>
+      <div className="flex flex-row w-full items-center">
+        <div className="inline-block w-3/4">
+          <PageTitle>Your pending images</PageTitle>
+        </div>
+        <div className="flex flex-row justify-end w-1/4 items-start h-[38px] relative gap-2">
+          <MenuButton
+            active={showMenu}
+            title="Pending options"
+            onClick={() => {
+              if (showMenu) {
+                setShowMenu(false)
+              } else {
+                setShowMenu(true)
+              }
+            }}
+          >
+            <DotsVerticalIcon size={24} />
+          </MenuButton>
+          {showMenu && (
+            <DropDownMenu
+              handleClose={() => {
+                setShowMenu(false)
+              }}
+            >
+              <DropDownMenuItem onClick={() => setFilter('all')}>
+                View all ({pendingImages.length})
+              </DropDownMenuItem>
+              <DropDownMenuItem onClick={() => setFilter('processing')}>
+                View processing ({processing.length})
+              </DropDownMenuItem>
+              <DropDownMenuItem onClick={() => setFilter('done')}>
+                View done ({done.length})
+              </DropDownMenuItem>
+              <DropDownMenuItem onClick={() => setFilter('error')}>
+                View errors ({error.length})
+              </DropDownMenuItem>
+              <MenuSeparator />
+              <DropDownMenuItem
+                onClick={() => {
+                  deleteDoneFromPending()
+                }}
+              >
+                Clear completed
+              </DropDownMenuItem>
+              <DropDownMenuItem onClick={deleteAllPendingJobs}>
+                Clear pending
+              </DropDownMenuItem>
+              <DropDownMenuItem onClick={deleteAllPendingErrors}>
+                Clear errors
+              </DropDownMenuItem>
+              <MenuSeparator />
+              <DropDownMenuItem
+                onClick={() => {
+                  if (AppSettings.get('autoClearPending')) {
+                    AppSettings.set('autoClearPending', false)
+                  } else {
+                    AppSettings.set('autoClearPending', true)
+                  }
+                }}
+              >
+                <div className="flex flex-row gap-[8px]">
+                  {AppSettings.get('autoClearPending') ? (
+                    <CheckboxIcon />
+                  ) : (
+                    <SquareIcon />
+                  )}
+                  <div>
+                    Auto-clear completed?
+                    <div className="text-xs">(when leaving pending page)</div>
+                  </div>
+                </div>
+              </DropDownMenuItem>
+            </DropDownMenu>
+          )}
+        </div>
+      </div>
       {pendingImages.length > 0 ? (
         <div className="flex flex-row gap-2 mb-4">
           <TextButton onClick={() => setFilter('all')}>
