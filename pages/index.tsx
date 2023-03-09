@@ -57,7 +57,10 @@ import styles from '../styles/index.module.css'
 import TriggerDropdown from '../components/CreatePage/TriggerDropdown'
 import DefaultPromptInput from '../models/DefaultPromptInput'
 import { logDataForDebugging } from '../utils/debugTools'
-import { validatePromptSafety } from '../utils/validationUtils'
+import {
+  promptSafetyExclusions,
+  validatePromptSafety
+} from '../utils/validationUtils'
 import AlertTriangleIcon from '../components/icons/AlertTriangle'
 
 interface InputTarget {
@@ -447,7 +450,8 @@ const Home: NextPage = ({
   }
 
   useEffect(() => {
-    const promptFlagged = validatePromptSafety(input.prompt)
+    const modifiedPrompt = promptSafetyExclusions(input.prompt, input.models[0])
+    const promptFlagged = validatePromptSafety(modifiedPrompt)
     const hasNsfwModel =
       input?.models?.filter((model: string) => {
         if (!model) {

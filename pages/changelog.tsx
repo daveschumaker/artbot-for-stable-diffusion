@@ -101,6 +101,15 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.03.09</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Minor: Added an exclusion check for certain words used to trigger
+            NSFW models.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.03.08</SubSectionTitle>
         <StyledUl>
           <StyledLi>A few minor updates at the moment:</StyledLi>

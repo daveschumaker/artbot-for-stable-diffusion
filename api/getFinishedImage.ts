@@ -81,7 +81,7 @@ export const _getFinishedImage = async (
       }
     }
 
-    if (Array.isArray(generations)) {
+    if (Array.isArray(generations) && generations.length > 0) {
       const [image] = generations
 
       if (!generations || !image) {

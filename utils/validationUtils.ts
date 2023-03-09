@@ -93,6 +93,15 @@ export const isValidHttpUrl = (string: string = '') => {
   return url.protocol === 'http:' || url.protocol === 'https:'
 }
 
+export const promptSafetyExclusions = (prompt: string, model: string) => {
+  if (model === 'Hentai Diffusion') {
+    prompt = prompt.replace('1girl', '')
+    prompt = prompt.replace('1boy', '')
+  }
+
+  return prompt
+}
+
 export const validatePromptSafety = (prompt: string) => {
   prompt = prompt.toLowerCase()
   const regex = /girl|boy|student|young|lit[tl]le|\blil\b|small|tiny/gm
