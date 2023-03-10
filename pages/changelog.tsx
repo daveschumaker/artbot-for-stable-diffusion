@@ -124,6 +124,9 @@ const Changelog = () => {
             Fixed issue related to sharing image generation parameters for
             images that have been upscaled.
           </StyledLi>
+          <StyledLi>
+            Add a copy prompt button right from the pending items page.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

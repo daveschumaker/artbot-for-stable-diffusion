@@ -24,6 +24,8 @@ import { useStore } from 'statery'
 import { modelInfoStore } from '../store/modelStore'
 import { MODEL_LIMITED_BY_WORKERS, RATE_IMAGE_CUTOFF_SEC } from '../constants'
 import DisplayRawData from './DisplayRawData'
+import CopyIcon from './icons/CopyIcon'
+import { copyEditPrompt } from '../controllers/imageDetailsCommon'
 
 const RATINGS_ENABLED = false
 
@@ -198,6 +200,11 @@ const PendingItem = memo(
     const handleRemovePanel = () => {
       deletePendingJobFromDb(jobId)
       handleCloseClick(jobId)
+    }
+
+    const handleCopyPromptClick = (imageDetails: any) => {
+      copyEditPrompt(imageDetails)
+      router.push(`/?edit=true`)
     }
 
     const timeDiff = jobDetails?.initWaitTime - jobDetails?.wait_time || 0
@@ -403,24 +410,35 @@ const PendingItem = memo(
                   </Button>
                 )}
               {jobDetails.jobStatus === JobStatus.Done && (
-                <Button
-                  onClick={() => {
-                    clearNewImageNotification()
-                    trackEvent({
-                      event: 'VIEW_IMAGE_BTN_CLICK',
-                      context: '/pages/pending'
-                    })
-                    trackGaEvent({
-                      action: 'pending_view_image_btn',
-                      params: {
+                <div className="flex flex-row gap-2">
+                  <Button
+                    title="Copy and re-edit prompt"
+                    // @ts-ignore
+                    onClick={() => handleCopyPromptClick(jobDetails)}
+                  >
+                    <CopyIcon />
+                    <span className="inline-block md:hidden">Copy</span>
+                    <span className="hidden md:inline-block">Copy prompt</span>
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      clearNewImageNotification()
+                      trackEvent({
+                        event: 'VIEW_IMAGE_BTN_CLICK',
                         context: '/pages/pending'
-                      }
-                    })
-                    router.push(`/image/${jobDetails.jobId}`)
-                  }}
-                >
-                  View
-                </Button>
+                      })
+                      trackGaEvent({
+                        action: 'pending_view_image_btn',
+                        params: {
+                          context: '/pages/pending'
+                        }
+                      })
+                      router.push(`/image/${jobDetails.jobId}`)
+                    }}
+                  >
+                    View
+                  </Button>
+                </div>
               )}
               {jobDetails.jobStatus !== JobStatus.Done && (
                 <div className="flex flex-row gap-2">
@@ -430,6 +448,15 @@ const PendingItem = memo(
                   {jobDetails.jobStatus === JobStatus.Error || jobStalled ? (
                     <Button onClick={handleRetryJob}>Retry?</Button>
                   ) : null}
+                  <Button
+                    title="Copy and re-edit prompt"
+                    // @ts-ignore
+                    onClick={() => handleCopyPromptClick(jobDetails)}
+                  >
+                    <CopyIcon />
+                    <span className="inline-block md:hidden">Copy</span>
+                    <span className="hidden md:inline-block">Copy prompt</span>
+                  </Button>
                   <Button btnType="secondary" onClick={handleDeleteJob}>
                     <TrashIcon />
                     <MobileHideText>

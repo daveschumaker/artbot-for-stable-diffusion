@@ -150,10 +150,6 @@ const ImageDetails = ({
 
   const getShortlink = async () => {
     if (imageDetails.shortlink || componentState.shortlink) {
-      console.log(
-        `shortlink already exists!!!`,
-        imageDetails.shortlink || componentState.shortlink
-      )
       copyShortlink(imageDetails.shortlink || componentState.shortlink)
       return
     }
@@ -192,8 +188,6 @@ const ImageDetails = ({
 
       copyShortlink(shortlink)
     }
-
-    console.log(`shortlinkData?`, shortlinkData)
 
     setComponentState({ shortlinkPending: false, shortlink })
   }
