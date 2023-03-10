@@ -28,6 +28,15 @@ export class MySubClassedDexie extends Dexie {
       pending: '++id, jobId,timestamp, parentJobId',
       prompts: '++id, timestamp, promptType'
     })
+
+    this.version(4).stores({
+      completed: '++id, jobId, timestamp, parentJobId',
+      images: '++id, imageType, parentJobId, jobId',
+      pending: '++id, jobId, timestamp, parentJobId, jobStatus',
+      projects: '++id, name',
+      prompts: '++id, timestamp, promptType',
+      tags: '++id, name'
+    })
   }
 }
 
@@ -152,16 +161,11 @@ export const deleteStalePending = async () => {
 
 export const allPendingJobs = async (status?: string) => {
   try {
-    return await db?.pending
-      ?.orderBy('id')
-      ?.filter(function (job: { jobStatus: string }) {
-        if (status) {
-          return job.jobStatus === status
-        } else {
-          return true
-        }
-      })
-      ?.toArray()
+    if (status) {
+      return await db?.pending?.where('jobStatus')?.equals(status)?.toArray()
+    } else {
+      return await db?.pending?.toArray()
+    }
   } catch (err: any) {
     if (
       err.message.indexOf(

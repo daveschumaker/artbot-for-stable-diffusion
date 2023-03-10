@@ -359,14 +359,10 @@ export const getImage = async (jobId: string) => {
 }
 
 export const hackyMultiJobCheck = async () => {
-  const allKeys = (await allPendingJobs()) || []
+  const queued = await allPendingJobs(JobStatus.Queued)
+  const processing = await allPendingJobs(JobStatus.Processing)
 
-  const queuedOrProcessing = allKeys.filter((job: any = {}) => {
-    return (
-      job.jobStatus === JobStatus.Queued ||
-      job.jobStatus === JobStatus.Processing
-    )
-  })
+  const queuedOrProcessing = [...queued, ...processing]
 
   const [firstJob, secondJob, thirdJob, fourthJob, fifthJob] =
     queuedOrProcessing
