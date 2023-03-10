@@ -423,7 +423,13 @@ const Home: NextPage = ({
   }
 
   const updateDefaultInput = async () => {
-    if (!editMode && !shareMode && !loadDrawing && !loadShortlink) {
+    if (
+      !editMode &&
+      !shareMode &&
+      !loadDrawing &&
+      !loadShortlink &&
+      !getInputCache()
+    ) {
       const updateObject = PromptInputSettings.load()
       delete updateObject.v
 

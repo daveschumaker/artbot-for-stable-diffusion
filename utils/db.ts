@@ -519,9 +519,10 @@ export const initDb = () => {
   // console.log(`Database loaded`)
 }
 
+declare const window: any
 if (typeof window !== 'undefined') {
   // @ts-ignore
   window._artbotDb = db
-  // @ts-ignore
   window._artbotDb.getImageDetails = getImageDetails
+  window._artbotDb.imageCount = imageCount
 }

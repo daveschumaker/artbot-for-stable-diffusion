@@ -31,6 +31,8 @@ import { useWindowSize } from '../../../hooks/useWindowSize'
 import ImageParamsForApi from '../../../models/ImageParamsForApi'
 import { userInfoStore } from '../../../store/userStore'
 import { createShortlink } from '../../../api/createShortlink'
+import AppSettings from '../../../models/AppSettings'
+import PromptInputSettings from '../../../models/PromptInputSettings'
 
 interface ImageDetails {
   id: number
@@ -110,6 +112,10 @@ const ImageDetails = ({
   }
 
   const handleCopyPromptClick = (imageDetails: any) => {
+    if (AppSettings.get('savePromptOnCreate')) {
+      PromptInputSettings.set('prompt', imageDetails.prompt)
+    }
+
     copyEditPrompt(imageDetails)
 
     trackEvent({

@@ -114,6 +114,12 @@ const Changelog = () => {
             unfavorite an image (this also works on the image details page as
             well.)
           </StyledLi>
+          <StyledLi>
+            Fix: Issue where copying image params, modifying one settings,
+            clicking generate and then going back restored settings from your
+            initial request, rather than your most recent. Thanks to Litnine for
+            finding this and the steps to reproduce.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
@@ -141,7 +147,9 @@ const Changelog = () => {
             images that have been upscaled.
           </StyledLi>
           <StyledLi>
-            Add a copy prompt button right from the pending items page.
+            Add a copy prompt button right from the pending items page. Thanks
+            to &quot;The I.B.A.K.T Committe&quot; on Discord for suggesting
+            this.
           </StyledLi>
         </StyledUl>
       </Section>

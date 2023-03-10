@@ -1,3 +1,5 @@
+import PromptInputSettings from '../models/PromptInputSettings'
+import { setInputCache } from '../store/inputCache'
 import { PromptTypes } from '../types'
 import { db } from './db'
 import { logDataForDebugging } from './debugTools'
@@ -135,6 +137,27 @@ export const savePrompt = ({
     canvasData,
     maskData
   }
+
+  // Clone to prompt input settings
+  const keysToExclude = [
+    'canvasStore',
+    'canvasData',
+    'copyPrompt',
+    'maskData',
+    'source_image'
+  ]
+
+  let cacheObj: any = {}
+  for (const [key, value] of Object.entries(promptDetails)) {
+    if (keysToExclude.indexOf(key) >= 0) {
+      return
+    }
+
+    cacheObj[key] = value
+    PromptInputSettings.set(key, value)
+  }
+
+  setInputCache({ ...cacheObj })
 }
 
 export const loadEditPrompt = () => {
