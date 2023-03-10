@@ -319,6 +319,10 @@ const Rate = () => {
         }
       })
 
+      if (res.status === 403) {
+        return fetchImage({ getNextImage: true })
+      }
+
       const data = await res.json()
       fetchImage({ getNextImage: true })
       const { reward } = data
