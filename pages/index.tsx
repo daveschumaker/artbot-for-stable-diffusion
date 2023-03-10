@@ -537,8 +537,11 @@ const Home: NextPage = ({
         data: { ...getInputCache() }
       })
       setInput({ ...getInputCache() })
-    } else if (editMode) {
+    } else if (editMode && !loadEditPrompt().defaultSavePrompt) {
       setInput({ ...loadEditPrompt() })
+    } else {
+      const updateObject = PromptInputSettings.load()
+      setInput({ ...updateObject })
     }
   })
 

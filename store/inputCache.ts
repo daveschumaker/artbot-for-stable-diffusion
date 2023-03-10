@@ -10,6 +10,10 @@ export const clearInputCache = () => {
 }
 
 export const getInputCache = () => {
+  if (!inputCache) {
+    return
+  }
+
   return Object.assign({}, inputCache)
 }
 

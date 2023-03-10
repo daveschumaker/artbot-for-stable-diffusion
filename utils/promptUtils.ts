@@ -12,6 +12,7 @@ export enum SourceProcessing {
   OutPainting = 'outpainting'
 }
 interface SavePrompt {
+  defaultSavePrompt: boolean
   img2img: boolean
   imageType: string
   copyPrompt: boolean
@@ -47,6 +48,7 @@ interface SavePrompt {
 }
 
 let initPromptDetails: SavePrompt = {
+  defaultSavePrompt: true,
   img2img: false,
   imageType: '',
   copyPrompt: false,
@@ -109,6 +111,7 @@ export const savePrompt = ({
 } = {}) => {
   const samplerValid = validSampler(sampler)
   promptDetails = {
+    defaultSavePrompt: false,
     img2img,
     imageType,
     copyPrompt: true,
