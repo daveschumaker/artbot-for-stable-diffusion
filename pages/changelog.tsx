@@ -96,10 +96,26 @@ const Changelog = () => {
               favorite images. (I know that some of you have thousands of images
               and this is not ideal at the moment.)
             </StyledLi>
+            <StyledLi>
+              2023.03.10 - Still some wonky behavior around the pending items
+              page. It&quot;s slowly getting better, but still more work to do!
+            </StyledLi>
           </StyledUl>
         </Section>
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
+      <Section>
+        <SubSectionTitle>2023.03.10</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Refactored some logic around the favorite icon on the image modal.
+            Should work much better now. Bonus: if you&apos;re on a dekstop or
+            laptop, you can now press &quot;F&quot; to quickly favorite or
+            unfavorite an image (this also works on the image details page as
+            well.)
+          </StyledLi>
+        </StyledUl>
+      </Section>
       <Section>
         <SubSectionTitle>2023.03.09</SubSectionTitle>
         <StyledUl>

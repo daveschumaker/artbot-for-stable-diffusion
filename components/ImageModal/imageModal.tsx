@@ -4,10 +4,12 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import useComponentState from '../../hooks/useComponentState'
 import { useWindowSize } from '../../hooks/useWindowSize'
+import { getImageDetails, updateCompletedJob } from '../../utils/db'
 import { base64toBlob, downloadFile } from '../../utils/imageUtils'
 import ConfirmationModal from '../ConfirmationModal'
 import DownloadIcon from '../icons/DownloadIcon'
 import EyeIcon from '../icons/EyeIcon'
+import HeartIcon from '../icons/HeartIcon'
 import LinkIcon from '../icons/LinkIcon'
 import ShareIcon from '../icons/ShareIcon'
 import TrashIcon from '../icons/TrashIcon'
@@ -155,6 +157,35 @@ const ImageModal = ({
     }
   }
 
+  const updateFavoriteState = useCallback(
+    async (jobId: string) => {
+      if (!jobId) {
+        return
+      }
+
+      getImageDetails.delete(jobId)
+      const data = await getImageDetails(jobId)
+      setComponentState({ favorited: data.favorited })
+    },
+    [setComponentState]
+  )
+
+  const onFavoriteClick = useCallback(async () => {
+    await updateCompletedJob(
+      imageDetails.id,
+      Object.assign({}, imageDetails, {
+        favorited: !componentState.favorited
+      })
+    )
+    await updateFavoriteState(imageDetails.jobId)
+    setComponentState({ favorited: !componentState.favorited })
+  }, [
+    componentState.favorited,
+    imageDetails,
+    setComponentState,
+    updateFavoriteState
+  ])
+
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       if (e.key === 'ArrowLeft') {
@@ -175,6 +206,8 @@ const ImageModal = ({
         handleClose()
       } else if (e.key === 'Delete') {
         handleDeleteImage()
+      } else if (e.keyCode === 70) {
+        onFavoriteClick()
       }
     }
     window.addEventListener('keydown', handleKeyPress)
@@ -183,6 +216,7 @@ const ImageModal = ({
     disableNav,
     handleClose,
     handleLoadMore,
+    onFavoriteClick,
     reverseButtons,
     setComponentState
   ])
@@ -207,36 +241,26 @@ const ImageModal = ({
   }, [imageDetails.base64String, setComponentState])
 
   useEffect(() => {
-    if (imageDetails.favorited && !componentState.favorited) {
-      setComponentState({ favorited: true })
-    } else if (!imageDetails.favorited && componentState.favorited) {
-      setComponentState({ favorited: false })
-    }
+    updateFavoriteState(imageDetails.jobId)
+    // if (imageDetails.favorited && !componentState.favorited) {
+    //   setComponentState({ favorited: true })
+    // } else if (!imageDetails.favorited && componentState.favorited) {
+    //   setComponentState({ favorited: false })
+    // }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [imageDetails])
+  }, [imageDetails.jobId])
 
   return (
     <StyledModal
       windowHeight={size.height}
       handleClose={handleClose}
       setDynamicHeight={componentState.containerHeight}
-      // leftButton={
-      //   <div
-      //     onClick={async () => {
-      //       await updateCompletedJob(
-      //         imageDetails.id,
-      //         Object.assign({}, imageDetails, {
-      //           favorited: !componentState.favorited
-      //         })
-      //       )
-      //       await handleFavoriteClick()
-      //       setComponentState({ favorited: !componentState.favorited })
-      //     }}
-      //   >
-      //     <HeartIcon fill={componentState.favorited ? '#14B8A6' : undefined} />
-      //   </div>
-      // }
+      leftButton={
+        <div onClick={onFavoriteClick}>
+          <HeartIcon fill={componentState.favorited ? '#14B8A6' : undefined} />
+        </div>
+      }
     >
       {showDeleteModal && (
         <ConfirmationModal
