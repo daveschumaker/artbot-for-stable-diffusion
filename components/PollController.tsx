@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { useEffect } from 'react'
 import { useStore } from 'statery'
 
 import Toast from '../components/UI/Toast'
 import { POLL_COMPLETED_JOBS_INTERVAL } from '../constants'
+import { useEffectOnce } from '../hooks/useEffectOnce'
 import { appInfoStore, setShowImageReadyToast } from '../store/appStore'
 import {
   decideNewMain,
@@ -34,7 +34,7 @@ const PollController = () => {
     await hackyMultiJobCheck()
   }
 
-  useEffect(() => {
+  useEffectOnce(() => {
     localStorage[LocalStorageEvents.New] = Date.now()
 
     const firstCheckDelay = 500
@@ -57,7 +57,7 @@ const PollController = () => {
 
     return () => clearInterval(interval)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  })
 
   return (
     <>
