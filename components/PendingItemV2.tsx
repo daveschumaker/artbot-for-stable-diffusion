@@ -417,8 +417,7 @@ const PendingItem = memo(
                     onClick={() => handleCopyPromptClick(jobDetails)}
                   >
                     <CopyIcon />
-                    <span className="inline-block md:hidden">Copy</span>
-                    <span className="hidden md:inline-block">Copy prompt</span>
+                    <span className="hidden md:inline-block">Copy</span>
                   </Button>
                   <Button
                     onClick={() => {
@@ -454,8 +453,7 @@ const PendingItem = memo(
                     onClick={() => handleCopyPromptClick(jobDetails)}
                   >
                     <CopyIcon />
-                    <span className="inline-block md:hidden">Copy</span>
-                    <span className="hidden md:inline-block">Copy prompt</span>
+                    <span className="hidden md:inline-block">Copy</span>
                   </Button>
                   <Button btnType="secondary" onClick={handleDeleteJob}>
                     <TrashIcon />
