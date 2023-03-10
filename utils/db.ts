@@ -209,22 +209,6 @@ export const bulkDeleteImages = async (images: Array<string>) => {
   return db.completed.bulkDelete(images)
 }
 
-export const _getAllPendingJobsByStatus = async (
-  status: string,
-  limit: number = 5
-) => {
-  return await db.pending
-    .orderBy('timestamp')
-    .limit(limit)
-    .filter(function (job: { jobStatus: string }) {
-      return job.jobStatus === status
-    })
-    .toArray()
-}
-export const getAllPendingJobsByStatus = memoize(_getAllPendingJobsByStatus, {
-  maxAge: 10000
-})
-
 export const countCompletedJobs = async () => {
   return await db?.completed?.orderBy('timestamp').count()
 }
@@ -420,12 +404,9 @@ export const fetchRelatedImages = async (
     .toArray()
 }
 
-export const _getPendingJobDetails = async (jobId: string) => {
+export const getPendingJobDetails = async (jobId: string) => {
   return await db.pending.where('jobId').equals(jobId).first()
 }
-export const getPendingJobDetails = memoize(_getPendingJobDetails, {
-  maxAge: 10000
-})
 
 // @ts-ignore
 export const updateCompletedJob = async (tableId: number, updatedObject) => {

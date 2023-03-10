@@ -415,6 +415,13 @@ export const checkCurrentJob = async (imageDetails: any) => {
 
   if (jobDetails?.processing === 1) {
     imageDetails.jobStatus = JobStatus.Processing
+    await updatePendingJob(
+      imageDetails.id,
+      Object.assign({}, imageDetails, {
+        queue_position: jobDetails.queue_position,
+        wait_time: jobDetails.wait_time || 0
+      })
+    )
   }
 
   if (jobDetails?.success && !jobDetails?.done) {

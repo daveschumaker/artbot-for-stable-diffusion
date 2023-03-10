@@ -121,7 +121,7 @@ const PendingPage = () => {
     if (filter === 'processing') {
       return (
         job.jobStatus === JobStatus.Processing ||
-        job.jobStatus === JobStatus.Requested
+        job.jobStatus === JobStatus.Queued
       )
     }
 
@@ -183,7 +183,7 @@ const PendingPage = () => {
                 View all ({pendingImages.length})
               </DropDownMenuItem>
               <DropDownMenuItem onClick={() => setFilter('processing')}>
-                View processing ({processing.length})
+                View processing ({processing.length + queued.length})
               </DropDownMenuItem>
               <DropDownMenuItem onClick={() => setFilter('done')}>
                 View done ({done.length})
@@ -240,7 +240,7 @@ const PendingPage = () => {
             done ({done.length})
           </TextButton>
           <TextButton onClick={() => setFilter('processing')}>
-            processing ({processing.length})
+            processing ({processing.length + queued.length})
           </TextButton>
           <TextButton onClick={() => setFilter('error')}>
             error ({error.length})
