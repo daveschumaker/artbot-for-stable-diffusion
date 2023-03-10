@@ -62,6 +62,9 @@ import {
   validatePromptSafety
 } from '../utils/validationUtils'
 import AlertTriangleIcon from '../components/icons/AlertTriangle'
+import FlexRow from '../components/UI/FlexRow'
+import ArrowBarLeftIcon from '../components/icons/ArrowBarLeftIcon'
+import clsx from 'clsx'
 
 interface InputTarget {
   name: string
@@ -433,9 +436,9 @@ const Home: NextPage = ({
       const updateObject = PromptInputSettings.load()
       delete updateObject.v
 
-      if (!AppSettings.get('savePromptOnCreate')) {
-        delete updateObject.prompt
-      }
+      // if (!AppSettings.get('savePromptOnCreate')) {
+      //   delete updateObject.prompt
+      // }
 
       if (!AppSettings.get('saveSeedOnCreate')) {
         delete updateObject.seed
@@ -479,13 +482,13 @@ const Home: NextPage = ({
     watchBuild()
   }, [watchBuild])
 
-  useEffect(() => {
+  useEffectOnce(() => {
     if (!editMode && !shareMode && !loadDrawing && !loadShortlink) {
       updateDefaultInput()
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  })
 
   useEffect(() => {
     const hasModel = availableModels.filter((model: any) => {
@@ -697,7 +700,7 @@ const Home: NextPage = ({
           triggerArray={triggerArray}
         />
       )}
-      <div className={styles['sticky-text-area']}>
+      <div className={clsx(styles['sticky-text-area'], 'mt-2')}>
         {flaggedPromptError && (
           <div className="mb-4 bg-red-500 rounded-md px-4 py-2 font-[500] flex flex-row items-center gap-2 text-white">
             <div>
@@ -710,13 +713,27 @@ const Home: NextPage = ({
             </div>
           </div>
         )}
-        <TextArea
-          name="prompt"
-          placeholder="Describe your image..."
-          onChange={handleChangeValue}
-          value={input.prompt}
-          ref={ref}
-        />
+        <FlexRow>
+          <TextArea
+            name="prompt"
+            placeholder="Describe your image..."
+            onChange={handleChangeValue}
+            value={input.prompt}
+            ref={ref}
+          />
+          <Button
+            title="Clear current input"
+            btnType="secondary"
+            onClick={() => {
+              PromptInputSettings.set('prompt', '')
+              setInput({
+                prompt: ''
+              })
+            }}
+          >
+            <ArrowBarLeftIcon />
+          </Button>
+        </FlexRow>
         {hasValidationError && (
           <div className="mt-2 text-red-500 font-semibold">
             Please correct all input errors before continuing
@@ -750,7 +767,7 @@ const Home: NextPage = ({
                 <span>
                   <TrashIcon />
                 </span>
-                <span className="hidden md:inline-block">Clear</span>
+                <span>Reset all?</span>
               </Button>
               <Button
                 title="Create new image"
@@ -808,7 +825,7 @@ const Home: NextPage = ({
             <span>
               <TrashIcon />
             </span>
-            <span className="hidden md:inline-block">Clear</span>
+            <span>Reset all?</span>
           </Button>
           <Button
             title="Create new image"
