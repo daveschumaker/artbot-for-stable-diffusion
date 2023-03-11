@@ -8,6 +8,7 @@ import PromptInputSettings from '../models/PromptInputSettings'
 // @ts-ignore
 import { trackNewSession } from './analytics'
 import { isAppActive } from './appUtils'
+import { deleteDoneFromPending } from './db'
 import { initWindowLogger } from './debugTools'
 
 export const updateShowGrid = () => {
@@ -68,6 +69,27 @@ export const updateAppConfig = () => {
   }
 }
 
+// Track time of last visit so we can potentially clean up pending items database.
+// If the user is returning to ArtBot after 30 minutes, clear out the pending items queue for performance reasons.
+export const appLastActive = () => {
+  const WAIT_TIME_SEC = 1800 // 30 minutes.
+  const lastActiveTime = localStorage.getItem('ArtBotLastActive')
+
+  let currentTime = Math.floor(Date.now() / 1000)
+  if (lastActiveTime && currentTime - Number(lastActiveTime) > WAIT_TIME_SEC) {
+    try {
+      deleteDoneFromPending()
+    } catch (err) {
+      console.log(`An error occurred while clearing out stale pending items.`)
+    }
+  }
+
+  setInterval(() => {
+    currentTime = Math.floor(Date.now() / 1000)
+    localStorage.setItem('ArtBotLastActive', String(currentTime))
+  }, 1000)
+}
+
 // Use to fix any issues related to local storage values
 // due to bad decisions on my part.
 export const fixLocalStorage = () => {
@@ -103,6 +125,7 @@ export const initAppSettings = async () => {
   setUserId()
   buildModelAvailability()
   fetchMyWorkers()
+  appLastActive()
 
   setInterval(async () => {
     if (!isAppActive()) {
