@@ -59,10 +59,10 @@ const PendingPage = () => {
 
     pendingImages
       .sort((a: any, b: any) => {
-        if (a.timestamp > b.timestamp) {
+        if (a.id > b.id) {
           return 1
         }
-        if (a.timestamp < b.timestamp) {
+        if (a.id < b.id) {
           return -1
         }
         return 0
