@@ -153,7 +153,7 @@ export const savePrompt = ({
   let cacheObj: any = {}
   for (const [key, value] of Object.entries(promptDetails)) {
     if (keysToExclude.indexOf(key) >= 0) {
-      return
+      continue
     }
 
     cacheObj[key] = value
