@@ -36,7 +36,7 @@ export interface IRequestParams {
   post_processing?: Array<string>
   prompt: string
   sampler: string
-  seed?: string
+  seed: string
   source_image?: string
   source_mask?: string
   source_processing: SourceProcessing

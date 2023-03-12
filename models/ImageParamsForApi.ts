@@ -2,7 +2,7 @@ import { modifyPromptForStylePreset } from '../utils/imageUtils'
 import { SourceProcessing } from '../utils/promptUtils'
 import AppSettings from './AppSettings'
 
-interface ApiParams {
+export interface IApiParams {
   prompt: string
   params: ParamsObject
   nsfw: boolean
@@ -25,7 +25,7 @@ export interface IArtBotImageDetails {
   cfg_scale: number
   height: number
   width: number
-  seed?: string
+  seed: string
   steps: number
   karras: boolean
   hires: boolean
@@ -43,7 +43,7 @@ export interface IArtBotImageDetails {
 }
 
 interface ParamsObject {
-  sampler_name?: string // Optional due to controlNet
+  sampler_name: string // Optional due to controlNet
   cfg_scale: number
   height: number
   width: number
@@ -52,10 +52,10 @@ interface ParamsObject {
   denoising_strength?: number
   control_type?: string
   karras: boolean
-  hires_fix?: boolean // Optional due to img2img not being supported
+  hires_fix: boolean
   clip_skip: number
   tiling: boolean
-  post_processing?: Array<string>
+  post_processing: string[]
   n: number
 }
 
@@ -79,17 +79,17 @@ class ImageParamsForApi {
       cfg_scale,
       height,
       width,
-      seed,
+      seed = '',
       steps,
       models,
-      karras,
-      hires,
-      clipskip,
-      tiling,
+      karras = false,
+      hires = false,
+      clipskip = 1,
+      tiling = false,
       source_image,
       source_processing,
       stylePreset,
-      post_processing,
+      post_processing = [],
       source_mask,
       denoising_strength,
       control_type
@@ -98,13 +98,15 @@ class ImageParamsForApi {
 
     const { hasError = false } = options
 
-    const apiParams: ApiParams = {
+    const apiParams: IApiParams = {
       prompt,
       params: {
         cfg_scale: Number(cfg_scale),
+        seed,
         sampler_name: sampler,
         height: Number(height),
         width: Number(width),
+        post_processing: [...post_processing],
         steps: Number(steps),
         tiling,
         karras,
@@ -122,12 +124,6 @@ class ImageParamsForApi {
 
     if (useWorkerId) {
       apiParams.workers = [useWorkerId]
-    }
-
-    if (seed) {
-      apiParams.params.seed = seed
-    } else {
-      apiParams.params.seed = ''
     }
 
     if (source_processing === SourceProcessing.Img2Img) {
@@ -149,12 +145,6 @@ class ImageParamsForApi {
       apiParams.source_processing = source_processing
       apiParams.source_mask = source_mask
       apiParams.models = ['stable_diffusion_inpainting']
-    }
-
-    if (post_processing.length > 0) {
-      apiParams.params.post_processing = post_processing
-    } else {
-      apiParams.params.post_processing = []
     }
 
     if (control_type && control_type !== '' && source_image) {
@@ -187,13 +177,13 @@ class ImageParamsForApi {
     // Things to remove
     if (control_type && control_type !== '' && source_image) {
       delete apiParams.params.denoising_strength
-      delete apiParams.params.sampler_name
+      apiParams.params.sampler_name = ''
       apiParams.params.karras = false
       apiParams.params.hires_fix = false
     }
 
     if (source_image) {
-      delete apiParams.params.hires_fix
+      apiParams.params.hires_fix = false
     }
 
     return apiParams

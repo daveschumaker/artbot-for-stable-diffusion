@@ -2,6 +2,7 @@ import {
   compressToEncodedURIComponent,
   decompressFromEncodedURIComponent
 } from 'lz-string'
+import DefaultPromptInput from './DefaultPromptInput'
 
 class ShareLinkDetails {
   constructor() {}

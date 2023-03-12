@@ -23,7 +23,7 @@ interface CreateImageJob {
   karras: boolean
   hires: boolean
   clipskip: number
-  seed?: string
+  seed: string
   numImages?: number
   parentJobId?: string
   models: Array<string>
