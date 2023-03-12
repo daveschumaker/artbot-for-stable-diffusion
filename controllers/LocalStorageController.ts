@@ -57,11 +57,16 @@ class LocalStorageController {
 
     try {
       const string = localStorage.getItem(this.localStorageKey) || ''
+
+      if (!string) {
+        return
+      }
+
       const data = JSON.parse(string)
 
       return data
     } catch (err) {
-      return {}
+      return
     }
   }
 
