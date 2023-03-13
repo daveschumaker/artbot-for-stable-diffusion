@@ -57,7 +57,7 @@ class ShareLinkDetails {
     return compressed
   }
 
-  static decode(uri: string) {
+  static decode(uri: string): DefaultPromptInput {
     const string = decompressFromEncodedURIComponent(uri) || '{}'
     const linkData = JSON.parse(string)
     const { prompt, negative, params } = linkData

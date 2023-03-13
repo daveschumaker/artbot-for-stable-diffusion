@@ -41,9 +41,11 @@ class LocalStorageController {
 
     const data = this.load()
 
-    if (data[item] === 'true') {
+    if (data && data[item] && data[item] === 'true') {
       return true
-    } else if (data[item] === 'false') {
+    } else if (data && data[item] && data[item] === 'false') {
+      return false
+    } else {
       return false
     }
 
@@ -79,7 +81,7 @@ class LocalStorageController {
       return
     }
 
-    const data = this.load()
+    const data = this.load() || {}
     data[key] = val
     this.saveAll(data)
   }

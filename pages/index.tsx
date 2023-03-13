@@ -38,11 +38,7 @@ import StylesDropdown from '../components/CreatePage/StylesDropdown'
 import { useStore } from 'statery'
 import { appInfoStore } from '../store/appStore'
 import AppSettings from '../models/AppSettings'
-import {
-  countImagesToGenerate,
-  kudosCost,
-  orientationDetails
-} from '../utils/imageUtils'
+import { countImagesToGenerate, orientationDetails } from '../utils/imageUtils'
 import { toast } from 'react-toastify'
 import Linker from '../components/UI/Linker'
 import InteractiveModal from '../components/UI/InteractiveModal/interactiveModal'
@@ -65,6 +61,7 @@ import AlertTriangleIcon from '../components/icons/AlertTriangle'
 import FlexRow from '../components/UI/FlexRow'
 import ArrowBarLeftIcon from '../components/icons/ArrowBarLeftIcon'
 import clsx from 'clsx'
+import { kudosCostV2 } from '../utils/kudosCost'
 
 interface InputTarget {
   name: string
@@ -339,16 +336,17 @@ const Home: NextPage = ({
     })
 
     //////// TODO: REMOVE ME when kudos debugging is complete:
-    const kudos = kudosCost({
+    const kudos = kudosCostV2({
       width: input.width,
       height: input.height,
       steps: input.steps,
-      numImages: totalImagesRequested,
       postProcessors: input.post_processing,
-      sampler: input.sampler,
-      control_type: input.source_image ? input.control_type : '',
-      prompt: input.prompt,
-      negativePrompt: input.negative
+      samplerName: input.sampler,
+      usesControlNet: input.control_type ? true : false,
+      prompt: [input.prompt, input.negative].join(' ### '),
+      hasSourceImage: input.source_image ? true : false,
+      denoisingStrength: input.denoising_strength,
+      numImages: totalImagesRequested
     })
 
     logDataForDebugging({
@@ -433,7 +431,8 @@ const Home: NextPage = ({
       !loadShortlink &&
       !getInputCache()
     ) {
-      const updateObject = PromptInputSettings.load()
+      const updateObject = PromptInputSettings.load() || {}
+
       delete updateObject.v
 
       // if (!AppSettings.get('savePromptOnCreate')) {
@@ -547,16 +546,18 @@ const Home: NextPage = ({
 
   const triggerArray = [...(modelDetails[input?.models[0]]?.trigger ?? '')]
   const totalImagesRequested = countImagesToGenerate(input)
-  const totalKudosCost = kudosCost({
+
+  const totalKudosCost = kudosCostV2({
     width: input.width,
     height: input.height,
     steps: input.steps,
-    numImages: totalImagesRequested,
     postProcessors: input.post_processing,
-    sampler: input.sampler,
-    control_type: input.source_image ? input.control_type : '',
-    prompt: input.prompt,
-    negativePrompt: input.negative
+    samplerName: input.sampler,
+    usesControlNet: input.control_type ? true : false,
+    prompt: [input.prompt, input.negative].join(' ### '),
+    hasSourceImage: input.source_image ? true : false,
+    denoisingStrength: input.denoising_strength,
+    numImages: totalImagesRequested
   })
 
   const kudosPerImage =

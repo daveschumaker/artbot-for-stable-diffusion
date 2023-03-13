@@ -30,7 +30,6 @@ import {
 import { userInfoStore } from '../store/userStore'
 import {
   countImagesToGenerate,
-  kudosCost,
   nearestWholeMultiple
 } from '../utils/imageUtils'
 import { validModelsArray } from '../utils/modelUtils'
@@ -55,6 +54,7 @@ import AppSettings from '../models/AppSettings'
 import CheckboxIcon from '../components/icons/CheckboxIcon'
 import { toast } from 'react-toastify'
 import { getInputCache } from '../store/inputCache'
+import { kudosCostV2 } from '../utils/kudosCost'
 
 // Kind of a hacky way to persist output of image over the course of a session.
 let cachedImageDetails = {}
@@ -314,16 +314,17 @@ const ControlNet = () => {
     }
   }, [router.query.drawing])
 
-  const totalKudosCost = kudosCost({
+  const totalKudosCost = kudosCostV2({
     width: input.width,
     height: input.height,
     steps: input.steps,
-    numImages: totalImagesRequested,
     postProcessors: input.post_processing,
-    sampler: input.sampler,
-    control_type: input.source_image ? input.control_type : '',
-    prompt: input.prompt,
-    negativePrompt: input.negative
+    samplerName: input.sampler,
+    usesControlNet: input.control_type ? true : false,
+    prompt: [input.prompt, input.negative].join(' ### '),
+    hasSourceImage: input.source_image ? true : false,
+    denoisingStrength: input.denoising_strength,
+    numImages: totalImagesRequested
   })
 
   const kudosPerImage =
