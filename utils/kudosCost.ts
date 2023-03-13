@@ -51,7 +51,7 @@ export const kudosCostV2 = ({
   kudos += AppSettings.get('shareImagesExternally') === true ? 1 : 3
   kudos *= numImages
 
-  return (Math.round(kudos * 100) / 100) * numImages
+  return Math.round(kudos)
 }
 
 export const getAccurateSteps = (
