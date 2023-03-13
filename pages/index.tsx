@@ -7,7 +7,6 @@ import { createImageJob } from '../utils/imageCache'
 import PageTitle from '../components/UI/PageTitle'
 import {
   clearSavedInputCache,
-  loadEditPrompt,
   savePromptHistory,
   SourceProcessing
 } from '../utils/promptUtils'
@@ -23,17 +22,11 @@ import {
   getCanvasStore,
   resetSavedDrawingState
 } from '../store/canvasStore'
-import {
-  clearInputCache,
-  getInputCache,
-  setInputCache
-} from '../store/inputCache'
-import { useEffectOnce } from '../hooks/useEffectOnce'
+import { clearInputCache, setInputCache } from '../store/inputCache'
 import { getDefaultPrompt } from '../utils/db'
 import CreateImageRequest from '../models/CreateImageRequest'
 import ShareLinkDetails from '../models/ShareableLink'
 import Head from 'next/head'
-import { setModelDetails } from '../store/modelStore'
 import StylesDropdown from '../components/CreatePage/StylesDropdown'
 import { useStore } from 'statery'
 import { appInfoStore } from '../store/appStore'
@@ -45,9 +38,7 @@ import InteractiveModal from '../components/UI/InteractiveModal/interactiveModal
 import PromptHistory from '../components/PromptHistory'
 import MenuButton from '../components/UI/MenuButton'
 import HistoryIcon from '../components/icons/HistoryIcon'
-import useComponentState from '../hooks/useComponentState'
 import PromptInputSettings from '../models/PromptInputSettings'
-import { validModelsArray } from '../utils/modelUtils'
 import { userInfoStore } from '../store/userStore'
 import styles from '../styles/index.module.css'
 import TriggerDropdown from '../components/CreatePage/TriggerDropdown'
@@ -62,6 +53,8 @@ import FlexRow from '../components/UI/FlexRow'
 import ArrowBarLeftIcon from '../components/icons/ArrowBarLeftIcon'
 import clsx from 'clsx'
 import { kudosCostV2 } from '../utils/kudosCost'
+import { CreatePageMode, isSharedLink } from '../utils/loadInputCache'
+import ImageApiParamsToPromptInput from '../models/ImageApiParamsToPromptInput'
 
 interface InputTarget {
   name: string
@@ -112,11 +105,7 @@ export async function getServerSideProps(context: any) {
   }
 }
 
-const Home: NextPage = ({
-  availableModels,
-  modelDetails,
-  shortlinkImageParams
-}: any) => {
+const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
   const appState = useStore(appInfoStore)
   const userInfo = useStore(userInfoStore)
 
@@ -129,78 +118,21 @@ const Home: NextPage = ({
   const router = useRouter()
   const { query } = router
 
-  const editMode = query.edit
-  const loadModel = query.model
-  const shareMode = query.share
-  const loadDrawing = query.drawing
-  const loadShortlink = query.i
-
-  let initialState: any = defaultState
-
-  if (loadModel === 'stable_diffusion_2.0') {
-    initialState.models = [loadModel]
-    initialState.sampler = 'dpmsolver'
-  } else if (loadModel) {
-    initialState.models = [loadModel]
-  }
-
-  if (shareMode) {
-    const shareParams = ShareLinkDetails.decode(shareMode as string) || {}
-    initialState = { ...defaultState, ...shareParams }
-  } else if (loadShortlink && shortlinkImageParams) {
-    // TODO: Map imageParamsForApi BACK to this.
-    const { imageParams } = shortlinkImageParams
-    initialState = {
-      ...defaultState,
-      prompt: imageParams.prompt,
-      models: imageParams.models,
-      cfg_scale: imageParams.params.cfg_scale,
-      clipskip: imageParams.clip_skip,
-      orientationType: 'custom',
-      height: imageParams.params.height,
-      width: imageParams.params.width,
-      hires: imageParams.params.hires_fix,
-      karras: imageParams.params.karras,
-      post_processing: imageParams.params.post_processing,
-      sampler: imageParams.params.sampler_name,
-      seed: imageParams.params.seed,
-      steps: imageParams.params.steps,
-      tiling: imageParams.params.tiling
-    }
-  } else if (loadDrawing) {
-    initialState = {
-      ...defaultState,
-      source_image: getBase64FromDraw().base64,
-      orientationType: 'custom',
-      height: getBase64FromDraw().height,
-      width: getBase64FromDraw().width,
-      source_processing: SourceProcessing.Img2Img
-    }
-  } else if (editMode) {
-    initialState = {
-      ...loadEditPrompt(),
-      upscaled: false,
-      numImages: 1,
-      post_processing: [],
-      useAllModels: false,
-      useFavoriteModels: false,
-      useAllSamplers: false
-    }
-  }
-
-  const [, setComponentState] = useComponentState({
-    showTriggerWordsModal: false
-  })
-
+  const [pageLoaded, setPageLoaded] = useState(false)
   const [flaggedPromptError, setFlaggedPromptError] = useState(false)
   const [showPromptHistory, setShowPromptHistory] = useState(false)
   const [hasValidationError, setHasValidationError] = useState(false)
   const [pending, setPending] = useState(false)
   const [hasError, setHasError] = useState('')
   const [input, setInput] = useReducer((state: any, newState: any) => {
-    setInputCache({ ...state, ...newState })
-    return { ...state, ...newState }
-  }, initialState)
+    const updatedInputState = { ...state, ...newState }
+
+    if (pageLoaded) {
+      PromptInputSettings.saveAllInput(updatedInputState)
+    }
+
+    return updatedInputState
+  }, new DefaultPromptInput())
 
   const watchBuild = useCallback(() => {
     if (!build) {
@@ -219,17 +151,6 @@ const Home: NextPage = ({
   const handleChangeValue = (event: InputEvent) => {
     const inputName = event.target.name
     const inputValue = event.target.value
-
-    if (inputName !== 'prompt' && inputName !== 'seed') {
-      PromptInputSettings.set(inputName, inputValue)
-    } else if (
-      AppSettings.get('savePromptOnCreate') &&
-      inputName === 'prompt'
-    ) {
-      PromptInputSettings.set('prompt', inputValue)
-    } else if (AppSettings.get('saveSeedOnCreate') && inputName === 'seed') {
-      PromptInputSettings.set('seed', inputValue)
-    }
 
     setInput({ [inputName]: inputValue })
   }
@@ -423,40 +344,6 @@ const Home: NextPage = ({
     setInput(newDefaultState)
   }
 
-  const updateDefaultInput = async () => {
-    if (
-      !editMode &&
-      !shareMode &&
-      !loadDrawing &&
-      !loadShortlink &&
-      !getInputCache()
-    ) {
-      const updateObject = PromptInputSettings.load() || {}
-
-      delete updateObject.v
-
-      // if (!AppSettings.get('savePromptOnCreate')) {
-      //   delete updateObject.prompt
-      // }
-
-      if (!AppSettings.get('saveSeedOnCreate')) {
-        delete updateObject.seed
-      }
-
-      if (!updateObject.source_image && updateObject.control_type) {
-        updateObject.control_type = ''
-      }
-
-      setInput({ ...updateObject })
-
-      if (updateObject.showMultiModel) {
-        setComponentState({
-          showMultiModel: true
-        })
-      }
-    }
-  }
-
   useEffect(() => {
     const modifiedPrompt = promptSafetyExclusions(input.prompt, input.models[0])
     const promptFlagged = validatePromptSafety(modifiedPrompt)
@@ -481,68 +368,110 @@ const Home: NextPage = ({
     watchBuild()
   }, [watchBuild])
 
-  useEffectOnce(() => {
-    if (!editMode && !shareMode && !loadDrawing && !loadShortlink) {
-      updateDefaultInput()
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  })
-
+  // DO NOT SET INPUT STUFF until after useEffect runs! Let this function be the sole source of input truth.
+  // Check various load states and modes for CreatePage and set preferences based on that here.
+  // Thoughts: if we handle all initial input state here, we shouldn't need to track various modes.
+  // e.g., anywhere else on the site uses the "savePrompt" method. This simply loads it.
   useEffect(() => {
-    const hasModel = availableModels.filter((model: any) => {
-      return model.name === input.models[0]
-    })
+    // TODO: Probably need an InitialInputState type which is then extended by DefaultInputPrompt type
+    let initialState: {
+      models?: string[]
+      numImages?: number
+      sampler?: string
+      source_mask?: string
+      source_image?: string
+      tiling?: boolean
+    } = {}
 
-    if (hasModel.length === 0 && !shareMode && !loadShortlink) {
-      setComponentState({
-        models: ['stable_diffusion'],
-        sampler: 'k_euler_a'
-      })
+    // Step 1. Check if prompt is shared via original share parameter.
+    if (isSharedLink(query) && query[CreatePageMode.SHARE]) {
+      const shareParams =
+        ShareLinkDetails.decode(query[CreatePageMode.SHARE] as string) || {}
+      initialState = { ...shareParams }
     }
-  }, [
-    availableModels,
-    input.models,
-    loadShortlink,
-    setComponentState,
-    shareMode
-  ])
 
-  useEffectOnce(() => {
-    trackEvent({
-      event: 'PAGE_VIEW',
-      context: '/pages/index'
-    })
+    // Step 1a. Check if prompt is shared via shortlink service.
+    if (isSharedLink(query) && query[CreatePageMode.SHORTLINK]) {
+      // TODO: Function to map shortlinkImageParams to regular object. Make it testable!
+      initialState = new ImageApiParamsToPromptInput(shortlinkImageParams)
+    }
 
-    setModelDetails(modelDetails)
+    // Step 2. Load user prompt settings, if available
+    if (!isSharedLink(query) && PromptInputSettings.load()) {
+      initialState = { ...PromptInputSettings.load() }
+    }
 
-    const restorePrompt = localStorage.getItem('reloadPrompt')
+    // Step 2a. Otherwise, load standarddefault prompt settings
+    if (!isSharedLink(query) && !PromptInputSettings.load()) {
+      initialState = { ...new DefaultPromptInput() }
+    }
 
-    if (restorePrompt) {
-      const shareParams = ShareLinkDetails.decode(restorePrompt as string) || {}
-      initialState = { ...defaultState, ...shareParams }
-      setInput({ ...initialState })
-      localStorage.removeItem('reloadPrompt')
-    } else if (
-      !loadDrawing &&
-      !editMode &&
-      !shareMode &&
-      !loadModel &&
-      !loadShortlink &&
-      getInputCache()
+    // Step 3. Check for other query param states. If query param is for loading a model, set model:
+    if (query[CreatePageMode.LOAD_MODEL]) {
+      initialState = {
+        ...new DefaultPromptInput(),
+        ...(PromptInputSettings.load() || {}),
+        models: [query[CreatePageMode.LOAD_MODEL] as string]
+      }
+    }
+
+    // Step 3a. Check if drawing mode
+    if (query[CreatePageMode.LOAD_DRAWING]) {
+      initialState = {
+        ...new DefaultPromptInput(),
+        ...(PromptInputSettings.load() || {}),
+        source_image: getBase64FromDraw().base64,
+        orientationType: 'custom',
+        height: getBase64FromDraw().height,
+        width: getBase64FromDraw().width,
+        source_processing: SourceProcessing.Img2Img
+      }
+    }
+
+    // Step 4. Validate various prompt parameters (e.g., correct model vs. source_processing type)
+    // TODO: Move into subfolder / function?
+
+    if (initialState.models && initialState?.models?.length === 0) {
+      initialState.models = ['stable_diffusion']
+    }
+
+    if (
+      initialState.models &&
+      initialState.models[0] === 'stable_diffusion_2'
     ) {
-      logDataForDebugging({
-        name: 'index#useEffectOnce.getInputCache',
-        data: { ...getInputCache() }
-      })
-      setInput({ ...getInputCache() })
-    } else if (editMode && !loadEditPrompt().defaultSavePrompt) {
-      setInput({ ...loadEditPrompt() })
-    } else {
-      const updateObject = PromptInputSettings.load()
-      setInput({ ...updateObject })
+      initialState.sampler = 'dpmsolver'
     }
-  })
+
+    if (!initialState.sampler) {
+      initialState.sampler = 'k_euler'
+    }
+
+    if (
+      (initialState.numImages && isNaN(initialState.numImages)) ||
+      !initialState.numImages
+    ) {
+      initialState.numImages = 1
+    }
+
+    // Handle state where tiling is incorrectly set in case of img2img or inpainting
+    const hasSourceImageOrMask =
+      initialState.source_image || initialState.source_mask
+    const hasInvalidModel =
+      initialState.models &&
+      initialState.models[0] === 'Stable Diffusion 2 Depth'
+    if (
+      (hasSourceImageOrMask || hasInvalidModel) &&
+      initialState.tiling === true
+    ) {
+      initialState.tiling = false
+    }
+
+    // Step 4. Set input
+    setInput({ ...initialState })
+
+    // Step 5. Set pageLoaded so we can start error checking and auto saving input.
+    setPageLoaded(true)
+  }, [query, shortlinkImageParams])
 
   const triggerArray = [...(modelDetails[input?.models[0]]?.trigger ?? '')]
   const totalImagesRequested = countImagesToGenerate(input)
@@ -583,60 +512,6 @@ const Home: NextPage = ({
     setHasError('')
   }
 
-  useEffect(() => {
-    const { source_mask, source_image, tiling, models = [] } = input || {}
-
-    const modelerOptions = (imageParams: any) => {
-      const modelsArray = validModelsArray({ imageParams }) || []
-      modelsArray.push({
-        name: 'random',
-        value: 'random',
-        label: 'Random!',
-        count: 1
-      })
-
-      return modelsArray
-    }
-
-    const modelExists = modelerOptions(input).filter((option: any) => {
-      return input?.models?.indexOf(option.value) >= 0
-    })
-
-    if (
-      models[0] === 'stable_diffusion_inpainting' ||
-      models[0] === 'Stable Diffusion 2 Depth'
-    ) {
-      // Handle state where an incorrect model might be cached
-      // e.g., "stable_diffusion_inpainting" when first loading page.
-      if (
-        !shareMode &&
-        !loadShortlink &&
-        (!modelExists || modelExists.length === 0)
-      ) {
-        setInput({
-          models: ['stable_diffusion'],
-          sampler: 'k_euler_a'
-        })
-      }
-    }
-
-    if (isNaN(input.numImages)) {
-      setInput({ numImages: 1 })
-    }
-
-    // Handle state where tiling is incorrectly set in case of img2img or inpainting
-    if (
-      (source_mask ||
-        source_image ||
-        models[0] === 'Stable Diffusion 2 Depth') &&
-      tiling === true
-    ) {
-      setInput({
-        tiling: false
-      })
-    }
-  }, [input, loadShortlink, shareMode])
-
   return (
     <main>
       {showPromptHistory && (
@@ -647,7 +522,7 @@ const Home: NextPage = ({
           />
         </InteractiveModal>
       )}
-      {loadShortlink ? (
+      {query[CreatePageMode.SHORTLINK] ? (
         <Head>
           <title>ArtBot - Shareable Link created with {input.models[0]}</title>
           <meta
@@ -660,11 +535,13 @@ const Home: NextPage = ({
           />
           <meta
             name="twitter:image"
-            content={`https://tinybots.net/artbot/i/${loadShortlink}`}
+            content={`https://tinybots.net/artbot/i/${
+              query[CreatePageMode.SHORTLINK]
+            }`}
           />
         </Head>
       ) : null}
-      {shareMode ? (
+      {isSharedLink(query) ? (
         <Head>
           <title>ArtBot - Shareable Link</title>
           <meta name="twitter:title" content="ArtBot - Shareable Link" />

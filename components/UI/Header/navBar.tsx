@@ -148,7 +148,7 @@ const NavBar = () => {
                 Detailed information about all models currently available on the
                 Stable Horde.
               </ListItem>
-              <ListItem href="/models/updates" title="Model Updates">
+              <ListItem href="/info/models/updates" title="Model Updates">
                 The latest information on new models and updated models.
               </ListItem>
               <ListItem

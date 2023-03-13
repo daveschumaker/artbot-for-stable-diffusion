@@ -105,6 +105,25 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.03.12</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: Kudos calculations should now be spot on. Thanks to Litnine on
+            Discord for doing a bunch of legwork to get this correct.
+          </StyledLi>
+          <StyledLi>
+            Fix: Properly saving input state and restoring it (where
+            appropriate) should now work correctly. As well as copying images,
+            making changes to input, etc. Thanks to Litnine, Hinaloth, and
+            dreamy on Discord for the bug reports.
+          </StyledLi>
+          <StyledLi>
+            Fix: Broken link on flyout menu for model updates. Thanks to
+            TheGlosser on Discord for reporting this.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.03.10</SubSectionTitle>
         <StyledUl>
           <StyledLi>
