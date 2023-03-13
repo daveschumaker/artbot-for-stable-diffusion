@@ -2,7 +2,6 @@ import {
   compressToEncodedURIComponent,
   decompressFromEncodedURIComponent
 } from 'lz-string'
-import DefaultPromptInput from './DefaultPromptInput'
 
 class ShareLinkDetails {
   constructor() {}
@@ -57,7 +56,7 @@ class ShareLinkDetails {
     return compressed
   }
 
-  static decode(uri: string): DefaultPromptInput {
+  static decode(uri: string) {
     const string = decompressFromEncodedURIComponent(uri) || '{}'
     const linkData = JSON.parse(string)
     const { prompt, negative, params } = linkData

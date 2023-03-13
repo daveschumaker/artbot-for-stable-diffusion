@@ -1,4 +1,5 @@
 import LocalStorageController from '../controllers/LocalStorageController'
+import AppSettings from './AppSettings'
 
 class PromptInputSettingsClass extends LocalStorageController {
   constructor({ name, version }: { name: string; version: number }) {
@@ -28,7 +29,15 @@ class PromptInputSettingsClass extends LocalStorageController {
     }
 
     for (let [key, value] of Object.entries(clonedInput)) {
-      if (keysToExclude.indexOf(key) >= 0) {
+      if (keysToExclude.includes(key)) {
+        continue
+      }
+
+      if (key === 'prompt' && !AppSettings.get('savePromptOnCreate')) {
+        continue
+      }
+
+      if (key === 'seed' && !AppSettings.get('saveSeedOnCreate')) {
         continue
       }
 

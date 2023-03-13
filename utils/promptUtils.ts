@@ -147,7 +147,8 @@ export const savePrompt = ({
     'canvasData',
     'copyPrompt',
     'maskData',
-    'source_image'
+    'source_image',
+    'source_mask'
   ]
 
   let cacheObj: any = {}
