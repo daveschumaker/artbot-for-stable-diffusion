@@ -30,7 +30,7 @@ export interface CreateImageJob {
   steps: number
   sampler: string
   apikey?: string
-  seed?: string
+  seed: string
   numImages?: number
   useTrusted?: boolean
   parentJobId?: string
