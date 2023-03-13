@@ -43,7 +43,7 @@ export interface IArtBotImageDetails {
 }
 
 interface ParamsObject {
-  sampler_name: string // Optional due to controlNet
+  sampler_name?: string // Optional due to controlNet
   cfg_scale: number
   height: number
   width: number
@@ -177,7 +177,7 @@ class ImageParamsForApi {
     // Things to remove
     if (control_type && control_type !== '' && source_image) {
       delete apiParams.params.denoising_strength
-      apiParams.params.sampler_name = ''
+      delete apiParams.params.sampler_name
       apiParams.params.karras = false
       apiParams.params.hires_fix = false
     }

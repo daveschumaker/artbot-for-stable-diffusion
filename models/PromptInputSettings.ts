@@ -1,12 +1,18 @@
 import LocalStorageController from '../controllers/LocalStorageController'
 import AppSettings from './AppSettings'
 
+interface IOptions {
+  forceSavePrompt?: boolean
+}
+
 class PromptInputSettingsClass extends LocalStorageController {
   constructor({ name, version }: { name: string; version: number }) {
     super({ name, version })
   }
 
-  saveAllInput(input: object) {
+  saveAllInput(input: object = {}, options: IOptions = {}) {
+    const { forceSavePrompt = false } = options
+
     const clonedInput = Object.assign({}, input)
 
     // Clone to prompt input settings
@@ -33,7 +39,11 @@ class PromptInputSettingsClass extends LocalStorageController {
         continue
       }
 
-      if (key === 'prompt' && !AppSettings.get('savePromptOnCreate')) {
+      if (
+        key === 'prompt' &&
+        !AppSettings.get('savePromptOnCreate') &&
+        !forceSavePrompt
+      ) {
         continue
       }
 

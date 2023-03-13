@@ -1,7 +1,26 @@
 const express = require('express')
 const router = express.Router()
 
-router.get('/:shortlink', async (req, res) => {
+router.get('/get/:shortlink', async (req, res) => {
+  const { shortlink } = req.params
+
+  if (shortlink) {
+    const resp = await fetch(
+      `${process.env.SHORTLINK_SERVICE}/api/v1/shortlink/load/${shortlink}`
+    )
+    const data = (await resp.json()) || {}
+    const { data: responseData = {} } = data
+    const { imageParams } = responseData
+
+    if (imageParams) {
+      return res.send(imageParams)
+    }
+  }
+
+  return res.send('')
+})
+
+router.get('/i/:shortlink', async (req, res) => {
   const { shortlink } = req.params
 
   if (shortlink) {

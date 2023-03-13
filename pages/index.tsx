@@ -91,8 +91,10 @@ export async function getServerSideProps(context: any) {
       const res = await fetch(
         `http://localhost:${process.env.PORT}/artbot/api/get-shortlink?shortlink=${query.i}`
       )
+
       const data = (await res.json()) || {}
-      shortlinkImageParams = data.imageParams || null
+      const { imageParams } = data.imageParams || {}
+      shortlinkImageParams = imageParams || null
     }
   } catch (err) {}
 
@@ -128,7 +130,8 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
     const updatedInputState = { ...state, ...newState }
 
     if (pageLoaded) {
-      PromptInputSettings.saveAllInput(updatedInputState)
+      const forceSavePrompt = query[CreatePageMode.SHORTLINK] ? true : false
+      PromptInputSettings.saveAllInput(updatedInputState, { forceSavePrompt })
     }
 
     return updatedInputState
@@ -373,41 +376,46 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
   // Thoughts: if we handle all initial input state here, we shouldn't need to track various modes.
   // e.g., anywhere else on the site uses the "savePrompt" method. This simply loads it.
   useEffect(() => {
-    // TODO: Probably need an InitialInputState type which is then extended by DefaultInputPrompt type
-    let initialState: {
-      models?: string[]
-      numImages?: number
-      sampler?: string
-      source_mask?: string
-      source_image?: string
-      tiling?: boolean
-    } = {}
+    // Set initial state here as default. Will act as fallback in case none of the other options work.
+    let initialState: DefaultPromptInput | null = new DefaultPromptInput()
 
     // Step 1. Check if prompt is shared via original share parameter.
     if (isSharedLink(query) && query[CreatePageMode.SHARE]) {
+      initialState = null
       const shareParams =
         ShareLinkDetails.decode(query[CreatePageMode.SHARE] as string) || {}
+
+      // @ts-ignore
       initialState = { ...shareParams }
     }
 
     // Step 1a. Check if prompt is shared via shortlink service.
-    if (isSharedLink(query) && query[CreatePageMode.SHORTLINK]) {
+    if (
+      isSharedLink(query) &&
+      query[CreatePageMode.SHORTLINK] &&
+      shortlinkImageParams
+    ) {
+      initialState = null
       // TODO: Function to map shortlinkImageParams to regular object. Make it testable!
+      // @ts-ignore
       initialState = new ImageApiParamsToPromptInput(shortlinkImageParams)
     }
 
     // Step 2. Load user prompt settings, if available
     if (!isSharedLink(query) && PromptInputSettings.load()) {
+      initialState = null
       initialState = { ...PromptInputSettings.load() }
     }
 
     // Step 2a. Otherwise, load standarddefault prompt settings
     if (!isSharedLink(query) && !PromptInputSettings.load()) {
+      initialState = null
       initialState = { ...new DefaultPromptInput() }
     }
 
     // Step 3. Check for other query param states. If query param is for loading a model, set model:
     if (query[CreatePageMode.LOAD_MODEL]) {
+      initialState = null
       initialState = {
         ...new DefaultPromptInput(),
         ...(PromptInputSettings.load() || {}),
@@ -417,6 +425,7 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
 
     // Step 3a. Check if drawing mode
     if (query[CreatePageMode.LOAD_DRAWING]) {
+      initialState = null
       initialState = {
         ...new DefaultPromptInput(),
         ...(PromptInputSettings.load() || {}),
@@ -431,35 +440,45 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
     // Step 4. Validate various prompt parameters (e.g., correct model vs. source_processing type)
     // TODO: Move into subfolder / function?
 
-    if (initialState.models && initialState?.models?.length === 0) {
+    if (
+      initialState &&
+      initialState.models &&
+      initialState?.models?.length === 0
+    ) {
       initialState.models = ['stable_diffusion']
     }
 
     if (
+      initialState &&
       initialState.models &&
       initialState.models[0] === 'stable_diffusion_2'
     ) {
       initialState.sampler = 'dpmsolver'
     }
 
-    if (!initialState.sampler) {
+    if (initialState && !initialState.sampler) {
       initialState.sampler = 'k_euler'
     }
 
     if (
-      (initialState.numImages && isNaN(initialState.numImages)) ||
-      !initialState.numImages
+      (initialState &&
+        initialState.numImages &&
+        isNaN(initialState.numImages)) ||
+      (initialState && !initialState.numImages)
     ) {
       initialState.numImages = 1
     }
 
     // Handle state where tiling is incorrectly set in case of img2img or inpainting
     const hasSourceImageOrMask =
-      initialState.source_image || initialState.source_mask
+      (initialState && initialState.source_image) ||
+      (initialState && initialState.source_mask)
     const hasInvalidModel =
+      initialState &&
       initialState.models &&
       initialState.models[0] === 'Stable Diffusion 2 Depth'
     if (
+      initialState &&
       (hasSourceImageOrMask || hasInvalidModel) &&
       initialState.tiling === true
     ) {
@@ -522,20 +541,29 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
           />
         </InteractiveModal>
       )}
-      {query[CreatePageMode.SHORTLINK] ? (
+      {query[CreatePageMode.SHORTLINK] && shortlinkImageParams ? (
         <Head>
-          <title>ArtBot - Shareable Link created with {input.models[0]}</title>
+          <title>
+            🤖 ArtBot - Shareable Link $
+            {shortlinkImageParams.models && shortlinkImageParams.models[0]
+              ? `created with ${shortlinkImageParams.models[0]}`
+              : ''}
+          </title>
           <meta
             name="twitter:title"
-            content={`🤖 ArtBot - Shareable Link created with ${input.models[0]}`}
+            content={`🤖 ArtBot - Shareable Link ${
+              shortlinkImageParams.models && shortlinkImageParams.models[0]
+                ? `created with ${shortlinkImageParams.models[0]}`
+                : ''
+            }`}
           />
           <meta
             name="twitter:description"
-            content={`Prompt: "${input.prompt}"`}
+            content={`Prompt: "${shortlinkImageParams.prompt}"`}
           />
           <meta
             name="twitter:image"
-            content={`https://tinybots.net/artbot/i/${
+            content={`https://tinybots.net/artbot/shortlink/i/${
               query[CreatePageMode.SHORTLINK]
             }`}
           />
