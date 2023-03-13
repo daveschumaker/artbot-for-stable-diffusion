@@ -658,7 +658,7 @@ const SettingsPage = () => {
               {componentState.showResetConfirmation && (
                 <AlertDialogBox
                   title="Are you sure you want to reset your preferences?"
-                  message="This option will reset all user settings (e.g., API key, image download preferences, stored input values, etc). Your images will be safe. Please save your API key before continuing."
+                  message="This option will reset all user settings found on this settings page. (e.g., API key, image download preferences, stored input values, etc). Your images will be safe. However, please save your API key before continuing."
                   onConfirmClick={() => {
                     localStorage.clear()
                     window.location.reload()
@@ -880,18 +880,20 @@ const SettingsPage = () => {
               </Section>
               <Section>
                 <SubSectionTitle>
-                  <strong>Reset local storage?</strong>
+                  <strong>Reset ArtBot settings in local storage?</strong>
                   <div className="block text-xs mb-2 mt-2 w-full">
-                    In some instances, ArtBot settings have been corrupted. Use
-                    this option to reset all user settings (e.g., API key, image
-                    download preferences, stored input values, etc).
+                    In some instances, ArtBot settings could have been
+                    corrupted. Use this option to reset all user settings found
+                    on this settings page (e.g., API key, image download
+                    preferences, stored input values, etc).
                   </div>
                   <div className="block text-xs mb-2 mt-2 w-full">
                     Please save your <strong>API key</strong> before doing this!
                   </div>
                   <div className="block text-xs mb-2 mt-2 w-full">
-                    The image database will not be touched and your images will
-                    still be available.
+                    The prompt history database and image database will not be
+                    touched and your images will still be available after this
+                    reset.
                   </div>
                 </SubSectionTitle>
                 <MaxWidth
@@ -905,6 +907,36 @@ const SettingsPage = () => {
                     }
                   >
                     Reset Preferences?
+                  </Button>
+                </MaxWidth>
+              </Section>
+              <Section>
+                <SubSectionTitle>
+                  <strong>Reset Input Cache?</strong>
+                  <div className="block text-xs mb-2 mt-2 w-full">
+                    In some instances, input cache settings could have been
+                    corrupted. Use this option to reset cached data found on the
+                    create page (e.g., steps, guidance, last used sampler, last
+                    used model).
+                  </div>
+                  <div className="block text-xs mb-2 mt-2 w-full">
+                    The prompt history database and image database will not be
+                    touched and your images will still be available after this
+                    reset.
+                  </div>
+                </SubSectionTitle>
+                <MaxWidth
+                  // @ts-ignore
+                  maxWidth="240"
+                >
+                  <Button
+                    btnType="secondary"
+                    onClick={() => {
+                      localStorage.removeItem('PromptInputSettings')
+                      window.location.assign(`${window.location.origin}/artbot`)
+                    }}
+                  >
+                    Reset Input Cache?
                   </Button>
                 </MaxWidth>
               </Section>
