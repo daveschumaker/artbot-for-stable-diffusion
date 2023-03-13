@@ -7,6 +7,7 @@ import { createImageJob } from '../utils/imageCache'
 import PageTitle from '../components/UI/PageTitle'
 import {
   clearSavedInputCache,
+  loadEditPrompt,
   savePromptHistory,
   SourceProcessing
 } from '../utils/promptUtils'
@@ -424,16 +425,13 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
     }
 
     // Step 3a. Check if drawing mode
-    if (query[CreatePageMode.LOAD_DRAWING]) {
+    if (query[CreatePageMode.LOAD_DRAWING] || loadEditPrompt().source_image) {
       initialState = null
       initialState = {
         ...new DefaultPromptInput(),
-        ...(PromptInputSettings.load() || {}),
         source_image: getBase64FromDraw().base64,
-        orientationType: 'custom',
-        height: getBase64FromDraw().height,
-        width: getBase64FromDraw().width,
-        source_processing: SourceProcessing.Img2Img
+        source_processing: SourceProcessing.Img2Img,
+        ...(loadEditPrompt() || {})
       }
     }
 

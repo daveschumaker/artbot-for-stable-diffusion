@@ -105,6 +105,24 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.03.13</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>Two steps forward, four steps back lately...</StyledLi>
+          <StyledLi>
+            Fix: Shortlinks were broken. Thanks to ResidentChiefNZ on Discord
+            for letting me know.
+          </StyledLi>
+          <StyledLi>
+            Fix: Errors creating an image using ControlNet due to invalid
+            sampler setting. Thanks to voodoocode for reporting this.
+          </StyledLi>
+          <StyledLi>
+            Fix: use for img2img button not working on image details page.
+            Thanks to voodoocode for reporting this.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.03.12</SubSectionTitle>
         <StyledUl>
           <StyledLi>
