@@ -18,7 +18,6 @@ const StyledLink = styled.a`
 
 export default function ErrorPage({ err }: { err: any }) {
   const router = useRouter()
-  console.log(`router?`, router)
 
   useEffectOnce(() => {
     const { username } = userInfoStore.state
