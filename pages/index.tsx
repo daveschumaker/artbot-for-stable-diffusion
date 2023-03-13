@@ -449,7 +449,7 @@ const Home: NextPage = ({
 
       setInput({ ...updateObject })
 
-      if (PromptInputSettings.load().showMultiModel) {
+      if (updateObject.showMultiModel) {
         setComponentState({
           showMultiModel: true
         })
