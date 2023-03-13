@@ -490,6 +490,13 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
     setPageLoaded(true)
   }, [query, shortlinkImageParams])
 
+  let sharedPrompt
+  if (query[CreatePageMode.SHARE]) {
+    sharedPrompt = ShareLinkDetails.decode(
+      query[CreatePageMode.SHARE] as string
+    ).prompt
+  }
+
   const triggerArray = [...(modelDetails[input?.models[0]]?.trigger ?? '')]
   const totalImagesRequested = countImagesToGenerate(input)
 
@@ -539,12 +546,12 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
           />
         </InteractiveModal>
       )}
-      {query[CreatePageMode.SHORTLINK] && shortlinkImageParams ? (
+      {shortlinkImageParams && shortlinkImageParams.params ? (
         <Head>
           <title>
-            🤖 ArtBot - Shareable Link $
+            🤖 ArtBot - Shareable Link
             {shortlinkImageParams.models && shortlinkImageParams.models[0]
-              ? `created with ${shortlinkImageParams.models[0]}`
+              ? ` created with ${shortlinkImageParams.models[0]}`
               : ''}
           </title>
           <meta
@@ -561,21 +568,20 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
           />
           <meta
             name="twitter:image"
-            content={`https://tinybots.net/artbot/shortlink/i/${
+            content={`https://tinybots.net/artbot/api/v1/shortlink/i/${
               query[CreatePageMode.SHORTLINK]
             }`}
           />
         </Head>
       ) : null}
-      {isSharedLink(query) ? (
+      {query[CreatePageMode.SHARE] ? (
         <Head>
           <title>ArtBot - Shareable Link</title>
           <meta name="twitter:title" content="ArtBot - Shareable Link" />
           <meta
             name="twitter:description"
-            content={`Prompt: "${input.prompt}"`}
+            content={`Prompt: "${sharedPrompt}"`}
           />
-          <meta name="twitter:image" content="" />
         </Head>
       ) : null}
       <div className="flex flex-row w-full items-center">
