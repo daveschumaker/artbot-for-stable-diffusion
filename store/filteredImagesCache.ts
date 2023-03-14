@@ -6,7 +6,7 @@ export const findFilteredIndexById = (id: number) => {
 }
 
 export const setFilteredItemsArray = (items: Array<number>) => {
-  filteredIds = [...items]
+  filteredIds = [...items].reverse()
 }
 
 export const getNextFilteredItem = (idx: number) => {
