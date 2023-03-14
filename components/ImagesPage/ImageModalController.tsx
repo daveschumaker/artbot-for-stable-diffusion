@@ -54,7 +54,7 @@ const ImageModalController = ({
     let data
     if (useFilteredItems) {
       const idx = findFilteredIndexById(imageDetails.id)
-      data = getPrevFilteredItem(idx)
+      data = getPrevFilteredItem(idx) // I know this is counterintuitive, but UX is better this way
       setImageDetails(data)
       setLoading(false)
       return
@@ -71,7 +71,7 @@ const ImageModalController = ({
     let data
     if (useFilteredItems) {
       const idx = findFilteredIndexById(imageDetails.id)
-      data = getNextFilteredItem(idx)
+      data = getNextFilteredItem(idx) // I know this is counterintuitive, but UX is better this way
       setImageDetails(data)
       setLoading(false)
       return
