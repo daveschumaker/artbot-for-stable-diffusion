@@ -75,7 +75,11 @@ export const getAccurateSteps = (
 
   steps = samplerAccurateSteps()
 
-  if (hasSourceImage) {
+  // There is a bug on the server: cost is supposed to be affected, but it isn't.
+  // TODO: Remove this check when this bug is fixed server-side.
+  const doesDenoisingStrengthAffectKudosCost = false;
+
+  if (hasSourceImage && doesDenoisingStrengthAffectKudosCost) {
     steps *= denoisingStrength || 0.8
   }
 
