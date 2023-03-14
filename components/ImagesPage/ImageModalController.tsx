@@ -77,16 +77,11 @@ const ImageModalController = ({
       return
     }
 
-    if (imageDetails.id <= 1) {
-      setLoading(false)
-      return
-    }
 
     data = (await getPrevImageDetails(imageDetails.timestamp)) || {}
     if (data.id) {
       setImageDetails(data)
     }
-    setImageDetails(data)
     setLoading(false)
   }
 
