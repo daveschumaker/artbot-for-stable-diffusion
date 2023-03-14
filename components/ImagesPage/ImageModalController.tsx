@@ -86,7 +86,6 @@ const ImageModalController = ({
     if (data.id) {
       setImageDetails(data)
     }
-    setImageDetails(data)
     setLoading(false)
   }
 
