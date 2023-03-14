@@ -105,6 +105,40 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.03.14</SubSectionTitle>
+        <StyledLi>
+          MILESTONE: 🎉🎉🎉 ‼️‼️‼️ <strong>5,000,000</strong> images have been
+          created with ArtBot!‼️‼️‼️ 🎉🎉🎉
+        </StyledLi>
+        <StyledUl>
+          <StyledLi>
+            Fix: Kudos cost calculation update. Thanks to Litnine for the{' '}
+            <Linker
+              href="https://github.com/daveschumaker/artbot-for-stable-diffusion/pull/47"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              pull request
+            </Linker>
+            .
+          </StyledLi>
+          <StyledLi>
+            Fix: Issue where previous / next buttons were reversed if you had a
+            filter applied. Also fix for navigation issues with the image popup
+            window due to incorrectly parsing an image id. Thanks again to
+            Litnine for the{' '}
+            <Linker
+              href="https://github.com/daveschumaker/artbot-for-stable-diffusion/pull/48"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              pull request
+            </Linker>
+            . I love to see people contribute to ArtBot. Thank you!
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.03.13</SubSectionTitle>
         <StyledUl>
           <StyledLi>Two steps forward, four steps back lately...</StyledLi>
