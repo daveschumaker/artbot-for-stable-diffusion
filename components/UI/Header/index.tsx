@@ -38,25 +38,27 @@ const Header = () => {
         <div
           className={clsx([
             'cursor-pointer',
-            'mr-[8px]',
+            'mr-[12px]',
+            'mt-[4px]',
             `hover:text-[rgb(20,184,166)]`
           ])}
           onClick={() => setShowAppMenu(true)}
         >
           <MenuIcon size={28} />
         </div>
-        <div className="w-full flex flex-row items-center">
-          <Link href="/">
-            <div className="inline-block">
+        <div className="w-full flex items-center">
+          <Link href="/" className="mb-1 flex items-center">
+            <div>
               <Image
                 src="/artbot/artbot-logo.png"
                 height={30}
                 width={30}
                 alt="AI ArtBot logo"
+                className="min-w-[30px] max-w-[30px]"
               />
             </div>
-            <div className="inline-block">
-              <h1 className="ml-2 pt-1 inline-block h-8 text-[24px] md:text-[28px] font-bold leading-7 text-teal-500">
+            <div>
+              <h1 className="ml-2 pt-2 mb-1 md:mb-[2px] h-8 text-[24px] md:text-[26px] font-bold leading-7 text-teal-500">
                 ArtBot
               </h1>
             </div>

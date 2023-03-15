@@ -34,7 +34,7 @@ const WorkerModelDetails = ({
 
   return (
     <div className={className}>
-      <div className={styles.ModalList}>
+      <div className={styles.ModelList}>
         {sortedModels.map((model: string) => {
           return (
             <li key={`${id}_${model}`}>
