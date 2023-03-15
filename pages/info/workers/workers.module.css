@@ -13,7 +13,7 @@
   grid-column: 1 / -1;
 }
 
-.ModalList {
+.ModelList {
   display: flex;
   flex-direction: column;
   margin-left: 8px;
