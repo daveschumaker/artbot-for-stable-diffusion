@@ -33,7 +33,7 @@
 }
 
 .NavigationMenuLink {
-  padding: 2px 0 2px 8px;
+  padding: 2px 2px 2px 10px;
   outline: none;
   user-select: none;
   font-weight: 500;
@@ -50,8 +50,7 @@
 .AnalyticsIcon {
   justify-content: center;
   height: 40px;
-  width: 40px;
-  padding: 2px;
+  margin-left: 10px;
 }
 
 .isActive {
@@ -215,11 +214,13 @@
 .CaretDown {
   position: relative;
   color: var(--violet10);
-  top: 1px;
   transition: transform 250ms ease;
+  margin: 0 -7px 0 -2px;
+  transform: scale(0.7);
+  left: -4px;
 }
 [data-state='open'] > .CaretDown {
-  transform: rotate(-180deg);
+  transform: scale(0.7) rotate(-180deg);
 }
 
 .Arrow {
