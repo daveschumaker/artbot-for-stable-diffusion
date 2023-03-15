@@ -105,6 +105,40 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.03.15</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            UI: A{' '}
+            <Linker
+              href="https://github.com/daveschumaker/artbot-for-stable-diffusion/pull/49"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              few
+            </Linker>{' '}
+            <Linker
+              href="https://github.com/daveschumaker/artbot-for-stable-diffusion/pull/50"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              UI improvements
+            </Linker>{' '}
+            today courtesy of Litnine. Better spacing on the NavBar (thank you!)
+            and more information on the worker details page (thank you!!).
+          </StyledLi>
+          <StyledLi>
+            If interested, you can view what&apos;s on deck for ArtBot on the{' '}
+            <Linker
+              href="https://github.com/users/daveschumaker/projects/1/views/1"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Github kanban board
+            </Linker>
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.03.14</SubSectionTitle>
         <StyledLi>
           MILESTONE: 🎉🎉🎉 ‼️‼️‼️ <strong>5,000,000</strong> images have been
