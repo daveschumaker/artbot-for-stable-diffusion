@@ -216,11 +216,11 @@
   color: var(--violet10);
   transition: transform 250ms ease;
   margin: 0 -7px 0 -2px;
-  transform: scale(0.7);
-  left: -4px;
+  transform: scale(0.82);
+  left: -3px;
 }
 [data-state='open'] > .CaretDown {
-  transform: scale(0.7) rotate(-180deg);
+  transform: scale(0.82) rotate(-180deg);
 }
 
 .Arrow {
