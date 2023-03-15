@@ -201,6 +201,16 @@ const WorkerInfo = ({
             <strong>{worker.requests_fulfilled?.toLocaleString()}</strong>
           </div>
           <Spacer />
+          <div>
+            <strong>{worker?.painting?'Supports inpainting':'Does not support inpainting'}</strong>
+          </div>
+          <div>
+            <strong>{worker?.nsfw?'Supports NSFW requests':'Does not support NSFW requests'}</strong>
+          </div>
+          <div>
+            <strong>{worker['post-processing']?'Supports post-processing':'Does not support post-processing'}</strong>
+          </div>
+          <Spacer />
         </WorkerStatus>
       </div>
       <div className={styles['model-spacer']} />
