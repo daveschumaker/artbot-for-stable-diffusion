@@ -457,33 +457,17 @@ const ImagesPage = () => {
   const LinkEl = componentState.deleteMode ? NonLink : Link
 
   const countDescriptor = () => {
-    let string = ``
 
-    if (componentState.filterMode === 'model') {
-      string = `"${router?.query?.model || ''}" `
+    const descriptorMap = {
+      'model': `"${router?.query?.model || ''}" `,
+      'favorited': 'favorite ',
+      'unfavorited': 'unfavorited ',
+      'text2img': 'text2img ',
+      'img2img': 'img2img ',
+      'inpainting': 'inpainted '
     }
 
-    if (componentState.filterMode === 'favorited') {
-      string = 'favorite '
-    }
-
-    if (componentState.filterMode === 'unfavorited') {
-      string = 'unfavorited '
-    }
-
-    if (componentState.filterMode === 'text2img') {
-      string = 'text2img '
-    }
-
-    if (componentState.filterMode === 'img2img') {
-      string = 'img2img '
-    }
-
-    if (componentState.filterMode === 'inpainting') {
-      string = 'inpainted '
-    }
-
-    return string
+    return descriptorMap[componentState.filterMode as keyof typeof descriptorMap]
   }
 
   return (
