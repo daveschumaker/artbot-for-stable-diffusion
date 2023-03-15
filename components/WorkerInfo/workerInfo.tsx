@@ -201,15 +201,34 @@ const WorkerInfo = ({
             <strong>{worker.requests_fulfilled?.toLocaleString()}</strong>
           </div>
           <Spacer />
-          <div>
-            <strong>{worker?.painting?'Supports inpainting':'Does not support inpainting'}</strong>
-          </div>
-          <div>
-            <strong>{worker?.nsfw?'Supports NSFW requests':'Does not support NSFW requests'}</strong>
-          </div>
-          <div>
-            <strong>{worker['post-processing']?'Supports post-processing':'Does not support post-processing'}</strong>
-          </div>
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                Inpainting:&nbsp;&nbsp;
+                </td>
+                <td>
+                  {<strong>{worker?.painting?'✔️':'❌'}</strong>}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                NSFW:&nbsp;&nbsp;
+                </td>
+                <td>
+                  {<strong>{worker?.nsfw?'✔️':'❌'}</strong>}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Post-processing:&nbsp;&nbsp;
+                </td>
+                <td> 
+                  <strong>{worker['post-processing']?'✔️':'❌'}</strong>
+                </td>
+              </tr>
+            </tbody>
+          </table>
           <Spacer />
         </WorkerStatus>
       </div>
