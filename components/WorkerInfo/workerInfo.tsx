@@ -201,13 +201,46 @@ const WorkerInfo = ({
             <strong>{worker.requests_fulfilled?.toLocaleString()}</strong>
           </div>
           <Spacer />
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                Inpainting:&nbsp;&nbsp;
+                </td>
+                <td>
+                  {<strong>{worker?.painting?'✔️':'❌'}</strong>}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                NSFW:&nbsp;&nbsp;
+                </td>
+                <td>
+                  {<strong>{worker?.nsfw?'✔️':'❌'}</strong>}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Post-processing:&nbsp;&nbsp;
+                </td>
+                <td> 
+                  <strong>{worker['post-processing']?'✔️':'❌'}</strong>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Trusted:&nbsp;&nbsp;
+                </td>
+                <td> 
+                  <strong>{worker.trusted?'✔️':'❌'}</strong>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <Spacer />
         </WorkerStatus>
       </div>
-      <div className={styles['model-spacer']} />
-      <ExpandModels onClick={showModelClick}>
-        {showModels ? <ChevronDownIcon /> : <ChevronRightIcon />}
-        Models ({worker?.models?.length ?? 0})
-      </ExpandModels>
+
       <div
         className={clsx(
           styles['use-worker-row'],
@@ -223,7 +256,7 @@ const WorkerInfo = ({
             }}
           >
             <CheckboxIcon />
-            Unset worker
+            Return to using all workers
           </Button>
         ) : (
           <Button
@@ -233,7 +266,7 @@ const WorkerInfo = ({
             }}
           >
             <SquareIcon />
-            Use worker
+            Use this worker for all jobs
           </Button>
         )}
       </div>
@@ -278,6 +311,14 @@ const WorkerInfo = ({
           )}
         </div>
       )}
+
+      <Spacer />
+
+      <ExpandModels onClick={showModelClick}>
+        {showModels ? <ChevronDownIcon /> : <ChevronRightIcon />}
+        Models ({worker?.models?.length ?? 0})
+      </ExpandModels>
+
     </div>
   )
 }
