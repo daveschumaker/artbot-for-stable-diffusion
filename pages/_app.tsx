@@ -13,6 +13,7 @@ import PollController from '../components/PollController'
 import 'react-toastify/dist/ReactToastify.css'
 import { lightTheme, darkTheme } from '../styles/theme'
 import '../styles/globals.css'
+import '../styles/root.css'
 
 import { initDb } from '../utils/db'
 import { useCallback, useEffect, useState } from 'react'

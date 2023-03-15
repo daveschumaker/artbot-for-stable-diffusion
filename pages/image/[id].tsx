@@ -3,9 +3,9 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
-import styled from 'styled-components'
 import { useRouter } from 'next/router'
 
+import styles from './image.module.css'
 import ImageDetails from '../../components/ImagePage/ImageDetails'
 import PageTitle from '../../components/UI/PageTitle'
 
@@ -26,30 +26,8 @@ import { useEffectOnce } from '../../hooks/useEffectOnce'
 import { kudosCost } from '../../utils/imageUtils'
 import RelatedImages from '../../components/ImagePage/RelatedImages'
 import { getRelatedImages } from '../../components/ImagePage/image.controller'
-
-const StyledImage = styled.img`
-  box-shadow: 0 16px 38px -12px rgb(0 0 0 / 56%),
-    0 4px 25px 0px rgb(0 0 0 / 12%), 0 8px 10px -5px rgb(0 0 0 / 20%);
-  max-height: 512px;
-`
-
-const Section = styled.div`
-  padding-top: 8px;
-
-  &:first-child {
-    padding-top: 0;
-  }
-`
-
-const OptionsLink = styled.div`
-  display: inline-block;
-  color: ${(props) => props.theme.navLinkActive};
-  cursor: pointer;
-
-  &:hover {
-    color: ${(props) => props.theme.navLinkNormal};
-  }
-`
+import clsx from 'clsx'
+import Section from '../../components/UI/Section'
 
 const ImagePage = () => {
   const handlers = useSwipeable({
@@ -282,9 +260,9 @@ const ImagePage = () => {
         <>
           <div key={imageDetails.jobId} className="text-center pb-6">
             <div {...handlers}>
-              <StyledImage
+              <img
+                className={clsx(styles.StyledImage, 'mx-auto', 'rounded')}
                 src={'data:image/webp;base64,' + imageDetails.base64String}
-                className="mx-auto rounded"
                 alt={imageDetails.prompt}
               />
             </div>
@@ -296,7 +274,8 @@ const ImagePage = () => {
           <div className="mb-4">
             <PageTitle>Advanced Options</PageTitle>
             <Section>
-              <OptionsLink
+              <div
+                className={styles.OptionsLink}
                 onClick={() => {
                   trackEvent({
                     event: 'USE_IMG_FOR_INTERROGATE',
@@ -307,20 +286,24 @@ const ImagePage = () => {
                 }}
               >
                 [ interrogate image (image2text) ]
-              </OptionsLink>
+              </div>
             </Section>
             <Section>
               {imageUpscaled ? (
                 <div>[ upscaled image (already upscaled)]</div>
               ) : (
-                <OptionsLink onClick={() => handleUpscaleClick()}>
+                <div
+                  className={styles.OptionsLink}
+                  onClick={() => handleUpscaleClick()}
+                >
                   [ upscale image ({upscaleCost} kudos){' '}
                   {pendingUpscale && '(processing...)'} ]
-                </OptionsLink>
+                </div>
               )}
             </Section>
             <Section>
-              <OptionsLink
+              <div
+                className={styles.OptionsLink}
                 onClick={() => {
                   trackEvent({
                     event: 'USE_IMG_FOR_IMG2IMG',
@@ -331,10 +314,11 @@ const ImagePage = () => {
                 }}
               >
                 [ use for img2img ]
-              </OptionsLink>
+              </div>
             </Section>
             <Section>
-              <OptionsLink
+              <div
+                className={styles.OptionsLink}
                 onClick={() => {
                   trackEvent({
                     event: 'USE_IMG_FOR_INPAINT',
@@ -345,11 +329,12 @@ const ImagePage = () => {
                 }}
               >
                 [ use for inpainting ]
-              </OptionsLink>
+              </div>
             </Section>
             {imageDetails.canvasStore && (
               <Section>
-                <OptionsLink
+                <div
+                  className={styles.OptionsLink}
                   onClick={() => {
                     trackEvent({
                       event: 'CLONE_INPAINT_MASK',
@@ -361,7 +346,7 @@ const ImagePage = () => {
                   }}
                 >
                   [ clone and edit inpainting mask ]
-                </OptionsLink>
+                </div>
               </Section>
             )}
           </div>

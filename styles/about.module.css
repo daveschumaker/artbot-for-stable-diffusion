@@ -1,0 +1,39 @@
+.AboutWrapper {
+  margin-bottom: 80px;
+}
+
+.LinkButton {
+  cursor: pointer;
+  color: var(--link-color);
+  font-weight: 600;
+}
+
+.LinkButton:hover {
+  color: var(--link-active-color);
+}
+
+.HeroImage {
+  border-radius: 8px;
+  box-shadow: 0 16px 38px -12px rgba(0, 0, 0, 0.56),
+    0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.HelpfulLinks {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  font-size: 14px;
+  line-height: 20px;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 8px;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .HelpfulLinks {
+    font-size: 16px;
+  }
+}

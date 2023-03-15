@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
-import styled from 'styled-components'
 import { trackEvent } from '../api/telemetry'
 import FeedbackForm from '../components/FeedbackForm'
 import Modal from '../components/Modal'
@@ -10,37 +9,7 @@ import Linker from '../components/UI/Linker'
 import PageTitle from '../components/UI/PageTitle'
 import Text from '../components/UI/Text'
 import { useEffectOnce } from '../hooks/useEffectOnce'
-
-const AboutWrapper = styled.div`
-  margin-bottom: 80px;
-`
-
-const LinkButton = styled.div`
-  cursor: pointer;
-  color: ${(props) => props.theme.link};
-  font-weight: 600;
-
-  &:hover {
-    color: ${(props) => props.theme.linkActive};
-  }
-`
-
-const HeroImage = styled.img`
-  border-radius: 8px;
-  box-shadow: 0 16px 38px -12px rgb(0 0 0 / 56%),
-    0 4px 25px 0px rgb(0 0 0 / 12%), 0 8px 10px -5px rgb(0 0 0 / 20%);
-  margin-bottom: 16px;
-  width: 100%;
-`
-
-const HelpfulLinks = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-  justify-content: center;
-  margin-bottom: 4px;
-  width: 100%;
-`
+import styles from '../styles/about.module.css'
 
 const AboutPage = () => {
   const [totalImages, setTotalImages] = useState(0)
@@ -70,7 +39,7 @@ const AboutPage = () => {
   })
 
   return (
-    <AboutWrapper>
+    <div className={styles.AboutWrapper}>
       {showFeedback && (
         <Modal handleClose={() => setShowFeedback(false)}>
           <FeedbackForm />
@@ -87,18 +56,22 @@ const AboutPage = () => {
         </div>
       ) : null}
       <div className="mt-2">
-        <HeroImage
+        <img
+          className={styles.HeroImage}
           src="/artbot/painting_bot.png"
           alt="painting of a robot painting robots"
         />
-        <HelpfulLinks className="mb-4 flex-wrap text-sm md:text-md">
-          <LinkButton onClick={() => setShowFeedback(true)}>
+        <div className={styles.HelpfulLinks}>
+          <div
+            className={styles.LinkButton}
+            onClick={() => setShowFeedback(true)}
+          >
             Contact / Feedback
-          </LinkButton>
+          </div>
           |<Linker href="/changelog">Changelog</Linker>|
           <Linker href="/faq">FAQ</Linker>|
           <Linker href="/info">General Info</Linker>
-        </HelpfulLinks>
+        </div>
         <div className="mt-4">
           <Text>
             ArtBot is an unofficial front-end web client designed for
@@ -299,7 +272,7 @@ const AboutPage = () => {
           </li>
         </ul>
       </div>
-    </AboutWrapper>
+    </div>
   )
 }
 

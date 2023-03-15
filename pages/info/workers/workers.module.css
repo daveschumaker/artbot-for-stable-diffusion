@@ -12,3 +12,12 @@
   padding: 8px;
   grid-column: 1 / -1;
 }
+
+.ModalList {
+  display: flex;
+  flex-direction: column;
+  margin-left: 8px;
+  padding-top: 4px;
+  padding-left: 16px;
+  row-gap: 4px;
+}

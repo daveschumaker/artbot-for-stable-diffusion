@@ -11,16 +11,6 @@ import InfoPageMenuButton from '../../../components/InfoPage/Menu'
 import styles from './workers.module.css'
 import { useForceUpdate } from '../../../hooks/useForceUpdate'
 import Linker from '../../../components/UI/Linker'
-import styled from 'styled-components'
-
-const ModelList = styled.ul`
-  display: flex;
-  flex-direction: column;
-  margin-left: 8px;
-  padding-top: 4px;
-  padding-left: 16px;
-  row-gap: 4px;
-`
 
 const WorkerModelDetails = ({
   className,
@@ -44,7 +34,7 @@ const WorkerModelDetails = ({
 
   return (
     <div className={className}>
-      <ModelList>
+      <div className={styles.ModalList}>
         {sortedModels.map((model: string) => {
           return (
             <li key={`${id}_${model}`}>
@@ -54,7 +44,7 @@ const WorkerModelDetails = ({
             </li>
           )
         })}
-      </ModelList>
+      </div>
     </div>
   )
 }
