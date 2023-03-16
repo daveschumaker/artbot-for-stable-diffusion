@@ -328,6 +328,7 @@ const AdvancedOptionsPanel = ({
                 context: '/pages/index'
               })
 
+              PromptInputSettings.delete('parentJobId')
               setInput({
                 parentJobId: ''
               })

@@ -96,6 +96,10 @@ export const fixLocalStorage = () => {
   if (PromptInputSettings.get('control_type') === 'none') {
     PromptInputSettings.set('control_type', '')
   }
+
+  if (PromptInputSettings.get('parentJobId')) {
+    PromptInputSettings.delete('parentJobId')
+  }
 }
 
 export const initAppSettings = async () => {
