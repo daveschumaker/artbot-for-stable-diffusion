@@ -55,6 +55,7 @@ import CheckboxIcon from '../components/icons/CheckboxIcon'
 import { toast } from 'react-toastify'
 import { getInputCache } from '../store/inputCache'
 import { kudosCostV2 } from '../utils/kudosCost'
+import PromptInputSettings from '../models/PromptInputSettings'
 
 // Kind of a hacky way to persist output of image over the course of a session.
 let cachedImageDetails = {}
@@ -116,15 +117,22 @@ const ControlNet = () => {
 
   const handlePostProcessing = useCallback(
     (value: string) => {
-      const newPost = [...input.post_processing]
-
+      let newPost = [...input.post_processing]
       const index = newPost.indexOf(value)
+
       if (index > -1) {
         newPost.splice(index, 1)
       } else {
-        if (value === 'RealESRGAN_x4plus') {
-          setInput({ numImages: 1 })
+        const idx_1 = input.post_processing.indexOf('RealESRGAN_x4plus')
+        const idx_2 = input.post_processing.indexOf(
+          'RealESRGAN_x4plus_anime_6B'
+        )
+        if (value === 'RealESRGAN_x4plus' && idx_2 >= 0) {
+          newPost.splice(idx_2, 1)
+        } else if (value === 'RealESRGAN_x4plus_anime_6B' && idx_1 >= 0) {
+          newPost.splice(idx_1, 1)
         }
+
         newPost.push(value)
       }
 
@@ -635,6 +643,127 @@ const ControlNet = () => {
             </Section>
           </SplitPanel>
         </TwoPanel>
+        <TwoPanel className="mt-4">
+          <SplitPanel>
+            <Section>
+              <div className="flex flex-row items-center justify-between">
+                {input.source_image && (
+                  <div className="flex flex-col">
+                    <SubSectionTitle>
+                      <TextTooltipRow>
+                        Denoise{' '}
+                        <Tooltip width="200px">
+                          Amount of noise added to input image. Values that
+                          approach 1.0 allow for lots of variations but will
+                          also produce images that are not semantically
+                          consistent with the input. Only available for img2img.
+                        </Tooltip>
+                      </TextTooltipRow>
+                    </SubSectionTitle>
+                  </div>
+                )}
+                <>
+                  <SubSectionTitle>
+                    <TextTooltipRow>
+                      Denoise{' '}
+                      <Tooltip width="200px">
+                        Amount of noise added to input image. Values that
+                        approach 1.0 allow for lots of variations but will also
+                        produce images that are not semantically consistent with
+                        the input. Only available for img2img.
+                      </Tooltip>
+                    </TextTooltipRow>
+                    <div className="block text-xs w-full">(0.0 - 1.0)</div>
+                  </SubSectionTitle>
+                  <NumberInput
+                    // @ts-ignore
+                    className="mb-2"
+                    type="text"
+                    step={0.05}
+                    disabled={input.models[0] === 'stable_diffusion_inpainting'}
+                    min={0}
+                    max={1.0}
+                    onBlur={(e: any) => {
+                      if (Number(e.target.value < 0)) {
+                        setInput({ denoising_strength: 0 })
+                        return
+                      }
+
+                      if (Number(e.target.value > 1.0)) {
+                        setInput({ denoising_strength: 1 })
+                        return
+                      }
+
+                      if (isNaN(e.target.value)) {
+                        setInput({ denoising_strength: 0.5 })
+                        return
+                      }
+                    }}
+                    onMinusClick={() => {
+                      if (isNaN(input.denoising_strength)) {
+                        input.denoising_strength = 0.5
+                      }
+
+                      if (Number(input.denoising_strength) > 1) {
+                        PromptInputSettings.set('denoising_strength', 1)
+                        setInput({ denoising_strength: 1 })
+                        return
+                      }
+
+                      const value = Number(input.denoising_strength) - 0.05
+                      const niceNumber = Number(value).toFixed(2)
+                      setInput({ denoising_strength: niceNumber })
+                    }}
+                    onPlusClick={() => {
+                      if (isNaN(input.denoising_strength)) {
+                        input.denoising_strength = 0.5
+                      }
+
+                      const value = Number(input.denoising_strength) + 0.05
+                      const niceNumber = Number(value).toFixed(2)
+                      PromptInputSettings.set('denoising_strength', niceNumber)
+                      setInput({ denoising_strength: niceNumber })
+                    }}
+                    name="denoising_strength"
+                    onChange={handleNumberInput}
+                    // @ts-ignore
+                    value={input.denoising_strength}
+                    width="100%"
+                  />
+                </>
+              </div>
+              {input.source_processing === SourceProcessing.InPainting &&
+                input.models[0] === 'stable_diffusion_inpainting' && (
+                  <div className="mt-0 text-sm text-slate-500">
+                    Note: Denoise disabled when inpainting model is used.
+                  </div>
+                )}
+              <div className="mb-4">
+                <Slider
+                  disabled={input.models[0] === 'stable_diffusion_inpainting'}
+                  value={input.denoising_strength}
+                  min={0}
+                  max={1}
+                  step={0.05}
+                  onChange={(e: any) => {
+                    const event = {
+                      target: {
+                        name: 'denoising_strength',
+                        value: Number(e.target.value)
+                      }
+                    }
+
+                    // @ts-ignore
+                    handleChangeInput(event)
+                  }}
+                />
+              </div>
+            </Section>
+          </SplitPanel>
+          <SplitPanel>
+            <Section></Section>
+          </SplitPanel>
+        </TwoPanel>
       </Section>
       <Section>
         <SubSectionTitle>
@@ -711,6 +840,11 @@ const ControlNet = () => {
             label={`RealESRGAN_x4plus (upscaler)`}
             value={getPostProcessing(`RealESRGAN_x4plus`)}
             onChange={() => handlePostProcessing(`RealESRGAN_x4plus`)}
+          />
+          <Checkbox
+            label={`RealESRGAN_x4plus_anime_6B (upscaler)`}
+            value={getPostProcessing(`RealESRGAN_x4plus_anime_6B`)}
+            onChange={() => handlePostProcessing(`RealESRGAN_x4plus_anime_6B`)}
           />
         </div>
       </Section>

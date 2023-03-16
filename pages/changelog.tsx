@@ -136,6 +136,14 @@ const Changelog = () => {
               Github kanban board
             </Linker>
           </StyledLi>
+          <StyledUl>
+            Added &apos;RealESRGAN_x4plus_anime_6B&apos; upscaler to post
+            processing section. Note: You cannot pick both at the same time.
+          </StyledUl>
+          <StyledLi>
+            Stable Horde now support denoise strength (or init strength, as some
+            UIs call it) for ControlNet!
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

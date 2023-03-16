@@ -216,20 +216,22 @@ const AdvancedOptionsPanel = ({
 
   const handlePostProcessing = useCallback(
     (value: string) => {
-      const newPost = [...input.post_processing]
-
+      let newPost = [...input.post_processing]
       const index = newPost.indexOf(value)
+
       if (index > -1) {
         newPost.splice(index, 1)
       } else {
-        trackEvent({
-          event: 'USE_ALL_MODELS_CLICK',
-          context: '/pages/index'
-        })
-
-        if (value === 'RealESRGAN_x4plus') {
-          setInput({ numImages: 1 })
+        const idx_1 = input.post_processing.indexOf('RealESRGAN_x4plus')
+        const idx_2 = input.post_processing.indexOf(
+          'RealESRGAN_x4plus_anime_6B'
+        )
+        if (value === 'RealESRGAN_x4plus' && idx_2 >= 0) {
+          newPost.splice(idx_2, 1)
+        } else if (value === 'RealESRGAN_x4plus_anime_6B' && idx_1 >= 0) {
+          newPost.splice(idx_1, 1)
         }
+
         newPost.push(value)
       }
 
@@ -913,7 +915,7 @@ const AdvancedOptionsPanel = ({
           <SplitPanel>
             <Section>
               <div className="flex flex-row items-center justify-between">
-                {input.source_image && input.control_type !== '' && (
+                {input.source_image && (
                   <div className="flex flex-col">
                     <SubSectionTitle>
                       <TextTooltipRow>
@@ -926,110 +928,97 @@ const AdvancedOptionsPanel = ({
                         </Tooltip>
                       </TextTooltipRow>
                     </SubSectionTitle>
-                    <div className="mt-[-6px] text-sm text-slate-500 dark:text-slate-400 font-[600]">
-                      Note: Denoise disabled when controlnet is used.
-                    </div>
                   </div>
                 )}
-                {input.control_type === '' && (
-                  <>
-                    <SubSectionTitle>
-                      <TextTooltipRow>
-                        Denoise{' '}
-                        <Tooltip width="200px">
-                          Amount of noise added to input image. Values that
-                          approach 1.0 allow for lots of variations but will
-                          also produce images that are not semantically
-                          consistent with the input. Only available for img2img.
-                        </Tooltip>
-                      </TextTooltipRow>
-                      <div className="block text-xs w-full">(0.0 - 1.0)</div>
-                    </SubSectionTitle>
-                    <NumberInput
-                      // @ts-ignore
-                      className="mb-2"
-                      type="text"
-                      step={0.05}
-                      disabled={
-                        input.models[0] === 'stable_diffusion_inpainting'
+                <>
+                  <SubSectionTitle>
+                    <TextTooltipRow>
+                      Denoise{' '}
+                      <Tooltip width="200px">
+                        Amount of noise added to input image. Values that
+                        approach 1.0 allow for lots of variations but will also
+                        produce images that are not semantically consistent with
+                        the input. Only available for img2img.
+                      </Tooltip>
+                    </TextTooltipRow>
+                    <div className="block text-xs w-full">(0.0 - 1.0)</div>
+                  </SubSectionTitle>
+                  <NumberInput
+                    // @ts-ignore
+                    className="mb-2"
+                    type="text"
+                    step={0.05}
+                    disabled={input.models[0] === 'stable_diffusion_inpainting'}
+                    min={0}
+                    max={1.0}
+                    onBlur={(e: any) => {
+                      if (Number(e.target.value < 0)) {
+                        PromptInputSettings.set('denoising_strength', 0)
+                        setInput({ denoising_strength: 0 })
+                        return
                       }
-                      min={0}
-                      max={1.0}
-                      onBlur={(e: any) => {
-                        if (Number(e.target.value < 0)) {
-                          PromptInputSettings.set('denoising_strength', 0)
-                          setInput({ denoising_strength: 0 })
+
+                      if (Number(e.target.value > 1.0)) {
+                        PromptInputSettings.set('denoising_strength', 1)
+                        setInput({ denoising_strength: 1 })
+                        return
+                      }
+
+                      if (isNaN(e.target.value)) {
+                        PromptInputSettings.set('denoising_strength', 0.5)
+                        setInput({ denoising_strength: 0.5 })
+                        return
+                      }
+
+                      if (
+                        isNaN(e.target.value) ||
+                        e.target.value < 0 ||
+                        e.target.value > 1.0
+                      ) {
+                        if (initialLoad) {
                           return
                         }
 
-                        if (Number(e.target.value > 1.0)) {
-                          PromptInputSettings.set('denoising_strength', 1)
-                          setInput({ denoising_strength: 1 })
-                          return
-                        }
+                        setErrorMessage({
+                          denoising_strength: `Please enter a valid number between 0 and 1.0`
+                        })
+                      } else if (errorMessage.denoising_strength) {
+                        setErrorMessage({ denoising_strength: null })
+                      }
+                    }}
+                    onMinusClick={() => {
+                      if (isNaN(input.denoising_strength)) {
+                        input.denoising_strength = 0.5
+                      }
 
-                        if (isNaN(e.target.value)) {
-                          PromptInputSettings.set('denoising_strength', 0.5)
-                          setInput({ denoising_strength: 0.5 })
-                          return
-                        }
+                      if (Number(input.denoising_strength) > 1) {
+                        PromptInputSettings.set('denoising_strength', 1)
+                        setInput({ denoising_strength: 1 })
+                        return
+                      }
 
-                        if (
-                          isNaN(e.target.value) ||
-                          e.target.value < 0 ||
-                          e.target.value > 1.0
-                        ) {
-                          if (initialLoad) {
-                            return
-                          }
+                      const value = Number(input.denoising_strength) - 0.05
+                      const niceNumber = Number(value).toFixed(2)
+                      PromptInputSettings.set('denoising_strength', niceNumber)
+                      setInput({ denoising_strength: niceNumber })
+                    }}
+                    onPlusClick={() => {
+                      if (isNaN(input.denoising_strength)) {
+                        input.denoising_strength = 0.5
+                      }
 
-                          setErrorMessage({
-                            denoising_strength: `Please enter a valid number between 0 and 1.0`
-                          })
-                        } else if (errorMessage.denoising_strength) {
-                          setErrorMessage({ denoising_strength: null })
-                        }
-                      }}
-                      onMinusClick={() => {
-                        if (isNaN(input.denoising_strength)) {
-                          input.denoising_strength = 0.5
-                        }
-
-                        if (Number(input.denoising_strength) > 1) {
-                          PromptInputSettings.set('denoising_strength', 1)
-                          setInput({ denoising_strength: 1 })
-                          return
-                        }
-
-                        const value = Number(input.denoising_strength) - 0.05
-                        const niceNumber = Number(value).toFixed(2)
-                        PromptInputSettings.set(
-                          'denoising_strength',
-                          niceNumber
-                        )
-                        setInput({ denoising_strength: niceNumber })
-                      }}
-                      onPlusClick={() => {
-                        if (isNaN(input.denoising_strength)) {
-                          input.denoising_strength = 0.5
-                        }
-
-                        const value = Number(input.denoising_strength) + 0.05
-                        const niceNumber = Number(value).toFixed(2)
-                        PromptInputSettings.set(
-                          'denoising_strength',
-                          niceNumber
-                        )
-                        setInput({ denoising_strength: niceNumber })
-                      }}
-                      name="denoising_strength"
-                      onChange={handleNumberInput}
-                      // @ts-ignore
-                      value={input.denoising_strength}
-                      width="100%"
-                    />
-                  </>
-                )}
+                      const value = Number(input.denoising_strength) + 0.05
+                      const niceNumber = Number(value).toFixed(2)
+                      PromptInputSettings.set('denoising_strength', niceNumber)
+                      setInput({ denoising_strength: niceNumber })
+                    }}
+                    name="denoising_strength"
+                    onChange={handleNumberInput}
+                    // @ts-ignore
+                    value={input.denoising_strength}
+                    width="100%"
+                  />
+                </>
               </div>
               {input.source_processing === SourceProcessing.InPainting &&
                 input.models[0] === 'stable_diffusion_inpainting' && (
@@ -1037,27 +1026,25 @@ const AdvancedOptionsPanel = ({
                     Note: Denoise disabled when inpainting model is used.
                   </div>
                 )}
-              {input.control_type === '' && (
-                <div className="mb-4">
-                  <Slider
-                    disabled={input.models[0] === 'stable_diffusion_inpainting'}
-                    value={input.denoising_strength}
-                    min={0}
-                    max={1}
-                    step={0.05}
-                    onChange={(e: any) => {
-                      const event = {
-                        target: {
-                          name: 'denoising_strength',
-                          value: Number(e.target.value)
-                        }
+              <div className="mb-4">
+                <Slider
+                  disabled={input.models[0] === 'stable_diffusion_inpainting'}
+                  value={input.denoising_strength}
+                  min={0}
+                  max={1}
+                  step={0.05}
+                  onChange={(e: any) => {
+                    const event = {
+                      target: {
+                        name: 'denoising_strength',
+                        value: Number(e.target.value)
                       }
+                    }
 
-                      handleChangeInput(event)
-                    }}
-                  />
-                </div>
-              )}
+                    handleChangeInput(event)
+                  }}
+                />
+              </div>
               {errorMessage.denoising_strength && (
                 <div className="mb-2 text-red-500 text-lg font-bold">
                   {errorMessage.denoising_strength}
@@ -1452,6 +1439,11 @@ const AdvancedOptionsPanel = ({
             label={`RealESRGAN_x4plus (upscaler)`}
             value={getPostProcessing(`RealESRGAN_x4plus`)}
             onChange={() => handlePostProcessing(`RealESRGAN_x4plus`)}
+          />
+          <Checkbox
+            label={`RealESRGAN_x4plus_anime_6B (upscaler)`}
+            value={getPostProcessing(`RealESRGAN_x4plus_anime_6B`)}
+            onChange={() => handlePostProcessing(`RealESRGAN_x4plus_anime_6B`)}
           />
         </div>
       </Section>
