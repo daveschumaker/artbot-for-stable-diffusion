@@ -577,7 +577,8 @@ const AdvancedOptionsPanel = ({
               from={1}
               to={maxSteps({
                 sampler: input.sampler,
-                loggedIn: loggedIn === true ? true : false
+                loggedIn: loggedIn === true ? true : false,
+                isSlider: true
               })}
               step={1}
               input={input} 
