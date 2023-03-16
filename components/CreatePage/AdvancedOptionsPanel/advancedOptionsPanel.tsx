@@ -45,6 +45,7 @@ import TwoPanel from '../../UI/TwoPanel'
 import SplitPanel from '../../UI/SplitPanel'
 import Samplers from './Samplers'
 import NumericInputSlider from './NumericInputSlider'
+import InputSwitch from './InputSwitch'
 
 const NoSliderSpacer = styled.div`
   height: 14px;
@@ -635,43 +636,34 @@ const AdvancedOptionsPanel = ({
             </Section>
           )}
           {showMultiSamplerInput && (
-            <Section>
-              <SubSectionTitle>
-                <TextTooltipRow>
-                  Use multiple steps
-                  <Tooltip left="-140" width="240px">
-                    Provide a list of comma separated values to create a series
-                    of images using multiple steps: &quot;3,6,9,12,15&quot;
-                  </Tooltip>
-                </TextTooltipRow>
-              </SubSectionTitle>
-              <Switch
-                disabled={
-                  input.useMultiGuidance || input.useAllSamplers ? true : false
-                }
-                onChange={() => {
-                  if (!input.useMultiSteps) {
-                    setInput({
-                      useMultiSteps: true,
-                      numImages: 1,
-                      useAllModels: false,
-                      useFavoriteModels: false,
-                      useAllSamplers: false
-                    })
+            <InputSwitch
+              disabled={
+                input.useMultiGuidance || input.useAllSamplers ? true : false
+              }
+              label="Use multiple steps"
+              tooltip={`Provide a list of comma separated values to create a series of images using multiple steps: &quot;3,6,9,12,15&quot;`}
+              handleSwitchToggle={() => {
+                if (!input.useMultiSteps) {
+                  setInput({
+                    useMultiSteps: true,
+                    numImages: 1,
+                    useAllModels: false,
+                    useFavoriteModels: false,
+                    useAllSamplers: false
+                  })
 
-                    PromptInputSettings.set('useMultiSteps', true)
-                    PromptInputSettings.set('numImages', 1)
-                    PromptInputSettings.set('useAllModels', false)
-                    PromptInputSettings.set('useFavoriteModels', false)
-                    PromptInputSettings.set('useAllSamplers', false)
-                  } else {
-                    PromptInputSettings.set('useMultiSteps', false)
-                    setInput({ useMultiSteps: false })
-                  }
-                }}
-                checked={input.useMultiSteps}
-              />
-            </Section>
+                  PromptInputSettings.set('useMultiSteps', true)
+                  PromptInputSettings.set('numImages', 1)
+                  PromptInputSettings.set('useAllModels', false)
+                  PromptInputSettings.set('useFavoriteModels', false)
+                  PromptInputSettings.set('useAllSamplers', false)
+                } else {
+                  PromptInputSettings.set('useMultiSteps', false)
+                  setInput({ useMultiSteps: false })
+                }
+              }}
+              checked={input.useMultiSteps}
+            />
           )}
         </SplitPanel>
         <SplitPanel>
