@@ -1352,80 +1352,18 @@ const AdvancedOptionsPanel = ({
         />
       </div>
       {showNumImagesInput && (
-        <div className="mt-8 w-full md:w-1/2">
-          <Section>
-            <div className="flex flex-row items-center justify-between">
-              <SubSectionTitle>
-                Number of images
-                <div className="block text-xs w-full">
-                  (1 - {MAX_IMAGES_PER_JOB})
-                </div>
-              </SubSectionTitle>
-              <NumberInput
-                // @ts-ignore
-                className="mb-2"
-                error={errorMessage.numImages}
-                type="text"
-                min={1}
-                max={MAX_IMAGES_PER_JOB}
-                name="numImages"
-                onMinusClick={() => {
-                  const value = input.numImages - 1
-                  PromptInputSettings.set('numImages', value)
-                  setInput({ numImages: value })
-                }}
-                onPlusClick={() => {
-                  const value = input.numImages + 1
-                  PromptInputSettings.set('numImages', value)
-                  setInput({ numImages: value })
-                }}
-                onChange={handleNumberInput}
-                onBlur={(e: any) => {
-                  if (
-                    isNaN(e.target.value) ||
-                    e.target.value < 1 ||
-                    e.target.value > MAX_IMAGES_PER_JOB
-                  ) {
-                    if (initialLoad) {
-                      return
-                    }
-
-                    setErrorMessage({
-                      numImages: `Please enter a valid number between 1 and ${MAX_IMAGES_PER_JOB}`
-                    })
-                  } else if (errorMessage.numImages) {
-                    setErrorMessage({ numImages: null })
-                  }
-                }}
-                // @ts-ignore
-                value={input.numImages}
-                width="100%"
-              />
-            </div>
-            <div className="mb-4">
-              <Slider
-                value={input.numImages}
-                min={1}
-                max={MAX_IMAGES_PER_JOB}
-                onChange={(e: any) => {
-                  const event = {
-                    target: {
-                      name: 'numImages',
-                      value: Number(e.target.value)
-                    }
-                  }
-
-                  handleChangeInput(event)
-                }}
-              />
-            </div>
-            {errorMessage.numImages && (
-              <div className="mb-2 text-red-500 text-lg font-bold">
-                {errorMessage.numImages}
-              </div>
-            )}
-          </Section>
-        </div>
+        <Section>
+          <InputSlider 
+            label="Number of images"
+            from={1}
+            to={MAX_IMAGES_PER_JOB}
+            step={1}
+            input={input} 
+            setInput={setInput}
+            fieldName="numImages"
+            initialLoad={initialLoad}
+          />
+        </Section>
       )}
     </div>
   )

@@ -10,7 +10,7 @@ import Slider from "../../../UI/Slider";
 
 interface Props {
     label: string;
-    tooltip: string;
+    tooltip?: string;
     from: number;
     to: number;
     step: number;
@@ -83,10 +83,14 @@ const InputSlider = ( {
           <SubSectionTitle>
             <TextTooltipRow>
               {label}
-              <Tooltip left="-20" width="240px">
-                {tooltip}
-              </Tooltip>
+              {tooltip &&(
+                <Tooltip left="-20" width="240px">
+                  {tooltip}
+                </Tooltip>
+              )}
             </TextTooltipRow>
+        
+           
             <div className="block text-xs w-full">({from} - {to})</div>
           </SubSectionTitle>
           <NumberInput
