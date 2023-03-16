@@ -580,84 +580,23 @@ const AdvancedOptionsPanel = ({
       <TwoPanel className="mt-4">
         <SplitPanel>
           {!input.useMultiSteps && (
-            <Section>
-              <div className="flex flex-row items-center justify-between">
-                <SubSectionTitle>
-                  <TextTooltipRow>
-                    Steps
-                    <Tooltip width="200px">
-                      Fewer steps generally result in quicker image generations.
-                      Many models achieve full coherence after a certain number
-                      of finite steps (60 - 90). Keep your initial queries in
-                      the 30 - 50 range for best results.
-                    </Tooltip>
-                  </TextTooltipRow>
-                  <div className="block text-xs w-full">
-                    (1 -{' '}
-                    {maxSteps({
-                      sampler: input.sampler,
-                      loggedIn: loggedIn === true ? true : false
-                    })}
-                    )
-                  </div>
-                </SubSectionTitle>
-                <NumberInput
-                  // @ts-ignore
-                  error={errorMessage.steps}
-                  className="mb-2"
-                  type="text"
-                  min={1}
-                  max={maxSteps({
-                    sampler: input.sampler,
-                    loggedIn: loggedIn === true ? true : false
-                  })}
-                  onMinusClick={() => {
-                    const value = input.steps - 1
-                    PromptInputSettings.set('steps', value)
-                    setInput({ steps: value })
-                  }}
-                  onPlusClick={() => {
-                    const value = input.steps + 1
-                    PromptInputSettings.set('steps', value)
-                    setInput({ steps: value })
-                  }}
-                  name="steps"
-                  onChange={handleNumberInput}
-                  onBlur={() => {
-                    validateSteps()
-                  }}
-                  // @ts-ignore
-                  value={Number(input.steps)}
-                  width="100%"
-                />
-              </div>
-              <div className="mb-4">
-                <Slider
-                  value={input.steps}
-                  min={1}
-                  max={maxSteps({
-                    sampler: input.sampler,
-                    loggedIn: loggedIn === true ? true : false,
-                    isSlider: true
-                  })}
-                  onChange={(e: any) => {
-                    const event = {
-                      target: {
-                        name: 'steps',
-                        value: Number(e.target.value)
-                      }
-                    }
-
-                    handleChangeInput(event)
-                  }}
-                />
-              </div>
-              {errorMessage.steps && (
-                <div className="mb-2 text-red-500 text-lg font-bold">
-                  {errorMessage.steps}
-                </div>
-              )}
-            </Section>
+            <NumericInputSlider 
+              label="Steps"
+              tooltip="Fewer steps generally result in quicker image generations.
+              Many models achieve full coherence after a certain number
+              of finite steps (60 - 90). Keep your initial queries in
+              the 30 - 50 range for best results."
+              from={1}
+              to={maxSteps({
+                sampler: input.sampler,
+                loggedIn: loggedIn === true ? true : false
+              })}
+              step={1}
+              input={input} 
+              setInput={setInput}
+              fieldName="steps"
+              initialLoad={initialLoad}
+            />
           )}
           {input.useMultiSteps && (
             <Section>
