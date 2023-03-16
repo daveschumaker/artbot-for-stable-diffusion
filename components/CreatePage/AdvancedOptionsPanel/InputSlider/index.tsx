@@ -9,13 +9,19 @@ import NumberInput from "../../../UI/NumberInput";
 import Slider from "../../../UI/Slider";
 
 interface Props {
+    label: string;
     input: { [key: string]: any };
     setInput: any;
     fieldName: string;
 }
   
 
-const InputSlider = ( {input, setInput, fieldName }: Props) => {
+const InputSlider = ( {
+  label, 
+  input, 
+  setInput, 
+  fieldName 
+}: Props) => {
 
   const errorMessageDefault: {[key: string]: any} = { facefixer_strength: null };
   const [errorMessage, setErrorMessage] = useState(errorMessageDefault);
@@ -42,7 +48,7 @@ const InputSlider = ( {input, setInput, fieldName }: Props) => {
         <div className="flex flex-row items-center justify-between">
           <SubSectionTitle>
             <TextTooltipRow>
-              Face-fix strength
+              {label}
               <Tooltip left="-20" width="240px">
                 0.05 is the weakest effect (barely noticeable improvements),
                 while 1.0 is the strongest effect.

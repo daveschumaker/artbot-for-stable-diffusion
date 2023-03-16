@@ -1439,6 +1439,7 @@ const AdvancedOptionsPanel = ({
           />
         {(getPostProcessing('CodeFormers')&&
           <InputSlider 
+            label="Face-fix fstrength"
             input={input} 
             setInput={setInput}
             fieldName="facefixer_strength"
