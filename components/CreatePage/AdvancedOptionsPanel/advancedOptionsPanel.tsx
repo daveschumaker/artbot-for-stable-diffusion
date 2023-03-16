@@ -27,7 +27,6 @@ import {
 } from '../../../constants'
 import GrainIcon from '../../icons/GrainIcon'
 import AppSettings from '../../../models/AppSettings'
-import Slider from '../../UI/Slider'
 import NumberInput from '../../UI/NumberInput'
 import useComponentState from '../../../hooks/useComponentState'
 import { validModelsArray } from '../../../utils/modelUtils'
