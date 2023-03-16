@@ -45,7 +45,7 @@ import ArrowBarLeftIcon from '../../icons/ArrowBarLeftIcon'
 import TwoPanel from '../../UI/TwoPanel'
 import SplitPanel from '../../UI/SplitPanel'
 import Samplers from './Samplers'
-import NumericInputSlider from './InputSlider'
+import NumericInputSlider from './NumericInputSlider'
 
 const NoSliderSpacer = styled.div`
   height: 14px;
