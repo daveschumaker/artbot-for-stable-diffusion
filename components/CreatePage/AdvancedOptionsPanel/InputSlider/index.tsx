@@ -22,7 +22,7 @@ interface Props {
 }
   
 
-const InputSlider = ( {
+const NumericInputSlider = ( {
   label, 
   tooltip,
   from,
@@ -140,4 +140,4 @@ const InputSlider = ( {
   );
 };
 
-export default InputSlider;
+export default NumericInputSlider;

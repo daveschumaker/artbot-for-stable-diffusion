@@ -41,12 +41,11 @@ import { modelInfoStore } from '../../../store/modelStore'
 import TextArea from '../../UI/TextArea'
 import HiresFix from './HiresFix'
 import FlexRow from '../../UI/FlexRow'
-import ClipSkip from './ClipSkip'
 import ArrowBarLeftIcon from '../../icons/ArrowBarLeftIcon'
 import TwoPanel from '../../UI/TwoPanel'
 import SplitPanel from '../../UI/SplitPanel'
 import Samplers from './Samplers'
-import InputSlider from './InputSlider'
+import NumericInputSlider from './InputSlider'
 
 const NoSliderSpacer = styled.div`
   height: 14px;
@@ -914,7 +913,7 @@ const AdvancedOptionsPanel = ({
         input.source_processing === SourceProcessing.Img2Img ||
         input.source_processing === SourceProcessing.InPainting) && (
             <Section>
-              <InputSlider
+              <NumericInputSlider
                 label="Denoise"
                 tooltip="Amount of noise added to input image. Values that
                 approach 1.0 allow for lots of variations but will
@@ -1319,7 +1318,7 @@ const AdvancedOptionsPanel = ({
             onChange={() => handlePostProcessing('CodeFormers')}
           />
         {(getPostProcessing('CodeFormers')&&
-          <InputSlider 
+          <NumericInputSlider 
             label="Face-fix strength"
             tooltip="0.05 is the weakest effect (barely noticeable improvements), while 1.0 is the strongest effect."
             from={0.05}
@@ -1344,7 +1343,7 @@ const AdvancedOptionsPanel = ({
         </div>
       </Section>
       <Section>
-        <InputSlider 
+        <NumericInputSlider 
             label="CLIP skip"
             tooltip="How many frames to skip between clips."
             from={1}
@@ -1358,7 +1357,7 @@ const AdvancedOptionsPanel = ({
       </Section>
       {showNumImagesInput && (
         <Section>
-          <InputSlider 
+          <NumericInputSlider 
             label="Number of images"
             from={1}
             to={MAX_IMAGES_PER_JOB}
