@@ -203,17 +203,6 @@ const AdvancedOptionsPanel = ({
     [input.post_processing]
   )
 
-  const handleNumberInput = (e: any) => {
-    const event = {
-      target: {
-        name: e.target.name,
-        value: Number(e.target.value)
-      }
-    }
-
-    handleChangeInput(event)
-  }
-
   const handlePostProcessing = useCallback(
     (value: string) => {
       let newPost = [...input.post_processing]
@@ -596,6 +585,7 @@ const AdvancedOptionsPanel = ({
               setInput={setInput}
               fieldName="steps"
               initialLoad={initialLoad}
+              fullWidth
             />
           )}
           {input.useMultiSteps && (
@@ -697,6 +687,7 @@ const AdvancedOptionsPanel = ({
                 setInput={setInput}
                 fieldName="cfg_scale"
                 initialLoad={initialLoad}
+                fullWidth
               />
           )}
           {input.useMultiGuidance && (
@@ -800,9 +791,6 @@ const AdvancedOptionsPanel = ({
                 initialLoad={initialLoad}
                 disabled={input.models[0] === 'stable_diffusion_inpainting'}
               />
-              {
-                // TODO: At least let choose between whole numbers and decimals
-              }
               {input.source_processing === SourceProcessing.InPainting &&
                 input.models[0] === 'stable_diffusion_inpainting' && (
                   <div className="mt-0 text-sm text-slate-500">

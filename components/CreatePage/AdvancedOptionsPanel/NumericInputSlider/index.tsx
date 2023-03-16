@@ -8,6 +8,8 @@ import Tooltip from "../../../UI/Tooltip";
 import NumberInput from "../../../UI/NumberInput";
 import Slider from "../../../UI/Slider";
 
+import clsx from "clsx";
+
 interface Props {
     label: string;
     tooltip?: string;
@@ -19,6 +21,7 @@ interface Props {
     fieldName: string;
     initialLoad: boolean;
     disabled?: boolean;
+    fullWidth?: boolean;
 }
   
 
@@ -32,7 +35,8 @@ const NumericInputSlider = ( {
   setInput, 
   fieldName,
   initialLoad,
-  disabled = false
+  disabled = false,
+  fullWidth = false
 }: Props) => {
 
   const errorMessageDefault: {[key: string]: any} = { facefixer_strength: null };
@@ -77,7 +81,12 @@ const NumericInputSlider = ( {
   };
 
   return (
-    <div className="mb-8 w-full md:w-1/2">
+    <div className={
+      clsx(
+        "mb-8 w-full",
+        (!fullWidth)&&"md:w-1/2"
+      )
+    }>
       <Section>
         <div className="flex flex-row items-center justify-between">
           <SubSectionTitle>
