@@ -927,11 +927,11 @@ const AdvancedOptionsPanel = ({
                 setInput={setInput}
                 fieldName="denoising_strength"
                 initialLoad={initialLoad}
+                disabled={input.models[0] === 'stable_diffusion_inpainting'}
               />
               {
-                // disabled={input.models[0] === 'stable_diffusion_inpainting'}
-                // show in percents
-                // At least let choose between whole numbers and decimals
+                // TODO: show in percents
+                // TODO: At least let choose between whole numbers and decimals
               }
               {input.source_processing === SourceProcessing.InPainting &&
                 input.models[0] === 'stable_diffusion_inpainting' && (

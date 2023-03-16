@@ -18,6 +18,7 @@ interface Props {
     setInput: any;
     fieldName: string;
     initialLoad: boolean;
+    disabled?: boolean;
 }
   
 
@@ -30,7 +31,8 @@ const InputSlider = ( {
   input, 
   setInput, 
   fieldName,
-  initialLoad
+  initialLoad,
+  disabled = false
 }: Props) => {
 
   const errorMessageDefault: {[key: string]: any} = { facefixer_strength: null };
@@ -95,6 +97,7 @@ const InputSlider = ( {
             max={1}
             step={0.05}
             name={fieldName}
+            disabled={disabled}
             onMinusClick={() => {
               const value = Number((input[fieldName] - step).toFixed(2));
               updateField(value);
@@ -119,6 +122,7 @@ const InputSlider = ( {
           min={from}
           max={to}
           step={step}
+          disabled={disabled}
           onChange={(e: any) => {
             handleChangeInput(e.target.value);
           }}
