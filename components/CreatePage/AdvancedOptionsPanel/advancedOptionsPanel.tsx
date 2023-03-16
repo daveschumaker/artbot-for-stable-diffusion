@@ -939,11 +939,6 @@ const AdvancedOptionsPanel = ({
                     Note: Denoise disabled when inpainting model is used.
                   </div>
                 )}
-              {errorMessage.denoising_strength && (
-                <div className="mb-2 text-red-500 text-lg font-bold">
-                  {errorMessage.denoising_strength}
-                </div>
-              )}
             </Section>
       )}
       <Section>
