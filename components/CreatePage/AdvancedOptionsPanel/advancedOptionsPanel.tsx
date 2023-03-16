@@ -747,85 +747,18 @@ const AdvancedOptionsPanel = ({
         </SplitPanel>
         <SplitPanel>
           {!input.useMultiGuidance && (
-            <Section>
-              <div className="flex flex-row items-center justify-between">
-                <SubSectionTitle>
-                  <TextTooltipRow>
-                    Guidance
-                    <Tooltip width="200px">
-                      Higher numbers follow the prompt more closely. Lower
-                      numbers give more creativity.
-                    </Tooltip>
-                  </TextTooltipRow>
-                  <div className="block text-xs w-full">(1 - 30)</div>
-                </SubSectionTitle>
-                <NumberInput
-                  // @ts-ignore
-                  error={errorMessage.cfg_scale}
-                  className="mb-2"
-                  type="text"
-                  min={0.5}
-                  max={30}
-                  step={0.5}
-                  onMinusClick={() => {
-                    const value = input.cfg_scale - 0.5
-                    PromptInputSettings.set('cfg_scale', value)
-                    setInput({ cfg_scale: value })
-                  }}
-                  onPlusClick={() => {
-                    const value = input.cfg_scale + 0.5
-                    PromptInputSettings.set('cfg_scale', value)
-                    setInput({ cfg_scale: value })
-                  }}
-                  name="cfg_scale"
-                  onBlur={(e: any) => {
-                    if (
-                      isNaN(e.target.value) ||
-                      e.target.value < 1 ||
-                      e.target.value > 30
-                    ) {
-                      if (initialLoad) {
-                        return
-                      }
-
-                      setErrorMessage({
-                        cfg_scale:
-                          'Please enter a valid number between 1 and 30'
-                      })
-                    } else if (errorMessage.cfg_scale) {
-                      setErrorMessage({ cfg_scale: null })
-                    }
-                  }}
-                  onChange={handleNumberInput}
-                  // @ts-ignore
-                  value={input.cfg_scale}
-                  width="100%"
-                />
-              </div>
-              <div className="mb-4">
-                <Slider
-                  value={input.cfg_scale}
-                  min={1}
-                  max={30}
-                  step={0.5}
-                  onChange={(e: any) => {
-                    const event = {
-                      target: {
-                        name: 'cfg_scale',
-                        value: Number(e.target.value)
-                      }
-                    }
-
-                    handleChangeInput(event)
-                  }}
-                />
-              </div>
-              {errorMessage.cfg_scale && (
-                <div className="mb-2 text-red-500 text-lg font-bold">
-                  {errorMessage.cfg_scale}
-                </div>
-              )}
-            </Section>
+              <NumericInputSlider 
+                label="Guidance"
+                tooltip="Higher numbers follow the prompt more closely. Lower
+                numbers give more creativity."
+                from={1}
+                to={30}
+                step={0.5}
+                input={input} 
+                setInput={setInput}
+                fieldName="cfg_scale"
+                initialLoad={initialLoad}
+              />
           )}
           {input.useMultiGuidance && (
             <Section>
