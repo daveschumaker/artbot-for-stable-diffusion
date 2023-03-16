@@ -1436,7 +1436,6 @@ const AdvancedOptionsPanel = ({
             value={getPostProcessing('CodeFormers')}
             onChange={() => handlePostProcessing('CodeFormers')}
           />
-        </div>
         {(getPostProcessing('CodeFormers')&&
         <div className="mb-8 w-full md:w-1/2">
           <Section>
@@ -1515,7 +1514,6 @@ const AdvancedOptionsPanel = ({
           </Section>
         </div>
         )}
-        <div className="flex flex-col gap-2 items-start">
           <Checkbox
             label={`RealESRGAN_x4plus (upscaler)`}
             value={getPostProcessing(`RealESRGAN_x4plus`)}
