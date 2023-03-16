@@ -1441,9 +1441,13 @@ const AdvancedOptionsPanel = ({
           <InputSlider 
             label="Face-fix strength"
             tooltip="0.05 is the weakest effect (barely noticeable improvements), while 1.0 is the strongest effect."
+            from={0.05}
+            to={1.0}
+            step={0.05}
             input={input} 
             setInput={setInput}
             fieldName="facefixer_strength"
+            initialLoad={initialLoad}
           />
         )}
           <Checkbox

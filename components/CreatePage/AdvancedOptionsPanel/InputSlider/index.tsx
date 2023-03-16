@@ -11,37 +11,46 @@ import Slider from "../../../UI/Slider";
 interface Props {
     label: string;
     tooltip: string;
+    from: number;
+    to: number;
+    step: number;
     input: { [key: string]: any };
     setInput: any;
     fieldName: string;
+    initialLoad: boolean;
 }
   
 
 const InputSlider = ( {
   label, 
   tooltip,
+  from,
+  to,
+  step,
   input, 
   setInput, 
-  fieldName 
+  fieldName,
+  initialLoad
 }: Props) => {
 
   const errorMessageDefault: {[key: string]: any} = { facefixer_strength: null };
   const [errorMessage, setErrorMessage] = useState(errorMessageDefault);
 
-  const [initialLoad] = useState(true);
-
-  const handleNumberInput = (value: string | number) => {
+  const updateField = (value: string | number) => {
     const res = {};
     // @ts-ignore
     res[fieldName] = Number(value);
     setInput(res);
+  }
+
+  const handleNumberInput = (event: any) => {
+    const value = Number(event.target.value);
+    if (isNaN(value)) return;
+    updateField(value);
   };
 
   const handleChangeInput = (value: string | number) => {
-    const res = {};
-    // @ts-ignore
-    res[fieldName] = Number(value);
-    setInput(res);
+    updateField(value);
   };
 
   return (
@@ -55,7 +64,7 @@ const InputSlider = ( {
                 {tooltip}
               </Tooltip>
             </TextTooltipRow>
-            <div className="block text-xs w-full">(0.05 - 1.0)</div>
+            <div className="block text-xs w-full">({from} - {to})</div>
           </SubSectionTitle>
           <NumberInput
             className="mb-2"
@@ -64,32 +73,34 @@ const InputSlider = ( {
             min={0.05}
             max={1}
             step={0.05}
-            name="facefixer_strength"
+            name={fieldName}
             onMinusClick={() => {
-              const value = Number((input[fieldName] - 0.05).toFixed(2));
-              input[fieldName] = value;
+              const value = Number((input[fieldName] - step).toFixed(2));
+              updateField(value);
             }}
             onPlusClick={() => {
-              const value = Number((input[fieldName] + 0.05).toFixed(2));
-              input[fieldName] = value;
+              const value = Number((input[fieldName] + step).toFixed(2));
+              updateField(value);
             }}
             onChange={handleNumberInput}
             onBlur={(e: any) => {
-              if (
-                isNaN(e.target.value) ||
-                e.target.value < 0.05 ||
-                e.target.value > 1
-              ) {
+              const value = Number(e.target.value);
+              console.log(value);
+              if (isNaN(value) || value < from || value > to) {
                 if (initialLoad) {
                   return;
                 }
 
-                input[fieldName] = 1;
+                updateField(to);
+
                 setErrorMessage({
-                  numImages: `Please enter a valid number between 0.05 and 1.00`,
+                  numImages: `Please enter a valid number between ${from} and ${to}`,
                 });
-              } else if (errorMessage.facefixer_strength) {
-                setErrorMessage({ facefixer_strength: null });
+              } else if (errorMessage[fieldName]) {
+                const errorUpdate = {};
+                // @ts-ignore
+                errorUpdate[fieldName] = null;
+                setErrorMessage(errorUpdate);
               }
             }}
             value={input[fieldName]}
@@ -98,9 +109,9 @@ const InputSlider = ( {
         </div>
         <Slider
           value={input[fieldName]}
-          min={0.05}
-          max={1}
-          step={0.05}
+          min={from}
+          max={to}
+          step={step}
           onChange={(e: any) => {
             handleChangeInput(e.target.value);
           }}
