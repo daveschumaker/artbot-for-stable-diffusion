@@ -144,6 +144,15 @@ const Changelog = () => {
             Stable Horde now support denoise strength (or init strength, as some
             UIs call it) for ControlNet!
           </StyledLi>
+          <StyledLi>
+            Fix: Issue with &quot;stuck&quot; attached job ID. Should now be
+            resolved. Thanks to Hinaloth and TheGlosser for reporting this on
+            Discord!
+          </StyledLi>
+          <StyledLi>
+            Support for face fixer strength! Slider from 0.05 to 1, where 1 is
+            the strongest effect.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

@@ -14,6 +14,7 @@ class ImageApiParamsToPromptInput {
   orientationType: string
   parentJobId?: string
   post_processing?: Array<string>
+  facefixer_strength?: number
   prompt: string
   sampler?: string
   seed: string
@@ -48,6 +49,10 @@ class ImageApiParamsToPromptInput {
     this.seed = imageParams.params.seed || ''
     this.steps = imageParams.params.steps
     this.tiling = imageParams.params.tiling
+
+    if (imageParams.params.facefixer_strength) {
+      this.facefixer_strength = imageParams.params.facefixer_strength
+    }
   }
 }
 

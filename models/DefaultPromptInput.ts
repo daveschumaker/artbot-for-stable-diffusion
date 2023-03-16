@@ -35,6 +35,7 @@ class DefaultPromptInput {
   stylePreset: string
   source_processing: SourceProcessing
   post_processing: Array<string>
+  facefixer_strength: number
   models: Array<string>
   useAllModels: boolean
   useFavoriteModels: boolean
@@ -78,6 +79,7 @@ class DefaultPromptInput {
     this.stylePreset = 'none'
     this.source_processing = SourceProcessing.Prompt
     this.post_processing = []
+    this.facefixer_strength = 0.75
     this.models = ['stable_diffusion']
     this.useAllModels = false
     this.useFavoriteModels = false

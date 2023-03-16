@@ -1436,6 +1436,84 @@ const AdvancedOptionsPanel = ({
             value={getPostProcessing('CodeFormers')}
             onChange={() => handlePostProcessing('CodeFormers')}
           />
+        </div>
+        <div className="mb-8 w-full md:w-1/2">
+          <Section>
+            <div className="flex flex-row items-center justify-between">
+              <SubSectionTitle>
+                <TextTooltipRow>
+                  Face-fix strength
+                  <Tooltip left="-20" width="240px">
+                    0.05 is the weakest effect (barely noticible improvements),
+                    while 1.0 is the strongest effect.
+                  </Tooltip>
+                </TextTooltipRow>
+                <div className="block text-xs w-full">(0.05 - 1.0)</div>
+              </SubSectionTitle>
+              <NumberInput
+                // @ts-ignore
+                className="mb-2"
+                error={errorMessage.facefixer_strength}
+                type="text"
+                min={0.05}
+                max={1}
+                step={0.05}
+                name="facefixer_strength"
+                onMinusClick={() => {
+                  const value = Number(input.facefixer_strength - 0.05).toFixed(
+                    2
+                  )
+                  setInput({ facefixer_strength: Number(value) })
+                }}
+                onPlusClick={() => {
+                  const value = Number(input.facefixer_strength + 0.05).toFixed(
+                    2
+                  )
+                  setInput({ facefixer_strength: Number(value) })
+                }}
+                onChange={handleNumberInput}
+                onBlur={(e: any) => {
+                  if (
+                    isNaN(e.target.value) ||
+                    e.target.value < 0.05 ||
+                    e.target.value > 1
+                  ) {
+                    if (initialLoad) {
+                      return
+                    }
+
+                    setInput({ facefixer_strength: 1 })
+                    setErrorMessage({
+                      numImages: `Please enter a valid number between 0.05 and 1.00`
+                    })
+                  } else if (errorMessage.facefixer_strength) {
+                    setErrorMessage({ facefixer_strength: null })
+                  }
+                }}
+                // @ts-ignore
+                value={input.facefixer_strength}
+                width="100%"
+              />
+            </div>
+            <Slider
+              value={input.facefixer_strength}
+              min={0.05}
+              max={1}
+              step={0.05}
+              onChange={(e: any) => {
+                const event = {
+                  target: {
+                    name: 'facefixer_strength',
+                    value: Number(e.target.value)
+                  }
+                }
+
+                handleChangeInput(event)
+              }}
+            />
+          </Section>
+        </div>
+        <div className="flex flex-col gap-2 items-start">
           <Checkbox
             label={`RealESRGAN_x4plus (upscaler)`}
             value={getPostProcessing(`RealESRGAN_x4plus`)}

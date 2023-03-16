@@ -34,6 +34,7 @@ export interface IRequestParams {
   orientationType: string
   parentJobId?: string
   post_processing?: Array<string>
+  facefixer_strength: number
   prompt: string
   sampler: string
   seed: string
@@ -75,6 +76,7 @@ class CreateImageRequest {
   orientation: string
   parentJobId: string
   post_processing: Array<string>
+  facefixer_strength?: number
   prompt: string
   sampler: string
   seed: string
@@ -114,6 +116,7 @@ class CreateImageRequest {
     orientationType = 'square',
     parentJobId = '',
     post_processing = [],
+    facefixer_strength = 0.75,
     prompt = '',
     sampler = 'k_euler',
     seed = '',
@@ -205,6 +208,13 @@ class CreateImageRequest {
     this.source_mask = String(source_mask)
     this.source_processing = source_processing
     this.stylePreset = stylePreset
+
+    if (
+      this.post_processing.includes('GFPGAN') ||
+      this.post_processing.includes('CodeFormers')
+    ) {
+      this.facefixer_strength = facefixer_strength
+    }
 
     if (
       source_processing === SourceProcessing.Img2Img ||

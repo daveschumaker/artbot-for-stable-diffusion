@@ -37,6 +37,7 @@ export interface IArtBotImageDetails {
   source_processing?: string
   stylePreset: string
   post_processing: Array<string>
+  facefixer_strength?: number
   source_mask?: string
   denoising_strength?: number
   control_type?: string
@@ -51,6 +52,7 @@ interface ParamsObject {
   steps: number
   denoising_strength?: number
   control_type?: string
+  facefixer_strength?: number
   karras: boolean
   hires_fix: boolean
   clip_skip: number
@@ -90,6 +92,7 @@ class ImageParamsForApi {
       source_processing,
       stylePreset,
       post_processing = [],
+      facefixer_strength,
       source_mask,
       denoising_strength,
       control_type
@@ -174,8 +177,12 @@ class ImageParamsForApi {
       }
     }
 
-    // Things to remove
+    if (facefixer_strength) {
+      apiParams.params.facefixer_strength = facefixer_strength
+    }
+
     if (control_type && control_type !== '' && source_image) {
+      // Things to remove
       delete apiParams.params.denoising_strength
       delete apiParams.params.sampler_name
       apiParams.params.karras = false
