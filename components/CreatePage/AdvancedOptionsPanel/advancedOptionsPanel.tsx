@@ -568,7 +568,7 @@ const AdvancedOptionsPanel = ({
       <TwoPanel className="mt-4">
         <SplitPanel>
           {!input.useMultiSteps && (
-            <NumericInputSlider 
+            <NumericInputSlider
               label="Steps"
               tooltip="Fewer steps generally result in quicker image generations.
               Many models achieve full coherence after a certain number
@@ -581,7 +581,7 @@ const AdvancedOptionsPanel = ({
                 isSlider: true
               })}
               step={1}
-              input={input} 
+              input={input}
               setInput={setInput}
               fieldName="steps"
               initialLoad={initialLoad}
@@ -676,19 +676,19 @@ const AdvancedOptionsPanel = ({
         </SplitPanel>
         <SplitPanel>
           {!input.useMultiGuidance && (
-              <NumericInputSlider 
-                label="Guidance"
-                tooltip="Higher numbers follow the prompt more closely. Lower
+            <NumericInputSlider
+              label="Guidance"
+              tooltip="Higher numbers follow the prompt more closely. Lower
                 numbers give more creativity."
-                from={1}
-                to={30}
-                step={0.5}
-                input={input} 
-                setInput={setInput}
-                fieldName="cfg_scale"
-                initialLoad={initialLoad}
-                fullWidth
-              />
+              from={1}
+              to={30}
+              step={0.5}
+              input={input}
+              setInput={setInput}
+              fieldName="cfg_scale"
+              initialLoad={initialLoad}
+              fullWidth
+            />
           )}
           {input.useMultiGuidance && (
             <Section>
@@ -775,29 +775,29 @@ const AdvancedOptionsPanel = ({
       {(input.img2img ||
         input.source_processing === SourceProcessing.Img2Img ||
         input.source_processing === SourceProcessing.InPainting) && (
-            <Section>
-              <NumericInputSlider
-                label="Denoise"
-                tooltip="Amount of noise added to input image. Values that
+        <Section>
+          <NumericInputSlider
+            label="Denoise"
+            tooltip="Amount of noise added to input image. Values that
                 approach 1.0 allow for lots of variations but will
                 also produce images that are not semantically
                 consistent with the input. Only available for img2img."
-                from={0.0}
-                to={1.0}
-                step={0.05}
-                input={input} 
-                setInput={setInput}
-                fieldName="denoising_strength"
-                initialLoad={initialLoad}
-                disabled={input.models[0] === 'stable_diffusion_inpainting'}
-              />
-              {input.source_processing === SourceProcessing.InPainting &&
-                input.models[0] === 'stable_diffusion_inpainting' && (
-                  <div className="mt-0 text-sm text-slate-500">
-                    Note: Denoise disabled when inpainting model is used.
-                  </div>
-                )}
-            </Section>
+            from={0.0}
+            to={1.0}
+            step={0.05}
+            input={input}
+            setInput={setInput}
+            fieldName="denoising_strength"
+            initialLoad={initialLoad}
+            disabled={input.models[0] === 'stable_diffusion_inpainting'}
+          />
+          {input.source_processing === SourceProcessing.InPainting &&
+            input.models[0] === 'stable_diffusion_inpainting' && (
+              <div className="mt-0 text-sm text-slate-500">
+                Note: Denoise disabled when inpainting model is used.
+              </div>
+            )}
+        </Section>
       )}
       <Section>
         <SubSectionTitle>Control Type</SubSectionTitle>
@@ -1177,19 +1177,20 @@ const AdvancedOptionsPanel = ({
             value={getPostProcessing('CodeFormers')}
             onChange={() => handlePostProcessing('CodeFormers')}
           />
-        {(getPostProcessing('CodeFormers')&&
-          <NumericInputSlider 
-            label="Face-fix strength"
-            tooltip="0.05 is the weakest effect (barely noticeable improvements), while 1.0 is the strongest effect."
-            from={0.05}
-            to={1.0}
-            step={0.05}
-            input={input} 
-            setInput={setInput}
-            fieldName="facefixer_strength"
-            initialLoad={initialLoad}
-          />
-        )}
+          {(getPostProcessing('GFPGAN') ||
+            getPostProcessing('CodeFormers')) && (
+            <NumericInputSlider
+              label="Face-fix strength"
+              tooltip="0.05 is the weakest effect (barely noticeable improvements), while 1.0 is the strongest effect."
+              from={0.05}
+              to={1.0}
+              step={0.05}
+              input={input}
+              setInput={setInput}
+              fieldName="facefixer_strength"
+              initialLoad={initialLoad}
+            />
+          )}
           <Checkbox
             label={`RealESRGAN_x4plus (upscaler)`}
             value={getPostProcessing(`RealESRGAN_x4plus`)}
@@ -1203,26 +1204,26 @@ const AdvancedOptionsPanel = ({
         </div>
       </Section>
       <Section>
-        <NumericInputSlider 
-            label="CLIP skip"
-            tooltip="How many frames to skip between clips."
-            from={1}
-            to={12}
-            step={1}
-            input={input} 
-            setInput={setInput}
-            fieldName="clipskip"
-            initialLoad={initialLoad}
+        <NumericInputSlider
+          label="CLIP skip"
+          tooltip="How many frames to skip between clips."
+          from={1}
+          to={12}
+          step={1}
+          input={input}
+          setInput={setInput}
+          fieldName="clipskip"
+          initialLoad={initialLoad}
         />
       </Section>
       {showNumImagesInput && (
         <Section>
-          <NumericInputSlider 
+          <NumericInputSlider
             label="Number of images"
             from={1}
             to={MAX_IMAGES_PER_JOB}
             step={1}
-            input={input} 
+            input={input}
             setInput={setInput}
             fieldName="numImages"
             initialLoad={initialLoad}
