@@ -46,7 +46,7 @@ import ArrowBarLeftIcon from '../../icons/ArrowBarLeftIcon'
 import TwoPanel from '../../UI/TwoPanel'
 import SplitPanel from '../../UI/SplitPanel'
 import Samplers from './Samplers'
-import FacefixerSlider from './FacefixerSlider'
+import InputSlider from './InputSlider'
 
 const NoSliderSpacer = styled.div`
   height: 14px;
@@ -1438,7 +1438,7 @@ const AdvancedOptionsPanel = ({
             onChange={() => handlePostProcessing('CodeFormers')}
           />
         {(getPostProcessing('CodeFormers')&&
-          <FacefixerSlider 
+          <InputSlider 
             input={input} 
             setInput={setInput}
             fieldName="facefixer_strength"

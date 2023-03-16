@@ -15,7 +15,7 @@ interface Props {
 }
   
 
-const FacefixerSlider = ( {input, setInput, fieldName }: Props) => {
+const InputSlider = ( {input, setInput, fieldName }: Props) => {
 
   const errorMessageDefault: {[key: string]: any} = { facefixer_strength: null };
   const [errorMessage, setErrorMessage] = useState(errorMessageDefault);
@@ -103,4 +103,4 @@ const FacefixerSlider = ( {input, setInput, fieldName }: Props) => {
   );
 };
 
-export default FacefixerSlider;
+export default InputSlider;
