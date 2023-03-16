@@ -131,7 +131,7 @@ const InputSlider = ( {
           }}
         />
         {errorMessage[fieldName] && (
-                <div className="mb-2 text-red-500 text-md font-bold">
+                <div className="mb-2 text-sm">
                   {errorMessage[fieldName]}
                 </div>
               )}

@@ -1343,14 +1343,19 @@ const AdvancedOptionsPanel = ({
           />
         </div>
       </Section>
-      <div className="mt-8 w-full md:w-1/2">
-        <ClipSkip
-          input={input}
-          setInput={setInput}
-          handleChangeInput={handleChangeInput}
-          handleNumberInput={handleNumberInput}
+      <Section>
+        <InputSlider 
+            label="CLIP skip"
+            tooltip="How many frames to skip between clips."
+            from={1}
+            to={12}
+            step={1}
+            input={input} 
+            setInput={setInput}
+            fieldName="clipskip"
+            initialLoad={initialLoad}
         />
-      </div>
+      </Section>
       {showNumImagesInput && (
         <Section>
           <InputSlider 
