@@ -27,7 +27,6 @@ import {
 } from '../../../constants'
 import GrainIcon from '../../icons/GrainIcon'
 import AppSettings from '../../../models/AppSettings'
-import Slider from '../../UI/Slider'
 import NumberInput from '../../UI/NumberInput'
 import useComponentState from '../../../hooks/useComponentState'
 import { validModelsArray } from '../../../utils/modelUtils'
@@ -41,11 +40,11 @@ import { modelInfoStore } from '../../../store/modelStore'
 import TextArea from '../../UI/TextArea'
 import HiresFix from './HiresFix'
 import FlexRow from '../../UI/FlexRow'
-import ClipSkip from './ClipSkip'
 import ArrowBarLeftIcon from '../../icons/ArrowBarLeftIcon'
 import TwoPanel from '../../UI/TwoPanel'
 import SplitPanel from '../../UI/SplitPanel'
 import Samplers from './Samplers'
+import NumericInputSlider from './NumericInputSlider'
 
 const NoSliderSpacer = styled.div`
   height: 14px;
@@ -202,17 +201,6 @@ const AdvancedOptionsPanel = ({
     },
     [input.post_processing]
   )
-
-  const handleNumberInput = (e: any) => {
-    const event = {
-      target: {
-        name: e.target.name,
-        value: Number(e.target.value)
-      }
-    }
-
-    handleChangeInput(event)
-  }
 
   const handlePostProcessing = useCallback(
     (value: string) => {
@@ -580,84 +568,25 @@ const AdvancedOptionsPanel = ({
       <TwoPanel className="mt-4">
         <SplitPanel>
           {!input.useMultiSteps && (
-            <Section>
-              <div className="flex flex-row items-center justify-between">
-                <SubSectionTitle>
-                  <TextTooltipRow>
-                    Steps
-                    <Tooltip width="200px">
-                      Fewer steps generally result in quicker image generations.
-                      Many models achieve full coherence after a certain number
-                      of finite steps (60 - 90). Keep your initial queries in
-                      the 30 - 50 range for best results.
-                    </Tooltip>
-                  </TextTooltipRow>
-                  <div className="block text-xs w-full">
-                    (1 -{' '}
-                    {maxSteps({
-                      sampler: input.sampler,
-                      loggedIn: loggedIn === true ? true : false
-                    })}
-                    )
-                  </div>
-                </SubSectionTitle>
-                <NumberInput
-                  // @ts-ignore
-                  error={errorMessage.steps}
-                  className="mb-2"
-                  type="text"
-                  min={1}
-                  max={maxSteps({
-                    sampler: input.sampler,
-                    loggedIn: loggedIn === true ? true : false
-                  })}
-                  onMinusClick={() => {
-                    const value = input.steps - 1
-                    PromptInputSettings.set('steps', value)
-                    setInput({ steps: value })
-                  }}
-                  onPlusClick={() => {
-                    const value = input.steps + 1
-                    PromptInputSettings.set('steps', value)
-                    setInput({ steps: value })
-                  }}
-                  name="steps"
-                  onChange={handleNumberInput}
-                  onBlur={() => {
-                    validateSteps()
-                  }}
-                  // @ts-ignore
-                  value={Number(input.steps)}
-                  width="100%"
-                />
-              </div>
-              <div className="mb-4">
-                <Slider
-                  value={input.steps}
-                  min={1}
-                  max={maxSteps({
-                    sampler: input.sampler,
-                    loggedIn: loggedIn === true ? true : false,
-                    isSlider: true
-                  })}
-                  onChange={(e: any) => {
-                    const event = {
-                      target: {
-                        name: 'steps',
-                        value: Number(e.target.value)
-                      }
-                    }
-
-                    handleChangeInput(event)
-                  }}
-                />
-              </div>
-              {errorMessage.steps && (
-                <div className="mb-2 text-red-500 text-lg font-bold">
-                  {errorMessage.steps}
-                </div>
-              )}
-            </Section>
+            <NumericInputSlider 
+              label="Steps"
+              tooltip="Fewer steps generally result in quicker image generations.
+              Many models achieve full coherence after a certain number
+              of finite steps (60 - 90). Keep your initial queries in
+              the 30 - 50 range for best results."
+              from={1}
+              to={maxSteps({
+                sampler: input.sampler,
+                loggedIn: loggedIn === true ? true : false,
+                isSlider: true
+              })}
+              step={1}
+              input={input} 
+              setInput={setInput}
+              fieldName="steps"
+              initialLoad={initialLoad}
+              fullWidth
+            />
           )}
           {input.useMultiSteps && (
             <Section>
@@ -747,85 +676,19 @@ const AdvancedOptionsPanel = ({
         </SplitPanel>
         <SplitPanel>
           {!input.useMultiGuidance && (
-            <Section>
-              <div className="flex flex-row items-center justify-between">
-                <SubSectionTitle>
-                  <TextTooltipRow>
-                    Guidance
-                    <Tooltip width="200px">
-                      Higher numbers follow the prompt more closely. Lower
-                      numbers give more creativity.
-                    </Tooltip>
-                  </TextTooltipRow>
-                  <div className="block text-xs w-full">(1 - 30)</div>
-                </SubSectionTitle>
-                <NumberInput
-                  // @ts-ignore
-                  error={errorMessage.cfg_scale}
-                  className="mb-2"
-                  type="text"
-                  min={0.5}
-                  max={30}
-                  step={0.5}
-                  onMinusClick={() => {
-                    const value = input.cfg_scale - 0.5
-                    PromptInputSettings.set('cfg_scale', value)
-                    setInput({ cfg_scale: value })
-                  }}
-                  onPlusClick={() => {
-                    const value = input.cfg_scale + 0.5
-                    PromptInputSettings.set('cfg_scale', value)
-                    setInput({ cfg_scale: value })
-                  }}
-                  name="cfg_scale"
-                  onBlur={(e: any) => {
-                    if (
-                      isNaN(e.target.value) ||
-                      e.target.value < 1 ||
-                      e.target.value > 30
-                    ) {
-                      if (initialLoad) {
-                        return
-                      }
-
-                      setErrorMessage({
-                        cfg_scale:
-                          'Please enter a valid number between 1 and 30'
-                      })
-                    } else if (errorMessage.cfg_scale) {
-                      setErrorMessage({ cfg_scale: null })
-                    }
-                  }}
-                  onChange={handleNumberInput}
-                  // @ts-ignore
-                  value={input.cfg_scale}
-                  width="100%"
-                />
-              </div>
-              <div className="mb-4">
-                <Slider
-                  value={input.cfg_scale}
-                  min={1}
-                  max={30}
-                  step={0.5}
-                  onChange={(e: any) => {
-                    const event = {
-                      target: {
-                        name: 'cfg_scale',
-                        value: Number(e.target.value)
-                      }
-                    }
-
-                    handleChangeInput(event)
-                  }}
-                />
-              </div>
-              {errorMessage.cfg_scale && (
-                <div className="mb-2 text-red-500 text-lg font-bold">
-                  {errorMessage.cfg_scale}
-                </div>
-              )}
-            </Section>
+              <NumericInputSlider 
+                label="Guidance"
+                tooltip="Higher numbers follow the prompt more closely. Lower
+                numbers give more creativity."
+                from={1}
+                to={30}
+                step={0.5}
+                input={input} 
+                setInput={setInput}
+                fieldName="cfg_scale"
+                initialLoad={initialLoad}
+                fullWidth
+              />
           )}
           {input.useMultiGuidance && (
             <Section>
@@ -912,151 +775,29 @@ const AdvancedOptionsPanel = ({
       {(input.img2img ||
         input.source_processing === SourceProcessing.Img2Img ||
         input.source_processing === SourceProcessing.InPainting) && (
-        <TwoPanel className="mt-4">
-          <SplitPanel>
             <Section>
-              <div className="flex flex-row items-center justify-between">
-                {input.source_image && (
-                  <div className="flex flex-col">
-                    <SubSectionTitle>
-                      <TextTooltipRow>
-                        Denoise{' '}
-                        <Tooltip width="200px">
-                          Amount of noise added to input image. Values that
-                          approach 1.0 allow for lots of variations but will
-                          also produce images that are not semantically
-                          consistent with the input. Only available for img2img.
-                        </Tooltip>
-                      </TextTooltipRow>
-                    </SubSectionTitle>
-                  </div>
-                )}
-                <>
-                  <SubSectionTitle>
-                    <TextTooltipRow>
-                      Denoise{' '}
-                      <Tooltip width="200px">
-                        Amount of noise added to input image. Values that
-                        approach 1.0 allow for lots of variations but will also
-                        produce images that are not semantically consistent with
-                        the input. Only available for img2img.
-                      </Tooltip>
-                    </TextTooltipRow>
-                    <div className="block text-xs w-full">(0.0 - 1.0)</div>
-                  </SubSectionTitle>
-                  <NumberInput
-                    // @ts-ignore
-                    className="mb-2"
-                    type="text"
-                    step={0.05}
-                    disabled={input.models[0] === 'stable_diffusion_inpainting'}
-                    min={0}
-                    max={1.0}
-                    onBlur={(e: any) => {
-                      if (Number(e.target.value < 0)) {
-                        PromptInputSettings.set('denoising_strength', 0)
-                        setInput({ denoising_strength: 0 })
-                        return
-                      }
-
-                      if (Number(e.target.value > 1.0)) {
-                        PromptInputSettings.set('denoising_strength', 1)
-                        setInput({ denoising_strength: 1 })
-                        return
-                      }
-
-                      if (isNaN(e.target.value)) {
-                        PromptInputSettings.set('denoising_strength', 0.5)
-                        setInput({ denoising_strength: 0.5 })
-                        return
-                      }
-
-                      if (
-                        isNaN(e.target.value) ||
-                        e.target.value < 0 ||
-                        e.target.value > 1.0
-                      ) {
-                        if (initialLoad) {
-                          return
-                        }
-
-                        setErrorMessage({
-                          denoising_strength: `Please enter a valid number between 0 and 1.0`
-                        })
-                      } else if (errorMessage.denoising_strength) {
-                        setErrorMessage({ denoising_strength: null })
-                      }
-                    }}
-                    onMinusClick={() => {
-                      if (isNaN(input.denoising_strength)) {
-                        input.denoising_strength = 0.5
-                      }
-
-                      if (Number(input.denoising_strength) > 1) {
-                        PromptInputSettings.set('denoising_strength', 1)
-                        setInput({ denoising_strength: 1 })
-                        return
-                      }
-
-                      const value = Number(input.denoising_strength) - 0.05
-                      const niceNumber = Number(value).toFixed(2)
-                      PromptInputSettings.set('denoising_strength', niceNumber)
-                      setInput({ denoising_strength: niceNumber })
-                    }}
-                    onPlusClick={() => {
-                      if (isNaN(input.denoising_strength)) {
-                        input.denoising_strength = 0.5
-                      }
-
-                      const value = Number(input.denoising_strength) + 0.05
-                      const niceNumber = Number(value).toFixed(2)
-                      PromptInputSettings.set('denoising_strength', niceNumber)
-                      setInput({ denoising_strength: niceNumber })
-                    }}
-                    name="denoising_strength"
-                    onChange={handleNumberInput}
-                    // @ts-ignore
-                    value={input.denoising_strength}
-                    width="100%"
-                  />
-                </>
-              </div>
+              <NumericInputSlider
+                label="Denoise"
+                tooltip="Amount of noise added to input image. Values that
+                approach 1.0 allow for lots of variations but will
+                also produce images that are not semantically
+                consistent with the input. Only available for img2img."
+                from={0.0}
+                to={1.0}
+                step={0.05}
+                input={input} 
+                setInput={setInput}
+                fieldName="denoising_strength"
+                initialLoad={initialLoad}
+                disabled={input.models[0] === 'stable_diffusion_inpainting'}
+              />
               {input.source_processing === SourceProcessing.InPainting &&
                 input.models[0] === 'stable_diffusion_inpainting' && (
                   <div className="mt-0 text-sm text-slate-500">
                     Note: Denoise disabled when inpainting model is used.
                   </div>
                 )}
-              <div className="mb-4">
-                <Slider
-                  disabled={input.models[0] === 'stable_diffusion_inpainting'}
-                  value={input.denoising_strength}
-                  min={0}
-                  max={1}
-                  step={0.05}
-                  onChange={(e: any) => {
-                    const event = {
-                      target: {
-                        name: 'denoising_strength',
-                        value: Number(e.target.value)
-                      }
-                    }
-
-                    handleChangeInput(event)
-                  }}
-                />
-              </div>
-              {errorMessage.denoising_strength && (
-                <div className="mb-2 text-red-500 text-lg font-bold">
-                  {errorMessage.denoising_strength}
-                </div>
-              )}
             </Section>
-          </SplitPanel>
-          <SplitPanel>
-            <Section></Section>
-          </SplitPanel>
-        </TwoPanel>
       )}
       <Section>
         <SubSectionTitle>Control Type</SubSectionTitle>
@@ -1436,84 +1177,19 @@ const AdvancedOptionsPanel = ({
             value={getPostProcessing('CodeFormers')}
             onChange={() => handlePostProcessing('CodeFormers')}
           />
-        </div>
-        <div className="mb-8 w-full md:w-1/2">
-          <Section>
-            <div className="flex flex-row items-center justify-between">
-              <SubSectionTitle>
-                <TextTooltipRow>
-                  Face-fix strength
-                  <Tooltip left="-20" width="240px">
-                    0.05 is the weakest effect (barely noticible improvements),
-                    while 1.0 is the strongest effect.
-                  </Tooltip>
-                </TextTooltipRow>
-                <div className="block text-xs w-full">(0.05 - 1.0)</div>
-              </SubSectionTitle>
-              <NumberInput
-                // @ts-ignore
-                className="mb-2"
-                error={errorMessage.facefixer_strength}
-                type="text"
-                min={0.05}
-                max={1}
-                step={0.05}
-                name="facefixer_strength"
-                onMinusClick={() => {
-                  const value = Number(input.facefixer_strength - 0.05).toFixed(
-                    2
-                  )
-                  setInput({ facefixer_strength: Number(value) })
-                }}
-                onPlusClick={() => {
-                  const value = Number(input.facefixer_strength + 0.05).toFixed(
-                    2
-                  )
-                  setInput({ facefixer_strength: Number(value) })
-                }}
-                onChange={handleNumberInput}
-                onBlur={(e: any) => {
-                  if (
-                    isNaN(e.target.value) ||
-                    e.target.value < 0.05 ||
-                    e.target.value > 1
-                  ) {
-                    if (initialLoad) {
-                      return
-                    }
-
-                    setInput({ facefixer_strength: 1 })
-                    setErrorMessage({
-                      numImages: `Please enter a valid number between 0.05 and 1.00`
-                    })
-                  } else if (errorMessage.facefixer_strength) {
-                    setErrorMessage({ facefixer_strength: null })
-                  }
-                }}
-                // @ts-ignore
-                value={input.facefixer_strength}
-                width="100%"
-              />
-            </div>
-            <Slider
-              value={input.facefixer_strength}
-              min={0.05}
-              max={1}
-              step={0.05}
-              onChange={(e: any) => {
-                const event = {
-                  target: {
-                    name: 'facefixer_strength',
-                    value: Number(e.target.value)
-                  }
-                }
-
-                handleChangeInput(event)
-              }}
-            />
-          </Section>
-        </div>
-        <div className="flex flex-col gap-2 items-start">
+        {(getPostProcessing('CodeFormers')&&
+          <NumericInputSlider 
+            label="Face-fix strength"
+            tooltip="0.05 is the weakest effect (barely noticeable improvements), while 1.0 is the strongest effect."
+            from={0.05}
+            to={1.0}
+            step={0.05}
+            input={input} 
+            setInput={setInput}
+            fieldName="facefixer_strength"
+            initialLoad={initialLoad}
+          />
+        )}
           <Checkbox
             label={`RealESRGAN_x4plus (upscaler)`}
             value={getPostProcessing(`RealESRGAN_x4plus`)}
@@ -1526,89 +1202,32 @@ const AdvancedOptionsPanel = ({
           />
         </div>
       </Section>
-      <div className="mt-8 w-full md:w-1/2">
-        <ClipSkip
-          input={input}
-          setInput={setInput}
-          handleChangeInput={handleChangeInput}
-          handleNumberInput={handleNumberInput}
+      <Section>
+        <NumericInputSlider 
+            label="CLIP skip"
+            tooltip="How many frames to skip between clips."
+            from={1}
+            to={12}
+            step={1}
+            input={input} 
+            setInput={setInput}
+            fieldName="clipskip"
+            initialLoad={initialLoad}
         />
-      </div>
+      </Section>
       {showNumImagesInput && (
-        <div className="mt-8 w-full md:w-1/2">
-          <Section>
-            <div className="flex flex-row items-center justify-between">
-              <SubSectionTitle>
-                Number of images
-                <div className="block text-xs w-full">
-                  (1 - {MAX_IMAGES_PER_JOB})
-                </div>
-              </SubSectionTitle>
-              <NumberInput
-                // @ts-ignore
-                className="mb-2"
-                error={errorMessage.numImages}
-                type="text"
-                min={1}
-                max={MAX_IMAGES_PER_JOB}
-                name="numImages"
-                onMinusClick={() => {
-                  const value = input.numImages - 1
-                  PromptInputSettings.set('numImages', value)
-                  setInput({ numImages: value })
-                }}
-                onPlusClick={() => {
-                  const value = input.numImages + 1
-                  PromptInputSettings.set('numImages', value)
-                  setInput({ numImages: value })
-                }}
-                onChange={handleNumberInput}
-                onBlur={(e: any) => {
-                  if (
-                    isNaN(e.target.value) ||
-                    e.target.value < 1 ||
-                    e.target.value > MAX_IMAGES_PER_JOB
-                  ) {
-                    if (initialLoad) {
-                      return
-                    }
-
-                    setErrorMessage({
-                      numImages: `Please enter a valid number between 1 and ${MAX_IMAGES_PER_JOB}`
-                    })
-                  } else if (errorMessage.numImages) {
-                    setErrorMessage({ numImages: null })
-                  }
-                }}
-                // @ts-ignore
-                value={input.numImages}
-                width="100%"
-              />
-            </div>
-            <div className="mb-4">
-              <Slider
-                value={input.numImages}
-                min={1}
-                max={MAX_IMAGES_PER_JOB}
-                onChange={(e: any) => {
-                  const event = {
-                    target: {
-                      name: 'numImages',
-                      value: Number(e.target.value)
-                    }
-                  }
-
-                  handleChangeInput(event)
-                }}
-              />
-            </div>
-            {errorMessage.numImages && (
-              <div className="mb-2 text-red-500 text-lg font-bold">
-                {errorMessage.numImages}
-              </div>
-            )}
-          </Section>
-        </div>
+        <Section>
+          <NumericInputSlider 
+            label="Number of images"
+            from={1}
+            to={MAX_IMAGES_PER_JOB}
+            step={1}
+            input={input} 
+            setInput={setInput}
+            fieldName="numImages"
+            initialLoad={initialLoad}
+          />
+        </Section>
       )}
     </div>
   )
