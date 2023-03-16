@@ -236,7 +236,7 @@
 .WorkerStatus {
   position: absolute;
   top: -2px;
-  right: -2px;
+  right: -7px;
 }
 
 @media (prefers-color-scheme: dark) {
