@@ -1444,7 +1444,7 @@ const AdvancedOptionsPanel = ({
                 <TextTooltipRow>
                   Face-fix strength
                   <Tooltip left="-20" width="240px">
-                    0.05 is the weakest effect (barely noticible improvements),
+                    0.05 is the weakest effect (barely noticeable improvements),
                     while 1.0 is the strongest effect.
                   </Tooltip>
                 </TextTooltipRow>
