@@ -930,7 +930,6 @@ const AdvancedOptionsPanel = ({
                 disabled={input.models[0] === 'stable_diffusion_inpainting'}
               />
               {
-                // TODO: show in percents
                 // TODO: At least let choose between whole numbers and decimals
               }
               {input.source_processing === SourceProcessing.InPainting &&

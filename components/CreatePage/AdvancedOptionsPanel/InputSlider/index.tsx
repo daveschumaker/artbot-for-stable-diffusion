@@ -53,7 +53,6 @@ const InputSlider = ( {
       }
 
       updateField(to);
-      console.log('IM HERE')
       const errorUpdate = {};
       // @ts-ignore
       errorUpdate[fieldName] = `This field only accepts numbers between ${from} and ${to}.`;
