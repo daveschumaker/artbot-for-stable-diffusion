@@ -1439,7 +1439,8 @@ const AdvancedOptionsPanel = ({
           />
         {(getPostProcessing('CodeFormers')&&
           <InputSlider 
-            label="Face-fix fstrength"
+            label="Face-fix strength"
+            tooltip="0.05 is the weakest effect (barely noticeable improvements), while 1.0 is the strongest effect."
             input={input} 
             setInput={setInput}
             fieldName="facefixer_strength"

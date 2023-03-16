@@ -10,6 +10,7 @@ import Slider from "../../../UI/Slider";
 
 interface Props {
     label: string;
+    tooltip: string;
     input: { [key: string]: any };
     setInput: any;
     fieldName: string;
@@ -18,6 +19,7 @@ interface Props {
 
 const InputSlider = ( {
   label, 
+  tooltip,
   input, 
   setInput, 
   fieldName 
@@ -50,8 +52,7 @@ const InputSlider = ( {
             <TextTooltipRow>
               {label}
               <Tooltip left="-20" width="240px">
-                0.05 is the weakest effect (barely noticeable improvements),
-                while 1.0 is the strongest effect.
+                {tooltip}
               </Tooltip>
             </TextTooltipRow>
             <div className="block text-xs w-full">(0.05 - 1.0)</div>
