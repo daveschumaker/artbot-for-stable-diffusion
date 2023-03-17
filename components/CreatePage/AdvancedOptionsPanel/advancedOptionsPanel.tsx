@@ -116,6 +116,35 @@ const AdvancedOptionsPanel = ({
     return input?.models?.indexOf(option.value) >= 0
   })
 
+  const validateSteps = useCallback(() => {
+    if (initialLoad) {
+      return
+    }
+
+    if (
+      isNaN(input.steps) ||
+      input.steps < 1 ||
+      input.steps >
+      maxSteps({
+        sampler: input.sampler,
+        loggedIn: loggedIn === true ? true : false
+      })
+    ) {
+      if (initialLoad) {
+        return
+      }
+
+      setErrorMessage({
+        steps: `Please enter a valid number between 1 and ${maxSteps({
+          sampler: input.sampler,
+          loggedIn: loggedIn === true ? true : false
+        })}`
+      })
+    } else {
+      setErrorMessage({ steps: null })
+    }
+  }, [initialLoad, input.sampler, input.steps, loggedIn, setErrorMessage])
+
   useEffect(() => {
     // Handle condition where error message briefly appears on screen on initial load.
     setTimeout(() => {
@@ -206,6 +235,10 @@ const AdvancedOptionsPanel = ({
 
     setHasValidationError(hasError)
   }, [hasError, initialLoad, setHasValidationError])
+
+  useEffect(() => {
+    validateSteps()
+  }, [input.sampler, validateSteps])
 
   useEffect(() => {
     const favModels = AppSettings.get('favoriteModels') || {}
