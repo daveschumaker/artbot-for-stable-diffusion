@@ -57,6 +57,7 @@ import { kudosCostV2 } from '../utils/kudosCost'
 import { CreatePageMode, isSharedLink } from '../utils/loadInputCache'
 import ImageApiParamsToPromptInput from '../models/ImageApiParamsToPromptInput'
 import FormErrorMessage from '../components/CreatePage/ActionPanel/FormErrorMessage'
+import ActionPanel from '../components/CreatePage/ActionPanel'
 
 interface InputTarget {
   name: string
@@ -679,73 +680,21 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
           </Button>
         </FlexRow>
 
-        <FormErrorMessage
+        <ActionPanel
           hasValidationError={hasValidationError}
           hasError={hasError}
           fixedSeedErrorMsg={fixedSeedErrorMsg}
+          input={input}
+          setInput={setInput}
+          resetInput={resetInput}
+          handleSubmit={handleSubmit}
+          pending={pending}
+          totalImagesRequested={totalImagesRequested}
+          loggedIn={loggedIn}
+          totalKudosCost={totalKudosCost}
+          kudosPerImage={kudosPerImage}
         />
-
-        <div className="mt-2 mb-4 w-full flex flex-col md:flex-row gap-2 justify-end items-start">
-          <div className="w-full md:w-1/2 text-sm flex flex-row justify-start gap-2 items-center">
-            <StylesDropdown
-              input={input}
-              setInput={setInput}
-              isSearchable={true}
-            />
-          </div>
-          <div className="w-full md:w-1/2 flex flex-col justify-start gap-2">
-            <div className="flex flex-row justify-end gap-2 sm:mt-0">
-              <Button
-                title="Clear current input"
-                btnType="secondary"
-                onClick={resetInput}
-              >
-                <span>
-                  <TrashIcon />
-                </span>
-                <span>Reset all?</span>
-              </Button>
-              <Button
-                title="Create new image"
-                onClick={handleSubmit}
-                disabled={
-                  hasValidationError ||
-                  pending ||
-                  hasError === ERROR_INPAINT_MISSING_SOURCE_MASK
-                }
-                width="100px"
-              >
-                <span>{pending ? '' : <SquarePlusIcon />}</span>
-                {pending ? 'Creating...' : 'Create'}
-              </Button>
-            </div>
-            <div className="flex flex-row justify-end">
-              <div className="flex flex-col justify-end">
-                <div className="text-xs flex flex-row justify-end gap-2">
-                  Images to request:{' '}
-                  <strong>{' ' + totalImagesRequested}</strong>
-                </div>
-                {loggedIn && (
-                  <>
-                    <div className="text-xs flex flex-row justify-end gap-2">
-                      {' '}
-                      Generation cost:{' '}
-                      <Linker href="/faq#kudos" passHref>
-                        <>{totalKudosCost} kudos</>
-                      </Linker>
-                    </div>
-                    <div className="text-xs flex flex-row justify-end gap-2">
-                      Per image:{' '}
-                      <Linker href="/faq#kudos" passHref>
-                        <>{kudosPerImage} kudos</>
-                      </Linker>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
+        
       </div>
       <OptionsPanel
         handleChangeInput={handleChangeValue}

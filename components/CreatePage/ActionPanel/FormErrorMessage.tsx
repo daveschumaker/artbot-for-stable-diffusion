@@ -1,5 +1,6 @@
 import React from 'react';
 
+// TODO: Allow multiple errors to be displayed at once
 interface Props {
   hasValidationError: boolean;
   hasError: string | null;
