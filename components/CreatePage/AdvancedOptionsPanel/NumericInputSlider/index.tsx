@@ -10,7 +10,6 @@ import Slider from 'components/UI/Slider'
 
 import clsx from 'clsx'
 
-// TODO: Give an option to only allow values that can be set by slider (i.e. account for step size)
 interface Props {
   label: string
   tooltip?: string
@@ -39,30 +38,36 @@ const NumericInputSlider = ({
   fullWidth = false
 }: Props) => {
 
-  const [errorMessage, setErrorMessage] = useState('')
+  const [warning, setWarning] = useState('')
+
+  function toggleWarning (state: boolean) {
+    setWarning(state ? `This field only accepts numbers between ${from} and ${to}.` : '')
+  }
 
 
 
-  const updateField = (value: string | number) => {
+  const updateField = (value: number) => {
     const res = {}
     // @ts-ignore
-    res[fieldName] = Number(value)
+    res[fieldName] = value
     setInput(res)
+
     // @ts-ignore
     setTemporaryValue(res[fieldName])
   }
 
-  const updateError = (value: string | number) => {
+  const safelyUpdateField = (value: string | number) => {
     value = Number(value)
     if (isNaN(value) || value < from || value > to) {
       if (initialLoad) {
         return
       }
 
+      toggleWarning(true)
       updateField(to)
-      setErrorMessage(`This field only accepts numbers between ${from} and ${to}.`)
-    } else if (errorMessage) {
-      setErrorMessage('')
+    } else {
+      // TODO: Give an option to only allow values that can be set by slider (i.e. account for step size)
+      toggleWarning(false)
       updateField(value)
     }
   }
@@ -71,11 +76,6 @@ const NumericInputSlider = ({
   const [temporaryValue, setTemporaryValue] = useState(input[fieldName]);
   const handleNumberInput = (event: any) => {
     setTemporaryValue(event.target.value)
-  }
-
-  const handleChangeInput = (value: string | number) => {
-    updateField(value)
-    updateError(value)
   }
 
   return (
@@ -102,18 +102,16 @@ const NumericInputSlider = ({
             disabled={disabled}
             onMinusClick={() => {
               const value = Number((input[fieldName] - step).toFixed(2))
-              updateField(value)
-              updateError(value)
+              safelyUpdateField(value)
             }}
             onPlusClick={() => {
               const value = Number((input[fieldName] + step).toFixed(2))
-              updateField(value)
-              updateError(value)
+              safelyUpdateField(value)
             }}
             onChange={handleNumberInput}
             onBlur={(e: any) => {
               const value = Number(e.target.value)
-              updateError(value)
+              safelyUpdateField(value)
             }}
             value={temporaryValue}
             width="100%"
@@ -126,11 +124,11 @@ const NumericInputSlider = ({
           step={step}
           disabled={disabled}
           onChange={(e: any) => {
-            handleChangeInput(e.target.value)
+            safelyUpdateField(e.target.value)
           }}
         />
-        {errorMessage && (
-          <div className="mb-2 text-sm">{errorMessage}</div>
+        {warning && (
+          <div className="mb-2 text-sm">{warning}</div>
         )}
       </Section>
     </div>
