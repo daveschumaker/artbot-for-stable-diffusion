@@ -704,63 +704,23 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
         setInput={setInput}
         setHasValidationError={setHasValidationError}
       />
-      <div className="w-full mt-2 flex flex-col justify-end gap-2">
-        <FormErrorMessage
-          hasValidationError={hasValidationError}
-          hasError={hasError}
-          fixedSeedErrorMsg={fixedSeedErrorMsg}
-        />
 
-        <div className="flex flex-row justify-end gap-2 sm:mt-0">
-          <Button
-            title="Clear current input"
-            btnType="secondary"
-            onClick={resetInput}
-          >
-            <span>
-              <TrashIcon />
-            </span>
-            <span>Reset all?</span>
-          </Button>
-          <Button
-            title="Create new image"
-            onClick={handleSubmit}
-            disabled={
-              hasValidationError ||
-              pending ||
-              hasError === ERROR_INPAINT_MISSING_SOURCE_MASK
-            }
-            width="100px"
-          >
-            <span>{pending ? '' : <SquarePlusIcon />}</span>
-            {pending ? 'Creating...' : 'Create'}
-          </Button>
-        </div>
-        <div className="flex flex-row justify-end">
-          <div className="flex flex-col justify-end">
-            <div className="text-xs flex flex-row justify-end gap-2">
-              Images to request: <strong>{' ' + totalImagesRequested}</strong>
-            </div>
-            {loggedIn && (
-              <>
-                <div className="text-xs flex flex-row justify-end gap-2">
-                  {' '}
-                  Generation cost:{' '}
-                  <Linker href="/faq#kudos" passHref>
-                    <>{totalKudosCost} kudos</>
-                  </Linker>
-                </div>
-                <div className="text-xs flex flex-row justify-end gap-2">
-                  Per image:{' '}
-                  <Linker href="/faq#kudos" passHref>
-                    <>{kudosPerImage} kudos</>
-                  </Linker>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
+      <ActionPanel
+        hasValidationError={hasValidationError}
+        hasError={hasError}
+        fixedSeedErrorMsg={fixedSeedErrorMsg}
+        input={input}
+        setInput={setInput}
+        resetInput={resetInput}
+        handleSubmit={handleSubmit}
+        pending={pending}
+        totalImagesRequested={totalImagesRequested}
+        loggedIn={loggedIn}
+        totalKudosCost={totalKudosCost}
+        kudosPerImage={kudosPerImage}
+      />
+
+
     </main>
   )
 }
