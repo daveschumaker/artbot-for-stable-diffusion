@@ -10,10 +10,6 @@ import Slider from 'components/UI/Slider'
 
 import clsx from 'clsx'
 
-import { formatStringRemoveSpaces } from 'utils/htmlUtils'
-import { nearestWholeMultiple } from 'utils/imageUtils'
-
-
 // TODO: Make this component only commit input on blur
 // TODO: Give an option to only allow values that can be set by slider (i.e. account for step size)
 interface Props {
@@ -43,7 +39,6 @@ const NumericInputSlider = ({
   disabled = false,
   fullWidth = false
 }: Props) => {
-  const tooltipId = formatStringRemoveSpaces(label)
   const errorMessageDefault: { [key: string]: any } = {
     facefixer_strength: null
   }
@@ -96,7 +91,7 @@ const NumericInputSlider = ({
           <SubSectionTitle>
             <TextTooltipRow>
               {label}
-              {tooltip && <Tooltip tooltipId={tooltipId}>{tooltip}</Tooltip>}
+              {tooltip && <Tooltip tooltipId={fieldName}>{tooltip}</Tooltip>}
             </TextTooltipRow>
 
             <div className="block text-xs w-full">
