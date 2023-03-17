@@ -127,10 +127,10 @@ const AdvancedOptionsPanel = ({
       isNaN(input.steps) ||
       input.steps < 1 ||
       input.steps >
-        maxSteps({
-          sampler: input.sampler,
-          loggedIn: loggedIn === true ? true : false
-        })
+      maxSteps({
+        sampler: input.sampler,
+        loggedIn: loggedIn === true ? true : false
+      })
     ) {
       if (initialLoad) {
         return
@@ -193,7 +193,7 @@ const AdvancedOptionsPanel = ({
       })
 
       await setDefaultPrompt(trimInput)
-    } catch (err) {}
+    } catch (err) { }
   }, [input.negative])
 
   const getPostProcessing = useCallback(
@@ -278,7 +278,7 @@ const AdvancedOptionsPanel = ({
     !componentState.showMultiModel &&
     !input.useAllModels &&
     input.source_processing !==
-      (SourceProcessing.InPainting || SourceProcessing.OutPainting)
+    (SourceProcessing.InPainting || SourceProcessing.OutPainting)
 
   const showNumImagesInput =
     !input.useAllModels && !input.useMultiSteps && !input.useAllSamplers
@@ -362,159 +362,45 @@ const AdvancedOptionsPanel = ({
                     </div>
                   )}
               </div>
-              <div className="flex flex-col gap-4 justify-start">
-                <div className="mt-2 flex flex-row gap-4 items-center">
-                  <div className="w-[80px]">
-                    <SubSectionTitle>Width</SubSectionTitle>
-                  </div>
-                  <NumberInput
-                    // @ts-ignore
-                    type="text"
-                    name="width"
-                    min={64}
-                    max={
+
+              <TwoPanel className="mt-4">
+                <SplitPanel>
+                  <NumericInputSlider
+                    label="Width"
+                    from={64}
+                    to={
                       loggedIn === true
-                        ? MAX_DIMENSIONS_LOGGED_IN
-                        : MAX_DIMENSIONS_LOGGED_OUT
+                      ? MAX_DIMENSIONS_LOGGED_IN
+                      : MAX_DIMENSIONS_LOGGED_OUT
                     }
-                    onMinusClick={() => {
-                      const value = Number(input.width) - 64
-                      PromptInputSettings.set('width', value)
-                      setInput({ width: value })
-                    }}
-                    onPlusClick={() => {
-                      const value = Number(input.width) + 64
-                      PromptInputSettings.set('width', value)
-                      setInput({ width: value })
-                    }}
-                    error={errorMessage.width}
-                    onChange={handleChangeInput}
-                    onBlur={(e: any) => {
-                      if (input.orientationType !== 'custom') {
-                        return
-                      }
-
-                      if (
-                        isNaN(e.target.value) ||
-                        e.target.value < 64 ||
-                        e.target.value >
-                          (loggedIn === true
-                            ? MAX_DIMENSIONS_LOGGED_IN
-                            : MAX_DIMENSIONS_LOGGED_OUT)
-                      ) {
-                        if (initialLoad) {
-                          return
-                        }
-
-                        setErrorMessage({
-                          width: `Please enter a valid number between 64 and ${
-                            loggedIn === true
-                              ? MAX_DIMENSIONS_LOGGED_IN
-                              : MAX_DIMENSIONS_LOGGED_OUT
-                          }`
-                        })
-                        return
-                      }
-
-                      if (errorMessage.width) {
-                        setErrorMessage({ width: null })
-                      }
-
-                      PromptInputSettings.set(
-                        'width',
-                        nearestWholeMultiple(e.target.value)
-                      )
-                      setInput({
-                        width: nearestWholeMultiple(e.target.value)
-                      })
-                    }}
-                    // @ts-ignore
-                    value={input.width}
-                    width="75px"
+                    step={64}
+                    input={input}
+                    setInput={setInput}
+                    fieldName="width"
+                    initialLoad={initialLoad}
+                    fullWidth
                   />
-                </div>
-                {errorMessage.width && (
-                  <div className="mb-2 text-red-500 font-bold">
-                    {errorMessage.width}
-                  </div>
-                )}
-                <div className="flex flex-row gap-4 items-center">
-                  <div className="w-[80px]">
-                    <SubSectionTitle>Height</SubSectionTitle>
-                  </div>
-                  <NumberInput
-                    // @ts-ignore
-                    className="mb-2"
-                    type="text"
-                    name="height"
-                    min={64}
-                    max={
+                </SplitPanel>
+
+                <SplitPanel>
+                  <NumericInputSlider
+                    label="Height"
+                    from={64}
+                    to={
                       loggedIn === true
-                        ? MAX_DIMENSIONS_LOGGED_IN
-                        : MAX_DIMENSIONS_LOGGED_OUT
+                      ? MAX_DIMENSIONS_LOGGED_IN
+                      : MAX_DIMENSIONS_LOGGED_OUT
                     }
-                    onMinusClick={() => {
-                      const value = Number(input.height) - 64
-                      PromptInputSettings.set('height', value)
-                      setInput({ height: value })
-                    }}
-                    onPlusClick={() => {
-                      const value = Number(input.height) + 64
-                      PromptInputSettings.set('height', value)
-                      setInput({ height: value })
-                    }}
-                    error={errorMessage.height}
-                    onChange={handleChangeInput}
-                    onBlur={(e: any) => {
-                      if (input.orientationType !== 'custom') {
-                        return
-                      }
-
-                      if (
-                        isNaN(e.target.value) ||
-                        e.target.value < 64 ||
-                        e.target.value >
-                          (loggedIn === true
-                            ? MAX_DIMENSIONS_LOGGED_IN
-                            : MAX_DIMENSIONS_LOGGED_OUT)
-                      ) {
-                        if (initialLoad) {
-                          return
-                        }
-
-                        setErrorMessage({
-                          height: `Please enter a valid number between 64 and ${
-                            loggedIn === true
-                              ? MAX_DIMENSIONS_LOGGED_IN
-                              : MAX_DIMENSIONS_LOGGED_OUT
-                          }`
-                        })
-                        return
-                      }
-
-                      if (errorMessage.height) {
-                        setErrorMessage({ height: null })
-                      }
-
-                      PromptInputSettings.set(
-                        'height',
-                        nearestWholeMultiple(e.target.value)
-                      )
-                      setInput({
-                        height: nearestWholeMultiple(e.target.value)
-                      })
-                    }}
-                    // @ts-ignore
-                    value={input.height}
-                    width="75px"
+                    step={64}
+                    input={input}
+                    setInput={setInput}
+                    fieldName="height"
+                    initialLoad={initialLoad}
+                    fullWidth
                   />
-                </div>
-                {errorMessage.height && (
-                  <div className="mb-2 text-red-500 font-bold">
-                    {errorMessage.height}
-                  </div>
-                )}
-              </div>
+                </SplitPanel>
+              </TwoPanel>
+
               <div className="block text-xs mt-2 w-full">
                 Height and widths must be divisible by 64. Enter your desired
                 dimensions and it will be automatically convereted to nearest
@@ -522,6 +408,7 @@ const AdvancedOptionsPanel = ({
               </div>
             </>
           )}
+
         </MaxWidth>
       </Section>
       <Section>
@@ -758,36 +645,36 @@ const AdvancedOptionsPanel = ({
       {(input.img2img ||
         input.source_processing === SourceProcessing.Img2Img ||
         input.source_processing === SourceProcessing.InPainting) && (
-        <Section>
-          <NumericInputSlider
-            label="Denoise"
-            tooltip="Amount of noise added to input image. Values that
+          <Section>
+            <NumericInputSlider
+              label="Denoise"
+              tooltip="Amount of noise added to input image. Values that
                 approach 1.0 allow for lots of variations but will
                 also produce images that are not semantically
                 consistent with the input. Only available for img2img."
-            from={0.0}
-            to={1.0}
-            step={0.05}
-            input={input}
-            setInput={setInput}
-            fieldName="denoising_strength"
-            initialLoad={initialLoad}
-            disabled={
+              from={0.0}
+              to={1.0}
+              step={0.05}
+              input={input}
+              setInput={setInput}
+              fieldName="denoising_strength"
+              initialLoad={initialLoad}
+              disabled={
+                input.models &&
+                input.models[0] &&
+                input.models[0].indexOf('_inpainting') >= 0
+              }
+            />
+            {input.source_processing === SourceProcessing.InPainting &&
               input.models &&
               input.models[0] &&
-              input.models[0].indexOf('_inpainting') >= 0
-            }
-          />
-          {input.source_processing === SourceProcessing.InPainting &&
-            input.models &&
-            input.models[0] &&
-            input.models[0].indexOf('_inpainting') >= 0 && (
-              <div className="mt-0 text-sm text-slate-500">
-                Note: Denoise disabled when inpainting model is used.
-              </div>
-            )}
-        </Section>
-      )}
+              input.models[0].indexOf('_inpainting') >= 0 && (
+                <div className="mt-0 text-sm text-slate-500">
+                  Note: Denoise disabled when inpainting model is used.
+                </div>
+              )}
+          </Section>
+        )}
       <Section>
         <SubSectionTitle>Control Type</SubSectionTitle>
         {!input.source_image && (
@@ -1009,9 +896,8 @@ const AdvancedOptionsPanel = ({
       )}
       {showUseAllModelsInput && (
         <InputSwitch
-          label={`Use all available models (${
-            modelerOptions(input).length - 1
-          })`}
+          label={`Use all available models (${modelerOptions(input).length - 1
+            })`}
           tooltip="Automatically generate an image for each model currently available on Stable Horde"
           moreInfoLink={
             <div className="mt-1 mb-2 text-xs">
@@ -1124,18 +1010,18 @@ const AdvancedOptionsPanel = ({
           />
           {(getPostProcessing('GFPGAN') ||
             getPostProcessing('CodeFormers')) && (
-            <NumericInputSlider
-              label="Face-fix strength"
-              tooltip="0.05 is the weakest effect (barely noticeable improvements), while 1.0 is the strongest effect."
-              from={0.05}
-              to={1.0}
-              step={0.05}
-              input={input}
-              setInput={setInput}
-              fieldName="facefixer_strength"
-              initialLoad={initialLoad}
-            />
-          )}
+              <NumericInputSlider
+                label="Face-fix strength"
+                tooltip="0.05 is the weakest effect (barely noticeable improvements), while 1.0 is the strongest effect."
+                from={0.05}
+                to={1.0}
+                step={0.05}
+                input={input}
+                setInput={setInput}
+                fieldName="facefixer_strength"
+                initialLoad={initialLoad}
+              />
+            )}
           <Checkbox
             label={`RealESRGAN_x4plus (upscaler)`}
             value={getPostProcessing(`RealESRGAN_x4plus`)}

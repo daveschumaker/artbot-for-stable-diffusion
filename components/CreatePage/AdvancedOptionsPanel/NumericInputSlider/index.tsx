@@ -11,6 +11,9 @@ import Slider from '../../../UI/Slider'
 import clsx from 'clsx'
 import { formatStringRemoveSpaces } from '../../../../utils/htmlUtils'
 
+
+// TODO: Make this component only commit input on blur
+// TODO: Give an option to only allow values that can be set by slider (i.e. account for step size)
 interface Props {
   label: string
   tooltip?: string
