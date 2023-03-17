@@ -9,9 +9,9 @@ import NumberInput from 'components/UI/NumberInput'
 import Slider from 'components/UI/Slider'
 
 import clsx from 'clsx'
-import { formatStringRemoveSpaces } from '../../../../utils/htmlUtils'
 
-import { nearestWholeMultiple } from '../../../../utils/imageUtils'
+import { formatStringRemoveSpaces } from 'utils/htmlUtils'
+import { nearestWholeMultiple } from 'utils/imageUtils'
 
 
 // TODO: Make this component only commit input on blur
