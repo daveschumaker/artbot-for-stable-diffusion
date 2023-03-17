@@ -41,38 +41,8 @@ export const modelInfoStore = makeStore<ModelStore>({
 export const setAvailableModels = (models: {
   [key: string]: IStableDiffusionModel
 }) => {
-  // models.sort((a: IStableDiffusionModel, b: IStableDiffusionModel) => {
-  //   if (typeof a.count === 'undefined' || isNaN(a.count)) {
-  //     return 0
-  //   }
-
-  //   if (typeof b.count === 'undefined' || isNaN(b.count)) {
-  //     return 0
-  //   }
-
-  //   if (a.count < b.count) {
-  //     return 1
-  //   }
-  //   if (a.count > b.count) {
-  //     return -1
-  //   }
-  //   return 0
-  // })
-
-  // let inpaintingWorkers = 0
-  // const availableModels = models.filter((model) => {
-  //   if (model.name === 'stable_diffusion_inpainting') {
-  //     inpaintingWorkers = model.count
-  //     return false
-  //   }
-
-  //   return true
-  // })
-
   modelInfoStore.set(() => ({
-    // availableModelNames: availableModels?.map((model) => model.name),
     availableModels: { ...models }
-    // inpaintingWorkers
   }))
 }
 

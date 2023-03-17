@@ -181,11 +181,6 @@ class CreateImageRequest {
     }
 
     this.models = [...models]
-
-    // if (source_processing === 'inpainting') {
-    //   this.models = ['stable_diffusion_inpainting']
-    // }
-
     this.sampler = String(sampler)
 
     // https://github.com/daveschumaker/artbot-for-stable-diffusion/issues/21

@@ -26,7 +26,9 @@ const cloneImageParams = async (
 
   const needsImg2ImgMask =
     clonedParams.source_processing === SourceProcessing.InPainting &&
-    clonedParams.models[0] !== 'stable_diffusion_inpainting'
+    clonedParams.models &&
+    clonedParams.models[0] &&
+    clonedParams.models[0].indexOf('_inpainting') === -1
 
   if (hasImg2ImgMask || needsImg2ImgMask) {
     clonedParams.source_processing = SourceProcessing.Img2Img
@@ -201,7 +203,7 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
 
       // It doesn't make sense to include this in all models mode.
       if (
-        modelName === 'stable_diffusion_inpainting' ||
+        modelName.indexOf('_inpainting') >= 0 ||
         modelName === 'Stable Diffusion 2 Depth'
       ) {
         return

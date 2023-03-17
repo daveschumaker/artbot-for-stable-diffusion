@@ -40,12 +40,15 @@ export const validModelsArray = ({
       continue
     }
 
-    if (
-      availableModels[key].name === 'stable_diffusion_inpainting' &&
-      inpainting === false
-    ) {
-      continue
-    }
+    // Temporarily (permanently) removing this. We should go ahead and show all models.
+    // Show a relevant warning in the UI when selected and user is missing a source mask
+    // https://github.com/daveschumaker/artbot-for-stable-diffusion/issues/65
+    // if (
+    //   availableModels[key].name === 'stable_diffusion_inpainting' &&
+    //   inpainting === false
+    // ) {
+    //   continue
+    // }
 
     // pix2pix cannot do txt2img.
     if (availableModels[key].name === 'pix2pix' && !imageParams.source_image) {

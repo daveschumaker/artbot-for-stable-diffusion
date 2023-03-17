@@ -147,7 +147,6 @@ class ImageParamsForApi {
       apiParams.source_image = source_image
       apiParams.source_processing = source_processing
       apiParams.source_mask = source_mask
-      apiParams.models = ['stable_diffusion_inpainting']
     }
 
     if (control_type && control_type !== '' && source_image) {

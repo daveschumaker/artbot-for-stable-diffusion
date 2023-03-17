@@ -772,10 +772,16 @@ const AdvancedOptionsPanel = ({
             setInput={setInput}
             fieldName="denoising_strength"
             initialLoad={initialLoad}
-            disabled={input.models[0] === 'stable_diffusion_inpainting'}
+            disabled={
+              input.models &&
+              input.models[0] &&
+              input.models[0].indexOf('_inpainting') >= 0
+            }
           />
           {input.source_processing === SourceProcessing.InPainting &&
-            input.models[0] === 'stable_diffusion_inpainting' && (
+            input.models &&
+            input.models[0] &&
+            input.models[0].indexOf('_inpainting') >= 0 && (
               <div className="mt-0 text-sm text-slate-500">
                 Note: Denoise disabled when inpainting model is used.
               </div>

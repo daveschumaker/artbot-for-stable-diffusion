@@ -665,7 +665,11 @@ const ControlNet = () => {
                     className="mb-2"
                     type="text"
                     step={0.05}
-                    disabled={input.models[0] === 'stable_diffusion_inpainting'}
+                    disabled={
+                      input.models &&
+                      input.models[0] &&
+                      input.models[0].indexOf('_inpainting') >= 0
+                    }
                     min={0}
                     max={1.0}
                     onBlur={(e: any) => {
@@ -718,14 +722,20 @@ const ControlNet = () => {
                 </>
               </div>
               {input.source_processing === SourceProcessing.InPainting &&
-                input.models[0] === 'stable_diffusion_inpainting' && (
+                input.models &&
+                input.models[0] &&
+                input.models[0].indexOf('_inpainting') >= 0 && (
                   <div className="mt-0 text-sm text-slate-500">
                     Note: Denoise disabled when inpainting model is used.
                   </div>
                 )}
               <div className="mb-4">
                 <Slider
-                  disabled={input.models[0] === 'stable_diffusion_inpainting'}
+                  disabled={
+                    input.models &&
+                    input.models[0] &&
+                    input.models[0].indexOf('_inpainting') >= 0
+                  }
                   value={input.denoising_strength}
                   min={0}
                   max={1}

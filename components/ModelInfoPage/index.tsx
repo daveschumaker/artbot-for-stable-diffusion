@@ -27,6 +27,8 @@ const ModelInfoPage = ({ availableModels, modelDetails }: any) => {
   const router = useRouter()
   const modelState = useStore(modelInfoStore)
   const workerModels = modelState.availableModels
+
+  // TODO: Filter and include all inpainting models (but per worker...)
   const inpaintingWorkers =
     workerModels?.['stable_diffusion_inpainting']?.count ?? 0
 
