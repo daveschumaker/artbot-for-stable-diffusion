@@ -1151,7 +1151,8 @@ const AdvancedOptionsPanel = ({
       <Section>
         <NumericInputSlider
           label="CLIP skip"
-          tooltip="How many frames to skip between clips."
+          tooltip="Determine how early to stop processing a prompt using CLIP. Higher
+          values stop processing earlier. Default is 1 (no skip)."
           from={1}
           to={12}
           step={1}
