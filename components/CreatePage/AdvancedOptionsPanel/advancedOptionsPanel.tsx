@@ -327,10 +327,7 @@ const AdvancedOptionsPanel = ({
       ) : null}
       <Section>
         <SubSectionTitle>Image orientation</SubSectionTitle>
-        <MaxWidth
-          // @ts-ignore
-          maxWidth="480"
-        >
+        <MaxWidth maxWidth={480}>
           <SelectComponent
             options={orientationOptions}
             onChange={(obj: { value: string; label: string }) => {
@@ -344,6 +341,7 @@ const AdvancedOptionsPanel = ({
             value={orientationValue}
             isSearchable={false}
           />
+
           {orientationValue?.value === 'custom' && (
             <>
               <div className="block text-xs mt-4 w-full">
@@ -361,43 +359,41 @@ const AdvancedOptionsPanel = ({
                   )}
               </div>
 
-              <TwoPanel className="mt-4">
-                <SplitPanel>
-                  <NumericInputSlider
-                    label="Width"
-                    from={64}
-                    to={
-                      loggedIn === true
+              <Section>
+                <NumericInputSlider
+                  label="Width"
+                  from={64}
+                  to={
+                    loggedIn === true
                       ? MAX_DIMENSIONS_LOGGED_IN
                       : MAX_DIMENSIONS_LOGGED_OUT
-                    }
-                    step={64}
-                    input={input}
-                    setInput={setInput}
-                    fieldName="width"
-                    initialLoad={initialLoad}
-                    fullWidth
-                  />
-                </SplitPanel>
+                  }
+                  step={64}
+                  input={input}
+                  setInput={setInput}
+                  fieldName="width"
+                  initialLoad={initialLoad}
+                  fullWidth
+                />
+              </Section>
 
-                <SplitPanel>
-                  <NumericInputSlider
-                    label="Height"
-                    from={64}
-                    to={
-                      loggedIn === true
+              <Section>
+                <NumericInputSlider
+                  label="Height"
+                  from={64}
+                  to={
+                    loggedIn === true
                       ? MAX_DIMENSIONS_LOGGED_IN
                       : MAX_DIMENSIONS_LOGGED_OUT
-                    }
-                    step={64}
-                    input={input}
-                    setInput={setInput}
-                    fieldName="height"
-                    initialLoad={initialLoad}
-                    fullWidth
-                  />
-                </SplitPanel>
-              </TwoPanel>
+                  }
+                  step={64}
+                  input={input}
+                  setInput={setInput}
+                  fieldName="height"
+                  initialLoad={initialLoad}
+                  fullWidth
+                />
+              </Section>
 
               <div className="block text-xs mt-2 w-full">
                 Height and widths must be divisible by 64. Enter your desired
