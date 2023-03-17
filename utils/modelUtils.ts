@@ -68,10 +68,10 @@ export const validModelsArray = ({
       continue
     }
 
-    // Per Discord, stable_diffusion_2.1 cannot do img2img.
+    // Per Discord, stable_diffusion_2.1 cannot do inpainting.
     if (
       availableModels[key].name === 'stable_diffusion_2.1' &&
-      (img2img !== false || inpainting !== false)
+      inpainting !== false
     ) {
       continue
     }
