@@ -10,7 +10,6 @@ import Slider from 'components/UI/Slider'
 
 import clsx from 'clsx'
 
-// TODO: Make this component only commit input on blur
 // TODO: Give an option to only allow values that can be set by slider (i.e. account for step size)
 interface Props {
   label: string
@@ -49,6 +48,8 @@ const NumericInputSlider = ({
     // @ts-ignore
     res[fieldName] = Number(value)
     setInput(res)
+    // @ts-ignore
+    setTemporaryValue(res[fieldName])
   }
 
   const updateError = (value: string | number) => {
@@ -70,13 +71,17 @@ const NumericInputSlider = ({
       // @ts-ignore
       errorUpdate[fieldName] = null
       setErrorMessage(errorUpdate)
+      updateField(value)
     }
   }
 
+
+  const [temporaryValue, setTemporaryValue] = useState(input[fieldName]);
   const handleNumberInput = (event: any) => {
-    const value = Number(event.target.value)
+    /*const value = Number(event.target.value)
     if (isNaN(value)) return
-    updateField(value)
+    updateField(value)*/
+    setTemporaryValue(event.target.value)
   }
 
   const handleChangeInput = (value: string | number) => {
@@ -121,7 +126,7 @@ const NumericInputSlider = ({
               const value = Number(e.target.value)
               updateError(value)
             }}
-            value={input[fieldName]}
+            value={temporaryValue}
             width="100%"
           />
         </div>
