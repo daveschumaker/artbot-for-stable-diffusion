@@ -642,7 +642,7 @@ const AdvancedOptionsPanel = ({
       {(input.img2img ||
         input.source_processing === SourceProcessing.Img2Img ||
         input.source_processing === SourceProcessing.InPainting) && (
-          <div  className="mr-8">
+          <div className="mr-8">
             <Section>
               <NumericInputSlider
                 label="Denoise"
@@ -986,7 +986,7 @@ const AdvancedOptionsPanel = ({
         checked={input.karras}
       />
       <HiresFix input={input} setInput={setInput} />
-      
+
       <Section>
         <SubSectionTitle>
           <TextTooltipRow>

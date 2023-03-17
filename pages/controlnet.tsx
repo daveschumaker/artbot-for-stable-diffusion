@@ -658,122 +658,39 @@ const ControlNet = () => {
             </Section>
           </SplitPanel>
         </TwoPanel>
-        <TwoPanel className="mt-4">
-          <SplitPanel>
-            <Section>
-              <div className="flex flex-row items-center justify-between">
-                <>
-                  <SubSectionTitle>
-                    <TextTooltipRow>
-                      Denoise{' '}
-                      <Tooltip tooltipId="denoise-tooltip">
-                        Amount of noise added to input image. Values that
-                        approach 1.0 allow for lots of variations but will also
-                        produce images that are not semantically consistent with
-                        the input. Only available for img2img.
-                      </Tooltip>
-                    </TextTooltipRow>
-                    <div className="block text-xs w-full">(0.0 - 1.0)</div>
-                  </SubSectionTitle>
-                  <NumberInput
-                    // @ts-ignore
-                    className="mb-2"
-                    type="text"
-                    step={0.05}
-                    disabled={
-                      input.models &&
-                      input.models[0] &&
-                      input.models[0].indexOf('_inpainting') >= 0
-                    }
-                    min={0}
-                    max={1.0}
-                    onBlur={(e: any) => {
-                      if (Number(e.target.value < 0)) {
-                        setInput({ denoising_strength: 0 })
-                        return
-                      }
 
-                      if (Number(e.target.value > 1.0)) {
-                        setInput({ denoising_strength: 1 })
-                        return
-                      }
-
-                      if (isNaN(e.target.value)) {
-                        setInput({ denoising_strength: 0.5 })
-                        return
-                      }
-                    }}
-                    onMinusClick={() => {
-                      if (isNaN(input.denoising_strength)) {
-                        input.denoising_strength = 0.5
-                      }
-
-                      if (Number(input.denoising_strength) > 1) {
-                        PromptInputSettings.set('denoising_strength', 1)
-                        setInput({ denoising_strength: 1 })
-                        return
-                      }
-
-                      const value = Number(input.denoising_strength) - 0.05
-                      const niceNumber = Number(value).toFixed(2)
-                      setInput({ denoising_strength: niceNumber })
-                    }}
-                    onPlusClick={() => {
-                      if (isNaN(input.denoising_strength)) {
-                        input.denoising_strength = 0.5
-                      }
-
-                      const value = Number(input.denoising_strength) + 0.05
-                      const niceNumber = Number(value).toFixed(2)
-                      PromptInputSettings.set('denoising_strength', niceNumber)
-                      setInput({ denoising_strength: niceNumber })
-                    }}
-                    name="denoising_strength"
-                    onChange={handleNumberInput}
-                    // @ts-ignore
-                    value={input.denoising_strength}
-                    width="100%"
-                  />
-                </>
-              </div>
-              {input.source_processing === SourceProcessing.InPainting &&
+        <div className="mr-8">
+          <Section>
+            <NumericInputSlider
+              label="Denoise"
+              tooltip="Amount of noise added to input image. Values that
+                  approach 1.0 allow for lots of variations but will
+                  also produce images that are not semantically
+                  consistent with the input. Only available for img2img."
+              from={0.0}
+              to={1.0}
+              step={0.05}
+              input={input}
+              setInput={setInput}
+              fieldName="denoising_strength"
+              initialLoad={false}
+              disabled={
                 input.models &&
                 input.models[0] &&
-                input.models[0].indexOf('_inpainting') >= 0 && (
-                  <div className="mt-0 text-sm text-slate-500">
-                    Note: Denoise disabled when inpainting model is used.
-                  </div>
-                )}
-              <div className="mb-4">
-                <Slider
-                  disabled={
-                    input.models &&
-                    input.models[0] &&
-                    input.models[0].indexOf('_inpainting') >= 0
-                  }
-                  value={input.denoising_strength}
-                  min={0}
-                  max={1}
-                  step={0.05}
-                  onChange={(e: any) => {
-                    const event = {
-                      target: {
-                        name: 'denoising_strength',
-                        value: Number(e.target.value)
-                      }
-                    }
+                input.models[0].indexOf('_inpainting') >= 0
+              }
+            />
+            {input.source_processing === SourceProcessing.InPainting &&
+              input.models &&
+              input.models[0] &&
+              input.models[0].indexOf('_inpainting') >= 0 && (
+                <div className="mt-0 text-sm text-slate-500">
+                  Note: Denoise disabled when inpainting model is used.
+                </div>
+              )}
+          </Section>
+        </div>
 
-                    // @ts-ignore
-                    handleChangeInput(event)
-                  }}
-                />
-              </div>
-            </Section>
-          </SplitPanel>
-          <SplitPanel>
-            <Section></Section>
-          </SplitPanel>
-        </TwoPanel>
       </Section>
       <Section>
         <SubSectionTitle>
