@@ -101,9 +101,9 @@ const NumericInputSlider = ({
           <NumberInput
             className="mb-2"
             type="text"
-            min={0.05}
-            max={1}
-            step={0.05}
+            min={from}
+            max={to}
+            step={step}
             name={fieldName}
             disabled={disabled}
             onMinusClick={() => {
