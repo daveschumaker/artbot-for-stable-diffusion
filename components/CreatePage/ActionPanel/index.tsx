@@ -28,6 +28,7 @@ interface Props {
   loggedIn: boolean | null;
   totalKudosCost: number;
   kudosPerImage: string;
+  showStylesDropdown?: boolean;
 }
 
 const ActionPanel = ({
@@ -43,6 +44,7 @@ const ActionPanel = ({
   loggedIn,
   totalKudosCost,
   kudosPerImage,
+  showStylesDropdown,
 }: Props) => {
   return (
     <>
@@ -53,13 +55,15 @@ const ActionPanel = ({
       />
 
       <div className="mt-2 mb-4 w-full flex flex-col md:flex-row gap-2 justify-end items-start">
-        <div className="w-full md:w-1/2 text-sm flex flex-row justify-start gap-2 items-center">
-          <StylesDropdown
-            input={input}
-            setInput={setInput}
-            isSearchable={true}
-          />
-        </div>
+        {showStylesDropdown && (
+          <div className="w-full md:w-1/2 text-sm flex flex-row justify-start gap-2 items-center">
+            <StylesDropdown
+              input={input}
+              setInput={setInput}
+              isSearchable={true}
+            />
+          </div>
+        )}
 
         <div className="w-full md:w-1/2 flex flex-col justify-start gap-2">
           <div className="flex flex-row justify-end gap-2 sm:mt-0">

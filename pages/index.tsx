@@ -693,6 +693,7 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
           loggedIn={loggedIn}
           totalKudosCost={totalKudosCost}
           kudosPerImage={kudosPerImage}
+          showStylesDropdown
         />
         
       </div>
