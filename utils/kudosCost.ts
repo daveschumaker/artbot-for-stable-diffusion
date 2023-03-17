@@ -46,7 +46,11 @@ export const kudosCostV2 = ({
   kudos *= usesControlNet && hasSourceImage ? 3 : 1
   kudos += countWeights(prompt)
   kudos *= hasSourceImage ? 1.5 : 1
-  kudos *= postProcessors.includes('RealESRGAN_x4plus') ? 1.3 : 1
+  kudos *=
+    postProcessors.includes('RealESRGAN_x4plus') ||
+    postProcessors.includes('RealESRGAN_x4plus_anime_6B')
+      ? 1.3
+      : 1
   kudos *= postProcessors.includes('CodeFormers') ? 1.3 : 1
   kudos += AppSettings.get('shareImagesExternally') === true ? 1 : 3
   kudos *= numImages
@@ -77,7 +81,7 @@ export const getAccurateSteps = (
 
   // There is a bug on the server: cost is supposed to be affected, but it isn't.
   // TODO: Remove this check when this bug is fixed server-side.
-  const doesDenoisingStrengthAffectKudosCost = false;
+  const doesDenoisingStrengthAffectKudosCost = false
 
   if (hasSourceImage && doesDenoisingStrengthAffectKudosCost) {
     steps *= denoisingStrength || 0.8
