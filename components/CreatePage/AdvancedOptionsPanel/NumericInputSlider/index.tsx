@@ -77,7 +77,7 @@ const NumericInputSlider = ({
       }
 
       toggleWarning(true)
-      updateField(to)
+      updateField(isNaN(value)?to:roundToNearestStep(value, from, to, step))
     } else {
       toggleWarning(false)
 
