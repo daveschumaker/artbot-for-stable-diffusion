@@ -25,7 +25,7 @@ const HiresFix = ({ input, setInput }: any) => {
       <SubSectionTitle>
         <TextTooltipRow>
           Hires fix
-          <Tooltip left="-20" width="240px">
+          <Tooltip tooltipId="hires-fix-tooltip">
             Partially renders image at a lower resolution before upscaling it
             and adding more detail. Useful to avoid things like double heads
             when requesting higher resolution images.

@@ -33,7 +33,7 @@ const ClipSkip = ({
         <SubSectionTitle>
           <TextTooltipRow>
             CLIP skip
-            <Tooltip left="-20" width="240px">
+            <Tooltip tooltipId="clip-skip-tooltip">
               Determine how early to stop processing a prompt using CLIP. Higher
               values stop processing earlier. Default is 1 (no skip).
             </Tooltip>

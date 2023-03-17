@@ -64,7 +64,7 @@ const Samplers = ({ input, setInput, showMultiModel = false }: IProps) => {
           <SubSectionTitle>
             <TextTooltipRow>
               Use all samplers
-              <Tooltip left="-140" width="240px">
+              <Tooltip tooltipId="use-all-samplers-tooltip">
                 Automatically generate an image for sampler
               </Tooltip>
             </TextTooltipRow>

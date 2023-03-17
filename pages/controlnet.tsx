@@ -509,7 +509,7 @@ const ControlNet = () => {
                 <SubSectionTitle>
                   <TextTooltipRow>
                     Steps
-                    <Tooltip width="200px">
+                    <Tooltip tooltipId="steps-tooltip">
                       Fewer steps generally result in quicker image generations.
                       Many models achieve full coherence after a certain number
                       of finite steps (60 - 90). Keep your initial queries in
@@ -580,7 +580,7 @@ const ControlNet = () => {
                 <SubSectionTitle>
                   <TextTooltipRow>
                     Guidance
-                    <Tooltip width="200px">
+                    <Tooltip tooltipId="guidance-tooltipz">
                       Higher numbers follow the prompt more closely. Lower
                       numbers give more creativity.
                     </Tooltip>
@@ -647,26 +647,11 @@ const ControlNet = () => {
           <SplitPanel>
             <Section>
               <div className="flex flex-row items-center justify-between">
-                {input.source_image && (
-                  <div className="flex flex-col">
-                    <SubSectionTitle>
-                      <TextTooltipRow>
-                        Denoise{' '}
-                        <Tooltip width="200px">
-                          Amount of noise added to input image. Values that
-                          approach 1.0 allow for lots of variations but will
-                          also produce images that are not semantically
-                          consistent with the input. Only available for img2img.
-                        </Tooltip>
-                      </TextTooltipRow>
-                    </SubSectionTitle>
-                  </div>
-                )}
                 <>
                   <SubSectionTitle>
                     <TextTooltipRow>
                       Denoise{' '}
-                      <Tooltip width="200px">
+                      <Tooltip tooltipId="denoise-tooltip">
                         Amount of noise added to input image. Values that
                         approach 1.0 allow for lots of variations but will also
                         produce images that are not semantically consistent with
@@ -769,7 +754,9 @@ const ControlNet = () => {
         <SubSectionTitle>
           <TextTooltipRow>
             Seed
-            <Tooltip width="140px">Leave seed blank for random.</Tooltip>
+            <Tooltip tooltipId="seed-tooltip">
+              Leave seed blank for random.
+            </Tooltip>
           </TextTooltipRow>
         </SubSectionTitle>
         <MaxWidth
@@ -819,7 +806,7 @@ const ControlNet = () => {
         <SubSectionTitle>
           <TextTooltipRow>
             Post-processing
-            <Tooltip left="-20" width="240px">
+            <Tooltip tooltipId="post-processing-tooltip">
               Post-processing options such as face improvement and image
               upscaling.
             </Tooltip>
@@ -843,7 +830,7 @@ const ControlNet = () => {
               <SubSectionTitle>
                 <TextTooltipRow>
                   Face-fix strength
-                  <Tooltip left="-20" width="240px">
+                  <Tooltip tooltipId="face-fixer-tooltip">
                     0.05 is the weakest effect (barely noticible improvements),
                     while 1.0 is the strongest effect.
                   </Tooltip>

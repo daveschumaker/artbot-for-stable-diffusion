@@ -2,11 +2,13 @@
 
 const InfoIcon = ({
   className,
+  id,
   size = 24,
   stroke = 'currentColor',
   fill = 'none'
 }: {
   className?: string
+  id?: string
   size?: number
   stroke?: string
   fill?: string
@@ -14,6 +16,7 @@ const InfoIcon = ({
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
+      id={id}
       className={className}
       width={size}
       height={size}

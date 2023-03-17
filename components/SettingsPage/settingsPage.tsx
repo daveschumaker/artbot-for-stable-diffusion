@@ -11,7 +11,7 @@ import { Button } from '../../components/UI/Button'
 import Input from '../../components/UI/Input'
 import PageTitle from '../../components/UI/PageTitle'
 import Select from '../../components/UI/Select'
-import Tooltip from '../../components/UI/Tooltip'
+import Tooltip from '../UI/Tooltip'
 import {
   IWorkers,
   setWorkers,
@@ -36,6 +36,7 @@ import { useEffectOnce } from '../../hooks/useEffectOnce'
 import MaxWidth from '../UI/MaxWidth'
 import AlertDialogBox from '../UI/AlertDialogBox'
 import { generateThumbnails } from '../../utils/db'
+import TextTooltipRow from '../UI/TextTooltipRow'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -378,12 +379,14 @@ const SettingsPage = () => {
               <Section>
                 <PageTitle as="h2">Stable Horde Settings</PageTitle>
                 <SubSectionTitle>
-                  <strong>API key</strong>
-                  <Tooltip width="220px">
-                    Leave blank for anonymous access. An API key gives higher
-                    priority access to the Stable Horde distributed cluster,
-                    resulting in shorter image creation times.
-                  </Tooltip>
+                  <TextTooltipRow>
+                    <strong>API key</strong>
+                    <Tooltip tooltipId="api-key-tooltip">
+                      Leave blank for anonymous access. An API key gives higher
+                      priority access to the Stable Horde distributed cluster,
+                      resulting in shorter image creation times.
+                    </Tooltip>
+                  </TextTooltipRow>
                   <div className="block text-xs mt-2 mb-2 w-full">
                     Leave blank for an anonymous user ID. Register via{' '}
                     <a

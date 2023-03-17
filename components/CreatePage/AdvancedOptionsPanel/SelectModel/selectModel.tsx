@@ -36,7 +36,7 @@ const SelectModel = ({ input, setInput, modelerOptions }: IProps) => {
       <SubSectionTitle>
         <TextTooltipRow>
           Model
-          <Tooltip width="240px">
+          <Tooltip tooltipId="model-dropdown-tooltip">
             Models currently available within the horde. Numbers in parentheses
             indicate number of works. Generally, these models will generate
             images quicker.

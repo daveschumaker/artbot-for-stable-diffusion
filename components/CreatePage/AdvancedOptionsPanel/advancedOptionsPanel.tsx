@@ -528,7 +528,7 @@ const AdvancedOptionsPanel = ({
         <SubSectionTitle>
           <TextTooltipRow>
             Negative prompt
-            <Tooltip width="180px">
+            <Tooltip tooltipId="negative-prompt-tooltip">
               Add words or phrases to demphasize from your desired image
             </Tooltip>
           </TextTooltipRow>
@@ -596,7 +596,7 @@ const AdvancedOptionsPanel = ({
                   <SubSectionTitle>
                     <TextTooltipRow>
                       Multi-steps
-                      <Tooltip width="210px">
+                      <Tooltip tooltipId="multi-steps">
                         Comma separated values to create a series of images
                         using multiple steps. Example: 3,6,9,12,15
                       </Tooltip>
@@ -689,7 +689,7 @@ const AdvancedOptionsPanel = ({
                   <SubSectionTitle>
                     <TextTooltipRow>
                       Guidance
-                      <Tooltip width="200px">
+                      <Tooltip tooltipId="guidance-tooltip">
                         Comma separated values to create a series of images
                         using multiple steps. Example: 3,6,9,12,15
                       </Tooltip>
@@ -722,45 +722,36 @@ const AdvancedOptionsPanel = ({
             </Section>
           )}
           {showMultiSamplerInput && (
-            <Section>
-              <SubSectionTitle>
-                <TextTooltipRow>
-                  Use multiple guidance
-                  <Tooltip left="-140" width="240px">
-                    Provide a list of comma separated values to create a series
-                    of images using multiple guidance: &quot;3,6,9,12,15&quot;
-                  </Tooltip>
-                </TextTooltipRow>
-              </SubSectionTitle>
-              <Switch
-                disabled={
-                  input.useMultiSteps || input.useAllSamplers ? true : false
-                }
-                onChange={() => {
-                  if (!input.useMultiGuidance) {
-                    setInput({
-                      useMultiGuidance: true,
-                      useMultiSteps: false,
-                      numImages: 1,
-                      useAllModels: false,
-                      useFavoriteModels: false,
-                      useAllSamplers: false
-                    })
+            <InputSwitch
+              label="Use multiple guidance"
+              tooltip='Provide a list of comma separated values to create a series of images using multiple guidance: "3,6,9,12,15"'
+              disabled={
+                input.useMultiSteps || input.useAllSamplers ? true : false
+              }
+              handleSwitchToggle={() => {
+                if (!input.useMultiGuidance) {
+                  setInput({
+                    useMultiGuidance: true,
+                    useMultiSteps: false,
+                    numImages: 1,
+                    useAllModels: false,
+                    useFavoriteModels: false,
+                    useAllSamplers: false
+                  })
 
-                    PromptInputSettings.set('useMultiGuidance', true)
-                    PromptInputSettings.set('useMultiSteps', false)
-                    PromptInputSettings.set('numImages', 1)
-                    PromptInputSettings.set('useAllModels', false)
-                    PromptInputSettings.set('useFavoriteModels', false)
-                    PromptInputSettings.set('useAllSamplers', false)
-                  } else {
-                    PromptInputSettings.set('useMultiGuidance', false)
-                    setInput({ useMultiGuidance: false })
-                  }
-                }}
-                checked={input.useMultiGuidance}
-              />
-            </Section>
+                  PromptInputSettings.set('useMultiGuidance', true)
+                  PromptInputSettings.set('useMultiSteps', false)
+                  PromptInputSettings.set('numImages', 1)
+                  PromptInputSettings.set('useAllModels', false)
+                  PromptInputSettings.set('useFavoriteModels', false)
+                  PromptInputSettings.set('useAllSamplers', false)
+                } else {
+                  PromptInputSettings.set('useMultiGuidance', false)
+                  setInput({ useMultiGuidance: false })
+                }
+              }}
+              checked={input.useMultiGuidance}
+            />
           )}
         </SplitPanel>
       </TwoPanel>
@@ -836,39 +827,25 @@ const AdvancedOptionsPanel = ({
           </MaxWidth>
         )}
       </Section>
-      <Section>
-        <SubSectionTitle>
-          <TextTooltipRow>
-            Tiling
-            <Tooltip width="240px">
-              Attempt to create seamless, repeatable textures. Note: This will
-              not work for img2img or inpainting requests.
-            </Tooltip>
-          </TextTooltipRow>
-        </SubSectionTitle>
-        <MaxWidth
-          // @ts-ignore
-          maxWidth="240"
-        >
-          <Switch
-            onChange={() => {
-              if (!input.tiling) {
-                setInput({ tiling: true })
-                PromptInputSettings.set('tiling', true)
-              } else {
-                setInput({ tiling: false })
-                PromptInputSettings.set('tiling', false)
-              }
-            }}
-            checked={input.tiling}
-          />
-        </MaxWidth>
-      </Section>
+      <InputSwitch
+        label="Tiling"
+        tooltip="Attempt to create seamless, repeatable textures. Note: This will not work for img2img or inpainting requests."
+        handleSwitchToggle={() => {
+          if (!input.tiling) {
+            setInput({ tiling: true })
+          } else {
+            setInput({ tiling: false })
+          }
+        }}
+        checked={input.tiling}
+      />
       <Section>
         <SubSectionTitle>
           <TextTooltipRow>
             Seed
-            <Tooltip width="140px">Leave seed blank for random.</Tooltip>
+            <Tooltip tooltipId="seed-tooltip">
+              Leave seed blank for random.
+            </Tooltip>
           </TextTooltipRow>
         </SubSectionTitle>
         <MaxWidth
@@ -925,7 +902,7 @@ const AdvancedOptionsPanel = ({
         <Section>
           <SubSectionTitle>
             Select Models
-            <Tooltip width="240px">
+            <Tooltip tooltipId="select-models-tooltip">
               Models currently available within the horde. Numbers in
               parentheses indicate number of works. Generally, these models will
               generate images quicker.
@@ -969,7 +946,7 @@ const AdvancedOptionsPanel = ({
           </MaxWidth>
         </Section>
       ) : null}
-      <div className="mt-2 flex flex-row items-center gap-2 text-[700]">
+      <div className="mt-2 flex flex-row items-center gap-2 text-[700] text-sm">
         Filter out NSFW models?{' '}
         <Switch
           checked={filterNsfwModels}
@@ -984,175 +961,145 @@ const AdvancedOptionsPanel = ({
           }}
         />
       </div>
-      {showMultiModelSelect ? (
-        <Section>
-          <SubSectionTitle>
-            <TextTooltipRow>
-              Multi-model select
-              <Tooltip left="-140" width="240px">
-                Pick from multiple models that you might prefer.
-              </Tooltip>
-            </TextTooltipRow>
-          </SubSectionTitle>
-          <Switch
-            onChange={() => {
-              if (!componentState.showMultiModel) {
-                trackEvent({
-                  event: 'USE_MULTI_MODEL_SELECT',
-                  context: '/pages/index'
-                })
-                setComponentState({
-                  showMultiModel: true
-                })
-                setInput({
-                  useAllSamplers: false,
-                  useAllModels: false,
-                  useFavoriteModels: false,
-                  useMultiSteps: false
-                })
+      {showMultiModelSelect && (
+        <InputSwitch
+          label="Multi-model select"
+          tooltip="Pick from multiple models that you might prefer."
+          handleSwitchToggle={() => {
+            if (!componentState.showMultiModel) {
+              trackEvent({
+                event: 'USE_MULTI_MODEL_SELECT',
+                context: '/pages/index'
+              })
+              setComponentState({
+                showMultiModel: true
+              })
+              setInput({
+                useAllSamplers: false,
+                useAllModels: false,
+                useFavoriteModels: false,
+                useMultiSteps: false
+              })
 
-                PromptInputSettings.set('showMultiModel', true)
-                PromptInputSettings.set('useAllSamplers', false)
-                PromptInputSettings.set('useAllModels', false)
-                PromptInputSettings.set('useFavoriteModels', false)
-                PromptInputSettings.set('useMultiSteps', false)
-              } else {
-                PromptInputSettings.set('showMultiModel', false)
-                PromptInputSettings.set('models', [input.models[0]])
+              PromptInputSettings.set('showMultiModel', true)
+              PromptInputSettings.set('useAllSamplers', false)
+              PromptInputSettings.set('useAllModels', false)
+              PromptInputSettings.set('useFavoriteModels', false)
+              PromptInputSettings.set('useMultiSteps', false)
+            } else {
+              PromptInputSettings.set('showMultiModel', false)
+              PromptInputSettings.set('models', [input.models[0]])
 
-                setComponentState({
-                  showMultiModel: false
-                })
-                setInput({
-                  models: [input.models[0]]
-                })
-              }
-            }}
-            checked={componentState.showMultiModel}
-          />
-        </Section>
-      ) : null}
-      {showUseAllModelsInput ? (
-        <Section>
-          <SubSectionTitle>
-            <>
-              <TextTooltipRow>
-                Use all available models ({modelerOptions(input).length - 1})
-                <Tooltip left="-140" width="240px">
-                  Automatically generate an image for each model currently
-                  available on Stable Horde
-                </Tooltip>
-              </TextTooltipRow>
-              <div className="mt-1 mb-2 text-xs">
-                <Linker href="/info/models">[ View all model details ]</Linker>
-              </div>
-            </>
-          </SubSectionTitle>
-          <Switch
-            onChange={() => {
-              if (!input.useAllModels) {
-                trackEvent({
-                  event: 'USE_ALL_MODELS_CLICK',
-                  context: '/pages/index'
-                })
-                setInput({
-                  useAllModels: true,
-                  useFavoriteModels: false,
-                  useMultiSteps: false,
-                  useAllSamplers: false,
-                  numImages: 1
-                })
+              setComponentState({
+                showMultiModel: false
+              })
+              setInput({
+                models: [input.models[0]]
+              })
+            }
+          }}
+          checked={componentState.showMultiModel}
+        />
+      )}
+      {showUseAllModelsInput && (
+        <InputSwitch
+          label={`Use all available models (${
+            modelerOptions(input).length - 1
+          })`}
+          tooltip="Automatically generate an image for each model currently available on Stable Horde"
+          moreInfoLink={
+            <div className="mt-1 mb-2 text-xs">
+              <Linker href="/info/models">[ View all model details ]</Linker>
+            </div>
+          }
+          handleSwitchToggle={() => {
+            if (!input.useAllModels) {
+              trackEvent({
+                event: 'USE_ALL_MODELS_CLICK',
+                context: '/pages/index'
+              })
+              setInput({
+                useAllModels: true,
+                useFavoriteModels: false,
+                useMultiSteps: false,
+                useAllSamplers: false,
+                numImages: 1
+              })
 
-                PromptInputSettings.set('useAllModels', true)
-                PromptInputSettings.set('useFavoriteModels', false)
-                PromptInputSettings.set('useMultiSteps', false)
-                PromptInputSettings.set('useAllSamplers', false)
-                PromptInputSettings.set('numImages', false)
-              } else {
-                PromptInputSettings.set('useAllModels', false)
-                setInput({ useAllModels: false })
-              }
-            }}
-            checked={input.useAllModels}
-          />
-        </Section>
-      ) : null}
-      {showUseFavoriteModelsInput ? (
-        <Section>
-          <SubSectionTitle>
-            <TextTooltipRow>
-              Use favorite models ({componentState.favoriteModelsCount})
-              <Tooltip left="-140" width="240px">
-                Automatically generate an image for each model you have
-                favorited.
-              </Tooltip>
-            </TextTooltipRow>
+              PromptInputSettings.set('useAllModels', true)
+              PromptInputSettings.set('useFavoriteModels', false)
+              PromptInputSettings.set('useMultiSteps', false)
+              PromptInputSettings.set('useAllSamplers', false)
+              PromptInputSettings.set('numImages', false)
+            } else {
+              PromptInputSettings.set('useAllModels', false)
+              setInput({ useAllModels: false })
+            }
+          }}
+          checked={input.useAllModels}
+        />
+      )}
+      {showUseFavoriteModelsInput && (
+        <InputSwitch
+          label={`Use favorite models (${componentState.favoriteModelsCount})`}
+          tooltip="Automatically generate an image for each model you have favorited."
+          moreInfoLink={
             <div className="mt-1 mb-2 text-xs">
               <Linker href="/info/models?show=favorite-models">
                 [ View favorite models ]
               </Linker>
             </div>
-          </SubSectionTitle>
-          <Switch
-            disabled={componentState.favoriteModelsCount === 0 ? true : false}
-            onChange={() => {
-              if (!input.useFavoriteModels) {
-                trackEvent({
-                  event: 'USE_FAV_MODELS_CLICK',
-                  context: '/pages/index'
-                })
-                setInput({
-                  useFavoriteModels: true,
-                  useAllSamplers: false,
-                  useMultiSteps: false
-                })
-                PromptInputSettings.set('useFavoriteModels', true)
-                PromptInputSettings.set('useAllSamplers', false)
-                PromptInputSettings.set('useMultiSteps', false)
-              } else {
-                PromptInputSettings.set('useFavoriteModels', false)
-                setInput({ useFavoriteModels: false })
-              }
-            }}
-            checked={input.useFavoriteModels}
-          />
-        </Section>
-      ) : null}
-      <Section>
-        <SubSectionTitle>
-          <TextTooltipRow>
-            Enable karras
-            <Tooltip left="-20" width="240px">
-              Denoising magic. Dramatically improves image generation using
-              fewer steps. (Not all workers support this yet)
-            </Tooltip>
-          </TextTooltipRow>
-          {input.source_image && input.control_type && (
+          }
+          disabled={componentState.favoriteModelsCount === 0 ? true : false}
+          handleSwitchToggle={() => {
+            if (!input.useFavoriteModels) {
+              trackEvent({
+                event: 'USE_FAV_MODELS_CLICK',
+                context: '/pages/index'
+              })
+              setInput({
+                useFavoriteModels: true,
+                useAllSamplers: false,
+                useMultiSteps: false
+              })
+              PromptInputSettings.set('useFavoriteModels', true)
+              PromptInputSettings.set('useAllSamplers', false)
+              PromptInputSettings.set('useMultiSteps', false)
+            } else {
+              PromptInputSettings.set('useFavoriteModels', false)
+              setInput({ useFavoriteModels: false })
+            }
+          }}
+          checked={input.useFavoriteModels}
+        />
+      )}
+      <InputSwitch
+        label="Enable karras"
+        tooltip="Denoising magic. Dramatically improves image generation using fewer steps."
+        moreInfoLink={
+          input.source_image &&
+          input.control_type && (
             <div className="mt-[-4px] text-sm text-slate-500 dark:text-slate-400 font-[600]">
               <strong>Note:</strong> Cannot be used for ControlNet requests
             </div>
-          )}
-        </SubSectionTitle>
-        <Switch
-          disabled={input.source_image && input.control_type ? true : false}
-          onChange={() => {
-            if (!input.karras) {
-              PromptInputSettings.set('karras', true)
-              setInput({ karras: true })
-            } else {
-              PromptInputSettings.set('karras', false)
-              setInput({ karras: false })
-            }
-          }}
-          checked={input.karras}
-        />
-      </Section>
+          )
+        }
+        disabled={input.source_image && input.control_type ? true : false}
+        handleSwitchToggle={() => {
+          if (!input.karras) {
+            setInput({ karras: true })
+          } else {
+            setInput({ karras: false })
+          }
+        }}
+        checked={input.karras}
+      />
       <HiresFix input={input} setInput={setInput} />
       <Section>
         <SubSectionTitle>
           <TextTooltipRow>
             Post-processing
-            <Tooltip left="-20" width="240px">
+            <Tooltip tooltipId="post-processing-tooltip">
               Post-processing options such as face improvement and image
               upscaling.
             </Tooltip>
