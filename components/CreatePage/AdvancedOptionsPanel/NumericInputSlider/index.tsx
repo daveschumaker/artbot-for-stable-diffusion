@@ -1,15 +1,17 @@
 import React, { useState } from 'react'
 
 // Import UI components
-import Section from '../../../UI/Section'
-import SubSectionTitle from '../../../UI/SubSectionTitle'
-import TextTooltipRow from '../../../UI/TextTooltipRow'
-import Tooltip from '../../../UI/Tooltip'
-import NumberInput from '../../../UI/NumberInput'
-import Slider from '../../../UI/Slider'
+import Section from 'components/UI/Section'
+import SubSectionTitle from 'components/UI/SubSectionTitle'
+import TextTooltipRow from 'components/UI/TextTooltipRow'
+import Tooltip from 'components/UI/Tooltip'
+import NumberInput from 'components/UI/NumberInput'
+import Slider from 'components/UI/Slider'
 
 import clsx from 'clsx'
 import { formatStringRemoveSpaces } from '../../../../utils/htmlUtils'
+
+import { nearestWholeMultiple } from '../../../../utils/imageUtils'
 
 
 // TODO: Make this component only commit input on blur

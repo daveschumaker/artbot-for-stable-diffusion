@@ -1,15 +1,9 @@
 import FormErrorMessage from './FormErrorMessage';
 import StylesDropdown from '../StylesDropdown';
 
-
-// TypeScript refuses to understand absolute paths for some reason, but they are superior to relative paths.
-// @ts-ignore
 import { Button } from 'components/UI/Button';
-// @ts-ignore
 import TrashIcon from 'components/icons/TrashIcon';
-// @ts-ignore
 import SquarePlusIcon from 'components/icons/SquarePlusIcon';
-// @ts-ignore
 import Linker from 'components/UI//Linker';
 
 const ERROR_INPAINT_MISSING_SOURCE_MASK =
