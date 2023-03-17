@@ -517,145 +517,40 @@ const ControlNet = () => {
             />
           </MaxWidth>
         </Section>
+
         <TwoPanel>
           <SplitPanel>
-            <Section>
-              <div className="flex flex-row items-center justify-between">
-                <SubSectionTitle>
-                  <TextTooltipRow>
-                    Steps
-                    <Tooltip tooltipId="steps-tooltip">
-                      Fewer steps generally result in quicker image generations.
-                      Many models achieve full coherence after a certain number
-                      of finite steps (60 - 90). Keep your initial queries in
-                      the 30 - 50 range for best results.
-                    </Tooltip>
-                  </TextTooltipRow>
-                  <div className="block text-xs w-full">
-                    (1 - {loggedIn ? 30 : 20})
-                  </div>
-                </SubSectionTitle>
-                <NumberInput
-                  // @ts-ignore
-                  // error={errorMessage.steps}
-                  className="mb-2"
-                  type="text"
-                  min={1}
-                  max={loggedIn ? 30 : 20}
-                  onMinusClick={() => {
-                    const value = input.steps - 1
-                    // PromptInputSettings.set('steps', value)
-                    setInput({ steps: value })
-                  }}
-                  onPlusClick={() => {
-                    const value = input.steps + 1
-                    // PromptInputSettings.set('steps', value)
-                    setInput({ steps: value })
-                  }}
-                  name="steps"
-                  onChange={handleNumberInput}
-                  onBlur={(e: any) => {
-                    const maxSteps = loggedIn ? 30 : 20
-                    if (
-                      isNaN(e.target.value) ||
-                      e.target.value < 1 ||
-                      e.target.value > maxSteps
-                    ) {
-                      setInput({ cfg_scale: 7 })
-                    }
-                  }}
-                  // @ts-ignore
-                  value={Number(input.steps)}
-                  width="100%"
-                />
-              </div>
-              <div className="mb-4">
-                <Slider
-                  value={input.steps}
-                  min={1}
-                  max={loggedIn ? 30 : 20}
-                  onChange={(e: any) => {
-                    const event = {
-                      target: {
-                        name: 'steps',
-                        value: Number(e.target.value)
-                      }
-                    }
-
-                    // @ts-ignore
-                    handleChangeInput(event)
-                  }}
-                />
-              </div>
-            </Section>
+          <NumericInputSlider
+              label="Steps"
+              tooltip="Fewer steps generally result in quicker image generations.
+              Many models achieve full coherence after a certain number
+              of finite steps (60 - 90). Keep your initial queries in
+              the 30 - 50 range for best results."
+              from={1}
+              to={loggedIn ? 30 : 20}
+              step={1}
+              input={input}
+              setInput={setInput}
+              fieldName="steps"
+              initialLoad={false}
+              fullWidth
+              enforceStepValue
+            />
           </SplitPanel>
           <SplitPanel>
-            <Section>
-              <div className="flex flex-row items-center justify-between">
-                <SubSectionTitle>
-                  <TextTooltipRow>
-                    Guidance
-                    <Tooltip tooltipId="guidance-tooltipz">
-                      Higher numbers follow the prompt more closely. Lower
-                      numbers give more creativity.
-                    </Tooltip>
-                  </TextTooltipRow>
-                  <div className="block text-xs w-full">(1 - 30)</div>
-                </SubSectionTitle>
-                <NumberInput
-                  // @ts-ignore
-                  // error={errorMessage.cfg_scale}
-                  className="mb-2"
-                  type="text"
-                  min={0.5}
-                  max={30}
-                  step={0.5}
-                  onMinusClick={() => {
-                    const value = input.cfg_scale - 0.5
-                    // PromptInputSettings.set('cfg_scale', value)
-                    setInput({ cfg_scale: value })
-                  }}
-                  onPlusClick={() => {
-                    const value = input.cfg_scale + 0.5
-                    // PromptInputSettings.set('cfg_scale', value)
-                    setInput({ cfg_scale: value })
-                  }}
-                  name="cfg_scale"
-                  onBlur={(e: any) => {
-                    if (
-                      isNaN(e.target.value) ||
-                      e.target.value < 1 ||
-                      e.target.value > 30
-                    ) {
-                      setInput({ cfg_scale: 7 })
-                    }
-                  }}
-                  onChange={handleNumberInput}
-                  // @ts-ignore
-                  value={input.cfg_scale}
-                  width="100%"
-                />
-              </div>
-              <div className="mb-4">
-                <Slider
-                  value={input.cfg_scale}
-                  min={1}
-                  max={30}
-                  step={0.5}
-                  onChange={(e: any) => {
-                    const event = {
-                      target: {
-                        name: 'cfg_scale',
-                        value: Number(e.target.value)
-                      }
-                    }
-
-                    // @ts-ignore
-                    handleChangeInput(event)
-                  }}
-                />
-              </div>
-            </Section>
+          <NumericInputSlider
+              label="Guidance"
+              tooltip="Higher numbers follow the prompt more closely. Lower
+                numbers give more creativity."
+              from={1}
+              to={30}
+              step={0.5}
+              input={input}
+              setInput={setInput}
+              fieldName="cfg_scale"
+              initialLoad={false}
+              fullWidth
+            />
           </SplitPanel>
         </TwoPanel>
 
@@ -692,6 +587,7 @@ const ControlNet = () => {
         </div>
 
       </Section>
+
       <Section>
         <SubSectionTitle>
           <TextTooltipRow>
@@ -737,6 +633,7 @@ const ControlNet = () => {
           </div>
         </MaxWidth>
       </Section>
+
       <Section>
         <SelectModel
           input={input}
