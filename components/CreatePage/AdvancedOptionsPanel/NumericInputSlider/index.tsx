@@ -38,10 +38,10 @@ const NumericInputSlider = ({
   disabled = false,
   fullWidth = false
 }: Props) => {
-  const errorMessageDefault: { [key: string]: any } = {
-    facefixer_strength: null
-  }
-  const [errorMessage, setErrorMessage] = useState(errorMessageDefault)
+
+  const [errorMessage, setErrorMessage] = useState('')
+
+
 
   const updateField = (value: string | number) => {
     const res = {}
@@ -60,17 +60,9 @@ const NumericInputSlider = ({
       }
 
       updateField(to)
-      const errorUpdate = {}
-      // @ts-ignore
-      errorUpdate[
-        fieldName
-      ] = `This field only accepts numbers between ${from} and ${to}.`
-      setErrorMessage(errorUpdate)
-    } else if (errorMessage[fieldName]) {
-      const errorUpdate = {}
-      // @ts-ignore
-      errorUpdate[fieldName] = null
-      setErrorMessage(errorUpdate)
+      setErrorMessage(`This field only accepts numbers between ${from} and ${to}.`)
+    } else if (errorMessage) {
+      setErrorMessage('')
       updateField(value)
     }
   }
@@ -78,9 +70,6 @@ const NumericInputSlider = ({
 
   const [temporaryValue, setTemporaryValue] = useState(input[fieldName]);
   const handleNumberInput = (event: any) => {
-    /*const value = Number(event.target.value)
-    if (isNaN(value)) return
-    updateField(value)*/
     setTemporaryValue(event.target.value)
   }
 
@@ -140,8 +129,8 @@ const NumericInputSlider = ({
             handleChangeInput(e.target.value)
           }}
         />
-        {errorMessage[fieldName] && (
-          <div className="mb-2 text-sm">{errorMessage[fieldName]}</div>
+        {errorMessage && (
+          <div className="mb-2 text-sm">{errorMessage}</div>
         )}
       </Section>
     </div>
