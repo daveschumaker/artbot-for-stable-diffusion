@@ -37,8 +37,7 @@ import { SourceProcessing } from '../utils/promptUtils'
 import Checkbox from '../components/UI/Checkbox'
 import ClipSkip from '../components/CreatePage/AdvancedOptionsPanel/ClipSkip'
 import TrashIcon from '../components/icons/TrashIcon'
-import SquarePlusIcon from '../components/icons/SquarePlusIcon'
-import Linker from '../components/UI/Linker'
+import ActionPanel from '../components/CreatePage/ActionPanel'
 import { createImageJob } from '../utils/imageCache'
 import CreateImageRequest from '../models/CreateImageRequest'
 import { useRouter } from 'next/router'
@@ -337,11 +336,26 @@ const ControlNet = () => {
 
   const kudosPerImage =
     totalImagesRequested < 1 ||
-    isNaN(totalKudosCost) ||
-    isNaN(totalImagesRequested)
+      isNaN(totalKudosCost) ||
+      isNaN(totalImagesRequested)
       ? 'N/A'
       : Number(totalKudosCost / totalImagesRequested).toFixed(2)
 
+  const fixedSeedErrorMsg =
+    'Warning: You are using a fixed seed with multiple images. (You can still continue)'
+  if (
+    hasError !== fixedSeedErrorMsg &&
+    totalImagesRequested > 1 &&
+    input.seed
+  ) {
+    setHasError(fixedSeedErrorMsg)
+  } else if (
+    hasError === fixedSeedErrorMsg &&
+    (!input.seed || totalImagesRequested === 1)
+  ) {
+    setHasError('')
+  }
+  
   return (
     <>
       <Head>
@@ -977,69 +991,24 @@ const ControlNet = () => {
           />
         </div>
       </Section>
-      {hasError && (
-        <Section>
-          <div className="mt-2 text-red-500 font-semibold w-full flex flex-row justify-end">
-            Error: {hasError}
-          </div>
-        </Section>
-      )}
-      <Section>
-        <div className="mt-2 mb-4 w-full flex flex-col md:flex-row gap-2 justify-end items-start">
-          <div className="w-full md:w-1/2 flex flex-col justify-start gap-2">
-            <div className="flex flex-row justify-end gap-2 sm:mt-0">
-              <Button
-                title="Clear current input"
-                btnType="secondary"
-                onClick={() => {
-                  setInput({ ...new DefaultPromptInput() })
-                  window.scrollTo(0, 0)
-                }}
-              >
-                <span>
-                  <TrashIcon />
-                </span>
-                <span className="hidden md:inline-block">Reset?</span>
-              </Button>
-              <Button
-                title="Create new image"
-                onClick={handleSubmit}
-                width="100px"
-              >
-                <span>
-                  <SquarePlusIcon />
-                </span>
-                {pending ? 'Creating...' : 'Create'}
-              </Button>
-            </div>
-            <div className="flex flex-row justify-end">
-              <div className="flex flex-col justify-end">
-                <div className="text-xs flex flex-row justify-end gap-2">
-                  Images to request:{' '}
-                  <strong>{' ' + totalImagesRequested}</strong>
-                </div>
-                {loggedIn && (
-                  <>
-                    <div className="text-xs flex flex-row justify-end gap-2">
-                      {' '}
-                      Generation cost:{' '}
-                      <Linker href="/faq#kudos" passHref>
-                        <>{totalKudosCost} kudos</>
-                      </Linker>
-                    </div>
-                    <div className="text-xs flex flex-row justify-end gap-2">
-                      Per image:{' '}
-                      <Linker href="/faq#kudos" passHref>
-                        <>{kudosPerImage} kudos</>
-                      </Linker>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </Section>
+
+      <ActionPanel
+        hasValidationError={false}
+        hasError={hasError}
+        fixedSeedErrorMsg={fixedSeedErrorMsg}
+        input={input}
+        setInput={setInput}
+        resetInput={() => {
+          setInput({ ...new DefaultPromptInput() })
+          window.scrollTo(0, 0)
+        }}
+        handleSubmit={handleSubmit}
+        pending={pending}
+        totalImagesRequested={totalImagesRequested}
+        loggedIn={loggedIn}
+        totalKudosCost={totalKudosCost}
+        kudosPerImage={kudosPerImage}
+      />
     </>
   )
 }

@@ -557,8 +557,7 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
     setHasError(fixedSeedErrorMsg)
   } else if (
     hasError === fixedSeedErrorMsg &&
-    totalImagesRequested > 1 &&
-    !input.seed
+    (!input.seed || totalImagesRequested === 1)
   ) {
     setHasError('')
   }
