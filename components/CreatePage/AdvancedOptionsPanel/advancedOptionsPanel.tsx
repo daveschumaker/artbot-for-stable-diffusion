@@ -470,6 +470,7 @@ const AdvancedOptionsPanel = ({
               fieldName="steps"
               initialLoad={initialLoad}
               fullWidth
+              enforceStepValue
             />
           )}
           {input.useMultiSteps && (
