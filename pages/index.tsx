@@ -13,8 +13,6 @@ import {
 } from '../utils/promptUtils'
 import TextArea from '../components/UI/TextArea'
 import { Button } from '../components/UI/Button'
-import TrashIcon from '../components/icons/TrashIcon'
-import SquarePlusIcon from '../components/icons/SquarePlusIcon'
 import { trackEvent, trackGaEvent } from '../api/telemetry'
 import OptionsPanel from '../components/CreatePage/OptionsPanel'
 import {
@@ -28,13 +26,11 @@ import { getDefaultPrompt } from '../utils/db'
 import CreateImageRequest from '../models/CreateImageRequest'
 import ShareLinkDetails from '../models/ShareableLink'
 import Head from 'next/head'
-import StylesDropdown from '../components/CreatePage/StylesDropdown'
 import { useStore } from 'statery'
 import { appInfoStore } from '../store/appStore'
 import AppSettings from '../models/AppSettings'
 import { countImagesToGenerate, orientationDetails } from '../utils/imageUtils'
 import { toast } from 'react-toastify'
-import Linker from '../components/UI/Linker'
 import InteractiveModal from '../components/UI/InteractiveModal/interactiveModal'
 import PromptHistory from '../components/PromptHistory'
 import MenuButton from '../components/UI/MenuButton'
@@ -56,6 +52,7 @@ import clsx from 'clsx'
 import { kudosCostV2 } from '../utils/kudosCost'
 import { CreatePageMode, isSharedLink } from '../utils/loadInputCache'
 import ImageApiParamsToPromptInput from '../models/ImageApiParamsToPromptInput'
+import ActionPanel from '../components/CreatePage/ActionPanel'
 
 interface InputTarget {
   name: string
@@ -100,7 +97,7 @@ export async function getServerSideProps(context: any) {
       const { imageParams } = data.imageParams || {}
       shortlinkImageParams = imageParams || null
     }
-  } catch (err) {}
+  } catch (err) { }
 
   return {
     props: {
@@ -545,8 +542,8 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
 
   const kudosPerImage =
     totalImagesRequested < 1 ||
-    isNaN(totalKudosCost) ||
-    isNaN(totalImagesRequested)
+      isNaN(totalKudosCost) ||
+      isNaN(totalImagesRequested)
       ? 'N/A'
       : Number(totalKudosCost / totalImagesRequested).toFixed(2)
 
@@ -560,8 +557,7 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
     setHasError(fixedSeedErrorMsg)
   } else if (
     hasError === fixedSeedErrorMsg &&
-    totalImagesRequested > 1 &&
-    !input.seed
+    (!input.seed || totalImagesRequested === 1)
   ) {
     setHasError('')
   }
@@ -586,11 +582,10 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
           </title>
           <meta
             name="twitter:title"
-            content={`🤖 ArtBot - Shareable Link ${
-              shortlinkImageParams.models && shortlinkImageParams.models[0]
+            content={`🤖 ArtBot - Shareable Link ${shortlinkImageParams.models && shortlinkImageParams.models[0]
                 ? `created with ${shortlinkImageParams.models[0]}`
                 : ''
-            }`}
+              }`}
           />
           <meta
             name="twitter:description"
@@ -598,9 +593,8 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
           />
           <meta
             name="twitter:image"
-            content={`https://tinybots.net/artbot/api/v1/shortlink/i/${
-              query[CreatePageMode.SHORTLINK]
-            }`}
+            content={`https://tinybots.net/artbot/api/v1/shortlink/i/${query[CreatePageMode.SHORTLINK]
+              }`}
           />
         </Head>
       ) : null}
@@ -677,82 +671,23 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
             <ArrowBarLeftIcon />
           </Button>
         </FlexRow>
-        {hasValidationError && (
-          <div className="mt-2 text-red-500 font-semibold">
-            Please correct all input errors before continuing
-          </div>
-        )}
-        {hasError && hasError === fixedSeedErrorMsg && (
-          <div className="mt-2 text-amber-400 font-semibold">
-            {fixedSeedErrorMsg}
-          </div>
-        )}
-        {hasError && hasError !== fixedSeedErrorMsg && (
-          <div className="mt-2 text-red-500 font-semibold">
-            Error: {hasError}
-          </div>
-        )}
-        <div className="mt-2 mb-4 w-full flex flex-col md:flex-row gap-2 justify-end items-start">
-          <div className="w-full md:w-1/2 text-sm flex flex-row justify-start gap-2 items-center">
-            <StylesDropdown
-              input={input}
-              setInput={setInput}
-              isSearchable={true}
-            />
-          </div>
-          <div className="w-full md:w-1/2 flex flex-col justify-start gap-2">
-            <div className="flex flex-row justify-end gap-2 sm:mt-0">
-              <Button
-                title="Clear current input"
-                btnType="secondary"
-                onClick={resetInput}
-              >
-                <span>
-                  <TrashIcon />
-                </span>
-                <span>Reset all?</span>
-              </Button>
-              <Button
-                title="Create new image"
-                onClick={handleSubmit}
-                disabled={
-                  hasValidationError ||
-                  pending ||
-                  hasError === ERROR_INPAINT_MISSING_SOURCE_MASK
-                }
-                width="100px"
-              >
-                <span>{pending ? '' : <SquarePlusIcon />}</span>
-                {pending ? 'Creating...' : 'Create'}
-              </Button>
-            </div>
-            <div className="flex flex-row justify-end">
-              <div className="flex flex-col justify-end">
-                <div className="text-xs flex flex-row justify-end gap-2">
-                  Images to request:{' '}
-                  <strong>{' ' + totalImagesRequested}</strong>
-                </div>
-                {loggedIn && (
-                  <>
-                    <div className="text-xs flex flex-row justify-end gap-2">
-                      {' '}
-                      Generation cost:{' '}
-                      <Linker href="/faq#kudos" passHref>
-                        <>{totalKudosCost} kudos</>
-                      </Linker>
-                    </div>
-                    <div className="text-xs flex flex-row justify-end gap-2">
-                      Per image:{' '}
-                      <Linker href="/faq#kudos" passHref>
-                        <>{kudosPerImage} kudos</>
-                      </Linker>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
+
+        <ActionPanel
+          hasValidationError={hasValidationError}
+          hasError={hasError}
+          fixedSeedErrorMsg={fixedSeedErrorMsg}
+          input={input}
+          setInput={setInput}
+          resetInput={resetInput}
+          handleSubmit={handleSubmit}
+          pending={pending}
+          totalImagesRequested={totalImagesRequested}
+          loggedIn={loggedIn}
+          totalKudosCost={totalKudosCost}
+          kudosPerImage={kudosPerImage}
+          showStylesDropdown
+        />
+
       </div>
       <OptionsPanel
         handleChangeInput={handleChangeValue}
@@ -762,57 +697,23 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
         setInput={setInput}
         setHasValidationError={setHasValidationError}
       />
-      <div className="w-full mt-2 flex flex-col justify-end gap-2">
-        <div className="flex flex-row justify-end gap-2 sm:mt-0">
-          <Button
-            title="Clear current input"
-            btnType="secondary"
-            onClick={resetInput}
-          >
-            <span>
-              <TrashIcon />
-            </span>
-            <span>Reset all?</span>
-          </Button>
-          <Button
-            title="Create new image"
-            onClick={handleSubmit}
-            disabled={
-              hasValidationError ||
-              pending ||
-              hasError === ERROR_INPAINT_MISSING_SOURCE_MASK
-            }
-            width="100px"
-          >
-            <span>{pending ? '' : <SquarePlusIcon />}</span>
-            {pending ? 'Creating...' : 'Create'}
-          </Button>
-        </div>
-        <div className="flex flex-row justify-end">
-          <div className="flex flex-col justify-end">
-            <div className="text-xs flex flex-row justify-end gap-2">
-              Images to request: <strong>{' ' + totalImagesRequested}</strong>
-            </div>
-            {loggedIn && (
-              <>
-                <div className="text-xs flex flex-row justify-end gap-2">
-                  {' '}
-                  Generation cost:{' '}
-                  <Linker href="/faq#kudos" passHref>
-                    <>{totalKudosCost} kudos</>
-                  </Linker>
-                </div>
-                <div className="text-xs flex flex-row justify-end gap-2">
-                  Per image:{' '}
-                  <Linker href="/faq#kudos" passHref>
-                    <>{kudosPerImage} kudos</>
-                  </Linker>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
+
+      <ActionPanel
+        hasValidationError={hasValidationError}
+        hasError={hasError}
+        fixedSeedErrorMsg={fixedSeedErrorMsg}
+        input={input}
+        setInput={setInput}
+        resetInput={resetInput}
+        handleSubmit={handleSubmit}
+        pending={pending}
+        totalImagesRequested={totalImagesRequested}
+        loggedIn={loggedIn}
+        totalKudosCost={totalKudosCost}
+        kudosPerImage={kudosPerImage}
+      />
+
+
     </main>
   )
 }
