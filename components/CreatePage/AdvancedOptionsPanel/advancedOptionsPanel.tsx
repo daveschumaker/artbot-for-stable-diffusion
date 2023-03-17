@@ -986,6 +986,7 @@ const AdvancedOptionsPanel = ({
         checked={input.karras}
       />
       <HiresFix input={input} setInput={setInput} />
+      
       <Section>
         <SubSectionTitle>
           <TextTooltipRow>

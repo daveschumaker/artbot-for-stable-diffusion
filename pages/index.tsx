@@ -97,7 +97,7 @@ export async function getServerSideProps(context: any) {
       const { imageParams } = data.imageParams || {}
       shortlinkImageParams = imageParams || null
     }
-  } catch (err) {}
+  } catch (err) { }
 
   return {
     props: {
@@ -542,8 +542,8 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
 
   const kudosPerImage =
     totalImagesRequested < 1 ||
-    isNaN(totalKudosCost) ||
-    isNaN(totalImagesRequested)
+      isNaN(totalKudosCost) ||
+      isNaN(totalImagesRequested)
       ? 'N/A'
       : Number(totalKudosCost / totalImagesRequested).toFixed(2)
 
@@ -582,11 +582,10 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
           </title>
           <meta
             name="twitter:title"
-            content={`🤖 ArtBot - Shareable Link ${
-              shortlinkImageParams.models && shortlinkImageParams.models[0]
+            content={`🤖 ArtBot - Shareable Link ${shortlinkImageParams.models && shortlinkImageParams.models[0]
                 ? `created with ${shortlinkImageParams.models[0]}`
                 : ''
-            }`}
+              }`}
           />
           <meta
             name="twitter:description"
@@ -594,9 +593,8 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
           />
           <meta
             name="twitter:image"
-            content={`https://tinybots.net/artbot/api/v1/shortlink/i/${
-              query[CreatePageMode.SHORTLINK]
-            }`}
+            content={`https://tinybots.net/artbot/api/v1/shortlink/i/${query[CreatePageMode.SHORTLINK]
+              }`}
           />
         </Head>
       ) : null}
@@ -689,7 +687,7 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
           kudosPerImage={kudosPerImage}
           showStylesDropdown
         />
-        
+
       </div>
       <OptionsPanel
         handleChangeInput={handleChangeValue}
