@@ -90,7 +90,7 @@ const NumericInputSlider = ({
   }
 
   return (
-    <div className={clsx('mb-8 w-full', !fullWidth && 'md:w-1/2')}>
+    <div className={clsx('mb-4 w-full', !fullWidth && 'md:w-1/2')}>
       <Section>
         <div className="flex flex-row items-center justify-between">
           <SubSectionTitle>

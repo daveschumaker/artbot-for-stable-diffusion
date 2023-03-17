@@ -639,35 +639,37 @@ const AdvancedOptionsPanel = ({
       {(input.img2img ||
         input.source_processing === SourceProcessing.Img2Img ||
         input.source_processing === SourceProcessing.InPainting) && (
-          <Section>
-            <NumericInputSlider
-              label="Denoise"
-              tooltip="Amount of noise added to input image. Values that
-                approach 1.0 allow for lots of variations but will
-                also produce images that are not semantically
-                consistent with the input. Only available for img2img."
-              from={0.0}
-              to={1.0}
-              step={0.05}
-              input={input}
-              setInput={setInput}
-              fieldName="denoising_strength"
-              initialLoad={initialLoad}
-              disabled={
+          <div  className="mr-8">
+            <Section>
+              <NumericInputSlider
+                label="Denoise"
+                tooltip="Amount of noise added to input image. Values that
+                  approach 1.0 allow for lots of variations but will
+                  also produce images that are not semantically
+                  consistent with the input. Only available for img2img."
+                from={0.0}
+                to={1.0}
+                step={0.05}
+                input={input}
+                setInput={setInput}
+                fieldName="denoising_strength"
+                initialLoad={initialLoad}
+                disabled={
+                  input.models &&
+                  input.models[0] &&
+                  input.models[0].indexOf('_inpainting') >= 0
+                }
+              />
+              {input.source_processing === SourceProcessing.InPainting &&
                 input.models &&
                 input.models[0] &&
-                input.models[0].indexOf('_inpainting') >= 0
-              }
-            />
-            {input.source_processing === SourceProcessing.InPainting &&
-              input.models &&
-              input.models[0] &&
-              input.models[0].indexOf('_inpainting') >= 0 && (
-                <div className="mt-0 text-sm text-slate-500">
-                  Note: Denoise disabled when inpainting model is used.
-                </div>
-              )}
-          </Section>
+                input.models[0].indexOf('_inpainting') >= 0 && (
+                  <div className="mt-0 text-sm text-slate-500">
+                    Note: Denoise disabled when inpainting model is used.
+                  </div>
+                )}
+            </Section>
+          </div>
         )}
       <Section>
         <SubSectionTitle>Control Type</SubSectionTitle>
