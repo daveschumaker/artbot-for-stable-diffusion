@@ -877,68 +877,33 @@ const ControlNet = () => {
       </Section>
 
       <Section>
-        <ClipSkip
+        <NumericInputSlider
+          label="CLIP skip"
+          tooltip="Determine how early to stop processing a prompt using CLIP. Higher
+          values stop processing earlier. Default is 1 (no skip)."
+          from={1}
+          to={12}
+          step={1}
           input={input}
           setInput={setInput}
-          handleChangeInput={handleChangeInput}
-          handleNumberInput={handleNumberInput}
+          fieldName="clipskip"
+          initialLoad={false}
+          fullWidth
         />
       </Section>
 
       <Section>
-        <div className="flex flex-row items-center justify-between">
-          <SubSectionTitle>
-            Number of images
-            <div className="block text-xs w-full">(1 - {30})</div>
-          </SubSectionTitle>
-          <NumberInput
-            // @ts-ignore
-            className="mb-2"
-            type="text"
-            min={1}
-            max={30}
-            name="numImages"
-            onMinusClick={() => {
-              const value = input.numImages - 1
-              setInput({ numImages: value })
-            }}
-            onPlusClick={() => {
-              const value = input.numImages + 1
-              setInput({ numImages: value })
-            }}
-            onChange={handleNumberInput}
-            onBlur={(e: any) => {
-              if (
-                isNaN(e.target.value) ||
-                e.target.value < 1 ||
-                e.target.value > 30
-              ) {
-                setInput({ numImages: 1 })
-              }
-            }}
-            // @ts-ignore
-            value={input.numImages}
-            width="100%"
-          />
-        </div>
-        <div className="mb-4">
-          <Slider
-            value={input.numImages}
-            min={1}
-            max={30}
-            onChange={(e: any) => {
-              const event = {
-                target: {
-                  name: 'numImages',
-                  value: Number(e.target.value)
-                }
-              }
-
-              // @ts-ignore
-              handleChangeInput(event)
-            }}
-          />
-        </div>
+        <NumericInputSlider
+          label="Number of images"
+          from={1}
+          to={30}
+          step={1}
+          input={input}
+          setInput={setInput}
+          fieldName="numImages"
+          initialLoad={false}
+          fullWidth
+        />
       </Section>
 
       <ActionPanel
