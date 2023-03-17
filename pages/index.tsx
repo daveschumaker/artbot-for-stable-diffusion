@@ -56,6 +56,7 @@ import clsx from 'clsx'
 import { kudosCostV2 } from '../utils/kudosCost'
 import { CreatePageMode, isSharedLink } from '../utils/loadInputCache'
 import ImageApiParamsToPromptInput from '../models/ImageApiParamsToPromptInput'
+import FormErrorMessage from '../components/CreatePage/FormErrorMessage'
 
 interface InputTarget {
   name: string
@@ -677,21 +678,13 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
             <ArrowBarLeftIcon />
           </Button>
         </FlexRow>
-        {hasValidationError && (
-          <div className="mt-2 text-red-500 font-semibold">
-            Please correct all input errors before continuing
-          </div>
-        )}
-        {hasError && hasError === fixedSeedErrorMsg && (
-          <div className="mt-2 text-amber-400 font-semibold">
-            {fixedSeedErrorMsg}
-          </div>
-        )}
-        {hasError && hasError !== fixedSeedErrorMsg && (
-          <div className="mt-2 text-red-500 font-semibold">
-            Error: {hasError}
-          </div>
-        )}
+
+        <FormErrorMessage
+          hasValidationError={hasValidationError}
+          hasError={hasError}
+          fixedSeedErrorMsg={fixedSeedErrorMsg}
+        />
+
         <div className="mt-2 mb-4 w-full flex flex-col md:flex-row gap-2 justify-end items-start">
           <div className="w-full md:w-1/2 text-sm flex flex-row justify-start gap-2 items-center">
             <StylesDropdown
@@ -763,6 +756,12 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
         setHasValidationError={setHasValidationError}
       />
       <div className="w-full mt-2 flex flex-col justify-end gap-2">
+        <FormErrorMessage
+          hasValidationError={hasValidationError}
+          hasError={hasError}
+          fixedSeedErrorMsg={fixedSeedErrorMsg}
+        />
+
         <div className="flex flex-row justify-end gap-2 sm:mt-0">
           <Button
             title="Clear current input"
