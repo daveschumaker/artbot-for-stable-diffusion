@@ -22,6 +22,7 @@ interface Props {
   initialLoad: boolean
   disabled?: boolean
   fullWidth?: boolean
+  enforceStepValue?: boolean
 }
 
 const NumericInputSlider = ({
@@ -35,13 +36,25 @@ const NumericInputSlider = ({
   fieldName,
   initialLoad,
   disabled = false,
-  fullWidth = false
+  fullWidth = false,
+  enforceStepValue = false
 }: Props) => {
-
   const [warning, setWarning] = useState('')
 
   function toggleWarning (state: boolean) {
     setWarning(state ? `This field only accepts numbers between ${from} and ${to}.` : '')
+  }
+
+  function roundToNearestStep(val: number, min: number, max: number, step: number) {
+    if (val < min) {
+      return min;
+    } else if (val > max) {
+      return max;
+    } else {
+      const steps = Math.round((val - min) / step);
+      const newValue = min + steps * step;
+      return newValue;
+    }
   }
 
 
@@ -66,8 +79,12 @@ const NumericInputSlider = ({
       toggleWarning(true)
       updateField(to)
     } else {
-      // TODO: Give an option to only allow values that can be set by slider (i.e. account for step size)
       toggleWarning(false)
+
+      if (enforceStepValue){
+        value = roundToNearestStep(value, from, to, step)
+      }
+
       updateField(value)
     }
   }
@@ -128,7 +145,7 @@ const NumericInputSlider = ({
           }}
         />
         {warning && (
-          <div className="mb-2 text-sm">{warning}</div>
+          <div className="mb-2 text-xs">{warning}</div>
         )}
       </Section>
     </div>

@@ -374,6 +374,7 @@ const AdvancedOptionsPanel = ({
                   fieldName="width"
                   initialLoad={initialLoad}
                   fullWidth
+                  enforceStepValue
                 />
               </Section>
 
@@ -392,12 +393,13 @@ const AdvancedOptionsPanel = ({
                   fieldName="height"
                   initialLoad={initialLoad}
                   fullWidth
+                  enforceStepValue
                 />
               </Section>
 
               <div className="block text-xs mt-2 w-full">
-                Height and widths must be divisible by 64. Enter your desired
-                dimensions and it will be automatically convereted to nearest
+                Height and width must be divisible by 64. Enter your desired
+                dimensions and it will be automatically converted to nearest
                 valid integer.
               </div>
             </>
