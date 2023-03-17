@@ -56,7 +56,7 @@ import clsx from 'clsx'
 import { kudosCostV2 } from '../utils/kudosCost'
 import { CreatePageMode, isSharedLink } from '../utils/loadInputCache'
 import ImageApiParamsToPromptInput from '../models/ImageApiParamsToPromptInput'
-import FormErrorMessage from '../components/CreatePage/FormErrorMessage'
+import FormErrorMessage from '../components/CreatePage/ActionPanel/FormErrorMessage'
 
 interface InputTarget {
   name: string
