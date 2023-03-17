@@ -105,6 +105,60 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.03.16</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Hah! You thought a day was going to go by without and update,
+            did&apos;t you?! I am going to get this in just under the wire,
+            California time.
+          </StyledLi>
+          <StyledLi>
+            A lot of code refactoring under the hood that will be invisible to
+            people using the site right now, but will pay huge dividends down
+            the road! Thanks again to Litnine, who put up{' '}
+            <Linker
+              href="https://github.com/daveschumaker/artbot-for-stable-diffusion/pull/49"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              another pull request
+            </Linker>
+            -- this time refactoring some more of my spaghetti code to create
+            some easily reusable components (specifically, the number input and
+            slider components you see everywhere). I am in awe. Thank you! Also,
+            they added a helpful UX feature that hides the face-fixer slider if
+            you&apos;re not using any of those post processors.
+          </StyledLi>
+          <StyledLi>
+            Inspired by Litnine&apos;s PR, I added some similar improvements to
+            the toggle switches and tooltip components. Again, nothing
+            immediately obvious, but makes it easy to re-use these UI components
+            in other places.
+          </StyledLi>
+          <StyledLi>
+            ResidentChiefNZ has been hard at work making a ton of improvements
+            on the Stable Horde backend (face-fixer from yesterday) and now
+            support for Stable Diffusion v2.1 inpainting and ControlNet.
+          </StyledLi>
+          <StyledLi>
+            Another upcoming update from ResidentChiefNZ will add more
+            inpainting specific models! I&apos;ve added support to help
+            future-proof this feature, so once it&apos;s live, it should just
+            work™️ (hopefully).
+          </StyledLi>
+          <StyledLi>
+            Speaking of inpainting -- previously, you had to jump through a
+            bunch of annoying steps. They inpainting model wasn&apos;t visible
+            in the models dropdown unless you first: uploaded an image, and then
+            painted something. Only then could you select
+            &quot;stable_diffusion_inpainting&quot;. You should now be able to
+            select that (and any inpainting model) from the go. We make software
+            that should be smart, so it should know if you need to add a source
+            mask and warn you before continuing. Well... now it does!
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.03.15</SubSectionTitle>
         <StyledUl>
           <StyledLi>
