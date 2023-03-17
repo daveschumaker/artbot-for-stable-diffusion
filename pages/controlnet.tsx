@@ -99,18 +99,6 @@ const ControlNet = () => {
     setInput({ [inputName]: inputValue })
   }
 
-  const handleNumberInput = (e: any) => {
-    const event = {
-      target: {
-        name: e.target.name,
-        value: Number(e.target.value)
-      }
-    }
-
-    // @ts-ignore
-    handleChangeInput(event)
-  }
-
   const handlePostProcessing = useCallback(
     (value: string) => {
       let newPost = [...input.post_processing]
