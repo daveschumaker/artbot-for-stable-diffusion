@@ -204,10 +204,10 @@ const ControlNet = () => {
 
     const filteredArray = modelsArray.filter((model: IModelDetails) => {
       if (!modelDetails[model.name]) {
-        return
+        return false
       }
 
-      return modelDetails[model.name]?.baseline === 'stable diffusion 1'
+      return true
     })
 
     return filteredArray
@@ -321,8 +321,8 @@ const ControlNet = () => {
 
   const kudosPerImage =
     totalImagesRequested < 1 ||
-      isNaN(totalKudosCost) ||
-      isNaN(totalImagesRequested)
+    isNaN(totalKudosCost) ||
+    isNaN(totalImagesRequested)
       ? 'N/A'
       : Number(totalKudosCost / totalImagesRequested).toFixed(2)
 
@@ -504,7 +504,7 @@ const ControlNet = () => {
 
         <TwoPanel>
           <SplitPanel>
-          <NumericInputSlider
+            <NumericInputSlider
               label="Steps"
               tooltip="Fewer steps generally result in quicker image generations.
               Many models achieve full coherence after a certain number
@@ -522,7 +522,7 @@ const ControlNet = () => {
             />
           </SplitPanel>
           <SplitPanel>
-          <NumericInputSlider
+            <NumericInputSlider
               label="Guidance"
               tooltip="Higher numbers follow the prompt more closely. Lower
                 numbers give more creativity."
@@ -569,7 +569,6 @@ const ControlNet = () => {
               )}
           </Section>
         </div>
-
       </Section>
 
       <Section>
@@ -649,18 +648,18 @@ const ControlNet = () => {
           />
           {(getPostProcessing('GFPGAN') ||
             getPostProcessing('CodeFormers')) && (
-              <NumericInputSlider
-                label="Face-fix strength"
-                tooltip="0.05 is the weakest effect (barely noticeable improvements), while 1.0 is the strongest effect."
-                from={0.05}
-                to={1.0}
-                step={0.05}
-                input={input}
-                setInput={setInput}
-                fieldName="facefixer_strength"
-                initialLoad={false}
-              />
-            )}
+            <NumericInputSlider
+              label="Face-fix strength"
+              tooltip="0.05 is the weakest effect (barely noticeable improvements), while 1.0 is the strongest effect."
+              from={0.05}
+              to={1.0}
+              step={0.05}
+              input={input}
+              setInput={setInput}
+              fieldName="facefixer_strength"
+              initialLoad={false}
+            />
+          )}
           <Checkbox
             label={`RealESRGAN_x4plus (upscaler)`}
             value={getPostProcessing(`RealESRGAN_x4plus`)}
