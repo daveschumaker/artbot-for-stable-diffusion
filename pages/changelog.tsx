@@ -118,6 +118,15 @@ const Changelog = () => {
             Fix: Page broke when removing all selected models. Thanks to R3H for
             reporting this on Discord.
           </StyledLi>
+          <StyledLi>
+            Fix: Image count would reset when going back and forth between
+            pending page and create page. Thanks for letting me know on Discord,
+            FiFoFree.
+          </StyledLi>
+          <StyledLi>
+            Add image id to filenames for easier downloading and merging of
+            files from multiple zips. Thanks to Efreak for the feedback.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
