@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 // Import UI components
 import Section from 'components/UI/Section'
@@ -91,6 +91,11 @@ const NumericInputSlider = ({
 
 
   const [temporaryValue, setTemporaryValue] = useState(input[fieldName]);
+
+  useEffect(() => {
+    setTemporaryValue(input[fieldName])
+  }, [input, fieldName])
+
   const handleNumberInput = (event: any) => {
     setTemporaryValue(event.target.value)
   }
