@@ -977,6 +977,11 @@ const AdvancedOptionsPanel = ({
             value={getPostProcessing(`RealESRGAN_x4plus_anime_6B`)}
             onChange={() => handlePostProcessing(`RealESRGAN_x4plus_anime_6B`)}
           />
+          <Checkbox
+            label={`Strip background`}
+            value={getPostProcessing(`strip_background`)}
+            onChange={() => handlePostProcessing(`strip_background`)}
+          />
         </div>
       </Section>
       <Section>
