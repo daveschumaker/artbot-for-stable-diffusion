@@ -542,10 +542,13 @@ export const downloadImages = async (
 
     if (image.prompt) {
       filename =
+        image.id +
+        '_' +
         image.prompt
           .replace(/[^a-z0-9]/gi, '_')
           .toLowerCase()
-          .slice(0, 125) + `_${imageId}.${fileType}`
+          .slice(0, 125) +
+        `_${imageId}.${fileType}`
     }
 
     const imageData = {
