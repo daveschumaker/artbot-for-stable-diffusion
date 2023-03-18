@@ -19,7 +19,6 @@ import { db, getDefaultPrompt, setDefaultPrompt } from '../../../utils/db'
 import { trackEvent } from '../../../api/telemetry'
 import Checkbox from '../../UI/Checkbox'
 import {
-  CONTROL_TYPE_ARRAY,
   MAX_DIMENSIONS_LOGGED_IN,
   MAX_DIMENSIONS_LOGGED_OUT,
   MAX_IMAGES_PER_JOB
@@ -44,6 +43,7 @@ import SplitPanel from '../../UI/SplitPanel'
 import Samplers from './Samplers'
 import NumericInputSlider from './NumericInputSlider'
 import InputSwitch from './InputSwitch'
+import ControlNetOptions from './ControlNetOptions'
 
 const NoSliderSpacer = styled.div`
   height: 14px;
@@ -125,10 +125,10 @@ const AdvancedOptionsPanel = ({
       isNaN(input.steps) ||
       input.steps < 1 ||
       input.steps >
-      maxSteps({
-        sampler: input.sampler,
-        loggedIn: loggedIn === true ? true : false
-      })
+        maxSteps({
+          sampler: input.sampler,
+          loggedIn: loggedIn === true ? true : false
+        })
     ) {
       if (initialLoad) {
         return
@@ -191,7 +191,7 @@ const AdvancedOptionsPanel = ({
       })
 
       await setDefaultPrompt(trimInput)
-    } catch (err) { }
+    } catch (err) {}
   }, [input.negative])
 
   const getPostProcessing = useCallback(
@@ -276,21 +276,10 @@ const AdvancedOptionsPanel = ({
     !componentState.showMultiModel &&
     !input.useAllModels &&
     input.source_processing !==
-    (SourceProcessing.InPainting || SourceProcessing.OutPainting)
+      (SourceProcessing.InPainting || SourceProcessing.OutPainting)
 
   const showNumImagesInput =
     !input.useAllModels && !input.useMultiSteps && !input.useAllSamplers
-
-  let controlTypeValue = { value: '', label: 'none' }
-
-  if (CONTROL_TYPE_ARRAY.indexOf(input.control_type) >= 0) {
-    if (input.control_type) {
-      controlTypeValue = {
-        value: input.control_type,
-        label: input.control_type
-      }
-    }
-  }
 
   return (
     <div>
@@ -404,7 +393,6 @@ const AdvancedOptionsPanel = ({
               </div>
             </>
           )}
-
         </MaxWidth>
       </Section>
       <Section>
@@ -642,83 +630,39 @@ const AdvancedOptionsPanel = ({
       {(input.img2img ||
         input.source_processing === SourceProcessing.Img2Img ||
         input.source_processing === SourceProcessing.InPainting) && (
-          <div className="mr-8">
-            <Section>
-              <NumericInputSlider
-                label="Denoise"
-                tooltip="Amount of noise added to input image. Values that
+        <div className="mr-8">
+          <Section>
+            <NumericInputSlider
+              label="Denoise"
+              tooltip="Amount of noise added to input image. Values that
                   approach 1.0 allow for lots of variations but will
                   also produce images that are not semantically
                   consistent with the input. Only available for img2img."
-                from={0.0}
-                to={1.0}
-                step={0.05}
-                input={input}
-                setInput={setInput}
-                fieldName="denoising_strength"
-                initialLoad={initialLoad}
-                disabled={
-                  input.models &&
-                  input.models[0] &&
-                  input.models[0].indexOf('_inpainting') >= 0
-                }
-              />
-              {input.source_processing === SourceProcessing.InPainting &&
+              from={0.0}
+              to={1.0}
+              step={0.05}
+              input={input}
+              setInput={setInput}
+              fieldName="denoising_strength"
+              initialLoad={initialLoad}
+              disabled={
                 input.models &&
                 input.models[0] &&
-                input.models[0].indexOf('_inpainting') >= 0 && (
-                  <div className="mt-0 text-sm text-slate-500">
-                    Note: Denoise disabled when inpainting model is used.
-                  </div>
-                )}
-            </Section>
-          </div>
-        )}
-      <Section>
-        <SubSectionTitle>Control Type</SubSectionTitle>
-        {!input.source_image && (
-          <div className="mt-[-6px] text-sm text-slate-500 dark:text-slate-400 font-[600]">
-            <MaxWidth
-              // @ts-ignore
-              maxWidth="360"
-            >
-              <strong>Note:</strong> ControlNet can only be used for img2img
-              requests. Please upload an image to use this feature.
-            </MaxWidth>
-          </div>
-        )}
-        {input.source_image && (
-          <MaxWidth
-            // @ts-ignore
-            maxWidth="240"
-          >
-            <SelectComponent
-              isDisabled={!input.source_image}
-              options={CONTROL_TYPE_ARRAY.map((value) => {
-                if (value === '') {
-                  return { value: '', label: 'none' }
-                }
-
-                return { value, label: value }
-              })}
-              onChange={(obj: { value: string; label: string }) => {
-                PromptInputSettings.set('control_type', obj.value)
-                setInput({ control_type: obj.value })
-
-                if (obj.value !== '') {
-                  setInput({ karras: false, hires: false })
-                }
-              }}
-              isSearchable={false}
-              value={
-                controlTypeValue
-                  ? controlTypeValue
-                  : { value: '', label: 'none' }
+                input.models[0].indexOf('_inpainting') >= 0
               }
             />
-          </MaxWidth>
-        )}
-      </Section>
+            {input.source_processing === SourceProcessing.InPainting &&
+              input.models &&
+              input.models[0] &&
+              input.models[0].indexOf('_inpainting') >= 0 && (
+                <div className="mt-0 text-sm text-slate-500">
+                  Note: Denoise disabled when inpainting model is used.
+                </div>
+              )}
+          </Section>
+        </div>
+      )}
+      <ControlNetOptions input={input} setInput={setInput} />
       <InputSwitch
         label="Tiling"
         tooltip="Attempt to create seamless, repeatable textures. Note: This will not work for img2img or inpainting requests."
@@ -895,8 +839,9 @@ const AdvancedOptionsPanel = ({
       )}
       {showUseAllModelsInput && (
         <InputSwitch
-          label={`Use all available models (${modelerOptions(input).length - 1
-            })`}
+          label={`Use all available models (${
+            modelerOptions(input).length - 1
+          })`}
           tooltip="Automatically generate an image for each model currently available on Stable Horde"
           moreInfoLink={
             <div className="mt-1 mb-2 text-xs">
@@ -1010,18 +955,18 @@ const AdvancedOptionsPanel = ({
           />
           {(getPostProcessing('GFPGAN') ||
             getPostProcessing('CodeFormers')) && (
-              <NumericInputSlider
-                label="Face-fix strength"
-                tooltip="0.05 is the weakest effect (barely noticeable improvements), while 1.0 is the strongest effect."
-                from={0.05}
-                to={1.0}
-                step={0.05}
-                input={input}
-                setInput={setInput}
-                fieldName="facefixer_strength"
-                initialLoad={initialLoad}
-              />
-            )}
+            <NumericInputSlider
+              label="Face-fix strength"
+              tooltip="0.05 is the weakest effect (barely noticeable improvements), while 1.0 is the strongest effect."
+              from={0.05}
+              to={1.0}
+              step={0.05}
+              input={input}
+              setInput={setInput}
+              fieldName="facefixer_strength"
+              initialLoad={initialLoad}
+            />
+          )}
           <Checkbox
             label={`RealESRGAN_x4plus (upscaler)`}
             value={getPostProcessing(`RealESRGAN_x4plus`)}

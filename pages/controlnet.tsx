@@ -52,6 +52,7 @@ import { toast } from 'react-toastify'
 import { getInputCache } from '../store/inputCache'
 import { kudosCostV2 } from '../utils/kudosCost'
 import NumericInputSlider from 'components/CreatePage/AdvancedOptionsPanel/NumericInputSlider'
+import ControlNetOptions from 'components/CreatePage/AdvancedOptionsPanel/ControlNetOptions'
 
 // Kind of a hacky way to persist output of image over the course of a session.
 let cachedImageDetails = {}
@@ -477,30 +478,7 @@ const ControlNet = () => {
       </Section>
       <Section>
         <SubSectionTitle>Step 3. Advanced settings</SubSectionTitle>
-        <Section>
-          <SubSectionTitle>Control Type</SubSectionTitle>
-          <MaxWidth
-            // @ts-ignore
-            maxWidth="240"
-          >
-            <SelectComponent
-              options={CONTROL_TYPE_ARRAY.filter((val) => val !== '').map(
-                (value) => {
-                  return { value, label: value }
-                }
-              )}
-              onChange={(obj: { value: string; label: string }) => {
-                setInput({ control_type: obj.value })
-
-                if (obj.value) {
-                  setInput({ karras: false, hires: false })
-                }
-              }}
-              isSearchable={false}
-              value={controlTypeValue}
-            />
-          </MaxWidth>
-        </Section>
+        <ControlNetOptions input={input} setInput={setInput} />
 
         <TwoPanel>
           <SplitPanel>
