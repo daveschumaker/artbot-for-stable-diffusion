@@ -11,14 +11,12 @@ import Input from '../components/UI/Input'
 import MaxWidth from '../components/UI/MaxWidth'
 import PageTitle from '../components/UI/PageTitle'
 import Section from '../components/UI/Section'
-import SelectComponent from '../components/UI/Select'
 import SplitPanel from '../components/UI/SplitPanel'
 import SubSectionTitle from '../components/UI/SubSectionTitle'
 import TextArea from '../components/UI/TextArea'
 import TextTooltipRow from '../components/UI/TextTooltipRow'
 import Tooltip from '../components/UI/Tooltip'
 import TwoPanel from '../components/UI/TwoPanel'
-import { CONTROL_TYPE_ARRAY } from '../constants'
 import DefaultPromptInput from '../models/DefaultPromptInput'
 import {
   clearBase64FromDraw,
@@ -220,15 +218,6 @@ const ControlNet = () => {
     },
     [input.post_processing]
   )
-
-  let controlTypeValue = { value: 'canny', label: 'canny' }
-
-  if (CONTROL_TYPE_ARRAY.indexOf(input.control_type) >= 0) {
-    controlTypeValue = {
-      value: input.control_type,
-      label: input.control_type
-    }
-  }
 
   const totalImagesRequested = countImagesToGenerate(input)
 

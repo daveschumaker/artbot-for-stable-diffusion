@@ -105,6 +105,18 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.03.18</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Feature: Add support for new control net options (return control map
+            and use control map).
+          </StyledLi>
+          <StyledLi>
+            Add support for new &quot;strip background&quot; post processor
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.03.17</SubSectionTitle>
         <StyledUl>
           <StyledLi>
