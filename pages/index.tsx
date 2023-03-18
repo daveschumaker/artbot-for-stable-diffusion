@@ -131,8 +131,9 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
     const updatedInputState = { ...state, ...newState }
 
     if (pageLoaded) {
-      const forceSavePrompt = query[CreatePageMode.SHORTLINK] ? true : false
-      PromptInputSettings.saveAllInput(updatedInputState, { forceSavePrompt })
+      PromptInputSettings.saveAllInput(updatedInputState, {
+        forceSavePrompt: true
+      })
     }
 
     return updatedInputState
@@ -254,6 +255,11 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
     }
 
     savePromptHistory(input.prompt)
+
+    if (!AppSettings.get('savePromptOnCreate')) {
+      PromptInputSettings.set('prompt', '')
+    }
+
     clearSavedInputCache()
     logDataForDebugging({
       name: 'index#handle_submit.CreateImageRequest',
