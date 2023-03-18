@@ -114,6 +114,10 @@ const Changelog = () => {
           <StyledLi>
             Add support for new &quot;strip background&quot; post processor
           </StyledLi>
+          <StyledLi>
+            Fix: Page broke when removing all selected models. Thanks to R3H for
+            reporting this on Discord.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

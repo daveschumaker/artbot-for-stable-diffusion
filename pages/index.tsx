@@ -376,7 +376,11 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
 
   useEffect(() => {
     const hasInpaintingModels =
-      input.models.filter((model: string) => {
+      input.models.filter((model: string = '') => {
+        if (!model) {
+          return false
+        }
+
         return model.indexOf('_inpainting') >= 0
       }) || []
     const hasSourceMask = input.source_mask
