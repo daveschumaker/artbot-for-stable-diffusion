@@ -686,6 +686,7 @@ const ControlNet = () => {
           fieldName="clipskip"
           initialLoad={false}
           fullWidth
+          enforceStepValue
         />
       </Section>
 
@@ -700,6 +701,7 @@ const ControlNet = () => {
           fieldName="numImages"
           initialLoad={false}
           fullWidth
+          enforceStepValue
         />
       </Section>
 

@@ -1046,6 +1046,7 @@ const AdvancedOptionsPanel = ({
           setInput={setInput}
           fieldName="clipskip"
           initialLoad={initialLoad}
+          enforceStepValue
         />
       </Section>
       {showNumImagesInput && (
@@ -1059,6 +1060,7 @@ const AdvancedOptionsPanel = ({
             setInput={setInput}
             fieldName="numImages"
             initialLoad={initialLoad}
+            enforceStepValue
           />
         </Section>
       )}
