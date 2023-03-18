@@ -33,7 +33,9 @@ const InputSwitch = ({
             {label}
             {tooltip && <Tooltip tooltipId={tooltipId}>{tooltip}</Tooltip>}
           </TextTooltipRow>
-          {moreInfoLink}
+          {moreInfoLink && (
+            <div className="mt-1 mb-2 text-xs">{moreInfoLink}</div>
+          )}
         </>
       </SubSectionTitle>
       <ReactSwitch

@@ -665,6 +665,7 @@ const AdvancedOptionsPanel = ({
       <ControlNetOptions input={input} setInput={setInput} />
       <InputSwitch
         label="Tiling"
+        disabled={input.source_image}
         tooltip="Attempt to create seamless, repeatable textures. Note: This will not work for img2img or inpainting requests."
         handleSwitchToggle={() => {
           if (!input.tiling) {
@@ -674,6 +675,13 @@ const AdvancedOptionsPanel = ({
           }
         }}
         checked={input.tiling}
+        moreInfoLink={
+          input.source_image ? (
+            <div className="text-slate-500 dark:text-slate-400">
+              This option cannot be used with img2img requests.
+            </div>
+          ) : null
+        }
       />
       <Section>
         <SubSectionTitle>
@@ -844,9 +852,7 @@ const AdvancedOptionsPanel = ({
           })`}
           tooltip="Automatically generate an image for each model currently available on Stable Horde"
           moreInfoLink={
-            <div className="mt-1 mb-2 text-xs">
-              <Linker href="/info/models">[ View all model details ]</Linker>
-            </div>
+            <Linker href="/info/models">[ View all model details ]</Linker>
           }
           handleSwitchToggle={() => {
             if (!input.useAllModels) {
@@ -880,11 +886,9 @@ const AdvancedOptionsPanel = ({
           label={`Use favorite models (${componentState.favoriteModelsCount})`}
           tooltip="Automatically generate an image for each model you have favorited."
           moreInfoLink={
-            <div className="mt-1 mb-2 text-xs">
-              <Linker href="/info/models?show=favorite-models">
-                [ View favorite models ]
-              </Linker>
-            </div>
+            <Linker href="/info/models?show=favorite-models">
+              [ View favorite models ]
+            </Linker>
           }
           disabled={componentState.favoriteModelsCount === 0 ? true : false}
           handleSwitchToggle={() => {
@@ -915,7 +919,7 @@ const AdvancedOptionsPanel = ({
         moreInfoLink={
           input.source_image &&
           input.control_type && (
-            <div className="mt-[-4px] text-sm text-slate-500 dark:text-slate-400 font-[600]">
+            <div className="mt-[-4px] text-xs text-slate-500 dark:text-slate-400 font-[600]">
               <strong>Note:</strong> Cannot be used for ControlNet requests
             </div>
           )

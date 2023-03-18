@@ -15,7 +15,7 @@ export default function TooltipComponent({
   tooltipId
 }: TooltipProps) {
   return (
-    <div className="text-sm font-normal">
+    <div className="text-sm font-normal ml-[4px]">
       <a id={tooltipId}>
         <InfoIcon stroke="white" fill="#14B8A6" />
       </a>

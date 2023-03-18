@@ -97,6 +97,13 @@ const ControlNetOptions = ({
           handleSwitchToggle={() =>
             handleControlMapSelect('return_control_map')
           }
+          moreInfoLink={
+            isDisabled ? (
+              <div className="text-slate-500 dark:text-slate-400">
+                This can only be used with img2img + ControlNet
+              </div>
+            ) : null
+          }
         />
         <InputSwitch
           disabled={isDisabled}
@@ -104,6 +111,13 @@ const ControlNetOptions = ({
           tooltip="Tell Stable Horde that the image you're uploading is a control map."
           checked={input.image_is_control}
           handleSwitchToggle={() => handleControlMapSelect('image_is_control')}
+          moreInfoLink={
+            isDisabled ? (
+              <div className="text-slate-500 dark:text-slate-400">
+                This can only be used with img2img + ControlNet
+              </div>
+            ) : null
+          }
         />
       </Section>
     </div>

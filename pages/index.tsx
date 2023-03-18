@@ -354,6 +354,7 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
     setInput(newDefaultState)
   }
 
+  // Various input validation stuff.
   useEffect(() => {
     const modifiedPrompt = promptSafetyExclusions(input.prompt, input.models[0])
     const promptFlagged = validatePromptSafety(modifiedPrompt)
@@ -372,7 +373,18 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
     if ((!promptFlagged && flaggedPromptError) || hasNsfwModel.length === 0) {
       setFlaggedPromptError(false)
     }
-  }, [input.prompt, input.models, flaggedPromptError, modelDetails])
+
+    if (input.source_image && input.tiling) {
+      setInput({ tiling: false })
+    }
+  }, [
+    input.prompt,
+    input.models,
+    flaggedPromptError,
+    modelDetails,
+    input.source_image,
+    input.tiling
+  ])
 
   useEffect(() => {
     const hasInpaintingModels =

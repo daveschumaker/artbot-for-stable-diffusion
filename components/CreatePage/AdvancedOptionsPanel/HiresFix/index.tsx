@@ -32,12 +32,12 @@ const HiresFix = ({ input, setInput }: any) => {
           </Tooltip>
         </TextTooltipRow>
         {input.source_image && (
-          <div className="mt-[-4px] text-sm text-slate-500 dark:text-slate-400 font-[600]">
+          <div className="mt-[-4px] text-xs text-slate-500 dark:text-slate-400 font-[600]">
             <strong>Note:</strong> Cannot be used for img2img requests
           </div>
         )}
         {error && (
-          <div className="mt-[-6px] text-sm text-slate-500 dark:text-slate-400 font-[600]">
+          <div className="mt-[-6px] text-xs text-slate-500 dark:text-slate-400 font-[600]">
             <strong>Note:</strong> {error}
           </div>
         )}
