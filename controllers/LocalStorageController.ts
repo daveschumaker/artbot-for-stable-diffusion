@@ -24,6 +24,10 @@ class LocalStorageController {
     }
   }
 
+  clear() {
+    localStorage.setItem(this.localStorageKey, '')
+  }
+
   delete(key: string) {
     if (typeof window === 'undefined') {
       return
@@ -107,6 +111,10 @@ class LocalStorageController {
       )
       localStorage.setItem(this.localStorageKey, '{}')
     }
+  }
+
+  reset() {
+    this.clear()
   }
 }
 

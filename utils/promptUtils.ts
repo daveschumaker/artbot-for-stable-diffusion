@@ -45,6 +45,7 @@ interface SavePrompt {
   canvasStore?: any
   canvasData?: any
   maskData?: any
+  numImages?: number
 }
 
 let initPromptDetails: SavePrompt = {
@@ -148,7 +149,9 @@ export const savePrompt = ({
     'copyPrompt',
     'maskData',
     'source_image',
-    'source_mask'
+    'source_mask',
+    'mask',
+    'numImages'
   ]
 
   let cacheObj: any = {}
@@ -161,7 +164,7 @@ export const savePrompt = ({
     PromptInputSettings.set(key, value)
   }
 
-  setInputCache({ ...cacheObj })
+  setInputCache({ ...cacheObj, numImages: 1 })
 }
 
 export const loadEditPrompt = () => {

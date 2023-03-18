@@ -1,3 +1,4 @@
+import PromptInputSettings from 'models/PromptInputSettings'
 import RerollImageRequest from '../models/RerollImageRequest'
 import UpscaleImageRequest from '../models/UpscaleImageRequest'
 import {
@@ -17,6 +18,7 @@ export const interrogateImage = (imageDetails: any) => {
 }
 
 export const copyEditPrompt = (imageDetails: any) => {
+  PromptInputSettings.clear()
   savePrompt({
     prompt: imageDetails.prompt,
     sampler: imageDetails.sampler,
@@ -66,6 +68,7 @@ export const uploadInpaint = (imageDetails: any, options: any = {}) => {
 
   setI2iUploaded(i2iBase64String)
 
+  PromptInputSettings.clear()
   savePrompt({
     imageType: imageDetails.imageType,
     prompt: imageDetails.prompt,
