@@ -105,6 +105,34 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.03.17</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Big thanks again to Litnine, who put up{' '}
+            <Linker
+              href="https://github.com/daveschumaker/artbot-for-stable-diffusion/pull/67"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              another pull request
+            </Linker>
+            , helping to refactor and simplify some of the logic on the
+            ControlNet page. 🙌🏻
+          </StyledLi>
+          <StyledLi>
+            Fix: Should now be able to use models with a baseline of
+            stable_diffusion_2 for ControlNet. Thanks to Efreak for suggesting
+            this on Discord.
+          </StyledLi>
+          <StyledLi>
+            Fix: Copy image prompt data would end up copying the number of
+            images to generate. This was always supposed to be set at 1, since
+            it copies the original seed as well. Thanks to Gigachad on Discord
+            for reporting this.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.03.16</SubSectionTitle>
         <StyledUl>
           <StyledLi>

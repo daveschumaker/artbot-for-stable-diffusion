@@ -41,6 +41,8 @@ export interface IArtBotImageDetails {
   source_mask?: string
   denoising_strength?: number
   control_type?: string
+  image_is_control?: boolean
+  return_control_map?: boolean
 }
 
 interface ParamsObject {
@@ -52,6 +54,8 @@ interface ParamsObject {
   steps: number
   denoising_strength?: number
   control_type?: string
+  image_is_control?: boolean
+  return_control_map?: boolean
   facefixer_strength?: number
   karras: boolean
   hires_fix: boolean
@@ -95,7 +99,9 @@ class ImageParamsForApi {
       facefixer_strength,
       source_mask,
       denoising_strength,
-      control_type
+      control_type,
+      image_is_control,
+      return_control_map
     } = imageDetails
     let negative = imageDetails.negative || ''
 
@@ -151,11 +157,15 @@ class ImageParamsForApi {
 
     if (control_type && control_type !== '' && source_image) {
       apiParams.params.control_type = control_type
+      apiParams.params.image_is_control = image_is_control
+      apiParams.params.return_control_map = return_control_map
     }
 
     // Handle a very poor decision on my part
     if (control_type === 'none') {
       apiParams.params.control_type = ''
+      delete apiParams.params.image_is_control
+      delete apiParams.params.return_control_map
     }
 
     // Handle style presets, as well as adding any negative prompts to input prompt string
@@ -182,7 +192,6 @@ class ImageParamsForApi {
 
     if (control_type && control_type !== '' && source_image) {
       // Things to remove
-      delete apiParams.params.denoising_strength
       delete apiParams.params.sampler_name
       apiParams.params.karras = false
       apiParams.params.hires_fix = false

@@ -5,6 +5,8 @@ class ImageApiParamsToPromptInput {
   cfg_scale: number
   denoising_strength?: number
   control_type?: string
+  image_is_control?: boolean
+  return_control_map?: boolean
   height: number
   karras: boolean
   hires: boolean
@@ -49,6 +51,8 @@ class ImageApiParamsToPromptInput {
     this.seed = imageParams.params.seed || ''
     this.steps = imageParams.params.steps
     this.tiling = imageParams.params.tiling
+    this.return_control_map = imageParams.params.return_control_map
+    this.image_is_control = imageParams.params.image_is_control
 
     if (imageParams.params.facefixer_strength) {
       this.facefixer_strength = imageParams.params.facefixer_strength

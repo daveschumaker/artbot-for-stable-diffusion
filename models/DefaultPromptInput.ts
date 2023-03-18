@@ -23,6 +23,8 @@ class DefaultPromptInput {
   seed: string
   denoising_strength: number
   control_type: string
+  image_is_control: boolean
+  return_control_map: boolean
   karras: boolean
   hires: boolean
   clipskip: number
@@ -67,6 +69,8 @@ class DefaultPromptInput {
     this.seed = ''
     this.denoising_strength = 0.75
     this.control_type = String(control_type)
+    this.image_is_control = false
+    this.return_control_map = false
     this.karras = true
     this.hires = false
     this.clipskip = 1

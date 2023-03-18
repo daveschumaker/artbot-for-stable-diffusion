@@ -55,6 +55,11 @@ class PromptInputSettingsClass extends LocalStorageController {
         key = keysToRemap[key]
       }
 
+      if (key === 'numImages') {
+        this.set(key, 1)
+        continue
+      }
+
       this.set(key, value)
     }
   }

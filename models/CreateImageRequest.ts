@@ -22,6 +22,8 @@ export interface IRequestParams {
   cfg_scale: number
   denoising_strength?: number
   control_type?: string
+  image_is_control: boolean
+  return_control_map: boolean
   height: number
   imageMimeType: ImageMimeType
   karras: boolean
@@ -61,6 +63,8 @@ class CreateImageRequest {
   cfg_scale: number
   denoising_strength: number | Common.Empty
   control_type: string
+  image_is_control: boolean
+  return_control_map: boolean
   height: number
   imageMimeType: ImageMimeType
   jobId?: string
@@ -105,6 +109,8 @@ class CreateImageRequest {
     cfg_scale = 7,
     denoising_strength = 0.75,
     control_type = '',
+    image_is_control = false,
+    return_control_map = false,
     height = 512,
     imageMimeType = ImageMimeType.WebP,
     karras = true,
@@ -221,6 +227,8 @@ class CreateImageRequest {
     }
 
     this.control_type = String(control_type)
+    this.image_is_control = Boolean(image_is_control)
+    this.return_control_map = Boolean(return_control_map)
 
     if (!source_image || source_mask) {
       this.control_type = ''
