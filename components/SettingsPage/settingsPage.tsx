@@ -37,6 +37,7 @@ import MaxWidth from '../UI/MaxWidth'
 import AlertDialogBox from '../UI/AlertDialogBox'
 import { generateThumbnails } from '../../utils/db'
 import TextTooltipRow from '../UI/TextTooltipRow'
+import EyeIcon from 'components/icons/EyeIcon'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -422,12 +423,25 @@ const SettingsPage = () => {
                       </span>
                     </div>
                   )}
-                  <Input
-                    type="text"
-                    name="steps"
-                    onChange={handleApiInput}
-                    value={componentState.apiKey}
-                  />
+                  <div className="flex flex-row gap-2">
+                    <Input
+                      type={componentState.showApiKey ? 'text' : 'password'}
+                      name="steps"
+                      onChange={handleApiInput}
+                      value={componentState.apiKey}
+                    />
+                    <Button
+                      onClick={() => {
+                        if (componentState.showApiKey) {
+                          setComponentState({ showApiKey: false })
+                        } else {
+                          setComponentState({ showApiKey: true })
+                        }
+                      }}
+                    >
+                      <EyeIcon />
+                    </Button>
+                  </div>
                   <div className="flex gap-2 mt-2 justify-start">
                     <Button
                       btnType="secondary"
