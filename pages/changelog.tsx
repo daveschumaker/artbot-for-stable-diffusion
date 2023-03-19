@@ -105,6 +105,20 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.03.19</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Feature: Add support for new Horde parameter to disable the use of
+            slower performaing workers. (Note: disabling incurs an additional
+            kudos cost).
+          </StyledLi>
+          <StyledLi>
+            Adjusted kudos calculations based on latest updates to the Stable
+            Horde API.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.03.18</SubSectionTitle>
         <StyledUl>
           <StyledLi>

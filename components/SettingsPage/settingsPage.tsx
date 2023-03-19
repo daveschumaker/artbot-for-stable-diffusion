@@ -126,7 +126,8 @@ const SettingsPage = () => {
     useBeta: false,
     useWorkerId: '',
     useTrusted: true,
-    imageDownloadFormat: 'jpg'
+    imageDownloadFormat: 'jpg',
+    slow_workers: true
   })
 
   const handleSetWorkerId = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -196,6 +197,8 @@ const SettingsPage = () => {
     updateObj.useBeta = AppSettings.get('useBeta') || false
     updateObj.useWorkerId = AppSettings.get('useWorkerId') || ''
     updateObj.useTrusted = AppSettings.get('useTrusted') || false
+    updateObj.slow_workers =
+      AppSettings.get('slow_workers') === false ? false : true
     updateObj.disableSnowflakes = AppSettings.get('disableSnowflakes') || false
     updateObj.shareImagesExternally =
       AppSettings.get('shareImagesExternally') || false
@@ -470,10 +473,6 @@ const SettingsPage = () => {
                 <Switch
                   disabled={!componentState.apiKey}
                   onChange={() => {
-                    if (!userStore.username) {
-                      return
-                    }
-
                     if (componentState.shareImagesExternally) {
                       handleSwitchSelect('shareImagesExternally', false)
                     } else {
@@ -495,20 +494,15 @@ const SettingsPage = () => {
                   // @ts-ignore
                   maxWidth="240"
                 >
-                  <Select
-                    isSearchable={false}
-                    options={[
-                      { value: true, label: 'Yes' },
-                      { value: false, label: 'No' }
-                    ]}
-                    onChange={(obj: any) =>
-                      handleUpdateSelect('allowNsfwImages', obj)
-                    }
-                    value={
-                      componentState.allowNsfwImages
-                        ? { value: true, label: 'Yes' }
-                        : { value: false, label: 'No' }
-                    }
+                  <Switch
+                    onChange={() => {
+                      if (componentState.allowNsfwImages) {
+                        handleSwitchSelect('allowNsfwImages', false)
+                      } else {
+                        handleSwitchSelect('allowNsfwImages', true)
+                      }
+                    }}
+                    checked={componentState.allowNsfwImages}
                   />
                 </MaxWidth>
               </Section>
@@ -539,6 +533,30 @@ const SettingsPage = () => {
                         ? { value: true, label: 'Trusted Only' }
                         : { value: false, label: 'All Workers' }
                     }
+                  />
+                </MaxWidth>
+              </Section>
+              <Section>
+                <SubSectionTitle>
+                  <strong>Allow slow workers</strong>
+                  <div className="block text-xs mt-2 mb-2 w-full">
+                    Allow slower workers to pick up your requests. Disabling
+                    this incurs an extra kudos cost.
+                  </div>
+                </SubSectionTitle>
+                <MaxWidth
+                  // @ts-ignore
+                  maxWidth="240"
+                >
+                  <Switch
+                    onChange={() => {
+                      if (componentState.slow_workers) {
+                        handleSwitchSelect('slow_workers', false)
+                      } else {
+                        handleSwitchSelect('slow_workers', true)
+                      }
+                    }}
+                    checked={componentState.slow_workers !== false}
                   />
                 </MaxWidth>
               </Section>

@@ -15,6 +15,7 @@ export interface IApiParams {
   r2?: boolean
   shared?: boolean
   workers?: Array<string>
+  slow_workers: boolean
 }
 
 export interface IArtBotImageDetails {
@@ -128,7 +129,8 @@ class ImageParamsForApi {
       trusted_workers: useTrusted,
       models,
       r2: true,
-      shared: shareImage
+      shared: shareImage,
+      slow_workers: AppSettings.get('slow_workers') === false ? false : true
     }
 
     if (useWorkerId) {

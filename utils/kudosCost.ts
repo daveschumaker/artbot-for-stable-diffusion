@@ -2,6 +2,8 @@
 // https://github.com/evguu/AI-Horde/blob/faq-edit/kudos/kudos_standalone.js
 // and from AqualXX method on StableUI:
 // https://github.com/aqualxx/stable-ui/blob/a685761440cd9ff55f86e6ee694adc147cd1971d/src/stores/generator.ts#L278
+// Horde calculations:
+// https://github.com/db0/AI-Horde/blob/main/horde/classes/stable/waiting_prompt.py#L204
 
 import AppSettings from '../models/AppSettings'
 
@@ -45,14 +47,16 @@ export const kudosCostV2 = ({
   for (let i = 0; i < postProcessors.length; i++) kudos *= 1.2
   kudos *= usesControlNet && hasSourceImage ? 3 : 1
   kudos += countWeights(prompt)
-  kudos *= hasSourceImage ? 1.5 : 1
+  kudos *= hasSourceImage ? 1.3 : 1
   kudos *=
     postProcessors.includes('RealESRGAN_x4plus') ||
     postProcessors.includes('RealESRGAN_x4plus_anime_6B')
       ? 1.3
       : 1
   kudos *= postProcessors.includes('CodeFormers') ? 1.3 : 1
+  kudos *= postProcessors.includes('strip_background') ? 1.2 : 1
   kudos += AppSettings.get('shareImagesExternally') === true ? 1 : 3
+  kudos += AppSettings.get('slow_workers') === false ? 1.2 : 1
   kudos *= numImages
 
   return Math.round(kudos)
