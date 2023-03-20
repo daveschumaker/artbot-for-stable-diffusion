@@ -46,6 +46,12 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
     })
   }
 
+  const getMegapixelSize = () => {
+    const size = input.height * input.width
+    const megapixel = 1024 * 1024
+    return (size / megapixel).toFixed(2)
+  }
+
   const orientationValue = orientationOptions.filter((option) => {
     return input.orientationType === option.value
   })[0]
@@ -69,21 +75,6 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
 
         {orientationValue?.value === 'custom' && (
           <>
-            <div className="block text-xs mt-4 w-full">
-              Max size for each dimension:{' '}
-              {loggedIn === true
-                ? MAX_DIMENSIONS_LOGGED_IN
-                : MAX_DIMENSIONS_LOGGED_OUT}{' '}
-              pixels
-              {loggedIn === true &&
-                input.height * input.width > 1024 * 1024 && (
-                  <div className="text-red-500 font-bold">
-                    WARNING: You will need to have enough kudos to complete this
-                    request.
-                  </div>
-                )}
-            </div>
-
             <div className="flex flex-column">
               <div className="w-11/12">
                 <Section>
@@ -124,19 +115,33 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
                   />
                 </Section>
               </div>
-              <div className="w-1/12 flex justify-center items-center">
+              <div className="w-1/12 flex justify-center items-center ml-1">
                 <Button
-                title="Swap dimensions"
-                onClick={() => {
-                  setInput({
-                    height: input.width,
-                    width: input.height
-                  })
-                }}
-              >
-                <RefreshIcon />
-              </Button>
+                  title="Swap dimensions"
+                  onClick={() => {
+                    setInput({
+                      height: input.width,
+                      width: input.height
+                    })
+                  }}
+                >
+                  <RefreshIcon />
+                </Button>
               </div>
+            </div>
+
+            <div className="block text-xs mt-3 w-full">
+
+              {input.height * input.width > 1024 * 1024 && (
+                <div className="text-amber-500 font-bold">
+                  You will need to have enough kudos to complete this request.
+                </div>
+              )}
+              {input.height * input.width <= 1024 * 1024 && (
+                <div className="text-gray-400 font-bold">
+                  Requests larger than 1 megapixel require upfront kudos.
+                </div>
+              )}
             </div>
 
             <div className="block text-xs mt-2 w-full">
@@ -144,7 +149,7 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
             </div>
 
             <div className="block text-xs w-full">
-              Current image size: {(input.width * input.height / 1048576).toFixed(2)} megapixels
+              Current image size: {getMegapixelSize()} megapixels
             </div>
           </>
         )}
