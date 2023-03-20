@@ -464,17 +464,7 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
       initialState = { ...new DefaultPromptInput() }
     }
 
-    // Step 3. Check for other query param states. If query param is for loading a model, set model:
-    if (query[CreatePageMode.LOAD_MODEL]) {
-      initialState = null
-      initialState = {
-        ...new DefaultPromptInput(),
-        ...(PromptInputSettings.load() || {}),
-        models: [query[CreatePageMode.LOAD_MODEL] as string]
-      }
-    }
-
-    // Step 3a. Check if drawing mode
+    // Step 3. Check if drawing mode
     if (query[CreatePageMode.LOAD_DRAWING] || loadEditPrompt().source_image) {
       initialState = null
       initialState = {
@@ -543,10 +533,23 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
       initialState.width = getI2IString().width
     }
 
-    // Step 5. Set input
+    // Step 5. Check for other query param states.
+    // Step 5a. If query param is for loading a model, set model:
+    if (initialState && query[CreatePageMode.LOAD_MODEL]) {
+      initialState.models = [query[CreatePageMode.LOAD_MODEL] as string]
+    }
+
+    // Step 5b. If query param is a prompt, set prompt:
+    if (initialState && query[CreatePageMode.PROMPT]) {
+      initialState.prompt = decodeURIComponent(
+        query[CreatePageMode.PROMPT] as string
+      )
+    }
+
+    // Step 6. Set input
     setInput({ ...initialState })
 
-    // Step 6. Set pageLoaded so we can start error checking and auto saving input.
+    // Step 7. Set pageLoaded so we can start error checking and auto saving input.
     setPageLoaded(true)
   }, [query, shortlinkImageParams])
 

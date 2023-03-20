@@ -20,6 +20,7 @@ import PlusIcon from '../icons/PlusIcon'
 import RecycleIcon from '../icons/RecycleIcon'
 import { clientHeader } from '../../utils/appUtils'
 import FlexRow from '../UI/FlexRow'
+import TextButton from 'components/UI/TextButton'
 
 const ContentWrapper = styled.div`
   padding-top: 16px;
@@ -581,6 +582,19 @@ const Interrogate = () => {
                 <PageTitle as="h2">Image caption</PageTitle>
                 &quot;{componentState.results.caption}
                 &quot;
+                <div className="mt-2">
+                  <TextButton
+                    onClick={() => {
+                      router.push(
+                        `/?prompt=${encodeURIComponent(
+                          componentState.results.caption
+                        )}`
+                      )
+                    }}
+                  >
+                    use prompt?
+                  </TextButton>
+                </div>
               </div>
             )}
           {componentState.jobComplete &&

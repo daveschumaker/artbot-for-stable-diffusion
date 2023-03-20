@@ -3,7 +3,8 @@ export enum CreatePageMode {
   LOAD_DRAWING = 'drawing',
   LOAD_MODEL = 'model',
   SHARE = 'share',
-  SHORTLINK = 'i'
+  SHORTLINK = 'i',
+  PROMPT = 'prompt'
 }
 
 const queryParamsToOverrideUserInput: Array<string> = [
