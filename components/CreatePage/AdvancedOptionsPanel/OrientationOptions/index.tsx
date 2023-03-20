@@ -76,7 +76,7 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
               isSearchable={false}
             />
           </div>
-          {input.orientationType !== 'custom' && (   
+          {input.orientationType !== 'custom' && (
             <div>
               <Button
                 title="Customize dimensions"
@@ -91,10 +91,23 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
               </Button>
             </div>
           )}
+          {input.orientationType === 'custom' && (
+            <Button
+              title="Swap dimensions"
+              onClick={() => {
+                setInput({
+                  height: input.width,
+                  width: input.height
+                })
+              }}
+            >
+              <RefreshIcon />
+            </Button>
+          )}
         </div>
 
         {
-          input.orientationType !== 'custom' && 
+          input.orientationType !== 'custom' &&
           input.orientationType !== 'random' && (
             <div className="block text-xs mt-2 w-full">
               Width: {input.width} Height: {input.height}
@@ -145,13 +158,13 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
                 </Section>
               </div>
               <div className="flex justify-center items-center">
+                {
+                  // TODO: put aspect ratio button here instead
+                }
                 <Button
-                  title="Swap dimensions"
+                  title="Keep aspect ratio"
                   onClick={() => {
-                    setInput({
-                      height: input.width,
-                      width: input.height
-                    })
+                    // TODO
                   }}
                 >
                   <RefreshIcon />
