@@ -115,8 +115,8 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
   }
 
   const getAspectRatioDeviationColor = (aspectRatioDeviation: number) => {
-    if (aspectRatioDeviation > 0.2) return 'text-red-500'
-    if (aspectRatioDeviation > 0.1) return 'text-amber-500'
+    if (aspectRatioDeviation > 0.25) return 'text-red-500'
+    if (aspectRatioDeviation > 0.15) return 'text-amber-500'
     return 'text-gray-500'
   }
 
@@ -253,7 +253,7 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
                 "block text-xs w-full font-bold " +
                 getAspectRatioDeviationColor(getAspectRatioDeviation())
               }>
-                Aspect ratio deviation: {(getAspectRatioDeviation()*100).toFixed(2)}%
+                Aspect ratio is locked! Deviation from target value: {(getAspectRatioDeviation()*100).toFixed(2)}%
               </div>
             )}
 
