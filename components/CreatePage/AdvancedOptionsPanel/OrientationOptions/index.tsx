@@ -13,7 +13,8 @@ import DefaultPromptInput from 'models/DefaultPromptInput'
 import { orientationDetails } from 'utils/imageUtils'
 
 import { Button } from 'components/UI/Button'
-import RefreshIcon from 'components/icons/RefreshIcon' // TODO: replace me with a more appropriate icon
+import RefreshIcon from 'components/icons/RefreshIcon'
+import PencilIcon from 'components/icons/PencilIcon'
 
 const orientationOptions = [
   { value: 'landscape-16x9', label: 'Landscape (16 x 9)' },
@@ -60,23 +61,45 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
     <Section>
       <SubSectionTitle>Image orientation</SubSectionTitle>
       <MaxWidth maxWidth={480}>
-        <SelectComponent
-          options={orientationOptions}
-          onChange={(obj: { value: string; label: string }) => {
-            handleOrientationSelect(obj.value)
+        <div className="flex flex-row items-center gap-2 w-full">
+          <div className="flex-1">
+            <SelectComponent
+              options={orientationOptions}
+              onChange={(obj: { value: string; label: string }) => {
+                handleOrientationSelect(obj.value)
 
-            if (obj.value !== 'custom') {
-              setErrorMessage({ height: null, width: null })
-            }
-          }}
-          value={orientationValue}
-          isSearchable={false}
-        />
+                if (obj.value !== 'custom') {
+                  setErrorMessage({ height: null, width: null })
+                }
+              }}
+              value={orientationValue}
+              isSearchable={false}
+            />
+          </div>
+          {input.orientationType !== 'custom' && (   
+            <div>
+              <Button
+                title="Customize dimensions"
+                onClick={() => {
+                  setInput({
+                    orientationType: 'custom'
+                  })
+                }}
+              >
+                <PencilIcon />
+              </Button>
+            </div>
+          )}
+        </div>
+
+        {
+          // TODO: Show current dimensions here if not custom
+        }
 
         {orientationValue?.value === 'custom' && (
           <>
-            <div className="flex flex-column">
-              <div className="w-11/12">
+            <div className="flex flex-column items-center gap-2 w-full">
+              <div className="flex-1">
                 <Section>
                   <NumericInputSlider
                     label="Width"
@@ -115,7 +138,7 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
                   />
                 </Section>
               </div>
-              <div className="w-1/12 flex justify-center items-center ml-2">
+              <div className="flex justify-center items-center">
                 <Button
                   title="Swap dimensions"
                   onClick={() => {
@@ -151,6 +174,10 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
             <div className="block text-xs w-full">
               Current image size: {getMegapixelSize()} megapixels
             </div>
+
+            {
+              // TODO: Show current aspect ratio here
+            }
           </>
         )}
       </MaxWidth>
