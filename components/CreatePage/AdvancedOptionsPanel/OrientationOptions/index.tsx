@@ -93,7 +93,11 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
         </div>
 
         {
-          // TODO: Show current dimensions here if not custom
+          input.orientationType !== 'custom' && (
+            <div className="block text-xs mt-2 w-full">
+              Width: {input.width} Height: {input.height}
+            </div>
+          )
         }
 
         {orientationValue?.value === 'custom' && (
