@@ -18,11 +18,7 @@ import NegativePrompts from '../NegativePrompts'
 import { db, getDefaultPrompt, setDefaultPrompt } from '../../../utils/db'
 import { trackEvent } from '../../../api/telemetry'
 import Checkbox from '../../UI/Checkbox'
-import {
-  MAX_DIMENSIONS_LOGGED_IN,
-  MAX_DIMENSIONS_LOGGED_OUT,
-  MAX_IMAGES_PER_JOB
-} from '../../../constants'
+import { MAX_IMAGES_PER_JOB } from '../../../constants'
 import GrainIcon from '../../icons/GrainIcon'
 import AppSettings from '../../../models/AppSettings'
 import useComponentState from '../../../hooks/useComponentState'
@@ -44,27 +40,16 @@ import Samplers from './Samplers'
 import NumericInputSlider from './NumericInputSlider'
 import InputSwitch from './InputSwitch'
 import ControlNetOptions from './ControlNetOptions'
+import OrientationOptions from './OrientationOptions'
 
 const NoSliderSpacer = styled.div`
   height: 14px;
   margin-bottom: 16px;
 `
 
-const orientationOptions = [
-  { value: 'landscape-16x9', label: 'Landscape (16 x 9)' },
-  { value: 'landscape', label: 'Landscape (3 x 2)' },
-  { value: 'portrait', label: 'Portrait (2 x 3)' },
-  { value: 'phone-bg', label: 'Phone background (9 x 21)' },
-  { value: 'ultrawide', label: 'Ultrawide (21 x 9)' },
-  { value: 'square', label: 'Square' },
-  { value: 'custom', label: 'Custom' },
-  { value: 'random', label: 'Random!' }
-]
-
 interface Props {
   handleChangeInput: any
   handleImageUpload: any
-  handleOrientationSelect: any
   input: any
   setInput: any
   setHasValidationError: any
@@ -72,7 +57,6 @@ interface Props {
 
 const AdvancedOptionsPanel = ({
   handleChangeInput,
-  handleOrientationSelect,
   input,
   setInput,
   setHasValidationError
@@ -91,12 +75,7 @@ const AdvancedOptionsPanel = ({
     totalModelsCount: availableModelNames.length,
     favoriteModelsCount: 0
   })
-
   const [initialLoad, setInitialLoad] = useState(true)
-
-  const orientationValue = orientationOptions.filter((option) => {
-    return input.orientationType === option.value
-  })[0]
 
   const modelerOptions = (imageParams: any) => {
     const modelsArray =
@@ -314,87 +293,11 @@ const AdvancedOptionsPanel = ({
           </TextButton>
         </Section>
       ) : null}
-      <Section>
-        <SubSectionTitle>Image orientation</SubSectionTitle>
-        <MaxWidth maxWidth={480}>
-          <SelectComponent
-            options={orientationOptions}
-            onChange={(obj: { value: string; label: string }) => {
-              PromptInputSettings.set('orientationType', obj.value)
-              handleOrientationSelect(obj.value)
-
-              if (obj.value !== 'custom') {
-                setErrorMessage({ height: null, width: null })
-              }
-            }}
-            value={orientationValue}
-            isSearchable={false}
-          />
-
-          {orientationValue?.value === 'custom' && (
-            <>
-              <div className="block text-xs mt-4 w-full">
-                Max size for each dimension:{' '}
-                {loggedIn === true
-                  ? MAX_DIMENSIONS_LOGGED_IN
-                  : MAX_DIMENSIONS_LOGGED_OUT}{' '}
-                pixels
-                {loggedIn === true &&
-                  input.height * input.width > 1024 * 1024 && (
-                    <div className="text-red-500 font-bold">
-                      WARNING: You will need to have enough kudos to complete
-                      this request.
-                    </div>
-                  )}
-              </div>
-
-              <Section>
-                <NumericInputSlider
-                  label="Width"
-                  from={64}
-                  to={
-                    loggedIn === true
-                      ? MAX_DIMENSIONS_LOGGED_IN
-                      : MAX_DIMENSIONS_LOGGED_OUT
-                  }
-                  step={64}
-                  input={input}
-                  setInput={setInput}
-                  fieldName="width"
-                  initialLoad={initialLoad}
-                  fullWidth
-                  enforceStepValue
-                />
-              </Section>
-
-              <Section>
-                <NumericInputSlider
-                  label="Height"
-                  from={64}
-                  to={
-                    loggedIn === true
-                      ? MAX_DIMENSIONS_LOGGED_IN
-                      : MAX_DIMENSIONS_LOGGED_OUT
-                  }
-                  step={64}
-                  input={input}
-                  setInput={setInput}
-                  fieldName="height"
-                  initialLoad={initialLoad}
-                  fullWidth
-                  enforceStepValue
-                />
-              </Section>
-
-              <div className="block text-xs mt-2 w-full">
-                Height and width must be divisible by 64. Enter your desired
-                dimensions and it will be automatically converted to nearest
-                valid integer.
-              </div>
-            </>
-          )}
-        </MaxWidth>
-      </Section>
+      <OrientationOptions
+        input={input}
+        setInput={setInput}
+        setErrorMessage={setErrorMessage}
+      />
       <Section>
         <SubSectionTitle>
           <TextTooltipRow>
