@@ -565,7 +565,9 @@ const AdvancedOptionsPanel = ({
           </Section>
         </div>
       )}
+
       <ControlNetOptions input={input} setInput={setInput} />
+
       <InputSwitch
         label="Tiling"
         disabled={input.source_image}
@@ -611,7 +613,7 @@ const AdvancedOptionsPanel = ({
               width="100%"
             />
             <Button
-              title="Generate random number"
+              title="Insert random seed"
               onClick={() => {
                 const value = Math.abs((Math.random() * 2 ** 32) | 0)
                 if (AppSettings.get('saveSeedOnCreate')) {
@@ -624,7 +626,7 @@ const AdvancedOptionsPanel = ({
             </Button>
             <Button
               btnType="secondary"
-              title="Generate random number"
+              title="Clear"
               onClick={() => {
                 PromptInputSettings.set('seed', '')
                 setInput({ seed: '' })

@@ -563,7 +563,7 @@ const ControlNet = () => {
               width="100%"
             />
             <Button
-              title="Generate random number"
+              title="Insert random seed"
               onClick={() => {
                 const value = Math.abs((Math.random() * 2 ** 32) | 0)
                 setInput({ seed: value })
@@ -573,7 +573,7 @@ const ControlNet = () => {
             </Button>
             <Button
               btnType="secondary"
-              title="Generate random number"
+              title="Clear"
               onClick={() => {
                 setInput({ seed: '' })
               }}

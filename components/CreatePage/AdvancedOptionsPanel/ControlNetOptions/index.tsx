@@ -2,9 +2,11 @@ import MaxWidth from 'components/UI/MaxWidth'
 import Section from 'components/UI/Section'
 import SelectComponent from 'components/UI/Select'
 import SubSectionTitle from 'components/UI/SubSectionTitle'
+import TwoPanel from 'components/UI/TwoPanel'
 import DefaultPromptInput from 'models/DefaultPromptInput'
 import { CONTROL_TYPE_ARRAY } from '../../../../constants'
 import InputSwitch from '../InputSwitch'
+import SplitPanel from 'components/UI/SplitPanel'
 
 const ControlNetOptions = ({
   input,
@@ -60,10 +62,7 @@ const ControlNetOptions = ({
           </div>
         )}
         {input.source_image && (
-          <MaxWidth
-            // @ts-ignore
-            maxWidth="240"
-          >
+          <div className="w-1/2">
             <SelectComponent
               isDisabled={isDisabled}
               options={CONTROL_TYPE_ARRAY.map((value) => {
@@ -87,39 +86,49 @@ const ControlNetOptions = ({
                   : { value: '', label: 'none' }
               }
             />
-          </MaxWidth>
+          </div>
         )}
-        <InputSwitch
-          disabled={isDisabled}
-          label="Return control map?"
-          tooltip="This option returns the control map / depth map for a given image."
-          checked={input.return_control_map}
-          handleSwitchToggle={() =>
-            handleControlMapSelect('return_control_map')
-          }
-          moreInfoLink={
-            isDisabled ? (
-              <div className="text-slate-500 dark:text-slate-400">
-                This can only be used with img2img + ControlNet
-              </div>
-            ) : null
-          }
-        />
-        <InputSwitch
-          disabled={isDisabled}
-          label="Use control map?"
-          tooltip="Tell Stable Horde that the image you're uploading is a control map."
-          checked={input.image_is_control}
-          handleSwitchToggle={() => handleControlMapSelect('image_is_control')}
-          moreInfoLink={
-            isDisabled ? (
-              <div className="text-slate-500 dark:text-slate-400">
-                This can only be used with img2img + ControlNet
-              </div>
-            ) : null
-          }
-        />
       </Section>
+      {!isDisabled && (
+        <TwoPanel>
+          <SplitPanel>
+            <InputSwitch
+              label="Return control map?"
+              disabled={!input.control_type}
+              tooltip="This option returns the control map / depth map for a given image."
+              checked={input.return_control_map}
+              handleSwitchToggle={() =>
+                handleControlMapSelect('return_control_map')
+              }
+              moreInfoLink={
+                input.control_type ? null : (
+                  <div className="text-slate-500 dark:text-slate-400">
+                    Select a control type to enable this option.
+                  </div>
+                )
+              }
+            />
+          </SplitPanel>
+
+          <SplitPanel>
+            <InputSwitch
+              label="Use control map?"
+              disabled={!input.control_type}
+              tooltip="Tell Stable Horde that the image you're uploading is a control map."
+              checked={input.image_is_control}
+              handleSwitchToggle={() => handleControlMapSelect('image_is_control')}
+              moreInfoLink={
+                input.control_type ? null : (
+                  <div className="text-slate-500 dark:text-slate-400">
+                    Select a control type to enable this option.
+                  </div>
+                )
+              }
+            />
+          </SplitPanel>
+
+        </TwoPanel>
+      )}
     </div>
   )
 }
