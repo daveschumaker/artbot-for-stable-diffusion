@@ -114,6 +114,11 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
     return deviation
   }
 
+  const getAspectRatioDeviationColor = (aspectRatioDeviation: number) => {
+    if (aspectRatioDeviation > 0.2) return 'text-red-500'
+    if (aspectRatioDeviation > 0.1) return 'text-amber-500'
+    return 'text-gray-500'
+  }
 
   const orientationValue = orientationOptions.filter((option) => {
     return input.orientationType === option.value
@@ -157,6 +162,9 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
             <Button
               title="Swap dimensions"
               onClick={() => {
+                if (keepAspectRatio){
+                  setTargetAspectRatio(input.height / input.width) // Invert target aspect ratio
+                }
                 setInput({
                   height: input.width,
                   width: input.height
@@ -238,6 +246,15 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
               )}
             </div>
 
+            {keepAspectRatio && (
+              <div className={
+                "block text-xs w-full font-bold " +
+                getAspectRatioDeviationColor(getAspectRatioDeviation())
+              }>
+                Aspect ratio deviation: {(getAspectRatioDeviation()*100).toFixed(2)}%
+              </div>
+            )}
+
             <div className="block text-xs mt-2 w-full">
               Height and width must be divisible by 64.
             </div>
@@ -245,12 +262,6 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
             <div className="block text-xs w-full">
               Current image size: {getMegapixelSize()} megapixels
             </div>
-
-            {keepAspectRatio && (
-              <div className="block text-xs w-full">
-                Aspect ratio deviation: {(getAspectRatioDeviation()*100).toFixed(2)}%
-              </div>
-            )}
             
           </>
         )}
