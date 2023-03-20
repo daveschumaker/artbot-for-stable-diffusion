@@ -23,7 +23,7 @@ interface Props {
   disabled?: boolean
   fullWidth?: boolean
   enforceStepValue?: boolean
-  callback?: ()=>void
+  callback?: (value: number)=>void
 }
 
 const NumericInputSlider = ({
@@ -59,21 +59,17 @@ const NumericInputSlider = ({
     }
   }
 
-  const [updateState, setUpdateState] = useState({})
-
   const updateField = (value: number) => {
     const res = {}
     // @ts-ignore
     res[fieldName] = value
     setInput(res)
     
-    setUpdateState({})
+    callback(value)
 
     // @ts-ignore
     setTemporaryValue(res[fieldName])
   }
-
-  useEffect(callback, [updateState]) // Please don't add callback as dependency!
 
   const safelyUpdateField = (value: string | number) => {
     value = Number(value)

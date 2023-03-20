@@ -76,11 +76,11 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
     setKeepAspectRatio(!keepAspectRatio)
   }
 
-  const widthCallback = () => {
+  const widthCallback = (value: number) => {
     if (keepAspectRatio) {
       const { from, to } = getConstraints()
 
-      let nearestHeight = Math.round(input.width / targetAspectRatio / 64) * 64
+      let nearestHeight = Math.round(value / targetAspectRatio / 64) * 64
       nearestHeight = Math.min(nearestHeight, to)
       nearestHeight = Math.max(nearestHeight, from)
 
@@ -90,11 +90,11 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
     }
   }
 
-  const heightCallback = () => {
+  const heightCallback = (value: number) => {
     if (keepAspectRatio) {
       const { from, to } = getConstraints()
 
-      let nearestWidth = Math.round(input.height * targetAspectRatio / 64) * 64
+      let nearestWidth = Math.round(value * targetAspectRatio / 64) * 64
       nearestWidth = Math.min(nearestWidth, to)
       nearestWidth = Math.max(nearestWidth, from)
 
