@@ -23,7 +23,7 @@ interface Props {
   disabled?: boolean
   fullWidth?: boolean
   enforceStepValue?: boolean
-  callback: ()=>void
+  callback?: ()=>void
 }
 
 const NumericInputSlider = ({
