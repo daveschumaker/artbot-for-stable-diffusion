@@ -15,6 +15,9 @@ import { orientationDetails } from 'utils/imageUtils'
 import { Button } from 'components/UI/Button'
 import RefreshIcon from 'components/icons/RefreshIcon'
 import PencilIcon from 'components/icons/PencilIcon'
+import LinkIcon from 'components/icons/LinkIcon'
+
+import { useState } from 'react'
 
 const orientationOptions = [
   { value: 'landscape-16x9', label: 'Landscape (16 x 9)' },
@@ -34,6 +37,8 @@ interface Props {
 }
 
 const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
+  const [keepAspectRatio, setKeepAspectRatio] = useState(false)
+
   const userState = useStore(userInfoStore)
   const { loggedIn } = userState
 
@@ -51,6 +56,10 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
     const size = input.height * input.width
     const megapixel = 1024 * 1024
     return (size / megapixel).toFixed(2)
+  }
+
+  const toggleKeepAspectRatio = () => {
+    setKeepAspectRatio(!keepAspectRatio)
   }
 
   const orientationValue = orientationOptions.filter((option) => {
@@ -157,17 +166,13 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
                   />
                 </Section>
               </div>
+
               <div className="flex justify-center items-center">
-                {
-                  // TODO: put aspect ratio button here instead
-                }
                 <Button
                   title="Keep aspect ratio"
-                  onClick={() => {
-                    // TODO
-                  }}
+                  onClick={toggleKeepAspectRatio}
                 >
-                  <RefreshIcon />
+                  <LinkIcon active={keepAspectRatio}/>
                 </Button>
               </div>
             </div>
