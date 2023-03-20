@@ -115,7 +115,7 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
                   />
                 </Section>
               </div>
-              <div className="w-1/12 flex justify-center items-center ml-1">
+              <div className="w-1/12 flex justify-center items-center ml-2">
                 <Button
                   title="Swap dimensions"
                   onClick={() => {
