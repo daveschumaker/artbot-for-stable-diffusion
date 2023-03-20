@@ -181,7 +181,7 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
               )}
               {input.height * input.width <= 1024 * 1024 && (
                 <div className="text-gray-400 font-bold">
-                  Requests larger than 1 megapixel require upfront kudos.
+                  High resolution requests require upfront kudos.
                 </div>
               )}
             </div>
@@ -194,9 +194,9 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
               Current image size: {getMegapixelSize()} megapixels
             </div>
 
-            {
-              // TODO: Show current aspect ratio here
-            }
+            <div className="block text-xs w-full">
+              DEBUG: Aspect ratio: {(input.width / input.height).toFixed(3)}
+            </div>
           </>
         )}
       </MaxWidth>
