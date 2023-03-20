@@ -37,10 +37,15 @@ interface Props {
 }
 
 const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
-  const [keepAspectRatio, setKeepAspectRatio] = useState(false)
-
   const userState = useStore(userInfoStore)
   const { loggedIn } = userState
+
+  const getConstraints = () => {
+    return {
+      from: 64,
+      to: loggedIn === true ? MAX_DIMENSIONS_LOGGED_IN : MAX_DIMENSIONS_LOGGED_OUT
+    }
+  }
 
   const handleOrientationSelect = (orientation: string) => {
     const details = orientationDetails(orientation, input.height, input.width)
@@ -58,9 +63,57 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
     return (size / megapixel).toFixed(2)
   }
 
+  const [keepAspectRatio, setKeepAspectRatio] = useState(false)
+  const [targetAspectRatio, setTargetAspectRatio] = useState(0)
+
   const toggleKeepAspectRatio = () => {
+    if (!keepAspectRatio) {
+      setTargetAspectRatio(input.width / input.height);
+    }
+    else {
+      setTargetAspectRatio(0)
+    }
     setKeepAspectRatio(!keepAspectRatio)
   }
+
+  const widthCallback = () => {
+    if (keepAspectRatio) {
+      const { from, to } = getConstraints()
+
+      let nearestHeight = Math.round(input.width / targetAspectRatio / 64) * 64
+      nearestHeight = Math.min(nearestHeight, to)
+      nearestHeight = Math.max(nearestHeight, from)
+
+      setInput({
+        height: nearestHeight
+      })
+    }
+  }
+
+  const heightCallback = () => {
+    if (keepAspectRatio) {
+      const { from, to } = getConstraints()
+
+      let nearestWidth = Math.round(input.height * targetAspectRatio / 64) * 64
+      nearestWidth = Math.min(nearestWidth, to)
+      nearestWidth = Math.max(nearestWidth, from)
+
+      setInput({
+        width: nearestWidth
+      })
+    }
+  }
+
+  const getAspectRatioDeviation = () => {
+    if (!keepAspectRatio) return 0
+
+    const currentAspectRatio = input.width / input.height
+    const aspectRatioRatio = currentAspectRatio / targetAspectRatio
+
+    const deviation = Math.abs(aspectRatioRatio - 1)
+    return deviation
+  }
+
 
   const orientationValue = orientationOptions.filter((option) => {
     return input.orientationType === option.value
@@ -131,12 +184,8 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
                 <Section>
                   <NumericInputSlider
                     label="Width"
-                    from={64}
-                    to={
-                      loggedIn === true
-                        ? MAX_DIMENSIONS_LOGGED_IN
-                        : MAX_DIMENSIONS_LOGGED_OUT
-                    }
+                    from={getConstraints().from}
+                    to={getConstraints().to}
                     step={64}
                     input={input}
                     setInput={setInput}
@@ -144,18 +193,15 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
                     initialLoad={false}
                     fullWidth
                     enforceStepValue
+                    callback={widthCallback}
                   />
                 </Section>
 
                 <Section>
                   <NumericInputSlider
                     label="Height"
-                    from={64}
-                    to={
-                      loggedIn === true
-                        ? MAX_DIMENSIONS_LOGGED_IN
-                        : MAX_DIMENSIONS_LOGGED_OUT
-                    }
+                    from={getConstraints().from}
+                    to={getConstraints().to}
                     step={64}
                     input={input}
                     setInput={setInput}
@@ -163,6 +209,7 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
                     initialLoad={false}
                     fullWidth
                     enforceStepValue
+                    callback={heightCallback}
                   />
                 </Section>
               </div>
@@ -172,7 +219,7 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
                   title="Keep aspect ratio"
                   onClick={toggleKeepAspectRatio}
                 >
-                  <LinkIcon active={keepAspectRatio}/>
+                  <LinkIcon active={keepAspectRatio} />
                 </Button>
               </div>
             </div>
@@ -201,6 +248,12 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
 
             <div className="block text-xs w-full">
               DEBUG: Aspect ratio: {(input.width / input.height).toFixed(3)}
+            </div>
+            <div className="block text-xs w-full">
+              DEBUG: Target aspect ratio: {targetAspectRatio?.toFixed(3)}
+            </div>
+            <div className="block text-xs w-full">
+              DEBUG: Deviation: {getAspectRatioDeviation().toFixed(2)}
             </div>
           </>
         )}
