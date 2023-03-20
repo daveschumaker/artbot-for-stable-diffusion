@@ -138,6 +138,8 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
                 if (obj.value !== 'custom') {
                   setErrorMessage({ height: null, width: null })
                 }
+
+                setKeepAspectRatio(false)
               }}
               value={orientationValue}
               isSearchable={false}
@@ -224,7 +226,7 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
 
               <div className="flex justify-center items-center">
                 <Button
-                  title="Keep aspect ratio"
+                  title={keepAspectRatio?"Free aspect ratio":"Lock aspect ratio"}
                   onClick={toggleKeepAspectRatio}
                 >
                   <LinkIcon active={keepAspectRatio} />
