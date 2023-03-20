@@ -59,18 +59,21 @@ const NumericInputSlider = ({
     }
   }
 
-
+  const [updateState, setUpdateState] = useState({})
 
   const updateField = (value: number) => {
     const res = {}
     // @ts-ignore
     res[fieldName] = value
     setInput(res)
+    
+    setUpdateState({})
 
     // @ts-ignore
     setTemporaryValue(res[fieldName])
-    callback()
   }
+
+  useEffect(callback, [updateState]) // Please don't add callback as dependency!
 
   const safelyUpdateField = (value: string | number) => {
     value = Number(value)

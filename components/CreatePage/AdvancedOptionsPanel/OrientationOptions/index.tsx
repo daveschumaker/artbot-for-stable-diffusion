@@ -246,15 +246,12 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
               Current image size: {getMegapixelSize()} megapixels
             </div>
 
-            <div className="block text-xs w-full">
-              DEBUG: Aspect ratio: {(input.width / input.height).toFixed(3)}
-            </div>
-            <div className="block text-xs w-full">
-              DEBUG: Target aspect ratio: {targetAspectRatio?.toFixed(3)}
-            </div>
-            <div className="block text-xs w-full">
-              DEBUG: Deviation: {getAspectRatioDeviation().toFixed(2)}
-            </div>
+            {keepAspectRatio && (
+              <div className="block text-xs w-full">
+                Aspect ratio deviation: {(getAspectRatioDeviation()*100).toFixed(2)}%
+              </div>
+            )}
+            
           </>
         )}
       </MaxWidth>
