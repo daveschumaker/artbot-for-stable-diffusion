@@ -10,6 +10,7 @@ import Uploader from '../Uploader'
 import PhotoUpIcon from '../../icons/PhotoUpIcon'
 import Head from 'next/head'
 import PromptInputSettings from '../../../models/PromptInputSettings'
+import { setI2iUploaded } from 'store/canvasStore'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -49,6 +50,12 @@ const Img2ImgPanel = ({ input, saveForInpaint, setInput }: Props) => {
       orientationType: 'custom',
       source_image,
       source_processing: SourceProcessing.Img2Img
+    })
+
+    setI2iUploaded({
+      base64String: source_image,
+      height,
+      width
     })
   }
 

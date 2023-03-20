@@ -19,6 +19,7 @@ import {
   clearCanvasStore,
   getBase64FromDraw,
   getCanvasStore,
+  getI2IString,
   resetSavedDrawingState
 } from '../store/canvasStore'
 import { clearInputCache, setInputCache } from '../store/inputCache'
@@ -532,10 +533,20 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
       initialState.tiling = false
     }
 
-    // Step 4. Set input
+    // Step 4. Check if we're restoring an img2img request.
+    if (
+      initialState?.source_processing === SourceProcessing.Img2Img &&
+      getI2IString().base64String
+    ) {
+      initialState.source_image = getI2IString().base64String
+      initialState.height = getI2IString().height
+      initialState.width = getI2IString().width
+    }
+
+    // Step 5. Set input
     setInput({ ...initialState })
 
-    // Step 5. Set pageLoaded so we can start error checking and auto saving input.
+    // Step 6. Set pageLoaded so we can start error checking and auto saving input.
     setPageLoaded(true)
   }, [query, shortlinkImageParams])
 
