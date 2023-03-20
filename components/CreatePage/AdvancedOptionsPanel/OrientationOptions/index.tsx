@@ -165,7 +165,7 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
               title="Swap dimensions"
               onClick={() => {
                 if (keepAspectRatio){
-                  setTargetAspectRatio(input.height / input.width) // Invert target aspect ratio
+                  setTargetAspectRatio(1/targetAspectRatio) // Invert target aspect ratio
                 }
                 setInput({
                   height: input.width,
