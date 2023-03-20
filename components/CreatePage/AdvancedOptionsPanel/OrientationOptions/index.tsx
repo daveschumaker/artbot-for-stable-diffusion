@@ -140,9 +140,11 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
             </div>
 
             <div className="block text-xs mt-2 w-full">
-              Height and width must be divisible by 64. Enter your desired
-              dimensions and it will be automatically converted to nearest valid
-              integer.
+              Height and width must be divisible by 64.
+            </div>
+
+            <div className="block text-xs w-full">
+              Current image size: {(input.width * input.height / 1048576).toFixed(2)} megapixels
             </div>
           </>
         )}
