@@ -51,6 +51,7 @@ import { getInputCache } from '../store/inputCache'
 import { kudosCostV2 } from '../utils/kudosCost'
 import NumericInputSlider from 'components/CreatePage/AdvancedOptionsPanel/NumericInputSlider'
 import ControlNetOptions from 'components/CreatePage/AdvancedOptionsPanel/ControlNetOptions'
+import UpscalerOptions from 'components/CreatePage/AdvancedOptionsPanel/UpscalerOptions'
 
 // Kind of a hacky way to persist output of image over the course of a session.
 let cachedImageDetails = {}
@@ -627,16 +628,7 @@ const ControlNet = () => {
               initialLoad={false}
             />
           )}
-          <Checkbox
-            label={`RealESRGAN_x4plus (upscaler)`}
-            value={getPostProcessing(`RealESRGAN_x4plus`)}
-            onChange={() => handlePostProcessing(`RealESRGAN_x4plus`)}
-          />
-          <Checkbox
-            label={`RealESRGAN_x4plus_anime_6B (upscaler)`}
-            value={getPostProcessing(`RealESRGAN_x4plus_anime_6B`)}
-            onChange={() => handlePostProcessing(`RealESRGAN_x4plus_anime_6B`)}
-          />
+          <UpscalerOptions input={input} setInput={setInput} />
         </div>
       </Section>
 

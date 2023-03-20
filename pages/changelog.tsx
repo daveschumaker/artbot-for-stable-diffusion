@@ -139,6 +139,9 @@ const Changelog = () => {
             frustrated with some posts on the Stable Diffusion sub-Reddit page,
             where people posted awesome images but never included captions)
           </StyledLi>
+          <StyledLi>
+            Two new upscalers added to the Horde: 4x_AnimeSharp and NMKD_Siax
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

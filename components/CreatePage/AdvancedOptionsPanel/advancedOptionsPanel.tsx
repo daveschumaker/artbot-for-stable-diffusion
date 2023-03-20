@@ -41,6 +41,7 @@ import NumericInputSlider from './NumericInputSlider'
 import InputSwitch from './InputSwitch'
 import ControlNetOptions from './ControlNetOptions'
 import OrientationOptions from './OrientationOptions'
+import UpscalerOptions from './UpscalerOptions'
 
 const NoSliderSpacer = styled.div`
   height: 14px;
@@ -877,20 +878,11 @@ const AdvancedOptionsPanel = ({
             />
           )}
           <Checkbox
-            label={`RealESRGAN_x4plus (upscaler)`}
-            value={getPostProcessing(`RealESRGAN_x4plus`)}
-            onChange={() => handlePostProcessing(`RealESRGAN_x4plus`)}
-          />
-          <Checkbox
-            label={`RealESRGAN_x4plus_anime_6B (upscaler)`}
-            value={getPostProcessing(`RealESRGAN_x4plus_anime_6B`)}
-            onChange={() => handlePostProcessing(`RealESRGAN_x4plus_anime_6B`)}
-          />
-          <Checkbox
             label={`Strip background`}
             value={getPostProcessing(`strip_background`)}
             onChange={() => handlePostProcessing(`strip_background`)}
           />
+          <UpscalerOptions input={input} setInput={setInput} />
         </div>
       </Section>
       <Section>
