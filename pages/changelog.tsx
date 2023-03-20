@@ -97,8 +97,8 @@ const Changelog = () => {
               and this is not ideal at the moment.)
             </StyledLi>
             <StyledLi>
-              2023.03.10 - Still some wonky behavior around the pending items
-              page. It&quot;s slowly getting better, but still more work to do!
+              2023.03.20 - The pending page still sucks. Looking into it! I am
+              sorry!
             </StyledLi>
           </StyledUl>
         </Section>
@@ -122,6 +122,23 @@ const Changelog = () => {
             nearest 64 pixels. This has been on the to-do list for a long time
             and I&apos;m happy to see it done so well.
           </StyledLi>
+          <StyledLi>
+            Fix: Deviation value on aspect ratio calculation reset to zero if
+            dimensions were swapped. Thanks to Litnine for both the bug report
+            and quick fix!
+          </StyledLi>
+          <StyledLi>
+            Fix: Source image for img2img requests disappeared after leaving the
+            page. Thanks to Litnine for the bug report.
+          </StyledLi>
+          <StyledLi>
+            Feature: Added support for prompt as a query parameter. It
+            doesn&apos;t do much at the moment. Mainly, you can now upload an
+            image into the interrogation tool, get a caption and then
+            immediately create a new image request using the caption. (I was
+            frustrated with some posts on the Stable Diffusion sub-Reddit page,
+            where people posted awesome images but never included captions)
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
@@ -129,7 +146,7 @@ const Changelog = () => {
         <StyledUl>
           <StyledLi>
             Feature: Add support for new Horde parameter to disable the use of
-            slower performaing workers. (Note: disabling incurs an additional
+            slower performing workers. (Note: disabling incurs an additional
             kudos cost).
           </StyledLi>
           <StyledLi>

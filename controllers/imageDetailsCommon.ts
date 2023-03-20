@@ -3,6 +3,7 @@ import RerollImageRequest from '../models/RerollImageRequest'
 import UpscaleImageRequest from '../models/UpscaleImageRequest'
 import {
   clearCanvasStore,
+  clearI2IString,
   cloneFromImage,
   setI2iUploaded,
   storeCanvas
@@ -49,6 +50,7 @@ export const copyEditPrompt = (imageDetails: any) => {
 export const uploadInpaint = (imageDetails: any, options: any = {}) => {
   const { clone = false, useSourceImg = false } = options
   clearCanvasStore()
+  clearI2IString()
 
   if (clone) {
     storeCanvas('drawLayer', imageDetails.canvasData)
@@ -106,6 +108,7 @@ export const uploadInpaint = (imageDetails: any, options: any = {}) => {
 
 export const uploadImg2Img = (imageDetails: any, options: any = {}) => {
   clearCanvasStore()
+  clearI2IString()
   const { useSourceImg = false } = options
 
   savePrompt({
