@@ -105,6 +105,26 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.03.20</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Feature: Absolutely{' '}
+            <Linker
+              href="https://github.com/daveschumaker/artbot-for-stable-diffusion/pull/81"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              amazing update
+            </Linker>{' '}
+            from Litnine. You can now lock the aspect ratio when creating an
+            image and resize to your heart&apos;s content! The new component
+            will automatically calculate the proper corresponding size to the
+            nearest 64 pixels. This has been on the to-do list for a long time
+            and I&apos;m happy to see it done so well.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.03.19</SubSectionTitle>
         <StyledUl>
           <StyledLi>
