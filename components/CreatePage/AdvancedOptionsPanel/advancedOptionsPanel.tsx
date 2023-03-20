@@ -565,7 +565,9 @@ const AdvancedOptionsPanel = ({
           </Section>
         </div>
       )}
+
       <ControlNetOptions input={input} setInput={setInput} />
+
       <InputSwitch
         label="Tiling"
         disabled={input.source_image}
