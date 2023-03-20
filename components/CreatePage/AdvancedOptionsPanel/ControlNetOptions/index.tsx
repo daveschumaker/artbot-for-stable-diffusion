@@ -89,36 +89,25 @@ const ControlNetOptions = ({
             />
           </MaxWidth>
         )}
-        <InputSwitch
-          disabled={isDisabled}
-          label="Return control map?"
-          tooltip="This option returns the control map / depth map for a given image."
-          checked={input.return_control_map}
-          handleSwitchToggle={() =>
-            handleControlMapSelect('return_control_map')
-          }
-          moreInfoLink={
-            isDisabled ? (
-              <div className="text-slate-500 dark:text-slate-400">
-                This can only be used with img2img + ControlNet
-              </div>
-            ) : null
-          }
-        />
-        <InputSwitch
-          disabled={isDisabled}
-          label="Use control map?"
-          tooltip="Tell Stable Horde that the image you're uploading is a control map."
-          checked={input.image_is_control}
-          handleSwitchToggle={() => handleControlMapSelect('image_is_control')}
-          moreInfoLink={
-            isDisabled ? (
-              <div className="text-slate-500 dark:text-slate-400">
-                This can only be used with img2img + ControlNet
-              </div>
-            ) : null
-          }
-        />
+        {!isDisabled && (
+          <>
+            <InputSwitch
+              label="Return control map?"
+              tooltip="This option returns the control map / depth map for a given image."
+              checked={input.return_control_map}
+              handleSwitchToggle={() =>
+                handleControlMapSelect('return_control_map')
+              }
+            />
+            <InputSwitch
+              label="Use control map?"
+              tooltip="Tell Stable Horde that the image you're uploading is a control map."
+              checked={input.image_is_control}
+              handleSwitchToggle={() => handleControlMapSelect('image_is_control')}
+            />
+          </>
+        )}
+
       </Section>
     </div>
   )
