@@ -23,6 +23,7 @@ interface Props {
   disabled?: boolean
   fullWidth?: boolean
   enforceStepValue?: boolean
+  callback: ()=>void
 }
 
 const NumericInputSlider = ({
@@ -37,7 +38,8 @@ const NumericInputSlider = ({
   initialLoad,
   disabled = false,
   fullWidth = false,
-  enforceStepValue = false
+  enforceStepValue = false,
+  callback = () => {}
 }: Props) => {
   const [warning, setWarning] = useState('')
 
@@ -67,6 +69,7 @@ const NumericInputSlider = ({
 
     // @ts-ignore
     setTemporaryValue(res[fieldName])
+    callback()
   }
 
   const safelyUpdateField = (value: string | number) => {
