@@ -80,6 +80,7 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
             <div>
               <Button
                 title="Customize dimensions"
+                disabled={input.orientationType === 'random'}
                 onClick={() => {
                   setInput({
                     orientationType: 'custom'
@@ -93,7 +94,8 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
         </div>
 
         {
-          input.orientationType !== 'custom' && (
+          input.orientationType !== 'custom' && 
+          input.orientationType !== 'random' && (
             <div className="block text-xs mt-2 w-full">
               Width: {input.width} Height: {input.height}
             </div>
