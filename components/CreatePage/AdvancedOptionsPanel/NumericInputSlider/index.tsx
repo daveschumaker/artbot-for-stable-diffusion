@@ -47,16 +47,15 @@ const NumericInputSlider = ({
     setWarning(state ? `This field only accepts numbers between ${from} and ${to}.` : '')
   }
 
+  function keepInBoundaries (val: number, min: number, max: number) {
+    return Math.max(min, Math.min(val, max))
+  }
+
   function roundToNearestStep(val: number, min: number, max: number, step: number) {
-    if (val < min) {
-      return min;
-    } else if (val > max) {
-      return max;
-    } else {
-      const steps = Math.round((val - min) / step);
-      const newValue = min + steps * step;
-      return newValue;
-    }
+    val = keepInBoundaries(val, min, max)
+    const steps = Math.round((val - min) / step);
+    const newValue = min + steps * step;
+    return newValue;
   }
 
   const updateField = (value: number) => {
@@ -95,11 +94,20 @@ const NumericInputSlider = ({
   const [temporaryValue, setTemporaryValue] = useState(input[fieldName]);
 
   useEffect(() => {
+    // We don't want to force input in incorrect boundaries
     if (initialLoad) {
       return
     }
+
     const newValue = input[fieldName]
-    const correctedNewValue = roundToNearestStep(newValue, from, to, step)
+    let correctedNewValue
+    if (enforceStepValue){
+      correctedNewValue = roundToNearestStep(newValue, from, to, step)
+    }
+    else{
+      correctedNewValue = keepInBoundaries(newValue, from, to)
+    }
+
     if (newValue !== correctedNewValue) {
       const res = {}
       // @ts-ignore
