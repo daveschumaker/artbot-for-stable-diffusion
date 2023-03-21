@@ -31,12 +31,12 @@ const Samplers = ({ input, setInput, showMultiModel = false }: IProps) => {
 
   return (
     <>
-      {!input.useAllSamplers && (
+      {input.multiState !== 'samplers' && (
         <Section>
           <SubSectionTitle>Sampler</SubSectionTitle>
           {(input.source_processing === SourceProcessing.InPainting &&
             input.models[0] === 'stable_diffusion_inpainting') ||
-          (input.source_image && input.control_type !== '') ? (
+            (input.source_image && input.control_type !== '') ? (
             <div className="mt-[-6px] text-sm text-slate-500 dark:text-slate-400 font-[600]">
               Note: Sampler disabled when controlnet or inpainting model is
               used.
@@ -74,7 +74,7 @@ const Samplers = ({ input, setInput, showMultiModel = false }: IProps) => {
               !!input.multiState && input.multiState !== 'samplers'
             }
             onChange={() => {
-              if (!input.useAllSamplers) {
+              if (input.multiState !== 'samplers') {
                 trackEvent({
                   event: 'USE_ALL_SAMPLERS_CLICK',
                   context: '/pages/index'
@@ -88,10 +88,10 @@ const Samplers = ({ input, setInput, showMultiModel = false }: IProps) => {
                 PromptInputSettings.set('multiState', 'samplers')
               } else {
                 PromptInputSettings.set('multiState', '')
-                setInput({multiState: '' })
+                setInput({ multiState: '' })
               }
             }}
-            checked={input.useAllSamplers}
+            checked={input.multiState === 'samplers'}
           />
         </Section>
       )}

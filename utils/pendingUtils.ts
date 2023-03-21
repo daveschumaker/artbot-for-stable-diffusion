@@ -156,7 +156,7 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
     return {
       success: true
     }
-  } else if (imageParams.useAllSamplers) {
+  } else if (imageParams.multiState === 'samplers') {
     imageParams.numImages = 1
 
     // TODO: Blarg. Should not hard code this. Constants, man. CONSTANTS.

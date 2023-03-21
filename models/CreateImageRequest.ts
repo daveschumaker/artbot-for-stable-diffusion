@@ -50,7 +50,7 @@ export interface IRequestParams {
   tiling: boolean
   triggers?: Array<string>
   useAllModels: boolean
-  useAllSamplers: boolean
+  multiState: string
   useMultiSteps: boolean
   useMultiGuidance: boolean
   width: number
@@ -97,7 +97,7 @@ class CreateImageRequest {
   triggers: Array<string>
   upscaled?: boolean
   useAllModels: boolean
-  useAllSamplers: boolean
+  multiState: string
   useMultiSteps: boolean
   useMultiGuidance: boolean
   width: number
@@ -136,7 +136,7 @@ class CreateImageRequest {
     tiling = false,
     triggers = [],
     useAllModels = false,
-    useAllSamplers = false,
+    multiState = '',
     useMultiGuidance = false,
     useMultiSteps = false,
     width = 512,
@@ -237,7 +237,7 @@ class CreateImageRequest {
     this.steps = Number(steps)
     this.triggers = [...triggers]
     this.useAllModels = Boolean(useAllModels)
-    this.useAllSamplers = Boolean(useAllSamplers)
+    this.multiState = String(multiState)
     this.useMultiSteps = Boolean(useMultiSteps)
     this.multiSteps = []
     this.useMultiGuidance = Boolean(useMultiGuidance)

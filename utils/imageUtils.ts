@@ -657,7 +657,7 @@ interface ICountImages {
   multiGuidance?: string
   useAllModels?: boolean
   useFavoriteModels?: boolean
-  useAllSamplers?: boolean
+  multiState?: string
   useMultiSteps?: boolean
   useMultiGuidance?: boolean
   prompt?: string
@@ -681,7 +681,7 @@ export const countImagesToGenerate = (imageParams: ICountImages) => {
     multiGuidance = '',
     useAllModels = false,
     useFavoriteModels = false,
-    useAllSamplers = false,
+    multiState = '',
     useMultiGuidance = false,
     useMultiSteps = false,
     models = [],
@@ -739,7 +739,7 @@ export const countImagesToGenerate = (imageParams: ICountImages) => {
     imageCount = imageCount * favModelCount
   }
 
-  if (useAllSamplers) {
+  if (multiState === 'samplers') {
     let samplerCount = DEFAULT_SAMPLER_ARRAY.length
 
     if (

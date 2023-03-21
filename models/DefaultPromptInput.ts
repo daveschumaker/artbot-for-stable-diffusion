@@ -42,7 +42,6 @@ class DefaultPromptInput {
   models: Array<string>
   useAllModels: boolean
   useFavoriteModels: boolean
-  useAllSamplers: boolean
   useMultiSteps: boolean
   useMultiGuidance: boolean
   canvasData: any | null
@@ -89,7 +88,6 @@ class DefaultPromptInput {
     this.models = ['stable_diffusion']
     this.useAllModels = false
     this.useFavoriteModels = false
-    this.useAllSamplers = false
     this.useMultiSteps = false
     this.useMultiGuidance = false
     this.canvasData = null
