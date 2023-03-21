@@ -49,6 +49,7 @@ interface FinishedImage {
   success: boolean
   base64String?: string
   status?: string
+  message?: string
 }
 
 export const checkImageJob = async (jobId: string): Promise<CheckImage> => {
@@ -209,7 +210,9 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
       )
 
       const skipSetErrorOnAll =
-        status === 'UNKNOWN_ERROR' || status === 'QUESTIONABLE_PROMPT_ERROR'
+        status === 'UNKNOWN_ERROR' ||
+        status === 'QUESTIONABLE_PROMPT_ERROR' ||
+        status === 'INVALID_IMAGE_FROM_API'
       if (imageParams.parentJobId && !skipSetErrorOnAll) {
         await updateAllPendingJobs(imageParams.parentJobId, {
           jobStatus: JobStatus.Error,
@@ -339,20 +342,20 @@ export const getImage = async (jobId: string) => {
   }
 
   const data = await getFinishedImage(jobId)
-  const { status = '' } = data
+  const { status = '', message = '' } = data
 
   if (data?.success) {
     return {
       jobId,
       status: 'SUCCESS',
-      message: '',
+      message,
       ...data
     }
   } else {
     return {
       success: false,
       status,
-      message: '',
+      message,
       jobId
     }
   }
@@ -495,6 +498,21 @@ export const checkCurrentJob = async (imageDetails: any) => {
       return {
         success: false,
         status: 'NOT_FOUND'
+      }
+    }
+
+    if (imgDetailsFromApi?.status === 'INVALID_IMAGE_FROM_API') {
+      await updatePendingJob(
+        imageDetails.id,
+        Object.assign({}, imageDetails, {
+          jobStatus: JobStatus.Error,
+          errorMessage: imgDetailsFromApi.message
+        })
+      )
+
+      return {
+        success: false,
+        status: 'INVALID_IMAGE_FROM_API'
       }
     }
 

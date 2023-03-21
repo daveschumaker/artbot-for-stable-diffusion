@@ -142,6 +142,16 @@ const Changelog = () => {
           <StyledLi>
             Two new upscalers added to the Horde: 4x_AnimeSharp and NMKD_Siax
           </StyledLi>
+          <StyledLi>
+            Fix: Issue with upscaler not able to be unselected. Thanks to
+            TheGlosser for reporting this on Discord.
+          </StyledLi>
+          <StyledLi>
+            Fix: Issue where sometimes broken images were returned from API
+            (ArtBot now properly shows an error and gives you an option to
+            retry). Thanks to AzureBlue for reporting this on Discord and then
+            working with me to fix the issue.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

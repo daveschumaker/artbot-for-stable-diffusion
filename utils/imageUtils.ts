@@ -815,3 +815,20 @@ export const generateBase64Thumbnail = async (
   const [, imgBase64String] = fullDataString.split(';base64,')
   return imgBase64String
 }
+
+export const isBase64UrlImage = async (base64String: string) => {
+  let image = new Image()
+  image.src = base64String
+  return await new Promise((resolve) => {
+    image.onload = function () {
+      if (image.height === 0 || image.width === 0) {
+        resolve(false)
+        return
+      }
+      resolve(true)
+    }
+    image.onerror = () => {
+      resolve(false)
+    }
+  })
+}

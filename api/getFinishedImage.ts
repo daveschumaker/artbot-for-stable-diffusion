@@ -1,4 +1,5 @@
 import memoizee from 'memoizee'
+import { isBase64UrlImage } from 'utils/imageUtils'
 import { clientHeader, getApiHostServer } from '../utils/appUtils'
 import { blobToBase64 } from '../utils/helperUtils'
 import { isValidHttpUrl } from '../utils/validationUtils'
@@ -6,6 +7,7 @@ import { isValidHttpUrl } from '../utils/validationUtils'
 interface FinishedImageResponse {
   success: boolean
   status?: string
+  message?: string
   jobId?: string
   worker_name?: string
   hordeImageId?: string
@@ -106,11 +108,12 @@ export const _getFinishedImage = async (
         }
       }
 
+      let base64
       if (isValidHttpUrl(image.img)) {
         try {
           const imageData = await fetch(`${image.img}`)
           const blob = await imageData.blob()
-          const base64 = (await blobToBase64(blob)) as string
+          base64 = (await blobToBase64(blob)) as string
           base64String = base64.split(',')[1]
         } catch (err) {
           return {
@@ -126,6 +129,22 @@ export const _getFinishedImage = async (
           success: false,
           status: 'MISSING_BASE64_STRING',
           jobId
+        }
+      }
+
+      // Attempt to handle an error that sometimes occurs, where R2 returns an invalid response.
+      // For whatever reason, ArtBot still processes this as an image.
+      if (base64) {
+        const validImage = await isBase64UrlImage(base64)
+
+        if (!validImage) {
+          return {
+            success: false,
+            status: 'INVALID_IMAGE_FROM_API',
+            jobId,
+            message:
+              'An error occurred while attempting to generate this image. Please try again.'
+          }
         }
       }
 

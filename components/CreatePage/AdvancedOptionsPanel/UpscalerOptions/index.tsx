@@ -28,7 +28,7 @@ const UpscalerOptions = ({ input, setInput }: Props) => {
   const handlePostProcessing = useCallback(
     (value: string) => {
       let newPost: string[] = []
-      const index = newPost.indexOf(value)
+      const index = input.post_processing.indexOf(value)
 
       if (index > -1) {
         newPost = [...input.post_processing]
