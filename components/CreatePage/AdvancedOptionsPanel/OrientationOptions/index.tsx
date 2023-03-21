@@ -108,7 +108,11 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
     if (!keepAspectRatio) return 0
 
     const currentAspectRatio = input.width / input.height
-    const aspectRatioRatio = currentAspectRatio / targetAspectRatio
+
+    const largerRatio = Math.max(currentAspectRatio, targetAspectRatio)
+    const smallerRatio = Math.min(currentAspectRatio, targetAspectRatio)
+
+    const aspectRatioRatio = largerRatio / smallerRatio
 
     const deviation = Math.abs(aspectRatioRatio - 1)
     return deviation
