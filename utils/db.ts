@@ -162,9 +162,13 @@ export const deleteStalePending = async () => {
 export const allPendingJobs = async (status?: string) => {
   try {
     if (status) {
-      return await db?.pending?.where('jobStatus')?.equals(status)?.toArray()
+      return await db?.pending
+        ?.where('jobStatus')
+        ?.equals(status)
+        ?.orderBy('id')
+        .toArray()
     } else {
-      return await db?.pending?.toArray()
+      return await db?.pending?.orderBy('id')?.toArray()
     }
   } catch (err: any) {
     if (
@@ -199,8 +203,11 @@ export const allCompletedJobs = memoize(_allCompletedJobs, {
 })
 
 export const deleteDoneFromPending = async () => {
-  const images = (await allPendingJobs(JobStatus.Done)) || []
-  const ids = images.map((job: any) => job.id)
+  const pendingJobs = (await allPendingJobs()) || []
+  const done = pendingJobs.filter((job: { jobStatus: JobStatus }) => {
+    return job.jobStatus === JobStatus.Done
+  })
+  const ids = done.map((job: any) => job.id)
 
   await db.pending.bulkDelete(ids)
 }
