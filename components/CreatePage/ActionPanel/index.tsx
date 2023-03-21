@@ -12,7 +12,6 @@ const ERROR_INPAINT_MISSING_SOURCE_MASK =
 interface Props {
   hasValidationError: boolean;
   hasError: string | null;
-  fixedSeedErrorMsg: string;
   errors: {[key: string]: boolean};
   input: string;
   setInput: any;
@@ -29,7 +28,6 @@ interface Props {
 const ActionPanel = ({
   hasValidationError,
   hasError,
-  fixedSeedErrorMsg,
   errors,
   input,
   setInput,
@@ -47,7 +45,6 @@ const ActionPanel = ({
       <FormErrorMessage
         hasValidationError={hasValidationError}
         hasError={hasError}
-        fixedSeedErrorMsg={fixedSeedErrorMsg}
         errors={errors}
       />
 

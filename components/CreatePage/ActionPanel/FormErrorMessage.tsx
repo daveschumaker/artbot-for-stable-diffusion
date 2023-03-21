@@ -5,12 +5,11 @@ import Errors from 'utils/errors'
 interface Props {
   hasValidationError: boolean;
   hasError: string | null;
-  fixedSeedErrorMsg: string;
   errors: {[key: string]: boolean};
 }
 
 function FormErrorMessage(props: Props){
-  const { hasValidationError, hasError, fixedSeedErrorMsg, errors } = props;
+  const { hasValidationError, hasError, errors } = props;
 
   return (
     <>
@@ -19,19 +18,14 @@ function FormErrorMessage(props: Props){
           Please correct all input errors before continuing
         </div>
       )}
-      {hasError && hasError === fixedSeedErrorMsg && (
-        <div className="mt-2 text-amber-400 font-semibold">
-          {fixedSeedErrorMsg}
-        </div>
-      )}
-      {hasError && hasError !== fixedSeedErrorMsg && (
+      {hasError && (
         <div className="mt-2 text-red-500 font-semibold">
           Error: {hasError}
         </div>
       )}
       
       {
-        Object.keys(errors||{}).filter(e=>Errors[e]).map((key: string) => {
+        Object.keys(errors||{}).filter(e=>errors[e]).map((key: string) => {
           return (
             <div key={key} className="mt-2 text-red-500 font-semibold">
               {Errors[key]||'Unknown Error Code: '+key}

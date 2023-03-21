@@ -585,20 +585,10 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
       ? 'N/A'
       : Number(totalKudosCost / totalImagesRequested).toFixed(2)
 
-  const fixedSeedErrorMsg =
-    'Warning: You are using a fixed seed with multiple images. (You can still continue)'
-  if (
-    hasError !== fixedSeedErrorMsg &&
-    totalImagesRequested > 1 &&
-    input.seed
-  ) {
-    setHasError(fixedSeedErrorMsg)
-  } else if (
-    hasError === fixedSeedErrorMsg &&
-    (!input.seed || totalImagesRequested === 1)
-  ) {
-    setHasError('')
-  }
+  useEffect(() => {
+    setErrors({FIXED_SEED: Boolean(totalImagesRequested > 1 && input.seed)})
+  }, [totalImagesRequested, input.seed])
+
 
   return (
     <main>
@@ -715,7 +705,6 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
         <ActionPanel
           hasValidationError={hasValidationError}
           hasError={hasError}
-          fixedSeedErrorMsg={fixedSeedErrorMsg}
           errors={errors}
           input={input}
           setInput={setInput}
@@ -741,7 +730,6 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
       <ActionPanel
         hasValidationError={hasValidationError}
         hasError={hasError}
-        fixedSeedErrorMsg={fixedSeedErrorMsg}
         errors={errors}
         input={input}
         setInput={setInput}
