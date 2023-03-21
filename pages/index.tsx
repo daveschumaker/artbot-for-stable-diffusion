@@ -65,9 +65,6 @@ interface InputEvent {
 
 const defaultState: DefaultPromptInput = new DefaultPromptInput()
 
-const ERROR_INPAINT_MISSING_SOURCE_MASK =
-  "Whoa! You need an image and a source mask first before continuing. Please upload an image and add paint an area you'd like to change, or change your model before continuing."
-
 export async function getServerSideProps(context: any) {
   let availableModels: Array<any> = []
   let modelDetails: any = {}
@@ -390,35 +387,22 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
   ])
 
   useEffect(() => {
-    const hasInpaintingModels =
-      input.models.filter((model: string = '') => {
-        if (!model) {
-          return false
-        }
-
-        return model.indexOf('_inpainting') >= 0
-      }) || []
+    const hasInpaintingModels = input.models.filter((model: string = '') => model && model.indexOf('_inpainting') >= 0) || []
     const hasSourceMask = input.source_mask
 
     if (
-      hasInpaintingModels.length > 0 &&
-      !hasSourceMask &&
-      hasError !== ERROR_INPAINT_MISSING_SOURCE_MASK
+      // @ts-ignore
+      hasInpaintingModels.length > 0 && !hasSourceMask && !errors.INPAINT_MISSING_SOURCE_MASK
     ) {
-      setHasError(ERROR_INPAINT_MISSING_SOURCE_MASK)
     } else if (
-      hasInpaintingModels.length > 0 &&
-      hasSourceMask &&
-      hasError === ERROR_INPAINT_MISSING_SOURCE_MASK
+      ((hasInpaintingModels.length > 0 && hasSourceMask) || (hasInpaintingModels.length === 0)) &&
+      // @ts-ignore
+      errors.INPAINT_MISSING_SOURCE_MASK
     ) {
-      setHasError('')
-    } else if (
-      hasInpaintingModels.length === 0 &&
-      hasError === ERROR_INPAINT_MISSING_SOURCE_MASK
-    ) {
-      setHasError('')
+      setErrors({INPAINT_MISSING_SOURCE_MASK: false})
     }
-  }, [hasError, input.models, input.source_mask])
+
+  }, [input.models, input.source_mask])
 
   useEffect(() => {
     watchBuild()

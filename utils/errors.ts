@@ -1,5 +1,5 @@
 interface IErrors {
-    [key: string]: {text: string, className: string}
+    [key: string]: {text: string, className: string, blocksCreation: boolean}
 }
 
 const typeMap = {
@@ -10,8 +10,15 @@ const typeMap = {
 const Errors: IErrors = {
     FIXED_SEED: {
         text: 'Warning: You are using a fixed seed with multiple images. (You can still continue)',
-        className: typeMap.warning
-    }
+        className: typeMap.warning,
+        blocksCreation: false
+    },
+    INPAINT_MISSING_SOURCE_MASK: {
+        text: "Whoa! You need an image and a source mask first before continuing. Please upload an image and add paint an area you'd like to change, or change your model before continuing.",
+        className: typeMap.error,
+        blocksCreation: true
+    },
+
 }
 
 export default Errors

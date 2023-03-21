@@ -5,9 +5,7 @@ import { Button } from 'components/UI/Button';
 import TrashIcon from 'components/icons/TrashIcon';
 import SquarePlusIcon from 'components/icons/SquarePlusIcon';
 import Linker from 'components/UI//Linker';
-
-const ERROR_INPAINT_MISSING_SOURCE_MASK =
-  "Whoa! You need an image and a source mask first before continuing. Please upload an image and add paint an area you'd like to change, or change your model before continuing."
+import Errors from 'utils/errors';
 
 interface Props {
   hasValidationError: boolean;
@@ -40,6 +38,10 @@ const ActionPanel = ({
   kudosPerImage,
   showStylesDropdown,
 }: Props) => {
+  function areThereCriticalErrors(){
+    return Object.keys(errors||{}).filter((key: string) => (errors[key] && Errors[key]?.blocksCreation)).length > 0
+  }
+
   return (
     <>
       <FormErrorMessage
@@ -74,10 +76,10 @@ const ActionPanel = ({
             <Button
               title="Create new image"
               onClick={handleSubmit}
+              // @ts-ignore
               disabled={
                 hasValidationError ||
-                pending ||
-                hasError === ERROR_INPAINT_MISSING_SOURCE_MASK
+                pending || areThereCriticalErrors()
               }
               width="100px"
             >
