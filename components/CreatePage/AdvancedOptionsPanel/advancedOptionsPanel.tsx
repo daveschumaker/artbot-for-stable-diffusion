@@ -330,9 +330,9 @@ const AdvancedOptionsPanel = ({
             initialLoad={initialLoad}
             fullWidth
             enforceStepValue
-            werewolfFieldName='multiSteps'
-            werewolfFieldName2='useMultiSteps'
-            werewolfEnabledCallback={() => {
+            werewolfDataFieldName='multiSteps'
+            werewolfEnabledFieldName='useMultiSteps'
+            onMultiEnable={() => {
               setInput({
                 useMultiSteps: true,
                 numImages: 1,
@@ -347,7 +347,7 @@ const AdvancedOptionsPanel = ({
               PromptInputSettings.set('useFavoriteModels', false)
               PromptInputSettings.set('useAllSamplers', false)
             }}
-            werewolfDisabledCallback={() => {
+            onMultiDisable={() => {
               PromptInputSettings.set('useMultiSteps', false)
               setInput({ useMultiSteps: false })  
             }}

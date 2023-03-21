@@ -26,10 +26,10 @@ interface Props {
   fullWidth?: boolean
   enforceStepValue?: boolean
   callback?: (value: number) => void
-  werewolfFieldName?: string
-  werewolfFieldName2?: string
-  werewolfEnabledCallback?: () => void
-  werewolfDisabledCallback?: () => void,
+  werewolfDataFieldName?: string
+  werewolfEnabledFieldName?: string
+  onMultiEnable?: () => void
+  onMultiDisable?: () => void,
   werewolfDisableCheckbox?: boolean
 }
 
@@ -47,23 +47,23 @@ const NumericInputSlider = ({
   fullWidth = false,
   enforceStepValue = false,
   callback = () => { },
-  werewolfFieldName = '',
-  werewolfFieldName2 = '',
-  werewolfEnabledCallback = () => {},
-  werewolfDisabledCallback = () => {},
+  werewolfDataFieldName = '',
+  werewolfEnabledFieldName = '',
+  onMultiEnable = () => {},
+  onMultiDisable = () => {},
   werewolfDisableCheckbox = false
 }: Props) => {
   const [warning, setWarning] = useState('')
 
   useEffect(() => {
-    if (input[werewolfFieldName2]){
-      werewolfEnabledCallback()
+    if (input[werewolfEnabledFieldName]){
+      onMultiEnable()
     }
     else {
-      werewolfDisabledCallback()
+      onMultiDisable()
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [input[werewolfFieldName2]])
+  }, [input[werewolfEnabledFieldName]])
 
   function toggleWarning(state: boolean) {
     setWarning(state ? `This field only accepts numbers between ${from} and ${to}.` : '')
@@ -205,16 +205,17 @@ const NumericInputSlider = ({
           // @ts-ignore
           className="mb-2"
           type="text"
-          name={werewolfFieldName}
+          name={werewolfDataFieldName}
           onChange={(e: any) => {
-            setInput({ [werewolfFieldName]: e.target.value })
+            setInput({ [werewolfDataFieldName]: e.target.value })
           }}
+          // TODO: better placeholder
           placeholder={`${from},${to}`}
           // onBlur={() => {
           //   validateSteps()
           // }}
           // @ts-ignore
-          value={input[werewolfFieldName]}
+          value={input[werewolfDataFieldName]}
           width="100%"
         />
       </>
@@ -229,16 +230,15 @@ const NumericInputSlider = ({
             <TextTooltipRow>
               {label}
               {tooltip && <Tooltip tooltipId={fieldName}>{tooltip}</Tooltip>}
-              {werewolfFieldName && (
+              {werewolfDataFieldName && (
                 // TODO: Replace me with some cute icon button! UwU
                 <>
                   <ReactSwitch
                     disabled={werewolfDisableCheckbox}
                     onChange={() => {
-                      console.log({[werewolfFieldName2]: !input[werewolfFieldName2]})
-                      setInput({[werewolfFieldName2]: !input[werewolfFieldName2]})
+                      setInput({[werewolfEnabledFieldName]: !input[werewolfEnabledFieldName]})
                     }}
-                    checked={input[werewolfFieldName2]}
+                    checked={input[werewolfEnabledFieldName]}
                   />
                 </>
               )}
@@ -248,9 +248,9 @@ const NumericInputSlider = ({
               ({from} - {to})
             </div>
           </SubSectionTitle>
-          {input[werewolfFieldName2] ? multipleMode.main : singleMode.main}
+          {input[werewolfEnabledFieldName] ? multipleMode.main : singleMode.main}
         </div>
-        {input[werewolfFieldName2] ? multipleMode.slider : singleMode.slider}
+        {input[werewolfEnabledFieldName] ? multipleMode.slider : singleMode.slider}
         {warning && (
           <div className="mb-2 text-xs">{warning}</div>
         )}
