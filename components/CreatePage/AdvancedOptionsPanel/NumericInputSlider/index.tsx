@@ -9,6 +9,8 @@ import NumberInput from 'components/UI/NumberInput'
 import Slider from 'components/UI/Slider'
 
 import clsx from 'clsx'
+import Input from 'components/UI/Input'
+import ReactSwitch from 'react-switch'
 
 interface Props {
   label: string
@@ -23,7 +25,12 @@ interface Props {
   disabled?: boolean
   fullWidth?: boolean
   enforceStepValue?: boolean
-  callback?: (value: number)=>void
+  callback?: (value: number) => void
+  werewolfFieldName?: string
+  werewolfFieldName2?: string
+  werewolfEnabledCallback?: () => void
+  werewolfDisabledCallback?: () => void,
+  werewolfDisableCheckbox?: boolean
 }
 
 const NumericInputSlider = ({
@@ -39,15 +46,30 @@ const NumericInputSlider = ({
   disabled = false,
   fullWidth = false,
   enforceStepValue = false,
-  callback = () => {}
+  callback = () => { },
+  werewolfFieldName = '',
+  werewolfFieldName2 = '',
+  werewolfEnabledCallback = () => {},
+  werewolfDisabledCallback = () => {},
+  werewolfDisableCheckbox = false
 }: Props) => {
   const [warning, setWarning] = useState('')
 
-  function toggleWarning (state: boolean) {
+  useEffect(() => {
+    if (input[werewolfFieldName2]){
+      werewolfEnabledCallback()
+    }
+    else {
+      werewolfDisabledCallback()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [input[werewolfFieldName2]])
+
+  function toggleWarning(state: boolean) {
     setWarning(state ? `This field only accepts numbers between ${from} and ${to}.` : '')
   }
 
-  function keepInBoundaries (val: number, min: number, max: number) {
+  function keepInBoundaries(val: number, min: number, max: number) {
     return Math.max(min, Math.min(val, max))
   }
 
@@ -58,7 +80,7 @@ const NumericInputSlider = ({
     return newValue;
   }
 
-  function updateField (value: number) {
+  function updateField(value: number) {
     const res = {}
     // @ts-ignore
     res[fieldName] = value
@@ -68,7 +90,7 @@ const NumericInputSlider = ({
     setTemporaryValue(res[fieldName])
   }
 
-  function safelyUpdateField (value: string | number) {
+  function safelyUpdateField(value: string | number) {
     value = Number(value)
     if (isNaN(value) || value < from || value > to) {
       if (initialLoad) {
@@ -76,11 +98,11 @@ const NumericInputSlider = ({
       }
 
       toggleWarning(true)
-      updateField(isNaN(value)?to:keepInBoundaries(value, from, to))
+      updateField(isNaN(value) ? to : keepInBoundaries(value, from, to))
     } else {
       toggleWarning(false)
 
-      if (enforceStepValue){
+      if (enforceStepValue) {
         value = roundToNearestStep(value, from, to, step)
       }
 
@@ -99,10 +121,10 @@ const NumericInputSlider = ({
 
     const newValue = input[fieldName]
     let correctedNewValue
-    if (enforceStepValue){
+    if (enforceStepValue) {
       correctedNewValue = roundToNearestStep(newValue, from, to, step)
     }
-    else{
+    else {
       correctedNewValue = keepInBoundaries(newValue, from, to)
     }
 
@@ -112,7 +134,7 @@ const NumericInputSlider = ({
       res[fieldName] = correctedNewValue
       setInput(res)
 
-      console.log('Invalid value loaded in', fieldName,'. Force updating to', correctedNewValue, 'from', newValue)
+      console.log('Invalid value loaded in', fieldName, '. Force updating to', correctedNewValue, 'from', newValue)
       return
     }
 
@@ -124,45 +146,37 @@ const NumericInputSlider = ({
     setTemporaryValue(event.target.value)
   }
 
-  return (
-    <div className={clsx('mb-4 w-full', !fullWidth && 'md:w-1/2')}>
-      <Section>
-        <div className="flex flex-row items-center justify-between">
-          <SubSectionTitle>
-            <TextTooltipRow>
-              {label}
-              {tooltip && <Tooltip tooltipId={fieldName}>{tooltip}</Tooltip>}
-            </TextTooltipRow>
-
-            <div className="block text-xs w-full">
-              ({from} - {to})
-            </div>
-          </SubSectionTitle>
-          <NumberInput
-            className="mb-2"
-            type="text"
-            min={from}
-            max={to}
-            step={step}
-            name={fieldName}
-            disabled={disabled}
-            onMinusClick={() => {
-              const value = Number((input[fieldName] - step).toFixed(2))
-              safelyUpdateField(value)
-            }}
-            onPlusClick={() => {
-              const value = Number((input[fieldName] + step).toFixed(2))
-              safelyUpdateField(value)
-            }}
-            onChange={handleNumberInput}
-            onBlur={(e: any) => {
-              const value = Number(e.target.value)
-              safelyUpdateField(value)
-            }}
-            value={temporaryValue}
-            width="100%"
-          />
-        </div>
+  const singleMode = {
+    main: (
+      <>
+        <NumberInput
+          className="mb-2"
+          type="text"
+          min={from}
+          max={to}
+          step={step}
+          name={fieldName}
+          disabled={disabled}
+          onMinusClick={() => {
+            const value = Number((input[fieldName] - step).toFixed(2))
+            safelyUpdateField(value)
+          }}
+          onPlusClick={() => {
+            const value = Number((input[fieldName] + step).toFixed(2))
+            safelyUpdateField(value)
+          }}
+          onChange={handleNumberInput}
+          onBlur={(e: any) => {
+            const value = Number(e.target.value)
+            safelyUpdateField(value)
+          }}
+          value={temporaryValue}
+          width="100%"
+        />
+      </>
+    ),
+    slider: (
+      <>
         <Slider
           value={input[fieldName]}
           min={from}
@@ -173,6 +187,70 @@ const NumericInputSlider = ({
             safelyUpdateField(e.target.value)
           }}
         />
+      </>
+    )
+  }
+
+  const multipleMode = {
+    main: (
+      <>
+        {
+          // TODO: Add clear button here
+        }
+      </>
+    ),
+    slider: (
+      <>
+        <Input
+          // @ts-ignore
+          className="mb-2"
+          type="text"
+          name={werewolfFieldName}
+          onChange={(e: any) => {
+            setInput({ [werewolfFieldName]: e.target.value })
+          }}
+          placeholder={`${from},${to}`}
+          // onBlur={() => {
+          //   validateSteps()
+          // }}
+          // @ts-ignore
+          value={input[werewolfFieldName]}
+          width="100%"
+        />
+      </>
+    )
+  }
+
+  return (
+    <div className={clsx('mb-4 w-full', !fullWidth && 'md:w-1/2')}>
+      <Section>
+        <div className="flex flex-row items-center justify-between">
+          <SubSectionTitle>
+            <TextTooltipRow>
+              {label}
+              {tooltip && <Tooltip tooltipId={fieldName}>{tooltip}</Tooltip>}
+              {werewolfFieldName && (
+                // TODO: Replace me with some cute icon button! UwU
+                <>
+                  <ReactSwitch
+                    disabled={werewolfDisableCheckbox}
+                    onChange={() => {
+                      console.log({[werewolfFieldName2]: !input[werewolfFieldName2]})
+                      setInput({[werewolfFieldName2]: !input[werewolfFieldName2]})
+                    }}
+                    checked={input[werewolfFieldName2]}
+                  />
+                </>
+              )}
+            </TextTooltipRow>
+
+            <div className="block text-xs w-full">
+              ({from} - {to})
+            </div>
+          </SubSectionTitle>
+          {input[werewolfFieldName2] ? multipleMode.main : singleMode.main}
+        </div>
+        {input[werewolfFieldName2] ? multipleMode.slider : singleMode.slider}
         {warning && (
           <div className="mb-2 text-xs">{warning}</div>
         )}

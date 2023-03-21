@@ -271,7 +271,7 @@ const AdvancedOptionsPanel = ({
           <TextTooltipRow>
             Negative prompt
             <Tooltip tooltipId="negative-prompt-tooltip">
-              Add words or phrases to demphasize from your desired image
+              Add words or phrases to deemphasize from your desired image
             </Tooltip>
           </TextTooltipRow>
         </SubSectionTitle>
@@ -311,105 +311,48 @@ const AdvancedOptionsPanel = ({
       <TwoPanel className="mt-4">
         <SplitPanel>
 
-          {!input.useMultiSteps && (
-            <NumericInputSlider
-              label="Steps"
-              tooltip="Fewer steps generally result in quicker image generations.
-              Many models achieve full coherence after a certain number
-              of finite steps (60 - 90). Keep your initial queries in
-              the 30 - 50 range for best results."
-              from={1}
-              to={maxSteps({
-                sampler: input.sampler,
-                loggedIn: loggedIn === true ? true : false,
-                isSlider: true
-              })}
-              step={1}
-              input={input}
-              setInput={setInput}
-              fieldName="steps"
-              initialLoad={initialLoad}
-              fullWidth
-              enforceStepValue
-            />
-          )}
-          {input.useMultiSteps && (
-            <Section>
-              <div className="flex flex-row items-center justify-between">
-                <div className="w-[220px] pr-2">
-                  <SubSectionTitle>
-                    <TextTooltipRow>
-                      Multi-steps
-                      <Tooltip tooltipId="multi-steps">
-                        Comma separated values to create a series of images
-                        using multiple steps. Example: 3,6,9,12,15
-                      </Tooltip>
-                    </TextTooltipRow>
-                    <div className="block text-xs w-full">
-                      (1 -{' '}
-                      {maxSteps({
-                        sampler: input.sampler,
-                        loggedIn: loggedIn === true ? true : false
-                      })}
-                      )
-                    </div>
-                  </SubSectionTitle>
-                </div>
-                <Input
-                  // @ts-ignore
-                  error={errorMessage.multiSteps}
-                  className="mb-2"
-                  type="text"
-                  name="multiSteps"
-                  onChange={handleChangeInput}
-                  placeholder="3,5,7,9"
-                  // onBlur={() => {
-                  //   validateSteps()
-                  // }}
-                  // @ts-ignore
-                  value={input.multiSteps}
-                  width="100%"
-                />
-              </div>
-              {errorMessage.steps && (
-                <div className="mb-2 text-red-500 text-lg font-bold">
-                  {errorMessage.steps}
-                </div>
-              )}
-              <NoSliderSpacer />
-            </Section>
-          )}
+          <NumericInputSlider
+            label="Steps"
+            tooltip="Fewer steps generally result in quicker image generations.
+            Many models achieve full coherence after a certain number
+            of finite steps (60 - 90). Keep your initial queries in
+            the 30 - 50 range for best results."
+            from={1}
+            to={maxSteps({
+              sampler: input.sampler,
+              loggedIn: loggedIn === true ? true : false,
+              isSlider: true
+            })}
+            step={1}
+            input={input}
+            setInput={setInput}
+            fieldName="steps"
+            initialLoad={initialLoad}
+            fullWidth
+            enforceStepValue
+            werewolfFieldName='multiSteps'
+            werewolfFieldName2='useMultiSteps'
+            werewolfEnabledCallback={() => {
+              setInput({
+                useMultiSteps: true,
+                numImages: 1,
+                useAllModels: false,
+                useFavoriteModels: false,
+                useAllSamplers: false
+              })
 
-          {showMultiSamplerInput && (
-            <InputSwitch
-              disabled={
-                input.useMultiGuidance || input.useAllSamplers ? true : false
-              }
-              label="Use multiple steps"
-              tooltip={`Provide a list of comma separated values to create a series of images using multiple steps: &quot;3,6,9,12,15&quot;`}
-              handleSwitchToggle={() => {
-                if (!input.useMultiSteps) {
-                  setInput({
-                    useMultiSteps: true,
-                    numImages: 1,
-                    useAllModels: false,
-                    useFavoriteModels: false,
-                    useAllSamplers: false
-                  })
-
-                  PromptInputSettings.set('useMultiSteps', true)
-                  PromptInputSettings.set('numImages', 1)
-                  PromptInputSettings.set('useAllModels', false)
-                  PromptInputSettings.set('useFavoriteModels', false)
-                  PromptInputSettings.set('useAllSamplers', false)
-                } else {
-                  PromptInputSettings.set('useMultiSteps', false)
-                  setInput({ useMultiSteps: false })
-                }
-              }}
-              checked={input.useMultiSteps}
-            />
-          )}
+              PromptInputSettings.set('useMultiSteps', true)
+              PromptInputSettings.set('numImages', 1)
+              PromptInputSettings.set('useAllModels', false)
+              PromptInputSettings.set('useFavoriteModels', false)
+              PromptInputSettings.set('useAllSamplers', false)
+            }}
+            werewolfDisabledCallback={() => {
+              PromptInputSettings.set('useMultiSteps', false)
+              setInput({ useMultiSteps: false })  
+            }}
+            werewolfDisableCheckbox={ input.useMultiGuidance || input.useAllSamplers}
+          />
 
         </SplitPanel>
 
@@ -502,7 +445,7 @@ const AdvancedOptionsPanel = ({
               checked={input.useMultiGuidance}
             />
           )}
-          
+
         </SplitPanel>
       </TwoPanel>
       {(input.img2img ||
