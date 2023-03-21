@@ -26,9 +26,15 @@ function FormErrorMessage(props: Props){
       
       {
         Object.keys(errors||{}).filter(e=>errors[e]).map((key: string) => {
+          if (!Errors[key]) return (
+            <div className="mt-2 text-red-500 font-semibold">
+              Unknown error code: {key}
+            </div>
+          )
+
           return (
-            <div key={key} className="mt-2 text-red-500 font-semibold">
-              {Errors[key]||'Unknown Error Code: '+key}
+            <div key={key} className={"mt-2 font-semibold " + Errors[key].className}>
+              {Errors[key].text}
             </div>
           )
         })
