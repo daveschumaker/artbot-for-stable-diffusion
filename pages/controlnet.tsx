@@ -52,6 +52,7 @@ import { kudosCostV2 } from '../utils/kudosCost'
 import NumericInputSlider from 'components/CreatePage/AdvancedOptionsPanel/NumericInputSlider'
 import ControlNetOptions from 'components/CreatePage/AdvancedOptionsPanel/ControlNetOptions'
 import UpscalerOptions from 'components/CreatePage/AdvancedOptionsPanel/UpscalerOptions'
+import useComponentState from 'hooks/useComponentState'
 
 // Kind of a hacky way to persist output of image over the course of a session.
 let cachedImageDetails = {}
@@ -312,25 +313,16 @@ const ControlNet = () => {
 
   const kudosPerImage =
     totalImagesRequested < 1 ||
-    isNaN(totalKudosCost) ||
-    isNaN(totalImagesRequested)
+      isNaN(totalKudosCost) ||
+      isNaN(totalImagesRequested)
       ? 'N/A'
       : Number(totalKudosCost / totalImagesRequested).toFixed(2)
 
-  const fixedSeedErrorMsg =
-    'Warning: You are using a fixed seed with multiple images. (You can still continue)'
-  if (
-    hasError !== fixedSeedErrorMsg &&
-    totalImagesRequested > 1 &&
-    input.seed
-  ) {
-    setHasError(fixedSeedErrorMsg)
-  } else if (
-    hasError === fixedSeedErrorMsg &&
-    (!input.seed || totalImagesRequested === 1)
-  ) {
-    setHasError('')
-  }
+  const [errors, setErrors] = useComponentState({} as { [key: string]: boolean })
+
+  useEffect(() => {
+    setErrors({ FIXED_SEED: Boolean(totalImagesRequested > 1 && input.seed) })
+  }, [totalImagesRequested, input.seed])
 
   return (
     <>
@@ -616,18 +608,18 @@ const ControlNet = () => {
           />
           {(getPostProcessing('GFPGAN') ||
             getPostProcessing('CodeFormers')) && (
-            <NumericInputSlider
-              label="Face-fix strength"
-              tooltip="0.05 is the weakest effect (barely noticeable improvements), while 1.0 is the strongest effect."
-              from={0.05}
-              to={1.0}
-              step={0.05}
-              input={input}
-              setInput={setInput}
-              fieldName="facefixer_strength"
-              initialLoad={false}
-            />
-          )}
+              <NumericInputSlider
+                label="Face-fix strength"
+                tooltip="0.05 is the weakest effect (barely noticeable improvements), while 1.0 is the strongest effect."
+                from={0.05}
+                to={1.0}
+                step={0.05}
+                input={input}
+                setInput={setInput}
+                fieldName="facefixer_strength"
+                initialLoad={false}
+              />
+            )}
           <UpscalerOptions input={input} setInput={setInput} />
         </div>
       </Section>
@@ -667,7 +659,7 @@ const ControlNet = () => {
       <ActionPanel
         hasValidationError={false}
         hasError={hasError}
-        fixedSeedErrorMsg={fixedSeedErrorMsg}
+        errors={errors}
         input={input}
         setInput={setInput}
         resetInput={() => {
