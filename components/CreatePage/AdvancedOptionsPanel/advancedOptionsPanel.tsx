@@ -323,28 +323,16 @@ const AdvancedOptionsPanel = ({
             werewolfDataFieldName='multiSteps'
             onMultiEnable={() => {
               setInput({
-                useMultiGuidance: false,
-                useMultiSteps: true,
                 numImages: 1,
-                useAllModels: false,
-                useFavoriteModels: false,
-                useAllSamplers: false
+                multiState: 'multiSteps'
               })
 
-              PromptInputSettings.set('useMultiGuidance', false)
-              PromptInputSettings.set('useMultiSteps', true)
               PromptInputSettings.set('numImages', 1)
-              PromptInputSettings.set('useAllModels', false)
-              PromptInputSettings.set('useFavoriteModels', false)
-              PromptInputSettings.set('useAllSamplers', false)
-
               PromptInputSettings.set('multiState', 'multiSteps')
             }}
             onMultiDisable={() => {
-              PromptInputSettings.set('useMultiSteps', false)
-
-              PromptInputSettings.set('multiState', undefined)
-              setInput({ useMultiSteps: false })
+              PromptInputSettings.set('multiState', '')
+              setInput({ multiState: '' })
             }}
           />
 
@@ -368,28 +356,17 @@ const AdvancedOptionsPanel = ({
             werewolfDataFieldName='multiGuidance'
             onMultiEnable={() => {
               setInput({
-                useMultiGuidance: true,
-                useMultiSteps: false,
                 numImages: 1,
-                useAllModels: false,
-                useFavoriteModels: false,
-                useAllSamplers: false
+                multiState: 'multiGuidance'
               })
 
-              PromptInputSettings.set('useMultiGuidance', true)
-              PromptInputSettings.set('useMultiSteps', false)
-              PromptInputSettings.set('numImages', 1)
-              PromptInputSettings.set('useAllModels', false)
-              PromptInputSettings.set('useFavoriteModels', false)
-              PromptInputSettings.set('useAllSamplers', false)
 
+              PromptInputSettings.set('numImages', 1)
               PromptInputSettings.set('multiState', 'multiGuidance')
             }}
             onMultiDisable={() => {
-              PromptInputSettings.set('useMultiGuidance', false)
-
-              PromptInputSettings.set('multiState', undefined)
-              setInput({ useMultiGuidance: false })
+              PromptInputSettings.set('multiState', '')
+              setInput({ multiState: '' })
             }}
           />
 

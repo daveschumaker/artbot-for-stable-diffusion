@@ -18,6 +18,7 @@ class DefaultPromptInput {
   sampler: string
   cfg_scale: number
   steps: number
+  multiState: string
   multiSteps: string
   multiGuidance: string
   seed: string
@@ -64,6 +65,7 @@ class DefaultPromptInput {
     this.sampler = 'k_euler_a'
     this.cfg_scale = 9
     this.steps = 20
+    this.multiState = ''
     this.multiSteps = ''
     this.multiGuidance = ''
     this.seed = ''

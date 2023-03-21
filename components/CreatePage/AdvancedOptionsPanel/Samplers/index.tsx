@@ -71,7 +71,7 @@ const Samplers = ({ input, setInput, showMultiModel = false }: IProps) => {
           </SubSectionTitle>
           <ReactSwitch
             disabled={
-              input.useMultiGuidance || input.useMultiSteps ? true : false
+              !!input.multiState && input.multiState !== 'samplers'
             }
             onChange={() => {
               if (!input.useAllSamplers) {
@@ -81,20 +81,14 @@ const Samplers = ({ input, setInput, showMultiModel = false }: IProps) => {
                 })
                 setInput({
                   numImages: 1,
-                  useAllSamplers: true,
-                  useAllModels: false,
-                  useFavoriteModels: false,
-                  useMultiSteps: false
+                  multiState: 'samplers'
                 })
 
                 PromptInputSettings.set('numImages', 1)
-                PromptInputSettings.set('useAllSamplers', true)
-                PromptInputSettings.set('useAllModels', false)
-                PromptInputSettings.set('useFavoriteModels', false)
-                PromptInputSettings.set('useMultiSteps', false)
+                PromptInputSettings.set('multiState', 'samplers')
               } else {
-                PromptInputSettings.set('useAllSamplers', false)
-                setInput({ useAllSamplers: false })
+                PromptInputSettings.set('multiState', '')
+                setInput({multiState: '' })
               }
             }}
             checked={input.useAllSamplers}
