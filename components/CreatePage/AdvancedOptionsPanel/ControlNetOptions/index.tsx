@@ -4,7 +4,7 @@ import SelectComponent from 'components/UI/Select'
 import SubSectionTitle from 'components/UI/SubSectionTitle'
 import TwoPanel from 'components/UI/TwoPanel'
 import DefaultPromptInput from 'models/DefaultPromptInput'
-import { CONTROL_TYPE_ARRAY } from '../../../../constants'
+import { CONTROL_TYPE_ARRAY } from '../../../../_constants'
 import InputSwitch from '../InputSwitch'
 import SplitPanel from 'components/UI/SplitPanel'
 
@@ -116,7 +116,9 @@ const ControlNetOptions = ({
               disabled={!input.control_type}
               tooltip="Tell Stable Horde that the image you're uploading is a control map."
               checked={input.image_is_control}
-              handleSwitchToggle={() => handleControlMapSelect('image_is_control')}
+              handleSwitchToggle={() =>
+                handleControlMapSelect('image_is_control')
+              }
               moreInfoLink={
                 input.control_type ? null : (
                   <div className="text-slate-500 dark:text-slate-400">
@@ -126,7 +128,6 @@ const ControlNetOptions = ({
               }
             />
           </SplitPanel>
-
         </TwoPanel>
       )}
     </div>

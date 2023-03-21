@@ -5,7 +5,7 @@ import SubSectionTitle from 'components/UI/SubSectionTitle'
 import {
   MAX_DIMENSIONS_LOGGED_IN,
   MAX_DIMENSIONS_LOGGED_OUT
-} from '../../../../constants'
+} from '../../../../_constants'
 import { useStore } from 'statery'
 import { userInfoStore } from 'store/userStore'
 import NumericInputSlider from '../NumericInputSlider'
@@ -43,7 +43,8 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
   const getConstraints = () => {
     return {
       from: 64,
-      to: loggedIn === true ? MAX_DIMENSIONS_LOGGED_IN : MAX_DIMENSIONS_LOGGED_OUT
+      to:
+        loggedIn === true ? MAX_DIMENSIONS_LOGGED_IN : MAX_DIMENSIONS_LOGGED_OUT
     }
   }
 
@@ -68,9 +69,8 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
 
   const toggleKeepAspectRatio = () => {
     if (!keepAspectRatio) {
-      setTargetAspectRatio(input.width / input.height);
-    }
-    else {
+      setTargetAspectRatio(input.width / input.height)
+    } else {
       setTargetAspectRatio(0)
     }
     setKeepAspectRatio(!keepAspectRatio)
@@ -94,7 +94,7 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
     if (keepAspectRatio) {
       const { from, to } = getConstraints()
 
-      let nearestWidth = Math.round(value * targetAspectRatio / 64) * 64
+      let nearestWidth = Math.round((value * targetAspectRatio) / 64) * 64
       nearestWidth = Math.min(nearestWidth, to)
       nearestWidth = Math.max(nearestWidth, from)
 
@@ -164,8 +164,8 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
             <Button
               title="Swap dimensions"
               onClick={() => {
-                if (keepAspectRatio){
-                  setTargetAspectRatio(1/targetAspectRatio) // Invert target aspect ratio
+                if (keepAspectRatio) {
+                  setTargetAspectRatio(1 / targetAspectRatio) // Invert target aspect ratio
                 }
                 setInput({
                   height: input.width,
@@ -178,14 +178,12 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
           )}
         </div>
 
-        {
-          input.orientationType !== 'custom' &&
+        {input.orientationType !== 'custom' &&
           input.orientationType !== 'random' && (
             <div className="block text-xs mt-2 w-full">
               Width: {input.width} Height: {input.height}
             </div>
-          )
-        }
+          )}
 
         {orientationValue?.value === 'custom' && (
           <>
@@ -226,7 +224,9 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
 
               <div className="flex justify-center items-center">
                 <Button
-                  title={keepAspectRatio?"Free aspect ratio":"Lock aspect ratio"}
+                  title={
+                    keepAspectRatio ? 'Free aspect ratio' : 'Lock aspect ratio'
+                  }
                   onClick={toggleKeepAspectRatio}
                 >
                   <LinkIcon active={keepAspectRatio} />
@@ -235,7 +235,6 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
             </div>
 
             <div className="block text-xs mt-3 w-full">
-
               {input.height * input.width > 1024 * 1024 && (
                 <div className="text-amber-500 font-bold">
                   You will need to have enough kudos to complete this request.
@@ -249,11 +248,14 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
             </div>
 
             {keepAspectRatio && (
-              <div className={
-                "block text-xs w-full font-bold " +
-                getAspectRatioDeviationColor(getAspectRatioDeviation())
-              }>
-                Aspect ratio is locked! Deviation from target value: {(getAspectRatioDeviation()*100).toFixed(2)}%
+              <div
+                className={
+                  'block text-xs w-full font-bold ' +
+                  getAspectRatioDeviationColor(getAspectRatioDeviation())
+                }
+              >
+                Aspect ratio is locked! Deviation from target value:{' '}
+                {(getAspectRatioDeviation() * 100).toFixed(2)}%
               </div>
             )}
 
@@ -264,7 +266,6 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
             <div className="block text-xs w-full">
               Current image size: {getMegapixelSize()} megapixels
             </div>
-            
           </>
         )}
       </MaxWidth>

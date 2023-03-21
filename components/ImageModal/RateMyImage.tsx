@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify'
 import { useCallback, useEffect, useState } from 'react'
-import { RATE_IMAGE_CUTOFF_SEC, RATING_QUALITY_MAP } from '../../constants'
+import { RATE_IMAGE_CUTOFF_SEC, RATING_QUALITY_MAP } from '../../_constants'
 import AppSettings from '../../models/AppSettings'
 import { getImageDetails, updateCompletedJob } from '../../utils/db'
 import StarRating from '../StarRating'

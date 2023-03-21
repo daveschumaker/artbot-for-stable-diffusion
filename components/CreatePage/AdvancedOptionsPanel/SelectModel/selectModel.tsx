@@ -14,7 +14,7 @@ import SelectComponent from '../../../UI/Select'
 import SubSectionTitle from '../../../UI/SubSectionTitle'
 import TextTooltipRow from '../../../UI/TextTooltipRow'
 import Tooltip from '../../../UI/Tooltip'
-import { MODEL_LIMITED_BY_WORKERS } from '../../../../constants'
+import { MODEL_LIMITED_BY_WORKERS } from '../../../../_constants'
 
 interface IProps {
   input: any

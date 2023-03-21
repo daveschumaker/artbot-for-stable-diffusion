@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { HexAlphaColorPicker } from 'react-colorful'
-import { ORIENTATION_OPTIONS } from '../../../../constants'
+import { ORIENTATION_OPTIONS } from '../../../../_constants'
 import { IOrientation } from '../../../../types'
 import {
   calculateAspectRatioFit,

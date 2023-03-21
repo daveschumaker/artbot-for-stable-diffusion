@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useStore } from 'statery'
 
 import Toast from '../components/UI/Toast'
-import { POLL_COMPLETED_JOBS_INTERVAL } from '../constants'
+import { POLL_COMPLETED_JOBS_INTERVAL } from '../_constants'
 import { useEffectOnce } from '../hooks/useEffectOnce'
 import { appInfoStore, setShowImageReadyToast } from '../store/appStore'
 import {

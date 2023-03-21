@@ -1,4 +1,4 @@
-import { HORDE_DEV, HORDE_PROD } from '../constants'
+import { HORDE_DEV, HORDE_PROD } from '../_constants'
 import AppSettings from '../models/AppSettings'
 
 export const logError = async (data: any) => {

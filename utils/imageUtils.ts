@@ -8,7 +8,7 @@ import { isValidHttpUrl } from './validationUtils'
 import { hasPromptMatrix, promptMatrix } from './promptUtils'
 import { validModelsArray } from './modelUtils'
 import AppSettings from '../models/AppSettings'
-import { DEFAULT_SAMPLER_ARRAY } from '../constants'
+import { DEFAULT_SAMPLER_ARRAY } from '../_constants'
 
 interface CreateImageJob {
   base64String?: string

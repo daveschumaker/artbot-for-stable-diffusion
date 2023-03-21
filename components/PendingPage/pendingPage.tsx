@@ -239,7 +239,7 @@ const PendingPage = () => {
             done ({done.length})
           </TextButton>
           <TextButton onClick={() => setFilter('processing')}>
-            processing ({processing.length + queued.length})
+            processing ({processing.length})
           </TextButton>
           <TextButton onClick={() => setFilter('error')}>
             error ({error.length})

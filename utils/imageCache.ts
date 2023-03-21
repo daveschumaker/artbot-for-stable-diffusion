@@ -19,7 +19,7 @@ import {
   CREATE_NEW_JOB_INTERVAL,
   MAX_CONCURRENT_JOBS_ANON,
   MAX_CONCURRENT_JOBS_USER
-} from '../constants'
+} from '../_constants'
 import { isAppActive } from './appUtils'
 import CreateImageRequest from '../models/CreateImageRequest'
 import { hasPromptMatrix, promptMatrix } from './promptUtils'
