@@ -27,10 +27,11 @@ interface Props {
   enforceStepValue?: boolean
   callback?: (value: number) => void
   werewolfDataFieldName?: string
-  werewolfEnabledFieldName?: string
   onMultiEnable?: () => void
   onMultiDisable?: () => void,
-  werewolfDisableCheckbox?: boolean
+
+  multiState?: string
+  setMultiState?: any
 }
 
 const NumericInputSlider = ({
@@ -48,22 +49,22 @@ const NumericInputSlider = ({
   enforceStepValue = false,
   callback = () => { },
   werewolfDataFieldName = '',
-  werewolfEnabledFieldName = '',
   onMultiEnable = () => {},
   onMultiDisable = () => {},
-  werewolfDisableCheckbox = false
+  multiState = '',
+  setMultiState = () => {}
 }: Props) => {
   const [warning, setWarning] = useState('')
 
   useEffect(() => {
-    if (input[werewolfEnabledFieldName]){
+    if (multiState === fieldName){
       onMultiEnable()
     }
     else {
       onMultiDisable()
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [input[werewolfEnabledFieldName]])
+  }, [multiState, fieldName])
 
   function toggleWarning(state: boolean) {
     setWarning(state ? `This field only accepts numbers between ${from} and ${to}.` : '')
@@ -234,11 +235,12 @@ const NumericInputSlider = ({
                 // TODO: Replace me with some cute icon button! UwU
                 <>
                   <ReactSwitch
-                    disabled={werewolfDisableCheckbox}
+                    disabled={!!multiState && multiState !== fieldName}
                     onChange={() => {
-                      setInput({[werewolfEnabledFieldName]: !input[werewolfEnabledFieldName]})
+                      //setInput({[werewolfEnabledFieldName]: !input[werewolfEnabledFieldName]})
+                      setMultiState(multiState === fieldName ? '' : fieldName)
                     }}
-                    checked={input[werewolfEnabledFieldName]}
+                    checked={multiState === fieldName}
                   />
                 </>
               )}
@@ -248,9 +250,9 @@ const NumericInputSlider = ({
               ({from} - {to})
             </div>
           </SubSectionTitle>
-          {input[werewolfEnabledFieldName] ? multipleMode.main : singleMode.main}
+          {multiState === fieldName ? multipleMode.main : singleMode.main}
         </div>
-        {input[werewolfEnabledFieldName] ? multipleMode.slider : singleMode.slider}
+        {multiState === fieldName ? multipleMode.slider : singleMode.slider}
         {warning && (
           <div className="mb-2 text-xs">{warning}</div>
         )}

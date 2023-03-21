@@ -78,6 +78,8 @@ const AdvancedOptionsPanel = ({
   })
   const [initialLoad, setInitialLoad] = useState(true)
 
+  const [multiState, setMultiState] = useState('')
+
   const modelerOptions = (imageParams: any) => {
     const modelsArray =
       validModelsArray({ imageParams, filterNsfw: filterNsfwModels }) || []
@@ -142,7 +144,7 @@ const AdvancedOptionsPanel = ({
       })
 
       await setDefaultPrompt(trimInput)
-    } catch (err) {}
+    } catch (err) { }
   }, [input.negative])
 
   const getPostProcessing = useCallback(
@@ -223,7 +225,7 @@ const AdvancedOptionsPanel = ({
     !componentState.showMultiModel &&
     !input.useAllModels &&
     input.source_processing !==
-      (SourceProcessing.InPainting || SourceProcessing.OutPainting)
+    (SourceProcessing.InPainting || SourceProcessing.OutPainting)
 
   const showNumImagesInput =
     !input.useAllModels && !input.useMultiSteps && !input.useAllSamplers
@@ -330,10 +332,11 @@ const AdvancedOptionsPanel = ({
             initialLoad={initialLoad}
             fullWidth
             enforceStepValue
+
             werewolfDataFieldName='multiSteps'
-            werewolfEnabledFieldName='useMultiSteps'
             onMultiEnable={() => {
               setInput({
+                useMultiGuidance: false,
                 useMultiSteps: true,
                 numImages: 1,
                 useAllModels: false,
@@ -341,6 +344,7 @@ const AdvancedOptionsPanel = ({
                 useAllSamplers: false
               })
 
+              PromptInputSettings.set('useMultiGuidance', false)
               PromptInputSettings.set('useMultiSteps', true)
               PromptInputSettings.set('numImages', 1)
               PromptInputSettings.set('useAllModels', false)
@@ -349,140 +353,94 @@ const AdvancedOptionsPanel = ({
             }}
             onMultiDisable={() => {
               PromptInputSettings.set('useMultiSteps', false)
-              setInput({ useMultiSteps: false })  
+              setInput({ useMultiSteps: false })
             }}
-            werewolfDisableCheckbox={ input.useMultiGuidance || input.useAllSamplers}
+
+            multiState={multiState}
+            setMultiState={setMultiState}
           />
 
         </SplitPanel>
 
         <SplitPanel>
 
-          {!input.useMultiGuidance && (
-            <NumericInputSlider
-              label="Guidance"
-              tooltip="Higher numbers follow the prompt more closely. Lower
+          <NumericInputSlider
+            label="Guidance"
+            tooltip="Higher numbers follow the prompt more closely. Lower
                 numbers give more creativity."
-              from={1}
-              to={30}
-              step={0.5}
-              input={input}
-              setInput={setInput}
-              fieldName="cfg_scale"
-              initialLoad={initialLoad}
-              fullWidth
-            />
-          )}
-          {input.useMultiGuidance && (
-            <Section>
-              <div className="flex flex-row items-center justify-between">
-                <div className="w-[220px] pr-2">
-                  <SubSectionTitle>
-                    <TextTooltipRow>
-                      Guidance
-                      <Tooltip tooltipId="guidance-tooltip">
-                        Comma separated values to create a series of images
-                        using multiple steps. Example: 3,6,9,12,15
-                      </Tooltip>
-                    </TextTooltipRow>
-                    <div className="block text-xs w-full">(1 - 30)</div>
-                  </SubSectionTitle>
-                </div>
-                <Input
-                  // @ts-ignore
-                  error={errorMessage.multiGuidance}
-                  className="mb-2"
-                  type="text"
-                  name="multiGuidance"
-                  onChange={handleChangeInput}
-                  placeholder="3,5,7,9"
-                  // onBlur={() => {
-                  //   validateSteps()
-                  // }}
-                  // @ts-ignore
-                  value={input.multiGuidance}
-                  width="100%"
-                />
-              </div>
-              {errorMessage.multiGuidance && (
-                <div className="mb-2 text-red-500 text-lg font-bold">
-                  {errorMessage.multiGuidance}
-                </div>
-              )}
-              <NoSliderSpacer />
-            </Section>
-          )}
+            from={1}
+            to={30}
+            step={0.5}
+            input={input}
+            setInput={setInput}
+            fieldName="cfg_scale"
+            initialLoad={initialLoad}
+            fullWidth
 
-          {showMultiSamplerInput && (
-            <InputSwitch
-              label="Use multiple guidance"
-              tooltip='Provide a list of comma separated values to create a series of images using multiple guidance: "3,6,9,12,15"'
-              disabled={
-                input.useMultiSteps || input.useAllSamplers ? true : false
-              }
-              handleSwitchToggle={() => {
-                if (!input.useMultiGuidance) {
-                  setInput({
-                    useMultiGuidance: true,
-                    useMultiSteps: false,
-                    numImages: 1,
-                    useAllModels: false,
-                    useFavoriteModels: false,
-                    useAllSamplers: false
-                  })
+            werewolfDataFieldName='multiGuidance'
+            onMultiEnable={() => {
+              setInput({
+                useMultiGuidance: true,
+                useMultiSteps: false,
+                numImages: 1,
+                useAllModels: false,
+                useFavoriteModels: false,
+                useAllSamplers: false
+              })
 
-                  PromptInputSettings.set('useMultiGuidance', true)
-                  PromptInputSettings.set('useMultiSteps', false)
-                  PromptInputSettings.set('numImages', 1)
-                  PromptInputSettings.set('useAllModels', false)
-                  PromptInputSettings.set('useFavoriteModels', false)
-                  PromptInputSettings.set('useAllSamplers', false)
-                } else {
-                  PromptInputSettings.set('useMultiGuidance', false)
-                  setInput({ useMultiGuidance: false })
-                }
-              }}
-              checked={input.useMultiGuidance}
-            />
-          )}
+              PromptInputSettings.set('useMultiGuidance', true)
+              PromptInputSettings.set('useMultiSteps', false)
+              PromptInputSettings.set('numImages', 1)
+              PromptInputSettings.set('useAllModels', false)
+              PromptInputSettings.set('useFavoriteModels', false)
+              PromptInputSettings.set('useAllSamplers', false)
+            }}
+            onMultiDisable={() => {
+              PromptInputSettings.set('useMultiGuidance', false)
+              setInput({ useMultiGuidance: false })
+            }}
+
+            multiState={multiState}
+            setMultiState={setMultiState}
+          />
 
         </SplitPanel>
       </TwoPanel>
       {(input.img2img ||
         input.source_processing === SourceProcessing.Img2Img ||
         input.source_processing === SourceProcessing.InPainting) && (
-        <div className="mr-8">
-          <Section>
-            <NumericInputSlider
-              label="Denoise"
-              tooltip="Amount of noise added to input image. Values that
+          <div className="mr-8">
+            <Section>
+              <NumericInputSlider
+                label="Denoise"
+                tooltip="Amount of noise added to input image. Values that
                   approach 1.0 allow for lots of variations but will
                   also produce images that are not semantically
                   consistent with the input. Only available for img2img."
-              from={0.0}
-              to={1.0}
-              step={0.05}
-              input={input}
-              setInput={setInput}
-              fieldName="denoising_strength"
-              initialLoad={initialLoad}
-              disabled={
+                from={0.0}
+                to={1.0}
+                step={0.05}
+                input={input}
+                setInput={setInput}
+                fieldName="denoising_strength"
+                initialLoad={initialLoad}
+                disabled={
+                  input.models &&
+                  input.models[0] &&
+                  input.models[0].indexOf('_inpainting') >= 0
+                }
+              />
+              {input.source_processing === SourceProcessing.InPainting &&
                 input.models &&
                 input.models[0] &&
-                input.models[0].indexOf('_inpainting') >= 0
-              }
-            />
-            {input.source_processing === SourceProcessing.InPainting &&
-              input.models &&
-              input.models[0] &&
-              input.models[0].indexOf('_inpainting') >= 0 && (
-                <div className="mt-0 text-sm text-slate-500">
-                  Note: Denoise disabled when inpainting model is used.
-                </div>
-              )}
-          </Section>
-        </div>
-      )}
+                input.models[0].indexOf('_inpainting') >= 0 && (
+                  <div className="mt-0 text-sm text-slate-500">
+                    Note: Denoise disabled when inpainting model is used.
+                  </div>
+                )}
+            </Section>
+          </div>
+        )}
 
       <ControlNetOptions input={input} setInput={setInput} />
 
@@ -670,9 +628,8 @@ const AdvancedOptionsPanel = ({
       )}
       {showUseAllModelsInput && (
         <InputSwitch
-          label={`Use all available models (${
-            modelerOptions(input).length - 1
-          })`}
+          label={`Use all available models (${modelerOptions(input).length - 1
+            })`}
           tooltip="Automatically generate an image for each model currently available on Stable Horde"
           moreInfoLink={
             <Linker href="/info/models">[ View all model details ]</Linker>
@@ -782,18 +739,18 @@ const AdvancedOptionsPanel = ({
           />
           {(getPostProcessing('GFPGAN') ||
             getPostProcessing('CodeFormers')) && (
-            <NumericInputSlider
-              label="Face-fix strength"
-              tooltip="0.05 is the weakest effect (barely noticeable improvements), while 1.0 is the strongest effect."
-              from={0.05}
-              to={1.0}
-              step={0.05}
-              input={input}
-              setInput={setInput}
-              fieldName="facefixer_strength"
-              initialLoad={initialLoad}
-            />
-          )}
+              <NumericInputSlider
+                label="Face-fix strength"
+                tooltip="0.05 is the weakest effect (barely noticeable improvements), while 1.0 is the strongest effect."
+                from={0.05}
+                to={1.0}
+                step={0.05}
+                input={input}
+                setInput={setInput}
+                fieldName="facefixer_strength"
+                initialLoad={initialLoad}
+              />
+            )}
           <Checkbox
             label={`Strip background`}
             value={getPostProcessing(`strip_background`)}
