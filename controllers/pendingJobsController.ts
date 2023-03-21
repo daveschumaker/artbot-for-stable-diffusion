@@ -20,7 +20,7 @@ export const getPendingJobsFromCache = () => {
 // Optimization hack?
 // Periodically fetch latest pending jobs from database
 // This call ensures it only happens one time (at a set interval)
-const fetchPendingImageJobs = async () => {
+export const fetchPendingImageJobs = async () => {
   const jobs = await allPendingJobs()
   pendingJobs = [...jobs]
 }

@@ -1,7 +1,11 @@
-import { getPendingJobsFromCache } from 'controllers/pendingJobsController'
-import { useCallback, useState } from 'react'
-import LazyLoad from 'react-lazyload'
+import {
+  fetchPendingImageJobs,
+  getPendingJobsFromCache
+} from 'controllers/pendingJobsController'
+import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
+import { useVirtualizer } from '@tanstack/react-virtual'
+
 import { useEffectOnce } from '../../hooks/useEffectOnce'
 import AppSettings from '../../models/AppSettings'
 import { setImagesForModalCache } from '../../store/pendingItemsCache'
@@ -13,6 +17,7 @@ import {
   deleteDoneFromPending,
   deletePendingJobFromDb
 } from '../../utils/db'
+
 import AdContainer from '../AdContainer'
 import CheckboxIcon from '../icons/CheckboxIcon'
 import DotsVerticalIcon from '../icons/DotsVerticalIcon'
@@ -25,6 +30,7 @@ import MenuButton from '../UI/MenuButton'
 import PageTitle from '../UI/PageTitle'
 import TextButton from '../UI/TextButton'
 import ImageModalController from './ImageModalController'
+import { useWindowSize } from 'hooks/useWindowSize'
 
 const MenuSeparator = styled.div`
   width: 100%;
@@ -32,6 +38,8 @@ const MenuSeparator = styled.div`
 `
 
 const PendingPage = () => {
+  const size = useWindowSize()
+  const parentRef = React.useRef<HTMLDivElement>(null)
   const [filter, setFilter] = useState('all')
   const [pendingImages, setPendingImages] = useState<Array<any>>([])
   const [showImageModal, setShowImageModal] = useState<string | boolean>(false)
@@ -40,10 +48,12 @@ const PendingPage = () => {
   const handleDeleteImage = async (id: number, jobId: string) => {
     await deleteCompletedImageById(id)
     await deletePendingJobFromDb(jobId)
+    fetchPendingImageJobs()
   }
 
   const onClosePanel = async (jobId: string) => {
     await deletePendingJobFromDb(jobId)
+    fetchPendingImageJobs()
   }
 
   const processPending = useCallback(() => {
@@ -53,40 +63,30 @@ const PendingPage = () => {
     const waiting: any = []
     const error: any = []
 
-    pendingImages
-      .sort((a: any, b: any) => {
-        if (a.id > b.id) {
-          return 1
-        }
-        if (a.id < b.id) {
-          return -1
-        }
-        return 0
-      })
-      .forEach((job: any) => {
-        if (job.jobStatus === JobStatus.Done) {
-          done.push(job)
-        }
+    pendingImages.forEach((job: any) => {
+      if (job.jobStatus === JobStatus.Done) {
+        done.push(job)
+      }
 
-        if (job.jobStatus === JobStatus.Processing) {
-          processing.push(job)
-        }
+      if (job.jobStatus === JobStatus.Processing) {
+        processing.push(job)
+      }
 
-        if (
-          job.jobStatus === JobStatus.Queued ||
-          job.jobStatus === JobStatus.Requested
-        ) {
-          queued.push(job)
-        }
+      if (
+        job.jobStatus === JobStatus.Queued ||
+        job.jobStatus === JobStatus.Requested
+      ) {
+        queued.push(job)
+      }
 
-        if (job.jobStatus === JobStatus.Waiting) {
-          waiting.push(job)
-        }
+      if (job.jobStatus === JobStatus.Waiting) {
+        waiting.push(job)
+      }
 
-        if (job.jobStatus === JobStatus.Error) {
-          error.push(job)
-        }
-      })
+      if (job.jobStatus === JobStatus.Error) {
+        error.push(job)
+      }
+    })
 
     return [done, processing, queued, waiting, error]
   }, [pendingImages])
@@ -99,32 +99,36 @@ const PendingPage = () => {
     setShowImageModal(jobId)
   }
 
-  const sorted = [
-    ...done,
-    ...processing,
-    ...queued,
-    ...waiting,
-    ...error
-  ].filter((job) => {
-    if (filter === 'all') {
-      return true
-    }
+  const sorted = [...done, ...processing, ...queued, ...waiting, ...error]
+    // .sort((a: any, b: any) => {
+    //   if (a.id > b.id) {
+    //     return 1
+    //   }
+    //   if (a.id < b.id) {
+    //     return -1
+    //   }
+    //   return 0
+    // })
+    .filter((job) => {
+      if (filter === 'all') {
+        return true
+      }
 
-    if (filter === 'done') {
-      return job.jobStatus === JobStatus.Done
-    }
+      if (filter === 'done') {
+        return job.jobStatus === JobStatus.Done
+      }
 
-    if (filter === 'processing') {
-      return (
-        job.jobStatus === JobStatus.Processing ||
-        job.jobStatus === JobStatus.Queued
-      )
-    }
+      if (filter === 'processing') {
+        return (
+          job.jobStatus === JobStatus.Processing ||
+          job.jobStatus === JobStatus.Queued
+        )
+      }
 
-    if (filter === 'error') {
-      return job.jobStatus === JobStatus.Error
-    }
-  })
+      if (filter === 'error') {
+        return job.jobStatus === JobStatus.Error
+      }
+    })
 
   const jobsInProgress = processing.length + queued.length
 
@@ -141,6 +145,33 @@ const PendingPage = () => {
       setShowImageModal(false)
     }
   })
+
+  const renderRow = ({ index }: { index: number }) => {
+    const job = sorted[index]
+    return (
+      <PendingItem
+        handleCloseClick={() => {
+          onClosePanel(job.jobId)
+        }}
+        //@ts-ignore
+        onImageClick={handleShowModalClick}
+        // onHideClick={}
+        //@ts-ignore
+        jobDetails={job}
+        //@ts-ignore
+        jobId={job.jobId}
+      />
+    )
+  }
+
+  const virtualizer = useVirtualizer({
+    count: sorted.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 240
+  })
+
+  const items = virtualizer.getVirtualItems()
+  const listHeight = size.height ? size.height - 256 : 500
 
   return (
     <div style={{ overflowAnchor: 'none' }}>
@@ -318,25 +349,49 @@ const PendingPage = () => {
         <AdContainer minSize={0} maxSize={640} />
       </div>
 
-      {sorted.length > 0 &&
-        sorted.map((job: { jobId: string; prompt: string }) => {
-          return (
-            <LazyLoad key={job.jobId}>
-              <PendingItem
-                handleCloseClick={() => {
-                  onClosePanel(job.jobId)
-                }}
-                //@ts-ignore
-                onImageClick={handleShowModalClick}
-                // onHideClick={}
-                //@ts-ignore
-                jobDetails={job}
-                //@ts-ignore
-                jobId={job.jobId}
-              />
-            </LazyLoad>
-          )
-        })}
+      {sorted.length > 0 && (
+        <div
+          ref={parentRef}
+          className="List"
+          style={{
+            height: listHeight,
+            width: '100%',
+            overflowY: 'auto',
+            contain: 'strict'
+          }}
+          id="pending-list-v2"
+        >
+          <div
+            style={{
+              height: virtualizer.getTotalSize(),
+              width: '100%',
+              position: 'relative'
+            }}
+          >
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                transform: `translateY(${items[0].start}px)`
+              }}
+            >
+              {items.map((virtualRow: any) => (
+                <div
+                  key={virtualRow.key}
+                  data-index={virtualRow.index}
+                  ref={virtualizer.measureElement}
+                >
+                  <div style={{ padding: '0 8px' }}>
+                    {renderRow({ index: virtualRow.index })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

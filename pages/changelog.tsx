@@ -105,6 +105,19 @@ const Changelog = () => {
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
       <Section>
+        <SubSectionTitle>2023.03.21</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Refactor the pending page... again. No front end changes as of yet,
+            but tried to rewrite a whooooole bunch of stuff to make fetching
+            requests more reliable and performant. Also implemented a
+            virtualized window for lists (as dynamically rendering a list of
+            hundred of changing items frequently caused memory errors and
+            crashes in people&apos;s browsers).
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.03.20</SubSectionTitle>
         <StyledUl>
           <StyledLi>

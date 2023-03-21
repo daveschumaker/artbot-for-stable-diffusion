@@ -24,6 +24,7 @@
     "@radix-ui/colors": "0.1.8",
     "@radix-ui/react-navigation-menu": "1.1.1",
     "@szhsin/react-menu": "3.4.1",
+    "@tanstack/react-virtual": "3.0.0-beta.9",
     "autosize": "5.0.2",
     "browser-image-resizer": "2.4.1",
     "buffer-image-size": "0.6.4",
