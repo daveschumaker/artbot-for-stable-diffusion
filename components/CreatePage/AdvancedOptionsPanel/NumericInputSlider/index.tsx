@@ -56,16 +56,6 @@ const NumericInputSlider = ({
 }: Props) => {
   const [warning, setWarning] = useState('')
 
-  useEffect(() => {
-    if (multiState === fieldName){
-      onMultiEnable()
-    }
-    else {
-      onMultiDisable()
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [multiState, fieldName])
-
   function toggleWarning(state: boolean) {
     setWarning(state ? `This field only accepts numbers between ${from} and ${to}.` : '')
   }
@@ -117,6 +107,7 @@ const NumericInputSlider = ({
   useEffect(() => {
     // We don't want to force input in incorrect boundaries
     if (initialLoad) {
+      setTemporaryValue(input[fieldName])
       return
     }
 
@@ -237,7 +228,12 @@ const NumericInputSlider = ({
                   <ReactSwitch
                     disabled={!!multiState && multiState !== fieldName}
                     onChange={() => {
-                      //setInput({[werewolfEnabledFieldName]: !input[werewolfEnabledFieldName]})
+                      if (multiState === fieldName){
+                        onMultiDisable()
+                      }
+                      else {
+                        onMultiEnable()
+                      }
                       setMultiState(multiState === fieldName ? '' : fieldName)
                     }}
                     checked={multiState === fieldName}
