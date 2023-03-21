@@ -105,18 +105,18 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
   }
 
   const getAspectRatioDeviation = () => {
-    if (!keepAspectRatio) return 0
-
-    const currentAspectRatio = input.width / input.height
-
-    const largerRatio = Math.max(currentAspectRatio, targetAspectRatio)
-    const smallerRatio = Math.min(currentAspectRatio, targetAspectRatio)
-
-    const aspectRatioRatio = largerRatio / smallerRatio
+    if (!keepAspectRatio) {
+      return 0
+    }
+  
+    const { width, height } = input
+    const currentAspectRatio = width / height
+    const aspectRatioRatio = Math.max(currentAspectRatio, targetAspectRatio) / Math.min(currentAspectRatio, targetAspectRatio)
 
     const deviation = Math.abs(aspectRatioRatio - 1)
     return deviation
   }
+  
 
   const getAspectRatioDeviationColor = (aspectRatioDeviation: number) => {
     if (aspectRatioDeviation > 0.25) return 'text-red-500'
