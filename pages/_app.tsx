@@ -30,9 +30,11 @@ import Menu from '../components/Menu'
 import Linker from '../components/UI/Linker'
 import ErrorBoundary from '../components/ErrorBoundary'
 import ServerMessage from '../components/ServerMessage'
+import { initPendingJobService } from 'controllers/pendingJobsController'
 
 initAppSettings()
 initDb()
+initPendingJobService()
 
 let waitingForServerInfoRes = false
 

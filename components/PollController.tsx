@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useStore } from 'statery'
 
 import Toast from '../components/UI/Toast'
-import { POLL_COMPLETED_JOBS_INTERVAL } from '../_constants'
 import { useEffectOnce } from '../hooks/useEffectOnce'
 import { appInfoStore, setShowImageReadyToast } from '../store/appStore'
 import {
@@ -12,8 +11,6 @@ import {
   multiStore,
   onLocalStorageEvent
 } from '../store/multiStore'
-import { isAppActive } from '../utils/appUtils'
-import { hackyMultiJobCheck } from '../utils/imageCache'
 import PollingImageController from './Global/PollingImageController'
 
 const PollController = () => {
@@ -30,10 +27,6 @@ const PollController = () => {
     setShowImageReadyToast(false)
   }
 
-  const checkForCompletedJob = async () => {
-    await hackyMultiJobCheck()
-  }
-
   useEffectOnce(() => {
     localStorage[LocalStorageEvents.New] = Date.now()
 
@@ -45,18 +38,6 @@ const PollController = () => {
       }
     }, firstCheckDelay)
     window.addEventListener('storage', onLocalStorageEvent, false)
-
-    const interval = setInterval(async () => {
-      // If user has multiple tabs open, prevent firing off numerous API calls.
-      if (!isAppActive()) {
-        return
-      }
-
-      checkForCompletedJob()
-    }, POLL_COMPLETED_JOBS_INTERVAL)
-
-    return () => clearInterval(interval)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   })
 
   return (

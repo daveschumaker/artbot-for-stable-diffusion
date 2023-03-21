@@ -444,7 +444,9 @@ const PendingItem = memo(
                   {jobDetails.jobStatus === JobStatus.Error && (
                     <Button onClick={handleEditClick}>Edit</Button>
                   )}
-                  {jobDetails.jobStatus === JobStatus.Error || jobStalled ? (
+                  {jobDetails.jobStatus === JobStatus.Error ||
+                  jobDetails.jobStatus === JobStatus.Requested ||
+                  jobStalled ? (
                     <Button onClick={handleRetryJob}>Retry?</Button>
                   ) : null}
                   <Button
@@ -480,8 +482,25 @@ const PendingItem = memo(
         </StyledPanel>
       </StyledContainer>
     )
-  }
+  },
+  arePropsEqual
 )
+
+function arePropsEqual(oldProps: any = {}, newProps: any = {}) {
+  const { jobDetails: oldJobDetails = {} } = oldProps || {}
+  const { jobDetails: newJobDetails = {} } = newProps || {}
+
+  if (!oldJobDetails.jobId || !newJobDetails.jobId) {
+    return false
+  }
+
+  return (
+    oldJobDetails.jobId === newJobDetails.jobId &&
+    oldJobDetails.jobStatus === newJobDetails.jobStatus &&
+    oldJobDetails.wait_time === newJobDetails.wait_time &&
+    oldJobDetails.initWaitTime === newJobDetails.initWaitTime
+  )
+}
 
 PendingItem.displayName = 'PendingItem'
 export default PendingItem

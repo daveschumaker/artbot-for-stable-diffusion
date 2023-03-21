@@ -41,7 +41,7 @@ const InputSwitch = ({
       <ReactSwitch
         disabled={disabled}
         onChange={handleSwitchToggle}
-        checked={Boolean(checked)}
+        checked={checked ? true : false}
       />
     </Section>
   )

@@ -1,12 +1,12 @@
-import { useLiveQuery } from 'dexie-react-hooks'
+import { getPendingJobsFromCache } from 'controllers/pendingJobsController'
 import { useCallback, useState } from 'react'
+import LazyLoad from 'react-lazyload'
 import styled from 'styled-components'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
 import AppSettings from '../../models/AppSettings'
 import { setImagesForModalCache } from '../../store/pendingItemsCache'
 import { JobStatus } from '../../types'
 import {
-  db,
   deleteAllPendingErrors,
   deleteAllPendingJobs,
   deleteCompletedImageById,
@@ -33,10 +33,7 @@ const MenuSeparator = styled.div`
 
 const PendingPage = () => {
   const [filter, setFilter] = useState('all')
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const pendingImages =
-    useLiveQuery(() => db?.pending?.orderBy('id')?.toArray()) || []
-
+  const [pendingImages, setPendingImages] = useState<Array<any>>([])
   const [showImageModal, setShowImageModal] = useState<string | boolean>(false)
   const [showMenu, setShowMenu] = useState(false)
 
@@ -129,10 +126,15 @@ const PendingPage = () => {
     }
   })
 
-  const waitingCount = processing.length + queued.length
+  const jobsInProgress = processing.length + queued.length
 
   useEffectOnce(() => {
+    const interval = setInterval(() => {
+      setPendingImages([...getPendingJobsFromCache()])
+    }, 1000)
+
     return () => {
+      clearInterval(interval)
       if (AppSettings.get('autoClearPending')) {
         deleteDoneFromPending()
       }
@@ -182,7 +184,7 @@ const PendingPage = () => {
                 View all ({pendingImages.length})
               </DropDownMenuItem>
               <DropDownMenuItem onClick={() => setFilter('processing')}>
-                View processing ({processing.length})
+                View processing ({jobsInProgress})
               </DropDownMenuItem>
               <DropDownMenuItem onClick={() => setFilter('done')}>
                 View done ({done.length})
@@ -239,7 +241,7 @@ const PendingPage = () => {
             done ({done.length})
           </TextButton>
           <TextButton onClick={() => setFilter('processing')}>
-            processing ({processing.length})
+            processing ({jobsInProgress})
           </TextButton>
           <TextButton onClick={() => setFilter('error')}>
             error ({error.length})
@@ -248,7 +250,7 @@ const PendingPage = () => {
       ) : null}
       {(pendingImages.length > 0 && done.length > 0) ||
       error.length > 2 ||
-      waitingCount > 0 ? (
+      jobsInProgress > 0 ? (
         <div className="flex flex-row gap-2 mb-2">
           {pendingImages.length > 0 && done.length > 0 && (
             <div className="mb-2">
@@ -261,7 +263,7 @@ const PendingPage = () => {
               </TextButton>
             </div>
           )}
-          {waitingCount > 0 && (
+          {jobsInProgress > 0 && (
             <div className="mb-2">
               <TextButton color="red" onClick={deleteAllPendingJobs}>
                 delete pending jobs
@@ -319,19 +321,20 @@ const PendingPage = () => {
       {sorted.length > 0 &&
         sorted.map((job: { jobId: string; prompt: string }) => {
           return (
-            <PendingItem
-              key={job.jobId}
-              handleCloseClick={() => {
-                onClosePanel(job.jobId)
-              }}
-              //@ts-ignore
-              onImageClick={handleShowModalClick}
-              // onHideClick={}
-              //@ts-ignore
-              jobDetails={job}
-              //@ts-ignore
-              jobId={job.jobId}
-            />
+            <LazyLoad key={job.jobId}>
+              <PendingItem
+                handleCloseClick={() => {
+                  onClosePanel(job.jobId)
+                }}
+                //@ts-ignore
+                onImageClick={handleShowModalClick}
+                // onHideClick={}
+                //@ts-ignore
+                jobDetails={job}
+                //@ts-ignore
+                jobId={job.jobId}
+              />
+            </LazyLoad>
           )
         })}
     </div>

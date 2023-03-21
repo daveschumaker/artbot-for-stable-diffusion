@@ -14,7 +14,6 @@ import {
 } from './db'
 import { createNewImage, generateBase64Thumbnail } from './imageUtils'
 import { createPendingJob } from './pendingUtils'
-import { sleep } from './sleep'
 import {
   CREATE_NEW_JOB_INTERVAL,
   MAX_CONCURRENT_JOBS_ANON,
@@ -362,48 +361,6 @@ export const getImage = async (jobId: string) => {
   }
 }
 
-export const hackyMultiJobCheck = async () => {
-  const queued = await allPendingJobs(JobStatus.Queued)
-  const processing = await allPendingJobs(JobStatus.Processing)
-
-  const queuedOrProcessing = [...queued, ...processing]
-
-  const [firstJob, secondJob, thirdJob, fourthJob, fifthJob] =
-    queuedOrProcessing
-
-  if (firstJob) {
-    await checkCurrentJob(firstJob)
-  }
-
-  await sleep(300)
-
-  if (secondJob) {
-    await checkCurrentJob(secondJob)
-  }
-
-  await sleep(300)
-
-  if (thirdJob) {
-    await checkCurrentJob(thirdJob)
-  }
-
-  if (MAX_JOBS >= 4) {
-    await sleep(300)
-
-    if (fourthJob) {
-      await checkCurrentJob(fourthJob)
-    }
-  }
-
-  if (MAX_JOBS >= 5) {
-    await sleep(300)
-
-    if (fifthJob) {
-      await checkCurrentJob(fifthJob)
-    }
-  }
-}
-
 export const checkCurrentJob = async (imageDetails: any) => {
   let jobDetails
 
@@ -603,12 +560,3 @@ export const checkCurrentJob = async (imageDetails: any) => {
     newImage: false
   }
 }
-
-const createJobInterval = () => {
-  createMultiImageJob()
-  setTimeout(() => {
-    createJobInterval()
-  }, FETCH_INTERVAL_SEC)
-}
-
-createJobInterval()
