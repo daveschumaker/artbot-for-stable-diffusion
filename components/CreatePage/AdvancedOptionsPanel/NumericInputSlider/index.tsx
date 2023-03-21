@@ -95,6 +95,22 @@ const NumericInputSlider = ({
   const [temporaryValue, setTemporaryValue] = useState(input[fieldName]);
 
   useEffect(() => {
+    if (initialLoad) {
+      return
+    }
+    const newValue = input[fieldName]
+    const correctedNewValue = roundToNearestStep(newValue, from, to, step)
+    if (newValue !== correctedNewValue) {
+      const res = {}
+      // @ts-ignore
+      res[fieldName] = correctedNewValue
+      setInput(res)
+
+      // DEBUG. TODO: Remove me when everything has proven to work correctly.
+      console.log('Invalid value loaded in', fieldName,'. Force updating to', correctedNewValue, 'from', newValue)
+      return
+    }
+
     setTemporaryValue(input[fieldName])
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [input[fieldName], fieldName, from, to, step])
