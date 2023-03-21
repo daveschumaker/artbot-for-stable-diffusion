@@ -29,9 +29,6 @@ interface Props {
   werewolfDataFieldName?: string
   onMultiEnable?: () => void
   onMultiDisable?: () => void,
-
-  multiState?: string
-  setMultiState?: any
 }
 
 const NumericInputSlider = ({
@@ -51,10 +48,11 @@ const NumericInputSlider = ({
   werewolfDataFieldName = '',
   onMultiEnable = () => {},
   onMultiDisable = () => {},
-  multiState = '',
-  setMultiState = () => {}
 }: Props) => {
   const [warning, setWarning] = useState('')
+
+  const multiState=input.multiState
+  const setMultiState=(value: string)=>setInput({multiState: value})
 
   function toggleWarning(state: boolean) {
     setWarning(state ? `This field only accepts numbers between ${from} and ${to}.` : '')

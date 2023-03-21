@@ -72,8 +72,6 @@ const AdvancedOptionsPanel = ({
   })
   const [initialLoad, setInitialLoad] = useState(true)
 
-  const [multiState, setMultiState] = useState('')
-
   const modelerOptions = (imageParams: any) => {
     const modelsArray =
       validModelsArray({ imageParams, filterNsfw: filterNsfwModels }) || []
@@ -339,14 +337,15 @@ const AdvancedOptionsPanel = ({
               PromptInputSettings.set('useAllModels', false)
               PromptInputSettings.set('useFavoriteModels', false)
               PromptInputSettings.set('useAllSamplers', false)
+
+              PromptInputSettings.set('multiState', 'multiSteps')
             }}
             onMultiDisable={() => {
               PromptInputSettings.set('useMultiSteps', false)
+
+              PromptInputSettings.set('multiState', undefined)
               setInput({ useMultiSteps: false })
             }}
-
-            multiState={multiState}
-            setMultiState={setMultiState}
           />
 
         </SplitPanel>
@@ -383,14 +382,15 @@ const AdvancedOptionsPanel = ({
               PromptInputSettings.set('useAllModels', false)
               PromptInputSettings.set('useFavoriteModels', false)
               PromptInputSettings.set('useAllSamplers', false)
+
+              PromptInputSettings.set('multiState', 'multiGuidance')
             }}
             onMultiDisable={() => {
               PromptInputSettings.set('useMultiGuidance', false)
+
+              PromptInputSettings.set('multiState', undefined)
               setInput({ useMultiGuidance: false })
             }}
-
-            multiState={multiState}
-            setMultiState={setMultiState}
           />
 
         </SplitPanel>
