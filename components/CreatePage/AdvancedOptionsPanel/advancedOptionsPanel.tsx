@@ -310,6 +310,7 @@ const AdvancedOptionsPanel = ({
       />
       <TwoPanel className="mt-4">
         <SplitPanel>
+
           {!input.useMultiSteps && (
             <NumericInputSlider
               label="Steps"
@@ -378,6 +379,7 @@ const AdvancedOptionsPanel = ({
               <NoSliderSpacer />
             </Section>
           )}
+
           {showMultiSamplerInput && (
             <InputSwitch
               disabled={
@@ -408,8 +410,11 @@ const AdvancedOptionsPanel = ({
               checked={input.useMultiSteps}
             />
           )}
+
         </SplitPanel>
+
         <SplitPanel>
+
           {!input.useMultiGuidance && (
             <NumericInputSlider
               label="Guidance"
@@ -464,6 +469,7 @@ const AdvancedOptionsPanel = ({
               <NoSliderSpacer />
             </Section>
           )}
+
           {showMultiSamplerInput && (
             <InputSwitch
               label="Use multiple guidance"
@@ -496,6 +502,7 @@ const AdvancedOptionsPanel = ({
               checked={input.useMultiGuidance}
             />
           )}
+          
         </SplitPanel>
       </TwoPanel>
       {(input.img2img ||
