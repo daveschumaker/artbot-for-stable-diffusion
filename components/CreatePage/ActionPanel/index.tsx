@@ -13,6 +13,7 @@ interface Props {
   hasValidationError: boolean;
   hasError: string | null;
   fixedSeedErrorMsg: string;
+  errors: {[key: string]: boolean};
   input: string;
   setInput: any;
   resetInput: () => void;
@@ -29,6 +30,7 @@ const ActionPanel = ({
   hasValidationError,
   hasError,
   fixedSeedErrorMsg,
+  errors,
   input,
   setInput,
   resetInput,
@@ -46,6 +48,7 @@ const ActionPanel = ({
         hasValidationError={hasValidationError}
         hasError={hasError}
         fixedSeedErrorMsg={fixedSeedErrorMsg}
+        errors={errors}
       />
 
       <div className="mt-2 mb-4 w-full flex flex-col md:flex-row gap-2 justify-end items-start">
