@@ -58,19 +58,17 @@ const NumericInputSlider = ({
     return newValue;
   }
 
-  const updateField = (value: number) => {
+  function updateField (value: number) {
     const res = {}
     // @ts-ignore
     res[fieldName] = value
     setInput(res)
-    
     callback(value)
-
     // @ts-ignore
     setTemporaryValue(res[fieldName])
   }
 
-  const safelyUpdateField = (value: string | number) => {
+  function safelyUpdateField (value: string | number) {
     value = Number(value)
     if (isNaN(value) || value < from || value > to) {
       if (initialLoad) {
@@ -78,7 +76,7 @@ const NumericInputSlider = ({
       }
 
       toggleWarning(true)
-      updateField(isNaN(value)?to:roundToNearestStep(value, from, to, step))
+      updateField(isNaN(value)?to:keepInBoundaries(value, from, to))
     } else {
       toggleWarning(false)
 
@@ -114,7 +112,6 @@ const NumericInputSlider = ({
       res[fieldName] = correctedNewValue
       setInput(res)
 
-      // DEBUG. TODO: Remove me when everything has proven to work correctly.
       console.log('Invalid value loaded in', fieldName,'. Force updating to', correctedNewValue, 'from', newValue)
       return
     }
