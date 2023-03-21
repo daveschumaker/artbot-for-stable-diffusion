@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useCallback, useEffect, useState } from 'react'
-import styled from 'styled-components'
 import { useStore } from 'statery'
 import Switch from 'react-switch'
 
@@ -42,11 +41,6 @@ import InputSwitch from './InputSwitch'
 import ControlNetOptions from './ControlNetOptions'
 import OrientationOptions from './OrientationOptions'
 import UpscalerOptions from './UpscalerOptions'
-
-const NoSliderSpacer = styled.div`
-  height: 14px;
-  margin-bottom: 16px;
-`
 
 interface Props {
   handleChangeInput: any
@@ -197,11 +191,6 @@ const AdvancedOptionsPanel = ({
   }, [input, setComponentState])
 
   // Dynamically display various options
-
-  const showMultiSamplerInput =
-    !input.useAllModels &&
-    !input.useFavoriteModels &&
-    !componentState.showMultiModel
 
   const showMultiModelSelect =
     !input.useMultiSteps &&
