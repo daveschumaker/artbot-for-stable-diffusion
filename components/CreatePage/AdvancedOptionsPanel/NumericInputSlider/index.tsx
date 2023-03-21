@@ -94,6 +94,7 @@ const NumericInputSlider = ({
   useEffect(() => {
     // We don't want to force input in incorrect boundaries
     if (initialLoad) {
+      setTemporaryValue(input[fieldName])
       return
     }
 
