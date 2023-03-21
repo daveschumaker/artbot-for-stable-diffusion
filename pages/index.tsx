@@ -128,6 +128,8 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
   const [hasValidationError, setHasValidationError] = useState(false)
   const [pending, setPending] = useState(false)
   const [hasError, setHasError] = useState('')
+  const [errors, setErrors] = useState({})
+
   const [input, setInput] = useReducer((state: any, newState: any) => {
     const updatedInputState = { ...state, ...newState }
 
@@ -714,6 +716,7 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
           hasValidationError={hasValidationError}
           hasError={hasError}
           fixedSeedErrorMsg={fixedSeedErrorMsg}
+          errors={errors}
           input={input}
           setInput={setInput}
           resetInput={resetInput}
@@ -739,6 +742,7 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
         hasValidationError={hasValidationError}
         hasError={hasError}
         fixedSeedErrorMsg={fixedSeedErrorMsg}
+        errors={errors}
         input={input}
         setInput={setInput}
         resetInput={resetInput}
