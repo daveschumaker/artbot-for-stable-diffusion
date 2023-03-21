@@ -182,7 +182,7 @@ const PendingPage = () => {
                 View all ({pendingImages.length})
               </DropDownMenuItem>
               <DropDownMenuItem onClick={() => setFilter('processing')}>
-                View processing ({processing.length + queued.length})
+                View processing ({processing.length})
               </DropDownMenuItem>
               <DropDownMenuItem onClick={() => setFilter('done')}>
                 View done ({done.length})

@@ -1,4 +1,3 @@
-import memoizee from 'memoizee'
 import { isBase64UrlImage } from 'utils/imageUtils'
 import { clientHeader, getApiHostServer } from '../utils/appUtils'
 import { blobToBase64 } from '../utils/helperUtils'
@@ -29,10 +28,10 @@ const apiCooldown = () => {
 
   setTimeout(() => {
     isCoolingOff = false
-  }, 30000)
+  }, 15000)
 }
 
-export const _getFinishedImage = async (
+export const getFinishedImage = async (
   jobId: string
 ): Promise<FinishedImageResponse> => {
   if (isCoolingOff) {
@@ -174,7 +173,3 @@ export const _getFinishedImage = async (
     }
   }
 }
-
-export const getFinishedImage = memoizee(_getFinishedImage, {
-  maxAge: 5000
-})

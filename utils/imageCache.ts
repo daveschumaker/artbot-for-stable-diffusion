@@ -103,7 +103,8 @@ export const createMultiImageJob = async () => {
     MAX_JOBS = MAX_CONCURRENT_JOBS_USER
   }
 
-  const queuedCount = (await allPendingJobs(JobStatus.Queued)) || []
+  const queuedCount = (await allPendingJobs(JobStatus.Processing)) || []
+
   if (queuedCount.length < MAX_JOBS) {
     const pendingJobs = (await allPendingJobs(JobStatus.Waiting)) || []
     const [nextJobParams] = pendingJobs
