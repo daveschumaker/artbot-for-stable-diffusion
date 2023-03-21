@@ -54,6 +54,7 @@ import { kudosCostV2 } from '../utils/kudosCost'
 import { CreatePageMode, isSharedLink } from '../utils/loadInputCache'
 import ImageApiParamsToPromptInput from '../models/ImageApiParamsToPromptInput'
 import ActionPanel from '../components/CreatePage/ActionPanel'
+import useComponentState from 'hooks/useComponentState'
 
 interface InputTarget {
   name: string
@@ -125,7 +126,7 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
   const [hasValidationError, setHasValidationError] = useState(false)
   const [pending, setPending] = useState(false)
   const [hasError, setHasError] = useState('')
-  const [errors, setErrors] = useState({} as { [key: string]: boolean })
+  const [errors, setErrors] = useComponentState({} as { [key: string]: boolean })
 
   const [input, setInput] = useReducer((state: any, newState: any) => {
     const updatedInputState = { ...state, ...newState }
