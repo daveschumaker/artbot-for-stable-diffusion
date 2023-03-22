@@ -171,7 +171,15 @@ const PendingPage = () => {
   })
 
   const items = virtualizer.getVirtualItems()
-  const listHeight = size.height ? size.height - 256 : 500
+  let listHeight = 500
+
+  if (size.width && size.height) {
+    if (size.width < 640) {
+      listHeight = size.height - 400
+    } else {
+      listHeight = size.height - 280
+    }
+  }
 
   return (
     <div style={{ overflowAnchor: 'none' }}>
