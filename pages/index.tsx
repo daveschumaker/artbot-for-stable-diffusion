@@ -54,6 +54,7 @@ import { kudosCostV2 } from '../utils/kudosCost'
 import { CreatePageMode, isSharedLink } from '../utils/loadInputCache'
 import ImageApiParamsToPromptInput from '../models/ImageApiParamsToPromptInput'
 import ActionPanel from '../components/CreatePage/ActionPanel'
+import useComponentState from 'hooks/useComponentState'
 
 interface InputTarget {
   name: string
@@ -64,9 +65,6 @@ interface InputEvent {
 }
 
 const defaultState: DefaultPromptInput = new DefaultPromptInput()
-
-const ERROR_INPAINT_MISSING_SOURCE_MASK =
-  "Whoa! You need an image and a source mask first before continuing. Please upload an image and add paint an area you'd like to change, or change your model before continuing."
 
 export async function getServerSideProps(context: any) {
   let availableModels: Array<any> = []
@@ -98,7 +96,7 @@ export async function getServerSideProps(context: any) {
       const { imageParams } = data.imageParams || {}
       shortlinkImageParams = imageParams || null
     }
-  } catch (err) {}
+  } catch (err) { }
 
   return {
     props: {
@@ -128,6 +126,8 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
   const [hasValidationError, setHasValidationError] = useState(false)
   const [pending, setPending] = useState(false)
   const [hasError, setHasError] = useState('')
+  const [errors, setErrors] = useComponentState({} as { [key: string]: boolean })
+
   const [input, setInput] = useReducer((state: any, newState: any) => {
     const updatedInputState = { ...state, ...newState }
 
@@ -388,35 +388,17 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
   ])
 
   useEffect(() => {
-    const hasInpaintingModels =
-      input.models.filter((model: string = '') => {
-        if (!model) {
-          return false
-        }
-
-        return model.indexOf('_inpainting') >= 0
-      }) || []
+    const hasInpaintingModels = input.models.filter((model: string = '') => (model && model.indexOf('_inpainting') >= 0)).length
     const hasSourceMask = input.source_mask
 
     if (
-      hasInpaintingModels.length > 0 &&
-      !hasSourceMask &&
-      hasError !== ERROR_INPAINT_MISSING_SOURCE_MASK
+      hasInpaintingModels > 0 && !hasSourceMask && !errors.INPAINT_MISSING_SOURCE_MASK
     ) {
-      setHasError(ERROR_INPAINT_MISSING_SOURCE_MASK)
-    } else if (
-      hasInpaintingModels.length > 0 &&
-      hasSourceMask &&
-      hasError === ERROR_INPAINT_MISSING_SOURCE_MASK
-    ) {
-      setHasError('')
-    } else if (
-      hasInpaintingModels.length === 0 &&
-      hasError === ERROR_INPAINT_MISSING_SOURCE_MASK
-    ) {
-      setHasError('')
+      setErrors({ INPAINT_MISSING_SOURCE_MASK: true })
+    } else if ((hasInpaintingModels == 0 || hasSourceMask) && errors.INPAINT_MISSING_SOURCE_MASK) {
+      setErrors({ INPAINT_MISSING_SOURCE_MASK: false })
     }
-  }, [hasError, input.models, input.source_mask])
+  }, [errors.INPAINT_MISSING_SOURCE_MASK, input.models, input.source_mask])
 
   useEffect(() => {
     watchBuild()
@@ -578,25 +560,15 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
 
   const kudosPerImage =
     totalImagesRequested < 1 ||
-    isNaN(totalKudosCost) ||
-    isNaN(totalImagesRequested)
+      isNaN(totalKudosCost) ||
+      isNaN(totalImagesRequested)
       ? 'N/A'
       : Number(totalKudosCost / totalImagesRequested).toFixed(2)
 
-  const fixedSeedErrorMsg =
-    'Warning: You are using a fixed seed with multiple images. (You can still continue)'
-  if (
-    hasError !== fixedSeedErrorMsg &&
-    totalImagesRequested > 1 &&
-    input.seed
-  ) {
-    setHasError(fixedSeedErrorMsg)
-  } else if (
-    hasError === fixedSeedErrorMsg &&
-    (!input.seed || totalImagesRequested === 1)
-  ) {
-    setHasError('')
-  }
+  useEffect(() => {
+    setErrors({ FIXED_SEED: Boolean(totalImagesRequested > 1 && input.seed) })
+  }, [totalImagesRequested, input.seed])
+
 
   return (
     <main>
@@ -618,11 +590,10 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
           </title>
           <meta
             name="twitter:title"
-            content={`🤖 ArtBot - Shareable Link ${
-              shortlinkImageParams.models && shortlinkImageParams.models[0]
-                ? `created with ${shortlinkImageParams.models[0]}`
-                : ''
-            }`}
+            content={`🤖 ArtBot - Shareable Link ${shortlinkImageParams.models && shortlinkImageParams.models[0]
+              ? `created with ${shortlinkImageParams.models[0]}`
+              : ''
+              }`}
           />
           <meta
             name="twitter:description"
@@ -630,9 +601,8 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
           />
           <meta
             name="twitter:image"
-            content={`https://tinybots.net/artbot/api/v1/shortlink/i/${
-              query[CreatePageMode.SHORTLINK]
-            }`}
+            content={`https://tinybots.net/artbot/api/v1/shortlink/i/${query[CreatePageMode.SHORTLINK]
+              }`}
           />
         </Head>
       ) : null}
@@ -713,7 +683,7 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
         <ActionPanel
           hasValidationError={hasValidationError}
           hasError={hasError}
-          fixedSeedErrorMsg={fixedSeedErrorMsg}
+          errors={errors}
           input={input}
           setInput={setInput}
           resetInput={resetInput}
@@ -738,7 +708,7 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
       <ActionPanel
         hasValidationError={hasValidationError}
         hasError={hasError}
-        fixedSeedErrorMsg={fixedSeedErrorMsg}
+        errors={errors}
         input={input}
         setInput={setInput}
         resetInput={resetInput}

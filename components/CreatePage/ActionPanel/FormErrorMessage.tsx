@@ -1,14 +1,15 @@
 import React from 'react';
+import Errors from 'utils/errors'
 
 // TODO: Allow multiple errors to be displayed at once
 interface Props {
   hasValidationError: boolean;
   hasError: string | null;
-  fixedSeedErrorMsg: string;
+  errors: {[key: string]: boolean};
 }
 
 function FormErrorMessage(props: Props){
-  const { hasValidationError, hasError, fixedSeedErrorMsg } = props;
+  const { hasValidationError, hasError, errors } = props;
 
   return (
     <>
@@ -17,16 +18,27 @@ function FormErrorMessage(props: Props){
           Please correct all input errors before continuing
         </div>
       )}
-      {hasError && hasError === fixedSeedErrorMsg && (
-        <div className="mt-2 text-amber-400 font-semibold">
-          {fixedSeedErrorMsg}
-        </div>
-      )}
-      {hasError && hasError !== fixedSeedErrorMsg && (
+      {hasError && (
         <div className="mt-2 text-red-500 font-semibold">
           Error: {hasError}
         </div>
       )}
+      
+      {
+        Object.keys(errors||{}).filter(e=>errors[e]).map((key: string) => {
+          if (!Errors[key]) return (
+            <div className="mt-2 text-red-500 font-semibold">
+              Unknown error code: {key}
+            </div>
+          )
+
+          return (
+            <div key={key} className={"mt-2 font-semibold " + Errors[key].className}>
+              {Errors[key].text}
+            </div>
+          )
+        })
+      }
     </>
   );
 }

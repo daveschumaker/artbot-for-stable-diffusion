@@ -47,31 +47,28 @@ const NumericInputSlider = ({
     setWarning(state ? `This field only accepts numbers between ${from} and ${to}.` : '')
   }
 
-  function roundToNearestStep(val: number, min: number, max: number, step: number) {
-    if (val < min) {
-      return min;
-    } else if (val > max) {
-      return max;
-    } else {
-      const steps = Math.round((val - min) / step);
-      const newValue = min + steps * step;
-      return newValue;
-    }
+  function keepInBoundaries (val: number, min: number, max: number) {
+    return Math.max(min, Math.min(val, max))
   }
 
-  const updateField = (value: number) => {
+  function roundToNearestStep(val: number, min: number, max: number, step: number) {
+    val = keepInBoundaries(val, min, max)
+    const steps = Math.round((val - min) / step);
+    const newValue = min + steps * step;
+    return newValue;
+  }
+
+  function updateField (value: number) {
     const res = {}
     // @ts-ignore
     res[fieldName] = value
     setInput(res)
-    
     callback(value)
-
     // @ts-ignore
     setTemporaryValue(res[fieldName])
   }
 
-  const safelyUpdateField = (value: string | number) => {
+  function safelyUpdateField (value: string | number) {
     value = Number(value)
     if (isNaN(value) || value < from || value > to) {
       if (initialLoad) {
@@ -79,7 +76,7 @@ const NumericInputSlider = ({
       }
 
       toggleWarning(true)
-      updateField(isNaN(value)?to:roundToNearestStep(value, from, to, step))
+      updateField(isNaN(value)?to:keepInBoundaries(value, from, to))
     } else {
       toggleWarning(false)
 
@@ -95,8 +92,34 @@ const NumericInputSlider = ({
   const [temporaryValue, setTemporaryValue] = useState(input[fieldName]);
 
   useEffect(() => {
+    // We don't want to force input in incorrect boundaries
+    if (initialLoad) {
+      setTemporaryValue(input[fieldName])
+      return
+    }
+
+    const newValue = input[fieldName]
+    let correctedNewValue
+    if (enforceStepValue){
+      correctedNewValue = roundToNearestStep(newValue, from, to, step)
+    }
+    else{
+      correctedNewValue = keepInBoundaries(newValue, from, to)
+    }
+
+    if (newValue !== correctedNewValue) {
+      const res = {}
+      // @ts-ignore
+      res[fieldName] = correctedNewValue
+      setInput(res)
+
+      console.log('Invalid value loaded in', fieldName,'. Force updating to', correctedNewValue, 'from', newValue)
+      return
+    }
+
     setTemporaryValue(input[fieldName])
-  }, [input, fieldName])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [input[fieldName], fieldName, from, to, step])
 
   const handleNumberInput = (event: any) => {
     setTemporaryValue(event.target.value)
