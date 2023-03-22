@@ -330,15 +330,13 @@ const ImageModal = ({
                 title="View tiles"
                 // @ts-ignore
                 onClick={() => {
-                  if (componentState.showTiles) {
-                    setComponentState({ showTiles: false })
-                  } else if (imageDetails.source_image) {
-                    setComponentState({ showTiles: true })
-                  }
+                  setComponentState({ showTiles: !componentState.showTiles })
                 }}
               >
                 <EyeIcon />
-                <span className="hidden md:inline-block">Show tiles</span>
+                <span className="hidden md:inline-block">
+                  {componentState.showTiles ? 'Hide tiles' : 'Show tiles'}
+                </span>
               </Button>
             )}
             <Button

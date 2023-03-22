@@ -96,14 +96,20 @@ const Changelog = () => {
               favorite images. (I know that some of you have thousands of images
               and this is not ideal at the moment.)
             </StyledLi>
-            <StyledLi>
-              2023.03.20 - The pending page still sucks. Looking into it! I am
-              sorry!
-            </StyledLi>
           </StyledUl>
         </Section>
       </Panel>
       {/* ///// START CHANGE LOG ////// */}
+      <Section>
+        <SubSectionTitle>2023.03.22</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: &quot;Show tiles&quot; button was broken on the image model.
+            Thanks to Stable Horde user Demons for reporting this via the
+            contact form.
+          </StyledLi>
+        </StyledUl>
+      </Section>
       <Section>
         <SubSectionTitle>2023.03.21</SubSectionTitle>
         <StyledUl>
