@@ -147,7 +147,20 @@ const PendingPage = () => {
   })
 
   const renderRow = ({ index }: { index: number }) => {
+    if (index === 0) {
+      return (
+        <div className="w-full">
+          <AdContainer minSize={0} maxSize={640} />
+        </div>
+      )
+    }
+
     const job = sorted[index]
+
+    if (!job || !job.jobId) {
+      return null
+    }
+
     return (
       <PendingItem
         handleCloseClick={() => {
@@ -165,9 +178,10 @@ const PendingPage = () => {
   }
 
   const virtualizer = useVirtualizer({
-    count: sorted.length,
+    count: sorted.length + 1,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 240
+    estimateSize: () => 240,
+    overscan: 2
   })
 
   const items = virtualizer.getVirtualItems()
@@ -175,7 +189,7 @@ const PendingPage = () => {
 
   if (size.width && size.height) {
     if (size.width < 640) {
-      listHeight = size.height - 400
+      listHeight = size.height - 280
     } else {
       listHeight = size.height - 280
     }
@@ -352,10 +366,6 @@ const PendingPage = () => {
           complete if worker is not available or under heavy load.
         </div>
       )}
-
-      <div className="w-full">
-        <AdContainer minSize={0} maxSize={640} />
-      </div>
 
       {sorted.length > 0 && (
         <div
