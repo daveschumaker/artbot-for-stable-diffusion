@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import SectionTitle from '../UI/SectionTitle'
 import SlidingPanel from '../UI/SlidingPanel'
-import styled from 'styled-components'
 import TextButton from '../UI/TextButton'
 import CloseIcon from '../icons/CloseIcon'
 import { db, getPrompts, setDefaultPrompt } from '../../utils/db'
@@ -14,12 +13,6 @@ interface Props {
   // @ts-ignore
   setInput(): void
 }
-
-const PromptContainer = styled.div`
-  border-bottom: 1px dashed white;
-  margin-bottom: 8px;
-  padding-bottom: 8px;
-`
 
 const NegativePrompts = ({ open, handleClosePane, setInput }: Props) => {
   const [prompts, setPrompts] = useState<Array<string>>([])
@@ -74,11 +67,11 @@ const NegativePrompts = ({ open, handleClosePane, setInput }: Props) => {
         </div>
 
 
-        <div className="pt-[32px] mb-[100px] bg-[#f2f2f2] dark:bg-[#222222]">
+        <div className="pt-[48px] mb-[100px] bg-[#f2f2f2] dark:bg-[#222222]">
           {prompts.length === 0 && <div>Nothing here yet!</div>}
           {prompts.map((prompt: any, i) => {
             return (
-              <PromptContainer
+              <div
                 key={`negative_prompt_${i}`}
                 className="text-[#222222] dark:text-[#f2f2f2]"
               >
@@ -115,7 +108,7 @@ const NegativePrompts = ({ open, handleClosePane, setInput }: Props) => {
                     </TextButton>
                   </div>
                 </div>
-              </PromptContainer>
+              </div>
             )
           })}
         </div>
