@@ -476,7 +476,6 @@ const ControlNet = () => {
               input={input}
               setInput={setInput}
               fieldName="steps"
-              initialLoad={false}
               fullWidth
               enforceStepValue
             />
@@ -492,7 +491,6 @@ const ControlNet = () => {
               input={input}
               setInput={setInput}
               fieldName="cfg_scale"
-              initialLoad={false}
               fullWidth
             />
           </SplitPanel>
@@ -512,7 +510,6 @@ const ControlNet = () => {
               input={input}
               setInput={setInput}
               fieldName="denoising_strength"
-              initialLoad={false}
               disabled={
                 input.models &&
                 input.models[0] &&
@@ -617,7 +614,6 @@ const ControlNet = () => {
                 input={input}
                 setInput={setInput}
                 fieldName="facefixer_strength"
-                initialLoad={false}
               />
             )}
           <UpscalerOptions input={input} setInput={setInput} />
@@ -635,7 +631,6 @@ const ControlNet = () => {
           input={input}
           setInput={setInput}
           fieldName="clipskip"
-          initialLoad={false}
           fullWidth
           enforceStepValue
         />
@@ -650,7 +645,6 @@ const ControlNet = () => {
           input={input}
           setInput={setInput}
           fieldName="numImages"
-          initialLoad={false}
           fullWidth
           enforceStepValue
         />

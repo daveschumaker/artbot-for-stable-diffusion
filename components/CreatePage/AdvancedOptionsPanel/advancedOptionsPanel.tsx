@@ -82,7 +82,6 @@ const AdvancedOptionsPanel = ({
     isNegativePromptLibraryPanelOpen: false,
     favoriteModelsCount: 0
   })
-  const [initialLoad, setInitialLoad] = useState(true)
 
   const modelerOptions = (imageParams: any) => {
     const modelsArray =
@@ -101,13 +100,6 @@ const AdvancedOptionsPanel = ({
   const modelsValue = modelerOptions(input).filter((option) => {
     return input?.models?.indexOf(option.value) >= 0
   })
-
-  useEffect(() => {
-    // Handle condition where error message briefly appears on screen on initial load.
-    setTimeout(() => {
-      setInitialLoad(false)
-    }, 750)
-  }, [])
 
   const clearNegPrompt = () => {
     setDefaultPrompt('')
@@ -307,7 +299,6 @@ const AdvancedOptionsPanel = ({
               input={input}
               setInput={setInput}
               fieldName="steps"
-              initialLoad={initialLoad}
               fullWidth
               enforceStepValue
             />
@@ -399,7 +390,6 @@ const AdvancedOptionsPanel = ({
               input={input}
               setInput={setInput}
               fieldName="cfg_scale"
-              initialLoad={initialLoad}
               fullWidth
             />
           )}
@@ -489,7 +479,6 @@ const AdvancedOptionsPanel = ({
               input={input}
               setInput={setInput}
               fieldName="denoising_strength"
-              initialLoad={initialLoad}
               disabled={
                 input.models &&
                 input.models[0] &&
@@ -815,7 +804,6 @@ const AdvancedOptionsPanel = ({
               input={input}
               setInput={setInput}
               fieldName="facefixer_strength"
-              initialLoad={initialLoad}
             />
           )}
           <Checkbox
@@ -837,7 +825,6 @@ const AdvancedOptionsPanel = ({
           input={input}
           setInput={setInput}
           fieldName="clipskip"
-          initialLoad={initialLoad}
           enforceStepValue
         />
       </Section>
@@ -851,7 +838,6 @@ const AdvancedOptionsPanel = ({
             input={input}
             setInput={setInput}
             fieldName="numImages"
-            initialLoad={initialLoad}
             enforceStepValue
           />
         </Section>
