@@ -21,29 +21,43 @@ import TextTooltipRow from 'components/UI/TextTooltipRow'
 import Tooltip from 'components/UI/Tooltip'
 import TwoPanel from 'components/UI/TwoPanel'
 
-import { SourceProcessing } from 'utils/promptUtils'
-import { userInfoStore } from 'store/userStore'
+// Icon imports
+import ArrowBarLeftIcon from '../../icons/ArrowBarLeftIcon'
+import GrainIcon from '../../icons/GrainIcon'
+
+// Utils imports
 import { maxSteps } from 'utils/validationUtils'
-import useErrorMessage from 'hooks/useErrorMessage'
-import NegativePrompts from '../NegativePrompts'
+import { SourceProcessing } from 'utils/promptUtils'
+import { validModelsArray } from 'utils/modelUtils'
 import { db, getDefaultPrompt, setDefaultPrompt } from 'utils/db'
+
+// Local imports
+import ControlNetOptions from './ControlNetOptions'
+import HiresFix from './HiresFix'
+import InputSwitch from './InputSwitch'
+import NumericInputSlider from './NumericInputSlider'
+import OrientationOptions from './OrientationOptions'
+import Samplers from './Samplers'
+import SelectModel from './SelectModel'
+import UpscalerOptions from './UpscalerOptions'
+
+// Store imports
+import { modelInfoStore } from 'store/modelStore'
+import { userInfoStore } from 'store/userStore'
+
+// Hook imports
+import useComponentState from 'hooks/useComponentState'
+import useErrorMessage from 'hooks/useErrorMessage'
+
+// Model imports
+import AppSettings from 'models/AppSettings'
+import PromptInputSettings from 'models/PromptInputSettings'
+
+// Other imports
+import NegativePrompts from '../NegativePrompts'
 import { trackEvent } from 'api/telemetry'
 import { MAX_IMAGES_PER_JOB } from '_constants'
-import GrainIcon from '../../icons/GrainIcon'
-import AppSettings from 'models/AppSettings'
-import useComponentState from 'hooks/useComponentState'
-import { validModelsArray } from 'utils/modelUtils'
-import PromptInputSettings from 'models/PromptInputSettings'
-import SelectModel from './SelectModel'
-import { modelInfoStore } from 'store/modelStore'
-import HiresFix from './HiresFix'
-import ArrowBarLeftIcon from '../../icons/ArrowBarLeftIcon'
-import Samplers from './Samplers'
-import NumericInputSlider from './NumericInputSlider'
-import InputSwitch from './InputSwitch'
-import ControlNetOptions from './ControlNetOptions'
-import OrientationOptions from './OrientationOptions'
-import UpscalerOptions from './UpscalerOptions'
+
 
 const NoSliderSpacer = styled.div`
   height: 14px;
