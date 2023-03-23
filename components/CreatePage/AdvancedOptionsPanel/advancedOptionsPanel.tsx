@@ -76,7 +76,6 @@ const AdvancedOptionsPanel = ({
     totalModelsCount: availableModelNames.length,
     favoriteModelsCount: 0
   })
-  const [initialLoad, setInitialLoad] = useState(true)
 
   const modelerOptions = (imageParams: any) => {
     const modelsArray =
@@ -95,13 +94,6 @@ const AdvancedOptionsPanel = ({
   const modelsValue = modelerOptions(input).filter((option) => {
     return input?.models?.indexOf(option.value) >= 0
   })
-
-  useEffect(() => {
-    // Handle condition where error message briefly appears on screen on initial load.
-    setTimeout(() => {
-      setInitialLoad(false)
-    }, 750)
-  }, [])
 
   useEffect(() => {
     const totalModelsCount = validModelsArray({
