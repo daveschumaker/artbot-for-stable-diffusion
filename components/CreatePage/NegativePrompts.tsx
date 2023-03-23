@@ -31,7 +31,7 @@ const NegativePrompts = ({ open, handleClosePane, setInput }: Props) => {
       if (Array.isArray(result)) {
         setPrompts(result)
       }
-    } catch (err) {}
+    } catch (err) { }
   }
 
   const saveDefaultPrompt = async (prompt: string) => {
@@ -60,7 +60,7 @@ const NegativePrompts = ({ open, handleClosePane, setInput }: Props) => {
       handleClosePane={handleClosePane}
     >
       <div className="relative">
-        <div className='fixed w-full right-0 px-5'>
+        <div className='fixed w-full top-0 right-0 px-5 pt-5 bg-[#f2f2f2] dark:bg-[#222222]'>
           <div className='flex flex-row'>
             <SectionTitle>Negative Prompt Library</SectionTitle>
             <div className='grow'/>
@@ -68,7 +68,12 @@ const NegativePrompts = ({ open, handleClosePane, setInput }: Props) => {
               <CloseIcon width={2} />
             </div>
           </div>
+          <div className="relative flex items-center">
+            <div className="flex-grow border-t border-gray-400"></div>
+          </div>
         </div>
+
+
         <div className="pt-[32px] mb-[100px] bg-[#f2f2f2] dark:bg-[#222222]">
           {prompts.length === 0 && <div>Nothing here yet!</div>}
           {prompts.map((prompt: any, i) => {
