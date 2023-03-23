@@ -83,7 +83,7 @@ const AdvancedOptionsPanel = ({
 
   const [componentState, setComponentState] = useComponentState({
     showMultiModel: PromptInputSettings.get('showMultiModel') || false,
-    showNegPane: false,
+    isNegativePromptLibraryPanelOpen: false,
     favoriteModelsCount: 0
   })
   const [initialLoad, setInitialLoad] = useState(true)
@@ -222,10 +222,10 @@ const AdvancedOptionsPanel = ({
 
   return (
     <div>
-      {componentState.showNegPane ? (
+      {componentState.isNegativePromptLibraryPanelOpen ? (
         <NegativePrompts
-          open={componentState.showNegPane}
-          handleClosePane={() => setComponentState({ showNegPane: false })}
+          open={componentState.isNegativePromptLibraryPanelOpen}
+          handleClosePane={() => setComponentState({ isNegativePromptLibraryPanelOpen: false })}
           setInput={setInput}
         />
       ) : null}
@@ -290,7 +290,7 @@ const AdvancedOptionsPanel = ({
         <FlexRow>
           <TextButton onClick={clearNegPrompt}>clear default</TextButton>
           <TextButton onClick={handleSaveNeg}>save as default</TextButton>
-          <TextButton onClick={() => setComponentState({ showNegPane: true })}>
+          <TextButton onClick={() => setComponentState({ isNegativePromptLibraryPanelOpen: true })}>
             load
           </TextButton>
         </FlexRow>
