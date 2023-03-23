@@ -657,7 +657,6 @@ const ControlNet = () => {
       </Section>
 
       <ActionPanel
-        hasValidationError={false}
         hasError={hasError}
         errors={errors}
         input={input}

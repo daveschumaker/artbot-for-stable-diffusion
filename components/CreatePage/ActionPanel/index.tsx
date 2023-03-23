@@ -8,7 +8,6 @@ import Linker from 'components/UI//Linker';
 import Errors from 'utils/errors';
 
 interface Props {
-  hasValidationError: boolean;
   hasError: string | null;
   errors: {[key: string]: boolean};
   input: string;
@@ -24,7 +23,6 @@ interface Props {
 }
 
 const ActionPanel = ({
-  hasValidationError,
   hasError,
   errors,
   input,
@@ -45,7 +43,6 @@ const ActionPanel = ({
   return (
     <>
       <FormErrorMessage
-        hasValidationError={hasValidationError}
         hasError={hasError}
         errors={errors}
       />
@@ -78,7 +75,6 @@ const ActionPanel = ({
               onClick={handleSubmit}
               // @ts-ignore
               disabled={
-                hasValidationError ||
                 pending || areThereCriticalErrors()
               }
               width="100px"
