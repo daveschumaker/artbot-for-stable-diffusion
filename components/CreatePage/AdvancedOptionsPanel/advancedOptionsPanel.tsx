@@ -78,8 +78,7 @@ const AdvancedOptionsPanel = ({
   setInput,
   setHasValidationError
 }: Props) => {
-  const modelState = useStore(modelInfoStore)
-  const { availableModels, availableModelNames } = modelState
+  const { availableModels, availableModelNames } = useStore(modelInfoStore)
 
   const [filterNsfwModels, setFilterNsfwModels] = useState(false)
   const userState = useStore(userInfoStore)
