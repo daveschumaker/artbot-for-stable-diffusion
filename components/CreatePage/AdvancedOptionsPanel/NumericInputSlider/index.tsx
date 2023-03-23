@@ -93,6 +93,12 @@ const NumericInputSlider = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fieldName, from, to, step])
 
+  useEffect(() => {
+    setTemporaryValue(input[fieldName])
+    console.log(fieldName)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [input[fieldName]])
+
   const handleNumberInput = (event: any) => {
     setTemporaryValue(event.target.value)
   }
