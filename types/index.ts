@@ -55,6 +55,12 @@ export interface CreateImageJob {
   has_source_image?: boolean
 }
 
+export interface NewRating {
+  dataset_id: string
+  id: string
+  url: string
+}
+
 export interface CreatePendingJob {
   id?: number
   timestamp: number

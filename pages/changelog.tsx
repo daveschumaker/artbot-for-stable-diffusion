@@ -99,7 +99,26 @@ const Changelog = () => {
           </StyledUl>
         </Section>
       </Panel>
-      {/* ///// START CHANGE LOG ////// */}
+      {/* /////
+          /////
+            *** START CHANGELOG ***
+          /////
+          /////
+      */}
+      <Section>
+        <SubSectionTitle>2023.03.23</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: Image ratings have been inconsistent and broken since some
+            griefing countermeasures were implemented on the backend. Ratings
+            should now work properly again. Protip: If you see an image that
+            literally says something like &quot;rate this image a 4&quot;, then
+            please do that. It&quot;s a form of captcha to verify ratings.
+            Thanks to ƊαякƊ, R3H and others for reporting issues with this on
+            Discord.
+          </StyledLi>
+        </StyledUl>
+      </Section>
       <Section>
         <SubSectionTitle>2023.03.22</SubSectionTitle>
         <StyledUl>
@@ -119,7 +138,8 @@ const Changelog = () => {
             requests more reliable and performant. Also implemented a
             virtualized window for lists (as dynamically rendering a list of
             hundred of changing items frequently caused memory errors and
-            crashes in people&apos;s browsers).
+            crashes in people&apos;s browsers). Still work to do. Thanks to
+            Litnine for reporting some bugs with this page.
           </StyledLi>
         </StyledUl>
       </Section>
