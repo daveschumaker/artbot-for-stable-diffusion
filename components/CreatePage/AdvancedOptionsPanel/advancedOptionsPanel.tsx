@@ -66,7 +66,6 @@ const NoSliderSpacer = styled.div`
 
 interface Props {
   handleChangeInput: any
-  handleImageUpload: any
   input: any
   setInput: any
   setHasValidationError: any
