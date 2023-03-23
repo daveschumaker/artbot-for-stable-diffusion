@@ -42,7 +42,6 @@ import SelectModel from './SelectModel'
 import UpscalerOptions from './UpscalerOptions'
 
 // Store imports
-import { modelInfoStore } from 'store/modelStore'
 import { userInfoStore } from 'store/userStore'
 
 // Hook imports
@@ -77,8 +76,6 @@ const AdvancedOptionsPanel = ({
   setInput,
   setHasValidationError
 }: Props) => {
-  const { availableModels, availableModelNames } = useStore(modelInfoStore)
-
   const [filterNsfwModels, setFilterNsfwModels] = useState(false)
   const userState = useStore(userInfoStore)
   const { loggedIn } = userState
@@ -87,7 +84,6 @@ const AdvancedOptionsPanel = ({
   const [componentState, setComponentState] = useComponentState({
     showMultiModel: PromptInputSettings.get('showMultiModel') || false,
     showNegPane: false,
-    totalModelsCount: availableModelNames.length,
     favoriteModelsCount: 0
   })
   const [initialLoad, setInitialLoad] = useState(true)
@@ -116,14 +112,6 @@ const AdvancedOptionsPanel = ({
       setInitialLoad(false)
     }, 750)
   }, [])
-
-  useEffect(() => {
-    const totalModelsCount = validModelsArray({
-      imageParams: input
-    })?.length
-
-    setComponentState({ totalModelsCount })
-  }, [availableModels, input, setComponentState])
 
   const clearNegPrompt = () => {
     setDefaultPrompt('')
