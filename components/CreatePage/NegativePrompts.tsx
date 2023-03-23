@@ -15,38 +15,6 @@ interface Props {
   setInput(): void
 }
 
-const Content = styled.div`
-  margin-bottom: 140px;
-
-  @media (min-width: 640px) {
-    margin-bottom: 8px;
-  }
-`
-
-const StyledCloseButton = styled.div`
-  cursor: pointer;
-  position: absolute;
-  top: 8px;
-  right: 8px;
-
-  @media (min-width: 640px) {
-    right: 16px;
-  }
-`
-
-const FixedHeader = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 44px;
-  padding: 8px 16px;
-
-  @media (min-width: 640px) {
-    border-radius: 4px;
-  }
-`
-
 const PromptContainer = styled.div`
   border-bottom: 1px dashed white;
   margin-bottom: 8px;
@@ -92,13 +60,16 @@ const NegativePrompts = ({ open, handleClosePane, setInput }: Props) => {
       handleClosePane={handleClosePane}
     >
       <div className="relative">
-        <FixedHeader>
-          <SectionTitle>Negative Prompt Library</SectionTitle>
-          <StyledCloseButton onClick={handleClosePane}>
-            <CloseIcon width={2} />
-          </StyledCloseButton>
-        </FixedHeader>
-        <Content className="pt-[32px] mb-[100px] bg-[#f2f2f2] dark:bg-[#222222]">
+        <div className='fixed w-full right-0 px-5'>
+          <div className='flex flex-row'>
+            <SectionTitle>Negative Prompt Library</SectionTitle>
+            <div className='grow'/>
+            <div onClick={handleClosePane}>
+              <CloseIcon width={2} />
+            </div>
+          </div>
+        </div>
+        <div className="pt-[32px] mb-[100px] bg-[#f2f2f2] dark:bg-[#222222]">
           {prompts.length === 0 && <div>Nothing here yet!</div>}
           {prompts.map((prompt: any, i) => {
             return (
@@ -142,7 +113,7 @@ const NegativePrompts = ({ open, handleClosePane, setInput }: Props) => {
               </PromptContainer>
             )
           })}
-        </Content>
+        </div>
       </div>
     </SlidingPanel>
   )
