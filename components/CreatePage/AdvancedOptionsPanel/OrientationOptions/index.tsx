@@ -33,10 +33,9 @@ const orientationOptions = [
 interface Props {
   input: DefaultPromptInput
   setInput: any
-  setErrorMessage: any
 }
 
-const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
+const OrientationOptions = ({ input, setInput}: Props) => {
   const userState = useStore(userInfoStore)
   const { loggedIn } = userState
 
@@ -138,11 +137,6 @@ const OrientationOptions = ({ input, setInput, setErrorMessage }: Props) => {
               options={orientationOptions}
               onChange={(obj: { value: string; label: string }) => {
                 handleOrientationSelect(obj.value)
-
-                if (obj.value !== 'custom') {
-                  setErrorMessage({ height: null, width: null })
-                }
-
                 setKeepAspectRatio(false)
               }}
               value={orientationValue}

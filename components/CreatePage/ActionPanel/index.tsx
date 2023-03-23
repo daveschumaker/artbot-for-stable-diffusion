@@ -8,9 +8,7 @@ import Linker from 'components/UI//Linker';
 import Errors from 'utils/errors';
 
 interface Props {
-  hasValidationError: boolean;
-  hasError: string | null;
-  errors: {[key: string]: boolean};
+  errors: { [key: string]: boolean };
   input: string;
   setInput: any;
   resetInput: () => void;
@@ -24,8 +22,6 @@ interface Props {
 }
 
 const ActionPanel = ({
-  hasValidationError,
-  hasError,
   errors,
   input,
   setInput,
@@ -38,17 +34,13 @@ const ActionPanel = ({
   kudosPerImage,
   showStylesDropdown,
 }: Props) => {
-  function areThereCriticalErrors(){
-    return Object.keys(errors||{}).filter((key: string) => (errors[key] && Errors[key]?.blocksCreation)).length > 0
+  function areThereCriticalErrors() {
+    return Object.keys(errors || {}).filter((key: string) => (errors[key] && Errors[key]?.blocksCreation)).length > 0
   }
 
   return (
     <>
-      <FormErrorMessage
-        hasValidationError={hasValidationError}
-        hasError={hasError}
-        errors={errors}
-      />
+      <FormErrorMessage errors={errors} />
 
       <div className="mt-2 mb-4 w-full flex flex-col md:flex-row gap-2 justify-end items-start">
         {showStylesDropdown && (
@@ -78,7 +70,6 @@ const ActionPanel = ({
               onClick={handleSubmit}
               // @ts-ignore
               disabled={
-                hasValidationError ||
                 pending || areThereCriticalErrors()
               }
               width="100px"

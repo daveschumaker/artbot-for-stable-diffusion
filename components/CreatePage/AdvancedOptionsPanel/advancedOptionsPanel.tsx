@@ -46,7 +46,6 @@ import { userInfoStore } from 'store/userStore'
 
 // Hook imports
 import useComponentState from 'hooks/useComponentState'
-import useErrorMessage from 'hooks/useErrorMessage'
 
 // Model imports
 import AppSettings from 'models/AppSettings'
@@ -64,22 +63,19 @@ const NoSliderSpacer = styled.div`
 `
 
 interface Props {
-  handleChangeInput: any
   input: any
   setInput: any
-  setHasValidationError: any
 }
 
 const AdvancedOptionsPanel = ({
-  handleChangeInput,
   input,
   setInput,
-  setHasValidationError
 }: Props) => {
+  const handleChangeInput = (event: any) => { setInput({ [event.target.name]: event.target.value }) }
+
   const [filterNsfwModels, setFilterNsfwModels] = useState(false)
   const userState = useStore(userInfoStore)
   const { loggedIn } = userState
-  const [errorMessage, setErrorMessage, hasError] = useErrorMessage()
 
   const [componentState, setComponentState] = useComponentState({
     showMultiModel: PromptInputSettings.get('showMultiModel') || false,
@@ -172,14 +168,6 @@ const AdvancedOptionsPanel = ({
   )
 
   useEffect(() => {
-    if (initialLoad) {
-      return
-    }
-
-    setHasValidationError(hasError)
-  }, [hasError, initialLoad, setHasValidationError])
-
-  useEffect(() => {
     const favModels = AppSettings.get('favoriteModels') || {}
     const favoriteModelsCount = Object.keys(favModels).length
 
@@ -256,7 +244,6 @@ const AdvancedOptionsPanel = ({
       <OrientationOptions
         input={input}
         setInput={setInput}
-        setErrorMessage={setErrorMessage}
       />
       <Section>
         <SubSectionTitle>
@@ -349,7 +336,6 @@ const AdvancedOptionsPanel = ({
                 </div>
                 <Input
                   // @ts-ignore
-                  error={errorMessage.multiSteps}
                   className="mb-2"
                   type="text"
                   name="multiSteps"
@@ -363,11 +349,6 @@ const AdvancedOptionsPanel = ({
                   width="100%"
                 />
               </div>
-              {errorMessage.steps && (
-                <div className="mb-2 text-red-500 text-lg font-bold">
-                  {errorMessage.steps}
-                </div>
-              )}
               <NoSliderSpacer />
             </Section>
           )}
@@ -439,7 +420,6 @@ const AdvancedOptionsPanel = ({
                 </div>
                 <Input
                   // @ts-ignore
-                  error={errorMessage.multiGuidance}
                   className="mb-2"
                   type="text"
                   name="multiGuidance"
@@ -453,11 +433,6 @@ const AdvancedOptionsPanel = ({
                   width="100%"
                 />
               </div>
-              {errorMessage.multiGuidance && (
-                <div className="mb-2 text-red-500 text-lg font-bold">
-                  {errorMessage.multiGuidance}
-                </div>
-              )}
               <NoSliderSpacer />
             </Section>
           )}
