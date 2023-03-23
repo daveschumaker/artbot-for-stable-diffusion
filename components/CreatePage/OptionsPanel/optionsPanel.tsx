@@ -36,13 +36,11 @@ const NavItem = styled.li<LiProps>`
 `
 
 interface Props {
-  handleChangeInput: any
   input: any
   setInput: any
 }
 
 const OptionsPanel = ({
-  handleChangeInput,
   input,
   setInput,
 }: Props) => {
@@ -132,7 +130,6 @@ const OptionsPanel = ({
       </ul>
       {activeNav === 'advanced' && (
         <AdvancedOptionsPanel
-          handleChangeInput={handleChangeInput}
           input={input}
           setInput={setInput}
         />

@@ -63,16 +63,16 @@ const NoSliderSpacer = styled.div`
 `
 
 interface Props {
-  handleChangeInput: any
   input: any
   setInput: any
 }
 
 const AdvancedOptionsPanel = ({
-  handleChangeInput,
   input,
   setInput,
 }: Props) => {
+  const handleChangeInput = (event: any) => { setInput({ [event.target.name]: event.target.value }) }
+
   const [filterNsfwModels, setFilterNsfwModels] = useState(false)
   const userState = useStore(userInfoStore)
   const { loggedIn } = userState

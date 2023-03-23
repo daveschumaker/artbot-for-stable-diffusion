@@ -667,7 +667,6 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
         />
       </div>
       <OptionsPanel
-        handleChangeInput={handleChangeValue}
         input={input}
         setInput={setInput}
       />
