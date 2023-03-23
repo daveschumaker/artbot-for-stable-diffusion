@@ -222,14 +222,14 @@ const AdvancedOptionsPanel = ({
 
   return (
     <div>
-      {componentState.isNegativePromptLibraryPanelOpen ? (
+      {componentState.isNegativePromptLibraryPanelOpen && (
         <NegativePrompts
           open={componentState.isNegativePromptLibraryPanelOpen}
           handleClosePane={() => setComponentState({ isNegativePromptLibraryPanelOpen: false })}
           setInput={setInput}
         />
-      ) : null}
-      {input.parentJobId ? (
+      )}
+      {input.parentJobId && (
         <Section>
           <SubSectionTitle>Attached to previous job</SubSectionTitle>
           <div className="text-xs">
@@ -252,7 +252,7 @@ const AdvancedOptionsPanel = ({
             Remove attachment?
           </TextButton>
         </Section>
-      ) : null}
+      )}
       <OrientationOptions
         input={input}
         setInput={setInput}
