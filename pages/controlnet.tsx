@@ -65,7 +65,6 @@ const ControlNet = () => {
   const { modelDetails } = modelState
 
   const [pending, setPending] = useState(false)
-  const [hasError, setHasError] = useState('')
   const [stayOnPage, setStayOnPage] = useState(false)
   const [showOptionsMenu, setShowOptionsMenu] = useState(false)
 
@@ -231,13 +230,13 @@ const ControlNet = () => {
     setPending(true)
 
     if (!input?.source_image) {
-      setHasError('Please upload a source image to continue')
+      setErrors({ SOURCE_IMAGE_EMPTY: true })
       setPending(false)
       return
     }
 
     if (!input?.prompt || input?.prompt.trim() === '') {
-      setHasError('Please enter a prompt to continue.')
+      setErrors({ PROMPT_EMPTY: true })
       setPending(false)
       return
     }
@@ -264,7 +263,8 @@ const ControlNet = () => {
         }
       )
 
-      setHasError('')
+      setErrors({ SOURCE_IMAGE_EMPTY: false })
+      setErrors({ PROMPT_EMPTY: false })
       setPending(false)
     }
   }, [input, pending, router, stayOnPage, totalImagesRequested])
@@ -657,7 +657,6 @@ const ControlNet = () => {
       </Section>
 
       <ActionPanel
-        hasError={hasError}
         errors={errors}
         input={input}
         setInput={setInput}

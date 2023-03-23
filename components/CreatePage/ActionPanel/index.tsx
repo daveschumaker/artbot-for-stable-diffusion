@@ -8,8 +8,7 @@ import Linker from 'components/UI//Linker';
 import Errors from 'utils/errors';
 
 interface Props {
-  hasError?: string | null; // TODO: Remove me after control net is refactored
-  errors: {[key: string]: boolean};
+  errors: { [key: string]: boolean };
   input: string;
   setInput: any;
   resetInput: () => void;
@@ -23,7 +22,6 @@ interface Props {
 }
 
 const ActionPanel = ({
-  hasError=null, // TODO: Remove me after control net is refactored
   errors,
   input,
   setInput,
@@ -36,16 +34,13 @@ const ActionPanel = ({
   kudosPerImage,
   showStylesDropdown,
 }: Props) => {
-  function areThereCriticalErrors(){
-    return Object.keys(errors||{}).filter((key: string) => (errors[key] && Errors[key]?.blocksCreation)).length > 0
+  function areThereCriticalErrors() {
+    return Object.keys(errors || {}).filter((key: string) => (errors[key] && Errors[key]?.blocksCreation)).length > 0
   }
 
   return (
     <>
-      <FormErrorMessage
-        hasError={hasError} // TODO: Remove me after control net is refactored
-        errors={errors}
-      />
+      <FormErrorMessage errors={errors} />
 
       <div className="mt-2 mb-4 w-full flex flex-col md:flex-row gap-2 justify-end items-start">
         {showStylesDropdown && (
