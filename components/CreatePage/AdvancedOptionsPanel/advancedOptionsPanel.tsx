@@ -162,16 +162,6 @@ const AdvancedOptionsPanel = ({
       if (index > -1) {
         newPost.splice(index, 1)
       } else {
-        const idx_1 = input.post_processing.indexOf('RealESRGAN_x4plus')
-        const idx_2 = input.post_processing.indexOf(
-          'RealESRGAN_x4plus_anime_6B'
-        )
-        if (value === 'RealESRGAN_x4plus' && idx_2 >= 0) {
-          newPost.splice(idx_2, 1)
-        } else if (value === 'RealESRGAN_x4plus_anime_6B' && idx_1 >= 0) {
-          newPost.splice(idx_1, 1)
-        }
-
         newPost.push(value)
       }
 
