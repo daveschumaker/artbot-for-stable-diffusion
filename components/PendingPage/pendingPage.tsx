@@ -147,14 +147,6 @@ const PendingPage = () => {
   })
 
   const renderRow = ({ index }: { index: number }) => {
-    if (index === 0) {
-      return (
-        <div className="w-full">
-          <AdContainer minSize={0} maxSize={640} />
-        </div>
-      )
-    }
-
     const job = sorted[index]
 
     if (!job || !job.jobId) {
@@ -367,6 +359,12 @@ const PendingPage = () => {
         </div>
       )}
 
+      {sorted.length === 0 && (
+        <div className="w-full">
+          <AdContainer minSize={0} maxSize={640} />
+        </div>
+      )}
+
       {sorted.length > 0 && (
         <div
           ref={parentRef}
@@ -387,6 +385,7 @@ const PendingPage = () => {
             }}
           >
             <div
+              className="mb-[54px]"
               style={{
                 position: 'absolute',
                 top: 0,
@@ -401,9 +400,20 @@ const PendingPage = () => {
                   data-index={virtualRow.index}
                   ref={virtualizer.measureElement}
                 >
+                  {virtualRow.index === 0 && (
+                    <div
+                      className="w-full px-[8px] mb-[8px]"
+                      style={{ padding: '2px 8px 2px 8px' }}
+                    >
+                      <AdContainer minSize={0} maxSize={640} />
+                    </div>
+                  )}
                   <div style={{ padding: '0 8px' }}>
                     {renderRow({ index: virtualRow.index })}
                   </div>
+                  {virtualRow.index === items.length && (
+                    <div className="h-[40px] w-full"></div>
+                  )}
                 </div>
               ))}
             </div>
