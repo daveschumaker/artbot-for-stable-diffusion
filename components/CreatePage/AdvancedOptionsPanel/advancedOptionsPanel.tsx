@@ -328,7 +328,6 @@ const AdvancedOptionsPanel = ({
               input={input}
               setInput={setInput}
               fieldName="steps"
-              initialLoad={initialLoad}
               fullWidth
               enforceStepValue
             />
@@ -426,7 +425,6 @@ const AdvancedOptionsPanel = ({
               input={input}
               setInput={setInput}
               fieldName="cfg_scale"
-              initialLoad={initialLoad}
               fullWidth
             />
           )}
@@ -522,7 +520,6 @@ const AdvancedOptionsPanel = ({
               input={input}
               setInput={setInput}
               fieldName="denoising_strength"
-              initialLoad={initialLoad}
               disabled={
                 input.models &&
                 input.models[0] &&
@@ -848,7 +845,6 @@ const AdvancedOptionsPanel = ({
               input={input}
               setInput={setInput}
               fieldName="facefixer_strength"
-              initialLoad={initialLoad}
             />
           )}
           <Checkbox
@@ -870,7 +866,6 @@ const AdvancedOptionsPanel = ({
           input={input}
           setInput={setInput}
           fieldName="clipskip"
-          initialLoad={initialLoad}
           enforceStepValue
         />
       </Section>
@@ -884,7 +879,6 @@ const AdvancedOptionsPanel = ({
             input={input}
             setInput={setInput}
             fieldName="numImages"
-            initialLoad={initialLoad}
             enforceStepValue
           />
         </Section>

@@ -19,7 +19,6 @@ interface Props {
   input: { [key: string]: any }
   setInput: any
   fieldName: string
-  initialLoad: boolean
   disabled?: boolean
   fullWidth?: boolean
   enforceStepValue?: boolean
@@ -35,7 +34,6 @@ const NumericInputSlider = ({
   input,
   setInput,
   fieldName,
-  initialLoad,
   disabled = false,
   fullWidth = false,
   enforceStepValue = false,
@@ -71,10 +69,6 @@ const NumericInputSlider = ({
   function safelyUpdateField (value: string | number) {
     value = Number(value)
     if (isNaN(value) || value < from || value > to) {
-      if (initialLoad) {
-        return
-      }
-
       toggleWarning(true)
       updateField(isNaN(value)?to:keepInBoundaries(value, from, to))
     } else {
@@ -92,34 +86,12 @@ const NumericInputSlider = ({
   const [temporaryValue, setTemporaryValue] = useState(input[fieldName]);
 
   useEffect(() => {
-    // We don't want to force input in incorrect boundaries
-    if (initialLoad) {
-      setTemporaryValue(input[fieldName])
-      return
-    }
-
     const newValue = input[fieldName]
-    let correctedNewValue
-    if (enforceStepValue){
-      correctedNewValue = roundToNearestStep(newValue, from, to, step)
-    }
-    else{
-      correctedNewValue = keepInBoundaries(newValue, from, to)
-    }
+    let correctedNewValue = enforceStepValue ? roundToNearestStep(newValue, from, to, step) : keepInBoundaries(newValue, from, to)
 
-    if (newValue !== correctedNewValue) {
-      const res = {}
-      // @ts-ignore
-      res[fieldName] = correctedNewValue
-      setInput(res)
-
-      console.log('Invalid value loaded in', fieldName,'. Force updating to', correctedNewValue, 'from', newValue)
-      return
-    }
-
-    setTemporaryValue(input[fieldName])
+    toggleWarning(newValue !== correctedNewValue)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [input[fieldName], fieldName, from, to, step])
+  }, [fieldName, from, to, step])
 
   const handleNumberInput = (event: any) => {
     setTemporaryValue(event.target.value)
