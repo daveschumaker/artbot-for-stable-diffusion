@@ -3,12 +3,12 @@ import Errors from 'utils/errors'
 
 // TODO: Allow multiple errors to be displayed at once
 interface Props {
-  hasError: string | null;
+  hasError?: string | null; // TODO: Remove me after control net is refactored
   errors: {[key: string]: boolean};
 }
 
 function FormErrorMessage(props: Props){
-  const { hasError, errors } = props;
+  const { hasError=null, errors } = props;
 
   return (
     <>

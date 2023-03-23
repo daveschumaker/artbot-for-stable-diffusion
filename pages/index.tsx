@@ -124,7 +124,6 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
   const [flaggedPromptError, setFlaggedPromptError] = useState(false)
   const [showPromptHistory, setShowPromptHistory] = useState(false)
   const [pending, setPending] = useState(false)
-  const [hasError, setHasError] = useState('')
   const [errors, setErrors] = useComponentState({} as { [key: string]: boolean })
 
   const [input, setInput] = useReducer((state: any, newState: any) => {
@@ -168,13 +167,12 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
       return
     }
 
-    setPending(true)
-
     if (!input?.prompt || input?.prompt.trim() === '') {
-      setHasError('Please enter a prompt to continue.')
-      setPending(false)
+      setErrors({ PROMPT_EMPTY: true})
       return
     }
+
+    setPending(true)
 
     const imageJobData = {
       ...input
@@ -652,7 +650,6 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
         </FlexRow>
 
         <ActionPanel
-          hasError={hasError}
           errors={errors}
           input={input}
           setInput={setInput}
@@ -666,13 +663,13 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
           showStylesDropdown
         />
       </div>
+
       <OptionsPanel
         input={input}
         setInput={setInput}
       />
 
       <ActionPanel
-        hasError={hasError}
         errors={errors}
         input={input}
         setInput={setInput}

@@ -18,7 +18,11 @@ const Errors: IErrors = {
         className: typeMap.error,
         blocksCreation: true
     },
-
+    PROMPT_EMPTY: {
+        text: "Please enter a prompt to continue.",
+        className: typeMap.warning,
+        blocksCreation: false
+    }
 }
 
 export default Errors

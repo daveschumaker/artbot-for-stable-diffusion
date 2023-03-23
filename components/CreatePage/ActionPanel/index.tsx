@@ -8,7 +8,7 @@ import Linker from 'components/UI//Linker';
 import Errors from 'utils/errors';
 
 interface Props {
-  hasError: string | null;
+  hasError?: string | null; // TODO: Remove me after control net is refactored
   errors: {[key: string]: boolean};
   input: string;
   setInput: any;
@@ -23,7 +23,7 @@ interface Props {
 }
 
 const ActionPanel = ({
-  hasError,
+  hasError=null, // TODO: Remove me after control net is refactored
   errors,
   input,
   setInput,
@@ -43,7 +43,7 @@ const ActionPanel = ({
   return (
     <>
       <FormErrorMessage
-        hasError={hasError}
+        hasError={hasError} // TODO: Remove me after control net is refactored
         errors={errors}
       />
 
