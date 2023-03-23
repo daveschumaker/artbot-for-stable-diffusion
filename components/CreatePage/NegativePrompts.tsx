@@ -54,9 +54,8 @@ const NegativePrompts = ({ open, handleClosePane, setInput }: Props) => {
     >
       <div className="relative">
         <div className='fixed w-full top-0 right-0 px-5 pt-5 bg-[#f2f2f2] dark:bg-[#222222]'>
-          <div className='flex flex-row'>
+          <div className='flex flex-row place-content-between'>
             <SectionTitle>Negative Prompt Library</SectionTitle>
-            <div className='grow'/>
             <div onClick={handleClosePane}>
               <CloseIcon width={2} />
             </div>
@@ -73,7 +72,7 @@ const NegativePrompts = ({ open, handleClosePane, setInput }: Props) => {
             return (
               <div
                 key={`negative_prompt_${i}`}
-                className="text-[#222222] dark:text-[#f2f2f2]"
+                className="text-[#222222] dark:text-[#f2f2f2] mb-2"
               >
                 {prompt.prompt}
 
