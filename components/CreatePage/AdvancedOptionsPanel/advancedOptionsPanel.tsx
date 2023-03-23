@@ -256,7 +256,6 @@ const AdvancedOptionsPanel = ({
       <OrientationOptions
         input={input}
         setInput={setInput}
-        setErrorMessage={setErrorMessage}
       />
       <Section>
         <SubSectionTitle>
