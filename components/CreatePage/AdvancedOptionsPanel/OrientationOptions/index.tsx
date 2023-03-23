@@ -196,7 +196,6 @@ const OrientationOptions = ({ input, setInput}: Props) => {
                     input={input}
                     setInput={setInput}
                     fieldName="width"
-                    initialLoad={false}
                     fullWidth
                     enforceStepValue
                     callback={widthCallback}
@@ -212,7 +211,6 @@ const OrientationOptions = ({ input, setInput}: Props) => {
                     input={input}
                     setInput={setInput}
                     fieldName="height"
-                    initialLoad={false}
                     fullWidth
                     enforceStepValue
                     callback={heightCallback}
