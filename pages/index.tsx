@@ -124,7 +124,9 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
   const [flaggedPromptError, setFlaggedPromptError] = useState(false)
   const [showPromptHistory, setShowPromptHistory] = useState(false)
   const [pending, setPending] = useState(false)
-  const [errors, setErrors] = useComponentState({} as { [key: string]: boolean })
+  const [errors, setErrors] = useComponentState(
+    {} as { [key: string]: boolean }
+  )
 
   const [input, setInput] = useReducer((state: any, newState: any) => {
     const updatedInputState = { ...state, ...newState }
@@ -168,7 +170,7 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
     }
 
     if (!input?.prompt || input?.prompt.trim() === '') {
-      setErrors({ PROMPT_EMPTY: true})
+      setErrors({ PROMPT_EMPTY: true })
       return
     }
 
@@ -321,6 +323,7 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
     })
 
     clearCanvasStore()
+    localStorage.removeItem('img2img_base64')
     setInput(newDefaultState)
   }
 
@@ -509,10 +512,19 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
       )
     }
 
-    // Step 6. Set input
+    // Step 6. Load in img2img if not already exists
+    if (
+      initialState &&
+      initialState.source_processing === SourceProcessing.Img2Img &&
+      localStorage.getItem('img2img_base64')
+    ) {
+      initialState.source_image = localStorage.getItem('img2img_base64') || ''
+    }
+
+    // Step 7. Set input
     setInput({ ...initialState })
 
-    // Step 7. Set pageLoaded so we can start error checking and auto saving input.
+    // Step 8. Set pageLoaded so we can start error checking and auto saving input.
     setPageLoaded(true)
   }, [query, shortlinkImageParams])
 
@@ -677,10 +689,7 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
         />
       </div>
 
-      <OptionsPanel
-        input={input}
-        setInput={setInput}
-      />
+      <OptionsPanel input={input} setInput={setInput} />
 
       <ActionPanel
         errors={errors}

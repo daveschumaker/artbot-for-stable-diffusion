@@ -182,17 +182,6 @@ const ToolBar = ({
             <RulerIcon stroke="black" />
           </ToolBarButton>
         )}
-        {canvasType === 'inpainting' && (
-          <ToolBarButton
-            active={activeBrush === 'pointer'}
-            onClick={() => {
-              setActiveBrush('pointer')
-              canvas?.setDrawingMode(false)
-            }}
-          >
-            <PointerIcon stroke="black" />
-          </ToolBarButton>
-        )}
         {canvasType === 'drawing' && (
           <>
             <ToolBarButton

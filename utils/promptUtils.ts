@@ -33,6 +33,7 @@ interface SavePrompt {
   triggers?: Array<string>
   tiling: boolean
   source_image?: string
+  post_processing: Array<string>
   source_processing?:
     | SourceProcessing.Prompt
     | SourceProcessing.Img2Img
@@ -60,6 +61,7 @@ let initPromptDetails: SavePrompt = {
   karras: false,
   hires: false,
   clipskip: 1,
+  post_processing: [],
   seed: '',
   steps: 25,
   height: 512,
@@ -71,7 +73,7 @@ let initPromptDetails: SavePrompt = {
   source_image: '',
   source_processing: SourceProcessing.Prompt,
   source_mask: '',
-  denoising_strength: 0.75,
+  denoising_strength: undefined,
   models: ['stable_diffusion'],
   canvasStore: '',
   canvasData: '',
@@ -98,12 +100,13 @@ export const savePrompt = ({
   width = 512,
   parentJobId = '',
   negative = '',
+  post_processing = [],
   triggers = [],
   tiling = false,
   source_image = '',
   source_processing = SourceProcessing.Prompt,
   source_mask = '',
-  denoising_strength = 0.75,
+  denoising_strength = undefined,
   control_type = '',
   models = ['stable_diffusion'],
   canvasStore = null,
@@ -125,6 +128,7 @@ export const savePrompt = ({
     sampler: samplerValid ? sampler : 'k_euler_a',
     cfg_scale,
     steps,
+    post_processing,
     height,
     width,
     parentJobId,

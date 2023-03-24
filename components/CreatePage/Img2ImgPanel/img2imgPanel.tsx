@@ -52,6 +52,9 @@ const Img2ImgPanel = ({ input, saveForInpaint, setInput }: Props) => {
       source_processing: SourceProcessing.Img2Img
     })
 
+    // Attempt to store image between sessions.
+    localStorage.setItem('img2img_base64', source_image)
+
     setI2iUploaded({
       base64String: source_image,
       height,
@@ -64,6 +67,7 @@ const Img2ImgPanel = ({ input, saveForInpaint, setInput }: Props) => {
       ...input
     })
 
+    localStorage.removeItem('img2img_base64')
     router.push('?panel=inpainting')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [input])
@@ -86,7 +90,7 @@ const Img2ImgPanel = ({ input, saveForInpaint, setInput }: Props) => {
             <div className="flex flex-row mb-4 gap-2">
               <Button
                 btnType="secondary"
-                onClick={() =>
+                onClick={() => {
                   setInput({
                     img2img: false,
                     imageType: '',
@@ -95,7 +99,8 @@ const Img2ImgPanel = ({ input, saveForInpaint, setInput }: Props) => {
                     source_image: '',
                     source_processing: SourceProcessing.Prompt
                   })
-                }
+                  localStorage.removeItem('img2img_base64')
+                }}
               >
                 <TrashIcon />
                 Clear

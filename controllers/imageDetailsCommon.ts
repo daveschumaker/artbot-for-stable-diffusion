@@ -20,6 +20,7 @@ export const interrogateImage = (imageDetails: any) => {
 
 export const copyEditPrompt = (imageDetails: any) => {
   PromptInputSettings.clear()
+
   savePrompt({
     prompt: imageDetails.prompt,
     sampler: imageDetails.sampler,
@@ -35,6 +36,10 @@ export const copyEditPrompt = (imageDetails: any) => {
     parentJobId: imageDetails.parentJobId,
     negative: imageDetails.negative,
     tiling: imageDetails.tiling,
+    source_processing: imageDetails.source_processing,
+    source_image: imageDetails.source_image,
+    source_mask: imageDetails.source_mask,
+    post_processing: imageDetails.post_processing,
     models: imageDetails?.models[0]
       ? imageDetails.models
       : [imageDetails.model || 'stable_diffusion']
