@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 
 // Import UI components
 import Section from 'components/UI/Section'
@@ -41,21 +41,22 @@ const NumericInputSlider = ({
 }: Props) => {
   const inputField = input[fieldName]
   const [warning, setWarning] = useState('')
+  const [temporaryValue, setTemporaryValue] = useState(inputField);
 
-  function toggleWarning (state: boolean) {
+  const toggleWarning = useCallback((state: boolean) => {
     setWarning(state ? `This field only accepts numbers between ${from} and ${to}.` : '')
-  }
+  }, [from, to])
 
   function keepInBoundaries (val: number, min: number, max: number) {
     return Math.max(min, Math.min(val, max))
   }
 
-  function roundToNearestStep(val: number, min: number, max: number, step: number) {
+  const roundToNearestStep = useCallback((val: number, min: number, max: number, step: number) =>{
     val = keepInBoundaries(val, min, max)
     const steps = Math.round((val - min) / step);
     const newValue = min + steps * step;
     return newValue;
-  }
+  }, [])
 
   function updateField (value: number) {
     setInput({[fieldName]: value})
@@ -79,16 +80,11 @@ const NumericInputSlider = ({
     }
   }
 
-
-  const [temporaryValue, setTemporaryValue] = useState(input[fieldName]);
-
   useEffect(() => {
-    const newValue = input[fieldName]
-    let correctedNewValue = enforceStepValue ? roundToNearestStep(newValue, from, to, step) : keepInBoundaries(newValue, from, to)
+    let correctedInputField = enforceStepValue ? roundToNearestStep(inputField, from, to, step) : keepInBoundaries(inputField, from, to)
 
-    toggleWarning(newValue !== correctedNewValue)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fieldName, from, to, step])
+    toggleWarning(inputField !== correctedInputField)
+  }, [inputField, from, to, step, enforceStepValue, roundToNearestStep, toggleWarning])
 
   useEffect(() => {
     setTemporaryValue(inputField)
