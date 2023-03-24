@@ -82,10 +82,6 @@ const ImageDetails = ({
 
   const imgStyle: any = {}
 
-  if (size.height) {
-    imgStyle.maxHeight = size.height - 88
-  }
-
   return (
     <>
       <FullScreen
@@ -121,10 +117,10 @@ const ImageDetails = ({
           {
             loading: styles['img-loading']
           },
-          'flex flex-row w-full justify-center items-center'
+          'w-full flex justify-center'
         )}
       >
-        <div className="max-w-[1400px]">
+        <div className="max-w-[1400px] h-[512px] flex flex-row justify-center items-center">
           <img
             className={clsx(styles.img)}
             src={'data:image/webp;base64,' + imageDetails.base64String}
