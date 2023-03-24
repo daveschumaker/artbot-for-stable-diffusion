@@ -142,6 +142,10 @@ const Changelog = () => {
             Fix: Issue where re-rolling tiled image would lose the tiled
             parameter.
           </StyledLi>
+          <StyledLi>
+            UX: On mobile devices, you can swipe down from the very top of the
+            image details view to close out the modal.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

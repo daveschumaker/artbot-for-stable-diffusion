@@ -104,9 +104,10 @@ const ImageOptionsWrapper = ({
       if (success) {
         setPendingReroll(false)
         router.push('/pending')
+        handleClose()
       }
     },
-    [pendingReroll, router]
+    [handleClose, pendingReroll, router]
   )
 
   const handleTileClick = (size: string) => {

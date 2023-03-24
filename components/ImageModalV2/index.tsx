@@ -40,7 +40,17 @@ const ImageModalV2 = ({
     preventScrollOnSwipe: true,
     swipeDuration: 250,
     trackTouch: true,
-    delta: 50
+    delta: 75
+  })
+
+  const closeSwipe = useSwipeable({
+    onSwipedDown: () => {
+      handleClose()
+    },
+    preventScrollOnSwipe: true,
+    swipeDuration: 250,
+    trackTouch: true,
+    delta: 150
   })
 
   const [showTiles, setShowTiles] = useState(false)
@@ -89,7 +99,10 @@ const ImageModalV2 = ({
         )}
         {...handlers}
       >
-        <div className="flex flex-row justify-end w-full pr-2 mb-2">
+        <div
+          className="flex flex-row justify-end w-full pr-2 mb-2"
+          {...closeSwipe}
+        >
           <div className={styles['close-btn']} onClick={handleClose}>
             <CloseIcon size={28} />
           </div>
