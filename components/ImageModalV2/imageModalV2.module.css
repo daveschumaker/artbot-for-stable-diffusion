@@ -4,6 +4,7 @@
 }
 
 .left-nav-btn {
+  display: none;
   position: absolute;
   bottom: calc(env(safe-area-inset-bottom) + 4px);
   left: -14px;
@@ -11,6 +12,7 @@
 }
 
 .right-nav-btn {
+  display: none;
   position: absolute;
   bottom: calc(env(safe-area-inset-bottom) + 4px);
   right: -14px;
@@ -47,11 +49,13 @@
 
 @media (min-width: 640px) {
   .left-nav-btn {
+    display: block;
     bottom: auto;
     top: 50%;
   }
 
   .right-nav-btn {
+    display: block;
     bottom: auto;
     top: 50%;
   }

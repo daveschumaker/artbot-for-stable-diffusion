@@ -142,12 +142,10 @@ const ImageDetails = ({
       >
         <div className="text-[16px] tablet:text-[18px] px-4 w-full max-w-[768px]">
           <div className="text-sm font-bold flex flex-row gap-2 items-center mb-[4px]">
-            <PlaylistXIcon hideCross/>
+            <PlaylistXIcon hideCross />
             Prompt
           </div>
-          <div className="w-full text-sm ml-[8px]">
-            {imageDetails.prompt}
-          </div>
+          <div className="w-full text-sm ml-[8px]">{imageDetails.prompt}</div>
         </div>
       </div>
       {imageDetails.negative && (
@@ -289,7 +287,7 @@ const ImageDetails = ({
         id="image-params-wrapper"
         className="mt-3 flex flex-col w-full justify-start items-center"
       >
-        <div className="text-[16px] tablet:text-[18px] px-4 w-full max-w-[768px] gap-4 flex flex-row">
+        <div className="text-[16px] tablet:text-[18px] px-4 w-full max-w-[768px] gap-4 flex flex-row mb-3">
           {/* <div className="flex flex-col gap-2">
                 <div className="text-sm font-bold flex flex-row gap-2 items-center mb-[4px]">
                   <PhotoUpIcon />

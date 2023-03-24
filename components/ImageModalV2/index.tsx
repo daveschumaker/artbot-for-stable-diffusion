@@ -6,6 +6,7 @@ import ImageDetails from 'components/ImageDetails'
 import { IImageDetails } from 'types'
 import ImageNavigation from './imageNavigation'
 import CloseIcon from 'components/icons/CloseIcon'
+import { useSwipeable } from 'react-swipeable'
 
 import styles from './imageModalV2.module.css'
 import clsx from 'clsx'
@@ -27,6 +28,21 @@ const ImageModalV2 = ({
   handleLoadPrev = () => {},
   imageDetails
 }: Props) => {
+  const handlers = useSwipeable({
+    onSwipedLeft: () => {
+      if (disableNav) return
+      handleLoadPrev()
+    },
+    onSwipedRight: () => {
+      if (disableNav) return
+      handleLoadNext()
+    },
+    preventScrollOnSwipe: true,
+    swipeDuration: 250,
+    trackTouch: true,
+    delta: 50
+  })
+
   const [showTiles, setShowTiles] = useState(false)
 
   const handleTiling = (bool: boolean) => {
@@ -71,6 +87,7 @@ const ImageModalV2 = ({
           styles['image-modal'],
           'opacity-100 rounded md:border-[2px] p-2 flex flex-col items-start fixed left-2 md:left-4 right-2 md:right-4 z-[100] max-w-[1600px] m-auto overflow-y-overlay bg-[#f2f2f2] dark:bg-[#222222]'
         )}
+        {...handlers}
       >
         <div className="flex flex-row justify-end w-full pr-2 mb-2">
           <div className={styles['close-btn']} onClick={handleClose}>

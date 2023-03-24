@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { Menu, MenuItem, MenuButton } from '@szhsin/react-menu'
+import { Menu, MenuItem, MenuButton, MenuDivider } from '@szhsin/react-menu'
 import '@szhsin/react-menu/dist/index.css'
 import '@szhsin/react-menu/dist/transitions/slide.css'
 
@@ -29,6 +29,7 @@ import PromptInputSettings from 'models/PromptInputSettings'
 import {
   copyEditPrompt,
   interrogateImage,
+  rerollImage,
   uploadImg2Img,
   uploadInpaint,
   upscaleImage
@@ -62,7 +63,9 @@ const ImageOptionsWrapper = ({
   handleFullScreen: () => any
 }) => {
   const router = useRouter()
+
   const [favorited, setFavorited] = useState(imageDetails.favorited)
+  const [pendingReroll, setPendingReroll] = useState(false)
   const [pendingUpscale, setPendingUpscale] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
 
@@ -85,6 +88,25 @@ const ImageOptionsWrapper = ({
     await deleteCompletedImageById(imageDetails.id)
     handleClose()
   }
+
+  const handleRerollClick = useCallback(
+    async (imageDetails: any) => {
+      if (pendingReroll) {
+        return
+      }
+
+      setPendingReroll(true)
+
+      const reRollStatus = await rerollImage(imageDetails)
+      const { success } = reRollStatus
+
+      if (success) {
+        setPendingReroll(false)
+        router.push('/pending')
+      }
+    },
+    [pendingReroll, router]
+  )
 
   const handleTileClick = (size: string) => {
     setTileSize(size)
@@ -231,7 +253,7 @@ const ImageOptionsWrapper = ({
       >
         <div
           id="image-options-buttons"
-          className="w-full flex flex-row items-center justify-end max-w-[768px] gap-6 md:gap-4"
+          className="w-full flex flex-row items-center justify-between tablet:justify-end max-w-[768px] md:gap-4"
         >
           <div className={styles['button-icon']}>
             <Menu
@@ -253,6 +275,13 @@ const ImageOptionsWrapper = ({
                   View image details page
                 </MenuItem>
               )}
+              <MenuDivider />
+              <MenuItem
+                className="text-sm"
+                onClick={() => handleRerollClick(imageDetails)}
+              >
+                Reroll this image as a new job
+              </MenuItem>
               <MenuItem
                 className="text-sm"
                 onClick={() => {
@@ -265,6 +294,7 @@ const ImageOptionsWrapper = ({
               <MenuItem className="text-sm" onClick={handleUpscaleClick}>
                 Upscale image {pendingUpscale && ' (processing...)'}
               </MenuItem>
+              <MenuDivider />
               <MenuItem
                 className="text-sm"
                 onClick={() => {
@@ -308,6 +338,7 @@ const ImageOptionsWrapper = ({
               <MenuItem className="text-sm" onClick={handleCopyPromptClick}>
                 Use all settings from this image for generation
               </MenuItem>
+              <MenuDivider />
               <MenuItem
                 className="text-sm"
                 onClick={async () => {
@@ -385,7 +416,7 @@ const ImageOptionsWrapper = ({
           )}
           {!isiOS() && (
             <div className={styles['button-icon']} onClick={handleFullScreen}>
-              <ResizeIcon strokeWidth={1.25}/>
+              <ResizeIcon strokeWidth={1.25} />
             </div>
           )}
           <div

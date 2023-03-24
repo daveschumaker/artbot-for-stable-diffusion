@@ -106,6 +106,37 @@ const Changelog = () => {
           /////
       */}
       <Section>
+        <SubSectionTitle>2023.03.24</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Merged in{' '}
+            <Linker
+              href="https://github.com/daveschumaker/artbot-for-stable-diffusion/pull/92"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              another PR
+            </Linker>{' '}
+            from Litnine -- essentially a unified theory of error handling and
+            some additional UI fixes. The create image and control net pages now
+            show all validation errors at once (if they exist), and it&apos;s
+            located in a central place that is easy to update.
+          </StyledLi>
+          <StyledLi>
+            Removed ugly navigation buttons from image details modal on mobile
+            devices and added back the ability to swipe between images. (Thank
+            you, Litnine!)
+          </StyledLi>
+          <StyledLi>
+            Added back the ability to re-roll images. It&apos; s located in the
+            additional options dropdown (the 3 dots) of the image details view.
+            (View? Yeah, we&apos;ll call it a view: modal + page = view.) Thanks
+            to openco for reaching out via the feedback form to remind me about
+            this!
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.03.23</SubSectionTitle>
         <StyledUl>
           <StyledLi>
