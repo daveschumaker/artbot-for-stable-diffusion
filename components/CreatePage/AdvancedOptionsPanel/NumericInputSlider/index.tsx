@@ -40,23 +40,24 @@ const NumericInputSlider = ({
   callback = () => {}
 }: Props) => {
   const inputField = input[fieldName]
+  const [temporaryValue, setTemporaryValue] = useState(inputField)
+
   const [warning, setWarning] = useState('')
-  const [temporaryValue, setTemporaryValue] = useState(inputField);
 
   const toggleWarning = useCallback((state: boolean) => {
     setWarning(state ? `This field only accepts numbers between ${from} and ${to}.` : '')
   }, [from, to])
 
-  function keepInBoundaries (val: number, min: number, max: number) {
-    return Math.max(min, Math.min(val, max))
-  }
+  const keepInBoundaries = useCallback((val: number)=>{
+    return Math.max(from, Math.min(val, to))
+  }, [from, to])
 
-  const roundToNearestStep = useCallback((val: number, min: number, max: number, step: number) =>{
-    val = keepInBoundaries(val, min, max)
-    const steps = Math.round((val - min) / step);
-    const newValue = min + steps * step;
+  const roundToNearestStep = useCallback((val: number) =>{
+    val = keepInBoundaries(val)
+    const steps = Math.round((val - from) / step);
+    const newValue = from + steps * step;
     return newValue;
-  }, [])
+  }, [from, keepInBoundaries, step])
 
   function updateField (value: number) {
     setInput({[fieldName]: value})
@@ -68,12 +69,12 @@ const NumericInputSlider = ({
     value = Number(value)
     if (isNaN(value) || value < from || value > to) {
       toggleWarning(true)
-      updateField(isNaN(value)?to:keepInBoundaries(value, from, to))
+      updateField(isNaN(value)?to:keepInBoundaries(value))
     } else {
       toggleWarning(false)
 
       if (enforceStepValue){
-        value = roundToNearestStep(value, from, to, step)
+        value = roundToNearestStep(value)
       }
 
       updateField(value)
@@ -81,10 +82,10 @@ const NumericInputSlider = ({
   }
 
   useEffect(() => {
-    let correctedInputField = enforceStepValue ? roundToNearestStep(inputField, from, to, step) : keepInBoundaries(inputField, from, to)
+    let correctedInputField = enforceStepValue ? roundToNearestStep(inputField) : keepInBoundaries(inputField)
 
     toggleWarning(inputField !== correctedInputField)
-  }, [inputField, from, to, step, enforceStepValue, roundToNearestStep, toggleWarning])
+  }, [inputField, enforceStepValue, roundToNearestStep, toggleWarning, keepInBoundaries])
 
   useEffect(() => {
     setTemporaryValue(inputField)
