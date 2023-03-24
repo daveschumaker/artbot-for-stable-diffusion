@@ -26,9 +26,9 @@ const ConfirmationModal = ({
 
   return (
     <Portal>
-      <Overlay handleClose={closeModal} zIndex={35} />
+      <Overlay handleClose={closeModal} zIndex={100} />
       <div
-        className="relative opacity-100 z-[35]"
+        className="relative opacity-100 z-[100]"
         aria-labelledby="modal-title"
         role="dialog"
         aria-modal="true"

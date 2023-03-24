@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import Head from 'next/head'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { trackEvent } from '../api/telemetry'
 import ExternalLinkIcon from '../components/icons/ExternalLinkIcon'
@@ -14,6 +14,8 @@ import { useEffectOnce } from '../hooks/useEffectOnce'
 import AppSettings from '../models/AppSettings'
 import { userInfoStore } from '../store/userStore'
 import { clientHeader } from '../utils/appUtils'
+import { sleep } from 'utils/sleep'
+import { NewRating } from 'types'
 
 const MAX_ERROR_COUNT = 30
 
@@ -106,20 +108,16 @@ const Image = styled.img<{ pending?: boolean; status?: string }>`
   `}
 `
 
-let activeImage = 0
 let errorCount = 0
 let imagePending = false
 let ratingPending = false
-
-const nextImageDetails = {
-  datasetId: null,
-  imageId: null,
-  imageUrl: null
-}
-
 let ratingTime = Date.now()
 
+let lastRatedId: string
+
 const Rate = () => {
+  const [imageArray, setImageArray] = useState<Array<NewRating>>([])
+
   const DRAMA_MODE = false // ratings provider has disabled rating system for all UIs for some reason.
   const [componentState, setComponentState] = useComponentState({
     apiKey: '',
@@ -128,32 +126,55 @@ const Rate = () => {
     datasetId: '',
     imageId: null,
     imageUrl: '',
+
+    errorMessage: '',
+
     imagesRated: 0,
     kudosEarned: 0,
+
     initialLoad: true,
     imagePending: false,
     ratingPending: false,
 
     rateImage: -Infinity,
-    rateQuality: -Infinity,
-
-    imageOneStatus: 'show',
-    imageTwoStatus: 'stage',
-    imageOneUrl: '',
-    imageOneId: '',
-    imageTwoUrl: '',
-    imageTwoId: ''
+    rateQuality: -Infinity
   })
 
   interface IFetchParams {
     getNextImage?: Boolean
+    ratingError?: Boolean
   }
 
-  const fetchImage = useCallback(
-    async (options: IFetchParams = {}) => {
-      const { getNextImage = false } = options
+  const loadNextImage = useCallback(() => {
+    const updateState = {
+      rateImage: -Infinity,
+      rateQuality: -Infinity,
+      initialLoad: false,
+      showError: false
+    }
 
-      let data: any = {}
+    setComponentState({
+      ...updateState
+    })
+  }, [setComponentState])
+
+  const fetchImage = useCallback(
+    async (options: IFetchParams = {}): Promise<Boolean> => {
+      const { ratingError = false, getNextImage = false } = options
+
+      if (ratingError) {
+        const updateImageArray = [...imageArray]
+        updateImageArray.shift() // Remove first rating.
+        setImageArray(updateImageArray)
+        setComponentState({ imagePending: false, ratingPending: false })
+        return false
+      }
+
+      if (imageArray.length >= 2) {
+        return false
+      }
+
+      let data: NewRating
       try {
         if (errorCount >= MAX_ERROR_COUNT) {
           setComponentState({
@@ -161,7 +182,7 @@ const Rate = () => {
             imagePending: false,
             showError: true
           })
-          return
+          return false
         }
 
         const res = await fetch(`${RATING_API}/api/v1/rating/new`, {
@@ -171,52 +192,64 @@ const Rate = () => {
             apikey: componentState.apiKey
           }
         })
+
+        if (res.status === 403) {
+          loadNextImage()
+          fetchImage()
+          return false
+        }
+
+        if (res.status === 429) {
+          setComponentState({
+            errorMessage:
+              'Whoa! Too many requests. Try again in a minute or so.'
+          })
+          return false
+        }
+
         data = (await res.json()) || {}
+
+        const updateImageArray = [...imageArray]
+        if (data.id) {
+          if (updateImageArray[0] && updateImageArray[0].id === data.id) {
+            return false
+          }
+
+          if (!getNextImage) {
+            updateImageArray.shift() // Remove first rating.
+          }
+
+          updateImageArray.push(data)
+          setImageArray(updateImageArray)
+
+          if (componentState.initialLoad) {
+            setComponentState({ initialLoad: false })
+          }
+        }
+
+        setTimeout(() => {
+          imagePending = false
+          ratingPending = false
+          setComponentState({ imagePending: false, ratingPending: false })
+        }, 600)
+
+        // await sleep(300)
+        return true
       } catch (err) {
         errorCount++
         setTimeout(() => {
           fetchImage({ getNextImage })
         }, 300)
-        return
-      } finally {
-        if (data.id) {
-          errorCount = 0
-
-          if (getNextImage) {
-            nextImageDetails.datasetId = data.dataset_id
-            nextImageDetails.imageId = data.id
-            nextImageDetails.imageUrl = data.url
-
-            if (activeImage === 1) {
-              setComponentState({
-                imageTwoUrl: data.url,
-                imageTwoId: data.id
-              })
-            } else {
-              setComponentState({
-                imageOneUrl: data.url,
-                imageOneId: data.id
-              })
-            }
-          } else {
-            activeImage = 1
-            setComponentState({
-              rateImage: -Infinity,
-              rateQuality: -Infinity,
-              datasetId: data.dataset_id,
-              imageOneUrl: data.url,
-              imageOneId: data.id,
-              imageId: data.id,
-              imageUrl: data.url,
-              initialLoad: false,
-              imagePending: false,
-              showError: false
-            })
-          }
-        }
+        return false
       }
     },
-    [componentState.apiKey, setComponentState]
+    [
+      componentState.apiKey,
+      componentState.initialLoad,
+      imageArray,
+      loadNextImage,
+      setComponentState
+    ]
   )
 
   const rateQuality = (rating: number) => {
@@ -242,48 +275,6 @@ const Rate = () => {
     [setComponentState]
   )
 
-  const loadNextImage = useCallback(() => {
-    const updateState = {
-      rateImage: -Infinity,
-      rateQuality: -Infinity,
-      initialLoad: false,
-      imagePending: false,
-      showError: false,
-      ratingPending: false,
-
-      imageOneStatus: '',
-      imageTwoStatus: ''
-    }
-
-    if (activeImage === 1) {
-      activeImage = 2
-      ratingPending = false
-      updateState.imageOneStatus = 'hide'
-      updateState.imageTwoStatus = 'show'
-
-      setTimeout(() => {
-        setComponentState({
-          imageOneStatus: 'stage'
-        })
-      }, 250)
-    } else {
-      activeImage = 1
-      ratingPending = false
-      updateState.imageOneStatus = 'show'
-      updateState.imageTwoStatus = 'hide'
-
-      setTimeout(() => {
-        setComponentState({
-          imageTwoStatus: 'stage'
-        })
-      }, 250)
-    }
-
-    setComponentState({
-      ...updateState
-    })
-  }, [setComponentState])
-
   const rateImageRequest = useCallback(async () => {
     if (ratingPending) {
       return
@@ -305,8 +296,8 @@ const Rate = () => {
       rating: componentState.rateImage
     }
 
-    const imageId =
-      activeImage === 1 ? componentState.imageOneId : componentState.imageTwoId
+    const imageId = imageArray[0].id
+    lastRatedId = imageId
 
     try {
       const res = await fetch(`${RATING_API}/api/v1/rating/${imageId}`, {
@@ -320,11 +311,13 @@ const Rate = () => {
       })
 
       if (res.status === 403) {
-        return fetchImage({ getNextImage: true })
+        console.log(`Rate Image Error?!`)
+        loadNextImage()
+        fetchImage()
       }
 
       const data = await res.json()
-      fetchImage({ getNextImage: true })
+      fetchImage()
       const { reward } = data
 
       if (reward) {
@@ -361,6 +354,9 @@ const Rate = () => {
         })
 
         loadNextImage()
+
+        await sleep(1000)
+        // fetchImage({ getNextImage: true }) // Try to fetch an additional image, if possible.
       }
     } catch (err: any) {
       errorCount++
@@ -373,6 +369,9 @@ const Rate = () => {
         }
       })
 
+      // Fallback to handle errors
+      fetchImage({ getNextImage: true })
+
       setTimeout(() => {
         ratingPending = false
         rateImageRequest()
@@ -380,14 +379,31 @@ const Rate = () => {
     }
   }, [
     componentState.apiKey,
-    componentState.imageOneId,
-    componentState.imageTwoId,
     componentState.rateImage,
     componentState.rateQuality,
     fetchImage,
+    imageArray,
     loadNextImage,
     setComponentState
   ])
+
+  // Handle race condition where when a new image is populated
+  // the old image is not removed properly.
+  useEffect(() => {
+    const updateImageArray = [...imageArray]
+
+    if (
+      imageArray.length > 1 &&
+      imageArray[0] &&
+      imageArray[0].id === lastRatedId
+    ) {
+      updateImageArray.shift()
+      setImageArray(updateImageArray)
+
+      // Fetch additional image?
+      // fetchImage({ getNextImage: true })
+    }
+  }, [fetchImage, imageArray])
 
   useEffect(() => {
     let totalRated = AppSettings.get('imagesRated') || 0
@@ -400,7 +416,6 @@ const Rate = () => {
   }, [setComponentState])
 
   useEffectOnce(() => {
-    activeImage = 0
     errorCount = 0
 
     imagePending = false
@@ -429,14 +444,14 @@ const Rate = () => {
       return
     }
 
-    if (componentState.apiKey && !imagePending) {
-      setTimeout(() => {
-        fetchImage().then(() => {
-          fetchImage({ getNextImage: true })
-        })
+    if (componentState.apiKey && !imagePending && componentState.initialLoad) {
+      setTimeout(async () => {
+        await fetchImage()
+        await sleep(500)
+        // await fetchImage({ getNextImage: true })
       }, 250)
     }
-  }, [componentState.apiKey, fetchImage])
+  }, [componentState.apiKey, componentState.initialLoad, fetchImage])
 
   if (DRAMA_MODE) {
     return (
@@ -506,43 +521,57 @@ const Rate = () => {
           </SubTitle>
         </>
       )}
+
       {componentState.showError && (
         <div className="text-red-500 font-bold flex flex-row gap-2">
           ERROR: Unable to complete this request. Please try again later.
         </div>
       )}
+
+      {componentState.errorMessage && (
+        <div className="text-red-500 font-bold flex flex-row gap-2 mb-3">
+          ERROR: {componentState.errorMessage}.
+        </div>
+      )}
+
       {componentState.initialLoad && (
         <>
           <SubTitle>Loading new image...</SubTitle>
-          <SubTitle>
-            <SpinnerV2 />
-          </SubTitle>
+          <div className="mt-2">
+            <SubTitle>
+              <SpinnerV2 />
+            </SubTitle>
+          </div>
         </>
       )}
 
-      {!componentState.initialLoad && componentState.imageUrl ? (
+      {!componentState.initialLoad && imageArray[0] && imageArray[0].id && (
         <div>
           <div className="flex flex-col align-center items-center w-full overflow-x-hidden">
             <ImageContainer>
               <Image
-                status={componentState.imageOneStatus}
+                id={imageArray[0].id}
                 pending={componentState.imagePending}
-                src={componentState.imageOneUrl}
+                src={imageArray[0].url}
                 alt="Rate this image"
               />
-              <Image
-                status={componentState.imageTwoStatus}
-                pending={componentState.imagePending}
-                src={componentState.imageTwoUrl}
-                alt="Rate this image"
-              />
+              {imageArray[1] && imageArray[1].id && (
+                <Image
+                  id={imageArray[1].id}
+                  pending={componentState.imagePending}
+                  src={imageArray[1].url}
+                  alt="Rate this image"
+                  // Pre-cache image... maybe?
+                  style={{ display: 'none' }}
+                />
+              )}
               {componentState.imagePending && (
                 <ImageOverlay>
                   <SpinnerV2 />
                 </ImageOverlay>
               )}
             </ImageContainer>
-            <div className="mt-2 flex flex-col align-center items-center w-full">
+            <div className="mt-3 flex flex-col align-center items-center w-full">
               <div>
                 How much do <em>you</em> like this image?
               </div>
@@ -576,7 +605,8 @@ const Rate = () => {
             </div>
           )}
         </div>
-      ) : null}
+      )}
+
       {componentState.apiKey !== ANON_API_KEY && (
         <SubTitle>
           Earn{' '}

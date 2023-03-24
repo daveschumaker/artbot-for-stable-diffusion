@@ -1,10 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react'
+import { IImageDetails } from 'types'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
-import { getImageDetails } from '../../utils/db'
-import ImageModal from '../ImageModal'
+import { deletePendingJobFromDb, getImageDetails } from '../../utils/db'
+
+// import ImageModal from '../ImageModal'
+import ImageModal from '../ImageModalV2'
 
 interface IProps {
-  handleClose(): void
+  handleClose: () => any
   handleDeleteImage(imageId: number, jobId: string): void
   imageList: Array<any>
   initialIndexJobId: string | boolean
@@ -12,25 +15,15 @@ interface IProps {
   reverseButtons?: boolean
 }
 
-interface IImageDetails {
-  id: number
-  jobId: string
-}
-
 const ImageModalController = ({
   handleClose = () => {},
   handleDeleteImage = () => {},
   initialIndexJobId = '',
   imageList = [],
-  onAfterDelete = () => {},
-  reverseButtons = false
+  onAfterDelete = () => {}
 }: IProps) => {
-  const [loading, setLoading] = useState(true)
   const [idx, setIdx] = useState<number | null>(null)
-  const [imageDetails, setImageDetails] = useState<IImageDetails>({
-    id: 0,
-    jobId: ''
-  })
+  const [imageDetails, setImageDetails] = useState<IImageDetails>()
 
   const loadImageData = useCallback(async () => {
     if (idx === null) {
@@ -39,10 +32,14 @@ const ImageModalController = ({
 
     const data = (await getImageDetails(imageList[idx].jobId)) || {}
     setImageDetails(data)
-    setLoading(false)
   }, [idx, imageList])
 
   const handleDeleteImageClick = async () => {
+    if (!imageDetails) {
+      return
+    }
+
+    deletePendingJobFromDb(imageDetails.jobId)
     handleDeleteImage(imageDetails.id, imageDetails.jobId)
     onAfterDelete()
     handleClose()
@@ -54,7 +51,6 @@ const ImageModalController = ({
     }
 
     if (idx >= imageList.length - 1) {
-      setLoading(false)
       return
     }
 
@@ -62,7 +58,6 @@ const ImageModalController = ({
     const data = (await getImageDetails(imageList[newIdx].jobId)) || {}
     setImageDetails(data)
     setIdx(newIdx)
-    setLoading(false)
   }, [idx, imageList])
 
   const handleLoadPrev = useCallback(async () => {
@@ -71,7 +66,6 @@ const ImageModalController = ({
     }
 
     if (idx <= 0) {
-      setLoading(false)
       return
     }
 
@@ -79,11 +73,9 @@ const ImageModalController = ({
     const data = (await getImageDetails(imageList[newIdx].jobId)) || {}
     setImageDetails(data)
     setIdx(newIdx)
-    setLoading(false)
   }, [idx, imageList])
 
   useEffect(() => {
-    setLoading(true)
     loadImageData()
   }, [idx, imageList, loadImageData])
 
@@ -95,6 +87,10 @@ const ImageModalController = ({
     })
   })
 
+  if (!imageDetails) {
+    return null
+  }
+
   return (
     <ImageModal
       disableNav={imageList.length <= 1}
@@ -103,8 +99,6 @@ const ImageModalController = ({
       handleLoadNext={handleLoadNext}
       handleLoadPrev={handleLoadPrev}
       imageDetails={imageDetails}
-      loading={loading}
-      reverseButtons={reverseButtons}
     />
   )
 }

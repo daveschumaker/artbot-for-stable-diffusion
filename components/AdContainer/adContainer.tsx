@@ -18,21 +18,23 @@ function AdContainer({
   const reference = useRef<HTMLInputElement | undefined>()
 
   useEffectOnce(() => {
-    if (
-      typeof reference === 'undefined' ||
-      typeof reference.current === 'undefined'
-    ) {
-      return
-    }
+    setTimeout(() => {
+      if (
+        typeof reference === 'undefined' ||
+        typeof reference.current === 'undefined' ||
+        !reference ||
+        !reference.current
+      ) {
+        return
+      }
 
-    reference.current.innerHTML = ''
-    const s = document.createElement('script')
-    s.id = '_carbonads_js'
-    s.src = `//cdn.carbonads.com/carbon.js?serve=${code}&placement=${placement}`
-    reference.current.appendChild(s)
-
-    //@ts-ignore
-  }, [])
+      reference.current.innerHTML = ''
+      const s = document.createElement('script')
+      s.id = '_carbonads_js'
+      s.src = `//cdn.carbonads.com/carbon.js?serve=${code}&placement=${placement}`
+      reference.current.appendChild(s)
+    }, 250)
+  })
 
   const classes = ['flex', 'justify-center', 'my-2', `w-full`]
 

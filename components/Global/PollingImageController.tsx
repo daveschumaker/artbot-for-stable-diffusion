@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react'
+import { IImageDetails } from 'types'
 import { deleteCompletedImageById, getImageDetails } from '../../utils/db'
-import ImageModal from '../ImageModal'
+// import ImageModal from '../ImageModal'
+import ImageModal from '../ImageModalV2'
 
 interface IProps {
   handleClose(): void
@@ -8,27 +10,23 @@ interface IProps {
   onAfterDelete(): void
 }
 
-interface IImageDetails {
-  id: number
-}
-
 const PollingImageController = ({
   handleClose = () => {},
   imageId,
   onAfterDelete = () => {}
 }: IProps) => {
-  const [loading, setLoading] = useState(true)
-  const [imageDetails, setImageDetails] = useState<IImageDetails>({
-    id: 0
-  })
+  const [imageDetails, setImageDetails] = useState<IImageDetails>()
 
   const loadImageData = useCallback(async () => {
     const data = (await getImageDetails(imageId)) || {}
     setImageDetails(data)
-    setLoading(false)
   }, [imageId])
 
   const handleDeleteImageClick = async () => {
+    if (!imageDetails) {
+      return
+    }
+
     await deleteCompletedImageById(imageDetails.id)
     onAfterDelete()
     handleClose()
@@ -36,10 +34,13 @@ const PollingImageController = ({
 
   useEffect(() => {
     if (imageId) {
-      setLoading(true)
       loadImageData()
     }
   }, [imageId, loadImageData])
+
+  if (!imageDetails) {
+    return null
+  }
 
   return (
     <ImageModal
@@ -47,7 +48,7 @@ const PollingImageController = ({
       handleClose={handleClose}
       handleDeleteImageClick={handleDeleteImageClick}
       imageDetails={imageDetails}
-      loading={loading}
+      // loading={loading}
     />
   )
 }

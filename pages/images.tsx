@@ -401,7 +401,7 @@ const ImagesPage = () => {
         e.key === 'ArrowLeft' &&
         componentState.showImageModal === false
       ) {
-        if (componentState.showImageModal) return
+        if (componentState.showImageModal || currentOffset <= 1) return
         handleLoadMore('prev')
       } else if (
         e.key === 'ArrowRight' &&
@@ -416,6 +416,7 @@ const ImagesPage = () => {
   }, [
     componentState.deleteMode,
     componentState.showImageModal,
+    currentOffset,
     handleLoadMore,
     setComponentState
   ])
@@ -457,17 +458,18 @@ const ImagesPage = () => {
   const LinkEl = componentState.deleteMode ? NonLink : Link
 
   const countDescriptor = () => {
-
     const descriptorMap = {
-      'model': `"${router?.query?.model || ''}" `,
-      'favorited': 'favorite ',
-      'unfavorited': 'unfavorited ',
-      'text2img': 'text2img ',
-      'img2img': 'img2img ',
-      'inpainting': 'inpainted '
+      model: `"${router?.query?.model || ''}" `,
+      favorited: 'favorite ',
+      unfavorited: 'unfavorited ',
+      text2img: 'text2img ',
+      img2img: 'img2img ',
+      inpainting: 'inpainted '
     }
 
-    return descriptorMap[componentState.filterMode as keyof typeof descriptorMap]
+    return descriptorMap[
+      componentState.filterMode as keyof typeof descriptorMap
+    ]
   }
 
   return (

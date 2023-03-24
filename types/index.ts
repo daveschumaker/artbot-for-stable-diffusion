@@ -1,3 +1,5 @@
+import { SourceProcessing } from 'utils/promptUtils'
+
 export enum ArtBotJobTypes {
   Text2Img = 'Text2Img',
   Img2Img = 'Img2Img',
@@ -53,6 +55,45 @@ export interface CreateImageJob {
 
   has_source_mask?: boolean
   has_source_image?: boolean
+}
+
+export interface NewRating {
+  dataset_id: string
+  id: string
+  url: string
+}
+
+// TODO: Probably should just extend CreateImageJob?
+export interface IImageDetails {
+  base64String: string
+  favorited: boolean
+  id: number
+  timestamp: number
+  jobId: string
+  prompt: string
+  shortlink: string
+  negative: string
+  worker_name: string
+  worker_id: string
+  sampler: string
+  modelVersion: string
+  seed: string
+  steps: string
+  denoising_strength: number
+  thumbnail: string
+  source_image: string
+  imageType: string
+  cfg_scale: number
+  control_type: string
+  image_is_control: boolean
+  karras: boolean
+  hires: boolean
+  clipskip: number
+  tiling: boolean
+  models: string[]
+  model: string
+  source_processing: SourceProcessing
+  img2img: boolean
 }
 
 export interface CreatePendingJob {

@@ -313,16 +313,18 @@ const ControlNet = () => {
 
   const kudosPerImage =
     totalImagesRequested < 1 ||
-      isNaN(totalKudosCost) ||
-      isNaN(totalImagesRequested)
+    isNaN(totalKudosCost) ||
+    isNaN(totalImagesRequested)
       ? 'N/A'
       : Number(totalKudosCost / totalImagesRequested).toFixed(2)
 
-  const [errors, setErrors] = useComponentState({} as { [key: string]: boolean })
+  const [errors, setErrors] = useComponentState(
+    {} as { [key: string]: boolean }
+  )
 
   useEffect(() => {
     setErrors({ FIXED_SEED: Boolean(totalImagesRequested > 1 && input.seed) })
-  }, [totalImagesRequested, input.seed])
+  }, [totalImagesRequested, input.seed, setErrors])
 
   return (
     <>

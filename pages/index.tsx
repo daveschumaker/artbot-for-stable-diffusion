@@ -96,7 +96,7 @@ export async function getServerSideProps(context: any) {
       const { imageParams } = data.imageParams || {}
       shortlinkImageParams = imageParams || null
     }
-  } catch (err) { }
+  } catch (err) {}
 
   return {
     props: {
@@ -357,17 +357,29 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
   ])
 
   useEffect(() => {
-    const hasInpaintingModels = input.models.filter((model: string = '') => (model && model.indexOf('_inpainting') >= 0)).length
+    const hasInpaintingModels = input.models.filter(
+      (model: string = '') => model && model.indexOf('_inpainting') >= 0
+    ).length
     const hasSourceMask = input.source_mask
 
     if (
-      hasInpaintingModels > 0 && !hasSourceMask && !errors.INPAINT_MISSING_SOURCE_MASK
+      hasInpaintingModels > 0 &&
+      !hasSourceMask &&
+      !errors.INPAINT_MISSING_SOURCE_MASK
     ) {
       setErrors({ INPAINT_MISSING_SOURCE_MASK: true })
-    } else if ((hasInpaintingModels == 0 || hasSourceMask) && errors.INPAINT_MISSING_SOURCE_MASK) {
+    } else if (
+      (hasInpaintingModels == 0 || hasSourceMask) &&
+      errors.INPAINT_MISSING_SOURCE_MASK
+    ) {
       setErrors({ INPAINT_MISSING_SOURCE_MASK: false })
     }
-  }, [errors.INPAINT_MISSING_SOURCE_MASK, input.models, input.source_mask])
+  }, [
+    errors.INPAINT_MISSING_SOURCE_MASK,
+    input.models,
+    input.source_mask,
+    setErrors
+  ])
 
   useEffect(() => {
     watchBuild()
@@ -529,15 +541,14 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
 
   const kudosPerImage =
     totalImagesRequested < 1 ||
-      isNaN(totalKudosCost) ||
-      isNaN(totalImagesRequested)
+    isNaN(totalKudosCost) ||
+    isNaN(totalImagesRequested)
       ? 'N/A'
       : Number(totalKudosCost / totalImagesRequested).toFixed(2)
 
   useEffect(() => {
     setErrors({ FIXED_SEED: Boolean(totalImagesRequested > 1 && input.seed) })
-  }, [totalImagesRequested, input.seed])
-
+  }, [totalImagesRequested, input.seed, setErrors])
 
   return (
     <main>
@@ -559,10 +570,11 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
           </title>
           <meta
             name="twitter:title"
-            content={`🤖 ArtBot - Shareable Link ${shortlinkImageParams.models && shortlinkImageParams.models[0]
-              ? `created with ${shortlinkImageParams.models[0]}`
-              : ''
-              }`}
+            content={`🤖 ArtBot - Shareable Link ${
+              shortlinkImageParams.models && shortlinkImageParams.models[0]
+                ? `created with ${shortlinkImageParams.models[0]}`
+                : ''
+            }`}
           />
           <meta
             name="twitter:description"
@@ -570,8 +582,9 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
           />
           <meta
             name="twitter:image"
-            content={`https://tinybots.net/artbot/api/v1/shortlink/i/${query[CreatePageMode.SHORTLINK]
-              }`}
+            content={`https://tinybots.net/artbot/api/v1/shortlink/i/${
+              query[CreatePageMode.SHORTLINK]
+            }`}
           />
         </Head>
       ) : null}

@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react'
+import { IImageDetails } from 'types'
 import { deleteCompletedImage } from '../../../utils/db'
-import ImageModal from '../../ImageModal'
+// import ImageModal from '../../ImageModal'
+import ImageModal from '../../ImageModalV2'
 
 interface IProps {
   handleClose(): void
@@ -9,27 +11,17 @@ interface IProps {
   onAfterDelete(): void
 }
 
-interface IImageDetails {
-  id: number
-  jobId: string
-}
-
 const ImageModalController = ({
   handleClose = () => {},
   initialIndexJobId = '',
   imageList = [],
   onAfterDelete = () => {}
 }: IProps) => {
-  const [loading, setLoading] = useState(true)
   const [idx, setIdx] = useState(0)
-  const [imageDetails, setImageDetails] = useState<IImageDetails>({
-    id: 0,
-    jobId: ''
-  })
+  const [imageDetails, setImageDetails] = useState<IImageDetails>()
 
   const loadImageData = useCallback(async () => {
     setImageDetails(imageList[idx])
-    setLoading(false)
   }, [idx, imageList])
 
   const handleDeleteImageClick = async () => {
@@ -39,22 +31,17 @@ const ImageModalController = ({
   }
 
   const handleLoadNext = async () => {
-    setLoading(true)
     if (idx >= imageList.length - 1) {
-      setLoading(false)
       return
     }
 
     const newIdx = idx + 1
     setImageDetails(imageList[newIdx])
     setIdx(newIdx)
-    setLoading(false)
   }
 
   const handleLoadPrev = async () => {
-    setLoading(true)
     if (idx <= 0) {
-      setLoading(false)
       return
     }
 
@@ -62,11 +49,9 @@ const ImageModalController = ({
 
     setImageDetails(imageList[newIdx])
     setIdx(newIdx)
-    setLoading(false)
   }
 
   useEffect(() => {
-    setLoading(true)
     loadImageData()
   }, [imageList, loadImageData])
 
@@ -78,6 +63,10 @@ const ImageModalController = ({
     })
   }, [imageList, initialIndexJobId])
 
+  if (!imageDetails) {
+    return null
+  }
+
   return (
     <ImageModal
       handleClose={handleClose}
@@ -85,7 +74,6 @@ const ImageModalController = ({
       handleLoadNext={handleLoadNext}
       handleLoadPrev={handleLoadPrev}
       imageDetails={imageDetails}
-      loading={loading}
     />
   )
 }
