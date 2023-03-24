@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 
 // Import UI components
 import Section from 'components/UI/Section'
@@ -19,7 +19,6 @@ interface Props {
   input: { [key: string]: any }
   setInput: any
   fieldName: string
-  initialLoad: boolean
   disabled?: boolean
   fullWidth?: boolean
   enforceStepValue?: boolean
@@ -35,95 +34,64 @@ const NumericInputSlider = ({
   input,
   setInput,
   fieldName,
-  initialLoad,
   disabled = false,
   fullWidth = false,
   enforceStepValue = false,
   callback = () => {}
 }: Props) => {
-  const [warning, setWarning] = useState('')
+  const inputField = input[fieldName]
+  const [temporaryValue, setTemporaryValue] = useState(inputField)
 
-  function toggleWarning (state: boolean) {
-    setWarning(state ? `This field only accepts numbers between ${from} and ${to}.` : '')
-  }
+  const [showWarning, setShowWarning] = useState(false)
 
-  function keepInBoundaries (val: number, min: number, max: number) {
-    return Math.max(min, Math.min(val, max))
-  }
+  const keepInBoundaries = useCallback((val: number)=>{
+    return Math.max(from, Math.min(val, to))
+  }, [from, to])
 
-  function roundToNearestStep(val: number, min: number, max: number, step: number) {
-    val = keepInBoundaries(val, min, max)
-    const steps = Math.round((val - min) / step);
-    const newValue = min + steps * step;
+  const roundToNearestStep = useCallback((val: number) =>{
+    val = keepInBoundaries(val)
+    const steps = Math.round((val - from) / step);
+    const newValue = from + steps * step;
     return newValue;
-  }
+  }, [from, keepInBoundaries, step])
 
   function updateField (value: number) {
-    const res = {}
-    // @ts-ignore
-    res[fieldName] = value
-    setInput(res)
+    setInput({[fieldName]: value})
+    setTemporaryValue(value)
     callback(value)
-    // @ts-ignore
-    setTemporaryValue(res[fieldName])
   }
 
   function safelyUpdateField (value: string | number) {
     value = Number(value)
     if (isNaN(value) || value < from || value > to) {
-      if (initialLoad) {
-        return
-      }
-
-      toggleWarning(true)
-      updateField(isNaN(value)?to:keepInBoundaries(value, from, to))
+      setShowWarning(true)
+      updateField(isNaN(value)?to:keepInBoundaries(value))
     } else {
-      toggleWarning(false)
+      setShowWarning(false)
 
       if (enforceStepValue){
-        value = roundToNearestStep(value, from, to, step)
+        value = roundToNearestStep(value)
       }
 
       updateField(value)
     }
   }
 
-
-  const [temporaryValue, setTemporaryValue] = useState(input[fieldName]);
-
+  // Show warnings to users who logged out after setting high values on sliders.
   useEffect(() => {
-    // We don't want to force input in incorrect boundaries
-    if (initialLoad) {
-      setTemporaryValue(input[fieldName])
-      return
-    }
+    let correctedInputField = enforceStepValue ? roundToNearestStep(inputField) : keepInBoundaries(inputField)
 
-    const newValue = input[fieldName]
-    let correctedNewValue
-    if (enforceStepValue){
-      correctedNewValue = roundToNearestStep(newValue, from, to, step)
-    }
-    else{
-      correctedNewValue = keepInBoundaries(newValue, from, to)
-    }
+    setShowWarning(inputField !== correctedInputField)
 
-    if (newValue !== correctedNewValue) {
-      const res = {}
-      // @ts-ignore
-      res[fieldName] = correctedNewValue
-      setInput(res)
-
-      console.log('Invalid value loaded in', fieldName,'. Force updating to', correctedNewValue, 'from', newValue)
-      return
-    }
-
-    setTemporaryValue(input[fieldName])
+    // inputField is not included in dependency array on purpose.
+    // Including it leads to a race condition which sometimes makes warnings disappear without user input.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [input[fieldName], fieldName, from, to, step])
+  }, [enforceStepValue, roundToNearestStep, keepInBoundaries])
 
-  const handleNumberInput = (event: any) => {
-    setTemporaryValue(event.target.value)
-  }
+  // Make sure text value on input is always up-to-date.
+  useEffect(() => {
+    setTemporaryValue(inputField)
+  }, [inputField])
 
   return (
     <div className={clsx('mb-4 w-full', !fullWidth && 'md:w-1/2')}>
@@ -148,14 +116,20 @@ const NumericInputSlider = ({
             name={fieldName}
             disabled={disabled}
             onMinusClick={() => {
-              const value = Number((input[fieldName] - step).toFixed(2))
+              const value = Number((inputField - step).toFixed(2))
               safelyUpdateField(value)
             }}
             onPlusClick={() => {
-              const value = Number((input[fieldName] + step).toFixed(2))
+              const value = Number((inputField + step).toFixed(2))
               safelyUpdateField(value)
             }}
-            onChange={handleNumberInput}
+            onChange={(e: any) =>{
+              // Note that we use setTemporaryValue, not safelyUpdateField.
+              // This is because we want to let users enter arbitrary data in the input.
+              // Validation and field update is performed after user finishes typing (see onBlur).
+              const value = e.target.value
+              setTemporaryValue(value)
+            }}
             onBlur={(e: any) => {
               const value = Number(e.target.value)
               safelyUpdateField(value)
@@ -174,8 +148,10 @@ const NumericInputSlider = ({
             safelyUpdateField(e.target.value)
           }}
         />
-        {warning && (
-          <div className="mb-2 text-xs">{warning}</div>
+        {showWarning && (
+          <div className="mb-2 text-xs">
+            This field only accepts numbers between {from} and {to}.
+          </div>
         )}
       </Section>
     </div>

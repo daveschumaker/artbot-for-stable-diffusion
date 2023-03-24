@@ -16,7 +16,6 @@ import ImageSquare from 'components/ImageSquare'
 import styles from './imageDetails.module.css'
 import ImageOptionsWrapper from './ImageOptionsWrapper'
 import Img2ImgModal from 'components/ImagePage/Img2ImgModal'
-import { useWindowSize } from 'hooks/useWindowSize'
 
 interface Props {
   imageDetails: IImageDetails
@@ -33,7 +32,6 @@ const ImageDetails = ({
   handleDeleteImageClick,
   handleTiling = () => {}
 }: Props) => {
-  const size = useWindowSize()
   const showFullScreen = useFullScreenHandle()
   const [fullscreen, setFullscreen] = useState(false)
   const [showImg2ImgModal, setShowImg2ImgModal] = useState(false)
@@ -82,10 +80,6 @@ const ImageDetails = ({
 
   const imgStyle: any = {}
 
-  if (size.height) {
-    imgStyle.maxHeight = size.height - 88
-  }
-
   return (
     <>
       <FullScreen
@@ -121,10 +115,10 @@ const ImageDetails = ({
           {
             loading: styles['img-loading']
           },
-          'flex flex-row w-full justify-center items-center'
+          'w-full flex justify-center'
         )}
       >
-        <div className="max-w-[1400px]">
+        <div className="max-w-[1400px] h-[512px] flex flex-row justify-center items-center">
           <img
             className={clsx(styles.img)}
             src={'data:image/webp;base64,' + imageDetails.base64String}
@@ -144,11 +138,17 @@ const ImageDetails = ({
       />
       <div
         id="image-prompt-wrapper"
-        className="mt-3 flex flex-row w-full justify-center"
+        className="mt-3 flex flex-col w-full justify-start items-center"
       >
-        <span className="text-[16px] tablet:text-[18px] px-4 w-full max-w-[768px]">
-          {imageDetails.prompt}
-        </span>
+        <div className="text-[16px] tablet:text-[18px] px-4 w-full max-w-[768px]">
+          <div className="text-sm font-bold flex flex-row gap-2 items-center mb-[4px]">
+            <PlaylistXIcon hideCross/>
+            Prompt
+          </div>
+          <div className="w-full text-sm ml-[8px]">
+            {imageDetails.prompt}
+          </div>
+        </div>
       </div>
       {imageDetails.negative && (
         <div

@@ -4,44 +4,58 @@ import styled from 'styled-components'
 import { useStore } from 'statery'
 import Switch from 'react-switch'
 
-import SelectComponent from '../../UI/Select'
-import Input from '../../UI/Input'
-import Tooltip from '../../UI/Tooltip'
-import { Button } from '../../UI/Button'
-import { SourceProcessing } from '../../../utils/promptUtils'
-import { userInfoStore } from '../../../store/userStore'
-import { maxSteps } from '../../../utils/validationUtils'
-import useErrorMessage from '../../../hooks/useErrorMessage'
-import TextButton from '../../UI/TextButton'
-import Linker from '../../UI/Linker'
-import NegativePrompts from '../NegativePrompts'
-import { db, getDefaultPrompt, setDefaultPrompt } from '../../../utils/db'
-import { trackEvent } from '../../../api/telemetry'
-import Checkbox from '../../UI/Checkbox'
-import { MAX_IMAGES_PER_JOB } from '../../../_constants'
-import GrainIcon from '../../icons/GrainIcon'
-import AppSettings from '../../../models/AppSettings'
-import useComponentState from '../../../hooks/useComponentState'
-import { validModelsArray } from '../../../utils/modelUtils'
-import PromptInputSettings from '../../../models/PromptInputSettings'
-import Section from '../../UI/Section'
-import SubSectionTitle from '../../UI/SubSectionTitle'
-import TextTooltipRow from '../../UI/TextTooltipRow'
-import MaxWidth from '../../UI/MaxWidth'
-import SelectModel from './SelectModel'
-import { modelInfoStore } from '../../../store/modelStore'
-import TextArea from '../../UI/TextArea'
-import HiresFix from './HiresFix'
-import FlexRow from '../../UI/FlexRow'
+// UI component imports
+import {Button} from 'components/UI/Button'
+import Checkbox from 'components/UI/Checkbox'
+import FlexRow from 'components/UI/FlexRow'
+import Input from 'components/UI/Input'
+import Linker from 'components/UI/Linker'
+import MaxWidth from 'components/UI/MaxWidth'
+import Section from 'components/UI/Section'
+import SelectComponent from 'components/UI/Select'
+import SplitPanel from 'components/UI/SplitPanel'
+import SubSectionTitle from 'components/UI/SubSectionTitle'
+import TextArea from 'components/UI/TextArea'
+import TextButton from 'components/UI/TextButton'
+import TextTooltipRow from 'components/UI/TextTooltipRow'
+import Tooltip from 'components/UI/Tooltip'
+import TwoPanel from 'components/UI/TwoPanel'
+
+// Icon imports
 import ArrowBarLeftIcon from '../../icons/ArrowBarLeftIcon'
-import TwoPanel from '../../UI/TwoPanel'
-import SplitPanel from '../../UI/SplitPanel'
-import Samplers from './Samplers'
-import NumericInputSlider from './NumericInputSlider'
-import InputSwitch from './InputSwitch'
+import GrainIcon from '../../icons/GrainIcon'
+
+// Utils imports
+import { maxSteps } from 'utils/validationUtils'
+import { SourceProcessing } from 'utils/promptUtils'
+import { validModelsArray } from 'utils/modelUtils'
+import { db, getDefaultPrompt, setDefaultPrompt } from 'utils/db'
+
+// Local imports
 import ControlNetOptions from './ControlNetOptions'
+import HiresFix from './HiresFix'
+import InputSwitch from './InputSwitch'
+import NumericInputSlider from './NumericInputSlider'
 import OrientationOptions from './OrientationOptions'
+import Samplers from './Samplers'
+import SelectModel from './SelectModel'
 import UpscalerOptions from './UpscalerOptions'
+
+// Store imports
+import { userInfoStore } from 'store/userStore'
+
+// Hook imports
+import useComponentState from 'hooks/useComponentState'
+
+// Model imports
+import AppSettings from 'models/AppSettings'
+import PromptInputSettings from 'models/PromptInputSettings'
+
+// Other imports
+import NegativePrompts from '../NegativePrompts'
+import { trackEvent } from 'api/telemetry'
+import { MAX_IMAGES_PER_JOB } from '_constants'
+
 
 const NoSliderSpacer = styled.div`
   height: 14px;
@@ -49,34 +63,25 @@ const NoSliderSpacer = styled.div`
 `
 
 interface Props {
-  handleChangeInput: any
-  handleImageUpload: any
   input: any
   setInput: any
-  setHasValidationError: any
 }
 
 const AdvancedOptionsPanel = ({
-  handleChangeInput,
   input,
   setInput,
-  setHasValidationError
 }: Props) => {
-  const modelState = useStore(modelInfoStore)
-  const { availableModels, availableModelNames } = modelState
+  const handleChangeInput = (event: any) => { setInput({ [event.target.name]: event.target.value }) }
 
   const [filterNsfwModels, setFilterNsfwModels] = useState(false)
   const userState = useStore(userInfoStore)
   const { loggedIn } = userState
-  const [errorMessage, setErrorMessage, hasError] = useErrorMessage()
 
   const [componentState, setComponentState] = useComponentState({
     showMultiModel: PromptInputSettings.get('showMultiModel') || false,
-    showNegPane: false,
-    totalModelsCount: availableModelNames.length,
+    isNegativePromptLibraryPanelOpen: false,
     favoriteModelsCount: 0
   })
-  const [initialLoad, setInitialLoad] = useState(true)
 
   const modelerOptions = (imageParams: any) => {
     const modelsArray =
@@ -95,21 +100,6 @@ const AdvancedOptionsPanel = ({
   const modelsValue = modelerOptions(input).filter((option) => {
     return input?.models?.indexOf(option.value) >= 0
   })
-
-  useEffect(() => {
-    // Handle condition where error message briefly appears on screen on initial load.
-    setTimeout(() => {
-      setInitialLoad(false)
-    }, 750)
-  }, [])
-
-  useEffect(() => {
-    const totalModelsCount = validModelsArray({
-      imageParams: input
-    })?.length
-
-    setComponentState({ totalModelsCount })
-  }, [availableModels, input, setComponentState])
 
   const clearNegPrompt = () => {
     setDefaultPrompt('')
@@ -160,16 +150,6 @@ const AdvancedOptionsPanel = ({
       if (index > -1) {
         newPost.splice(index, 1)
       } else {
-        const idx_1 = input.post_processing.indexOf('RealESRGAN_x4plus')
-        const idx_2 = input.post_processing.indexOf(
-          'RealESRGAN_x4plus_anime_6B'
-        )
-        if (value === 'RealESRGAN_x4plus' && idx_2 >= 0) {
-          newPost.splice(idx_2, 1)
-        } else if (value === 'RealESRGAN_x4plus_anime_6B' && idx_1 >= 0) {
-          newPost.splice(idx_1, 1)
-        }
-
         newPost.push(value)
       }
 
@@ -178,14 +158,6 @@ const AdvancedOptionsPanel = ({
     },
     [input.post_processing, setInput]
   )
-
-  useEffect(() => {
-    if (initialLoad) {
-      return
-    }
-
-    setHasValidationError(hasError)
-  }, [hasError, initialLoad, setHasValidationError])
 
   useEffect(() => {
     const favModels = AppSettings.get('favoriteModels') || {}
@@ -230,14 +202,14 @@ const AdvancedOptionsPanel = ({
 
   return (
     <div>
-      {componentState.showNegPane ? (
+      {componentState.isNegativePromptLibraryPanelOpen && (
         <NegativePrompts
-          open={componentState.showNegPane}
-          handleClosePane={() => setComponentState({ showNegPane: false })}
+          open={componentState.isNegativePromptLibraryPanelOpen}
+          handleClosePane={() => setComponentState({ isNegativePromptLibraryPanelOpen: false })}
           setInput={setInput}
         />
-      ) : null}
-      {input.parentJobId ? (
+      )}
+      {input.parentJobId && (
         <Section>
           <SubSectionTitle>Attached to previous job</SubSectionTitle>
           <div className="text-xs">
@@ -260,11 +232,10 @@ const AdvancedOptionsPanel = ({
             Remove attachment?
           </TextButton>
         </Section>
-      ) : null}
+      )}
       <OrientationOptions
         input={input}
         setInput={setInput}
-        setErrorMessage={setErrorMessage}
       />
       <Section>
         <SubSectionTitle>
@@ -298,7 +269,7 @@ const AdvancedOptionsPanel = ({
         <FlexRow>
           <TextButton onClick={clearNegPrompt}>clear default</TextButton>
           <TextButton onClick={handleSaveNeg}>save as default</TextButton>
-          <TextButton onClick={() => setComponentState({ showNegPane: true })}>
+          <TextButton onClick={() => setComponentState({ isNegativePromptLibraryPanelOpen: true })}>
             load
           </TextButton>
         </FlexRow>
@@ -328,7 +299,6 @@ const AdvancedOptionsPanel = ({
               input={input}
               setInput={setInput}
               fieldName="steps"
-              initialLoad={initialLoad}
               fullWidth
               enforceStepValue
             />
@@ -357,7 +327,6 @@ const AdvancedOptionsPanel = ({
                 </div>
                 <Input
                   // @ts-ignore
-                  error={errorMessage.multiSteps}
                   className="mb-2"
                   type="text"
                   name="multiSteps"
@@ -371,11 +340,6 @@ const AdvancedOptionsPanel = ({
                   width="100%"
                 />
               </div>
-              {errorMessage.steps && (
-                <div className="mb-2 text-red-500 text-lg font-bold">
-                  {errorMessage.steps}
-                </div>
-              )}
               <NoSliderSpacer />
             </Section>
           )}
@@ -426,7 +390,6 @@ const AdvancedOptionsPanel = ({
               input={input}
               setInput={setInput}
               fieldName="cfg_scale"
-              initialLoad={initialLoad}
               fullWidth
             />
           )}
@@ -447,7 +410,6 @@ const AdvancedOptionsPanel = ({
                 </div>
                 <Input
                   // @ts-ignore
-                  error={errorMessage.multiGuidance}
                   className="mb-2"
                   type="text"
                   name="multiGuidance"
@@ -461,11 +423,6 @@ const AdvancedOptionsPanel = ({
                   width="100%"
                 />
               </div>
-              {errorMessage.multiGuidance && (
-                <div className="mb-2 text-red-500 text-lg font-bold">
-                  {errorMessage.multiGuidance}
-                </div>
-              )}
               <NoSliderSpacer />
             </Section>
           )}
@@ -522,7 +479,6 @@ const AdvancedOptionsPanel = ({
               input={input}
               setInput={setInput}
               fieldName="denoising_strength"
-              initialLoad={initialLoad}
               disabled={
                 input.models &&
                 input.models[0] &&
@@ -848,7 +804,6 @@ const AdvancedOptionsPanel = ({
               input={input}
               setInput={setInput}
               fieldName="facefixer_strength"
-              initialLoad={initialLoad}
             />
           )}
           <Checkbox
@@ -870,7 +825,6 @@ const AdvancedOptionsPanel = ({
           input={input}
           setInput={setInput}
           fieldName="clipskip"
-          initialLoad={initialLoad}
           enforceStepValue
         />
       </Section>
@@ -884,7 +838,6 @@ const AdvancedOptionsPanel = ({
             input={input}
             setInput={setInput}
             fieldName="numImages"
-            initialLoad={initialLoad}
             enforceStepValue
           />
         </Section>

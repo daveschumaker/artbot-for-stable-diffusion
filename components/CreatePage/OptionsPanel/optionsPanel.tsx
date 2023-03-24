@@ -6,7 +6,6 @@ import Panel from '../../UI/Panel'
 import SectionTitle from '../../UI/SectionTitle'
 import AdvancedOptionsPanel from '../AdvancedOptionsPanel'
 import Img2ImgPanel from '../Img2ImgPanel'
-// import PainterPanel from '../PainterPanel'
 import Uploader from '../Uploader'
 import { clearCanvasStore, setI2iUploaded } from '../../../store/canvasStore'
 import { SourceProcessing } from '../../../utils/promptUtils'
@@ -37,21 +36,13 @@ const NavItem = styled.li<LiProps>`
 `
 
 interface Props {
-  handleChangeInput: any
-  handleImageUpload: any
-  handleOrientationSelect: any
   input: any
   setInput: any
-  setHasValidationError: any
 }
 
 const OptionsPanel = ({
-  handleChangeInput,
-  handleImageUpload,
-  handleOrientationSelect,
   input,
   setInput,
-  setHasValidationError
 }: Props) => {
   const router = useRouter()
   const [activeNav, setActiveNav] = useState('advanced')
@@ -139,12 +130,8 @@ const OptionsPanel = ({
       </ul>
       {activeNav === 'advanced' && (
         <AdvancedOptionsPanel
-          handleChangeInput={handleChangeInput}
-          handleImageUpload={handleImageUpload}
-          handleOrientationSelect={handleOrientationSelect}
           input={input}
           setInput={setInput}
-          setHasValidationError={setHasValidationError}
         />
       )}
       {activeNav === 'img2img' &&

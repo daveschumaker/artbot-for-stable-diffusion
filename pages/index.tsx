@@ -30,7 +30,7 @@ import Head from 'next/head'
 import { useStore } from 'statery'
 import { appInfoStore } from '../store/appStore'
 import AppSettings from '../models/AppSettings'
-import { countImagesToGenerate, orientationDetails } from '../utils/imageUtils'
+import { countImagesToGenerate } from '../utils/imageUtils'
 import { toast } from 'react-toastify'
 import InteractiveModal from '../components/UI/InteractiveModal/interactiveModal'
 import PromptHistory from '../components/PromptHistory'
@@ -123,12 +123,8 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
   const [pageLoaded, setPageLoaded] = useState(false)
   const [flaggedPromptError, setFlaggedPromptError] = useState(false)
   const [showPromptHistory, setShowPromptHistory] = useState(false)
-  const [hasValidationError, setHasValidationError] = useState(false)
   const [pending, setPending] = useState(false)
-  const [hasError, setHasError] = useState('')
-  const [errors, setErrors] = useComponentState(
-    {} as { [key: string]: boolean }
-  )
+  const [errors, setErrors] = useComponentState({} as { [key: string]: boolean })
 
   const [input, setInput] = useReducer((state: any, newState: any) => {
     const updatedInputState = { ...state, ...newState }
@@ -163,49 +159,20 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
     setInput({ [inputName]: inputValue })
   }
 
-  const handleImageUpload = (imageType: string, source_image: string) => {
-    setInput({
-      img2img: true,
-      imageType,
-      source_image
-    })
-  }
-
-  const handleOrientationSelect = (orientation: string, options?: any) => {
-    const details = orientationDetails(orientation, input.height, input.width)
-
-    setInput({
-      orientationType: orientation,
-      height: details.height,
-      width: details.width
-    })
-
-    if (!options?.initLoad) {
-      trackEvent({
-        event: 'ORIENTATION_CLICK',
-        context: '/pages/index',
-        data: {
-          orientation
-        }
-      })
-    }
-  }
-
   const handleSubmit = async () => {
     // TODO: Rather than directly send to API, we should queue up
     // jobs so we only ever send one job at a time to the API?
 
-    if (hasValidationError || pending) {
+    if (pending) {
+      return
+    }
+
+    if (!input?.prompt || input?.prompt.trim() === '') {
+      setErrors({ PROMPT_EMPTY: true})
       return
     }
 
     setPending(true)
-
-    if (!input?.prompt || input?.prompt.trim() === '') {
-      setHasError('Please enter a prompt to continue.')
-      setPending(false)
-      return
-    }
 
     const imageJobData = {
       ...input
@@ -696,8 +663,6 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
         </FlexRow>
 
         <ActionPanel
-          hasValidationError={hasValidationError}
-          hasError={hasError}
           errors={errors}
           input={input}
           setInput={setInput}
@@ -711,18 +676,13 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
           showStylesDropdown
         />
       </div>
+
       <OptionsPanel
-        handleChangeInput={handleChangeValue}
-        handleImageUpload={handleImageUpload}
-        handleOrientationSelect={handleOrientationSelect}
         input={input}
         setInput={setInput}
-        setHasValidationError={setHasValidationError}
       />
 
       <ActionPanel
-        hasValidationError={hasValidationError}
-        hasError={hasError}
         errors={errors}
         input={input}
         setInput={setInput}

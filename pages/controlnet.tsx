@@ -65,7 +65,6 @@ const ControlNet = () => {
   const { modelDetails } = modelState
 
   const [pending, setPending] = useState(false)
-  const [hasError, setHasError] = useState('')
   const [stayOnPage, setStayOnPage] = useState(false)
   const [showOptionsMenu, setShowOptionsMenu] = useState(false)
 
@@ -231,13 +230,13 @@ const ControlNet = () => {
     setPending(true)
 
     if (!input?.source_image) {
-      setHasError('Please upload a source image to continue')
+      setErrors({ SOURCE_IMAGE_EMPTY: true })
       setPending(false)
       return
     }
 
     if (!input?.prompt || input?.prompt.trim() === '') {
-      setHasError('Please enter a prompt to continue.')
+      setErrors({ PROMPT_EMPTY: true })
       setPending(false)
       return
     }
@@ -264,7 +263,8 @@ const ControlNet = () => {
         }
       )
 
-      setHasError('')
+      setErrors({ SOURCE_IMAGE_EMPTY: false })
+      setErrors({ PROMPT_EMPTY: false })
       setPending(false)
     }
   }, [input, pending, router, stayOnPage, totalImagesRequested])
@@ -478,7 +478,6 @@ const ControlNet = () => {
               input={input}
               setInput={setInput}
               fieldName="steps"
-              initialLoad={false}
               fullWidth
               enforceStepValue
             />
@@ -494,7 +493,6 @@ const ControlNet = () => {
               input={input}
               setInput={setInput}
               fieldName="cfg_scale"
-              initialLoad={false}
               fullWidth
             />
           </SplitPanel>
@@ -514,7 +512,6 @@ const ControlNet = () => {
               input={input}
               setInput={setInput}
               fieldName="denoising_strength"
-              initialLoad={false}
               disabled={
                 input.models &&
                 input.models[0] &&
@@ -610,18 +607,17 @@ const ControlNet = () => {
           />
           {(getPostProcessing('GFPGAN') ||
             getPostProcessing('CodeFormers')) && (
-            <NumericInputSlider
-              label="Face-fix strength"
-              tooltip="0.05 is the weakest effect (barely noticeable improvements), while 1.0 is the strongest effect."
-              from={0.05}
-              to={1.0}
-              step={0.05}
-              input={input}
-              setInput={setInput}
-              fieldName="facefixer_strength"
-              initialLoad={false}
-            />
-          )}
+              <NumericInputSlider
+                label="Face-fix strength"
+                tooltip="0.05 is the weakest effect (barely noticeable improvements), while 1.0 is the strongest effect."
+                from={0.05}
+                to={1.0}
+                step={0.05}
+                input={input}
+                setInput={setInput}
+                fieldName="facefixer_strength"
+              />
+            )}
           <UpscalerOptions input={input} setInput={setInput} />
         </div>
       </Section>
@@ -637,7 +633,6 @@ const ControlNet = () => {
           input={input}
           setInput={setInput}
           fieldName="clipskip"
-          initialLoad={false}
           fullWidth
           enforceStepValue
         />
@@ -652,15 +647,12 @@ const ControlNet = () => {
           input={input}
           setInput={setInput}
           fieldName="numImages"
-          initialLoad={false}
           fullWidth
           enforceStepValue
         />
       </Section>
 
       <ActionPanel
-        hasValidationError={false}
-        hasError={hasError}
         errors={errors}
         input={input}
         setInput={setInput}
