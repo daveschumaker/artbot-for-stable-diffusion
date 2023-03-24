@@ -4,12 +4,14 @@ const ResizeIcon = ({
   className,
   fill = 'none',
   size = 24,
-  stroke = 'currentColor'
+  stroke = 'currentColor',
+  strokeWidth = 2
 }: {
   className?: string
   fill?: string
   size?: number
-  stroke?: string
+  stroke?: string,
+  strokeWidth?: number
 }) => {
   return (
     <svg
@@ -18,7 +20,7 @@ const ResizeIcon = ({
       width={size}
       height={size}
       viewBox="0 0 24 24"
-      strokeWidth="2"
+      strokeWidth={strokeWidth}
       stroke={stroke}
       fill={fill}
       strokeLinecap="round"
