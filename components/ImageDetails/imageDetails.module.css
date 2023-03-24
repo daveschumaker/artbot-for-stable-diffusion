@@ -11,6 +11,10 @@
   border-radius: 4px;
 }
 
+.mobile-hide {
+  display: none;
+}
+
 .img-loading {
   height: 512px;
   width: 512px;
@@ -23,4 +27,10 @@
     0 4px 25px 0px rgb(0 0 0 / 12%), 0 8px 6px -5px rgb(0 0 0 / 20%);
   aspect-ratio: keep-aspect-ratio;
   max-height: 512px;
+}
+
+@media (min-width: 640px) {
+  .mobile-hide {
+    display: block;
+  }
 }

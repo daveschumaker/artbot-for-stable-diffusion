@@ -44,6 +44,7 @@ import ImageParamsForApi from 'models/ImageParamsForApi'
 import { userInfoStore } from 'store/userStore'
 import { createShortlink } from 'api/createShortlink'
 import { toast, ToastOptions } from 'react-toastify'
+import RefreshIcon from 'components/icons/RefreshIcon'
 
 const ImageOptionsWrapper = ({
   handleClose,
@@ -276,6 +277,9 @@ const ImageOptionsWrapper = ({
                 </MenuItem>
               )}
               <MenuDivider />
+              <MenuItem onClick={() => downloadFile(imageDetails)}>
+                Download image
+              </MenuItem>
               <MenuItem
                 className="text-sm"
                 onClick={() => handleRerollClick(imageDetails)}
@@ -435,10 +439,16 @@ const ImageOptionsWrapper = ({
             </div>
           )}
           <div
-            className={styles['button-icon']}
+            className={clsx(styles['button-icon'], styles['mobile-hide'])}
             onClick={() => downloadFile(imageDetails)}
           >
             <DownloadIcon />
+          </div>
+          <div
+            className={clsx(styles['button-icon'])}
+            onClick={() => handleRerollClick(imageDetails)}
+          >
+            <RefreshIcon />
           </div>
           <div className={styles['button-icon']} onClick={onFavoriteClick}>
             <HeartIcon fill={favorited ? '#14B8A6' : undefined} />

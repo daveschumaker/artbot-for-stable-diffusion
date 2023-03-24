@@ -134,6 +134,14 @@ const Changelog = () => {
             to openco for reaching out via the feedback form to remind me about
             this!
           </StyledLi>
+          <StyledLi>
+            Fix: Dedicated reroll button on mobile devices (download button
+            moved to dropdown menu on image details view).
+          </StyledLi>
+          <StyledLi>
+            Fix: Issue where re-rolling tiled image would lose the tiled
+            parameter.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

@@ -32,6 +32,7 @@ export interface IRequestParams {
   source_processing: SourceProcessing
   stylePreset: string
   steps: number
+  tiling?: boolean
   triggers?: Array<string>
   width: number
 }
@@ -62,6 +63,7 @@ class RerollImageRequest {
   source_processing: SourceProcessing
   stylePreset: string
   steps: number
+  tiling?: boolean
   timestamp?: number
   triggers: Array<string>
   width: number
@@ -87,6 +89,7 @@ class RerollImageRequest {
     stylePreset = 'none',
     source_processing = SourceProcessing.Prompt,
     steps = 20,
+    tiling = false,
     triggers = [],
     width = 512
   }: IRequestParams) {
@@ -122,6 +125,8 @@ class RerollImageRequest {
     } else {
       this.sampler = String(sampler)
     }
+
+    this.tiling = tiling
 
     this.source_image = String(source_image)
     this.source_mask = String(source_mask)
