@@ -85,9 +85,10 @@ const OptionsPanel = ({ input, setInput }: Props) => {
         {activeNav === 'advanced' && `Advanced Options`}
         {activeNav === 'img2img' && `Img2Img (source file)`}
         {/* {activeNav === 'draw' && `Draw (img2img)`} */}
-        {activeNav === 'inpainting' && `Inpainting / mask`}
+        {activeNav === 'inpainting' &&
+          `Inpainting / Outpainting / Img2Img Mask`}
       </SectionTitle>
-      <ul className="flex flex-row gap-2 md:gap-8 mb-3 text-sm md:text-base">
+      <ul className="flex flex-row gap-1 md:gap-4 mb-3 text-sm md:text-base">
         <NavItem
           active={activeNav === 'advanced'}
           onClick={() => {
@@ -122,7 +123,7 @@ const OptionsPanel = ({ input, setInput }: Props) => {
             setActiveNav('inpainting')
           }}
         >
-          [ inpainting ]
+          [ inpainting / outpainting ]
         </NavItem>
       </ul>
       {activeNav === 'advanced' && (
@@ -201,19 +202,17 @@ const OptionsPanel = ({ input, setInput }: Props) => {
               <title>Inpainting - ArtBot for Stable Diffusion</title>
               <meta name="twitter:title" content="ArtBot - Inpainting" />
             </Head>
-            {/* <InpaintingPanel
-              input={input}
-              setInput={setInput}
-              handleRemoveClick={() => {
-                clearCanvasStore()
-                setInput({
-                  imageType: '',
-                  source_image: '',
-                  source_mask: '',
-                  source_processing: SourceProcessing.Prompt
-                })
-              }}
-            /> */}
+            <div className="text-sm mb-2">
+              Want to try outpainting? A few quick tips:
+              <ul>
+                <li>- Upload an image</li>
+                <li>- Resize and move image around canvas</li>
+                <li>
+                  - Paint over checkerboard to include all areas you want to
+                  outpaint.
+                </li>
+              </ul>
+            </div>
             <Editor
               canvasId="inpainting-canvas"
               canvasType="inpainting"

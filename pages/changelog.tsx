@@ -146,6 +146,16 @@ const Changelog = () => {
             UX: On mobile devices, you can swipe down from the very top of the
             image details view to close out the modal.
           </StyledLi>
+          <StyledLi>
+            Fun fact: Apparently, support for outpainting has existed within the
+            Stable Horde API for ages and no one knew! Let&apos;s go ahead and
+            add some simple support for it (for now). How do you use it? Go to
+            the inpainting tab as you normally would, upload an image, and then
+            either click the cursor icon or the ruler icon to resize your
+            existing image. Key part: you need to paint over the checkerboard
+            (and anything else you want changed). I will improve this in the
+            future to make it easier. (This should be a FAQ item, probably)
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

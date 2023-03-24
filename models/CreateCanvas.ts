@@ -40,6 +40,7 @@ class CreateCanvas {
     width: number
   }
   canvasId: string
+  canvasScale: number
   drawLayer: fabric.Group
   imageLayer: fabric.Group | null
   isMouseDown: boolean
@@ -71,6 +72,7 @@ class CreateCanvas {
     this.canvas = canvas
     this.canvasId = String(canvasId)
     this.canvasType = String(canvasType)
+    this.canvasScale = 1
     this.brushPreview = null
     this.drawLayer = this.makeNewLayer({})
     this.imageLayer = null
@@ -323,6 +325,13 @@ class CreateCanvas {
     this.initCanvasEvents()
     this.updateCanvas()
 
+    const bgUrl = '/artbot/checkerboard.png'
+    this.canvas.setBackgroundColor(
+      // @ts-ignore
+      { source: bgUrl, repeat: 'repeat' },
+      this.canvas.renderAll.bind(this.canvas)
+    )
+
     this.updateBrush({
       width: CanvasSettings.get('brushSize') || 20
     })
@@ -438,7 +447,8 @@ class CreateCanvas {
     }
 
     if (this.imageLayer) {
-      data.source_image = this?.imageLayer
+      // data.source_image = this?.imageLayer
+      data.source_image = this?.canvas // Handle scaling canvas.
         ?.toDataURL({ format: 'webp' })
         .split(',')[1]
     }
@@ -478,6 +488,14 @@ class CreateCanvas {
       e.preventDefault()
       this.undo()
     }
+  }
+
+  setDrawingMode = (value: boolean) => {
+    if (!this.canvas) {
+      return
+    }
+
+    this.canvas.isDrawingMode = value
   }
 
   createDrawLayer({ opacity = 1.0 }: { opacity: number }) {
@@ -650,12 +668,25 @@ class CreateCanvas {
       })
 
     const newGroup = new fabric.Group([newLayer], {
-      selectable: false,
+      selectable: image ? true : false,
       absolutePositioned: absolute,
       opacity
     })
 
     return newGroup
+  }
+
+  scale = (value: any) => {
+    if (!this.imageLayer || !this.canvas) {
+      return
+    }
+
+    this.canvasScale = value
+    this.imageLayer.scale(parseFloat(value)).setCoords()
+    this.imageLayer.viewportCenter()
+    this.canvas.requestRenderAll()
+
+    this.autoSave()
   }
 
   toggleErase = (bool: boolean) => {
@@ -690,7 +721,7 @@ class CreateCanvas {
   }, 500)
 
   onMouseMove = (event: fabric.IEvent<Event>) => {
-    if (!this.canvas || !this.brushPreview) {
+    if (!this.canvas || !this.brushPreview || !this.canvas.isDrawingMode) {
       return
     }
 

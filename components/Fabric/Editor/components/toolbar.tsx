@@ -27,6 +27,11 @@ import {
 import UploadIcon from '../../../icons/UploadIcon'
 import { useRouter } from 'next/router'
 import UploadImage from './UploadImage'
+import { Button } from 'components/UI/Button'
+import RulerIcon from 'components/icons/RulerIcon'
+import PointerIcon from 'components/icons/PointerIcon'
+
+const DEBUG_MODE = false
 
 const ToolBarButton = ({
   active,
@@ -84,6 +89,9 @@ const ToolBar = ({
   const [showAdjustmentMenu, setShowAdjustmentMenu] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [brushSize, setBrushSize] = useState(20)
+
+  const [showScaleMenu, setShowScaleMenu] = useState(false)
+  const [canvasScale, setCanvasScale] = useState(1)
 
   const [showNewModal, setShowNewModal] = useState(false)
   const [showUploadModal, setShowUploadModal] = useState(false)
@@ -164,6 +172,27 @@ const ToolBar = ({
   return (
     <div className={clsx(wrapperClasses)}>
       <div className="flex flex-row gap-1 items-center">
+        {canvasType === 'inpainting' && (
+          <ToolBarButton
+            active={showScaleMenu}
+            onClick={() => {
+              setShowScaleMenu(!showScaleMenu)
+            }}
+          >
+            <RulerIcon stroke="black" />
+          </ToolBarButton>
+        )}
+        {canvasType === 'inpainting' && (
+          <ToolBarButton
+            active={activeBrush === 'pointer'}
+            onClick={() => {
+              setActiveBrush('pointer')
+              canvas?.setDrawingMode(false)
+            }}
+          >
+            <PointerIcon stroke="black" />
+          </ToolBarButton>
+        )}
         {canvasType === 'drawing' && (
           <>
             <ToolBarButton
@@ -185,6 +214,7 @@ const ToolBar = ({
           active={activeBrush === 'paint'}
           onClick={() => {
             setActiveBrush('paint')
+            canvas?.setDrawingMode(true)
             canvas?.toggleErase(false)
             canvas?.updateBrush()
           }}
@@ -195,6 +225,7 @@ const ToolBar = ({
           active={activeBrush === 'erase'}
           onClick={() => {
             setActiveBrush('erase')
+            canvas?.setDrawingMode(true)
             canvas?.toggleErase(true)
           }}
         >
@@ -227,6 +258,7 @@ const ToolBar = ({
               onClick={() => {
                 if (activeBrush !== 'picker') {
                   setActiveBrush('picker')
+                  canvas?.setDrawingMode(true)
                   canvas.colorPicker(true, (colorString: string) => {
                     CanvasSettings.set('brushColor', colorString)
                     setColor(colorString)
@@ -258,9 +290,11 @@ const ToolBar = ({
             />
           </>
         )}
-        {/* <Button onClick={canvas?.saveToDisk}>
-        <DownloadIcon />
-        </Button> */}
+        {DEBUG_MODE && (
+          <Button onClick={canvas?.saveToDisk}>
+            <DownloadIcon />
+          </Button>
+        )}
       </div>
       <div>
         <ToolBarButton
@@ -399,6 +433,33 @@ const ToolBar = ({
               canvas?.updateBrush({ color: value })
             }}
           />
+        </DropDown>
+      )}
+      {showScaleMenu && (
+        <DropDown handleClose={() => setShowScaleMenu(false)}>
+          <div className="flex flex-col w-full">
+            <div className="w-full mb-2">
+              <div className="text-gray-900">
+                <small>
+                  <strong>Canvas scale ({canvasScale})</strong>
+                </small>
+              </div>
+              <div className="w-full">
+                <input
+                  className="w-full"
+                  type="range"
+                  min={0.2}
+                  max={1.2}
+                  step={0.1}
+                  onChange={(e: any) => {
+                    canvas?.scale(Number(e.target.value))
+                    setCanvasScale(e.target.value)
+                  }}
+                  value={canvasScale}
+                />
+              </div>
+            </div>
+          </div>
         </DropDown>
       )}
       {showAdjustmentMenu && (
