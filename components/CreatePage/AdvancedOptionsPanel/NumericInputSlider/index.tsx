@@ -42,11 +42,7 @@ const NumericInputSlider = ({
   const inputField = input[fieldName]
   const [temporaryValue, setTemporaryValue] = useState(inputField)
 
-  const [warning, setWarning] = useState('')
-
-  const toggleWarning = useCallback((state: boolean) => {
-    setWarning(state ? `This field only accepts numbers between ${from} and ${to}.` : '')
-  }, [from, to])
+  const [showWarning, setShowWarning] = useState(false)
 
   const keepInBoundaries = useCallback((val: number)=>{
     return Math.max(from, Math.min(val, to))
@@ -68,10 +64,10 @@ const NumericInputSlider = ({
   function safelyUpdateField (value: string | number) {
     value = Number(value)
     if (isNaN(value) || value < from || value > to) {
-      toggleWarning(true)
+      setShowWarning(true)
       updateField(isNaN(value)?to:keepInBoundaries(value))
     } else {
-      toggleWarning(false)
+      setShowWarning(false)
 
       if (enforceStepValue){
         value = roundToNearestStep(value)
@@ -84,8 +80,8 @@ const NumericInputSlider = ({
   useEffect(() => {
     let correctedInputField = enforceStepValue ? roundToNearestStep(inputField) : keepInBoundaries(inputField)
 
-    toggleWarning(inputField !== correctedInputField)
-  }, [inputField, enforceStepValue, roundToNearestStep, toggleWarning, keepInBoundaries])
+    setShowWarning(inputField !== correctedInputField)
+  }, [inputField, enforceStepValue, roundToNearestStep, setShowWarning, keepInBoundaries])
 
   useEffect(() => {
     setTemporaryValue(inputField)
@@ -118,11 +114,11 @@ const NumericInputSlider = ({
             name={fieldName}
             disabled={disabled}
             onMinusClick={() => {
-              const value = Number((input[fieldName] - step).toFixed(2))
+              const value = Number((inputField - step).toFixed(2))
               safelyUpdateField(value)
             }}
             onPlusClick={() => {
-              const value = Number((input[fieldName] + step).toFixed(2))
+              const value = Number((inputField + step).toFixed(2))
               safelyUpdateField(value)
             }}
             onChange={handleNumberInput}
@@ -144,8 +140,10 @@ const NumericInputSlider = ({
             safelyUpdateField(e.target.value)
           }}
         />
-        {warning && (
-          <div className="mb-2 text-xs">{warning}</div>
+        {showWarning && (
+          <div className="mb-2 text-xs">
+            This field only accepts numbers between {from} and {to}.
+          </div>
         )}
       </Section>
     </div>
