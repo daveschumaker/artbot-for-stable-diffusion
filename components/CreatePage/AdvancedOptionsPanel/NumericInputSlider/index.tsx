@@ -81,7 +81,7 @@ const NumericInputSlider = ({
     let correctedInputField = enforceStepValue ? roundToNearestStep(inputField) : keepInBoundaries(inputField)
 
     setShowWarning(inputField !== correctedInputField)
-  }, [inputField, enforceStepValue, roundToNearestStep, setShowWarning, keepInBoundaries])
+  }, [inputField, enforceStepValue, roundToNearestStep, keepInBoundaries])
 
   useEffect(() => {
     setTemporaryValue(inputField)
