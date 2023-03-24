@@ -58,13 +58,9 @@ const NumericInputSlider = ({
   }
 
   function updateField (value: number) {
-    const res = {}
-    // @ts-ignore
-    res[fieldName] = value
-    setInput(res)
+    setInput({[fieldName]: value})
+    setTemporaryValue(value)
     callback(value)
-    // @ts-ignore
-    setTemporaryValue(res[fieldName])
   }
 
   function safelyUpdateField (value: string | number) {
