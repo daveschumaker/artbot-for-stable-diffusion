@@ -43,7 +43,7 @@ import ShareIcon from 'components/icons/ShareIcon'
 import ImageParamsForApi from 'models/ImageParamsForApi'
 import { userInfoStore } from 'store/userStore'
 import { createShortlink } from 'api/createShortlink'
-import { toast } from 'react-toastify'
+import { toast, ToastOptions } from 'react-toastify'
 
 const ImageOptionsWrapper = ({
   handleClose,
@@ -342,8 +342,11 @@ const ImageOptionsWrapper = ({
               <MenuItem
                 className="text-sm"
                 onClick={async () => {
-                  await blobToClipboard(imageDetails.base64String)
-                  toast.success('Image copied to your clipboard!', {
+                  const success = await blobToClipboard(
+                    imageDetails.base64String
+                  )
+
+                  const toastObject: ToastOptions = {
                     pauseOnFocusLoss: false,
                     position: 'top-center',
                     autoClose: 2500,
@@ -353,7 +356,19 @@ const ImageOptionsWrapper = ({
                     draggable: false,
                     progress: undefined,
                     theme: 'light'
-                  })
+                  }
+
+                  if (success) {
+                    toast.success(
+                      'Image copied to your clipboard!',
+                      toastObject
+                    )
+                  } else {
+                    toast.error(
+                      'Unable to copy image to clipboard.',
+                      toastObject
+                    )
+                  }
                 }}
               >
                 Copy image to clipboard

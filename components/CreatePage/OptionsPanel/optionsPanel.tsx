@@ -40,10 +40,7 @@ interface Props {
   setInput: any
 }
 
-const OptionsPanel = ({
-  input,
-  setInput,
-}: Props) => {
+const OptionsPanel = ({ input, setInput }: Props) => {
   const router = useRouter()
   const [activeNav, setActiveNav] = useState('advanced')
 
@@ -129,10 +126,7 @@ const OptionsPanel = ({
         </NavItem>
       </ul>
       {activeNav === 'advanced' && (
-        <AdvancedOptionsPanel
-          input={input}
-          setInput={setInput}
-        />
+        <AdvancedOptionsPanel input={input} setInput={setInput} />
       )}
       {activeNav === 'img2img' &&
         input.source_processing === SourceProcessing.InPainting && (

@@ -9,6 +9,7 @@ import { hasPromptMatrix, promptMatrix } from './promptUtils'
 import { validModelsArray } from './modelUtils'
 import AppSettings from '../models/AppSettings'
 import { DEFAULT_SAMPLER_ARRAY } from '../_constants'
+import { isiOS } from './appUtils'
 
 interface CreateImageJob {
   base64String?: string
@@ -530,7 +531,21 @@ export const blobToClipboard = async (base64String: string) => {
   // Only PNGs can be copied to the clipboard
   const image: any = await base64toBlob(base64String, `image/png`)
   const newBlob = await image.toPNG()
-  navigator.clipboard.write([new ClipboardItem({ 'image/png': newBlob })])
+
+  if (isiOS()) {
+    try {
+      await navigator.clipboard.write([
+        new ClipboardItem({ 'image/png': newBlob })
+      ])
+      return true
+    } catch (err) {
+      console.log(`Unable to copy image to clipboard.`)
+      return false
+    }
+  } else {
+    navigator.clipboard.write([new ClipboardItem({ 'image/png': newBlob })])
+    return true
+  }
 }
 
 export const downloadImages = async (
