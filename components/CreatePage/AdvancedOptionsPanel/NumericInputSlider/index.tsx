@@ -39,6 +39,7 @@ const NumericInputSlider = ({
   enforceStepValue = false,
   callback = () => {}
 }: Props) => {
+  const inputField = input[fieldName]
   const [warning, setWarning] = useState('')
 
   function toggleWarning (state: boolean) {
@@ -94,10 +95,8 @@ const NumericInputSlider = ({
   }, [fieldName, from, to, step])
 
   useEffect(() => {
-    setTemporaryValue(input[fieldName])
-    console.log(fieldName)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [input[fieldName]])
+    setTemporaryValue(inputField)
+  }, [inputField])
 
   const handleNumberInput = (event: any) => {
     setTemporaryValue(event.target.value)
