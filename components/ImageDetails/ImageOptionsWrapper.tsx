@@ -303,10 +303,10 @@ const ImageOptionsWrapper = ({
                   )
                 }}
               >
-                Copy prompt only
+                Use this prompt for generation
               </MenuItem>
               <MenuItem className="text-sm" onClick={handleCopyPromptClick}>
-                Copy all settings
+                Use all settings from this image for generation
               </MenuItem>
               <MenuItem
                 className="text-sm"
