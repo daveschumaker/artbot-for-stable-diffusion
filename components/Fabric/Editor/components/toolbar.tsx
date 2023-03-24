@@ -200,6 +200,15 @@ const ToolBar = ({
           </>
         )}
         <ToolBarButton
+          active={activeBrush === 'pointer'}
+          onClick={() => {
+            setActiveBrush('pointer')
+            canvas?.setDrawingMode(false)
+          }}
+        >
+          <PointerIcon stroke="black" />
+        </ToolBarButton>
+        <ToolBarButton
           active={activeBrush === 'paint'}
           onClick={() => {
             setActiveBrush('paint')
