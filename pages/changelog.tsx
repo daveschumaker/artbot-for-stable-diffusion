@@ -156,6 +156,10 @@ const Changelog = () => {
             (and anything else you want changed). I will improve this in the
             future to make it easier. (This should be a FAQ item, probably)
           </StyledLi>
+          <StyledLi>
+            Fix: img2img source being forgotten as you navigate between pages
+            (or reload the page). Thanks to Litnine for reporting this!
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
