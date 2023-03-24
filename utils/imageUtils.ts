@@ -524,6 +524,15 @@ export const kudosCost = ({
   }
 }
 
+export const blobToClipboard = async (base64String: string) => {
+  initBlob()
+
+  // Only PNGs can be copied to the clipboard
+  const image: any = await base64toBlob(base64String, `image/png`)
+  const newBlob = await image.toPNG()
+  navigator.clipboard.write([new ClipboardItem({ 'image/png': newBlob })])
+}
+
 export const downloadImages = async (
   imageArray: Array<any> = [],
   callback = () => {}

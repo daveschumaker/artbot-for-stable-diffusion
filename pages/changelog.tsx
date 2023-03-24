@@ -117,6 +117,20 @@ const Changelog = () => {
             Thanks to ƊαякƊ, R3H and others for reporting issues with this on
             Discord.
           </StyledLi>
+          <StyledLi>
+            Feature: Swanky new image details page and modal. (And modal?). Yes!
+            They are now basically the same thing. Same info available on both.
+            Easier to update. Buttons with dropdown options, if needed. Can now
+            view tileable images on the image details page. Can now view
+            tileable images fullscreen! Will there be bugs? Probably! But
+            that&apos;s what makes things fun. (But seriously, if you see any,
+            you know what to do.)
+          </StyledLi>
+          <StyledLi>
+            Oh, yeah. With the new image page / modal, you can now copy images
+            directly to your clipboard. That&apos;s kind of neat for things like
+            Discord, text messages, etc.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

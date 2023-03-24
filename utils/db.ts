@@ -461,9 +461,14 @@ export const deleteAllPendingJobs = async () => {
     .delete()
 }
 
+export const getImageDetailsById = async (id: number) => {
+  return await db.completed.where('id').equals(id).first()
+}
+
 export const _getImageDetails = async (jobId: string) => {
   return await db.completed.where('jobId').equals(jobId).first()
 }
+
 export const getImageDetails = memoize(_getImageDetails, {
   maxAge: 120000
 })

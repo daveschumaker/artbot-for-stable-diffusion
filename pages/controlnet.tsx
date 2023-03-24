@@ -313,16 +313,18 @@ const ControlNet = () => {
 
   const kudosPerImage =
     totalImagesRequested < 1 ||
-      isNaN(totalKudosCost) ||
-      isNaN(totalImagesRequested)
+    isNaN(totalKudosCost) ||
+    isNaN(totalImagesRequested)
       ? 'N/A'
       : Number(totalKudosCost / totalImagesRequested).toFixed(2)
 
-  const [errors, setErrors] = useComponentState({} as { [key: string]: boolean })
+  const [errors, setErrors] = useComponentState(
+    {} as { [key: string]: boolean }
+  )
 
   useEffect(() => {
     setErrors({ FIXED_SEED: Boolean(totalImagesRequested > 1 && input.seed) })
-  }, [totalImagesRequested, input.seed])
+  }, [totalImagesRequested, input.seed, setErrors])
 
   return (
     <>
@@ -608,18 +610,18 @@ const ControlNet = () => {
           />
           {(getPostProcessing('GFPGAN') ||
             getPostProcessing('CodeFormers')) && (
-              <NumericInputSlider
-                label="Face-fix strength"
-                tooltip="0.05 is the weakest effect (barely noticeable improvements), while 1.0 is the strongest effect."
-                from={0.05}
-                to={1.0}
-                step={0.05}
-                input={input}
-                setInput={setInput}
-                fieldName="facefixer_strength"
-                initialLoad={false}
-              />
-            )}
+            <NumericInputSlider
+              label="Face-fix strength"
+              tooltip="0.05 is the weakest effect (barely noticeable improvements), while 1.0 is the strongest effect."
+              from={0.05}
+              to={1.0}
+              step={0.05}
+              input={input}
+              setInput={setInput}
+              fieldName="facefixer_strength"
+              initialLoad={false}
+            />
+          )}
           <UpscalerOptions input={input} setInput={setInput} />
         </div>
       </Section>

@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
+import { IImageDetails } from 'types'
 import {
   findFilteredIndexById,
   getNextFilteredItem,
@@ -10,53 +11,53 @@ import {
   getNextImageDetails,
   getPrevImageDetails
 } from '../../utils/db'
-import ImageModal from '../ImageModal'
+
+// import ImageModal from '../ImageModal'
+import ImageModal from '../ImageModalV2'
 
 interface IProps {
-  handleClose(): void
+  handleClose: () => void
   imageId: string
   onAfterDelete(): void
   reverseButtons?: boolean
   useFilteredItems?: boolean
 }
 
-interface IImageDetails {
-  id: number
-  timestamp: number
-}
-
 const ImageModalController = ({
   handleClose = () => {},
   imageId,
   onAfterDelete = () => {},
-  reverseButtons = false,
   useFilteredItems = false
 }: IProps) => {
-  const [loading, setLoading] = useState(true)
-  const [imageDetails, setImageDetails] = useState<IImageDetails>({
-    id: 0,
-    timestamp: 0
-  })
+  const [imageDetails, setImageDetails] = useState<IImageDetails>()
 
   const loadImageData = useCallback(async () => {
     const data = (await getImageDetails(imageId)) || {}
     setImageDetails(data)
-    setLoading(false)
   }, [imageId])
 
   const handleDeleteImageClick = async () => {
+    if (!imageDetails) {
+      return
+    }
+
+    console.log(`heyyyo!`)
+
     await deleteCompletedImageById(imageDetails.id)
     onAfterDelete()
     handleClose()
   }
 
   const handleLoadNext = async () => {
+    if (!imageDetails) {
+      return
+    }
+
     let data
     if (useFilteredItems) {
       const idx = findFilteredIndexById(imageDetails.id)
       data = getNextFilteredItem(idx)
       setImageDetails(data)
-      setLoading(false)
       return
     }
 
@@ -64,43 +65,48 @@ const ImageModalController = ({
     if (data.id) {
       setImageDetails(data)
     }
-    setLoading(false)
   }
 
   const handleLoadPrev = async () => {
+    if (!imageDetails) {
+      return
+    }
+
     let data
     if (useFilteredItems) {
       const idx = findFilteredIndexById(imageDetails.id)
       data = getPrevFilteredItem(idx)
       setImageDetails(data)
-      setLoading(false)
       return
     }
-
 
     data = (await getPrevImageDetails(imageDetails.timestamp)) || {}
     if (data.id) {
       setImageDetails(data)
     }
-    setLoading(false)
   }
 
   useEffect(() => {
     if (imageId) {
-      setLoading(true)
       loadImageData()
     }
   }, [imageId, loadImageData])
 
+  if (!imageDetails) {
+    return null
+  }
+
   return (
     <ImageModal
-      handleClose={handleClose}
       handleDeleteImageClick={handleDeleteImageClick}
       handleLoadNext={handleLoadNext}
       handleLoadPrev={handleLoadPrev}
       imageDetails={imageDetails}
-      loading={loading}
-      reverseButtons={reverseButtons}
+      // loading={loading}
+      // reverseButtons={reverseButtons}
+      // @ts-ignore
+      handleClose={handleClose}
+      // imageId={imageDetails.id}
     />
   )
 }

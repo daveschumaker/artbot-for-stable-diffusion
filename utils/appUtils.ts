@@ -64,7 +64,7 @@ export const getApiHostServer = () => {
 
 ///////
 
-function isiOS() {
+export const isiOS = () => {
   return (
     [
       'iPad Simulator',
@@ -108,4 +108,30 @@ export const unlockScroll = () => {
   }
 
   delete document.body.dataset.scrollLock
+}
+
+export const enterFullScreen = (element: any) => {
+  if (element.requestFullscreen) {
+    element.requestFullscreen()
+  } else if (element.mozRequestFullScreen) {
+    element.mozRequestFullScreen() // Firefox
+  } else if (element.webkitRequestFullscreen) {
+    element.webkitRequestFullscreen() // Safari
+  } else if (element.msRequestFullscreen) {
+    element.msRequestFullscreen() // IE/Edge
+  }
+}
+
+export const exitFullscreen = () => {
+  if (document.exitFullscreen) {
+    document.exitFullscreen()
+    // @ts-ignore
+  } else if (document.mozCancelFullScreen) {
+    // @ts-ignore
+    document.mozCancelFullScreen()
+    // @ts-ignore
+  } else if (document.webkitExitFullscreen) {
+    // @ts-ignore
+    document.webkitExitFullscreen()
+  }
 }
