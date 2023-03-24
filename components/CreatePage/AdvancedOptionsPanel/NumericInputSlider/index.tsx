@@ -77,19 +77,21 @@ const NumericInputSlider = ({
     }
   }
 
+  // Show warnings to users who logged out after setting high values on sliders.
   useEffect(() => {
     let correctedInputField = enforceStepValue ? roundToNearestStep(inputField) : keepInBoundaries(inputField)
 
     setShowWarning(inputField !== correctedInputField)
-  }, [inputField, enforceStepValue, roundToNearestStep, keepInBoundaries])
 
+    // inputField is not included in dependency array on purpose.
+    // Including it leads to a race condition which sometimes makes warnings disappear without user input.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enforceStepValue, roundToNearestStep, keepInBoundaries])
+
+  // Make sure text value on input is always up-to-date.
   useEffect(() => {
     setTemporaryValue(inputField)
   }, [inputField])
-
-  const handleNumberInput = (event: any) => {
-    setTemporaryValue(event.target.value)
-  }
 
   return (
     <div className={clsx('mb-4 w-full', !fullWidth && 'md:w-1/2')}>
@@ -121,7 +123,13 @@ const NumericInputSlider = ({
               const value = Number((inputField + step).toFixed(2))
               safelyUpdateField(value)
             }}
-            onChange={handleNumberInput}
+            onChange={(e: any) =>{
+              // Note that we use setTemporaryValue, not safelyUpdateField.
+              // This is because we want to let users enter arbitrary data in the input.
+              // Validation and field update is performed after user finishes typing (see onBlur).
+              const value = e.target.value
+              setTemporaryValue(value)
+            }}
             onBlur={(e: any) => {
               const value = Number(e.target.value)
               safelyUpdateField(value)
