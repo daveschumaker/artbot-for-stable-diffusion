@@ -385,7 +385,7 @@ const ImageOptionsWrapper = ({
           )}
           {!isiOS() && (
             <div className={styles['button-icon']} onClick={handleFullScreen}>
-              <ResizeIcon />
+              <ResizeIcon strokeWidth={1.25}/>
             </div>
           )}
           <div
