@@ -140,11 +140,17 @@ const ImageDetails = ({
       />
       <div
         id="image-prompt-wrapper"
-        className="mt-3 flex flex-row w-full justify-center"
+        className="mt-3 flex flex-col w-full justify-start items-center"
       >
-        <span className="text-[16px] tablet:text-[18px] px-4 w-full max-w-[768px]">
-          {imageDetails.prompt}
-        </span>
+        <div className="text-[16px] tablet:text-[18px] px-4 w-full max-w-[768px]">
+          <div className="text-sm font-bold flex flex-row gap-2 items-center mb-[4px]">
+            <PlaylistXIcon hideCross/>
+            Prompt
+          </div>
+          <div className="w-full text-sm ml-[8px]">
+            {imageDetails.prompt}
+          </div>
+        </div>
       </div>
       {imageDetails.negative && (
         <div
