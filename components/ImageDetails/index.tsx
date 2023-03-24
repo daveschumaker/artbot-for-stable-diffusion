@@ -16,7 +16,6 @@ import ImageSquare from 'components/ImageSquare'
 import styles from './imageDetails.module.css'
 import ImageOptionsWrapper from './ImageOptionsWrapper'
 import Img2ImgModal from 'components/ImagePage/Img2ImgModal'
-import { useWindowSize } from 'hooks/useWindowSize'
 
 interface Props {
   imageDetails: IImageDetails
@@ -33,7 +32,6 @@ const ImageDetails = ({
   handleDeleteImageClick,
   handleTiling = () => {}
 }: Props) => {
-  const size = useWindowSize()
   const showFullScreen = useFullScreenHandle()
   const [fullscreen, setFullscreen] = useState(false)
   const [showImg2ImgModal, setShowImg2ImgModal] = useState(false)
