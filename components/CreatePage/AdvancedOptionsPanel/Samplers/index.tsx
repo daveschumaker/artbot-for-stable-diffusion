@@ -52,7 +52,6 @@ const Samplers = ({ input, setInput, showMultiModel = false }: IProps) => {
                   PromptInputSettings.set('sampler', obj.value)
                   setInput({ sampler: obj.value })
                 }}
-                isSearchable={true}
                 value={samplerValue}
               />
             </MaxWidth>

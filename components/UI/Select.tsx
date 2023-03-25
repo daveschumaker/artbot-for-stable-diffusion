@@ -80,6 +80,7 @@ const SelectComponent = (props: SelectProps) => {
       className={className}
       id="long-value-select"
       instanceId="long-value-select"
+      closeMenuOnSelect={props.isMulti ? false : true}
       {...rest}
       //@ts-ignore
       styles={customStyles}

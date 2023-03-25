@@ -106,6 +106,15 @@ const Changelog = () => {
           /////
       */}
       <Section>
+        <SubSectionTitle>2023.03.25</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: When selecting multiple-models, the select dropdown should stay
+            open! Thanks to EFreak on Discord for reporting this!
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.03.24</SubSectionTitle>
         <StyledUl>
           <StyledLi>
