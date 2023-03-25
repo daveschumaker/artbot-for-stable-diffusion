@@ -160,6 +160,18 @@ const Changelog = () => {
             Fix: img2img source being forgotten as you navigate between pages
             (or reload the page). Thanks to Litnine for reporting this!
           </StyledLi>
+          <StyledLi>
+            Fix: Restore ability to press &quot;delete&quot; keyboard shortcut
+            on image details view, as well as pressing &quot;f&quot; -- though
+            not to pay respects -- this is to quickly favorite an image. While
+            we&apos;re adding shortcuts, here is are two more: &quot;d&quot; to
+            quickly download an image, &quot;r&quot; to quickly reroll. Thanks
+            to qwq and Efreak on Discord for the reminder and suggestions.
+          </StyledLi>
+          <StyledLi>
+            Fix: Issue where Safari on iOS wasn&apos;t able to use the new copy
+            image to clipboard feature.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

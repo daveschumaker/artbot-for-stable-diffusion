@@ -9,7 +9,7 @@ import { hasPromptMatrix, promptMatrix } from './promptUtils'
 import { validModelsArray } from './modelUtils'
 import AppSettings from '../models/AppSettings'
 import { DEFAULT_SAMPLER_ARRAY } from '../_constants'
-import { isiOS } from './appUtils'
+import { isiOS, isSafariBrowser } from './appUtils'
 
 interface CreateImageJob {
   base64String?: string
@@ -528,21 +528,31 @@ export const kudosCost = ({
 export const blobToClipboard = async (base64String: string) => {
   initBlob()
 
-  // Only PNGs can be copied to the clipboard
-  const image: any = await base64toBlob(base64String, `image/png`)
-  const newBlob = await image.toPNG()
+  const makeImagePromiseForSafari = async () => {
+    const base64Response = await fetch(`data:image/png;base64,${base64String}`)
+    const imgBlob = await base64Response.blob()
 
-  if (isiOS()) {
+    // @ts-ignore
+    return await imgBlob.toPNG()
+  }
+
+  if (isiOS() || isSafariBrowser()) {
     try {
-      await navigator.clipboard.write([
-        new ClipboardItem({ 'image/png': newBlob })
+      navigator.clipboard.write([
+        new ClipboardItem({
+          'image/png': makeImagePromiseForSafari()
+        })
       ])
+
       return true
     } catch (err) {
-      console.log(`Unable to copy image to clipboard.`)
       return false
     }
   } else {
+    // Only PNGs can be copied to the clipboard
+    const image: any = await base64toBlob(base64String, `image/png`)
+    const newBlob = await image.toPNG()
+
     navigator.clipboard.write([new ClipboardItem({ 'image/png': newBlob })])
     return true
   }

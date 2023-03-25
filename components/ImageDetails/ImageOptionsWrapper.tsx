@@ -230,11 +230,26 @@ const ImageOptionsWrapper = ({
       if (e.key === 'f') {
         onFavoriteClick()
       }
+
+      if (e.key === 'd') {
+        downloadFile(imageDetails)
+      }
+
+      if (e.key === 'r') {
+        handleRerollClick(imageDetails)
+      }
     }
 
     window.addEventListener('keydown', handleKeyPress)
     return () => window.removeEventListener('keydown', handleKeyPress)
-  }, [handleClose, onFavoriteClick, setShowTiles, showTiles])
+  }, [
+    handleClose,
+    handleRerollClick,
+    imageDetails,
+    onFavoriteClick,
+    setShowTiles,
+    showTiles
+  ])
 
   return (
     <>
