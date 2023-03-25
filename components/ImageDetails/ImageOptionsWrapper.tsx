@@ -222,11 +222,19 @@ const ImageOptionsWrapper = ({
           setShowTiles(false)
         }
       }
+
+      if (e.key === 'Delete') {
+        setShowDeleteModal(true)
+      }
+
+      if (e.key === 'f') {
+        onFavoriteClick()
+      }
     }
 
     window.addEventListener('keydown', handleKeyPress)
     return () => window.removeEventListener('keydown', handleKeyPress)
-  }, [handleClose, setShowTiles, showTiles])
+  }, [handleClose, onFavoriteClick, setShowTiles, showTiles])
 
   return (
     <>

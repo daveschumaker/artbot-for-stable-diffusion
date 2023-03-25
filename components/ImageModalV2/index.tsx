@@ -23,7 +23,7 @@ interface Props {
 const ImageModalV2 = ({
   disableNav = false,
   handleClose,
-  handleDeleteImageClick,
+  handleDeleteImageClick = () => {},
   handleLoadNext = () => {},
   handleLoadPrev = () => {},
   imageDetails
