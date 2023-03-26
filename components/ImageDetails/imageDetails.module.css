@@ -1,3 +1,15 @@
+@media (max-width: 639px){
+  .img, .image-loading, .img-container{
+      --image-container-size: 400px;
+  }
+}
+
+@media (min-width: 640px){
+  .img, .img-loading, .img-container{
+    --image-container-size: 512px;
+}
+}
+
 .menu {
   position: absolute;
   top: 32px !important;
@@ -16,8 +28,8 @@
 }
 
 .img-loading {
-  height: 512px;
-  width: 512px;
+  height: var(--image-container-size);
+  width: var(--image-container-size);
   background-color: gray;
 }
 
@@ -25,8 +37,13 @@
   border-radius: 4px;
   box-shadow: 0 16px 38px -12px rgb(0 0 0 / 56%),
     0 4px 25px 0px rgb(0 0 0 / 12%), 0 8px 6px -5px rgb(0 0 0 / 20%);
-  aspect-ratio: keep-aspect-ratio;
-  max-height: 512px;
+  aspect-ratio: initial;
+  max-height: var(--image-container-size);
+}
+
+.img-container{
+  height: var(--image-container-size);
+  min-height: var(--image-container-size);
 }
 
 @media (min-width: 640px) {

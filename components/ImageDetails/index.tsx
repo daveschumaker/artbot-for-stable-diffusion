@@ -118,7 +118,10 @@ const ImageDetails = ({
           'w-full flex justify-center'
         )}
       >
-        <div className="max-w-[1400px] h-[512px] flex flex-row justify-center items-center">
+        <div className={
+          "max-w-[1400px] flex flex-row justify-center items-center "
+          + styles['img-container']
+        }>
           <img
             className={clsx(styles.img)}
             src={'data:image/webp;base64,' + imageDetails.base64String}
