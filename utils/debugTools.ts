@@ -34,7 +34,16 @@ export const initWindowLogger = () => {
   }
 }
 
-// Logger for debugging
+/**
+ * logToConsole
+ * Output logs to console for easier debugging in both prod and dev environments.
+ * To enable, set either localStorage or window value for debugKey to true.
+ * e.g., `localStorage.setItem('Input_Validation', true)` or `window['Input_Validation'] = true`
+ * @param {Object} debugObject - The debugging payload that will be output to the console
+ * @param {Object} debugObject.data - Data specifically related to the method that is being debugged
+ * @param {string} debugObject.name - Name or type of method that is being debugged.
+ * @param {string} debugObject.debugKey - Key used to enable console debugging using localStorage or window
+ */
 export const logToConsole = ({
   data,
   name,
@@ -49,7 +58,7 @@ export const logToConsole = ({
   }
 
   // @ts-ignore
-  if (window[debugKey] === true) {
+  if (localStorage.getItem(debugKey === 'true') || window[debugKey] === true) {
     console.log(`--`)
     console.log(`Output logs for: ${name} (${debugKey})`)
     console.log(data)
