@@ -173,7 +173,7 @@ const PendingPage = () => {
     count: sorted.length + 1,
     getScrollElement: () => parentRef.current,
     estimateSize: () => 240,
-    overscan: 2
+    overscan: 1
   })
 
   const items = virtualizer.getVirtualItems()
