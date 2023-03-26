@@ -191,7 +191,9 @@ const ImageDetails = ({
             ])}
           >
             {showRequestParams && (
-              <pre>{JSON.stringify(cleanData(), null, 2)}</pre>
+              <pre className="whitespace-pre-wrap">
+                {JSON.stringify(cleanData(), null, 2)}
+              </pre>
             )}
             {!showRequestParams && (
               <ul>
