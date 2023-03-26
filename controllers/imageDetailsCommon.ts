@@ -116,6 +116,14 @@ export const uploadImg2Img = (imageDetails: any, options: any = {}) => {
   clearI2IString()
   const { useSourceImg = false } = options
 
+  // If used for img2img request, invalidate any inpainting model since we aren't passing along source_mask
+  if (
+    imageDetails?.models[0] &&
+    imageDetails?.models[0].includes('_inpainting')
+  ) {
+    imageDetails.models[0] = 'stable_diffusion'
+  }
+
   savePrompt({
     imageType: imageDetails.imageType,
     prompt: imageDetails.prompt,
