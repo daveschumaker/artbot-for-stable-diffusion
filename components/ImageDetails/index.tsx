@@ -196,6 +196,11 @@ const ImageDetails = ({
             {!showRequestParams && (
               <ul>
                 <li>
+                  <strong>Created:</strong>{' '}
+                  {new Date(imageDetails.timestamp).toLocaleString()}
+                </li>
+                <li>&zwnj;</li>
+                <li>
                   <strong>Worker ID:</strong> {imageDetails.worker_id}
                 </li>
                 <li>
