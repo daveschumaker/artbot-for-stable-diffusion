@@ -148,7 +148,7 @@ const ImageDetails = ({
             <PlaylistXIcon hideCross />
             Prompt
           </div>
-          <div className="w-full text-sm ml-[8px]">{imageDetails.prompt}</div>
+          <div className="w-full text-sm ml-[8px] break-words">{imageDetails.prompt}</div>
         </div>
       </div>
       {imageDetails.negative && (
@@ -161,7 +161,7 @@ const ImageDetails = ({
               <PlaylistXIcon />
               Negative prompt
             </div>
-            <div className="w-full text-sm ml-[8px]">
+            <div className="w-full text-sm ml-[8px] break-words">
               {imageDetails.negative}
             </div>
           </div>
