@@ -13,7 +13,7 @@ import DefaultPromptInput from 'models/DefaultPromptInput'
 import { orientationDetails } from 'utils/imageUtils'
 
 import { Button } from 'components/UI/Button'
-import RefreshIcon from 'components/icons/RefreshIcon'
+import ArrowsDownUpIcon from 'components/icons/ArrowsDownUpIcon'
 import PencilIcon from 'components/icons/PencilIcon'
 import LinkIcon from 'components/icons/LinkIcon'
 
@@ -171,7 +171,7 @@ const OrientationOptions = ({ input, setInput}: Props) => {
                 })
               }}
             >
-              <RefreshIcon />
+              <ArrowsDownUpIcon />
             </Button>
           )}
         </div>
