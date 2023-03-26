@@ -509,7 +509,7 @@ const AdvancedOptionsPanel = ({
 
       <InputSwitch
         label="Tiling"
-        disabled={input.source_image}
+        disabled={input.source_image ? true : false}
         tooltip="Attempt to create seamless, repeatable textures. Note: This will not work for img2img or inpainting requests."
         handleSwitchToggle={() => {
           if (!input.tiling) {

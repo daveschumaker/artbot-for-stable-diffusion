@@ -424,7 +424,7 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
       initialState = { ...PromptInputSettings.load() }
     }
 
-    // Step 2a. Otherwise, load standarddefault prompt settings
+    // Step 2a. Otherwise, load standard default prompt settings
     if (!isSharedLink(query) && !PromptInputSettings.load()) {
       initialState = null
       initialState = { ...new DefaultPromptInput() }
