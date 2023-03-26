@@ -447,8 +447,15 @@ class CreateCanvas {
     }
 
     if (this.imageLayer) {
-      // data.source_image = this?.imageLayer
-      data.source_image = this?.canvas // Handle scaling canvas.
+      // TODO: FIXME: Outpainting support
+      // I had switched this call the handle outpainting requests, but it's now breaking inpainting due to merging a mask with source_image.
+      // Was trying to get around issue with properly scaling the image on the canvas, but the source_image being attached isn't resized,
+      // so the Stable Horde backend wouldn't properly outpaint the image. This following line got around that by essentially creating a whole
+      // new image that includes entire canvas + resized image. It's hacky and needs to be fixed. Disabling for now.
+      // data.source_image = this?.canvas
+
+      // This works for img2img / img2img mask / inpainting.
+      data.source_image = this?.imageLayer
         ?.toDataURL({ format: 'webp' })
         .split(',')[1]
     }
