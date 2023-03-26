@@ -163,8 +163,16 @@ const AdvancedOptionsPanel = ({
     const favModels = AppSettings.get('favoriteModels') || {}
     const favoriteModelsCount = Object.keys(favModels).length
 
+    if (
+      !componentState.showMultiModel &&
+      input.models.length > 1 &&
+      !input.useAllModels
+    ) {
+      setComponentState({ showMultiModel: true })
+    }
+
     setComponentState({ favoriteModelsCount })
-  }, [input, setComponentState])
+  }, [componentState.showMultiModel, input, setComponentState])
 
   // Dynamically display various options
 
