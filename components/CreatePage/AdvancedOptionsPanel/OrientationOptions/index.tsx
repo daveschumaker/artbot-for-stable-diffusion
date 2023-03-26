@@ -13,9 +13,9 @@ import DefaultPromptInput from 'models/DefaultPromptInput'
 import { orientationDetails } from 'utils/imageUtils'
 
 import { Button } from 'components/UI/Button'
-import RefreshIcon from 'components/icons/RefreshIcon'
+import ArrowsDownUpIcon from 'components/icons/ArrowsDownUpIcon'
 import PencilIcon from 'components/icons/PencilIcon'
-import LinkIcon from 'components/icons/LinkIcon'
+import ChainLinkIcon from 'components/icons/ChainLinkIcon'
 
 import { useState } from 'react'
 
@@ -171,7 +171,7 @@ const OrientationOptions = ({ input, setInput}: Props) => {
                 })
               }}
             >
-              <RefreshIcon />
+              <ArrowsDownUpIcon />
             </Button>
           )}
         </div>
@@ -225,7 +225,7 @@ const OrientationOptions = ({ input, setInput}: Props) => {
                   }
                   onClick={toggleKeepAspectRatio}
                 >
-                  <LinkIcon active={keepAspectRatio} />
+                  <ChainLinkIcon active={keepAspectRatio} />
                 </Button>
               </div>
             </div>
