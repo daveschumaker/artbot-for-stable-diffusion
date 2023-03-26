@@ -435,7 +435,8 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
         ...new DefaultPromptInput(),
         source_image: getBase64FromDraw().base64,
         source_processing: SourceProcessing.Img2Img,
-        ...(loadEditPrompt() || {})
+        ...(loadEditPrompt() || {}),
+        ...(PromptInputSettings.load() || {})
       }
 
       logToConsole({
