@@ -300,16 +300,12 @@ const ImageOptionsWrapper = ({
                   View image details page
                 </MenuItem>
               )}
-              <MenuDivider />
-              <MenuItem onClick={() => downloadFile(imageDetails)}>
+              <MenuItem 
+                className="text-sm"
+                onClick={() => downloadFile(imageDetails)}>
                 Download image
               </MenuItem>
-              <MenuItem
-                className="text-sm"
-                onClick={() => handleRerollClick(imageDetails)}
-              >
-                Reroll this image as a new job
-              </MenuItem>
+              <MenuDivider />
               <MenuItem
                 className="text-sm"
                 onClick={() => {
@@ -366,7 +362,6 @@ const ImageOptionsWrapper = ({
               <MenuItem className="text-sm" onClick={handleCopyPromptClick}>
                 Use all settings from this image for generation
               </MenuItem>
-              <MenuDivider />
               <MenuItem
                 className="text-sm"
                 onClick={async () => {
