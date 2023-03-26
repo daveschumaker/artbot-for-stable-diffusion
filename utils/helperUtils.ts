@@ -21,6 +21,13 @@ export const randomPropertyName = function (obj: any = {}) {
   return keys[Math.floor(Math.random() * keys.length)]
 }
 
+export const objIsEmpty = (obj: object) => {
+  for (var prop in obj) {
+    if (obj.hasOwnProperty(prop)) return false
+  }
+  return true
+}
+
 export const toBool = (value?: string | null) => {
   if (value === 'true' || value === 'True') {
     return true

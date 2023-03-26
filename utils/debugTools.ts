@@ -34,6 +34,7 @@ export const initWindowLogger = () => {
   }
 }
 
+// Logger for debugging
 export const logToConsole = ({
   data,
   name,
@@ -49,9 +50,10 @@ export const logToConsole = ({
 
   // @ts-ignore
   if (window[debugKey] === true) {
-    console.log(`\n--`)
+    console.log(`--`)
     console.log(`Output logs for: ${name} (${debugKey})`)
     console.log(data)
+    console.log(``)
   }
 }
 

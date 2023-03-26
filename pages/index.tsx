@@ -41,7 +41,7 @@ import { userInfoStore } from '../store/userStore'
 import styles from '../styles/index.module.css'
 import TriggerDropdown from '../components/CreatePage/TriggerDropdown'
 import DefaultPromptInput from '../models/DefaultPromptInput'
-import { logDataForDebugging } from '../utils/debugTools'
+import { logDataForDebugging, logToConsole } from '../utils/debugTools'
 import {
   promptSafetyExclusions,
   validatePromptSafety
@@ -134,6 +134,12 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
     if (pageLoaded) {
       PromptInputSettings.saveAllInput(updatedInputState, {
         forceSavePrompt: true
+      })
+
+      logToConsole({
+        data: updatedInputState,
+        name: 'setInput_state',
+        debugKey: 'DEBUG_LOAD_INPUT'
       })
     }
 
@@ -236,37 +242,6 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
     logDataForDebugging({
       name: 'index#handle_submit.CreateImageRequest',
       data: new CreateImageRequest(inputToSubmit)
-    })
-
-    //////// TODO: REMOVE ME when kudos debugging is complete:
-    const kudos = kudosCostV2({
-      width: input.width,
-      height: input.height,
-      steps: input.steps,
-      postProcessors: input.post_processing,
-      samplerName: input.sampler,
-      usesControlNet: input.control_type ? true : false,
-      prompt: [input.prompt, input.negative].join(' ### '),
-      hasSourceImage: input.source_image ? true : false,
-      denoisingStrength: input.denoising_strength,
-      numImages: totalImagesRequested
-    })
-
-    logDataForDebugging({
-      name: 'index#handle_submit.PredictedKudosCost',
-      data: {
-        totalCalculatedKudos: kudos,
-        totalImagesRequested: countImagesToGenerate(input),
-        width: input.width,
-        height: input.height,
-        steps: input.steps,
-        numImages: totalImagesRequested,
-        postProcessors: input.post_processing,
-        sampler: input.sampler,
-        control_type: input.source_image ? input.control_type : '',
-        prompt: input.prompt,
-        negativePrompt: input.negative
-      }
     })
 
     await createImageJob(new CreateImageRequest(inputToSubmit))
@@ -404,6 +379,12 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
 
       // @ts-ignore
       initialState = { ...shareParams }
+
+      logToConsole({
+        data: initialState,
+        name: 'LoadInput_Step_1',
+        debugKey: 'DEBUG_LOAD_INPUT'
+      })
     }
 
     // Step 1a. Check if prompt is shared via shortlink service.
@@ -416,18 +397,35 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
       // TODO: Function to map shortlinkImageParams to regular object. Make it testable!
       // @ts-ignore
       initialState = new ImageApiParamsToPromptInput(shortlinkImageParams)
+      logToConsole({
+        data: initialState,
+        name: 'LoadInput_Step_1a',
+        debugKey: 'DEBUG_LOAD_INPUT'
+      })
     }
 
     // Step 2. Load user prompt settings, if available
     if (!isSharedLink(query) && PromptInputSettings.load()) {
       initialState = null
       initialState = { ...PromptInputSettings.load() }
+
+      logToConsole({
+        data: initialState,
+        name: 'LoadInput_Step_2',
+        debugKey: 'DEBUG_LOAD_INPUT'
+      })
     }
 
     // Step 2a. Otherwise, load standard default prompt settings
     if (!isSharedLink(query) && !PromptInputSettings.load()) {
       initialState = null
       initialState = { ...new DefaultPromptInput() }
+
+      logToConsole({
+        data: initialState,
+        name: 'LoadInput_Step_2a',
+        debugKey: 'DEBUG_LOAD_INPUT'
+      })
     }
 
     // Step 3. Check if drawing mode
@@ -439,31 +437,58 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
         source_processing: SourceProcessing.Img2Img,
         ...(loadEditPrompt() || {})
       }
+
+      logToConsole({
+        data: initialState,
+        name: 'LoadInput_Step_3',
+        debugKey: 'DEBUG_LOAD_INPUT'
+      })
     }
 
     // Step 4. Validate various prompt parameters (e.g., correct model vs. source_processing type)
     // TODO: Move into subfolder / function?
 
+    // Step 4a.
     if (
       initialState &&
       initialState.models &&
       initialState?.models?.length === 0
     ) {
       initialState.models = ['stable_diffusion']
+
+      logToConsole({
+        data: initialState,
+        name: 'LoadInput_Step_4a',
+        debugKey: 'DEBUG_LOAD_INPUT'
+      })
     }
 
+    // Step 4b.
     if (
       initialState &&
       initialState.models &&
       initialState.models[0] === 'stable_diffusion_2'
     ) {
       initialState.sampler = 'dpmsolver'
+      logToConsole({
+        data: initialState,
+        name: 'LoadInput_Step_4b',
+        debugKey: 'DEBUG_LOAD_INPUT'
+      })
     }
 
+    // Step 4c.
     if (initialState && !initialState.sampler) {
       initialState.sampler = 'k_euler'
+
+      logToConsole({
+        data: initialState,
+        name: 'LoadInput_Step_4c',
+        debugKey: 'DEBUG_LOAD_INPUT'
+      })
     }
 
+    // Step 4d.
     if (
       (initialState &&
         initialState.numImages &&
@@ -471,8 +496,15 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
       (initialState && !initialState.numImages)
     ) {
       initialState.numImages = 1
+
+      logToConsole({
+        data: initialState,
+        name: 'LoadInput_Step_4d',
+        debugKey: 'DEBUG_LOAD_INPUT'
+      })
     }
 
+    // Step 4e.
     // Handle state where tiling is incorrectly set in case of img2img or inpainting
     const hasSourceImageOrMask =
       (initialState && initialState.source_image) ||
@@ -487,9 +519,14 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
       initialState.tiling === true
     ) {
       initialState.tiling = false
+      logToConsole({
+        data: initialState,
+        name: 'LoadInput_Step_4e',
+        debugKey: 'DEBUG_LOAD_INPUT'
+      })
     }
 
-    // Step 4. Check if we're restoring an img2img request.
+    // Step 4f. Check if we're restoring an img2img request.
     if (
       initialState?.source_processing === SourceProcessing.Img2Img &&
       getI2IString().base64String
@@ -497,12 +534,24 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
       initialState.source_image = getI2IString().base64String
       initialState.height = getI2IString().height
       initialState.width = getI2IString().width
+
+      logToConsole({
+        data: initialState,
+        name: 'LoadInput_Step_4f',
+        debugKey: 'DEBUG_LOAD_INPUT'
+      })
     }
 
     // Step 5. Check for other query param states.
     // Step 5a. If query param is for loading a model, set model:
     if (initialState && query[CreatePageMode.LOAD_MODEL]) {
       initialState.models = [query[CreatePageMode.LOAD_MODEL] as string]
+
+      logToConsole({
+        data: initialState,
+        name: 'LoadInput_Step_5a',
+        debugKey: 'DEBUG_LOAD_INPUT'
+      })
     }
 
     // Step 5b. If query param is a prompt, set prompt:
@@ -510,6 +559,12 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
       initialState.prompt = decodeURIComponent(
         query[CreatePageMode.PROMPT] as string
       )
+
+      logToConsole({
+        data: initialState,
+        name: 'LoadInput_Step_5b',
+        debugKey: 'DEBUG_LOAD_INPUT'
+      })
     }
 
     // Step 6. Load in img2img if not already exists
@@ -519,10 +574,16 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
       localStorage.getItem('img2img_base64')
     ) {
       initialState.source_image = localStorage.getItem('img2img_base64') || ''
+
+      logToConsole({
+        data: initialState,
+        name: 'LoadInput_Step_6',
+        debugKey: 'DEBUG_LOAD_INPUT'
+      })
     }
 
     // Step 7. Set input
-    setInput({ ...initialState })
+    setInput({ ...(initialState as DefaultPromptInput) })
 
     // Step 8. Set pageLoaded so we can start error checking and auto saving input.
     setPageLoaded(true)
