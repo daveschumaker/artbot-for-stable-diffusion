@@ -398,8 +398,14 @@ class CreateCanvas {
       return
     }
 
-    // TODO: Save imageLayer and maskLayer to image job for later look ups! (And to selectively toggle mask)
+    // Temporarily clone and remove brush layer on autosave so brush outline isn't saved to canvas
+    // @ts-ignore
+    this.brushPreview.set('stroke', '')
 
+    //@ts-ignore
+    this.canvas.remove(this.brushPreview)
+
+    // TODO: Save imageLayer and maskLayer to image job for later look ups! (And to selectively toggle mask)
     const data = {
       imageType: 'image/webp',
       source_image: '',
