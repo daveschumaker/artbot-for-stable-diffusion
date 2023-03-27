@@ -1,4 +1,3 @@
-import CreateCanvas from 'models/CreateCanvas'
 import PromptInputSettings from 'models/PromptInputSettings'
 import RerollImageRequest from '../models/RerollImageRequest'
 import UpscaleImageRequest from '../models/UpscaleImageRequest'
@@ -64,6 +63,11 @@ export const uploadInpaint = async (imageDetails: any, options: any = {}) => {
 
   let sourceMaskToUse: string = ''
   if (useSourceMask) {
+    // TODO: Importing this causes Fabric to be built as part of
+    // app chunk, doubling size of initial JS library. Find a way to split this out.
+    //@ts-ignore
+    const CreateCanvas = (await import('../models/CreateCanvas')).default
+
     sourceMaskToUse = await CreateCanvas.getMaskForInput(
       imageDetails.maskData,
       imageDetails.height,
