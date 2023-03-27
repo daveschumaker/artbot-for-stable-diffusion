@@ -148,13 +148,13 @@ export const savePrompt = ({
 
   // Clone to prompt input settings
   const keysToExclude = [
-    'canvasStore',
-    'canvasData',
+    // 'canvasStore',
+    // 'canvasData',
     'copyPrompt',
-    'maskData',
-    'source_image',
-    'source_mask',
-    'mask',
+    // 'maskData',
+    // 'source_image',
+    // 'source_mask',
+    // 'mask',
     'numImages'
   ]
 

@@ -17,13 +17,13 @@ class PromptInputSettingsClass extends LocalStorageController {
 
     // Clone to prompt input settings
     const keysToExclude = [
-      'canvasData',
-      'canvasStore',
-      'copyPrompt',
-      'maskData',
-      'parentJobId',
-      'source_image',
-      'source_mask'
+      // 'canvasData',
+      // 'canvasStore',
+      // 'copyPrompt',
+      // 'maskData',
+      'parentJobId'
+      // 'source_image',
+      // 'source_mask'
     ]
 
     interface IKeyValue {
