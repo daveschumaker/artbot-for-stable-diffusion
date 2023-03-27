@@ -55,6 +55,7 @@ import { CreatePageMode, isSharedLink } from '../utils/loadInputCache'
 import ImageApiParamsToPromptInput from '../models/ImageApiParamsToPromptInput'
 import ActionPanel from '../components/CreatePage/ActionPanel'
 import useComponentState from 'hooks/useComponentState'
+import { uploadInpaint } from 'controllers/imageDetailsCommon'
 
 interface InputTarget {
   name: string
@@ -409,6 +410,16 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
       initialState = null
       initialState = { ...PromptInputSettings.load() }
 
+      console.log(`PromptInputSettings.load()`, PromptInputSettings.load())
+
+      if (initialState && initialState.source_image) {
+        uploadInpaint(initialState, {
+          clone: true,
+          useSourceImg: true,
+          useSourceMask: true
+        })
+      }
+
       logToConsole({
         data: initialState,
         name: 'LoadInput_Step_2',
@@ -429,7 +440,8 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
     }
 
     // Step 3. Check if drawing mode
-    if (query[CreatePageMode.LOAD_DRAWING] || loadEditPrompt().source_image) {
+    // if (query[CreatePageMode.LOAD_DRAWING] || loadEditPrompt().source_image) {
+    if (query[CreatePageMode.LOAD_DRAWING]) {
       initialState = null
       initialState = {
         ...new DefaultPromptInput(),

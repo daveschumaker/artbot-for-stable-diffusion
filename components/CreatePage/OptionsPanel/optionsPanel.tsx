@@ -154,45 +154,6 @@ const OptionsPanel = ({ input, setInput }: Props) => {
           />
         )}
 
-      {/* {activeNav === 'draw' &&
-        input.source_processing === SourceProcessing.InPainting && (
-          <WarningPanel
-            panelType="inpainting"
-            handleRemoveClick={() => {
-              clearCanvasStore()
-              setInput({
-                imageType: '',
-                source_image: '',
-                source_mask: '',
-                source_processing: SourceProcessing.Prompt
-              })
-            }}
-          />
-        )} */}
-
-      {/* {activeNav === 'draw' &&
-        input.source_processing !== SourceProcessing.InPainting && (
-          <>
-            <Editor
-              canvasId="drawing-canvas"
-              canvasType="drawing"
-              setInput={setInput}
-              handleRemoveClick={() => {
-                clearCanvasStore()
-                setInput({
-                  imageType: '',
-                  source_image: '',
-                  source_mask: '',
-                  source_processing: SourceProcessing.Prompt
-                })
-              }}
-              source_image={input.source_image}
-              source_image_height={input.height}
-              source_image_width={input.width}
-            />
-          </>
-        )} */}
-
       {activeNav === 'inpainting' &&
         input.source_image &&
         (input.source_processing === SourceProcessing.InPainting ||
@@ -217,6 +178,7 @@ const OptionsPanel = ({ input, setInput }: Props) => {
               canvasId="inpainting-canvas"
               canvasType="inpainting"
               setInput={setInput}
+              source_image={input.source_image}
               handleRemoveClick={() => {
                 clearCanvasStore()
                 setInput({

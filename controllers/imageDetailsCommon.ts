@@ -1,3 +1,4 @@
+import CreateCanvas from 'models/CreateCanvas'
 import PromptInputSettings from 'models/PromptInputSettings'
 import RerollImageRequest from '../models/RerollImageRequest'
 import UpscaleImageRequest from '../models/UpscaleImageRequest'
@@ -52,15 +53,22 @@ export const copyEditPrompt = (imageDetails: any) => {
  * @param imageDetails
  * @param options
  */
-export const uploadInpaint = (imageDetails: any, options: any = {}) => {
-  const { clone = false, useSourceImg = false } = options
-  clearCanvasStore()
-  clearI2IString()
+export const uploadInpaint = async (imageDetails: any, options: any = {}) => {
+  const { clone = false, useSourceImg = false, useSourceMask = false } = options
 
   if (clone) {
     storeCanvas('drawLayer', imageDetails.canvasData)
     storeCanvas('maskLayer', imageDetails.maskData)
     cloneFromImage(imageDetails.canvasStore)
+  }
+
+  let sourceMaskToUse: string = ''
+  if (useSourceMask) {
+    sourceMaskToUse = await CreateCanvas.getMaskForInput(
+      imageDetails.maskData,
+      imageDetails.height,
+      imageDetails.width
+    )
   }
 
   const i2iBase64String = {
@@ -98,7 +106,7 @@ export const uploadInpaint = (imageDetails: any, options: any = {}) => {
 
     // Don't set source_mask here, in case of img2img mask (which is inverted), it will be inverted again.
     // Use CreateCanvas class to restore mask and then automatically add to input the correct way.
-    source_mask: '',
+    source_mask: sourceMaskToUse,
 
     denoising_strength: imageDetails.denoising_strength,
     models: imageDetails?.models[0]

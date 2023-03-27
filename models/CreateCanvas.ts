@@ -13,6 +13,7 @@ import { getCanvasHeight, getMaxValidCanvasWidth } from '../utils/fabricUtils'
 import { nearestWholeMultiple } from '../utils/imageUtils'
 import { SourceProcessing } from '../utils/promptUtils'
 import CanvasSettings from './CanvasSettings'
+import DefaultPromptInput from './DefaultPromptInput'
 
 fabric.Object.NUM_FRACTION_DIGITS = 15
 
@@ -399,9 +400,6 @@ class CreateCanvas {
     }
 
     // Temporarily clone and remove brush layer on autosave so brush outline isn't saved to canvas
-    // @ts-ignore
-    this.brushPreview.set('stroke', '')
-
     //@ts-ignore
     this.canvas.remove(this.brushPreview)
 
@@ -426,10 +424,6 @@ class CreateCanvas {
       canvasData: this.canvas.toObject(),
       maskData: null
     }
-
-    // Temporarily clone and remove brush layer on autosave so brush outline isn't saved to canvas
-    // @ts-ignore
-    this.canvas.remove(this.brushPreview)
 
     storeCanvas('drawLayer', data.canvasData)
 
@@ -580,11 +574,32 @@ class CreateCanvas {
     }
   }
 
-  importImage() {
-    if (!this.canvas) {
-      return Promise.resolve()
-    }
+  static getMaskForInput(
+    maskLayer: any,
+    height: number,
+    width: number
+  ): Promise<string> {
+    return new Promise((resolve) => {
+      let newMask = new fabric.Canvas(null, {
+        backgroundColor: 'black',
+        isDrawingMode: false
+      })
 
+      newMask.loadFromJSON(getCanvasStore().maskLayer, () => {
+        if (!newMask) {
+          return
+        }
+
+        newMask.setHeight(height)
+        newMask.setWidth(width)
+
+        resolve(newMask.toDataURL({ format: 'webp' }).split(',')[1])
+      })
+    })
+  }
+
+  // TODO: Extrapolate a lot of this into static  methods that can be used anywhere.
+  importImage() {
     return new Promise((resolve) => {
       if (!this.canvas) {
         return resolve(true)
@@ -644,6 +659,8 @@ class CreateCanvas {
 
         canvas.insertAt(this.imageLayer, 0, false)
 
+        // Import mask layer, if available, otherwise create mask layer.
+        let source_mask = ''
         if (getCanvasStore().maskLayer) {
           this.createMaskLayer()
           this.maskLayer?.loadFromJSON(getCanvasStore().maskLayer, () => {
@@ -654,17 +671,19 @@ class CreateCanvas {
             this.maskLayer.setHeight(this.height)
             this.maskLayer.setWidth(this.width)
 
-            this.setInput({
-              source_mask: this.maskLayer
-                .toDataURL({ format: 'webp' })
-                .split(',')[1]
-            })
-
-            this.maskLayer.renderAll()
+            source_mask = this.maskLayer
+              .toDataURL({ format: 'webp' })
+              .split(',')[1]
           })
+        } else {
+          this.createMaskLayer()
         }
 
         this.updateCanvas()
+
+        if (this.maskLayer) {
+          this.maskLayer.renderAll()
+        }
 
         // Once image has been properly imported and setup, store all relevant data on input object
         this.setInput({
@@ -672,7 +691,8 @@ class CreateCanvas {
           width: this.width,
           source_image: this?.imageLayer
             ?.toDataURL({ format: 'webp' })
-            .split(',')[1]
+            .split(',')[1],
+          source_mask
         })
 
         return resolve(true)
@@ -701,7 +721,8 @@ class CreateCanvas {
       })
 
     const newGroup = new fabric.Group([newLayer], {
-      selectable: image ? true : false,
+      // selectable: image ? true : false, // Outpainting stuff
+      selectable: false,
       absolutePositioned: absolute,
       opacity
     })
