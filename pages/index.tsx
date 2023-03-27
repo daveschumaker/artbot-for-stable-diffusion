@@ -410,8 +410,6 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
       initialState = null
       initialState = { ...PromptInputSettings.load() }
 
-      console.log(`PromptInputSettings.load()`, PromptInputSettings.load())
-
       if (initialState && initialState.source_image) {
         uploadInpaint(initialState, {
           clone: true,
@@ -553,6 +551,13 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
         name: 'LoadInput_Step_4f',
         debugKey: 'DEBUG_LOAD_INPUT'
       })
+    }
+
+    // Step 4g. Check if we're restoring an img2img or inpainting job
+    if (initialState && initialState.source_image && initialState.source_mask) {
+      initialState.source_processing = SourceProcessing.InPainting
+    } else if (initialState && initialState.source_image) {
+      initialState.source_processing = SourceProcessing.Img2Img
     }
 
     // Step 5. Check for other query param states.
