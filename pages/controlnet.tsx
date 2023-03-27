@@ -222,6 +222,10 @@ const ControlNet = () => {
 
   const totalImagesRequested = countImagesToGenerate(input)
 
+  const [errors, setErrors] = useComponentState(
+    {} as { [key: string]: boolean }
+  )
+
   const handleSubmit = useCallback(async () => {
     if (pending) {
       return
@@ -267,7 +271,7 @@ const ControlNet = () => {
       setErrors({ PROMPT_EMPTY: false })
       setPending(false)
     }
-  }, [input, pending, router, stayOnPage, totalImagesRequested])
+  }, [input, pending, router, setErrors, stayOnPage, totalImagesRequested])
 
   useEffectOnce(() => {
     const string = localStorage.getItem('controlnetPageInput')
@@ -317,10 +321,6 @@ const ControlNet = () => {
     isNaN(totalImagesRequested)
       ? 'N/A'
       : Number(totalKudosCost / totalImagesRequested).toFixed(2)
-
-  const [errors, setErrors] = useComponentState(
-    {} as { [key: string]: boolean }
-  )
 
   useEffect(() => {
     setErrors({ FIXED_SEED: Boolean(totalImagesRequested > 1 && input.seed) })
