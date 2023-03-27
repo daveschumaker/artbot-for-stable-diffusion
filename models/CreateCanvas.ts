@@ -643,15 +643,35 @@ class CreateCanvas {
         })
 
         canvas.insertAt(this.imageLayer, 0, false)
-        this.createMaskLayer()
+
+        if (getCanvasStore().maskLayer) {
+          this.createMaskLayer()
+          this.maskLayer?.loadFromJSON(getCanvasStore().maskLayer, () => {
+            if (!this.maskLayer) {
+              return
+            }
+
+            this.maskLayer.setHeight(this.height)
+            this.maskLayer.setWidth(this.width)
+
+            this.setInput({
+              source_mask: this.maskLayer
+                .toDataURL({ format: 'webp' })
+                .split(',')[1]
+            })
+
+            this.maskLayer.renderAll()
+          })
+        }
+
         this.updateCanvas()
 
         // Once image has been properly imported and setup, store all relevant data on input object
         this.setInput({
           height: this.height,
           width: this.width,
-          source_image: image
-            .toDataURL({ format: 'webp', height: this.height })
+          source_image: this?.imageLayer
+            ?.toDataURL({ format: 'webp' })
             .split(',')[1]
         })
 
