@@ -47,12 +47,18 @@ class DefaultPromptInput {
   canvasData: any | null
   maskData: any | null
 
+  // Outpainting type signatures:
+  canvasScale?: number
+  outpainting_source_image?: string // this replaces source_image when sending API request for outpainting job.
+
   constructor({
     control_type = '',
     source_image = '',
     height = 512,
     width = 512
   }: IParams = {}) {
+    this.canvasScale = 1
+    this.outpainting_source_image = ''
     this.img2img = false
     this.upscaled = false
     this.imageType = ''

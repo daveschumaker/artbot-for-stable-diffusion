@@ -503,6 +503,19 @@ class CreateCanvas {
     }
 
     this.canvas.isDrawingMode = value
+
+    if (value === true) {
+      this.canvas.discardActiveObject().renderAll()
+    }
+  }
+
+  selectPointer = () => {
+    if (!this.canvas) {
+      return
+    }
+
+    // @ts-ignore
+    this.canvas?.setActiveObject(this.canvas.item(1))
   }
 
   createDrawLayer({ opacity = 1.0 }: { opacity: number }) {
@@ -721,8 +734,7 @@ class CreateCanvas {
       })
 
     const newGroup = new fabric.Group([newLayer], {
-      // selectable: image ? true : false, // Outpainting stuff
-      selectable: false,
+      selectable: image ? true : false, // true supports outpainting (moving imported image around canvas)
       absolutePositioned: absolute,
       opacity
     })

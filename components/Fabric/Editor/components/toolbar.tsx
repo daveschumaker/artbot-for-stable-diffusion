@@ -32,7 +32,6 @@ import RulerIcon from 'components/icons/RulerIcon'
 import PointerIcon from 'components/icons/PointerIcon'
 
 const DEBUG_MODE = false
-const DISABLE_OUTPAINTING = true
 
 const ToolBarButton = ({
   active,
@@ -173,16 +172,14 @@ const ToolBar = ({
   return (
     <div className={clsx(wrapperClasses)}>
       <div className="flex flex-row gap-1 items-center">
-        {canvasType === 'inpainting' && !DISABLE_OUTPAINTING && (
-          <ToolBarButton
-            active={showScaleMenu}
-            onClick={() => {
-              setShowScaleMenu(!showScaleMenu)
-            }}
-          >
-            <RulerIcon stroke="black" />
-          </ToolBarButton>
-        )}
+        <ToolBarButton
+          active={showScaleMenu}
+          onClick={() => {
+            setShowScaleMenu(!showScaleMenu)
+          }}
+        >
+          <RulerIcon stroke="black" />
+        </ToolBarButton>
         {canvasType === 'drawing' && (
           <>
             <ToolBarButton
@@ -200,17 +197,16 @@ const ToolBar = ({
             <MinusVertical stroke="#949494" />
           </>
         )}
-        {!DISABLE_OUTPAINTING && (
-          <ToolBarButton
-            active={activeBrush === 'pointer'}
-            onClick={() => {
-              setActiveBrush('pointer')
-              canvas?.setDrawingMode(false)
-            }}
-          >
-            <PointerIcon stroke="black" />
-          </ToolBarButton>
-        )}
+        <ToolBarButton
+          active={activeBrush === 'pointer'}
+          onClick={() => {
+            setActiveBrush('pointer')
+            canvas?.selectPointer()
+            canvas?.setDrawingMode(false)
+          }}
+        >
+          <PointerIcon stroke="black" />
+        </ToolBarButton>
         <ToolBarButton
           active={activeBrush === 'paint'}
           onClick={() => {
