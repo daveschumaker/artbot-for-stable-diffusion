@@ -106,6 +106,20 @@ const Changelog = () => {
           /////
       */}
       <Section>
+        <SubSectionTitle>2023.03.27</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Temporarily disabled outpainting due to some issues...
+          </StyledLi>
+          <StyledLi>
+            Minor fixes related to improving experience around img2img, masks
+            and inpainting. Hopefully this tightens up some of the
+            functionality. I was hoping to bring back outpainting tonight but
+            wasn&apos;t able to get it finished. It is in progress!
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.03.25</SubSectionTitle>
         <StyledUl>
           <StyledLi>
