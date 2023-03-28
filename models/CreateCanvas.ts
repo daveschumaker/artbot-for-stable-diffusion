@@ -13,7 +13,6 @@ import { getCanvasHeight, getMaxValidCanvasWidth } from '../utils/fabricUtils'
 import { nearestWholeMultiple } from '../utils/imageUtils'
 import { SourceProcessing } from '../utils/promptUtils'
 import CanvasSettings from './CanvasSettings'
-import DefaultPromptInput from './DefaultPromptInput'
 
 fabric.Object.NUM_FRACTION_DIGITS = 15
 
@@ -43,6 +42,7 @@ class CreateCanvas {
   canvasId: string
   canvasScale: number
   drawLayer: fabric.Group
+  enableOutpainting: boolean
   imageLayer: fabric.Group | null
   isMouseDown: boolean
   erasing: boolean
@@ -105,6 +105,8 @@ class CreateCanvas {
 
     this.isPickingColor = false
     this.colorPickerCallback = () => {}
+
+    this.enableOutpainting = false
   }
 
   static asyncClone = async (object: any) => {
@@ -372,10 +374,24 @@ class CreateCanvas {
       }
     }
 
+    const handleScaling = (e: any) => {
+      const target = e.target
+
+      // Maybe not the best way to handle this, but attempting to
+      // check if someone is trying to outpaint by scaling down image
+      // from original size.
+      if (target.scaleX < this.width || target.scaleY < this.height) {
+        this.enableOutpainting = true
+      } else if (target.scaleX >= this.width && target.scaleY >= this.height) {
+        this.enableOutpainting = false
+      }
+    }
+
     this.canvas.on('path:created', this.onPathCreated)
     this.canvas.on('mouse:move', handleMouseMove)
     this.canvas.on('mouse:down', handleMouseDown)
     this.canvas.on('mouse:up', handleMouseUp)
+    this.canvas.on('object:scaling', handleScaling)
   }
 
   exportToDataUrl = () => {
@@ -413,6 +429,7 @@ class CreateCanvas {
           ? SourceProcessing.Img2Img
           : SourceProcessing.InPainting,
       orientationType: 'custom',
+      outpainting_source_image: '',
 
       // H x W are set on initial canvas load. Not sure why I had set this as part of autosave.
       // It ends up overwriting the initial image settings for some reason.
@@ -456,6 +473,12 @@ class CreateCanvas {
 
       // This works for img2img / img2img mask / inpainting.
       data.source_image = this?.imageLayer
+        ?.toDataURL({ format: 'webp' })
+        .split(',')[1]
+    }
+
+    if (this.enableOutpainting) {
+      data.outpainting_source_image = this?.canvas
         ?.toDataURL({ format: 'webp' })
         .split(',')[1]
     }
@@ -515,7 +538,7 @@ class CreateCanvas {
     }
 
     // @ts-ignore
-    this.canvas?.setActiveObject(this.canvas.item(1))
+    // this.canvas?.setActiveObject(this.canvas.item(1))
   }
 
   createDrawLayer({ opacity = 1.0 }: { opacity: number }) {
@@ -751,6 +774,12 @@ class CreateCanvas {
     this.imageLayer.scale(parseFloat(value)).setCoords()
     this.imageLayer.viewportCenter()
     this.canvas.requestRenderAll()
+
+    if (value < 1) {
+      this.enableOutpainting = true
+    } else {
+      this.enableOutpainting = false
+    }
 
     this.autoSave()
   }

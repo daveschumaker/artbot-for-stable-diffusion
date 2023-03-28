@@ -56,6 +56,7 @@ export interface IRequestParams {
   width: number
   canvasData: any
   maskData: any
+  outpainting_source_image?: string
 }
 
 class CreateImageRequest {
@@ -103,11 +104,9 @@ class CreateImageRequest {
   width: number
   canvasData: any
   maskData: any
-  canvasScale?: number
   outpainting_source_image?: string
 
   constructor({
-    canvasScale = 1,
     outpainting_source_image = '',
     canvasStore,
     cfg_scale = 7,
@@ -151,7 +150,6 @@ class CreateImageRequest {
       this.canvasStore = canvasStore
     }
 
-    this.canvasScale = Number(canvasScale)
     this.outpainting_source_image = outpainting_source_image
 
     this.cfg_scale = Number(cfg_scale)

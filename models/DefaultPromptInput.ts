@@ -1,3 +1,4 @@
+import { ArtBotJobTypes } from 'types'
 import { SourceProcessing } from '../utils/promptUtils'
 
 interface IParams {
@@ -7,6 +8,7 @@ interface IParams {
   width?: number
 }
 class DefaultPromptInput {
+  artbotJobType?: ArtBotJobTypes
   img2img: boolean
   upscaled: boolean
   imageType: string
@@ -48,7 +50,6 @@ class DefaultPromptInput {
   maskData: any | null
 
   // Outpainting type signatures:
-  canvasScale?: number
   outpainting_source_image?: string // this replaces source_image when sending API request for outpainting job.
 
   constructor({
@@ -57,7 +58,7 @@ class DefaultPromptInput {
     height = 512,
     width = 512
   }: IParams = {}) {
-    this.canvasScale = 1
+    this.artbotJobType = ArtBotJobTypes.Text2Img
     this.outpainting_source_image = ''
     this.img2img = false
     this.upscaled = false

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { Dispatch, useCallback } from 'react'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
 
@@ -11,6 +11,8 @@ import PhotoUpIcon from '../../icons/PhotoUpIcon'
 import Head from 'next/head'
 import PromptInputSettings from '../../../models/PromptInputSettings'
 import { setI2iUploaded } from 'store/canvasStore'
+import DefaultPromptInput from 'models/DefaultPromptInput'
+import { ArtBotJobTypes } from 'types'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -24,9 +26,9 @@ interface Props {
   handleChangeInput: any
   handleImageUpload: any
   handleOrientationSelect: any
-  input: any
+  input: DefaultPromptInput
   saveForInpaint: any
-  setInput: any
+  setInput: Dispatch<any>
 }
 
 const Img2ImgPanel = ({ input, saveForInpaint, setInput }: Props) => {
@@ -43,6 +45,7 @@ const Img2ImgPanel = ({ input, saveForInpaint, setInput }: Props) => {
     PromptInputSettings.set('width', width)
 
     setInput({
+      artbotJobType: ArtBotJobTypes.Img2Img,
       img2img: true,
       imageType,
       height,
@@ -92,6 +95,7 @@ const Img2ImgPanel = ({ input, saveForInpaint, setInput }: Props) => {
                 btnType="secondary"
                 onClick={() => {
                   setInput({
+                    artbotJobType: ArtBotJobTypes.Text2Img,
                     img2img: false,
                     imageType: '',
                     height: 512,

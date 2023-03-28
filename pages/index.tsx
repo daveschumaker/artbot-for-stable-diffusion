@@ -56,6 +56,7 @@ import ImageApiParamsToPromptInput from '../models/ImageApiParamsToPromptInput'
 import ActionPanel from '../components/CreatePage/ActionPanel'
 import useComponentState from 'hooks/useComponentState'
 import { uploadInpaint } from 'controllers/imageDetailsCommon'
+import { ArtBotJobTypes } from 'types'
 
 interface InputTarget {
   name: string
@@ -295,6 +296,7 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
     const [defaultPrompt = {}] = defaultPromptResult
 
     const newDefaultState = Object.assign({}, defaultState, {
+      artbotJobType: ArtBotJobTypes.Text2Img,
       negative: defaultPrompt.prompt || ''
     })
 

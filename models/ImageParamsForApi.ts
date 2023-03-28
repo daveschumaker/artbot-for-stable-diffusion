@@ -1,3 +1,4 @@
+import { ArtBotJobTypes } from '../types'
 import { modifyPromptForStylePreset } from '../utils/imageUtils'
 import { SourceProcessing } from '../utils/promptUtils'
 import AppSettings from './AppSettings'
@@ -44,6 +45,8 @@ export interface IArtBotImageDetails {
   control_type?: string
   image_is_control?: boolean
   return_control_map?: boolean
+  artbotJobType?: ArtBotJobTypes
+  outpainting_source_image?: string
 }
 
 interface ParamsObject {
@@ -102,7 +105,9 @@ class ImageParamsForApi {
       denoising_strength,
       control_type,
       image_is_control,
-      return_control_map
+      return_control_map,
+      artbotJobType,
+      outpainting_source_image
     } = imageDetails
     let negative = imageDetails.negative || ''
 
@@ -197,6 +202,13 @@ class ImageParamsForApi {
       delete apiParams.params.sampler_name
       apiParams.params.karras = false
       apiParams.params.hires_fix = false
+    }
+
+    if (
+      artbotJobType === ArtBotJobTypes.Outpainting &&
+      outpainting_source_image
+    ) {
+      apiParams.source_image = outpainting_source_image
     }
 
     if (source_image) {

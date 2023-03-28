@@ -31,7 +31,7 @@ import { Button } from 'components/UI/Button'
 import RulerIcon from 'components/icons/RulerIcon'
 import PointerIcon from 'components/icons/PointerIcon'
 
-const DEBUG_MODE = false
+const DEBUG_MODE = true
 
 const ToolBarButton = ({
   active,

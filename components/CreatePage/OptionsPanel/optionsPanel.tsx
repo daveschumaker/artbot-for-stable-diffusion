@@ -13,6 +13,7 @@ import WarningPanel from '../WarningPanel'
 import { nearestWholeMultiple } from '../../../utils/imageUtils'
 import Editor from '../../Fabric/Editor'
 import Head from 'next/head'
+import { ArtBotJobTypes } from 'types'
 
 interface LiProps {
   active?: boolean
@@ -58,7 +59,7 @@ const OptionsPanel = ({ input, setInput }: Props) => {
     }
   }, [router.query])
 
-  const handleSaveAction = async (data: any) => {
+  const handleSaveActionForInpainting = async (data: any) => {
     clearCanvasStore() // Handle bug where previous canvas may show up.
     const newBase64String = `data:${data.imageType};base64,${data.source_image}`
 
@@ -69,6 +70,7 @@ const OptionsPanel = ({ input, setInput }: Props) => {
     })
 
     setInput({
+      artbotJobType: ArtBotJobTypes.Inpainting,
       height: nearestWholeMultiple(data.height),
       width: nearestWholeMultiple(data.width),
       orientationType: 'custom',
@@ -136,6 +138,7 @@ const OptionsPanel = ({ input, setInput }: Props) => {
             handleRemoveClick={() => {
               clearCanvasStore()
               setInput({
+                artbotJobType: ArtBotJobTypes.Text2Img,
                 imageType: '',
                 source_image: '',
                 source_mask: '',
@@ -150,7 +153,7 @@ const OptionsPanel = ({ input, setInput }: Props) => {
           <Img2ImgPanel
             input={input}
             setInput={setInput}
-            saveForInpaint={handleSaveAction}
+            saveForInpaint={handleSaveActionForInpainting}
           />
         )}
 
@@ -182,6 +185,7 @@ const OptionsPanel = ({ input, setInput }: Props) => {
               handleRemoveClick={() => {
                 clearCanvasStore()
                 setInput({
+                  artbotJobType: ArtBotJobTypes.Text2Img,
                   imageType: '',
                   source_image: '',
                   source_mask: '',
@@ -199,7 +203,10 @@ const OptionsPanel = ({ input, setInput }: Props) => {
             <Head>
               <title>Inpainting - ArtBot for Stable Diffusion</title>
             </Head>
-            <Uploader handleSaveImage={handleSaveAction} type="inpainting" />
+            <Uploader
+              handleSaveImage={handleSaveActionForInpainting}
+              type="inpainting"
+            />
           </>
         )}
 
@@ -215,6 +222,7 @@ const OptionsPanel = ({ input, setInput }: Props) => {
               handleRemoveClick={() => {
                 clearCanvasStore()
                 setInput({
+                  artbotJobType: ArtBotJobTypes.Text2Img,
                   imageType: '',
                   source_image: '',
                   source_mask: '',

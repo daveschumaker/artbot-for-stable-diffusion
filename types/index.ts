@@ -5,6 +5,7 @@ export enum ArtBotJobTypes {
   Img2Img = 'Img2Img',
   Drawing = 'Drawing',
   Inpainting = 'Inpainting',
+  Outpainting = 'Outpainting',
   Upscale = 'Upscale',
   Reroll = 'Reroll',
   CopyPrompt = 'CopiedPrompt',
