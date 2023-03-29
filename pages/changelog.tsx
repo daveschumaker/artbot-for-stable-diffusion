@@ -106,6 +106,56 @@ const Changelog = () => {
           /////
       */}
       <Section>
+        <SubSectionTitle>2023.03.29</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            It&apos;s been fairly quiet the last few days as I&apos;ve been
+            heads down with other obligations. That said...
+          </StyledLi>
+          <StyledLi>
+            ResidentChiefNZ, the sole volunteer ML engineer working on adding
+            new features to the Stable Horde API had to unexpectedly stop
+            working on the project. Do you know anyone interested in helping
+            out?{' '}
+            <Linker
+              href="https://sigmoid.social/@stablehorde/110103295684041783"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              More info
+            </Linker>
+            .
+          </StyledLi>
+          <StyledLi>
+            Fix: I swapped out the virtual windowing library used for the
+            pending items page. Hopefully that helps with issues related
+            scrolling behavior, especially on mobile devices. (You might be
+            wondering why I&apos;ve spent so much time working on the pending
+            items page and how to efficiently render a list with hundreds of
+            items.{' '}
+            <Linker
+              href="https://legacy.reactjs.org/docs/optimizing-performance.html#virtualize-long-lists"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              the official React docs recommend this as a performance
+              optimization
+            </Linker>
+            .)
+          </StyledLi>
+          <StyledLi>
+            UI: On the pending items page, I moved a number of the text links
+            (for stuff like completed items, errors, etc), into the dropdown
+            menu to give the page a bit more space (especially relevant on
+            mobile devices).
+          </StyledLi>
+          <StyledLi>
+            UX: You can now swipe up or right on the new image notification to
+            get it to go away.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.03.27</SubSectionTitle>
         <StyledUl>
           <StyledLi>

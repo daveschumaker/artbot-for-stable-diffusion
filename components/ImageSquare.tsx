@@ -34,7 +34,7 @@ export default function ImageSquare({
   return (
     <div
       className={clsx(classes)}
-      style={{ width: `${size}px`, height: `${size}px` }}
+      style={{ width: `${size}px`, height: `${size}px`, position: 'relative' }}
     >
       <Image
         fill

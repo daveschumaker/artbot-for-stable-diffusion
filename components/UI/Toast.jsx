@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import styled from 'styled-components'
+import { useSwipeable } from 'react-swipeable'
 
 import { setNewImageReady, setShowImageReadyToast } from '../../store/appStore'
 import { useEffect, useState } from 'react'
@@ -47,6 +48,19 @@ const StyledTextPanel = styled.div`
 `
 
 export default function Toast({ handleClose, handleImageClick, jobId, showImageReadyToast }) {
+  const handlers = useSwipeable({
+    onSwipedRight: () => {
+      handleClose()
+    },
+    onSwipedUp: () => {
+      handleClose()
+    },
+    preventScrollOnSwipe: true,
+    swipeDuration: 250,
+    trackTouch: true,
+    delta: 35
+  })
+
   const [imageDetails, setImageDetails] = useState({})
 
   const fetchImageDetails = async (jobId) => {
@@ -87,7 +101,7 @@ export default function Toast({ handleClose, handleImageClick, jobId, showImageR
   const isActive = jobId && imageDetails.base64String && showImageReadyToast
 
   return (
-    <StyledToast active={isActive}>
+    <StyledToast active={isActive} {...handlers}>
       {isActive && (
         <>
           <div>

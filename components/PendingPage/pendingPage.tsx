@@ -1,10 +1,7 @@
-import {
-  fetchPendingImageJobs,
-  getPendingJobsFromCache
-} from 'controllers/pendingJobsController'
+import { fetchPendingImageJobs } from 'controllers/pendingJobsController'
 import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
-import { useVirtualizer } from '@tanstack/react-virtual'
+import { Virtuoso } from 'react-virtuoso'
 
 import { useEffectOnce } from '../../hooks/useEffectOnce'
 import AppSettings from '../../models/AppSettings'
@@ -31,6 +28,8 @@ import PageTitle from '../UI/PageTitle'
 import TextButton from '../UI/TextButton'
 import ImageModalController from './ImageModalController'
 import { useWindowSize } from 'hooks/useWindowSize'
+import usePendingItems from './usePendingItems'
+import styles from './pendingPage.module.css'
 
 const MenuSeparator = styled.div`
   width: 100%;
@@ -39,9 +38,8 @@ const MenuSeparator = styled.div`
 
 const PendingPage = () => {
   const size = useWindowSize()
-  const parentRef = React.useRef<HTMLDivElement>(null)
   const [filter, setFilter] = useState('all')
-  const [pendingImages, setPendingImages] = useState<Array<any>>([])
+  const pendingImages = usePendingItems('all')
   const [showImageModal, setShowImageModal] = useState<string | boolean>(false)
   const [showMenu, setShowMenu] = useState(false)
 
@@ -99,46 +97,37 @@ const PendingPage = () => {
     setShowImageModal(jobId)
   }
 
-  const sorted = [...done, ...processing, ...queued, ...waiting, ...error]
-    // .sort((a: any, b: any) => {
-    //   if (a.id > b.id) {
-    //     return 1
-    //   }
-    //   if (a.id < b.id) {
-    //     return -1
-    //   }
-    //   return 0
-    // })
-    .filter((job) => {
-      if (filter === 'all') {
-        return true
-      }
+  const sorted = [
+    ...done,
+    ...processing,
+    ...queued,
+    ...waiting,
+    ...error
+  ].filter((job) => {
+    if (filter === 'all') {
+      return true
+    }
 
-      if (filter === 'done') {
-        return job.jobStatus === JobStatus.Done
-      }
+    if (filter === 'done') {
+      return job.jobStatus === JobStatus.Done
+    }
 
-      if (filter === 'processing') {
-        return (
-          job.jobStatus === JobStatus.Processing ||
-          job.jobStatus === JobStatus.Queued
-        )
-      }
+    if (filter === 'processing') {
+      return (
+        job.jobStatus === JobStatus.Processing ||
+        job.jobStatus === JobStatus.Queued
+      )
+    }
 
-      if (filter === 'error') {
-        return job.jobStatus === JobStatus.Error
-      }
-    })
+    if (filter === 'error') {
+      return job.jobStatus === JobStatus.Error
+    }
+  })
 
   const jobsInProgress = processing.length + queued.length
 
   useEffectOnce(() => {
-    const interval = setInterval(() => {
-      setPendingImages([...getPendingJobsFromCache()])
-    }, 1000)
-
     return () => {
-      clearInterval(interval)
       if (AppSettings.get('autoClearPending')) {
         deleteDoneFromPending()
       }
@@ -146,7 +135,7 @@ const PendingPage = () => {
     }
   })
 
-  const renderRow = ({ index }: { index: number }) => {
+  const renderRow = ({ index }: { index: any }) => {
     const job = sorted[index]
 
     if (!job || !job.jobId) {
@@ -169,21 +158,13 @@ const PendingPage = () => {
     )
   }
 
-  const virtualizer = useVirtualizer({
-    count: sorted.length + 1,
-    getScrollElement: () => parentRef.current,
-    estimateSize: () => 240,
-    overscan: 1
-  })
-
-  const items = virtualizer.getVirtualItems()
   let listHeight = 500
 
   if (size.width && size.height) {
     if (size.width < 640) {
-      listHeight = size.height - 280
+      listHeight = size.height - 320
     } else {
-      listHeight = size.height - 280
+      listHeight = size.height - 200
     }
   }
 
@@ -203,7 +184,7 @@ const PendingPage = () => {
       )}
       <div className="flex flex-row w-full items-center">
         <div className="inline-block w-3/4">
-          <PageTitle>Your pending images</PageTitle>
+          <PageTitle>Image queue</PageTitle>
         </div>
         <div className="flex flex-row justify-end w-1/4 items-start h-[38px] relative gap-2">
           <MenuButton
@@ -217,7 +198,10 @@ const PendingPage = () => {
               }
             }}
           >
-            <DotsVerticalIcon size={24} />
+            <div className="flex flex-row items-center">
+              <div className={styles['menu-title']}>{filter}</div>
+              <DotsVerticalIcon size={24} />
+            </div>
           </MenuButton>
           {showMenu && (
             <DropDownMenu
@@ -277,51 +261,6 @@ const PendingPage = () => {
           )}
         </div>
       </div>
-      {pendingImages.length > 0 ? (
-        <div className="flex flex-row gap-2 mb-4">
-          <TextButton onClick={() => setFilter('all')}>
-            all ({pendingImages.length})
-          </TextButton>
-          <TextButton onClick={() => setFilter('done')}>
-            done ({done.length})
-          </TextButton>
-          <TextButton onClick={() => setFilter('processing')}>
-            processing ({jobsInProgress})
-          </TextButton>
-          <TextButton onClick={() => setFilter('error')}>
-            error ({error.length})
-          </TextButton>
-        </div>
-      ) : null}
-      {(pendingImages.length > 0 && done.length > 0) ||
-      error.length > 2 ||
-      jobsInProgress > 0 ? (
-        <div className="flex flex-row gap-2 mb-2">
-          {pendingImages.length > 0 && done.length > 0 && (
-            <div className="mb-2">
-              <TextButton
-                onClick={() => {
-                  deleteDoneFromPending()
-                }}
-              >
-                clear completed
-              </TextButton>
-            </div>
-          )}
-          {jobsInProgress > 0 && (
-            <div className="mb-2">
-              <TextButton color="red" onClick={deleteAllPendingJobs}>
-                delete pending jobs
-              </TextButton>
-            </div>
-          )}
-          {error.length > 2 && (
-            <TextButton color="red" onClick={deleteAllPendingErrors}>
-              delete all errors? ({error.length})
-            </TextButton>
-          )}
-        </div>
-      ) : null}
       {pendingImages.length === 0 && (
         <div className="mt-4 mb-2">
           No images pending.{' '}
@@ -366,59 +305,29 @@ const PendingPage = () => {
       )}
 
       {sorted.length > 0 && (
-        <div
-          ref={parentRef}
-          className="List"
+        <Virtuoso
+          className={styles['virtual-list']}
           style={{
-            height: listHeight,
-            width: '100%',
-            overflowY: 'auto',
-            contain: 'strict'
+            height: `${listHeight}px`,
+            padding: '60px 0'
           }}
-          id="pending-list-v2"
-        >
-          <div
-            style={{
-              height: virtualizer.getTotalSize(),
-              width: '100%',
-              position: 'relative'
-            }}
-          >
-            <div
-              className="mb-[54px]"
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                transform: `translateY(${items[0].start}px)`
-              }}
-            >
-              {items.map((virtualRow: any) => (
+          totalCount={sorted.length}
+          components={{
+            Footer: () => {
+              return (
                 <div
-                  key={virtualRow.key}
-                  data-index={virtualRow.index}
-                  ref={virtualizer.measureElement}
+                  style={{
+                    height: '30px',
+                    marginBottom: '30px'
+                  }}
                 >
-                  {virtualRow.index === 0 && (
-                    <div
-                      className="w-full px-[8px] mb-[8px]"
-                      style={{ padding: '2px 8px 2px 8px' }}
-                    >
-                      <AdContainer minSize={0} maxSize={640} />
-                    </div>
-                  )}
-                  <div style={{ padding: '0 8px' }}>
-                    {renderRow({ index: virtualRow.index })}
-                  </div>
-                  {virtualRow.index === items.length && (
-                    <div className="h-[40px] w-full"></div>
-                  )}
+                  {' '}
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
+              )
+            }
+          }}
+          itemContent={(index) => <>{renderRow({ index })}</>}
+        />
       )}
     </div>
   )
