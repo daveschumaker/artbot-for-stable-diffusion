@@ -133,7 +133,10 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
     const updatedInputState = { ...state, ...newState }
 
     if (pageLoaded) {
-      PromptInputSettings.saveAllInput(updatedInputState, {
+      // Only look for new changes to update and write to localStorage via PromptInputSettings
+      // otherwise, cloning the entire input object causes a bunch of CPU thrashing as we iterate
+      // through individual keys. If balues haven't changed, there's no need to update them.
+      PromptInputSettings.saveAllInput(newState, {
         forceSavePrompt: true
       })
 
@@ -605,10 +608,15 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
       })
     }
 
-    // Step 7. Set input
+    // Step 7. Store entirety of modified initial state here
+    PromptInputSettings.saveAllInput(initialState as DefaultPromptInput, {
+      forceSavePrompt: true
+    })
+
+    // Step 8. Set input
     setInput({ ...(initialState as DefaultPromptInput) })
 
-    // Step 8. Set pageLoaded so we can start error checking and auto saving input.
+    // Step 9. Set pageLoaded so we can start error checking and auto saving input.
     setPageLoaded(true)
   }, [query, shortlinkImageParams])
 
