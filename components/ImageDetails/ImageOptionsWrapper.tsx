@@ -139,7 +139,6 @@ const ImageOptionsWrapper = ({
 
     // Bust memoization cache
     getImageDetails.delete(imageDetails.jobId)
-    await getImageDetails(imageDetails.jobId)
   }, [favorited, imageDetails])
 
   const copyShortlink = (_shortlink: string) => {
@@ -209,9 +208,14 @@ const ImageOptionsWrapper = ({
     setSavedShortlink(shortlink)
   }
 
+  const checkFavorite = useCallback(async () => {
+    const details = await getImageDetails(imageDetails.jobId)
+    setFavorited(details.favorited)
+  }, [imageDetails.jobId])
+
   useEffect(() => {
-    setFavorited(imageDetails.favorited)
-  }, [imageDetails.favorited])
+    checkFavorite()
+  }, [checkFavorite, imageDetails.jobId])
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
@@ -300,9 +304,10 @@ const ImageOptionsWrapper = ({
                   View image details page
                 </MenuItem>
               )}
-              <MenuItem 
+              <MenuItem
                 className="text-sm"
-                onClick={() => downloadFile(imageDetails)}>
+                onClick={() => downloadFile(imageDetails)}
+              >
                 Download image
               </MenuItem>
               <MenuDivider />
