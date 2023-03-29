@@ -153,6 +153,10 @@ const Changelog = () => {
             UX: You can now swipe up or right on the new image notification to
             get it to go away.
           </StyledLi>
+          <StyledLi>
+            UI: Fix some UI lag on the create image page. Thanks to raider and
+            Anon69 for reporting this on Discord.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
