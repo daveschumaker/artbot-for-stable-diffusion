@@ -41,8 +41,6 @@ const ImageModalController = ({
       return
     }
 
-    console.log(`heyyyo!`)
-
     await deleteCompletedImageById(imageDetails.id)
     onAfterDelete()
     handleClose()
