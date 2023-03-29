@@ -1,3 +1,4 @@
+import { debounce } from 'utils/debounce'
 import LocalStorageController from '../controllers/LocalStorageController'
 import AppSettings from './AppSettings'
 
@@ -10,7 +11,7 @@ class PromptInputSettingsClass extends LocalStorageController {
     super({ name, version })
   }
 
-  saveAllInput(input: object = {}, options: IOptions = {}) {
+  saveAllInput = debounce((input: object = {}, options: IOptions = {}) => {
     const { forceSavePrompt = false } = options
 
     const clonedInput = Object.assign({}, input)
@@ -57,7 +58,7 @@ class PromptInputSettingsClass extends LocalStorageController {
 
       this.set(key, value)
     }
-  }
+  }, 350)
 }
 
 const PromptInputSettings = new PromptInputSettingsClass({

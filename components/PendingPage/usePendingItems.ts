@@ -6,7 +6,7 @@ import { db } from 'utils/db'
 
 export default function usePendingItems(filter: string = 'all') {
   let pendingImages =
-    useLiveQuery(() => db?.pending?.orderBy('id')?.toArray()) || []
+    useLiveQuery(() => db?.pending?.orderBy('id')?.toArray(), []) || []
 
   /**
    * DEPRECATED:
