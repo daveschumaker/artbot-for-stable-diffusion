@@ -554,7 +554,12 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
     }
 
     // Step 4g. Check if we're restoring an img2img or inpainting job
-    if (initialState && initialState.source_image && initialState.source_mask) {
+    if (
+      (initialState && initialState.source_image && initialState.source_mask) ||
+      (initialState &&
+        initialState.source_image &&
+        initialState.source_processing === SourceProcessing.InPainting)
+    ) {
       initialState.source_processing = SourceProcessing.InPainting
     } else if (initialState && initialState.source_image) {
       initialState.source_processing = SourceProcessing.Img2Img
