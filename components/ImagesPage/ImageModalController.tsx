@@ -6,7 +6,8 @@ import {
   getPrevFilteredItem
 } from '../../store/filteredImagesCache'
 import {
-  deleteCompletedImageById,
+  deleteCompletedImage,
+  deletePendingJobFromDb,
   getImageDetails,
   getNextImageDetails,
   getPrevImageDetails
@@ -41,7 +42,8 @@ const ImageModalController = ({
       return
     }
 
-    await deleteCompletedImageById(imageDetails.id)
+    await deletePendingJobFromDb(imageDetails.jobId)
+    await deleteCompletedImage(imageDetails.jobId)
     onAfterDelete()
     handleClose()
   }

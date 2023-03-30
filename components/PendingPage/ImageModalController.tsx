@@ -10,7 +10,7 @@ import ImageModal from '../ImageModalV2'
 
 interface IProps {
   handleClose: () => any
-  handleDeleteImage(imageId: number, jobId: string): void
+  handleDeleteImage(jobId: string): void
   imageList: Array<any>
   initialIndexJobId: string | boolean
   onAfterDelete(): void
@@ -42,7 +42,7 @@ const ImageModalController = ({
     }
 
     deletePendingJobFromDb(imageDetails.jobId)
-    handleDeleteImage(imageDetails.id, imageDetails.jobId)
+    handleDeleteImage(imageDetails.jobId)
     onAfterDelete()
     handleClose()
   }

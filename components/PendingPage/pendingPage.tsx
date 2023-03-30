@@ -142,8 +142,13 @@ const PendingPage = () => {
    * but never removed from pending items table, resulting in all sorts of errors.
    */
   const verifyImagesExist = useCallback(async () => {
+    if (done.length === 0) {
+      return
+    }
+
     for (const idx in done) {
       const exists = (await getImageDetails(done[idx].jobId)) || {}
+
       if (!exists.id) {
         await deletePendingJobFromDb(done[idx].jobId)
       }
@@ -156,7 +161,7 @@ const PendingPage = () => {
     if (!validatePending) {
       verifyImagesExist()
     }
-  }, [done, validatePending, verifyImagesExist])
+  }, [validatePending, verifyImagesExist])
 
   const renderRow = ({ index }: { index: any }) => {
     const job = sorted[index]
