@@ -10,7 +10,7 @@ import { JobStatus } from '../../types'
 import {
   deleteAllPendingErrors,
   deleteAllPendingJobs,
-  deleteCompletedImageById,
+  deleteCompletedImage,
   deleteDoneFromPending,
   deletePendingJobFromDb,
   getImageDetails
@@ -45,8 +45,8 @@ const PendingPage = () => {
   const [showMenu, setShowMenu] = useState(false)
   const [validatePending, setValidatePending] = useState(false)
 
-  const handleDeleteImage = async (id: number, jobId: string) => {
-    await deleteCompletedImageById(id)
+  const handleDeleteImage = async (jobId: string) => {
+    await deleteCompletedImage(jobId)
     await deletePendingJobFromDb(jobId)
     fetchPendingImageJobs()
   }
@@ -187,7 +187,7 @@ const PendingPage = () => {
     if (size.width < 640) {
       listHeight = size.height - 220
     } else {
-      listHeight = size.height - 200
+      listHeight = size.height - 216
     }
   }
 

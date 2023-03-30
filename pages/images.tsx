@@ -131,7 +131,8 @@ const ImagesPage = () => {
     showLayoutMenu: false,
     totalImages: 0,
     images: [],
-    isLoading: true
+    isLoading: true,
+    updateTimestamp: Date.now()
   })
 
   const getImageCount = useCallback(async () => {
@@ -149,6 +150,13 @@ const ImagesPage = () => {
   }, [componentState.filterMode, router.query.model, setComponentState])
 
   const fetchImages = useCallback(async () => {
+    // This is a hack to get around linting error with dependency array.
+    // After an image is deleted, force update a timestamp. useCallback here
+    // sees that it was updated and reruns the fetch query.
+    if (!componentState.updateTimestamp) {
+      return
+    }
+
     const offset = Number(router.query.offset) || 0
     let data
     const sort = localStorage.getItem('imagePageSort') || 'new'
@@ -168,6 +176,7 @@ const ImagesPage = () => {
     setComponentState({ images: data, isLoading: false })
   }, [
     componentState.filterMode,
+    componentState.updateTimestamp,
     getImageCount,
     router.query.model,
     router.query.offset,
@@ -491,7 +500,10 @@ const ImagesPage = () => {
       )}
       {componentState.showImageModal && (
         <ImageModalController
-          onAfterDelete={fetchImages}
+          onAfterDelete={() => {
+            setComponentState({ updateTimestamp: Date.now() })
+            fetchImages()
+          }}
           handleClose={() => setComponentState({ showImageModal: false })}
           imageId={componentState.showImageModal}
           useFilteredItems={componentState.filterMode !== 'all'}
