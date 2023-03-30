@@ -12,7 +12,7 @@ import { SourceProcessing } from '../utils/promptUtils'
 
 export interface IRequestParams {
   artbotJobType: ArtBotJobTypes
-  canvasStore?: ICanvas
+  canvasData?: ICanvas
   cfg_scale: number
   denoising_strength?: number
   height: number
@@ -38,7 +38,7 @@ export interface IRequestParams {
 }
 
 class RerollImageRequest {
-  canvasStore?: ICanvas
+  canvasData?: ICanvas
   cfg_scale: number
   denoising_strength: number | Common.Empty
   height: number
@@ -69,7 +69,7 @@ class RerollImageRequest {
   width: number
 
   constructor({
-    canvasStore,
+    canvasData,
     cfg_scale = 7,
     denoising_strength = 0.75,
     height = 512,
@@ -93,8 +93,8 @@ class RerollImageRequest {
     triggers = [],
     width = 512
   }: IRequestParams) {
-    if (canvasStore) {
-      this.canvasStore = canvasStore
+    if (canvasData) {
+      this.canvasData = canvasData
     }
 
     this.cfg_scale = Number(cfg_scale)

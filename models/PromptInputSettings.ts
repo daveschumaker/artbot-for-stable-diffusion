@@ -18,8 +18,8 @@ class PromptInputSettingsClass extends LocalStorageController {
 
     // Clone to prompt input settings
     const keysToExclude = [
+      'canvasStore', // DEPRECATED
       // 'canvasData',
-      // 'canvasStore',
       // 'copyPrompt',
       // 'maskData',
       'parentJobId'

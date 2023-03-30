@@ -184,20 +184,13 @@ export const allPendingJobs = async (status?: string) => {
 
 // Useful for fetching date user first used site.
 export const fetchFirstCompletedJob = async () => {
-  try {
-    return await db?.completed?.orderBy('id')?.limit(1).first()
-  } catch (err) {
-    return {}
-  }
+  return await db?.completed?.orderBy('id')?.limit(1).first()
 }
 
 export const _allCompletedJobs = async () => {
-  try {
-    return await db?.completed?.orderBy('id')?.toArray()
-  } catch (err) {
-    return []
-  }
+  return await db?.completed?.orderBy('id')?.toArray()
 }
+
 export const allCompletedJobs = memoize(_allCompletedJobs, {
   maxAge: 10000
 })

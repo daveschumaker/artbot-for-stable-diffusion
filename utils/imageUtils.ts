@@ -242,7 +242,7 @@ export const createNewImage = async (imageParams: CreateImageJob) => {
       }
 
       if (clonedParams.canvasStore) {
-        clonedParams.canvasStore = '[ true ]'
+        delete clonedParams.canvasStore
       }
 
       trackEvent({

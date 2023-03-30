@@ -1,7 +1,6 @@
 import {
   ArtBotJobTypes,
   Common,
-  ICanvas,
   ImageMimeType,
   ImageSize,
   JobStatus
@@ -18,7 +17,6 @@ interface IRandomSampler {
 }
 export interface IRequestParams {
   artbotJobType: ArtBotJobTypes
-  canvasStore?: ICanvas
   cfg_scale: number
   denoising_strength?: number
   control_type?: string
@@ -59,7 +57,6 @@ export interface IRequestParams {
 }
 
 class CreateImageRequest {
-  canvasStore?: ICanvas
   cfg_scale: number
   denoising_strength: number | Common.Empty
   control_type: string
@@ -105,7 +102,6 @@ class CreateImageRequest {
   maskData: any
 
   constructor({
-    canvasStore,
     cfg_scale = 7,
     denoising_strength = 0.75,
     control_type = '',
@@ -143,10 +139,6 @@ class CreateImageRequest {
     canvasData = null,
     maskData = null
   }: IRequestParams) {
-    if (canvasStore) {
-      this.canvasStore = canvasStore
-    }
-
     this.cfg_scale = Number(cfg_scale)
     this.imageMimeType = imageMimeType
     this.jobStatus = JobStatus.Waiting

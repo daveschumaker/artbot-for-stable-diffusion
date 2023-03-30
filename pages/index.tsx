@@ -191,7 +191,7 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
     }
 
     if (getCanvasStore().cached && getCanvasStore().canvasRef) {
-      imageJobData.canvasStore = { ...getCanvasStore() }
+      imageJobData.canvasData = { ...getCanvasStore() }
     }
 
     // Handle weird error that's been cropping up where canvas is empty but inpainting is true:

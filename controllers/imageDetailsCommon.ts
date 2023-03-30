@@ -58,7 +58,7 @@ export const uploadInpaint = async (imageDetails: any, options: any = {}) => {
   if (clone) {
     storeCanvas('drawLayer', imageDetails.canvasData)
     storeCanvas('maskLayer', imageDetails.maskData)
-    cloneFromImage(imageDetails.canvasStore)
+    cloneFromImage(imageDetails.canvasData)
   }
 
   let sourceMaskToUse: string = ''
@@ -117,7 +117,6 @@ export const uploadInpaint = async (imageDetails: any, options: any = {}) => {
       ? imageDetails.models
       : [imageDetails.model || 'stable_diffusion'],
 
-    canvasStore: clone ? imageDetails.canvasStore : null,
     canvasData: clone ? imageDetails.canvasData : null,
     maskData: clone ? imageDetails.maskData : null
   })
