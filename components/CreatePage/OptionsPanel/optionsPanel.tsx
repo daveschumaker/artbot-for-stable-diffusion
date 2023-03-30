@@ -18,6 +18,15 @@ interface LiProps {
   active?: boolean
 }
 
+const removeImageCanvasData = {
+  canvasData: null,
+  maskData: null,
+  imageType: '',
+  source_image: '',
+  source_mask: '',
+  source_processing: SourceProcessing.Prompt
+}
+
 const NavItem = styled.li<LiProps>`
   color: ${(props) => props.theme.navLinkNormal};
   cursor: pointer;
@@ -135,12 +144,7 @@ const OptionsPanel = ({ input, setInput }: Props) => {
             panelType="inpainting"
             handleRemoveClick={() => {
               clearCanvasStore()
-              setInput({
-                imageType: '',
-                source_image: '',
-                source_mask: '',
-                source_processing: SourceProcessing.Prompt
-              })
+              setInput({ ...removeImageCanvasData })
             }}
           />
         )}
@@ -182,10 +186,7 @@ const OptionsPanel = ({ input, setInput }: Props) => {
               handleRemoveClick={() => {
                 clearCanvasStore()
                 setInput({
-                  imageType: '',
-                  source_image: '',
-                  source_mask: '',
-                  source_processing: SourceProcessing.Prompt
+                  ...removeImageCanvasData
                 })
               }}
             />
@@ -215,10 +216,7 @@ const OptionsPanel = ({ input, setInput }: Props) => {
               handleRemoveClick={() => {
                 clearCanvasStore()
                 setInput({
-                  imageType: '',
-                  source_image: '',
-                  source_mask: '',
-                  source_processing: SourceProcessing.Prompt
+                  ...removeImageCanvasData
                 })
               }}
             />
