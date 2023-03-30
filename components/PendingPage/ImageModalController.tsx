@@ -1,4 +1,6 @@
+import ErrorComponent, { logErrorInComponent } from 'components/ErrorComponent'
 import React, { useCallback, useEffect, useState } from 'react'
+import { ErrorBoundary } from 'react-error-boundary'
 import { IImageDetails } from 'types'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
 import { deletePendingJobFromDb, getImageDetails } from '../../utils/db'
@@ -91,15 +93,22 @@ const ImageModalController = ({
     return null
   }
 
+  const logError = (error: Error, info: { componentStack: string }) => {
+    const componentName = 'PendingPage.ImageModalController'
+    logErrorInComponent(error, info, componentName)
+  }
+
   return (
-    <ImageModal
-      disableNav={imageList.length <= 1}
-      handleClose={handleClose}
-      handleDeleteImageClick={handleDeleteImageClick}
-      handleLoadNext={handleLoadNext}
-      handleLoadPrev={handleLoadPrev}
-      imageDetails={imageDetails}
-    />
+    <ErrorBoundary FallbackComponent={ErrorComponent} onError={logError}>
+      <ImageModal
+        disableNav={imageList.length <= 1}
+        handleClose={handleClose}
+        handleDeleteImageClick={handleDeleteImageClick}
+        handleLoadNext={handleLoadNext}
+        handleLoadPrev={handleLoadPrev}
+        imageDetails={imageDetails}
+      />
+    </ErrorBoundary>
   )
 }
 

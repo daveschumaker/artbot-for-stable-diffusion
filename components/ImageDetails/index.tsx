@@ -38,7 +38,7 @@ const ImageDetails = ({
   const [showTiles, setShowTiles] = useState(false)
   const [showRequestParams, setShowRequestParams] = useState(false)
 
-  if (!imageDetails || imageDetails.id === 0) {
+  if (!imageDetails || !imageDetails.id) {
     return null
   }
 
@@ -118,10 +118,12 @@ const ImageDetails = ({
           'w-full flex justify-center'
         )}
       >
-        <div className={
-          "max-w-[1400px] flex flex-row justify-center items-center "
-          + styles['img-container']
-        }>
+        <div
+          className={
+            'max-w-[1400px] flex flex-row justify-center items-center ' +
+            styles['img-container']
+          }
+        >
           <img
             className={clsx(styles.img)}
             src={'data:image/webp;base64,' + imageDetails.base64String}
@@ -148,7 +150,9 @@ const ImageDetails = ({
             <PlaylistXIcon hideCross />
             Prompt
           </div>
-          <div className="w-full text-sm ml-[8px] break-words">{imageDetails.prompt}</div>
+          <div className="w-full text-sm ml-[8px] break-words">
+            {imageDetails.prompt}
+          </div>
         </div>
       </div>
       {imageDetails.negative && (

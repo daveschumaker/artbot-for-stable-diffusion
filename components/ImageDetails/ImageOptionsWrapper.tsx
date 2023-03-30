@@ -12,7 +12,7 @@ import TrashIcon from 'components/icons/TrashIcon'
 import { useCallback, useEffect, useState } from 'react'
 import { IImageDetails } from 'types'
 import {
-  deleteCompletedImageById,
+  deleteCompletedImage,
   deletePendingJobFromDb,
   getImageDetails,
   updateCompletedJob
@@ -85,8 +85,9 @@ const ImageOptionsWrapper = ({
 
   const handleDeleteImageConfirm = async () => {
     handleDeleteImageClick()
-    deletePendingJobFromDb(imageDetails.jobId)
-    await deleteCompletedImageById(imageDetails.id)
+    await deletePendingJobFromDb(imageDetails.jobId)
+    await deleteCompletedImage(imageDetails.jobId)
+    getImageDetails.delete(imageDetails.jobId) // bust memoization cache
     handleClose()
   }
 

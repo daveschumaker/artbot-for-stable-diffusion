@@ -1,3 +1,6 @@
+import { ErrorBoundary } from 'react-error-boundary'
+import { useCallback, useEffect, useState } from 'react'
+import { useStore } from 'statery'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import Script from 'next/script'
@@ -16,9 +19,7 @@ import '../styles/globals.css'
 import '../styles/root.css'
 
 import { initDb } from '../utils/db'
-import { useCallback, useEffect, useState } from 'react'
 import { appInfoStore, setBuildId, setClusterSettings } from '../store/appStore'
-import { useStore } from 'statery'
 import ServerUpdateModal from '../components/ServerUpdateModal'
 import MobileFooter from '../components/MobileFooter'
 import { isAppActive } from '../utils/appUtils'
@@ -28,9 +29,9 @@ import { useRouter } from 'next/router'
 import { useWindowSize } from '../hooks/useWindowSize'
 import Menu from '../components/Menu'
 import Linker from '../components/UI/Linker'
-import ErrorBoundary from '../components/ErrorBoundary'
 import ServerMessage from '../components/ServerMessage'
 import { initPendingJobService } from 'controllers/pendingJobsController'
+import ErrorComponent, { logErrorInComponent } from 'components/ErrorComponent'
 
 initAppSettings()
 initDb()
@@ -251,7 +252,10 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
               Updated: 5:23 AM Thursday, February 23, 2023 UTC
             </div>
           </div> */}
-          <ErrorBoundary>
+          <ErrorBoundary
+            FallbackComponent={ErrorComponent}
+            onError={logErrorInComponent}
+          >
             <Component {...pageProps} />
           </ErrorBoundary>
           <Footer />

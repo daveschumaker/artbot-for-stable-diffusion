@@ -1,5 +1,5 @@
 import { fetchPendingImageJobs } from 'controllers/pendingJobsController'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Virtuoso } from 'react-virtuoso'
 
@@ -12,7 +12,8 @@ import {
   deleteAllPendingJobs,
   deleteCompletedImageById,
   deleteDoneFromPending,
-  deletePendingJobFromDb
+  deletePendingJobFromDb,
+  getImageDetails
 } from '../../utils/db'
 
 import AdContainer from '../AdContainer'
@@ -42,6 +43,7 @@ const PendingPage = () => {
   const pendingImages = usePendingItems('all')
   const [showImageModal, setShowImageModal] = useState<string | boolean>(false)
   const [showMenu, setShowMenu] = useState(false)
+  const [validatePending, setValidatePending] = useState(false)
 
   const handleDeleteImage = async (id: number, jobId: string) => {
     await deleteCompletedImageById(id)
@@ -134,6 +136,27 @@ const PendingPage = () => {
       setShowImageModal(false)
     }
   })
+
+  /**
+   * Handle a potential race condition where images are somehow deleted from completed items table
+   * but never removed from pending items table, resulting in all sorts of errors.
+   */
+  const verifyImagesExist = useCallback(async () => {
+    for (const idx in done) {
+      const exists = (await getImageDetails(done[idx].jobId)) || {}
+      if (!exists.id) {
+        await deletePendingJobFromDb(done[idx].jobId)
+      }
+    }
+
+    setValidatePending(true)
+  }, [done])
+
+  useEffect(() => {
+    if (!validatePending) {
+      verifyImagesExist()
+    }
+  }, [done, validatePending, verifyImagesExist])
 
   const renderRow = ({ index }: { index: any }) => {
     const job = sorted[index]
