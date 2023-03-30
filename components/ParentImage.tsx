@@ -2,16 +2,14 @@ import PhotoUpIcon from 'components/icons/PhotoUpIcon'
 import ImageSquare from 'components/ImageSquare'
 import { useCallback, useEffect, useState } from 'react'
 import { IImageDetails } from 'types'
-import { fetchRelatedImages } from 'utils/db'
+import { fetchRelatedImages, getParentJobDetails } from 'utils/db'
 
 const RenderParentImage = ({ parentJobId }: { parentJobId: string }) => {
   const [imageType, setImageType] = useState('')
   const [parentImage, setParentImage] = useState('')
 
   const fetchParentJobDetails = useCallback(async () => {
-    const relatedImagesArray: Array<IImageDetails> =
-      (await fetchRelatedImages(parentJobId, 1, 'normal')) || []
-    const details: IImageDetails = relatedImagesArray[0] || {}
+    const details: IImageDetails = await getParentJobDetails(parentJobId)
 
     if (details.base64String) {
       setParentImage(details.base64String)

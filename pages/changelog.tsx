@@ -106,6 +106,26 @@ const Changelog = () => {
           /////
       */}
       <Section>
+        <SubSectionTitle>2023.03.30</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Feature: Added ability to easily detach parent image jobs from the
+            image details view. We also now show a parent image (if it exists)
+            on both the create page and image details view for better visibility
+            (and to hopefully alleviate those instances where you clone image
+            details and forget to remove the parent job when you&apos;re making
+            some significant changes). Thanks to Efreak on Discord for
+            suggesting this.
+          </StyledLi>
+          <StyledLi>
+            Added a new &quot;server updated&quot; message. No longer (or at
+            least very rarely) are the days where you will be interrupted
+            mid-session. We now show a helpful message informing you to reload
+            the page when possible to pull down the latest changes.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.03.29</SubSectionTitle>
         <StyledUl>
           <StyledLi>

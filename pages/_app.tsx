@@ -32,6 +32,7 @@ import Linker from '../components/UI/Linker'
 import ServerMessage from '../components/ServerMessage'
 import { initPendingJobService } from 'controllers/pendingJobsController'
 import ErrorComponent, { logErrorInComponent } from 'components/ErrorComponent'
+import ServerUpdateComponent from 'components/ServerUpdateComponent'
 
 initAppSettings()
 initDb()
@@ -46,7 +47,11 @@ interface MyAppProps extends AppProps {
 function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
   const router = useRouter()
   const { darkModeActive } = darkMode
+
+  const [showServerUpdateComponent, setShowServerUpdateComponent] =
+    useState(false)
   const [showServerUpdateModal, setShowServerUpdateModal] = useState(false)
+
   const size = useWindowSize()
 
   const appState = useStore(appInfoStore)
@@ -80,6 +85,10 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
 
         if (appInfoStore.state.clusterSettings.forceReloadOnServerUpdate) {
           setShowServerUpdateModal(true)
+        } else if (
+          !appInfoStore.state.clusterSettings.forceReloadOnServerUpdate
+        ) {
+          setShowServerUpdateComponent(true)
         } else {
           console.log(
             'Application was just updated in the background. Reload this page for the latest code.'
@@ -204,7 +213,7 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
           />
           {showServerUpdateModal && <ServerUpdateModal />}
           <ServerMessage />
-          {/* <NavBar /> */}
+          {showServerUpdateComponent && <ServerUpdateComponent />}
           {unsupportedBrowser && (
             <div className="text-sm border-2 border-rose-600 py-1 px-2 rounded mb-2 text-red-500">
               <div className="mb-[8px]">

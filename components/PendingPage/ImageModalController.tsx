@@ -77,6 +77,10 @@ const ImageModalController = ({
     setIdx(newIdx)
   }, [idx, imageList])
 
+  const handleReloadImageData = useCallback(async () => {
+    loadImageData()
+  }, [loadImageData])
+
   useEffect(() => {
     loadImageData()
   }, [idx, imageList, loadImageData])
@@ -106,6 +110,7 @@ const ImageModalController = ({
         handleDeleteImageClick={handleDeleteImageClick}
         handleLoadNext={handleLoadNext}
         handleLoadPrev={handleLoadPrev}
+        handleReloadImageData={handleReloadImageData}
         imageDetails={imageDetails}
       />
     </ErrorBoundary>

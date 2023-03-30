@@ -18,6 +18,7 @@ interface Props {
   handleDeleteImageClick?: () => any
   handleLoadNext?: () => any
   handleLoadPrev?: () => any
+  handleReloadImageData?: () => any
 }
 
 const ImageModalV2 = ({
@@ -26,6 +27,7 @@ const ImageModalV2 = ({
   handleDeleteImageClick = () => {},
   handleLoadNext = () => {},
   handleLoadPrev = () => {},
+  handleReloadImageData = () => {},
   imageDetails
 }: Props) => {
   const handlers = useSwipeable({
@@ -120,6 +122,7 @@ const ImageModalV2 = ({
           <ImageDetails
             handleClose={handleClose}
             handleDeleteImageClick={handleDeleteImageClick}
+            handleReloadImageData={handleReloadImageData}
             imageDetails={imageDetails}
             isModal={true}
             handleTiling={handleTiling}

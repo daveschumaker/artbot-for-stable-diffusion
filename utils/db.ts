@@ -2,7 +2,7 @@ import Dexie from 'dexie'
 import memoize from 'memoizee'
 
 import { setUnsupportedBrowser } from '../store/appStore'
-import { JobStatus } from '../types'
+import { IImageDetails, JobStatus } from '../types'
 import { generateBase64Thumbnail } from './imageUtils'
 import { SourceProcessing } from './promptUtils'
 
@@ -408,6 +408,13 @@ export const fetchRelatedImages = async (
       .reverse()
       .toArray()
   }
+}
+
+export const getParentJobDetails = async (jobId: string) => {
+  const results: Array<IImageDetails> =
+    (await fetchRelatedImages(jobId, 1, 'normal')) || []
+  const details: IImageDetails = results[0] || {}
+  return details
 }
 
 export const getPendingJobDetails = async (jobId: string) => {
