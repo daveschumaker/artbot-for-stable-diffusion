@@ -157,6 +157,22 @@ const Changelog = () => {
             UI: Fix some UI lag on the create image page. Thanks to raider and
             Anon69 for reporting this on Discord.
           </StyledLi>
+          <StyledLi>
+            UI: Fixed issue with a stale cache when favoriting items from an
+            image modal (sometimes, the value would persist). Thanks to Litnine
+            for reporting this on Discord.
+          </StyledLi>
+          <StyledLi>
+            Fix: Deleting completed images from pages other than pending
+            didn&apos;t properly remove them from the pending page in some
+            scenarios. Worse, when deleting from the pending items page, I
+            would... err... sometimes use image IDs from the wrong table
+            (pending vs completed), meaning that potentially the wrong image was
+            deleted. I don&apos;t think this happened often, otherwise I would
+            have heard about it sooner. But it is fixed now! Anyway, thanks to
+            Efreak for providing a detailed bug report related to errors with
+            the pending page on Discord.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
