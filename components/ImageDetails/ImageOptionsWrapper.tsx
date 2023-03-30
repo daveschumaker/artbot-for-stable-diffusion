@@ -38,7 +38,7 @@ import {
 import { useRouter } from 'next/router'
 import WallIcon from 'components/icons/WallIcon'
 import ResizeIcon from 'components/icons/ResizeIcon'
-import { isiOS } from 'utils/appUtils'
+import { isiOS, uuidv4 } from 'utils/appUtils'
 import { SourceProcessing } from 'utils/promptUtils'
 import ShareIcon from 'components/icons/ShareIcon'
 import ImageParamsForApi from 'models/ImageParamsForApi'
@@ -147,7 +147,7 @@ const ImageOptionsWrapper = ({
     await updateCompletedJob(
       imageDetails.id,
       Object.assign({}, imageDetails, {
-        parentJobId: ''
+        parentJobId: uuidv4()
       })
     )
 
@@ -407,6 +407,7 @@ const ImageOptionsWrapper = ({
               <MenuItem className="text-sm" onClick={handleCopyPromptClick}>
                 Use all settings from this image
               </MenuItem>
+              <MenuDivider />
               <MenuItem
                 className="text-sm"
                 onClick={async () => {

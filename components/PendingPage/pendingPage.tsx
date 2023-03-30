@@ -31,6 +31,8 @@ import ImageModalController from './ImageModalController'
 import { useWindowSize } from 'hooks/useWindowSize'
 import usePendingItems from './usePendingItems'
 import styles from './pendingPage.module.css'
+import FilterClearOptions from './filterClearOptions'
+import { isInstalledPwa } from 'utils/appUtils'
 
 const MenuSeparator = styled.div`
   width: 100%;
@@ -171,25 +173,40 @@ const PendingPage = () => {
     }
 
     return (
-      <PendingItem
-        handleCloseClick={() => {
-          onClosePanel(job.jobId)
-        }}
-        //@ts-ignore
-        onImageClick={handleShowModalClick}
-        // onHideClick={}
-        //@ts-ignore
-        jobDetails={job}
-        //@ts-ignore
-        jobId={job.jobId}
-      />
+      <>
+        {index === 0 && (
+          <div className="mt-2 mb-2">
+            Why not <Linker href="/rate">rate some images</Linker> (and earn
+            kudos) while you wait?
+          </div>
+        )}
+        {index === 0 && (
+          <div className="w-full">
+            <AdContainer minSize={0} maxSize={640} />
+          </div>
+        )}
+        <PendingItem
+          handleCloseClick={() => {
+            onClosePanel(job.jobId)
+          }}
+          //@ts-ignore
+          onImageClick={handleShowModalClick}
+          // onHideClick={}
+          //@ts-ignore
+          jobDetails={job}
+          //@ts-ignore
+          jobId={job.jobId}
+        />
+      </>
     )
   }
 
   let listHeight = 500
 
-  if (size.width && size.height) {
-    listHeight = size.height - 220
+  if (isInstalledPwa() && size.height) {
+    listHeight = size.height - 276
+  } else if (size.height) {
+    listHeight = size.height - 240
   }
 
   return (
@@ -285,18 +302,17 @@ const PendingPage = () => {
           )}
         </div>
       </div>
+      <FilterClearOptions
+        filter={filter}
+        setFilter={setFilter}
+        pendingImages={pendingImages}
+      />
       {pendingImages.length === 0 && (
         <div className="mt-4 mb-2">
           No images pending.{' '}
           <Linker href="/" className="text-cyan-400">
             Why not create something?
           </Linker>
-        </div>
-      )}
-      {sorted.length > 0 && (
-        <div className="mt-2 mb-2">
-          Why not <Linker href="/rate">rate some images</Linker> (and earn
-          kudos) while you wait?
         </div>
       )}
 

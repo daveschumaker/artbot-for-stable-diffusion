@@ -655,7 +655,7 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
   }, [totalImagesRequested, input.seed, setErrors])
 
   return (
-    <main>
+    <main className="pb-[90px]">
       {showPromptHistory && (
         <InteractiveModal handleClose={() => setShowPromptHistory(false)}>
           <PromptHistory

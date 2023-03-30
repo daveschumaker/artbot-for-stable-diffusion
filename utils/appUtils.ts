@@ -28,6 +28,10 @@ export const isAppActive = () => {
 }
 
 export const isInstalledPwa = () => {
+  if (typeof window === 'undefined') {
+    return false
+  }
+
   // @ts-ignore
   if (window?.navigator?.standalone) {
     // Installed on iOS
