@@ -392,16 +392,22 @@ export const fetchCompletedJobsById = async (ids = []) => {
 
 export const fetchRelatedImages = async (
   parentJobId: string,
-  limit?: number
+  limit: number = 100,
+  sort?: string
 ) => {
   if (!limit) {
     limit = Infinity
   }
-  return await db?.completed
-    ?.where({ parentJobId })
-    .limit(limit)
-    .reverse()
-    .toArray()
+
+  if (sort === 'normal') {
+    return await db?.completed?.where({ parentJobId }).limit(limit).toArray()
+  } else {
+    return await db?.completed
+      ?.where({ parentJobId })
+      .limit(limit)
+      .reverse()
+      .toArray()
+  }
 }
 
 export const getPendingJobDetails = async (jobId: string) => {

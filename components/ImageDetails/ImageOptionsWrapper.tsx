@@ -49,6 +49,7 @@ import RefreshIcon from 'components/icons/RefreshIcon'
 const ImageOptionsWrapper = ({
   handleClose,
   handleDeleteImageClick = () => {},
+  handleReloadImageData = () => {},
   imageDetails,
   isModal,
   showTiles,
@@ -57,6 +58,7 @@ const ImageOptionsWrapper = ({
 }: {
   handleClose: () => any
   handleDeleteImageClick?: () => any
+  handleReloadImageData?: () => any
   imageDetails: IImageDetails
   isModal: boolean
   showTiles: boolean
@@ -126,6 +128,20 @@ const ImageOptionsWrapper = ({
     await upscaleImage(imageDetails)
     router.push('/pending')
   }, [imageDetails, pendingUpscale, router])
+
+  const onDetachParent = useCallback(async () => {
+    await updateCompletedJob(
+      imageDetails.id,
+      Object.assign({}, imageDetails, {
+        parentJobId: ''
+      })
+    )
+
+    // Bust memoization cache
+    getImageDetails.delete(imageDetails.jobId)
+
+    handleReloadImageData()
+  }, [handleReloadImageData, imageDetails])
 
   const onFavoriteClick = useCallback(async () => {
     const updateFavorited = !favorited
@@ -305,6 +321,12 @@ const ImageOptionsWrapper = ({
                   View image details page
                 </MenuItem>
               )}
+              {imageDetails.parentJobId &&
+                imageDetails.parentJobId !== imageDetails.jobId && (
+                  <MenuItem className="text-sm" onClick={onDetachParent}>
+                    Detach from parent job
+                  </MenuItem>
+                )}
               <MenuItem
                 className="text-sm"
                 onClick={() => downloadFile(imageDetails)}

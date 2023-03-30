@@ -16,12 +16,14 @@ import ImageSquare from 'components/ImageSquare'
 import styles from './imageDetails.module.css'
 import ImageOptionsWrapper from './ImageOptionsWrapper'
 import Img2ImgModal from 'components/ImagePage/Img2ImgModal'
+import RenderParentImage from 'components/ParentImage'
 
 interface Props {
   imageDetails: IImageDetails
   isModal?: boolean
   handleClose?: () => any
   handleDeleteImageClick?: () => any
+  handleReloadImageData?: () => any
   handleTiling?: (bool: any) => any
 }
 
@@ -30,6 +32,7 @@ const ImageDetails = ({
   isModal = false,
   handleClose = () => {},
   handleDeleteImageClick,
+  handleReloadImageData = () => {},
   handleTiling = () => {}
 }: Props) => {
   const showFullScreen = useFullScreenHandle()
@@ -136,6 +139,7 @@ const ImageDetails = ({
         isModal={isModal}
         handleClose={handleClose}
         handleDeleteImageClick={handleDeleteImageClick}
+        handleReloadImageData={handleReloadImageData}
         imageDetails={imageDetails}
         showTiles={showTiles}
         setShowTiles={handleOnTilingClick}
@@ -204,6 +208,9 @@ const ImageDetails = ({
                 <li>
                   <strong>Created:</strong>{' '}
                   {new Date(imageDetails.timestamp).toLocaleString()}
+                </li>
+                <li>
+                  <strong>Job ID:</strong> {imageDetails.jobId}
                 </li>
                 <li>&zwnj;</li>
                 <li>
@@ -302,19 +309,9 @@ const ImageDetails = ({
         className="mt-3 flex flex-col w-full justify-start items-center"
       >
         <div className="text-[16px] tablet:text-[18px] px-4 w-full max-w-[768px] gap-4 flex flex-row mb-3">
-          {/* <div className="flex flex-col gap-2">
-                <div className="text-sm font-bold flex flex-row gap-2 items-center mb-[4px]">
-                  <PhotoUpIcon />
-                  Parent image
-                </div>
-                <div>
-                  <ImageSquare
-                    imageDetails={{ base64String: imageDetails.source_image }}
-                    imageType={imageDetails.imageType}
-                    size={140}
-                  />
-                </div>
-              </div> */}
+          {imageDetails.parentJobId && (
+            <RenderParentImage parentJobId={imageDetails.parentJobId} />
+          )}
           {imageDetails.source_image && (
             <div className="flex flex-col gap-2">
               <div className="text-sm font-bold flex flex-row gap-2 items-center mb-[4px]">

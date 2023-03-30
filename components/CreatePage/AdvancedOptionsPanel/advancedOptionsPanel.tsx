@@ -5,7 +5,7 @@ import { useStore } from 'statery'
 import Switch from 'react-switch'
 
 // UI component imports
-import {Button} from 'components/UI/Button'
+import { Button } from 'components/UI/Button'
 import Checkbox from 'components/UI/Checkbox'
 import FlexRow from 'components/UI/FlexRow'
 import Input from 'components/UI/Input'
@@ -55,7 +55,7 @@ import PromptInputSettings from 'models/PromptInputSettings'
 import NegativePrompts from '../NegativePrompts'
 import { trackEvent } from 'api/telemetry'
 import { MAX_IMAGES_PER_JOB } from '_constants'
-
+import RenderParentImage from 'components/ParentImage'
 
 const NoSliderSpacer = styled.div`
   height: 14px;
@@ -67,11 +67,10 @@ interface Props {
   setInput: any
 }
 
-const AdvancedOptionsPanel = ({
-  input,
-  setInput,
-}: Props) => {
-  const handleChangeInput = (event: any) => { setInput({ [event.target.name]: event.target.value }) }
+const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
+  const handleChangeInput = (event: any) => {
+    setInput({ [event.target.name]: event.target.value })
+  }
 
   const [filterNsfwModels, setFilterNsfwModels] = useState(false)
   const userState = useStore(userInfoStore)
@@ -213,38 +212,38 @@ const AdvancedOptionsPanel = ({
       {componentState.isNegativePromptLibraryPanelOpen && (
         <NegativePrompts
           open={componentState.isNegativePromptLibraryPanelOpen}
-          handleClosePane={() => setComponentState({ isNegativePromptLibraryPanelOpen: false })}
+          handleClosePane={() =>
+            setComponentState({ isNegativePromptLibraryPanelOpen: false })
+          }
           setInput={setInput}
         />
       )}
       {input.parentJobId && (
         <Section>
-          <SubSectionTitle>Attached to previous job</SubSectionTitle>
-          <div className="text-xs">
-            This job will be associated with an{' '}
-            <Linker href={`/job/${input.parentJobId}`}>existing job</Linker>.
+          <div className="flex flex-row gap-2 w-full">
+            <RenderParentImage parentJobId={input.parentJobId} />
+            <div className="flex flex-col gap-2">
+              <SubSectionTitle>Attached to previous job</SubSectionTitle>
+              <div className="text-xs">
+                This job will be associated with an{' '}
+                <Linker href={`/job/${input.parentJobId}`}>existing job</Linker>
+                .
+              </div>
+              <TextButton
+                onClick={() => {
+                  PromptInputSettings.delete('parentJobId')
+                  setInput({
+                    parentJobId: ''
+                  })
+                }}
+              >
+                Remove attachment?
+              </TextButton>
+            </div>
           </div>
-          <TextButton
-            onClick={() => {
-              trackEvent({
-                event: 'REMOVE_PARENT_JOB_ID',
-                context: '/pages/index'
-              })
-
-              PromptInputSettings.delete('parentJobId')
-              setInput({
-                parentJobId: ''
-              })
-            }}
-          >
-            Remove attachment?
-          </TextButton>
         </Section>
       )}
-      <OrientationOptions
-        input={input}
-        setInput={setInput}
-      />
+      <OrientationOptions input={input} setInput={setInput} />
       <Section>
         <SubSectionTitle>
           <TextTooltipRow>
@@ -277,7 +276,11 @@ const AdvancedOptionsPanel = ({
         <FlexRow>
           <TextButton onClick={clearNegPrompt}>clear default</TextButton>
           <TextButton onClick={handleSaveNeg}>save as default</TextButton>
-          <TextButton onClick={() => setComponentState({ isNegativePromptLibraryPanelOpen: true })}>
+          <TextButton
+            onClick={() =>
+              setComponentState({ isNegativePromptLibraryPanelOpen: true })
+            }
+          >
             load
           </TextButton>
         </FlexRow>
@@ -289,7 +292,6 @@ const AdvancedOptionsPanel = ({
       />
       <TwoPanel className="mt-4">
         <SplitPanel>
-
           {!input.useMultiSteps && (
             <NumericInputSlider
               label="Steps"
@@ -382,11 +384,9 @@ const AdvancedOptionsPanel = ({
               checked={input.useMultiSteps}
             />
           )}
-
         </SplitPanel>
 
         <SplitPanel>
-
           {!input.useMultiGuidance && (
             <NumericInputSlider
               label="Guidance"
@@ -467,7 +467,6 @@ const AdvancedOptionsPanel = ({
               checked={input.useMultiGuidance}
             />
           )}
-          
         </SplitPanel>
       </TwoPanel>
       {(input.img2img ||

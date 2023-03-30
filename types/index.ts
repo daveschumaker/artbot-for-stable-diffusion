@@ -70,6 +70,7 @@ export interface IImageDetails {
   id: number
   timestamp: number
   jobId: string
+  parentJobId: string
   prompt: string
   shortlink: string
   negative: string

@@ -4,25 +4,15 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import PageTitle from '../../components/UI/PageTitle'
 
+import PageTitle from '../../components/UI/PageTitle'
 import Spinner from '../../components/Spinner'
 import { getImageDetails, updateCompletedJob } from '../../utils/db'
-// import { useSwipeable } from 'react-swipeable'
 import RelatedImages from '../../components/ImagePage/RelatedImages'
 import { getRelatedImages } from '../../components/ImagePage/image.controller'
-
 import ImageDetails from '../../components/ImageDetails'
 
 const ImagePage = () => {
-  // const handlers = useSwipeable({
-  //   onSwipedLeft: () => handleKeyPress(null, 'left'),
-  //   onSwipedRight: () => handleKeyPress(null, 'right'),
-  //   preventScrollOnSwipe: true,
-  //   trackTouch: true,
-  //   swipeDuration: 250,
-  //   delta: 35
-  // })
   const router = useRouter()
   const { id } = router.query
 
@@ -66,6 +56,10 @@ const ImagePage = () => {
     )
     fetchImageDetails(id)
   }, [fetchImageDetails, id, imageDetails])
+
+  const handleReloadImageData = useCallback(async () => {
+    fetchImageDetails(id)
+  }, [fetchImageDetails, id])
 
   useEffect(() => {
     if (id) {
@@ -167,7 +161,10 @@ const ImagePage = () => {
 
       {!isInitialLoad && imageDetails?.base64String && (
         <>
-          <ImageDetails imageDetails={imageDetails} />
+          <ImageDetails
+            handleReloadImageData={handleReloadImageData}
+            imageDetails={imageDetails}
+          />
         </>
       )}
 
