@@ -15,6 +15,7 @@ import {
   deleteCompletedImage,
   deletePendingJobFromDb,
   getImageDetails,
+  getParentJobDetails,
   updateCompletedJob
 } from 'utils/db'
 import {
@@ -71,10 +72,23 @@ const ImageOptionsWrapper = ({
   const [pendingReroll, setPendingReroll] = useState(false)
   const [pendingUpscale, setPendingUpscale] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [hasParentJob, setHasParentJob] = useState(false)
 
   const [tileSize, setTileSize] = useState('128px')
   const [savedShortlink, setSavedShortlink] = useState('')
   const [shortlinkPending, setShortlinkPending] = useState(false)
+
+  const fetchParentJobDetails = useCallback(async () => {
+    const details: IImageDetails = await getParentJobDetails(
+      imageDetails.parentJobId
+    )
+
+    if (imageDetails.jobId === details.jobId || !imageDetails.parentJobId) {
+      setHasParentJob(false)
+    } else {
+      setHasParentJob(true)
+    }
+  }, [imageDetails.jobId, imageDetails.parentJobId])
 
   const handleCopyPromptClick = () => {
     if (AppSettings.get('savePromptOnCreate')) {
@@ -272,6 +286,10 @@ const ImageOptionsWrapper = ({
     showTiles
   ])
 
+  useEffect(() => {
+    fetchParentJobDetails()
+  }, [fetchParentJobDetails, imageDetails.parentJobId])
+
   return (
     <>
       {showTiles && (
@@ -321,12 +339,11 @@ const ImageOptionsWrapper = ({
                   View image details page
                 </MenuItem>
               )}
-              {imageDetails.parentJobId &&
-                imageDetails.parentJobId !== imageDetails.jobId && (
-                  <MenuItem className="text-sm" onClick={onDetachParent}>
-                    Detach from parent job
-                  </MenuItem>
-                )}
+              {hasParentJob && (
+                <MenuItem className="text-sm" onClick={onDetachParent}>
+                  Detach from parent job
+                </MenuItem>
+              )}
               <MenuItem
                 className="text-sm"
                 onClick={() => downloadFile(imageDetails)}

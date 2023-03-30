@@ -310,7 +310,10 @@ const ImageDetails = ({
       >
         <div className="text-[16px] tablet:text-[18px] px-4 w-full max-w-[768px] gap-4 flex flex-row mb-3">
           {imageDetails.parentJobId && (
-            <RenderParentImage parentJobId={imageDetails.parentJobId} />
+            <RenderParentImage
+              jobId={imageDetails.jobId}
+              parentJobId={imageDetails.parentJobId}
+            />
           )}
           {imageDetails.source_image && (
             <div className="flex flex-col gap-2">
