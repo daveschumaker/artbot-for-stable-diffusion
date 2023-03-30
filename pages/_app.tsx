@@ -198,7 +198,7 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
       <ContentWrapper>
         <Menu show={showAppMenu} />
         <Header />
-        <div className="absolute mx-auto w-full pb-[88px] md:pb-[0] top-[56px] md:top-[44px] md:relative">
+        <div className="absolute mx-auto w-full md:pb-[0] top-[56px] md:top-[44px] md:relative">
           <ToastContainer
             style={{ marginTop: `calc(env(safe-area-inset-top))` }}
           />

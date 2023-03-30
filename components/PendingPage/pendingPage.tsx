@@ -189,11 +189,7 @@ const PendingPage = () => {
   let listHeight = 500
 
   if (size.width && size.height) {
-    if (size.width < 640) {
-      listHeight = size.height - 220
-    } else {
-      listHeight = size.height - 216
-    }
+    listHeight = size.height - 220
   }
 
   return (
