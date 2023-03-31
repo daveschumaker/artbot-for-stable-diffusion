@@ -12,6 +12,7 @@ import {
   allPendingJobs,
   db,
   deletePendingJobFromDb,
+  getImageDetails,
   getPendingJobDetails,
   updateAllPendingJobs,
   updatePendingJob
@@ -365,6 +366,85 @@ export const getImage = async (jobId: string) => {
   }
 }
 
+export const addCompletedJobToDb = async ({
+  jobDetails,
+  thumbnail = '',
+  errorCount = 0
+}: {
+  jobDetails: any
+  thumbnail: string
+  errorCount?: number
+}) => {
+  // Catch a potential race condition where the same jobId can be added twice.
+  // This might happen when multiple tabs are open.
+  try {
+    if (errorCount >= 5) {
+      return { success: false }
+    }
+
+    // @ts-ignore
+    if (window.DEBUG_THUMBNAIL) {
+      console.log(``)
+      console.log(`imgDetailsFromApi?`, jobDetails)
+      console.log(`thumbnail generated?`, thumbnail)
+    }
+
+    delete jobDetails.id
+    await db.completed.put(
+      Object.assign({}, jobDetails, {
+        jobStatus: JobStatus.Done,
+        thumbnail
+      })
+    )
+
+    return { success: true }
+  } catch (err: any) {
+    errorCount++
+
+    if (
+      err.name === 'QuotaExceededError' ||
+      (err.inner && err.inner.name === 'QuotaExceededError')
+    ) {
+      // Handle a strange error the happens for... some reason?
+      // https://dexie.org/docs/DexieErrors/Dexie.QuotaExceededError
+
+      if (errorCount >= 5) {
+        logError({
+          path: window.location.href,
+          errorMessage: [
+            'imageCache.checkCurrentJob',
+            'Unable to add completed item to db'
+          ].join('\n'),
+          errorInfo: err?.message,
+          errorType: 'client-side',
+          username: userInfoStore.state.username
+        })
+      }
+
+      await addCompletedJobToDb({
+        jobDetails,
+        thumbnail,
+        errorCount
+      })
+    } else {
+      logError({
+        path: window.location.href,
+        errorMessage: [
+          'imageCache.checkCurrentJob',
+          'Unable to add completed item to db'
+        ].join('\n'),
+        errorInfo: err?.message,
+        errorType: 'client-side',
+        username: userInfoStore.state.username
+      })
+
+      return {
+        success: false
+      }
+    }
+  }
+}
+
 export const checkCurrentJob = async (imageDetails: any) => {
   let jobDetails
 
@@ -492,7 +572,7 @@ export const checkCurrentJob = async (imageDetails: any) => {
         ...imgDetailsFromApi
       }
 
-      let thumbnail
+      let thumbnail: string = ''
       if (appInfoStore.state.primaryWindow) {
         const thumbnail = await generateBase64Thumbnail(
           imgDetailsFromApi.base64String,
@@ -508,42 +588,16 @@ export const checkCurrentJob = async (imageDetails: any) => {
         )
       }
 
-      // Catch a potential race condition where the same jobId can be added twice.
-      // This might happen when multiple tabs are open.
-      try {
-        // @ts-ignore
-        if (window.DEBUG_THUMBNAIL) {
-          console.log(``)
-          console.log(`imgDetailsFromApi?`, imgDetailsFromApi)
-          console.log(`thumbnail generated?`, thumbnail)
-        }
-
-        delete job.id
-        if (appInfoStore.state.primaryWindow) {
-          await db.completed.put(
-            Object.assign({}, job, {
-              jobStatus: JobStatus.Done,
-              thumbnail
-            })
-          )
-        }
-      } catch (err: any) {
-        console.log(`WARNING: Unable to add completed job to DB.`)
-        console.log(err)
-
-        logError({
-          path: window.location.href,
-          errorMessage: [
-            'imageCache.checkCurrentJob',
-            'Unable to add completed item to db'
-          ].join('\n'),
-          errorInfo: err?.message,
-          errorType: 'client-side',
-          username: userInfoStore.state.username
+      if (appInfoStore.state.primaryWindow) {
+        const result = await addCompletedJobToDb({
+          jobDetails: job,
+          thumbnail
         })
 
-        return {
-          newImage: false
+        if (!result?.success) {
+          return {
+            success: false
+          }
         }
       }
 
