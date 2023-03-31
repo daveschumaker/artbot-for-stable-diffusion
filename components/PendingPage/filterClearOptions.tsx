@@ -26,6 +26,7 @@ const FilterClearOptions = ({
     const done: any = []
     const processing: any = []
     const queued: any = []
+    const waiting: any = []
     const error: any = []
 
     pendingImages.forEach((job: any) => {
@@ -44,6 +45,10 @@ const FilterClearOptions = ({
         queued.push(job)
       }
 
+      if (job.jobStatus === JobStatus.Waiting) {
+        waiting.push(job)
+      }
+
       if (job.jobStatus === JobStatus.Error) {
         error.push(job)
       }
@@ -52,9 +57,11 @@ const FilterClearOptions = ({
     return [done, processing, queued, error]
   }, [pendingImages])
 
-  const [done = [], processing = [], queued = [], error = []] = processPending()
+  const [done = [], processing = [], queued = [], waiting = [], error = []] =
+    processPending()
 
   const jobsInProgress = processing.length + queued.length
+  const jobsWaiting = queued.length + waiting.length
 
   return (
     <>
@@ -67,7 +74,7 @@ const FilterClearOptions = ({
           onConfirmClick={async () => {
             if (confirmClear === 'done') {
               await deleteDoneFromPending()
-            } else if (confirmClear === 'processing') {
+            } else if (confirmClear === 'pending') {
               await deleteAllPendingJobs()
             } else if (confirmClear === 'error') {
               await deleteAllPendingErrors()
@@ -81,7 +88,7 @@ const FilterClearOptions = ({
           showWarningIcon={false}
         />
       )}
-      <div className="flex flex-row w-full items-center text-xs tablet:text-sm mb-2">
+      <div className="flex flex-row w-full items-center text-xs font-[500] tablet:text-sm mb-2">
         <div className="flex flex-row gap-1 items-center mr-2">
           <FilterIcon />
           <strong>View:</strong>
@@ -120,7 +127,7 @@ const FilterClearOptions = ({
           errors ({error.length})
         </div>
       </div>
-      <div className="flex flex-row w-full items-center text-xs tablet:text-sm mb-2">
+      <div className="flex flex-row w-full items-center text-xs font-[500] tablet:text-sm mb-2">
         <div className="flex flex-row gap-1 items-center mr-2">
           <CircleXIcon />
           <strong>Clear:</strong>
@@ -136,7 +143,7 @@ const FilterClearOptions = ({
           className="flex flex-row gap-1 items-center cursor-pointer text-[#14b8a5]"
           onClick={() => setConfirmClear('pending')}
         >
-          pending ({jobsInProgress})
+          pending ({jobsWaiting})
         </div>
         <Separator />
         <div
