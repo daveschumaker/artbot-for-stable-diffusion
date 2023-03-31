@@ -8,10 +8,8 @@ import {
   allPendingJobs,
   db,
   deletePendingJobFromDb,
-  getImageDetails,
   getPendingJobDetails,
   updateAllPendingJobs,
-  updateCompletedJob,
   updatePendingJob
 } from './db'
 import { createNewImage, generateBase64Thumbnail } from './imageUtils'
@@ -512,24 +510,12 @@ export const checkCurrentJob = async (imageDetails: any) => {
           console.log(`thumbnail generated?`, thumbnail)
         }
 
-        const exists = (await getImageDetails(jobId)) || {}
-
-        if (exists && exists.id) {
-          await updateCompletedJob(
-            exists.id,
-            Object.assign({}, job, {
-              jobStatus: JobStatus.Done,
-              thumbnail
-            })
-          )
-        } else {
-          await db.completed.add(
-            Object.assign({}, job, {
-              jobStatus: JobStatus.Done,
-              thumbnail
-            })
-          )
-        }
+        await db.completed.add(
+          Object.assign({}, job, {
+            jobStatus: JobStatus.Done,
+            thumbnail
+          })
+        )
       } catch (err: any) {
         console.log(`WARNING: Unable to add completed job to DB.`)
         console.log(err)
