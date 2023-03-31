@@ -193,6 +193,10 @@ const Changelog = () => {
             Efreak for providing a detailed bug report related to errors with
             the pending page on Discord.
           </StyledLi>
+          <StyledLi>
+            Add some additional error logging for a few remaining issues on the
+            pending items page.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
