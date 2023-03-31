@@ -54,7 +54,7 @@ export const createPendingRerollJob = async (
   const clonedParams = await cloneImageParams(imageParams)
 
   try {
-    await db.pending.add({
+    await db.pending.put({
       ...clonedParams
     })
   } finally {
@@ -146,7 +146,7 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
             })
           }
 
-          await db.pending.add({
+          await db.pending.put({
             ...clonedParams
           })
         }
@@ -185,7 +185,7 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
       }
 
       try {
-        await db.pending.add({
+        await db.pending.put({
           ...clonedParams
         })
       } catch (err) {}
@@ -243,7 +243,7 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
       }
 
       try {
-        await db.pending.add({
+        await db.pending.put({
           ...clonedParams
         })
       } catch (err) {}
@@ -288,7 +288,7 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
       }
 
       try {
-        await db.pending.add({
+        await db.pending.put({
           ...clonedParams
         })
       } catch (err) {}

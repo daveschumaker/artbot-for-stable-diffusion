@@ -510,7 +510,8 @@ export const checkCurrentJob = async (imageDetails: any) => {
           console.log(`thumbnail generated?`, thumbnail)
         }
 
-        await db.completed.add(
+        delete job.id
+        await db.completed.put(
           Object.assign({}, job, {
             jobStatus: JobStatus.Done,
             thumbnail
