@@ -106,6 +106,19 @@ const Changelog = () => {
           /////
       */}
       <Section>
+        <SubSectionTitle>2023.03.31</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Fix: I introduced a race condition where having multiple tabs open
+            would create the same image multiple times in the photo gallery.
+            This has been fixed using the handy BroadcastMessage browser API --
+            now ArtBot can figure out which tab should be the primary tab and
+            make API calls from it. Thanks to Efreak for suggesting this and
+            &quot;The I.B.A.K.T Committe&quot; for reporting this on Discord.
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.03.30</SubSectionTitle>
         <StyledUl>
           <StyledLi>

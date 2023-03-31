@@ -13,6 +13,7 @@ interface AppStore {
   unsupportedBrowser: boolean
   hordePerformance: object
   clusterSettings: IClusterSettings
+  primaryWindow: boolean
 }
 
 export const appInfoStore = makeStore<AppStore>({
@@ -28,7 +29,8 @@ export const appInfoStore = makeStore<AppStore>({
   hordePerformance: {},
   clusterSettings: {
     forceReloadOnServerUpdate: true
-  }
+  },
+  primaryWindow: false
 })
 
 export const setClusterSettings = (obj: IClusterSettings) => {
@@ -46,6 +48,12 @@ export const setHordePerformance = (obj: object) => {
 export const setUnsupportedBrowser = (val: boolean = false) => {
   appInfoStore.set(() => ({
     unsupportedBrowser: val
+  }))
+}
+
+export const setPrimaryWindow = (val: boolean = false) => {
+  appInfoStore.set(() => ({
+    primaryWindow: val
   }))
 }
 

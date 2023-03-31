@@ -2,7 +2,11 @@ import { userInfoStore } from '../store/userStore'
 import { checkImageStatus } from '../api/checkImageStatus'
 import { getFinishedImage } from '../api/getFinishedImage'
 import { trackEvent, trackGaEvent } from '../api/telemetry'
-import { setNewImageReady, setShowImageReadyToast } from '../store/appStore'
+import {
+  appInfoStore,
+  setNewImageReady,
+  setShowImageReadyToast
+} from '../store/appStore'
 import { CreateImageJob, JobStatus } from '../types'
 import {
   allPendingJobs,
@@ -364,7 +368,7 @@ export const getImage = async (jobId: string) => {
 export const checkCurrentJob = async (imageDetails: any) => {
   let jobDetails
 
-  if (!isAppActive()) {
+  if (!isAppActive() || !appInfoStore.state.primaryWindow) {
     return
   }
 
@@ -488,18 +492,22 @@ export const checkCurrentJob = async (imageDetails: any) => {
         ...imgDetailsFromApi
       }
 
-      const thumbnail = await generateBase64Thumbnail(
-        imgDetailsFromApi.base64String,
-        jobId
-      )
-      await updatePendingJob(
-        imageDetails.id,
-        Object.assign({}, job, {
-          timestamp: Date.now(),
-          jobStatus: JobStatus.Done,
-          thumbnail
-        })
-      )
+      let thumbnail
+      if (appInfoStore.state.primaryWindow) {
+        const thumbnail = await generateBase64Thumbnail(
+          imgDetailsFromApi.base64String,
+          jobId
+        )
+        await updatePendingJob(
+          imageDetails.id,
+          Object.assign({}, job, {
+            timestamp: Date.now(),
+            jobStatus: JobStatus.Done,
+            thumbnail
+          })
+        )
+      }
+
       // Catch a potential race condition where the same jobId can be added twice.
       // This might happen when multiple tabs are open.
       try {
@@ -511,12 +519,14 @@ export const checkCurrentJob = async (imageDetails: any) => {
         }
 
         delete job.id
-        await db.completed.put(
-          Object.assign({}, job, {
-            jobStatus: JobStatus.Done,
-            thumbnail
-          })
-        )
+        if (appInfoStore.state.primaryWindow) {
+          await db.completed.put(
+            Object.assign({}, job, {
+              jobStatus: JobStatus.Done,
+              thumbnail
+            })
+          )
+        }
       } catch (err: any) {
         console.log(`WARNING: Unable to add completed job to DB.`)
         console.log(err)

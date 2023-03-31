@@ -1,5 +1,7 @@
+import { BroadcastChannel } from 'broadcast-channel'
 import { HORDE_DEV, HORDE_PROD } from '../_constants'
 import AppSettings from '../models/AppSettings'
+import { setPrimaryWindow } from 'store/appStore'
 
 export const logError = async (data: any) => {
   await fetch(`/artbot/api/log-error`, {
@@ -151,3 +153,56 @@ export const exitFullscreen = () => {
     document.webkitExitFullscreen()
   }
 }
+
+let primaryTab = false
+let channel: any
+let windowUuid: string
+
+const setActive = () => {
+  if (primaryTab === true) {
+    return
+  }
+
+  primaryTab = true
+  let msg = {
+    windowId: windowUuid,
+    msg: 'active'
+  }
+
+  setPrimaryWindow(true)
+  channel.postMessage(msg)
+}
+
+/**
+ * BroadcastChannel
+ * This library has a leaderElection method for helping to determine
+ * the primary tab for a web app. However, I couldn't get this to work
+ * so I implemented my own leader election system here, using event listeners
+ * and a unique window ID.
+ */
+export const initBrowserTab = () => {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  document?.querySelector('body')?.addEventListener('mouseover', setActive)
+  document?.querySelector('body')?.addEventListener('keydown', setActive)
+  window.addEventListener('scroll', setActive)
+
+  windowUuid = uuidv4()
+  channel = new BroadcastChannel('activeTab')
+  channel.onmessage = (msg: any) => {
+    if (msg.windowId !== windowUuid) {
+      primaryTab = false
+      setPrimaryWindow(false)
+    }
+  }
+}
+
+// export const broadcastMessage = (msg: string) => {
+//   if (!channel) {
+//     return
+//   }
+
+//   channel.postMessage(msg)
+// }

@@ -1,3 +1,4 @@
+import { appInfoStore } from 'store/appStore'
 import { userInfoStore } from 'store/userStore'
 import { JobStatus } from 'types'
 import { isAppActive } from 'utils/appUtils'
@@ -30,6 +31,10 @@ const checkMultiPendingJobs = async () => {
     return
   }
 
+  if (!appInfoStore.state.primaryWindow) {
+    return
+  }
+
   const queued = pendingJobs.filter((job: { jobStatus: JobStatus }) => {
     return job.jobStatus === JobStatus.Queued
   })
@@ -53,7 +58,7 @@ const createImageJobs = async () => {
     return
   }
 
-  if (!isAppActive()) {
+  if (!isAppActive() || !appInfoStore.state.primaryWindow) {
     return
   }
 
