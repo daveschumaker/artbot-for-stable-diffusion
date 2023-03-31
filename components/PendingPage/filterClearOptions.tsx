@@ -116,7 +116,7 @@ const FilterClearOptions = ({
             textDecoration: filter === 'processing' ? 'underline' : 'unset'
           }}
         >
-          pending ({jobsInProgress})
+          processing ({jobsInProgress})
         </div>
         <Separator />
         <div

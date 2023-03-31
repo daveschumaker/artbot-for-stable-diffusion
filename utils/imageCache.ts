@@ -12,7 +12,6 @@ import {
   allPendingJobs,
   db,
   deletePendingJobFromDb,
-  getImageDetails,
   getPendingJobDetails,
   updateAllPendingJobs,
   updatePendingJob

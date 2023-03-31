@@ -120,6 +120,15 @@ const Changelog = () => {
             Made the filter / clear text links on the pending page darker.
             Thanks to Litnine for the suggestion on Discord.
           </StyledLi>
+          <StyledLi>
+            Fix: I had added a menu dropdown option in the past to stay on the
+            control net page, but it was rarely used. I&apos;ve had a number of
+            feedback items asking why the &quot;stay on create&quot; setting
+            doesn&apos;t work for this page. It has been updated and now works
+            as you would expect. I&apos;ve removed the confusing dropdown from
+            the control net page. Thanks to Vadi for reporting on Discord and
+            Stable Horde user tom_tom_ for the feedback.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

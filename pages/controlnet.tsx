@@ -39,13 +39,7 @@ import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { useEffectOnce } from '../hooks/useEffectOnce'
 import { IModelDetails, modelInfoStore } from '../store/modelStore'
-import MenuButton from '../components/UI/MenuButton'
-import DotsVerticalIcon from '../components/icons/DotsVerticalIcon'
-import DropDown from '../components/UI/DropDownV2/DropDownMenu'
-import DropDownItem from '../components/UI/DropDownV2/DropDownMenuItem'
-import SquareIcon from '../components/icons/SquareIcon'
 import AppSettings from '../models/AppSettings'
-import CheckboxIcon from '../components/icons/CheckboxIcon'
 import { toast } from 'react-toastify'
 import { getInputCache } from '../store/inputCache'
 import { kudosCostV2 } from '../utils/kudosCost'
@@ -65,8 +59,6 @@ const ControlNet = () => {
   const { modelDetails } = modelState
 
   const [pending, setPending] = useState(false)
-  const [stayOnPage, setStayOnPage] = useState(false)
-  const [showOptionsMenu, setShowOptionsMenu] = useState(false)
 
   const initialInput = {
     ...new DefaultPromptInput(),
@@ -249,7 +241,7 @@ const ControlNet = () => {
 
     await createImageJob(new CreateImageRequest(inputToSubmit))
 
-    if (!stayOnPage) {
+    if (!AppSettings.get('stayOnCreate')) {
       router.push('/pending')
     } else {
       toast.success(
@@ -271,7 +263,7 @@ const ControlNet = () => {
       setErrors({ PROMPT_EMPTY: false })
       setPending(false)
     }
-  }, [input, pending, router, setErrors, stayOnPage, totalImagesRequested])
+  }, [input, pending, router, setErrors, totalImagesRequested])
 
   useEffectOnce(() => {
     const string = localStorage.getItem('controlnetPageInput')
@@ -289,7 +281,6 @@ const ControlNet = () => {
     }
 
     setInput({ ...updateObj })
-    setStayOnPage(AppSettings.get('controlNetPageStay') === true ? true : false)
   })
 
   useEffect(() => {
@@ -344,36 +335,7 @@ const ControlNet = () => {
         <div className="inline-block w-1/2">
           <PageTitle>ControlNet</PageTitle>
         </div>
-        <div className="flex flex-row justify-end w-1/2 items-start h-[38px] relative gap-2">
-          <MenuButton
-            // active={componentState.showLayoutMenu}
-            title="Change layout"
-            onClick={() => {
-              setShowOptionsMenu(true)
-            }}
-          >
-            <DotsVerticalIcon size={24} />
-          </MenuButton>
-          {showOptionsMenu && (
-            <DropDown
-              alignRight
-              handleClose={() => {
-                setShowOptionsMenu(false)
-              }}
-              style={{ top: '38px' }}
-            >
-              <DropDownItem
-                handleClick={() => {
-                  AppSettings.set('controlNetPageStay', !stayOnPage)
-                  setStayOnPage(!stayOnPage)
-                }}
-              >
-                {stayOnPage === true ? <CheckboxIcon /> : <SquareIcon />}
-                Stay on page?
-              </DropDownItem>
-            </DropDown>
-          )}
-        </div>
+        <div className="flex flex-row justify-end w-1/2 items-start h-[38px] relative gap-2"></div>
       </div>
       <Section first>
         <SubSectionTitle>Step 1. Upload an image</SubSectionTitle>

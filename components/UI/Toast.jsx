@@ -98,7 +98,11 @@ export default function Toast({ handleClose, handleImageClick, jobId, showImageR
     return () => clearInterval(interval)
   })
 
-  const isActive = jobId && imageDetails.base64String && showImageReadyToast
+  const isActive = jobId && imageDetails && imageDetails.base64String && showImageReadyToast
+
+  if (!isActive) {
+    return null
+  }
 
   return (
     <StyledToast active={isActive} {...handlers}>
