@@ -42,7 +42,7 @@ const ImageModalV2 = ({
     preventScrollOnSwipe: true,
     swipeDuration: 250,
     trackTouch: true,
-    delta: 75
+    delta: 25
   })
 
   const closeSwipe = useSwipeable({
