@@ -37,6 +37,17 @@ export class MySubClassedDexie extends Dexie {
       prompts: '++id, timestamp, promptType',
       tags: '++id, name'
     })
+
+    this.version(5).stores({
+      completed: '++id, jobId, timestamp, parentJobId',
+      images: '++id, imageType, parentJobId, jobId, type',
+      imageProjects: '++id, projectId, imageId',
+      imageTags: '++id, tagId, imageId',
+      pending: '++id, jobId, timestamp, parentJobId, jobStatus',
+      projects: '++id, name, type',
+      prompts: '++id, timestamp, promptType',
+      tags: '++id, name'
+    })
   }
 }
 

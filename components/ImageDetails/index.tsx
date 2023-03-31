@@ -17,6 +17,8 @@ import styles from './imageDetails.module.css'
 import ImageOptionsWrapper from './ImageOptionsWrapper'
 import Img2ImgModal from 'components/ImagePage/Img2ImgModal'
 import RenderParentImage from 'components/ParentImage'
+import { logError } from 'utils/appUtils'
+import { userInfoStore } from 'store/userStore'
 
 interface Props {
   imageDetails: IImageDetails
@@ -42,6 +44,13 @@ const ImageDetails = ({
   const [showRequestParams, setShowRequestParams] = useState(false)
 
   if (!imageDetails || !imageDetails.id) {
+    logError({
+      path: window.location.href,
+      errorMessage: 'ImageDetails.missingImageDetails',
+      errorInfo: '',
+      errorType: 'client-side',
+      username: userInfoStore.state.username
+    })
     return null
   }
 

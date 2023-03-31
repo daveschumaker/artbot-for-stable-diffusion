@@ -146,7 +146,7 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
             })
           }
 
-          db.pending.add({
+          await db.pending.add({
             ...clonedParams
           })
         }

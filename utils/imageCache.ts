@@ -19,7 +19,7 @@ import {
   MAX_CONCURRENT_JOBS_ANON,
   MAX_CONCURRENT_JOBS_USER
 } from '../_constants'
-import { isAppActive } from './appUtils'
+import { isAppActive, logError } from './appUtils'
 import CreateImageRequest from '../models/CreateImageRequest'
 import { hasPromptMatrix, promptMatrix } from './promptUtils'
 
@@ -517,6 +517,20 @@ export const checkCurrentJob = async (imageDetails: any) => {
           })
         )
       } catch (err) {
+        console.log(`WARNING: Unable to add completed job to DB.`)
+        console.log(err)
+
+        logError({
+          path: window.location.href,
+          errorMessage: [
+            'imageCache.checkCurrentJob',
+            'Unable to add completed item to db'
+          ].join('\n'),
+          errorInfo: err,
+          errorType: 'client-side',
+          username: userInfoStore.state.username
+        })
+
         return {
           newImage: false
         }
