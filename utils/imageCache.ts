@@ -526,7 +526,7 @@ export const checkCurrentJob = async (imageDetails: any) => {
             'imageCache.checkCurrentJob',
             'Unable to add completed item to db'
           ].join('\n'),
-          errorInfo: err,
+          errorInfo: err?.message,
           errorType: 'client-side',
           username: userInfoStore.state.username
         })
