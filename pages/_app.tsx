@@ -22,11 +22,7 @@ import { initDb } from '../utils/db'
 import { appInfoStore, setBuildId, setClusterSettings } from '../store/appStore'
 import ServerUpdateModal from '../components/ServerUpdateModal'
 import MobileFooter from '../components/MobileFooter'
-import {
-  broadcastMessage,
-  initBrowserTab,
-  isAppActive
-} from '../utils/appUtils'
+import { initBrowserTab, isAppActive } from '../utils/appUtils'
 import { ToastContainer } from 'react-toastify'
 import AdContainer from '../components/AdContainer'
 import { useRouter } from 'next/router'
