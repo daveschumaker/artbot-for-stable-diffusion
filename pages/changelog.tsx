@@ -116,6 +116,10 @@ const Changelog = () => {
             make API calls from it. Thanks to Efreak for suggesting this and
             &quot;The I.B.A.K.T Committe&quot; for reporting this on Discord.
           </StyledLi>
+          <StyledLi>
+            Made the filter / clear text links on the pending page darker.
+            Thanks to Litnine for the suggestion on Discord.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

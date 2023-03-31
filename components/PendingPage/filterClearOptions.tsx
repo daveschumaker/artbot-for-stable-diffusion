@@ -87,7 +87,7 @@ const FilterClearOptions = ({
           <strong>View:</strong>
         </div>
         <div
-          className="flex flex-row gap-1 items-center cursor-pointer text-[#5eedde]"
+          className="flex flex-row gap-1 items-center cursor-pointer text-[#14b8a5]"
           onClick={() => setFilter('all')}
           style={{ textDecoration: filter === 'all' ? 'underline' : 'unset' }}
         >
@@ -95,7 +95,7 @@ const FilterClearOptions = ({
         </div>
         <Separator />
         <div
-          className="flex flex-row gap-1 items-center cursor-pointer text-[#5eedde]"
+          className="flex flex-row gap-1 items-center cursor-pointer text-[#14b8a5]"
           onClick={() => setFilter('done')}
           style={{ textDecoration: filter === 'done' ? 'underline' : 'unset' }}
         >
@@ -103,7 +103,7 @@ const FilterClearOptions = ({
         </div>
         <Separator />
         <div
-          className="flex flex-row gap-1 items-center cursor-pointer text-[#5eedde]"
+          className="flex flex-row gap-1 items-center cursor-pointer text-[#14b8a5]"
           onClick={() => setFilter('processing')}
           style={{
             textDecoration: filter === 'processing' ? 'underline' : 'unset'
@@ -113,7 +113,7 @@ const FilterClearOptions = ({
         </div>
         <Separator />
         <div
-          className="flex flex-row gap-1 items-center cursor-pointer text-[#5eedde]"
+          className="flex flex-row gap-1 items-center cursor-pointer text-[#14b8a5]"
           onClick={() => setFilter('error')}
           style={{ textDecoration: filter === 'error' ? 'underline' : 'unset' }}
         >
@@ -126,21 +126,21 @@ const FilterClearOptions = ({
           <strong>Clear:</strong>
         </div>
         <div
-          className="flex flex-row gap-1 items-center cursor-pointer text-[#5eedde]"
+          className="flex flex-row gap-1 items-center cursor-pointer text-[#14b8a5]"
           onClick={() => setConfirmClear('done')}
         >
           completed ({done.length})
         </div>
         <Separator />
         <div
-          className="flex flex-row gap-1 items-center cursor-pointer text-[#5eedde]"
+          className="flex flex-row gap-1 items-center cursor-pointer text-[#14b8a5]"
           onClick={() => setConfirmClear('pending')}
         >
           pending ({jobsInProgress})
         </div>
         <Separator />
         <div
-          className="flex flex-row gap-1 items-center cursor-pointer text-[#5eedde]"
+          className="flex flex-row gap-1 items-center cursor-pointer text-[#14b8a5]"
           onClick={() => setConfirmClear('error')}
         >
           errors ({error.length})
