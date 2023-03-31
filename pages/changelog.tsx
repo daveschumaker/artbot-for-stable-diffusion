@@ -123,6 +123,14 @@ const Changelog = () => {
             mid-session. We now show a helpful message informing you to reload
             the page when possible to pull down the latest changes.
           </StyledLi>
+          <StyledLi>
+            Add some additional error logging for a few remaining issues on the
+            pending items page.
+          </StyledLi>
+          <StyledLi>
+            Oh, wow. The additional error logging quickly highlighted some
+            issues. This fix hopefully resolves them. Stay tuned...
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>
@@ -192,10 +200,6 @@ const Changelog = () => {
             have heard about it sooner. But it is fixed now! Anyway, thanks to
             Efreak for providing a detailed bug report related to errors with
             the pending page on Discord.
-          </StyledLi>
-          <StyledLi>
-            Add some additional error logging for a few remaining issues on the
-            pending items page.
           </StyledLi>
         </StyledUl>
       </Section>
