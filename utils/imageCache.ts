@@ -26,6 +26,7 @@ import {
 import { isAppActive, logError } from './appUtils'
 import CreateImageRequest from '../models/CreateImageRequest'
 import { hasPromptMatrix, promptMatrix } from './promptUtils'
+import { sleep } from './sleep'
 
 export const initIndexedDb = () => {}
 
@@ -420,6 +421,7 @@ export const addCompletedJobToDb = async ({
         })
       }
 
+      await sleep(250)
       await addCompletedJobToDb({
         jobDetails,
         thumbnail,
@@ -571,23 +573,12 @@ export const checkCurrentJob = async (imageDetails: any) => {
         ...imgDetailsFromApi
       }
 
-      let thumbnail: string = ''
       if (appInfoStore.state.primaryWindow) {
         const thumbnail = await generateBase64Thumbnail(
           imgDetailsFromApi.base64String,
           jobId
         )
-        await updatePendingJob(
-          imageDetails.id,
-          Object.assign({}, job, {
-            timestamp: Date.now(),
-            jobStatus: JobStatus.Done,
-            thumbnail
-          })
-        )
-      }
 
-      if (appInfoStore.state.primaryWindow) {
         const result = await addCompletedJobToDb({
           jobDetails: job,
           thumbnail
@@ -598,6 +589,15 @@ export const checkCurrentJob = async (imageDetails: any) => {
             success: false
           }
         }
+
+        await updatePendingJob(
+          imageDetails.id,
+          Object.assign({}, job, {
+            timestamp: Date.now(),
+            jobStatus: JobStatus.Done,
+            thumbnail
+          })
+        )
       }
 
       setNewImageReady(imageDetails.jobId)
