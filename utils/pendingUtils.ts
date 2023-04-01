@@ -1,13 +1,16 @@
 import { DEFAULT_SAMPLER_ARRAY, MAX_IMAGES_PER_JOB } from '../_constants'
 import CreateImageRequest from '../models/CreateImageRequest'
 import RerollImageRequest from '../models/RerollImageRequest'
-import { uuidv4 } from './appUtils'
+import { logError, uuidv4 } from './appUtils'
 import { db } from './db'
 import { randomPropertyName } from './helperUtils'
 import { getModelVersion, validModelsArray } from './modelUtils'
 import { stylePresets } from './stylePresets'
 import { modelInfoStore } from '../store/modelStore'
 import { SourceProcessing } from './promptUtils'
+import { sleep } from './sleep'
+import { userInfoStore } from 'store/userStore'
+import { toast, ToastOptions } from 'react-toastify'
 
 const cloneImageParams = async (
   imageParams: CreateImageRequest | RerollImageRequest
@@ -86,6 +89,80 @@ export const addTriggerToPrompt = ({
   }
 
   return prompt
+}
+
+const toastObject: ToastOptions = {
+  pauseOnFocusLoss: false,
+  position: 'top-center',
+  autoClose: 2500,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: false,
+  draggable: false,
+  progress: undefined,
+  theme: 'light'
+}
+
+export const addPendingJobToDb = async ({
+  clonedParams,
+  errorCount = 0
+}: {
+  clonedParams: any
+  errorCount: number
+}) => {
+  // Handle an interesting race condition that sometimes happens with Dexie
+  // "QuoteExceeded" error but not really.
+  // https://dexie.org/docs/DexieErrors/Dexie.QuotaExceededError
+  try {
+    if (errorCount >= 5) {
+      toast.error(
+        'Unable to add pending image request to browser database. Please reload the web app and try again.',
+        toastObject
+      )
+      return { success: false }
+    }
+
+    await db.pending.put({
+      ...clonedParams
+    })
+  } catch (err: any) {
+    errorCount++
+
+    if (err.message && err.message.includes('QuotaExceededError')) {
+      // Handle a strange error the happens for... some reason?
+      // https://dexie.org/docs/DexieErrors/Dexie.QuotaExceededError
+
+      if (errorCount >= 5) {
+        logError({
+          path: window.location.href,
+          errorMessage: [
+            'pendingUtils.addPendingJobToDb.errorCountExceeded',
+            'Unable to add completed item to db'
+          ].join('\n'),
+          errorInfo: err?.message,
+          errorType: 'client-side',
+          username: userInfoStore.state.username
+        })
+      }
+
+      await sleep(250)
+      await addPendingJobToDb({
+        clonedParams,
+        errorCount
+      })
+    } else {
+      logError({
+        path: window.location.href,
+        errorMessage: [
+          'pendingUtils.addPendingJobToDb',
+          'Unable to add completed item to db'
+        ].join('\n'),
+        errorInfo: err?.message,
+        errorType: 'client-side',
+        username: userInfoStore.state.username
+      })
+    }
+  }
 }
 
 export const createPendingJob = async (imageParams: CreateImageRequest) => {

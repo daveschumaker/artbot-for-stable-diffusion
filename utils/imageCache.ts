@@ -305,6 +305,7 @@ export const createImageJob = async (newImageRequest: CreateImageRequest) => {
       imageRequest.useMultiSteps = false
       imageRequest.multiSteps = []
 
+      await sleep(100)
       await createPendingJob(imageRequest)
     }
   }
@@ -318,6 +319,7 @@ export const createImageJob = async (newImageRequest: CreateImageRequest) => {
       imageRequest.useMultiGuidance = false
       imageRequest.multiGuidance = []
 
+      await sleep(100)
       await createPendingJob(imageRequest)
     }
   } else if (hasPromptMatrix(newImageRequest.prompt)) {
@@ -326,6 +328,8 @@ export const createImageJob = async (newImageRequest: CreateImageRequest) => {
 
     for (const idx in matrixPrompts) {
       newImageRequest.prompt = matrixPrompts[idx]
+
+      await sleep(100)
       await createPendingJob(newImageRequest)
     }
   } else {
@@ -401,10 +405,7 @@ export const addCompletedJobToDb = async ({
   } catch (err: any) {
     errorCount++
 
-    if (
-      err.name === 'QuotaExceededError' ||
-      (err.inner && err.inner.name === 'QuotaExceededError')
-    ) {
+    if (err.message && err.message.includes('QuotaExceededError')) {
       // Handle a strange error the happens for... some reason?
       // https://dexie.org/docs/DexieErrors/Dexie.QuotaExceededError
 
@@ -412,7 +413,7 @@ export const addCompletedJobToDb = async ({
         logError({
           path: window.location.href,
           errorMessage: [
-            'imageCache.checkCurrentJob',
+            'imageCache.checkCurrentJob.errorCountExceeded',
             'Unable to add completed item to db'
           ].join('\n'),
           errorInfo: err?.message,
