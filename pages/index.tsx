@@ -56,6 +56,7 @@ import ImageApiParamsToPromptInput from '../models/ImageApiParamsToPromptInput'
 import ActionPanel from '../components/CreatePage/ActionPanel'
 import useComponentState from 'hooks/useComponentState'
 import { uploadInpaint } from 'controllers/imageDetailsCommon'
+import { lockScroll, unlockScroll } from 'utils/appUtils'
 
 interface InputTarget {
   name: string
@@ -125,6 +126,8 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
   const [flaggedPromptError, setFlaggedPromptError] = useState(false)
   const [showPromptHistory, setShowPromptHistory] = useState(false)
   const [pending, setPending] = useState(false)
+  const [showSharedModal, setShowSharedModal] = useState(false)
+
   const [errors, setErrors] = useComponentState(
     {} as { [key: string]: boolean }
   )
@@ -406,6 +409,9 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
         name: 'LoadInput_Step_1a',
         debugKey: 'DEBUG_LOAD_INPUT'
       })
+
+      lockScroll()
+      setShowSharedModal(true)
     }
 
     // Step 2. Load user prompt settings, if available
@@ -656,6 +662,40 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
 
   return (
     <main className="pb-[90px]">
+      {showSharedModal && (
+        <InteractiveModal
+          handleClose={() => {
+            unlockScroll()
+            setShowSharedModal(false)
+          }}
+          maxWidth="480px"
+        >
+          <div className="flex flex-col w-full px-3">
+            <PageTitle>Shared image</PageTitle>
+            <div className="w-full flex justify-center">
+              <img
+                src={`https://tinybots.net/artbot/api/v1/shortlink/i/${
+                  query[CreatePageMode.SHORTLINK]
+                }`}
+                alt=""
+                className="max-h-[256px]"
+              />
+            </div>
+            <div className="mt-4 w-full flex px-2 justify-center italic">
+              {input.prompt}
+            </div>
+            <div
+              className="mt-4 mb-2 w-full flex px-2 justify-center text-[#14b8a5] cursor-pointer font-[700]"
+              onClick={() => {
+                unlockScroll()
+                setShowSharedModal(false)
+              }}
+            >
+              Create your own image
+            </div>
+          </div>
+        </InteractiveModal>
+      )}
       {showPromptHistory && (
         <InteractiveModal handleClose={() => setShowPromptHistory(false)}>
           <PromptHistory

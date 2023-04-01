@@ -89,12 +89,12 @@ const FilterClearOptions = ({
         />
       )}
       <div className="flex flex-row w-full items-center text-xs font-[500] tablet:text-sm mb-2">
-        <div className="flex flex-row gap-1 items-center mr-2">
+        <div className="flex flex-row gap-[2px] items-center mr-2">
           <FilterIcon />
           <strong>View:</strong>
         </div>
         <div
-          className="flex flex-row gap-1 items-center cursor-pointer text-[#14b8a5]"
+          className="flex flex-row gap-[2px] items-center cursor-pointer text-[#14b8a5]"
           onClick={() => setFilter('all')}
           style={{ textDecoration: filter === 'all' ? 'underline' : 'unset' }}
         >
@@ -102,7 +102,7 @@ const FilterClearOptions = ({
         </div>
         <Separator />
         <div
-          className="flex flex-row gap-1 items-center cursor-pointer text-[#14b8a5]"
+          className="flex flex-row gap-[2px] items-center cursor-pointer text-[#14b8a5]"
           onClick={() => setFilter('done')}
           style={{ textDecoration: filter === 'done' ? 'underline' : 'unset' }}
         >
@@ -110,7 +110,7 @@ const FilterClearOptions = ({
         </div>
         <Separator />
         <div
-          className="flex flex-row gap-1 items-center cursor-pointer text-[#14b8a5]"
+          className="flex flex-row gap-[2px] items-center cursor-pointer text-[#14b8a5]"
           onClick={() => setFilter('processing')}
           style={{
             textDecoration: filter === 'processing' ? 'underline' : 'unset'
@@ -120,7 +120,7 @@ const FilterClearOptions = ({
         </div>
         <Separator />
         <div
-          className="flex flex-row gap-1 items-center cursor-pointer text-[#14b8a5]"
+          className="flex flex-row gap-[2px] items-center cursor-pointer text-[#14b8a5]"
           onClick={() => setFilter('error')}
           style={{ textDecoration: filter === 'error' ? 'underline' : 'unset' }}
         >
@@ -128,26 +128,26 @@ const FilterClearOptions = ({
         </div>
       </div>
       <div className="flex flex-row w-full items-center text-xs font-[500] tablet:text-sm mb-2">
-        <div className="flex flex-row gap-1 items-center mr-2">
+        <div className="flex flex-row gap-[2px] items-center mr-2">
           <CircleXIcon />
           <strong>Clear:</strong>
         </div>
         <div
-          className="flex flex-row gap-1 items-center cursor-pointer text-[#14b8a5]"
+          className="flex flex-row gap-[2px] items-center cursor-pointer text-[#14b8a5]"
           onClick={() => setConfirmClear('done')}
         >
           completed ({done.length})
         </div>
         <Separator />
         <div
-          className="flex flex-row gap-1 items-center cursor-pointer text-[#14b8a5]"
+          className="flex flex-row gap-[2px] items-center cursor-pointer text-[#14b8a5]"
           onClick={() => setConfirmClear('pending')}
         >
           pending ({jobsWaiting})
         </div>
         <Separator />
         <div
-          className="flex flex-row gap-1 items-center cursor-pointer text-[#14b8a5]"
+          className="flex flex-row gap-[2px] items-center cursor-pointer text-[#14b8a5]"
           onClick={() => setConfirmClear('error')}
         >
           errors ({error.length})
