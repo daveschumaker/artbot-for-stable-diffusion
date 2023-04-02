@@ -11,6 +11,7 @@ import { SourceProcessing } from './promptUtils'
 import { sleep } from './sleep'
 import { userInfoStore } from 'store/userStore'
 import { toast, ToastOptions } from 'react-toastify'
+import { logToConsole } from './debugTools'
 
 const cloneImageParams = async (
   imageParams: CreateImageRequest | RerollImageRequest
@@ -125,8 +126,20 @@ export const addPendingJobToDb = async ({
     await db.pending.put({
       ...clonedParams
     })
+
+    logToConsole({
+      data: clonedParams,
+      name: 'pendingUtils.addPendingJobToDb.success',
+      debugKey: 'ADD_PENDING_JOB_TO_DB'
+    })
   } catch (err: any) {
     errorCount++
+
+    logToConsole({
+      data: err,
+      name: 'pendingUtils.addPendingJobToDb.error',
+      debugKey: 'ADD_PENDING_JOB_TO_DB'
+    })
 
     if (err.message && err.message.includes('QuotaExceededError')) {
       // Handle a strange error the happens for... some reason?

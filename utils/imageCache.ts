@@ -27,6 +27,7 @@ import { isAppActive, logError } from './appUtils'
 import CreateImageRequest from '../models/CreateImageRequest'
 import { hasPromptMatrix, promptMatrix } from './promptUtils'
 import { sleep } from './sleep'
+import { logToConsole } from './debugTools'
 
 export const initIndexedDb = () => {}
 
@@ -401,9 +402,21 @@ export const addCompletedJobToDb = async ({
       })
     )
 
+    logToConsole({
+      data: jobDetails,
+      name: 'imageCache.addCompletedJobToDb.success',
+      debugKey: 'ADD_COMPLETED_JOB_TO_DB'
+    })
+
     return { success: true }
   } catch (err: any) {
     errorCount++
+
+    logToConsole({
+      data: err,
+      name: 'imageCache.addCompletedJobToDb.error',
+      debugKey: 'ADD_COMPLETED_JOB_TO_DB'
+    })
 
     if (err.message && err.message.includes('QuotaExceededError')) {
       // Handle a strange error the happens for... some reason?
@@ -458,6 +471,8 @@ export const checkCurrentJob = async (imageDetails: any) => {
 
   if (jobId) {
     jobDetails = await checkImageJob(jobId)
+  } else {
+    return
   }
 
   if (jobDetails?.processing === 1) {
@@ -599,6 +614,12 @@ export const checkCurrentJob = async (imageDetails: any) => {
             thumbnail
           })
         )
+
+        logToConsole({
+          data: job,
+          name: 'imageCache.checkCurrentJob.updatePendingJobAfterComplete.success',
+          debugKey: 'ADD_COMPLETED_JOB_TO_DB'
+        })
       }
 
       setNewImageReady(imageDetails.jobId)

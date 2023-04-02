@@ -57,8 +57,14 @@ export const logToConsole = ({
     return
   }
 
-  // @ts-ignore
-  if (localStorage.getItem(debugKey) === 'true' || window[debugKey] === true) {
+  if (
+    localStorage.getItem(debugKey) === 'true' ||
+    // @ts-ignore
+    window[debugKey] === true ||
+    // @ts-ignore
+    window['DEBUG_ALL_LOGS'] ||
+    localStorage.getItem('DEBUG_ALL_LOGS') === 'true'
+  ) {
     console.log(`--`)
     console.log(`Output logs for: ${name} (${debugKey})`)
     console.log(data)
