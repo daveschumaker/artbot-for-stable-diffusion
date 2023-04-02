@@ -455,7 +455,7 @@ const Rate = () => {
 
   if (DRAMA_MODE) {
     return (
-      <>
+      <div>
         <Head>
           <title>Rate images - ArtBot for Stable Diffusion</title>
           <meta name="twitter:title" content="Rate images with ArtBot" />
@@ -477,12 +477,12 @@ const Rate = () => {
           ArtBot&apos; control, ratings have been (temporarily?) disabled. I
           will share here when I have more information.
         </SubTitle>
-      </>
+      </div>
     )
   }
 
   return (
-    <>
+    <div className="pb-[88px]">
       <Head>
         <title>Rate images - ArtBot for Stable Diffusion</title>
         <meta name="twitter:title" content="Rate images with ArtBot" />
@@ -625,7 +625,7 @@ const Rate = () => {
           library.
         </SubTitle>
       )}
-    </>
+    </div>
   )
 }
 

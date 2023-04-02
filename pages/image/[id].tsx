@@ -121,7 +121,7 @@ const ImagePage = () => {
   const noImageFound = !isInitialLoad && !imageDetails?.base64String
 
   return (
-    <div>
+    <div className="pb-[88px]">
       <Head>
         <title>Image details - ArtBot for Stable Diffusion</title>
       </Head>

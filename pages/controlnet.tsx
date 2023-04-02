@@ -318,7 +318,7 @@ const ControlNet = () => {
   }, [totalImagesRequested, input.seed, setErrors])
 
   return (
-    <>
+    <div className="pb-[88px]">
       <Head>
         <title>ControlNet - ArtBot for Stable Diffusion</title>
         <meta name="twitter:title" content="ArtBot - ControlNet" />
@@ -629,7 +629,7 @@ const ControlNet = () => {
         totalKudosCost={totalKudosCost}
         kudosPerImage={kudosPerImage}
       />
-    </>
+    </div>
   )
 }
 

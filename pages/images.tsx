@@ -482,7 +482,7 @@ const ImagesPage = () => {
   }
 
   return (
-    <div className="relative" {...handlers}>
+    <div className="relative pb-[88px]" {...handlers}>
       {componentState.deleteMode && (
         <FloatingActionButton
           onClick={() => {

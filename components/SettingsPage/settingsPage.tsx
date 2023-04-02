@@ -258,7 +258,7 @@ const SettingsPage = () => {
   })
 
   return (
-    <div>
+    <div className="pb-[88px]">
       <Head>
         <title>Settings - ArtBot for Stable Diffusion</title>
         <meta name="twitter:title" content="ArtBot - Settings" />
