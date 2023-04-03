@@ -8,7 +8,7 @@ import PromptInputSettings from '../models/PromptInputSettings'
 // @ts-ignore
 import { trackNewSession } from './analytics'
 import { isAppActive } from './appUtils'
-import { deleteDoneFromPending } from './db'
+import { deleteDoneFromPending, deleteInvalidPendingJobs } from './db'
 import { initWindowLogger } from './debugTools'
 
 export const updateShowGrid = () => {
@@ -71,9 +71,11 @@ export const updateAppConfig = () => {
 
 // Track time of last visit so we can potentially clean up pending items database.
 // If the user is returning to ArtBot after 30 minutes, clear out the pending items queue for performance reasons.
-export const appLastActive = () => {
+export const appLastActive = async () => {
   const WAIT_TIME_SEC = 1800 // 30 minutes.
   const lastActiveTime = localStorage.getItem('ArtBotLastActive')
+
+  await deleteInvalidPendingJobs()
 
   let currentTime = Math.floor(Date.now() / 1000)
   if (lastActiveTime && currentTime - Number(lastActiveTime) > WAIT_TIME_SEC) {
