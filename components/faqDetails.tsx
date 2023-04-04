@@ -261,6 +261,8 @@ export const FaqStorageExceeded = () => {
           is a browser and device operating system issue that ArtBot cannot
           workaround.
         </p>
+        <p>After removing some images, please reload the app and try again.</p>
+        <p>--</p>
         <p>
           The always helpful{' '}
           <Linker
