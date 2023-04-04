@@ -5,6 +5,7 @@ import {
   FaqEstimatedTime,
   FaqKudos,
   FaqMissingRequests,
+  FaqStorageExceeded,
   FaqSyntax
 } from '../components/faqDetails'
 import PageTitle from '../components/UI/PageTitle'
@@ -46,6 +47,10 @@ const FaqPage = () => {
         <Panel>
           <a id="black-image" />
           <FaqBlackImage />
+        </Panel>
+        <Panel>
+          <a id="storage-exceeded" />
+          <FaqStorageExceeded />
         </Panel>
       </div>
     </div>

@@ -58,6 +58,10 @@ const createImageJobs = async () => {
     return
   }
 
+  if (appInfoStore.state.storageQuotaLimit) {
+    return
+  }
+
   if (!isAppActive() || !appInfoStore.state.primaryWindow) {
     return
   }

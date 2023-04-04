@@ -3,35 +3,43 @@ import { IClusterSettings } from './clusterSettings'
 
 interface AppStore {
   buildId: string
+  clusterSettings: IClusterSettings
+  hordePerformance: object
   indexDbSupport: boolean
-  serverMessage: string
-  showBetaOption: boolean
   newImageReady: string
+  primaryWindow: boolean
+  serverMessage: string
+  showAppMenu: boolean
+  showBetaOption: boolean
   showImageReadyToast: boolean
   stableHordeApiOnline: boolean
-  showAppMenu: boolean
+  storageQuotaLimit: boolean
   unsupportedBrowser: boolean
-  hordePerformance: object
-  clusterSettings: IClusterSettings
-  primaryWindow: boolean
 }
 
 export const appInfoStore = makeStore<AppStore>({
   buildId: '',
-  indexDbSupport: true,
-  serverMessage: '',
-  showBetaOption: false,
-  newImageReady: '',
-  showImageReadyToast: false,
-  stableHordeApiOnline: true,
-  showAppMenu: false,
-  unsupportedBrowser: false,
-  hordePerformance: {},
   clusterSettings: {
     forceReloadOnServerUpdate: true
   },
+  hordePerformance: {},
+  indexDbSupport: true,
+  newImageReady: '',
+  serverMessage: '',
+  showAppMenu: false,
+  showBetaOption: false,
+  showImageReadyToast: false,
+  stableHordeApiOnline: true,
+  storageQuotaLimit: false,
+  unsupportedBrowser: false,
   primaryWindow: false
 })
+
+export const setStorageQuotaLimit = (val: boolean = false) => {
+  appInfoStore.set(() => ({
+    storageQuotaLimit: val
+  }))
+}
 
 export const setClusterSettings = (obj: IClusterSettings) => {
   appInfoStore.set(() => ({

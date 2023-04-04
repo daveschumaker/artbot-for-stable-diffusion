@@ -11,6 +11,9 @@ import HordeDropdown from './HordeDropdown'
 import PointIcon from '../../icons/PointIcon'
 import { useStore } from 'statery'
 import { userInfoStore } from '../../../store/userStore'
+import AlertTriangleIcon from 'components/icons/AlertTriangle'
+import ErrorDropdown from './ErrorDropdown'
+import { appInfoStore } from 'store/appStore'
 
 const ListItem = ({ className, children, href, title, ...props }: any) => (
   <li>
@@ -31,7 +34,9 @@ const NavBar = () => {
   const router = useRouter()
   const { pathname } = router
 
+  const appStore = useStore(appInfoStore)
   const { workers } = useStore(userInfoStore)
+  const { storageQuotaLimit } = appStore
 
   const isActiveRoute = (page: string) => {
     if (page === pathname) {
@@ -197,6 +202,22 @@ const NavBar = () => {
             </ul>
           </NavigationMenu.Content>
         </NavigationMenu.Item>
+
+        {storageQuotaLimit && (
+          <NavigationMenu.Item>
+            <NavigationMenu.Trigger
+              className={clsx(
+                styles.NavigationMenuTrigger,
+                styles.AnalyticsIcon
+              )}
+            >
+              <AlertTriangleIcon size={32} stroke="red" />
+            </NavigationMenu.Trigger>
+            <NavigationMenu.Content className={styles.NavigationMenuContent}>
+              <ErrorDropdown />
+            </NavigationMenu.Content>
+          </NavigationMenu.Item>
+        )}
 
         <NavigationMenu.Item>
           <NavigationMenu.Trigger

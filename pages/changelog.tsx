@@ -119,6 +119,15 @@ const Changelog = () => {
             incorrectly applying memoization to a particular lookup method. This
             should now be resolved!
           </StyledLi>
+          <StyledLi>
+            UX: Added a warning if you (are most likely on Safari) and running
+            into issues with image generation. There are some very strict
+            browser storage limits. I&apos;ve added information to{' '}
+            <Linker href="/faq#kudos" passHref>
+              the FAQ
+            </Linker>{' '}
+            as well.
+          </StyledLi>
         </StyledUl>
       </Section>
       <Section>

@@ -5,7 +5,8 @@ import { trackEvent, trackGaEvent } from '../api/telemetry'
 import {
   appInfoStore,
   setNewImageReady,
-  setShowImageReadyToast
+  setShowImageReadyToast,
+  setStorageQuotaLimit
 } from '../store/appStore'
 import { CreateImageJob, JobStatus } from '../types'
 import {
@@ -373,8 +374,7 @@ export const getImage = async (jobId: string) => {
 
 export const addCompletedJobToDb = async ({
   jobDetails,
-  thumbnail = '',
-  errorCount = 0
+  thumbnail = ''
 }: {
   jobDetails: any
   thumbnail: string
@@ -383,10 +383,6 @@ export const addCompletedJobToDb = async ({
   // Catch a potential race condition where the same jobId can be added twice.
   // This might happen when multiple tabs are open.
   try {
-    if (errorCount >= 5) {
-      return { success: false }
-    }
-
     // @ts-ignore
     if (window.DEBUG_THUMBNAIL) {
       console.log(``)
@@ -404,8 +400,8 @@ export const addCompletedJobToDb = async ({
     }
 
     delete clonedJobDetails.id
-    await db.completed.add(
-      Object.assign({}, jobDetails, {
+    await db.completed.put(
+      Object.assign({}, clonedJobDetails, {
         jobStatus: JobStatus.Done,
         thumbnail
       })
@@ -420,42 +416,18 @@ export const addCompletedJobToDb = async ({
 
     return { success: true }
   } catch (err: any) {
-    errorCount++
-
     logToConsole({
       data: err,
       name: 'imageCache.addCompletedJobToDb.error',
       debugKey: 'ADD_COMPLETED_JOB_TO_DB'
     })
 
+    // Storage is full.
     if (err.message && err.message.includes('QuotaExceededError')) {
-      // Handle a strange error the happens for... some reason?
-      // https://dexie.org/docs/DexieErrors/Dexie.QuotaExceededError
-
-      if (errorCount >= 5) {
-        logError({
-          path: window.location.href,
-          errorMessage: [
-            'imageCache.checkCurrentJob.errorCountExceeded',
-            'Unable to add completed item to db'
-          ].join('\n'),
-          errorInfo: err?.message,
-          errorType: 'client-side',
-          username: userInfoStore.state.username
-        })
-      }
-
-      await sleep(250)
-      await addCompletedJobToDb({
-        jobDetails,
-        thumbnail,
-        errorCount
-      })
-    } else {
       logError({
         path: window.location.href,
         errorMessage: [
-          'imageCache.checkCurrentJob',
+          'imageCache.checkCurrentJob.errorCountExceeded',
           'Unable to add completed item to db'
         ].join('\n'),
         errorInfo: err?.message,
@@ -463,9 +435,23 @@ export const addCompletedJobToDb = async ({
         username: userInfoStore.state.username
       })
 
-      return {
-        success: false
-      }
+      setStorageQuotaLimit(true)
+      return { success: false }
+    }
+
+    logError({
+      path: window.location.href,
+      errorMessage: [
+        'imageCache.checkCurrentJob',
+        'Unable to add completed item to db'
+      ].join('\n'),
+      errorInfo: err?.message,
+      errorType: 'client-side',
+      username: userInfoStore.state.username
+    })
+
+    return {
+      success: false
     }
   }
 }
@@ -485,7 +471,18 @@ export const checkCurrentJob = async (imageDetails: any) => {
 
   const checkJobResult = await checkImageJob(jobId)
 
-  // DEBUG BOUNCING JOB STATUS
+  if (appInfoStore.state.storageQuotaLimit) {
+    await updatePendingJob(
+      imageDetails.id,
+      Object.assign({}, jobDetails, {
+        jobStatus: JobStatus.Error,
+        errorMessage:
+          'Your browser has informed ArtBot that its storage quota has been exceeded. Please remove some older images and try again shortly.'
+      })
+    )
+    return { success: false }
+  }
+
   if (!jobDetails.jobStatus) {
     jobDetails.jobStatus = JobStatus.Waiting
   }

@@ -235,3 +235,73 @@ export const FaqBlackImage = () => {
     </div>
   )
 }
+
+export const FaqStorageExceeded = () => {
+  return (
+    <div>
+      <Question>
+        <Linker
+          href={`/faq#storage-exceeded`}
+          onClick={() => {
+            navigator?.clipboard
+              ?.writeText(`https://tinybots.net/artbot/faq/#storage-exceeded`)
+              ?.then(() => showToast())
+          }}
+        >
+          <LinkIcon className="cursor-pointer mt-1" />
+        </Linker>
+        Why am I getting a &quot;web app exceeded storage quota error&quot;?
+      </Question>
+      <div className="flex flex-col gap-4">
+        <p>
+          Various operating systems and browsers impose limits on the amount of
+          storage that can be utilized by a particular web app. If you&apos;ve
+          received this error, you&apos;ll need to remove images from your
+          browser&apos;s ArtBot database instance before continuing. Sadly, this
+          is a browser and device operating system issue that ArtBot cannot
+          workaround.
+        </p>
+        <p>
+          The always helpful{' '}
+          <Linker
+            href="https://developer.mozilla.org/en-US/docs/Web/API/Storage_API/Storage_quotas_and_eviction_criteria#Storage_limits"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            MDN web docs
+          </Linker>{' '}
+          have more information about this particular issue.
+        </p>
+        <p>
+          In summary, on iOS, web apps installed on your homescreen (a.k.a. a
+          PWA -- progressive web app) have a hard limit of 1GB of storage space,
+          however if using a web app through the Safari browser (or Firefox /
+          Chrome / etc... which all utilize Safari&apos;s engine as of this
+          writing), initially limit to 1GB of space, but can request more
+          storage from the user.
+        </p>
+        <p>
+          On other operating systems and browsers, which don&apos;t act like
+          FisherPrice toys, you have a limit of 10% of diskspace (or 10GB,
+          whichever is smaller) on Firefox and up to 60% of available diskspace
+          in Chrome based browsers.
+        </p>
+        <p>
+          (Note about FisherPrice toys -- this web app is primarily developed
+          using one...)
+        </p>
+        <p>
+          In the future, I will add some more helpful storage management options
+          to ArtBot.
+        </p>
+        <p>
+          <strong>IMPORTANT NOTE:</strong> After deleting images from the
+          gallery, you might still get quote exceeded errors. This is because
+          browser APIs don&apos; t expose a way to run garbage collection on
+          IndexDb. This happens automatically... at some point in time. Wait a
+          few minutes and try again. I really wish this would be more intuitive.
+        </p>
+      </div>
+    </div>
+  )
+}
