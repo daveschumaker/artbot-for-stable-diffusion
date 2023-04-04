@@ -497,7 +497,7 @@ export const _getImageDetails = async (jobId: string) => {
 }
 
 export const getImageDetails = memoize(_getImageDetails, {
-  maxAge: 120000
+  maxAge: 1000
 })
 
 export const _getNextImageDetails = async (timestamp: number) => {

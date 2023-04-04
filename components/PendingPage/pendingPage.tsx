@@ -149,6 +149,7 @@ const PendingPage = () => {
     }
 
     for (const idx in done) {
+      getImageDetails.delete(done[idx].jobId) // Bust memo cache
       const exists = (await getImageDetails(done[idx].jobId)) || {}
 
       if (!exists.id) {

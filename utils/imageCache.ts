@@ -12,7 +12,7 @@ import {
   allPendingJobs,
   db,
   deletePendingJobFromDb,
-  getPendingJobDetails,
+  getImageDetails,
   updateAllPendingJobs,
   updatePendingJob
 } from './db'
@@ -47,6 +47,7 @@ interface CheckImage {
   queue_position?: number
   wait_time?: number
   processing?: number
+  waiting?: number
   finished?: number
 }
 
@@ -67,7 +68,6 @@ export const checkImageJob = async (jobId: string): Promise<CheckImage> => {
 
   try {
     const data: CheckImage = await checkImageStatus(jobId)
-
     const { success, status = '' } = data
 
     if (status === 'NOT_FOUND') {
@@ -394,13 +394,23 @@ export const addCompletedJobToDb = async ({
       console.log(`thumbnail generated?`, thumbnail)
     }
 
-    delete jobDetails.id
-    await db.completed.put(
+    const clonedJobDetails = Object.assign({}, jobDetails)
+
+    getImageDetails.delete(jobDetails.jobId) // Bust memo cache
+    const jobExists = await getImageDetails(jobDetails.jobId)
+
+    if (jobExists) {
+      return { success: true }
+    }
+
+    delete clonedJobDetails.id
+    await db.completed.add(
       Object.assign({}, jobDetails, {
         jobStatus: JobStatus.Done,
         thumbnail
       })
     )
+    getImageDetails.delete(jobDetails.jobId) // Bust memo cache... again.
 
     logToConsole({
       data: jobDetails,
@@ -461,7 +471,7 @@ export const addCompletedJobToDb = async ({
 }
 
 export const checkCurrentJob = async (imageDetails: any) => {
-  let jobDetails
+  let jobDetails: any = Object.assign({}, imageDetails)
 
   if (!isAppActive() || !appInfoStore.state.primaryWindow) {
     return
@@ -469,58 +479,49 @@ export const checkCurrentJob = async (imageDetails: any) => {
 
   const { jobId } = imageDetails
 
-  if (jobId) {
-    jobDetails = await checkImageJob(jobId)
-  } else {
+  if (!jobId) {
     return
   }
 
-  if (jobDetails?.processing === 1) {
-    imageDetails.jobStatus = JobStatus.Processing
-    await updatePendingJob(
-      imageDetails.id,
-      Object.assign({}, imageDetails, {
-        queue_position: jobDetails.queue_position,
-        wait_time: jobDetails.wait_time || 0
-      })
-    )
+  const checkJobResult = await checkImageJob(jobId)
+
+  // DEBUG BOUNCING JOB STATUS
+  if (!jobDetails.jobStatus) {
+    jobDetails.jobStatus = JobStatus.Waiting
   }
 
-  if (jobDetails?.success && !jobDetails?.done) {
-    //@ts-ignore
-    if (!imageDetails.initWaitTime) {
-      imageDetails.initWaitTime = jobDetails.wait_time
-      //@ts-ignore
-    }
-
-    if (
-      jobDetails.wait_time &&
-      jobDetails.wait_time > imageDetails.initWaitTime
-    ) {
-      imageDetails.initWaitTime = jobDetails.wait_time
-    }
-
-    await updatePendingJob(
-      imageDetails.id,
-      Object.assign({}, imageDetails, {
-        queue_position: jobDetails.queue_position,
-        wait_time: jobDetails.wait_time || 0
-      })
-    )
+  if (!jobDetails.initWaitTime) {
+    jobDetails.initWaitTime = checkJobResult.wait_time
+  } else if (
+    jobDetails.wait_time &&
+    jobDetails.wait_time > jobDetails.initWaitTime
+  ) {
+    jobDetails.initWaitTime = checkJobResult.wait_time
   }
 
-  if (jobDetails?.done) {
-    const imageDetails = await getPendingJobDetails(jobId)
-    const imgDetailsFromApi: FinishedImage = await getImage(jobId)
+  if (checkJobResult?.processing === 1) {
+    jobDetails.jobStatus = JobStatus.Processing
+    jobDetails.wait_time = checkJobResult.wait_time
+  } else if (checkJobResult?.waiting === 1) {
+    jobDetails.jobStatus = JobStatus.Queued
+    jobDetails.wait_time = checkJobResult.wait_time
+    jobDetails.queue_position = checkJobResult.queue_position
+  }
+
+  await updatePendingJob(jobDetails.id, Object.assign({}, jobDetails))
+
+  let imgDetailsFromApi: FinishedImage
+  if (checkJobResult?.done) {
+    imgDetailsFromApi = await getImage(jobId)
 
     if (imgDetailsFromApi?.status === 'WORKER_GENERATION_ERROR') {
-      const jobTimestamp = imageDetails?.timestamp / 1000 || 0
+      const jobTimestamp = jobDetails?.timestamp / 1000 || 0
       const currentTimestamp = Date.now() / 1000
 
       if (currentTimestamp - jobTimestamp > 60) {
         await updatePendingJob(
-          imageDetails.id,
-          Object.assign({}, imageDetails, {
+          jobDetails.id,
+          Object.assign({}, jobDetails, {
             jobStatus: JobStatus.Error,
             errorMessage:
               'The worker GPU processing this request encountered an error. Retry?'
@@ -541,7 +542,7 @@ export const checkCurrentJob = async (imageDetails: any) => {
       if (currentTimestamp - jobTimestamp > 300) {
         await updatePendingJob(
           imageDetails.id,
-          Object.assign({}, imageDetails, {
+          Object.assign({}, jobDetails, {
             jobStatus: JobStatus.Error,
             errorMessage:
               'Job has gone stale and has been removed from the Stable Horde backend. Retry?'
