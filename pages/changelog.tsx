@@ -41,7 +41,7 @@ const LinkButton = ({
 /** TEMPLATE
 
 <Section>
-  <SubSectionTitle>2023.03.01</SubSectionTitle>
+  <SubSectionTitle>2023.04.01</SubSectionTitle>
   <StyledUl>
     <StyledLi>test</StyledLi>
   </StyledUl>
@@ -105,6 +105,22 @@ const Changelog = () => {
           /////
           /////
       */}
+      <Section>
+        <SubSectionTitle>2023.04.04</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Been a bit quiet around here lately. Been busy with work and life
+            obligations around these parts.
+          </StyledLi>
+          <StyledLi>
+            Fix: Biggest fix right now -- there&apos;s been tons of issues
+            cropping up in my error logs with images sometimes not showing up in
+            the image details view. As it turns out, it was due to me
+            incorrectly applying memoization to a particular lookup method. This
+            should now be resolved!
+          </StyledLi>
+        </StyledUl>
+      </Section>
       <Section>
         <SubSectionTitle>2023.03.31</SubSectionTitle>
         <StyledUl>
