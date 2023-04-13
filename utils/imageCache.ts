@@ -8,7 +8,7 @@ import {
   setShowImageReadyToast,
   setStorageQuotaLimit
 } from '../store/appStore'
-import { CreateImageJob, JobStatus } from '../types'
+import { CheckImage, CreateImageJob, JobStatus } from '../types'
 import {
   allPendingJobs,
   db,
@@ -39,18 +39,6 @@ let FETCH_INTERVAL_SEC = CREATE_NEW_JOB_INTERVAL
 // Limit max jobs for anon users. If user is logged in,
 // let them run more jobs at once.
 let MAX_JOBS = MAX_CONCURRENT_JOBS_ANON
-interface CheckImage {
-  success: boolean
-  status?: string
-  message?: string
-  jobId?: string
-  done?: boolean
-  queue_position?: number
-  wait_time?: number
-  processing?: number
-  waiting?: number
-  finished?: number
-}
 
 interface FinishedImage {
   success: boolean

@@ -12,6 +12,19 @@ export enum ArtBotJobTypes {
   Variation = 'Variation'
 }
 
+export interface CheckImage {
+  success: boolean
+  status?: string
+  message?: string
+  jobId?: string
+  done?: boolean
+  queue_position?: number
+  wait_time?: number
+  processing?: number
+  waiting?: number
+  finished?: number
+}
+
 export enum Common {
   Empty = ''
 }
