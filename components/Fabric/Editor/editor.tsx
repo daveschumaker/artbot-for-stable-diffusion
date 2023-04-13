@@ -7,16 +7,7 @@ import {
 } from '../../../store/canvasStore'
 import CreateCanvas from '../../../models/CreateCanvas'
 import ToolBar from './components/toolbar'
-
-interface IProps {
-  canvasId?: string
-  canvasType?: string
-  handleRemoveClick: () => void
-  setInput: () => void
-  source_image?: string
-  source_image_height?: number
-  source_image_width?: number
-}
+import { EditorProps } from 'types/props'
 
 const Editor = ({
   canvasId = 'canvas',
@@ -25,8 +16,10 @@ const Editor = ({
   source_image,
   source_image_height,
   source_image_width,
-  setInput
-}: IProps) => {
+  setInput,
+  canvasHeight,
+  canvasWidth
+}: EditorProps) => {
   const canvas = useRef(null)
   const [ref, setRef] = useState()
   const [canvasState, setCanvasState] = useState(null)
@@ -47,8 +40,8 @@ const Editor = ({
       canvasId,
       canvasType,
       setInput,
-      height,
-      width,
+      height: canvasHeight ? canvasHeight : height,
+      width: canvasWidth ? canvasWidth : width,
       bgColor
     })
 
