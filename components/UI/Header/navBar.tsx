@@ -103,6 +103,10 @@ const NavBar = () => {
                 Draw and paint your own image and use it as source material for
                 Stable Diffusion.
               </ListItem>
+              <ListItem href="/live-paint" title="Live Paint">
+                Draw your own image and see Stable Diffusion process results in
+                near realtime (dependent on queue length)
+              </ListItem>
             </ul>
           </NavigationMenu.Content>
         </NavigationMenu.Item>

@@ -17,8 +17,12 @@ const Editor = ({
   source_image_height,
   source_image_width,
   setInput = () => {},
+  toolbarClassName = '',
+  editorClassName = '',
   canvasHeight,
-  canvasWidth
+  canvasWidth,
+  toolbarAbsolute = false,
+  toolbarDisableMenu = false
 }: EditorProps) => {
   const canvas = useRef(null)
   const [ref, setRef] = useState()
@@ -110,7 +114,7 @@ const Editor = ({
   })
 
   return (
-    <div>
+    <div className={editorClassName}>
       <ToolBar
         // @ts-ignore
         canvas={ref}
@@ -120,6 +124,9 @@ const Editor = ({
         source_image={source_image}
         source_image_height={source_image_height}
         source_image_width={source_image_width}
+        toolbarClassName={toolbarClassName}
+        toolbarAbsolute={toolbarAbsolute}
+        toolbarDisableMenu={toolbarDisableMenu}
       />
       <div className="w-full" id="canvas-wrapper">
         <canvas id={canvasId} />

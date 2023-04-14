@@ -10,4 +10,8 @@ export interface EditorProps {
   source_image_width?: number
   canvasHeight?: number
   canvasWidth?: number
+  toolbarClassName?: string
+  editorClassName?: string
+  toolbarAbsolute?: boolean
+  toolbarDisableMenu?: boolean
 }

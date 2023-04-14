@@ -49,28 +49,33 @@ export const useFetchImage = (input: DefaultPromptInput) => {
     }
   }, [getImage, jobDone, jobId])
 
-  useDebouncedEffect(
-    async () => {
-      if (!input.source_image) {
+  const newImageRequest = useCallback(async () => {
+    if (!input.source_image || !input.prompt) {
+      return
+    }
+
+    if (!pending) {
+      // @ts-ignore
+      let imageParams = new CreateImageRequest(input)
+      setPending(true)
+
+      // @ts-ignore
+      const data = (await createImage(imageParams)) || {}
+
+      // @ts-ignore
+      if (!data.success) {
+        console.log(`Error: Unable to complete this image request.`)
+        setPending(false)
         return
       }
 
-      if (!pending) {
-        // @ts-ignore
-        let imageParams = new CreateImageRequest(input)
-        setPending(true)
-
-        // @ts-ignore
-        const data = (await createImage(imageParams)) || {}
-
-        if (data.jobId) {
-          setJobId(data.jobId)
-        }
+      if (data.jobId) {
+        setJobId(data.jobId)
       }
-    },
-    [input],
-    2000
-  )
+    }
+  }, [input, pending])
+
+  useDebouncedEffect(newImageRequest, [input], 1500)
 
   useEffect(() => {
     let interval: any

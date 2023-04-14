@@ -11,6 +11,7 @@ import TextArea from 'components/UI/TextArea'
 import TextTooltipRow from 'components/UI/TextTooltipRow'
 import ArrowBarLeftIcon from 'components/icons/ArrowBarLeftIcon'
 import GrainIcon from 'components/icons/GrainIcon'
+import PlaylistXIcon from 'components/icons/PlaylistXIcon'
 import { Tooltip } from 'react-tooltip'
 import { useStore } from 'statery'
 import { userInfoStore } from 'store/userStore'
@@ -26,7 +27,11 @@ export const LivePaintOptions = ({ input, setInput }: any) => {
   }
 
   return (
-    <div className="flex flex-col gap-2 w-full">
+    <div className="flex flex-col w-full gap-2">
+      <div className="text-sm font-bold flex flex-row gap-2 items-center mb-[4px]">
+        <PlaylistXIcon hideCross />
+        Prompt
+      </div>
       <FlexRow>
         <TextArea
           name="prompt"
@@ -39,7 +44,32 @@ export const LivePaintOptions = ({ input, setInput }: any) => {
         <Button
           title="Clear current input"
           btnType="secondary"
-          onClick={() => {}}
+          onClick={() => {
+            setInput({ prompt: '' })
+          }}
+        >
+          <ArrowBarLeftIcon />
+        </Button>
+      </FlexRow>
+      <div className="text-sm font-bold flex flex-row gap-2 items-center mb-[4px]">
+        <PlaylistXIcon />
+        Negative prompt
+      </div>
+      <FlexRow>
+        <TextArea
+          name="prompt"
+          placeholder="Words and descriptions to de-emphasize from an image..."
+          onChange={(e: any) => {
+            setInput({ negative: e.target.value })
+          }}
+          value={input.negative}
+        />
+        <Button
+          title="Clear current input"
+          btnType="secondary"
+          onClick={() => {
+            setInput({ negative: '' })
+          }}
         >
           <ArrowBarLeftIcon />
         </Button>

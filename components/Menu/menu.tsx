@@ -178,6 +178,14 @@ const Menu = () => {
               <LineDashedIcon />
               Inpainting
             </SubOption>
+            <SubOption
+              onClick={() => {
+                navigateToLink('/live-paint')
+              }}
+            >
+              <LineDashedIcon />
+              Live Paint
+            </SubOption>
           </SubOptions>
           <MenuOption
             onClick={() => {

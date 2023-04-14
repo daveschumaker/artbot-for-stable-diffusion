@@ -610,18 +610,6 @@ export const checkCurrentJob = async (imageDetails: any) => {
 
       setNewImageReady(imageDetails.jobId)
       setShowImageReadyToast(true)
-
-      trackEvent({
-        event: 'IMAGE_RECEIVED_FROM_API',
-        data: {
-          dimensions: `h ${imageDetails.height} x w ${imageDetails.width}`,
-          waitTimeSeconds: imageDetails.jobTimestamp
-            ? (
-                Math.floor(Date.now() - imageDetails.jobTimestamp) / 1000
-              ).toFixed(0)
-            : 0
-        }
-      })
       trackGaEvent({
         action: 'img_received_from_api',
         params: {

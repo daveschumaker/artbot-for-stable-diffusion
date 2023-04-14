@@ -2,6 +2,7 @@ import { isBase64UrlImage } from 'utils/imageUtils'
 import { clientHeader, getApiHostServer } from '../utils/appUtils'
 import { blobToBase64 } from '../utils/helperUtils'
 import { isValidHttpUrl } from '../utils/validationUtils'
+import { trackEvent } from './telemetry'
 
 interface FinishedImageResponse {
   success: boolean
@@ -146,6 +147,11 @@ export const getFinishedImage = async (
           }
         }
       }
+
+      trackEvent({
+        event: 'IMAGE_RECEIVED_FROM_API',
+        data: {}
+      })
 
       return {
         success: true,

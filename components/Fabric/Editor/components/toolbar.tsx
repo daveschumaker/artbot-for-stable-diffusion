@@ -74,16 +74,22 @@ const ToolBarButton = ({
 const ToolBar = ({
   canvas,
   canvasType = 'inpainting',
+  toolbarClassName = '',
+  toolbarAbsolute = false,
+  toolbarDisableMenu = false,
   handleNewCanvas,
   handleRemoveClick
 }: {
   canvas: CreateCanvas
   canvasType?: string
+  toolbarClassName?: string
   handleNewCanvas: any
   handleRemoveClick(): void
   source_image?: string
   source_image_height?: number
   source_image_width?: number
+  toolbarAbsolute?: boolean
+  toolbarDisableMenu?: boolean
 }) => {
   const router = useRouter()
   const [activeBrush, setActiveBrush] = useState('paint')
@@ -167,12 +173,16 @@ const ToolBar = ({
     'p-[2px]',
     'md:p-[8px]',
     'shadow-md',
-    'select-none'
+    'select-none',
+    toolbarClassName
   ]
 
   return (
-    <div className={clsx(wrapperClasses)}>
-      <div className="flex flex-row gap-1 items-center">
+    <div
+      className={clsx(wrapperClasses)}
+      style={{ position: toolbarAbsolute ? 'absolute' : 'relative' }}
+    >
+      <div className="flex flex-row items-center gap-1">
         {canvasType === 'inpainting' && !DISABLE_OUTPAINTING && (
           <ToolBarButton
             active={showScaleMenu}
@@ -183,7 +193,7 @@ const ToolBar = ({
             <RulerIcon stroke="black" />
           </ToolBarButton>
         )}
-        {canvasType === 'drawing' && (
+        {canvasType === 'drawing' && !toolbarDisableMenu && (
           <>
             <ToolBarButton
               active={showMainMenu}
