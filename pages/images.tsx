@@ -900,12 +900,7 @@ const ImagesPage = () => {
         //@ts-ignore
         size && size.width < 890 && !imageDetailsModalOpen && (
           <div className="w-full">
-            <AdContainer
-              component="images-page"
-              minSize={0}
-              maxSize={640}
-              key={router.asPath}
-            />
+            <AdContainer minSize={0} maxSize={640} key={router.asPath} />
           </div>
         )
       }

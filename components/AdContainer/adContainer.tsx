@@ -3,12 +3,10 @@ import React, { useRef } from 'react'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
 
 function AdContainer({
-  component = '',
   code = 'CWYD62QI',
   placement = 'tinybotsnet'
 }: {
   code: string
-  component: string
   placement: string
   minSize?: number
   maxSize?: number

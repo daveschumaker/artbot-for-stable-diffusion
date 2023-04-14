@@ -269,7 +269,6 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
               <div className="fixed right-[6px] bottom-[2px] max-w-[156px]">
                 <AdContainer
                   code="CWYD62QI"
-                  component="_app-sidebar"
                   placement="tinybotsnet"
                   key={router.asPath}
                   minSize={890}
