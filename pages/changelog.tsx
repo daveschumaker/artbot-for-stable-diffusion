@@ -106,6 +106,36 @@ const Changelog = () => {
           /////
       */}
       <Section>
+        <SubSectionTitle>2023.04.14</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            Feature: Live paint! You can now paint a canvas in ArtBot and see
+            results pop in from the API as you work on an image. Check it out on
+            the{' '}
+            <Linker href="/live-paint" passHref>
+              live paint page
+            </Linker>
+            ! (This may not work well with mobile devices. Also, make sure you
+            are logged in using your Stable Horde API key, otherwise queue
+            lengths might be a bit long.)
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
+        <SubSectionTitle>2023.04.10</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>*tap, tap* Is this thing on? Hey!</StyledLi>
+          <StyledLi>
+            MILESTONE: 🎉🎉🎉 ‼️‼️‼️ <strong>6,000,000</strong> images have been
+            created with ArtBot!‼️‼️‼️ 🎉🎉🎉
+          </StyledLi>
+          <StyledLi>
+            (Been pretty tied up with work and life lately, but finally getting
+            back into the swing of things)
+          </StyledLi>
+        </StyledUl>
+      </Section>
+      <Section>
         <SubSectionTitle>2023.04.04</SubSectionTitle>
         <StyledUl>
           <StyledLi>
