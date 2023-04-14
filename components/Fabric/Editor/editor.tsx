@@ -16,7 +16,7 @@ const Editor = ({
   source_image,
   source_image_height,
   source_image_width,
-  setInput,
+  setInput = () => {},
   canvasHeight,
   canvasWidth
 }: EditorProps) => {

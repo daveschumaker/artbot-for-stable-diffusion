@@ -15,9 +15,15 @@ interface IProps {
   input: DefaultPromptInput
   setInput: (obj: any) => void
   showMultiModel?: boolean
+  hideShowAllSamplers?: boolean
 }
 
-const Samplers = ({ input, setInput, showMultiModel = false }: IProps) => {
+const Samplers = ({
+  input,
+  setInput,
+  showMultiModel = false,
+  hideShowAllSamplers = false
+}: IProps) => {
   const samplerValue = samplerOptions(input).filter((option) => {
     return input.sampler === option.value
   })[0]
@@ -27,7 +33,8 @@ const Samplers = ({ input, setInput, showMultiModel = false }: IProps) => {
     input.source_processing !== SourceProcessing.InPainting &&
     !input.useAllModels &&
     !input.useFavoriteModels &&
-    !showMultiModel
+    !showMultiModel &&
+    !hideShowAllSamplers
 
   return (
     <>
