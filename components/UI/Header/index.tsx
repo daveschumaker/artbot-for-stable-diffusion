@@ -24,16 +24,8 @@ const Header = () => {
       ])}
     >
       <div
-        className={clsx(
-          'mx-auto',
-          'w-[calc(100%-16px)]',
-          'flex',
-          'flex-row',
-          'py-[8px]',
-          'sm:max-w-[768px]',
-          'xl:max-w-[1024px]',
-          '2xl:max-w-[1280px]'
-        )}
+        className={clsx('global-wrapper')}
+        style={{ flexDirection: 'row', margin: '0 auto', padding: '0' }}
       >
         <div
           className={clsx([
@@ -46,8 +38,8 @@ const Header = () => {
         >
           <MenuIcon size={28} />
         </div>
-        <div className="w-full flex items-center">
-          <Link href="/" className="mb-1 flex items-center">
+        <div className="flex items-center w-full">
+          <Link href="/" className="flex items-center mb-1">
             <div>
               <Image
                 src="/artbot/artbot-logo.png"

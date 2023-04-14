@@ -43,6 +43,8 @@ import AdContainer from '../components/AdContainer'
 import { setFilteredItemsArray } from '../store/filteredImagesCache'
 import FloatingActionButton from '../components/UI/FloatingActionButton'
 import TrashIcon from '../components/icons/TrashIcon'
+import { useStore } from 'statery'
+import { appInfoStore } from 'store/appStore'
 
 const MenuSeparator = styled.div`
   width: 100%;
@@ -115,6 +117,8 @@ const ImagesPage = () => {
   })
   const router = useRouter()
   const size = useWindowSize()
+  const appState = useStore(appInfoStore)
+  const { imageDetailsModalOpen } = appState
 
   const [componentState, setComponentState] = useComponentState({
     deleteMode: false,
@@ -512,11 +516,11 @@ const ImagesPage = () => {
       {componentState.showDownloadModal && (
         <Modal hideCloseButton>
           Downloading images
-          <div className="w-full flex flex-row text-sm mt-4 mb-4">
+          <div className="flex flex-row w-full mt-4 mb-4 text-sm">
             Processing selected images for download and converting to{' '}
             {AppSettings.get('imageDownloadFormat') || 'JPG'}s. Please wait.
           </div>
-          <div className="w-full flex flex-row justify-center">
+          <div className="flex flex-row justify-center w-full">
             <SpinnerV2 />
           </div>
         </Modal>
@@ -538,7 +542,7 @@ const ImagesPage = () => {
         <title>Your images - ArtBot for Stable Diffusion</title>
         <meta name="twitter:title" content="ArtBot - Your images" />
       </Head>
-      <div className="flex flex-row w-full items-center">
+      <div className="flex flex-row items-center w-full">
         <div className="inline-block w-1/2">
           <PageTitle>Your images</PageTitle>
         </div>
@@ -812,9 +816,9 @@ const ImagesPage = () => {
         cache and are not stored on a remote server. Clearing your cache will{' '}
         <strong>delete</strong> all images.
       </div>
-      <div className="flex flex-row w-full justify-between">
+      <div className="flex flex-row justify-between w-full">
         {!componentState.deleteMode && componentState.totalImages > 0 && (
-          <div className="text-sm mb-2 text-teal-500">
+          <div className="mb-2 text-sm text-teal-500">
             Showing {currentOffset} - {maxOffset} of{' '}
             <strong>{componentState.totalImages}</strong> {countDescriptor()}
             images {componentState.sortMode === 'new' && `(↓ newest)`}
@@ -823,7 +827,7 @@ const ImagesPage = () => {
         )}
         {componentState.deleteMode && (
           <>
-            <div className="text-sm mb-2 text-teal-500">
+            <div className="mb-2 text-sm text-teal-500">
               selected ({componentState.deleteSelection.length})
             </div>
             <ButtonContainer>
@@ -892,9 +896,20 @@ const ImagesPage = () => {
             </Link>
           </div>
         )}
-      <div className="w-full">
-        <AdContainer minSize={0} maxSize={640} key={router.asPath} />
-      </div>
+      {
+        //@ts-ignore
+        size && size.width < 890 && !imageDetailsModalOpen && (
+          <div className="w-full">
+            <AdContainer
+              component="images-page"
+              minSize={0}
+              maxSize={640}
+              key={router.asPath}
+            />
+          </div>
+        )
+      }
+
       {componentState.isLoading && <Spinner />}
       <div className={defaultStyle}>
         {!componentState.isLoading &&

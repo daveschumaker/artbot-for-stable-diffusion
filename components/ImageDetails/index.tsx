@@ -19,6 +19,7 @@ import Img2ImgModal from 'components/ImagePage/Img2ImgModal'
 import RenderParentImage from 'components/ParentImage'
 import { logError } from 'utils/appUtils'
 import { userInfoStore } from 'store/userStore'
+import AdContainer from 'components/AdContainer'
 
 interface Props {
   imageDetails: IImageDetails
@@ -100,7 +101,7 @@ const ImageDetails = ({
       >
         {fullscreen && (
           <div
-            className="w-full h-screen flex flex-row items-center justify-center"
+            className="flex flex-row items-center justify-center w-full h-screen"
             onClick={() => {
               showFullScreen.exit()
             }}
@@ -156,7 +157,7 @@ const ImageDetails = ({
       />
       <div
         id="image-prompt-wrapper"
-        className="mt-3 flex flex-col w-full justify-start items-center"
+        className="flex flex-col items-center justify-start w-full mt-3"
       >
         <div className="text-[16px] tablet:text-[18px] px-4 w-full max-w-[768px]">
           <div className="text-sm font-bold flex flex-row gap-2 items-center mb-[4px]">
@@ -171,7 +172,7 @@ const ImageDetails = ({
       {imageDetails.negative && (
         <div
           id="image-negative-prompt-wrapper"
-          className="mt-3 flex flex-col w-full justify-start items-center"
+          className="flex flex-col items-center justify-start w-full mt-3"
         >
           <div className="text-[16px] tablet:text-[18px] px-4 w-full max-w-[768px]">
             <div className="text-sm font-bold flex flex-row gap-2 items-center mb-[4px]">
@@ -186,136 +187,142 @@ const ImageDetails = ({
       )}
       <div
         id="image-params-wrapper"
-        className="mt-3 flex flex-col w-full justify-start items-center"
+        className="flex flex-col items-center justify-start w-full mt-3"
       >
         <div className="text-[16px] tablet:text-[18px] px-4 w-full max-w-[768px]">
-          <div className="text-sm font-bold flex flex-row gap-2 items-center">
+          <div className="flex flex-row items-center gap-2 text-sm font-bold">
             <SettingsIcon />
             Image details
           </div>
-          <div
-            className={clsx([
-              'bg-slate-800',
-              'font-mono',
-              'text-white',
-              'text-sm',
-              'overflow-x-auto',
-              'mt-2',
-              'mx-4',
-              'rounded-md',
-              'p-4',
-              'w-full'
-            ])}
-          >
-            {showRequestParams && (
-              <pre className="whitespace-pre-wrap">
-                {JSON.stringify(cleanData(), null, 2)}
-              </pre>
-            )}
-            {!showRequestParams && (
-              <ul>
-                <li>
-                  <strong>Created:</strong>{' '}
-                  {new Date(imageDetails.timestamp).toLocaleString()}
-                </li>
-                <li>
-                  <strong>Job ID:</strong> {imageDetails.jobId}
-                </li>
-                <li>&zwnj;</li>
-                <li>
-                  <strong>Worker ID:</strong> {imageDetails.worker_id}
-                </li>
-                <li>
-                  <strong>Worker name:</strong> {imageDetails.worker_name}
-                </li>
-                <li>&zwnj;</li>
-                <li>
-                  <strong>Sampler:</strong> {imageDetails.sampler}
-                </li>
-                {modelName ? (
-                  <li>
-                    <strong>Model:</strong>{' '}
-                    <Linker
-                      href={`/images?model=${modelName}`}
-                      passHref
-                      className="text-cyan-500"
-                    >
-                      {modelName}
-                    </Linker>
-                  </li>
-                ) : null}
-                {imageDetails.modelVersion && (
-                  <li>
-                    <strong>Model version:</strong> {imageDetails.modelVersion}
-                  </li>
-                )}
-                <li>&zwnj;</li>
-                <li>
-                  <strong>Seed:</strong> {imageDetails.seed}
-                </li>
-                <li>
-                  <strong>Steps:</strong> {imageDetails.steps}
-                </li>
-                <li>
-                  <strong>Guidance / cfg scale:</strong>{' '}
-                  {imageDetails.cfg_scale}
-                </li>
-                {isImg2Img && imageDetails.denoising_strength && (
-                  <li>
-                    <strong>Denoise:</strong>{' '}
-                    {Number(imageDetails.denoising_strength).toFixed(2)}
-                  </li>
-                )}
-                <li>&zwnj;</li>
-                <li>
-                  <strong>Karras:</strong>{' '}
-                  {imageDetails.karras ? 'true' : 'false'}
-                </li>
-                <li>
-                  <strong>Hi-res fix:</strong>{' '}
-                  {imageDetails.hires ? 'true' : 'false'}
-                </li>
-                <li>
-                  <strong>CLIP skip:</strong>{' '}
-                  {imageDetails.clipskip ? imageDetails.clipskip : 1}
-                </li>
-                <li>
-                  <strong>tiled:</strong>{' '}
-                  {imageDetails.tiling ? 'true' : 'false'}
-                </li>
-                <li>&zwnj;</li>
-                {imageDetails.control_type && (
-                  <li>
-                    <strong>Control type:</strong> {imageDetails.control_type}
-                  </li>
-                )}
-                {imageDetails.image_is_control && (
-                  <li>
-                    <strong>Control map:</strong>{' '}
-                    {imageDetails.image_is_control}
-                  </li>
-                )}
-              </ul>
-            )}
+          <div className="mt-2 ml-4 w-full flex flex-row justify-start max-w-[768px]">
+            <div
+              className="flex flex-row items-center gap-2 text-sm cursor-pointer"
+              onClick={() => {
+                setShowRequestParams(!showRequestParams)
+              }}
+            >
+              {showRequestParams ? <ListIcon /> : <CodeDotsIcon />}
+              {showRequestParams
+                ? 'show image details'
+                : 'show request parameters'}
+            </div>
           </div>
-        </div>
-        <div className="mt-2 w-full flex flex-row justify-end max-w-[768px]">
-          <div
-            className="text-sm cursor-pointer flex flex-row gap-2 items-center"
-            onClick={() => {
-              setShowRequestParams(!showRequestParams)
-            }}
-          >
-            {showRequestParams ? <ListIcon /> : <CodeDotsIcon />}
-            {showRequestParams
-              ? 'show image details'
-              : 'show request parameters'}
+          <div className="flex flex-row">
+            <div
+              className={clsx([
+                'bg-slate-800',
+                'font-mono',
+                'text-white',
+                'text-sm',
+                'overflow-x-auto',
+                'mt-2',
+                'mx-4',
+                'rounded-md',
+                'p-4',
+                styles['image-details']
+              ])}
+            >
+              {showRequestParams && (
+                <pre className="whitespace-pre-wrap">
+                  {JSON.stringify(cleanData(), null, 2)}
+                </pre>
+              )}
+              {!showRequestParams && (
+                <ul>
+                  <li>
+                    <strong>Created:</strong>{' '}
+                    {new Date(imageDetails.timestamp).toLocaleString()}
+                  </li>
+                  <li>
+                    <strong>Job ID:</strong> {imageDetails.jobId}
+                  </li>
+                  <li>&zwnj;</li>
+                  <li>
+                    <strong>Worker ID:</strong> {imageDetails.worker_id}
+                  </li>
+                  <li>
+                    <strong>Worker name:</strong> {imageDetails.worker_name}
+                  </li>
+                  <li>&zwnj;</li>
+                  <li>
+                    <strong>Sampler:</strong> {imageDetails.sampler}
+                  </li>
+                  {modelName ? (
+                    <li>
+                      <strong>Model:</strong>{' '}
+                      <Linker
+                        href={`/images?model=${modelName}`}
+                        passHref
+                        className="text-cyan-500"
+                      >
+                        {modelName}
+                      </Linker>
+                    </li>
+                  ) : null}
+                  {imageDetails.modelVersion && (
+                    <li>
+                      <strong>Model version:</strong>{' '}
+                      {imageDetails.modelVersion}
+                    </li>
+                  )}
+                  <li>&zwnj;</li>
+                  <li>
+                    <strong>Seed:</strong> {imageDetails.seed}
+                  </li>
+                  <li>
+                    <strong>Steps:</strong> {imageDetails.steps}
+                  </li>
+                  <li>
+                    <strong>Guidance / cfg scale:</strong>{' '}
+                    {imageDetails.cfg_scale}
+                  </li>
+                  {isImg2Img && imageDetails.denoising_strength && (
+                    <li>
+                      <strong>Denoise:</strong>{' '}
+                      {Number(imageDetails.denoising_strength).toFixed(2)}
+                    </li>
+                  )}
+                  <li>&zwnj;</li>
+                  <li>
+                    <strong>Karras:</strong>{' '}
+                    {imageDetails.karras ? 'true' : 'false'}
+                  </li>
+                  <li>
+                    <strong>Hi-res fix:</strong>{' '}
+                    {imageDetails.hires ? 'true' : 'false'}
+                  </li>
+                  <li>
+                    <strong>CLIP skip:</strong>{' '}
+                    {imageDetails.clipskip ? imageDetails.clipskip : 1}
+                  </li>
+                  <li>
+                    <strong>tiled:</strong>{' '}
+                    {imageDetails.tiling ? 'true' : 'false'}
+                  </li>
+                  <li>&zwnj;</li>
+                  {imageDetails.control_type && (
+                    <li>
+                      <strong>Control type:</strong> {imageDetails.control_type}
+                    </li>
+                  )}
+                  {imageDetails.image_is_control && (
+                    <li>
+                      <strong>Control map:</strong>{' '}
+                      {imageDetails.image_is_control}
+                    </li>
+                  )}
+                </ul>
+              )}
+            </div>
+            <div className="w-[154px]">
+              <AdContainer />
+            </div>
           </div>
         </div>
       </div>
       <div
         id="image-params-wrapper"
-        className="mt-3 flex flex-col w-full justify-start items-center"
+        className="flex flex-col items-center justify-start w-full mt-3"
       >
         <div className="text-[16px] tablet:text-[18px] px-4 w-full max-w-[768px] gap-4 flex flex-row mb-3">
           {imageDetails.parentJobId && (

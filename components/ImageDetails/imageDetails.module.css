@@ -1,13 +1,17 @@
-@media (max-width: 639px){
-  .img, .image-loading, .img-container{
-      --image-container-size: 400px;
+@media (max-width: 639px) {
+  .img,
+  .image-loading,
+  .img-container {
+    --image-container-size: 400px;
   }
 }
 
-@media (min-width: 640px){
-  .img, .img-loading, .img-container{
+@media (min-width: 640px) {
+  .img,
+  .img-loading,
+  .img-container {
     --image-container-size: 512px;
-}
+  }
 }
 
 .menu {
@@ -40,7 +44,7 @@
   max-height: var(--image-container-size);
 }
 
-.img-container{
+.img-container {
   height: var(--image-container-size);
   min-height: var(--image-container-size);
 }
@@ -49,4 +53,8 @@
   .mobile-hide {
     display: block;
   }
+}
+
+.image-details {
+  width: 100%;
 }

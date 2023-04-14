@@ -3,13 +3,12 @@ import React, { useRef } from 'react'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
 
 function AdContainer({
+  component = '',
   code = 'CWYD62QI',
-  placement = 'tinybotsnet',
-  minSize = 1440,
-  maxSize = Infinity,
-  override = false
+  placement = 'tinybotsnet'
 }: {
   code: string
+  component: string
   placement: string
   minSize?: number
   maxSize?: number
@@ -19,6 +18,10 @@ function AdContainer({
 
   useEffectOnce(() => {
     setTimeout(() => {
+      if (document.getElementById('carbonads')) {
+        return
+      }
+
       if (
         typeof reference === 'undefined' ||
         typeof reference.current === 'undefined' ||
@@ -38,19 +41,13 @@ function AdContainer({
 
   const classes = ['flex', 'justify-center', 'my-2', `w-full`]
 
-  if (typeof window !== 'undefined') {
-    if (!override && window.innerWidth < minSize) {
-      return null
-    }
-    if (!override && window.innerWidth > maxSize) {
-      return null
-    }
-  } else {
+  if (typeof window === 'undefined') {
     return null
   }
 
   return (
     <div
+      // component-name={component}
       id="_adUnit"
       className={clsx(classes)}
       //@ts-ignore

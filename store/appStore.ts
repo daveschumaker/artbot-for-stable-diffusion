@@ -6,6 +6,7 @@ interface AppStore {
   clusterSettings: IClusterSettings
   hordePerformance: object
   indexDbSupport: boolean
+  imageDetailsModalOpen: boolean
   newImageReady: string
   primaryWindow: boolean
   serverMessage: string
@@ -24,6 +25,7 @@ export const appInfoStore = makeStore<AppStore>({
   },
   hordePerformance: {},
   indexDbSupport: true,
+  imageDetailsModalOpen: false,
   newImageReady: '',
   serverMessage: '',
   showAppMenu: false,
@@ -38,6 +40,12 @@ export const appInfoStore = makeStore<AppStore>({
 export const setStorageQuotaLimit = (val: boolean = false) => {
   appInfoStore.set(() => ({
     storageQuotaLimit: val
+  }))
+}
+
+export const setImageDetailsModalOpen = (val: boolean = false) => {
+  appInfoStore.set(() => ({
+    imageDetailsModalOpen: val
   }))
 }
 

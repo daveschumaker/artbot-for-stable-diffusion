@@ -10,6 +10,7 @@ import { useSwipeable } from 'react-swipeable'
 
 import styles from './imageModalV2.module.css'
 import clsx from 'clsx'
+import { setImageDetailsModalOpen } from 'store/appStore'
 
 interface Props {
   disableNav?: boolean
@@ -86,8 +87,12 @@ const ImageModalV2 = ({
 
   useEffect(() => {
     lockScroll()
+    setImageDetailsModalOpen(true)
 
-    return () => unlockScroll()
+    return () => {
+      setImageDetailsModalOpen(false)
+      unlockScroll()
+    }
   })
 
   return (

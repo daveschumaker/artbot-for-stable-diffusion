@@ -52,6 +52,31 @@ a {
   }
 }
 
+.global-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  position: relative;
+  /* padding: 4px 8px; */
+  width: 100%;
+}
+
+@media (min-width: 554px) {
+  .global-wrapper {
+    max-width: 554px;
+    margin: 0 auto;
+  }
+}
+
+/* This min-width needs to be whatever the sum of our x-margins are plus previous min-width value. */
+@media (min-width: 890px) {
+  .global-wrapper {
+    max-width: 1280px;
+    width: calc(100% - 336px);
+    margin: 0 168px;
+  }
+}
+
 /* Carbon Ads */
 #carbonads * {
   margin: initial;

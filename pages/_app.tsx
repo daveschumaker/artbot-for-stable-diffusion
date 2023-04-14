@@ -26,13 +26,13 @@ import { initBrowserTab, isAppActive } from '../utils/appUtils'
 import { ToastContainer } from 'react-toastify'
 import AdContainer from '../components/AdContainer'
 import { useRouter } from 'next/router'
-import { useWindowSize } from '../hooks/useWindowSize'
 import Menu from '../components/Menu'
 import Linker from '../components/UI/Linker'
 import ServerMessage from '../components/ServerMessage'
 import { initPendingJobService } from 'controllers/pendingJobsController'
 import ErrorComponent, { logErrorInComponent } from 'components/ErrorComponent'
 import ServerUpdateComponent from 'components/ServerUpdateComponent'
+import { useWindowSize } from 'hooks/useWindowSize'
 
 initBrowserTab()
 initAppSettings()
@@ -48,16 +48,20 @@ interface MyAppProps extends AppProps {
 function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
   const router = useRouter()
   const { darkModeActive } = darkMode
+  const size = useWindowSize()
 
   const [showServerUpdateComponent, setShowServerUpdateComponent] =
     useState(false)
   const [showServerUpdateModal, setShowServerUpdateModal] = useState(false)
 
-  const size = useWindowSize()
-
   const appState = useStore(appInfoStore)
-  const { buildId, stableHordeApiOnline, showAppMenu, unsupportedBrowser } =
-    appState
+  const {
+    buildId,
+    imageDetailsModalOpen,
+    stableHordeApiOnline,
+    showAppMenu,
+    unsupportedBrowser
+  } = appState
 
   const fetchAppInfo = useCallback(async () => {
     if (!isAppActive()) {
@@ -110,19 +114,6 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
 
     return () => clearInterval(interval)
   }, [fetchAppInfo])
-
-  let sizeOverride = false
-  if (typeof size.width !== 'undefined') {
-    if (size?.width > 1130 && size?.width < 1279) {
-      sizeOverride = true
-    } else if (size?.width > 1388 && size?.width < 1440) {
-      sizeOverride = true
-    } else if (size?.width > 1639) {
-      sizeOverride = true
-    } else {
-      sizeOverride = false
-    }
-  }
 
   return (
     <ThemeProvider theme={darkModeActive ? darkTheme : lightTheme}>
@@ -216,7 +207,7 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
           <ServerMessage />
           {showServerUpdateComponent && <ServerUpdateComponent />}
           {unsupportedBrowser && (
-            <div className="text-sm border-2 border-rose-600 py-1 px-2 rounded mb-2 text-red-500">
+            <div className="px-2 py-1 mb-2 text-sm text-red-500 border-2 rounded border-rose-600">
               <div className="mb-[8px]">
                 <strong>WARNING:</strong> The current state of this web browser
                 does not support the IndexedDb browser API.
@@ -229,7 +220,7 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
             </div>
           )}
           {!stableHordeApiOnline && (
-            <div className="text-sm border-2 border-rose-600 py-1 px-2 rounded mb-2 text-red-500">
+            <div className="px-2 py-1 mb-2 text-sm text-red-500 border-2 rounded border-rose-600">
               <strong>Warning:</strong> ArtBot is currently unable to connect to
               the Stable Horde API backend as it is currently unavailable.
               Please try again soon or{' '}
@@ -245,7 +236,7 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
           )}
           {/* <div
             id="global-server-message"
-            className="text-sm border-2 border-rose-600 py-1 px-2 rounded mb-2 text-red-500"
+            className="px-2 py-1 mb-2 text-sm text-red-500 border-2 rounded border-rose-600"
           >
             <strong>WARNING!</strong> The Stable Horde API is currently
             experiencing *significant* delays due to backend issues. Requests
@@ -266,20 +257,25 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
             FallbackComponent={ErrorComponent}
             onError={logErrorInComponent}
           >
-            <Component {...pageProps} />
+            <div className="p-1">
+              <Component {...pageProps} />
+            </div>
           </ErrorBoundary>
           <Footer />
-          {sizeOverride && (
-            <div className="fixed right-[16px] bottom-[8px] max-w-[156px]">
-              <AdContainer
-                code="CWYD62QI"
-                placement="tinybotsnet"
-                key={router.asPath}
-                minSize={1440}
-                override={sizeOverride}
-              />
-            </div>
-          )}
+          {size &&
+            // @ts-ignore
+            size.width >= 890 &&
+            !imageDetailsModalOpen && (
+              <div className="fixed right-[6px] bottom-[2px] max-w-[156px]">
+                <AdContainer
+                  code="CWYD62QI"
+                  component="_app-sidebar"
+                  placement="tinybotsnet"
+                  key={router.asPath}
+                  minSize={890}
+                />
+              </div>
+            )}
         </div>
       </ContentWrapper>
       <MobileFooter />

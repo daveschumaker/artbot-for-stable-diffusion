@@ -33,6 +33,8 @@ import usePendingItems from './usePendingItems'
 import styles from './pendingPage.module.css'
 import FilterClearOptions from './filterClearOptions'
 import { isInstalledPwa } from 'utils/appUtils'
+import { useStore } from 'statery'
+import { appInfoStore } from 'store/appStore'
 
 const MenuSeparator = styled.div`
   width: 100%;
@@ -46,6 +48,8 @@ const PendingPage = () => {
   const [showImageModal, setShowImageModal] = useState<string | boolean>(false)
   const [showMenu, setShowMenu] = useState(false)
   const [validatePending, setValidatePending] = useState(false)
+  const appState = useStore(appInfoStore)
+  const { imageDetailsModalOpen } = appState
 
   const handleDeleteImage = async (jobId: string) => {
     await deleteCompletedImage(jobId)
@@ -181,11 +185,14 @@ const PendingPage = () => {
             kudos) while you wait?
           </div>
         )}
-        {index === 0 && (
-          <div className="w-full">
-            <AdContainer minSize={0} maxSize={640} />
-          </div>
-        )}
+        {index === 0 &&
+          !imageDetailsModalOpen &&
+          //@ts-ignore
+          size.width < 890 && (
+            <div className="w-full">
+              <AdContainer />
+            </div>
+          )}
         <PendingItem
           handleCloseClick={() => {
             onClosePanel(job.jobId)
@@ -224,7 +231,7 @@ const PendingPage = () => {
           initialIndexJobId={showImageModal}
         />
       )}
-      <div className="flex flex-row w-full items-center">
+      <div className="flex flex-row items-center w-full">
         <div className="inline-block w-3/4">
           <PageTitle>Image queue</PageTitle>
         </div>
@@ -339,11 +346,14 @@ const PendingPage = () => {
         </div>
       )}
 
-      {sorted.length === 0 && (
-        <div className="w-full">
-          <AdContainer minSize={0} maxSize={640} />
-        </div>
-      )}
+      {sorted.length === 0 &&
+        !imageDetailsModalOpen &&
+        // @ts-ignore
+        size.width < 890 && (
+          <div className="w-full">
+            <AdContainer />
+          </div>
+        )}
 
       {sorted.length > 0 && (
         <Virtuoso
