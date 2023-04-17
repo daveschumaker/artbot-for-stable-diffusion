@@ -87,6 +87,7 @@ const Interrogate = () => {
     jobId: '',
     jobComplete: false,
     jobPending: false,
+    loadImageError: false,
     sourceType: sourceType,
     source_image: source_image,
     sourceImageType: '',
@@ -152,6 +153,10 @@ const Interrogate = () => {
       setComponentState({
         source_image: imgBase64String,
         sourceImageType: imageType
+      })
+    } else {
+      setComponentState({
+        loadImageError: true
       })
     }
   }, [componentState.imgUrl, setComponentState])
@@ -271,11 +276,11 @@ const Interrogate = () => {
         source_image
       })
 
-      const { jobId, success } = data
+      const { jobId, success, message } = data
 
       if (!success) {
         setComponentState({
-          apiError: 'Unable to complete request, please try again later.',
+          apiError: message,
           jobPending: false
         })
       } else {
@@ -548,7 +553,7 @@ const Interrogate = () => {
         <ContentWrapper>
           {componentState.apiError && (
             <>
-              <div className="mb-2 text-red-500 text-lg font-bold">
+              <div className="mb-2 text-lg font-bold text-red-500">
                 {componentState.apiError}
               </div>
             </>

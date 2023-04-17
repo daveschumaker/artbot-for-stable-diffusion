@@ -55,7 +55,15 @@ export const requestIterrogate = async ({
     if (statusCode === 400) {
       return {
         success: false,
+        message: data.message,
         status: 'BAD_REQUEST'
+      }
+    }
+
+    if (data.message) {
+      return {
+        success: false,
+        message: data.message
       }
     }
 

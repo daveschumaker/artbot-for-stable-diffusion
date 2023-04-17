@@ -68,12 +68,18 @@ export default async function handler(
 
   const { imageUrl, r2 = false } = req.body
 
-  const fileSize = await ufs(imageUrl)
-
-  if (fileSize > 10000000) {
+  try {
+    const fileSize = await ufs(imageUrl)
+    if (fileSize > 10000000) {
+      return res.send({
+        success: false,
+        status: 'ERROR_IMAGE_SIZE'
+      })
+    }
+  } catch (err) {
     return res.send({
       success: false,
-      status: 'ERROR_IMAGE_SIZE'
+      status: 'UNABLE_TO_GET_IMAGE_SIZE'
     })
   }
 
