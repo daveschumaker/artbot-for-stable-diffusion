@@ -12,7 +12,8 @@ import { SourceProcessing } from 'utils/promptUtils'
 import { useEffectOnce } from 'hooks/useEffectOnce'
 import { Button } from 'components/UI/Button'
 import DownloadIcon from 'components/icons/DownloadIcon'
-import { downloadFile } from 'utils/imageUtils'
+import { downloadFile, nearestWholeMultiple } from 'utils/imageUtils'
+import { trackEvent } from 'api/telemetry'
 
 const LivePaintPage = () => {
   const initInput: DefaultPromptInput = {
@@ -38,9 +39,23 @@ const LivePaintPage = () => {
     const width = container?.offsetWidth
     // @ts-ignore
     setPageWidth(width)
+
+    trackEvent({
+      event: 'PAGE_VIEW',
+      context: '/pages/live-paint'
+    })
   })
 
-  const size = Math.floor((pageWidth - 8) / 2)
+  let size = Math.floor((pageWidth - 8) / 2)
+
+  // Ensure size is multiple of 64
+  let validateSize = nearestWholeMultiple(size)
+
+  if (validateSize > size) {
+    size = validateSize - 64
+  } else {
+    size = validateSize
+  }
 
   return (
     <>

@@ -47,6 +47,7 @@ import NumericInputSlider from 'components/CreatePage/AdvancedOptionsPanel/Numer
 import ControlNetOptions from 'components/CreatePage/AdvancedOptionsPanel/ControlNetOptions'
 import UpscalerOptions from 'components/CreatePage/AdvancedOptionsPanel/UpscalerOptions'
 import useComponentState from 'hooks/useComponentState'
+import { trackEvent } from 'api/telemetry'
 
 // Kind of a hacky way to persist output of image over the course of a session.
 let cachedImageDetails = {}
@@ -281,6 +282,11 @@ const ControlNet = () => {
     }
 
     setInput({ ...updateObj })
+
+    trackEvent({
+      event: 'PAGE_VIEW',
+      context: '/pages/controlnet'
+    })
   })
 
   useEffect(() => {
@@ -331,7 +337,7 @@ const ControlNet = () => {
           content="https://tinybots.net/artbot/robot_control.jpg"
         />
       </Head>
-      <div className="flex flex-row w-full items-center">
+      <div className="flex flex-row items-center w-full">
         <div className="inline-block w-1/2">
           <PageTitle>ControlNet</PageTitle>
         </div>
@@ -344,7 +350,7 @@ const ControlNet = () => {
             <Uploader handleSaveImage={handleSaveImage} type="ControlNet" />
           )}
           {input.source_image && (
-            <div className="flex flex-col w-full align-center justify-center">
+            <div className="flex flex-col justify-center w-full align-center">
               <img
                 src={`data:${input.imageType};base64,${input.source_image}`}
                 alt="Uploaded image for ControlNet"
@@ -356,7 +362,7 @@ const ControlNet = () => {
                   width: '100%'
                 }}
               />
-              <div className="flex flex-row w-full justify-end mt-2">
+              <div className="flex flex-row justify-end w-full mt-2">
                 <Button
                   btnType="secondary"
                   onClick={() => {
@@ -394,7 +400,7 @@ const ControlNet = () => {
           </Button>
         </FlexRow>
         <FlexRow>
-          <div className="flex flex-col gap-2 w-full">
+          <div className="flex flex-col w-full gap-2">
             <div className="text-sm font-[700]">
               Negative prompt (optional):
             </div>
@@ -556,7 +562,7 @@ const ControlNet = () => {
             </Tooltip>
           </TextTooltipRow>
         </SubSectionTitle>
-        <div className="flex flex-col gap-2 items-start">
+        <div className="flex flex-col items-start gap-2">
           <Checkbox
             label={`GFPGAN (improves faces)`}
             value={getPostProcessing('GFPGAN')}
