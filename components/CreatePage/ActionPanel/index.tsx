@@ -1,59 +1,49 @@
-import FormErrorMessage from './FormErrorMessage';
-import StylesDropdown from '../StylesDropdown';
+import FormErrorMessage from './FormErrorMessage'
 
-import { Button } from 'components/UI/Button';
-import TrashIcon from 'components/icons/TrashIcon';
-import SquarePlusIcon from 'components/icons/SquarePlusIcon';
-import Linker from 'components/UI//Linker';
-import Errors from 'utils/errors';
+import { Button } from 'components/UI/Button'
+import TrashIcon from 'components/icons/TrashIcon'
+import SquarePlusIcon from 'components/icons/SquarePlusIcon'
+import Linker from 'components/UI//Linker'
+import Errors from 'utils/errors'
 
 interface Props {
-  errors: { [key: string]: boolean };
-  input: string;
-  setInput: any;
-  resetInput: () => void;
-  handleSubmit: () => void;
-  pending: boolean;
-  totalImagesRequested: number;
-  loggedIn: boolean | null;
-  totalKudosCost: number;
-  kudosPerImage: string;
-  showStylesDropdown?: boolean;
+  errors: { [key: string]: boolean }
+  input: string
+  setInput: any
+  resetInput: () => void
+  handleSubmit: () => void
+  pending: boolean
+  totalImagesRequested: number
+  loggedIn: boolean | null
+  totalKudosCost: number
+  kudosPerImage: string
+  showStylesDropdown?: boolean
 }
 
 const ActionPanel = ({
   errors,
-  input,
-  setInput,
   resetInput,
   handleSubmit,
   pending,
   totalImagesRequested,
   loggedIn,
   totalKudosCost,
-  kudosPerImage,
-  showStylesDropdown,
+  kudosPerImage
 }: Props) => {
   function areThereCriticalErrors() {
-    return Object.keys(errors || {}).filter((key: string) => (errors[key] && Errors[key]?.blocksCreation)).length > 0
+    return (
+      Object.keys(errors || {}).filter(
+        (key: string) => errors[key] && Errors[key]?.blocksCreation
+      ).length > 0
+    )
   }
 
   return (
     <>
       <FormErrorMessage errors={errors} />
 
-      <div className="mt-2 mb-4 w-full flex flex-col md:flex-row gap-2 justify-end items-start">
-        {showStylesDropdown && (
-          <div className="w-full md:w-1/2 text-sm flex flex-row justify-start gap-2 items-center">
-            <StylesDropdown
-              input={input}
-              setInput={setInput}
-              isSearchable={true}
-            />
-          </div>
-        )}
-
-        <div className="w-full md:w-1/2 flex flex-col justify-start gap-2">
+      <div className="flex flex-col items-start justify-end w-full gap-2 mt-2 mb-4 md:flex-row">
+        <div className="flex flex-col justify-start w-full gap-2 md:w-1/2">
           <div className="flex flex-row justify-end gap-2 sm:mt-0">
             <Button
               title="Clear current input"
@@ -69,9 +59,7 @@ const ActionPanel = ({
               title="Create new image"
               onClick={handleSubmit}
               // @ts-ignore
-              disabled={
-                pending || areThereCriticalErrors()
-              }
+              disabled={pending || areThereCriticalErrors()}
               width="100px"
             >
               <span>{pending ? '' : <SquarePlusIcon />}</span>
@@ -80,20 +68,19 @@ const ActionPanel = ({
           </div>
           <div className="flex flex-row justify-end">
             <div className="flex flex-col justify-end">
-              <div className="text-xs flex flex-row justify-end gap-2">
-                Images to request:{' '}
-                <strong>{' ' + totalImagesRequested}</strong>
+              <div className="flex flex-row justify-end gap-2 text-xs">
+                Images to request: <strong>{' ' + totalImagesRequested}</strong>
               </div>
               {loggedIn && (
                 <>
-                  <div className="text-xs flex flex-row justify-end gap-2">
+                  <div className="flex flex-row justify-end gap-2 text-xs">
                     {' '}
                     Generation cost:{' '}
                     <Linker href="/faq#kudos" passHref>
                       <>{totalKudosCost} kudos</>
                     </Linker>
                   </div>
-                  <div className="text-xs flex flex-row justify-end gap-2">
+                  <div className="flex flex-row justify-end gap-2 text-xs">
                     Per image:{' '}
                     <Linker href="/faq#kudos" passHref>
                       <>{kudosPerImage} kudos</>
@@ -109,4 +96,4 @@ const ActionPanel = ({
   )
 }
 
-export default ActionPanel;
+export default ActionPanel

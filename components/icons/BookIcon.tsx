@@ -1,13 +1,13 @@
 // Modified via: https://tabler-icons.io/
 
-const PhotoIcon = ({
+const BookIcon = ({
   className,
-  id,
+  fill = 'none',
   size = 24,
   stroke = 'currentColor'
 }: {
   className?: string
-  id?: string
+  fill?: string
   size?: number
   stroke?: string
 }) => {
@@ -15,23 +15,23 @@ const PhotoIcon = ({
     <svg
       xmlns="http://www.w3.org/2000/svg"
       className={className}
-      id={id}
       width={size}
       height={size}
       viewBox="0 0 24 24"
       strokeWidth="1"
       stroke={stroke}
-      fill="none"
+      fill={fill}
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-      <line x1="15" y1="8" x2="15.01" y2="8" />
-      <rect x="4" y="4" width="16" height="16" rx="3" />
-      <path d="M4 15l4 -4a3 5 0 0 1 3 0l5 5" />
-      <path d="M14 14l1 -1a3 5 0 0 1 3 0l2 2" />
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+      <path d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0"></path>
+      <path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0"></path>
+      <path d="M3 6l0 13"></path>
+      <path d="M12 6l0 13"></path>
+      <path d="M21 6l0 13"></path>
     </svg>
   )
 }
 
-export default PhotoIcon
+export default BookIcon

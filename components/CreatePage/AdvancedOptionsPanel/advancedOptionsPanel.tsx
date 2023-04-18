@@ -7,7 +7,6 @@ import Switch from 'react-switch'
 // UI component imports
 import { Button } from 'components/UI/Button'
 import Checkbox from 'components/UI/Checkbox'
-import FlexRow from 'components/UI/FlexRow'
 import Input from 'components/UI/Input'
 import Linker from 'components/UI/Linker'
 import MaxWidth from 'components/UI/MaxWidth'
@@ -15,7 +14,6 @@ import Section from 'components/UI/Section'
 import SelectComponent from 'components/UI/Select'
 import SplitPanel from 'components/UI/SplitPanel'
 import SubSectionTitle from 'components/UI/SubSectionTitle'
-import TextArea from 'components/UI/TextArea'
 import TextButton from 'components/UI/TextButton'
 import TextTooltipRow from 'components/UI/TextTooltipRow'
 import Tooltip from 'components/UI/Tooltip'
@@ -29,7 +27,6 @@ import GrainIcon from '../../icons/GrainIcon'
 import { maxSteps } from 'utils/validationUtils'
 import { SourceProcessing } from 'utils/promptUtils'
 import { validModelsArray } from 'utils/modelUtils'
-import { db, getDefaultPrompt, setDefaultPrompt } from 'utils/db'
 
 // Local imports
 import ControlNetOptions from './ControlNetOptions'
@@ -52,11 +49,11 @@ import AppSettings from 'models/AppSettings'
 import PromptInputSettings from 'models/PromptInputSettings'
 
 // Other imports
-import NegativePrompts from '../NegativePrompts'
 import { trackEvent } from 'api/telemetry'
 import { MAX_IMAGES_PER_JOB } from '_constants'
 import RenderParentImage from 'components/ParentImage'
 import Fingers from './Fingers'
+import StylesDropdown from '../StylesDropdown'
 
 const NoSliderSpacer = styled.div`
   height: 14px;
@@ -100,40 +97,6 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
   const modelsValue = modelerOptions(input).filter((option) => {
     return input?.models?.indexOf(option.value) >= 0
   })
-
-  const clearNegPrompt = () => {
-    setDefaultPrompt('')
-    PromptInputSettings.set('negative', '')
-    setInput({ negative: '' })
-  }
-
-  const handleSaveNeg = useCallback(async () => {
-    const trimInput = input.negative.trim()
-    if (!trimInput) {
-      return
-    }
-
-    const defaultPromptResult = (await getDefaultPrompt()) || []
-    const [defaultPrompt = {}] = defaultPromptResult
-
-    if (defaultPrompt.prompt === trimInput) {
-      return
-    }
-
-    trackEvent({
-      event: 'SAVE_DEFAULT_NEG_PROMPT',
-      context: '/pages/index'
-    })
-
-    try {
-      await db.prompts.add({
-        prompt: trimInput,
-        promptType: 'negative'
-      })
-
-      await setDefaultPrompt(trimInput)
-    } catch (err) {}
-  }, [input.negative])
 
   const getPostProcessing = useCallback(
     (value: string) => {
@@ -210,18 +173,9 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
 
   return (
     <div>
-      {componentState.isNegativePromptLibraryPanelOpen && (
-        <NegativePrompts
-          open={componentState.isNegativePromptLibraryPanelOpen}
-          handleClosePane={() =>
-            setComponentState({ isNegativePromptLibraryPanelOpen: false })
-          }
-          setInput={setInput}
-        />
-      )}
       {input.parentJobId && (
         <Section>
-          <div className="flex flex-row gap-2 w-full">
+          <div className="flex flex-row w-full gap-2">
             <RenderParentImage parentJobId={input.parentJobId} />
             <div className="flex flex-col gap-2">
               <SubSectionTitle>Attached to previous job</SubSectionTitle>
@@ -244,48 +198,10 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
           </div>
         </Section>
       )}
+      <div className="flex flex-row items-center justify-start w-full gap-2 text-sm md:w-1/2">
+        <StylesDropdown input={input} setInput={setInput} isSearchable={true} />
+      </div>
       <OrientationOptions input={input} setInput={setInput} />
-      <Section>
-        <SubSectionTitle>
-          <TextTooltipRow>
-            Negative prompt
-            <Tooltip tooltipId="negative-prompt-tooltip">
-              Add words or phrases to demphasize from your desired image
-            </Tooltip>
-          </TextTooltipRow>
-        </SubSectionTitle>
-        <FlexRow>
-          <TextArea
-            name="negative"
-            placeholder="Words to deemphasize from image"
-            onChange={handleChangeInput}
-            value={input.negative}
-          />
-          <Button
-            title="Clear current input"
-            btnType="secondary"
-            onClick={() => {
-              PromptInputSettings.set('negative', '')
-              setInput({
-                negative: ''
-              })
-            }}
-          >
-            <ArrowBarLeftIcon />
-          </Button>
-        </FlexRow>
-        <FlexRow>
-          <TextButton onClick={clearNegPrompt}>clear default</TextButton>
-          <TextButton onClick={handleSaveNeg}>save as default</TextButton>
-          <TextButton
-            onClick={() =>
-              setComponentState({ isNegativePromptLibraryPanelOpen: true })
-            }
-          >
-            load
-          </TextButton>
-        </FlexRow>
-      </Section>
       <Samplers
         input={input}
         setInput={setInput}
@@ -326,7 +242,7 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
                         using multiple steps. Example: 3,6,9,12,15
                       </Tooltip>
                     </TextTooltipRow>
-                    <div className="block text-xs w-full">
+                    <div className="block w-full text-xs">
                       (1 -{' '}
                       {maxSteps({
                         sampler: input.sampler,
@@ -414,7 +330,7 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
                         using multiple steps. Example: 3,6,9,12,15
                       </Tooltip>
                     </TextTooltipRow>
-                    <div className="block text-xs w-full">(1 - 30)</div>
+                    <div className="block w-full text-xs">(1 - 30)</div>
                   </SubSectionTitle>
                 </div>
                 <Input
@@ -790,7 +706,7 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
             </Tooltip>
           </TextTooltipRow>
         </SubSectionTitle>
-        <div className="flex flex-col gap-2 items-start">
+        <div className="flex flex-col items-start gap-2">
           <Checkbox
             label={`GFPGAN (improves faces)`}
             value={getPostProcessing('GFPGAN')}

@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { useCallback, useEffect, useReducer, useRef, useState } from 'react'
+import { useCallback, useEffect, useReducer, useState } from 'react'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 
@@ -11,8 +11,6 @@ import {
   savePromptHistory,
   SourceProcessing
 } from '../utils/promptUtils'
-import TextArea from '../components/UI/TextArea'
-import { Button } from '../components/UI/Button'
 import { trackEvent, trackGaEvent } from '../api/telemetry'
 import OptionsPanel from '../components/CreatePage/OptionsPanel'
 import {
@@ -33,9 +31,6 @@ import AppSettings from '../models/AppSettings'
 import { countImagesToGenerate } from '../utils/imageUtils'
 import { toast } from 'react-toastify'
 import InteractiveModal from '../components/UI/InteractiveModal/interactiveModal'
-import PromptHistory from '../components/PromptHistory'
-import MenuButton from '../components/UI/MenuButton'
-import HistoryIcon from '../components/icons/HistoryIcon'
 import PromptInputSettings from '../models/PromptInputSettings'
 import { userInfoStore } from '../store/userStore'
 import styles from '../styles/index.module.css'
@@ -47,8 +42,6 @@ import {
   validatePromptSafety
 } from '../utils/validationUtils'
 import AlertTriangleIcon from '../components/icons/AlertTriangle'
-import FlexRow from '../components/UI/FlexRow'
-import ArrowBarLeftIcon from '../components/icons/ArrowBarLeftIcon'
 import clsx from 'clsx'
 import { kudosCostV2 } from '../utils/kudosCost'
 import { CreatePageMode, isSharedLink } from '../utils/loadInputCache'
@@ -57,6 +50,8 @@ import ActionPanel from '../components/CreatePage/ActionPanel'
 import useComponentState from 'hooks/useComponentState'
 import { uploadInpaint } from 'controllers/imageDetailsCommon'
 import { lockScroll, unlockScroll } from 'utils/appUtils'
+import NegativePrompt from 'components/CreatePage/NegativePrompt'
+import PromptText from 'components/CreatePage/AdvancedOptionsPanel/PromptText'
 
 interface InputTarget {
   name: string
@@ -116,7 +111,6 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
   const { buildId } = appState
   const { loggedIn } = userInfo
 
-  const ref = useRef(null)
   const [build, setBuild] = useState(buildId)
 
   const router = useRouter()
@@ -124,7 +118,6 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
 
   const [pageLoaded, setPageLoaded] = useState(false)
   const [flaggedPromptError, setFlaggedPromptError] = useState(false)
-  const [showPromptHistory, setShowPromptHistory] = useState(false)
   const [pending, setPending] = useState(false)
   const [showSharedModal, setShowSharedModal] = useState(false)
 
@@ -672,7 +665,7 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
         >
           <div className="flex flex-col w-full px-3">
             <PageTitle>Shared image</PageTitle>
-            <div className="w-full flex justify-center">
+            <div className="flex justify-center w-full">
               <img
                 src={`https://tinybots.net/artbot/api/v1/shortlink/i/${
                   query[CreatePageMode.SHORTLINK]
@@ -681,7 +674,7 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
                 className="max-h-[256px]"
               />
             </div>
-            <div className="mt-4 w-full flex px-2 justify-center italic">
+            <div className="flex justify-center w-full px-2 mt-4 italic">
               {input.prompt}
             </div>
             <div
@@ -694,14 +687,6 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
               Create your own image
             </div>
           </div>
-        </InteractiveModal>
-      )}
-      {showPromptHistory && (
-        <InteractiveModal handleClose={() => setShowPromptHistory(false)}>
-          <PromptHistory
-            copyPrompt={setInput}
-            handleClose={() => setShowPromptHistory(false)}
-          />
         </InteractiveModal>
       )}
       {shortlinkImageParams && shortlinkImageParams.params ? (
@@ -742,7 +727,7 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
           />
         </Head>
       ) : null}
-      <div className="flex flex-row w-full items-center">
+      <div className="flex flex-row items-center w-full">
         <div className="inline-block w-1/2">
           <PageTitle>
             New image{' '}
@@ -752,17 +737,6 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
               '(img2img)'}
           </PageTitle>
         </div>
-        <div className="flex flex-row justify-end w-1/2 items-start h-[38px] relative gap-2">
-          <MenuButton
-            active={showPromptHistory}
-            title=""
-            onClick={() => {
-              setShowPromptHistory(true)
-            }}
-          >
-            <HistoryIcon size={24} />
-          </MenuButton>
-        </div>
       </div>
       {modelDetails[input?.models[0]]?.trigger && (
         <TriggerDropdown
@@ -771,7 +745,7 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
           triggerArray={triggerArray}
         />
       )}
-      <div className={clsx(styles['sticky-text-area'], 'mt-2')}>
+      <div className={clsx(styles['sticky-text-area'], 'mt-0')}>
         {flaggedPromptError && (
           <div className="mb-4 bg-red-500 rounded-md px-4 py-2 font-[500] flex flex-row items-center gap-2 text-white">
             <div>
@@ -784,27 +758,18 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
             </div>
           </div>
         )}
-        <FlexRow>
-          <TextArea
-            name="prompt"
-            placeholder="Describe your image..."
-            onChange={handleChangeValue}
-            value={input.prompt}
-            ref={ref}
-          />
-          <Button
-            title="Clear current input"
-            btnType="secondary"
-            onClick={() => {
-              PromptInputSettings.set('prompt', '')
-              setInput({
-                prompt: ''
-              })
-            }}
-          >
-            <ArrowBarLeftIcon />
-          </Button>
-        </FlexRow>
+
+        <PromptText
+          handleChangeValue={handleChangeValue}
+          input={input}
+          setInput={setInput}
+        />
+
+        <NegativePrompt
+          handleChangeValue={handleChangeValue}
+          input={input}
+          setInput={setInput}
+        />
 
         <ActionPanel
           errors={errors}

@@ -1,9 +1,0 @@
-.tooltip-wrapper {
-  max-width: 200px;
-  border: 1px solid white;
-  z-index: 21;
-}
-
-.tooltip {
-  padding: 8px;
-}

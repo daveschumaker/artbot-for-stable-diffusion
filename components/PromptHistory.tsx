@@ -43,7 +43,7 @@ const PromptWrapper = styled.div`
   flex-direction: column;
   row-gap: 4px;
   margin-bottom: 16px;
-  border: 1px solid white;
+  border: 1px solid #7e5a6c;
   border-radius: 4px;
   padding: 8px;
   position: relative;
@@ -138,7 +138,7 @@ const PromptHistory = (props: any) => {
           width="100%"
         />
       </div>
-      <div className="mb-2 flex flex-row justify-between">
+      <div className="flex flex-row justify-between mb-2">
         <TextButton
           onClick={() => {
             if (componentState.view === 'all') {
@@ -166,11 +166,12 @@ const PromptHistory = (props: any) => {
       {componentState.filter && filteredPrompts.length === 0 && (
         <div>No prompts found.</div>
       )}
-      <PromptsList>
-        {filteredPrompts.map((p: any) => {
-          return (
-            <PromptWrapper key={`prompt_${p.id}`}>
-              {/* <MenuButtonWrapper>
+      {filteredPrompts.length > 0 && (
+        <PromptsList>
+          {filteredPrompts.map((p: any) => {
+            return (
+              <PromptWrapper key={`prompt_${p.id}`}>
+                {/* <MenuButtonWrapper>
                 <MenuButton
                   // active={optimisticFavorite}
                   title="Save as favorite"
@@ -179,53 +180,54 @@ const PromptHistory = (props: any) => {
                   <HeartIcon />
                 </MenuButton>
               </MenuButtonWrapper> */}
-              <PromptText>{p.prompt}</PromptText>
-              <Row>
-                <div>
-                  <Timestamp>
-                    {new Date(p.timestamp).toLocaleString()}
-                  </Timestamp>
-                </div>
-                <div className="flex flex-row gap-2">
-                  <Button
-                    onClick={() => {
-                      handleFavoriteClick(p)
-                      fetchPrompts(componentState.view)
-                    }}
-                  >
-                    <HeartIcon
-                      size={24}
-                      fill={
-                        p.promptType === PromptTypes.PromptFavorite
-                          ? 'currentColor'
-                          : 'none'
-                      }
-                    />
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      props.copyPrompt({ prompt: p.prompt })
-                      props.handleClose()
-                    }}
-                  >
-                    <CopyIcon size={24} />
-                  </Button>
-                  <Button
-                    title="Delete prompt"
-                    btnType="secondary"
-                    onClick={async () => {
-                      await db.prompts.bulkDelete([p.id])
-                      fetchPrompts(componentState.view)
-                    }}
-                  >
-                    <TrashIcon size={24} />
-                  </Button>
-                </div>
-              </Row>
-            </PromptWrapper>
-          )
-        })}
-      </PromptsList>
+                <PromptText>{p.prompt}</PromptText>
+                <Row>
+                  <div>
+                    <Timestamp>
+                      {new Date(p.timestamp).toLocaleString()}
+                    </Timestamp>
+                  </div>
+                  <div className="flex flex-row gap-2">
+                    <Button
+                      onClick={() => {
+                        handleFavoriteClick(p)
+                        fetchPrompts(componentState.view)
+                      }}
+                    >
+                      <HeartIcon
+                        size={24}
+                        fill={
+                          p.promptType === PromptTypes.PromptFavorite
+                            ? 'currentColor'
+                            : 'none'
+                        }
+                      />
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        props.copyPrompt({ prompt: p.prompt })
+                        props.handleClose()
+                      }}
+                    >
+                      <CopyIcon size={24} />
+                    </Button>
+                    <Button
+                      title="Delete prompt"
+                      btnType="secondary"
+                      onClick={async () => {
+                        await db.prompts.bulkDelete([p.id])
+                        fetchPrompts(componentState.view)
+                      }}
+                    >
+                      <TrashIcon size={24} />
+                    </Button>
+                  </div>
+                </Row>
+              </PromptWrapper>
+            )
+          })}
+        </PromptsList>
+      )}
     </>
   )
 }
