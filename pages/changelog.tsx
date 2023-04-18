@@ -93,22 +93,20 @@ const Changelog = () => {
           </div>
         )}
       <Panel>
-        <Section>
-          <SubSectionTitle>Ongoing issues:</SubSectionTitle>
-          <StyledUl>
-            <StyledLi>
-              2022.12.24 - Bulk downloads using the export option are a bit
-              buggy. I believe this is due to browser and device memory
-              limitations. I&apos;m investigating ways to make the downloads
-              easier (perhaps breaking them up into a series of files that you
-              would have to manually download). In the meantime, you can
-              optionally download 100 images at a time on from the{' '}
-              <Linker href="/images">images page</Linker> or groups of your
-              favorite images. (I know that some of you have thousands of images
-              and this is not ideal at the moment.)
-            </StyledLi>
-          </StyledUl>
-        </Section>
+        <SubSectionTitle>Ongoing issues:</SubSectionTitle>
+        <StyledUl>
+          <StyledLi>
+            2022.12.24 - Bulk downloads using the export option are a bit buggy.
+            I believe this is due to browser and device memory limitations.
+            I&apos;m investigating ways to make the downloads easier (perhaps
+            breaking them up into a series of files that you would have to
+            manually download). In the meantime, you can optionally download 100
+            images at a time on from the{' '}
+            <Linker href="/images">images page</Linker> or groups of your
+            favorite images. (I know that some of you have thousands of images
+            and this is not ideal at the moment.)
+          </StyledLi>
+        </StyledUl>
       </Panel>
       {/* /////
           /////
@@ -117,6 +115,43 @@ const Changelog = () => {
           /////
       */}
       <div className="px-1">
+        <Section>
+          <SubSectionTitle>2023.04.18</SubSectionTitle>
+          <StyledUl>
+            <StyledLi>
+              UI update: I am moving a few things around on the image creation
+              page as I prepare for a large UI refactor targeted toward desktop
+              / laptop users. One thing I&apos;ve heard from people -- they want
+              the negative prompt text area closer to the normal prompt area.
+            </StyledLi>
+            <StyledLi>
+              More improvements to the{' '}
+              <Linker href="/live-paint" passHref>
+                live paint page
+              </Linker>
+              . It should have better support for those of you using ArtBot on a
+              mobile device.
+            </StyledLi>
+            <StyledLi>
+              NEAT! I missed this awhile back (I should do a better job checking
+              my referrer logs). ArtBot was listed in PC World as{' '}
+              <Linker
+                href="https://www.pcworld.com/article/1672975/the-best-ai-art-generators-for-you-midjourney-bing-and-more.html"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                one of best AI art generators
+              </Linker>
+              !
+              <AddedInfo>
+                Quoting from the article: &quot;Artbot uses a GUI that&apos;s
+                somewhat navigable.&quot; Haha, that is being too generous! (I
+                agree, things can be a lot better. This is one reason I have
+                been trying to do some more UI refactoring.)
+              </AddedInfo>
+            </StyledLi>
+          </StyledUl>
+        </Section>
         <Section>
           <SubSectionTitle>2023.04.14</SubSectionTitle>
           <StyledUl>

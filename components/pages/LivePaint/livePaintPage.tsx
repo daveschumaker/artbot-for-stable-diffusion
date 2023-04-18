@@ -105,7 +105,7 @@ const LivePaint = () => {
         </div>
       )}
       <div
-        className="flex flex-row w-full"
+        className="flex flex-row justify-center w-full"
         id="live-paint-container"
         style={{
           columnGap: isSinglePanel ? '0' : '8px'
@@ -168,8 +168,19 @@ const LivePaint = () => {
                   width: `${size}px`
                 }}
               >
-                {isSinglePanel && `Hey, paint something on the canvas!`}
-                {!isSinglePanel && `<-- Hey, paint something over there!`}
+                {isSinglePanel &&
+                  !input.source_image &&
+                  !pending &&
+                  `Hey, paint something on the canvas!`}
+                {!isSinglePanel &&
+                  !input.source_image &&
+                  !pending &&
+                  `<-- Hey, paint something over there!`}
+                {input.source_image &&
+                  !input.prompt &&
+                  !pending &&
+                  `Hey, don't forget to write a prompt down below!`}
+                {!imageResult && pending && `Requesting new image...`}
               </div>
             )}
         </div>
