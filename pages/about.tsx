@@ -77,7 +77,7 @@ const AboutPage = () => {
             ArtBot is an unofficial front-end web client designed for
             interacting with the{' '}
             <Linker
-              href="https://stablehorde.net/"
+              href="https://aihorde.net/"
               target="_blank"
               rel="noreferrer"
             >
@@ -92,11 +92,7 @@ const AboutPage = () => {
           provided by a community of generous users that allows anyone to create
           generative AI artwork on their own computers or mobile devices. More
           information is available on the{' '}
-          <Linker
-            href="https://stablehorde.net/"
-            target="_blank"
-            rel="noreferrer"
-          >
+          <Linker href="https://aihorde.net/" target="_blank" rel="noreferrer">
             Stable Horde
           </Linker>{' '}
           page and you can also join their{' '}

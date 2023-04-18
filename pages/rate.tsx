@@ -509,7 +509,7 @@ const Rate = () => {
           <SubTitle>
             Don&apos;t have a Stable Horde account?{' '}
             <Linker
-              href="https://stablehorde.net/register"
+              href="https://aihorde.net/register"
               target="_blank"
               rel="noopener noreferrer"
             >

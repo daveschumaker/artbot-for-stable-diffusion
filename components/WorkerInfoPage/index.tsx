@@ -20,7 +20,7 @@ const WorkerInfoPage = () => {
   })
 
   const fetchWorkers = async () => {
-    const resp = await fetch(`https://stablehorde.net/api/v2/workers`, {
+    const resp = await fetch(`https://aihorde.net/api/v2/workers`, {
       headers: {
         'Content-Type': 'application/json',
         'Client-Agent': clientHeader()

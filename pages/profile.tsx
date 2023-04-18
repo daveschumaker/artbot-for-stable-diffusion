@@ -63,7 +63,7 @@ const ProfilePage = () => {
           </Link>{' '}
           with your{' '}
           <a
-            href="https://stablehorde.net/"
+            href="https://aihorde.net/"
             target="_blank"
             rel="noopener noreferrer"
             className="text-cyan-500"
@@ -75,12 +75,12 @@ const ProfilePage = () => {
         <div className="mb-[8px]">
           Don&apos;t have an API key? Register via{' '}
           <a
-            href="https://stablehorde.net/register"
+            href="https://aihorde.net/register"
             target="_blank"
             rel="noopener noreferrer"
             className="text-cyan-500"
           >
-            stablehorde.net
+            aihorde.net
           </a>
           .
         </div>

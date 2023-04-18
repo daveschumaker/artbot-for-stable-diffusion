@@ -28,7 +28,7 @@ export const fetchAvailableModels = async () => {
     const res = await fetch(
       isInitial
         ? `/artbot/api/models-available`
-        : `https://stablehorde.net/api/v2/status/models`,
+        : `https://aihorde.net/api/v2/status/models`,
       {
         headers: {
           'Content-Type': 'application/json',

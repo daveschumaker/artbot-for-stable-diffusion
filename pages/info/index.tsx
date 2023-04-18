@@ -16,7 +16,7 @@ const InfoPage = () => {
   const [perfStats, setPerfStats] = useState<IPerfStats | null>(null)
 
   const fetchPerfStats = async () => {
-    const res = await fetch('https://stablehorde.net/api/v2/status/performance')
+    const res = await fetch('https://aihorde.net/api/v2/status/performance')
     const data = await res.json()
 
     setPerfStats(data)

@@ -92,7 +92,7 @@ const RateMyImage = ({ jobId }: IProps) => {
 
     try {
       const res = await fetch(
-        `https://stablehorde.net/api/v2/generate/rate/${jobId}`,
+        `https://aihorde.net/api/v2/generate/rate/${jobId}`,
         {
           method: 'POST',
           body: JSON.stringify(ratingData),

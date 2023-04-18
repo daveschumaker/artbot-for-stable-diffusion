@@ -2,7 +2,7 @@ let workerDetailsCache = []
 
 const fetchWorkerDetails = async () => {
   try {
-    const resp = await fetch(`https://stablehorde.net/api/v2/workers`, {
+    const resp = await fetch(`https://aihorde.net/api/v2/workers`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

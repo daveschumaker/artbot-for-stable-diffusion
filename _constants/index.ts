@@ -1,8 +1,8 @@
 import { IOrientation } from '../types'
 
 export const ANON_API_KEY = '0000000000'
-export const HORDE_PROD = 'https://stablehorde.net'
-export const HORDE_DEV = 'https://dev.stablehorde.net'
+export const HORDE_PROD = 'https://aihorde.net'
+export const HORDE_DEV = 'https://dev.aihorde.net'
 export const RATING_API = 'https://ratings.aihorde.net'
 export const CREATE_NEW_JOB_INTERVAL = 1500 // ms between new job requests
 export const RATE_IMAGE_CUTOFF_SEC = 900

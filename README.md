@@ -22,7 +22,7 @@ See it in action: [https://tinybots.net/artbot](https://tinybots.net/artbot)
 
 ## Intro
 
-ArtBot is an unofficial front-end web client designed for interacting with the [Stable Horde](https://stablehorde.net/) distributed cluster -- a group of GPUs running Stable Diffusion whose processing time has been kindly donated by an enthusiastic community of volunteers.
+ArtBot is an unofficial front-end web client designed for interacting with the [Stable Horde](https://aihorde.net/) distributed cluster -- a group of GPUs running Stable Diffusion whose processing time has been kindly donated by an enthusiastic community of volunteers.
 
 ArtBot is built using [Next.js 13](https://nextjs.org/) and [Typescript](https://www.typescriptlang.org/). It with was created as a side project in order to experiment with various client-side technologies, such as IndexedDB and LocalStorage APIs. These APIs allow you to securely and privately store the AI generated images you've created with the cluster within your own browser.
 

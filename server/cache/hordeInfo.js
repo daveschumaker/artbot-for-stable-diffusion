@@ -4,7 +4,7 @@ let perf = {}
 
 const fetchHordePerformance = async () => {
   try {
-    const res = await fetch('https://stablehorde.net/api/v2/status/performance')
+    const res = await fetch('https://aihorde.net/api/v2/status/performance')
     const data = await res.json()
 
     // Temporary hack to get around an issue where the Stable Horde backend alternates

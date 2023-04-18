@@ -397,12 +397,12 @@ const SettingsPage = () => {
                       <strong>Note:</strong> image generation times will be much
                       slower). Register via the official{' '}
                       <a
-                        href="https://stablehorde.net/register"
+                        href="https://aihorde.net/register"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-cyan-500"
                       >
-                        stablehorde.net
+                        aihorde.net
                       </a>{' '}
                       website. API key is stored in your browser cache using
                       LocalStorage.

@@ -28,7 +28,7 @@ const getModelDetails = () => {
 
 const fetchAvailableModels = async () => {
   try {
-    const resp = await fetch(`https://stablehorde.net/api/v2/status/models`, {
+    const resp = await fetch(`https://aihorde.net/api/v2/status/models`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
