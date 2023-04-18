@@ -9,9 +9,13 @@ import InputSwitch from '../InputSwitch'
 import SplitPanel from 'components/UI/SplitPanel'
 
 const ControlNetOptions = ({
+  forceDisplay = false,
+  hideControlMap = false,
   input,
   setInput
 }: {
+  forceDisplay?: boolean
+  hideControlMap?: boolean
   input: DefaultPromptInput
   setInput: any
 }) => {
@@ -44,13 +48,13 @@ const ControlNetOptions = ({
     }
   }
 
-  const isDisabled = !input.source_image
+  const isDisabled = !input.source_image && !forceDisplay
 
   return (
     <div>
       <Section>
         <SubSectionTitle>Control Type</SubSectionTitle>
-        {isDisabled && (
+        {isDisabled && !forceDisplay && (
           <div className="mt-[-6px] text-sm text-slate-500 dark:text-slate-400 font-[600]">
             <MaxWidth
               // @ts-ignore
@@ -61,8 +65,8 @@ const ControlNetOptions = ({
             </MaxWidth>
           </div>
         )}
-        {input.source_image && (
-          <div className="w-1/2">
+        {(input.source_image || forceDisplay) && (
+          <div className="max-w-[384px] w-full">
             <SelectComponent
               isDisabled={isDisabled}
               options={CONTROL_TYPE_ARRAY.map((value) => {
@@ -89,7 +93,7 @@ const ControlNetOptions = ({
           </div>
         )}
       </Section>
-      {!isDisabled && (
+      {!isDisabled && !hideControlMap && (
         <TwoPanel>
           <SplitPanel>
             <InputSwitch

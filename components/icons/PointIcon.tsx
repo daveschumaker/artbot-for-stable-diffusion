@@ -4,12 +4,14 @@ const PointIcon = ({
   className,
   fill = 'none',
   size = 24,
-  stroke = 'currentColor'
+  stroke = 'currentColor',
+  style
 }: {
   className?: string
   fill?: string
   size?: number
   stroke?: string
+  style?: object
 }) => {
   return (
     <svg
@@ -23,6 +25,7 @@ const PointIcon = ({
       fill={fill}
       strokeLinecap="round"
       strokeLinejoin="round"
+      style={style}
     >
       <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
       <circle cx="12" cy="12" r="4"></circle>

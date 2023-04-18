@@ -263,7 +263,7 @@ const SettingsPage = () => {
         <title>Settings - ArtBot for Stable Diffusion</title>
         <meta name="twitter:title" content="ArtBot - Settings" />
       </Head>
-      <div className="flex flex-row w-full items-center">
+      <div className="flex flex-row items-center w-full">
         <div className="inline-block w-1/4">
           <PageTitle>Settings</PageTitle>
         </div>
@@ -391,20 +391,25 @@ const SettingsPage = () => {
                       resulting in shorter image creation times.
                     </Tooltip>
                   </TextTooltipRow>
-                  <div className="block text-xs mt-2 mb-2 w-full">
-                    Leave blank for an anonymous user ID. Register via{' '}
-                    <a
-                      href="https://stablehorde.net/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-cyan-500"
-                    >
-                      stablehorde.net
-                    </a>
-                    . Stored in browser using LocalStorage.
-                  </div>
+                  {!userStore.loggedIn && (
+                    <div className="block w-full mt-2 mb-2 text-xs">
+                      Leave blank for an anonymous user ID (
+                      <strong>Note:</strong> image generation times will be much
+                      slower). Register via the official{' '}
+                      <a
+                        href="https://stablehorde.net/register"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-cyan-500"
+                      >
+                        stablehorde.net
+                      </a>{' '}
+                      website. API key is stored in your browser cache using
+                      LocalStorage.
+                    </div>
+                  )}
                   {componentState.apiErrorMsg && (
-                    <div className="text-red-500 font-bold flex flex-row gap-2">
+                    <div className="flex flex-row gap-2 font-bold text-red-500">
                       {componentState.apiErrorMsg}
                     </div>
                   )}
@@ -414,7 +419,7 @@ const SettingsPage = () => {
                   maxWidth="480"
                 >
                   {userStore.loggedIn && (
-                    <div className="block text-xs mt-2 mb-2 w-full">
+                    <div className="block w-full mt-1 mb-2 text-xs">
                       Logged in as {userStore.username}
                       <br />
                       Kudos:{' '}
@@ -442,7 +447,7 @@ const SettingsPage = () => {
                       <EyeIcon />
                     </Button>
                   </div>
-                  <div className="flex gap-2 mt-2 justify-start">
+                  <div className="flex justify-start gap-2 mt-2">
                     <Button
                       btnType="secondary"
                       onClick={() => {
@@ -466,7 +471,7 @@ const SettingsPage = () => {
               <Section>
                 <SubSectionTitle>
                   <strong>Share images with LAION</strong>
-                  <div className="block text-xs mt-2 mb-2 w-full">
+                  <div className="block w-full mt-2 mb-2 text-xs">
                     Automatically and anonymously share images with LAION (the
                     non-profit that helped to train Stable Diffusion) for use in
                     aesthetic training in order to improve future models. See{' '}
@@ -499,7 +504,7 @@ const SettingsPage = () => {
               <Section>
                 <SubSectionTitle>
                   <strong>Allow NSFW images</strong>
-                  <div className="block text-xs mt-2 mb-2 w-full">
+                  <div className="block w-full mt-2 mb-2 text-xs">
                     Workers attempt to block NSFW queries. Images flagged by
                     NSFW filter will be blacked out.
                   </div>
@@ -523,7 +528,7 @@ const SettingsPage = () => {
               <Section>
                 <SubSectionTitle>
                   <strong>Worker type</strong>
-                  <div className="block text-xs mb-2 mt-2 w-full">
+                  <div className="block w-full mt-2 mb-2 text-xs">
                     Request images from all workers or trusted only. Potential
                     risk if untrusted worker is a troll. Trusted is safer, but
                     potentially slower.
@@ -553,7 +558,7 @@ const SettingsPage = () => {
               <Section>
                 <SubSectionTitle>
                   <strong>Allow slow workers</strong>
-                  <div className="block text-xs mt-2 mb-2 w-full">
+                  <div className="block w-full mt-2 mb-2 text-xs">
                     Allow slower workers to pick up your requests. Disabling
                     this incurs an extra kudos cost.
                   </div>
@@ -577,7 +582,7 @@ const SettingsPage = () => {
               <Section>
                 <SubSectionTitle>
                   <strong>Use a specific worker ID</strong>
-                  <div className="block text-xs mb-2 mt-2 w-full">
+                  <div className="block w-full mt-2 mb-2 text-xs">
                     Enter worker ID to send all of your image requests to a
                     specific worker. Useful for debugging purposes or testing
                     features available on particular workers.{' '}
@@ -597,7 +602,7 @@ const SettingsPage = () => {
                     value={componentState.useWorkerId}
                     placeholder="Worker ID"
                   />
-                  <div className="flex gap-2 mt-2 justify-start">
+                  <div className="flex justify-start gap-2 mt-2">
                     <Button
                       btnType="secondary"
                       onClick={() => {
@@ -616,7 +621,7 @@ const SettingsPage = () => {
                 <Section>
                   <SubSectionTitle>
                     Enable Beta
-                    <div className="block text-xs mt-2 mb-2 w-full">
+                    <div className="block w-full mt-2 mb-2 text-xs">
                       Will route all requests to Stable Horde&apos;s beta server
                       (if available). Used for testing purposes. Things may
                       break.
@@ -707,12 +712,12 @@ const SettingsPage = () => {
                 <PageTitle as="h2">ArtBot Preferences</PageTitle>
                 <SubSectionTitle>
                   <strong>Stay on create page?</strong>
-                  <div className="block text-xs mb-2 mt-2 w-full">
+                  <div className="block w-full mt-2 mb-2 text-xs">
                     After clicking &quot;create&quot; on the image generation
                     page, stay on the page, rather than show pending items.
                   </div>
                 </SubSectionTitle>
-                <div className="flex flex-row gap-2 items-center">
+                <div className="flex flex-row items-center gap-2">
                   <Switch
                     onChange={() => {
                       if (componentState.stayOnCreate) {
@@ -728,13 +733,13 @@ const SettingsPage = () => {
               <Section>
                 <SubSectionTitle>
                   <strong>Save on create?</strong>
-                  <div className="block text-xs mb-2 mt-2 w-full">
+                  <div className="block w-full mt-2 mb-2 text-xs">
                     After clicking &quot;create&quot; on the image generation
                     page, preserve the following settings. (All other settings
                     will be remembered.)
                   </div>
                 </SubSectionTitle>
-                <div className="flex flex-row gap-2 mt-2 items-center">
+                <div className="flex flex-row items-center gap-2 mt-2">
                   <div className="w-[100px] text-sm">Prompt?</div>
                   <Switch
                     onChange={() => {
@@ -747,7 +752,7 @@ const SettingsPage = () => {
                     checked={componentState.savePromptOnCreate}
                   />
                 </div>
-                <div className="flex flex-row gap-2 mt-2 items-center">
+                <div className="flex flex-row items-center gap-2 mt-2">
                   <div className="w-[100px] text-sm">Seed?</div>
                   <Switch
                     onChange={() => {
@@ -760,7 +765,7 @@ const SettingsPage = () => {
                     checked={componentState.saveSeedOnCreate}
                   />
                 </div>
-                <div className="flex flex-row gap-2 mt-2 items-center">
+                <div className="flex flex-row items-center gap-2 mt-2">
                   <div className="w-[100px] text-sm">Canvas</div>
                   <Switch
                     onChange={() => {
@@ -777,7 +782,7 @@ const SettingsPage = () => {
               <Section>
                 <SubSectionTitle>
                   <strong>Preferred image format</strong>
-                  <div className="block text-xs mb-2 mt-2 w-full">
+                  <div className="block w-full mt-2 mb-2 text-xs">
                     Choose your preferred format when downloading images from
                     ArtBot
                   </div>
@@ -806,13 +811,13 @@ const SettingsPage = () => {
               <Section>
                 <SubSectionTitle>
                   <strong>Run in background?</strong>
-                  <div className="block text-xs mb-2 mt-2 w-full">
+                  <div className="block w-full mt-2 mb-2 text-xs">
                     By default, ArtBot only runs in the active browser tab in
                     order to try and help prevent your IP address from being
                     throttled. You may disable this behavior if you wish.
                   </div>
                 </SubSectionTitle>
-                <div className="flex flex-row gap-2 items-center">
+                <div className="flex flex-row items-center gap-2">
                   <Switch
                     onChange={() => {
                       if (componentState.runInBackground) {
@@ -828,7 +833,7 @@ const SettingsPage = () => {
               <Section>
                 <SubSectionTitle>
                   <strong>Enable page swipe on image gallery page?</strong>
-                  <div className="block text-xs mb-2 mt-2 w-full">
+                  <div className="block w-full mt-2 mb-2 text-xs">
                     On mobile devices, this option allows you to swipe between
                     full pages of images on the{' '}
                     <Linker href="/images">images gallery page</Linker>.
@@ -853,20 +858,20 @@ const SettingsPage = () => {
               <Section>
                 <SubSectionTitle>
                   <strong>Generate thumbnails?</strong>
-                  <div className="block text-xs mb-2 mt-2 w-full">
+                  <div className="block w-full mt-2 mb-2 text-xs">
                     ArtBot recently implemented image thumbnails to help the
                     image gallery become more performant, especially on mobile
                     devices. Older images, created before 2023.03.06, will not
                     have image thumbnails. If you wish, you may manually kick
                     off this process.
                   </div>
-                  <div className="block text-xs mb-2 w-full">
+                  <div className="block w-full mb-2 text-xs">
                     <strong>WARNING:</strong> Depending on the number of images,
                     this could take some time. (On my iPhone 14 Pro, it took
                     about 100 seconds to process 3,000 images)
                   </div>
                   {totalToProcess > 0 && (
-                    <div className="block text-xs mb-2 w-full">
+                    <div className="block w-full mb-2 text-xs">
                       {processState} {currentProcessIdx} of {totalToProcess}{' '}
                       {processState === 'Analyzing' ? 'images' : 'thumbnails'}.
                     </div>
@@ -893,7 +898,7 @@ const SettingsPage = () => {
               <Section>
                 <SubSectionTitle>
                   <strong>Download debugging logs?</strong>
-                  <div className="block text-xs mb-2 mt-2 w-full">
+                  <div className="block w-full mt-2 mb-2 text-xs">
                     This is really only used in case you&apos;re encountering
                     some issues with ArtBot and are asked to provide some
                     additional logs.
@@ -916,16 +921,16 @@ const SettingsPage = () => {
               <Section>
                 <SubSectionTitle>
                   <strong>Reset ArtBot settings in local storage?</strong>
-                  <div className="block text-xs mb-2 mt-2 w-full">
+                  <div className="block w-full mt-2 mb-2 text-xs">
                     In some instances, ArtBot settings could have been
                     corrupted. Use this option to reset all user settings found
                     on this settings page (e.g., API key, image download
                     preferences, stored input values, etc).
                   </div>
-                  <div className="block text-xs mb-2 mt-2 w-full">
+                  <div className="block w-full mt-2 mb-2 text-xs">
                     Please save your <strong>API key</strong> before doing this!
                   </div>
-                  <div className="block text-xs mb-2 mt-2 w-full">
+                  <div className="block w-full mt-2 mb-2 text-xs">
                     The prompt history database and image database will not be
                     touched and your images will still be available after this
                     reset.
@@ -948,13 +953,13 @@ const SettingsPage = () => {
               <Section>
                 <SubSectionTitle>
                   <strong>Reset Input Cache?</strong>
-                  <div className="block text-xs mb-2 mt-2 w-full">
+                  <div className="block w-full mt-2 mb-2 text-xs">
                     In some instances, input cache settings could have been
                     corrupted. Use this option to reset cached data found on the
                     create page (e.g., steps, guidance, last used sampler, last
                     used model).
                   </div>
-                  <div className="block text-xs mb-2 mt-2 w-full">
+                  <div className="block w-full mt-2 mb-2 text-xs">
                     The prompt history database and image database will not be
                     touched and your images will still be available after this
                     reset.
@@ -978,7 +983,7 @@ const SettingsPage = () => {
               {/* <Section>
                 <SubSectionTitle>
                   Disable snow flakes
-                  <div className="block text-xs mb-2 mt-2 w-full">
+                  <div className="block w-full mt-2 mb-2 text-xs">
                     Turn off snow flakes (a temporary feature enabled during
                     Christmastime here in California). NOTE: Requires page
                     reload.

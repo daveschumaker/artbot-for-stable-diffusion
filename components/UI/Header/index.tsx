@@ -19,6 +19,7 @@ const Header = () => {
         'left-[0]',
         'right-[0]',
         'z-[25]',
+        'px-[8px]',
         'bg-[#f2f2f2]',
         'dark:bg-[#222222]'
       ])}

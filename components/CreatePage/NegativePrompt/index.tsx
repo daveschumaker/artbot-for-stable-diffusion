@@ -77,7 +77,7 @@ const NegativePrompt = ({ handleChangeValue, input, setInput }: any) => {
             onChange={handleChangeValue}
             value={input.negative}
           />
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-2">
             <Button
               title="Clear current input"
               btnType="secondary"

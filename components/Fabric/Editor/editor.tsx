@@ -13,6 +13,7 @@ const Editor = ({
   canvasId = 'canvas',
   canvasType = 'inpainting',
   handleRemoveClick,
+  hideCanvas = false,
   source_image,
   source_image_height,
   source_image_width,
@@ -128,7 +129,11 @@ const Editor = ({
         toolbarAbsolute={toolbarAbsolute}
         toolbarDisableMenu={toolbarDisableMenu}
       />
-      <div className="w-full" id="canvas-wrapper">
+      <div
+        className="w-full"
+        id="canvas-wrapper"
+        style={{ display: hideCanvas ? 'none' : 'block' }}
+      >
         <canvas id={canvasId} />
       </div>
     </div>

@@ -1,3 +1,4 @@
+import ControlNetOptions from 'components/CreatePage/AdvancedOptionsPanel/ControlNetOptions'
 import NumericInputSlider from 'components/CreatePage/AdvancedOptionsPanel/NumericInputSlider'
 import Samplers from 'components/CreatePage/AdvancedOptionsPanel/Samplers'
 import SelectModel from 'components/CreatePage/AdvancedOptionsPanel/SelectModel/selectModel'
@@ -135,6 +136,15 @@ export const LivePaintOptions = ({ input, setInput }: any) => {
             input.models[0] &&
             input.models[0].indexOf('_inpainting') >= 0
           }
+        />
+      </FlexRow>
+
+      <FlexRow>
+        <ControlNetOptions
+          forceDisplay
+          hideControlMap
+          input={input}
+          setInput={setInput}
         />
       </FlexRow>
 

@@ -8,7 +8,7 @@ import DefaultPromptInput from 'models/DefaultPromptInput'
 import { CheckImage } from 'types'
 
 export const useFetchImage = (input: DefaultPromptInput) => {
-  const [jobStatus, setJobStatus] = useState('waiting')
+  const [jobStatus, setJobStatus] = useState('requesting')
   const [jobId, setJobId] = useState('')
   const [jobDone, setJobDone] = useState(false)
   const [waitTime, setWaitTime] = useState('...')
@@ -22,7 +22,7 @@ export const useFetchImage = (input: DefaultPromptInput) => {
       setImageResult(data.base64String)
       setPending(false)
       setJobDone(false)
-      setJobStatus('waiting')
+      setJobStatus('requesting')
       setWaitTime('...')
       setJobId('')
     }
