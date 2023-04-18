@@ -52,7 +52,6 @@ import PromptInputSettings from 'models/PromptInputSettings'
 import { trackEvent } from 'api/telemetry'
 import { MAX_IMAGES_PER_JOB } from '_constants'
 import RenderParentImage from 'components/ParentImage'
-import Fingers from './Fingers'
 import StylesDropdown from '../StylesDropdown'
 
 const NoSliderSpacer = styled.div`
@@ -738,7 +737,6 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
           <UpscalerOptions input={input} setInput={setInput} />
         </div>
       </Section>
-      <Fingers />
       <Section>
         <NumericInputSlider
           label="CLIP skip"
