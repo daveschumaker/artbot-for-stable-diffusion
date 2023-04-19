@@ -116,6 +116,22 @@ const Changelog = () => {
       */}
       <div className="px-1">
         <Section>
+          <SubSectionTitle>2023.04.19</SubSectionTitle>
+          <StyledUl>
+            <StyledLi>
+              Fix: Issue where a blank modal would sometimes show on image
+              gallery page. (Another issue with incorrect memoization. Oops!)
+            </StyledLi>
+            <StyledLi>
+              Misc: more small fixes to the{' '}
+              <Linker href="/live-paint" passHref>
+                live paint page
+              </Linker>
+              .
+            </StyledLi>
+          </StyledUl>
+        </Section>
+        <Section>
           <SubSectionTitle>2023.04.18</SubSectionTitle>
           <StyledUl>
             <StyledLi>

@@ -2,7 +2,7 @@
 /* eslint-disable @next/next/no-img-element */
 import Editor from 'components/Fabric/Editor'
 import PageTitle from 'components/UI/PageTitle'
-import { useEffect, useReducer, useState } from 'react'
+import { useCallback, useEffect, useReducer, useState } from 'react'
 import DefaultPromptInput from 'models/DefaultPromptInput'
 import { useFetchImage } from 'hooks/useFetchImage'
 import SpinnerV2 from 'components/Spinner'
@@ -55,6 +55,33 @@ const LivePaint = () => {
 
   let [imageResult, pending, jobStatus, waitTime] = useFetchImage(input)
 
+  const getCanvasSize = useCallback(() => {
+    let size = pageWidth
+    if (!isSinglePanel) {
+      size = Math.floor((pageWidth - 8) / 2)
+
+      // Ensure size is multiple of 64
+      let validateSize = nearestWholeMultiple(size)
+
+      if (validateSize > size) {
+        size = validateSize - 64
+      } else {
+        size = validateSize
+      }
+    }
+
+    return size
+  }, [isSinglePanel, pageWidth])
+
+  useEffect(() => {
+    if (pageWidth !== 0) {
+      setInput({
+        width: getCanvasSize(),
+        height: getCanvasSize()
+      })
+    }
+  }, [getCanvasSize, pageWidth])
+
   useEffect(() => {
     if (imageResult) {
       setNewResult(true)
@@ -80,19 +107,7 @@ const LivePaint = () => {
     })
   })
 
-  let size = pageWidth
-  if (!isSinglePanel) {
-    size = Math.floor((pageWidth - 8) / 2)
-
-    // Ensure size is multiple of 64
-    let validateSize = nearestWholeMultiple(size)
-
-    if (validateSize > size) {
-      size = validateSize - 64
-    } else {
-      size = validateSize
-    }
-  }
+  let size = getCanvasSize()
 
   return (
     <>
