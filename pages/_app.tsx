@@ -199,7 +199,7 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
       <ContentWrapper>
         <Menu show={showAppMenu} />
         <Header />
-        <div className="absolute mx-auto w-full md:pb-[0] top-[56px] md:top-[44px] md:relative px-[8px]">
+        <div className="absolute mx-auto w-full md:pb-[0] top-[48px] md:top-[44px] md:relative px-[8px]">
           <ToastContainer
             style={{ marginTop: `calc(env(safe-area-inset-top))` }}
           />
@@ -257,7 +257,7 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
             FallbackComponent={ErrorComponent}
             onError={logErrorInComponent}
           >
-            <div className="p-1">
+            <div className="pb-[72px] adCol:p-1">
               <Component {...pageProps} />
             </div>
           </ErrorBoundary>

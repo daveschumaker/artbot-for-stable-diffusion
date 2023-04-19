@@ -19,6 +19,12 @@
     "update:build-id": "node ./x-build-scripts/updateBuildId.js",
     "test": "jest"
   },
+  "jest": {
+    "moduleDirectories": [
+      "node_modules",
+      "<rootDir>"
+    ]
+  },
   "dependencies": {
     "@next/bundle-analyzer": "13.3.0",
     "@radix-ui/colors": "0.1.8",
@@ -48,7 +54,7 @@
     "react-colorful": "5.6.1",
     "react-dom": "18.2.0",
     "react-dropzone": "14.2.3",
-    "react-error-boundary": "^4.0.3",
+    "react-error-boundary": "4.0.3",
     "react-full-screen": "1.1.1",
     "react-lazyload": "3.2.0",
     "react-portal": "4.2.2",

@@ -1,4 +1,4 @@
-import { debounce } from 'utils/debounce'
+import { debounce } from '../utils/debounce'
 import LocalStorageController from '../controllers/LocalStorageController'
 import AppSettings from './AppSettings'
 

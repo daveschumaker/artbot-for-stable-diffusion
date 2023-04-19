@@ -504,12 +504,14 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
       {componentState.showMultiModel ? (
         <Section>
           <SubSectionTitle>
-            Select Models
-            <Tooltip tooltipId="select-models-tooltip">
-              Models currently available within the horde. Numbers in
-              parentheses indicate number of works. Generally, these models will
-              generate images quicker.
-            </Tooltip>
+            <TextTooltipRow>
+              Select Models
+              <Tooltip tooltipId="select-models-tooltip">
+                Models currently available within the horde. Numbers in
+                parentheses indicate number of works. Generally, these models
+                will generate images quicker.
+              </Tooltip>
+            </TextTooltipRow>
             <div className="text-xs">
               <Linker href={`/info/models#${input.models[0]}`}>
                 [ View detailed model info ]

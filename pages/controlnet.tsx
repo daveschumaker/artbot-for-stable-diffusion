@@ -48,6 +48,7 @@ import ControlNetOptions from 'components/CreatePage/AdvancedOptionsPanel/Contro
 import UpscalerOptions from 'components/CreatePage/AdvancedOptionsPanel/UpscalerOptions'
 import useComponentState from 'hooks/useComponentState'
 import { trackEvent } from 'api/telemetry'
+import PlaylistXIcon from 'components/icons/PlaylistXIcon'
 
 // Kind of a hacky way to persist output of image over the course of a session.
 let cachedImageDetails = {}
@@ -324,7 +325,7 @@ const ControlNet = () => {
   }, [totalImagesRequested, input.seed, setErrors])
 
   return (
-    <div className="pb-[88px]">
+    <div>
       <Head>
         <title>ControlNet - ArtBot for Stable Diffusion</title>
         <meta name="twitter:title" content="ArtBot - ControlNet" />
@@ -381,6 +382,10 @@ const ControlNet = () => {
       </Section>
       <Section>
         <SubSectionTitle>Step 2. Prompts</SubSectionTitle>
+        <div className="flex flex-row items-center gap-2 mt-0 mb-1 text-sm font-bold">
+          <PlaylistXIcon />
+          Prompt
+        </div>
         <FlexRow className="mb-2">
           <TextArea
             name="prompt"
@@ -399,11 +404,12 @@ const ControlNet = () => {
             <ArrowBarLeftIcon />
           </Button>
         </FlexRow>
+        <div className="flex flex-row items-center gap-2 mt-0 mb-1 text-sm font-bold">
+          <PlaylistXIcon />
+          Negative prompt <span className="font-[400] text-xs">(optional)</span>
+        </div>
         <FlexRow>
           <div className="flex flex-col w-full gap-2">
-            <div className="text-sm font-[700]">
-              Negative prompt (optional):
-            </div>
             <FlexRow>
               <TextArea
                 name="negative"
@@ -430,7 +436,7 @@ const ControlNet = () => {
       </Section>
       <Section>
         <SubSectionTitle>Step 3. Advanced settings</SubSectionTitle>
-        <ControlNetOptions input={input} setInput={setInput} />
+        <ControlNetOptions forceDisplay input={input} setInput={setInput} />
 
         <TwoPanel>
           <SplitPanel>
@@ -621,6 +627,7 @@ const ControlNet = () => {
       </Section>
 
       <ActionPanel
+        disableSubmit={!input.source_image}
         errors={errors}
         input={input}
         setInput={setInput}

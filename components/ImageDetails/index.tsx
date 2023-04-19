@@ -20,6 +20,7 @@ import RenderParentImage from 'components/ParentImage'
 import { logError } from 'utils/appUtils'
 import { userInfoStore } from 'store/userStore'
 import AdContainer from 'components/AdContainer'
+import { useWindowSize } from 'hooks/useWindowSize'
 
 interface Props {
   imageDetails: IImageDetails
@@ -38,6 +39,7 @@ const ImageDetails = ({
   handleReloadImageData = () => {},
   handleTiling = () => {}
 }: Props) => {
+  const size = useWindowSize()
   const showFullScreen = useFullScreenHandle()
   const [fullscreen, setFullscreen] = useState(false)
   const [showImg2ImgModal, setShowImg2ImgModal] = useState(false)
@@ -185,6 +187,14 @@ const ImageDetails = ({
           </div>
         </div>
       )}
+      {
+        // @ts-ignore
+        size.width < 890 && (
+          <div className="flex flex-row justify-center w-full mt-3">
+            <AdContainer />
+          </div>
+        )
+      }
       <div
         id="image-params-wrapper"
         className="flex flex-col items-center justify-start w-full mt-3"
@@ -314,9 +324,14 @@ const ImageDetails = ({
                 </ul>
               )}
             </div>
-            <div className="w-[154px]">
-              <AdContainer />
-            </div>
+            {
+              // @ts-ignore
+              size.width >= 890 && isModal && (
+                <div className="w-[154px]">
+                  <AdContainer />
+                </div>
+              )
+            }
           </div>
         </div>
       </div>

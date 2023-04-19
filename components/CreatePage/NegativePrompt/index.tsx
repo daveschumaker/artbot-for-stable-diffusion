@@ -2,7 +2,6 @@ import { trackEvent } from 'api/telemetry'
 import { Button } from 'components/UI/Button'
 import FlexRow from 'components/UI/FlexRow'
 import Section from 'components/UI/Section'
-import SubSectionTitle from 'components/UI/SubSectionTitle'
 import TextArea from 'components/UI/TextArea'
 import TextButton from 'components/UI/TextButton'
 import TextTooltipRow from 'components/UI/TextTooltipRow'
@@ -56,11 +55,12 @@ const NegativePrompt = ({ handleChangeValue, input, setInput }: any) => {
         />
       )}
       <Section>
-        <SubSectionTitle>
+        <div>
           <TextTooltipRow>
             <div className="flex flex-row items-center gap-2 mt-0 mb-1 text-sm font-bold">
               <PlaylistXIcon />
-              Negative prompt
+              Negative prompt{' '}
+              <span className="font-[400] text-xs">(optional)</span>
             </div>
             <Tooltip
               // @ts-ignore
@@ -69,7 +69,7 @@ const NegativePrompt = ({ handleChangeValue, input, setInput }: any) => {
               Add words or phrases to demphasize from your desired image
             </Tooltip>
           </TextTooltipRow>
-        </SubSectionTitle>
+        </div>
         <FlexRow>
           <TextArea
             name="negative"

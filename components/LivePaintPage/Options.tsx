@@ -29,7 +29,7 @@ export const LivePaintOptions = ({ input, setInput }: any) => {
 
   return (
     <div className="flex flex-col w-full gap-2">
-      <div className="text-sm font-bold flex flex-row gap-2 items-center mb-[4px]">
+      <div className="flex flex-row items-center gap-2 text-sm font-bold">
         <PlaylistXIcon hideCross />
         Prompt
       </div>
@@ -52,9 +52,9 @@ export const LivePaintOptions = ({ input, setInput }: any) => {
           <ArrowBarLeftIcon />
         </Button>
       </FlexRow>
-      <div className="text-sm font-bold flex flex-row gap-2 items-center mb-[4px]">
+      <div className="flex flex-row items-center gap-2 text-sm font-bold">
         <PlaylistXIcon />
-        Negative prompt
+        Negative prompt <span className="font-[400] text-xs">(optional)</span>
       </div>
       <FlexRow>
         <TextArea

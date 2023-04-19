@@ -9,6 +9,7 @@ import Errors from 'utils/errors'
 interface Props {
   errors: { [key: string]: boolean }
   input: string
+  disableSubmit?: boolean
   setInput: any
   resetInput: () => void
   handleSubmit: () => void
@@ -21,6 +22,7 @@ interface Props {
 }
 
 const ActionPanel = ({
+  disableSubmit = false,
   errors,
   resetInput,
   handleSubmit,
@@ -59,7 +61,7 @@ const ActionPanel = ({
               title="Create new image"
               onClick={handleSubmit}
               // @ts-ignore
-              disabled={pending || areThereCriticalErrors()}
+              disabled={disableSubmit || pending || areThereCriticalErrors()}
               width="100px"
             >
               <span>{pending ? '' : <SquarePlusIcon />}</span>
