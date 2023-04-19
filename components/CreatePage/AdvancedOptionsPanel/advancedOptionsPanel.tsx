@@ -756,7 +756,7 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
       {showNumImagesInput && (
         <Section>
           <NumericInputSlider
-            label="Number of images"
+            label="# of images"
             from={1}
             to={MAX_IMAGES_PER_JOB}
             step={1}

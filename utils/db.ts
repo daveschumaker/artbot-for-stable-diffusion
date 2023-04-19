@@ -500,14 +500,11 @@ export const getImageDetails = memoize(_getImageDetails, {
   maxAge: 1000
 })
 
-export const _getNextImageDetails = async (timestamp: number) => {
+export const getNextImageDetails = async (timestamp: number) => {
   return await db.completed.where('timestamp').above(timestamp).limit(1).first()
 }
-export const getNextImageDetails = memoize(_getNextImageDetails, {
-  maxAge: 30000
-})
 
-export const _getPrevImageDetails = async (timestamp: number) => {
+export const getPrevImageDetails = async (timestamp: number) => {
   return await db.completed
     .where('timestamp')
     .below(timestamp)
@@ -515,9 +512,6 @@ export const _getPrevImageDetails = async (timestamp: number) => {
     .limit(1)
     .first()
 }
-export const getPrevImageDetails = memoize(_getPrevImageDetails, {
-  maxAge: 30000
-})
 
 export const deleteCompletedImage = async (jobId: string) => {
   await db.completed.where('jobId').equals(jobId).delete()
