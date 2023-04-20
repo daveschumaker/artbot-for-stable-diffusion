@@ -310,9 +310,17 @@ export const filterCompletedJobs = async ({
   offset = 0,
   sort = 'new',
   filterType = 'favorited',
-  model = ''
+  model = '',
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  callback = (index: any) => {}
 } = {}) => {
+  let imageIndex = 1
+
   const filterFunc = (entry: any) => {
+    // @ts-ignore
+    callback(imageIndex)
+    imageIndex++
+
     if (filterType === 'model') {
       if (entry.models && entry?.models?.indexOf(model) >= 0) {
         return true
