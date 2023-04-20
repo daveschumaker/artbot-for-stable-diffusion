@@ -9,7 +9,7 @@ const nextConfig = {
   images: {
     domains: ['huggingface.co', 'raw.githubusercontent.com']
   },
-  productionBrowserSourceMaps: process.env.ANALYZE === 'true' ? true : false,
+  productionBrowserSourceMaps: true,
   reactStrictMode: true,
   swcMinify: false // Set to false for now due to issue with React-tooltip
 }

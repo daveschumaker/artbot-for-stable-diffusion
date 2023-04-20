@@ -35,7 +35,7 @@ import ExternalLinkIcon from '../icons/ExternalLinkIcon'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
 import MaxWidth from '../UI/MaxWidth'
 import AlertDialogBox from '../UI/AlertDialogBox'
-import { generateThumbnails } from '../../utils/db'
+import { db, generateThumbnails } from '../../utils/db'
 import TextTooltipRow from '../UI/TextTooltipRow'
 import EyeIcon from 'components/icons/EyeIcon'
 
@@ -977,6 +977,38 @@ const SettingsPage = () => {
                     }}
                   >
                     Reset Input Cache?
+                  </Button>
+                </MaxWidth>
+              </Section>
+              <Section>
+                <SubSectionTitle>
+                  <strong>Clear pending items table?</strong>
+                  <div className="block w-full mt-2 mb-2 text-xs">
+                    In some instances, a data corruption issue can occur on the
+                    pending items page due to an unknown race condition that
+                    hasn&apos;t been solved yet. When this happens, you will
+                    encounter an error when trying to access the pending items
+                    page.
+                  </div>
+                  <div className="block w-full mt-2 mb-2 text-xs">
+                    The image database will not be touched and your images will
+                    still be available after this reset.
+                  </div>
+                </SubSectionTitle>
+                <MaxWidth
+                  // @ts-ignore
+                  maxWidth="240"
+                >
+                  <Button
+                    btnType="secondary"
+                    onClick={async () => {
+                      await db.pending.clear()
+                      window.location.assign(
+                        `${window.location.origin}/artbot/pending`
+                      )
+                    }}
+                  >
+                    Reset Pending Items?
                   </Button>
                 </MaxWidth>
               </Section>

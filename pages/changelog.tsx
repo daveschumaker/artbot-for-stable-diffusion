@@ -116,6 +116,22 @@ const Changelog = () => {
       */}
       <div className="px-1">
         <Section>
+          <SubSectionTitle>2023.04.20</SubSectionTitle>
+          <StyledUl>
+            <StyledLi>
+              Debugging feature: On the{' '}
+              <Linker href="/settings?panel=prefs">
+                ArtBot settings panel
+              </Linker>
+              , I&apos;ve added a button that clears out the pending items
+              table. This is useful for an unknown race condition that primarily
+              happens in Firefox where the pending items table gets corrupted. I
+              need to do more investigation into why this happens in this first
+              place.
+            </StyledLi>
+          </StyledUl>
+        </Section>
+        <Section>
           <SubSectionTitle>2023.04.19</SubSectionTitle>
           <StyledUl>
             <StyledLi>
