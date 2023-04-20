@@ -13,7 +13,11 @@ import { useStore } from 'statery'
 import { userInfoStore } from '../../../store/userStore'
 import AlertTriangleIcon from 'components/icons/AlertTriangle'
 import ErrorDropdown from './ErrorDropdown'
-import { appInfoStore } from 'store/appStore'
+import {
+  appInfoStore,
+  setNewImageReady,
+  setShowImageReadyToast
+} from 'store/appStore'
 
 const ListItem = ({ className, children, href, title, ...props }: any) => (
   <li>
@@ -33,6 +37,9 @@ const ListItem = ({ className, children, href, title, ...props }: any) => (
 const NavBar = () => {
   const router = useRouter()
   const { pathname } = router
+
+  const appState = useStore(appInfoStore)
+  const { newImageReady } = appState
 
   const appStore = useStore(appInfoStore)
   const { workers } = useStore(userInfoStore)
@@ -123,13 +130,32 @@ const NavBar = () => {
           </Link>
         </NavigationMenu.Item>
 
-        <NavigationMenu.Item className={styles.NavigationMenuItem}>
+        <NavigationMenu.Item
+          className={clsx('relative', styles.NavigationMenuItem)}
+        >
+          {newImageReady && (
+            <span
+              className="flex flex-row justify-center items-center opacity-1 w-[12px] h-[12px] pl-[1.5px] mr-1 bg-red-600 rounded-full border-white border-[1px] text-[8px] text-white"
+              style={{
+                position: 'absolute',
+                top: '-4px',
+                right: '-11px'
+              }}
+            >
+              !
+            </span>
+          )}
+
           <Link
             className={clsx(
               styles.NavigationMenuLink,
               isActiveRoute('/images') && styles.isActive
             )}
             href="/images"
+            onClick={() => {
+              setShowImageReadyToast(false)
+              setNewImageReady('')
+            }}
           >
             Images
           </Link>

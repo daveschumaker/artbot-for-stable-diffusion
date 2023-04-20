@@ -129,6 +129,14 @@ const Changelog = () => {
               need to do more investigation into why this happens in this first
               place.
             </StyledLi>
+            <StyledLi>
+              Feature: Disable new image notification toast on the{' '}
+              <Linker href="/settings?panel=prefs">
+                ArtBot settings panel
+              </Linker>
+              . (I&apos;ve found it annoying on some occasions when trying to
+              click various menu items right as the notification pops up.)
+            </StyledLi>
           </StyledUl>
         </Section>
         <Section>

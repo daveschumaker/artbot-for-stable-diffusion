@@ -109,6 +109,7 @@ const SettingsPage = () => {
     allowNsfwImages: false,
     apiKey: '',
     apiErrorMsg: '',
+    disableNewImageNotification: false,
     disableSnowflakes: false,
     enableGallerySwipe: true,
     loadingWorkerStatus: {},
@@ -194,6 +195,8 @@ const SettingsPage = () => {
     updateObj.saveCanvasOnCreate =
       AppSettings.get('saveCanvasOnCreate') || false
 
+    updateObj.disableNewImageNotification =
+      AppSettings.get('disableNewImageNotification') || false
     updateObj.stayOnCreate = AppSettings.get('stayOnCreate') || false
     updateObj.useBeta = AppSettings.get('useBeta') || false
     updateObj.useWorkerId = AppSettings.get('useWorkerId') || ''
@@ -852,6 +855,30 @@ const SettingsPage = () => {
                       }
                     }}
                     checked={componentState.enableGallerySwipe}
+                  />
+                </MaxWidth>
+              </Section>
+              <Section>
+                <SubSectionTitle>
+                  <strong>Disable new image notification?</strong>
+                  <div className="block w-full mt-2 mb-2 text-xs">
+                    This option disabled the new image notification toast that
+                    pops up in the top right corner of the web app when ArtBot
+                    receives a new image from the AI Horde backend.
+                  </div>
+                </SubSectionTitle>
+                <MaxWidth
+                  // @ts-ignore
+                  maxWidth="240"
+                >
+                  <Switch
+                    onChange={() => {
+                      handleSwitchSelect(
+                        'disableNewImageNotification',
+                        !componentState.disableNewImageNotification
+                      )
+                    }}
+                    checked={componentState.disableNewImageNotification}
                   />
                 </MaxWidth>
               </Section>

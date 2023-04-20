@@ -313,7 +313,7 @@ const ImageOptionsWrapper = ({
       )}
       <div
         id="image-options-wrapper"
-        className="mt-3 flex flex-row w-full justify-center"
+        className="flex flex-row justify-center w-full mt-3"
       >
         <div
           id="image-options-buttons"

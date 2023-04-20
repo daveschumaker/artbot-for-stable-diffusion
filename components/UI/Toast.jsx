@@ -9,6 +9,7 @@ import { getImageDetails } from '../../utils/db'
 import ImageSquare from '../ImageSquare'
 import CloseIcon from '../icons/CloseIcon'
 import Linker from './Linker'
+import AppSettings from 'models/AppSettings'
 
 const StyledToast = styled.div`
   align-items: center;
@@ -100,7 +101,7 @@ export default function Toast({ handleClose, handleImageClick, jobId, showImageR
 
   const isActive = jobId && imageDetails && imageDetails.base64String && showImageReadyToast
 
-  if (!isActive) {
+  if (!isActive || AppSettings.get('disableNewImageNotification')) {
     return null
   }
 

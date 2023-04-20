@@ -136,11 +136,15 @@ const ImagesPage = () => {
     totalImages: 0,
     images: [],
     isLoading: true,
-    updateTimestamp: Date.now()
+    updateTimestamp: Date.now(),
+
+    currentFilterImageIndex: 0,
+    rawTotalImages: 0
   })
 
   const getImageCount = useCallback(async () => {
     let count
+    const rawTotal = await imageCount()
 
     if (componentState.filterMode !== 'all') {
       count = await countFilterCompleted({
@@ -148,9 +152,9 @@ const ImagesPage = () => {
         model: router.query.model as string
       })
     } else {
-      count = await imageCount()
+      count = rawTotal
     }
-    setComponentState({ totalImages: count })
+    setComponentState({ totalImages: count, rawTotalImages: rawTotal })
   }, [componentState.filterMode, router.query.model, setComponentState])
 
   const fetchImages = useCallback(async () => {
@@ -172,7 +176,8 @@ const ImagesPage = () => {
         offset,
         sort,
         filterType: componentState.filterMode,
-        model: router.query.model as string
+        model: router.query.model as string,
+        callback: (i) => setComponentState({ currentFilterImageIndex: i })
       })
       setFilteredItemsArray(data)
     }
