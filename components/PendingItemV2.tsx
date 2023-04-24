@@ -307,10 +307,11 @@ const PendingItem = memo(
           </StyledImageInfoPanel>
           {jobDetails.jobStatus === JobStatus.Error ? (
             <div className="mt-2 font-mono text-xs text-red-400">
-              <strong>Stable Horde API Error:</strong> {jobDetails.errorMessage}{' '}
+              <strong>Stable Horde API Error:</strong> &quot;
+              {jobDetails.errorMessage}&quot;
               {jobDetails.errorMessage !==
               'Unable to create image. Please try again soon.' ? (
-                <>
+                <div>
                   Not sure what this means? Please visit the{' '}
                   <Linker
                     href="https://discord.gg/3DxrhksKzn"
@@ -319,8 +320,8 @@ const PendingItem = memo(
                   >
                     Stable Horde Discord channel
                   </Linker>{' '}
-                  for more information.
-                </>
+                  for more further help and information.
+                </div>
               ) : null}
             </div>
           ) : null}
