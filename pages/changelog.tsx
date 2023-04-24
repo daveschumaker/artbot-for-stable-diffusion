@@ -116,6 +116,19 @@ const Changelog = () => {
       */}
       <div className="px-1">
         <Section>
+          <SubSectionTitle>2023.04.24</SubSectionTitle>
+          <StyledUl>
+            <StyledLi>
+              Added support for new field from Stable Horde API: is_possible --
+              this lets us know whether or not there are workers available to
+              complete a pending image request. If a particular image request is
+              not possible, you will see a message on the pending items page.
+              (This usually occurs if there are no workers that support the
+              requested image dimensions or post processors.)
+            </StyledLi>
+          </StyledUl>
+        </Section>
+        <Section>
           <SubSectionTitle>2023.04.20</SubSectionTitle>
           <StyledUl>
             <StyledLi>

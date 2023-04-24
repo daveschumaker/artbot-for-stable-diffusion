@@ -153,8 +153,10 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
       await updatePendingJob(imageParams.id, Object.assign({}, imageParams))
 
       const jobDetailsFromApi = (await checkImageJob(jobId)) || {}
+
       if (typeof jobDetailsFromApi?.success === 'undefined') {
         imageParams.jobStatus = JobStatus.Waiting
+        imageParams.is_possible = jobDetailsFromApi.is_possible
         await updatePendingJob(imageParams.id, Object.assign({}, imageParams))
         return {
           success: false,
@@ -492,6 +494,8 @@ export const checkCurrentJob = async (imageDetails: any) => {
     jobDetails.wait_time = checkJobResult.wait_time
     jobDetails.queue_position = checkJobResult.queue_position
   }
+
+  jobDetails.is_possible = checkJobResult.is_possible
 
   await updatePendingJob(jobDetails.id, Object.assign({}, jobDetails))
 

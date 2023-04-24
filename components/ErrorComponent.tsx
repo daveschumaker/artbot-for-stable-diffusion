@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { userInfoStore } from '../store/userStore'
 import { logError } from '../utils/appUtils'
 import PageTitle from './UI/PageTitle'
+import { db } from 'utils/db'
 
 const StyledLink = styled.a`
   color: ${(props) => props.theme.link};
@@ -37,6 +38,15 @@ export const logErrorInComponent = (
     errorType: 'client-side',
     username
   })
+
+  if (
+    window.location.href.includes('/pending') &&
+    errorMessage.includes(
+      'The operation failed for reasons unrelated to the database itself'
+    )
+  ) {
+    db.pending.clear()
+  }
 }
 
 const ErrorComponent = () => {

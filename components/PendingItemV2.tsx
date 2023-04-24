@@ -244,6 +244,8 @@ const PendingItem = memo(
     const jobTimeDiff = currentTimestamp - jobTimestamp < RATE_IMAGE_CUTOFF_SEC
     const canRate = !jobDetails.userRating && jobDetails.shareImagesExternally
 
+    const isPossible = jobDetails.is_possible
+
     return (
       <StyledContainer>
         <StyledPanel>
@@ -278,7 +280,7 @@ const PendingItem = memo(
                 {jobDetails.upscaled && <div>[ UPSCALING ]</div>}
                 <div className="italic">{jobDetails.prompt}</div>
               </StyledPrompt>
-              <div className="w-full font-mono text-xs mt-2 text-white">
+              <div className="w-full mt-2 font-mono text-xs text-white">
                 Steps: {jobDetails.steps}
                 <br />
                 Sampler: {jobDetails.sampler}
@@ -304,7 +306,7 @@ const PendingItem = memo(
             <DisplayRawData data={jobDetails} />
           </StyledImageInfoPanel>
           {jobDetails.jobStatus === JobStatus.Error ? (
-            <div className="font-mono text-xs mt-2 text-red-400">
+            <div className="mt-2 font-mono text-xs text-red-400">
               <strong>Stable Horde API Error:</strong> {jobDetails.errorMessage}{' '}
               {jobDetails.errorMessage !==
               'Unable to create image. Please try again soon.' ? (
@@ -322,8 +324,16 @@ const PendingItem = memo(
               ) : null}
             </div>
           ) : null}
+          {isPossible === false ? (
+            <div className="mt-2 font-mono text-xs text-amber-400">
+              <strong>Warning:</strong> There are currently no workers available
+              to process this image. You can continue to wait for a worker to
+              come online, or adjust your image settings (e.g., dimensions or
+              post processors) and try again.
+            </div>
+          ) : null}
           {jobStalled ? (
-            <div className="font-mono text-xs mt-2">
+            <div className="mt-2 font-mono text-xs text-amber-400">
               <strong>Warning:</strong> Job seems to have stalled. This can
               happen if a worker goes offline or crashes without completing the
               request. You can automatically cancel and retry this request or
@@ -331,16 +341,16 @@ const PendingItem = memo(
             </div>
           ) : null}
           <StyledInfoDiv>
-            <div className="flex flex-grow flex-col justify-end">
+            <div className="flex flex-col justify-end flex-grow">
               {jobDetails.jobStatus === JobStatus.Requested && (
-                <div className="w-full font-mono text-xs mt-2">
+                <div className="w-full mt-2 font-mono text-xs">
                   Image requested
                   <br />
                   Waiting for response...
                 </div>
               )}
               {jobDetails.jobStatus === JobStatus.Queued && (
-                <div className="w-full font-mono text-xs mt-2">
+                <div className="w-full mt-2 font-mono text-xs">
                   Request queued{' '}
                   {isNaN(jobDetails.queue_position) ? null : (
                     <>(queue position: {jobDetails.queue_position})</>
@@ -359,7 +369,7 @@ const PendingItem = memo(
                 </div>
               )}
               {jobDetails.jobStatus === JobStatus.Processing && (
-                <div className="w-full font-mono text-xs mt-2">
+                <div className="w-full mt-2 font-mono text-xs">
                   Processing
                   <br />
                   Estimated time remaining: {jobDetails.wait_time}s (
@@ -368,14 +378,14 @@ const PendingItem = memo(
                 </div>
               )}
               {jobDetails.jobStatus === JobStatus.Waiting && (
-                <div className="w-full font-mono text-xs mt-2">
+                <div className="w-full mt-2 font-mono text-xs">
                   Waiting to submit image request
                   <br />
                   <br />
                 </div>
               )}
               {jobDetails.jobStatus === JobStatus.Done && (
-                <div className="w-full font-mono text-xs mt-2">
+                <div className="w-full mt-2 font-mono text-xs">
                   Image request complete
                   <br />
                   <br />
@@ -395,7 +405,7 @@ const PendingItem = memo(
                 </div>
               )}
               {jobDetails.jobStatus === JobStatus.Error && (
-                <div className="font-mono text-xs mt-2 text-red-400">
+                <div className="mt-2 font-mono text-xs text-red-400">
                   Created: {new Date(jobDetails.jobTimestamp).toLocaleString()}
                 </div>
               )}

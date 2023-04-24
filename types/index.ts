@@ -19,6 +19,7 @@ export interface CheckImage {
   jobId?: string
   done?: boolean
   queue_position?: number
+  is_possible?: boolean
   wait_time?: number
   processing?: number
   waiting?: number
@@ -30,6 +31,7 @@ export enum Common {
 }
 export interface CreateImageJob {
   id: number
+  is_possible?: boolean
   jobTimestamp?: number
   jobId?: string
   jobStatus?: string
