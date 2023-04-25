@@ -94,10 +94,14 @@ export const isValidHttpUrl = (string: string = '') => {
 }
 
 export const promptSafetyExclusions = (prompt: string, model: string) => {
+  prompt = prompt.toLowerCase()
+
   if (model === 'Hentai Diffusion') {
     prompt = prompt.replace('1girl', '')
     prompt = prompt.replace('1boy', '')
   }
+
+  prompt = prompt.replace('cowboy', '')
 
   return prompt
 }
