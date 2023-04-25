@@ -695,6 +695,7 @@ interface ICountImages {
   useMultiSteps?: boolean
   useMultiGuidance?: boolean
   prompt?: string
+  negative?: string
   models?: Array<string>
 }
 
@@ -719,7 +720,8 @@ export const countImagesToGenerate = (imageParams: ICountImages) => {
     useMultiGuidance = false,
     useMultiSteps = false,
     models = [],
-    prompt = ''
+    prompt = '',
+    negative = ''
   } = imageParams
   let imageCount = numImages
 
@@ -751,9 +753,14 @@ export const countImagesToGenerate = (imageParams: ICountImages) => {
     imageCount = imageCount * splitCount
   }
 
-  if (hasPromptMatrix(prompt)) {
+  if (hasPromptMatrix(prompt) || hasPromptMatrix(negative)) {
     const matrixPrompts = [...promptMatrix(prompt)] || ['']
-    imageCount = imageCount * matrixPrompts.length
+    const matrixNegative = [...promptMatrix(negative)] || ['']
+
+    const promptLength = matrixPrompts.length > 0 ? matrixPrompts.length : 1
+    const negLength = matrixNegative.length > 0 ? matrixNegative.length : 1
+
+    imageCount = imageCount * (promptLength * negLength)
   }
 
   if (models.length > 1) {

@@ -314,15 +314,42 @@ export const createImageJob = async (newImageRequest: CreateImageRequest) => {
       await sleep(100)
       await createPendingJob(imageRequest)
     }
-  } else if (hasPromptMatrix(newImageRequest.prompt)) {
+  } else if (
+    hasPromptMatrix(newImageRequest.prompt) ||
+    hasPromptMatrix(newImageRequest.negative)
+  ) {
     // Check for prompt matrix
     const matrixPrompts = [...promptMatrix(newImageRequest.prompt)]
+    const matrixNegative = [...promptMatrix(newImageRequest.negative)]
 
-    for (const idx in matrixPrompts) {
-      newImageRequest.prompt = matrixPrompts[idx]
+    if (matrixPrompts.length >= 1 && matrixNegative.length === 0) {
+      for (const idx in matrixPrompts) {
+        newImageRequest.prompt = matrixPrompts[idx]
 
-      await sleep(100)
-      await createPendingJob(newImageRequest)
+        await sleep(100)
+        await createPendingJob(newImageRequest)
+      }
+    }
+
+    if (matrixPrompts.length === 0 && matrixNegative.length >= 1) {
+      for (const idx in matrixNegative) {
+        newImageRequest.negative = matrixNegative[idx]
+
+        await sleep(100)
+        await createPendingJob(newImageRequest)
+      }
+    }
+
+    if (matrixPrompts.length >= 1 && matrixNegative.length >= 1) {
+      for (const idx in matrixPrompts) {
+        for (const idx2 in matrixNegative) {
+          newImageRequest.prompt = matrixPrompts[idx]
+          newImageRequest.negative = matrixNegative[idx2]
+
+          await sleep(100)
+          await createPendingJob(newImageRequest)
+        }
+      }
     }
   } else {
     await createPendingJob(newImageRequest)

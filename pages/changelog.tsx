@@ -126,6 +126,10 @@ const Changelog = () => {
               (This usually occurs if there are no workers that support the
               requested image dimensions or post processors.)
             </StyledLi>
+            <StyledLi>
+              Fix: Negative prompt field now supports prompt matrix. Thanks to
+              Cubox on Discord for letting me know this was broken.
+            </StyledLi>
           </StyledUl>
         </Section>
         <Section>
