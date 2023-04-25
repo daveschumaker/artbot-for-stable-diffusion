@@ -8,6 +8,7 @@ export const maxSteps = ({
   isSlider = false
 }) => {
   const anonMaxSteps: Samplers = {
+    DDIM: 50,
     k_dpm_2_a: 25,
     k_dpm_2: 25,
     k_euler_a: 50,
@@ -59,6 +60,7 @@ export const hasSourceImg = (input: IHasImg) => {
 
 export const validSampler = (sampler: string) => {
   const samplers = [
+    'DDIM',
     'dpmsolver',
     'k_dpm_2_a',
     'k_dpm_2',
