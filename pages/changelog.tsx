@@ -116,6 +116,20 @@ const Changelog = () => {
       */}
       <div className="px-1">
         <Section>
+          <SubSectionTitle>2023.04.25</SubSectionTitle>
+          <StyledUl>
+            <StyledLi>
+              Fix: When running prompt validation, ignore negative prompt added
+              to positive field using &quot;###&quot;. Thanks to dreamy on
+              Discord for reporting this.
+            </StyledLi>
+            <StyledLi>
+              Added DDIM to samplers list. Thanks to dreamy on Discord for
+              reporting that this was missing.
+            </StyledLi>
+          </StyledUl>
+        </Section>
+        <Section>
           <SubSectionTitle>2023.04.24</SubSectionTitle>
           <StyledUl>
             <StyledLi>

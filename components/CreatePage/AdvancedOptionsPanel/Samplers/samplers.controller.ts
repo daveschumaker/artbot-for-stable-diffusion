@@ -6,6 +6,7 @@ export const samplerOptions = (input: any) => {
   }
 
   const options = [
+    { value: 'DDIM', label: 'DDIM' },
     { value: 'k_dpm_2_a', label: 'k_dpm_2_a' },
     { value: 'k_dpm_2', label: 'k_dpm_2' },
     { value: 'k_euler_a', label: 'k_euler_a' },

@@ -95,6 +95,7 @@ export const isValidHttpUrl = (string: string = '') => {
 
 export const promptSafetyExclusions = (prompt: string, model: string) => {
   prompt = prompt.toLowerCase()
+  prompt = prompt.split('###')[0]
 
   if (model === 'Hentai Diffusion') {
     prompt = prompt.replace('1girl', '')
