@@ -81,7 +81,8 @@ export const addTriggerToPrompt = ({
       modelInfoStore?.state?.modelDetails[model]?.trigger ?? []
 
     if (triggerArray.length > 0) {
-      triggers = triggerArray.join(' ')
+      // Instead of adding all trigger words at once to prompt, randomly pick one:
+      triggers = triggerArray[Math.floor(Math.random() * triggerArray.length)]
     }
   }
 

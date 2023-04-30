@@ -116,6 +116,19 @@ const Changelog = () => {
       */}
       <div className="px-1">
         <Section>
+          <SubSectionTitle>2023.04.29</SubSectionTitle>
+          <StyledUl>
+            <StyledLi>
+              Fix: When selecting &quot;use all models&quot; (or even &quot;use
+              favorite models&quot;), in any instance where a model had multiple
+              trigger words, ALL trigger words would be added to the prompt.
+              This is not really ideal. Now, ArtBot will randomly pick a trigger
+              work from the trigger words array. Thanks to Efreak for suggesting
+              this on Discord.
+            </StyledLi>
+          </StyledUl>
+        </Section>
+        <Section>
           <SubSectionTitle>2023.04.25</SubSectionTitle>
           <StyledUl>
             <StyledLi>
