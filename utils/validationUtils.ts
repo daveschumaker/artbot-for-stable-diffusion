@@ -105,6 +105,7 @@ export const promptSafetyExclusions = (prompt: string, model: string) => {
   }
 
   prompt = prompt.replace('cowboy', '')
+  prompt = prompt.replace('destiny', '')
 
   return prompt
 }
