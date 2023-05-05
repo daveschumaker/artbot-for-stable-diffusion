@@ -25,6 +25,12 @@
       "<rootDir>"
     ]
   },
+  "overrides": {
+    "react-lazyload": {
+      "react": "18.2.0",
+      "react-dom": "18.2.0"
+    }
+  },
   "dependencies": {
     "@next/bundle-analyzer": "13.3.0",
     "@radix-ui/colors": "0.1.8",
