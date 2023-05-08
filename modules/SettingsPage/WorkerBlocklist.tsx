@@ -47,7 +47,7 @@ const WorkerBlocklist = () => {
   }
 
   useEffect(() => {
-    const blockList = AppSettings.get('blockedWorkers')
+    const blockList = AppSettings.get('blockedWorkers') || []
     setBlockedWorkers(blockList)
   }, [])
 
