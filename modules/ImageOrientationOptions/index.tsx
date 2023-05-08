@@ -227,18 +227,20 @@ const ImageOrientationOptions = ({
           >
             <div className="flex flex-col w-full gap-2">
               <SubSectionTitle>
-                Custom dimensions
-                {keepAspectRatio ? (
-                  <>
-                    <TooltipComponent targetId={`tooltip-keepRation`}>
-                      Aspect ratio is locked. Adjusting either dimension will
-                      update the other dimension accordingly.
-                    </TooltipComponent>
-                    <IconLock id="tooltip-keepRation" stroke={1.5} />
-                  </>
-                ) : (
-                  <IconLockOpen id="tooltip-keepRation" stroke={1.5} />
-                )}
+                <div className="flex flex-row gap-4">
+                  Custom dimensions
+                  {keepAspectRatio ? (
+                    <>
+                      <TooltipComponent targetId={`tooltip-keepRatio`}>
+                        Aspect ratio is locked. Adjusting either dimension will
+                        update the other dimension accordingly.
+                      </TooltipComponent>
+                      <IconLock id="tooltip-keepRatio" stroke={1.5} />
+                    </>
+                  ) : (
+                    <IconLockOpen id="tooltip-keepRatio" stroke={1.5} />
+                  )}
+                </div>
               </SubSectionTitle>
               <Section>
                 <NumericInputSlider

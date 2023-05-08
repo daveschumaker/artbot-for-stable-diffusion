@@ -44,7 +44,7 @@ const LinkButton = ({
 /** TEMPLATE
 
 <Section>
-  <SubSectionTitle>2023.04.01</SubSectionTitle>
+  <SubSectionTitle>2023.05.01</SubSectionTitle>
   <StyledUl>
     <StyledLi>test</StyledLi>
   </StyledUl>
@@ -115,6 +115,31 @@ const Changelog = () => {
           /////
       */}
       <div className="px-1">
+        <Section>
+          <SubSectionTitle>2023.05.07</SubSectionTitle>
+          <StyledUl>
+            <StyledLi>
+              Added support for AI Horde&apos;s new shareable keys feature. You
+              can now login using a shared key, if available (I&apos;ll add the
+              ability the create shared keys in a future update).
+            </StyledLi>
+            <StyledLi>
+              Updated some styles on the image creation page and added some new
+              functionality around the prompt text areas to help with future
+              inspiration (pre-defined style tags, cleaned up some stuff related
+              to style presets).
+            </StyledLi>
+          </StyledUl>
+        </Section>
+        <Section>
+          <SubSectionTitle>2023.05.06</SubSectionTitle>
+          <StyledUl>
+            <StyledLi>
+              MILESTONE: 🎉🎉🎉 ‼️‼️‼️ <strong>7,000,000</strong> images have
+              been created with ArtBot!‼️‼️‼️ 🎉🎉🎉
+            </StyledLi>
+          </StyledUl>
+        </Section>
         <Section>
           <SubSectionTitle>2023.04.29</SubSectionTitle>
           <StyledUl>

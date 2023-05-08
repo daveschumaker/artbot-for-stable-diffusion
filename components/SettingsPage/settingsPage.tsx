@@ -371,7 +371,7 @@ const SettingsPage = () => {
           <LinksList>
             <li>
               <Linker href="/settings" passHref>
-                Stable Horde Settings
+                AI Horde Settings
               </Linker>
             </li>
             <li>

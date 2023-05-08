@@ -54,7 +54,7 @@ const StylePresetsDropdown = ({ input, setInput }: GetSetPromptInput) => {
       modify = modify.replace('{np}', np)
 
       arr.push(
-        <div className={styles['preset-wrapper']}>
+        <div className={styles['preset-wrapper']} key={`style_${key}`}>
           <div>
             <strong>{key}</strong>
             {` / `}
@@ -62,8 +62,12 @@ const StylePresetsDropdown = ({ input, setInput }: GetSetPromptInput) => {
           </div>
           <div className="flex flex-row w-full justify-between">
             <div className={styles['preset-description']}>{modify}</div>
-            <div style={{ marginLeft: '8px', width: '64px' }}>
-              <Button size="small" onClick={() => handleUsePreset(key)}>
+            <div style={{ marginLeft: '8px', width: '72px' }}>
+              <Button
+                size="small"
+                onClick={() => handleUsePreset(key)}
+                width="72px"
+              >
                 <IconPlayerPlayFilled stroke={1.5} />
                 Use
               </Button>

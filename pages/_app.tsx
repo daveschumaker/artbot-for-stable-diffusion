@@ -146,7 +146,7 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
         <meta name="twitter:title" content="ArtBot for Stable Diffusion" />
         <meta
           name="twitter:description"
-          content="Generate AI-created images and photos with Stable Diffusion using a distributed computing cluster powered by Stable Horde. No login required and free to use."
+          content="Generate AI-created images and photos with Stable Diffusion using a distributed computing cluster powered by the AI Horde. No login required and free to use."
         />
         <meta
           name="twitter:image"

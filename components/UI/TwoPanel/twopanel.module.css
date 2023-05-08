@@ -4,7 +4,7 @@
   width: 100%;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 1000px) {
   .two-panel {
     flex-direction: row;
     column-gap: 32px;

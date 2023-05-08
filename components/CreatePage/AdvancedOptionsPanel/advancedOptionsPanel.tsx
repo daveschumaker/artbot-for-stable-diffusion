@@ -746,6 +746,7 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
           input={input}
           setInput={setInput}
           fieldName="clipskip"
+          fullWidth
           enforceStepValue
         />
       </Section>
@@ -759,6 +760,7 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
             input={input}
             setInput={setInput}
             fieldName="numImages"
+            fullWidth
             enforceStepValue
           />
         </Section>
