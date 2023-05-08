@@ -1,0 +1,13 @@
+.select-control {
+  background-color: #ffffff;
+  border: 1px solid #282828;
+  color: #282828;
+}
+
+@media (prefers-color-scheme: dark) {
+  .select-control {
+    background-color: rgb(42, 48, 60);
+    border: 1px solid #e1e1e1;
+    color: #e1e1e1;
+  }
+}
