@@ -2,6 +2,12 @@
   margin-left: 8px;
 }
 
+.styled-ul-depth-1 {
+  margin-top: 8px;
+  font-size: 12px;
+  list-style-type: none;
+}
+
 .styled-li {
   line-height: 22px;
   list-style: square;

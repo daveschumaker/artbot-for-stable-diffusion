@@ -11,7 +11,15 @@ const nextConfig = {
   },
   productionBrowserSourceMaps: true,
   reactStrictMode: true,
-  swcMinify: false // Set to false for now due to issue with React-tooltip
+  swcMinify: false, // Set to false for now due to issue with React-tooltip
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.md$/,
+      use: 'raw-loader'
+    })
+
+    return config
+  }
 }
 
 module.exports = withBundleAnalyzer(nextConfig)
