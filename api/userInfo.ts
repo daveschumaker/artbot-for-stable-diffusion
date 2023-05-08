@@ -73,7 +73,7 @@ export const fetchUserDetails = async (apikey: string) => {
       worker_ids
     })
 
-    if (worker_ids.length > 0) {
+    if (worker_ids && worker_ids.length > 0) {
       let workerInfo: { [key: string]: IWorker } = {}
 
       for (const idx in worker_ids) {
