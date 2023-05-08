@@ -32,7 +32,7 @@
     }
   },
   "dependencies": {
-    "@next/bundle-analyzer": "13.4.1",
+    "@next/bundle-analyzer": "13.3.4",
     "@radix-ui/colors": "0.1.8",
     "@radix-ui/react-navigation-menu": "1.1.1",
     "@szhsin/react-menu": "3.4.1",
@@ -50,7 +50,7 @@
     "file-saver": "2.0.5",
     "lz-string": "1.4.4",
     "memoizee": "0.4.15",
-    "next": "13.4.1",
+    "next": "13.3.4",
     "next-dark-mode": "3.0.0",
     "node-abort-controller": "3.1.1",
     "node-cron": "3.0.2",
