@@ -142,29 +142,14 @@
 .NavigationMenuViewport[data-state='closed'] {
   animation: scaleOut 200ms ease;
 }
-@media only screen and (min-width: 600px) {
-  .NavigationMenuViewport {
-    width: var(--radix-navigation-menu-viewport-width);
-  }
-}
 
 .List {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   padding: 12px;
   margin: 0;
   column-gap: 10px;
   list-style: none;
-}
-@media only screen and (min-width: 600px) {
-  .List.one {
-    width: 500px;
-    grid-template-columns: 0.75fr 1fr;
-  }
-  .List.two {
-    width: 600px;
-    grid-auto-flow: column;
-    grid-template-rows: repeat(3, 1fr);
-  }
 }
 
 .ListItemLink {
