@@ -54,14 +54,35 @@ export const fetchUserDetails = async (apikey: string) => {
 
     const userDetails = await res.json()
 
-    const {
+    let {
       records = {},
       kudos = 0,
       kudos_details = {},
       trusted = false,
       username = '',
-      worker_ids = null
+      worker_ids = null,
+      sharedKey = false
     } = userDetails
+
+    // FIXME: Hacky lookup for shared keys!
+    if (userDetails.username.includes('(Shared Key:')) {
+      const keyRes = await fetch(
+        `${getApiHostServer()}/api/v2/sharedkeys/${apikey}`,
+        {
+          headers: {
+            'Client-Agent': clientHeader()
+          }
+        }
+      )
+
+      const sharedKeyDetails = await keyRes.json()
+
+      if (sharedKeyDetails.id) {
+        sharedKey = true
+        kudos = sharedKeyDetails.kudos
+        username = sharedKeyDetails.username
+      }
+    }
 
     setUserInfo({
       kudos,
@@ -70,6 +91,7 @@ export const fetchUserDetails = async (apikey: string) => {
       records,
       trusted,
       username,
+      sharedKey,
       worker_ids
     })
 

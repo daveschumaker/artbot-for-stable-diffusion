@@ -1,0 +1,27 @@
+.user-info-wrapper {
+  padding: 8px 0 0 0;
+  /* border: 1px solid black; */
+  border-radius: 8px;
+}
+
+.section {
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  margin-bottom: 0;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.user-info-wrapper-title {
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  margin-bottom: 0;
+  text-transform: uppercase;
+}
+
+.user-info-wrapper-details {
+  font-size: 20px;
+  font-weight: 600;
+}
