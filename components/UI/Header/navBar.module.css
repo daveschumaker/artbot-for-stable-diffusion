@@ -143,6 +143,12 @@
   animation: scaleOut 200ms ease;
 }
 
+@media only screen and (min-width: 600px) {
+  .NavigationMenuViewport {
+    width: 400px;
+  }
+}
+
 .List {
   display: flex;
   flex-direction: column;

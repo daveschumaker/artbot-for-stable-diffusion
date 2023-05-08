@@ -20,7 +20,7 @@ const StylePresetsDropdown = ({ input, setInput }: GetSetPromptInput) => {
 
     const updateInput = {
       prompt: positive,
-      negative,
+      negative: negative.trim(),
       models: stylePresets[key].model
         ? [stylePresets[key].model]
         : input.models,
@@ -47,12 +47,17 @@ const StylePresetsDropdown = ({ input, setInput }: GetSetPromptInput) => {
   const renderStyleList = () => {
     const arr = []
 
-    const p = input.prompt ? input.prompt : '[no prompt set]'
+    const p = input.prompt ? input.prompt : '[no prompt set] '
     const np = input.negative ? input.negative : ''
 
     for (const [key, presetDetails] of Object.entries(stylePresets)) {
       let modify = presetDetails.prompt.replace('{p}', p)
-      modify = modify.replace('{np}', np)
+
+      if (!modify.includes('###') && np) {
+        modify = modify.replace('{np}', ' ### ' + np)
+      } else {
+        modify = modify.replace('{np}', np)
+      }
 
       arr.push(
         <div className={styles['preset-wrapper']} key={`style_${key}`}>

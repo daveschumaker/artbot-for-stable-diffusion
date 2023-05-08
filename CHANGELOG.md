@@ -2,8 +2,8 @@
 
 - Fix: Text was hard to see on prompt history modal. Thanks anonymous user for reporting this.
 - Fix: Nav dropdown menu items were cut off at certain resolutions. Thanks to EFreak for reporting this on Discord.
-- Added a markdown parser so that it's much easier to write this changelog (and potentially other things on the site in the future).
-  - Not so fun fact: Whenever I was editing the changelog, I was actually writing a bunch of html directly into the changelog page. Gross!
+- Added a markdown parser so that it's much easier to write this changelog (and potentially other things on the site in the future -- like a much more detailed FAQ).
+  - Not so fun fact: Whenever I was editing the changelog, I was actually writing a bunch of html directly into the changelog page. Gross! One benefit is that the changelog is now an actual file that you can reference on things like [Github](https://github.com/daveschumaker/artbot-for-stable-diffusion/blob/main/CHANGELOG.md).
 
 # 2023.05.07
 
@@ -42,7 +42,7 @@
 
 - UI update: I am moving a few things around on the image creation page as I prepare for a large UI refactor targeted toward desktop / laptop users. One thing I've heard from people -- they want the negative prompt text area closer to the normal prompt area.
 - More improvements to the [live paint page](/live-paint). It should have better support for those of you using ArtBot on a mobile device.
-- NEAT! I missed this awhile back (I should do a better job checking my referrer logs). ArtBot was listed in PC World as [one of best AI art generators](https://www.pcworld.com/article/1672975/- the-best-ai-art-generators-for-you-midjourney-bing-and-more.html)!
+- NEAT! I missed this awhile back (I should do a better job checking my referrer logs). ArtBot was listed in PC World as [one of best AI art generators](https://www.pcworld.com/article/1672975/the-best-ai-art-generators-for-you-midjourney-bing-and-more.html)!
 - Quoting from the article: "Artbot uses a GUI that's somewhat navigable." Haha, that is being too generous! (I agree, things can be a lot better. This is one reason I have been trying to do some more UI refactoring.)
 
 # 2023.04.14
@@ -446,7 +446,7 @@
 
 - Been pretty heads down lately and have been working on various things in the background. Among them:
 - Better inpainting: Inpainting on ArtBot has always kind of... sucked. And it's been missing a feature added to Stable Horde awhile back: img2img masking, which was released way back at the beginning of November. I made some improvements around this experience and tried to give the interface a slightly updated coat of paint.
-- Inpainting and img2img masking aren't exactly the same thing, though from an end-user perspective, they both work in a very similar fashion -- you paint a part of an image that you want changed, type in a description and voila! With inpainting, you are limited to a very specific model (stable_diffusion_inpainting, based on SD v2). With img2img mask, you can use any model. Also, due to how resource intensive inpainting is, there are not many workers currently running the stable_diffusion_inpainting model, which has resulted in a ton of issues on ArtBot (error messages saying: "No workers available, try again later."). Things should work much better now! Head on over to the inpainting panel and try it out!
+  - Inpainting and img2img masking aren't exactly the same thing, though from an end-user perspective, they both work in a very similar fashion -- you paint a part of an image that you want changed, type in a description and voila! With inpainting, you are limited to a very specific model (stable_diffusion_inpainting, based on SD v2). With img2img mask, you can use any model. Also, due to how resource intensive inpainting is, there are not many workers currently running the stable_diffusion_inpainting model, which has resulted in a ton of issues on ArtBot (error messages saying: "No workers available, try again later."). Things should work much better now! Head on over to the inpainting panel and try it out!
 - UX: On mobile devices, replace interrogation icon / link with rating icon / link. The ratings page is used more (at least on desktop) and arguably more important. You can still find the interrogation page in the menu. (Thanks to Stable Horde user, Underwater_Silver, for the suggestion)
 - Feature: Stable Horde recently added support for attempting to create tiled images. This is handy for creating fun backgrounds. Check it out, in the advanced options tab. (Note: It does not work for img2img or inpainting requests.)
 - Fix: Copy prompt from the image details page forgot image orientation and resolution settings. (Thanks for reporting on Discord, Saw Dagon)
@@ -482,7 +482,7 @@
 # 2023.01.14
 
 - Save model version on image create and show in image details. Github #29
-- This is something I hadn't been doing before now. There are a lot of models now available on the Stable Horde (100 at the time of this writing!). And many of the models are being updated by their maintainers. Some models can drastically change output between differing versions, meaning that the same parameters and seed given to a different version of a particular model will result in a completely different image. In an effort to give more transparency into how your images have been created, ArtBot will now save the version of the model that was created with your image.
+  - This is something I hadn't been doing before now. There are a lot of models now available on the Stable Horde (100 at the time of this writing!). And many of the models are being updated by their maintainers. Some models can drastically change output between differing versions, meaning that the same parameters and seed given to a different version of a particular model will result in a completely different image. In an effort to give more transparency into how your images have been created, ArtBot will now save the version of the model that was created with your image.
 
 # 2023.01.13
 
@@ -543,7 +543,7 @@
 
 - Feature: Support for Stable Horde CLIP interrogation. Send an existing image to the Stable Horde API and get a predicted caption generated by the API, NSFW status, or tags related to the image. Read db0's blog post about it. For now, it only works on images submitted via URL. (Direct image uploading coming soon)
 - Feature: Proper kudos cost and image generation numbers on the create page.
-- When you create a new image request using combinations of various settings (like a prompt matrix, multiple steps, all samplers, etc), image counts can inflate pretty quickly. You now have more visibility into how many images you are requesting from the Stable Horde API, as well as updated kudos costs (total and per image).
+  - When you create a new image request using combinations of various settings (like a prompt matrix, multiple steps, all samplers, etc), image counts can inflate pretty quickly. You now have more visibility into how many images you are requesting from the Stable Horde API, as well as updated kudos costs (total and per image).
 - Feature: Added a new slide out menu system that's available across the app on both mobile and desktop devices. ArtBot is starting to get a lot of options, so this is a nice way to list everything available on the site.
 
 # 2023.01.03

@@ -205,22 +205,22 @@ const WorkerInfo = ({
             <tbody>
               <tr>
                 <td>Inpainting:&nbsp;&nbsp;</td>
-                <td>{<strong>{worker?.painting ? '✔️' : '❌'}</strong>}</td>
+                <td>{<strong>{worker?.painting ? '✅' : '❌'}</strong>}</td>
               </tr>
               <tr>
                 <td>NSFW:&nbsp;&nbsp;</td>
-                <td>{<strong>{worker?.nsfw ? '✔️' : '❌'}</strong>}</td>
+                <td>{<strong>{worker?.nsfw ? '✅' : '❌'}</strong>}</td>
               </tr>
               <tr>
                 <td>Post-processing:&nbsp;&nbsp;</td>
                 <td>
-                  <strong>{worker['post-processing'] ? '✔️' : '❌'}</strong>
+                  <strong>{worker['post-processing'] ? '✅' : '❌'}</strong>
                 </td>
               </tr>
               <tr>
                 <td>Trusted:&nbsp;&nbsp;</td>
                 <td>
-                  <strong>{worker.trusted ? '✔️' : '❌'}</strong>
+                  <strong>{worker.trusted ? '✅' : '❌'}</strong>
                 </td>
               </tr>
             </tbody>
