@@ -59,6 +59,11 @@ export const kudosCostV2 = ({
   kudos += AppSettings.get('slow_workers') === false ? 1.2 : 1
   kudos *= numImages
 
+  const useBlocklist = AppSettings.get('blockedWorkers')
+  if (useBlocklist) {
+    kudos *= 1.1
+  }
+
   return Math.round(kudos)
 }
 

@@ -17,6 +17,7 @@ import AppSettings from 'models/AppSettings'
 import React from 'react'
 import { fetchUserDetails } from 'api/userInfo'
 import SharedKeys from './SharedKeys'
+import WorkerBlocklist from './WorkerBlocklist'
 
 const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
   const userStore = useStore(userInfoStore)
@@ -336,6 +337,7 @@ const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
           />
         </MaxWidth>
       </Section>
+      <WorkerBlocklist />
       <Section>
         <SubSectionTitle>
           <strong>Use a specific worker ID</strong>

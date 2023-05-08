@@ -77,7 +77,7 @@ const FeedbackForm = ({
               <span>Feedback:</span>
               <TextArea
                 maxLength={2048}
-                onChange={(e) => setInputText(e.target.value)}
+                onChange={(e: any) => setInputText(e.target.value)}
                 value={inputText}
               />
             </div>

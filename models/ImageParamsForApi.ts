@@ -16,6 +16,7 @@ export interface IApiParams {
   shared?: boolean
   workers?: Array<string>
   slow_workers: boolean
+  worker_blacklist?: boolean
 }
 
 export interface IArtBotImageDetails {
@@ -79,6 +80,7 @@ class ImageParamsForApi {
     const allowNsfw = AppSettings.get('allowNsfwImages') || false
     const shareImage = AppSettings.get('shareImagesExternally') || false
     const useWorkerId = AppSettings.get('useWorkerId') || ''
+    const useBlocklist = AppSettings.get('blockedWorkers')
 
     const {
       prompt,
@@ -129,11 +131,17 @@ class ImageParamsForApi {
       trusted_workers: useTrusted,
       models,
       r2: true,
+      worker_blacklist: false,
       shared: shareImage,
       slow_workers: AppSettings.get('slow_workers') === false ? false : true
     }
 
-    if (useWorkerId) {
+    if (useBlocklist) {
+      apiParams.workers = [...useBlocklist]
+      apiParams.worker_blacklist = true
+    }
+
+    if (!useBlocklist && useWorkerId) {
       apiParams.workers = [useWorkerId]
     }
 
