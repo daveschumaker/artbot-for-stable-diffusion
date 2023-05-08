@@ -300,7 +300,7 @@ const Menu = () => {
               }}
             >
               <LineDashedIcon />
-              Stable Horde Settings
+              AI Horde Settings
             </SubOption>
             <SubOption
               onClick={() => {

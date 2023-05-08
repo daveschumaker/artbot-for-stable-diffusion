@@ -219,8 +219,8 @@ const NavBar = () => {
                 Information about images you&apos;ve requested and / or
                 generated on the Stable Horde.
               </ListItem>
-              <ListItem href="/settings" title="Stable Horde Settings">
-                Settings specifically related to your Stable Horde account.
+              <ListItem href="/settings" title="AI Horde Settings">
+                Settings specifically related to your AI Horde account.
               </ListItem>
               <ListItem href="/settings?panel=prefs" title="ArtBot Preferences">
                 Preferences related to ArtBot.

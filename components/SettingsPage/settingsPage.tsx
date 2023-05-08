@@ -306,7 +306,7 @@ const SettingsPage = () => {
                 )}
                 {!router.query.panel &&
                   `
-                Stable Horde Settings
+                AI Horde Settings
                 `}
                 {router.query.panel === 'workers' && `Manage Workers`}
                 {router.query.panel === 'prefs' && `ArtBot Prefs`}
@@ -329,7 +329,7 @@ const SettingsPage = () => {
                     )
                   }}
                 >
-                  Stable Horde settings
+                  AI Horde settings
                 </DropDownMenuItem>
                 <DropDownMenuItem
                   onClick={() => {
