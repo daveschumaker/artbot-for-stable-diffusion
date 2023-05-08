@@ -19,6 +19,10 @@
     "update:build-id": "node ./x-build-scripts/updateBuildId.js",
     "test": "jest"
   },
+  "engines": {
+    "npm": ">=9.0.0",
+    "node": ">=18.0.0"
+  },
   "jest": {
     "moduleDirectories": [
       "node_modules",

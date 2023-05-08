@@ -34,8 +34,8 @@ ArtBot makes use of icons from [Tabler](https://tabler-icons.io/).
 
 ### Requirements
 
-- node `>= 14.18.0`
-- npm `>= 6.14.0`
+- node `>= 18.0.0`
+- npm `>= 9.0.0`
 
 Most of these steps should be applicable to Linux / MacOS / Windows environments.
 
@@ -44,7 +44,7 @@ Installing various versions of Node.js on your machine can be tricky. I am a big
 Using `nvm`, you can install Node like this:
 
 ```bash
-> nvm install v14.16.0
+> nvm install v18.16.0
 > nvm alias default node
 ```
 
