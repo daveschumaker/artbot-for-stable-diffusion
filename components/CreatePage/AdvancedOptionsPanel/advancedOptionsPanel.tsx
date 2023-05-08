@@ -449,7 +449,7 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
         </SubSectionTitle>
         <MaxWidth
           // @ts-ignore
-          maxWidth="240"
+          width="240px"
         >
           <div className="flex flex-row gap-2">
             <Input
@@ -516,7 +516,7 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
           </SubSectionTitle>
           <MaxWidth
             // @ts-ignore
-            maxWidth="480"
+            width="480px"
           >
             <SelectComponent
               isMulti

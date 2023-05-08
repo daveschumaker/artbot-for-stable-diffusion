@@ -163,7 +163,7 @@ export const LivePaintOptions = ({ input, setInput }: any) => {
           </SubSectionTitle>
           <MaxWidth
             // @ts-ignore
-            maxWidth="240"
+            width="240px"
           >
             <div className="flex flex-row gap-2">
               <Input

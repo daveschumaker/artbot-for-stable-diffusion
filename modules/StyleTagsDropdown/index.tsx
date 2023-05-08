@@ -3,7 +3,6 @@ import styles from './component.module.css'
 import { useEffect, useState } from 'react'
 import { Button } from 'components/UI/Button'
 import { IconTags, IconX } from '@tabler/icons-react'
-import DropDownMenu from 'components/UI/DropDownMenu/dropDownMenu'
 import Overlay from 'components/UI/Overlay'
 
 const tags = [
@@ -276,17 +275,6 @@ const tags = [
 const StyleTagsDropdown = ({ input, setInput }: GetSetPromptInput) => {
   const [showMenu, setShowMenu] = useState(false)
 
-  const sorted = tags.sort((a: string, b: string) => {
-    if (a < b) {
-      return -1
-    }
-    if (a > b) {
-      return 1
-    }
-
-    return 0
-  })
-
   const addTagClick = (tag: string) => {
     setInput({ prompt: `${input.prompt}, ${tag}` })
   }
@@ -324,20 +312,27 @@ const StyleTagsDropdown = ({ input, setInput }: GetSetPromptInput) => {
             </div>
             <div className={styles['style-tags-wrapper']}>
               {tags.map(([section, elements]) => (
-                <div key={section} className="mb-2 px-2">
+                <div
+                  // @ts-ignore
+                  key={section}
+                  className="mb-2 px-2"
+                >
                   <h2 className="font-[700] mb-1">{section}</h2>
                   <div className="" style={{ wordBreak: 'break-all' }}>
-                    {elements.map((element) => (
-                      <div
-                        className={styles['tag']}
-                        key={element}
-                        onClick={() => {
-                          addTagClick(element)
-                        }}
-                      >
-                        {element}
-                      </div>
-                    ))}
+                    {
+                      // @ts-ignore
+                      elements.map((element) => (
+                        <div
+                          className={styles['tag']}
+                          key={element}
+                          onClick={() => {
+                            addTagClick(element)
+                          }}
+                        >
+                          {element}
+                        </div>
+                      ))
+                    }
                   </div>
                 </div>
               ))}

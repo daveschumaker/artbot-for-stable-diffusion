@@ -51,7 +51,7 @@ const Samplers = ({
           ) : (
             <MaxWidth
               // @ts-ignore
-              maxWidth="240"
+              width="240px"
             >
               <SelectComponent
                 options={samplerOptions(input)}

@@ -3,7 +3,7 @@ import FormErrorMessage from './FormErrorMessage'
 import { Button } from 'components/UI/Button'
 import TrashIcon from 'components/icons/TrashIcon'
 import SquarePlusIcon from 'components/icons/SquarePlusIcon'
-import Linker from 'components/UI//Linker'
+import Linker from 'components/UI/Linker'
 import Errors from 'utils/errors'
 
 interface Props {

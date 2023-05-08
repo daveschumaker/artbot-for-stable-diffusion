@@ -35,7 +35,7 @@ interface Props {
   setInput: any
 }
 
-const OrientationOptions = ({ input, setInput}: Props) => {
+const OrientationOptions = ({ input, setInput }: Props) => {
   const userState = useStore(userInfoStore)
   const { loggedIn } = userState
 
@@ -107,15 +107,16 @@ const OrientationOptions = ({ input, setInput}: Props) => {
     if (!keepAspectRatio) {
       return 0
     }
-  
+
     const { width, height } = input
     const currentAspectRatio = width / height
-    const aspectRatioRatio = Math.max(currentAspectRatio, targetAspectRatio) / Math.min(currentAspectRatio, targetAspectRatio)
+    const aspectRatioRatio =
+      Math.max(currentAspectRatio, targetAspectRatio) /
+      Math.min(currentAspectRatio, targetAspectRatio)
 
     const deviation = Math.abs(aspectRatioRatio - 1)
     return deviation
   }
-  
 
   const getAspectRatioDeviationColor = (aspectRatioDeviation: number) => {
     if (aspectRatioDeviation > 0.25) return 'text-red-500'
@@ -130,7 +131,7 @@ const OrientationOptions = ({ input, setInput}: Props) => {
   return (
     <Section>
       <SubSectionTitle>Image orientation</SubSectionTitle>
-      <MaxWidth maxWidth={480}>
+      <MaxWidth width="480px">
         <div className="flex flex-row items-center gap-2 w-full">
           <div className="flex-1">
             <SelectComponent

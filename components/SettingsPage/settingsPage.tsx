@@ -510,7 +510,7 @@ const SettingsPage = () => {
                 </SubSectionTitle>
                 <MaxWidth
                   // @ts-ignore
-                  maxWidth="480"
+                  width="480px"
                 >
                   <div className="flex flex-row gap-2">
                     <Input
@@ -595,7 +595,7 @@ const SettingsPage = () => {
                 </SubSectionTitle>
                 <MaxWidth
                   // @ts-ignore
-                  maxWidth="240"
+                  width="240px"
                 >
                   <Switch
                     onChange={() => {
@@ -620,7 +620,7 @@ const SettingsPage = () => {
                 </SubSectionTitle>
                 <MaxWidth
                   // @ts-ignore
-                  maxWidth="240"
+                  width="240px"
                 >
                   <Select
                     isSearchable={false}
@@ -649,7 +649,7 @@ const SettingsPage = () => {
                 </SubSectionTitle>
                 <MaxWidth
                   // @ts-ignore
-                  maxWidth="240"
+                  width="240px"
                 >
                   <Switch
                     onChange={() => {
@@ -677,7 +677,7 @@ const SettingsPage = () => {
                 </SubSectionTitle>
                 <MaxWidth
                   // @ts-ignore
-                  maxWidth="480"
+                  width="480px"
                 >
                   <Input
                     type="text"
@@ -713,7 +713,7 @@ const SettingsPage = () => {
                   </SubSectionTitle>
                   <MaxWidth
                     // @ts-ignore
-                    maxWidth="240"
+                    width="240px"
                   >
                     <Select
                       options={[
@@ -873,7 +873,7 @@ const SettingsPage = () => {
                 </SubSectionTitle>
                 <MaxWidth
                   // @ts-ignore
-                  maxWidth="240"
+                  width="240px"
                 >
                   <Select
                     isSearchable={false}
@@ -925,7 +925,7 @@ const SettingsPage = () => {
                 </SubSectionTitle>
                 <MaxWidth
                   // @ts-ignore
-                  maxWidth="240"
+                  width="240px"
                 >
                   <Switch
                     onChange={() => {
@@ -950,7 +950,7 @@ const SettingsPage = () => {
                 </SubSectionTitle>
                 <MaxWidth
                   // @ts-ignore
-                  maxWidth="240"
+                  width="240px"
                 >
                   <Switch
                     onChange={() => {
@@ -987,7 +987,7 @@ const SettingsPage = () => {
                 </SubSectionTitle>
                 <MaxWidth
                   // @ts-ignore
-                  maxWidth="240"
+                  width="240px"
                 >
                   <Button
                     onClick={() => {
@@ -1014,7 +1014,7 @@ const SettingsPage = () => {
                 </SubSectionTitle>
                 <MaxWidth
                   // @ts-ignore
-                  maxWidth="240"
+                  width="240px"
                 >
                   <Button
                     onClick={() => {
@@ -1046,7 +1046,7 @@ const SettingsPage = () => {
                 </SubSectionTitle>
                 <MaxWidth
                   // @ts-ignore
-                  maxWidth="240"
+                  width="240px"
                 >
                   <Button
                     theme="secondary"
@@ -1075,7 +1075,7 @@ const SettingsPage = () => {
                 </SubSectionTitle>
                 <MaxWidth
                   // @ts-ignore
-                  maxWidth="240"
+                  width="240px"
                 >
                   <Button
                     theme="secondary"
@@ -1105,7 +1105,7 @@ const SettingsPage = () => {
                 </SubSectionTitle>
                 <MaxWidth
                   // @ts-ignore
-                  maxWidth="240"
+                  width="240px"
                 >
                   <Button
                     theme="secondary"
@@ -1131,7 +1131,7 @@ const SettingsPage = () => {
                 </SubSectionTitle>
                 <MaxWidth
                   // @ts-ignore
-                  maxWidth="240"
+                  width="240px"
                 >
                   <Select
                     options={[

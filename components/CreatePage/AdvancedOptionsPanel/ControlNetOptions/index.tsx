@@ -58,7 +58,7 @@ const ControlNetOptions = ({
           <div className="mt-[-6px] text-sm text-slate-500 dark:text-slate-400 font-[600]">
             <MaxWidth
               // @ts-ignore
-              maxWidth="360"
+              width="360px"
             >
               <strong>Note:</strong> ControlNet can only be used for img2img
               requests. Please upload an image to use this feature.

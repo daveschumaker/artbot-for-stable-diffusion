@@ -114,6 +114,17 @@ export interface IImageDetails {
   img2img: boolean
 }
 
+interface ImageOrientation {
+  label: string
+  orientation: string
+  height: number
+  width: number
+}
+
+export interface OrientationLookup {
+  [key: string]: ImageOrientation
+}
+
 export interface CreatePendingJob {
   id?: number
   timestamp: number

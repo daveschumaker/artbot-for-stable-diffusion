@@ -45,7 +45,7 @@ const SelectModel = ({ input, setInput, modelerOptions }: IProps) => {
       </SubSectionTitle>
       <MaxWidth
         // @ts-ignore
-        maxWidth="480"
+        width="480px"
       >
         <SelectComponent
           menuPlacement={'top'}
@@ -107,7 +107,7 @@ const SelectModel = ({ input, setInput, modelerOptions }: IProps) => {
       {modelDetails[input.models[0]]?.showcases && (
         <MaxWidth
           // @ts-ignore
-          maxWidth="240"
+          width="240px"
           className="mt-2"
         >
           <div className="mb-2 text-sm">
@@ -124,7 +124,7 @@ const SelectModel = ({ input, setInput, modelerOptions }: IProps) => {
       )}
       <MaxWidth
         // @ts-ignore
-        maxWidth="480"
+        width="480px"
       >
         {modelDetails[input.models[0]] && (
           <div className="mt-2 text-xs">
