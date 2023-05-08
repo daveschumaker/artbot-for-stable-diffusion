@@ -1,4 +1,4 @@
-import { IconCopy, IconTrash } from '@tabler/icons-react'
+import { IconCopy, IconPencil, IconTrash } from '@tabler/icons-react'
 import { fetchUserDetails } from 'api/userInfo'
 import DeleteConfirmModal from 'components/DeleteConfirmModal'
 import { Button } from 'components/UI/Button'
@@ -92,9 +92,6 @@ const SharedKeys = () => {
       }
 
       await fetchUserDetails(AppSettings.get('apiKey'))
-
-      console.log(`details?@`, details)
-
       setShowCreateModal(false)
     } catch (err) {
       setShowCreateModal(false)
@@ -129,29 +126,37 @@ const SharedKeys = () => {
     }
   }
 
-  // const handleUpdateKey = async (key: string | boolean) => {
-  //   const data = {
-  //     name: 'TestFlight1',
-  //     kudos: Number(inputKeyKudos)
-  //   }
+  const handleUpdateKey = async (key: string | boolean) => {
+    const data = {
+      name: 'TestFlight1',
+      kudos: Number(inputKeyKudos)
+    }
 
-  //   try {
-  //     const resp = await fetch(`https://aihorde.net/api/v2/sharedkeys/${key}`, {
-  //       method: 'PATCH',
-  //       body: JSON.stringify(data),
-  //       headers: {
-  //         apikey: AppSettings.get('apiKey'),
-  //         'Content-Type': 'application/json',
-  //         'Client-Agent': clientHeader()
-  //       }
-  //     })
+    try {
+      const resp = await fetch(`https://aihorde.net/api/v2/sharedkeys/${key}`, {
+        method: 'PATCH',
+        body: JSON.stringify(data),
+        headers: {
+          apikey: AppSettings.get('apiKey'),
+          'Content-Type': 'application/json',
+          'Client-Agent': clientHeader()
+        }
+      })
 
-  //     const updateData = await resp.json()
-  //     console.log(`update?`, updateData)
-  //   } catch (err) {
-  //     console.log(`err???`, err)
-  //   }
-  // }
+      const details = await resp.json()
+
+      if (details.id) {
+        const updateKeyDetails = Object.assign({}, keyDetails)
+        updateKeyDetails[details.id] = details
+        setKeyDetails(updateKeyDetails)
+      }
+
+      setShowEditModal(false)
+    } catch (err) {
+      console.log(`Error updating shared key:`, err)
+      setShowEditModal(false)
+    }
+  }
 
   const fetchKeyDetails = async (key: string) => {
     try {
@@ -193,7 +198,6 @@ const SharedKeys = () => {
 
   useEffect(() => {
     if (keyIds.length > 0) {
-      console.log(`calling!`)
       updateAllKeyDetails()
     }
   }, [keyIds, updateAllKeyDetails])
@@ -257,7 +261,7 @@ const SharedKeys = () => {
                 </Button>
                 <Button
                   onClick={() => {
-                    // handleUpdateKey(showEditModal)
+                    handleUpdateKey(showEditModal)
                   }}
                 >
                   Update
@@ -349,9 +353,9 @@ const SharedKeys = () => {
                   >
                     <IconTrash stroke={1.5} />
                   </Button>
-                  {/* <Button onClick={() => setShowEditModal(key)} size="small">
+                  <Button onClick={() => setShowEditModal(key)} size="small">
                     <IconPencil stroke={1.5} />
-                  </Button> */}
+                  </Button>
                   <Button onClick={() => handleCopyKeyClick(key)} size="small">
                     <IconCopy stroke={1.5} />
                   </Button>
