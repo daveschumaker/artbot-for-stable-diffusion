@@ -77,3 +77,12 @@ export const ORIENTATION_OPTIONS: Array<IOrientation> = [
   { value: 'custom', label: 'Custom' },
   { value: 'random', label: 'Random!' }
 ]
+
+export const zIndex = {
+  DEFAULT: 1,
+  OVER_BASE: 2, // e.g., Makes <Select /> menu dropdown appear above other select components
+  NAV_BAR: 25,
+  MODAL: 3,
+  SLIDING_PANEL: 4,
+  OVERLAY: 30
+}

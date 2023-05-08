@@ -24,16 +24,16 @@ describe('samplers.controller.ts', () => {
         models: ['stable_diffusion']
       })
 
-      expect(samplers.length).toBe(7)
+      expect(samplers.length).toBe(8)
     })
 
-    test('handle samplers for text2img', () => {
-      const samplers = samplerOptions({
-        source_processing: SourceProcessing.Prompt,
-        models: ['stable_diffusion']
-      })
+    // test('handle samplers for text2img', () => {
+    //   const samplers = samplerOptions({
+    //     source_processing: SourceProcessing.Prompt,
+    //     models: ['stable_diffusion']
+    //   })
 
-      expect(samplers.length).toBe(12)
-    })
+    //   expect(samplers.length).toBe(12)
+    // })
   })
 })

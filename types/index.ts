@@ -148,6 +148,20 @@ export interface DiffusionModel {
   performance: number
 }
 
+export interface SelectPropsComponent {
+  className?: string
+  isDisabled?: boolean
+  isMulti?: boolean
+  isSearchable?: boolean
+  menuPlacement?: string
+  name?: string
+  onChange: any
+  options: Array<any>
+  styles?: any
+  value?: Value
+  width?: string
+}
+
 export interface GenerateResponse {
   id: string
   message?: string
@@ -224,4 +238,9 @@ export enum ControlTypes {
   Scribble = 'scribble',
   FakeScribbles = 'fakescribbles',
   Hough = 'hough'
+}
+
+export interface Value {
+  value: string | boolean
+  label: string
 }
