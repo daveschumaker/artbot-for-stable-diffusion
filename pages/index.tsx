@@ -33,7 +33,6 @@ import { toast } from 'react-toastify'
 import InteractiveModal from '../components/UI/InteractiveModal/interactiveModal'
 import PromptInputSettings from '../models/PromptInputSettings'
 import { userInfoStore } from '../store/userStore'
-import styles from '../styles/index.module.css'
 import TriggerDropdown from '../components/CreatePage/TriggerDropdown'
 import DefaultPromptInput from '../models/DefaultPromptInput'
 import { logDataForDebugging, logToConsole } from '../utils/debugTools'
@@ -50,19 +49,8 @@ import ActionPanel from '../components/CreatePage/ActionPanel'
 import useComponentState from 'hooks/useComponentState'
 import { uploadInpaint } from 'controllers/imageDetailsCommon'
 import { lockScroll, unlockScroll } from 'utils/appUtils'
-import NegativePrompt from 'components/CreatePage/NegativePrompt'
-import PromptText from 'components/CreatePage/AdvancedOptionsPanel/PromptText'
-import Section from 'components/UI/Section'
 import PromptTextArea from 'modules/PromptTextArea'
 import NegativePromptArea from 'modules/NegativePromptArea'
-
-interface InputTarget {
-  name: string
-  value: string
-}
-interface InputEvent {
-  target: InputTarget
-}
 
 const defaultState: DefaultPromptInput = new DefaultPromptInput()
 
@@ -162,13 +150,6 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
       localStorage.setItem('reloadPrompt', shareLinkDetails)
     }
   }, [build, buildId, input])
-
-  const handleChangeValue = (event: InputEvent) => {
-    const inputName = event.target.name
-    const inputValue = event.target.value
-
-    setInput({ [inputName]: inputValue })
-  }
 
   const handleSubmit = async () => {
     // TODO: Rather than directly send to API, we should queue up

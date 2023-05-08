@@ -6,14 +6,12 @@ import Uploader from '../components/CreatePage/Uploader'
 import ArrowBarLeftIcon from '../components/icons/ArrowBarLeftIcon'
 import GrainIcon from '../components/icons/GrainIcon'
 import { Button } from '../components/UI/Button'
-import FlexRow from '../components/UI/FlexRow'
 import Input from '../components/UI/Input'
 import MaxWidth from '../components/UI/MaxWidth'
 import PageTitle from '../components/UI/PageTitle'
 import Section from '../components/UI/Section'
 import SplitPanel from '../components/UI/SplitPanel'
 import SubSectionTitle from '../components/UI/SubSectionTitle'
-import TextArea from '../components/UI/TextArea'
 import TextTooltipRow from '../components/UI/TextTooltipRow'
 import Tooltip from '../components/UI/Tooltip'
 import TwoPanel from '../components/UI/TwoPanel'
@@ -48,7 +46,8 @@ import ControlNetOptions from 'components/CreatePage/AdvancedOptionsPanel/Contro
 import UpscalerOptions from 'components/CreatePage/AdvancedOptionsPanel/UpscalerOptions'
 import useComponentState from 'hooks/useComponentState'
 import { trackEvent } from 'api/telemetry'
-import PlaylistXIcon from 'components/icons/PlaylistXIcon'
+import PromptTextArea from 'modules/PromptTextArea'
+import NegativePromptArea from 'modules/NegativePromptArea'
 
 // Kind of a hacky way to persist output of image over the course of a session.
 let cachedImageDetails = {}
@@ -382,57 +381,18 @@ const ControlNet = () => {
       </Section>
       <Section>
         <SubSectionTitle>Step 2. Prompts</SubSectionTitle>
-        <div className="flex flex-row items-center gap-2 mt-0 mb-1 text-sm font-bold">
-          <PlaylistXIcon />
-          Prompt
+        <div
+          className="flex flex-col w-full gap-2 rounded"
+          style={{
+            color: '#ffffff',
+            backgroundColor: 'var(--accent-color)',
+            padding: '8px 12px',
+            marginBottom: '16px'
+          }}
+        >
+          <PromptTextArea input={input} setInput={setInput} />
+          <NegativePromptArea input={input} setInput={setInput} />
         </div>
-        <FlexRow className="mb-2">
-          <TextArea
-            name="prompt"
-            placeholder="Describe your image..."
-            // @ts-ignore
-            onChange={handleChangeInput}
-            value={input.prompt}
-          />
-          <Button
-            title="Clear current input"
-            theme="secondary"
-            onClick={() => {
-              setInput({ prompt: '' })
-            }}
-          >
-            <ArrowBarLeftIcon />
-          </Button>
-        </FlexRow>
-        <div className="flex flex-row items-center gap-2 mt-0 mb-1 text-sm font-bold">
-          <PlaylistXIcon />
-          Negative prompt <span className="font-[400] text-xs">(optional)</span>
-        </div>
-        <FlexRow>
-          <div className="flex flex-col w-full gap-2">
-            <FlexRow>
-              <TextArea
-                name="negative"
-                placeholder="Words to deemphasize from image"
-                // @ts-ignore
-                onChange={handleChangeInput}
-                value={input.negative}
-              />
-              <Button
-                title="Clear current input"
-                theme="secondary"
-                onClick={() => {
-                  // PromptInputSettings.set('negative', '')
-                  setInput({
-                    negative: ''
-                  })
-                }}
-              >
-                <ArrowBarLeftIcon />
-              </Button>
-            </FlexRow>
-          </div>
-        </FlexRow>
       </Section>
       <Section>
         <SubSectionTitle>Step 3. Advanced settings</SubSectionTitle>

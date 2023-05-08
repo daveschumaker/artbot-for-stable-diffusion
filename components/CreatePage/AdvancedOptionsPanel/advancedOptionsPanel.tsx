@@ -52,7 +52,6 @@ import PromptInputSettings from 'models/PromptInputSettings'
 import { trackEvent } from 'api/telemetry'
 import { MAX_IMAGES_PER_JOB } from '_constants'
 import RenderParentImage from 'components/ParentImage'
-import StylesDropdown from '../StylesDropdown'
 
 const NoSliderSpacer = styled.div`
   height: 14px;
