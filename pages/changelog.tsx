@@ -26,8 +26,6 @@ export const StyledUl = ({
   children: React.ReactNode
   depth?: number
 }) => {
-  console.log(`DEPTH`, depth)
-
   return (
     <ul
       className={clsx(styles['styled-ul'], {

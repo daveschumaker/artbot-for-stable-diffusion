@@ -1,5 +1,5 @@
 import Section from 'components/UI/Section'
-import AlertDialogBox from '../UI/AlertDialogBox'
+import AlertDialogBox from '../../components/UI/AlertDialogBox'
 import PageTitle from 'components/UI/PageTitle'
 import SubSectionTitle from 'components/UI/SubSectionTitle'
 import ReactSwitch from 'react-switch'

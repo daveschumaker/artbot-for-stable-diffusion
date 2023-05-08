@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import { trackEvent } from '../api/telemetry'
 import { fetchUserDetails } from '../api/userInfo'
-import SettingsPageComponent from '../components/SettingsPage'
+import SettingsPageComponent from '../modules/SettingsPage'
 import { useEffectOnce } from '../hooks/useEffectOnce'
 import AppSettings from '../models/AppSettings'
 
