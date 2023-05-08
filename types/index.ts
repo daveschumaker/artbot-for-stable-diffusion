@@ -1,3 +1,5 @@
+import DefaultPromptInput from 'models/DefaultPromptInput'
+import { Dispatch } from 'react'
 import { SourceProcessing } from 'utils/promptUtils'
 
 export enum ArtBotJobTypes {
@@ -165,6 +167,13 @@ export interface SelectPropsComponent {
 export interface GenerateResponse {
   id: string
   message?: string
+}
+
+export type SetInput = Dispatch<Partial<DefaultPromptInput>>
+
+export interface GetSetPromptInput {
+  input: DefaultPromptInput
+  setInput: SetInput
 }
 
 export enum JobStatus {

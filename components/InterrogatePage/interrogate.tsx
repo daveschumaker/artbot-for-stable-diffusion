@@ -532,7 +532,7 @@ const Interrogate = () => {
             />
             <Button
               title="Upload image from URL"
-              btnType="primary"
+              theme="primary"
               onClick={() =>
                 submitInterrogation({ source_image: componentState.imgUrl })
               }

@@ -437,7 +437,7 @@ const PaintCanvas = ({ setActiveNav, setInput }: Props) => {
         </div>
 
         <Button
-          btnType="secondary"
+          theme="secondary"
           onClick={() => {
             isDrawingRef.current = false
             //@ts-ignore

@@ -355,7 +355,7 @@ const ImageModal = ({
                 </Button>
               )
             }
-            <Button btnType="secondary" onClick={() => handleDeleteImage()}>
+            <Button theme="secondary" onClick={() => handleDeleteImage()}>
               <TrashIcon /> Delete
             </Button>
           </OptionsRow>

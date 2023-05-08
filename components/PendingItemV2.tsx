@@ -468,7 +468,7 @@ const PendingItem = memo(
                     <CopyIcon />
                     <span className="hidden md:inline-block">Copy</span>
                   </Button>
-                  <Button btnType="secondary" onClick={handleDeleteJob}>
+                  <Button theme="secondary" onClick={handleDeleteJob}>
                     <TrashIcon />
                     <MobileHideText>
                       {jobDetails.jobStatus === JobStatus.Error

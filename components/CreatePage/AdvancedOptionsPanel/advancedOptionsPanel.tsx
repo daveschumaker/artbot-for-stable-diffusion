@@ -197,9 +197,6 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
           </div>
         </Section>
       )}
-      <div className="flex flex-row items-center justify-start w-full gap-2 text-sm md:w-1/2">
-        <StylesDropdown input={input} setInput={setInput} isSearchable={true} />
-      </div>
       <OrientationOptions input={input} setInput={setInput} />
       <Samplers
         input={input}
@@ -479,7 +476,7 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
               <GrainIcon />
             </Button>
             <Button
-              btnType="secondary"
+              theme="secondary"
               title="Clear"
               onClick={() => {
                 PromptInputSettings.set('seed', '')

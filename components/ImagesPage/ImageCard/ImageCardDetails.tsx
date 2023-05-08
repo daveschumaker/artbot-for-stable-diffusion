@@ -203,7 +203,7 @@ const ImageDetails = ({
           </Button>
           <Button
             title="Delete image"
-            btnType="secondary"
+            theme="secondary"
             onClick={() => setShowDeleteModal(true)}
           >
             <TrashIcon className="mx-auto" />

@@ -213,7 +213,7 @@ const PromptHistory = (props: any) => {
                     </Button>
                     <Button
                       title="Delete prompt"
-                      btnType="secondary"
+                      theme="secondary"
                       onClick={async () => {
                         await db.prompts.bulkDelete([p.id])
                         fetchPrompts(componentState.view)

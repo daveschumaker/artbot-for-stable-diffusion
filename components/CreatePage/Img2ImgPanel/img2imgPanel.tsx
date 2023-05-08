@@ -89,7 +89,7 @@ const Img2ImgPanel = ({ input, saveForInpaint, setInput }: Props) => {
           <>
             <div className="flex flex-row mb-4 gap-2">
               <Button
-                btnType="secondary"
+                theme="secondary"
                 onClick={() => {
                   setInput({
                     img2img: false,

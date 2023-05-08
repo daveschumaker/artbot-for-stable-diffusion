@@ -147,7 +147,7 @@ const UpscalePage = () => {
             />
             <div className="flex flex-row w-full justify-end mt-2">
               <Button
-                btnType="secondary"
+                theme="secondary"
                 onClick={() => {
                   setInput({ source_image: '' })
                 }}
@@ -173,7 +173,7 @@ const UpscalePage = () => {
           <div className="flex flex-row justify-end gap-2 sm:mt-0">
             <Button
               title="Clear current input"
-              btnType="secondary"
+              theme="secondary"
               onClick={resetInput}
             >
               <span>

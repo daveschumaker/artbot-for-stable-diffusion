@@ -1,0 +1,12 @@
+.tooltip-wrapper {
+  border-radius: 8px;
+  border: 1px solid white;
+  max-width: 240px;
+  z-index: 21;
+}
+
+.tooltip {
+  font-size: 14px;
+  font-weight: 400;
+  padding: 4px 8px;
+}

@@ -309,7 +309,7 @@ const ToolBar = ({
       </div>
       <div>
         <ToolBarButton
-          btnType="secondary"
+          theme="secondary"
           onClick={() => {
             lockScroll()
             setShowDeleteModal(true)

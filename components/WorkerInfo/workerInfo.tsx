@@ -204,35 +204,23 @@ const WorkerInfo = ({
           <table>
             <tbody>
               <tr>
+                <td>Inpainting:&nbsp;&nbsp;</td>
+                <td>{<strong>{worker?.painting ? '✔️' : '❌'}</strong>}</td>
+              </tr>
+              <tr>
+                <td>NSFW:&nbsp;&nbsp;</td>
+                <td>{<strong>{worker?.nsfw ? '✔️' : '❌'}</strong>}</td>
+              </tr>
+              <tr>
+                <td>Post-processing:&nbsp;&nbsp;</td>
                 <td>
-                Inpainting:&nbsp;&nbsp;
-                </td>
-                <td>
-                  {<strong>{worker?.painting?'✔️':'❌'}</strong>}
+                  <strong>{worker['post-processing'] ? '✔️' : '❌'}</strong>
                 </td>
               </tr>
               <tr>
+                <td>Trusted:&nbsp;&nbsp;</td>
                 <td>
-                NSFW:&nbsp;&nbsp;
-                </td>
-                <td>
-                  {<strong>{worker?.nsfw?'✔️':'❌'}</strong>}
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Post-processing:&nbsp;&nbsp;
-                </td>
-                <td> 
-                  <strong>{worker['post-processing']?'✔️':'❌'}</strong>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Trusted:&nbsp;&nbsp;
-                </td>
-                <td> 
-                  <strong>{worker.trusted?'✔️':'❌'}</strong>
+                  <strong>{worker.trusted ? '✔️' : '❌'}</strong>
                 </td>
               </tr>
             </tbody>
@@ -249,7 +237,7 @@ const WorkerInfo = ({
       >
         {AppSettings.get('useWorkerId') === worker.id ? (
           <Button
-            btnType="secondary"
+            theme="secondary"
             onClick={() => {
               AppSettings.save('useWorkerId', '')
               forceUpdate()
@@ -274,7 +262,7 @@ const WorkerInfo = ({
         <div className="mt-4">
           {worker.online && !worker.maintenance_mode && (
             <Button
-              btnType="secondary"
+              theme="secondary"
               disabled={loadingWorkerStatus[worker.id]}
               onClick={() => {
                 handleWorkerChange({
@@ -318,7 +306,6 @@ const WorkerInfo = ({
         {showModels ? <ChevronDownIcon /> : <ChevronRightIcon />}
         Models ({worker?.models?.length ?? 0})
       </ExpandModels>
-
     </div>
   )
 }

@@ -80,7 +80,7 @@ const NegativePrompt = ({ handleChangeValue, input, setInput }: any) => {
           <div className="flex flex-col gap-2">
             <Button
               title="Clear current input"
-              btnType="secondary"
+              theme="secondary"
               onClick={() => {
                 PromptInputSettings.set('negative', '')
                 setInput({

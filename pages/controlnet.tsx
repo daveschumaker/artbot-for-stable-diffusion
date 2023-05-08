@@ -365,7 +365,7 @@ const ControlNet = () => {
               />
               <div className="flex flex-row justify-end w-full mt-2">
                 <Button
-                  btnType="secondary"
+                  theme="secondary"
                   onClick={() => {
                     cachedImageDetails = {}
                     setInput({ source_image: '' })
@@ -396,7 +396,7 @@ const ControlNet = () => {
           />
           <Button
             title="Clear current input"
-            btnType="secondary"
+            theme="secondary"
             onClick={() => {
               setInput({ prompt: '' })
             }}
@@ -420,7 +420,7 @@ const ControlNet = () => {
               />
               <Button
                 title="Clear current input"
-                btnType="secondary"
+                theme="secondary"
                 onClick={() => {
                   // PromptInputSettings.set('negative', '')
                   setInput({
@@ -538,7 +538,7 @@ const ControlNet = () => {
               <GrainIcon />
             </Button>
             <Button
-              btnType="secondary"
+              theme="secondary"
               title="Clear"
               onClick={() => {
                 setInput({ seed: '' })

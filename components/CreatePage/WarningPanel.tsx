@@ -16,7 +16,7 @@ const WarningPanel = ({ panelType, handleRemoveClick }: Props) => {
       </p>
       <p className="mt-2">This process cannot be undone.</p>
       <div className="mt-2">
-        <Button btnType="secondary" onClick={handleRemoveClick}>
+        <Button theme="secondary" onClick={handleRemoveClick}>
           Remove {panelType}
         </Button>
       </div>

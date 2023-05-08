@@ -44,7 +44,7 @@ export const LivePaintOptions = ({ input, setInput }: any) => {
         />
         <Button
           title="Clear current input"
-          btnType="secondary"
+          theme="secondary"
           onClick={() => {
             setInput({ prompt: '' })
           }}
@@ -67,7 +67,7 @@ export const LivePaintOptions = ({ input, setInput }: any) => {
         />
         <Button
           title="Clear current input"
-          btnType="secondary"
+          theme="secondary"
           onClick={() => {
             setInput({ negative: '' })
           }}
@@ -188,7 +188,7 @@ export const LivePaintOptions = ({ input, setInput }: any) => {
                 <GrainIcon />
               </Button>
               <Button
-                btnType="secondary"
+                theme="secondary"
                 title="Clear"
                 onClick={() => {
                   setInput({ seed: '' })

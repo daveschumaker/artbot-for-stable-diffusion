@@ -52,6 +52,9 @@ import { uploadInpaint } from 'controllers/imageDetailsCommon'
 import { lockScroll, unlockScroll } from 'utils/appUtils'
 import NegativePrompt from 'components/CreatePage/NegativePrompt'
 import PromptText from 'components/CreatePage/AdvancedOptionsPanel/PromptText'
+import Section from 'components/UI/Section'
+import PromptTextArea from 'modules/PromptTextArea'
+import NegativePromptArea from 'modules/NegativePromptArea'
 
 interface InputTarget {
   name: string
@@ -745,7 +748,7 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
           triggerArray={triggerArray}
         />
       )}
-      <div className={clsx(styles['sticky-text-area'], 'mt-0')}>
+      <div className={clsx('mt-0')}>
         {flaggedPromptError && (
           <div className="mb-4 bg-red-500 rounded-md px-4 py-2 font-[500] flex flex-row items-center gap-2 text-white">
             <div>
@@ -759,17 +762,18 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
           </div>
         )}
 
-        <PromptText
-          handleChangeValue={handleChangeValue}
-          input={input}
-          setInput={setInput}
-        />
-
-        <NegativePrompt
-          handleChangeValue={handleChangeValue}
-          input={input}
-          setInput={setInput}
-        />
+        <div
+          className="flex flex-col w-full gap-2 rounded"
+          style={{
+            color: '#ffffff',
+            backgroundColor: 'var(--accent-color)',
+            padding: '8px 12px',
+            marginBottom: '16px'
+          }}
+        >
+          <PromptTextArea input={input} setInput={setInput} />
+          <NegativePromptArea input={input} setInput={setInput} />
+        </div>
 
         <ActionPanel
           errors={errors}

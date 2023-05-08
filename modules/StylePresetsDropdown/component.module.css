@@ -1,0 +1,58 @@
+.dropdown-menu {
+  background-color: var(--input-background);
+  position: absolute;
+  top: 38px;
+  left: 0;
+  right: 0;
+  height: 380px;
+  border-radius: 4px;
+  border: 2px solid var(--card-background);
+  z-index: 31;
+}
+
+@media (min-width: 640px) {
+  .dropdown-menu {
+    width: 500px;
+  }
+}
+
+.StyledClose {
+  cursor: pointer;
+  position: absolute;
+  top: 4px;
+  right: 4px;
+}
+
+.style-presets-wrapper {
+  position: absolute;
+  top: 32px;
+  bottom: 8px;
+  left: 8px;
+  right: 8px;
+  overflow-y: auto;
+
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;
+}
+
+.style-presets-wrapper * {
+  -ms-overflow-style: none;
+}
+
+.style-presets-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.preset-wrapper {
+  padding: 4px 8px 16px 8px;
+  border-radius: 4px;
+  margin-bottom: 14px;
+}
+
+.preset-wrapper:hover {
+  background-color: var(--light-accent);
+}
+
+.preset-description {
+  font-size: 12px;
+}

@@ -55,7 +55,7 @@ const Uploader = ({ handleSaveImage, type = 'img2img' }: Props) => {
         />
         <Button
           title="Upload image from URL"
-          btnType="primary"
+          theme="primary"
           onClick={handleImportFromUrl}
           width="120px"
         >

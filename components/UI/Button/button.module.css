@@ -1,0 +1,49 @@
+.styled-button {
+  align-items: center;
+  background-color: var(--btn-primary);
+  border-radius: 4px;
+  border: 1px solid white;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  font-size: 14px;
+  font-weight: 500;
+  gap: 4px;
+  height: 40px;
+  justify-content: center;
+  min-width: 40px;
+  padding: 2px 8px;
+
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.styled-button:hover {
+  background-color: var(--btn-primary-hover);
+}
+
+.styled-button-secondary {
+  background-color: var(--btn-secondary);
+}
+
+.styled-button-secondary:hover {
+  background-color: var(--btn-secondary-hover);
+}
+
+.styled-button-disabled {
+  background-color: #b7b7b5;
+}
+
+.styled-button:active {
+  transform: scale(0.98);
+}
+
+.styled-button-small {
+  height: 34px;
+  padding: 2px 4px;
+}
+
+.styled-button-disabled {
+  background-color: gray;
+}

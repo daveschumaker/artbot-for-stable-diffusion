@@ -408,7 +408,7 @@ const ImageDetails = ({
           </Button>
           <Button
             title="Delete image"
-            btnType="secondary"
+            theme="secondary"
             onClick={() => setComponentState({ showDeleteModal: true })}
           >
             <TrashIcon className="mx-auto" />
