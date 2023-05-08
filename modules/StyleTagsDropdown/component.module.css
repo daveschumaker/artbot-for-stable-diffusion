@@ -44,6 +44,7 @@
 }
 
 .tag {
+  color: white;
   background-color: var(--main-color);
   border-radius: 12px;
   cursor: pointer;

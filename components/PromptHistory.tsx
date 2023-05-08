@@ -118,7 +118,7 @@ const PromptHistory = (props: any) => {
   })
 
   return (
-    <>
+    <div className="text-black dark:text-white">
       <PageTitle>
         {componentState.view === 'all' && `Prompt history`}
         {componentState.view === 'favorites' && `Favorite prompts`}
@@ -228,7 +228,7 @@ const PromptHistory = (props: any) => {
           })}
         </PromptsList>
       )}
-    </>
+    </div>
   )
 }
 

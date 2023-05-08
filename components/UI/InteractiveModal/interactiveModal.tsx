@@ -174,7 +174,7 @@ const InteractiveModal = (props: any) => {
         <ContentWrapper>{props.children}</ContentWrapper>
         <SwipeCapture {...handlers} />
         <CloseIconWrapper onClick={onClose}>
-          <CloseIcon size={28} />
+          <CloseIcon size={28} className="text-black dark:text-white" />
         </CloseIconWrapper>
         {leftButton && <LeftIconWrapper>{leftButton}</LeftIconWrapper>}
       </StyledInteractiveModal>

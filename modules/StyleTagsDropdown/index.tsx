@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { Button } from 'components/UI/Button'
 import { IconTags, IconX } from '@tabler/icons-react'
 import Overlay from 'components/UI/Overlay'
+import clsx from 'clsx'
 
 const tags = [
   [
@@ -303,7 +304,12 @@ const StyleTagsDropdown = ({ input, setInput }: GetSetPromptInput) => {
       {showMenu && (
         <>
           <Overlay handleClose={() => setShowMenu(false)} disableBackground />
-          <div className={styles['dropdown-menu']}>
+          <div
+            className={clsx(
+              styles['dropdown-menu'],
+              'text-black dark:text-white'
+            )}
+          >
             <div
               className={styles['StyledClose']}
               onClick={() => setShowMenu(false)}

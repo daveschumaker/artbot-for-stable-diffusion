@@ -5,6 +5,7 @@ import { GetSetPromptInput } from 'types'
 import styles from './component.module.css'
 import Overlay from 'components/UI/Overlay'
 import { stylePresets } from 'models/StylePresets'
+import clsx from 'clsx'
 
 const StylePresetsDropdown = ({ input, setInput }: GetSetPromptInput) => {
   const [showMenu, setShowMenu] = useState(false)
@@ -94,7 +95,12 @@ const StylePresetsDropdown = ({ input, setInput }: GetSetPromptInput) => {
       {showMenu && (
         <>
           <Overlay handleClose={() => setShowMenu(false)} disableBackground />
-          <div className={styles['dropdown-menu']}>
+          <div
+            className={clsx(
+              styles['dropdown-menu'],
+              'text-black dark:text-white'
+            )}
+          >
             <div
               className={styles['StyledClose']}
               onClick={() => setShowMenu(false)}
