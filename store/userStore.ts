@@ -35,6 +35,7 @@ interface UserStore {
   trusted: boolean
   worker_ids: Array<string> | null
   workers: IWorkers
+  sharedkey_ids: Array<string>
 }
 
 interface IKudosDetails {
@@ -53,6 +54,7 @@ interface UserInfo {
   sharedKey: boolean
   trusted: boolean
   worker_ids: Array<string> | null
+  sharedkey_ids: Array<string>
 }
 
 export const userInfoStore = makeStore<UserStore>({
@@ -70,6 +72,7 @@ export const userInfoStore = makeStore<UserStore>({
   trusted: false,
   loggedIn: false,
   sharedKey: false,
+  sharedkey_ids: [],
   workers: {}
 })
 
@@ -90,6 +93,10 @@ export const unsetUserInfo = () => {
     workers: {}
   }))
 }
+
+// Due to caching issues, shared_keys might not be immediately available from the API.
+// Use this to update and store keys in the cache
+export const updateSharedKey = (id: string) => {}
 
 export const setWorker = (worker: IWorker) => {
   const workers = { ...userInfoStore.state.workers }
@@ -113,7 +120,8 @@ export const setUserInfo = ({
   records,
   trusted,
   worker_ids = null,
-  sharedKey = false
+  sharedKey = false,
+  sharedkey_ids = []
 }: UserInfo) => {
   userInfoStore.set(() => ({
     username,
@@ -123,6 +131,7 @@ export const setUserInfo = ({
     trusted,
     worker_ids,
     sharedKey,
+    sharedkey_ids,
     loggedIn: username ? true : false
   }))
 }

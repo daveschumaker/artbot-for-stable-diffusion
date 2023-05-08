@@ -7,7 +7,12 @@ import {
   setWorkers,
   userInfoStore
 } from '../store/userStore'
-import { clientHeader, getApiHostServer, isAppActive } from '../utils/appUtils'
+import {
+  clientHeader,
+  getApiHostServer,
+  isAppActive,
+  isUuid
+} from '../utils/appUtils'
 import { uuidv4 } from '../utils/appUtils'
 
 export const setUserId = () => {
@@ -61,26 +66,32 @@ export const fetchUserDetails = async (apikey: string) => {
       trusted = false,
       username = '',
       worker_ids = null,
-      sharedKey = false
+      sharedKey = false,
+      sharedkey_ids = []
     } = userDetails
 
-    // FIXME: Hacky lookup for shared keys!
-    if (userDetails.username.includes('(Shared Key:')) {
-      const keyRes = await fetch(
-        `${getApiHostServer()}/api/v2/sharedkeys/${apikey}`,
-        {
-          headers: {
-            'Client-Agent': clientHeader()
+    if (isUuid(apikey)) {
+      try {
+        const keyRes = await fetch(
+          `${getApiHostServer()}/api/v2/sharedkeys/${apikey}`,
+          {
+            headers: {
+              'Client-Agent': clientHeader()
+            }
           }
+        )
+
+        const sharedKeyDetails = await keyRes.json()
+
+        if (sharedKeyDetails.id) {
+          kudos = sharedKeyDetails.kudos
+          username = sharedKeyDetails.username
         }
-      )
-
-      const sharedKeyDetails = await keyRes.json()
-
-      if (sharedKeyDetails.id) {
-        sharedKey = true
-        kudos = sharedKeyDetails.kudos
-        username = sharedKeyDetails.username
+      } catch (err) {
+        console.log(
+          `Error: Something happened while trying to look up Shared Key details`
+        )
+        console.log(err)
       }
     }
 
@@ -91,8 +102,9 @@ export const fetchUserDetails = async (apikey: string) => {
       records,
       trusted,
       username,
-      sharedKey,
-      worker_ids
+      sharedKey: isUuid(apikey),
+      worker_ids,
+      sharedkey_ids
     })
 
     if (worker_ids && worker_ids.length > 0) {

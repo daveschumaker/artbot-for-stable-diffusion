@@ -16,6 +16,7 @@ import Select from 'components/UI/Select'
 import AppSettings from 'models/AppSettings'
 import React from 'react'
 import { fetchUserDetails } from 'api/userInfo'
+import SharedKeys from './SharedKeys'
 
 const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
   const userStore = useStore(userInfoStore)
@@ -225,6 +226,7 @@ const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
           </div>
         </MaxWidth>
       </Section>
+      {loggedIn && <SharedKeys></SharedKeys>}
       <Section>
         <SubSectionTitle>
           <strong>Share images with LAION</strong>

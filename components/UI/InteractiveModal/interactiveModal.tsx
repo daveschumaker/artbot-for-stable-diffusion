@@ -108,6 +108,7 @@ const ContentWrapper = styled.div`
 const InteractiveModal = (props: any) => {
   const {
     className = '',
+    disableSwipe = false,
     handleClose = () => {},
     setDynamicHeight = 512,
     leftButton
@@ -172,7 +173,7 @@ const InteractiveModal = (props: any) => {
         maxWidth={props.maxWidth}
       >
         <ContentWrapper>{props.children}</ContentWrapper>
-        <SwipeCapture {...handlers} />
+        {!disableSwipe && <SwipeCapture {...handlers} />}
         <CloseIconWrapper onClick={onClose}>
           <CloseIcon size={28} className="text-black dark:text-white" />
         </CloseIconWrapper>

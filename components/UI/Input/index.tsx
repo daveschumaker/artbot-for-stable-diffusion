@@ -7,6 +7,7 @@ interface InputProps {
   name?: string
   type?: string
   className?: string
+  id?: string
   children?: React.ReactNode
   error?: boolean | string
   step?: number
@@ -22,7 +23,14 @@ interface InputProps {
 }
 
 const Input = (props: InputProps) => {
-  const { children, className, selectAll = false, value = '', ...rest } = props
+  const {
+    children,
+    className,
+    id,
+    selectAll = false,
+    value = '',
+    ...rest
+  } = props
 
   const handleFocus = (e: any) => {
     e.target.select()
@@ -30,6 +38,7 @@ const Input = (props: InputProps) => {
 
   return (
     <input
+      id={id}
       className={clsx(
         styles['styled-input'],
         props.error && styles['error'],

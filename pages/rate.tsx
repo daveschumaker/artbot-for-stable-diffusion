@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import Head from 'next/head'
+import { useStore } from 'statery'
 import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { trackEvent } from '../api/telemetry'
@@ -116,9 +117,11 @@ let ratingTime = Date.now()
 let lastRatedId: string
 
 const Rate = () => {
+  const DRAMA_MODE = false // ratings provider has disabled rating system for all UIs for some reason.
+  const userStore = useStore(userInfoStore)
+  const { sharedKey } = userStore
   const [imageArray, setImageArray] = useState<Array<NewRating>>([])
 
-  const DRAMA_MODE = false // ratings provider has disabled rating system for all UIs for some reason.
   const [componentState, setComponentState] = useComponentState({
     apiKey: '',
     activeStar: 0,
@@ -476,6 +479,29 @@ const Rate = () => {
           Due to issues with third-party rating service that are outside of
           ArtBot&apos; control, ratings have been (temporarily?) disabled. I
           will share here when I have more information.
+        </SubTitle>
+      </div>
+    )
+  }
+
+  if (sharedKey) {
+    return (
+      <div>
+        <Head>
+          <title>Rate images - ArtBot for Stable Diffusion</title>
+          <meta name="twitter:title" content="Rate images with ArtBot" />
+          <meta
+            name="twitter:description"
+            content="Give aesthetics ratings for images created with Stable Diffusion and help improve future models."
+          />
+          <meta
+            name="twitter:image"
+            content="https://tinybots.net/artbot/robot_judge.png"
+          />
+        </Head>
+        <PageTitle>Rate images (disabled)</PageTitle>
+        <SubTitle>
+          Rating images is not possible using a shared API key.
         </SubTitle>
       </div>
     )
