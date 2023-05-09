@@ -63,7 +63,7 @@ const WorkerBlocklist = () => {
             <div className="flex flex-col gap-4 px-2">
               <h2 className="font-bold">Add worker to block list</h2>
               <div>
-                <label htmlFor="workerInput">Update kudos:</label>
+                <label htmlFor="workerInput">Worker ID:</label>
                 <Input
                   id="workerInput"
                   type="text"
