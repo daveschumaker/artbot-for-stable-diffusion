@@ -1,6 +1,8 @@
 # 2023.05.09
 
 - Added ability to sort workers by max resolution on the [worker details page](/info/workers). Thanks to Efreak for suggesting this on Discord.
+- Fixed a typo on the worker block list field due to a copy / paste error on my part. ("update kudos" instead of "add worker ID"). Thanks to Litnine for reporting this on Discord.
+- Fixed issue where long prompts with no spaces (e.g., "this_is_a_long_prompt,dramatic,epic,moody,etc,etc") would overflow various containers (prompt history and pending items). Thanks to Litnine for reporting this.
 
 # 2023.05.08
 
