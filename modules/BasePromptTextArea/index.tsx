@@ -10,7 +10,7 @@ import { Button } from 'components/UI/Button'
 interface Props {
   handleChangeValue: (e: any) => void
   handleClear: () => void
-  label: React.ReactNode
+  label?: React.ReactNode
   optionalButton?: React.ReactNode
   placeholder: string
   value: string

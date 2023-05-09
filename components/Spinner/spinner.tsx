@@ -39,7 +39,7 @@ const StyledCircle = styled.circle`
   }
 `
 
-export default function SpinnerV2({ size = 50 }) {
+export default function SpinnerV2({ size = 50 }: { size?: number }) {
   return (
     <StyledSVG viewBox={`0 0 50 50`} size={size}>
       <StyledCircle
