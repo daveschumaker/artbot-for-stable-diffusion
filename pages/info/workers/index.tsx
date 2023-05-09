@@ -110,6 +110,20 @@ const WorkerInfoPage = () => {
       return 0
     }
 
+    if (componentState.sort === 'resolution') {
+      const aSpeed = a.max_pixels
+      const bSpeed = b.max_pixels
+
+      if (aSpeed > bSpeed) {
+        return -1
+      }
+      if (aSpeed < bSpeed) {
+        return 1
+      }
+
+      return 0
+    }
+
     if (componentState.sort === 'name') {
       if (a[componentState.sort] < b[componentState.sort]) {
         return -1
@@ -136,6 +150,7 @@ const WorkerInfoPage = () => {
     { value: 'requests_fulfilled', label: 'Completed' },
     { value: 'kudos_rewards', label: 'Kudos' },
     { value: 'models', label: 'Models' },
+    { value: 'resolution', label: 'Max resolution' },
     { value: 'speed_per', label: 'Speed' },
     { value: 'uptime', label: 'Uptime' }
   ]
@@ -182,9 +197,9 @@ const WorkerInfoPage = () => {
         {componentState.isLoading && <SpinnerV2 />}
         {!componentState.isLoading && (
           <div className={styles.wrapper}>
-            {sortedWorkers?.map((worker: any) => {
+            {sortedWorkers?.map((worker: any, i: number) => {
               return (
-                <>
+                <div key={`worker_info_${i}`}>
                   <WorkerInfo
                     showModels={
                       componentState.showModelsForWorkerId === worker.id
@@ -209,7 +224,7 @@ const WorkerInfoPage = () => {
                       models={worker.models}
                     />
                   )}
-                </>
+                </div>
               )
             })}
           </div>

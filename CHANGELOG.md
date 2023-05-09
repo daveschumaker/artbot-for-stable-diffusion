@@ -1,3 +1,7 @@
+# 2023.05.09
+
+- Added ability to sort workers by max resolution on the [worker details page](/info/workers). Thanks to Efreak for suggesting this on Discord.
+
 # 2023.05.08
 
 - Fix: Text was hard to see on prompt history modal. Thanks anonymous user for reporting this.
