@@ -87,9 +87,21 @@ export default async function handler(
   const imageType = resp.headers.get('Content-Type')
 
   let converted
+  let imgBuffer
 
-  // @ts-ignore
-  const imgBuffer = await resp.buffer()
+  try {
+    // @ts-ignore
+    imgBuffer = await resp.buffer()
+  } catch (err) {
+    console.log(`Error: resp.buffer is missing`)
+    console.log(`Image URL:`, imageUrl)
+    console.log(err)
+
+    res.send({
+      success: false,
+      status: 'ERROR_RESIZING_REMOTE_IMAGE'
+    })
+  }
 
   var dimensions = sizeOf(imgBuffer)
   const shouldResize = dimensions.height > 1024 || dimensions.width > 1024
