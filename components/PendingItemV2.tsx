@@ -278,7 +278,16 @@ const PendingItem = memo(
             <div className="flex flex-col flex-grow">
               <StyledPrompt className="flex-grow">
                 {jobDetails.upscaled && <div>[ UPSCALING ]</div>}
-                <div className="italic">{jobDetails.prompt}</div>
+                <div
+                  className="italic"
+                  style={{
+                    overflowWrap: 'break-word',
+                    display: 'inline-block',
+                    wordBreak: 'break-word'
+                  }}
+                >
+                  {jobDetails.prompt}
+                </div>
               </StyledPrompt>
               <div className="w-full mt-2 font-mono text-xs text-white">
                 Steps: {jobDetails.steps}

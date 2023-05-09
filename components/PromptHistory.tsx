@@ -70,6 +70,9 @@ const Timestamp = styled.div`
 
 const PromptText = styled.div`
   margin-right: 40px;
+  overflow-rap: break-word;
+  display: inline-block;
+  word-break: break-word;
 `
 
 const PromptHistory = (props: any) => {
