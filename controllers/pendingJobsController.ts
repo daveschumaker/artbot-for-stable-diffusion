@@ -71,18 +71,24 @@ const createImageJobs = async () => {
   }
 
   const queued = pendingJobs.filter((job: { jobStatus: JobStatus }) => {
-    return job.jobStatus === JobStatus.Queued
+    if (job && job.jobStatus) {
+      return job.jobStatus === JobStatus.Queued
+    }
   })
 
   const processing = pendingJobs.filter((job: { jobStatus: JobStatus }) => {
-    return job.jobStatus === JobStatus.Processing
+    if (job && job.jobStatus) {
+      return job.jobStatus === JobStatus.Processing
+    }
   })
 
   const processingOrQueued = [...processing, ...queued]
 
   if (processingOrQueued.length < MAX_JOBS) {
     const waitingJobs = pendingJobs.filter((job: { jobStatus: JobStatus }) => {
-      return job.jobStatus === JobStatus.Waiting
+      if (job && job.jobStatus) {
+        return job.jobStatus === JobStatus.Waiting
+      }
     })
 
     const [nextJobParams] = waitingJobs
