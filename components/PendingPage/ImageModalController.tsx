@@ -1,9 +1,10 @@
 import ErrorComponent, { logErrorInComponent } from 'components/ErrorComponent'
+import { deletePendingJob, getPendingJob } from 'controllers/pendingJobsCache'
 import React, { useCallback, useEffect, useState } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { IImageDetails } from 'types'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
-import { deletePendingJobFromDb, getImageDetails } from '../../utils/db'
+import { deletePendingJobFromDb } from '../../utils/db'
 
 // import ImageModal from '../ImageModal'
 import ImageModal from '../ImageModalV2'
@@ -28,11 +29,17 @@ const ImageModalController = ({
   const [imageDetails, setImageDetails] = useState<IImageDetails>()
 
   const loadImageData = useCallback(async () => {
-    if (idx === null) {
+    if (
+      !imageList ||
+      typeof idx === 'undefined' ||
+      idx === null ||
+      !imageList[idx]
+    ) {
       return
     }
 
-    const data = (await getImageDetails(imageList[idx].jobId)) || {}
+    const data = getPendingJob(imageList[idx].jobId) || {}
+    // @ts-ignore
     setImageDetails(data)
   }, [idx, imageList])
 
@@ -41,6 +48,7 @@ const ImageModalController = ({
       return
     }
 
+    deletePendingJob(imageDetails.jobId)
     deletePendingJobFromDb(imageDetails.jobId)
     handleDeleteImage(imageDetails.jobId)
     onAfterDelete()
@@ -57,7 +65,8 @@ const ImageModalController = ({
     }
 
     const newIdx = idx + 1
-    const data = (await getImageDetails(imageList[newIdx].jobId)) || {}
+    const data = getPendingJob(imageList[newIdx].jobId) || {}
+    // @ts-ignore
     setImageDetails(data)
     setIdx(newIdx)
   }, [idx, imageList])
@@ -72,7 +81,8 @@ const ImageModalController = ({
     }
 
     const newIdx = idx - 1
-    const data = (await getImageDetails(imageList[newIdx].jobId)) || {}
+    const data = getPendingJob(imageList[newIdx].jobId) || {}
+    // @ts-ignore
     setImageDetails(data)
     setIdx(newIdx)
   }, [idx, imageList])

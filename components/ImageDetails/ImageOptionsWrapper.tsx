@@ -46,6 +46,7 @@ import { userInfoStore } from 'store/userStore'
 import { createShortlink } from 'api/createShortlink'
 import { toast, ToastOptions } from 'react-toastify'
 import RefreshIcon from 'components/icons/RefreshIcon'
+import { deletePendingJob } from 'controllers/pendingJobsCache'
 
 const ImageOptionsWrapper = ({
   handleClose,
@@ -101,6 +102,7 @@ const ImageOptionsWrapper = ({
 
   const handleDeleteImageConfirm = async () => {
     handleDeleteImageClick()
+    deletePendingJob(imageDetails.jobId)
     await deletePendingJobFromDb(imageDetails.jobId)
     await deleteCompletedImage(imageDetails.jobId)
     getImageDetails.delete(imageDetails.jobId) // bust memoization cache

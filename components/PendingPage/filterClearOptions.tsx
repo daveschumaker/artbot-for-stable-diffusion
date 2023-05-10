@@ -10,6 +10,7 @@ import {
   deleteAllPendingJobs,
   deleteDoneFromPending
 } from 'utils/db'
+import { deletePendingJobs } from 'controllers/pendingJobsCache'
 
 const FilterClearOptions = ({
   filter,
@@ -73,10 +74,14 @@ const FilterClearOptions = ({
           `}
           onConfirmClick={async () => {
             if (confirmClear === 'done') {
+              deletePendingJobs(JobStatus.Done)
               await deleteDoneFromPending()
             } else if (confirmClear === 'pending') {
               await deleteAllPendingJobs()
+              deletePendingJobs(JobStatus.Waiting)
+              deletePendingJobs(JobStatus.Queued)
             } else if (confirmClear === 'error') {
+              deletePendingJobs(JobStatus.Error)
               await deleteAllPendingErrors()
             }
 

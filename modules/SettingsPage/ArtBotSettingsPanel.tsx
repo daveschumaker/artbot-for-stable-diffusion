@@ -10,6 +10,7 @@ import Linker from 'components/UI/Linker'
 import { useState } from 'react'
 import { Button } from 'components/UI/Button'
 import { db, generateThumbnails } from 'utils/db'
+import { deletePendingJobs } from 'controllers/pendingJobsCache'
 
 const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
   const [processState, setProcessState] = useState('')
@@ -351,6 +352,7 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
           <Button
             theme="secondary"
             onClick={async () => {
+              deletePendingJobs()
               await db.pending.clear()
               window.location.assign(`${window.location.origin}/artbot/pending`)
             }}

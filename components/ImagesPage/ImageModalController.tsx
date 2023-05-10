@@ -42,6 +42,7 @@ const ImageModalController = ({
       return
     }
 
+    deletePendingJobFromDb(imageDetails.jobId)
     await deletePendingJobFromDb(imageDetails.jobId)
     await deleteCompletedImage(imageDetails.jobId)
     onAfterDelete()

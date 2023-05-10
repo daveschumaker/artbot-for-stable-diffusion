@@ -9,6 +9,7 @@ import {
   createTextJob,
   fetchTextModels
 } from './controller'
+import styles from './component.module.css'
 
 interface TextModel {
   name: string
@@ -43,6 +44,10 @@ const ChatPageComponent = () => {
   const handleSendClick = useCallback(async () => {
     let promptForApi
     const updateOutput = [...output]
+
+    if (!activeModel) {
+      return
+    }
 
     if (prompt) {
       updateOutput.push(prompt)
@@ -130,7 +135,10 @@ const ChatPageComponent = () => {
   }, [])
 
   return (
-    <div className="flex flex-col" style={{ height: 'calc(100vh - 80px)' }}>
+    <div
+      className={styles['chat-wrapper']}
+      style={{ height: 'calc(100vh - 80px)' }}
+    >
       <div className="flex grow flex-col">
         {output.length === 0 && <div>Hey, enter something below!</div>}
         {output.length > 0 &&
@@ -163,7 +171,11 @@ const ChatPageComponent = () => {
           handleClear={() => setPrompt('')}
           placeholder="Enter your initial prompt here..."
           optionalButton={
-            <Button onClick={handleSendClick} size="small">
+            <Button
+              disabled={!activeModel ? true : false}
+              onClick={handleSendClick}
+              size="small"
+            >
               <IconSend stroke={1.5} />
             </Button>
           }

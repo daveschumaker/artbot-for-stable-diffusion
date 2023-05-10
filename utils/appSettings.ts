@@ -1,3 +1,4 @@
+import { initLoadPendingJobsFromDb } from 'controllers/pendingJobsCache'
 import { buildModelAvailability } from '../api/fetchAvailableModels'
 import { fetchHordePerformance } from '../api/fetchHordePerformance'
 import fetchMyWorkers from '../api/fetchMyWorkers'
@@ -115,6 +116,8 @@ export const initAppSettings = async () => {
 
   // app settings from local storage
   updateShowGrid()
+
+  initLoadPendingJobsFromDb()
 
   await trackNewSession()
 

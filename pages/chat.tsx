@@ -8,11 +8,11 @@ const ChatPage = () => {
   return (
     <>
       <Head>
-        <title>Chat - ArtBot for Stable Diffusion</title>
-        <meta name="twitter:title" content="ArtBot - Live Paint" />
+        <title>Chat - ArtBot for KoboldAI</title>
+        <meta name="twitter:title" content="ArtBot - Chat using KoboldAI" />
         <meta
           name="twitter:image"
-          content="https://tinybots.net/artbot/robots_drawing.png"
+          content="https://tinybots.net/artbot/robots_talking.jpg"
         />
       </Head>
       <PageTitle>Chat</PageTitle>

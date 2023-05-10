@@ -455,6 +455,11 @@ export const updateCompletedJob = async (tableId: number, updatedObject) => {
   db.completed.update(tableId, updatedObject)
 }
 
+export const addPendingJobToDexie = async (jobDetails: any) => {
+  const info = await db.pending.put({ ...jobDetails })
+  return info
+}
+
 // @ts-ignore
 export const updatePendingJob = async (tableId: number, updatedObject) => {
   db.pending.update(tableId, updatedObject)

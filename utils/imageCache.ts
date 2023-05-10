@@ -10,7 +10,6 @@ import {
 } from '../store/appStore'
 import { CheckImage, CreateImageJob, JobStatus } from '../types'
 import {
-  allPendingJobs,
   db,
   deletePendingJobFromDb,
   getImageDetails,
@@ -29,6 +28,11 @@ import CreateImageRequest from '../models/CreateImageRequest'
 import { hasPromptMatrix, promptMatrix } from './promptUtils'
 import { sleep } from './sleep'
 import { logToConsole } from './debugTools'
+import {
+  getAllPendingJobs,
+  updatePendingJobId,
+  updatePendingJobV2
+} from 'controllers/pendingJobsCache'
 
 export const initIndexedDb = () => {}
 
@@ -97,10 +101,10 @@ export const createMultiImageJob = async () => {
     MAX_JOBS = MAX_CONCURRENT_JOBS_USER
   }
 
-  const queuedCount = (await allPendingJobs(JobStatus.Processing)) || []
+  const queuedCount = (await getAllPendingJobs(JobStatus.Processing)) || []
 
   if (queuedCount.length < MAX_JOBS) {
-    const pendingJobs = (await allPendingJobs(JobStatus.Waiting)) || []
+    const pendingJobs = (await getAllPendingJobs(JobStatus.Waiting)) || []
     const [nextJobParams] = pendingJobs
 
     if (nextJobParams) {
@@ -116,7 +120,8 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
 
   try {
     imageParams.jobStatus = JobStatus.Requested
-    await updatePendingJob(imageParams.id, Object.assign({}, imageParams))
+    updatePendingJobV2(imageParams)
+    // await updatePendingJob(imageParams.id, Object.assign({}, imageParams))
 
     const data = await createNewImage(imageParams)
     // @ts-ignore
@@ -130,7 +135,8 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
     ) {
       FETCH_INTERVAL_SEC += 1000
       imageParams.jobStatus = JobStatus.Waiting
-      await updatePendingJob(imageParams.id, Object.assign({}, imageParams))
+      updatePendingJobV2(imageParams)
+      // await updatePendingJob(imageParams.id, Object.assign({}, imageParams))
       return
     }
 
@@ -138,18 +144,25 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
     // Probably rate limited?
     if (!success && !jobId && !status) {
       imageParams.jobStatus = JobStatus.Waiting
-      await updatePendingJob(imageParams.id, Object.assign({}, imageParams))
+      updatePendingJobV2(imageParams)
+      // await updatePendingJob(imageParams.id, Object.assign({}, imageParams))
       return
     }
 
+    // Success! jobId has changed.
     if (success && jobId) {
       FETCH_INTERVAL_SEC = CREATE_NEW_JOB_INTERVAL
+
+      // This replaced ArtBot generated jobId with jobId from API.
+      updatePendingJobId(imageParams.jobId, jobId)
 
       // Overwrite params on success.
       imageParams.jobId = jobId
       imageParams.timestamp = Date.now()
       imageParams.jobStatus = JobStatus.Queued
 
+      // Need both these here to handle updating jobId in both database and in-memory cache.
+      updatePendingJobV2(imageParams)
       await updatePendingJob(imageParams.id, Object.assign({}, imageParams))
 
       const jobDetailsFromApi = (await checkImageJob(jobId)) || {}
@@ -157,7 +170,9 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
       if (typeof jobDetailsFromApi?.success === 'undefined') {
         imageParams.jobStatus = JobStatus.Waiting
         imageParams.is_possible = jobDetailsFromApi.is_possible
-        await updatePendingJob(imageParams.id, Object.assign({}, imageParams))
+
+        updatePendingJobV2(imageParams)
+        // await updatePendingJob(imageParams.id, Object.assign({}, imageParams))
         return {
           success: false,
           message: 'Unable to send request...'
@@ -185,19 +200,32 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
         imageParams.queue_position = queue_position
       }
 
-      await updatePendingJob(
-        imageParams.id,
+      updatePendingJobV2(
         Object.assign({}, imageParams, {
           queue_position: imageParams.queue_position,
           wait_time: imageParams.wait_time || 0
         })
       )
 
+      // await updatePendingJob(
+      //   imageParams.id,
+      //   Object.assign({}, imageParams, {
+      //     queue_position: imageParams.queue_position,
+      //     wait_time: imageParams.wait_time || 0
+      //   })
+      // )
+
       return {
         success: true,
         message
       }
     } else {
+      updatePendingJobV2(
+        Object.assign({}, imageParams, {
+          jobStatus: JobStatus.Error,
+          errorMessage: message
+        })
+      )
       await updatePendingJob(
         imageParams.id,
         Object.assign({}, imageParams, {
@@ -242,6 +270,12 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
       }
     }
   } catch (err) {
+    updatePendingJobV2(
+      Object.assign({}, imageParams, {
+        jobStatus: JobStatus.Error,
+        errorMessage: 'An unknown error occurred...'
+      })
+    )
     await updatePendingJob(
       imageParams.id,
       Object.assign({}, imageParams, {
@@ -489,6 +523,13 @@ export const checkCurrentJob = async (imageDetails: any) => {
   const checkJobResult = await checkImageJob(jobId)
 
   if (appInfoStore.state.storageQuotaLimit) {
+    updatePendingJobV2(
+      Object.assign({}, jobDetails, {
+        jobStatus: JobStatus.Error,
+        errorMessage:
+          'Your browser has informed ArtBot that its storage quota has been exceeded. Please remove some older images and try again shortly.'
+      })
+    )
     await updatePendingJob(
       imageDetails.id,
       Object.assign({}, jobDetails, {
@@ -524,7 +565,8 @@ export const checkCurrentJob = async (imageDetails: any) => {
 
   jobDetails.is_possible = checkJobResult.is_possible
 
-  await updatePendingJob(jobDetails.id, Object.assign({}, jobDetails))
+  updatePendingJobV2(Object.assign({}, jobDetails))
+  // await updatePendingJob(jobDetails.id, Object.assign({}, jobDetails))
 
   let imgDetailsFromApi: FinishedImage
   if (checkJobResult?.done) {
@@ -535,6 +577,13 @@ export const checkCurrentJob = async (imageDetails: any) => {
       const currentTimestamp = Date.now() / 1000
 
       if (currentTimestamp - jobTimestamp > 60) {
+        updatePendingJobV2(
+          Object.assign({}, jobDetails, {
+            jobStatus: JobStatus.Error,
+            errorMessage:
+              'The worker GPU processing this request encountered an error. Retry?'
+          })
+        )
         await updatePendingJob(
           jobDetails.id,
           Object.assign({}, jobDetails, {
@@ -556,6 +605,13 @@ export const checkCurrentJob = async (imageDetails: any) => {
       const currentTimestamp = Date.now() / 1000
 
       if (currentTimestamp - jobTimestamp > 300) {
+        updatePendingJobV2(
+          Object.assign({}, jobDetails, {
+            jobStatus: JobStatus.Error,
+            errorMessage:
+              'Job has gone stale and has been removed from the Stable Horde backend. Retry?'
+          })
+        )
         await updatePendingJob(
           imageDetails.id,
           Object.assign({}, jobDetails, {
@@ -578,6 +634,12 @@ export const checkCurrentJob = async (imageDetails: any) => {
     }
 
     if (imgDetailsFromApi?.status === 'INVALID_IMAGE_FROM_API') {
+      updatePendingJobV2(
+        Object.assign({}, imageDetails, {
+          jobStatus: JobStatus.Error,
+          errorMessage: imgDetailsFromApi.message
+        })
+      )
       await updatePendingJob(
         imageDetails.id,
         Object.assign({}, imageDetails, {
@@ -622,6 +684,14 @@ export const checkCurrentJob = async (imageDetails: any) => {
             success: false
           }
         }
+
+        updatePendingJobV2(
+          Object.assign({}, job, {
+            timestamp: Date.now(),
+            jobStatus: JobStatus.Done,
+            thumbnail
+          })
+        )
 
         await updatePendingJob(
           imageDetails.id,

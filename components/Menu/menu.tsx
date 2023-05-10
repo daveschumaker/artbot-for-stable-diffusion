@@ -156,6 +156,14 @@ const Menu = () => {
           <SubOptions>
             <SubOption
               onClick={() => {
+                navigateToLink('/chat')
+              }}
+            >
+              <LineDashedIcon />
+              Chat / Text
+            </SubOption>
+            <SubOption
+              onClick={() => {
                 navigateToLink('/controlnet')
               }}
             >

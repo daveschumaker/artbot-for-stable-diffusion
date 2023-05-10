@@ -2,7 +2,7 @@ import { DEFAULT_SAMPLER_ARRAY, MAX_IMAGES_PER_JOB } from '../_constants'
 import CreateImageRequest from '../models/CreateImageRequest'
 import RerollImageRequest from '../models/RerollImageRequest'
 import { logError, uuidv4 } from './appUtils'
-import { db } from './db'
+import { addPendingJobToDexie, db } from './db'
 import { randomPropertyName } from './helperUtils'
 import { getModelVersion, validModelsArray } from './modelUtils'
 import { stylePresets } from './stylePresets'
@@ -12,6 +12,7 @@ import { sleep } from './sleep'
 import { userInfoStore } from 'store/userStore'
 import { toast, ToastOptions } from 'react-toastify'
 import { logToConsole } from './debugTools'
+import { setPendingJob } from 'controllers/pendingJobsCache'
 
 const cloneImageParams = async (
   imageParams: CreateImageRequest | RerollImageRequest
@@ -58,7 +59,9 @@ export const createPendingRerollJob = async (
   const clonedParams = await cloneImageParams(imageParams)
 
   try {
-    await db.pending.put({
+    const imageId = await addPendingJobToDexie(clonedParams)
+    setPendingJob({
+      id: imageId,
       ...clonedParams
     })
   } finally {
@@ -124,7 +127,9 @@ export const addPendingJobToDb = async ({
       return { success: false }
     }
 
-    await db.pending.put({
+    const imageId = await addPendingJobToDexie(clonedParams)
+    setPendingJob({
+      id: imageId,
       ...clonedParams
     })
 
@@ -237,7 +242,9 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
             })
           }
 
-          await db.pending.put({
+          const imageId = await addPendingJobToDexie(clonedParams)
+          setPendingJob({
+            id: imageId,
             ...clonedParams
           })
         }
@@ -276,7 +283,9 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
       }
 
       try {
-        await db.pending.put({
+        const imageId = await addPendingJobToDexie(clonedParams)
+        setPendingJob({
+          id: imageId,
           ...clonedParams
         })
       } catch (err) {}
@@ -334,7 +343,9 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
       }
 
       try {
-        await db.pending.put({
+        const imageId = await addPendingJobToDexie(clonedParams)
+        setPendingJob({
+          id: imageId,
           ...clonedParams
         })
       } catch (err) {}
@@ -379,7 +390,9 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
       }
 
       try {
-        await db.pending.put({
+        const imageId = await addPendingJobToDexie(clonedParams)
+        setPendingJob({
+          id: imageId,
           ...clonedParams
         })
       } catch (err) {}

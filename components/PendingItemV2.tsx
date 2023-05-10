@@ -2,7 +2,6 @@ import { memo } from 'react'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
 
-import { deletePendingJobFromDb } from '../utils/db'
 import ProgressBar from './ProgressBarV2'
 import { setNewImageReady, setShowImageReadyToast } from '../store/appStore'
 import { Button } from './UI/Button'
@@ -26,6 +25,7 @@ import { MODEL_LIMITED_BY_WORKERS, RATE_IMAGE_CUTOFF_SEC } from '../_constants'
 import DisplayRawData from './DisplayRawData'
 import CopyIcon from './icons/CopyIcon'
 import { copyEditPrompt } from '../controllers/imageDetailsCommon'
+import { deletePendingJob } from 'controllers/pendingJobsCache'
 
 const RATINGS_ENABLED = false
 
@@ -160,18 +160,18 @@ const PendingItem = memo(
         context: '/pages/pending'
       })
 
-      deletePendingJobFromDb(jobId)
+      deletePendingJob(jobId)
     }
 
     const handleEditClick = async () => {
-      await deletePendingJobFromDb(jobId)
       savePrompt({ ...jobDetails })
+      deletePendingJob(jobId)
       router.push(`/?edit=true`)
     }
 
     const handleRetryJob = async () => {
       if (serverHasJob) {
-        deletePendingJobFromApi(jobId)
+        deletePendingJob(jobId)
       }
 
       // Fixes https://github.com/daveschumaker/artbot-for-stable-diffusion/issues/23
@@ -188,7 +188,7 @@ const PendingItem = memo(
       })
 
       await createImageJob(clonedParams)
-      await deletePendingJobFromDb(jobId)
+      deletePendingJob(jobId)
       window.scrollTo(0, 0)
     }
 
@@ -198,7 +198,7 @@ const PendingItem = memo(
     }
 
     const handleRemovePanel = () => {
-      deletePendingJobFromDb(jobId)
+      deletePendingJob(jobId)
       handleCloseClick(jobId)
     }
 

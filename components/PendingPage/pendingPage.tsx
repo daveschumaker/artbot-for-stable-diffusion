@@ -29,12 +29,16 @@ import PageTitle from '../UI/PageTitle'
 import TextButton from '../UI/TextButton'
 import ImageModalController from './ImageModalController'
 import { useWindowSize } from 'hooks/useWindowSize'
-import usePendingItems from './usePendingItems'
 import styles from './pendingPage.module.css'
 import FilterClearOptions from './filterClearOptions'
 import { isInstalledPwa } from 'utils/appUtils'
 import { useStore } from 'statery'
 import { appInfoStore } from 'store/appStore'
+import {
+  deletePendingJob,
+  deletePendingJobs,
+  getAllPendingJobs
+} from 'controllers/pendingJobsCache'
 
 const MenuSeparator = styled.div`
   width: 100%;
@@ -44,20 +48,34 @@ const MenuSeparator = styled.div`
 const PendingPage = () => {
   const size = useWindowSize()
   const [filter, setFilter] = useState('all')
-  const pendingImages = usePendingItems('all')
   const [showImageModal, setShowImageModal] = useState<string | boolean>(false)
   const [showMenu, setShowMenu] = useState(false)
   const [validatePending, setValidatePending] = useState(false)
   const appState = useStore(appInfoStore)
   const { imageDetailsModalOpen } = appState
 
+  const [pendingImages, setPendingImages] = useState([])
+
+  useEffect(() => {
+    // @ts-ignore
+    setPendingImages(getAllPendingJobs())
+    const interval = setInterval(() => {
+      // @ts-ignore
+      setPendingImages(getAllPendingJobs())
+    }, 250)
+
+    return () => clearInterval(interval)
+  }, [])
+
   const handleDeleteImage = async (jobId: string) => {
     await deleteCompletedImage(jobId)
+    deletePendingJob(jobId)
     await deletePendingJobFromDb(jobId)
     fetchPendingImageJobs()
   }
 
   const onClosePanel = async (jobId: string) => {
+    deletePendingJob(jobId)
     await deletePendingJobFromDb(jobId)
     fetchPendingImageJobs()
   }
@@ -101,6 +119,9 @@ const PendingPage = () => {
     processPending()
 
   const handleShowModalClick = (jobId: string) => {
+    console.log(`jobId?`, jobId)
+    console.log(`done?`, done)
+
     setImagesForModalCache([...done])
     setShowImageModal(jobId)
   }
@@ -137,6 +158,7 @@ const PendingPage = () => {
   useEffectOnce(() => {
     return () => {
       if (AppSettings.get('autoClearPending')) {
+        deletePendingJobs(JobStatus.Done)
         deleteDoneFromPending()
       }
       setShowImageModal(false)
@@ -157,6 +179,7 @@ const PendingPage = () => {
       const exists = (await getImageDetails(done[idx].jobId)) || {}
 
       if (!exists.id) {
+        deletePendingJob(done[idx].jobId)
         await deletePendingJobFromDb(done[idx].jobId)
       }
     }
@@ -273,12 +296,19 @@ const PendingPage = () => {
               <MenuSeparator />
               <DropDownMenuItem
                 onClick={() => {
+                  deletePendingJobs(JobStatus.Done)
                   deleteDoneFromPending()
                 }}
               >
                 Clear completed
               </DropDownMenuItem>
-              <DropDownMenuItem onClick={deleteAllPendingJobs}>
+              <DropDownMenuItem
+                onClick={() => {
+                  deletePendingJobs(JobStatus.Queued)
+                  deletePendingJobs(JobStatus.Waiting)
+                  deleteAllPendingJobs()
+                }}
+              >
                 Clear pending
               </DropDownMenuItem>
               <DropDownMenuItem onClick={deleteAllPendingErrors}>
@@ -330,6 +360,7 @@ const PendingPage = () => {
           <div className="mb-2">
             <TextButton
               onClick={() => {
+                deletePendingJobs(JobStatus.Done)
                 deleteDoneFromPending()
               }}
             >

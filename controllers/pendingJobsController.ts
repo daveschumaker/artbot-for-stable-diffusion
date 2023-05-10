@@ -2,7 +2,6 @@ import { appInfoStore } from 'store/appStore'
 import { userInfoStore } from 'store/userStore'
 import { JobStatus } from 'types'
 import { isAppActive } from 'utils/appUtils'
-import { allPendingJobs } from 'utils/db'
 import { checkCurrentJob, sendJobToApi } from 'utils/imageCache'
 import { sleep } from 'utils/sleep'
 import {
@@ -10,6 +9,7 @@ import {
   MAX_CONCURRENT_JOBS_USER,
   POLL_COMPLETED_JOBS_INTERVAL
 } from '_constants'
+import { getAllPendingJobs } from './pendingJobsCache'
 
 let MAX_JOBS = MAX_CONCURRENT_JOBS_ANON
 let pendingJobs: Array<any> = []
@@ -22,7 +22,7 @@ export const getPendingJobsFromCache = () => {
 // Periodically fetch latest pending jobs from database
 // This call ensures it only happens one time (at a set interval)
 export const fetchPendingImageJobs = async () => {
-  const jobs = await allPendingJobs()
+  const jobs = getAllPendingJobs()
   pendingJobs = [...jobs]
 }
 

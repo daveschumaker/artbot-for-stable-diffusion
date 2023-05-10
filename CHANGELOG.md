@@ -3,6 +3,7 @@
 - Added ability to sort workers by max resolution on the [worker details page](/info/workers). Thanks to Efreak for suggesting this on Discord.
 - Fixed a typo on the worker block list field due to a copy / paste error on my part. ("update kudos" instead of "add worker ID"). Thanks to Litnine for reporting this on Discord.
 - Fixed issue where long prompts with no spaces (e.g., "this_is_a_long_prompt,dramatic,epic,moody,etc,etc") would overflow various containers (prompt history and pending items). Thanks to Litnine for reporting this.
+- Attempting to fix some race conditions on the (pending page)[/pending] (of course... where else?!) and stop hammering your browser's IndexedDb API so much when checking / updating pending image states.
 
 # 2023.05.08
 
@@ -12,7 +13,7 @@
   - Not so fun fact: Whenever I was editing the changelog, I was actually writing a bunch of html directly into the changelog page. Gross! One benefit is that the changelog is now an actual file that you can reference on things like [Github](https://github.com/daveschumaker/artbot-for-stable-diffusion/blob/main/CHANGELOG.md).
 - Feature: Added additional support creating and editing shared API keys for the AI Horde. You can modify these settings on the [settings page](/settings).
 - Feature: Added support for a new AI Horde feature: Worker block lists. Is there a worker consistently giving you junk output? Add their ID to the new worker block list and your image jobs will no longer be sent to them. This is also available on the [settings page](/settings). (Note: This incurs a 10% kudos penality due to suboptimal use of Horde resources)
-- Secret beta feature that no one is supposed to know about yet (work-in-progress): [Text generation via AI Horde and KobaldAI!](/chat)
+- Secret beta feature that no one is supposed to know about yet (work-in-progress): [Text generation via AI Horde and KoboldAI!](/chat)
 
 # 2023.05.07
 
