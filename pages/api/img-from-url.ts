@@ -97,7 +97,7 @@ export default async function handler(
     console.log(`Image URL:`, imageUrl)
     console.log(err)
 
-    res.send({
+    return res.send({
       success: false,
       status: 'ERROR_RESIZING_REMOTE_IMAGE'
     })
