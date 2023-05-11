@@ -86,7 +86,9 @@ export const getAllPendingJobs = (status?: any): Array<any> => {
 
   if (status) {
     return jobsArray.filter((job: any) => {
-      return job.jobStatus === status
+      if (job && job.jobStatus) {
+        return job.jobStatus === status
+      }
     })
   }
 
@@ -113,12 +115,16 @@ export const updatePendingJobV2 = (pendingJob: IPendingJob) => {
 }
 
 export const updatePendingJobId = (oldId: string = '', newId: string) => {
-  if (!oldId || !newId) {
+  if (!oldId || !newId || !pendingJobs[oldId]) {
     return
   }
 
   pendingJobs[newId] = cloneDeep(pendingJobs[oldId])
-  pendingJobs[newId].jobId = newId
+
+  if (pendingJobs[newId]) {
+    pendingJobs[newId].jobId = newId
+  }
+
   delete pendingJobs[oldId]
 }
 
