@@ -71,7 +71,7 @@ const Timestamp = styled.div`
 
 const PromptText = styled.div`
   margin-right: 40px;
-  overflow-rap: break-word;
+  overflow-wrap: break-word;
   display: inline-block;
   word-break: break-word;
 `

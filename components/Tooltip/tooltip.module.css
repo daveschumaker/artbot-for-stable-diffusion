@@ -10,3 +10,9 @@
   font-weight: 400;
   padding: 4px 8px;
 }
+
+@media (min-width: 640px) {
+  .tooltip-wrapper {
+    width: 340px;
+  }
+}

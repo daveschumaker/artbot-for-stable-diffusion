@@ -10,12 +10,14 @@ interface ImageDetails {
 interface ImageSquareProps {
   imageDetails: ImageDetails
   size?: number
+  id?: string
   imageType?: string
 }
 
 export default function ImageSquare({
   imageDetails,
   size = 180,
+  id,
   imageType = 'image/webp'
 }: ImageSquareProps) {
   let base64String = `data:${imageType};base64,${
@@ -37,10 +39,11 @@ export default function ImageSquare({
     >
       <img
         // fill
+        id={id}
         src={base64String}
         alt={imageDetails?.prompt || ''}
         className="mx-auto rounded"
-        style={{ objectFit: 'cover' }}
+        style={{ objectFit: 'cover', width: `${size}px`, height: `${size}px` }}
       />
     </div>
   )

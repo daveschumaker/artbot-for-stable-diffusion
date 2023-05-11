@@ -8,15 +8,24 @@ interface TooltipProps {
   children: React.ReactNode
   disabled?: boolean
   targetId: string
+  width?: string
 }
 
 export default function Tooltip({
   children,
   disabled = false,
-  targetId
+  targetId,
+  width
 }: TooltipProps) {
   if (disabled) {
     return null
+  }
+
+  const style = {}
+
+  if (width) {
+    // @ts-ignore
+    style.width = width
   }
 
   return (
@@ -24,6 +33,7 @@ export default function Tooltip({
       anchorSelect={`#${targetId}`}
       className={styles['tooltip-wrapper']}
       place="bottom"
+      style={{ ...style }}
     >
       <div className={styles['tooltip']}>{children}</div>
     </ReactTooltip>

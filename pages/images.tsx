@@ -46,6 +46,8 @@ import { useStore } from 'statery'
 import { appInfoStore } from 'store/appStore'
 import useGalleryImageModal from 'components/ImagesPage/useGalleryImageModal'
 import { useImagePreview } from 'modules/ImagePreviewProvider'
+import Tooltip from 'components/Tooltip'
+import isMobile from 'is-mobile'
 
 const MenuSeparator = styled.div`
   width: 100%;
@@ -929,6 +931,8 @@ const ImagesPage = () => {
                   prompt: string
                   timestamp: number
                   seed: number
+                  sampler: string
+                  models: Array<string>
                 }) => {
                   return (
                     <LazyLoad key={image.jobId} once>
@@ -941,7 +945,23 @@ const ImagesPage = () => {
                           }
                           tabIndex={0}
                         >
+                          {!isMobile() && (
+                            <Tooltip targetId={'image_' + image.id}>
+                              <div
+                                className="font-mono text-xs"
+                                style={{
+                                  overflowWrap: 'break-word',
+                                  wordBreak: 'break-word'
+                                }}
+                              >
+                                <div className="mb-2">{image.prompt}</div>
+                                <div>Model: {image.models[0]}</div>
+                                <div>Sampler: {image.sampler}</div>
+                              </div>
+                            </Tooltip>
+                          )}
                           <img
+                            id={'image_' + image.id}
                             src={
                               'data:image/webp;base64,' +
                               (image.thumbnail || image.base64String)
@@ -1004,7 +1024,23 @@ const ImagesPage = () => {
                           }
                           tabIndex={0}
                         >
+                          {!isMobile() && (
+                            <Tooltip targetId={'image_' + image.id}>
+                              <div
+                                className="font-mono text-xs"
+                                style={{
+                                  overflowWrap: 'break-word',
+                                  wordBreak: 'break-word'
+                                }}
+                              >
+                                <div className="mb-2">{image.prompt}</div>
+                                <div>Model: {image.models[0]}</div>
+                                <div>Sampler: {image.sampler}</div>
+                              </div>
+                            </Tooltip>
+                          )}
                           <ImageSquare
+                            id={'image_' + image.id}
                             imageDetails={image}
                             imageType={'image/webp'}
                           />
