@@ -53,7 +53,7 @@ Using `nvm`, you can install Node like this:
 Once you have your Node.js environment setup, you can clone this repository and install the required packages. Depending on the specs of your machine and speed of your internet connection, installing all packages may take a minute or two.
 
 ```bash
-> git clone git@github.com:daveschumaker/artbot-for-stable-diffusion.git
+> git clone https://github.com/daveschumaker/artbot-for-stable-diffusion
 > cd artbot-for-stable-diffusion
 > npm install
 ```
