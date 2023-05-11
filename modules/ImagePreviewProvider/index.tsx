@@ -19,14 +19,14 @@ export interface IShowImagePreviewModal {
 
 interface ImagePreviewContextData {
   setImageData: any
-  showModal: boolean
+  isImageModalOpen: boolean
   handleModalClose: any
   showImagePreviewModal: any
 }
 
 const ImagePreviewContext = createContext<ImagePreviewContextData>({
   setImageData: () => {},
-  showModal: false,
+  isImageModalOpen: false,
   handleModalClose: () => {},
   showImagePreviewModal: () => {}
 })
@@ -100,7 +100,7 @@ export const ImagePreviewProvider = ({
     <ImagePreviewContext.Provider
       value={{
         setImageData,
-        showModal,
+        isImageModalOpen: showModal,
         handleModalClose,
         showImagePreviewModal
       }}

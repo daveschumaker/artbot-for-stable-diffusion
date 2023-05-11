@@ -37,7 +37,6 @@ import Modal from '../components/Modal'
 import SpinnerV2 from '../components/Spinner'
 import DropDownMenu from '../components/UI/DropDownMenu'
 import DropDownMenuItem from '../components/UI/DropDownMenuItem'
-import ImageModalController from '../components/ImagesPage/ImageModalController'
 import AppSettings from '../models/AppSettings'
 import AdContainer from '../components/AdContainer'
 import { setFilteredItemsArray } from '../store/filteredImagesCache'
@@ -45,6 +44,8 @@ import FloatingActionButton from '../components/UI/FloatingActionButton'
 import TrashIcon from '../components/icons/TrashIcon'
 import { useStore } from 'statery'
 import { appInfoStore } from 'store/appStore'
+import useGalleryImageModal from 'components/ImagesPage/useGalleryImageModal'
+import { useImagePreview } from 'modules/ImagePreviewProvider'
 
 const MenuSeparator = styled.div`
   width: 100%;
@@ -93,13 +94,15 @@ const ButtonContainer = styled.div`
 `
 
 const ImagesPage = () => {
+  const { isImageModalOpen } = useImagePreview()
+
   const handlers = useSwipeable({
     onSwipedLeft: () => {
       if (AppSettings.get('enableGallerySwipe') === false) {
         return
       }
 
-      if (componentState.showImageModal) return
+      if (isImageModalOpen) return
       handleLoadMore('next')
     },
     onSwipedRight: () => {
@@ -107,7 +110,7 @@ const ImagesPage = () => {
         return
       }
 
-      if (componentState.showImageModal) return
+      if (isImageModalOpen) return
       handleLoadMore('prev')
     },
     preventScrollOnSwipe: true,
@@ -125,7 +128,6 @@ const ImagesPage = () => {
     deleteSelection: [],
     showDeleteModal: false,
     showDownloadModal: false,
-    showImageModal: false,
 
     offset: Number(router.query.offset) || 0,
     filterMode: router.query.filter || 'all',
@@ -141,6 +143,8 @@ const ImagesPage = () => {
     currentFilterImageIndex: 0,
     rawTotalImages: 0
   })
+
+  const [showImageModal] = useGalleryImageModal()
 
   const getImageCount = useCallback(async () => {
     let count
@@ -247,11 +251,11 @@ const ImagesPage = () => {
       }
 
       if (btn === 'prev') {
-        if (componentState.showImageModal) return
+        if (isImageModalOpen) return
         newNum =
           componentState.offset - 100 < 0 ? 0 : componentState.offset - 100
       } else {
-        if (componentState.showImageModal) return
+        if (isImageModalOpen) return
         newNum =
           componentState.offset + 100 > componentState.totalImages
             ? componentState.offset
@@ -331,15 +335,20 @@ const ImagesPage = () => {
         e.preventDefault()
         e.stopPropagation()
 
-        setComponentState({
-          showImageModal: jobId
+        showImageModal({
+          jobId,
+          imagesList: componentState.images,
+          fetchImages
         })
       }
     },
     [
       componentState.deleteMode,
       componentState.deleteSelection,
-      setComponentState
+      componentState.images,
+      fetchImages,
+      setComponentState,
+      showImageModal
     ]
   )
 
@@ -415,17 +424,11 @@ const ImagesPage = () => {
 
       if (componentState.deleteMode && e.keyCode === 13) {
         setComponentState({ showDeleteModal: true })
-      } else if (
-        e.key === 'ArrowLeft' &&
-        componentState.showImageModal === false
-      ) {
-        if (componentState.showImageModal || currentOffset <= 1) return
+      } else if (e.key === 'ArrowLeft' && isImageModalOpen === false) {
+        if (!isImageModalOpen || currentOffset <= 1) return
         handleLoadMore('prev')
-      } else if (
-        e.key === 'ArrowRight' &&
-        componentState.showImageModal === false
-      ) {
-        if (componentState.showImageModal) return
+      } else if (e.key === 'ArrowRight' && isImageModalOpen === false) {
+        if (isImageModalOpen) return
         handleLoadMore('next')
       }
     }
@@ -433,9 +436,9 @@ const ImagesPage = () => {
     return () => window.removeEventListener('keydown', handleKeyPress)
   }, [
     componentState.deleteMode,
-    componentState.showImageModal,
     currentOffset,
     handleLoadMore,
+    isImageModalOpen,
     setComponentState
   ])
 
@@ -507,7 +510,7 @@ const ImagesPage = () => {
             : '?'}
         </FloatingActionButton>
       )}
-      {componentState.showImageModal && (
+      {/* {componentState.showImageModal && (
         <ImageModalController
           onAfterDelete={() => {
             setComponentState({ updateTimestamp: Date.now() })
@@ -517,7 +520,7 @@ const ImagesPage = () => {
           imageId={componentState.showImageModal}
           useFilteredItems={componentState.filterMode !== 'all'}
         />
-      )}
+      )} */}
       {componentState.showDownloadModal && (
         <Modal hideCloseButton>
           Downloading images

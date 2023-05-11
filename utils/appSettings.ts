@@ -1,4 +1,8 @@
-import { initLoadPendingJobsFromDb } from 'controllers/pendingJobsCache'
+import {
+  deletePendingJobs,
+  initLoadPendingJobsFromDb
+} from 'controllers/pendingJobsCache'
+import { JobStatus } from 'types'
 import { buildModelAvailability } from '../api/fetchAvailableModels'
 import { fetchHordePerformance } from '../api/fetchHordePerformance'
 import fetchMyWorkers from '../api/fetchMyWorkers'
@@ -81,6 +85,7 @@ export const appLastActive = async () => {
   let currentTime = Math.floor(Date.now() / 1000)
   if (lastActiveTime && currentTime - Number(lastActiveTime) > WAIT_TIME_SEC) {
     try {
+      deletePendingJobs(JobStatus.Done)
       deleteDoneFromPending()
     } catch (err) {
       console.log(`An error occurred while clearing out stale pending items.`)

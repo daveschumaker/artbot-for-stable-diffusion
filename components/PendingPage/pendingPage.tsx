@@ -34,7 +34,8 @@ import { appInfoStore } from 'store/appStore'
 import {
   deletePendingJob,
   deletePendingJobs,
-  getAllPendingJobs
+  getAllPendingJobs,
+  syncPendingJobsFromDb
 } from 'controllers/pendingJobsCache'
 import usePendingImageModal from './usePendingImageModal'
 
@@ -56,9 +57,14 @@ const PendingPage = () => {
 
   const [showImageModal] = usePendingImageModal()
 
-  useEffect(() => {
+  const initPageLoad = async () => {
+    await syncPendingJobsFromDb()
     // @ts-ignore
     setPendingImages(getAllPendingJobs())
+  }
+
+  useEffect(() => {
+    initPageLoad()
     const interval = setInterval(() => {
       // @ts-ignore
       setPendingImages(getAllPendingJobs())

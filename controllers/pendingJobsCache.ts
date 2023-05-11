@@ -24,6 +24,18 @@ export const initLoadPendingJobsFromDb = async () => {
   })
 }
 
+export const syncPendingJobsFromDb = async () => {
+  const jobs = await allPendingJobs()
+
+  jobs.forEach((job: any) => {
+    if (pendingJobs[job.jobId]) {
+      return
+    }
+
+    pendingJobs[job.jobId] = job
+  })
+}
+
 export const deletePendingJobs = async (status?: any) => {
   if (status) {
     const jobs = Object.assign({}, pendingJobs)

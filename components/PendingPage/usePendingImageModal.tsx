@@ -1,11 +1,10 @@
 import { getAllPendingJobs, getPendingJob } from 'controllers/pendingJobsCache'
 import useComponentState from 'hooks/useComponentState'
 import { useImagePreview } from 'modules/ImagePreviewProvider'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect } from 'react'
 import { JobStatus } from 'types'
 
 const usePendingImageModal = () => {
-  const jobIdRef = useRef('')
   const { setImageData, showImagePreviewModal } = useImagePreview()
 
   const [componentState, setComponentState] = useComponentState({
@@ -16,7 +15,6 @@ const usePendingImageModal = () => {
   })
 
   const showImageModal = (jobId: string) => {
-    jobIdRef.current = ''
     setComponentState({
       jobId,
       initJobId: jobId
@@ -82,7 +80,6 @@ const usePendingImageModal = () => {
           jobId: null,
           pendingImagesList: null
         })
-        jobIdRef.current = ''
       },
       onDeleteCallback: () => {
         setComponentState({
@@ -91,7 +88,6 @@ const usePendingImageModal = () => {
           jobId: null,
           pendingImagesList: null
         })
-        jobIdRef.current = ''
       }
     })
 
