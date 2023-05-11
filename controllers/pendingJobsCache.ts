@@ -69,9 +69,9 @@ export const deletePendingJobs = async (status?: any) => {
   }
 }
 
-export const deletePendingJob = (jobId: string) => {
+export const deletePendingJob = async (jobId: string) => {
+  await deletePendingJobFromDb(jobId)
   delete pendingJobs[jobId]
-  deletePendingJobFromDb(jobId)
 }
 
 export const getPendingJob = (jobId: string) => {

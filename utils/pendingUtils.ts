@@ -2,7 +2,7 @@ import { DEFAULT_SAMPLER_ARRAY, MAX_IMAGES_PER_JOB } from '../_constants'
 import CreateImageRequest from '../models/CreateImageRequest'
 import RerollImageRequest from '../models/RerollImageRequest'
 import { logError, uuidv4 } from './appUtils'
-import { addPendingJobToDexie, db } from './db'
+import { addPendingJobToDexie } from './db'
 import { randomPropertyName } from './helperUtils'
 import { getModelVersion, validModelsArray } from './modelUtils'
 import { stylePresets } from './stylePresets'
@@ -14,15 +14,38 @@ import { toast, ToastOptions } from 'react-toastify'
 import { logToConsole } from './debugTools'
 import { setPendingJob } from 'controllers/pendingJobsCache'
 
+const addJobToPending = async (
+  imageParams: CreateImageRequest | RerollImageRequest
+) => {
+  // Create a temporary uuid for easier lookups.
+  // Will be replaced later when job is accepted
+  // by API
+  imageParams.jobId = uuidv4()
+
+  try {
+    const imageId = await addPendingJobToDexie(imageParams)
+    setPendingJob({
+      id: imageId,
+      ...imageParams
+    })
+    return {
+      success: true
+    }
+  } catch (err) {
+    console.log(`Error: Unable to add pending job.`)
+    console.log(err)
+
+    return {
+      success: false
+    }
+  }
+}
+
 const cloneImageParams = async (
   imageParams: CreateImageRequest | RerollImageRequest
 ) => {
   const clonedParams = Object.assign({}, imageParams)
 
-  // Create a temporary uuid for easier lookups.
-  // Will be replaced later when job is accepted
-  // by API
-  clonedParams.jobId = uuidv4()
   clonedParams.timestamp = Date.now()
 
   const hasImg2ImgMask =
@@ -57,18 +80,7 @@ export const createPendingRerollJob = async (
   imageParams: RerollImageRequest
 ) => {
   const clonedParams = await cloneImageParams(imageParams)
-
-  try {
-    const imageId = await addPendingJobToDexie(clonedParams)
-    setPendingJob({
-      id: imageId,
-      ...clonedParams
-    })
-  } finally {
-    return {
-      success: true
-    }
-  }
+  await addJobToPending(clonedParams)
 }
 
 export const addTriggerToPrompt = ({
@@ -127,11 +139,7 @@ export const addPendingJobToDb = async ({
       return { success: false }
     }
 
-    const imageId = await addPendingJobToDexie(clonedParams)
-    setPendingJob({
-      id: imageId,
-      ...clonedParams
-    })
+    await addJobToPending(clonedParams)
 
     logToConsole({
       data: clonedParams,
@@ -165,10 +173,7 @@ export const addPendingJobToDb = async ({
       }
 
       await sleep(250)
-      await addPendingJobToDb({
-        clonedParams,
-        errorCount
-      })
+      await addJobToPending(clonedParams)
     } else {
       logError({
         path: window.location.href,
@@ -192,8 +197,10 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
     return []
   }
 
-  if (isNaN(numImages) || numImages < 1 || numImages > MAX_IMAGES_PER_JOB) {
+  if (isNaN(numImages) || numImages < 1) {
     numImages = 1
+  } else if (numImages > MAX_IMAGES_PER_JOB) {
+    numImages = MAX_IMAGES_PER_JOB
   }
 
   let clonedParams
@@ -242,11 +249,7 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
             })
           }
 
-          const imageId = await addPendingJobToDexie(clonedParams)
-          setPendingJob({
-            id: imageId,
-            ...clonedParams
-          })
+          await addJobToPending(clonedParams)
         }
       } catch (err) {}
     }
@@ -282,13 +285,7 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
         }
       }
 
-      try {
-        const imageId = await addPendingJobToDexie(clonedParams)
-        setPendingJob({
-          id: imageId,
-          ...clonedParams
-        })
-      } catch (err) {}
+      await addJobToPending(clonedParams)
     }
 
     return {
@@ -342,13 +339,7 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
         })
       }
 
-      try {
-        const imageId = await addPendingJobToDexie(clonedParams)
-        setPendingJob({
-          id: imageId,
-          ...clonedParams
-        })
-      } catch (err) {}
+      await addJobToPending(clonedParams)
     }
 
     return {
@@ -389,13 +380,7 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
         })
       }
 
-      try {
-        const imageId = await addPendingJobToDexie(clonedParams)
-        setPendingJob({
-          id: imageId,
-          ...clonedParams
-        })
-      } catch (err) {}
+      await addJobToPending(clonedParams)
     }
 
     return {

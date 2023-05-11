@@ -170,6 +170,7 @@ export const rerollImage = async (imageDetails: any) => {
   const rerollImageJob = new RerollImageRequest(imageDetails)
   const res = await createPendingRerollJob(rerollImageJob)
 
+  // @ts-ignore
   if (res?.success) {
     return {
       success: true

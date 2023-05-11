@@ -1,3 +1,11 @@
+# 2023.05.11
+
+- A whole lot of random fixes.
+- Fix: Using block list would return invalid payload error from API. Thanks to dreamy for reporting this on Discord.
+- Fix: Requesting multiple models with multiple image (e.g., Anything Diffusion and Deliberate with image count of 2, so you would expect 4 images) stopped working after a recent change. This now works again. Thanks to gunsalem for reporting this on Discord, as well as a number of anonymous users via the feedback form.
+- Fix: Pending page would cause "ghost generations" after completing initial image run. Weird, strange, and I think I've fixed it. Thanks again to dreamy on Discord for reporting this.
+- A whole bunch of behind the scenes changes -- I had some tightly coupled logic with regard to the image preview modals. I've tried to clean up and simplify this logic. In my testing, things seem to work much better (no more random images disappearing due to off-by-1 errors, swiping between pages should be faster). I think everything works, but if you encounter anything funky, let me know.
+
 # 2023.05.09
 
 - Added ability to sort workers by max resolution on the [worker details page](/info/workers). Thanks to Efreak for suggesting this on Discord.

@@ -335,6 +335,7 @@ export const createImageJob = async (newImageRequest: CreateImageRequest) => {
       await createPendingJob(imageRequest)
     }
   }
+
   if (
     newImageRequest.useMultiGuidance &&
     newImageRequest.multiGuidance.length > 0
@@ -703,8 +704,6 @@ export const checkCurrentJob = async (imageDetails: any) => {
             thumbnail
           })
         )
-
-        console.log(`pendingJobs?`, getAllPendingJobs())
 
         logToConsole({
           data: job,

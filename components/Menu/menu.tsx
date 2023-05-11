@@ -136,7 +136,7 @@ const Menu = () => {
     } else {
       setLocked(false)
     }
-  }, [showAppMenu])
+  }, [setLocked, showAppMenu])
 
   return (
     <>

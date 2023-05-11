@@ -10,7 +10,6 @@ import { useSwipeable } from 'react-swipeable'
 import styles from './imageModalV2.module.css'
 import clsx from 'clsx'
 import { setImageDetailsModalOpen } from 'store/appStore'
-import { useWindowSize } from 'hooks/useWindowSize'
 import useLockedBody from 'hooks/useLockedBody'
 
 interface Props {
@@ -35,7 +34,6 @@ const ImageModalV2 = ({
   imageDetails
 }: Props) => {
   const [, setLocked] = useLockedBody(false)
-  const size = useWindowSize()
   const handlers = useSwipeable({
     onSwipedLeft: () => {
       if (disableNav) return
