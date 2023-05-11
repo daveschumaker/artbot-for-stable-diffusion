@@ -137,7 +137,8 @@ class ImageParamsForApi {
     }
 
     if (useBlocklist) {
-      apiParams.workers = [...useBlocklist]
+      const blocked = useBlocklist.map((worker: { id: string }) => worker.id)
+      apiParams.workers = [...blocked]
       apiParams.worker_blacklist = true
     }
 

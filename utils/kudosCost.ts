@@ -64,6 +64,10 @@ export const kudosCostV2 = ({
     kudos *= 1.1
   }
 
+  // ArtBot kudos tax (1 x n image requests)
+  // https://discord.com/channels/781145214752129095/1020707945694101564/1106152512781828146
+  kudos += numImages
+
   return Math.round(kudos)
 }
 
