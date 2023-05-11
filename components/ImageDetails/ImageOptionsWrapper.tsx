@@ -47,6 +47,7 @@ import { createShortlink } from 'api/createShortlink'
 import { toast, ToastOptions } from 'react-toastify'
 import RefreshIcon from 'components/icons/RefreshIcon'
 import { deletePendingJob } from 'controllers/pendingJobsCache'
+import { getRelatedImages } from 'components/ImagePage/image.controller'
 
 const ImageOptionsWrapper = ({
   handleClose,
@@ -74,6 +75,7 @@ const ImageOptionsWrapper = ({
   const [pendingUpscale, setPendingUpscale] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [hasParentJob, setHasParentJob] = useState(false)
+  const [hasRelatedImages, setHasRelatedImages] = useState(false)
 
   const [tileSize, setTileSize] = useState('128px')
   const [savedShortlink, setSavedShortlink] = useState('')
@@ -246,6 +248,18 @@ const ImageOptionsWrapper = ({
     setFavorited(details.favorited)
   }, [imageDetails.jobId])
 
+  const fetchRelatedImages = useCallback(async () => {
+    const result = await getRelatedImages(imageDetails.parentJobId)
+
+    if (result && result.length > 0) {
+      setHasRelatedImages(true)
+    }
+  }, [imageDetails.parentJobId])
+
+  useEffect(() => {
+    fetchRelatedImages()
+  }, [fetchRelatedImages, imageDetails.parentJobId])
+
   useEffect(() => {
     checkFavorite()
   }, [checkFavorite, imageDetails.jobId])
@@ -384,6 +398,19 @@ const ImageOptionsWrapper = ({
               >
                 Use for inpainting
               </MenuItem>
+              {hasRelatedImages && (
+                <>
+                  <MenuDivider />
+                  <MenuItem
+                    className="text-sm"
+                    onClick={() => {
+                      router.push(`/image/${imageDetails.jobId}#related-images`)
+                    }}
+                  >
+                    View related images
+                  </MenuItem>
+                </>
+              )}
             </Menu>
           </div>
           <div className={styles['button-icon']}>

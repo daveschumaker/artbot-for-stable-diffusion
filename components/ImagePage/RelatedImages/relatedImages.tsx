@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from 'next/link'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useCallback } from 'react'
 import LazyLoad from 'react-lazyload'
 import styled from 'styled-components'
@@ -17,7 +17,7 @@ import FloatingActionButton from '../../UI/FloatingActionButton'
 import MenuButton from '../../UI/MenuButton'
 import PageTitle from '../../UI/PageTitle'
 import TextButton from '../../UI/TextButton'
-import ImageModalController from './ImageModalController'
+import useRelatedImageModal from './useRelatedImageModal'
 
 const NonLink = styled.div`
   cursor: pointer;
@@ -78,9 +78,10 @@ const RelatedImages = ({
     deleteMode: false,
     deleteSelection: [],
     showDeleteModal: false,
-    showImageModal: false,
     initialIndexJobId: 0
   })
+
+  const [showImageModal] = useRelatedImageModal()
 
   let imageColumns = 2
   // @ts-ignore
@@ -131,9 +132,11 @@ const RelatedImages = ({
         e.stopPropagation()
 
         onModalOpen(true)
-        setComponentState({
-          showImageModal: jobId,
-          initialIndexJobId: jobId
+
+        showImageModal({
+          jobId,
+          imagesList: images,
+          fetchImages: handleAfterDelete
         })
       }
 
@@ -142,18 +145,21 @@ const RelatedImages = ({
     [
       componentState.deleteMode,
       componentState.deleteSelection,
+      handleAfterDelete,
+      images,
       onModalOpen,
-      setComponentState
+      setComponentState,
+      showImageModal
     ]
   )
 
-  useEffect(() => {
-    if (componentState.showImageModal) {
-      onModalOpen(false)
-      setComponentState({ showImageModal: false })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [imageId])
+  // useEffect(() => {
+  //   if (componentState.showImageModal) {
+  //     onModalOpen(false)
+  //     setComponentState({ showImageModal: false })
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [imageId])
 
   const LinkEl = componentState.deleteMode ? NonLink : Link
 
@@ -179,19 +185,6 @@ const RelatedImages = ({
           DELETE ({componentState.deleteSelection.length})?
         </FloatingActionButton>
       )}
-      {componentState.showImageModal && (
-        <ImageModalController
-          onAfterDelete={handleAfterDelete}
-          handleClose={() => {
-            onModalOpen(false)
-            setComponentState({
-              showImageModal: false
-            })
-          }}
-          imageList={images}
-          initialIndexJobId={componentState.initialIndexJobId}
-        />
-      )}
       {componentState.showDeleteModal && (
         <ConfirmationModal
           multiImage={componentState.deleteSelection.length > 1}
@@ -207,7 +200,9 @@ const RelatedImages = ({
       )}
       <div className="flex flex-row w-full items-center">
         <div className="inline-block w-1/2">
-          <PageTitle>Related images</PageTitle>
+          <a id="related-images">
+            <PageTitle>Related images</PageTitle>
+          </a>
         </div>
         <div className="flex flex-row justify-end w-1/2 items-start h-[36px] relative gap-2">
           <MenuButton

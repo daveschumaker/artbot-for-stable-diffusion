@@ -16,7 +16,25 @@ let pendingJobs: IPendingJobs = {}
 // base64 image from object on JobStatus.Done and
 // do a direct db lookup using the pending image modal.
 
+const DEBUG_PENDING_CACHE = async () => {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  console.log(`-- pendingJobs cache:`)
+  console.log(pendingJobs)
+
+  const jobs = await allPendingJobs()
+  console.log(`\n-- pendingJobs IndexedDb table:`)
+  console.log(jobs)
+}
+
 export const initLoadPendingJobsFromDb = async () => {
+  if (typeof window !== 'undefined') {
+    // @ts-ignore
+    window.DEBUG_PENDING_CACHE = DEBUG_PENDING_CACHE
+  }
+
   const jobs = await allPendingJobs()
 
   jobs.forEach((job: any) => {
