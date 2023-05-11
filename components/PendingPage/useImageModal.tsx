@@ -24,8 +24,6 @@ const useImageModal = () => {
   }
 
   const handleLoadNext = useCallback(() => {
-    console.log(`currentIndex?`, componentState.imgIdx)
-    console.log(`get`, getAllPendingJobs())
     if (componentState.imgIdx === null) {
       return
     }
@@ -116,6 +114,8 @@ const useImageModal = () => {
     // Freezes currently finished images list, so that
     // list doesn't jump around while navigating.
     let pendingImagesList = getAllPendingJobs(JobStatus.Done)
+
+    // TODO: Make this more extensible by passing in a sort function.
     pendingImagesList = pendingImagesList.sort((a: any = {}, b: any = {}) => {
       if (a.id < b.id) {
         return -1

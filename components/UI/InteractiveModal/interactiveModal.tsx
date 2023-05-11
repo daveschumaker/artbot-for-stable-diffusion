@@ -3,9 +3,9 @@ import styled from 'styled-components'
 
 import CloseIcon from '../../icons/CloseIcon'
 import Overlay from '../Overlay'
-import { lockScroll, unlockScroll } from '../../../utils/appUtils'
 import { useSwipeable } from 'react-swipeable'
 import clsx from 'clsx'
+import useLockedBody from 'hooks/useLockedBody'
 
 interface IStyle {
   height: number | null
@@ -106,6 +106,8 @@ const ContentWrapper = styled.div`
 `
 
 const InteractiveModal = (props: any) => {
+  const [, setLocked] = useLockedBody(false)
+
   const {
     className = '',
     disableSwipe = false,
@@ -141,13 +143,13 @@ const InteractiveModal = (props: any) => {
   }
 
   useEffect(() => {
-    lockScroll()
+    setLocked(true)
 
     document.addEventListener('keydown', keyDownHandler)
 
     return () => {
       document.removeEventListener('keydown', keyDownHandler)
-      unlockScroll()
+      setLocked(false)
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

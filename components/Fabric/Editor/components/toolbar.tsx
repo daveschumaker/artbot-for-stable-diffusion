@@ -2,7 +2,6 @@ import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import { HexAlphaColorPicker } from 'react-colorful'
 
-import { lockScroll, unlockScroll } from '../../../../utils/appUtils'
 import DeleteConfirmModal from '../../../DeleteConfirmModal'
 import AdjustmentIcon from '../../../icons/AdjustmentIcon'
 import EraserIcon from '../../../icons/EraserIcon'
@@ -30,6 +29,7 @@ import UploadImage from './UploadImage'
 import { Button } from 'components/UI/Button'
 import RulerIcon from 'components/icons/RulerIcon'
 import PointerIcon from 'components/icons/PointerIcon'
+import useLockedBody from 'hooks/useLockedBody'
 
 const DEBUG_MODE = false
 const DISABLE_OUTPAINTING = true
@@ -91,7 +91,9 @@ const ToolBar = ({
   toolbarAbsolute?: boolean
   toolbarDisableMenu?: boolean
 }) => {
+  const [, setLocked] = useLockedBody(false)
   const router = useRouter()
+
   const [activeBrush, setActiveBrush] = useState('paint')
   const [showAdjustmentMenu, setShowAdjustmentMenu] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
@@ -291,10 +293,10 @@ const ToolBar = ({
               style={{ backgroundColor: color }}
               onClick={() => {
                 if (showColors) {
-                  unlockScroll()
+                  setLocked(false)
                   setShowColors(false)
                 } else {
-                  lockScroll()
+                  setLocked(true)
                   setShowColors(true)
                 }
               }}
@@ -311,7 +313,7 @@ const ToolBar = ({
         <ToolBarButton
           theme="secondary"
           onClick={() => {
-            lockScroll()
+            setLocked(true)
             setShowDeleteModal(true)
           }}
         >
@@ -321,7 +323,7 @@ const ToolBar = ({
       {showMainMenu && (
         <DropDown
           handleClose={() => {
-            unlockScroll()
+            setLocked(false)
             setShowNewModal(false)
             setShowMainMenu(false)
           }}
@@ -329,7 +331,7 @@ const ToolBar = ({
           <div className="flex flex-col w-full">
             <DropDownItem
               handleClick={() => {
-                lockScroll()
+                setLocked(true)
 
                 if (showNewModal) {
                   setShowNewModal(false)
@@ -343,7 +345,7 @@ const ToolBar = ({
             </DropDownItem>
             <DropDownItem
               handleClick={() => {
-                lockScroll()
+                setLocked(true)
 
                 if (showUploadModal) {
                   setShowUploadModal(false)
@@ -430,7 +432,7 @@ const ToolBar = ({
       {showColors && (
         <DropDown
           handleClose={() => {
-            unlockScroll()
+            setLocked(false)
             setShowColors(false)
           }}
         >
@@ -519,12 +521,12 @@ const ToolBar = ({
               canvas?.reset()
             }
 
-            unlockScroll()
+            setLocked(false)
             handleRemoveClick()
             setShowDeleteModal(false)
           }}
           closeModal={() => {
-            unlockScroll()
+            setLocked(false)
             setShowDeleteModal(false)
           }}
         >

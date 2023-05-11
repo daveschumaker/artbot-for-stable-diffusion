@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import Overlay from 'components/UI/Overlay'
 import { useEffect, useState } from 'react'
-import { lockScroll, unlockScroll } from 'utils/appUtils'
 import ImageDetails from 'components/ImageDetails'
 import { IImageDetails } from 'types'
 import ImageNavigation from './imageNavigation'
@@ -11,6 +10,8 @@ import { useSwipeable } from 'react-swipeable'
 import styles from './imageModalV2.module.css'
 import clsx from 'clsx'
 import { setImageDetailsModalOpen } from 'store/appStore'
+import { useWindowSize } from 'hooks/useWindowSize'
+import useLockedBody from 'hooks/useLockedBody'
 
 interface Props {
   disableNav?: boolean
@@ -33,6 +34,8 @@ const ImageModalV2 = ({
   onDeleteCallback = () => {},
   imageDetails
 }: Props) => {
+  const [, setLocked] = useLockedBody(false)
+  const size = useWindowSize()
   const handlers = useSwipeable({
     onSwipedLeft: () => {
       if (disableNav) return
@@ -88,12 +91,12 @@ const ImageModalV2 = ({
   }, [handleClose, handleLoadNext, handleLoadPrev, showTiles])
 
   useEffect(() => {
-    lockScroll()
+    setLocked(true)
     setImageDetailsModalOpen(true)
 
     return () => {
       setImageDetailsModalOpen(false)
-      unlockScroll()
+      setLocked(false)
     }
   })
 

@@ -103,37 +103,6 @@ export const isiOS = () => {
   )
 }
 
-let scrollOffset = 0
-
-export const lockScroll = () => {
-  const scrollBarCompensation = window.innerWidth - document.body.offsetWidth
-
-  document.body.dataset.scrollLock = 'true'
-  document.body.style.overflow = 'hidden'
-  document.body.style.paddingRight = `${scrollBarCompensation}px`
-
-  if (isiOS()) {
-    scrollOffset = window.pageYOffset
-    document.body.style.position = 'fixed'
-    document.body.style.top = `-${scrollOffset}px`
-    document.body.style.width = '100%'
-  }
-}
-
-export const unlockScroll = () => {
-  document.body.style.overflow = ''
-  document.body.style.paddingRight = ''
-
-  if (isiOS()) {
-    document.body.style.position = ''
-    document.body.style.top = ''
-    document.body.style.width = ''
-    window.scrollTo(0, scrollOffset)
-  }
-
-  delete document.body.dataset.scrollLock
-}
-
 export const enterFullScreen = (element: any) => {
   if (element.requestFullscreen) {
     element.requestFullscreen()

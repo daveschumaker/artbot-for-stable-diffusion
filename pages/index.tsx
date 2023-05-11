@@ -48,9 +48,9 @@ import ImageApiParamsToPromptInput from '../models/ImageApiParamsToPromptInput'
 import ActionPanel from '../components/CreatePage/ActionPanel'
 import useComponentState from 'hooks/useComponentState'
 import { uploadInpaint } from 'controllers/imageDetailsCommon'
-import { lockScroll, unlockScroll } from 'utils/appUtils'
 import PromptTextArea from 'modules/PromptTextArea'
 import NegativePromptArea from 'modules/NegativePromptArea'
+import useLockedBody from 'hooks/useLockedBody'
 
 const defaultState: DefaultPromptInput = new DefaultPromptInput()
 
@@ -104,6 +104,7 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
 
   const [build, setBuild] = useState(buildId)
 
+  const [, setLocked] = useLockedBody(false)
   const router = useRouter()
   const { query } = router
 
@@ -387,7 +388,7 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
         debugKey: 'DEBUG_LOAD_INPUT'
       })
 
-      lockScroll()
+      setLocked(true)
       setShowSharedModal(true)
     }
 
@@ -642,7 +643,7 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
       {showSharedModal && (
         <InteractiveModal
           handleClose={() => {
-            unlockScroll()
+            setLocked(false)
             setShowSharedModal(false)
           }}
           maxWidth="480px"
@@ -664,7 +665,7 @@ const Home: NextPage = ({ modelDetails, shortlinkImageParams }: any) => {
             <div
               className="mt-4 mb-2 w-full flex px-2 justify-center text-[#14b8a5] cursor-pointer font-[700]"
               onClick={() => {
-                unlockScroll()
+                setLocked(false)
                 setShowSharedModal(false)
               }}
             >

@@ -1,3 +1,4 @@
+import useLockedBody from 'hooks/useLockedBody'
 import { useEffect } from 'react'
 import styled from 'styled-components'
 
@@ -76,6 +77,7 @@ const PromptText = styled.div`
 `
 
 const PromptHistory = (props: any) => {
+  const [, setLocked] = useLockedBody(false)
   const [componentState, setComponentState] = useComponentState({
     filter: '',
     prompts: [],
@@ -110,6 +112,11 @@ const PromptHistory = (props: any) => {
 
   useEffect(() => {
     fetchPrompts()
+    setLocked(true)
+
+    return () => {
+      setLocked(false)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

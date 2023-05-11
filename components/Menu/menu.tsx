@@ -17,9 +17,9 @@ import SettingsIcon from '../icons/SettingsIcon'
 import { useStore } from 'statery'
 import { appInfoStore, setShowAppMenu } from '../../store/appStore'
 import { useEffect } from 'react'
-import { lockScroll, unlockScroll } from '../../utils/appUtils'
 import PencilIcon from '../icons/PencilIcon'
 import RobotIcon from '../icons/RobotIcon'
+import useLockedBody from 'hooks/useLockedBody'
 
 interface IStyledProps {
   show?: boolean
@@ -116,6 +116,7 @@ const SubOption = styled.div`
 `
 
 const Menu = () => {
+  const [, setLocked] = useLockedBody(false)
   const router = useRouter()
   const appState = useStore(appInfoStore)
   const { showAppMenu } = appState
@@ -131,9 +132,9 @@ const Menu = () => {
 
   useEffect(() => {
     if (showAppMenu) {
-      lockScroll()
+      setLocked(true)
     } else {
-      unlockScroll()
+      setLocked(false)
     }
   }, [showAppMenu])
 
