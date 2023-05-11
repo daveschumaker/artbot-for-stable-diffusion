@@ -2,7 +2,6 @@
 import { useRouter } from 'next/router'
 import { useStore } from 'statery'
 import PromptInputSettings from '../../../../models/PromptInputSettings'
-import Image from 'next/image'
 
 import { modelInfoStore } from '../../../../store/modelStore'
 import AlertTriangleIcon from '../../../icons/AlertTriangle'
@@ -113,7 +112,7 @@ const SelectModel = ({ input, setInput, modelerOptions }: IProps) => {
           <div className="mb-2 text-sm">
             Example output using {input.models[0]}
           </div>
-          <Image
+          <img
             src={modelDetails[input.models[0]]?.showcases[0]}
             alt="Model example"
             width="240"

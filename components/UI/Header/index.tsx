@@ -1,5 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
 import clsx from 'clsx'
-import Image from 'next/image'
 import Link from 'next/link'
 import { setShowAppMenu } from '../../../store/appStore'
 import MenuIcon from '../../icons/MenuIcon'
@@ -42,7 +42,7 @@ const Header = () => {
         <div className="flex items-center w-full">
           <Link href="/" className="flex items-center mb-1">
             <div>
-              <Image
+              <img
                 src="/artbot/artbot-logo.png"
                 height={30}
                 width={30}

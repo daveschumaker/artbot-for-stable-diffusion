@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import clsx from 'clsx'
-import Image from 'next/image'
 
 interface ImageDetails {
   base64String: string
@@ -36,8 +35,8 @@ export default function ImageSquare({
       className={clsx(classes)}
       style={{ width: `${size}px`, height: `${size}px`, position: 'relative' }}
     >
-      <Image
-        fill
+      <img
+        // fill
         src={base64String}
         alt={imageDetails?.prompt || ''}
         className="mx-auto rounded"
