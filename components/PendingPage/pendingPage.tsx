@@ -5,12 +5,10 @@ import { Virtuoso } from 'react-virtuoso'
 
 import { useEffectOnce } from '../../hooks/useEffectOnce'
 import AppSettings from '../../models/AppSettings'
-import { setImagesForModalCache } from '../../store/pendingItemsCache'
 import { JobStatus } from '../../types'
 import {
   deleteAllPendingErrors,
   deleteAllPendingJobs,
-  deleteCompletedImage,
   deleteDoneFromPending,
   deletePendingJobFromDb,
   getImageDetails
@@ -27,7 +25,6 @@ import Linker from '../UI/Linker'
 import MenuButton from '../UI/MenuButton'
 import PageTitle from '../UI/PageTitle'
 import TextButton from '../UI/TextButton'
-import ImageModalController from './ImageModalController'
 import { useWindowSize } from 'hooks/useWindowSize'
 import styles from './pendingPage.module.css'
 import FilterClearOptions from './filterClearOptions'
@@ -37,11 +34,9 @@ import { appInfoStore } from 'store/appStore'
 import {
   deletePendingJob,
   deletePendingJobs,
-  getAllPendingJobs,
-  getPendingJob
+  getAllPendingJobs
 } from 'controllers/pendingJobsCache'
-import { useImagePreview } from 'modules/ImagePreviewProvider'
-import useImageModal from './useImageModal'
+import usePendingImageModal from './usePendingImageModal'
 
 const MenuSeparator = styled.div`
   width: 100%;
@@ -59,7 +54,7 @@ const PendingPage = () => {
 
   const [pendingImages, setPendingImages] = useState([])
 
-  const [showImageModal] = useImageModal()
+  const [showImageModal] = usePendingImageModal()
 
   useEffect(() => {
     // @ts-ignore
@@ -71,13 +66,6 @@ const PendingPage = () => {
 
     return () => clearInterval(interval)
   }, [])
-
-  const handleDeleteImage = async (jobId: string) => {
-    await deleteCompletedImage(jobId)
-    deletePendingJob(jobId)
-    await deletePendingJobFromDb(jobId)
-    fetchPendingImageJobs()
-  }
 
   const onClosePanel = async (jobId: string) => {
     deletePendingJob(jobId)

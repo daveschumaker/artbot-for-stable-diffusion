@@ -4,7 +4,7 @@ import { useImagePreview } from 'modules/ImagePreviewProvider'
 import { useCallback, useEffect, useRef } from 'react'
 import { JobStatus } from 'types'
 
-const useImageModal = () => {
+const usePendingImageModal = () => {
   const jobIdRef = useRef('')
   const { setImageData, showImagePreviewModal } = useImagePreview()
 
@@ -146,4 +146,4 @@ const useImageModal = () => {
   return [showImageModal]
 }
 
-export default useImageModal
+export default usePendingImageModal
