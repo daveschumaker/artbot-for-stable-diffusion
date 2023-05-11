@@ -93,7 +93,10 @@ const ImageDetails = ({
     imageDetails.source_processing === SourceProcessing.Img2Img ||
     imageDetails.img2img
 
-  const imgStyle: any = {}
+  const imgStyle: any = {
+    maxWidth: '1024px',
+    width: '100%'
+  }
 
   return (
     <>

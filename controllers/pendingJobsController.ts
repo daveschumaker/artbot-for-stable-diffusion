@@ -44,6 +44,7 @@ const checkMultiPendingJobs = async () => {
   })
 
   const processingOrQueued = [...processing, ...queued]
+
   const limitCheck = processingOrQueued.slice(MAX_JOBS * -1)
 
   for (const idx in limitCheck) {

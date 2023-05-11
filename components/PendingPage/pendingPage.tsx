@@ -37,8 +37,11 @@ import { appInfoStore } from 'store/appStore'
 import {
   deletePendingJob,
   deletePendingJobs,
-  getAllPendingJobs
+  getAllPendingJobs,
+  getPendingJob
 } from 'controllers/pendingJobsCache'
+import { useImagePreview } from 'modules/ImagePreviewProvider'
+import useImageModal from './useImageModal'
 
 const MenuSeparator = styled.div`
   width: 100%;
@@ -48,13 +51,15 @@ const MenuSeparator = styled.div`
 const PendingPage = () => {
   const size = useWindowSize()
   const [filter, setFilter] = useState('all')
-  const [showImageModal, setShowImageModal] = useState<string | boolean>(false)
+  // const [showImageModal, setShowImageModal] = useState<string | boolean>(false)
   const [showMenu, setShowMenu] = useState(false)
   const [validatePending, setValidatePending] = useState(false)
   const appState = useStore(appInfoStore)
   const { imageDetailsModalOpen } = appState
 
   const [pendingImages, setPendingImages] = useState([])
+
+  const [showImageModal] = useImageModal()
 
   useEffect(() => {
     // @ts-ignore
@@ -119,38 +124,42 @@ const PendingPage = () => {
     processPending()
 
   const handleShowModalClick = (jobId: string) => {
-    console.log(`jobId?`, jobId)
-    console.log(`done?`, done)
-
-    setImagesForModalCache([...done])
-    setShowImageModal(jobId)
+    showImageModal(jobId)
   }
 
-  const sorted = [
-    ...done,
-    ...processing,
-    ...queued,
-    ...waiting,
-    ...error
-  ].filter((job) => {
-    if (filter === 'all') {
-      return true
+  let sorted = [...done, ...processing, ...queued, ...waiting, ...error].filter(
+    (job) => {
+      if (filter === 'all') {
+        return true
+      }
+
+      if (filter === 'done') {
+        return job.jobStatus === JobStatus.Done
+      }
+
+      if (filter === 'processing') {
+        return (
+          job.jobStatus === JobStatus.Processing ||
+          job.jobStatus === JobStatus.Queued
+        )
+      }
+
+      if (filter === 'error') {
+        return job.jobStatus === JobStatus.Error
+      }
+    }
+  )
+
+  sorted = sorted.sort((a: any = {}, b: any = {}) => {
+    if (a.id < b.id) {
+      return -1
     }
 
-    if (filter === 'done') {
-      return job.jobStatus === JobStatus.Done
+    if (a.id > b.id) {
+      return 1
     }
 
-    if (filter === 'processing') {
-      return (
-        job.jobStatus === JobStatus.Processing ||
-        job.jobStatus === JobStatus.Queued
-      )
-    }
-
-    if (filter === 'error') {
-      return job.jobStatus === JobStatus.Error
-    }
+    return 0
   })
 
   const jobsInProgress = processing.length + queued.length
@@ -161,7 +170,6 @@ const PendingPage = () => {
         deletePendingJobs(JobStatus.Done)
         deleteDoneFromPending()
       }
-      setShowImageModal(false)
     }
   })
 
@@ -242,7 +250,7 @@ const PendingPage = () => {
 
   return (
     <div style={{ overflowAnchor: 'none' }}>
-      {showImageModal && (
+      {/* {showImageModal && (
         <ImageModalController
           reverseButtons
           onAfterDelete={() => {}}
@@ -253,7 +261,7 @@ const PendingPage = () => {
           imageList={done}
           initialIndexJobId={showImageModal}
         />
-      )}
+      )} */}
       <div className="flex flex-row items-center w-full">
         <div className="inline-block w-3/4">
           <PageTitle>Image queue</PageTitle>

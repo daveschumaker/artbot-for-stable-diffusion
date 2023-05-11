@@ -112,19 +112,21 @@ const ImageModalController = ({
     logErrorInComponent(error, info, componentName)
   }
 
-  return (
-    <ErrorBoundary FallbackComponent={ErrorComponent} onError={logError}>
-      <ImageModal
-        disableNav={imageList.length <= 1}
-        handleClose={handleClose}
-        handleDeleteImageClick={handleDeleteImageClick}
-        handleLoadNext={handleLoadNext}
-        handleLoadPrev={handleLoadPrev}
-        handleReloadImageData={handleReloadImageData}
-        imageDetails={imageDetails}
-      />
-    </ErrorBoundary>
-  )
+  return null
+
+  // return (
+  //   <ErrorBoundary FallbackComponent={ErrorComponent} onError={logError}>
+  //     <ImageModal
+  //       disableNav={imageList.length <= 1}
+  //       handleClose={handleClose}
+  //       handleDeleteImageClick={handleDeleteImageClick}
+  //       handleLoadNext={handleLoadNext}
+  //       handleLoadPrev={handleLoadPrev}
+  //       handleReloadImageData={handleReloadImageData}
+  //       imageDetails={imageDetails}
+  //     />
+  //   </ErrorBoundary>
+  // )
 }
 
 function areEqual(prevProps: IProps, nextProps: IProps) {

@@ -48,7 +48,7 @@ const StyledTextPanel = styled.div`
   padding-left: 8px;
 `
 
-export default function Toast({ handleClose, handleImageClick, jobId, showImageReadyToast }) {
+export default function Toast({ disableAutoClose = false, handleClose, handleImageClick, jobId, showImageReadyToast }) {
   const handlers = useSwipeable({
     onSwipedRight: () => {
       handleClose()
@@ -81,9 +81,11 @@ export default function Toast({ handleClose, handleImageClick, jobId, showImageR
     })
     handleImageClick()
 
-    setShowImageReadyToast(false)
-    setNewImageReady('')
-    handleClose()
+    if (!disableAutoClose) {
+      setShowImageReadyToast(false)
+      setNewImageReady('')
+      handleClose()
+    }
   }
 
   useEffect(() => {
@@ -94,7 +96,9 @@ export default function Toast({ handleClose, handleImageClick, jobId, showImageR
 
   useEffect(() => {
     const interval = setTimeout(async () => {
-      handleClose()
+      if (!disableAutoClose) {
+        handleClose()
+      }
     }, 5000)
     return () => clearInterval(interval)
   })

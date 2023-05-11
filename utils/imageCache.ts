@@ -685,6 +685,8 @@ export const checkCurrentJob = async (imageDetails: any) => {
           }
         }
 
+        // Attempt to fix race condition where thumbnail is broken.
+        await sleep(1000)
         updatePendingJobV2(
           Object.assign({}, job, {
             timestamp: Date.now(),
@@ -701,6 +703,8 @@ export const checkCurrentJob = async (imageDetails: any) => {
             thumbnail
           })
         )
+
+        console.log(`pendingJobs?`, getAllPendingJobs())
 
         logToConsole({
           data: job,

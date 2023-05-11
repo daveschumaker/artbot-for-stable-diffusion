@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useStore } from 'statery'
 
 import Toast from '../components/UI/Toast'
@@ -11,13 +10,13 @@ import {
   multiStore,
   onLocalStorageEvent
 } from '../store/multiStore'
-import PollingImageController from './Global/PollingImageController'
+import { useImagePreview } from 'modules/ImagePreviewProvider'
+import { getPendingJob } from 'controllers/pendingJobsCache'
 
 const PollController = () => {
+  const { showImagePreviewModal } = useImagePreview()
   const appState = useStore(appInfoStore)
   const multiState = useStore(multiStore)
-  const [showImageModal, setShowImageModal] = useState(false)
-
   const { newImageReady, showImageReadyToast } = appState
 
   const handleCloseToast = () => {
@@ -25,6 +24,13 @@ const PollController = () => {
     // clear newImageJobId so we can keep new image indicator
     // in NavBar
     setShowImageReadyToast(false)
+  }
+
+  const showImageModal = (jobId: string) => {
+    showImagePreviewModal({
+      disableNav: true,
+      imageDetails: getPendingJob(jobId)
+    })
   }
 
   useEffectOnce(() => {
@@ -42,20 +48,14 @@ const PollController = () => {
 
   return (
     <>
-      {showImageModal && (
-        <PollingImageController
-          handleClose={() => setShowImageModal(false)}
-          // @ts-ignore
-          imageId={showImageModal}
-        />
-      )}
       {newImageReady && (
         <Toast
+          // THIS IS FOR DEBUGGING
+          disableAutoClose={false}
           handleClose={handleCloseToast}
+          handleImageClick={() => showImageModal(newImageReady)}
           jobId={newImageReady}
           showImageReadyToast={showImageReadyToast}
-          // @ts-ignore
-          handleImageClick={() => setShowImageModal(newImageReady)}
         />
       )}
     </>

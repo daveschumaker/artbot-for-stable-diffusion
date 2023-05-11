@@ -18,6 +18,7 @@ let pendingJobs: IPendingJobs = {}
 
 export const initLoadPendingJobsFromDb = async () => {
   const jobs = await allPendingJobs()
+
   jobs.forEach((job: any) => {
     pendingJobs[job.jobId] = job
   })

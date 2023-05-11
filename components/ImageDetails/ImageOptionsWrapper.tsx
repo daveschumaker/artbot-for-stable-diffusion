@@ -102,9 +102,9 @@ const ImageOptionsWrapper = ({
 
   const handleDeleteImageConfirm = async () => {
     handleDeleteImageClick()
-    deletePendingJob(imageDetails.jobId)
     await deletePendingJobFromDb(imageDetails.jobId)
     await deleteCompletedImage(imageDetails.jobId)
+    deletePendingJob(imageDetails.jobId)
     getImageDetails.delete(imageDetails.jobId) // bust memoization cache
     handleClose()
   }

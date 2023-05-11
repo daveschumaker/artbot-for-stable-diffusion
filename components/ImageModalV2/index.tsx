@@ -20,6 +20,7 @@ interface Props {
   handleLoadNext?: () => any
   handleLoadPrev?: () => any
   handleReloadImageData?: () => any
+  onDeleteCallback?: () => any
 }
 
 const ImageModalV2 = ({
@@ -29,6 +30,7 @@ const ImageModalV2 = ({
   handleLoadNext = () => {},
   handleLoadPrev = () => {},
   handleReloadImageData = () => {},
+  onDeleteCallback = () => {},
   imageDetails
 }: Props) => {
   const handlers = useSwipeable({
@@ -105,6 +107,7 @@ const ImageModalV2 = ({
           'opacity-100 rounded md:border-[2px] p-2 flex flex-col items-start fixed left-2 md:left-4 right-2 md:right-4 z-[100] max-w-[1600px] m-auto overflow-y-overlay bg-[#f2f2f2] dark:bg-[#222222]'
         )}
         {...handlers}
+        style={{ maxWidth: '1280px' }}
       >
         <div
           className="flex flex-row justify-end w-full pr-2 mb-2"
@@ -126,7 +129,10 @@ const ImageModalV2 = ({
         >
           <ImageDetails
             handleClose={handleClose}
-            handleDeleteImageClick={handleDeleteImageClick}
+            handleDeleteImageClick={() => {
+              onDeleteCallback()
+              handleDeleteImageClick()
+            }}
             handleReloadImageData={handleReloadImageData}
             imageDetails={imageDetails}
             isModal={true}

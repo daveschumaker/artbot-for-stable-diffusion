@@ -101,7 +101,6 @@ const ChatPageComponent = () => {
     const checkJobStatus = async () => {
       // Replace this with your API call to check the job status
       const status = await checkTextJobStatus(jobId)
-      console.log(`status?`, status)
 
       if (status.wait_time) {
         setJobEta(status.wait_time)
