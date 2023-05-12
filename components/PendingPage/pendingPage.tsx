@@ -74,8 +74,8 @@ const PendingPage = () => {
   }, [])
 
   const onClosePanel = async (jobId: string) => {
-    deletePendingJob(jobId)
     await deletePendingJobFromDb(jobId)
+    deletePendingJob(jobId)
     fetchPendingImageJobs()
   }
 
@@ -181,8 +181,8 @@ const PendingPage = () => {
       const exists = (await getImageDetails(done[idx].jobId)) || {}
 
       if (!exists.id) {
-        deletePendingJob(done[idx].jobId)
         await deletePendingJobFromDb(done[idx].jobId)
+        deletePendingJob(done[idx].jobId)
       }
     }
 

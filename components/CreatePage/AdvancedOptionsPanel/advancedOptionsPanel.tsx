@@ -52,6 +52,7 @@ import { trackEvent } from 'api/telemetry'
 import { MAX_IMAGES_PER_JOB } from '_constants'
 import RenderParentImage from 'components/ParentImage'
 import ImageOrientationOptions from 'modules/ImageOrientationOptions'
+import AllowNsfwImages from './AllowNsfwImages'
 
 const NoSliderSpacer = styled.div`
   height: 14px;
@@ -735,6 +736,7 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
           <UpscalerOptions input={input} setInput={setInput} />
         </div>
       </Section>
+      <AllowNsfwImages />
       <Section>
         <NumericInputSlider
           label="CLIP skip"

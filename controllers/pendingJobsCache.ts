@@ -1,9 +1,11 @@
 import cloneDeep from 'clone-deep'
+import { JobStatus } from 'types'
 import { allPendingJobs, deletePendingJobFromDb } from 'utils/db'
 
 interface IPendingJob {
   id: number
   jobId?: string | undefined
+  errorMessage?: string
 }
 
 interface IPendingJobs {
@@ -126,6 +128,33 @@ export const updatePendingJobId = (oldId: string = '', newId: string) => {
   }
 
   delete pendingJobs[oldId]
+}
+
+export const updateAllPendingJobsV2 = async (
+  status: any,
+  options: any = {}
+) => {
+  if (status) {
+    const jobs = Object.assign({}, pendingJobs)
+    for (const [key, value = {}] of Object.entries(jobs)) {
+      const inProgress =
+        // @ts-ignore
+        value.jobStatus === JobStatus.Done ||
+        // @ts-ignore
+        value.jobStatus === JobStatus.Processing ||
+        // @ts-ignore
+        value.jobStatus === JobStatus.Requested
+
+      if (!inProgress && pendingJobs[key]) {
+        // @ts-ignore
+        pendingJobs[key].jobStatus = status
+        pendingJobs[key].errorMessage = options?.errorMessage
+      }
+    }
+  } else {
+    // @ts-ignore
+    pendingJobs = []
+  }
 }
 
 // TODO: Handle "updateAllPendingJobs" for various errors

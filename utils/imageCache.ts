@@ -30,6 +30,7 @@ import { sleep } from './sleep'
 import { logToConsole } from './debugTools'
 import {
   getAllPendingJobs,
+  updateAllPendingJobsV2,
   updatePendingJobId,
   updatePendingJobV2
 } from 'controllers/pendingJobsCache'
@@ -153,7 +154,7 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
     if (success && jobId) {
       FETCH_INTERVAL_SEC = CREATE_NEW_JOB_INTERVAL
 
-      // This replaced ArtBot generated jobId with jobId from API.
+      // This replaces ArtBot generated jobId with jobId from API.
       updatePendingJobId(imageParams.jobId, jobId)
 
       // Overwrite params on success.
@@ -171,8 +172,8 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
         imageParams.jobStatus = JobStatus.Waiting
         imageParams.is_possible = jobDetailsFromApi.is_possible
 
+        await updatePendingJob(imageParams.id, Object.assign({}, imageParams))
         updatePendingJobV2(imageParams)
-        // await updatePendingJob(imageParams.id, Object.assign({}, imageParams))
         return {
           success: false,
           message: 'Unable to send request...'
@@ -207,27 +208,20 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
         })
       )
 
-      // await updatePendingJob(
-      //   imageParams.id,
-      //   Object.assign({}, imageParams, {
-      //     queue_position: imageParams.queue_position,
-      //     wait_time: imageParams.wait_time || 0
-      //   })
-      // )
-
       return {
         success: true,
         message
       }
     } else {
-      updatePendingJobV2(
+      await updatePendingJob(
+        imageParams.id,
         Object.assign({}, imageParams, {
           jobStatus: JobStatus.Error,
           errorMessage: message
         })
       )
-      await updatePendingJob(
-        imageParams.id,
+
+      updatePendingJobV2(
         Object.assign({}, imageParams, {
           jobStatus: JobStatus.Error,
           errorMessage: message
@@ -241,6 +235,10 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
       if (imageParams.parentJobId && !skipSetErrorOnAll) {
         await updateAllPendingJobs(imageParams.parentJobId, {
           jobStatus: JobStatus.Error,
+          errorMessage: message
+        })
+
+        updateAllPendingJobsV2(JobStatus.Error, {
           errorMessage: message
         })
       }
@@ -270,14 +268,15 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
       }
     }
   } catch (err) {
-    updatePendingJobV2(
+    await updatePendingJob(
+      imageParams.id,
       Object.assign({}, imageParams, {
         jobStatus: JobStatus.Error,
         errorMessage: 'An unknown error occurred...'
       })
     )
-    await updatePendingJob(
-      imageParams.id,
+
+    updatePendingJobV2(
       Object.assign({}, imageParams, {
         jobStatus: JobStatus.Error,
         errorMessage: 'An unknown error occurred...'
@@ -287,6 +286,9 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
     if (imageParams.parentJobId) {
       await updateAllPendingJobs(imageParams.parentJobId, {
         jobStatus: JobStatus.Error,
+        errorMessage: 'An unknown error occurred...'
+      })
+      updateAllPendingJobsV2(JobStatus.Error, {
         errorMessage: 'An unknown error occurred...'
       })
     }
@@ -480,7 +482,7 @@ export const addCompletedJobToDb = async ({
         path: window.location.href,
         errorMessage: [
           'imageCache.checkCurrentJob.errorCountExceeded',
-          'Unable to add completed item to db'
+          'QuotaExceededError: Unable to add completed item to db'
         ].join('\n'),
         errorInfo: err?.message,
         errorType: 'client-side',

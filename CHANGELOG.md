@@ -1,3 +1,11 @@
+# 2023.05.12
+
+- For desktop / laptop users, I added a small tooltip on the image gallery page that show prompt, model, and sampler as you mouse over images.
+- Fix: Using the left arrow key on the image gallery page did not work. Oops!
+- Fix: Stretched images in image preview modal on iOS. Thanks to FiFoFree for reporting this on Discord.
+- UX: Added a "allow NSFW generations" switch to the advanced options panel (previously, this was buried inside the settings page)
+- Feature: Added an input filter to the style presets dropdown. You can now filter by style preset name and model (if availabile).
+
 # 2023.05.11
 
 - A whole lot of random fixes.

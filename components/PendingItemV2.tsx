@@ -334,7 +334,9 @@ const PendingItem = memo(
               ) : null}
             </div>
           ) : null}
-          {isPossible === false ? (
+          {isPossible === false &&
+          jobDetails.jobStatus !== JobStatus.Processing &&
+          jobDetails.jobStatus !== JobStatus.Done ? (
             <div className="mt-2 font-mono text-xs text-amber-400">
               <strong>Warning:</strong> There are currently no workers available
               to process this image. You can continue to wait a few minutes for
