@@ -56,12 +56,14 @@ const StylePresetsDropdown = ({ input, setInput }: GetSetPromptInput) => {
       if (filter) {
         if (
           !key.toLowerCase().includes(filter) &&
+          // @ts-ignore
           !presetDetails.model.toLowerCase().includes(filter)
         ) {
           continue
         }
       }
 
+      // @ts-ignore
       let modify = presetDetails.prompt.replace('{p}', p)
 
       if (!modify.includes('###') && np) {
@@ -75,7 +77,12 @@ const StylePresetsDropdown = ({ input, setInput }: GetSetPromptInput) => {
           <div>
             <strong>{key}</strong>
             {` / `}
-            <span className="text-xs">{presetDetails.model}</span>
+            <span className="text-xs">
+              {
+                // @ts-ignore
+                presetDetails.model
+              }
+            </span>
           </div>
           <div className="flex flex-row w-full justify-between">
             <div className={styles['preset-description']}>{modify}</div>
