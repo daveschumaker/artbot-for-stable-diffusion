@@ -919,7 +919,11 @@ const ImagesPage = () => {
         )
       }
 
-      {componentState.isLoading && <Spinner />}
+      {componentState.isLoading && (
+        <div style={{ height: '100vh' }}>
+          <Spinner />
+        </div>
+      )}
       <div className={defaultStyle}>
         {!componentState.isLoading &&
           componentState.images.length > 0 &&
