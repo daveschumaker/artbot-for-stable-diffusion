@@ -274,6 +274,10 @@ const ImageOptionsWrapper = ({
         }
       }
 
+      if (e.key === 'Backspace') {
+        setShowDeleteModal(true)
+      }
+
       if (e.key === 'Delete') {
         setShowDeleteModal(true)
       }

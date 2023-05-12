@@ -431,7 +431,7 @@ const ImagesPage = () => {
       if (componentState.deleteMode && e.keyCode === 13) {
         setComponentState({ showDeleteModal: true })
       } else if (e.key === 'ArrowLeft' && isImageModalOpen === false) {
-        if (!isImageModalOpen || currentOffset <= 1) return
+        if (isImageModalOpen || currentOffset <= 1) return
         handleLoadMore('prev')
       } else if (e.key === 'ArrowRight' && isImageModalOpen === false) {
         if (isImageModalOpen) return
@@ -1016,6 +1016,8 @@ const ImagesPage = () => {
                   timestamp: number
                   seed: number
                   favorited: boolean
+                  sampler: string
+                  models: Array<string>
                 }) => {
                   return (
                     <LazyLoad key={image.jobId} once>
