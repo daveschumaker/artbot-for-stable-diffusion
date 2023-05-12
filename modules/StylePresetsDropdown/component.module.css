@@ -23,9 +23,13 @@
   right: 4px;
 }
 
+.filter-preset {
+  margin: 32px 16px 0 16px;
+}
+
 .style-presets-wrapper {
   position: absolute;
-  top: 32px;
+  top: 78px;
   bottom: 8px;
   left: 8px;
   right: 8px;

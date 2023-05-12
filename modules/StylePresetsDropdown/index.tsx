@@ -6,8 +6,10 @@ import styles from './component.module.css'
 import Overlay from 'components/UI/Overlay'
 import { stylePresets } from 'models/StylePresets'
 import clsx from 'clsx'
+import Input from 'components/UI/Input'
 
 const StylePresetsDropdown = ({ input, setInput }: GetSetPromptInput) => {
+  const [filter, setFilter] = useState('')
   const [showMenu, setShowMenu] = useState(false)
 
   const handleUsePreset = (key: string) => {
@@ -51,6 +53,15 @@ const StylePresetsDropdown = ({ input, setInput }: GetSetPromptInput) => {
     const np = input.negative ? input.negative : ''
 
     for (const [key, presetDetails] of Object.entries(stylePresets)) {
+      if (filter) {
+        if (
+          !key.toLowerCase().includes(filter) &&
+          !presetDetails.model.toLowerCase().includes(filter)
+        ) {
+          continue
+        }
+      }
+
       let modify = presetDetails.prompt.replace('{p}', p)
 
       if (!modify.includes('###') && np) {
@@ -111,6 +122,19 @@ const StylePresetsDropdown = ({ input, setInput }: GetSetPromptInput) => {
               onClick={() => setShowMenu(false)}
             >
               <IconX stroke={1.5} />
+            </div>
+            <div className={styles['filter-preset']}>
+              <Input
+                className="mb-2"
+                type="text"
+                name="filterPrompt"
+                placeholder="Filter presets"
+                onChange={(e: any) => {
+                  setFilter(e.target.value)
+                }}
+                value={filter}
+                width="100%"
+              />
             </div>
             <div className={styles['style-presets-wrapper']}>
               {renderStyleList()}

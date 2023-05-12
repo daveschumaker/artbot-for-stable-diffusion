@@ -337,9 +337,9 @@ const PendingItem = memo(
           {isPossible === false ? (
             <div className="mt-2 font-mono text-xs text-amber-400">
               <strong>Warning:</strong> There are currently no workers available
-              to process this image. You can continue to wait for a worker to
-              come online, or adjust your image settings (e.g., dimensions or
-              post processors) and try again.
+              to process this image. You can continue to wait a few minutes for
+              a worker to come online, or adjust your image settings (e.g.,
+              model, dimensions or post processors) and try again.
             </div>
           ) : null}
           {jobStalled ? (

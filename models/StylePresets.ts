@@ -1,5 +1,3 @@
-// Via: https://github.com/db0/Stable-Horde-Styles
-// TODO: Automatically import and update
 interface Preset {
   [key: string]: {
     prompt: string
@@ -10,7 +8,20 @@ interface Preset {
   }
 }
 
-export const stylePresets: Preset = {
+function sortAlphabetically(obj: any) {
+  const sortedKeys = Object.keys(obj).sort()
+  const sortedObj: any = {}
+
+  for (const key of sortedKeys) {
+    sortedObj[key] = obj[key]
+  }
+
+  return sortedObj
+}
+
+// Via: https://github.com/db0/Stable-Horde-Styles
+// TODO: Automatically import and update
+export const stableHordeStyles: Preset = {
   raw: {
     prompt: '{p}{np}',
     model: 'stable_diffusion'
@@ -611,3 +622,12 @@ export const stylePresets: Preset = {
     model: 'T-Shirt Diffusion'
   }
 }
+
+// Random stuff I've found on Reddit that seems interesting.
+// TODO: Backfeed these into main Stable Horde styles.
+const customStyles = {}
+
+export const stylePresets = sortAlphabetically({
+  ...stableHordeStyles,
+  ...customStyles
+})
