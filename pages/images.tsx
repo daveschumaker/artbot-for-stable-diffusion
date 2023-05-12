@@ -104,6 +104,8 @@ const ImagesPage = () => {
         return
       }
 
+      if (componentState.offset >= componentState.totalImages - 99) return
+
       if (isImageModalOpen) return
       handleLoadMore('next')
     },
@@ -111,6 +113,8 @@ const ImagesPage = () => {
       if (AppSettings.get('enableGallerySwipe') === false) {
         return
       }
+
+      if (componentState.offset <= 0) return
 
       if (isImageModalOpen) return
       handleLoadMore('prev')
