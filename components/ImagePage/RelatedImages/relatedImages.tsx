@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import useScrollToLocation from 'hooks/useScrollToLocation'
 import Link from 'next/link'
 import React from 'react'
 import { useCallback } from 'react'
@@ -73,6 +74,7 @@ const RelatedImages = ({
   onModalOpen: (value: boolean) => void
   updateRelatedImages: (parentJobId: string) => void
 }) => {
+  useScrollToLocation()
   const size = useWindowSize()
   const [componentState, setComponentState] = useComponentState({
     deleteMode: false,
@@ -200,9 +202,7 @@ const RelatedImages = ({
       )}
       <div className="flex flex-row w-full items-center">
         <div className="inline-block w-1/2">
-          <a id="related-images">
-            <PageTitle>Related images</PageTitle>
-          </a>
+          <PageTitle>Related images</PageTitle>
         </div>
         <div className="flex flex-row justify-end w-1/2 items-start h-[36px] relative gap-2">
           <MenuButton
@@ -269,6 +269,7 @@ const RelatedImages = ({
         )}
       </div>
       <div className="mt-4 flex gap-y-2.5 flex-wrap gap-x-2.5">
+        <a id="related-images"></a>
         <MasonryLayout columns={imageColumns} gap={8}>
           {filteredImages.map(
             (image: {

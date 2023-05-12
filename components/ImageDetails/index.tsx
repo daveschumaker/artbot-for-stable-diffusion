@@ -95,6 +95,7 @@ const ImageDetails = ({
 
   const imgStyle: any = {
     maxWidth: '1024px',
+    objectFit: 'contain',
     width: '100%'
   }
 

@@ -29,6 +29,7 @@
   flex-direction: column;
   row-gap: 8px;
   margin-top: 12px;
+  margin-bottom: 40px;
   justify-content: center;
   width: 100%;
 }

@@ -124,6 +124,7 @@ const Img2ImgModal = ({
 
               router.push(`/controlnet?drawing=true`)
             }}
+            size="small"
             width={isMobile ? '100%' : ''}
           >
             Use for ControlNet
@@ -133,6 +134,7 @@ const Img2ImgModal = ({
               uploadImg2Img(imageDetails, { useSourceImg: true })
               router.push(`/?panel=img2img&edit=true`)
             }}
+            size="small"
             width={isMobile ? '100%' : ''}
           >
             Use for img2img
@@ -142,6 +144,7 @@ const Img2ImgModal = ({
               uploadInpaint(imageDetails, { clone: false, useSourceImg: true })
               router.push(`/?panel=inpainting&edit=true`)
             }}
+            size="small"
             width={isMobile ? '100%' : ''}
           >
             Use for inpaint
@@ -156,6 +159,7 @@ const Img2ImgModal = ({
                 })
                 router.push(`/?panel=inpainting&edit=true`)
               }}
+              size="small"
               width={isMobile ? '100%' : ''}
             >
               Clone mask

@@ -44,7 +44,7 @@ const StyledInteractiveModal = styled.div<IStyle>`
   border-top: 2px solid ${(props) => props.theme.border};
   border-radius: 8px;
   opacity: 1;
-  top: 80px;
+  top: 20px;
   left: 0;
   right: 0;
   bottom: 0;
