@@ -17,6 +17,7 @@ import { userInfoStore } from '../store/userStore'
 import { clientHeader } from '../utils/appUtils'
 import { sleep } from 'utils/sleep'
 import { NewRating } from 'types'
+import Tooltip from 'components/UI/Tooltip'
 
 const MAX_ERROR_COUNT = 30
 
@@ -522,6 +523,31 @@ const Rate = () => {
         />
       </Head>
       <PageTitle>Rate images</PageTitle>
+      <div
+        style={{
+          alignItems: 'center',
+          display: 'flex',
+          flexDirection: 'row',
+          columnGap: '2px',
+          fontSize: '12px',
+          marginTop: '-12px',
+          marginBottom: '8px'
+        }}
+      >
+        What does &quot;<strong>you must rate this image X</strong>&quot; mean?
+        <Tooltip tooltipId="rate-image-captcha">
+          This is the AI Horde&apos;s version of a CAPTCHA. In order to prevent
+          abuse, these images are randomly displayed to ensure a user is not an
+          automated system. <strong>Please rate as the image requests!</strong>{' '}
+          Otherwise, you may be subject to a rating timeout.
+          <div style={{ marginTop: '8px' }}>
+            <img
+              src="/artbot/image_rating.png"
+              alt="Example of an image rating CAPTCHA"
+            />
+          </div>
+        </Tooltip>
+      </div>
       {componentState.apiKey === ANON_API_KEY && (
         <>
           <SubTitle>

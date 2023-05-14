@@ -1,3 +1,8 @@
+# 2023.05.14
+
+- Happy Mother's Day to all you moms out there.
+- Added a tooltip to the [image ratings page](/rate) that gives some more information about the CAPTCHA system. These are images you sometimes see that say "YOU MUST RATE THIS IMAGE A 7." When you see this, please do as the image says. 🙂
+
 # 2023.05.13
 
 - Oh, boy. I've been encountering a whole bunch of issues with my VPS this weekend. It sounds like there was an issue with a physical node that they've fixed. I'm really sorry if you've encountered any unexpected downtime.
