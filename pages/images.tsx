@@ -942,6 +942,8 @@ const ImagesPage = () => {
                   sampler: string
                   models: Array<string>
                 }) => {
+                  console.log(`image?`, image)
+
                   return (
                     <LazyLoad key={image.jobId} once>
                       <div className="relative">
@@ -963,7 +965,10 @@ const ImagesPage = () => {
                                 }}
                               >
                                 <div className="mb-2">{image.prompt}</div>
-                                <div>Model: {image.models[0]}</div>
+                                {image.models &&
+                                  Array.isArray(image.models) && (
+                                    <div>Model: {image.models[0]}</div>
+                                  )}
                                 <div>Sampler: {image.sampler}</div>
                               </div>
                             </Tooltip>
