@@ -1,3 +1,8 @@
+# 2023.05.13
+
+- Oh, boy. I've been encountering a whole bunch of issues with my VPS this weekend. It sounds like there was an issue with a physical node that they've fixed. I'm really sorry if you've encountered any unexpected downtime.
+- UX / fix: Viewing models served by specific workers has always been a bit ugly and some changes I made completely broke the display. This has now been fixed. Thanks to Efreak on Discord for reporting this.
+
 # 2023.05.12
 
 - For desktop / laptop users, I added a small tooltip on the image gallery page that show prompt, model, and sampler as you mouse over images.

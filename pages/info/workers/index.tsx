@@ -10,44 +10,6 @@ import SpinnerV2 from '../../../components/Spinner'
 import InfoPageMenuButton from '../../../components/InfoPage/Menu'
 import styles from './workers.module.css'
 import { useForceUpdate } from '../../../hooks/useForceUpdate'
-import Linker from '../../../components/UI/Linker'
-
-const WorkerModelDetails = ({
-  className,
-  id,
-  models
-}: {
-  className: any
-  id: string
-  models: any
-}) => {
-  const sortedModels =
-    models?.sort((a: string = '', b: string = '') => {
-      if (a.toLowerCase() < b.toLowerCase()) {
-        return -1
-      }
-      if (a.toLowerCase() > b.toLowerCase()) {
-        return 1
-      }
-      return 0
-    }) ?? []
-
-  return (
-    <div className={className}>
-      <div className={styles.ModelList}>
-        {sortedModels.map((model: string) => {
-          return (
-            <li key={`${id}_${model}`}>
-              <Linker href={`/info/models#${model}`} passHref>
-                {model}
-              </Linker>
-            </li>
-          )
-        })}
-      </div>
-    </div>
-  )
-}
 
 const WorkerInfoPage = () => {
   const forceUpdate = useForceUpdate()
@@ -217,13 +179,6 @@ const WorkerInfoPage = () => {
                     worker={worker}
                     forceUpdate={forceUpdate}
                   />
-                  {componentState.showModelsForWorkerId === worker.id && (
-                    <WorkerModelDetails
-                      className={styles['worker-details']}
-                      id={worker.id}
-                      models={worker.models}
-                    />
-                  )}
                 </div>
               )
             })}

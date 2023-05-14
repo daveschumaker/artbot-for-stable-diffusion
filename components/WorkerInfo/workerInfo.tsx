@@ -1,4 +1,5 @@
 import clsx from 'clsx'
+import { useState } from 'react'
 import { toast } from 'react-toastify'
 import styled from 'styled-components'
 import { fetchUserDetails } from '../../api/userInfo'
@@ -17,6 +18,7 @@ import PointIcon from '../icons/PointIcon'
 import SquareIcon from '../icons/SquareIcon'
 import Row from '../Row'
 import { Button } from '../UI/Button'
+import ModelsModal from './ModelsModal'
 import styles from './workerInfo.module.css'
 
 const WorkerTitle = styled.div`
@@ -59,11 +61,11 @@ const WorkerInfo = ({
   editable,
   loadingWorkerStatus,
   setComponentState,
-  showModels,
-  showModelClick,
   worker,
   workers
 }: any) => {
+  const [showModels, setShowModels] = useState(false)
+
   let statusColor = 'green'
   if (worker.online && worker.maintenance_mode) {
     statusColor = 'orange'
@@ -116,197 +118,206 @@ const WorkerInfo = ({
   }
 
   return (
-    <div
-      className={clsx(styles.wrapper, showModels && styles['expand-panel'])}
-      key={worker.id}
-    >
-      <div>
-        <WorkerTitle>
-          <a
-            // @ts-ignore
-            name={worker.id}
-          />
-          <PointIcon size={28} fill={statusColor} stroke={statusColor} />
-          <strong>{worker.name}</strong>
-        </WorkerTitle>
-        <WorkerId
-          onClick={() => {
-            navigator?.clipboard?.writeText(`${worker.id}`).then(() => {
-              toast.success('Worker ID copied!', {
-                pauseOnFocusLoss: false,
-                position: 'top-center',
-                autoClose: 2500,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: false,
-                draggable: false,
-                progress: undefined,
-                theme: 'light'
-              })
-            })
-          }}
-        >
-          <CopyIcon />
-          id: {worker.id}
-        </WorkerId>
-        {worker.info && (
-          <div className="mt-2 text-sm italic">{worker.info}</div>
-        )}
-        <WorkerStatus>
-          <div>
-            Status:{' '}
-            <strong>
-              {worker.online && worker.maintenance_mode && 'Paused'}
-              {worker.online && !worker.maintenance_mode && 'Online'}
-              {!worker.online && 'Offline'}
-            </strong>
-          </div>
-          <div>
-            Total uptime: <strong>{formatSeconds(worker.uptime)}</strong>
-          </div>
-          <Spacer />
-          <div>
-            Threads: <strong>{worker.threads}</strong>
-          </div>
-          <div>
-            Max resolution (1:1):{' '}
-            <strong>
-              {Math.floor(Math.sqrt(worker.max_pixels))} x{' '}
-              {Math.floor(Math.sqrt(worker.max_pixels))}
-            </strong>
-          </div>
-          <div>
-            Max pixels: <strong>{worker.max_pixels?.toLocaleString()}</strong>
-          </div>
-          <div>
-            Performance: <strong>{worker.performance}</strong>
-          </div>
-          <div>
-            Avg time per request:{' '}
-            <strong>
-              {worker.requests_fulfilled > 0
-                ? `${Number(worker.uptime / worker.requests_fulfilled).toFixed(
-                    4
-                  )} seconds`
-                : 'N/A'}
-            </strong>
-          </div>
-          <Spacer />
-          <div>
-            Kudos earned:{' '}
-            <strong>{worker?.kudos_rewards?.toLocaleString()}</strong>
-          </div>
-          <div>
-            Requests completed:{' '}
-            <strong>{worker.requests_fulfilled?.toLocaleString()}</strong>
-          </div>
-          <Spacer />
-          <table>
-            <tbody>
-              <tr>
-                <td>Inpainting:&nbsp;&nbsp;</td>
-                <td>{<strong>{worker?.painting ? '✅' : '❌'}</strong>}</td>
-              </tr>
-              <tr>
-                <td>NSFW:&nbsp;&nbsp;</td>
-                <td>{<strong>{worker?.nsfw ? '✅' : '❌'}</strong>}</td>
-              </tr>
-              <tr>
-                <td>Post-processing:&nbsp;&nbsp;</td>
-                <td>
-                  <strong>{worker['post-processing'] ? '✅' : '❌'}</strong>
-                </td>
-              </tr>
-              <tr>
-                <td>Trusted:&nbsp;&nbsp;</td>
-                <td>
-                  <strong>{worker.trusted ? '✅' : '❌'}</strong>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <Spacer />
-        </WorkerStatus>
-      </div>
-
+    <>
+      {showModels && (
+        <ModelsModal
+          handleClose={() => setShowModels(false)}
+          models={worker.models}
+          workerName={worker.name}
+        />
+      )}
       <div
-        className={clsx(
-          styles['use-worker-row'],
-          showModels && styles['worker-row-padding']
-        )}
+        className={clsx(styles.wrapper, showModels && styles['expand-panel'])}
+        key={worker.id}
       >
-        {AppSettings.get('useWorkerId') === worker.id ? (
-          <Button
-            theme="secondary"
+        <div>
+          <WorkerTitle>
+            <a
+              // @ts-ignore
+              name={worker.id}
+            />
+            <PointIcon size={28} fill={statusColor} stroke={statusColor} />
+            <strong>{worker.name}</strong>
+          </WorkerTitle>
+          <WorkerId
             onClick={() => {
-              AppSettings.save('useWorkerId', '')
-              forceUpdate()
+              navigator?.clipboard?.writeText(`${worker.id}`).then(() => {
+                toast.success('Worker ID copied!', {
+                  pauseOnFocusLoss: false,
+                  position: 'top-center',
+                  autoClose: 2500,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: false,
+                  draggable: false,
+                  progress: undefined,
+                  theme: 'light'
+                })
+              })
             }}
           >
-            <CheckboxIcon />
-            Return to using all workers
-          </Button>
-        ) : (
-          <Button
-            onClick={() => {
-              AppSettings.save('useWorkerId', worker.id)
-              forceUpdate()
-            }}
-          >
-            <SquareIcon />
-            Use this worker for all jobs
-          </Button>
-        )}
-      </div>
-      {editable !== false && worker.online && (
-        <div className="mt-4">
-          {worker.online && !worker.maintenance_mode && (
+            <CopyIcon />
+            id: {worker.id}
+          </WorkerId>
+          {worker.info && (
+            <div className="mt-2 text-sm italic">{worker.info}</div>
+          )}
+          <WorkerStatus>
+            <div>
+              Status:{' '}
+              <strong>
+                {worker.online && worker.maintenance_mode && 'Paused'}
+                {worker.online && !worker.maintenance_mode && 'Online'}
+                {!worker.online && 'Offline'}
+              </strong>
+            </div>
+            <div>
+              Total uptime: <strong>{formatSeconds(worker.uptime)}</strong>
+            </div>
+            <Spacer />
+            <div>
+              Threads: <strong>{worker.threads}</strong>
+            </div>
+            <div>
+              Max resolution (1:1):{' '}
+              <strong>
+                {Math.floor(Math.sqrt(worker.max_pixels))} x{' '}
+                {Math.floor(Math.sqrt(worker.max_pixels))}
+              </strong>
+            </div>
+            <div>
+              Max pixels: <strong>{worker.max_pixels?.toLocaleString()}</strong>
+            </div>
+            <div>
+              Performance: <strong>{worker.performance}</strong>
+            </div>
+            <div>
+              Avg time per request:{' '}
+              <strong>
+                {worker.requests_fulfilled > 0
+                  ? `${Number(
+                      worker.uptime / worker.requests_fulfilled
+                    ).toFixed(4)} seconds`
+                  : 'N/A'}
+              </strong>
+            </div>
+            <Spacer />
+            <div>
+              Kudos earned:{' '}
+              <strong>{worker?.kudos_rewards?.toLocaleString()}</strong>
+            </div>
+            <div>
+              Requests completed:{' '}
+              <strong>{worker.requests_fulfilled?.toLocaleString()}</strong>
+            </div>
+            <Spacer />
+            <table>
+              <tbody>
+                <tr>
+                  <td>Inpainting:&nbsp;&nbsp;</td>
+                  <td>{<strong>{worker?.painting ? '✅' : '❌'}</strong>}</td>
+                </tr>
+                <tr>
+                  <td>NSFW:&nbsp;&nbsp;</td>
+                  <td>{<strong>{worker?.nsfw ? '✅' : '❌'}</strong>}</td>
+                </tr>
+                <tr>
+                  <td>Post-processing:&nbsp;&nbsp;</td>
+                  <td>
+                    <strong>{worker['post-processing'] ? '✅' : '❌'}</strong>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Trusted:&nbsp;&nbsp;</td>
+                  <td>
+                    <strong>{worker.trusted ? '✅' : '❌'}</strong>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <Spacer />
+          </WorkerStatus>
+        </div>
+
+        <div
+          className={clsx(
+            styles['use-worker-row'],
+            showModels && styles['worker-row-padding']
+          )}
+        >
+          {AppSettings.get('useWorkerId') === worker.id ? (
             <Button
               theme="secondary"
-              disabled={loadingWorkerStatus[worker.id]}
               onClick={() => {
-                handleWorkerChange({
-                  state: 'pause'
-                })
+                AppSettings.save('useWorkerId', '')
+                forceUpdate()
               }}
             >
-              {loadingWorkerStatus[worker.id] ? (
-                'Updating...'
-              ) : (
-                <>
-                  <PauseIcon /> Pause worker
-                </>
-              )}
+              <CheckboxIcon />
+              Return to using all workers
             </Button>
-          )}
-          {worker.online && worker.maintenance_mode && (
+          ) : (
             <Button
-              disabled={loadingWorkerStatus[worker.id]}
               onClick={() => {
-                handleWorkerChange({
-                  state: 'start'
-                })
+                AppSettings.save('useWorkerId', worker.id)
+                forceUpdate()
               }}
             >
-              {loadingWorkerStatus[worker.id] ? (
-                'Updating...'
-              ) : (
-                <>
-                  <PlayIcon /> Re-start worker
-                </>
-              )}
+              <SquareIcon />
+              Use this worker for all jobs
             </Button>
           )}
         </div>
-      )}
+        {editable !== false && worker.online && (
+          <div className="mt-4">
+            {worker.online && !worker.maintenance_mode && (
+              <Button
+                theme="secondary"
+                disabled={loadingWorkerStatus[worker.id]}
+                onClick={() => {
+                  handleWorkerChange({
+                    state: 'pause'
+                  })
+                }}
+              >
+                {loadingWorkerStatus[worker.id] ? (
+                  'Updating...'
+                ) : (
+                  <>
+                    <PauseIcon /> Pause worker
+                  </>
+                )}
+              </Button>
+            )}
+            {worker.online && worker.maintenance_mode && (
+              <Button
+                disabled={loadingWorkerStatus[worker.id]}
+                onClick={() => {
+                  handleWorkerChange({
+                    state: 'start'
+                  })
+                }}
+              >
+                {loadingWorkerStatus[worker.id] ? (
+                  'Updating...'
+                ) : (
+                  <>
+                    <PlayIcon /> Re-start worker
+                  </>
+                )}
+              </Button>
+            )}
+          </div>
+        )}
 
-      <Spacer />
+        <Spacer />
 
-      <ExpandModels onClick={showModelClick}>
-        {showModels ? <ChevronDownIcon /> : <ChevronRightIcon />}
-        Models ({worker?.models?.length ?? 0})
-      </ExpandModels>
-    </div>
+        <ExpandModels onClick={() => setShowModels(true)}>
+          {showModels ? <ChevronDownIcon /> : <ChevronRightIcon />}
+          Models ({worker?.models?.length ?? 0})
+        </ExpandModels>
+      </div>
+    </>
   )
 }
 
