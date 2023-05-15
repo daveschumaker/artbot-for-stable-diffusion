@@ -31,7 +31,7 @@ const checkMultiPendingJobs = async () => {
     return
   }
 
-  if (!appInfoStore.state.primaryWindow) {
+  if (!isAppActive() || !appInfoStore.state.primaryWindow) {
     return
   }
 

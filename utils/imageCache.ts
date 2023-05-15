@@ -671,7 +671,7 @@ export const checkCurrentJob = async (imageDetails: any) => {
         ...imgDetailsFromApi
       }
 
-      if (appInfoStore.state.primaryWindow) {
+      if (isAppActive() || appInfoStore.state.primaryWindow) {
         const thumbnail = await generateBase64Thumbnail(
           imgDetailsFromApi.base64String,
           jobId
