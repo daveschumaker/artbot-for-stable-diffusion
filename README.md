@@ -114,7 +114,7 @@ As mentioned earlier, attempting to use `npm run dev` or `npm run start` within 
 
 ### Other issues
 
-For other issues not mentioned here, feel free to [open a new issue on Github](https://github.com/daveschumaker/artbot-for-stable-diffusion/issues) or visit the [ArtBot feedback channel](https://discord.com/channels/781145214752129095/1038867597543882894) on the Stable Horde Discord server.
+For other issues not mentioned here, feel free to [open a new issue on Github](https://github.com/daveschumaker/artbot-for-stable-diffusion/issues) or visit the [ArtBot feedback channel](https://discord.com/channels/781145214752129095/1107628882783391744) on the Stable Horde Discord server.
 
 ## Contributions
 

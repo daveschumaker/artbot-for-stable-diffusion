@@ -1,3 +1,7 @@
+# 2023.05.15
+
+- db0 added official channels on Discord for various UIs on that integrate with the AI Horde. I've updated links across the page. [You can find the discussion about ArtBot here](https://discord.com/channels/781145214752129095/1107628882783391744), if you're into that sort of thing.
+
 # 2023.05.14
 
 - Happy Mother's Day to all you moms out there.

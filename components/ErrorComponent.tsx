@@ -71,7 +71,7 @@ const ErrorComponent = () => {
         <StyledLink href="/artbot/contact">contact form</StyledLink> if
         you&apos;d like to provide more information about what happened or{' '}
         <StyledLink
-          href="https://discord.com/channels/781145214752129095/1038867597543882894"
+          href="https://discord.com/channels/781145214752129095/1107628882783391744"
           target="_blank"
           rel="noopener noreferrer"
         >

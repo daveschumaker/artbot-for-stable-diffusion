@@ -236,7 +236,7 @@ const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
             non-profit that helped to train Stable Diffusion) for use in
             aesthetic training in order to improve future models. See{' '}
             <Linker
-              href="https://discord.com/channels/781145214752129095/1038867597543882894"
+              href="https://discord.com/channels/781145214752129095/1107628882783391744"
               target="_blank"
               rel="noopener noreferrer"
             >

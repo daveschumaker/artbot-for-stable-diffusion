@@ -177,7 +177,7 @@ const AboutPage = () => {
           <li>
             Discord (ArtBot feedback):{' '}
             <Linker
-              href="https://discord.com/channels/781145214752129095/1038867597543882894"
+              href="https://discord.com/channels/781145214752129095/1107628882783391744"
               target="_blank"
               rel="noopener noreferrer"
             >
