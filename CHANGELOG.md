@@ -1,6 +1,7 @@
 # 2023.05.15
 
-- db0 added official channels on Discord for various UIs on that integrate with the AI Horde. I've updated links across the page. [You can find the discussion about ArtBot here](https://discord.com/channels/781145214752129095/1107628882783391744), if you're into that sort of thing.
+- db0 added official channels on Discord for various UIs on that integrate with the AI Horde. I've updated links across the web app. [You can find the discussion about ArtBot here](https://discord.com/channels/781145214752129095/1107628882783391744). Stop by and say hi, if you're into that sort of thing.
+- Fix: Apparently, the "run in background" option on the [ArtBot settings page](/settings?panel=prefs) wasn't working correctly. I found myself queueing up a bunch of jobs, switching tabs to check on some other things, and come back later to find out nearly all the images are still pending. Oops! ArtBot should now be able to continue running. (Note: I'm not sure how this will work on a mobile device).
 
 # 2023.05.14
 

@@ -49,7 +49,7 @@ export const updateAppConfig = () => {
     updateData.saveInputOnCreate = true
   }
 
-  if (localStorage.getItem('runBackground') === 'true') {
+  if (localStorage.getItem('runBackground') !== 'false') {
     updateData.runInBackground = true
   }
 

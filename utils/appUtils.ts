@@ -18,7 +18,7 @@ export const clientHeader = () => {
 }
 
 export const isAppActive = () => {
-  if (AppSettings.get('runInBackground')) {
+  if (AppSettings.get('runInBackground') !== false) {
     return true
   }
 
