@@ -24,6 +24,8 @@ build_info.json
 *.pem
 /analyze
 /ArtBot_ModelChanges
+build.sh
+release.sh
 
 # debug
 npm-debug.log*
