@@ -4,6 +4,7 @@
 - Fix: Apparently, the "run in background" option on the [ArtBot settings page](/settings?panel=prefs) wasn't working correctly. I found myself queueing up a bunch of jobs, switching tabs to check on some other things, and come back later to find out nearly all the images are still pending. Oops! ArtBot should now be able to continue running. (Note: I'm not sure how this will work on a mobile device).
 - Fix: Prevent some unnecessary re-renders within image details component (used in both modal and image detail page) that could impact perfomance.
 - Fix: Interrogate page would sometimes become unresponsive if an error occured while fetching image from an external source.
+- Fix (hopefully): Issue with "ghost" generations that would sometimes happen when you canceled an image request. I'm like 93% sure I've solved it this time.
 
 # 2023.05.14
 

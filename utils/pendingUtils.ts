@@ -12,7 +12,7 @@ import { sleep } from './sleep'
 import { userInfoStore } from 'store/userStore'
 import { toast, ToastOptions } from 'react-toastify'
 import { logToConsole } from './debugTools'
-import { setPendingJob } from 'controllers/pendingJobsCache'
+import { deletePendingJob, setPendingJob } from 'controllers/pendingJobsCache'
 
 const addJobToPending = async (
   imageParams: CreateImageRequest | RerollImageRequest
@@ -159,21 +159,18 @@ export const addPendingJobToDb = async ({
       // Handle a strange error the happens for... some reason?
       // https://dexie.org/docs/DexieErrors/Dexie.QuotaExceededError
 
-      if (errorCount >= 5) {
-        logError({
-          path: window.location.href,
-          errorMessage: [
-            'pendingUtils.addPendingJobToDb.errorCountExceeded',
-            'Unable to add completed item to db'
-          ].join('\n'),
-          errorInfo: err?.message,
-          errorType: 'client-side',
-          username: userInfoStore.state.username
-        })
-      }
+      logError({
+        path: window.location.href,
+        errorMessage: [
+          'pendingUtils.addPendingJobToDb.errorCountExceeded',
+          'Unable to add completed item to db'
+        ].join('\n'),
+        errorInfo: err?.message,
+        errorType: 'client-side',
+        username: userInfoStore.state.username
+      })
 
-      await sleep(250)
-      await addJobToPending(clonedParams)
+      deletePendingJob(clonedParams.jobId)
     } else {
       logError({
         path: window.location.href,
@@ -185,6 +182,8 @@ export const addPendingJobToDb = async ({
         errorType: 'client-side',
         username: userInfoStore.state.username
       })
+
+      deletePendingJob(clonedParams.jobId)
     }
   }
 }
