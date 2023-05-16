@@ -5,6 +5,7 @@ import { setUnsupportedBrowser } from '../store/appStore'
 import { IImageDetails, JobStatus } from '../types'
 import { generateBase64Thumbnail } from './imageUtils'
 import { SourceProcessing } from './promptUtils'
+import { deletePendingJobs } from 'controllers/pendingJobsCache'
 
 export class MySubClassedDexie extends Dexie {
   completed: any
@@ -488,6 +489,8 @@ export const deleteAllPendingErrors = async () => {
       return job.jobStatus === JobStatus.Error
     })
     .delete()
+
+  deletePendingJobs(JobStatus.Error)
 }
 
 export const deleteAllPendingJobs = async () => {
@@ -499,6 +502,9 @@ export const deleteAllPendingJobs = async () => {
       )
     })
     .delete()
+
+  deletePendingJobs(JobStatus.Queued)
+  deletePendingJobs(JobStatus.Waiting)
 }
 
 export const getImageDetailsById = async (id: number) => {

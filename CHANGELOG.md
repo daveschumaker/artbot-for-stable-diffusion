@@ -2,6 +2,7 @@
 
 - Fix: Navigation keys and swipe behavior were backwards on image modal. Thanks to Litnine for reporting this on Discord.
 - Behind the scenes: improvements to settings and displaying server messages (e.g., downtime alerts, etc)
+- Fix: Unable to bulk clear images that had an error state on the pending page. Thanks to "I.B.B.A.F.L.C.S.S.H.K.T Committe" on Discord for reporting this.
 
 # 2023.05.15
 

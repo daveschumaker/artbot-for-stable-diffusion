@@ -3,7 +3,7 @@ import FilterIcon from 'components/icons/FilterIcon'
 import Separator from 'components/UI/Separator'
 import AlertDialogBox from 'components/UI/AlertDialogBox'
 
-import { useCallback, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { JobStatus } from 'types'
 import {
   deleteAllPendingErrors,
@@ -22,44 +22,56 @@ const FilterClearOptions = ({
   setFilter: any
 }) => {
   const [confirmClear, setConfirmClear] = useState('')
+  const [imageStatus, setImageStatus] = useState({
+    done: [],
+    processing: [],
+    queued: [],
+    waiting: [],
+    error: []
+  })
 
-  const processPending = useCallback(() => {
+  useEffect(() => {
     const done: any = []
     const processing: any = []
     const queued: any = []
     const waiting: any = []
     const error: any = []
 
-    pendingImages.forEach((job: any) => {
-      if (job.jobStatus === JobStatus.Done) {
-        done.push(job)
+    for (const item of pendingImages) {
+      if (item.jobStatus === JobStatus.Done) {
+        done.push(item)
       }
 
-      if (job.jobStatus === JobStatus.Processing) {
-        processing.push(job)
+      if (item.jobStatus === JobStatus.Processing) {
+        processing.push(item)
       }
 
       if (
-        job.jobStatus === JobStatus.Queued ||
-        job.jobStatus === JobStatus.Requested
+        item.jobStatus === JobStatus.Queued ||
+        item.jobStatus === JobStatus.Requested
       ) {
-        queued.push(job)
+        queued.push(item)
       }
 
-      if (job.jobStatus === JobStatus.Waiting) {
-        waiting.push(job)
+      if (item.jobStatus === JobStatus.Waiting) {
+        waiting.push(item)
       }
 
-      if (job.jobStatus === JobStatus.Error) {
-        error.push(job)
+      if (item.jobStatus === JobStatus.Error) {
+        error.push(item)
       }
+    }
+
+    setImageStatus({
+      done,
+      processing,
+      queued,
+      waiting,
+      error
     })
-
-    return [done, processing, queued, error]
   }, [pendingImages])
 
-  const [done = [], processing = [], queued = [], waiting = [], error = []] =
-    processPending()
+  const { done, processing, queued, waiting, error } = imageStatus
 
   const jobsInProgress = processing.length + queued.length
   const jobsWaiting = queued.length + waiting.length
