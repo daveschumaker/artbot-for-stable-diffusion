@@ -25,6 +25,7 @@ build_info.json
 *.pem
 /analyze
 /ArtBot_ModelChanges
+/ArtBot_ServerMessage
 build.sh
 release.sh
 

@@ -4,11 +4,18 @@ import Panel from '../UI/Panel'
 
 const ServerMessage = () => {
   const appState = useStore(appInfoStore)
-  const { clusterSettings } = appState
-  const { serverMessage } = clusterSettings
+  const { serverMessage } = appState
 
-  if (!serverMessage || !serverMessage.title) {
+  if (!serverMessage || !serverMessage.title || !serverMessage.content) {
     return null
+  }
+
+  let timeDiff = 0
+
+  // @ts-ignore
+  if (serverMessage.timeDiffSec) {
+    // @ts-ignore
+    timeDiff = Math.floor(serverMessage.timeDiffSec / 60)
   }
 
   return (
@@ -16,6 +23,11 @@ const ServerMessage = () => {
       <Panel>
         <div className="font-[700] mb-2">{serverMessage.title}</div>
         <div dangerouslySetInnerHTML={{ __html: serverMessage.content }} />
+        {timeDiff && (
+          <div className="mt-2 text-xs italic">
+            Posted ~{timeDiff} minute{timeDiff !== 1 ? 's' : ''} ago
+          </div>
+        )}
       </Panel>
     </div>
   )
