@@ -605,12 +605,11 @@ export const downloadImages = async (
     }
 
     fileDetails.push(imageData)
+    let newBlob
+    const input = await base64toBlob(image.base64String, `image/${fileType}`)
     try {
-      if(image.imageMimeType != `image/${fileType}`) {
-        const input = await base64toBlob(image.base64String, `image/${fileType}`)
-        let newBlob
+      if (image.imageMimeType !== `image/${fileType}`) {
         if (input) {
-
           if (fileType === 'png') {
             // @ts-ignore
             newBlob = await input?.toPNG()
@@ -633,8 +632,7 @@ export const downloadImages = async (
         name: filename,
         lastModified: new Date(image.timestamp),
         input: newBlob
-        })
-      }
+      })
     } catch (err) {
       console.log(`Error converting image to ${fileType}...`)
       console.log(image.jobId)
@@ -670,9 +668,10 @@ export const downloadFile = async (image: any) => {
       .slice(0, 124) + `.${fileType}`
 
   //don't convert files that are already in the right format..........☹
-  if(image.imageMimeType == `image/${fileType}`) {
+  if (image.imageMimeType == `image/${fileType}`) {
     saveAs(input, filename)
-  } else { // otherwise we'll convert if necessary
+  } else {
+    // otherwise we'll convert if necessary
     let newBlob
 
     if (fileType === 'png') {

@@ -5,6 +5,7 @@
 - Fix: Prevent some unnecessary re-renders within image details component (used in both modal and image detail page) that could impact perfomance.
 - Fix: Interrogate page would sometimes become unresponsive if an error occured while fetching image from an external source.
 - Fix (hopefully): Issue with "ghost" generations that would sometimes happen when you canceled an image request. I'm like 93% sure I've solved it this time.
+- Merged in an improvement from Efreak to fix a double encoding issue when downloading images. Thank you! 🙌
 
 # 2023.05.14
 
