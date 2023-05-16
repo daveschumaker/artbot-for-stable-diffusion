@@ -17,7 +17,8 @@
     "postinstall": "node ./x-build-scripts/post-install.js",
     "start": "NODE_ENV=production node server.js",
     "update:build-id": "node ./x-build-scripts/updateBuildId.js",
-    "test": "jest"
+    "test": "jest",
+    "prepare": "husky install"
   },
   "engines": {
     "npm": ">=9.0.0",
@@ -103,7 +104,7 @@
     "babel-plugin-styled-components": "2.1.1",
     "eslint": "8.34.0",
     "eslint-config-next": "13.4.1",
-    "husky": "8.0.3",
+    "husky": "^8.0.0",
     "jest": "29.4.3",
     "postcss": "8.4.21",
     "prettier": "2.8.7",
