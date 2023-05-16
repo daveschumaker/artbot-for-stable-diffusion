@@ -10,6 +10,7 @@ import {
 } from '../store/appStore'
 import { CheckImage, CreateImageJob, JobStatus } from '../types'
 import {
+  addCompletedJobToDexie,
   db,
   deletePendingJobFromDb,
   getImageDetails,
@@ -454,12 +455,11 @@ export const addCompletedJobToDb = async ({
     }
 
     delete clonedJobDetails.id
-    await db.completed.put(
-      Object.assign({}, clonedJobDetails, {
-        jobStatus: JobStatus.Done,
-        thumbnail
-      })
-    )
+    await addCompletedJobToDexie({
+      ...clonedJobDetails,
+      jobStatus: JobStatus.Done,
+      thumbnail
+    })
     getImageDetails.delete(jobDetails.jobId) // Bust memo cache... again.
 
     logToConsole({

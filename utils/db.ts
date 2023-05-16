@@ -1,7 +1,7 @@
 import Dexie from 'dexie'
 import memoize from 'memoizee'
 
-import { setUnsupportedBrowser } from '../store/appStore'
+import { setStorageQuotaLimit, setUnsupportedBrowser } from '../store/appStore'
 import { IImageDetails, JobStatus } from '../types'
 import { generateBase64Thumbnail } from './imageUtils'
 import { SourceProcessing } from './promptUtils'
@@ -454,6 +454,19 @@ export const getPendingJobDetails = async (jobId: string) => {
 // @ts-ignore
 export const updateCompletedJob = async (tableId: number, updatedObject) => {
   db.completed.update(tableId, updatedObject)
+}
+
+export const addCompletedJobToDexie = async (imageDetails = {}) => {
+  try {
+    await db.completed.put(Object.assign({}, imageDetails))
+  } catch (err: any) {
+    console.log(`Uh oh! An error occurred!`)
+    console.log(err.message)
+
+    if (err.message.includes('QuotaExceededError')) {
+      setStorageQuotaLimit(true)
+    }
+  }
 }
 
 export const addPendingJobToDexie = async (jobDetails: any) => {
