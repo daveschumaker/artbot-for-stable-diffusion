@@ -134,27 +134,35 @@ const Interrogate = () => {
   ])
 
   const fetchRemoteImage = useCallback(async () => {
-    const resp = await fetch(`/artbot/api/img-from-url`, {
-      method: 'POST',
-      body: JSON.stringify({
-        imageUrl: componentState.imgUrl
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Client-Agent': clientHeader()
-      }
-    })
-    const data = await resp.json()
-
-    // @ts-ignore
-    const { success, imageType, imgBase64String } = data
-
-    if (success) {
-      setComponentState({
-        source_image: imgBase64String,
-        sourceImageType: imageType
+    try {
+      const resp = await fetch(`/artbot/api/img-from-url`, {
+        method: 'POST',
+        body: JSON.stringify({
+          imageUrl: componentState.imgUrl
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Client-Agent': clientHeader()
+        }
       })
-    } else {
+      const data = await resp.json()
+
+      // @ts-ignore
+      const { success, imageType, imgBase64String } = data
+
+      if (success) {
+        setComponentState({
+          source_image: imgBase64String,
+          sourceImageType: imageType
+        })
+      } else {
+        setComponentState({
+          loadImageError: true
+        })
+      }
+    } catch (err) {
+      console.log(`Error: Unable to load image.`)
+      console.log(err)
       setComponentState({
         loadImageError: true
       })
