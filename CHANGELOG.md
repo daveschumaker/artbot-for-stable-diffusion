@@ -1,6 +1,7 @@
 # 2023.05.16
 
 - Fix: Navigation keys and swipe behavior were backwards on image modal. Thanks to Litnine for reporting this on Discord.
+- Behind the scenes: improvements to settings and displaying server messages (e.g., downtime alerts, etc)
 
 # 2023.05.15
 
