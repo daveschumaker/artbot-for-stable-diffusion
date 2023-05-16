@@ -23,11 +23,11 @@ const ServerMessage = () => {
       <Panel>
         <div className="font-[700] mb-2">{serverMessage.title}</div>
         <div dangerouslySetInnerHTML={{ __html: serverMessage.content }} />
-        {timeDiff && (
+        {timeDiff > 0 ? (
           <div className="mt-2 text-xs italic">
             Posted ~{timeDiff} minute{timeDiff !== 1 ? 's' : ''} ago
           </div>
-        )}
+        ) : null}
       </Panel>
     </div>
   )
