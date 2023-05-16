@@ -16,7 +16,6 @@ interface IKudosCostParams {
   denoisingStrength: number
   postProcessors: string[]
   usesControlNet: boolean
-  prompt: string
   numImages: number
 }
 
@@ -29,7 +28,6 @@ export const kudosCostV2 = ({
   denoisingStrength,
   postProcessors,
   usesControlNet,
-  prompt,
   numImages
 }: IKudosCostParams) => {
   const result =
@@ -46,7 +44,6 @@ export const kudosCostV2 = ({
   let kudos = 0.1232 * accurateSteps + result * (0.1232 * accurateSteps * 8.75)
   for (let i = 0; i < postProcessors.length; i++) kudos *= 1.2
   kudos *= usesControlNet && hasSourceImage ? 3 : 1
-  kudos += countWeights(prompt)
   kudos *= hasSourceImage ? 1.3 : 1
   kudos *=
     postProcessors.includes('RealESRGAN_x4plus') ||
@@ -101,20 +98,4 @@ export const getAccurateSteps = (
   }
 
   return steps
-}
-
-function countWeights(prompt: string = '') {
-  let open = false
-  let count = 0
-  for (const char of prompt) {
-    if (char == '(') {
-      open = true
-    }
-
-    if (char == ')' && open) {
-      open = false
-      count++
-    }
-  }
-  return count
 }

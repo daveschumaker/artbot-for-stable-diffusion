@@ -457,7 +457,6 @@ const CreateHomePage = ({ modelDetails, shortlinkImageParams }: any) => {
     postProcessors: input.post_processing,
     samplerName: input.sampler,
     usesControlNet: input.control_type ? true : false,
-    prompt: [input.prompt, input.negative].join(' ### '),
     hasSourceImage: input.source_image ? true : false,
     denoisingStrength: input.denoising_strength,
     numImages: totalImagesRequested
