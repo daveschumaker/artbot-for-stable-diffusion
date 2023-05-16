@@ -19,6 +19,7 @@
 release.tar.gz
 
 # misc
+/x-build-scripts/announce.js
 .DS_Store
 build_info.json
 *.pem
