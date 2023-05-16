@@ -72,8 +72,8 @@ export const deletePendingJobs = async (status?: any) => {
 }
 
 export const deletePendingJob = async (jobId: string) => {
-  await deletePendingJobFromDb(jobId)
   delete pendingJobs[jobId]
+  deletePendingJobFromDb(jobId)
 }
 
 export const getPendingJob = (jobId: string) => {
@@ -83,7 +83,7 @@ export const getPendingJob = (jobId: string) => {
 export const getAllPendingJobs = (status?: any): Array<any> => {
   let jobsArray: Array<IPendingJob> = []
   for (const [, value] of Object.entries(pendingJobs)) {
-    jobsArray.push(value)
+    jobsArray.push(cloneDeep(value))
   }
 
   if (status) {
@@ -156,5 +156,3 @@ export const updateAllPendingJobsV2 = async (
     pendingJobs = []
   }
 }
-
-// TODO: Handle "updateAllPendingJobs" for various errors
