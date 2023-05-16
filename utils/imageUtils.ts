@@ -606,29 +606,33 @@ export const downloadImages = async (
 
     fileDetails.push(imageData)
     try {
-      const input = await base64toBlob(image.base64String, `image/${fileType}`)
-      if (input) {
+      if(image.imageMimeType != `image/${fileType}`) {
+        const input = await base64toBlob(image.base64String, `image/${fileType}`)
         let newBlob
+        if (input) {
 
-        if (fileType === 'png') {
-          // @ts-ignore
-          newBlob = await input?.toPNG()
+          if (fileType === 'png') {
+            // @ts-ignore
+            newBlob = await input?.toPNG()
+          }
+
+          if (fileType === 'jpg') {
+            // @ts-ignore
+            newBlob = await input?.toJPEG()
+          }
+
+          if (fileType === 'webp') {
+            // @ts-ignore
+            newBlob = await input?.toWebP()
+          }
         }
-
-        if (fileType === 'jpg') {
-          // @ts-ignore
-          newBlob = await input?.toJPEG()
-        }
-
-        if (fileType === 'webp') {
-          // @ts-ignore
-          newBlob = await input?.toWebP()
-        }
-
-        fileArray.push({
-          name: filename,
-          lastModified: new Date(image.timestamp),
-          input: newBlob
+      } else {
+        newBlob = input
+      }
+      fileArray.push({
+        name: filename,
+        lastModified: new Date(image.timestamp),
+        input: newBlob
         })
       }
     } catch (err) {
@@ -657,6 +661,7 @@ export const downloadFile = async (image: any) => {
   initBlob()
   const fileType = AppSettings.get('imageDownloadFormat') || 'jpg'
   const input = await base64toBlob(image.base64String, `image/${fileType}`)
+  const { saveAs } = (await import('file-saver')).default
 
   const filename =
     image.prompt
@@ -664,25 +669,29 @@ export const downloadFile = async (image: any) => {
       .toLowerCase()
       .slice(0, 124) + `.${fileType}`
 
-  let newBlob
+  //don't convert files that are already in the right format..........☹
+  if(image.imageMimeType == `image/${fileType}`) {
+    saveAs(input, filename)
+  } else { // otherwise we'll convert if necessary
+    let newBlob
 
-  if (fileType === 'png') {
-    // @ts-ignore
-    newBlob = await input?.toPNG()
+    if (fileType === 'png') {
+      // @ts-ignore
+      newBlob = await input?.toPNG()
+    }
+
+    if (fileType === 'jpg') {
+      // @ts-ignore
+      newBlob = await input?.toJPEG()
+    }
+
+    if (fileType === 'webp') {
+      // @ts-ignore
+      newBlob = await input?.toWebP()
+    }
+
+    saveAs(newBlob, filename)
   }
-
-  if (fileType === 'jpg') {
-    // @ts-ignore
-    newBlob = await input?.toJPEG()
-  }
-
-  if (fileType === 'webp') {
-    // @ts-ignore
-    newBlob = await input?.toWebP()
-  }
-
-  const { saveAs } = (await import('file-saver')).default
-  saveAs(newBlob, filename)
 }
 
 interface ICountImages {
