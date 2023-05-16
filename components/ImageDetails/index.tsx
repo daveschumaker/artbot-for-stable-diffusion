@@ -7,7 +7,7 @@ import PlaylistXIcon from 'components/icons/PlaylistXIcon'
 import SettingsIcon from 'components/icons/SettingsIcon'
 import Linker from 'components/UI/Linker'
 import ImageParamsForApi from 'models/ImageParamsForApi'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { FullScreen, useFullScreenHandle } from 'react-full-screen'
 import { IImageDetails } from 'types'
 import { SourceProcessing } from 'utils/promptUtils'
@@ -376,4 +376,12 @@ const ImageDetails = ({
   )
 }
 
-export default ImageDetails
+function areEqual(prevProps: any, nextProps: any) {
+  if (prevProps.imageDetails.jobId !== nextProps.imageDetails.jobId) {
+    return false
+  }
+
+  return true
+}
+
+export default React.memo(ImageDetails, areEqual)
