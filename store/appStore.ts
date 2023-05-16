@@ -9,7 +9,11 @@ interface AppStore {
   imageDetailsModalOpen: boolean
   newImageReady: string
   primaryWindow: boolean
-  serverMessage: string
+  serverMessage: {
+    content: string
+    title: string
+    type: string
+  }
   showAppMenu: boolean
   showBetaOption: boolean
   showImageReadyToast: boolean
@@ -27,7 +31,11 @@ export const appInfoStore = makeStore<AppStore>({
   indexDbSupport: true,
   imageDetailsModalOpen: false,
   newImageReady: '',
-  serverMessage: '',
+  serverMessage: {
+    content: '',
+    title: '',
+    type: ''
+  },
   showAppMenu: false,
   showBetaOption: false,
   showImageReadyToast: false,
@@ -52,6 +60,12 @@ export const setImageDetailsModalOpen = (val: boolean = false) => {
 export const setClusterSettings = (obj: IClusterSettings) => {
   appInfoStore.set(() => ({
     clusterSettings: obj
+  }))
+}
+
+export const setServerMessage = (obj: any) => {
+  appInfoStore.set(() => ({
+    serverMessage: { ...obj }
   }))
 }
 
@@ -94,16 +108,6 @@ export const setBuildId = (id: string) => {
 export const setHordeStatus = (val: boolean) => {
   appInfoStore.set(() => ({
     stableHordeApiOnline: val
-  }))
-}
-
-export const setServerMessage = (message: string) => {
-  if (appInfoStore.state.serverMessage === message) {
-    return
-  }
-
-  appInfoStore.set(() => ({
-    serverMessage: message
   }))
 }
 

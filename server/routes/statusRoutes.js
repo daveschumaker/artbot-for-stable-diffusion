@@ -1,6 +1,7 @@
+require('dotenv').config()
 const buildInfo = require('../../build_info.json')
 const { build } = buildInfo
-const { getClusterSettings } = require('../cache/serverStatus.js')
+const { getClusterSettings, getServerMessage, setServerMessage } = require('../cache/serverStatus.js')
 
 const express = require('express')
 const {
@@ -9,6 +10,29 @@ const {
   adjustCount
 } = require('../cache/perf.js')
 const router = express.Router()
+
+router.post('/message', async (req, res) => {
+  const { content = '', title = "", type = "", apiKey } = req.body || {}
+
+  if (!apiKey || apiKey !== process.env.API_KEY) {
+    return res.send({
+      success: false
+    })
+  }
+
+  setServerMessage({ content, title, type })
+
+  res.send({
+    success: true
+  })
+})
+
+router.get('/message', async (req, res) => {
+  res.send({
+    success: true,
+    ...getServerMessage()
+  })
+})
 
 router.get('/heartbeat', async (req, res) => {
   res.send({
@@ -50,7 +74,10 @@ router.post('/new-image', async (req, res) => {
 
 router.get('/cluster-settings', async (req, res) => {
   res.send({
-    ...getClusterSettings()
+    ...getClusterSettings(),
+    serverMessage: {
+      ...getServerMessage()
+    }
   })
 })
 

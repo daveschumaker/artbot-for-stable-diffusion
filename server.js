@@ -1,4 +1,5 @@
 require('dotenv').config()
+const bodyParser = require('body-parser')
 const express = require('express')
 const next = require('next')
 const { initHordePerfMonitor } = require('./server/cache/hordeInfo')
@@ -23,6 +24,9 @@ app.prepare().then(async () => {
   try {
     await app.prepare()
     const server = express()
+
+    // parse application/json
+    server.use(bodyParser.json())
 
     initModelDataFetch()
     initServerStatusFetch()

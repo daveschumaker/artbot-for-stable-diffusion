@@ -19,7 +19,12 @@ import '../styles/globals.css'
 import '../styles/root.css'
 
 import { initDb } from '../utils/db'
-import { appInfoStore, setBuildId, setClusterSettings } from '../store/appStore'
+import {
+  appInfoStore,
+  setBuildId,
+  setClusterSettings,
+  setServerMessage
+} from '../store/appStore'
 import ServerUpdateModal from '../components/ServerUpdateModal'
 import MobileFooter from '../components/MobileFooter'
 import { initBrowserTab, isAppActive } from '../utils/appUtils'
@@ -77,9 +82,12 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
       waitingForServerInfoRes = true
       const res = await fetch('/artbot/api/server-info')
       const data = await res.json()
-      const { build, clusterSettings } = data
+      const { build, clusterSettings = {} } = data
+      const { serverMessage = {} } = clusterSettings
+
       waitingForServerInfoRes = false
 
+      setServerMessage(serverMessage)
       if (clusterSettings) {
         setClusterSettings(clusterSettings)
       }
