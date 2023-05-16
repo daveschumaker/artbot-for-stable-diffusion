@@ -6,8 +6,6 @@ const ServerMessage = () => {
   const appState = useStore(appInfoStore)
   const { serverMessage } = appState
 
-  console.log(`serverMessage?`, serverMessage)
-
   if (!serverMessage || !serverMessage.title || !serverMessage.content) {
     return null
   }
