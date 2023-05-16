@@ -37,11 +37,11 @@ const ImageModalV2 = ({
   const handlers = useSwipeable({
     onSwipedLeft: () => {
       if (disableNav) return
-      handleLoadPrev()
+      handleLoadNext()
     },
     onSwipedRight: () => {
       if (disableNav) return
-      handleLoadNext()
+      handleLoadPrev()
     },
     preventScrollOnSwipe: true,
     swipeDuration: 250,
@@ -76,11 +76,11 @@ const ImageModalV2 = ({
       }
 
       if (e.key === 'ArrowLeft') {
-        handleLoadNext()
+        handleLoadPrev()
       }
 
       if (e.key === 'ArrowRight') {
-        handleLoadPrev()
+        handleLoadNext()
       }
     }
 

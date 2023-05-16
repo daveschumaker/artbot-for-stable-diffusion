@@ -1,9 +1,13 @@
+# 2023.05.16
+
+- Fix: Navigation keys and swipe behavior were backwards on image modal. Thanks to Litnine for reporting this on Discord.
+
 # 2023.05.15
 
 - db0 added official channels on Discord for various UIs on that integrate with the AI Horde. I've updated links across the web app. [You can find the discussion about ArtBot here](https://discord.com/channels/781145214752129095/1107628882783391744). Stop by and say hi, if you're into that sort of thing.
 - Fix: Apparently, the "run in background" option on the [ArtBot settings page](/settings?panel=prefs) wasn't working correctly. I found myself queueing up a bunch of jobs, switching tabs to check on some other things, and come back later to find out nearly all the images are still pending. Oops! ArtBot should now be able to continue running. (Note: I'm not sure how this will work on a mobile device).
-- Fix: Prevent some unnecessary re-renders within image details component (used in both modal and image detail page) that could impact perfomance.
-- Fix: Interrogate page would sometimes become unresponsive if an error occured while fetching image from an external source.
+- Fix: Prevent some unnecessary re-renders within image details component (used in both modal and image detail page) that could impact performance.
+- Fix: Interrogate page would sometimes become unresponsive if an error occurred while fetching image from an external source.
 - Fix (hopefully): Issue with "ghost" generations that would sometimes happen when you canceled an image request. I'm like 93% sure I've solved it this time.
 - Merged in an improvement from Efreak to fix a double encoding issue when downloading images. Thank you! 🙌
 
@@ -23,7 +27,7 @@
 - Fix: Using the left arrow key on the image gallery page did not work. Oops!
 - Fix: Stretched images in image preview modal on iOS. Thanks to FiFoFree for reporting this on Discord.
 - UX: Added a "allow NSFW generations" switch to the advanced options panel (previously, this was buried inside the settings page)
-- Feature: Added an input filter to the style presets dropdown. You can now filter by style preset name and model (if availabile).
+- Feature: Added an input filter to the style presets dropdown. You can now filter by style preset name and model (if available).
 
 # 2023.05.11
 
@@ -47,7 +51,7 @@
 - Added a markdown parser so that it's much easier to write this changelog (and potentially other things on the site in the future -- like a much more detailed FAQ).
   - Not so fun fact: Whenever I was editing the changelog, I was actually writing a bunch of html directly into the changelog page. Gross! One benefit is that the changelog is now an actual file that you can reference on things like [Github](https://github.com/daveschumaker/artbot-for-stable-diffusion/blob/main/CHANGELOG.md).
 - Feature: Added additional support creating and editing shared API keys for the AI Horde. You can modify these settings on the [settings page](/settings).
-- Feature: Added support for a new AI Horde feature: Worker block lists. Is there a worker consistently giving you junk output? Add their ID to the new worker block list and your image jobs will no longer be sent to them. This is also available on the [settings page](/settings). (Note: This incurs a 10% kudos penality due to suboptimal use of Horde resources)
+- Feature: Added support for a new AI Horde feature: Worker block lists. Is there a worker consistently giving you junk output? Add their ID to the new worker block list and your image jobs will no longer be sent to them. This is also available on the [settings page](/settings). (Note: This incurs a 10% kudos penalty due to suboptimal use of Horde resources)
 - Secret beta feature that no one is supposed to know about yet (work-in-progress): [Text generation via AI Horde and KoboldAI!](/chat)
 
 # 2023.05.07
@@ -144,18 +148,18 @@
 - Merged in another PR from Litnine -- essentially a unified theory of error handling and some additional UI fixes. The create image and control net pages now show all validation errors at once (if they exist), and it's located in a central place that is easy to update.
 - Removed ugly navigation buttons from image details modal on mobile devices and added back the ability to swipe between images. (Thank you, Litnine!)
 - Added back the ability to re-roll images. It' s located in the additional options dropdown (the 3 dots) of the image details view. (View? Yeah, we'll call it a view: modal + page = view.) Thanks to openco for reaching out via the feedback form to remind me about this!
-- Fix: Dedicated reroll button on mobile devices (download button moved to dropdown menu on image details view).
+- Fix: Dedicated re-roll button on mobile devices (download button moved to dropdown menu on image details view).
 - Fix: Issue where re-rolling tiled image would lose the tiled parameter.
 - UX: On mobile devices, you can swipe down from the very top of the image details view to close out the modal.
 - Fun fact: Apparently, support for outpainting has existed within the Stable Horde API for ages and no one knew! Let's go ahead and add some simple support for it (for now). How do you use it? Go to the inpainting tab as you normally would, upload an image, and then either click the cursor icon or the ruler icon to resize your existing image. Key part: you need to paint over the checkerboard (and anything else you want changed). I will improve this in the future to make it easier. (This should be a FAQ item, probably)
 - Fix: img2img source being forgotten as you navigate between pages (or reload the page). Thanks to Litnine for reporting this!
-- Fix: Restore ability to press "delete" keyboard shortcut on image details view, as well as pressing "f" -- though not to pay respects -- this is to quickly favorite an image. While we're adding shortcuts, here is are two more: "d" to quickly download an image, "r" to quickly reroll. Thanks to qwq and Efreak on Discord for the reminder and suggestions.
+- Fix: Restore ability to press "delete" keyboard shortcut on image details view, as well as pressing "f" -- though not to pay respects -- this is to quickly favorite an image. While we're adding shortcuts, here is are two more: "d" to quickly download an image, "r" to quickly re-roll. Thanks to qwq and Efreak on Discord for the reminder and suggestions.
 - Fix: Issue where Safari on iOS wasn't able to use the new copy image to clipboard feature.
 
 # 2023.03.23
 
 - Fix: Image ratings have been inconsistent and broken since some griefing countermeasures were implemented on the backend. Ratings should now work properly again. Protip: If you see an image that literally says something like "rate this image a 4", then please do that. It"s a form of captcha to verify ratings. Thanks to ƊαякƊ, R3H and others for reporting issues with this on Discord.
-- Feature: Swanky new image details page and modal. (And modal?). Yes! They are now basically the same thing. Same info available on both. Easier to update. Buttons with dropdown options, if needed. Can now view tileable images on the image details page. Can now view tileable images fullscreen! Will there be bugs? Probably! But that's what makes things fun. (But seriously, if you see any, you know what to do.)
+- Feature: Swanky new image details page and modal. (And modal?). Yes! They are now basically the same thing. Same info available on both. Easier to update. Buttons with dropdown options, if needed. Can now view tile-able images on the image details page. Can now view tile-able images fullscreen! Will there be bugs? Probably! But that's what makes things fun. (But seriously, if you see any, you know what to do.)
 - Oh, yeah. With the new image page / modal, you can now copy images directly to your clipboard. That's kind of neat for things like Discord, text messages, etc.
 
 # 2023.03.22
@@ -213,15 +217,6 @@
 - Fix: Issue with "stuck" attached job ID. Should now be resolved. Thanks to Hinaloth and TheGlosser for reporting this on Discord!
 - Support for face fixer strength! Slider from 0.05 to 1, where 1 is the strongest effect.
 
-# 2023.03.15
-
-- UI: A few UI improvements today courtesy of Litnine. Better spacing on the NavBar (thank you!) and more information on the worker details page (thank you!!).
-- If interested, you can view what's on deck for ArtBot on the Github kanban board
-- Added 'RealESRGAN_x4plus_anime_6B' upscaler to post processing section. Note: You cannot pick both at the same time.
-- Stable Horde now support denoise strength (or init strength, as some UIs call it) for ControlNet!
-- Fix: Issue with "stuck" attached job ID. Should now be resolved. Thanks to Hinaloth and TheGlosser for reporting this on Discord!
-- Support for face fixer strength! Slider from 0.05 to 1, where 1 is the strongest effect.
-
 # 2023.03.14
 
 - MILESTONE: 🎉🎉🎉 ‼️‼️‼️ 5,000,000 images have been created with ArtBot!‼️‼️‼️ 🎉🎉🎉
@@ -239,11 +234,11 @@
 
 - Fix: Kudos calculations should now be spot on. Thanks to Litnine on Discord for doing a bunch of legwork to get this correct.
 - Fix: Properly saving input state and restoring it (where appropriate) should now work correctly. As well as copying images, making changes to input, etc. Thanks to Litnine, Hinaloth, and dreamy on Discord for the bug reports.
-- Fix: Broken link on flyout menu for model updates. Thanks to TheGlosser on Discord for reporting this.
+- Fix: Broken link on fly out menu for model updates. Thanks to TheGlosser on Discord for reporting this.
 
 # 2023.03.10
 
-- Refactored some logic around the favorite icon on the image modal. Should work much better now. Bonus: if you're on a dekstop or laptop, you can now press "F" to quickly favorite or unfavorite an image (this also works on the image details page as well.)
+- Refactored some logic around the favorite icon on the image modal. Should work much better now. Bonus: if you're on a desktop or laptop, you can now press "F" to quickly favorite or unfavorite an image (this also works on the image details page as well.)
 - Fix: Issue where copying image params, modifying one settings, clicking generate and then going back restored settings from your initial request, rather than your most recent. Thanks to Litnine for finding this and the steps to reproduce.
 
 # 2023.03.09
@@ -265,7 +260,7 @@
 
 # 2023.03.07
 
-- UI: Remove persistant red dot for offline workers. Thanks to Gigachad on Discord for the suggestion.
+- UI: Remove persistent red dot for offline workers. Thanks to Gigachad on Discord for the suggestion.
 
 # 2023.03.06
 
@@ -273,7 +268,7 @@
 - Fix: Ratings are now submitted for the correct image.
 - Feature: Select your preferred image download type (jpg, png, or webp) in the ArtBot settings panel.
 - Feature: New Stable Horde performance dropdown so you can see current load on the Horde, as well as a quick status of any running worker.
-- Automatically generate and process thumbnails for all new images. This will keep the image gallery much more performant, especially on mobile devices. Thanks to Litnine on Discord for raising awarness about this issue! There is also a setting on the ArtBot settings panel to manually process thumbnails for all previously created images.
+- Automatically generate and process thumbnails for all new images. This will keep the image gallery much more performant, especially on mobile devices. Thanks to Litnine on Discord for raising awareness about this issue! There is also a setting on the ArtBot settings panel to manually process thumbnails for all previously created images.
 - Thumbnail logic isn't working in certain instances. Added some debugging logic to investigate. (Of course, it works fine on my local machine, but the moment I push it live...)
 - I setup a way to post global messages to ArtBot without having to push server updates. Going forward, I should be able to easily do things like post notifications if there are network issues or warn everyone about incoming server updates and give you a chance to save your work.
 
@@ -285,7 +280,7 @@
 
 - Image rating is back!. db0 has been doing some work restoring the database and getting things back in order. It should mostly be online now. If you encounter any broken images (essentially, something has't been upload to the server yet), just reload the page for now. Note: rating your own images is temporarily disabled. It will be online soon™!
 - Fix: Okay, NOW image rating is back for real. I forgot to update the hostname for the API when rating an image. Thanks to the mighty db0 on Discord for reporting this.
-- Feature: Oh, boy. I built out a custom shortlink microservice for sharing image prompts. Now, the shareable URL is rather reasonable. Before, it encoded the entire image parameters object, which would result in URLs that were like 1000 characters long. Note: These shareable links will only works for text2img requests. Thanks to Gigachad on Discord for the suggestion.
+- Feature: Oh, boy. I built out a custom short link microservice for sharing image prompts. Now, the shareable URL is rather reasonable. Before, it encoded the entire image parameters object, which would result in URLs that were like 1000 characters long. Note: These shareable links will only works for text2img requests. Thanks to Gigachad on Discord for the suggestion.
 - By fixing ratings, I broke them even more. Thanks to Litnine on Discord for letting me know!
 - Argh! Sorry for all the sudden updates. Had a few hot fixes for things I had broke. This should be it for today!
 
@@ -389,7 +384,7 @@
 # 2023.02.12
 
 - Added a helpful automated error message that shows up on every page if ArtBot is unable to connect to the Stable Horde backend API (...like this exact moment as I am deploying this).
-- Fix: Issue with canvas settings being preserved beween image generation requests, depending on settings. Thanks to FlameMind and Gigachad on Discord for reporting this and providing some video examples of what was happening.
+- Fix: Issue with canvas settings being preserved between image generation requests, depending on settings. Thanks to FlameMind and Gigachad on Discord for reporting this and providing some video examples of what was happening.
 
 # 2023.02.11
 
@@ -748,7 +743,7 @@
 # 2022.11.28
 
 - Refactor: More work on caching model data from Stable Horde API so that it is immediately available on page load.
-- Fix: Clicking the "upscale image" link from any image details page should now work properly. (I broke this while trying to create some new classes for handling image requests, reroll requests, and upscale requests.)
+- Fix: Clicking the "upscale image" link from any image details page should now work properly. (I broke this while trying to create some new classes for handling image requests, re-roll requests, and upscale requests.)
 
 # 2022.11.27
 
@@ -831,7 +826,7 @@
 
 # 2022.11.12
 
-- Fix (hopefully): When rerolling existing images or retrying pending images, sometimes ArtBot would forget what model you had originally selected and revert to the default model ("stable diffusion").
+- Fix (hopefully): When re-rolling existing images or retrying pending images, sometimes ArtBot would forget what model you had originally selected and revert to the default model ("stable diffusion").
 - Fix: Selecting random in the models dropdown never actually selected a random model.
 
 # 2022.11.11
@@ -851,7 +846,7 @@
 - MILESTONE: 300,000 images have been created with ArtBot! (33,000 in the last 24 hours)
 - Made a number of improvements to pending items page, such as filters and options to edit or retry image requests when an error is detected from the Stable Horde API.
 - Thanks to some refactored logic with the pending items queue, I've upped limit of images that can be requested at once.
-- Fix: issue where clicking "reroll" on an image created with the "use all models" options resulted in re-running the job again... the whole thing (this meant 20+ new images, when you probably only wanted one).
+- Fix: issue where clicking "re-roll" on an image created with the "use all models" options resulted in re-running the job again... the whole thing (this meant 20+ new images, when you probably only wanted one).
 - For those so inclined, I added a buy me a coffee link to the about page.
 
 # 2022.11.08
