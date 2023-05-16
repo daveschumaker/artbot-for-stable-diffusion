@@ -434,6 +434,9 @@ const ImagesPage = () => {
         if (isImageModalOpen || currentOffset <= 1) return
         handleLoadMore('prev')
       } else if (e.key === 'ArrowRight' && isImageModalOpen === false) {
+        const onLastPage =
+          componentState.offset >= componentState.totalImages - 99
+        if (onLastPage) return
         if (isImageModalOpen) return
         handleLoadMore('next')
       }
@@ -942,8 +945,6 @@ const ImagesPage = () => {
                   sampler: string
                   models: Array<string>
                 }) => {
-                  console.log(`image?`, image)
-
                   return (
                     <LazyLoad key={image.jobId} once>
                       <div className="relative">
