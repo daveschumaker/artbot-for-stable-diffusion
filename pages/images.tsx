@@ -375,7 +375,7 @@ const ImagesPage = () => {
       })
     })
 
-    await downloadImages(imagesToDownload)
+    await downloadImages({ imageArray: imagesToDownload })
 
     setComponentState({ showDownloadModal: false })
     trackEvent({

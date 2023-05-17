@@ -5,10 +5,10 @@ import FeedbackForm from '../components/FeedbackForm'
 import React, { useState } from 'react'
 import { useEffectOnce } from '../hooks/useEffectOnce'
 import { trackEvent } from '../api/telemetry'
-import Panel from '../components/UI/Panel'
+// import Panel from '../components/UI/Panel'
 import AdContainer from '../components/AdContainer'
 import Section from '../components/UI/Section'
-import SubSectionTitle from '../components/UI/SubSectionTitle'
+// import SubSectionTitle from '../components/UI/SubSectionTitle'
 import styles from '../styles/changelog.module.css'
 import Modal from '../components/Modal'
 import { useWindowSize } from 'hooks/useWindowSize'
@@ -133,7 +133,7 @@ const Changelog = () => {
             <AdContainer />
           </div>
         )}
-      <Panel>
+      {/* <Panel>
         <SubSectionTitle>Ongoing issues:</SubSectionTitle>
         <StyledUl>
           <StyledLi>
@@ -148,7 +148,7 @@ const Changelog = () => {
             and this is not ideal at the moment.)
           </StyledLi>
         </StyledUl>
-      </Panel>
+      </Panel> */}
       <div className="px-1">
         <Section>
           <ReactMarkdown

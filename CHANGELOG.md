@@ -3,6 +3,8 @@
 - Fix: Navigation keys and swipe behavior were backwards on image modal. Thanks to Litnine for reporting this on Discord.
 - Behind the scenes: improvements to settings and displaying server messages (e.g., downtime alerts, etc)
 - Fix: Unable to bulk clear images that had an error state on the pending page. Thanks to "I.B.B.A.F.L.C.S.S.H.K.T Committe" on Discord for reporting this.
+- Fix: Update kudos costs based on latest research and advancements from the mad scientists over on the AI Horde (this time, weights no longer factor into kudos calculations)
+- Hacky fix for bulk download of images on the [export data page](/settings?panel=import-export) (due to issues with attempting to stream a zip file).
 
 # 2023.05.15
 

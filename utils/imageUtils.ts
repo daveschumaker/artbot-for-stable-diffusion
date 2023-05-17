@@ -10,6 +10,7 @@ import { validModelsArray } from './modelUtils'
 import AppSettings from '../models/AppSettings'
 import { DEFAULT_SAMPLER_ARRAY } from '../_constants'
 import { isiOS, isSafariBrowser } from './appUtils'
+import { fetchCompletedJobs } from './db'
 
 interface CreateImageJob {
   base64String?: string
@@ -557,19 +558,29 @@ export const blobToClipboard = async (base64String: string) => {
     return true
   }
 }
-
-export const downloadImages = async (
-  imageArray: Array<any> = [],
+export const downloadImages = async ({
+  imageArray = [],
+  offset = 0,
+  limit = 0,
   callback = () => {}
-) => {
+}: any) => {
+  if (offset >= 0 && limit > 0) {
+    imageArray = await fetchCompletedJobs({ offset, limit })
+  }
+
   initBlob()
 
   const { downloadZip } = await import('client-zip')
   const fileDetails: any = []
   const fileArray: any = []
 
+  let currentIndex = offset
   for (const imageId in imageArray) {
     const image: any = imageArray[imageId]
+
+    if (!image.base64String) {
+      continue
+    }
 
     let fileType = AppSettings.get('imageDownloadFormat') || 'jpg'
     let filename = `image_${imageId}.${fileType}`
@@ -638,7 +649,11 @@ export const downloadImages = async (
       console.log(image.jobId)
     }
 
-    callback()
+    callback({
+      currentIndex
+    })
+
+    currentIndex++
   }
 
   const jsonDetails = {
@@ -647,10 +662,17 @@ export const downloadImages = async (
     input: JSON.stringify(fileDetails, null, 2)
   }
 
+  let zipFilename = 'artbot-image-export.zip'
+
+  if (offset >= 0 && limit > 0) {
+    zipFilename = `artbot-image-export-${offset}-to-${offset + limit}.zip`
+  }
+
+  callback({ done: true })
   const blob = await downloadZip([jsonDetails, ...fileArray]).blob()
   const link = document.createElement('a')
   link.href = URL.createObjectURL(blob)
-  link.download = 'artbot-image-export.zip'
+  link.download = zipFilename
   link.click()
   link.remove()
 }
