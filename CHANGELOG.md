@@ -1,6 +1,7 @@
 # 2023.05.17
 
 - Fix: Ghost jobs that would reappear after canceling in-progress jobs. Thanks to dreamy on Discord for reporting this (multiple times!).
+- Added timestamps to downloaded zip files. Thanks to Efreak for the suggestion.
 
 # 2023.05.16
 

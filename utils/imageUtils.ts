@@ -562,10 +562,11 @@ export const downloadImages = async ({
   imageArray = [],
   offset = 0,
   limit = 0,
+  sort = '',
   callback = () => {}
 }: any) => {
   if (offset >= 0 && limit > 0) {
-    imageArray = await fetchCompletedJobs({ offset, limit })
+    imageArray = await fetchCompletedJobs({ offset, limit, sort })
   }
 
   initBlob()
@@ -662,10 +663,14 @@ export const downloadImages = async ({
     input: JSON.stringify(fileDetails, null, 2)
   }
 
-  let zipFilename = 'artbot-image-export.zip'
+  const date = new Date()
+  const dateString = date.toISOString().substring(0, 16).replace('T', '-')
+  let zipFilename = `artbot-image-export-${dateString}.zip`
 
   if (offset >= 0 && limit > 0) {
-    zipFilename = `artbot-image-export-${offset}-to-${offset + limit}.zip`
+    zipFilename = `artbot-image-export-${offset}-to-${
+      offset + limit
+    }-${dateString}.zip`
   }
 
   callback({ done: true })

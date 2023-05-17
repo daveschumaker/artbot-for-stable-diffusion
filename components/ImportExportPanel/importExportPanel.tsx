@@ -67,6 +67,7 @@ const ImportExportPanel = () => {
               await downloadImages({
                 offset: startNum,
                 limit: bucketSize - 1,
+                sort: 'old',
                 callback: ({ currentIndex, done }: any) => {
                   if (done) {
                     setFileStatus(
@@ -154,6 +155,7 @@ const ImportExportPanel = () => {
             </MaxWidth>
           </Section>
           <Section>
+            <div className="text-xs mb-2">(Sorted by oldest images first)</div>
             <ul>{renderImageList()}</ul>
           </Section>
         </SubSectionTitle>
