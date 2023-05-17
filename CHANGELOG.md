@@ -1,3 +1,7 @@
+# 2023.05.17
+
+- Fix: Ghost jobs that would reappear after canceling in-progress jobs. Thanks to dreamy on Discord for reporting this (multiple times!).
+
 # 2023.05.16
 
 - Fix: Navigation keys and swipe behavior were backwards on image modal. Thanks to Litnine for reporting this on Discord.

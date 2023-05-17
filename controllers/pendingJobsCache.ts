@@ -113,6 +113,12 @@ export const updatePendingJobV2 = (pendingJob: IPendingJob) => {
   }
 
   const { jobId } = pendingJob
+
+  // Fix ghosting issue that could occur when in-progress jobs were deleted.
+  if (!pendingJobs[jobId]) {
+    return false
+  }
+
   pendingJobs[jobId] = cloneDeep(pendingJob)
 }
 
