@@ -96,6 +96,7 @@ const ButtonContainer = styled.div`
 `
 
 const ImagesPage = () => {
+  const LIMIT = AppSettings.get('imagesPerPage') || 50
   const { isImageModalOpen } = useImagePreview()
 
   const handlers = useSwipeable({
@@ -104,7 +105,8 @@ const ImagesPage = () => {
         return
       }
 
-      if (componentState.offset >= componentState.totalImages - 99) return
+      if (componentState.offset >= componentState.totalImages - (LIMIT - 1))
+        return
 
       if (isImageModalOpen) return
       handleLoadMore('next')
@@ -223,15 +225,15 @@ const ImagesPage = () => {
       if (btn === 'last') {
         const count = await countCompletedJobs()
         const sort = localStorage.getItem('imagePageSort') || 'new'
-        const data = await fetchCompletedJobs({ offset: count - 100, sort })
+        const data = await fetchCompletedJobs({ offset: count - LIMIT, sort })
         setComponentState({
           images: data,
           isLoading: false,
-          offset: count - 100
+          offset: count - LIMIT
         })
 
         const newQuery = Object.assign({}, router.query)
-        newQuery.offset = String(count - 100)
+        newQuery.offset = String(count - LIMIT)
         //@ts-ignore
         router.push(`?${new URLSearchParams(newQuery).toString()}`)
         return
@@ -259,13 +261,13 @@ const ImagesPage = () => {
       if (btn === 'prev') {
         if (isImageModalOpen) return
         newNum =
-          componentState.offset - 100 < 0 ? 0 : componentState.offset - 100
+          componentState.offset - LIMIT < 0 ? 0 : componentState.offset - LIMIT
       } else {
         if (isImageModalOpen) return
         newNum =
-          componentState.offset + 100 > componentState.totalImages
+          componentState.offset + LIMIT > componentState.totalImages
             ? componentState.offset
-            : componentState.offset + 100
+            : componentState.offset + LIMIT
       }
 
       trackEvent({
@@ -312,9 +314,9 @@ const ImagesPage = () => {
 
   const currentOffset = componentState.offset + 1
   const maxOffset =
-    componentState.offset + 100 > componentState.totalImages
+    componentState.offset + LIMIT > componentState.totalImages
       ? componentState.totalImages
-      : componentState.offset + 100
+      : componentState.offset + LIMIT
 
   let imageColumns = 2
   // @ts-ignore
@@ -435,7 +437,7 @@ const ImagesPage = () => {
         handleLoadMore('prev')
       } else if (e.key === 'ArrowRight' && isImageModalOpen === false) {
         const onLastPage =
-          componentState.offset >= componentState.totalImages - 99
+          componentState.offset >= componentState.totalImages - LIMIT - 1
         if (onLastPage) return
         if (isImageModalOpen) return
         handleLoadMore('next')
@@ -444,7 +446,10 @@ const ImagesPage = () => {
     window.addEventListener('keydown', handleKeyPress)
     return () => window.removeEventListener('keydown', handleKeyPress)
   }, [
+    LIMIT,
     componentState.deleteMode,
+    componentState.offset,
+    componentState.totalImages,
     currentOffset,
     handleLoadMore,
     isImageModalOpen,
@@ -1109,7 +1114,7 @@ const ImagesPage = () => {
             }
           )}
       </div>
-      {!componentState.isLoading && componentState.totalImages > 100 && (
+      {!componentState.isLoading && componentState.totalImages > LIMIT && (
         <div className="flex flex-row justify-center gap-2 mt-4">
           <Button
             disabled={componentState.offset === 0}
@@ -1126,14 +1131,14 @@ const ImagesPage = () => {
             Prev
           </Button>
           <Button
-            disabled={currentOffset >= componentState.totalImages - 99}
+            disabled={currentOffset >= componentState.totalImages - LIMIT - 1}
             onClick={() => handleLoadMore('next')}
             width="52px"
           >
             Next
           </Button>
           <Button
-            disabled={currentOffset >= componentState.totalImages - 99}
+            disabled={currentOffset >= componentState.totalImages - LIMIT - 1}
             onClick={() => handleLoadMore('last')}
             width="52px"
           >

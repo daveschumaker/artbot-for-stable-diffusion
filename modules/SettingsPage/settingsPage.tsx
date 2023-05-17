@@ -82,6 +82,7 @@ const SettingsPage = () => {
     runInBackground: false,
     saveInputOnCreate: false, // DEPRECATE
 
+    imagesPerPage: 50,
     savePromptOnCreate: false,
     saveSeedOnCreate: false,
     saveCanvasOnCreate: false,
@@ -111,6 +112,7 @@ const SettingsPage = () => {
     updateObj.enableGallerySwipe =
       AppSettings.get('enableGallerySwipe') === false ? false : true
 
+    updateObj.imagesPerPage = AppSettings.get('imagesPerPage') || 50
     updateObj.saveInputOnCreate = AppSettings.get('saveInputOnCreate') || false // DEPRECATE
     updateObj.savePromptOnCreate =
       AppSettings.get('savePromptOnCreate') || false

@@ -1,6 +1,7 @@
 # 2023.05.17
 
 - Fix: Ghost jobs that would reappear after canceling in-progress jobs. Thanks to dreamy on Discord for reporting this (multiple times!).
+- Feature: Added a new setting: 'max images per page", so you can tweak the number of images viewable in the photo gallery. Helpful for lower powered devices.
 - Added timestamps to downloaded zip files. Thanks to Efreak for the suggestion.
 
 # 2023.05.16
@@ -713,7 +714,7 @@
 # 2022.12.06
 
 - Fix: Issue with attempting to use non-trusted workers. (Thanks voodoocode!)
-- Added option to search model and sampler dropdowns. (Thanks voodoocode!)
+- Added option to search model and sampler drop downs. (Thanks voodoocode!)
 - Update style presets.
 - Feature: Select favorite models and then generate images against them. You can select your favorite Stable Diffusion models here.
 - Feature: Generate a series of images using all available samplers. Works best if you fix the seed ahead of time.
@@ -747,7 +748,7 @@
 # 2022.11.29
 
 - Fix: Finally fixed the pesky bug where everything would disappear from pending items page when you clicked retry or delete.
-- Feature: Styles! Are you having a hard time coming up with a prompt to give you good looking images? Over on the Stable Horde Discord channel, Db0 has implemented a bot that can make it easier to emulate a number of different art styles. There is now a styles dropdown below the prompt textbox where you can choose one of these style presets. You can see prompt details related to various styles on Github.
+- Feature: Styles! Are you having a hard time coming up with a prompt to give you good looking images? Over on the Stable Horde Discord channel, Db0 has implemented a bot that can make it easier to emulate a number of different art styles. There is now a styles dropdown below the prompt text box where you can choose one of these style presets. You can see prompt details related to various styles on Github.
 
 # 2022.11.28
 
@@ -941,7 +942,7 @@
 
 - img2img support is live for trusted users (generally those who are contributing back to the Stable Horde with GPU cycles).
 - Initial work on getting ArtBot setup as a proper Progressive Web App (PWA)
-- Add it to your mobile device homescreen for a more app like experience
+- Add it to your mobile device home screen for a more app like experience
 - Add simple pagination buttons for [images page](/images) (things were getting slow if you had a lot of images stored in the browser cache).
 
 # 2022.10.14
