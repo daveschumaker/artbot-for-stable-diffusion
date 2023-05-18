@@ -13,6 +13,7 @@ export interface IApiParams {
   source_processing?: string
   source_mask?: string
   r2?: boolean
+  replacement_filter?: boolean
   shared?: boolean
   workers?: Array<string>
   slow_workers: boolean
@@ -131,6 +132,7 @@ class ImageParamsForApi {
       trusted_workers: useTrusted,
       models,
       r2: true,
+      replacement_filter: AppSettings.get('useReplacementFilter') || false,
       worker_blacklist: false,
       shared: shareImage,
       slow_workers: AppSettings.get('slow_workers') === false ? false : true

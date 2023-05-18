@@ -53,6 +53,7 @@ import { MAX_IMAGES_PER_JOB } from '_constants'
 import RenderParentImage from 'components/ParentImage'
 import ImageOrientationOptions from 'modules/ImageOrientationOptions'
 import AllowNsfwImages from './AllowNsfwImages'
+import ReplacementFilterToggle from './ReplacementFilterToggle'
 
 const NoSliderSpacer = styled.div`
   height: 14px;
@@ -737,6 +738,7 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
         </div>
       </Section>
       <AllowNsfwImages />
+      <ReplacementFilterToggle />
       <Section>
         <NumericInputSlider
           label="CLIP skip"
