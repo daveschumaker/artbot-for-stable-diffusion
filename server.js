@@ -26,7 +26,8 @@ app.prepare().then(async () => {
     const server = express()
 
     // parse application/json
-    server.use(bodyParser.json())
+    server.use(bodyParser.json({ limit: '5mb' }))
+    server.use(bodyParser.urlencoded({ extended: true, limit: '5mb' }))
 
     initModelDataFetch()
     initServerStatusFetch()

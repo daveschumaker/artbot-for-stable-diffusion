@@ -3,6 +3,7 @@
 - Fix: Ghost jobs that would reappear after canceling in-progress jobs. Thanks to dreamy on Discord for reporting this (multiple times!).
 - Feature: Added a new setting: 'max images per page", so you can tweak the number of images viewable in the photo gallery. Helpful for lower powered devices.
 - Added timestamps to downloaded zip files. Thanks to Efreak for the suggestion.
+- Feature: Add support for prompt replacement filter.
 
 # 2023.05.16
 
