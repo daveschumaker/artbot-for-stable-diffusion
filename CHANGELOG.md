@@ -1,6 +1,6 @@
 # 2023.05.18
 
-- Add some UX improvements to the [export data page](/settings?panel=import-export): when downloading a zip file, disable the rest of the links. This is because only one zip file can be downloaded at a time (for now... I need to implement for complex logic). Once one file is done, you can download the next one. Thanks to "I.B.B.A.F.L.C.S.S.H.K.T Committe" in Discord for bringing this up.
+- Add some UX improvements to the [export data page](/settings?panel=import-export): when downloading a zip file, disable the rest of the links. This is because only one zip file can be downloaded at a time (for now... I need to implement more complex logic). Once one file is done, you can download the next one. Thanks to "I.B.B.A.F.L.C.S.S.H.K.T Committe" in Discord for bringing this up.
 - Add some additional checks for valid image files when creating zip file (mainly related to some broken data received from API awhile back). Thanks again to "I.B.B.A.F.L.C.S.S.H.K.T Committe" for helping to debug this.
 
 # 2023.05.17
