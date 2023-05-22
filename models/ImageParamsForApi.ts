@@ -1,3 +1,4 @@
+import { Lora } from 'types'
 import { modifyPromptForStylePreset } from '../utils/imageUtils'
 import { SourceProcessing } from '../utils/promptUtils'
 import AppSettings from './AppSettings'
@@ -46,6 +47,7 @@ export interface IArtBotImageDetails {
   control_type?: string
   image_is_control?: boolean
   return_control_map?: boolean
+  loras: Lora[]
 }
 
 interface ParamsObject {
@@ -66,6 +68,7 @@ interface ParamsObject {
   tiling: boolean
   post_processing: string[]
   n: number
+  loras: Lora[]
 }
 
 interface IOptions {
@@ -105,7 +108,8 @@ class ImageParamsForApi {
       denoising_strength,
       control_type,
       image_is_control,
-      return_control_map
+      return_control_map,
+      loras
     } = imageDetails
     let negative = imageDetails.negative || ''
 
@@ -125,7 +129,8 @@ class ImageParamsForApi {
         karras,
         hires_fix: hires,
         clip_skip: clipskip,
-        n: 1
+        n: 1,
+        loras: [...loras]
       },
       nsfw: allowNsfw, // Use workers that allow NSFW images
       censor_nsfw: !allowNsfw, // Show user NSFW images if created

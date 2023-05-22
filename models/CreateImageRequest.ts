@@ -3,7 +3,8 @@ import {
   Common,
   ImageMimeType,
   ImageSize,
-  JobStatus
+  JobStatus,
+  Lora
 } from '../types'
 import { uuidv4 } from '../utils/appUtils'
 import { orientationDetails, randomSampler } from '../utils/imageUtils'
@@ -54,6 +55,7 @@ export interface IRequestParams {
   width: number
   canvasData: any
   maskData: any
+  loras: Lora[]
 }
 
 class CreateImageRequest {
@@ -100,6 +102,7 @@ class CreateImageRequest {
   width: number
   canvasData: any
   maskData: any
+  loras: Lora[]
 
   constructor({
     cfg_scale = 7,
@@ -137,7 +140,8 @@ class CreateImageRequest {
     useMultiSteps = false,
     width = 512,
     canvasData = null,
-    maskData = null
+    maskData = null,
+    loras = []
   }: IRequestParams) {
     this.cfg_scale = Number(cfg_scale)
     this.imageMimeType = imageMimeType
@@ -201,6 +205,7 @@ class CreateImageRequest {
     this.source_mask = String(source_mask)
     this.source_processing = source_processing
     this.stylePreset = stylePreset
+    this.loras = [...loras]
 
     if (
       this.post_processing.includes('GFPGAN') ||

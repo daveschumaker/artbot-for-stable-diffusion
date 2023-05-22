@@ -175,6 +175,12 @@ export interface SelectPropsComponent {
   width?: string
 }
 
+export interface Lora {
+  name: string
+  model: number
+  clip: number
+}
+
 export interface GenerateResponse {
   id: string
   message?: string
