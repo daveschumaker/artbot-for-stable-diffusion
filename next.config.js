@@ -9,7 +9,7 @@ const nextConfig = {
   images: {
     domains: ['huggingface.co', 'raw.githubusercontent.com']
   },
-  productionBrowserSourceMaps: true,
+  productionBrowserSourceMaps: false, // Setting to true seems to blow up our prod Node server
   reactStrictMode: true,
   swcMinify: false, // Set to false for now due to issue with React-tooltip
   webpack: (config) => {
