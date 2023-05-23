@@ -6,8 +6,9 @@ import { GetSetPromptInput } from 'types'
 import styles from './loraSelect.module.css'
 import { Button } from 'components/UI/Button'
 import { IconPlus, IconTrash } from '@tabler/icons-react'
-import NumericInputSlider from 'components/CreatePage/AdvancedOptionsPanel/NumericInputSlider'
 import ChooseLoraModal from './ChooseLoraModal'
+import NumberInput from 'components/UI/NumberInput'
+import Slider from 'components/UI/Slider'
 
 const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
   const [showModal, setShowModal] = useState(false)
@@ -34,23 +35,19 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
   )
 
   const handleUpdate = useCallback(
-    (obj: any = {}) => {
-      let i
-      let value
-
-      for (const key in obj) {
-        i = Number(key)
-        value = obj[key]
-      }
-
-      if (!i) {
+    (i, value) => {
+      console.log(`heeeyy?`, i, value)
+      if (!i && i !== 0) {
         return
       }
 
-      const lorasToUpdate = [...input.loras]
-      lorasToUpdate[i].model = value
+      console.log(`i, value`, i, value)
 
-      setInput({ loras: lorasToUpdate })
+      const lorasToUpdate = [...input.loras]
+      console.log(`lorasToUpdate`, lorasToUpdate)
+      lorasToUpdate[Number(i)].model = value
+
+      setInput({ loras: [...lorasToUpdate] })
     },
     [input.loras, setInput]
   )
@@ -60,9 +57,7 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
 
     input.loras.forEach((lora, i) => {
       // Need to cast input to correct type
-      const castInput = {
-        [String(i)]: lora.model
-      }
+      console.log(`lora.model??`, lora.model)
 
       arr.push(
         <div
@@ -80,16 +75,46 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
             </Button>
           </div>
           <div className="w-full">
-            <NumericInputSlider
-              fullWidth
-              label="LORA strength"
-              from={0.05}
-              to={1.0}
-              step={0.05}
-              input={castInput}
-              setInput={handleUpdate}
-              fieldName={String(i)}
-            />
+            <Section>
+              <div className="flex flex-row items-center justify-between">
+                <SubSectionTitle>
+                  LORA strength
+                  <div className="block text-xs w-full">
+                    ({0.5} - {1})
+                  </div>
+                </SubSectionTitle>
+                <NumberInput
+                  className="mb-2"
+                  type="text"
+                  min={0.5}
+                  max={1}
+                  step={0.05}
+                  onMinusClick={() => {
+                    handleUpdate(i, Number((lora.model - 0.05).toFixed(2)))
+                  }}
+                  onPlusClick={() => {
+                    handleUpdate(i, Number((lora.model + 0.05).toFixed(2)))
+                  }}
+                  onChange={(e: any) => {
+                    handleUpdate(i, Number(e.target.value))
+                  }}
+                  onBlur={(e: any) => {
+                    handleUpdate(i, Number(e.target.value))
+                  }}
+                  value={lora.model}
+                  width="100%"
+                />
+              </div>
+              <Slider
+                value={lora.model}
+                min={0.5}
+                max={1}
+                step={0.05}
+                onChange={(e: any) => {
+                  handleUpdate(i, Number(e.target.value))
+                }}
+              />
+            </Section>
           </div>
         </div>
       )
