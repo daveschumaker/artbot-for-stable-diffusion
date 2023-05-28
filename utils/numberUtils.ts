@@ -6,6 +6,12 @@ const plural = (diff: number, bucket: number) => {
   }
 }
 
+export const kilobytesToGigabytes = (kilobytes: number) => {
+  const bytesInGigabyte = 1024 * 1024
+  const gigabytes = kilobytes / bytesInGigabyte
+  return gigabytes
+}
+
 export const relativeTimeSec = ({
   now,
   compare

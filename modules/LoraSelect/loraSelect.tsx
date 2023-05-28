@@ -35,16 +35,12 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
   )
 
   const handleUpdate = useCallback(
-    (i, value) => {
-      console.log(`heeeyy?`, i, value)
+    (i: number, value: any) => {
       if (!i && i !== 0) {
         return
       }
 
-      console.log(`i, value`, i, value)
-
       const lorasToUpdate = [...input.loras]
-      console.log(`lorasToUpdate`, lorasToUpdate)
       lorasToUpdate[Number(i)].model = value
 
       setInput({ loras: [...lorasToUpdate] })
@@ -115,6 +111,18 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
                 }}
               />
             </Section>
+            <div className="w-full">
+              <Section>
+                <div className="flex flex-col justify-between">
+                  <SubSectionTitle>
+                    Trigger words
+                    <div style={{ fontWeight: 400, fontSize: '14px' }}>
+                      (Don&apos;t forget to add one of these to your prompt)
+                    </div>
+                  </SubSectionTitle>
+                </div>
+              </Section>
+            </div>
           </div>
         </div>
       )
@@ -129,7 +137,7 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
 
   return (
     <Section>
-      <MaxWidth width="50%">
+      <MaxWidth width="512px">
         <div
           style={{
             border: '1px solid rgb(126, 90, 108)',
@@ -138,7 +146,12 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
           }}
         >
           <SubSectionTitle>Select LORAs</SubSectionTitle>
-          <div className="mb-2 relative">
+          <div
+            className="mb-2 relative"
+            style={{
+              marginBottom: '12px'
+            }}
+          >
             <Button size="small" onClick={() => setShowModal(true)}>
               <IconPlus /> Add LORA
             </Button>

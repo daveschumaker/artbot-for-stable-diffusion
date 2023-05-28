@@ -1,29 +1,37 @@
 import Overlay from 'components/UI/Overlay'
 import { IconX } from '@tabler/icons-react'
 import Input from 'components/UI/Input'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import styles from './loraSelect.module.css'
-import Loras from 'models/Loras'
+import { ParsedLoraModel } from 'models/Loras'
+
+let loraCache: Array<any> | null = null
 
 const ChooseLoraModal = ({
   handleClose = () => {},
-  handleAddLora = () => {}
+  handleAddLora = (lora: any) => lora
 }) => {
-  const data = Loras.getModels()
+  const [loras, setLoras] = useState([])
   const [filter, setFilter] = useState('')
 
+  console.log(`data`, loras)
+
   const renderLoraList = useCallback(() => {
+    if (loras.length === 0) {
+      return
+    }
+
     const arr: Array<any> = []
 
-    let filteredLoras = data
+    let filteredLoras = loras
 
     if (filter) {
-      filteredLoras = data.filter((lora) => {
+      filteredLoras = loras.filter((lora: ParsedLoraModel) => {
         return lora.displayName.toLowerCase().includes(filter.toLowerCase())
       })
     }
 
-    filteredLoras.forEach((lora, i) => {
+    filteredLoras.forEach((lora: ParsedLoraModel, i) => {
       arr.push(
         <div
           key={`lora_select_${i}`}
@@ -39,7 +47,28 @@ const ChooseLoraModal = ({
     })
 
     return arr
-  }, [data, filter])
+  }, [filter, handleAddLora, handleClose, loras])
+
+  const fetchLoras = async () => {
+    if (loraCache !== null) {
+      setLoras(loraCache)
+      return
+    }
+
+    const res = await fetch('/artbot/api/get-lora-models')
+    const json = await res.json()
+
+    const { data } = json
+
+    if (data) {
+      loraCache = [...data]
+      setLoras(data)
+    }
+  }
+
+  useEffect(() => {
+    fetchLoras()
+  }, [])
 
   return (
     <>

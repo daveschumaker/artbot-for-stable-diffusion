@@ -1,4 +1,5 @@
 // Init list via: https://civitai.com/api/v1/models?types=LORA&sort=Highest%20Rated
+import { kilobytesToGigabytes } from 'utils/numberUtils'
 import modelResponse from './loras.json'
 
 export interface LoraModelItem {
@@ -14,6 +15,9 @@ export interface LoraModelVersion {
   stats: {
     downloadCount: number
   }
+  files: Array<{
+    sizeKB: number
+  }>
 }
 
 export interface ParsedLoraModel {
@@ -23,6 +27,7 @@ export interface ParsedLoraModel {
   url: string
   downloads: number
   description: string
+  sizeKb: number
 }
 
 function stripHTMLTags(input: string | null = '') {
@@ -41,10 +46,12 @@ function stripHTMLTags(input: string | null = '') {
 
 class Loras {
   static getModels = () => {
-    const { items = [] } = modelResponse
     const models: ParsedLoraModel[] = []
 
-    items.forEach((item) => {
+    // TODO: Check limit against 10GB that workers download
+    let totalSizeKb = 0
+
+    modelResponse.forEach((item) => {
       const {
         name = '',
         description = '',
@@ -56,16 +63,26 @@ class Loras {
       }
 
       modelVersions.forEach((model: LoraModelVersion) => {
+        const { files } = model
+        const sizeKb = files[0].sizeKB
+
+        totalSizeKb += sizeKb
+
         models.push({
           displayName: `${name} / ${model.name}`,
           name: model.name,
           trainedWords: model.trainedWords,
           url: model.downloadUrl,
           downloads: model?.stats?.downloadCount,
-          description: stripHTMLTags(description)
+          description: stripHTMLTags(description),
+          sizeKb
         })
       })
     })
+
+    console.log(`LORAs`, models.length)
+    console.log(`LORA Total Size`, totalSizeKb)
+    console.log(`LORA Total Size GB`, kilobytesToGigabytes(totalSizeKb))
 
     return [...models]
   }
