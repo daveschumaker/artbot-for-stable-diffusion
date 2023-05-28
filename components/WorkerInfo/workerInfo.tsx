@@ -228,6 +228,12 @@ const WorkerInfo = ({
                   </td>
                 </tr>
                 <tr>
+                  <td>LORA:&nbsp;&nbsp;</td>
+                  <td>
+                    <strong>{worker.lora ? '✅' : '❌'}</strong>
+                  </td>
+                </tr>
+                <tr>
                   <td>Trusted:&nbsp;&nbsp;</td>
                   <td>
                     <strong>{worker.trusted ? '✅' : '❌'}</strong>
