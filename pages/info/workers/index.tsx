@@ -86,6 +86,17 @@ const WorkerInfoPage = () => {
       return 0
     }
 
+    if (componentState.sort === 'lora') {
+      if (a.lora) {
+        return -1
+      }
+      if (!a.lora) {
+        return 1
+      }
+
+      return 0
+    }
+
     if (componentState.sort === 'name') {
       if (a[componentState.sort] < b[componentState.sort]) {
         return -1
@@ -111,6 +122,7 @@ const WorkerInfoPage = () => {
     { value: 'name', label: 'Name' },
     { value: 'requests_fulfilled', label: 'Completed' },
     { value: 'kudos_rewards', label: 'Kudos' },
+    { value: 'lora', label: 'LORA support' },
     { value: 'models', label: 'Models' },
     { value: 'resolution', label: 'Max resolution' },
     { value: 'speed_per', label: 'Speed' },
