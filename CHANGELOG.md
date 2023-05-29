@@ -1,3 +1,8 @@
+# 2023.05.29
+
+- Long time, no see! I am still alive, and chances are, if you're reading this, so are you!
+- db0 and the team (Jug, Tazlin) have been workin on adding LoRA support to the AI Horde! I've been following the progress and have attempted to add support. I think it works! Maybe. Try it out and let me know. (Scroll down the advanced options panel to the LoRA selection -- currently the Horde backend only supports ~100 of the most popular models available on Civitai.)
+
 # 2023.05.18
 
 - Add some UX improvements to the [export data page](/settings?panel=import-export): when downloading a zip file, disable the rest of the links. This is because only one zip file can be downloaded at a time (for now... I need to implement more complex logic). Once one file is done, you can download the next one. Thanks to "I.B.B.A.F.L.C.S.S.H.K.T Committe" in Discord for bringing this up.
