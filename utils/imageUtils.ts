@@ -36,6 +36,7 @@ interface CreateImageJob {
   stylePreset: string
   denoising_strength?: number
   post_processing: Array<string>
+  loras: Array<any>
 
   has_source_image?: boolean
   has_source_mask?: boolean

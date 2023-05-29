@@ -1,5 +1,5 @@
 // Init list via: https://civitai.com/api/v1/models?types=LORA&sort=Highest%20Rated
-// import { kilobytesToGigabytes } from 'utils/numberUtils'
+import { kilobytesToGigabytes } from 'utils/numberUtils'
 import modelResponse from './loras.json'
 
 export interface LoraModelItem {
@@ -9,6 +9,7 @@ export interface LoraModelItem {
 }
 
 export interface LoraModelVersion {
+  id: number
   name: string
   trainedWords: string[]
   downloadUrl: string
@@ -21,6 +22,7 @@ export interface LoraModelVersion {
 }
 
 export interface ParsedLoraModel {
+  id: number
   displayName: string
   name: string
   trainedWords: string[]
@@ -49,7 +51,11 @@ class Loras {
     const models: ParsedLoraModel[] = []
 
     // TODO: Check limit against 10GB that workers download
-    // let totalSizeKb = 0
+    let totalSizeKb = 0
+
+    if (!Array.isArray(modelResponse)) {
+      return
+    }
 
     modelResponse.forEach((item) => {
       const {
@@ -67,14 +73,19 @@ class Loras {
           return
         }
 
+        if (kilobytesToGigabytes(totalSizeKb) >= 10) {
+          return
+        }
+
         const { files } = model
         const sizeKb = files[0].sizeKB
         // @ts-ignore
         const loraName = model.files[0].name.split('.')[0]
 
-        // totalSizeKb += sizeKb
+        totalSizeKb += sizeKb
 
         models.push({
+          id: model.id,
           displayName: `${name} / ${model.name}`,
           name: loraName,
           trainedWords: model.trainedWords,
