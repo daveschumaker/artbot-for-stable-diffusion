@@ -3,6 +3,7 @@ import { kilobytesToGigabytes } from 'utils/numberUtils'
 import modelResponse from './loras.json'
 
 export interface LoraModelItem {
+  id: number
   name: string
   description: string | null
   modelVersions: LoraModelVersion[]
@@ -59,6 +60,7 @@ class Loras {
 
     modelResponse.forEach((item) => {
       const {
+        id,
         name = '',
         description = '',
         modelVersions = []
@@ -85,7 +87,7 @@ class Loras {
         totalSizeKb += sizeKb
 
         models.push({
-          id: model.id,
+          id,
           displayName: `${name} / ${model.name}`,
           name: loraName,
           trainedWords: model.trainedWords,

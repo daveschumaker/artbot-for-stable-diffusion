@@ -12,7 +12,7 @@ const useLoraCache = () => {
       setLorasArray(loraCache)
 
       loraCache.forEach((lora: any) => {
-        loraObj[lora.name] = { ...lora }
+        loraObj[lora.id] = { ...lora }
       })
 
       setLorasDetails(loraObj)
@@ -29,7 +29,7 @@ const useLoraCache = () => {
       setLorasArray(data)
 
       data.forEach((lora: any) => {
-        loraObj[lora.name] = { ...lora }
+        loraObj[lora.id] = { ...lora }
       })
 
       setLorasDetails(loraObj)

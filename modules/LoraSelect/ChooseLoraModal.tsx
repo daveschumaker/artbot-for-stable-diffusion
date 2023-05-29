@@ -36,7 +36,8 @@ const ChooseLoraModal = ({
           key={`lora_select_${i}`}
           className="mb-2 row cursor-pointer"
           onClick={() => {
-            handleAddLora(lora.name)
+            const idString = String(lora.id)
+            handleAddLora(idString)
             handleClose()
           }}
         >

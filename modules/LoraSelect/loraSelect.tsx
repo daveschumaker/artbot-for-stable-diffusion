@@ -53,8 +53,13 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
     const arr: any = []
 
     input.loras.forEach((lora, i) => {
+      if (!lorasDetails[lora.name]) {
+        return null
+      }
+
       // Need to cast input to correct type
       const hasWords = lorasDetails[lora.name]?.trainedWords?.length > 0
+      const displayName = lorasDetails[lora.name]?.name
 
       arr.push(
         <div
@@ -62,7 +67,7 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
           key={`lora_${lora.name}_${i}`}
         >
           <div className={styles['lora-name']}>
-            {lora.name}
+            {displayName}
             <Button
               size="small"
               theme="secondary"
