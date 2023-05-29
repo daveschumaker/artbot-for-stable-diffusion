@@ -68,7 +68,7 @@ interface ParamsObject {
   tiling: boolean
   post_processing: string[]
   n: number
-  loras: Lora[]
+  loras?: Lora[]
 }
 
 interface IOptions {
@@ -217,6 +217,10 @@ class ImageParamsForApi {
 
     if (source_image) {
       apiParams.params.hires_fix = false
+    }
+
+    if (loras.length === 0) {
+      delete apiParams.params.loras
     }
 
     return apiParams
