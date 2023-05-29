@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import MaxWidth from 'components/UI/MaxWidth'
 import Section from 'components/UI/Section'
 import SubSectionTitle from 'components/UI/SubSectionTitle'
@@ -9,11 +9,12 @@ import { IconPlus, IconTrash } from '@tabler/icons-react'
 import ChooseLoraModal from './ChooseLoraModal'
 import NumberInput from 'components/UI/NumberInput'
 import Slider from 'components/UI/Slider'
+import useLoraCache from './useLoraCache'
 
 const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
+  const [loadedLoras, setLoadedLoras] = useState(false)
+  const [fetchLoras, , lorasDetails] = useLoraCache()
   const [showModal, setShowModal] = useState(false)
-
-  console.log(`input.loras??`, input.loras)
 
   const handleAddLora = (name: string = '') => {
     const lorasToUpdate = [...input.loras]
@@ -53,7 +54,7 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
 
     input.loras.forEach((lora, i) => {
       // Need to cast input to correct type
-      console.log(`lora.model??`, lora.model)
+      const hasWords = lorasDetails[lora.name]?.trainedWords?.length > 0
 
       arr.push(
         <div
@@ -116,8 +117,37 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
                 <div className="flex flex-col justify-between">
                   <SubSectionTitle>
                     Trigger words
-                    <div style={{ fontWeight: 400, fontSize: '14px' }}>
-                      (Don&apos;t forget to add one of these to your prompt)
+                    {!hasWords && (
+                      <div style={{ fontWeight: 400, fontSize: '12px' }}>
+                        (This LORA does not utilize any trained words)
+                      </div>
+                    )}
+                    {hasWords && (
+                      <div style={{ fontWeight: 400, fontSize: '12px' }}>
+                        (Don&apos;t forget to add one of these to your prompt)
+                      </div>
+                    )}
+                    <div
+                      className="flex flex-row flex-wrap font-[400] cursor-pointer"
+                      style={{
+                        columnGap: '8px',
+                        color: '#17cfbb'
+                      }}
+                    >
+                      {lorasDetails[lora.name]?.trainedWords?.map(
+                        (word: string, i: number) => {
+                          return (
+                            <div
+                              key={lora.name + '_' + i}
+                              onClick={() => {
+                                setInput({ prompt: input.prompt + ' ' + word })
+                              }}
+                            >
+                              {word}
+                            </div>
+                          )
+                        }
+                      )}
                     </div>
                   </SubSectionTitle>
                 </div>
@@ -133,7 +163,21 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
     }
 
     return arr
-  }, [handleDeleteLora, handleUpdate, input.loras])
+  }, [
+    handleDeleteLora,
+    handleUpdate,
+    input.loras,
+    input.prompt,
+    lorasDetails,
+    setInput
+  ])
+
+  useEffect(() => {
+    if (input.loras.length > 0 && !loadedLoras) {
+      fetchLoras()
+      setLoadedLoras(true)
+    }
+  }, [fetchLoras, input.loras.length, loadedLoras])
 
   return (
     <Section>
@@ -145,14 +189,23 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
             borderRadius: '4px'
           }}
         >
-          <SubSectionTitle>Select LORAs</SubSectionTitle>
+          <SubSectionTitle>
+            Select LORAs
+            <div style={{ fontWeight: 400, fontSize: '12px' }}>
+              (Maximum of 5 LORAs)
+            </div>
+          </SubSectionTitle>
           <div
             className="mb-2 relative"
             style={{
               marginBottom: '12px'
             }}
           >
-            <Button size="small" onClick={() => setShowModal(true)}>
+            <Button
+              size="small"
+              onClick={() => setShowModal(true)}
+              disabled={input.loras.length >= 5}
+            >
               <IconPlus /> Add LORA
             </Button>
             {showModal && (

@@ -4,34 +4,33 @@ import Input from 'components/UI/Input'
 import { useCallback, useEffect, useState } from 'react'
 import styles from './loraSelect.module.css'
 import { ParsedLoraModel } from 'models/Loras'
+import useLoraCache from './useLoraCache'
 
-let loraCache: Array<any> | null = null
+export let loraCache: Array<any> | null = null
 
 const ChooseLoraModal = ({
   handleClose = () => {},
   handleAddLora = (lora: any) => lora
 }) => {
-  const [loras, setLoras] = useState([])
+  const [fetchLoras, lorasArray] = useLoraCache()
   const [filter, setFilter] = useState('')
 
-  console.log(`data`, loras)
-
   const renderLoraList = useCallback(() => {
-    if (loras.length === 0) {
+    if (lorasArray.length === 0) {
       return
     }
 
     const arr: Array<any> = []
 
-    let filteredLoras = loras
+    let filteredLoras = lorasArray
 
     if (filter) {
-      filteredLoras = loras.filter((lora: ParsedLoraModel) => {
+      filteredLoras = lorasArray.filter((lora: ParsedLoraModel) => {
         return lora.displayName.toLowerCase().includes(filter.toLowerCase())
       })
     }
 
-    filteredLoras.forEach((lora: ParsedLoraModel, i) => {
+    filteredLoras.forEach((lora: ParsedLoraModel, i: number) => {
       arr.push(
         <div
           key={`lora_select_${i}`}
@@ -47,28 +46,13 @@ const ChooseLoraModal = ({
     })
 
     return arr
-  }, [filter, handleAddLora, handleClose, loras])
-
-  const fetchLoras = async () => {
-    if (loraCache !== null) {
-      setLoras(loraCache)
-      return
-    }
-
-    const res = await fetch('/artbot/api/get-lora-models')
-    const json = await res.json()
-
-    const { data } = json
-
-    if (data) {
-      loraCache = [...data]
-      setLoras(data)
-    }
-  }
+  }, [filter, handleAddLora, handleClose, lorasArray])
 
   useEffect(() => {
-    fetchLoras()
-  }, [])
+    if (lorasArray.length === 0) {
+      fetchLoras()
+    }
+  }, [fetchLoras, lorasArray.length])
 
   return (
     <>
