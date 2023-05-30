@@ -1,3 +1,8 @@
+# 2023.05.30
+
+- Still working through some issues related to stalled jobs on the pending items page. I've added some more logic to check for potential error conditions.
+- LoRA weight slider and input should have a minimum of 0.05, not 0.5 (typo on my part). Thanks to Efreak for reporting this on Discord.
+
 # 2023.05.29
 
 - Long time, no see! I am still alive, and chances are, if you're reading this, so are you!

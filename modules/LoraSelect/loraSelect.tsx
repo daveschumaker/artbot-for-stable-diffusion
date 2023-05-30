@@ -52,6 +52,10 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
   const renderLoras = useCallback(() => {
     const arr: any = []
 
+    if (!input.loras || !Array.isArray(input.loras)) {
+      return null
+    }
+
     input.loras.forEach((lora, i) => {
       if (!lorasDetails[lora.name]) {
         return null
@@ -82,13 +86,13 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
                 <SubSectionTitle>
                   LORA strength
                   <div className="block text-xs w-full">
-                    ({0.5} - {1})
+                    ({0.05} - {1})
                   </div>
                 </SubSectionTitle>
                 <NumberInput
                   className="mb-2"
                   type="text"
-                  min={0.5}
+                  min={0.05}
                   max={1}
                   step={0.05}
                   onMinusClick={() => {
@@ -109,7 +113,7 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
               </div>
               <Slider
                 value={lora.model}
-                min={0.5}
+                min={0.05}
                 max={1}
                 step={0.05}
                 onChange={(e: any) => {

@@ -109,7 +109,7 @@ class ImageParamsForApi {
       control_type,
       image_is_control,
       return_control_map,
-      loras
+      loras = []
     } = imageDetails
     let negative = imageDetails.negative || ''
 
@@ -129,8 +129,7 @@ class ImageParamsForApi {
         karras,
         hires_fix: hires,
         clip_skip: clipskip,
-        n: 1,
-        loras: [...loras]
+        n: 1
       },
       nsfw: allowNsfw, // Use workers that allow NSFW images
       censor_nsfw: !allowNsfw, // Show user NSFW images if created
@@ -161,6 +160,10 @@ class ImageParamsForApi {
       if (source_mask) {
         apiParams.source_mask = source_mask
       }
+    }
+
+    if (loras && Array.isArray(loras) && loras.length > 0) {
+      apiParams.params.loras = [...loras]
     }
 
     if (
@@ -219,7 +222,7 @@ class ImageParamsForApi {
       apiParams.params.hires_fix = false
     }
 
-    if (loras.length === 0) {
+    if (loras && loras.length === 0) {
       delete apiParams.params.loras
     }
 

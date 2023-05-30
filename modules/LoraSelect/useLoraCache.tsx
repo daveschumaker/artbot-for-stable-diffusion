@@ -24,7 +24,7 @@ const useLoraCache = () => {
 
     const { data } = json
 
-    if (data) {
+    if (data && Array.isArray(data)) {
       loraCache = [...data]
       setLorasArray(data)
 
