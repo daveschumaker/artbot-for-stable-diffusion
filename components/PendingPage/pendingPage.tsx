@@ -173,6 +173,7 @@ const PendingPage = () => {
    */
   const verifyImagesExist = useCallback(async () => {
     if (done.length === 0) {
+      await deleteDoneFromPending()
       return
     }
 

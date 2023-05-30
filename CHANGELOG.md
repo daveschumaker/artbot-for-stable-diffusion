@@ -2,7 +2,8 @@
 
 - Long time, no see! I am still alive, and chances are, if you're reading this, so are you!
 - db0 and the team (Jug, Tazlin) have been workin on adding LoRA support to the AI Horde! I've been following the progress and have attempted to add support. I think it works! Maybe. Try it out and let me know. (Scroll down the advanced options panel to the LoRA selection -- currently the Horde backend only supports ~100 of the most popular models available on Civitai.)
-- Fix: Empty LoRAs field was causing pending jobs to hang
+- Fix: Empty LoRAs field was causing pending jobs to hang. Thanks to Atticus, dreamy, and gunsalem on Discord for investigating and reporting this.
+- Attempting to fix: issues related to stalled job queue. I'm hearing a number of reports about this and trying to figure out what is happening.
 
 # 2023.05.18
 

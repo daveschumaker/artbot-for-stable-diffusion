@@ -217,6 +217,26 @@ export const deleteDoneFromPending = async () => {
   await db.pending.bulkDelete(ids)
 }
 
+export const deleteQueuedFromPending = async () => {
+  const pendingJobs = (await allPendingJobs()) || []
+  const done = pendingJobs.filter((job: { jobStatus: JobStatus }) => {
+    return job.jobStatus === JobStatus.Queued
+  })
+
+  const ids = done.map((job: any) => job.id)
+  await db.pending.bulkDelete(ids)
+}
+
+export const deleteRequestedFromPending = async () => {
+  const pendingJobs = (await allPendingJobs()) || []
+  const done = pendingJobs.filter((job: { jobStatus: JobStatus }) => {
+    return job.jobStatus === JobStatus.Requested
+  })
+
+  const ids = done.map((job: any) => job.id)
+  await db.pending.bulkDelete(ids)
+}
+
 export const deleteInvalidPendingJobs = async () => {
   const pendingJobs = (await allPendingJobs()) || []
   const done = pendingJobs.filter((job: { jobStatus: JobStatus }) => {

@@ -13,7 +13,12 @@ import PromptInputSettings from '../models/PromptInputSettings'
 // @ts-ignore
 import { trackNewSession } from './analytics'
 import { isAppActive } from './appUtils'
-import { deleteDoneFromPending, deleteInvalidPendingJobs } from './db'
+import {
+  deleteDoneFromPending,
+  deleteInvalidPendingJobs,
+  deleteQueuedFromPending,
+  deleteRequestedFromPending
+} from './db'
 import { initWindowLogger } from './debugTools'
 
 export const updateShowGrid = () => {
@@ -85,8 +90,13 @@ export const appLastActive = async () => {
   let currentTime = Math.floor(Date.now() / 1000)
   if (lastActiveTime && currentTime - Number(lastActiveTime) > WAIT_TIME_SEC) {
     try {
+      await deleteDoneFromPending()
+      await deleteQueuedFromPending()
+      await deleteInvalidPendingJobs()
+      await deleteRequestedFromPending()
       deletePendingJobs(JobStatus.Done)
-      deleteDoneFromPending()
+      deletePendingJobs(JobStatus.Queued)
+      deletePendingJobs(JobStatus.Requested)
     } catch (err) {
       console.log(`An error occurred while clearing out stale pending items.`)
     }
@@ -95,7 +105,7 @@ export const appLastActive = async () => {
   setInterval(() => {
     currentTime = Math.floor(Date.now() / 1000)
     localStorage.setItem('ArtBotLastActive', String(currentTime))
-  }, 1000)
+  }, 5000)
 }
 
 // Use to fix any issues related to local storage values

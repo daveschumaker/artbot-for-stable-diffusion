@@ -376,8 +376,8 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
           <Button
             theme="secondary"
             onClick={async () => {
-              deletePendingJobs()
               await db.pending.clear()
+              deletePendingJobs()
               window.location.assign(`${window.location.origin}/artbot/pending`)
             }}
           >
