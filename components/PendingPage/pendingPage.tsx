@@ -36,11 +36,10 @@ import { appInfoStore } from 'store/appStore'
 import {
   deletePendingJob,
   deletePendingJobs,
-  getAllPendingJobs,
-  syncPendingJobsFromDb
+  getAllPendingJobs
+  // syncPendingJobsFromDb
 } from 'controllers/pendingJobsCache'
 import usePendingImageModal from './usePendingImageModal'
-import { objIsEmpty } from 'utils/helperUtils'
 
 const MenuSeparator = styled.div`
   width: 100%;
@@ -66,10 +65,11 @@ const PendingPage = () => {
       console.log(`pendingPage#initPageLoad`)
     }
 
-    await syncPendingJobsFromDb()
+    // Temporarily hide this as I think this is what is causing the ghost jobs race condition
+    // await syncPendingJobsFromDb()
 
-    // @ts-ignore
-    setPendingImages(getAllPendingJobs())
+    // // @ts-ignore
+    // setPendingImages(getAllPendingJobs())
   }
 
   const cleanPendingJobsOnUnload = async () => {
@@ -93,7 +93,7 @@ const PendingPage = () => {
       clearInterval(interval)
       const pendingJobs = getAllPendingJobs()
 
-      if (objIsEmpty(pendingJobs)) {
+      if (pendingJobs.length === 0) {
         cleanPendingJobsOnUnload()
       }
     }

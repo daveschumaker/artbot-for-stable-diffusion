@@ -77,7 +77,7 @@ export const deletePendingJobs = async (status?: any) => {
     }
   } else {
     // @ts-ignore
-    pendingJobs = []
+    pendingJobs = {}
   }
 }
 
@@ -179,6 +179,6 @@ export const updateAllPendingJobsV2 = async (
     }
   } else {
     // @ts-ignore
-    pendingJobs = []
+    pendingJobs = {}
   }
 }
