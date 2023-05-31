@@ -20,6 +20,7 @@ import Row from '../Row'
 import { Button } from '../UI/Button'
 import ModelsModal from './ModelsModal'
 import styles from './workerInfo.module.css'
+import { useForceUpdate } from 'hooks/useForceUpdate'
 
 const WorkerTitle = styled.div`
   align-items: center;
@@ -57,13 +58,13 @@ const ExpandModels = styled(Row)`
 `
 
 const WorkerInfo = ({
-  forceUpdate,
   editable,
   loadingWorkerStatus,
   setComponentState,
   worker,
   workers
 }: any) => {
+  const forceUpdate = useForceUpdate()
   const [showModels, setShowModels] = useState(false)
 
   let statusColor = 'green'

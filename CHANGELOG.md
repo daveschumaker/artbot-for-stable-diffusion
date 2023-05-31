@@ -2,6 +2,8 @@
 
 - Still working through some issues related to stalled jobs on the pending items page. I've added some more logic to check for potential error conditions.
 - LoRA weight slider and input should have a minimum of 0.05, not 0.5 (typo on my part). Thanks to Efreak for reporting this on Discord.
+- Feature: Thanks to some backend changes on the AI Horde, you can now add any LoRA available on Civitai! All you need is the model ID or URL. (Check the LoRA panel in the advanced options area of the create page for more details).
+- Fix: Added a "clear favorite models" button to the button of the favorite models page. Overtime, some models have been removed or renamed and it's created some problems for those of you who use this feature. This should get you back in business, at least until I come up with a more elegant solution. Special thanks to gunsalem for suggesting this feature.
 
 # 2023.05.29
 

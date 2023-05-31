@@ -1,81 +1,167 @@
+/* eslint-disable @next/next/no-img-element */
 import Overlay from 'components/UI/Overlay'
-import { IconX } from '@tabler/icons-react'
-import Input from 'components/UI/Input'
-import { useCallback, useEffect, useState } from 'react'
+import {
+  IconCloudSearch,
+  IconHeart,
+  IconHistory,
+  IconX
+} from '@tabler/icons-react'
+import { useEffect, useState } from 'react'
 import styles from './loraSelect.module.css'
-import { ParsedLoraModel } from 'models/Loras'
-import useLoraCache from './useLoraCache'
+import Tabs from 'components/UI/Tabs'
+import Tab from 'components/UI/Tab'
+import LoadLora from './LoadLoraFromCivitai'
+import FavoriteLoras from './FavoriteLoras'
+import RecentLoras from './RecentLoras'
 
 export let loraCache: Array<any> | null = null
+
+let tempCache: any = null
 
 const ChooseLoraModal = ({
   handleClose = () => {},
   handleAddLora = (lora: any) => lora
 }) => {
-  const [fetchLoras, lorasArray] = useLoraCache()
-  const [filter, setFilter] = useState('')
+  const [activeTab, setActiveTab] = useState('load')
 
-  const renderLoraList = useCallback(() => {
-    if (lorasArray.length === 0) {
-      return
-    }
+  const cacheLoaded = (lora: any) => {
+    tempCache = Object.assign({}, lora)
+  }
 
-    const arr: Array<any> = []
+  const handleSaveRecent = (loraDetails: any) => {
+    // Check if the local storage already has an array stored
+    let existingArray = localStorage.getItem('recentLoras')
+    let newArray
 
-    let filteredLoras = lorasArray
+    if (existingArray) {
+      // Parse the existing array from the local storage
+      newArray = JSON.parse(existingArray)
 
-    if (filter) {
-      filteredLoras = lorasArray.filter((lora: ParsedLoraModel) => {
-        return lora.displayName.toLowerCase().includes(filter.toLowerCase())
-      })
-    }
-
-    filteredLoras.forEach((lora: ParsedLoraModel, i: number) => {
-      arr.push(
-        <div
-          key={`lora_select_${i}`}
-          className="mb-2 row cursor-pointer"
-          onClick={() => {
-            const idString = String(lora.id)
-            handleAddLora(idString)
-            handleClose()
-          }}
-        >
-          {lora.displayName}
-        </div>
+      // Check if the object with the same id already exists in the array
+      const existingObjectIndex = newArray.findIndex(
+        (obj: any) => obj.name === loraDetails.name
       )
-    })
 
-    return arr
-  }, [filter, handleAddLora, handleClose, lorasArray])
+      if (existingObjectIndex !== -1) {
+        // Remove the existing object from the array
+        newArray.splice(existingObjectIndex, 1)
+      }
+
+      // Add the object to the front of the array
+      newArray.unshift(loraDetails)
+
+      // Limit the array to 25 elements
+      if (newArray.length > 25) {
+        newArray = newArray.slice(0, 25)
+      }
+    } else {
+      // Create a new array with the object
+      newArray = [loraDetails]
+    }
+
+    // Store the updated array back in the local storage
+    localStorage.setItem('recentLoras', JSON.stringify(newArray))
+  }
 
   useEffect(() => {
-    if (lorasArray.length === 0) {
-      fetchLoras()
+    return () => {
+      tempCache = null
     }
-  }, [fetchLoras, lorasArray.length])
+  }, [])
 
   return (
     <>
       <Overlay handleClose={handleClose} disableBackground />
-      <div className={styles['lora-select-modal']}>
+      <div
+        className={styles['lora-select-modal']}
+        style={{
+          height: 'auto',
+          maxHeight: '400px',
+          paddingBottom: '16px',
+          overflowY: 'hidden'
+        }}
+      >
         <div className={styles['StyledClose']} onClick={handleClose}>
           <IconX stroke={1.5} />
         </div>
-        <div className={styles['filter-preset']}>
-          <Input
-            className="mb-2"
-            type="text"
-            name="filterLoras"
-            placeholder="Search LORAs"
-            onChange={(e: any) => {
-              setFilter(e.target.value)
-            }}
-            value={filter}
-            width="100%"
-          />
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            marginTop: '32px'
+          }}
+        >
+          <div>
+            <Tabs>
+              <Tab
+                activeTab={activeTab === 'load'}
+                label={
+                  <div className="flex flex-row items-center gap-2">
+                    <IconCloudSearch /> Load
+                  </div>
+                }
+                onClick={() => setActiveTab('load')}
+              />
+              <Tab
+                activeTab={activeTab === 'favorites'}
+                label={
+                  <div className="flex flex-row items-center gap-2">
+                    <IconHeart /> Favorites
+                  </div>
+                }
+                onClick={() => setActiveTab('favorites')}
+              />
+              <Tab
+                activeTab={activeTab === 'recents'}
+                label={
+                  <div className="flex flex-row items-center gap-2">
+                    <IconHistory /> Recent
+                  </div>
+                }
+                onClick={() => setActiveTab('recents')}
+              />
+            </Tabs>
+          </div>
+          {activeTab === 'load' && (
+            <LoadLora
+              handleAddLora={handleAddLora}
+              handleClose={handleClose}
+              handleSaveRecent={handleSaveRecent}
+              cacheLoaded={cacheLoaded}
+              tempCache={tempCache}
+            />
+          )}
+          {activeTab === 'favorites' && (
+            <div
+              style={{
+                height: '320px',
+                overflow: 'scroll',
+                position: 'relative'
+              }}
+            >
+              <FavoriteLoras
+                handleAddLora={handleAddLora}
+                handleClose={handleClose}
+                handleSaveRecent={handleSaveRecent}
+              />
+            </div>
+          )}
+          {activeTab === 'recents' && (
+            <div
+              style={{
+                height: '320px',
+                overflow: 'scroll',
+                position: 'relative'
+              }}
+            >
+              <RecentLoras
+                handleAddLora={handleAddLora}
+                handleClose={handleClose}
+                handleSaveRecent={handleSaveRecent}
+              />
+            </div>
+          )}
         </div>
-        <div className={styles['lora-select-wrapper']}>{renderLoraList()}</div>
       </div>
     </>
   )

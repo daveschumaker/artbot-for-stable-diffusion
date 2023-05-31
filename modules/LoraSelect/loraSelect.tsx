@@ -1,28 +1,36 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import MaxWidth from 'components/UI/MaxWidth'
 import Section from 'components/UI/Section'
 import SubSectionTitle from 'components/UI/SubSectionTitle'
 import { GetSetPromptInput } from 'types'
 import styles from './loraSelect.module.css'
 import { Button } from 'components/UI/Button'
-import { IconPlus, IconTrash } from '@tabler/icons-react'
+import { IconExternalLink, IconPlus, IconTrash } from '@tabler/icons-react'
 import ChooseLoraModal from './ChooseLoraModal'
 import NumberInput from 'components/UI/NumberInput'
 import Slider from 'components/UI/Slider'
-import useLoraCache from './useLoraCache'
+import Linker from 'components/UI/Linker'
 
 const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
-  const [loadedLoras, setLoadedLoras] = useState(false)
-  const [fetchLoras, , lorasDetails] = useLoraCache()
   const [showModal, setShowModal] = useState(false)
 
-  const handleAddLora = (name: string = '') => {
+  const handleAddLora = (loraDetails: any) => {
     const lorasToUpdate = [...input.loras]
-    lorasToUpdate.push({
-      name,
-      model: 1,
-      clip: 1
-    })
+
+    const exists = lorasToUpdate.filter(
+      (lora) => lora.name === loraDetails.name
+    )
+
+    if (exists.length > 0) {
+      return
+    }
+
+    lorasToUpdate.push(
+      Object.assign({}, loraDetails, {
+        model: 1,
+        clip: 1
+      })
+    )
 
     setInput({ loras: [...lorasToUpdate] })
   }
@@ -57,13 +65,11 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
     }
 
     input.loras.forEach((lora, i) => {
-      if (!lorasDetails[lora.name]) {
-        return null
-      }
-
       // Need to cast input to correct type
-      const hasWords = lorasDetails[lora.name]?.trainedWords?.length > 0
-      const displayName = lorasDetails[lora.name]?.name
+      // @ts-ignore
+      const hasWords = lora?.trainedWords?.length > 0
+      // @ts-ignore
+      const displayName = lora?.label
 
       arr.push(
         <div
@@ -71,7 +77,24 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
           key={`lora_${lora.name}_${i}`}
         >
           <div className={styles['lora-name']}>
-            {displayName}
+            <div className="flex flex-col">
+              {displayName}
+              <div
+                className="flex flex-row gap-2 items-center"
+                style={{
+                  fontSize: '12px'
+                }}
+              >
+                <Linker
+                  href={`https://civitai.com/models/${lora.name}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  [ View on Civitai]
+                </Linker>
+                <IconExternalLink size={18} />
+              </div>
+            </div>
             <Button
               size="small"
               theme="secondary"
@@ -84,7 +107,7 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
             <Section>
               <div className="flex flex-row items-center justify-between">
                 <SubSectionTitle>
-                  LORA strength
+                  LoRA strength
                   <div className="block text-xs w-full">
                     ({0.05} - {1})
                   </div>
@@ -128,7 +151,7 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
                     Trigger words
                     {!hasWords && (
                       <div style={{ fontWeight: 400, fontSize: '12px' }}>
-                        (This LORA does not utilize any trained words)
+                        (This LoRA does not utilize any trained words)
                       </div>
                     )}
                     {hasWords && (
@@ -143,8 +166,9 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
                         color: '#17cfbb'
                       }}
                     >
-                      {lorasDetails[lora.name]?.trainedWords?.map(
-                        (word: string, i: number) => {
+                      {
+                        // @ts-ignore
+                        lora?.trainedWords?.map((word: string, i: number) => {
                           return (
                             <div
                               key={lora.name + '_' + i}
@@ -155,8 +179,8 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
                               {word}
                             </div>
                           )
-                        }
-                      )}
+                        })
+                      }
                     </div>
                   </SubSectionTitle>
                 </div>
@@ -172,21 +196,14 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
     }
 
     return arr
-  }, [
-    handleDeleteLora,
-    handleUpdate,
-    input.loras,
-    input.prompt,
-    lorasDetails,
-    setInput
-  ])
+  }, [handleDeleteLora, handleUpdate, input.loras, input.prompt, setInput])
 
-  useEffect(() => {
-    if (input.loras.length > 0 && !loadedLoras) {
-      fetchLoras()
-      setLoadedLoras(true)
-    }
-  }, [fetchLoras, input.loras.length, loadedLoras])
+  // useEffect(() => {
+  //   if (input.loras.length > 0 && !loadedLoras) {
+  //     fetchLoras()
+  //     setLoadedLoras(true)
+  //   }
+  // }, [fetchLoras, input.loras.length, loadedLoras])
 
   return (
     <Section>
@@ -199,9 +216,9 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
           }}
         >
           <SubSectionTitle>
-            Select LORAs
+            Select LoRAs
             <div style={{ fontWeight: 400, fontSize: '12px' }}>
-              (Maximum of 5 LORAs)
+              (Maximum of 5 LoRAs)
             </div>
           </SubSectionTitle>
           <div
@@ -215,7 +232,7 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
               onClick={() => setShowModal(true)}
               disabled={input.loras.length >= 5}
             >
-              <IconPlus /> Add LORA
+              <IconPlus /> Add LoRA
             </Button>
             {showModal && (
               <ChooseLoraModal

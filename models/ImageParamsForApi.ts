@@ -163,7 +163,13 @@ class ImageParamsForApi {
     }
 
     if (loras && Array.isArray(loras) && loras.length > 0) {
-      apiParams.params.loras = [...loras]
+      apiParams.params.loras = loras.map((lora) => {
+        return {
+          name: String(lora.name),
+          model: lora.model,
+          clip: lora.clip
+        }
+      })
     }
 
     if (

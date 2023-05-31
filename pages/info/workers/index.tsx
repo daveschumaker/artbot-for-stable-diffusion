@@ -9,10 +9,8 @@ import { useEffectOnce } from '../../../hooks/useEffectOnce'
 import SpinnerV2 from '../../../components/Spinner'
 import InfoPageMenuButton from '../../../components/InfoPage/Menu'
 import styles from './workers.module.css'
-import { useForceUpdate } from '../../../hooks/useForceUpdate'
 
 const WorkerInfoPage = () => {
-  const forceUpdate = useForceUpdate()
   const [componentState, setComponentState] = useComponentState({
     showModelsForWorkerId: '',
     isLoading: true,
@@ -189,7 +187,6 @@ const WorkerInfoPage = () => {
                     editable={false}
                     key={worker.id}
                     worker={worker}
-                    forceUpdate={forceUpdate}
                   />
                 </div>
               )

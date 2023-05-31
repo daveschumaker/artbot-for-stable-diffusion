@@ -47,6 +47,7 @@ interface SavePrompt {
   canvasData?: any
   maskData?: any
   numImages?: number
+  loras?: any[]
 }
 
 let initPromptDetails: SavePrompt = {
@@ -77,7 +78,8 @@ let initPromptDetails: SavePrompt = {
   models: ['stable_diffusion'],
   canvasStore: '',
   canvasData: '',
-  maskData: ''
+  maskData: '',
+  loras: []
 }
 
 let promptDetails: SavePrompt = Object.assign({}, initPromptDetails)
@@ -111,7 +113,8 @@ export const savePrompt = ({
   models = ['stable_diffusion'],
   canvasStore = null,
   canvasData = null,
-  maskData = null
+  maskData = null,
+  loras = []
 } = {}) => {
   const samplerValid = validSampler(sampler)
   promptDetails = {
@@ -143,7 +146,8 @@ export const savePrompt = ({
     models,
     canvasStore,
     canvasData,
-    maskData
+    maskData,
+    loras
   }
 
   // Clone to prompt input settings
