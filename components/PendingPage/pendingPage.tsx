@@ -7,6 +7,8 @@ import { useEffectOnce } from '../../hooks/useEffectOnce'
 import AppSettings from '../../models/AppSettings'
 import { JobStatus } from '../../types'
 import {
+  allPendingJobs,
+  clearPendingJobsTable,
   deleteAllPendingErrors,
   deleteAllPendingJobs,
   deleteDoneFromPending,
@@ -38,6 +40,7 @@ import {
   syncPendingJobsFromDb
 } from 'controllers/pendingJobsCache'
 import usePendingImageModal from './usePendingImageModal'
+import { objIsEmpty } from 'utils/helperUtils'
 
 const MenuSeparator = styled.div`
   width: 100%;
@@ -58,19 +61,42 @@ const PendingPage = () => {
   const [showImageModal] = usePendingImageModal()
 
   const initPageLoad = async () => {
+    // @ts-ignore
+    if (typeof window !== 'undefined' && window.DEBUG_PENDING_JOBS) {
+      console.log(`pendingPage#initPageLoad`)
+    }
+
     await syncPendingJobsFromDb()
+
     // @ts-ignore
     setPendingImages(getAllPendingJobs())
   }
 
+  const cleanPendingJobsOnUnload = async () => {
+    await clearPendingJobsTable()
+    deletePendingJobs()
+
+    // @ts-ignore
+    if (typeof window !== 'undefined' && window.DEBUG_PENDING_JOBS) {
+      const jobs = await allPendingJobs()
+      console.log(`cleanPendingJobsOnUnload (jobs in db)`, jobs)
+    }
+  }
+
   useEffect(() => {
-    initPageLoad()
     const interval = setInterval(() => {
       // @ts-ignore
       setPendingImages(getAllPendingJobs())
     }, 250)
 
-    return () => clearInterval(interval)
+    return () => {
+      clearInterval(interval)
+      const pendingJobs = getAllPendingJobs()
+
+      if (objIsEmpty(pendingJobs)) {
+        cleanPendingJobsOnUnload()
+      }
+    }
   }, [])
 
   const onClosePanel = async (jobId: string) => {
@@ -159,6 +185,8 @@ const PendingPage = () => {
   const jobsInProgress = processing.length + queued.length
 
   useEffectOnce(() => {
+    initPageLoad()
+
     return () => {
       if (AppSettings.get('autoClearPending')) {
         deletePendingJobs(JobStatus.Done)
@@ -172,6 +200,11 @@ const PendingPage = () => {
    * but never removed from pending items table, resulting in all sorts of errors.
    */
   const verifyImagesExist = useCallback(async () => {
+    // @ts-ignore
+    if (typeof window !== 'undefined' && window.DEBUG_PENDING_JOBS) {
+      console.log(`pendingPage#verifyImagesExist`)
+    }
+
     if (done.length === 0) {
       await deleteDoneFromPending()
       return
@@ -245,18 +278,6 @@ const PendingPage = () => {
 
   return (
     <div style={{ overflowAnchor: 'none' }}>
-      {/* {showImageModal && (
-        <ImageModalController
-          reverseButtons
-          onAfterDelete={() => {}}
-          handleDeleteImage={handleDeleteImage}
-          handleClose={() => {
-            setShowImageModal(false)
-          }}
-          imageList={done}
-          initialIndexJobId={showImageModal}
-        />
-      )} */}
       <div className="flex flex-row items-center w-full">
         <div className="inline-block w-3/4">
           <PageTitle>Image queue</PageTitle>

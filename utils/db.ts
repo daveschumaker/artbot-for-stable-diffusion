@@ -171,6 +171,10 @@ export const deleteStalePending = async () => {
     ?.delete()
 }
 
+export const clearPendingJobsTable = async () => {
+  return await db.pending.clear()
+}
+
 export const allPendingJobs = async (status?: string) => {
   try {
     if (status) {

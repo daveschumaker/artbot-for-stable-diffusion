@@ -1,3 +1,7 @@
+# 2023.05.31
+
+- It appears phantom jobs never went away. Interestingly, I can't recreate on my local machine in either development or production servers. But I do see it happen on my phone. I've added some more debugging logic so I can... err... test in production.
+
 # 2023.05.30
 
 - Still working through some issues related to stalled jobs on the pending items page. I've added some more logic to check for potential error conditions.
