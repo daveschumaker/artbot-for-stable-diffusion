@@ -1,6 +1,7 @@
 # 2023.05.31
 
 - It appears phantom jobs never went away. Interestingly, I can't recreate on my local machine in either development or production servers. But I do see it happen on my phone. I've added some more debugging logic so I can... err... test in production.
+- Fix: 👻 jobs should no longer be an issue!
 
 # 2023.05.30
 

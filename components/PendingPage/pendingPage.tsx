@@ -397,7 +397,9 @@ const PendingPage = () => {
       {AppSettings.get('useWorkerId') && (
         <div className="mt-4 mb-4 text-amber-400 font-semibold rounded border border-amber-400 p-[8px]">
           FYI: You are currently sending jobs to only one worker. Jobs may not
-          complete if worker is not available or under heavy load.
+          complete if worker is not available or under heavy load, or certain
+          request parameters aren&apos;t available (i.e., model, image
+          resolution, post-processors).
         </div>
       )}
 

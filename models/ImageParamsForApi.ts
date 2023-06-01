@@ -17,7 +17,7 @@ export interface IApiParams {
   replacement_filter?: boolean
   shared?: boolean
   workers?: Array<string>
-  slow_workers: boolean
+  slow_workers?: boolean
   worker_blacklist?: boolean
 }
 
@@ -146,10 +146,21 @@ class ImageParamsForApi {
       const blocked = useBlocklist.map((worker: { id: string }) => worker.id)
       apiParams.workers = [...blocked]
       apiParams.worker_blacklist = true
+    } else {
+      delete apiParams.worker_blacklist
     }
 
     if (!useBlocklist && useWorkerId) {
       apiParams.workers = [useWorkerId]
+
+      // Potential ArtBot / AI Horde API interface issue.
+      // If we're explicitly choosing a worker, we probably don't care, delete them.
+      // Somehow, this seems to allow jobs to be processed again.
+      delete apiParams.worker_blacklist
+      delete apiParams.slow_workers
+      delete apiParams.replacement_filter
+      apiParams.shared = false
+      apiParams.trusted_workers = false
     }
 
     if (source_processing === SourceProcessing.Img2Img) {
