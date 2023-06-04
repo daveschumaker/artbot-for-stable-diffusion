@@ -171,6 +171,10 @@ export const deleteStalePending = async () => {
     ?.delete()
 }
 
+export const clearPendingJobsTable = async () => {
+  return await db.pending.clear()
+}
+
 export const allPendingJobs = async (status?: string) => {
   try {
     if (status) {
@@ -211,6 +215,26 @@ export const deleteDoneFromPending = async () => {
   const pendingJobs = (await allPendingJobs()) || []
   const done = pendingJobs.filter((job: { jobStatus: JobStatus }) => {
     return job.jobStatus === JobStatus.Done
+  })
+
+  const ids = done.map((job: any) => job.id)
+  await db.pending.bulkDelete(ids)
+}
+
+export const deleteQueuedFromPending = async () => {
+  const pendingJobs = (await allPendingJobs()) || []
+  const done = pendingJobs.filter((job: { jobStatus: JobStatus }) => {
+    return job.jobStatus === JobStatus.Queued
+  })
+
+  const ids = done.map((job: any) => job.id)
+  await db.pending.bulkDelete(ids)
+}
+
+export const deleteRequestedFromPending = async () => {
+  const pendingJobs = (await allPendingJobs()) || []
+  const done = pendingJobs.filter((job: { jobStatus: JobStatus }) => {
+    return job.jobStatus === JobStatus.Requested
   })
 
   const ids = done.map((job: any) => job.id)

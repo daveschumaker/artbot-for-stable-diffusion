@@ -9,10 +9,8 @@ import { useEffectOnce } from '../../../hooks/useEffectOnce'
 import SpinnerV2 from '../../../components/Spinner'
 import InfoPageMenuButton from '../../../components/InfoPage/Menu'
 import styles from './workers.module.css'
-import { useForceUpdate } from '../../../hooks/useForceUpdate'
 
 const WorkerInfoPage = () => {
-  const forceUpdate = useForceUpdate()
   const [componentState, setComponentState] = useComponentState({
     showModelsForWorkerId: '',
     isLoading: true,
@@ -86,6 +84,17 @@ const WorkerInfoPage = () => {
       return 0
     }
 
+    if (componentState.sort === 'lora') {
+      if (a.lora) {
+        return -1
+      }
+      if (!a.lora) {
+        return 1
+      }
+
+      return 0
+    }
+
     if (componentState.sort === 'name') {
       if (a[componentState.sort] < b[componentState.sort]) {
         return -1
@@ -111,6 +120,7 @@ const WorkerInfoPage = () => {
     { value: 'name', label: 'Name' },
     { value: 'requests_fulfilled', label: 'Completed' },
     { value: 'kudos_rewards', label: 'Kudos' },
+    { value: 'lora', label: 'LORA support' },
     { value: 'models', label: 'Models' },
     { value: 'resolution', label: 'Max resolution' },
     { value: 'speed_per', label: 'Speed' },
@@ -177,7 +187,6 @@ const WorkerInfoPage = () => {
                     editable={false}
                     key={worker.id}
                     worker={worker}
-                    forceUpdate={forceUpdate}
                   />
                 </div>
               )

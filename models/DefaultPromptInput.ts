@@ -1,3 +1,4 @@
+import { Lora } from 'types'
 import { SourceProcessing } from '../utils/promptUtils'
 
 interface IParams {
@@ -46,6 +47,7 @@ class DefaultPromptInput {
   useMultiGuidance: boolean
   canvasData: any | null
   maskData: any | null
+  loras: Lora[]
 
   constructor({
     control_type = '',
@@ -92,6 +94,7 @@ class DefaultPromptInput {
     this.useMultiGuidance = false
     this.canvasData = null
     this.maskData = null
+    this.loras = []
   }
 }
 

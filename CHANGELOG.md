@@ -1,3 +1,34 @@
+# 2023.05.31
+
+- It appears phantom jobs never went away. Interestingly, I can't recreate on my local machine in either development or production servers. But I do see it happen on my phone. I've added some more debugging logic so I can... err... test in production.
+- Fix: 👻 jobs should no longer be an issue!
+
+# 2023.05.30
+
+- Still working through some issues related to stalled jobs on the pending items page. I've added some more logic to check for potential error conditions.
+- LoRA weight slider and input should have a minimum of 0.05, not 0.5 (typo on my part). Thanks to Efreak for reporting this on Discord.
+- Feature: Thanks to some backend changes on the AI Horde, you can now add any LoRA available on Civitai! All you need is the model ID or URL. (Check the LoRA panel in the advanced options area of the create page for more details).
+- Fix: Added a "clear favorite models" button to the button of the favorite models page. Overtime, some models have been removed or renamed and it's created some problems for those of you who use this feature. This should get you back in business, at least until I come up with a more elegant solution. Special thanks to gunsalem for suggesting this feature.
+
+# 2023.05.29
+
+- Long time, no see! I am still alive, and chances are, if you're reading this, so are you!
+- db0 and the team (Jug, Tazlin) have been workin on adding LoRA support to the AI Horde! I've been following the progress and have attempted to add support. I think it works! Maybe. Try it out and let me know. (Scroll down the advanced options panel to the LoRA selection -- currently the Horde backend only supports ~100 of the most popular models available on Civitai.)
+- Fix: Empty LoRAs field was causing pending jobs to hang. Thanks to Atticus, dreamy, and gunsalem on Discord for investigating and reporting this.
+- Attempting to fix: issues related to stalled job queue. I'm hearing a number of reports about this and trying to figure out what is happening.
+
+# 2023.05.18
+
+- Add some UX improvements to the [export data page](/settings?panel=import-export): when downloading a zip file, disable the rest of the links. This is because only one zip file can be downloaded at a time (for now... I need to implement more complex logic). Once one file is done, you can download the next one. Thanks to "I.B.B.A.F.L.C.S.S.H.K.T Committe" in Discord for bringing this up.
+- Add some additional checks for valid image files when creating zip file (mainly related to some broken data received from API awhile back). Thanks again to "I.B.B.A.F.L.C.S.S.H.K.T Committe" for helping to debug this.
+
+# 2023.05.17
+
+- Fix: Ghost jobs that would reappear after canceling in-progress jobs. Thanks to dreamy on Discord for reporting this (multiple times!).
+- Feature: Added a new setting: 'max images per page", so you can tweak the number of images viewable in the photo gallery. Helpful for lower powered devices.
+- Added timestamps to downloaded zip files. Thanks to Efreak for the suggestion.
+- Feature: Add support for prompt replacement filter.
+
 # 2023.05.16
 
 - Fix: Navigation keys and swipe behavior were backwards on image modal. Thanks to Litnine for reporting this on Discord.
@@ -708,7 +739,7 @@
 # 2022.12.06
 
 - Fix: Issue with attempting to use non-trusted workers. (Thanks voodoocode!)
-- Added option to search model and sampler dropdowns. (Thanks voodoocode!)
+- Added option to search model and sampler drop downs. (Thanks voodoocode!)
 - Update style presets.
 - Feature: Select favorite models and then generate images against them. You can select your favorite Stable Diffusion models here.
 - Feature: Generate a series of images using all available samplers. Works best if you fix the seed ahead of time.
@@ -742,7 +773,7 @@
 # 2022.11.29
 
 - Fix: Finally fixed the pesky bug where everything would disappear from pending items page when you clicked retry or delete.
-- Feature: Styles! Are you having a hard time coming up with a prompt to give you good looking images? Over on the Stable Horde Discord channel, Db0 has implemented a bot that can make it easier to emulate a number of different art styles. There is now a styles dropdown below the prompt textbox where you can choose one of these style presets. You can see prompt details related to various styles on Github.
+- Feature: Styles! Are you having a hard time coming up with a prompt to give you good looking images? Over on the Stable Horde Discord channel, Db0 has implemented a bot that can make it easier to emulate a number of different art styles. There is now a styles dropdown below the prompt text box where you can choose one of these style presets. You can see prompt details related to various styles on Github.
 
 # 2022.11.28
 
@@ -936,7 +967,7 @@
 
 - img2img support is live for trusted users (generally those who are contributing back to the Stable Horde with GPU cycles).
 - Initial work on getting ArtBot setup as a proper Progressive Web App (PWA)
-- Add it to your mobile device homescreen for a more app like experience
+- Add it to your mobile device home screen for a more app like experience
 - Add simple pagination buttons for [images page](/images) (things were getting slow if you had a lot of images stored in the browser cache).
 
 # 2022.10.14

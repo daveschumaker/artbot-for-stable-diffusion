@@ -115,6 +115,30 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
         </div>
       </Section>
       <Section>
+        <MaxWidth width="240px">
+          <SubSectionTitle>
+            <strong>Images per page</strong>
+          </SubSectionTitle>
+          <div className="flex flex-row gap-2 items-center">
+            <Select
+              options={[
+                { value: 25, label: 25 },
+                { value: 50, label: 50 },
+                { value: 100, label: 100 }
+              ]}
+              isSearchable={false}
+              onChange={(obj: any) => {
+                handleUpdateSelect('imagesPerPage', obj)
+              }}
+              value={{
+                value: componentState.imagesPerPage,
+                label: componentState.imagesPerPage
+              }}
+            />
+          </div>
+        </MaxWidth>
+      </Section>
+      <Section>
         <SubSectionTitle>
           <strong>Preferred image format</strong>
           <div className="block w-full mt-2 mb-2 text-xs">
@@ -352,8 +376,8 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
           <Button
             theme="secondary"
             onClick={async () => {
-              deletePendingJobs()
               await db.pending.clear()
+              deletePendingJobs()
               window.location.assign(`${window.location.origin}/artbot/pending`)
             }}
           >

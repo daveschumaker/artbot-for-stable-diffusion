@@ -4,6 +4,7 @@ import InfoPageMenuButton from '../../../components/InfoPage/Menu'
 import ModelInfoPage from '../../../components/ModelInfoPage'
 import Row from '../../../components/Row'
 import PageTitle from '../../../components/UI/PageTitle'
+import AppSettings from 'models/AppSettings'
 
 export async function getServerSideProps() {
   let availableModels: Array<any> = []
@@ -49,6 +50,11 @@ const InfoPage = ({ availableModels, modelDetails }: any) => {
     return 'All models'
   }
 
+  const handleClearFavoriteModels = () => {
+    AppSettings.set('favoriteModels', {})
+    window.location.reload()
+  }
+
   return (
     <div className="mb-4">
       <Head>
@@ -82,6 +88,20 @@ const InfoPage = ({ availableModels, modelDetails }: any) => {
         availableModels={availableModels}
         modelDetails={modelDetails}
       />
+      {router.query.show === 'favorite-models' && (
+        <div>
+          <div
+            onClick={handleClearFavoriteModels}
+            style={{
+              cursor: 'pointer',
+              color: 'var(--link-text)',
+              fontWeight: '600'
+            }}
+          >
+            [ clear favorite models ]
+          </div>
+        </div>
+      )}
     </div>
   )
 }

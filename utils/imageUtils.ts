@@ -36,6 +36,7 @@ interface CreateImageJob {
   stylePreset: string
   denoising_strength?: number
   post_processing: Array<string>
+  loras: Array<any>
 
   has_source_image?: boolean
   has_source_mask?: boolean
@@ -562,10 +563,11 @@ export const downloadImages = async ({
   imageArray = [],
   offset = 0,
   limit = 0,
+  sort = '',
   callback = () => {}
 }: any) => {
   if (offset >= 0 && limit > 0) {
-    imageArray = await fetchCompletedJobs({ offset, limit })
+    imageArray = await fetchCompletedJobs({ offset, limit, sort })
   }
 
   initBlob()
@@ -578,7 +580,7 @@ export const downloadImages = async ({
   for (const imageId in imageArray) {
     const image: any = imageArray[imageId]
 
-    if (!image.base64String) {
+    if (!image || !image.base64String) {
       continue
     }
 
@@ -617,7 +619,18 @@ export const downloadImages = async ({
 
     fileDetails.push(imageData)
     let newBlob
-    const input = await base64toBlob(image.base64String, `image/${fileType}`)
+
+    let input
+    try {
+      input = await base64toBlob(image.base64String, `image/${fileType}`)
+    } catch (err) {
+      console.log(
+        `Error: Something unfortunate happened when attempting to convert base64string to file blob`
+      )
+      console.log(err)
+      continue
+    }
+
     try {
       if (image.imageMimeType !== `image/${fileType}`) {
         if (input) {
@@ -647,6 +660,7 @@ export const downloadImages = async ({
     } catch (err) {
       console.log(`Error converting image to ${fileType}...`)
       console.log(image.jobId)
+      continue
     }
 
     callback({
@@ -656,16 +670,26 @@ export const downloadImages = async ({
     currentIndex++
   }
 
+  if (fileArray.length === 0) {
+    console.log(`Error: No image files found within zip file. Aborting.`)
+    callback({ done: true, error: true })
+    return
+  }
+
   const jsonDetails = {
     name: '_image_details.json',
     lastModified: new Date(),
     input: JSON.stringify(fileDetails, null, 2)
   }
 
-  let zipFilename = 'artbot-image-export.zip'
+  const date = new Date()
+  const dateString = date.toISOString().substring(0, 16).replace('T', '-')
+  let zipFilename = `artbot-image-export-${dateString}.zip`
 
   if (offset >= 0 && limit > 0) {
-    zipFilename = `artbot-image-export-${offset}-to-${offset + limit}.zip`
+    zipFilename = `artbot-image-export-${offset}-to-${
+      offset + limit
+    }-${dateString}.zip`
   }
 
   callback({ done: true })

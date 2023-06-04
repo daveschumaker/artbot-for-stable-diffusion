@@ -39,6 +39,11 @@ export const initLoadPendingJobsFromDb = async () => {
 
   const jobs = await allPendingJobs()
 
+  // @ts-ignore
+  if (typeof window !== 'undefined' && window.DEBUG_PENDING_JOBS) {
+    console.log(`initLoadPendingJobsFromDb`, jobs)
+  }
+
   jobs.forEach((job: any) => {
     pendingJobs[job.jobId] = job
   })
@@ -46,6 +51,11 @@ export const initLoadPendingJobsFromDb = async () => {
 
 export const syncPendingJobsFromDb = async () => {
   const jobs = await allPendingJobs()
+
+  // @ts-ignore
+  if (typeof window !== 'undefined' && window.DEBUG_PENDING_JOBS) {
+    console.log(`syncPendingJobsFromDb`, jobs)
+  }
 
   jobs.forEach((job: any) => {
     if (pendingJobs[job.jobId]) {
@@ -67,7 +77,7 @@ export const deletePendingJobs = async (status?: any) => {
     }
   } else {
     // @ts-ignore
-    pendingJobs = []
+    pendingJobs = {}
   }
 }
 
@@ -102,6 +112,11 @@ export const setPendingJob = (pendingJob: IPendingJob) => {
     return
   }
 
+  // @ts-ignore
+  if (typeof window !== 'undefined' && window.DEBUG_PENDING_JOBS) {
+    console.log(`setPendingJob`, pendingJob)
+  }
+
   const { jobId } = pendingJob
   pendingJobs[jobId] = cloneDeep(pendingJob)
 }
@@ -113,6 +128,17 @@ export const updatePendingJobV2 = (pendingJob: IPendingJob) => {
   }
 
   const { jobId } = pendingJob
+
+  // @ts-ignore
+  if (typeof window !== 'undefined' && window.DEBUG_PENDING_JOBS) {
+    console.log(`updatePendingJobV2`, pendingJob)
+  }
+
+  // Fix ghosting issue that could occur when in-progress jobs were deleted.
+  if (!pendingJobs[jobId]) {
+    return false
+  }
+
   pendingJobs[jobId] = cloneDeep(pendingJob)
 }
 
@@ -153,6 +179,6 @@ export const updateAllPendingJobsV2 = async (
     }
   } else {
     // @ts-ignore
-    pendingJobs = []
+    pendingJobs = {}
   }
 }

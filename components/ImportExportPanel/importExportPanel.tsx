@@ -50,15 +50,31 @@ const ImportExportPanel = () => {
       numberRanges.push(
         <li
           key={`files-to-download-${startNum}-${endNum}`}
-          className="flex flex-row items-center text-sm font-[700] cursor-pointer mb-2 gap-2 text-text-main"
+          className="flex flex-row items-center text-sm font-[700] cursor-pointer mb-2 gap-2"
+          style={{
+            color:
+              componentState.processingDownloads || fileStatus[i] === 'done'
+                ? 'gray'
+                : '#14b8a6',
+            cursor:
+              componentState.processingDownloads || fileStatus[i] === 'done'
+                ? 'unset'
+                : 'pointer'
+          }}
         >
           <IconChevronRight />
           <div
             onClick={async () => {
-              if (fileStatus[i] === 'loading' || fileStatus[i] === 'done') {
+              if (
+                fileStatus[i] === 'loading' ||
+                fileStatus[i] === 'done' ||
+                componentState.processingDownloads
+              ) {
                 return
               }
-
+              setComponentState({
+                processingDownloads: true
+              })
               setFileStatus(
                 Object.assign({}, fileStatus, {
                   [i]: 'loading'
@@ -67,8 +83,12 @@ const ImportExportPanel = () => {
               await downloadImages({
                 offset: startNum,
                 limit: bucketSize - 1,
+                sort: 'old',
                 callback: ({ currentIndex, done }: any) => {
                   if (done) {
+                    setComponentState({
+                      processingDownloads: false
+                    })
                     setFileStatus(
                       Object.assign({}, fileStatus, {
                         [i]: 'done'
@@ -154,6 +174,7 @@ const ImportExportPanel = () => {
             </MaxWidth>
           </Section>
           <Section>
+            <div className="text-xs mb-2">(Sorted by oldest images first)</div>
             <ul>{renderImageList()}</ul>
           </Section>
         </SubSectionTitle>

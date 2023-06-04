@@ -1,3 +1,4 @@
+import { Lora } from 'types'
 import { modifyPromptForStylePreset } from '../utils/imageUtils'
 import { SourceProcessing } from '../utils/promptUtils'
 import AppSettings from './AppSettings'
@@ -13,9 +14,10 @@ export interface IApiParams {
   source_processing?: string
   source_mask?: string
   r2?: boolean
+  replacement_filter?: boolean
   shared?: boolean
   workers?: Array<string>
-  slow_workers: boolean
+  slow_workers?: boolean
   worker_blacklist?: boolean
 }
 
@@ -45,6 +47,7 @@ export interface IArtBotImageDetails {
   control_type?: string
   image_is_control?: boolean
   return_control_map?: boolean
+  loras: Lora[]
 }
 
 interface ParamsObject {
@@ -65,6 +68,7 @@ interface ParamsObject {
   tiling: boolean
   post_processing: string[]
   n: number
+  loras?: Lora[]
 }
 
 interface IOptions {
@@ -104,7 +108,8 @@ class ImageParamsForApi {
       denoising_strength,
       control_type,
       image_is_control,
-      return_control_map
+      return_control_map,
+      loras = []
     } = imageDetails
     let negative = imageDetails.negative || ''
 
@@ -131,6 +136,7 @@ class ImageParamsForApi {
       trusted_workers: useTrusted,
       models,
       r2: true,
+      replacement_filter: AppSettings.get('useReplacementFilter') || false,
       worker_blacklist: false,
       shared: shareImage,
       slow_workers: AppSettings.get('slow_workers') === false ? false : true
@@ -140,10 +146,21 @@ class ImageParamsForApi {
       const blocked = useBlocklist.map((worker: { id: string }) => worker.id)
       apiParams.workers = [...blocked]
       apiParams.worker_blacklist = true
+    } else {
+      delete apiParams.worker_blacklist
     }
 
     if (!useBlocklist && useWorkerId) {
       apiParams.workers = [useWorkerId]
+
+      // Potential ArtBot / AI Horde API interface issue.
+      // If we're explicitly choosing a worker, we probably don't care, delete them.
+      // Somehow, this seems to allow jobs to be processed again.
+      delete apiParams.worker_blacklist
+      delete apiParams.slow_workers
+      delete apiParams.replacement_filter
+      apiParams.shared = false
+      apiParams.trusted_workers = false
     }
 
     if (source_processing === SourceProcessing.Img2Img) {
@@ -154,6 +171,16 @@ class ImageParamsForApi {
       if (source_mask) {
         apiParams.source_mask = source_mask
       }
+    }
+
+    if (loras && Array.isArray(loras) && loras.length > 0) {
+      apiParams.params.loras = loras.map((lora) => {
+        return {
+          name: String(lora.name),
+          model: lora.model,
+          clip: lora.clip
+        }
+      })
     }
 
     if (
@@ -210,6 +237,10 @@ class ImageParamsForApi {
 
     if (source_image) {
       apiParams.params.hires_fix = false
+    }
+
+    if (loras && loras.length === 0) {
+      delete apiParams.params.loras
     }
 
     return apiParams

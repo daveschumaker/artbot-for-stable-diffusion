@@ -19,6 +19,7 @@ import SelectComponent from 'components/UI/Select'
 import { Button } from 'components/UI/Button'
 import NumericInputSlider from 'components/CreatePage/AdvancedOptionsPanel/NumericInputSlider'
 import DefaultPromptInput from 'models/DefaultPromptInput'
+import useWorkerDetails from 'hooks/useWorkerDetails'
 
 interface ModifiedInput {
   height: number
@@ -33,6 +34,7 @@ const ImageOrientationOptions = ({
   input: ModifiedInput
   setInput: Dispatch<Partial<DefaultPromptInput>>
 }) => {
+  const [workerDetails] = useWorkerDetails()
   const userState = useStore(userInfoStore)
   const { loggedIn } = userState
 
@@ -131,10 +133,21 @@ const ImageOrientationOptions = ({
     }
   )[0]
 
+  const totalPixels = input.height * input.width
+
   return (
     <Section>
       <MaxWidth width="480px">
         <SubSectionTitle>Image orientation</SubSectionTitle>
+        {
+          // @ts-ignore
+          workerDetails && totalPixels > workerDetails.max_pixels && (
+            <div className="flex flex-row items-center w-full gap-2 mb-2 text-red-600 text-[14px] font-[700]">
+              Warning: These dimensions exceed the max_pixels for your targeted
+              worker. Reduce resolution or remove targeted worker.
+            </div>
+          )
+        }
         <div className="flex flex-row items-center w-full gap-2 mb-2">
           <SelectComponent
             options={ImageOrientation.dropdownOptions()}

@@ -69,6 +69,7 @@ export interface CreateImageJob {
   canvasStore?: any
   tiling: boolean
   post_processing: Array<string>
+  loras: Array<any>
 
   has_source_mask?: boolean
   has_source_image?: boolean
@@ -173,6 +174,12 @@ export interface SelectPropsComponent {
   styles?: any
   value?: Value
   width?: string
+}
+
+export interface Lora {
+  name: string
+  model: number
+  clip: number
 }
 
 export interface GenerateResponse {

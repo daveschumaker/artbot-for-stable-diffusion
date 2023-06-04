@@ -53,6 +53,8 @@ import { MAX_IMAGES_PER_JOB } from '_constants'
 import RenderParentImage from 'components/ParentImage'
 import ImageOrientationOptions from 'modules/ImageOrientationOptions'
 import AllowNsfwImages from './AllowNsfwImages'
+import ReplacementFilterToggle from './ReplacementFilterToggle'
+import LoraSelect from 'modules/LoraSelect'
 
 const NoSliderSpacer = styled.div`
   height: 14px;
@@ -671,6 +673,7 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
           checked={input.useFavoriteModels}
         />
       )}
+      <LoraSelect input={input} setInput={setInput} />
       <InputSwitch
         label="Enable karras"
         tooltip="Denoising magic. Dramatically improves image generation using fewer steps."
@@ -737,6 +740,7 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
         </div>
       </Section>
       <AllowNsfwImages />
+      <ReplacementFilterToggle />
       <Section>
         <NumericInputSlider
           label="CLIP skip"
