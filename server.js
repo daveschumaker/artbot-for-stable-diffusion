@@ -49,6 +49,8 @@ app.prepare().then(async () => {
         if (err) throw err
       }
 
+      console.log('\n--- ArtBot Server Online --')
+      console.log(new Date())
       console.log(`> Ready on localhost:${port} - env ${process.env.NODE_ENV}`)
     })
   } catch (err) {
