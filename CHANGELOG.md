@@ -1,3 +1,9 @@
+# 2023.06.06
+
+- Been heads down lately rewriting a bunch of stuff using Next.JS server components (and also trying to figure out a memory leak issue with my Node server). Also, just a lot of general cleanup -- trying to make things easier to read and for people to contribute, because there is a lot of spaghetti.
+- Change input field on LoRA modal to be numeric -- much easier for people on mobile devices to enter model number (but still allows pasting a URL). [Thanks to Efreak for the pull request on Github!](https://github.com/daveschumaker/artbot-for-stable-diffusion/commit/17c1ced34afd6ae6c2d62cc65a49ae249f3f8df7)
+- Fix issue with image gallery page not respecting the image limit you set on the [ArtBot settings page](/settings?panel=prefs). You may need to re-select a number for this to properly take effect. Thanks to Efreak for reporting this on Discord.
+
 # 2023.05.31
 
 - It appears phantom jobs never went away. Interestingly, I can't recreate on my local machine in either development or production servers. But I do see it happen on my phone. I've added some more debugging logic so I can... err... test in production.
