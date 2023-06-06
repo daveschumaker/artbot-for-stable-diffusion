@@ -96,7 +96,7 @@ const LoadLora = ({
           type="text"
           name="filterLoras"
           placeholder="Civitai LoRA ID or URL"
-          inputmode="numeric"
+          inputMode="numeric"
           onChange={(e: any) => {
             setLoraId(e.target.value)
           }}
