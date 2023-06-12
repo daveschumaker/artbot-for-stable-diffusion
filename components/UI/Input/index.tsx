@@ -8,6 +8,7 @@ interface InputProps {
   type?: string
   className?: string
   id?: string
+  inputMode?: any
   children?: React.ReactNode
   error?: boolean | string
   step?: number

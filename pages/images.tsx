@@ -182,9 +182,10 @@ const ImagesPage = () => {
     const sort = localStorage.getItem('imagePageSort') || 'new'
 
     if (componentState.filterMode === 'all') {
-      data = await fetchCompletedJobs({ offset, sort })
+      data = await fetchCompletedJobs({ limit: LIMIT, offset, sort })
     } else {
       data = await filterCompletedJobs({
+        limit: LIMIT,
         offset,
         sort,
         filterType: componentState.filterMode,
@@ -196,6 +197,7 @@ const ImagesPage = () => {
     await getImageCount()
     setComponentState({ images: data, isLoading: false })
   }, [
+    LIMIT,
     componentState.filterMode,
     componentState.updateTimestamp,
     getImageCount,
@@ -225,7 +227,11 @@ const ImagesPage = () => {
       if (btn === 'last') {
         const count = await countCompletedJobs()
         const sort = localStorage.getItem('imagePageSort') || 'new'
-        const data = await fetchCompletedJobs({ offset: count - LIMIT, sort })
+        const data = await fetchCompletedJobs({
+          limit: LIMIT,
+          offset: count - LIMIT,
+          sort
+        })
         setComponentState({
           images: data,
           isLoading: false,
@@ -242,6 +248,7 @@ const ImagesPage = () => {
       if (btn === 'first') {
         const sort = localStorage.getItem('imagePageSort') || 'new'
         const data = await fetchCompletedJobs({
+          limit: LIMIT,
           offset: 0,
           sort
         })
