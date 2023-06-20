@@ -13,6 +13,7 @@ import { db, generateThumbnails } from 'utils/db'
 import { deletePendingJobs } from 'controllers/pendingJobsCache'
 
 const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
+  const [processType, setProcessType] = useState<string | null>(null)
   const [processState, setProcessState] = useState('')
   const [totalToProcess, setTotalToProcess] = useState(0)
   const [currentProcessIdx, setCurrentProcessIdx] = useState(0)
@@ -251,7 +252,7 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
             could take some time. (On my iPhone 14 Pro, it took about 100
             seconds to process 3,000 images)
           </div>
-          {totalToProcess > 0 && (
+          {processType === 'thumbnails' && totalToProcess > 0 && (
             <div className="block w-full mb-2 text-xs">
               {processState} {currentProcessIdx} of {totalToProcess}{' '}
               {processState === 'Analyzing' ? 'images' : 'thumbnails'}.
@@ -264,6 +265,7 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
         >
           <Button
             onClick={() => {
+              setProcessType('thumbnails')
               // @ts-ignore
               generateThumbnails(({ total, current, state }) => {
                 setTotalToProcess(total)

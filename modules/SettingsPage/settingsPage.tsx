@@ -273,7 +273,7 @@ const SettingsPage = () => {
                     )
                   }}
                 >
-                  Export
+                  Import / Export
                 </DropDownMenuItem>
               </DropDownMenu>
             )}
@@ -300,7 +300,7 @@ const SettingsPage = () => {
             </li>
             <li>
               <Linker href="/settings?panel=import-export" passHref>
-                Export
+                Import / Export
               </Linker>
             </li>
           </LinksList>

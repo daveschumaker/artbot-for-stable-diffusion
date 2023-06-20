@@ -120,15 +120,28 @@ const ImageOptionsWrapper = ({
       setPendingReroll(true)
 
       const reRollStatus = await rerollImage(imageDetails)
+
       const { success } = reRollStatus
 
       if (success) {
         setPendingReroll(false)
-        router.push('/pending')
-        handleClose()
+        // router.push('/pending')
+        // handleClose()
+
+        toast.success('Re-rolling and requesting new image', {
+          pauseOnFocusLoss: false,
+          position: 'top-center',
+          autoClose: 2500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          theme: 'light'
+        })
       }
     },
-    [handleClose, pendingReroll, router]
+    [pendingReroll]
   )
 
   const handleTileClick = (size: string) => {

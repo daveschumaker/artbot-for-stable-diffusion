@@ -74,6 +74,20 @@ export const getApiHostServer = () => {
   return HORDE_PROD
 }
 
+export const downloadBlob = (blob: Blob, fileName: string) => {
+  const url = URL.createObjectURL(blob)
+
+  const link = document.createElement('a')
+  link.href = url
+  link.download = fileName
+
+  document.body.appendChild(link)
+  link.click()
+
+  document.body.removeChild(link)
+  URL.revokeObjectURL(url)
+}
+
 ///////
 export const isSafariBrowser = () => {
   const is_chrome = navigator.userAgent.indexOf('Chrome') > -1
@@ -172,6 +186,18 @@ export const initBrowserTab = () => {
       setPrimaryWindow(false)
     }
   }
+}
+
+export const formatDate = () => {
+  const currentDate = new Date()
+
+  const year = currentDate.getFullYear()
+  const month = String(currentDate.getMonth() + 1).padStart(2, '0')
+  const day = String(currentDate.getDate()).padStart(2, '0')
+  const hours = String(currentDate.getHours()).padStart(2, '0')
+  const minutes = String(currentDate.getMinutes()).padStart(2, '0')
+
+  return `${year}.${month}.${day}_${hours}:${minutes}`
 }
 
 // export const broadcastMessage = (msg: string) => {

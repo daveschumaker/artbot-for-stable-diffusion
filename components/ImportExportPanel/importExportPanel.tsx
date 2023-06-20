@@ -10,6 +10,8 @@ import MaxWidth from 'components/UI/MaxWidth'
 import { useState } from 'react'
 import SpinnerV2 from 'components/Spinner'
 import { IconChevronRight } from '@tabler/icons-react'
+import ExportDatabase from 'modules/SettingsPage/ExportDatabase'
+import ImportDatabase from 'modules/SettingsPage/ImportDatabase'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -127,10 +129,12 @@ const ImportExportPanel = () => {
 
   return (
     <div>
+      <PageTitle as="h2">Import / Export Data</PageTitle>
+      <ImportDatabase />
+      <ExportDatabase />
       <Section>
-        <PageTitle as="h2">Export Data</PageTitle>
         <SubSectionTitle>
-          Download all data{' '}
+          <strong>Download all images </strong>
           {componentState.totalImages > 0
             ? `(${componentState.totalImages} images)`
             : null}

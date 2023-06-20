@@ -79,7 +79,7 @@ export const createPendingRerollJob = async (
   imageParams: RerollImageRequest
 ) => {
   const clonedParams = await cloneImageParams(imageParams)
-  await addJobToPending(clonedParams)
+  return await addJobToPending(clonedParams)
 }
 
 export const addTriggerToPrompt = ({
