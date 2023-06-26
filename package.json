@@ -50,6 +50,7 @@
     "clone-deep": "4.0.1",
     "clsx": "1.2.1",
     "dexie": "3.2.3",
+    "dexie-export-import": "^4.0.7",
     "dexie-react-hooks": "1.1.1",
     "dompurify": "^3.0.3",
     "dotenv": "16.0.3",

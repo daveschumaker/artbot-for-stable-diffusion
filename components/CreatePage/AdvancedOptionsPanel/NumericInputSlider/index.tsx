@@ -110,6 +110,7 @@ const NumericInputSlider = ({
           <NumberInput
             className="mb-2"
             type="text"
+            inputMode="numeric"
             min={from}
             max={to}
             step={step}

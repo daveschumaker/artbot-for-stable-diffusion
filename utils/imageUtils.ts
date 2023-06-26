@@ -605,6 +605,7 @@ export const downloadImages = async ({
       negative_prompt: image.negative,
       sampler: image.sampler,
       model: image.models ? image.models[0] : image.model || 'stable_diffusion',
+      loras: image.loras,
       height: image.height,
       width: image.width,
       steps: Number(image.steps),

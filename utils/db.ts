@@ -54,6 +54,18 @@ export class MySubClassedDexie extends Dexie {
 
 export const db = new MySubClassedDexie()
 
+export const dbImport = async (blob: Blob) => {
+  const { importDB } = await import('dexie-export-import')
+  await importDB(blob)
+  return true
+}
+
+export const dbExport = async (progressCallback?: () => any) => {
+  const { exportDB } = await import('dexie-export-import')
+  const blob = await exportDB(db, { prettyJson: true, progressCallback })
+  return blob
+}
+
 export const generateThumbnails = async (cb = ({}: {}) => {}) => {
   let total = await countCompletedJobs()
   let current = 0

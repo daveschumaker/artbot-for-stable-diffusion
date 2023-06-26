@@ -1,3 +1,17 @@
+# 2023.06.19
+
+- I'm still here! As I said in a previous update (2023.06.06), I've been rewriting a number of components to take advantage of some new updates with NextJS 13. Ideally, I'd like to release all the changes all at once, rather than roll out stuff a bit at a time. (There's just a ton of horribly written code I'd like to get rid of forever).
+- That said, some small updates: You can now completely export and import that ArtBot database from the [import / export settings page](?panel=import-export). Thanks to Efreak on Discord for the feature request (and digging into some potential libraries to help out with this feature).
+  - This allows you to export the raw IndexedDb database from your browser. This includes the all image generation details, base64 strings for all images, various favorites, etc. Looking at this data won't really do much for you, because it's meant to...
+  - Import! You can take this same file and send it to another device (or, just use it to back things up) and import that database back into ArtBot.
+  - For me, I'm using this to test out various table optimizations and updates and makes it easy to restore things should something go awry.
+  - One important thing to note: There is currently no way to check deltas and merge two separate ArtBot databases. e.g., you export the database from your computer machine, import on your phone and create images on the go. Meanwhile, you come back home, and start creating images on your computer. Oh, wait! What about the phone? Well, now you have two divergent databases. I will have to figure this out at some point.
+- Fix: Re-rolling an image (by clicking the refresh icon), would only work 1 time for some reason. I've fixed this. You can now mash on it to generate as many re-rolls as your heart desires! Thanks to Bwesh for reporting this on Discord.
+
+# 2023.06.11
+
+- MILESTONE: 🎉🎉🎉 ‼️‼️‼️ **8,000,000 images** have been created with ArtBot!‼️‼️‼️ 🎉🎉🎉
+
 # 2023.06.06
 
 - Been heads down lately rewriting a bunch of stuff using Next.JS server components (and also trying to figure out a memory leak issue with my Node server). Also, just a lot of general cleanup -- trying to make things easier to read and for people to contribute, because there is a lot of spaghetti.
