@@ -172,6 +172,7 @@ const ImportExportPanel = () => {
                   onChange={(option: any) => {
                     setComponentState({ filesPerZip: option })
                   }}
+                  inputMode="none"
                   value={componentState.filesPerZip}
                 />
               </div>
