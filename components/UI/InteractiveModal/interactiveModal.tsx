@@ -41,7 +41,7 @@ const SwipeCapture = styled.div`
 
 const StyledInteractiveModal = styled.div<IStyle>`
   background-color: var(--body-color);
-  border-top: 2px solid ${(props) => props.theme.border};
+  border-top: 2px solid var(--border-color);
   border-radius: 8px;
   opacity: 1;
   top: 20px;
@@ -62,7 +62,7 @@ const StyledInteractiveModal = styled.div<IStyle>`
   `}
 
   @media (min-width: 640px) {
-    border: 2px solid ${(props) => props.theme.border};
+    border: 2px solid var(--border-color);
     max-width: ${(props) => props.maxWidth || '864px'};
     width: calc(100% - 48px);
     /* max-width: 752px; */

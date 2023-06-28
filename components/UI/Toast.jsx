@@ -15,7 +15,7 @@ const StyledToast = styled.div`
   align-items: center;
   background-color: var(--body-color);
   border-radius: 4px;
-  border: 2px solid ${(props) => props.theme.border};
+  border: 2px solid var(--border-color);
   box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
   color: ${(props) => props.theme.text};
   cursor: pointer;

@@ -28,19 +28,19 @@ const removeImageCanvasData = {
 }
 
 const NavItem = styled.li<LiProps>`
-  color: ${(props) => props.theme.navLinkNormal};
+  color: var(--nav-link-normal);
   cursor: pointer;
 
   &:hover {
-    color: ${(props) => props.theme.navLinkActive};
-    border-bottom: 2px solid ${(props) => props.theme.navLinkActive};
+    color: var(--nav-link-active);
+    border-bottom: 2px solid var(--nav-link-active);
   }
 
   ${(props) =>
     props.active &&
     `
-    color: ${props.theme.navLinkActive};
-    border-bottom: 2px solid  ${props.theme.navLinkActive};
+    color: var(--nav-link-active);
+    border-bottom: 2px solid var(--nav-link-active);
   `}
 `
 

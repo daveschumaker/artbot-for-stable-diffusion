@@ -1,9 +1,13 @@
 :root {
   --body-color: #f2f2f2;
+  --border-color: #7e5a6c;
   --text-color: #244975;
   --text-shade: #ffffff;
   --link-text: #17cfbb;
   --link-active: #5eedde;
+
+  --nav-link-normal: #282828;
+  --nav-link-active: #14b8a6;
 
   --light-shade: #efedef;
   --light-accent: #9ca8bd;
@@ -12,7 +16,8 @@
   --dark-accent: #8e7fb8;
   --dark-shade: #244975;
 
-  --card-background: #7e5a6c; /* this is equivalent to props.theme.border on original ArtBot */
+  /* this is equivalent to props.theme.border on original ArtBot */
+  --card-background: #7e5a6c;
 
   --sticky-footer-padding: 80px;
   --sticky-footer-margin: -80px;
@@ -42,5 +47,8 @@
 
     --input-background: rgb(42, 48, 60);
     --input-text: #e1e1e1;
+
+    --nav-link-normal: #ffffff;
+    --nav-link-active: #14b8a6;
   }
 }

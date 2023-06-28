@@ -9,7 +9,8 @@ interface PanelProps {
 }
 
 const StyledPanel = styled.div<PanelProps>`
-  border: solid 2px ${(props) => props.theme.border};
+  border: solid 2px var(--border-color);
+  border-color: var(--border-color);
   border-radius: 4px;
   padding: ${(props) => props.padding || '8px'};
   width: 100%;

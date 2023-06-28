@@ -75,7 +75,7 @@ const CanvasWrapper = styled.div`
 `
 
 const StyledCanvas = styled.canvas`
-  border: 1px solid ${(props) => props.theme.border};
+  border: 1px solid var(--border-color);
 `
 
 const ColorButton = styled.div`

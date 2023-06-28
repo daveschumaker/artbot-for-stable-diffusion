@@ -957,6 +957,7 @@ const ImagesPage = () => {
                   sampler: string
                   models: Array<string>
                 }) => {
+                  console.log(`image??`, image)
                   return (
                     <LazyLoad key={image.jobId} once>
                       <div className="relative">
