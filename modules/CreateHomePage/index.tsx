@@ -42,7 +42,7 @@ import { handleCreateClick } from './createPage.controller'
 
 const defaultState: DefaultPromptInput = new DefaultPromptInput()
 
-const CreateHomePage = ({ modelDetails, shortlinkImageParams }: any) => {
+const CreateHomePage = ({ modelDetails = {}, shortlinkImageParams }: any) => {
   const appState = useStore(appInfoStore)
   const userInfo = useStore(userInfoStore)
 
@@ -438,7 +438,7 @@ const CreateHomePage = ({ modelDetails, shortlinkImageParams }: any) => {
 
     // Step 9. Set pageLoaded so we can start error checking and auto saving input.
     setPageLoaded(true)
-  }, [query, shortlinkImageParams])
+  }, [query, setLocked, shortlinkImageParams])
 
   let sharedPrompt
   if (query[CreatePageMode.SHARE]) {

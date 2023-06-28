@@ -4,8 +4,6 @@ import { useStore } from 'statery'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import Script from 'next/script'
-import { ThemeProvider } from 'styled-components'
-import withDarkMode from 'next-dark-mode'
 
 import { initAppSettings } from '../utils/appSettings'
 import ContentWrapper from '../components/UI/ContentWrapper'
@@ -14,7 +12,6 @@ import Header from '../components/UI/Header'
 import PollController from '../components/PollController'
 
 import 'react-toastify/dist/ReactToastify.css'
-import { lightTheme, darkTheme } from '../styles/theme'
 import '../styles/globals.css'
 import '../styles/root.css'
 
@@ -51,9 +48,8 @@ interface MyAppProps extends AppProps {
   darkMode: any
 }
 
-function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
+function MyApp({ Component, pageProps }: MyAppProps) {
   const router = useRouter()
-  const { darkModeActive } = darkMode
   const size = useWindowSize()
 
   const [showServerUpdateComponent, setShowServerUpdateComponent] =
@@ -125,7 +121,7 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
   }, [fetchAppInfo])
 
   return (
-    <ThemeProvider theme={darkModeActive ? darkTheme : lightTheme}>
+    <>
       {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS ? (
         <>
           <Script
@@ -289,8 +285,8 @@ function MyApp({ Component, darkMode, pageProps }: MyAppProps) {
         </ContentWrapper>
       </ImagePreviewProvider>
       <MobileFooter />
-    </ThemeProvider>
+    </>
   )
 }
 
-export default withDarkMode(MyApp)
+export default MyApp

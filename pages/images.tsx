@@ -963,6 +963,7 @@ const ImagesPage = () => {
                         <LinkEl
                           href={`/image/${image.jobId}`}
                           passHref
+                          //@ts-ignore
                           onClick={(e) =>
                             handleImageClick(e, image.id, image.jobId)
                           }
@@ -1047,6 +1048,7 @@ const ImagesPage = () => {
                         <LinkEl
                           href={`/image/${image.jobId}`}
                           passHref
+                          //@ts-ignore
                           onClick={(e) =>
                             handleImageClick(e, image.id, image.jobId)
                           }

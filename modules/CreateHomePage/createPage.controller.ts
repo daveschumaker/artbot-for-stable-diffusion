@@ -97,7 +97,7 @@ export const handleCreateClick = async ({
     const modelsArray =
       Object.keys(favModels).length > 0
         ? (inputToSubmit.models = [...Object.keys(favModels)])
-        : 'stable_diffusion'
+        : ['stable_diffusion']
     input.models = [...modelsArray]
   }
 

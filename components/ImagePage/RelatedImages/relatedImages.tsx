@@ -114,9 +114,9 @@ const RelatedImages = ({
     })
   }
 
-  const handleAfterDelete = async () => {
+  const handleAfterDelete = useCallback(async () => {
     await updateRelatedImages(parentJobId)
-  }
+  }, [parentJobId, updateRelatedImages])
 
   const handleImageClick = useCallback(
     // @ts-ignore
@@ -288,6 +288,7 @@ const RelatedImages = ({
                     <LinkEl
                       href={`/image/${image.jobId}`}
                       passHref
+                      // @ts-ignore
                       onClick={(e) =>
                         handleImageClick({
                           e,

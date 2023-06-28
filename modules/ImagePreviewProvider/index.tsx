@@ -2,6 +2,7 @@ import ImageModalV2 from 'components/ImageModalV2'
 import usePath from 'hooks/usePath'
 import React, {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useRef,
@@ -46,11 +47,11 @@ export const ImagePreviewProvider = ({
   const [showModal, setShowModal] = useState(false)
   const [componentProps, setComponentProps] = useState<any>({})
 
-  const handleModalClose = () => {
+  const handleModalClose = useCallback(() => {
     setImageData(null)
     setShowModal(false)
     componentProps.onCloseCallback()
-  }
+  }, [componentProps])
 
   const showImagePreviewModal = ({
     disableNav = false,
@@ -88,7 +89,7 @@ export const ImagePreviewProvider = ({
     if (path !== prevPath.current) {
       handleModalClose()
     }
-  }, [path, showModal])
+  }, [handleModalClose, path, showModal])
 
   useEffect(() => {
     if (imageData && !showModal) {
