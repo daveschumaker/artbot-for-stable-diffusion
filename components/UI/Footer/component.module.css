@@ -1,0 +1,24 @@
+.Footer {
+  display: none;
+  margin-top: auto;
+  margin-bottom: 16px;
+  padding-top: 16px;
+  text-align: center;
+  width: 100%;
+}
+
+.Footer-isSafari {
+  margin-bottom: 160px;
+}
+
+@media (min-width: 640px) {
+  .Footer {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    padding-top: 16px;
+  }
+}
