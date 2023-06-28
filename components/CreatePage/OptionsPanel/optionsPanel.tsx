@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import styled from 'styled-components'
 import { useRouter } from 'next/router'
 
 import Panel from '../../UI/Panel'
@@ -13,10 +12,8 @@ import WarningPanel from '../WarningPanel'
 import { nearestWholeMultiple } from '../../../utils/imageUtils'
 import Editor from '../../Fabric/Editor'
 import Head from 'next/head'
-
-interface LiProps {
-  active?: boolean
-}
+import styles from './component.module.css'
+import clsx from 'clsx'
 
 const removeImageCanvasData = {
   canvasData: null,
@@ -26,23 +23,6 @@ const removeImageCanvasData = {
   source_mask: '',
   source_processing: SourceProcessing.Prompt
 }
-
-const NavItem = styled.li<LiProps>`
-  color: var(--nav-link-normal);
-  cursor: pointer;
-
-  &:hover {
-    color: var(--nav-link-active);
-    border-bottom: 2px solid var(--nav-link-active);
-  }
-
-  ${(props) =>
-    props.active &&
-    `
-    color: var(--nav-link-active);
-    border-bottom: 2px solid var(--nav-link-active);
-  `}
-`
 
 interface Props {
   input: any
@@ -98,24 +78,30 @@ const OptionsPanel = ({ input, setInput }: Props) => {
           `Inpainting / Outpainting / Img2Img Mask`}
       </SectionTitle>
       <ul className="flex flex-row gap-1 md:gap-4 mb-3 text-sm md:text-base">
-        <NavItem
-          active={activeNav === 'advanced'}
+        <div
+          className={clsx(
+            styles.NavItem,
+            activeNav === 'advanced' && styles['NavItem-Active']
+          )}
           onClick={() => {
             setActiveNav('advanced')
             router.push(`/`)
           }}
         >
           [ advanced ]
-        </NavItem>
-        <NavItem
-          active={activeNav === 'img2img'}
+        </div>
+        <div
+          className={clsx(
+            styles.NavItem,
+            activeNav === 'img2img' && styles['NavItem-Active']
+          )}
           onClick={() => {
             router.push(`?panel=img2img`)
             setActiveNav('img2img')
           }}
         >
           [ img2img ]
-        </NavItem>
+        </div>
         {/* <NavItem
           active={activeNav === 'draw'}
           onClick={() => {
@@ -125,15 +111,18 @@ const OptionsPanel = ({ input, setInput }: Props) => {
         >
           [ draw ]
         </NavItem> */}
-        <NavItem
-          active={activeNav === 'inpainting'}
+        <div
+          className={clsx(
+            styles.NavItem,
+            activeNav === 'inpainting' && styles['NavItem-Active']
+          )}
           onClick={() => {
             router.push(`?panel=inpainting`)
             setActiveNav('inpainting')
           }}
         >
           [ inpainting / outpainting ]
-        </NavItem>
+        </div>
       </ul>
       {activeNav === 'advanced' && (
         <AdvancedOptionsPanel input={input} setInput={setInput} />

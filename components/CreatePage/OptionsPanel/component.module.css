@@ -1,0 +1,14 @@
+.NavItem {
+  color: var(--nav-link-normal);
+  cursor: pointer;
+}
+
+.NavItem:hover {
+  color: var(--nav-link-active);
+  border-bottom: 2px solid var(--nav-link-active);
+}
+
+.NavItem-Active {
+  color: var(--nav-link-active);
+  border-bottom: 2px solid var(--nav-link-active);
+}
