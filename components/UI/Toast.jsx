@@ -13,7 +13,7 @@ import AppSettings from 'models/AppSettings'
 
 const StyledToast = styled.div`
   align-items: center;
-  background-color: ${(props) => props.theme.body};
+  background-color: var(--body-color);
   border-radius: 4px;
   border: 2px solid ${(props) => props.theme.border};
   box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
@@ -25,7 +25,8 @@ const StyledToast = styled.div`
   padding: 8px;
   position: fixed;
   right: 8px;
-  top: ${(props) => (props.active ? 'calc(env(safe-area-inset-top) + 8px)' : '-200px')};
+  top: ${(props) =>
+    props.active ? 'calc(env(safe-area-inset-top) + 8px)' : '-200px'};
   transition: all 0.4s;
   width: 300px;
   z-index: 26;
@@ -35,7 +36,7 @@ const StyledClose = styled.div`
   position: absolute;
   top: 4px;
   right: 4px;
-`;
+`
 
 const StyledTextPanel = styled.div`
   display: flex;
@@ -48,7 +49,13 @@ const StyledTextPanel = styled.div`
   padding-left: 8px;
 `
 
-export default function Toast({ disableAutoClose = false, handleClose, handleImageClick, jobId, showImageReadyToast }) {
+export default function Toast({
+  disableAutoClose = false,
+  handleClose,
+  handleImageClick,
+  jobId,
+  showImageReadyToast
+}) {
   const handlers = useSwipeable({
     onSwipedRight: () => {
       handleClose()
@@ -103,7 +110,8 @@ export default function Toast({ disableAutoClose = false, handleClose, handleIma
     return () => clearInterval(interval)
   })
 
-  const isActive = jobId && imageDetails && imageDetails.base64String && showImageReadyToast
+  const isActive =
+    jobId && imageDetails && imageDetails.base64String && showImageReadyToast
 
   if (!isActive || AppSettings.get('disableNewImageNotification')) {
     return null
@@ -114,21 +122,29 @@ export default function Toast({ disableAutoClose = false, handleClose, handleIma
       {isActive && (
         <>
           <div>
-            <Linker disableLinkClick href={`/image/${jobId}`} onClick={handleClick}>
+            <Linker
+              disableLinkClick
+              href={`/image/${jobId}`}
+              onClick={handleClick}
+            >
               <ImageSquare imageDetails={imageDetails} size={80} />
             </Linker>
           </div>
           <StyledTextPanel>
             <div>Your new image is ready.</div>
-            <Linker disableLinkClick href={`/image/${jobId}`} onClick={handleClick}>
+            <Linker
+              disableLinkClick
+              href={`/image/${jobId}`}
+              onClick={handleClick}
+            >
               Check it out!
-            </Linker >
+            </Linker>
           </StyledTextPanel>
           <StyledClose onClick={handleClose}>
             <CloseIcon />
           </StyledClose>
         </>
       )}
-    </StyledToast >
-  );
+    </StyledToast>
+  )
 }

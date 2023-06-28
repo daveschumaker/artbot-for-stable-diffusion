@@ -26,7 +26,7 @@ interface IStyledProps {
 }
 
 const MenuOverlay = styled.div<IStyledProps>`
-  background-color: ${(props) => props.theme.secondaryBackground};
+  background-color: var(--body-color);
   /* border-right: 1px solid gray; */
   box-shadow: 2px 0 8px #000000;
   bottom: 0;

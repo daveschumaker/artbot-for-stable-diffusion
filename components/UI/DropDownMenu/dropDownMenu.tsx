@@ -15,7 +15,7 @@ interface StyleProps {
 }
 
 const StyledDropDownMenu = styled.div<StyleProps>`
-  background-color: ${(props) => props.theme.body};
+  background-color: var(--body-color);
   border: 2px solid ${(props) => props.theme.navLinkActive};
   border-radius: 4px;
   /* padding: 4px 0; */

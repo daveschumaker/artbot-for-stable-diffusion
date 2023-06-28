@@ -14,7 +14,7 @@ import PageTitle from './UI/PageTitle'
 import TextButton from './UI/TextButton'
 
 const PromptsList = styled.div`
-  background-color: ${(props) => props.theme.body};
+  background-color: var(--body-color);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -39,7 +39,7 @@ const PromptsList = styled.div`
 `
 
 const PromptWrapper = styled.div`
-  background-color: ${(props) => props.theme.body};
+  background-color: var(--body-color);
   display: flex;
   flex-direction: column;
   row-gap: 4px;
