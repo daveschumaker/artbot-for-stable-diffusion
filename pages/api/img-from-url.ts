@@ -93,6 +93,8 @@ export default async function handler(
     // @ts-ignore
     imgBuffer = await resp.buffer()
   } catch (err) {
+    console.log(`--`)
+    console.log(new Date())
     console.log(`Error: resp.buffer is missing`)
     console.log(`Image URL:`, imageUrl)
     console.log(err)

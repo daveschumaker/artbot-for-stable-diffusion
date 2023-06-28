@@ -16,14 +16,14 @@ const fetchWorkerDetails = async () => {
       workerDetailsCache = [].concat(data)
     }
   } catch (err) {
-    // If an error occurs, we don't want to overwrite any existing data.
+    console.error(err)
   }
 }
 
-const initWorkerDetailsFetch = () => {
-  fetchWorkerDetails()
-  setInterval(() => {
-    fetchWorkerDetails()
+const initWorkerDetailsFetch = async () => {
+  await fetchWorkerDetails()
+  setInterval(async () => {
+    await fetchWorkerDetails()
   }, 60000)
 }
 

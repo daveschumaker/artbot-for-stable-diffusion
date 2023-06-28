@@ -164,6 +164,7 @@ export interface DiffusionModel {
 
 export interface SelectPropsComponent {
   className?: string
+  inputMode?: string
   isDisabled?: boolean
   isMulti?: boolean
   isSearchable?: boolean

@@ -11,7 +11,7 @@ const nextConfig = {
   },
   productionBrowserSourceMaps: false, // Setting to true seems to blow up our prod Node server
   reactStrictMode: true,
-  swcMinify: false, // Set to false for now due to issue with React-tooltip
+  swcMinify: true,
   webpack: (config) => {
     config.module.rules.push({
       test: /\.md$/,

@@ -12,27 +12,22 @@ const cache = {
   details: {}
 }
 
-const getAvailableModels = () => {
-  return {
-    timestamp: cache.availableFetchTimestamp,
-    models: cache.models
-  }
-}
+const getAvailableModels = () => ({
+  timestamp: cache.availableFetchTimestamp,
+  models: cache.models
+})
 
-const getModelDetails = () => {
-  return {
-    timestamp: cache.detailsFetchTimestamp,
-    models: cache.details
-  }
-}
+const getModelDetails = () => ({
+  timestamp: cache.detailsFetchTimestamp,
+  models: cache.details
+})
 
 const fetchAvailableModels = async () => {
   try {
     const resp = await fetch(`https://aihorde.net/api/v2/status/models`, {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
-        'Client-Agent': `ArtBot:v.1:(discord)rockbandit#4910`
+        'Content-Type': 'application/json'
       }
     })
     const data = await resp.json()
@@ -41,7 +36,9 @@ const fetchAvailableModels = async () => {
       cache.models = [...data]
       cache.availableFetchTimestamp = Date.now()
     }
-  } catch (err) {}
+  } catch (err) {
+    console.error(err)
+  }
 }
 
 const fetchModelDetails = async () => {
@@ -95,20 +92,24 @@ const fetchModelDetails = async () => {
       cache.details = { ...modelDetails }
       cache.detailsFetchTimestamp = Date.now()
     }
-  } catch (err) {}
+  } catch (err) {
+    console.error(err)
+  }
 }
 
 const initModelDataFetch = async () => {
   try {
     loadInitChanges()
-    fetchAvailableModels()
-    fetchModelDetails()
+    await fetchAvailableModels()
+    await fetchModelDetails()
 
-    setInterval(() => {
-      fetchAvailableModels()
-      fetchModelDetails()
+    setInterval(async () => {
+      await fetchAvailableModels()
+      await fetchModelDetails()
     }, 60000)
-  } catch (err) {}
+  } catch (err) {
+    console.error('Error initializing model data fetch:', err)
+  }
 }
 
 module.exports = {
