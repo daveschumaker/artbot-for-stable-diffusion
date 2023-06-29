@@ -3,59 +3,58 @@ import sizeOf from 'buffer-image-size'
 import sharp from 'sharp'
 import ufs from '../../server/utils/fileSize'
 
+const MAX_FILESIZE = 10 * 1000000
+
 type Data = {
   success: boolean
   base64String?: string
   status?: string
 }
 
-const getDataUrl = (imgBuffer: any) => {
-  return new Promise((resolve) => {
-    return sharp(imgBuffer)
-      .toBuffer({ resolveWithObject: true })
-      .then(async function ({ data, info }) {
-        const pngString = await data.toString('base64')
-        resolve({
-          success: true,
-          base64String: pngString,
-          height: info.height,
-          width: info.width
-        })
-      })
-      .catch((err) => {
-        console.log(`Unable to create png file.`, err)
-        resolve({
-          success: false
-        })
-      })
-  })
+const getDataUrl = async (imgBuffer: any) => {
+  try {
+    const { data, info } = await sharp(imgBuffer).toBuffer({
+      resolveWithObject: true
+    })
+    const pngString = await data.toString('base64')
+
+    return {
+      success: true,
+      base64String: pngString,
+      height: info.height,
+      width: info.width
+    }
+  } catch (err) {
+    console.log(`Unable to create png file.`, err)
+    return {
+      success: false
+    }
+  }
 }
 
-const resizeImage = (imgBuffer: any) => {
-  return new Promise((resolve) => {
-    return sharp(imgBuffer)
+const resizeImage = async (imgBuffer: any) => {
+  try {
+    const { data, info } = await sharp(imgBuffer)
       .resize({
         width: 1024,
         height: 1024,
         fit: 'inside'
       })
       .toBuffer({ resolveWithObject: true })
-      .then(async function ({ data, info }) {
-        const pngString = await data.toString('base64')
-        resolve({
-          success: true,
-          base64String: pngString,
-          height: info.height,
-          width: info.width
-        })
-      })
-      .catch((err) => {
-        console.log(`Unable to create png file.`, err)
-        resolve({
-          success: false
-        })
-      })
-  })
+    const pngString = await data.toString('base64')
+
+    return {
+      success: true,
+      base64String: pngString,
+      height: info.height,
+      width: info.width
+    }
+  } catch (err) {
+    console.log(`Unable to create png file.`, err)
+    return {
+      success: false
+    }
+  }
 }
 
 export default async function handler(
@@ -70,7 +69,7 @@ export default async function handler(
 
   try {
     const fileSize = await ufs(imageUrl)
-    if (fileSize > 10000000) {
+    if (fileSize > MAX_FILESIZE) {
       return res.send({
         success: false,
         status: 'ERROR_IMAGE_SIZE'
@@ -91,7 +90,9 @@ export default async function handler(
 
   try {
     // @ts-ignore
-    imgBuffer = await resp.buffer()
+    const arrayBuffer = await resp.arrayBuffer()
+    const uint8Array = new Uint8Array(arrayBuffer)
+    imgBuffer = Buffer.from(uint8Array)
   } catch (err) {
     console.log(`--`)
     console.log(new Date())
