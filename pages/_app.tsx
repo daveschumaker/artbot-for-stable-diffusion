@@ -36,6 +36,7 @@ import ErrorComponent, { logErrorInComponent } from 'components/ErrorComponent'
 import ServerUpdateComponent from 'components/ServerUpdateComponent'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { ImagePreviewProvider } from 'modules/ImagePreviewProvider'
+import AppInit from 'modules/AppInit'
 
 initBrowserTab()
 initAppSettings()
@@ -200,6 +201,7 @@ function MyApp({ Component, pageProps }: MyAppProps) {
         ></meta>
         <link rel="icon" type="image/x-icon" href="/artbot/favicon.ico"></link>
       </Head>
+      <AppInit />
       <ImagePreviewProvider>
         <PollController />
         <ContentWrapper>
