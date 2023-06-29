@@ -1,0 +1,12 @@
+
+version: '3'
+services:
+  nextjs-app:
+    image: nextjs-app
+    ports:
+      - 8888:3000
+    volumes:
+      - ./pages:/app/pages
+
+
+#  docker-compose up
