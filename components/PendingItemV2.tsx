@@ -46,12 +46,6 @@ const StyledContainer = styled.div`
   margin-bottom: 16px;
 `
 
-const StyledPanel = styled(Panel)`
-  background-color: ${(props) => props.theme.cardBackground};
-  display: flex;
-  flex-direction: column;
-`
-
 const StyledCloseButton = styled.div`
   cursor: pointer;
   position: absolute;
@@ -248,7 +242,13 @@ const PendingItem = memo(
 
     return (
       <StyledContainer>
-        <StyledPanel>
+        <Panel
+          style={{
+            backgroundColor: 'var(--card-background)',
+            display: 'flex',
+            flexDirection: 'column'
+          }}
+        >
           {processDoneOrError ? (
             <StyledCloseButton onClick={handleRemovePanel}>
               <CloseIcon width={2} stroke="white" />
@@ -501,7 +501,7 @@ const PendingItem = memo(
               <ProgressBar pct={100} />
             </ProgressBarPosition>
           )}
-        </StyledPanel>
+        </Panel>
       </StyledContainer>
     )
   },
