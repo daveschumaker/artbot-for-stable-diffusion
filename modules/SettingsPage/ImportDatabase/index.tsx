@@ -36,7 +36,7 @@ export default function ImportDatabase() {
       <label
         //@ts-ignore
         for="file-upload"
-        class={styles.ImportButton}
+        className={styles.ImportButton}
       >
         Import database
       </label>

@@ -30,6 +30,7 @@
   --placeholder-text: #9299a6;
   --input-background: #ffffff;
   --input-text: #282828;
+  --input-color: #282828;
 
   --sidebar-width: 240px;
 
@@ -47,6 +48,7 @@
 
     --input-background: rgb(42, 48, 60);
     --input-text: #e1e1e1;
+    --input-color: #e1e1e1;
 
     --nav-link-normal: #ffffff;
     --nav-link-active: #14b8a6;

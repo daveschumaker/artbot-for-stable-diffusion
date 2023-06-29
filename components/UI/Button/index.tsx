@@ -41,15 +41,11 @@ export function Button(props: ButtonProps) {
     <button
       id={id}
       disabled={disabled}
-      className={clsx(
-        styles['styled-button'],
-        {
-          [styles['styled-button-secondary']]: theme === 'secondary',
-          [styles['styled-button-small']]: size === 'small',
-          [styles['styled-button-disabled']]: disabled
-        },
-        className
-      )}
+      className={clsx(styles['styled-button'], className, {
+        [styles['styled-button-secondary']]: theme === 'secondary',
+        [styles['styled-button-small']]: size === 'small',
+        [styles['styled-button-disabled']]: disabled
+      })}
       onClick={() => {
         if (disabled) return
         onClick()

@@ -1,6 +1,9 @@
+/* eslint react/prop-types: 0 */
+
 import React, { useCallback } from 'react'
 import styled from 'styled-components'
 import { useDropzone } from 'react-dropzone'
+import styles from './component.module.css'
 
 import PlusIcon from '../icons/PlusIcon'
 import {
@@ -23,27 +26,6 @@ interface UploaderProps {
 
 const StyledIcon = styled(PlusIcon)`
   display: block;
-`
-
-const StyledDropZone = styled.div`
-  align-items: center;
-  border-color: ${(props) => props.theme.text};
-  border-radius: 4px;
-  border-style: dashed;
-  border-width: 2px;
-  color: ${(props) => props.theme.text};
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  font-size: 16px;
-  height: 200px;
-  justify-content: center;
-  outline: none;
-  padding: 16px;
-  text-align: center;
-  transition: border 0.24s ease-in-out;
-  width: 100%;
 `
 
 export default function Dropzone(props: UploaderProps) {
@@ -96,15 +78,8 @@ export default function Dropzone(props: UploaderProps) {
     [handleUpload]
   )
 
-  const {
-    fileRejections,
-    getRootProps,
-    getInputProps,
-    isDragActive,
-    isFocused,
-    isDragAccept,
-    isDragReject
-  } = useDropzone({ accept: { 'image/*': [] }, maxFiles: 1, onDrop })
+  const { fileRejections, getRootProps, getInputProps, isDragActive } =
+    useDropzone({ accept: { 'image/*': [] }, maxFiles: 1, onDrop })
 
   return (
     <>
@@ -113,9 +88,7 @@ export default function Dropzone(props: UploaderProps) {
           Please upload a single valid image file!
         </div>
       )}
-      <StyledDropZone
-        {...getRootProps({ isFocused, isDragAccept, isDragReject })}
-      >
+      <div className={styles.Dropzone} {...getRootProps()}>
         <input {...getInputProps()} />
         <StyledIcon />
         {isDragActive ? (
@@ -126,7 +99,7 @@ export default function Dropzone(props: UploaderProps) {
             <br />({type})
           </div>
         )}
-      </StyledDropZone>
+      </div>
     </>
   )
 }

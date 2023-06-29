@@ -18,6 +18,7 @@ interface InputProps {
   onChange: any
   placeholder?: string
   selectAll?: boolean
+  style?: any
   tabIndex?: number
   width?: string
   value: string
@@ -29,6 +30,7 @@ const Input = (props: InputProps) => {
     className,
     id,
     selectAll = false,
+    style = {},
     value = '',
     ...rest
   } = props
@@ -50,6 +52,7 @@ const Input = (props: InputProps) => {
           handleFocus(e)
         }
       }}
+      style={style}
       width={props.width || '100%'}
       value={value}
       {...rest}

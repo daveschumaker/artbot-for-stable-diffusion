@@ -31,10 +31,6 @@
   background-color: var(--btn-secondary-hover);
 }
 
-.styled-button-disabled {
-  background-color: #b7b7b5;
-}
-
 .styled-button:active {
   transform: scale(0.98);
 }
@@ -45,5 +41,9 @@
 }
 
 .styled-button-disabled {
+  background-color: gray;
+}
+
+.styled-button-disabled:hover {
   background-color: gray;
 }
