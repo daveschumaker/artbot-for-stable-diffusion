@@ -12,15 +12,15 @@ interface Props {
 }
 
 const StyledSlidingPanel = styled(SlidingPane)`
-  background-color: ${(props) => props.theme.body};
-  border-top: 1px solid ${(props) => props.theme.text};
+  background-color: var(--body-color);
+  border-top: 1px solid var(--text-color);
   margin-bottom: 100px;
   max-width: 768px;
   width: 100%;
   z-index: 32;
 
   @media (min-width: 768px) {
-    border: 1px solid ${(props) => props.theme.text};
+    border: 1px solid var(--text-color);
     border-radius: 4px;
     border-bottom: none;
   }

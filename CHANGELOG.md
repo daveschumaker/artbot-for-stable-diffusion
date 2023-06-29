@@ -1,3 +1,10 @@
+# 2023.06.28
+
+- A number of fixes related to server side rendering using styled-components, and enabling NextJS static page optimization. Hopefully, this should make the site (slightly?) more performant.
+- I've been trying to figure out issues related to a pesky memory leak. This is why you may have seen the "ArtBot is down" page while the server reboots every few hours. We'll see if it still happens as frequently.
+- A few PRs from some very kind contributors! [Add LoRA to meta-data output](https://github.com/daveschumaker/artbot-for-stable-diffusion/pull/113) (thanks, Efreak!), [change input mode for various inputs](https://github.com/daveschumaker/artbot-for-stable-diffusion/pull/112) (thanks, Efreak!), [set LoRA input mode to numeric](https://github.com/daveschumaker/artbot-for-stable-diffusion/pull/111) (thanks, Efreak!), and [Add missing import/export menu item](https://github.com/daveschumaker/artbot-for-stable-diffusion/pull/115) (thanks, Brimstone!).
+- Fixed: Issue with trying to fetch remote images when using things like img2img, controlnet, or image interrogation. Previously, it would just error out. It should handle things a bit better now.
+
 # 2023.06.19
 
 - I'm still here! As I said in a previous update (2023.06.06), I've been rewriting a number of components to take advantage of some new updates with NextJS 13. Ideally, I'd like to release all the changes all at once, rather than roll out stuff a bit at a time. (There's just a ton of horribly written code I'd like to get rid of forever).
