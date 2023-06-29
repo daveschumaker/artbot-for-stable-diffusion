@@ -327,6 +327,14 @@ const Menu = () => {
               <LineDashedIcon />
               ArtBot Prefs
             </SubOption>
+            <SubOption
+              onClick={() => {
+                navigateToLink('/settings?panel=import-export')
+              }}
+            >
+              <LineDashedIcon />
+              Import / Export
+            </SubOption>
           </SubOptions>
           <MenuOption
             onClick={() => {
