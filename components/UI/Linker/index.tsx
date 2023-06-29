@@ -1,14 +1,5 @@
-import styled from 'styled-components'
 import Link from 'next/link'
-
-const StyledLink = styled(Link)`
-  color: ${(props) => props.theme.link};
-  font-weight: 600;
-
-  &:hover {
-    color: ${(props) => props.theme.linkActive};
-  }
-`
+import styles from './component.module.css'
 
 const Linker = (props: any) => {
   const { disableLinkClick = false, onClick = () => {}, ...rest } = props
@@ -24,7 +15,7 @@ const Linker = (props: any) => {
     onClick()
   }
 
-  return <StyledLink {...rest} onClick={handleClick} />
+  return <Link className={styles.Linker} {...rest} onClick={handleClick} />
 }
 
 export default Linker

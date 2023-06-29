@@ -1,0 +1,8 @@
+.Linker {
+  color: var(--link-text);
+  font-weight: 600;
+}
+
+.Linker:hover {
+  color: var(--link-active);
+}
