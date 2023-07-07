@@ -1,3 +1,10 @@
+# 2023.07.07
+
+- Work continues on the rewrite (and also attempting to fix a bunch of existing bugs on my development branch)
+- Fix: Shareabe links are back! [For example](https://tinybots.net/artbot?i=DWepe3nyFti). I apologize for breaking them. 🥴
+- Fix: Viewing a shareable link no longer automatically overwrites all your existing preferences. You have to scroll down and click on "use image parameters", which will copy all the image settings onto the creation page.
+- Feature: Display all parameters used to generate an image on the shared image modal.
+
 # 2023.06.28
 
 - A number of fixes related to server side rendering using styled-components, and enabling NextJS static page optimization. Hopefully, this should make the site (slightly?) more performant.

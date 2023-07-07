@@ -1,0 +1,7 @@
+@media (min-width: 640px) {
+  .SharedImageModal {
+    max-width: 900px !important;
+    width: 900px;
+    height: 90% !important;
+  }
+}

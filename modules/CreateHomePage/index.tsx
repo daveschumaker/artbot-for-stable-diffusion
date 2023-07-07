@@ -39,8 +39,32 @@ import PromptTextArea from 'modules/PromptTextArea'
 import NegativePromptArea from 'modules/NegativePromptArea'
 import useLockedBody from 'hooks/useLockedBody'
 import { handleCreateClick } from './createPage.controller'
+import styles from './component.module.css'
+import { Button } from 'components/UI/Button'
+import { IconCopy } from '@tabler/icons-react'
+import ImageParamsForApi from 'models/ImageParamsForApi'
 
 const defaultState: DefaultPromptInput = new DefaultPromptInput()
+
+const cleanData = (imageDetails: any) => {
+  // @ts-ignore
+  const params = new ImageParamsForApi(imageDetails)
+
+  // @ts-ignore
+
+  if (params.source_image) {
+    // @ts-ignore
+    params.source_image = '[true]'
+  }
+
+  // @ts-ignore
+  if (params.source_mask) {
+    // @ts-ignore
+    params.source_mask = '[true]'
+  }
+
+  return params
+}
 
 const CreateHomePage = ({ modelDetails = {}, shortlinkImageParams }: any) => {
   const appState = useStore(appInfoStore)
@@ -214,16 +238,6 @@ const CreateHomePage = ({ modelDetails = {}, shortlinkImageParams }: any) => {
       query[CreatePageMode.SHORTLINK] &&
       shortlinkImageParams
     ) {
-      initialState = null
-      // TODO: Function to map shortlinkImageParams to regular object. Make it testable!
-      // @ts-ignore
-      initialState = new ImageApiParamsToPromptInput(shortlinkImageParams)
-      logToConsole({
-        data: initialState,
-        name: 'LoadInput_Step_1a',
-        debugKey: 'DEBUG_LOAD_INPUT'
-      })
-
       setLocked(true)
       setShowSharedModal(true)
     }
@@ -477,6 +491,7 @@ const CreateHomePage = ({ modelDetails = {}, shortlinkImageParams }: any) => {
     <main className="pb-[90px]">
       {showSharedModal && (
         <InteractiveModal
+          className={styles.SharedImageModal}
           handleClose={() => {
             setLocked(false)
             setShowSharedModal(false)
@@ -494,17 +509,59 @@ const CreateHomePage = ({ modelDetails = {}, shortlinkImageParams }: any) => {
                 className="max-h-[256px]"
               />
             </div>
-            <div className="flex justify-center w-full px-2 mt-4 italic">
-              {input.prompt}
+            <div className="flex justify-center w-full px-2 mt-4 mb-4 italic">
+              {shortlinkImageParams.prompt}
+            </div>
+            <div className="flex flex-row">
+              <div
+                className={clsx([
+                  'bg-slate-800',
+                  'font-mono',
+                  'text-white',
+                  'text-sm',
+                  'overflow-x-auto',
+                  'mt-2',
+                  'mb-2',
+                  'mx-4',
+                  'rounded-md',
+                  'p-4',
+                  styles['image-details']
+                ])}
+              >
+                <pre className="whitespace-pre-wrap">
+                  {JSON.stringify(
+                    cleanData({
+                      prompt: shortlinkImageParams.prompt,
+                      ...shortlinkImageParams.params
+                    }),
+                    null,
+                    2
+                  )}
+                </pre>
+              </div>
             </div>
             <div
-              className="mt-4 mb-2 w-full flex px-2 justify-center text-[#14b8a5] cursor-pointer font-[700]"
-              onClick={() => {
-                setLocked(false)
-                setShowSharedModal(false)
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                maxWidth: '100%',
+                paddingBottom: '8px'
               }}
             >
-              Create your own image
+              <Button
+                onClick={() => {
+                  let initialState = new ImageApiParamsToPromptInput(
+                    shortlinkImageParams
+                  )
+                  setInput({
+                    ...(initialState as DefaultPromptInput)
+                  })
+                  setLocked(false)
+                  setShowSharedModal(false)
+                }}
+              >
+                <IconCopy /> Use image parameters
+              </Button>
             </div>
           </div>
         </InteractiveModal>
