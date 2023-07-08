@@ -1,3 +1,4 @@
+import { AiHordeGeneration } from 'types'
 import { isBase64UrlImage } from 'utils/imageUtils'
 import { clientHeader, getApiHostServer } from '../utils/appUtils'
 import { blobToBase64 } from '../utils/helperUtils'
@@ -16,6 +17,7 @@ interface FinishedImageResponse {
   canRate?: boolean
   model?: string
   worker_id?: string
+  generations?: Array<AiHordeGeneration>
 }
 
 let isCoolingOff = false
@@ -162,7 +164,8 @@ export const getFinishedImage = async (
         seed,
         canRate: shared ? true : false,
         worker_id,
-        worker_name
+        worker_name,
+        generations // Initial work to handle returning multiple images
       }
     }
 

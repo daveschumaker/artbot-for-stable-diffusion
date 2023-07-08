@@ -195,6 +195,17 @@ export interface GetSetPromptInput {
   setInput: SetInput
 }
 
+export interface AiHordeGeneration {
+  censored: boolean
+  id: string
+  img: string
+  model: string
+  seed: string
+  state: string
+  worker_id: string
+  worker_name: string
+}
+
 export enum JobStatus {
   Waiting = 'waiting', // waiting to submit to stable horde api
   Requested = 'requested', // Job sent to API, waiting for response.
