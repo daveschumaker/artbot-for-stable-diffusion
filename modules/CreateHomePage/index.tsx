@@ -17,7 +17,6 @@ import Head from 'next/head'
 import { useStore } from 'statery'
 import { appInfoStore } from '../../store/appStore'
 import { countImagesToGenerate } from '../../utils/imageUtils'
-import InteractiveModal from '../../components/UI/InteractiveModal/interactiveModal'
 import PromptInputSettings from '../../models/PromptInputSettings'
 import { userInfoStore } from '../../store/userStore'
 import TriggerDropdown from '../../components/CreatePage/TriggerDropdown'
@@ -31,7 +30,6 @@ import AlertTriangleIcon from '../../components/icons/AlertTriangle'
 import clsx from 'clsx'
 import { kudosCostV2 } from '../../utils/kudosCost'
 import { CreatePageMode, isSharedLink } from '../../utils/loadInputCache'
-import ImageApiParamsToPromptInput from '../../models/ImageApiParamsToPromptInput'
 import ActionPanel from '../../components/CreatePage/ActionPanel'
 import useComponentState from 'hooks/useComponentState'
 import { uploadInpaint } from 'controllers/imageDetailsCommon'
@@ -39,32 +37,9 @@ import PromptTextArea from 'modules/PromptTextArea'
 import NegativePromptArea from 'modules/NegativePromptArea'
 import useLockedBody from 'hooks/useLockedBody'
 import { handleCreateClick } from './createPage.controller'
-import styles from './component.module.css'
-import { Button } from 'components/UI/Button'
-import { IconCopy } from '@tabler/icons-react'
-import ImageParamsForApi from 'models/ImageParamsForApi'
+import ShareModal from './ShareModal'
 
 const defaultState: DefaultPromptInput = new DefaultPromptInput()
-
-const cleanData = (imageDetails: any) => {
-  // @ts-ignore
-  const params = new ImageParamsForApi(imageDetails)
-
-  // @ts-ignore
-
-  if (params.source_image) {
-    // @ts-ignore
-    params.source_image = '[true]'
-  }
-
-  // @ts-ignore
-  if (params.source_mask) {
-    // @ts-ignore
-    params.source_mask = '[true]'
-  }
-
-  return params
-}
 
 const CreateHomePage = ({ modelDetails = {}, shortlinkImageParams }: any) => {
   const appState = useStore(appInfoStore)
@@ -490,81 +465,12 @@ const CreateHomePage = ({ modelDetails = {}, shortlinkImageParams }: any) => {
   return (
     <main className="pb-[90px]">
       {showSharedModal && (
-        <InteractiveModal
-          className={styles.SharedImageModal}
-          handleClose={() => {
-            setLocked(false)
-            setShowSharedModal(false)
-          }}
-          maxWidth="480px"
-        >
-          <div className="flex flex-col w-full px-3">
-            <PageTitle>Shared image</PageTitle>
-            <div className="flex justify-center w-full">
-              <img
-                src={`https://tinybots.net/artbot/api/v1/shortlink/i/${
-                  query[CreatePageMode.SHORTLINK]
-                }`}
-                alt=""
-                className="max-h-[256px]"
-              />
-            </div>
-            <div className="flex justify-center w-full px-2 mt-4 mb-4 italic">
-              {shortlinkImageParams.prompt}
-            </div>
-            <div className="flex flex-row">
-              <div
-                className={clsx([
-                  'bg-slate-800',
-                  'font-mono',
-                  'text-white',
-                  'text-sm',
-                  'overflow-x-auto',
-                  'mt-2',
-                  'mb-2',
-                  'mx-4',
-                  'rounded-md',
-                  'p-4',
-                  styles['image-details']
-                ])}
-              >
-                <pre className="whitespace-pre-wrap">
-                  {JSON.stringify(
-                    cleanData({
-                      prompt: shortlinkImageParams.prompt,
-                      ...shortlinkImageParams.params
-                    }),
-                    null,
-                    2
-                  )}
-                </pre>
-              </div>
-            </div>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                maxWidth: '100%',
-                paddingBottom: '8px'
-              }}
-            >
-              <Button
-                onClick={() => {
-                  let initialState = new ImageApiParamsToPromptInput(
-                    shortlinkImageParams
-                  )
-                  setInput({
-                    ...(initialState as DefaultPromptInput)
-                  })
-                  setLocked(false)
-                  setShowSharedModal(false)
-                }}
-              >
-                <IconCopy /> Use image parameters
-              </Button>
-            </div>
-          </div>
-        </InteractiveModal>
+        <ShareModal
+          handleCloseModal={() => setShowSharedModal(false)}
+          query={query}
+          setInput={setInput}
+          shortlinkImageParams={shortlinkImageParams}
+        />
       )}
       {shortlinkImageParams && shortlinkImageParams.params ? (
         <Head>
