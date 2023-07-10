@@ -18,6 +18,14 @@ export const clientHeader = () => {
 }
 
 export const isAppActive = () => {
+  if (typeof document.hidden === 'undefined') {
+    return true
+  }
+
+  if (document.hidden) {
+    return false
+  }
+
   if (AppSettings.get('runInBackground') !== false) {
     return true
   }
@@ -198,6 +206,15 @@ export const formatDate = () => {
   const minutes = String(currentDate.getMinutes()).padStart(2, '0')
 
   return `${year}.${month}.${day}_${hours}:${minutes}`
+}
+
+// Function to handle visibility change events
+export const documentIsVisible = () => {
+  if (document.hidden) {
+    return false
+  } else {
+    return true
+  }
 }
 
 // export const broadcastMessage = (msg: string) => {
