@@ -9,6 +9,7 @@ import { deletePendingJobs } from 'controllers/pendingJobsCache'
 
 export class MySubClassedDexie extends Dexie {
   completed: any
+  images: any
   pending: any
   prompts: any
 
@@ -64,6 +65,23 @@ export const dbExport = async (progressCallback?: () => any) => {
   const { exportDB } = await import('dexie-export-import')
   const blob = await exportDB(db, { prettyJson: true, progressCallback })
   return blob
+}
+
+export const addImageToDexie = async ({
+  base64String,
+  jobId,
+  type
+}: {
+  base64String: string
+  jobId: string
+  type?: string
+}) => {
+  await db.images.add({
+    jobId,
+    base64String,
+    type,
+    timestamp: Date.now()
+  })
 }
 
 export const generateThumbnails = async (cb = ({}: {}) => {}) => {

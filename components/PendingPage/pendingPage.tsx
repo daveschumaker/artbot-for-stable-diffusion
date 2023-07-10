@@ -20,7 +20,6 @@ import AdContainer from '../AdContainer'
 import CheckboxIcon from '../icons/CheckboxIcon'
 import DotsVerticalIcon from '../icons/DotsVerticalIcon'
 import SquareIcon from '../icons/SquareIcon'
-import PendingItem from '../PendingItemV2'
 import DropDownMenu from '../UI/DropDownMenu/dropDownMenu'
 import DropDownMenuItem from '../UI/DropDownMenuItem'
 import Linker from '../UI/Linker'
@@ -40,6 +39,7 @@ import {
   // syncPendingJobsFromDb
 } from 'controllers/pendingJobsCache'
 import usePendingImageModal from './usePendingImageModal'
+import PendingItem from 'modules/PendingItem'
 
 const MenuSeparator = styled.div`
   width: 100%;

@@ -13,11 +13,11 @@ import {
   CreateImageJob,
   FinishedImageResponse,
   FinishedImageResponseError,
-  GeneratedImage,
   JobStatus
 } from '../types'
 import {
   addCompletedJobToDexie,
+  addImageToDexie,
   deletePendingJobFromDb,
   getImageDetails,
   updateAllPendingJobs,
@@ -662,11 +662,19 @@ export const checkCurrentJob = async (imageDetails: any) => {
 
       if (isAppActive() || appInfoStore.state.primaryWindow) {
         for (const idx in imgDetailsFromApi.generations) {
-          if (Number(idx) > 0) return
-
           const image = imgDetailsFromApi.generations[idx]
-
           if ('base64String' in image && image.base64String) {
+            if (Number(idx) > 0) {
+              // TODO: For now, this is for SDXL_beta logic, which returns an additional image
+              addImageToDexie({
+                jobId: imageDetails.id as string,
+                base64String: image.base64String,
+                type: 'ab-test'
+              })
+
+              return
+            }
+
             const jobWithImageDetails = {
               ...job,
               ...image

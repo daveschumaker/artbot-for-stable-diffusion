@@ -1,0 +1,70 @@
+.PendingItemWrapper {
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.ButtonContainer {
+  align-items: flex-end;
+  column-gap: 8px;
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+  justify-content: flex-end;
+}
+
+.CloseButton {
+  cursor: pointer;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.InfoPanel {
+  display: flex;
+  flex-direction: row;
+}
+
+.InfoDetails {
+  color: white;
+  display: flex;
+  flex-direction: row;
+  margin-top: 8px;
+}
+
+.ModelWarning {
+  align-items: center;
+  color: #facc15;
+  column-gap: 4px;
+  display: flex;
+  font-size: 12px;
+  flex-direction: row;
+  margin-bottom: 4px;
+  margin-top: 4px;
+}
+
+.ProgressBarPosition {
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  right: 0;
+}
+
+.MobileHideText {
+  display: none;
+}
+
+.Prompt {
+  color: white;
+  margin-right: 24px;
+}
+
+@media (min-width: 640px) {
+  .CloseButton {
+    right: 16px;
+  }
+
+  .MobileHideText {
+    display: inline-block;
+  }
+}

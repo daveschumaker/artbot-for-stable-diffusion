@@ -1,122 +1,35 @@
 import { memo } from 'react'
 import { useRouter } from 'next/router'
-import styled from 'styled-components'
 
-import ProgressBar from './ProgressBarV2'
-import { setNewImageReady, setShowImageReadyToast } from '../store/appStore'
-import { Button } from './UI/Button'
-import TrashIcon from './icons/TrashIcon'
-import Panel from './UI/Panel'
-import { trackEvent, trackGaEvent } from '../api/telemetry'
-import ImageSquare from './ImageSquare'
-import SpinnerV2 from './Spinner'
-import PhotoUpIcon from './icons/PhotoUpIcon'
-import AlertTriangleIcon from './icons/AlertTriangle'
-import { JobStatus } from '../types'
-import CloseIcon from './icons/CloseIcon'
-import { deletePendingJobFromApi } from '../api/deletePendingJobFromApi'
-import { createImageJob } from '../utils/imageCache'
-import { savePrompt } from '../utils/promptUtils'
-import CreateImageRequest from '../models/CreateImageRequest'
-import Linker from './UI/Linker'
+import ProgressBar from './ProgressBar'
+import { setNewImageReady, setShowImageReadyToast } from '../../store/appStore'
+import { Button } from '../../components/UI/Button'
+import TrashIcon from '../../components/icons/TrashIcon'
+import Panel from '../../components/UI/Panel'
+import { trackEvent, trackGaEvent } from '../../api/telemetry'
+import AlertTriangleIcon from '../../components/icons/AlertTriangle'
+import { JobStatus } from '../../types'
+import CloseIcon from '../../components/icons/CloseIcon'
+import { deletePendingJobFromApi } from 'api/deletePendingJobFromApi'
+import { createImageJob } from 'utils/imageCache'
+import { savePrompt } from 'utils/promptUtils'
+import CreateImageRequest from 'models/CreateImageRequest'
+import Linker from 'components/UI/Linker'
 import { useStore } from 'statery'
-import { modelInfoStore } from '../store/modelStore'
-import { MODEL_LIMITED_BY_WORKERS, RATE_IMAGE_CUTOFF_SEC } from '../_constants'
-import DisplayRawData from './DisplayRawData'
-import CopyIcon from './icons/CopyIcon'
-import { copyEditPrompt } from '../controllers/imageDetailsCommon'
+import { modelInfoStore } from 'store/modelStore'
+import {
+  MODEL_LIMITED_BY_WORKERS,
+  RATE_IMAGE_CUTOFF_SEC
+} from '../../_constants'
+import DisplayRawData from 'components/DisplayRawData'
+import CopyIcon from 'components/icons/CopyIcon'
+import { copyEditPrompt } from 'controllers/imageDetailsCommon'
 import { deletePendingJob } from 'controllers/pendingJobsCache'
+import styles from './pendingItem.module.css'
+import clsx from 'clsx'
+import ImageThumbnail from './ImageThumbnail'
 
 const RATINGS_ENABLED = false
-
-const ModelWarning = styled.div`
-  align-items: center;
-  color: #facc15;
-  column-gap: 4px;
-  display: flex;
-  font-size: 12px;
-  flex-direction: row;
-  margin-bottom: 4px;
-  margin-top: 4px;
-`
-
-const StyledContainer = styled.div`
-  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
-  position: relative;
-  margin-bottom: 16px;
-`
-
-const StyledCloseButton = styled.div`
-  cursor: pointer;
-  position: absolute;
-  top: 8px;
-  right: 8px;
-
-  @media (min-width: 640px) {
-    right: 16px;
-  }
-`
-
-const ImageWaiting = styled.div`
-  align-items: center;
-  background-color: ${(props) => props.theme.waitingImageBackground};
-  border-radius: 4px;
-  display: flex;
-  justify-content: center;
-  margin-right: 16px;
-  height: 100px;
-  width: 100px;
-  min-width: 100px;
-  min-height: 100px;
-  box-shadow: 0 16px 38px -12px rgb(0 0 0 / 56%),
-    0 4px 25px 0px rgb(0 0 0 / 12%), 0 8px 10px -5px rgb(0 0 0 / 20%);
-`
-
-const ProgressBarPosition = styled.div`
-  position: absolute;
-  bottom: 0px;
-  left: 0;
-  right: 0;
-`
-
-const StyledImageInfoPanel = styled.div`
-  display: flex;
-  flex-direction: row;
-`
-
-const StyledPrompt = styled.div`
-  color: ${(props) => props.theme.grayText};
-  margin-right: 24px;
-`
-
-const StyledInfoDiv = styled.div`
-  color: ${(props) => props.theme.grayText};
-  display: flex;
-  flex-direction: row;
-  margin-top: 8px;
-`
-
-const StyledButtonContainer = styled.div`
-  align-items: flex-end;
-  display: flex;
-  flex-direction: row;
-  flex-shrink: 0;
-  justify-content: flex-end;
-  column-gap: 8px;
-`
-
-const MobileHideText = styled.span`
-  display: none;
-  @media (min-width: 640px) {
-    display: inline-block;
-  }
-`
-
-const ImageContainer = styled.div`
-  cursor: pointer;
-`
-
-const StyledImage = styled(ImageSquare)``
 
 interface IProps {
   handleCloseClick?: (jobId: string) => void
@@ -241,7 +154,7 @@ const PendingItem = memo(
     const isPossible = jobDetails.is_possible
 
     return (
-      <StyledContainer>
+      <div className={styles.PendingItemWrapper}>
         <Panel
           style={{
             backgroundColor: 'var(--card-background)',
@@ -250,33 +163,18 @@ const PendingItem = memo(
           }}
         >
           {processDoneOrError ? (
-            <StyledCloseButton onClick={handleRemovePanel}>
+            <div className={styles.CloseButton} onClick={handleRemovePanel}>
               <CloseIcon width={2} stroke="white" />
-            </StyledCloseButton>
+            </div>
           ) : null}
-          <StyledImageInfoPanel>
-            <ImageWaiting>
-              {serverHasJob || jobDetails.jobStatus === JobStatus.Requested ? (
-                <SpinnerV2 />
-              ) : null}
-              {jobDetails.jobStatus === JobStatus.Done && (
-                <ImageContainer onClick={() => onImageClick(jobId)}>
-                  <StyledImage
-                    // @ts-ignore
-                    imageDetails={jobDetails}
-                    size={100}
-                  />
-                </ImageContainer>
-              )}
-              {jobDetails.jobStatus === JobStatus.Waiting && (
-                <PhotoUpIcon size={48} />
-              )}
-              {jobDetails.jobStatus === JobStatus.Error && (
-                <AlertTriangleIcon size={48} stroke="rgb(234 179 8)" />
-              )}
-            </ImageWaiting>
+          <div className={styles.InfoPanel}>
+            <ImageThumbnail
+              onImageClick={() => onImageClick(jobId)}
+              jobDetails={jobDetails}
+              serverHasJob={serverHasJob}
+            />
             <div className="flex flex-col flex-grow">
-              <StyledPrompt className="flex-grow">
+              <div className={clsx('flex-grow', styles.Prompt)}>
                 {jobDetails.upscaled && <div>[ UPSCALING ]</div>}
                 <div
                   className="italic"
@@ -288,7 +186,7 @@ const PendingItem = memo(
                 >
                   {jobDetails.prompt}
                 </div>
-              </StyledPrompt>
+              </div>
               <div className="w-full mt-2 font-mono text-xs text-white">
                 Steps: {jobDetails.steps}
                 <br />
@@ -299,21 +197,21 @@ const PendingItem = memo(
                   MODEL_LIMITED_BY_WORKERS && (
                   <>
                     <div>
-                      <ModelWarning>
+                      <div className={styles.ModelWarning}>
                         <AlertTriangleIcon size={32} /> This model has limited
                         availability.
                         <br />
                         Images may take a long time to generate.
-                      </ModelWarning>
+                      </div>
                     </div>
                   </>
                 )}
               </div>
             </div>
-          </StyledImageInfoPanel>
-          <StyledImageInfoPanel>
+          </div>
+          <div className={styles.InfoPanel}>
             <DisplayRawData data={jobDetails} />
-          </StyledImageInfoPanel>
+          </div>
           {jobDetails.jobStatus === JobStatus.Error ? (
             <div className="mt-2 font-mono text-xs text-red-400">
               <strong>Stable Horde API Error:</strong> &quot;
@@ -352,7 +250,7 @@ const PendingItem = memo(
               continue to wait.
             </div>
           ) : null}
-          <StyledInfoDiv>
+          <div className={styles.InfoDetails}>
             <div className="flex flex-col justify-end flex-grow">
               {jobDetails.jobStatus === JobStatus.Requested && (
                 <div className="w-full mt-2 font-mono text-xs">
@@ -422,7 +320,7 @@ const PendingItem = memo(
                 </div>
               )}
             </div>
-            <StyledButtonContainer>
+            <div className={styles.ButtonContainer}>
               {RATINGS_ENABLED &&
                 jobDetails.jobStatus === JobStatus.Done &&
                 jobTimeDiff &&
@@ -481,28 +379,28 @@ const PendingItem = memo(
                   </Button>
                   <Button theme="secondary" onClick={handleDeleteJob}>
                     <TrashIcon />
-                    <MobileHideText>
+                    <div className={styles.MobileHideText}>
                       {jobDetails.jobStatus === JobStatus.Error
                         ? 'Remove'
                         : 'Cancel'}
-                    </MobileHideText>
+                    </div>
                   </Button>
                 </div>
               )}
-            </StyledButtonContainer>
-          </StyledInfoDiv>
+            </div>
+          </div>
           {serverHasJob && (
-            <ProgressBarPosition>
+            <div className={styles.ProgressBarPosition}>
               <ProgressBar pct={pctComplete} />
-            </ProgressBarPosition>
+            </div>
           )}
           {jobDetails.jobStatus === JobStatus.Done && (
-            <ProgressBarPosition>
+            <div className={styles.ProgressBarPosition}>
               <ProgressBar pct={100} />
-            </ProgressBarPosition>
+            </div>
           )}
         </Panel>
-      </StyledContainer>
+      </div>
     )
   },
   arePropsEqual

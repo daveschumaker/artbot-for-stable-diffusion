@@ -126,6 +126,12 @@ export interface OrientationLookup {
   [key: string]: ImageOrientation
 }
 
+export interface JobImageDetails {
+  base64String: string
+  thumbnail?: string
+  prompt?: string
+}
+
 export interface CreatePendingJob {
   id?: number
   timestamp: number
