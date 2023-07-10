@@ -1,28 +1,17 @@
-import { AiHordeGeneration } from 'types'
-import { isBase64UrlImage } from 'utils/imageUtils'
+import { generateBase64Thumbnail, isBase64UrlImage } from 'utils/imageUtils'
 import { clientHeader, getApiHostServer } from '../utils/appUtils'
 import { blobToBase64 } from '../utils/helperUtils'
 import { isValidHttpUrl } from '../utils/validationUtils'
 import { trackEvent } from './telemetry'
-
-interface FinishedImageResponse {
-  success: boolean
-  status?: string
-  message?: string
-  jobId?: string
-  worker_name?: string
-  hordeImageId?: string
-  base64String?: string
-  seed?: string
-  canRate?: boolean
-  model?: string
-  worker_id?: string
-  generations?: Array<AiHordeGeneration>
-}
+import {
+  FinishedImageResponse,
+  FinishedImageResponseError,
+  GeneratedImage
+} from 'types'
 
 let isCoolingOff = false
 
-const apiCooldown = () => {
+const apiCooldown = (timeoutMs: number = 15000) => {
   if (isCoolingOff) {
     return
   }
@@ -31,23 +20,49 @@ const apiCooldown = () => {
 
   setTimeout(() => {
     isCoolingOff = false
-  }, 15000)
+  }, timeoutMs)
+}
+
+export const fetchImageFromUrl = async (imgUrl: string) => {
+  try {
+    if (!isValidHttpUrl(imgUrl)) return false
+
+    const imageData = await fetch(imgUrl)
+    const blob = await imageData.blob()
+    const base64 = (await blobToBase64(blob)) as string
+
+    // Attempt to handle an error that sometimes occurs, where R2 returns an invalid response.
+    // For whatever reason, ArtBot still processes this as an image.
+    const validImage = await isBase64UrlImage(base64)
+    if (!validImage) return false
+
+    trackEvent({
+      event: 'IMAGE_RECEIVED_FROM_API',
+      data: {}
+    })
+
+    return base64.split(',')[1]
+  } catch (e) {
+    return false
+  }
 }
 
 export const getFinishedImage = async (
   jobId: string
-): Promise<FinishedImageResponse> => {
+): Promise<FinishedImageResponse | FinishedImageResponseError> => {
   if (isCoolingOff) {
     return {
       success: false,
-      status: 'API_COOLDOWN'
+      status: 'API_COOLDOWN',
+      message: 'Temporarily throttling API calls'
     }
   }
 
   if (!jobId) {
     return {
       success: false,
-      status: 'MISSING_JOBID'
+      status: 'MISSING_JOBID',
+      message: 'Missing JobID'
     }
   }
 
@@ -68,11 +83,23 @@ export const getFinishedImage = async (
 
     const { generations, message, shared, faulted } = data
 
+    if (status === 404) {
+      apiCooldown(5000)
+      return {
+        success: false,
+        status: 'NOT_FOUND',
+        message:
+          'Job has gone stale and has been removed from the Stable Horde backend. Retry?',
+        jobId
+      }
+    }
+
     if (message === '2 per 1 minute' || status === 429) {
-      apiCooldown()
+      apiCooldown(30000)
       return {
         success: false,
         status: 'WAITING_FOR_PENDING_REQUEST',
+        message: 'Currently waiting for a pending request',
         jobId
       }
     }
@@ -81,104 +108,68 @@ export const getFinishedImage = async (
       return {
         success: false,
         status: 'WORKER_GENERATION_ERROR',
-        jobId
+        message:
+          'Worker encountered an error while trying to generate this image'
       }
     }
 
+    const generationDetails: Array<
+      GeneratedImage | FinishedImageResponseError
+    > = []
     if (Array.isArray(generations) && generations.length > 0) {
-      const [image] = generations
-
-      if (!generations || !image) {
-        return {
-          success: false,
-          status: 'WORKER_GENERATION_ERROR',
-          jobId
-        }
-      }
-
-      const { model, seed, id: hordeImageId, worker_id, worker_name } = image
-      let base64String = image.img
-
-      // Image is not done uploading to R2 yet(?).
-      // This should no longer happen, according to Db0
-      // Keeping this here for now.
-      if (image.img === 'R2') {
-        return {
-          success: false,
-          status: 'WAITING_FOR_PENDING_REQUEST',
-          jobId
-        }
-      }
-
-      let base64
-      if (isValidHttpUrl(image.img)) {
-        try {
-          const imageData = await fetch(`${image.img}`)
-          const blob = await imageData.blob()
-          base64 = (await blobToBase64(blob)) as string
-          base64String = base64.split(',')[1]
-        } catch (err) {
+      for (const image of generations) {
+        if (!generations || !image) {
           return {
             success: false,
-            status: 'MISSING_BASE64_STRING',
-            jobId
+            status: 'WORKER_GENERATION_ERROR',
+            message:
+              'Worker encountered an error while trying to generate this image'
           }
         }
-      }
 
-      if (!base64String) {
-        return {
-          success: false,
-          status: 'MISSING_BASE64_STRING',
-          jobId
-        }
-      }
+        const base64String = await fetchImageFromUrl(image.img)
 
-      // Attempt to handle an error that sometimes occurs, where R2 returns an invalid response.
-      // For whatever reason, ArtBot still processes this as an image.
-      if (base64) {
-        const validImage = await isBase64UrlImage(base64)
+        if (base64String) {
+          const thumbnail = await generateBase64Thumbnail(base64String, jobId)
 
-        if (!validImage) {
-          return {
+          generationDetails.push({
+            base64String,
+            thumbnail,
+            censored: image.censored,
+            model: image.model,
+            seed: image.seed,
+            hordeImageId: image.id,
+            worker_id: image.worker_id,
+            worker_name: image.worker_name
+          })
+        } else {
+          generationDetails.push({
             success: false,
             status: 'INVALID_IMAGE_FROM_API',
-            jobId,
             message:
               'An error occurred while attempting to generate this image. Please try again.'
-          }
+          })
         }
       }
-
-      trackEvent({
-        event: 'IMAGE_RECEIVED_FROM_API',
-        data: {}
-      })
 
       return {
         success: true,
-        hordeImageId,
         jobId,
-        model,
-        base64String,
-        seed,
         canRate: shared ? true : false,
-        worker_id,
-        worker_name,
-        generations // Initial work to handle returning multiple images
+        generations: generationDetails // Initial work to handle returning multiple images
       }
     }
 
     return {
       success: false,
       status: 'UNKNOWN_ERROR',
-      jobId
+      message: 'An error occurred while trying to process this image.'
     }
   } catch (err) {
     return {
       success: false,
       status: 'UNKNOWN_ERROR',
-      jobId
+      message: 'An error occurred while trying to process this image.'
     }
   }
 }

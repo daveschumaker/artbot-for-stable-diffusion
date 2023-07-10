@@ -8,7 +8,14 @@ import {
   setShowImageReadyToast,
   setStorageQuotaLimit
 } from '../store/appStore'
-import { CheckImage, CreateImageJob, JobStatus } from '../types'
+import {
+  CheckImage,
+  CreateImageJob,
+  FinishedImageResponse,
+  FinishedImageResponseError,
+  GeneratedImage,
+  JobStatus
+} from '../types'
 import {
   addCompletedJobToDexie,
   deletePendingJobFromDb,
@@ -16,7 +23,7 @@ import {
   updateAllPendingJobs,
   updatePendingJobInDexie
 } from './db'
-import { createNewImage, generateBase64Thumbnail } from './imageUtils'
+import { createNewImage } from './imageUtils'
 import { createPendingJob } from './pendingUtils'
 import {
   CREATE_NEW_JOB_INTERVAL,
@@ -44,13 +51,6 @@ let FETCH_INTERVAL_SEC = CREATE_NEW_JOB_INTERVAL
 // Limit max jobs for anon users. If user is logged in,
 // let them run more jobs at once.
 let MAX_JOBS = MAX_CONCURRENT_JOBS_ANON
-
-interface FinishedImage {
-  success: boolean
-  base64String?: string
-  status?: string
-  message?: string
-}
 
 export const checkImageJob = async (jobId: string): Promise<CheckImage> => {
   if (!jobId || !jobId?.trim()) {
@@ -413,43 +413,18 @@ export const getImage = async (jobId: string) => {
   }
 
   const data = await getFinishedImage(jobId)
-  const { status = '', message = '' } = data
-
-  if (data?.success) {
-    return {
-      jobId,
-      status: 'SUCCESS',
-      message,
-      ...data
-    }
-  } else {
-    return {
-      success: false,
-      status,
-      message,
-      jobId
-    }
-  }
+  return data
 }
 
 export const addCompletedJobToDb = async ({
-  jobDetails,
-  thumbnail = ''
+  jobDetails
 }: {
   jobDetails: any
-  thumbnail: string
   errorCount?: number
 }) => {
   // Catch a potential race condition where the same jobId can be added twice.
   // This might happen when multiple tabs are open.
   try {
-    // @ts-ignore
-    if (window.DEBUG_THUMBNAIL) {
-      console.log(``)
-      console.log(`imgDetailsFromApi?`, jobDetails)
-      console.log(`thumbnail generated?`, thumbnail)
-    }
-
     const clonedJobDetails = Object.assign({}, jobDetails)
 
     getImageDetails.delete(jobDetails.jobId) // Bust memo cache
@@ -462,8 +437,7 @@ export const addCompletedJobToDb = async ({
     delete clonedJobDetails.id
     await addCompletedJobToDexie({
       ...clonedJobDetails,
-      jobStatus: JobStatus.Done,
-      thumbnail
+      jobStatus: JobStatus.Done
     })
     getImageDetails.delete(jobDetails.jobId) // Bust memo cache... again.
 
@@ -576,11 +550,14 @@ export const checkCurrentJob = async (imageDetails: any) => {
   updatePendingJobV2(Object.assign({}, jobDetails))
   // await updatePendingJobInDexie(jobDetails.id, Object.assign({}, jobDetails))
 
-  let imgDetailsFromApi: FinishedImage
+  let imgDetailsFromApi: FinishedImageResponse | FinishedImageResponseError
   if (checkJobResult?.done) {
     imgDetailsFromApi = await getImage(jobId)
 
-    if (imgDetailsFromApi?.status === 'WORKER_GENERATION_ERROR') {
+    if (
+      'status' in imgDetailsFromApi &&
+      imgDetailsFromApi.status === 'WORKER_GENERATION_ERROR'
+    ) {
       const jobTimestamp = jobDetails?.timestamp / 1000 || 0
       const currentTimestamp = Date.now() / 1000
 
@@ -608,11 +585,15 @@ export const checkCurrentJob = async (imageDetails: any) => {
       }
     }
 
-    if (imgDetailsFromApi?.status === 'NOT_FOUND') {
+    if (
+      'status' in imgDetailsFromApi &&
+      imgDetailsFromApi.status === 'NOT_FOUND'
+    ) {
       const jobTimestamp = imageDetails.timestamp / 1000
       const currentTimestamp = Date.now() / 1000
 
-      if (currentTimestamp - jobTimestamp > 300) {
+      // Time in seconds. This handles any sort of initial request delay.
+      if (currentTimestamp - jobTimestamp > 60) {
         updatePendingJobV2(
           Object.assign({}, jobDetails, {
             jobStatus: JobStatus.Error,
@@ -641,7 +622,10 @@ export const checkCurrentJob = async (imageDetails: any) => {
       }
     }
 
-    if (imgDetailsFromApi?.status === 'INVALID_IMAGE_FROM_API') {
+    if (
+      'status' in imgDetailsFromApi &&
+      imgDetailsFromApi.status === 'INVALID_IMAGE_FROM_API'
+    ) {
       updatePendingJobV2(
         Object.assign({}, imageDetails, {
           jobStatus: JobStatus.Error,
@@ -664,8 +648,8 @@ export const checkCurrentJob = async (imageDetails: any) => {
 
     if (
       imageDetails &&
-      imgDetailsFromApi?.success &&
-      imgDetailsFromApi?.base64String
+      imgDetailsFromApi.success &&
+      'generations' in imgDetailsFromApi
     ) {
       imageDetails.done = true
       imageDetails.jobStatus = JobStatus.Done
@@ -677,46 +661,45 @@ export const checkCurrentJob = async (imageDetails: any) => {
       }
 
       if (isAppActive() || appInfoStore.state.primaryWindow) {
-        const thumbnail = await generateBase64Thumbnail(
-          imgDetailsFromApi.base64String,
-          jobId
-        )
+        for (const idx in imgDetailsFromApi.generations) {
+          if (Number(idx) > 0) return
 
-        const result = await addCompletedJobToDb({
-          jobDetails: job,
-          thumbnail
-        })
+          const image = imgDetailsFromApi.generations[idx]
 
-        if (!result?.success) {
-          return {
-            success: false
+          if ('base64String' in image && image.base64String) {
+            const jobWithImageDetails = {
+              ...job,
+              ...image
+            }
+
+            const result = await addCompletedJobToDb({
+              jobDetails: jobWithImageDetails
+            })
+
+            if (result.success) {
+              updatePendingJobV2(
+                Object.assign({}, jobWithImageDetails, {
+                  timestamp: Date.now(),
+                  jobStatus: JobStatus.Done
+                })
+              )
+
+              await updatePendingJobInDexie(
+                imageDetails.id,
+                Object.assign({}, jobWithImageDetails, {
+                  timestamp: Date.now(),
+                  jobStatus: JobStatus.Done
+                })
+              )
+
+              logToConsole({
+                data: jobWithImageDetails,
+                name: 'imageCache.checkCurrentJob.updatePendingJobAfterComplete.success',
+                debugKey: 'ADD_COMPLETED_JOB_TO_DB'
+              })
+            }
           }
         }
-
-        // Attempt to fix race condition where thumbnail is broken.
-        await sleep(1000)
-        updatePendingJobV2(
-          Object.assign({}, job, {
-            timestamp: Date.now(),
-            jobStatus: JobStatus.Done,
-            thumbnail
-          })
-        )
-
-        await updatePendingJob(
-          imageDetails.id,
-          Object.assign({}, job, {
-            timestamp: Date.now(),
-            jobStatus: JobStatus.Done,
-            thumbnail
-          })
-        )
-
-        logToConsole({
-          data: job,
-          name: 'imageCache.checkCurrentJob.updatePendingJobAfterComplete.success',
-          debugKey: 'ADD_COMPLETED_JOB_TO_DB'
-        })
       }
 
       setNewImageReady(imageDetails.jobId)

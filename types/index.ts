@@ -206,6 +206,27 @@ export interface AiHordeGeneration {
   worker_name: string
 }
 
+type OmittedGeneratedImageProps = 'id' | 'img' | 'state'
+export interface GeneratedImage
+  extends Omit<AiHordeGeneration, OmittedGeneratedImageProps> {
+  base64String: string
+  hordeImageId: string
+  thumbnail: string
+}
+
+export interface FinishedImageResponse {
+  success: boolean
+  jobId: string
+  canRate: boolean
+  generations: Array<GeneratedImage | FinishedImageResponseError>
+}
+
+export interface FinishedImageResponseError {
+  message: string
+  status: string
+  success: boolean
+}
+
 export enum JobStatus {
   Waiting = 'waiting', // waiting to submit to stable horde api
   Requested = 'requested', // Job sent to API, waiting for response.
