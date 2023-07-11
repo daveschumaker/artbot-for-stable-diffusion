@@ -41,7 +41,11 @@ const AboutPage = () => {
   return (
     <div className={styles.AboutWrapper}>
       {showFeedback && (
-        <Modal handleClose={() => setShowFeedback(false)}>
+        <Modal
+          handleClose={() => setShowFeedback(false)}
+          style={{ height: '520px' }}
+          visible={showFeedback}
+        >
           <FeedbackForm />
         </Modal>
       )}

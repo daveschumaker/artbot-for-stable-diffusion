@@ -543,7 +543,7 @@ const ImagesPage = () => {
         />
       )} */}
       {componentState.showDownloadModal && (
-        <Modal hideCloseButton>
+        <Modal hideCloseButton visible={componentState.showDownloadModal}>
           Downloading images
           <div className="flex flex-row w-full mt-4 mb-4 text-sm">
             Processing selected images for download and converting to{' '}

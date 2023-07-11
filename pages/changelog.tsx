@@ -111,7 +111,11 @@ const Changelog = () => {
   return (
     <div className="mb-4">
       {showFeedback && (
-        <Modal handleClose={() => setShowFeedback(false)}>
+        <Modal
+          handleClose={() => setShowFeedback(false)}
+          style={{ height: '520px' }}
+          visible={showFeedback}
+        >
           <FeedbackForm />
         </Modal>
       )}
