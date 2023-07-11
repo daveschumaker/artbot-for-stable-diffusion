@@ -1,11 +1,12 @@
 # 2023.07.10
 
 - Added support for SDXL beta! Stability.ai is kindly providing some computing power to the AI Horde in order to help fine tune and improve future image models. Once you've generated an image using SDXL, you'll be presented with two thumbnails. Choose which image you think looks best and the result will be sent back to Stability.ai. In return, AI Horde will reward you with kudos (currently 15 per rating). More information is available on [Db0's blog post announcing the partnership](https://dbzer0.com/blog/stable-diffusion-xl-beta-on-the-ai-horde/).
+- Fix: Issue with page scroll being locked after closing shared image modal
 
 # 2023.07.07
 
 - Work continues on the rewrite (and also attempting to fix a bunch of existing bugs on my development branch)
-- Fix: Shareabe links are back! [For example](https://tinybots.net/artbot?i=DWepe3nyFti). I apologize for breaking them. 🥴
+- Fix: Shareable links are back! [For example](https://tinybots.net/artbot?i=DWepe3nyFti). I apologize for breaking them. 🥴
 - Fix: Viewing a shareable link no longer automatically overwrites all your existing preferences. You have to scroll down and click on "use image parameters", which will copy all the image settings onto the creation page.
 - Feature: Display all parameters used to generate an image on the shared image modal.
 

@@ -213,7 +213,6 @@ const CreateHomePage = ({ modelDetails = {}, shortlinkImageParams }: any) => {
       query[CreatePageMode.SHORTLINK] &&
       shortlinkImageParams
     ) {
-      setLocked(true)
       setShowSharedModal(true)
     }
 
@@ -466,7 +465,10 @@ const CreateHomePage = ({ modelDetails = {}, shortlinkImageParams }: any) => {
     <main className="pb-[90px]">
       {showSharedModal && (
         <ShareModal
-          handleCloseModal={() => setShowSharedModal(false)}
+          handleCloseModal={() => {
+            setLocked(false)
+            setShowSharedModal(false)
+          }}
           query={query}
           setInput={setInput}
           shortlinkImageParams={shortlinkImageParams}

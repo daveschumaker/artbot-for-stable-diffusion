@@ -10,6 +10,7 @@ import { Button } from 'components/UI/Button'
 import ImageApiParamsToPromptInput from '../../../models/ImageApiParamsToPromptInput'
 import DefaultPromptInput from 'models/DefaultPromptInput'
 import { IconCopy } from '@tabler/icons-react'
+import { useEffect } from 'react'
 
 const cleanData = (imageDetails: any) => {
   // @ts-ignore
@@ -48,6 +49,12 @@ export default function ShareModal({
     window.location.hostname === 'localhost'
       ? 'http://localhost:3000'
       : 'https://tinybots.net'
+
+  useEffect(() => {
+    setLocked(true)
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <InteractiveModal
