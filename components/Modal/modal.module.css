@@ -1,0 +1,32 @@
+.ModalWrapper {
+  background-color: var(--body-color);
+  border-radius: 8px;
+  border: 1px solid var(--input-color);
+  height: auto;
+  left: 50%;
+  height: 280px;
+  min-height: 280px;
+  opacity: 1;
+  overflow: hidden;
+  padding: 16px;
+  position: fixed;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  transition: height 0.15s ease;
+  width: calc(100% - 32px);
+  z-index: 20;
+}
+
+.CloseIconWrapper {
+  cursor: pointer;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+@media (min-width: 640px) {
+  .ModalWrapper {
+    min-height: 280px;
+    width: 480px;
+  }
+}

@@ -1,0 +1,27 @@
+.DropdownOptions {
+  background-color: var(--body-color);
+  border-radius: 8px;
+  border: 2px solid var(--accent-color);
+  color: var(--input-text);
+  display: flex;
+  height: auto;
+  left: 0;
+  padding: 8px;
+  position: absolute;
+  right: 0;
+  top: 42px;
+  z-index: 31;
+}
+
+.CloseButton {
+  cursor: pointer;
+  position: absolute;
+  top: 4px;
+  right: 4px;
+}
+
+.DropdownContent {
+  /* flex-grow: 1; */
+  margin-top: 18px;
+  width: calc(100% - 16px);
+}

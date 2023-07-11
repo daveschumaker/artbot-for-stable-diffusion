@@ -64,7 +64,7 @@ const StyledInteractiveModal = styled.div<IStyle>`
   @media (min-width: 640px) {
     border: 2px solid var(--border-color);
     max-width: ${(props) => props.maxWidth || '864px'};
-    width: calc(100% - 48px);
+    width: calc(100% - 48px) !important;
     /* max-width: 752px; */
     /* min-height: 480px; */
     height: ${(props) => (props.height ? props.height + 'px' : '512px')};
@@ -78,7 +78,6 @@ const StyledInteractiveModal = styled.div<IStyle>`
 
   @media (min-width: 1280px) {
     max-width: ${(props) => props.maxWidth || '1088px'};
-    width: calc(100% - 48px);
   }
 `
 

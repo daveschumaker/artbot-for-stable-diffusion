@@ -250,7 +250,10 @@ const PendingPage = () => {
           !imageDetailsModalOpen &&
           //@ts-ignore
           size.width < 890 && (
-            <div className="w-full" style={{ minHeight: '164px' }}>
+            <div
+              className="w-full"
+              style={{ marginBottom: '16px', minHeight: '164px' }}
+            >
               <AdContainer />
             </div>
           )}

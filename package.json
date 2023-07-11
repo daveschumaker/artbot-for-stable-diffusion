@@ -30,6 +30,7 @@
     }
   },
   "dependencies": {
+    "@ebay/nice-modal-react": "^1.2.10",
     "@next/bundle-analyzer": "13.4.7",
     "@radix-ui/colors": "0.1.8",
     "@radix-ui/react-checkbox": "^1.0.4",

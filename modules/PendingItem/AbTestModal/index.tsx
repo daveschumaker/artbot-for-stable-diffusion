@@ -80,6 +80,7 @@ export default function AbTestModal({
     handleClose,
     jobDetails.base64String,
     jobDetails.hordeImageId,
+    jobDetails.id,
     jobDetails.jobId,
     secondaryId,
     secondaryImage,
@@ -127,7 +128,10 @@ export default function AbTestModal({
         back to Stability.ai in order to further improve SDXL. In return, you
         will receive 15 kudos per image rated.
       </div>
-      <div className="flex flex-row w-full justify-center">
+      <div
+        className="flex flex-row w-full justify-center"
+        style={{ marginBottom: '12px' }}
+      >
         <Button
           disabled={selectedImg === 0}
           onClick={() => {

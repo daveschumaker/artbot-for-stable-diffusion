@@ -33,11 +33,10 @@ import { CreatePageMode, isSharedLink } from '../../utils/loadInputCache'
 import ActionPanel from '../../components/CreatePage/ActionPanel'
 import useComponentState from 'hooks/useComponentState'
 import { uploadInpaint } from 'controllers/imageDetailsCommon'
-import PromptTextArea from 'modules/PromptTextArea'
-import NegativePromptArea from 'modules/NegativePromptArea'
 import useLockedBody from 'hooks/useLockedBody'
 import { handleCreateClick } from './createPage.controller'
 import ShareModal from './ShareModal'
+import PromptInput from './PromptInput'
 
 const defaultState: DefaultPromptInput = new DefaultPromptInput()
 
@@ -544,18 +543,7 @@ const CreateHomePage = ({ modelDetails = {}, shortlinkImageParams }: any) => {
           </div>
         )}
 
-        <div
-          className="flex flex-col w-full gap-2 rounded"
-          style={{
-            color: '#ffffff',
-            backgroundColor: 'var(--accent-color)',
-            padding: '8px 12px',
-            marginBottom: '16px'
-          }}
-        >
-          <PromptTextArea input={input} setInput={setInput} />
-          <NegativePromptArea input={input} setInput={setInput} />
-        </div>
+        <PromptInput input={input} setInput={setInput} />
 
         <ActionPanel
           errors={errors}

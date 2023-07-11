@@ -1,0 +1,14 @@
+.flexibleRow {
+  column-gap: 24px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0;
+  width: 100%;
+}
+
+@media (min-width: 1200px) {
+  .flexibleRow {
+    flex-direction: row;
+    margin-bottom: 24px;
+  }
+}

@@ -1,7 +1,12 @@
 # 2023.07.10
 
 - Added support for SDXL beta! Stability.ai is kindly providing some computing power to the AI Horde in order to help fine tune and improve future image models. Once you've generated an image using SDXL, you'll be presented with two thumbnails. Choose which image you think looks best and the result will be sent back to Stability.ai. In return, AI Horde will reward you with kudos (currently 15 per rating). More information is available on [Db0's blog post announcing the partnership](https://dbzer0.com/blog/stable-diffusion-xl-beta-on-the-ai-horde/).
-- Fix: Issue with page scroll being locked after closing shared image modal
+- Fix: Issue with page scroll being locked after closing shared image modal (Thanks for reporting, Anonymous Derpling!)
+- UI Refactor: Mostly invisible to users. But the prompt input and associated dropdowns (prompt history, negative prompt history, tags, styles) have been cleaned up. (The old negative prompt modal was especially ugly. No more slider!)
+  - This is based on some redesign work I've been doing on a development branch. I figure that I should start porting components over to my production build, otherwise, they'll never see the light of day at the pace I've been going at!
+- Issues I'm currently investigating:
+  - Once you've voted on an image for SDXL, you lose access to the previous image. I should probably save all images to the browser database, regardless.
+  - Mobile display issues around SDXL image voting.
 
 # 2023.07.07
 
