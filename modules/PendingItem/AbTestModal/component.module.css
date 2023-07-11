@@ -1,0 +1,25 @@
+.ModalStyle {
+  width: unset !important;
+}
+
+.ImageWrapper {
+  height: auto;
+  width: 50%;
+}
+
+.Images {
+  column-gap: 8px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.ImageElement {
+  max-width: 50%;
+  height: 100%;
+  flex: 1;
+}
+
+.NotSelected {
+  max-width: 45%;
+}

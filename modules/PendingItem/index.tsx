@@ -28,6 +28,8 @@ import { deletePendingJob } from 'controllers/pendingJobsCache'
 import styles from './pendingItem.module.css'
 import clsx from 'clsx'
 import ImageThumbnail from './ImageThumbnail'
+import Tooltip from 'components/UI/Tooltip'
+import { IconInfoHexagon } from '@tabler/icons-react'
 
 const RATINGS_ENABLED = false
 
@@ -175,6 +177,24 @@ const PendingItem = memo(
             />
             <div className="flex flex-col flex-grow">
               <div className={clsx('flex-grow', styles.Prompt)}>
+                {jobDetails.models[0].includes('SDXL_beta') && (
+                  <div
+                    style={{
+                      display: 'flex',
+                      fontWeight: 700
+                    }}
+                  >
+                    <IconInfoHexagon style={{ marginRight: '8px' }} />
+                    SDXL beta{' '}
+                    <Tooltip tooltipId="sdxl-beta-tooltip">
+                      SDXL is currently in beta and provided by Stability.ai in
+                      order to refine future image models. Please select one of
+                      the following two images to choose as the best image for
+                      this particular generation. You will be rewarded 15 kudos
+                      for each rating.
+                    </Tooltip>
+                  </div>
+                )}
                 {jobDetails.upscaled && <div>[ UPSCALING ]</div>}
                 <div
                   className="italic"
@@ -290,13 +310,6 @@ const PendingItem = memo(
               {jobDetails.jobStatus === JobStatus.Waiting && (
                 <div className="w-full mt-2 font-mono text-xs">
                   Waiting to submit image request
-                  <br />
-                  <br />
-                </div>
-              )}
-              {jobDetails.jobStatus === JobStatus.Done && (
-                <div className="w-full mt-2 font-mono text-xs">
-                  Image request complete
                   <br />
                   <br />
                 </div>
@@ -417,6 +430,7 @@ function arePropsEqual(oldProps: any = {}, newProps: any = {}) {
   return (
     oldJobDetails.jobId === newJobDetails.jobId &&
     oldJobDetails.jobStatus === newJobDetails.jobStatus &&
+    oldJobDetails.ratingSubmitted === newJobDetails.ratingSubmitted &&
     oldJobDetails.wait_time === newJobDetails.wait_time &&
     oldJobDetails.initWaitTime === newJobDetails.initWaitTime
   )

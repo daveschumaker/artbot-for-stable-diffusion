@@ -1,14 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 import clsx from 'clsx'
-
-interface ImageDetails {
-  base64String: string
-  thumbnail?: string
-  prompt?: string
-}
+import { JobImageDetails } from 'types'
 
 interface ImageSquareProps {
-  imageDetails: ImageDetails
+  imageDetails: JobImageDetails
   size?: number
   id?: string
   imageType?: string

@@ -12,7 +12,6 @@ import DefaultPromptInput from 'models/DefaultPromptInput'
 import { IconCopy } from '@tabler/icons-react'
 
 const cleanData = (imageDetails: any) => {
-  console.log(`imageDetails?`, imageDetails)
   // @ts-ignore
   const params = new ImageParamsForApi(imageDetails)
 

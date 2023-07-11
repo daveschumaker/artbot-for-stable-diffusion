@@ -1,9 +1,17 @@
+.MobileImagesView {
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+}
+
 .ImageWrapper {
   align-items: center;
   background-color: black;
   border-radius: 4px;
   color: white;
+  column-gap: 12px;
   display: flex;
+  flex-direction: row;
   height: 100px;
   justify-content: center;
   margin-right: 16px;
@@ -12,4 +20,10 @@
   width: 100px;
   box-shadow: 0 16px 38px -12px rgb(0 0 0 / 56%),
     0 4px 25px 0px rgb(0 0 0 / 12%), 0 8px 10px -5px rgb(0 0 0 / 20%);
+}
+
+@media (min-width: 640px) {
+  .MobileImagesView {
+    flex-direction: row;
+  }
 }

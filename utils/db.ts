@@ -69,19 +69,26 @@ export const dbExport = async (progressCallback?: () => any) => {
 
 export const addImageToDexie = async ({
   base64String,
+  hordeImageId,
   jobId,
   type
 }: {
   base64String: string
+  hordeImageId: string
   jobId: string
   type?: string
 }) => {
   await db.images.add({
     jobId,
     base64String,
+    hordeImageId,
     type,
     timestamp: Date.now()
   })
+}
+
+export const getJobImagesFromDexie = async (jobId: string) => {
+  return await db.images.where('jobId').equals(jobId).toArray()
 }
 
 export const generateThumbnails = async (cb = ({}: {}) => {}) => {

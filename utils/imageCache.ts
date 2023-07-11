@@ -667,8 +667,9 @@ export const checkCurrentJob = async (imageDetails: any) => {
             if (Number(idx) > 0) {
               // TODO: For now, this is for SDXL_beta logic, which returns an additional image
               addImageToDexie({
-                jobId: imageDetails.id as string,
+                jobId,
                 base64String: image.base64String,
+                hordeImageId: image.hordeImageId,
                 type: 'ab-test'
               })
 

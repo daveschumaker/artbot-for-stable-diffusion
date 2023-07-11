@@ -18,6 +18,7 @@
 
   /* this is equivalent to props.theme.border on original ArtBot */
   --card-background: #7e5a6c;
+  --overlay-background: #ffffff;
 
   --sticky-footer-padding: 80px;
   --sticky-footer-margin: -80px;
@@ -45,6 +46,8 @@
     --text-shade: #f3f3ef;
     --link-text: #5eedde;
     --link-active: #17cfbb;
+
+    --overlay-background: #00000;
 
     --input-background: rgb(42, 48, 60);
     --input-text: #e1e1e1;

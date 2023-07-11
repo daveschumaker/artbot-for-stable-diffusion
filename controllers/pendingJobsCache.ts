@@ -142,6 +142,18 @@ export const updatePendingJobV2 = (pendingJob: IPendingJob) => {
   pendingJobs[jobId] = cloneDeep(pendingJob)
 }
 
+export const updatePendingJobProperties = (
+  jobId: string,
+  updateObject = {}
+) => {
+  if (!pendingJobs[jobId]) {
+    return false
+  }
+
+  const updated = Object.assign({}, pendingJobs[jobId], { ...updateObject })
+  pendingJobs[jobId] = cloneDeep(updated)
+}
+
 export const updatePendingJobId = (oldId: string = '', newId: string) => {
   if (!oldId || !newId || !pendingJobs[oldId]) {
     return

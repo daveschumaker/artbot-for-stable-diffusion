@@ -35,7 +35,11 @@ export const useFetchImage = (input: DefaultPromptInput) => {
 
     const data: CheckImage = await checkImageStatus(jobId)
 
-    if (data.finished === 1) {
+    if (data.status === 'NOT_FOUND') {
+      setJobStatus('error')
+      setJobDone(true)
+      setPending(false)
+    } else if (data.finished === 1) {
       setJobDone(true)
       getImage()
     } else if ((data?.queue_position ?? 0) > 0) {

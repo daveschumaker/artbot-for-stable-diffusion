@@ -141,7 +141,7 @@ const Menu = () => {
   return (
     <>
       {showAppMenu && <Overlay handleClose={handleClose} />}
-      <MenuOverlay show={showAppMenu}>
+      <MenuOverlay show={showAppMenu ? true : undefined}>
         <CloseWrapper onClick={handleClose}>
           <CloseIcon size={32} />
         </CloseWrapper>

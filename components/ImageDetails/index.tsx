@@ -194,7 +194,10 @@ const ImageDetails = ({
       {
         // @ts-ignore
         size.width < 890 && (
-          <div className="flex flex-row justify-center w-full mt-3">
+          <div
+            className="flex flex-row justify-center w-full mt-3"
+            style={{ minHeight: '214px' }}
+          >
             <AdContainer />
           </div>
         )

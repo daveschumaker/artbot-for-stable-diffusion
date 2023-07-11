@@ -147,6 +147,8 @@ const PendingPage = () => {
     showImageModal(jobId)
   }
 
+  const inProgress = [].concat(processing, queued, waiting)
+
   let sorted = [...done, ...processing, ...queued, ...waiting, ...error].filter(
     (job) => {
       if (filter === 'all') {
@@ -238,7 +240,7 @@ const PendingPage = () => {
 
     return (
       <>
-        {index === 0 && (
+        {inProgress.length > 0 && index === 0 && (
           <div className="mt-2 mb-2">
             Why not <Linker href="/rate">rate some images</Linker> (and earn
             kudos) while you wait?
@@ -248,7 +250,7 @@ const PendingPage = () => {
           !imageDetailsModalOpen &&
           //@ts-ignore
           size.width < 890 && (
-            <div className="w-full">
+            <div className="w-full" style={{ minHeight: '164px' }}>
               <AdContainer />
             </div>
           )}
