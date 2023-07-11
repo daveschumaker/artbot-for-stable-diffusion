@@ -8,10 +8,10 @@ import clsx from 'clsx'
 interface ModalProps {
   className?: string
   children: React.ReactNode | React.ReactNode[]
-  handleClose: () => any
+  handleClose?: () => any
   hideCloseButton?: boolean
   style?: CSSProperties
-  visible: boolean
+  visible?: boolean
 }
 
 export default function Modal(props: ModalProps) {
@@ -19,7 +19,9 @@ export default function Modal(props: ModalProps) {
   const id = useId()
 
   const handleClose = () => {
-    props.handleClose()
+    if (props.handleClose) {
+      props.handleClose()
+    }
   }
 
   useEffect(() => {
@@ -32,7 +34,7 @@ export default function Modal(props: ModalProps) {
 
   useEffect(() => {
     const handleKeyPress = (event: any) => {
-      if (event.key === 'Escape') {
+      if (event.key === 'Escape' && props.handleClose) {
         props.handleClose()
       }
     }

@@ -85,7 +85,7 @@ export const handleCreateClick = async ({
   trackGaEvent({
     action: 'new_img_request',
     params: {
-      type: input.img2img ? 'img2img' : 'prompt2img'
+      type: input.source_processing ? 'img2img' : 'prompt2img'
     }
   })
 
