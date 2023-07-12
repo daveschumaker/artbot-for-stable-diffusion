@@ -1,7 +1,7 @@
 .number-input-wrapper {
   display: flex;
   flex-direction: row;
-  width: 160px;
+  width: 140px;
 }
 
 .number-input-minus-btn {

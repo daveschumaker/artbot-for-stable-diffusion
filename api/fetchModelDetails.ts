@@ -1,9 +1,6 @@
+import { IAvailableModels, IModelsDetails } from 'types/artbot'
 import StableDiffusionModel from '../models/StableDiffusionModel'
-import {
-  IAvailableModels,
-  IModelsDetails,
-  setModelDetails
-} from '../store/modelStore'
+import { setModelDetails } from '../store/modelStore'
 import { isAppActive } from '../utils/appUtils'
 
 let isPending = false

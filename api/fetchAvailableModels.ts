@@ -1,5 +1,5 @@
 import StableDiffusionModel from '../models/StableDiffusionModel'
-import { modelInfoStore, setAvailableModels } from '../store/modelStore'
+import { modelStore, setAvailableModels } from '../store/modelStore'
 import { clientHeader, isAppActive } from '../utils/appUtils'
 import fetchModelDetails from './fetchModelDetails'
 
@@ -68,12 +68,13 @@ export const buildModelAvailability = async () => {
     // If nothing happens here, ignore it for now.
   } finally {
     const currentModelCount = Object.keys(
-      modelInfoStore.state.availableModels
+      modelStore.state.availableModels
     ).length
 
     const validCount = currentModelCount > 1 && modelAvailability.length > 1
 
     if (validCount || currentModelCount === 0) {
+      // @ts-ignore
       setAvailableModels(availableModelsMap)
     }
   }

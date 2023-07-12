@@ -1,6 +1,7 @@
 .ModalStyle {
   height: calc(100% - 48px) !important;
   width: unset !important;
+  z-index: 30;
 }
 
 .ImageWrapper {
@@ -16,7 +17,7 @@
 }
 
 .ImageElement {
-  max-width: 100%;
+  max-width: 80%;
   height: 100%;
 }
 

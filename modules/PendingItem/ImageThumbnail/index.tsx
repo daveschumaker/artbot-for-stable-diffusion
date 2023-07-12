@@ -8,6 +8,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { getJobImagesFromDexie } from 'utils/db'
 import clsx from 'clsx'
 import AbTestModal from '../AbTestModal'
+import { useModal } from '@ebay/nice-modal-react'
 
 export default function ImageThumbnail({
   jobDetails,
@@ -18,7 +19,8 @@ export default function ImageThumbnail({
   onImageClick: (jobId: string) => any
   serverHasJob: boolean
 }) {
-  const [showAbTestModal, setShowAbTestModal] = useState(false) // SDXL_beta
+  const abTestModal = useModal(AbTestModal)
+  // const [showAbTestModal, setShowAbTestModal] = useState(false) // SDXL_beta
   const [secondaryImage, setSecondaryImage] = useState('') // SDXL_beta
   const [secondaryId, setSecondaryId] = useState('') // SDXL_beta
   const [isRated, setIsRated] = useState(false)
@@ -41,7 +43,12 @@ export default function ImageThumbnail({
   const handleClick = useCallback(() => {
     // SDXL_beta
     if (secondaryImage && !isRated && !ratingSubmitted) {
-      setShowAbTestModal(true)
+      abTestModal.show({
+        jobDetails,
+        secondaryId,
+        secondaryImage,
+        setIsRated
+      })
       return
     }
 
@@ -54,7 +61,7 @@ export default function ImageThumbnail({
 
   return (
     <div className={styles.MobileImagesView}>
-      {showAbTestModal && (
+      {/* {showAbTestModal && (
         <AbTestModal
           handleClose={() => setShowAbTestModal(false)}
           jobDetails={jobDetails}
@@ -62,7 +69,7 @@ export default function ImageThumbnail({
           secondaryImage={secondaryImage}
           setIsRated={setIsRated}
         />
-      )}
+      )} */}
       <div className={clsx(styles.ImageWrapper)}>
         {serverHasJob || jobDetails.jobStatus === JobStatus.Requested ? (
           <SpinnerV2 />

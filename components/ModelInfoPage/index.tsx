@@ -8,7 +8,7 @@ import Panel from '../../components/UI/Panel'
 import TextButton from '../../components/UI/TextButton'
 import useComponentState from '../../hooks/useComponentState'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
-import { modelInfoStore } from '../../store/modelStore'
+import { modelStore } from '../../store/modelStore'
 import SpinnerV2 from '../../components/Spinner'
 import LinkIcon from '../../components/icons/LinkIcon'
 import styled from 'styled-components'
@@ -25,7 +25,7 @@ const StyledLinkIcon = styled(LinkIcon)`
 
 const ModelInfoPage = ({ availableModels, modelDetails }: any) => {
   const router = useRouter()
-  const modelState = useStore(modelInfoStore)
+  const modelState = useStore(modelStore)
   const workerModels = modelState.availableModels
 
   // TODO: Filter and include all inpainting models (but per worker...)

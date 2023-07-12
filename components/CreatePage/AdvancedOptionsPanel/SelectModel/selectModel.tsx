@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { useStore } from 'statery'
 import PromptInputSettings from '../../../../models/PromptInputSettings'
 
-import { modelInfoStore } from '../../../../store/modelStore'
+import { modelStore } from '../../../../store/modelStore'
 import AlertTriangleIcon from '../../../icons/AlertTriangle'
 import Linker from '../../../UI/Linker'
 import MaxWidth from '../../../UI/MaxWidth'
@@ -23,7 +23,7 @@ interface IProps {
 
 const SelectModel = ({ input, setInput, modelerOptions }: IProps) => {
   const router = useRouter()
-  const modelState = useStore(modelInfoStore)
+  const modelState = useStore(modelStore)
   const { availableModels, modelDetails } = modelState
 
   const modelsValue = modelerOptions(input).filter((option) => {

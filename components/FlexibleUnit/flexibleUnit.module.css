@@ -1,0 +1,13 @@
+.flexibleUnit {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+@media (min-width: 1200px) {
+  .flexibleUnit {
+    margin-bottom: 0;
+    width: 50%;
+  }
+}

@@ -44,7 +44,8 @@ const StyledInteractiveModal = styled.div<IStyle>`
   border-top: 2px solid var(--border-color);
   border-radius: 8px;
   opacity: 1;
-  top: 20px;
+  height: 100%;
+  top: 48px;
   left: 0;
   right: 0;
   bottom: 0;

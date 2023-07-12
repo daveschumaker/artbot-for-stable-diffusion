@@ -1,28 +1,29 @@
-import React, { CSSProperties, useId } from 'react'
+import { CSSProperties, useId } from 'react'
 import Select, { OptionProps } from 'react-select'
-// import { useUID } from 'react-uid
 
-import { zIndex } from '_constants'
-import { SelectPropsComponent } from 'types'
+import { SelectComponentProps } from 'types/artbot'
 
-const SelectComponent = (props: SelectPropsComponent) => {
+const SelectComponent = (props: SelectComponentProps) => {
   // Fixes a bunch of weird SSR related issues with react-select
   // See: https://github.com/JedWatson/react-select/issues/3590
   const id = useId()
 
   const { ...rest } = props
 
+  console.log(`props?`, props)
+
   const customStyles = {
     container: (provided: CSSProperties) => ({
-      ...provided
+      ...provided,
+      width: '100%'
     }),
     control: (provided: CSSProperties) => ({
       ...provided,
-      backgroundColor: `var(--input-background)`,
+      backgroundColor: props.isDisabled ? '#adadad' : `var(--input-background)`,
       borderColor: `var(--input-text)`,
       color: `var(--input-text)`,
       fontSize: '16px',
-      zIndex: zIndex.DEFAULT
+      zIndex: `var(--zIndex-default)`
     }),
     input: (provided: CSSProperties) => ({
       ...provided,
@@ -53,7 +54,8 @@ const SelectComponent = (props: SelectPropsComponent) => {
       ...provided,
       backgroundColor: `var(--input-background)`,
       color: `var(--input-text)`,
-      zIndex: zIndex.OVER_BASE
+      marginBottom: '16px',
+      zIndex: `var(--zIndex-overBase)`
     }),
     indicatorsContainer: (provided: CSSProperties) => ({
       ...provided
@@ -71,6 +73,7 @@ const SelectComponent = (props: SelectPropsComponent) => {
       //@ts-ignore
       styles={customStyles}
       placeholder="Select..."
+      // menuIsOpen
     />
   )
 }

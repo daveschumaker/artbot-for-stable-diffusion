@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { useStore } from 'statery'
-import Switch from 'react-switch'
+// import Switch from 'react-switch'
 
 // UI component imports
 import { Button } from 'components/UI/Button'
@@ -34,7 +34,6 @@ import HiresFix from './HiresFix'
 import InputSwitch from './InputSwitch'
 import NumericInputSlider from './NumericInputSlider'
 import Samplers from './Samplers'
-import SelectModel from './SelectModel'
 import UpscalerOptions from './UpscalerOptions'
 
 // Store imports
@@ -51,10 +50,14 @@ import PromptInputSettings from 'models/PromptInputSettings'
 import { trackEvent } from 'api/telemetry'
 import { MAX_IMAGES_PER_JOB } from '_constants'
 import RenderParentImage from 'components/ParentImage'
-import ImageOrientationOptions from 'modules/ImageOrientationOptions'
 import AllowNsfwImages from './AllowNsfwImages'
 import ReplacementFilterToggle from './ReplacementFilterToggle'
 import LoraSelect from 'modules/LoraSelect'
+import FlexibleRow from 'components/FlexibleRow'
+import FlexibleUnit from 'components/FlexibleUnit'
+import SelectModel from 'modules/AdvancedOptions/SelectModel'
+import SelectModelDetails from 'modules/AdvancedOptions/ModelDetails/modelDetails'
+import ImageOrientationOptions from 'modules/AdvancedOptions/ImageOrientationOptions'
 
 const NoSliderSpacer = styled.div`
   height: 14px;
@@ -71,7 +74,7 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
     setInput({ [event.target.name]: event.target.value })
   }
 
-  const [filterNsfwModels, setFilterNsfwModels] = useState(false)
+  // const [filterNsfwModels, setFilterNsfwModels] = useState(false)
   const userState = useStore(userInfoStore)
   const { loggedIn } = userState
 
@@ -83,7 +86,7 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
 
   const modelerOptions = (imageParams: any) => {
     const modelsArray =
-      validModelsArray({ imageParams, filterNsfw: filterNsfwModels }) || []
+      validModelsArray({ imageParams, filterNsfw: false }) || []
     modelsArray.push({
       name: 'random',
       value: 'random',
@@ -199,7 +202,72 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
           </div>
         </Section>
       )}
-      <ImageOrientationOptions input={input} setInput={setInput} />
+
+      <FlexibleRow>
+        <FlexibleUnit>
+          {componentState.showMultiModel ? (
+            <Section style={{ marginBottom: '8px' }}>
+              <SubSectionTitle>
+                <TextTooltipRow>
+                  Select Models
+                  <Tooltip tooltipId="select-models-tooltip">
+                    Models currently available within the horde. Numbers in
+                    parentheses indicate number of works. Generally, these
+                    models will generate images quicker.
+                  </Tooltip>
+                </TextTooltipRow>
+              </SubSectionTitle>
+              <SelectComponent
+                isMulti
+                // menuPlacement={'top'}
+                //@ts-ignore
+                options={modelerOptions(input)}
+                onChange={(obj: Array<{ value: string; label: string }>) => {
+                  const modelArray: Array<string> = []
+
+                  obj.forEach((model: { value: string; label: string }) => {
+                    modelArray.push(model.value)
+                  })
+
+                  let sampler = input.sampler
+
+                  if (input.sampler === 'dpmsolver' && modelArray.length > 1) {
+                    sampler = 'k_euler_a'
+                  }
+
+                  PromptInputSettings.set('models', [...modelArray])
+                  PromptInputSettings.set('sampler', sampler)
+                  setInput({ models: [...modelArray], sampler })
+                }}
+                // @ts-ignore
+                value={modelsValue}
+                isSearchable={true}
+              />
+            </Section>
+          ) : (
+            <SelectModel
+              disabled={
+                input.source_processing !== SourceProcessing.OutPainting &&
+                !input.useAllModels &&
+                !componentState.showMultiModel &&
+                !input.useFavoriteModels
+                  ? false
+                  : true
+              }
+              input={input}
+              setInput={setInput}
+            />
+          )}
+          <SelectModelDetails
+            models={input.models}
+            multiModels={input.useAllModels || input.useFavoriteModels}
+          />
+        </FlexibleUnit>
+        <FlexibleUnit>
+          <ImageOrientationOptions input={input} setInput={setInput} />
+        </FlexibleUnit>
+      </FlexibleRow>
+
       <Samplers
         input={input}
         setInput={setInput}
@@ -421,7 +489,7 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
 
       <ControlNetOptions input={input} setInput={setInput} />
 
-      <InputSwitch
+      {/* <InputSwitch
         label="Tiling"
         disabled={input.source_image ? true : false}
         tooltip="Attempt to create seamless, repeatable textures. Note: This will not work for img2img or inpainting requests."
@@ -440,7 +508,7 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
             </div>
           ) : null
         }
-      />
+      /> */}
       <Section>
         <SubSectionTitle>
           <TextTooltipRow>
@@ -490,7 +558,7 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
           </div>
         </MaxWidth>
       </Section>
-      {input.source_processing !== SourceProcessing.OutPainting &&
+      {/* {input.source_processing !== SourceProcessing.OutPainting &&
         !input.useAllModels &&
         !componentState.showMultiModel &&
         !input.useFavoriteModels && (
@@ -499,58 +567,9 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
             modelerOptions={modelerOptions}
             setInput={setInput}
           />
-        )}
-      {componentState.showMultiModel ? (
-        <Section>
-          <SubSectionTitle>
-            <TextTooltipRow>
-              Select Models
-              <Tooltip tooltipId="select-models-tooltip">
-                Models currently available within the horde. Numbers in
-                parentheses indicate number of works. Generally, these models
-                will generate images quicker.
-              </Tooltip>
-            </TextTooltipRow>
-            <div className="text-xs">
-              <Linker href={`/info/models#${input.models[0]}`}>
-                [ View detailed model info ]
-              </Linker>
-            </div>
-          </SubSectionTitle>
-          <MaxWidth
-            // @ts-ignore
-            width="480px"
-          >
-            <SelectComponent
-              isMulti
-              menuPlacement={'top'}
-              //@ts-ignore
-              options={modelerOptions(input)}
-              onChange={(obj: Array<{ value: string; label: string }>) => {
-                const modelArray: Array<string> = []
+        )} */}
 
-                obj.forEach((model: { value: string; label: string }) => {
-                  modelArray.push(model.value)
-                })
-
-                let sampler = input.sampler
-
-                if (input.sampler === 'dpmsolver' && modelArray.length > 1) {
-                  sampler = 'k_euler_a'
-                }
-
-                PromptInputSettings.set('models', [...modelArray])
-                PromptInputSettings.set('sampler', sampler)
-                setInput({ models: [...modelArray], sampler })
-              }}
-              // @ts-ignore
-              value={modelsValue}
-              isSearchable={true}
-            />
-          </MaxWidth>
-        </Section>
-      ) : null}
-      <div className="mt-2 flex flex-row items-center gap-2 text-[700] text-sm">
+      {/* <div className="mt-2 flex flex-row items-center gap-2 text-[700] text-sm">
         Filter out NSFW models?{' '}
         <Switch
           checked={filterNsfwModels}
@@ -564,7 +583,7 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
             }
           }}
         />
-      </div>
+      </div> */}
       {showMultiModelSelect && (
         <InputSwitch
           label="Multi-model select"

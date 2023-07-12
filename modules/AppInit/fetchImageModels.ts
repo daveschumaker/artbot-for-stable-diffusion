@@ -1,5 +1,5 @@
 import {
-  modelInfoStore,
+  modelStore,
   setAvailableModels,
   setModelDetails
 } from '../../store/modelStore'
@@ -24,7 +24,7 @@ async function loadAvailableModels() {
     }
 
     const currentModelCount = Object.keys(
-      modelInfoStore.state.availableModels
+      modelStore.state.availableModels
     ).length
 
     // Prevent overwriting existing models data if API encounters an error.
