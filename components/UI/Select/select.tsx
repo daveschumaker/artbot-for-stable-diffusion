@@ -10,8 +10,6 @@ const SelectComponent = (props: SelectComponentProps) => {
 
   const { ...rest } = props
 
-  console.log(`props?`, props)
-
   const customStyles = {
     container: (provided: CSSProperties) => ({
       ...provided,

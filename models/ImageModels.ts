@@ -66,6 +66,22 @@ class ImageModels {
         continue
       }
 
+      // Per Discord, SDXL_beta cannot do img2img.
+      if (
+        availableModels[key].name.includes === 'SDXL_beta' &&
+        (isImg2Img !== false || isInpainting !== false)
+      ) {
+        continue
+      }
+
+      // Per Discord, stable_diffusion_2.0 cannot do img2img.
+      if (
+        availableModels[key].name === 'stable_diffusion_2.0' &&
+        (isImg2Img !== false || isInpainting !== false)
+      ) {
+        continue
+      }
+
       // Depth2Image cannot do text2img
       if (
         availableModels[key].name === 'Stable Diffusion 2 Depth' &&
