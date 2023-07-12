@@ -12,7 +12,7 @@ import PromptInputSettings from '../models/PromptInputSettings'
 
 // @ts-ignore
 import { trackNewSession } from './analytics'
-import { isAppActive } from './appUtils'
+import { documentIsVisible, isAppActive } from './appUtils'
 import {
   deleteDoneFromPending,
   deleteInvalidPendingJobs,
@@ -20,6 +20,12 @@ import {
   deleteRequestedFromPending
 } from './db'
 import { initWindowLogger } from './debugTools'
+
+// Check if the Page Visibility API is supported
+if (typeof window !== 'undefined' && typeof document.hidden !== 'undefined') {
+  // Add event listeners for visibility change
+  document.addEventListener('visibilitychange', documentIsVisible)
+}
 
 export const updateShowGrid = () => {
   if (localStorage.getItem('showGrid') === 'true') {

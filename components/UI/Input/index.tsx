@@ -53,7 +53,6 @@ const Input = (props: InputProps) => {
         }
       }}
       style={style}
-      width={props.width || '100%'}
       value={value}
       {...rest}
     >

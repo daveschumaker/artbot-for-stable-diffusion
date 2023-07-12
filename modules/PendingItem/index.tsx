@@ -16,7 +16,7 @@ import { savePrompt } from 'utils/promptUtils'
 import CreateImageRequest from 'models/CreateImageRequest'
 import Linker from 'components/UI/Linker'
 import { useStore } from 'statery'
-import { modelInfoStore } from 'store/modelStore'
+import { modelStore } from 'store/modelStore'
 import {
   MODEL_LIMITED_BY_WORKERS,
   RATE_IMAGE_CUTOFF_SEC
@@ -48,7 +48,7 @@ const PendingItem = memo(
     onImageClick = () => {}
   }: IProps) => {
     const router = useRouter()
-    const modelState = useStore(modelInfoStore)
+    const modelState = useStore(modelStore)
     const { availableModels } = modelState
 
     const processDoneOrError =

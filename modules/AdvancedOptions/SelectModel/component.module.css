@@ -1,0 +1,15 @@
+.DropdownList {
+  display: inline;
+  margin-top: 8px;
+}
+
+.DropdownList > li {
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px;
+  border-radius: 8px;
+}
+
+.DropdownList > li:hover {
+  background-color: var(--accent-color);
+}

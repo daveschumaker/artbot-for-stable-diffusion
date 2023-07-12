@@ -12,6 +12,17 @@ export const kilobytesToGigabytes = (kilobytes: number) => {
   return gigabytes
 }
 
+export const nearestWholeMultiple = (input: number, X = 64) => {
+  let output = Math.round(input / X)
+  if (output === 0 && input > 0) {
+    output += 1
+  }
+
+  output *= X
+
+  return output
+}
+
 export const relativeTimeSec = ({
   now,
   compare

@@ -6,7 +6,7 @@ import { addPendingJobToDexie } from './db'
 import { randomPropertyName } from './helperUtils'
 import { getModelVersion, validModelsArray } from './modelUtils'
 import { stylePresets } from './stylePresets'
-import { modelInfoStore } from '../store/modelStore'
+import { modelStore } from '../store/modelStore'
 import { SourceProcessing } from './promptUtils'
 import { userInfoStore } from 'store/userStore'
 import { toast, ToastOptions } from 'react-toastify'
@@ -90,9 +90,8 @@ export const addTriggerToPrompt = ({
   model: string
 }) => {
   let triggers = ''
-  if (modelInfoStore.state.modelDetails[model]) {
-    const triggerArray =
-      modelInfoStore?.state?.modelDetails[model]?.trigger ?? []
+  if (modelStore.state.modelDetails[model]) {
+    const triggerArray = modelStore?.state?.modelDetails[model]?.trigger ?? []
 
     if (triggerArray.length > 0) {
       // Instead of adding all trigger words at once to prompt, randomly pick one:

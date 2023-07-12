@@ -1,3 +1,14 @@
+# 2023.07.12
+
+- Temporarily (?) remove the "tiling" option in the Advanced Settings panel as it is not currently implemented on the updated GPU worker side of things. Hopefully it will be back soon!
+- UI refactor: Moved model selection and model details toward top of Advanced Settings panel, since model selection seems to be one of the more important things that people choose when generating images.
+- UI refactor: Image orientation settings will now slot in right next to the model selection panel. Also, the image dimension adjustments panel will now always display. Why? Because now, if you choose something like "Portrait (2 x 3)", you can automatically adjust the desired size while keeping dimensions the same. I think this is a much better user experience.
+- UI fixes: SDXL A/B test issues on some mobile devices (iPhone / mobile Safari, ah hem) that I had mentioned in the 2023.07.10 update.
+
+# 2023.07.11
+
+- MILESTONE: 🎉🎉🎉 ‼️‼️‼️ **9,000,000 images** have been created with ArtBot!‼️‼️‼️ 🎉🎉🎉
+
 # 2023.07.10
 
 - Added support for SDXL beta! Stability.ai is kindly providing some computing power to the AI Horde in order to help fine tune and improve future image models. Once you've generated an image using SDXL, you'll be presented with two thumbnails. Choose which image you think looks best and the result will be sent back to Stability.ai. In return, AI Horde will reward you with kudos (currently 15 per rating). More information is available on [Db0's blog post announcing the partnership](https://dbzer0.com/blog/stable-diffusion-xl-beta-on-the-ai-horde/).

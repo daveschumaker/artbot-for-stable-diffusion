@@ -36,7 +36,7 @@ import CreateImageRequest from '../models/CreateImageRequest'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { useEffectOnce } from '../hooks/useEffectOnce'
-import { IModelDetails, modelInfoStore } from '../store/modelStore'
+import { modelStore } from '../store/modelStore'
 import AppSettings from '../models/AppSettings'
 import { toast } from 'react-toastify'
 import { getInputCache } from '../store/inputCache'
@@ -48,13 +48,14 @@ import useComponentState from 'hooks/useComponentState'
 import { trackEvent } from 'api/telemetry'
 import PromptTextArea from 'modules/PromptTextArea'
 import NegativePromptArea from 'modules/NegativePromptArea'
+import { IModelsDetails } from 'types/artbot'
 
 // Kind of a hacky way to persist output of image over the course of a session.
 let cachedImageDetails = {}
 
 const ControlNet = () => {
   const router = useRouter()
-  const modelState = useStore(modelInfoStore)
+  const modelState = useStore(modelStore)
   const userState = useStore(userInfoStore)
   const { loggedIn } = userState
   const { modelDetails } = modelState
@@ -195,7 +196,8 @@ const ControlNet = () => {
   const modelerOptions = (imageParams: any) => {
     const modelsArray = validModelsArray({ imageParams }) || []
 
-    const filteredArray = modelsArray.filter((model: IModelDetails) => {
+    const filteredArray = modelsArray.filter((model: IModelsDetails) => {
+      // @ts-ignore
       if (!modelDetails[model.name]) {
         return false
       }

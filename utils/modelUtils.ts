@@ -1,9 +1,9 @@
-import { modelInfoStore } from '../store/modelStore'
+import { modelStore } from '../store/modelStore'
 import { SourceProcessing } from './promptUtils'
 
 export const getModelVersion = (modelName: string) => {
-  if (modelInfoStore.state.modelDetails[modelName]) {
-    return modelInfoStore.state.modelDetails[modelName].version || ''
+  if (modelStore.state.modelDetails[modelName]) {
+    return modelStore.state.modelDetails[modelName].version || ''
   }
 
   return ''
@@ -19,7 +19,7 @@ export const validModelsArray = ({
   sort = 'workers',
   filterNsfw = false
 } = {}) => {
-  const modelDetails = modelInfoStore.state.modelDetails
+  const modelDetails = modelStore.state.modelDetails
   const img2img =
     imageParams.source_processing === SourceProcessing.Img2Img ||
     imageParams.source_processing === SourceProcessing.InPainting
@@ -27,7 +27,7 @@ export const validModelsArray = ({
 
   const modelsArray: any = []
   const availableModels =
-    JSON.parse(JSON.stringify(modelInfoStore.state.availableModels)) || {}
+    JSON.parse(JSON.stringify(modelStore.state.availableModels)) || {}
 
   for (const key in availableModels) {
     const modelName = availableModels[key].name

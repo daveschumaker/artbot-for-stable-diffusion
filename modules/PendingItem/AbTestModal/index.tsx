@@ -13,21 +13,25 @@ import {
   updatePendingJobInDexie
 } from 'utils/db'
 import { updatePendingJobProperties } from 'controllers/pendingJobsCache'
+import NiceModal, { useModal } from '@ebay/nice-modal-react'
 
-export default function AbTestModal({
+function AbTestModal({
   jobDetails,
   secondaryId,
   secondaryImage,
-  handleClose = () => {},
   setIsRated = () => {}
 }: {
-  handleClose: () => any
   jobDetails: any
   secondaryId: string
   secondaryImage: string
   setIsRated: (value: boolean) => any
 }) {
+  const modal = useModal()
   const [selectedImg, setSelectedImg] = useState(0)
+
+  const handleClose = () => {
+    modal.remove()
+  }
 
   const handleRateImage = useCallback(async () => {
     const imageId = selectedImg === 1 ? jobDetails.hordeImageId : secondaryId
@@ -145,3 +149,5 @@ export default function AbTestModal({
     </InteractiveModal>
   )
 }
+
+export default NiceModal.create(AbTestModal)

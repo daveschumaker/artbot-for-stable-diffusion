@@ -44,3 +44,12 @@ export function blobToBase64(data: Blob | File) {
     reader.readAsDataURL(data)
   })
 }
+
+export const isEmptyObject = (obj: object) => {
+  for (let key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      return false
+    }
+  }
+  return true
+}

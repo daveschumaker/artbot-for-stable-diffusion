@@ -22,7 +22,7 @@ interface Props {
   disabled?: boolean
   fullWidth?: boolean
   enforceStepValue?: boolean
-  callback?: (value: number)=>void
+  callback?: (value: number) => void
 }
 
 const NumericInputSlider = ({
@@ -44,32 +44,38 @@ const NumericInputSlider = ({
 
   const [showWarning, setShowWarning] = useState(false)
 
-  const keepInBoundaries = useCallback((val: number)=>{
-    return Math.max(from, Math.min(val, to))
-  }, [from, to])
+  const keepInBoundaries = useCallback(
+    (val: number) => {
+      return Math.max(from, Math.min(val, to))
+    },
+    [from, to]
+  )
 
-  const roundToNearestStep = useCallback((val: number) =>{
-    val = keepInBoundaries(val)
-    const steps = Math.round((val - from) / step);
-    const newValue = from + steps * step;
-    return newValue;
-  }, [from, keepInBoundaries, step])
+  const roundToNearestStep = useCallback(
+    (val: number) => {
+      val = keepInBoundaries(val)
+      const steps = Math.round((val - from) / step)
+      const newValue = from + steps * step
+      return newValue
+    },
+    [from, keepInBoundaries, step]
+  )
 
-  function updateField (value: number) {
-    setInput({[fieldName]: value})
+  function updateField(value: number) {
+    setInput({ [fieldName]: value })
     setTemporaryValue(value)
     callback(value)
   }
 
-  function safelyUpdateField (value: string | number) {
+  function safelyUpdateField(value: string | number) {
     value = Number(value)
     if (isNaN(value) || value < from || value > to) {
       setShowWarning(true)
-      updateField(isNaN(value)?to:keepInBoundaries(value))
+      updateField(isNaN(value) ? to : keepInBoundaries(value))
     } else {
       setShowWarning(false)
 
-      if (enforceStepValue){
+      if (enforceStepValue) {
         value = roundToNearestStep(value)
       }
 
@@ -79,7 +85,9 @@ const NumericInputSlider = ({
 
   // Show warnings to users who logged out after setting high values on sliders.
   useEffect(() => {
-    let correctedInputField = enforceStepValue ? roundToNearestStep(inputField) : keepInBoundaries(inputField)
+    let correctedInputField = enforceStepValue
+      ? roundToNearestStep(inputField)
+      : keepInBoundaries(inputField)
 
     setShowWarning(inputField !== correctedInputField)
 
@@ -95,7 +103,7 @@ const NumericInputSlider = ({
 
   return (
     <div className={clsx('mb-4 w-full', !fullWidth && 'md:w-1/2')}>
-      <Section>
+      <Section style={{ paddingTop: 0 }}>
         <div className="flex flex-row items-center justify-between">
           <SubSectionTitle>
             <TextTooltipRow>
@@ -103,7 +111,7 @@ const NumericInputSlider = ({
               {tooltip && <Tooltip tooltipId={fieldName}>{tooltip}</Tooltip>}
             </TextTooltipRow>
 
-            <div className="block text-xs w-full">
+            <div className="block text-xs w-full font-[400]">
               ({from} - {to})
             </div>
           </SubSectionTitle>
@@ -124,7 +132,7 @@ const NumericInputSlider = ({
               const value = Number((inputField + step).toFixed(2))
               safelyUpdateField(value)
             }}
-            onChange={(e: any) =>{
+            onChange={(e: any) => {
               // Note that we use setTemporaryValue, not safelyUpdateField.
               // This is because we want to let users enter arbitrary data in the input.
               // Validation and field update is performed after user finishes typing (see onBlur).
