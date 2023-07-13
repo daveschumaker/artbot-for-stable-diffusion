@@ -30,3 +30,11 @@
     width: 480px;
   }
 }
+
+@media (min-width: 960px) {
+  .ModalWrapper {
+    min-height: 280px;
+    max-width: 880px;
+    width: 50%;
+  }
+}

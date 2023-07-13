@@ -103,7 +103,7 @@ a {
   --carbon-bg-primary: hsl(0, 0%, 98%);
   --carbon-bg-secondary: hsl(0, 0%, 92%);
   --carbon-text-color: hsl(0, 0%, 20%);
-  z-index: 10;
+  z-index: var(--zIndex-default);
   font-size: var(--carbon-font-size);
   font-family: var(--carbon-font-family);
   width: 100%;

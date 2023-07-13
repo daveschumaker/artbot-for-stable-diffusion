@@ -1,3 +1,7 @@
+# 2023.07.13
+
+- Fix: Dropdown menus for tags and style presets were unscrollable due to a pesky z-index issue. Thanks to Noli and Anonymous Derpling on Discord for reporting this issue.
+
 # 2023.07.12
 
 - Temporarily (?) remove the "tiling" option in the Advanced Settings panel as it is not currently implemented on the updated GPU worker side of things. Hopefully it will be back soon!

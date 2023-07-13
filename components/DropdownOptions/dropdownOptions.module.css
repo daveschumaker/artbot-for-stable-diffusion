@@ -10,7 +10,7 @@
   position: absolute;
   right: 0;
   top: 42px;
-  z-index: var(--zIndex-overBase);
+  z-index: var(--zIndex-overNavBar);
 }
 
 .CloseButton {
