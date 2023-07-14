@@ -1,3 +1,7 @@
+# 2023.07.14
+
+- Fix: ArtBot was not properly working in the background. Thanks to ThereIsNoJustice and hmal on Discord for reporting this.
+
 # 2023.07.13
 
 - Fix: Dropdown menus for tags and style presets were unscrollable due to a pesky z-index issue. Thanks to Noli and Anonymous Derpling on Discord for reporting this issue.
