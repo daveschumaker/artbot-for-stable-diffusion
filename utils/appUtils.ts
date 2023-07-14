@@ -1,7 +1,7 @@
 import { BroadcastChannel } from 'broadcast-channel'
 import { HORDE_DEV, HORDE_PROD } from '../_constants'
 import AppSettings from '../models/AppSettings'
-import { setPrimaryWindow } from 'store/appStore'
+import { appInfoStore, setPrimaryWindow } from 'store/appStore'
 
 export const logError = async (data: any) => {
   await fetch(`/artbot/api/log-error`, {
@@ -18,14 +18,27 @@ export const clientHeader = () => {
 }
 
 export const isAppActive = () => {
+  if (typeof window === 'undefined') {
+    return true
+  }
+
+  if (appInfoStore.state.primaryWindow) {
+    return true
+  }
+
+  // Browser doesn't support document.hidden or visibility state?
+  // Then always run in background
   if (typeof document.hidden === 'undefined') {
     return true
   }
 
-  if (document.hidden) {
-    return false
-  }
+  // User defined runInBackground is false
+  // if (AppSettings.get('runInBackground') === false && document.hidden) {
+  //   return false;
+  // }
 
+  // Either user defined runInBackground explicitly set to true
+  // (or new user -- where runInBackground will be undefined)
   if (AppSettings.get('runInBackground') !== false) {
     return true
   }
