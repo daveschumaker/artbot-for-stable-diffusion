@@ -34,7 +34,6 @@ import { useSwipeable } from 'react-swipeable'
 import { useEffectOnce } from '../hooks/useEffectOnce'
 import MasonryLayout from '../components/MasonryLayout'
 import Modal from '../components/Modal'
-import SpinnerV2 from '../components/Spinner'
 import DropDownMenu from '../components/UI/DropDownMenu'
 import DropDownMenuItem from '../components/UI/DropDownMenuItem'
 import AppSettings from '../models/AppSettings'
@@ -543,15 +542,17 @@ const ImagesPage = () => {
         />
       )} */}
       {componentState.showDownloadModal && (
-        <Modal hideCloseButton visible={componentState.showDownloadModal}>
-          Downloading images
-          <div className="flex flex-row w-full mt-4 mb-4 text-sm">
-            Processing selected images for download and converting to{' '}
-            {AppSettings.get('imageDownloadFormat') || 'JPG'}s. Please wait.
-          </div>
-          <div className="flex flex-row justify-center w-full">
-            <SpinnerV2 />
-          </div>
+        <Modal visible={true}>
+          <>
+            Downloading images
+            <div className="flex flex-row w-full mt-4 mb-4 text-sm">
+              Processing selected images for download and converting to{' '}
+              {AppSettings.get('imageDownloadFormat') || 'JPG'}s. Please wait.
+            </div>
+            <div className="flex flex-row justify-center w-full">
+              <Spinner />
+            </div>
+          </>
         </Modal>
       )}
       {componentState.showDeleteModal && (

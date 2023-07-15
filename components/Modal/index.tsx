@@ -42,6 +42,7 @@ export default function Modal(props: ModalProps) {
     window.addEventListener('keydown', handleKeyPress)
 
     return () => {
+      setLocked(false)
       window.removeEventListener('keydown', handleKeyPress)
     }
 
