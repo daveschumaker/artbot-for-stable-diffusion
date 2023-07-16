@@ -75,7 +75,8 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
       nearestHeight = Math.max(nearestHeight, from)
 
       setInput({
-        height: nearestHeight
+        height: nearestHeight,
+        width: value
       })
     } else if (input.orientationType !== 'custom' && !keepAspectRatio) {
       setInput({ orientationType: 'custom' })
@@ -91,6 +92,7 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
       nearestWidth = Math.max(nearestWidth, from)
 
       setInput({
+        height: value,
         width: nearestWidth
       })
     } else if (input.orientationType !== 'custom' && !keepAspectRatio) {
@@ -130,7 +132,8 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
   // Lock aspect ratio on initial run if orientation type is not custom
   useEffect(() => {
     if (input.orientationType !== 'custom') {
-      handleOrientationSelect(input.orientationType || 'square')
+      setKeepAspectRatio(true)
+      setTargetAspectRatio(input.width / input.height)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

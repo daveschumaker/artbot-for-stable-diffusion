@@ -1,3 +1,8 @@
+# 2023.07.16
+
+- Updated shared images feauture to utilize AWS (before... they were just saved locally and taking up space on my own server. Almost 4,000 shared images so far!) All existing shared images have been migrated and should continue to work.
+- Fix: Issues with image orientation settings getting reset and just acting ridiculous every time you come back to the create image page. Thanks to Chief of Booty for reporting this on Discord.
+
 # 2023.07.15
 
 - Fix: Page crashes when attempting to download multiple images at once from image gallery. Thanks to ThereIsNoJustice on Discord for reporting this.

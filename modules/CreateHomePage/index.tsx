@@ -74,8 +74,8 @@ const CreateHomePage = ({ modelDetails = {}, shortlinkImageParams }: any) => {
       })
 
       logToConsole({
-        data: updatedInputState,
-        name: 'setInput_state',
+        data: newState,
+        name: 'setInput_new_state',
         debugKey: 'DEBUG_LOAD_INPUT'
       })
     }
@@ -422,6 +422,11 @@ const CreateHomePage = ({ modelDetails = {}, shortlinkImageParams }: any) => {
 
     // Step 8. Set input
     setInput({ ...(initialState as DefaultPromptInput) })
+    logToConsole({
+      data: initialState,
+      name: 'LoadInput_Step_8',
+      debugKey: 'DEBUG_LOAD_INPUT'
+    })
 
     // Step 9. Set pageLoaded so we can start error checking and auto saving input.
     setPageLoaded(true)
