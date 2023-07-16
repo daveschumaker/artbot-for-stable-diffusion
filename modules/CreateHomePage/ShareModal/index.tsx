@@ -45,11 +45,6 @@ export default function ShareModal({
 }) {
   const [, setLocked] = useLockedBody(false)
 
-  const hostname =
-    window.location.hostname === 'localhost'
-      ? 'http://localhost:3000'
-      : 'https://tinybots.net'
-
   useEffect(() => {
     setLocked(true)
 
@@ -69,9 +64,9 @@ export default function ShareModal({
         <PageTitle>Shared image</PageTitle>
         <div className="flex justify-center w-full">
           <img
-            src={`${hostname}/artbot/api/v1/shortlink/i/${
+            src={`https://s3.amazonaws.com/tinybots.artbot/artbot/images/${
               query[CreatePageMode.SHORTLINK]
-            }`}
+            }.webp`}
             alt=""
             className="max-h-[256px]"
           />

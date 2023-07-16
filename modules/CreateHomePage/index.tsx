@@ -495,9 +495,9 @@ const CreateHomePage = ({ modelDetails = {}, shortlinkImageParams }: any) => {
           />
           <meta
             name="twitter:image"
-            content={`https://tinybots.net/artbot/api/v1/shortlink/i/${
+            content={`https://s3.amazonaws.com/tinybots.artbot/artbot/images/${
               query[CreatePageMode.SHORTLINK]
-            }`}
+            }.webp`}
           />
         </Head>
       ) : null}
