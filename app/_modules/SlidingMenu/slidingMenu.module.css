@@ -1,0 +1,35 @@
+.MenuOverlay {
+  background-color: var(--body-color);
+  /* border-right: 1px solid gray; */
+  box-shadow: 2px 0 8px #000000;
+  bottom: 0;
+  left: 0;
+  padding-top: calc(env(safe-area-inset-top) + 32px) 16px 16px 16px;
+  position: fixed;
+  top: 0;
+  transform: translateX(-110%);
+  transition: all 250ms ease-in-out;
+  width: 300px;
+  z-index: 30;
+}
+
+@media (min-width: 640px) {
+  .MenuOverlay {
+    height: 100vh;
+  }
+}
+
+.MenuOverlayShow {
+  transform: translateX(0%);
+}
+
+.CloseWrapper {
+  cursor: pointer;
+  position: absolute;
+  top: calc(env(safe-area-inset-top) + 4px);
+  left: 8px;
+}
+
+.CloseWrapper:hover {
+  color: rgb(20, 184, 166);
+}

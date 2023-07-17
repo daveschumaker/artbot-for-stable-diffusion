@@ -1,23 +1,26 @@
-/* eslint-disable react/display-name */
+'use client'
+
 import React from 'react'
 import clsx from 'clsx'
 import * as NavigationMenu from '@radix-ui/react-navigation-menu'
 import styles from './navBar.module.css'
-import ChevronDownIcon from '../../icons/ChevronDownIcon'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
-import AnalyticsIcon from '../../icons/AnalyticsIcon'
-import HordeDropdown from './HordeDropdown'
-import PointIcon from '../../icons/PointIcon'
+import { usePathname } from 'next/navigation'
+import HordeDropdown from '../HordeDropdown'
 import { useStore } from 'statery'
-import { userInfoStore } from '../../../store/userStore'
+import { userInfoStore } from '../../../../store/userStore'
 import AlertTriangleIcon from 'components/icons/AlertTriangle'
-import ErrorDropdown from './ErrorDropdown'
+import ErrorDropdown from '../ErrorDropdown'
 import {
   appInfoStore,
   setNewImageReady,
   setShowImageReadyToast
 } from 'store/appStore'
+import {
+  IconChevronDown,
+  IconDeviceDesktopAnalytics,
+  IconPoint
+} from '@tabler/icons-react'
 
 const ListItem = ({ className, children, href, title, ...props }: any) => (
   <li>
@@ -34,9 +37,8 @@ const ListItem = ({ className, children, href, title, ...props }: any) => (
   </li>
 )
 
-const NavBar = () => {
-  const router = useRouter()
-  const { pathname } = router
+const HeaderNavLinks = () => {
+  const pathname = usePathname()
 
   const appState = useStore(appInfoStore)
   const { newImageReady } = appState
@@ -96,7 +98,7 @@ const NavBar = () => {
             <Link className={styles.NavigationMenuLink} href="/">
               Create
             </Link>
-            <ChevronDownIcon className={styles.CaretDown} />
+            <IconChevronDown className={styles.CaretDown} stroke={1.5} />
           </NavigationMenu.Trigger>
           <NavigationMenu.Content className={styles.NavigationMenuContent}>
             <ul className={clsx(styles.List, styles.one)}>
@@ -175,7 +177,7 @@ const NavBar = () => {
             >
               Info
             </Link>
-            <ChevronDownIcon className={styles.CaretDown} />
+            <IconChevronDown className={styles.CaretDown} stroke={1.5} />
           </NavigationMenu.Trigger>
           <NavigationMenu.Content className={styles.NavigationMenuContent}>
             <ul className={clsx(styles.List, styles.one)}>
@@ -211,7 +213,7 @@ const NavBar = () => {
             <Link className={styles.NavigationMenuLink} href="/settings">
               Settings
             </Link>
-            <ChevronDownIcon className={styles.CaretDown} />
+            <IconChevronDown className={styles.CaretDown} stroke={1.5} />
           </NavigationMenu.Trigger>
           <NavigationMenu.Content className={styles.NavigationMenuContent}>
             <ul className={clsx(styles.List, styles.one)}>
@@ -254,13 +256,13 @@ const NavBar = () => {
             className={clsx(styles.NavigationMenuTrigger, styles.AnalyticsIcon)}
           >
             {(isActive || isPaused) && (
-              <PointIcon
+              <IconPoint
                 className={styles.WorkerStatus}
                 fill={workerBadgeColor}
-                stroke="white"
+                stroke={1.5}
               />
             )}
-            <AnalyticsIcon size={32} />
+            <IconDeviceDesktopAnalytics size={32} stroke={1.5} />
           </NavigationMenu.Trigger>
           <NavigationMenu.Content className={styles.NavigationMenuContent}>
             <HordeDropdown />
@@ -279,4 +281,4 @@ const NavBar = () => {
   )
 }
 
-export default NavBar
+export default HeaderNavLinks

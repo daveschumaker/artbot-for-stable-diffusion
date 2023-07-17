@@ -1,4 +1,10 @@
+import {
+  getHordePerformanceCache,
+  initHordePerfMonitor
+} from 'app/_api/hordeInfo'
 import type { NextApiRequest, NextApiResponse } from 'next'
+
+initHordePerfMonitor()
 
 type Data = {
   success: boolean
@@ -14,15 +20,7 @@ export default async function handler(
   }
 
   try {
-    const resp = await fetch(
-      `http://localhost:${process.env.PORT}/artbot/api/v1/horde-info/performance`,
-      {
-        method: 'GET'
-      }
-    )
-
-    const data = await resp.json()
-    const { perfStats = {} } = data
+    const perfStats = getHordePerformanceCache()
 
     return res.send({
       success: true,

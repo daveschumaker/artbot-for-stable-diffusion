@@ -13,7 +13,6 @@ import { getCanvasHeight, getMaxValidCanvasWidth } from '../utils/fabricUtils'
 import { nearestWholeMultiple } from '../utils/imageUtils'
 import { SourceProcessing } from '../utils/promptUtils'
 import CanvasSettings from './CanvasSettings'
-import DefaultPromptInput from './DefaultPromptInput'
 
 fabric.Object.NUM_FRACTION_DIGITS = 15
 
@@ -129,13 +128,17 @@ class CreateCanvas {
     width?: number
     canvasId?: string
   } = {}) => {
-    return new fabric.Canvas(canvasId, {
-      backgroundColor: bgColor,
-      // renderOnAddRemove: true,
-      isDrawingMode: false,
-      height,
-      width: getMaxValidCanvasWidth()
-    })
+    try {
+      return new fabric.Canvas(canvasId, {
+        backgroundColor: bgColor,
+        // renderOnAddRemove: true,
+        isDrawingMode: false,
+        height,
+        width: getMaxValidCanvasWidth()
+      })
+    } catch (e) {
+      console.log(`e?`, e)
+    }
   }
 
   restoreCanvas = () => {

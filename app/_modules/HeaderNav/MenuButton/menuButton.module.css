@@ -1,0 +1,16 @@
+.MenuButton {
+  align-items: center;
+  display: flex;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.MenuButton:hover {
+  color: rgb(20, 184, 166);
+}
+
+@media (min-width: 1024px) {
+  .MenuButton {
+    display: none;
+  }
+}

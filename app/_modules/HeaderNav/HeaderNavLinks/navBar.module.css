@@ -1,5 +1,6 @@
 .NavigationMenuRoot {
   display: flex;
+  flex-direction: row;
   position: relative;
   justify-content: flex-end;
   flex-grow: 1;
@@ -81,18 +82,23 @@
   animation-duration: 250ms;
   animation-timing-function: ease;
 }
+
 .NavigationMenuContent[data-motion='from-start'] {
   animation-name: enterFromLeft;
 }
+
 .NavigationMenuContent[data-motion='from-end'] {
   animation-name: enterFromRight;
 }
+
 .NavigationMenuContent[data-motion='to-start'] {
   animation-name: exitToLeft;
 }
+
 .NavigationMenuContent[data-motion='to-end'] {
   animation-name: exitToRight;
 }
+
 @media only screen and (min-width: 600px) {
   .NavigationMenuContent {
     width: auto;
@@ -109,9 +115,11 @@
   z-index: 1;
   transition: width, transform 250ms ease;
 }
+
 .NavigationMenuIndicator[data-state='visible'] {
   animation: fadeIn 200ms ease;
 }
+
 .NavigationMenuIndicator[data-state='hidden'] {
   animation: fadeOut 200ms ease;
 }
@@ -139,6 +147,7 @@
 .NavigationMenuViewport[data-state='open'] {
   animation: scaleIn 200ms ease;
 }
+
 .NavigationMenuViewport[data-state='closed'] {
   animation: scaleOut 200ms ease;
 }
@@ -210,6 +219,7 @@
   transform: scale(0.82);
   left: -3px;
 }
+
 [data-state='open'] > .CaretDown {
   transform: scale(0.82) rotate(-180deg);
 }
@@ -241,6 +251,7 @@
     opacity: 0;
     transform: translateX(200px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -252,6 +263,7 @@
     opacity: 0;
     transform: translateX(-200px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -263,6 +275,7 @@
     opacity: 1;
     transform: translateX(0);
   }
+
   to {
     opacity: 0;
     transform: translateX(200px);
@@ -274,6 +287,7 @@
     opacity: 1;
     transform: translateX(0);
   }
+
   to {
     opacity: 0;
     transform: translateX(-200px);
@@ -285,6 +299,7 @@
     opacity: 0;
     transform: rotateX(-30deg) scale(0.9);
   }
+
   to {
     opacity: 1;
     transform: rotateX(0deg) scale(1);
@@ -296,6 +311,7 @@
     opacity: 1;
     transform: rotateX(0deg) scale(1);
   }
+
   to {
     opacity: 0;
     transform: rotateX(-10deg) scale(0.95);
@@ -306,6 +322,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -315,6 +332,7 @@
   from {
     opacity: 1;
   }
+
   to {
     opacity: 0;
   }

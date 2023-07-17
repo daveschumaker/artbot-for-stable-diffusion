@@ -7,11 +7,9 @@ import { appInfoStore } from '../../../../store/appStore'
 import { userInfoStore } from '../../../../store/userStore'
 import { clientHeader, getApiHostServer } from '../../../../utils/appUtils'
 import { sleep } from '../../../../utils/sleep'
-import PauseIcon from '../../../icons/PauseIcon'
-import PlayIcon from '../../../icons/PlayIcon'
-import PointIcon from '../../../icons/PointIcon'
-import SpinnerV2 from '../../../Spinner'
 import styles from './hordeDropdown.module.css'
+import { IconPlayerPause, IconPlayerPlay, IconPoint } from '@tabler/icons-react'
+import SpinnerV2 from 'components/Spinner'
 
 const HordeDropdown = () => {
   const appStore = useStore(appInfoStore)
@@ -210,13 +208,13 @@ const HordeDropdown = () => {
                       {workerState[key] === 'loading' && (
                         <SpinnerV2 size={24} />
                       )}
-                      {workerState[key] === 'active' && <PauseIcon />}
-                      {workerState[key] === 'paused' && <PlayIcon />}
-                      {workerState[key] === 'offline' && <PlayIcon />}
+                      {workerState[key] === 'active' && <IconPlayerPause />}
+                      {workerState[key] === 'paused' && <IconPlayerPlay />}
+                      {workerState[key] === 'offline' && <IconPlayerPlay />}
                     </div>
                     <div className="flex flex-row gap-[0px] items-center">
                       {worker.name}
-                      <PointIcon stroke="white" fill={workerBadgeColor} />
+                      <IconPoint stroke="white" fill={workerBadgeColor} />
                     </div>
                   </div>
                   <div className="flex flex-col tablet:flex-row tablet:items-center font-mono tablet:justify-between w-full pl-[4px]">

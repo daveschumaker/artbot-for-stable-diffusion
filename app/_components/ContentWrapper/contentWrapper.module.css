@@ -1,0 +1,10 @@
+.ContentWrapper {
+  margin-top: var(--headerNav-height);
+  padding: 8px;
+}
+
+@media (min-width: 1024px) {
+  .ContentWrapper {
+    margin-left: var(--fixedSideBar-width);
+  }
+}

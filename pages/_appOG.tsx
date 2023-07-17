@@ -8,7 +8,6 @@ import Script from 'next/script'
 import { initAppSettings } from '../utils/appSettings'
 import ContentWrapper from '../components/UI/ContentWrapper'
 import Footer from '../components/UI/Footer'
-import Header from '../components/UI/Header'
 import PollController from '../components/PollController'
 
 import 'react-toastify/dist/ReactToastify.css'
@@ -208,7 +207,6 @@ function MyApp({ Component, pageProps }: MyAppProps) {
           <PollController />
           <ContentWrapper>
             <Menu show={showAppMenu} />
-            <Header />
             <div className="absolute mx-auto w-full md:pb-[0] top-[48px] md:top-[44px] md:relative px-[8px]">
               <ToastContainer
                 style={{ marginTop: `calc(env(safe-area-inset-top))` }}

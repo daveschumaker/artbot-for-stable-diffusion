@@ -1,0 +1,15 @@
+.FixedMenu {
+  border-right: 1px solid black;
+  bottom: 0;
+  display: none;
+  left: 0;
+  position: fixed;
+  top: var(--headerNav-height);
+  width: var(--fixedSideBar-width);
+}
+
+@media (min-width: 1024px) {
+  .FixedMenu {
+    display: block;
+  }
+}

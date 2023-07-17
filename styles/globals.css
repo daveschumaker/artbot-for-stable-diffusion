@@ -3,11 +3,28 @@
 @tailwind utilities;
 
 :root {
+  --body-color: #f2f2f2;
+
+  --fixedSideBar-width: 220px;
+  --headerNav-height: 42px;
+
   /* Z-INDEX */
   --zIndex-default: 1;
   --zIndex-overBase: 2;
   --zIndex-navBar: 3;
   --zIndex-overNavBar: 4;
+}
+
+@media (min-width: 640px) {
+  :root {
+    --headerNav-height: 48px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --body-color: #222222;
+  }
 }
 
 html {
