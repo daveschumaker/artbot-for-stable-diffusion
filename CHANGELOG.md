@@ -1,3 +1,7 @@
+# 2023.07.18
+
+- Fix: Super strange bug. Image size wasn't respected when hires fix was set to false. Thanks for reporting on Discord, Anonymous Derpling (and nice find)!
+
 # 2023.07.16
 
 - Updated shared images feauture to utilize AWS (before... they were just saved locally and taking up space on my own server. Almost 4,000 shared images so far!) All existing shared images have been migrated and should continue to work.

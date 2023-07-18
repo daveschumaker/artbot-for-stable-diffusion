@@ -149,20 +149,14 @@ class CreateImageRequest {
     this.jobTimestamp = Date.now()
 
     // Orientation settings
-    if (orientationType !== 'random') {
-      const imageSize: ImageSize = orientationDetails(
-        orientationType,
-        height,
-        width
-      )
-
-      this.orientation = imageSize.orientation
-      this.width = Number(imageSize.width)
-      this.height = Number(imageSize.height)
-    } else {
+    if (orientationType === 'random') {
       this.orientation = 'random'
       this.width = 512
       this.height = 512
+    } else {
+      this.orientation = orientationType
+      this.height = height
+      this.width = width
     }
 
     // Stable Diffusion models look best on at least 768 x 768
@@ -172,6 +166,12 @@ class CreateImageRequest {
     ) {
       this.width = 768
       this.height = 768
+    }
+
+    // SDXL models look best on at least 1024 x 1024
+    if (models[0].includes('SDXL') && this.orientation === 'square') {
+      this.width = 1024
+      this.height = 1024
     }
 
     this.karras = Boolean(karras)
