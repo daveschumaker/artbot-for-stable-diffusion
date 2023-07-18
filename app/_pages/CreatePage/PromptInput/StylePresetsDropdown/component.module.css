@@ -1,0 +1,50 @@
+.filter-preset {
+  display: flex;
+  column-gap: 8px;
+  flex-direction: row;
+  margin: 8px 8px 0 8px;
+  width: 100%;
+}
+
+.style-presets-wrapper {
+  position: absolute;
+  top: 82px;
+  bottom: 8px;
+  left: 8px;
+  right: 8px;
+  overflow-y: auto;
+
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+}
+
+.style-presets-wrapper * {
+  -ms-overflow-style: none;
+}
+
+.style-presets-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.style-presets-wrapper * {
+  -ms-overflow-style: none;
+}
+
+.style-presets-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.preset-wrapper {
+  padding: 4px 8px 16px 8px;
+  border-radius: 4px;
+  margin-bottom: 14px;
+}
+
+.preset-wrapper:hover {
+  background-color: var(--light-accent);
+}
+
+.preset-description {
+  font-size: 12px;
+}

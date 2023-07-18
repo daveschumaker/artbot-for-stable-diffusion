@@ -3,8 +3,20 @@
 @tailwind utilities;
 
 :root {
+  /* COLORS */
+  --accent-color: #8e6f7e;
   --body-color: #f2f2f2;
+  --btn-primary: #6ab7c6;
+  --btn-primary-hover: #8fc9d4;
+  --btn-secondary: #c77b68;
+  --btn-secondary-hover: #d59c8e;
+  --input-background: #ffffff;
+  --input-color: #282828;
+  --light-shade: #efedef;
+  --input-text: #282828;
+  --main-color: #14b8a6;
 
+  /* SIZES */
   --fixedSideBar-width: 220px;
   --headerNav-height: 42px;
 
@@ -23,7 +35,11 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
+    /* COLORS */
     --body-color: #222222;
+    --input-background: rgb(42, 48, 60);
+    --input-color: #e1e1e1;
+    --input-text: #e1e1e1;
   }
 }
 

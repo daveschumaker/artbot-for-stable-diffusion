@@ -13,3 +13,9 @@
   width: 100%;
   z-index: var(--zIndex-navBar);
 }
+
+@media (min-width: 1024px) {
+  .HeaderNav {
+    padding: env(safe-area-inset-top) 16px 0 16px;
+  }
+}

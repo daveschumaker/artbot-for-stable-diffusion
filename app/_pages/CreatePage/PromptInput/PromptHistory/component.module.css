@@ -1,0 +1,50 @@
+.PromptsList {
+  bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  height: 400px;
+  left: 0;
+  overflow-y: auto;
+  position: fixed;
+  right: 16px;
+  top: 108px;
+
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+}
+
+.PromptsList * {
+  -ms-overflow-style: none;
+}
+
+.PromptsList::-webkit-scrollbar {
+  display: none;
+}
+
+.PromptWrapper {
+  border-radius: 4px;
+  border: 1px solid var(--accent-color);
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+  padding: 8px;
+  position: relative;
+  row-gap: 12px;
+}
+
+.PromptText {
+  margin-right: 40px;
+  overflow-wrap: break-word;
+  display: inline-block;
+  word-break: break-word;
+}
+
+.PromptTimestamp {
+  color: gray;
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  font-size: 12px;
+  width: auto;
+}

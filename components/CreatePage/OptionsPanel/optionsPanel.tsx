@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 import Panel from '../../UI/Panel'
 import SectionTitle from '../../UI/SectionTitle'
@@ -31,11 +31,12 @@ interface Props {
 
 const OptionsPanel = ({ input, setInput }: Props) => {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const panel = searchParams?.get('panel')
+
   const [activeNav, setActiveNav] = useState('advanced')
 
   useEffect(() => {
-    const { panel } = router.query
-
     if (panel === 'inpainting') {
       setActiveNav('inpainting')
     } else if (panel === 'draw') {
@@ -45,7 +46,7 @@ const OptionsPanel = ({ input, setInput }: Props) => {
     } else {
       setActiveNav('advanced')
     }
-  }, [router.query])
+  }, [panel])
 
   const handleSaveAction = async (data: any) => {
     clearCanvasStore() // Handle bug where previous canvas may show up.

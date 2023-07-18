@@ -1,3 +1,6 @@
+import SharedImageView from './_modules/SharedImageView'
+import CreatePage from './_pages/CreatePage'
+
 async function getPageData(searchParams: any) {
   let availableModels: Array<any> = []
   let modelDetails: any = {}
@@ -38,12 +41,15 @@ async function getPageData(searchParams: any) {
 }
 
 export default async function Page({ searchParams }: { searchParams: any }) {
+  const { i: id } = searchParams
+
   // Fetch data directly in a Server Component
-  // const data = await getPageData(searchParams)
-  // console.log(`data?`, data)
-  await getPageData(searchParams)
+  const { modelDetails, shortlinkImageParams } = await getPageData(searchParams)
+
+  if (shortlinkImageParams) {
+    return <SharedImageView imageDetails={shortlinkImageParams} imageId={id} />
+  }
 
   // Forward fetched data to your Client Component
-  // return <HomePage recentPosts={recentPosts} />
-  return <div>OH HAI</div>
+  return <CreatePage modelDetails={modelDetails} />
 }
