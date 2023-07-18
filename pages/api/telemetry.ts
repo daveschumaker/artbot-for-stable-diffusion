@@ -1,4 +1,4 @@
-import { updateImageCount } from 'app/_api/counters'
+import { updateImageCount } from 'app/_server-api/counters'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 type Data = {

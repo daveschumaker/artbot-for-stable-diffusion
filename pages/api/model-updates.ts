@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { fetchModelChanges } from 'app/_api/modelUpdates'
+import { fetchModelChanges } from 'app/_server-api/modelUpdates'
 
 type Data = {
   success: boolean

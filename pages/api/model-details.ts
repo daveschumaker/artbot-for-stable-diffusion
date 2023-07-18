@@ -1,4 +1,4 @@
-import { getModelDetails } from 'app/_api/modelsAvailable'
+import { getModelDetails } from 'app/_server-api/modelsAvailable'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 type Data = {

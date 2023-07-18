@@ -1,7 +1,7 @@
 import {
   getAvailableModels,
   initModelAvailabilityFetch
-} from 'app/_api/modelsAvailable'
+} from 'app/_server-api/modelsAvailable'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 initModelAvailabilityFetch()

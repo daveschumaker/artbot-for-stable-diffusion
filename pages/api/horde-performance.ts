@@ -1,7 +1,7 @@
 import {
   getHordePerformanceCache,
   initHordePerfMonitor
-} from 'app/_api/hordeInfo'
+} from 'app/_server-api/hordeInfo'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 initHordePerfMonitor()

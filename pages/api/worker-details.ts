@@ -1,7 +1,7 @@
 import {
   getWorkerDetails,
   initWorkerDetailsFetch
-} from 'app/_api/workerDetails'
+} from 'app/_server-api/workerDetails'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 initWorkerDetailsFetch()

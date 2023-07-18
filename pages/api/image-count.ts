@@ -1,4 +1,4 @@
-import { getImageCount, initLoadImageCount } from 'app/_api/counters'
+import { getImageCount, initLoadImageCount } from 'app/_server-api/counters'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 initLoadImageCount()
