@@ -1,9 +1,10 @@
 import { makeStore } from 'statery'
-import { IClusterSettings } from './clusterSettings'
 
 interface AppStore {
   buildId: string
-  clusterSettings: IClusterSettings
+  clusterSettings: {
+    forceReloadOnServerUpdate: boolean
+  }
   hordePerformance: object
   indexDbSupport: boolean
   imageDetailsModalOpen: boolean
@@ -57,7 +58,7 @@ export const setImageDetailsModalOpen = (val: boolean = false) => {
   }))
 }
 
-export const setClusterSettings = (obj: IClusterSettings) => {
+export const setClusterSettings = (obj: any) => {
   appInfoStore.set(() => ({
     clusterSettings: obj
   }))

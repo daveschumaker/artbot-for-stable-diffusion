@@ -1,19 +1,10 @@
 require('dotenv').config()
-const cron = require('node-cron')
-const fetch = require('node-fetch')
-const fs = require('fs')
+import cron from 'node-cron'
+import fs from 'fs'
 
-const cache = {
+const cache: any = {
   previousHour: null,
   totalImages: 0
-}
-
-const adjustCount = (number) => {
-  if (number === 0 || isNaN(number)) {
-    return
-  }
-
-  cache.totalImages = Number(number)
 }
 
 const saveCache = () => {
@@ -32,18 +23,22 @@ const saveCache = () => {
   }
 }
 
-const getImageCount = () => {
+export const getImageCount = () => {
   return cache.totalImages
 }
 
-const updateImageCount = () => {
+export const updateImageCount = () => {
   cache.totalImages += 1
 }
 
-const initLoadCount = () => {
+export const initLoadImageCount = () => {
   if (process.env.NODE_ENV !== 'production') {
     return
   }
+
+  cron.schedule('0 * * * *', () => {
+    logCountTotal()
+  })
 
   if (
     process.env.PROD_COUNT_FILE &&
@@ -61,7 +56,7 @@ const initLoadCount = () => {
 }
 
 const logCountTotal = async () => {
-  const data = {
+  const data: any = {
     totalImages: getImageCount()
   }
 
@@ -88,15 +83,4 @@ const logCountTotal = async () => {
       success: true
     }
   }
-}
-
-cron.schedule('0 * * * *', () => {
-  logCountTotal()
-})
-
-module.exports = {
-  adjustCount,
-  getImageCount,
-  initLoadCount,
-  updateImageCount
 }

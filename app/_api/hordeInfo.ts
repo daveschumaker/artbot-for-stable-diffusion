@@ -34,7 +34,9 @@ export const fetchHordePerformance = async () => {
     }
 
     perf = Object.assign({}, data)
-  } catch (err) {}
+  } catch (err) {
+    // Silently fail
+  }
 }
 
 export const getHordePerformanceCache = () => {

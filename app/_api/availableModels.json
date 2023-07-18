@@ -1,0 +1,2054 @@
+[
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "3DKX",
+    "count": 5
+  },
+  {
+    "performance": 1011224.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "526Mix-Animated",
+    "count": 5
+  },
+  {
+    "performance": 613219.4,
+    "queued": 148357120.0,
+    "jobs": 7.0,
+    "eta": 48,
+    "type": "image",
+    "name": "Abyss OrangeMix",
+    "count": 5
+  },
+  {
+    "performance": 569607.4,
+    "queued": 52428800.0,
+    "jobs": 1.0,
+    "eta": 18,
+    "type": "image",
+    "name": "AbyssOrangeMix-AfterDark",
+    "count": 5
+  },
+  {
+    "performance": 814677.9,
+    "queued": 58982400.0,
+    "jobs": 3.0,
+    "eta": 18,
+    "type": "image",
+    "name": "ACertainThing",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 57671680.0,
+    "jobs": 9.0,
+    "eta": 10000,
+    "type": "image",
+    "name": "AIO Pixel Art",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Analog Diffusion",
+    "count": 5
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Analog Madness",
+    "count": 5
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Anime Pencil Diffusion",
+    "count": 5
+  },
+  {
+    "performance": 580836.4,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Anygen",
+    "count": 4
+  },
+  {
+    "performance": 1280067.1,
+    "queued": 39321600.0,
+    "jobs": 2.0,
+    "eta": 6,
+    "type": "image",
+    "name": "AnyLoRA",
+    "count": 5
+  },
+  {
+    "performance": 707894.7,
+    "queued": 1178828800.0,
+    "jobs": 52.0,
+    "eta": 87,
+    "type": "image",
+    "name": "Anything Diffusion",
+    "count": 19
+  },
+  {
+    "performance": 810539.7,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Anything Diffusion Inpainting",
+    "count": 8
+  },
+  {
+    "performance": 556647.8,
+    "queued": 98631680.0,
+    "jobs": 10.0,
+    "eta": 35,
+    "type": "image",
+    "name": "Anything v3",
+    "count": 5
+  },
+  {
+    "performance": 756140.3,
+    "queued": 31543296.0,
+    "jobs": 2.0,
+    "eta": 5,
+    "type": "image",
+    "name": "Anything v5",
+    "count": 7
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "App Icon Diffusion",
+    "count": 5
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Arcane Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Archer Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 165150720.0,
+    "jobs": 21.0,
+    "eta": 10000,
+    "type": "image",
+    "name": "Art Of Mtg",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Asim Simpsons",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "A to Zovya RPG",
+    "count": 5
+  },
+  {
+    "performance": 1020197.8,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Aurora",
+    "count": 5
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "A-Zovya RPG Inpainting",
+    "count": 5
+  },
+  {
+    "performance": 439212.1,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Babes",
+    "count": 6
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Balloon Art",
+    "count": 4
+  },
+  {
+    "performance": 1354904.4,
+    "queued": 310153216.0,
+    "jobs": 24.0,
+    "eta": 32,
+    "type": "image",
+    "name": "BB95 Furry Mix",
+    "count": 7
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Borderlands",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "BPModel",
+    "count": 4
+  },
+  {
+    "performance": 705331.4,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "BRA",
+    "count": 5
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "BubblyDubbly",
+    "count": 4
+  },
+  {
+    "performance": 344441.2,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "BweshMix",
+    "count": 5
+  },
+  {
+    "performance": 706662.2,
+    "queued": 26869760.0,
+    "jobs": 2.0,
+    "eta": 3,
+    "type": "image",
+    "name": "CamelliaMix 2.5D",
+    "count": 12
+  },
+  {
+    "performance": 816054.4,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Cetus-Mix",
+    "count": 6
+  },
+  {
+    "performance": 1167849.4,
+    "queued": 6881280.0,
+    "jobs": 1.0,
+    "eta": 1,
+    "type": "image",
+    "name": "Char",
+    "count": 3
+  },
+  {
+    "performance": 0.0,
+    "queued": 7864320.0,
+    "jobs": 1.0,
+    "eta": 10000,
+    "type": "image",
+    "name": "CharHelper",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Cheese Daddys Landscape Mix",
+    "count": 4
+  },
+  {
+    "performance": 673701.6,
+    "queued": 14745600.0,
+    "jobs": 1.0,
+    "eta": 1,
+    "type": "image",
+    "name": "ChilloutMix",
+    "count": 11
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "ChromaV5",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 78643200.0,
+    "jobs": 10.0,
+    "eta": 10000,
+    "type": "image",
+    "name": "Classic Animation Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Clazy",
+    "count": 4
+  },
+  {
+    "performance": 453504.2,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Colorful",
+    "count": 5
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Coloring Book",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Comic-Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 7864320.0,
+    "jobs": 1.0,
+    "eta": 10000,
+    "type": "image",
+    "name": "Concept Sheet",
+    "count": 4
+  },
+  {
+    "performance": 1604734.6,
+    "queued": 880529408.0,
+    "jobs": 48.0,
+    "eta": 60,
+    "type": "image",
+    "name": "Counterfeit",
+    "count": 9
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Cyberpunk Anime Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 573483.4,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "CyberRealistic",
+    "count": 6
+  },
+  {
+    "performance": 770996.1,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "CyriousMix",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Dan Mumford Style",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Darkest Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 660666.9,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Dark Sushi Mix",
+    "count": 5
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Dark Victorian Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 895857.9,
+    "queued": 285179904.0,
+    "jobs": 18.0,
+    "eta": 8,
+    "type": "image",
+    "name": "Deliberate",
+    "count": 37
+  },
+  {
+    "performance": 1142406.4,
+    "queued": 44564480.0,
+    "jobs": 6.0,
+    "eta": 4,
+    "type": "image",
+    "name": "Deliberate Inpainting",
+    "count": 8
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "DGSpitzer Art Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 397746.4,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Disco Elysium",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 21057536.0,
+    "jobs": 2.0,
+    "eta": 10000,
+    "type": "image",
+    "name": "Disney Pixar Cartoon Type A",
+    "count": 7
+  },
+  {
+    "performance": 311408.3,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "DnD Item",
+    "count": 4
+  },
+  {
+    "performance": 264919.7,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "DnD Map Generator",
+    "count": 6
+  },
+  {
+    "performance": 353903.4,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Double Exposure Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 845591.2,
+    "queued": 36786176.0,
+    "jobs": 3.0,
+    "eta": 6,
+    "type": "image",
+    "name": "Dreamlike Diffusion",
+    "count": 7
+  },
+  {
+    "performance": 765879.7,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Dreamlike Photoreal",
+    "count": 6
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "DreamLikeSamKuvshinov",
+    "count": 4
+  },
+  {
+    "performance": 1680931.0,
+    "queued": 731463680.0,
+    "jobs": 48.0,
+    "eta": 48,
+    "type": "image",
+    "name": "Dreamshaper",
+    "count": 9
+  },
+  {
+    "performance": 0.0,
+    "queued": 21057536.0,
+    "jobs": 2.0,
+    "eta": 10000,
+    "type": "image",
+    "name": "DreamShaper Inpainting",
+    "count": 7
+  },
+  {
+    "performance": 1157727.9,
+    "queued": 32440320.0,
+    "jobs": 3.0,
+    "eta": 5,
+    "type": "image",
+    "name": "DucHaiten",
+    "count": 5
+  },
+  {
+    "performance": 616011.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "DucHaiten Classic Anime",
+    "count": 5
+  },
+  {
+    "performance": 0.0,
+    "queued": 7864320.0,
+    "jobs": 1.0,
+    "eta": 10000,
+    "type": "image",
+    "name": "Dungeons and Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Dungeons n Waifus",
+    "count": 6
+  },
+  {
+    "performance": 915411.2,
+    "queued": 25559040.0,
+    "jobs": 4.0,
+    "eta": 5,
+    "type": "image",
+    "name": "Edge Of Realism",
+    "count": 5
+  },
+  {
+    "performance": 737299.7,
+    "queued": 52428800.0,
+    "jobs": 1.0,
+    "eta": 17,
+    "type": "image",
+    "name": "Eimis Anime Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 419300.2,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Elden Ring Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 7864320.0,
+    "jobs": 1.0,
+    "eta": 10000,
+    "type": "image",
+    "name": "Elldreth's Lucid Mix",
+    "count": 4
+  },
+  {
+    "performance": 297697.1,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Elldreths Retro Mix",
+    "count": 4
+  },
+  {
+    "performance": 862865.8,
+    "queued": 91750400.0,
+    "jobs": 3.0,
+    "eta": 17,
+    "type": "image",
+    "name": "Elysium Anime",
+    "count": 6
+  },
+  {
+    "performance": 440358.8,
+    "queued": 111165440.0,
+    "jobs": 17.0,
+    "eta": 42,
+    "type": "image",
+    "name": "Epic Diffusion",
+    "count": 6
+  },
+  {
+    "performance": 567286.6,
+    "queued": 21057536.0,
+    "jobs": 2.0,
+    "eta": 5,
+    "type": "image",
+    "name": "Epic Diffusion Inpainting",
+    "count": 7
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Eternos",
+    "count": 6
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Ether Real Mix",
+    "count": 5
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Experience",
+    "count": 4
+  },
+  {
+    "performance": 852895.5,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "ExpMix Line",
+    "count": 4
+  },
+  {
+    "performance": 263461.5,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "FaeTastic",
+    "count": 6
+  },
+  {
+    "performance": 0.0,
+    "queued": 7741440.0,
+    "jobs": 9.0,
+    "eta": 10000,
+    "type": "image",
+    "name": "Fantasy Card Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 370526.8,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "FKing SciFi",
+    "count": 5
+  },
+  {
+    "performance": 437924.2,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Fluffusion",
+    "count": 6
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Funko Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 719059.9,
+    "queued": 16220160.0,
+    "jobs": 4.0,
+    "eta": 4,
+    "type": "image",
+    "name": "Furry Epoch",
+    "count": 5
+  },
+  {
+    "performance": 320090.7,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Future Diffusion",
+    "count": 6
+  },
+  {
+    "performance": 773017.4,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Galena Redux",
+    "count": 6
+  },
+  {
+    "performance": 0.0,
+    "queued": 15728640.0,
+    "jobs": 4.0,
+    "eta": 10000,
+    "type": "image",
+    "name": "Ghibli Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 849710.8,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "GhostMix",
+    "count": 5
+  },
+  {
+    "performance": 1019498.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "GorynichMix",
+    "count": 4
+  },
+  {
+    "performance": 626231.1,
+    "queued": 212627456.0,
+    "jobs": 13.0,
+    "eta": 48,
+    "type": "image",
+    "name": "Grapefruit Hentai",
+    "count": 7
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Graphic-Art",
+    "count": 5
+  },
+  {
+    "performance": 660609.7,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "GTA5 Artwork Diffusion",
+    "count": 6
+  },
+  {
+    "performance": 398299.2,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "GuFeng",
+    "count": 5
+  },
+  {
+    "performance": 617213.9,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "GuoFeng",
+    "count": 5
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Guohua Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "HASDX",
+    "count": 4
+  },
+  {
+    "performance": 1361397.6,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Hassaku",
+    "count": 5
+  },
+  {
+    "performance": 661658.4,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Hassanblend",
+    "count": 6
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Healy's Anime Blend",
+    "count": 4
+  },
+  {
+    "performance": 1012126.4,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Henmix Real",
+    "count": 6
+  },
+  {
+    "performance": 970262.3,
+    "queued": 564019200.0,
+    "jobs": 26.0,
+    "eta": 48,
+    "type": "image",
+    "name": "Hentai Diffusion",
+    "count": 12
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "HRL",
+    "count": 4
+  },
+  {
+    "performance": 948358.9,
+    "queued": 1233551360.0,
+    "jobs": 77.0,
+    "eta": 118,
+    "type": "image",
+    "name": "ICBINP - I Can't Believe It's Not Photography",
+    "count": 11
+  },
+  {
+    "performance": 696453.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "iCoMix",
+    "count": 5
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "iCoMix Inpainting",
+    "count": 6
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Illuminati Diffusion",
+    "count": 5
+  },
+  {
+    "performance": 1685562.4,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Inkpunk Diffusion",
+    "count": 5
+  },
+  {
+    "performance": 265995.5,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Jim Eidomode",
+    "count": 6
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "JoMad Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "JWST Deep Space Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 815978.4,
+    "queued": 7864320.0,
+    "jobs": 1.0,
+    "eta": 2,
+    "type": "image",
+    "name": "Kenshi",
+    "count": 4
+  },
+  {
+    "performance": 261796.4,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Knollingcase",
+    "count": 4
+  },
+  {
+    "performance": 433823.9,
+    "queued": 7864320.0,
+    "jobs": 1.0,
+    "eta": 4,
+    "type": "image",
+    "name": "Korestyle",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "kurzgesagt",
+    "count": 6
+  },
+  {
+    "performance": 781326.5,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Laolei New Berry Protogen Mix",
+    "count": 4
+  },
+  {
+    "performance": 2515530.8,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Lawlas's yiff mix",
+    "count": 5
+  },
+  {
+    "performance": 759209.2,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Liberty",
+    "count": 6
+  },
+  {
+    "performance": 619306.5,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Lyriel",
+    "count": 5
+  },
+  {
+    "performance": 1704345.6,
+    "queued": 1132584960.0,
+    "jobs": 25.0,
+    "eta": 66,
+    "type": "image",
+    "name": "majicMIX realistic",
+    "count": 10
+  },
+  {
+    "performance": 442518.9,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Marvel Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Mega Merge Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 737972.3,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "MeinaMix",
+    "count": 4
+  },
+  {
+    "performance": 420607.9,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Microcasing",
+    "count": 4
+  },
+  {
+    "performance": 784560.8,
+    "queued": 7372800.0,
+    "jobs": 1.0,
+    "eta": 2,
+    "type": "image",
+    "name": "Microchars",
+    "count": 4
+  },
+  {
+    "performance": 335102.5,
+    "queued": 7372800.0,
+    "jobs": 1.0,
+    "eta": 5,
+    "type": "image",
+    "name": "Microcritters",
+    "count": 4
+  },
+  {
+    "performance": 531411.6,
+    "queued": 7372800.0,
+    "jobs": 1.0,
+    "eta": 3,
+    "type": "image",
+    "name": "Microscopic",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 15114240.0,
+    "jobs": 10.0,
+    "eta": 10000,
+    "type": "image",
+    "name": "Microworlds",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Midjourney PaintArt",
+    "count": 5
+  },
+  {
+    "performance": 297946.8,
+    "queued": 7372800.0,
+    "jobs": 1.0,
+    "eta": 6,
+    "type": "image",
+    "name": "Min Illust Background",
+    "count": 4
+  },
+  {
+    "performance": 767622.0,
+    "queued": 42270720.0,
+    "jobs": 4.0,
+    "eta": 9,
+    "type": "image",
+    "name": "Mistoon Amethyst",
+    "count": 6
+  },
+  {
+    "performance": 488640.7,
+    "queued": 7372800.0,
+    "jobs": 1.0,
+    "eta": 3,
+    "type": "image",
+    "name": "ModernArt Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 319938.0,
+    "queued": 7372800.0,
+    "jobs": 1.0,
+    "eta": 5,
+    "type": "image",
+    "name": "mo-di-diffusion",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Moedel",
+    "count": 3
+  },
+  {
+    "performance": 746560.6,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "MoistMix",
+    "count": 6
+  },
+  {
+    "performance": 672550.8,
+    "queued": 7372800.0,
+    "jobs": 1.0,
+    "eta": 2,
+    "type": "image",
+    "name": "MoonMix Fantasy",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Movie Diffusion",
+    "count": 5
+  },
+  {
+    "performance": 594037.7,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Neurogen",
+    "count": 5
+  },
+  {
+    "performance": 2802474.8,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "NeverEnding Dream",
+    "count": 6
+  },
+  {
+    "performance": 0.0,
+    "queued": 7372800.0,
+    "jobs": 1.0,
+    "eta": 10000,
+    "type": "image",
+    "name": "Nitro Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 7372800.0,
+    "jobs": 1.0,
+    "eta": 10000,
+    "type": "image",
+    "name": "OpenJourney Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Openniji",
+    "count": 4
+  },
+  {
+    "performance": 395204.3,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "OrbAI",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Papercutcraft",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Papercut Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 610884.6,
+    "queued": 14336000.0,
+    "jobs": 3.0,
+    "eta": 5,
+    "type": "image",
+    "name": "Pastel Mix",
+    "count": 4
+  },
+  {
+    "performance": 494619.5,
+    "queued": 38883328.0,
+    "jobs": 3.0,
+    "eta": 11,
+    "type": "image",
+    "name": "Perfect World",
+    "count": 7
+  },
+  {
+    "performance": 1060134.3,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "PFG",
+    "count": 6
+  },
+  {
+    "performance": 0.0,
+    "queued": 17694720.0,
+    "jobs": 1.0,
+    "eta": 10000,
+    "type": "image",
+    "name": "PIXHELL",
+    "count": 6
+  },
+  {
+    "performance": 643656.7,
+    "queued": 40140800.0,
+    "jobs": 6.0,
+    "eta": 15,
+    "type": "image",
+    "name": "Poison",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Pokemon3D",
+    "count": 4
+  },
+  {
+    "performance": 300804.8,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "PortraitPlus",
+    "count": 4
+  },
+  {
+    "performance": 303923.5,
+    "queued": 39321600.0,
+    "jobs": 2.0,
+    "eta": 25,
+    "type": "image",
+    "name": "PPP",
+    "count": 5
+  },
+  {
+    "performance": 576873.0,
+    "queued": 19333120.0,
+    "jobs": 3.0,
+    "eta": 3,
+    "type": "image",
+    "name": "Pretty 2.5D",
+    "count": 9
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "PRMJ",
+    "count": 4
+  },
+  {
+    "performance": 318862.2,
+    "queued": 167116800.0,
+    "jobs": 20.0,
+    "eta": 104,
+    "type": "image",
+    "name": "Project Unreal Engine 5",
+    "count": 5
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "ProtoGen",
+    "count": 4
+  },
+  {
+    "performance": 429522.6,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Protogen Anime",
+    "count": 4
+  },
+  {
+    "performance": 740546.2,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Protogen Infinity",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Pulp Vector Art",
+    "count": 6
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "PVC",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Rachel Walker Watercolors",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 7864320.0,
+    "jobs": 1.0,
+    "eta": 10000,
+    "type": "image",
+    "name": "Rainbowpatch",
+    "count": 4
+  },
+  {
+    "performance": 1059757.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Ranma Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "RCNZ Dumb Monkey",
+    "count": 4
+  },
+  {
+    "performance": 843671.6,
+    "queued": 5242880.0,
+    "jobs": 1.0,
+    "eta": 0,
+    "type": "image",
+    "name": "RCNZ Gorilla With A Brick",
+    "count": 7
+  },
+  {
+    "performance": 816016.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "RealBiter",
+    "count": 4
+  },
+  {
+    "performance": 603808.4,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Real Dos Mix",
+    "count": 5
+  },
+  {
+    "performance": 1785208.9,
+    "queued": 594739200.0,
+    "jobs": 11.0,
+    "eta": 83,
+    "type": "image",
+    "name": "Realisian",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Realism Engine",
+    "count": 4
+  },
+  {
+    "performance": 1202479.5,
+    "queued": 200867840.0,
+    "jobs": 24.0,
+    "eta": 20,
+    "type": "image",
+    "name": "Realistic Vision",
+    "count": 8
+  },
+  {
+    "performance": 1670091.7,
+    "queued": 5242880.0,
+    "jobs": 1.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Realistic Vision Inpainting",
+    "count": 7
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Redshift Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 1332241.9,
+    "queued": 89128960.0,
+    "jobs": 9.0,
+    "eta": 9,
+    "type": "image",
+    "name": "Reliberate",
+    "count": 7
+  },
+  {
+    "performance": 1054249.3,
+    "queued": 764805120.0,
+    "jobs": 12.0,
+    "eta": 103,
+    "type": "image",
+    "name": "Rev Animated",
+    "count": 7
+  },
+  {
+    "performance": 0.0,
+    "queued": 7864320.0,
+    "jobs": 1.0,
+    "eta": 10000,
+    "type": "image",
+    "name": "Robo-Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 202756.4,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Rodent Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 733199.3,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "RPG",
+    "count": 7
+  },
+  {
+    "performance": 0.0,
+    "queued": 7864320.0,
+    "jobs": 1.0,
+    "eta": 10000,
+    "type": "image",
+    "name": "Samaritan 3d Cartoon",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 7864320.0,
+    "jobs": 1.0,
+    "eta": 10000,
+    "type": "image",
+    "name": "Samdoesarts Ultmerge",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 7864320.0,
+    "jobs": 1.0,
+    "eta": 10000,
+    "type": "image",
+    "name": "Sci-Fi Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 1273587.7,
+    "queued": 7864320.0,
+    "jobs": 1.0,
+    "eta": 1,
+    "type": "image",
+    "name": "SD-Silicon",
+    "count": 4
+  },
+  {
+    "performance": 8014399.9,
+    "queued": 9175040.0,
+    "jobs": 2.0,
+    "eta": 0,
+    "type": "image",
+    "name": "SDXL_beta::stability.ai#6901",
+    "count": 9
+  },
+  {
+    "performance": 0.0,
+    "queued": 15728640.0,
+    "jobs": 2.0,
+    "eta": 10000,
+    "type": "image",
+    "name": "Seek.art MEGA",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 7864320.0,
+    "jobs": 1.0,
+    "eta": 10000,
+    "type": "image",
+    "name": "Smoke Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 671898.6,
+    "queued": 52428800.0,
+    "jobs": 1.0,
+    "eta": 15,
+    "type": "image",
+    "name": "Something",
+    "count": 5
+  },
+  {
+    "performance": 0.0,
+    "queued": 7864320.0,
+    "jobs": 1.0,
+    "eta": 10000,
+    "type": "image",
+    "name": "Sonic Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 7864320.0,
+    "jobs": 1.0,
+    "eta": 10000,
+    "type": "image",
+    "name": "Spider-Verse Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 7864320.0,
+    "jobs": 1.0,
+    "eta": 10000,
+    "type": "image",
+    "name": "Squishmallow Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 801257.6,
+    "queued": 39936000.0,
+    "jobs": 4.0,
+    "eta": 2,
+    "type": "image",
+    "name": "stable_diffusion",
+    "count": 19
+  },
+  {
+    "performance": 815802.8,
+    "queued": 31457280.0,
+    "jobs": 2.0,
+    "eta": 3,
+    "type": "image",
+    "name": "stable_diffusion_2.1",
+    "count": 10
+  },
+  {
+    "performance": 909902.1,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "stable_diffusion_inpainting",
+    "count": 5
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Supermarionation",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "SweetBoys 2D",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Sygil-Dev Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Synthwave",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "SynthwavePunk",
+    "count": 6
+  },
+  {
+    "performance": 627082.0,
+    "queued": 48824320.0,
+    "jobs": 11.0,
+    "eta": 12,
+    "type": "image",
+    "name": "ToonYou",
+    "count": 6
+  },
+  {
+    "performance": 1251525.8,
+    "queued": 52428800.0,
+    "jobs": 1.0,
+    "eta": 10,
+    "type": "image",
+    "name": "TrexMix",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "trinart",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Trinart Characters",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Tron Legacy Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 726946.0,
+    "queued": 78643200.0,
+    "jobs": 10.0,
+    "eta": 27,
+    "type": "image",
+    "name": "T-Shirt Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "T-Shirt Print Designs",
+    "count": 4
+  },
+  {
+    "performance": 1412929.1,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Uhmami",
+    "count": 4
+  },
+  {
+    "performance": 727089.2,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Ultraskin",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 7864320.0,
+    "jobs": 1.0,
+    "eta": 10000,
+    "type": "image",
+    "name": "UMI Olympus",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Unstable Ink Dream",
+    "count": 4
+  },
+  {
+    "performance": 409242.5,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "URPM",
+    "count": 5
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Valorant Diffusion",
+    "count": 5
+  },
+  {
+    "performance": 0.0,
+    "queued": 7741440.0,
+    "jobs": 9.0,
+    "eta": 10000,
+    "type": "image",
+    "name": "Van Gogh Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Vector Art",
+    "count": 5
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "vectorartz",
+    "count": 5
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Vintedois Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "VinteProtogenMix",
+    "count": 4
+  },
+  {
+    "performance": 407869.4,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Vivid Watercolors",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Voxel Art Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 140427.2,
+    "queued": 27033600.0,
+    "jobs": 4.0,
+    "eta": 38,
+    "type": "image",
+    "name": "waifu_diffusion",
+    "count": 5
+  },
+  {
+    "performance": 236556.8,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Wavyfusion",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Western Animation Diffusion",
+    "count": 5
+  },
+  {
+    "performance": 2271522.1,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Woop-Woop Photo",
+    "count": 5
+  },
+  {
+    "performance": 0.0,
+    "queued": 44236800.0,
+    "jobs": 8.0,
+    "eta": 10000,
+    "type": "image",
+    "name": "Xynthii-Diffusion",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Yiffy",
+    "count": 4
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Zack3D",
+    "count": 4
+  },
+  {
+    "performance": 296960.2,
+    "queued": 23592960.0,
+    "jobs": 3.0,
+    "eta": 15,
+    "type": "image",
+    "name": "Zeipher Female Model",
+    "count": 5
+  },
+  {
+    "performance": 0.0,
+    "queued": 0.0,
+    "jobs": 0.0,
+    "eta": 0,
+    "type": "image",
+    "name": "Zelda BOTW",
+    "count": 4
+  }
+]

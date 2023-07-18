@@ -1,6 +1,7 @@
 require('dotenv').config()
-const fs = require('fs')
-const LocalStorage = require('node-localstorage').LocalStorage
+import fs from 'fs'
+import { LocalStorage } from 'node-localstorage'
+
 const __DEV__ = process.env.NODE_ENV !== 'production'
 
 let dataPath = ''
@@ -19,10 +20,10 @@ const localStorage = new LocalStorage(dataPath, 10485760)
 
 // Store latest instance of model details fetched from remote API.
 // Use to compare against new requests.
-let cachedModelDetails = null
+let cachedModelDetails: any = null
 
 // In-memory cache for model changes.
-let cachedModelChanges = []
+let cachedModelChanges: any[] = []
 
 const storageActions = {
   load() {
@@ -49,12 +50,12 @@ const storageActions = {
   }
 }
 
-const loadInitChanges = () => {
+export const loadInitChanges = () => {
   storageActions.load()
 }
 
 const modelActions = {
-  add(modelName, version) {
+  add(modelName: string, version: string | number) {
     return {
       message: `New model added: "${modelName}", version: ${version}`,
       status: 'ADDED',
@@ -63,7 +64,7 @@ const modelActions = {
       timestamp: Date.now()
     }
   },
-  remove(modelName) {
+  remove(modelName: string) {
     return {
       message: `Model removed: ${modelName}`,
       status: 'REMOVED',
@@ -71,7 +72,7 @@ const modelActions = {
       timestamp: Date.now()
     }
   },
-  update(modelName, version) {
+  update(modelName: string, version: string | number) {
     return {
       message: `Model updated: new version of "${modelName}" - version ${version}`,
       modelName,
@@ -89,7 +90,7 @@ const cloneModelDetails = (modelDetails = {}) => {
   )
 }
 
-const modelDiff = (modelDetails = {}) => {
+export const modelDiff = (modelDetails: any = {}) => {
   if (!cachedModelDetails) {
     cloneModelDetails(modelDetails)
     return
@@ -134,12 +135,6 @@ const modelDiff = (modelDetails = {}) => {
   cloneModelDetails(modelDetails)
 }
 
-const fetchModelChanges = () => {
+export const fetchModelChanges = () => {
   return cachedModelChanges || []
-}
-
-module.exports = {
-  fetchModelChanges,
-  loadInitChanges,
-  modelDiff
 }

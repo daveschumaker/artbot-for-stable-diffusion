@@ -16,28 +16,9 @@ export default async function handler(
   }
 
   const { build } = buildInfo
-  let clusterSettings
-
-  try {
-    const resp = await fetch(
-      `http://localhost:${process.env.PORT}/artbot/api/v1/status/cluster-settings`,
-      {
-        method: 'GET'
-      }
-    )
-
-    const data = await resp.json()
-
-    if (typeof data === 'object' && !Array.isArray(data) && data !== null) {
-      clusterSettings = { ...data }
-    }
-  } catch (err) {
-    // If an error occurs, do nothing, as we don't want to overwrite existing settings.
-  }
 
   res.send({
     success: true,
-    build,
-    clusterSettings
+    build
   })
 }

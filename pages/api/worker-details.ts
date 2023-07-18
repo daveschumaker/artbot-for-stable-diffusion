@@ -1,5 +1,10 @@
+import {
+  getWorkerDetails,
+  initWorkerDetailsFetch
+} from 'app/_api/workerDetails'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import serverFetchWithTimeout from '../../utils/serverFetchWithTimeout'
+
+initWorkerDetailsFetch()
 
 type Data = {
   success: boolean
@@ -15,15 +20,8 @@ export default async function handler(
   }
 
   try {
-    const resp = await serverFetchWithTimeout(
-      `http://localhost:${process.env.PORT}/artbot/api/v1/workers/current`,
-      {
-        method: 'GET'
-      }
-    )
+    const workers = getWorkerDetails()
 
-    const data = await resp.json()
-    const { workers = [] } = data
     return res.send({
       success: true,
       workers

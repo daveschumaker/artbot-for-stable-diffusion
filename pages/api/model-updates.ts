@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import serverFetchWithTimeout from '../../utils/serverFetchWithTimeout'
+import { fetchModelChanges } from 'app/_api/modelUpdates'
 
 type Data = {
   success: boolean
@@ -16,15 +16,9 @@ export default async function handler(
   }
 
   try {
-    const resp = await serverFetchWithTimeout(
-      `http://localhost:${process.env.PORT}/artbot/api/v1/models/updates`,
-      {
-        method: 'GET'
-      }
-    )
+    const changes = fetchModelChanges()
+    const timestamp = Date.now()
 
-    const data = await resp.json()
-    const { changes = [], timestamp } = data
     return res.send({
       success: true,
       changes,

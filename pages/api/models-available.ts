@@ -1,5 +1,10 @@
+import {
+  getAvailableModels,
+  initModelAvailabilityFetch
+} from 'app/_api/modelsAvailable'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import serverFetchWithTimeout from '../../utils/serverFetchWithTimeout'
+
+initModelAvailabilityFetch()
 
 type Data = {
   success: boolean
@@ -16,15 +21,8 @@ export default async function handler(
   }
 
   try {
-    const resp = await serverFetchWithTimeout(
-      `http://localhost:${process.env.PORT}/artbot/api/v1/models/available`,
-      {
-        method: 'GET'
-      }
-    )
+    const { timestamp, models } = getAvailableModels()
 
-    const data = (await resp.json()) || {}
-    const { models = [], timestamp } = data
     return res.send({
       success: true,
       models: models,

@@ -172,6 +172,6 @@ export const initAppSettings = async () => {
     }
 
     await fetchUserDetails(apikey)
-    fetchMyWorkers()
+    await fetchMyWorkers()
   }, 60000)
 }
