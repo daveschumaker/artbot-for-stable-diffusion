@@ -237,3 +237,26 @@ export const documentIsVisible = () => {
 
 //   channel.postMessage(msg)
 // }
+
+export const parseQueryString = (
+  queryString: string
+): {
+  [key: string]: string | boolean
+} => {
+  if (!queryString) return {}
+
+  const params = new URLSearchParams(queryString)
+  const result: { [key: string]: string | boolean } = {}
+
+  for (const [key, value] of params.entries()) {
+    if (value === 'true') {
+      result[key] = true
+    } else if (value === 'false') {
+      result[key] = false
+    } else {
+      result[key] = value
+    }
+  }
+
+  return result
+}

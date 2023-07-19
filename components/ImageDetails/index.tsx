@@ -16,7 +16,7 @@ import ImageSquare from 'components/ImageSquare'
 import styles from './imageDetails.module.css'
 import ImageOptionsWrapper from './ImageOptionsWrapper'
 import Img2ImgModal from 'components/ImagePage/Img2ImgModal'
-import RenderParentImage from 'components/ParentImage'
+import ParentImage from 'app/_components/ParentImage'
 import { logError } from 'utils/appUtils'
 import { userInfoStore } from 'store/userStore'
 import AdContainer from 'components/AdContainer'
@@ -348,7 +348,7 @@ const ImageDetails = ({
       >
         <div className="text-[16px] tablet:text-[18px] px-4 w-full max-w-[768px] gap-4 flex flex-row mb-3">
           {imageDetails.parentJobId && (
-            <RenderParentImage
+            <ParentImage
               jobId={imageDetails.jobId}
               parentJobId={imageDetails.parentJobId}
             />

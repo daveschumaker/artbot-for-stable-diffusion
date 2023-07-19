@@ -49,12 +49,12 @@ import PromptInputSettings from 'models/PromptInputSettings'
 // Other imports
 import { trackEvent } from 'api/telemetry'
 import { MAX_IMAGES_PER_JOB } from '_constants'
-import RenderParentImage from 'components/ParentImage'
+import ParentImage from 'app/_components/ParentImage'
 import AllowNsfwImages from './AllowNsfwImages'
 import ReplacementFilterToggle from './ReplacementFilterToggle'
 import LoraSelect from 'modules/LoraSelect'
-import FlexibleRow from 'components/FlexibleRow'
-import FlexibleUnit from 'components/FlexibleUnit'
+import FlexibleRow from 'app/_components/FlexibleRow'
+import FlexibleUnit from 'app/_components/FlexibleUnit'
 import SelectModel from 'modules/AdvancedOptions/SelectModel'
 import SelectModelDetails from 'modules/AdvancedOptions/ModelDetails/modelDetails'
 import ImageOrientationOptions from 'modules/AdvancedOptions/ImageOrientationOptions'
@@ -180,7 +180,7 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
       {input.parentJobId && (
         <Section>
           <div className="flex flex-row w-full gap-2">
-            <RenderParentImage parentJobId={input.parentJobId} />
+            <ParentImage parentJobId={input.parentJobId} />
             <div className="flex flex-col gap-2">
               <SubSectionTitle>Attached to previous job</SubSectionTitle>
               <div className="text-xs">

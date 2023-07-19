@@ -1,11 +1,13 @@
+'use client'
+
 import { fetchPendingImageJobs } from 'controllers/pendingJobsController'
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Virtuoso } from 'react-virtuoso'
 
-import { useEffectOnce } from '../../hooks/useEffectOnce'
-import AppSettings from '../../models/AppSettings'
-import { JobStatus } from '../../types'
+import { useEffectOnce } from 'hooks/useEffectOnce'
+import AppSettings from 'models/AppSettings'
+import { JobStatus } from 'types'
 import {
   allPendingJobs,
   clearPendingJobsTable,
@@ -14,18 +16,18 @@ import {
   deleteDoneFromPending,
   deletePendingJobFromDb,
   getImageDetails
-} from '../../utils/db'
+} from 'utils/db'
 
-import AdContainer from '../AdContainer'
-import CheckboxIcon from '../icons/CheckboxIcon'
-import DotsVerticalIcon from '../icons/DotsVerticalIcon'
-import SquareIcon from '../icons/SquareIcon'
-import DropDownMenu from '../UI/DropDownMenu/dropDownMenu'
-import DropDownMenuItem from '../UI/DropDownMenuItem'
-import Linker from '../UI/Linker'
-import MenuButton from '../UI/MenuButton'
+import AdContainer from 'components/AdContainer'
+import CheckboxIcon from 'components/icons/CheckboxIcon'
+import DotsVerticalIcon from 'components/icons/DotsVerticalIcon'
+import SquareIcon from 'components/icons/SquareIcon'
+import DropDownMenu from 'components/UI/DropDownMenu/dropDownMenu'
+import DropDownMenuItem from 'components/UI/DropDownMenuItem'
+import Linker from 'components/UI/Linker'
+import MenuButton from 'components/UI/MenuButton'
 import PageTitle from 'app/_components/PageTitle'
-import TextButton from '../UI/TextButton'
+import TextButton from 'components/UI/TextButton'
 import { useWindowSize } from 'hooks/useWindowSize'
 import styles from './pendingPage.module.css'
 import FilterClearOptions from './filterClearOptions'

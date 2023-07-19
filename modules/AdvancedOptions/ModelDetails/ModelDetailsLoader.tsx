@@ -10,7 +10,8 @@ export default function ModelDetailsLoader() {
         display: 'flex',
         flexDirection: 'column',
         flexGrow: 1,
-        marginBottom: 0
+        marginBottom: 0,
+        paddingTop: 0
       }}
     >
       <div

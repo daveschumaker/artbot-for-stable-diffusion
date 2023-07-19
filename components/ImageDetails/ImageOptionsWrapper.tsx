@@ -35,7 +35,7 @@ import {
   uploadInpaint,
   upscaleImage
 } from 'controllers/imageDetailsCommon'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import WallIcon from 'components/icons/WallIcon'
 import ResizeIcon from 'components/icons/ResizeIcon'
 import { isiOS, uuidv4 } from 'utils/appUtils'
