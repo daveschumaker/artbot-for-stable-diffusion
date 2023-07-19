@@ -1,23 +1,25 @@
+'use client'
+
 import Head from 'next/head'
 import React, { useCallback, useEffect } from 'react'
 import { useStore } from 'statery'
 import styled from 'styled-components'
-import { useRouter } from 'next/router'
+import { useRouter, useSearchParams } from 'next/navigation'
 
-import useComponentState from '../../hooks/useComponentState'
+import useComponentState from 'hooks/useComponentState'
 import PageTitle from 'app/_components/PageTitle'
-import { IWorkers, setWorkers, userInfoStore } from '../../store/userStore'
-import Linker from '../../components/UI/Linker'
-import { sleep } from '../../utils/sleep'
-import { clientHeader, getApiHostServer } from '../../utils/appUtils'
-import MenuButton from '../../components/UI/MenuButton'
-import ChevronRightIcon from '../../components/icons/ChevronRightIcon'
-import ChevronDownIcon from '../../components/icons/ChevronDownIcon'
-import AppSettings from '../../models/AppSettings'
-import DropDownMenu from '../../components/UI/DropDownMenu'
-import DropDownMenuItem from '../../components/UI/DropDownMenuItem'
-import ImportExportPanel from '../../components/ImportExportPanel'
-import { useEffectOnce } from '../../hooks/useEffectOnce'
+import { IWorkers, setWorkers, userInfoStore } from 'store/userStore'
+import Linker from 'components/UI/Linker'
+import { sleep } from 'utils/sleep'
+import { clientHeader, getApiHostServer } from 'utils/appUtils'
+import MenuButton from 'components/UI/MenuButton'
+import ChevronRightIcon from 'components/icons/ChevronRightIcon'
+import ChevronDownIcon from 'components/icons/ChevronDownIcon'
+import AppSettings from 'models/AppSettings'
+import DropDownMenu from 'components/UI/DropDownMenu'
+import DropDownMenuItem from 'components/UI/DropDownMenuItem'
+import ImportExportPanel from 'components/ImportExportPanel'
+import { useEffectOnce } from 'hooks/useEffectOnce'
 import AiHordeSettingsPanel from './AiHordeSettingsPanel'
 import WorkerSettingsPanel from './WorkerSettingsPanel'
 import ArtBotSettingsPanel from './ArtBotSettingsPanel'
@@ -66,6 +68,7 @@ const ShowOnMobile = styled.div`
 
 const SettingsPage = () => {
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   const userState = useStore(userInfoStore)
   const { worker_ids = [] } = userState
@@ -170,10 +173,10 @@ const SettingsPage = () => {
   }, [worker_ids])
 
   useEffect(() => {
-    if (router.query.panel === 'workers') {
+    if (searchParams?.get('panel') === 'workers') {
       fetchWorkerData()
     }
-  }, [fetchWorkerData, router.query.panel])
+  }, [fetchWorkerData, searchParams])
 
   useEffectOnce(() => {
     setTimeout(() => {
@@ -218,13 +221,13 @@ const SettingsPage = () => {
                 ) : (
                   <ChevronRightIcon />
                 )}
-                {!router.query.panel &&
+                {!searchParams?.get('panel') &&
                   `
                 AI Horde Settings
                 `}
-                {router.query.panel === 'workers' && `Manage Workers`}
-                {router.query.panel === 'prefs' && `ArtBot Prefs`}
-                {router.query.panel === 'import-export' && `Export`}
+                {searchParams?.get('panel') === 'workers' && `Manage Workers`}
+                {searchParams?.get('panel') === 'prefs' && `ArtBot Prefs`}
+                {searchParams?.get('panel') === 'import-export' && `Export`}
               </div>
             </MenuButton>
             {componentState.showOptionsMenu && (
@@ -306,25 +309,25 @@ const SettingsPage = () => {
           </LinksList>
         </LinksPanel>
         <OptionsPanel>
-          {!router.query.panel && (
+          {!searchParams?.get('panel') && (
             <AiHordeSettingsPanel
               componentState={componentState}
               setComponentState={setComponentState}
             />
           )}
-          {router.query.panel === 'workers' && (
+          {searchParams?.get('panel') === 'workers' && (
             <WorkerSettingsPanel
               componentState={componentState}
               setComponentState={setComponentState}
             />
           )}
-          {router.query.panel === 'prefs' && (
+          {searchParams?.get('panel') === 'prefs' && (
             <ArtBotSettingsPanel
               componentState={componentState}
               setComponentState={setComponentState}
             />
           )}
-          {router.query.panel === 'import-export' ? (
+          {searchParams?.get('panel') === 'import-export' ? (
             <>
               <ImportExportPanel />
             </>

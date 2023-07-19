@@ -81,38 +81,39 @@ export interface NewRating {
   url: string
 }
 
-// TODO: Probably should just extend CreateImageJob?
-export interface IImageDetails {
-  base64String: string
-  favorited: boolean
-  id: number
-  timestamp: number
-  jobId: string
-  parentJobId: string
-  prompt: string
-  shortlink: string
-  negative: string
-  worker_name: string
-  worker_id: string
-  sampler: string
-  modelVersion: string
-  seed: string
-  steps: string
-  denoising_strength: number
-  thumbnail: string
-  source_image: string
-  imageType: string
-  cfg_scale: number
+export interface IImageDetails extends CreateImageJob {
+  allowNsfw?: boolean
+  apikey?: string
+  canvasStore?: any
   control_type: string
+  favorited: boolean
+  has_source_image?: boolean
+  has_source_mask?: boolean
+  height: number
   image_is_control: boolean
-  karras: boolean
-  hires: boolean
-  clipskip: number
-  tiling: boolean
-  models: string[]
+  imageType: string
+  initWaitTime?: number
+  is_possible?: boolean
+  jobStatus?: string
+  jobTimestamp?: number
+  loras: Array<any>
   model: string
+  modelVersion: string
+  numImages?: number
+  orientation?: string
+  orientationType?: string
+  post_processing: Array<string>
+  queue_position?: number
+  shortlink: string
+  source_mask?: string
   source_processing: SourceProcessing
-  img2img: boolean
+  stylePreset: string
+  thumbnail: string
+  useTrusted?: boolean
+  wait_time?: number
+  width: number
+  worker_id: string
+  worker_name: string
 }
 
 interface ImageOrientation {

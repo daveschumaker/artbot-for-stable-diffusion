@@ -12,16 +12,17 @@ import { getImageDetails, updateCompletedJob } from 'utils/db'
 import RelatedImages from 'components/ImagePage/RelatedImages'
 import { getRelatedImages } from 'components/ImagePage/image.controller'
 import ImageDetails from 'components/ImageDetails'
+import { IImageDetails } from 'types'
 
 const ImagePage = ({ id }: { id: string }) => {
   const router = useRouter()
 
   const [isInitialLoad, setIsInitialLoad] = useState(true)
-  const [imageDetails, setImageDetails] = useState({})
-  const [relatedImages, setRelatedImages] = useState([])
+  const [imageDetails, setImageDetails] = useState<IImageDetails>()
+  const [relatedImages, setRelatedImages] = useState<Array<IImageDetails>>([])
   const [imageModalOpen, setImageModalOpen] = useState(false)
 
-  const currentIndex = relatedImages.findIndex((el) => {
+  const currentIndex = relatedImages.findIndex((el: IImageDetails) => {
     return el.jobId === id
   })
 
@@ -45,7 +46,9 @@ const ImagePage = ({ id }: { id: string }) => {
   // }
 
   const handleFavoriteClick = useCallback(async () => {
-    const newFavStatus = imageDetails.favorited ? false : true
+    if (!imageDetails) return
+
+    const newFavStatus = imageDetails?.favorited ? false : true
     getImageDetails.delete(id) // bust memoization cache
 
     await updateCompletedJob(
@@ -54,16 +57,16 @@ const ImagePage = ({ id }: { id: string }) => {
         favorited: newFavStatus
       })
     )
-    fetchImageDetails(id)
+    fetchImageDetails()
   }, [fetchImageDetails, id, imageDetails])
 
   const handleReloadImageData = useCallback(async () => {
-    fetchImageDetails(id)
-  }, [fetchImageDetails, id])
+    fetchImageDetails()
+  }, [fetchImageDetails])
 
   useEffect(() => {
     if (id) {
-      fetchImageDetails(id)
+      fetchImageDetails()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
@@ -71,7 +74,7 @@ const ImagePage = ({ id }: { id: string }) => {
   const maxLength = relatedImages.length
 
   const handleKeyPress = useCallback(
-    (e: any, swipeDir) => {
+    (e: any, swipeDir?: string) => {
       if (maxLength <= 1) {
         return
       }
@@ -171,13 +174,13 @@ const ImagePage = ({ id }: { id: string }) => {
       {!isInitialLoad && relatedImages.length > 1 && (
         <div className="pt-2 border-0 border-t-2 border-dashed border-slate-500">
           <RelatedImages
-            onAfterDelete={() => findRelatedImages(imageDetails.parentJobId)}
+            onAfterDelete={() => findRelatedImages(imageDetails?.parentJobId)}
             onModalOpen={setImageModalOpen}
-            imageId={imageDetails.jobId}
-            parentJobId={imageDetails.parentJobId}
+            imageId={imageDetails?.jobId}
+            parentJobId={imageDetails?.parentJobId}
             images={relatedImages}
             updateRelatedImages={() =>
-              findRelatedImages(imageDetails.parentJobId)
+              findRelatedImages(imageDetails?.parentJobId)
             }
           />
         </div>

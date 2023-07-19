@@ -10,8 +10,8 @@ import MaxWidth from 'components/UI/MaxWidth'
 import { useState } from 'react'
 import SpinnerV2 from 'components/Spinner'
 import { IconChevronRight } from '@tabler/icons-react'
-import ExportDatabase from 'modules/SettingsPage/ExportDatabase'
-import ImportDatabase from 'modules/SettingsPage/ImportDatabase'
+import ExportDatabase from 'app/_pages/SettingsPage/ExportDatabase'
+import ImportDatabase from 'app/_pages/SettingsPage/ImportDatabase'
 
 const Section = styled.div`
   padding-top: 16px;

@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 
 import ProgressBar from './ProgressBar'
 import { setNewImageReady, setShowImageReadyToast } from '../../store/appStore'
