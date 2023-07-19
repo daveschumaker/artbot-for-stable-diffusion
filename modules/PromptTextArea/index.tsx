@@ -1,6 +1,6 @@
 import { IconBook, IconPlaylistAdd } from '@tabler/icons-react'
 import PromptHistory from 'components/PromptHistory'
-import Tooltip from 'components/Tooltip'
+import TooltipComponent from 'app/_components/TooltipComponent'
 import { Button } from 'components/UI/Button'
 import InteractiveModal from 'components/UI/InteractiveModal/interactiveModal'
 import isMobile from 'is-mobile'
@@ -43,12 +43,12 @@ const PromptTextArea = ({ input, setInput }: GetSetPromptInput) => {
         placeholder="Describe your image"
         optionalButton={
           <>
-            <Tooltip
+            <TooltipComponent
               disabled={isMobile()}
-              targetId="view-prompt-library-tooltip"
+              tooltipId="view-prompt-library-tooltip"
             >
               View prompt history.
-            </Tooltip>
+            </TooltipComponent>
             <Button
               id="view-prompt-library-tooltip"
               title="Show prompt history"
@@ -64,15 +64,18 @@ const PromptTextArea = ({ input, setInput }: GetSetPromptInput) => {
         value={input.prompt}
       />
       <div className="flex flex-row gap-2 relative">
-        <Tooltip disabled={isMobile()} targetId="style-tag-tooltip">
+        <TooltipComponent disabled={isMobile()} tooltipId="style-tag-tooltip">
           Helpful list of styles, artists, and photography methods to add to
           your prompt.
-        </Tooltip>
-        <Tooltip disabled={isMobile()} targetId="style-preset-tooltip">
+        </TooltipComponent>
+        <TooltipComponent
+          disabled={isMobile()}
+          tooltipId="style-preset-tooltip"
+        >
           Predefined community styles that will automatically select a model 66
           and add relevant prompt and negative prompt parameters when 67
           submitted to the Stable Horde API.
-        </Tooltip>
+        </TooltipComponent>
         <StyleTagsDropdown input={input} setInput={setInput} />
         <StylePresetsDropdown input={input} setInput={setInput} />
       </div>

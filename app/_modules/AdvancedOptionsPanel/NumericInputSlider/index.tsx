@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react'
 
 // Import UI components
-import Section from 'components/UI/Section'
-import SubSectionTitle from 'components/UI/SubSectionTitle'
-import TextTooltipRow from 'components/UI/TextTooltipRow'
-import Tooltip from 'components/UI/Tooltip'
+import Section from 'app/_components/Section'
+import SubSectionTitle from 'app/_components/SubSectionTitle'
+import TextTooltipRow from 'app/_components/TextTooltipRow'
+import TooltipComponent from 'app/_components/TooltipComponent'
 import NumberInput from 'components/UI/NumberInput'
 import Slider from 'components/UI/Slider'
 
@@ -108,7 +108,11 @@ const NumericInputSlider = ({
           <SubSectionTitle>
             <TextTooltipRow>
               {label}
-              {tooltip && <Tooltip tooltipId={fieldName}>{tooltip}</Tooltip>}
+              {tooltip && (
+                <TooltipComponent tooltipId={fieldName}>
+                  {tooltip}
+                </TooltipComponent>
+              )}
             </TextTooltipRow>
 
             <div className="block text-xs w-full font-[400]">

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { CSSProperties } from 'react'
 import styles from './section.module.css'
 import clsx from 'clsx'
 
@@ -11,7 +11,7 @@ const Section = ({
   first?: boolean
   children?: React.ReactNode
   className?: string
-  style?: object
+  style?: CSSProperties
 }) => {
   return (
     <div

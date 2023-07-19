@@ -10,8 +10,8 @@ import CloseIcon from '../../../icons/CloseIcon'
 import { Button } from '../../../UI/Button'
 import InteractiveModal from '../../../UI/InteractiveModal/interactiveModal'
 import PageTitle from 'app/_components/PageTitle'
-import SelectComponent from '../../../UI/Select'
-import SubSectionTitle from '../../../UI/SubSectionTitle'
+import Select from 'app/_components/Select'
+import SubSectionTitle from 'app/_components/SubSectionTitle'
 
 const NewCanvas = ({
   handleClose = () => {},
@@ -53,7 +53,7 @@ const NewCanvas = ({
               viewport.
             </div>
           </SubSectionTitle>
-          <SelectComponent
+          <Select
             className="z-30"
             options={filterOrientations}
             onChange={(obj: IOrientation) => {

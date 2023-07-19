@@ -8,16 +8,16 @@ import {
   IconSwitch2
 } from '@tabler/icons-react'
 
-import TooltipComponent from '../../components/Tooltip'
+import TooltipComponent from 'app/_components/TooltipComponent'
 import { userInfoStore } from 'store/userStore'
 import { MAX_DIMENSIONS_LOGGED_IN, MAX_DIMENSIONS_LOGGED_OUT } from '_constants'
 import { ImageOrientation } from 'controllers/ImageOrientation'
-import Section from 'components/UI/Section'
+import Section from 'app/_components/Section'
 import MaxWidth from 'components/UI/MaxWidth'
-import SubSectionTitle from 'components/UI/SubSectionTitle'
-import SelectComponent from 'components/UI/Select'
+import SubSectionTitle from 'app/_components/SubSectionTitle'
+import Select from 'app/_components/Select'
 import { Button } from 'components/UI/Button'
-import NumericInputSlider from 'components/CreatePage/AdvancedOptionsPanel/NumericInputSlider'
+import NumericInputSlider from 'app/_modules/AdvancedOptionsPanel/NumericInputSlider'
 import DefaultPromptInput from 'models/DefaultPromptInput'
 import useWorkerDetails from 'hooks/useWorkerDetails'
 
@@ -149,7 +149,7 @@ const ImageOrientationOptions = ({
           )
         }
         <div className="flex flex-row items-center w-full gap-2 mb-2">
-          <SelectComponent
+          <Select
             options={ImageOrientation.dropdownOptions()}
             onChange={(obj: { value: string; label: string }) => {
               handleOrientationSelect(obj.value)
@@ -244,7 +244,7 @@ const ImageOrientationOptions = ({
                   Custom dimensions
                   {keepAspectRatio ? (
                     <>
-                      <TooltipComponent targetId={`tooltip-keepRatio`}>
+                      <TooltipComponent tooltipId="tooltip-keepRatio">
                         Aspect ratio is locked. Adjusting either dimension will
                         update the other dimension accordingly.
                       </TooltipComponent>

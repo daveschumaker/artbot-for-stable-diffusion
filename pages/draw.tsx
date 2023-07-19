@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Editor from '../components/Fabric/Editor'
 import PageTitle from 'app/_components/PageTitle'
-import Section from '../components/UI/Section'
+import Section from 'app/_components/Section'
 import styles from '../styles/drawpage.module.css'
 
 const DrawPage = () => {

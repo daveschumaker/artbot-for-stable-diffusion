@@ -1,6 +1,6 @@
 import SpinnerV2 from 'components/Spinner'
-import Section from 'components/UI/Section'
-import SubSectionTitle from 'components/UI/SubSectionTitle'
+import Section from 'app/_components/Section'
+import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { useState } from 'react'
 import { dbImport } from 'utils/db'
 import styles from './component.module.css'

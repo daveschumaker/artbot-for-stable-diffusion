@@ -1,6 +1,6 @@
 import Checkbox from 'components/UI/Checkbox'
-import TextTooltipRow from 'components/UI/TextTooltipRow'
-import TooltipComponent from 'components/UI/Tooltip'
+import TextTooltipRow from 'app/_components/TextTooltipRow'
+import TooltipComponent from 'app/_components/TooltipComponent'
 import DefaultPromptInput from 'models/DefaultPromptInput'
 import PromptInputSettings from 'models/PromptInputSettings'
 import { useCallback } from 'react'

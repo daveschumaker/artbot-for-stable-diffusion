@@ -3,12 +3,12 @@ import { trackEvent } from '../../../../api/telemetry'
 import DefaultPromptInput from '../../../../models/DefaultPromptInput'
 import PromptInputSettings from '../../../../models/PromptInputSettings'
 import { SourceProcessing } from '../../../../utils/promptUtils'
-import MaxWidth from '../../../UI/MaxWidth'
-import Section from '../../../UI/Section'
-import SelectComponent from '../../../UI/Select'
-import SubSectionTitle from '../../../UI/SubSectionTitle'
-import TextTooltipRow from '../../../UI/TextTooltipRow'
-import Tooltip from '../../../UI/Tooltip'
+import MaxWidth from 'components/UI/MaxWidth'
+import Section from 'app/_components/Section'
+import Select from 'app/_components/Select'
+import SubSectionTitle from 'app/_components/SubSectionTitle'
+import TextTooltipRow from 'app/_components/TextTooltipRow'
+import TooltipComponent from 'app/_components/TooltipComponent'
 import { samplerOptions } from './samplers.controller'
 
 interface IProps {
@@ -53,7 +53,7 @@ const Samplers = ({
               // @ts-ignore
               width="240px"
             >
-              <SelectComponent
+              <Select
                 options={samplerOptions(input)}
                 onChange={(obj: { value: string; label: string }) => {
                   PromptInputSettings.set('sampler', obj.value)
@@ -70,9 +70,9 @@ const Samplers = ({
           <SubSectionTitle>
             <TextTooltipRow>
               Use all samplers
-              <Tooltip tooltipId="use-all-samplers-tooltip">
+              <TooltipComponent tooltipId="use-all-samplers-tooltip">
                 Automatically generate an image for sampler
-              </Tooltip>
+              </TooltipComponent>
             </TextTooltipRow>
           </SubSectionTitle>
           <ReactSwitch

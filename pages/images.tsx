@@ -45,7 +45,7 @@ import { useStore } from 'statery'
 import { appInfoStore } from 'store/appStore'
 import useGalleryImageModal from 'components/ImagesPage/useGalleryImageModal'
 import { useImagePreview } from 'modules/ImagePreviewProvider'
-import Tooltip from 'components/Tooltip'
+import TooltipComponent from 'app/_components/TooltipComponent'
 import isMobile from 'is-mobile'
 
 const MenuSeparator = styled.div`
@@ -971,7 +971,7 @@ const ImagesPage = () => {
                           tabIndex={0}
                         >
                           {!isMobile() && (
-                            <Tooltip targetId={'image_' + image.id}>
+                            <TooltipComponent tooltipId={'image_' + image.id}>
                               <div
                                 className="font-mono text-xs"
                                 style={{
@@ -986,7 +986,7 @@ const ImagesPage = () => {
                                   )}
                                 <div>Sampler: {image.sampler}</div>
                               </div>
-                            </Tooltip>
+                            </TooltipComponent>
                           )}
                           <img
                             id={'image_' + image.id}
@@ -1056,7 +1056,7 @@ const ImagesPage = () => {
                           tabIndex={0}
                         >
                           {!isMobile() && (
-                            <Tooltip targetId={'image_' + image.id}>
+                            <TooltipComponent tooltipId={'image_' + image.id}>
                               <div
                                 className="font-mono text-xs"
                                 style={{
@@ -1068,7 +1068,7 @@ const ImagesPage = () => {
                                 <div>Model: {image.models[0]}</div>
                                 <div>Sampler: {image.sampler}</div>
                               </div>
-                            </Tooltip>
+                            </TooltipComponent>
                           )}
                           <ImageSquare
                             id={'image_' + image.id}

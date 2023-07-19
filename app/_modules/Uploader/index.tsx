@@ -3,7 +3,7 @@ import { getImageFromUrl } from 'utils/imageUtils'
 import { Button } from 'components/UI/Button'
 import FlexRow from 'components/UI/FlexRow'
 import Input from 'components/UI/Input'
-import SubSectionTitle from 'components/UI/SubSectionTitle'
+import SubSectionTitle from 'app/_components/SubSectionTitle'
 import Dropzone from 'app/_modules/Dropzone'
 
 interface Props {

@@ -3,7 +3,7 @@ import useComponentState from '../../hooks/useComponentState'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
 import { clientHeader } from '../../utils/appUtils'
 import Row from '../Row'
-import SelectComponent from '../UI/Select'
+import Select from 'app/_components/Select'
 import WorkerInfo from '../WorkerInfo'
 
 const WorkersList = styled.div`
@@ -98,7 +98,7 @@ const WorkerInfoPage = () => {
         Workers online: {componentState.workers.length}
         <div className="flex flex-row gap-2 items-center">
           Sort:
-          <SelectComponent
+          <Select
             options={[
               { value: 'name', label: 'Name' },
               { value: 'requests_fulfilled', label: 'Completed' },

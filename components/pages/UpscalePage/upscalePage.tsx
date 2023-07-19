@@ -9,7 +9,7 @@ import SquarePlusIcon from 'components/icons/SquarePlusIcon'
 import TrashIcon from 'components/icons/TrashIcon'
 import { Button } from 'components/UI/Button'
 import PageTitle from 'app/_components/PageTitle'
-import Section from 'components/UI/Section'
+import Section from 'app/_components/Section'
 import { useCallback, useEffect, useReducer } from 'react'
 
 interface ComponentState {

@@ -1,19 +1,19 @@
 /* eslint-disable @next/next/no-img-element */
 import { useRouter } from 'next/router'
 import { useStore } from 'statery'
-import PromptInputSettings from '../../../../models/PromptInputSettings'
+import PromptInputSettings from 'models/PromptInputSettings'
 
-import { modelStore } from '../../../../store/modelStore'
-import AlertTriangleIcon from '../../../icons/AlertTriangle'
-import Linker from '../../../UI/Linker'
-import MaxWidth from '../../../UI/MaxWidth'
-import ModelWarning from '../../../UI/ModelWarning'
-import Section from '../../../UI/Section'
-import SelectComponent from '../../../UI/Select'
-import SubSectionTitle from '../../../UI/SubSectionTitle'
-import TextTooltipRow from '../../../UI/TextTooltipRow'
-import Tooltip from '../../../UI/Tooltip'
-import { MODEL_LIMITED_BY_WORKERS } from '../../../../_constants'
+import { modelStore } from 'store/modelStore'
+import AlertTriangleIcon from 'components/icons/AlertTriangle'
+import Linker from 'components/UI/Linker'
+import MaxWidth from 'components/UI/MaxWidth'
+import ModelWarning from 'components/UI/ModelWarning'
+import Section from 'app/_components/Section'
+import Select from 'app/_components/Select'
+import SubSectionTitle from 'app/_components/SubSectionTitle'
+import TextTooltipRow from 'app/_components/TextTooltipRow'
+import TooltipComponent from 'app/_components/TooltipComponent'
+import { MODEL_LIMITED_BY_WORKERS } from '_constants'
 
 interface IProps {
   input: any
@@ -35,18 +35,18 @@ const SelectModel = ({ input, setInput, modelerOptions }: IProps) => {
       <SubSectionTitle>
         <TextTooltipRow>
           Model
-          <Tooltip tooltipId="model-dropdown-tooltip">
+          <TooltipComponent tooltipId="model-dropdown-tooltip">
             Models currently available within the horde. Numbers in parentheses
             indicate number of works. Generally, these models will generate
             images quicker.
-          </Tooltip>
+          </TooltipComponent>
         </TextTooltipRow>
       </SubSectionTitle>
       <MaxWidth
         // @ts-ignore
         width="480px"
       >
-        <SelectComponent
+        <Select
           menuPlacement={'top'}
           //@ts-ignore
           options={modelerOptions(input)}

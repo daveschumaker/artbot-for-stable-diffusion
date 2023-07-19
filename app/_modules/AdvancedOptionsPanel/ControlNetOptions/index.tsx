@@ -1,7 +1,7 @@
 import MaxWidth from 'components/UI/MaxWidth'
-import Section from 'components/UI/Section'
-import SelectComponent from 'components/UI/Select'
-import SubSectionTitle from 'components/UI/SubSectionTitle'
+import Section from 'app/_components/Section'
+import Select from 'app/_components/Select'
+import SubSectionTitle from 'app/_components/SubSectionTitle'
 import TwoPanel from 'components/UI/TwoPanel'
 import DefaultPromptInput from 'models/DefaultPromptInput'
 import { CONTROL_TYPE_ARRAY } from '../../../../_constants'
@@ -67,7 +67,7 @@ const ControlNetOptions = ({
         )}
         {(input.source_image || forceDisplay) && (
           <div className="max-w-[384px] w-full">
-            <SelectComponent
+            <Select
               isDisabled={isDisabled}
               options={CONTROL_TYPE_ARRAY.map((value) => {
                 if (value === '') {

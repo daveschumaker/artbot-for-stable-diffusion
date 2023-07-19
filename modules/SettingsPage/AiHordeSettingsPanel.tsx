@@ -1,11 +1,11 @@
 import PageTitle from 'app/_components/PageTitle'
-import Section from 'components/UI/Section'
+import Section from 'app/_components/Section'
 import { useStore } from 'statery'
 import { unsetUserInfo, userInfoStore } from 'store/userStore'
 import styles from './settings.module.css'
-import SubSectionTitle from 'components/UI/SubSectionTitle'
-import TextTooltipRow from 'components/UI/TextTooltipRow'
-import Tooltip from 'components/Tooltip'
+import SubSectionTitle from 'app/_components/SubSectionTitle'
+import TextTooltipRow from 'app/_components/TextTooltipRow'
+import TooltipComponent from 'app/_components/TooltipComponent'
 import MaxWidth from 'components/UI/MaxWidth'
 import Input from 'components/UI/Input'
 import { Button } from 'components/UI/Button'
@@ -155,11 +155,11 @@ const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
         <SubSectionTitle>
           <TextTooltipRow>
             <strong>API key</strong>
-            <Tooltip tooltipId="api-key-tooltip">
+            <TooltipComponent tooltipId="api-key-tooltip">
               Leave blank for anonymous access. An API key gives higher priority
               access to the AI Horde distributed cluster, resulting in shorter
               image creation times.
-            </Tooltip>
+            </TooltipComponent>
           </TextTooltipRow>
           {!userStore.loggedIn && (
             <div className="block w-full mt-2 mb-2 text-xs">

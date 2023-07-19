@@ -9,7 +9,7 @@ import {
   IconPlaylistX
 } from '@tabler/icons-react'
 import isMobile from 'is-mobile'
-import Tooltip from 'components/Tooltip'
+import TooltipComponent from 'app/_components/TooltipComponent'
 import PromptInputSettings from 'models/PromptInputSettings'
 import NegativePrompts from 'components/CreatePage/NegativePrompts'
 
@@ -75,12 +75,18 @@ const NegativePromptArea = ({ input, setInput }: any) => {
           value={input.negative}
         />
         <div className="flex flex-row gap-2">
-          <Tooltip disabled={isMobile()} targetId="negative-save-tooltip">
+          <TooltipComponent
+            disabled={isMobile()}
+            tooltipId="negative-save-tooltip"
+          >
             Save negative prompt to your prompt library.
-          </Tooltip>
-          <Tooltip disabled={isMobile()} targetId="negative-load-tooltip">
+          </TooltipComponent>
+          <TooltipComponent
+            disabled={isMobile()}
+            tooltipId="negative-load-tooltip"
+          >
             Load a negative prompt from your prompt library.
-          </Tooltip>
+          </TooltipComponent>
           <Button
             id="negative-save-tooltip"
             size="small"

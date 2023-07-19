@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import SectionTitle from '../UI/SectionTitle'
+import SectionTitle from 'app/_components/SectionTitle'
 import SlidingPanel from '../UI/SlidingPanel'
 import TextButton from '../UI/TextButton'
 import CloseIcon from '../icons/CloseIcon'
@@ -24,7 +24,7 @@ const NegativePrompts = ({ open, handleClosePane, setInput }: Props) => {
       if (Array.isArray(result)) {
         setPrompts(result)
       }
-    } catch (err) { }
+    } catch (err) {}
   }
 
   const saveDefaultPrompt = async (prompt: string) => {
@@ -53,8 +53,8 @@ const NegativePrompts = ({ open, handleClosePane, setInput }: Props) => {
       handleClosePane={handleClosePane}
     >
       <div className="relative">
-        <div className='fixed w-full top-0 right-0 px-5 pt-5 bg-[#f2f2f2] dark:bg-[#222222]'>
-          <div className='flex flex-row place-content-between'>
+        <div className="fixed w-full top-0 right-0 px-5 pt-5 bg-[#f2f2f2] dark:bg-[#222222]">
+          <div className="flex flex-row place-content-between">
             <SectionTitle>Negative Prompt Library</SectionTitle>
             <div onClick={handleClosePane}>
               <CloseIcon width={2} />
@@ -64,7 +64,6 @@ const NegativePrompts = ({ open, handleClosePane, setInput }: Props) => {
             <div className="flex-grow border-t border-gray-400"></div>
           </div>
         </div>
-
 
         <div className="pt-[48px] mb-[100px] bg-[#f2f2f2] dark:bg-[#222222]">
           {prompts.length === 0 && <div>Nothing here yet!</div>}

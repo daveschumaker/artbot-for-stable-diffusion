@@ -28,7 +28,7 @@ import { deletePendingJob } from 'controllers/pendingJobsCache'
 import styles from './pendingItem.module.css'
 import clsx from 'clsx'
 import ImageThumbnail from './ImageThumbnail'
-import Tooltip from 'components/UI/Tooltip'
+import TooltipComponent from 'app/_components/TooltipComponent'
 import { IconInfoHexagon } from '@tabler/icons-react'
 
 const RATINGS_ENABLED = false
@@ -186,13 +186,13 @@ const PendingItem = memo(
                   >
                     <IconInfoHexagon style={{ marginRight: '8px' }} />
                     SDXL beta{' '}
-                    <Tooltip tooltipId="sdxl-beta-tooltip">
+                    <TooltipComponent tooltipId="sdxl-beta-tooltip">
                       SDXL is currently in beta and provided by Stability.ai in
                       order to refine future image models. Please select one of
                       the following two images to choose as the best image for
                       this particular generation. You will be rewarded 15 kudos
                       for each rating.
-                    </Tooltip>
+                    </TooltipComponent>
                   </div>
                 )}
                 {jobDetails.upscaled && <div>[ UPSCALING ]</div>}

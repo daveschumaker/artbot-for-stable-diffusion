@@ -1,7 +1,7 @@
 'use client'
 
 import SpinnerV2 from 'components/Spinner'
-import Section from 'components/UI/Section'
+import Section from 'app/_components/Section'
 
 export default function ModelDetailsLoader() {
   return (

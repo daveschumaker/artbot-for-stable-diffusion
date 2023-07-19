@@ -5,7 +5,7 @@ import { initBlob } from '../../utils/blobUtils'
 import { countCompletedJobs } from '../../utils/db'
 import { downloadImages } from '../../utils/imageUtils'
 import PageTitle from 'app/_components/PageTitle'
-import SelectComponent from 'components/UI/Select'
+import Select from 'app/_components/Select'
 import MaxWidth from 'components/UI/MaxWidth'
 import { useState } from 'react'
 import SpinnerV2 from 'components/Spinner'
@@ -162,7 +162,7 @@ const ImportExportPanel = () => {
             <MaxWidth width="240px">
               <div className="flex flex-row gap-2 items-center">
                 Images per file:
-                <SelectComponent
+                <Select
                   options={[
                     { value: 100, label: 100 },
                     { value: 250, label: 250 },

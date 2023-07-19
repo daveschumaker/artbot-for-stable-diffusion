@@ -1,6 +1,6 @@
 import { Button } from 'components/UI/Button'
 import Input from 'components/UI/Input'
-import SubSectionTitle from 'components/UI/SubSectionTitle'
+import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { deletePromptFromHistory, getPrompts, updatePrompt } from '_db/prompts'
 import { PromptHistoryDetails, PromptTypes, SetInput } from 'types/artbot'
 import {

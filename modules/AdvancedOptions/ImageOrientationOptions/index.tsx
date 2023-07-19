@@ -3,18 +3,18 @@ import { useStore } from 'statery'
 import { IconLock, IconLockOpen, IconSwitch2 } from '@tabler/icons-react'
 
 import { MAX_DIMENSIONS_LOGGED_IN, MAX_DIMENSIONS_LOGGED_OUT } from '_constants'
-import Section from 'components/UI/Section'
+import Section from 'app/_components/Section'
 import { GetSetPromptInput } from 'types/artbot'
-import SubSectionTitle from 'components/UI/SubSectionTitle'
-import SelectComponent from 'components/UI/Select'
+import SubSectionTitle from 'app/_components/SubSectionTitle'
+import Select from 'app/_components/Select'
 import { Button } from 'components/UI/Button'
 import useWorkerDetails from 'hooks/useWorkerDetails'
 import FlexRow from 'components/FlexRow'
 import FlexCol from 'components/FlexCol'
 import { ImageOrientation } from 'models/ImageOrientation'
 import { userInfoStore } from 'store/userStore'
-import Tooltip from 'components/Tooltip'
-import NumericInputSlider from 'components/CreatePage/AdvancedOptionsPanel/NumericInputSlider'
+import TooltipComponent from 'app/_components/TooltipComponent'
+import NumericInputSlider from 'app/_modules/AdvancedOptionsPanel/NumericInputSlider'
 
 const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
   const [workerDetails] = useWorkerDetails()
@@ -158,7 +158,7 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
         )
       }
       <FlexRow style={{ marginBottom: '8px' }}>
-        <SelectComponent
+        <Select
           options={ImageOrientation.dropdownOptions()}
           onChange={(obj: { value: string; label: string }) => {
             handleOrientationSelect(obj.value)
@@ -190,10 +190,10 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
               )}
               {keepAspectRatio && (
                 <>
-                  <Tooltip tooltipId={`tooltip-keepRatio`}>
+                  <TooltipComponent tooltipId={`tooltip-keepRatio`}>
                     Aspect ratio is locked. Adjusting either dimension will
                     update the other dimension accordingly.
-                  </Tooltip>
+                  </TooltipComponent>
                 </>
               )}
             </FlexRow>

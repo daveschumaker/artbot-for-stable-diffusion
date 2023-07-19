@@ -1,7 +1,7 @@
-import Section from '../../../UI/Section'
-import SubSectionTitle from '../../../UI/SubSectionTitle'
-import TextTooltipRow from '../../../UI/TextTooltipRow'
-import Tooltip from '../../../UI/Tooltip'
+import Section from 'app/_components/Section'
+import SubSectionTitle from 'app/_components/SubSectionTitle'
+import TextTooltipRow from 'app/_components/TextTooltipRow'
+import TooltipComponent from 'app/_components/TooltipComponent'
 import Switch from 'react-switch'
 import PromptInputSettings from '../../../../models/PromptInputSettings'
 import { useEffect, useState } from 'react'
@@ -25,11 +25,11 @@ const HiresFix = ({ input, setInput }: any) => {
       <SubSectionTitle>
         <TextTooltipRow>
           Hires fix
-          <Tooltip tooltipId="hires-fix-tooltip">
+          <TooltipComponent tooltipId="hires-fix-tooltip">
             Partially renders image at a lower resolution before upscaling it
             and adding more detail. Useful to avoid things like double heads
             when requesting higher resolution images.
-          </Tooltip>
+          </TooltipComponent>
         </TextTooltipRow>
         {input.source_image && (
           <div className="mt-[-4px] text-xs text-slate-500 dark:text-slate-400 font-[600]">

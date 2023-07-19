@@ -1,9 +1,9 @@
 import { GetSetPromptInput } from 'types/artbot'
 
-import Section from 'components/UI/Section'
+import Section from 'app/_components/Section'
 import ImageModels from 'models/ImageModels'
-import SelectComponent from 'components/UI/Select'
-import SubSectionTitle from 'components/UI/SubSectionTitle'
+import Select from 'app/_components/Select'
+import SubSectionTitle from 'app/_components/SubSectionTitle'
 // import { Button } from 'components/UI/Button'
 // import { IconFilter } from '@tabler/icons-react'
 import { useState } from 'react'
@@ -54,7 +54,7 @@ const SelectModel = ({ disabled, input, setInput }: SelectModelProps) => {
             </ul>
           </DropdownOptions>
         )}
-        <SelectComponent
+        <Select
           isDisabled={disabled}
           options={modelsOptions}
           onChange={(obj: any) => setInput({ models: [obj.value] })}

@@ -1,10 +1,10 @@
 import { ReactElement } from 'react'
 import ReactSwitch from 'react-switch'
 import { formatStringRemoveSpaces } from '../../../../utils/htmlUtils'
-import Section from '../../../UI/Section'
-import SubSectionTitle from '../../../UI/SubSectionTitle'
-import TextTooltipRow from '../../../UI/TextTooltipRow'
-import Tooltip from '../../../UI/Tooltip'
+import Section from 'app/_components/Section'
+import SubSectionTitle from 'app/_components/SubSectionTitle'
+import TextTooltipRow from 'app/_components/TextTooltipRow'
+import TooltipComponent from 'app/_components/TooltipComponent'
 
 interface Props {
   checked: boolean
@@ -31,7 +31,11 @@ const InputSwitch = ({
         <>
           <TextTooltipRow>
             {label}
-            {tooltip && <Tooltip tooltipId={tooltipId}>{tooltip}</Tooltip>}
+            {tooltip && (
+              <TooltipComponent tooltipId={tooltipId}>
+                {tooltip}
+              </TooltipComponent>
+            )}
           </TextTooltipRow>
           {moreInfoLink && (
             <div className="mt-1 mb-2 text-xs">{moreInfoLink}</div>

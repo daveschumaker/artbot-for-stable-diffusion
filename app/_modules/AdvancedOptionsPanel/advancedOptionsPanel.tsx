@@ -10,18 +10,18 @@ import Checkbox from 'components/UI/Checkbox'
 import Input from 'components/UI/Input'
 import Linker from 'components/UI/Linker'
 import MaxWidth from 'components/UI/MaxWidth'
-import Section from 'components/UI/Section'
-import SelectComponent from 'components/UI/Select'
+import Section from 'app/_components/Section'
+import Select from 'app/_components/Select'
 import SplitPanel from 'components/UI/SplitPanel'
-import SubSectionTitle from 'components/UI/SubSectionTitle'
+import SubSectionTitle from 'app/_components/SubSectionTitle'
 import TextButton from 'components/UI/TextButton'
-import TextTooltipRow from 'components/UI/TextTooltipRow'
-import Tooltip from 'components/UI/Tooltip'
+import TextTooltipRow from 'app/_components/TextTooltipRow'
+import TooltipComponent from 'app/_components/TooltipComponent'
 import TwoPanel from 'components/UI/TwoPanel'
 
 // Icon imports
-import ArrowBarLeftIcon from '../../icons/ArrowBarLeftIcon'
-import GrainIcon from '../../icons/GrainIcon'
+import ArrowBarLeftIcon from 'components/icons/ArrowBarLeftIcon'
+import GrainIcon from 'components/icons/GrainIcon'
 
 // Utils imports
 import { maxSteps } from 'utils/validationUtils'
@@ -210,14 +210,14 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
               <SubSectionTitle>
                 <TextTooltipRow>
                   Select Models
-                  <Tooltip tooltipId="select-models-tooltip">
+                  <TooltipComponent tooltipId="select-models-tooltip">
                     Models currently available within the horde. Numbers in
                     parentheses indicate number of works. Generally, these
                     models will generate images quicker.
-                  </Tooltip>
+                  </TooltipComponent>
                 </TextTooltipRow>
               </SubSectionTitle>
-              <SelectComponent
+              <Select
                 isMulti
                 // menuPlacement={'top'}
                 //@ts-ignore
@@ -303,10 +303,10 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
                   <SubSectionTitle>
                     <TextTooltipRow>
                       Multi-steps
-                      <Tooltip tooltipId="multi-steps">
+                      <TooltipComponent tooltipId="multi-steps">
                         Comma separated values to create a series of images
                         using multiple steps. Example: 3,6,9,12,15
-                      </Tooltip>
+                      </TooltipComponent>
                     </TextTooltipRow>
                     <div className="block w-full text-xs">
                       (1 -{' '}
@@ -391,10 +391,10 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
                   <SubSectionTitle>
                     <TextTooltipRow>
                       Guidance
-                      <Tooltip tooltipId="guidance-tooltip">
+                      <TooltipComponent tooltipId="guidance-tooltip">
                         Comma separated values to create a series of images
                         using multiple steps. Example: 3,6,9,12,15
-                      </Tooltip>
+                      </TooltipComponent>
                     </TextTooltipRow>
                     <div className="block w-full text-xs">(1 - 30)</div>
                   </SubSectionTitle>
@@ -513,9 +513,9 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
         <SubSectionTitle>
           <TextTooltipRow>
             Seed
-            <Tooltip tooltipId="seed-tooltip">
+            <TooltipComponent tooltipId="seed-tooltip">
               Leave seed blank for random.
-            </Tooltip>
+            </TooltipComponent>
           </TextTooltipRow>
         </SubSectionTitle>
         <MaxWidth
@@ -720,10 +720,10 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
         <SubSectionTitle>
           <TextTooltipRow>
             Post-processing
-            <Tooltip tooltipId="post-processing-tooltip">
+            <TooltipComponent tooltipId="post-processing-tooltip">
               Post-processing options such as face improvement and image
               upscaling.
-            </Tooltip>
+            </TooltipComponent>
           </TextTooltipRow>
         </SubSectionTitle>
         <div className="flex flex-col items-start gap-2">

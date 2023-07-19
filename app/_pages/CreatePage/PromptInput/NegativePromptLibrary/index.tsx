@@ -1,4 +1,4 @@
-import SubSectionTitle from 'components/UI/SubSectionTitle'
+import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { deletePromptFromHistory, getPrompts } from '_db/prompts'
 import { PromptHistoryDetails, PromptTypes, SetInput } from 'types/artbot'
 import { useModal } from '@ebay/nice-modal-react'

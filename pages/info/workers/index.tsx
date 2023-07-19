@@ -1,6 +1,6 @@
 import Head from 'next/head'
 
-import SelectComponent from '../../../components/UI/Select'
+import Select from 'app/_components/Select'
 import WorkerInfo from '../../../components/WorkerInfo'
 import Row from '../../../components/Row'
 import PageTitle from 'app/_components/PageTitle'
@@ -157,7 +157,7 @@ const WorkerInfoPage = () => {
           {componentState.isLoading ? '...' : componentState.workers.length}
           <div className="flex flex-row gap-2 items-center">
             Sort:
-            <SelectComponent
+            <Select
               options={[...sortOptions]}
               onChange={(obj: { value: string; label: string }) => {
                 setComponentState({ sort: obj.value })

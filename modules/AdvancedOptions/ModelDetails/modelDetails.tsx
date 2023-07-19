@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import { useStore } from 'statery'
-import Section from 'components/UI/Section'
+import Section from 'app/_components/Section'
 import { modelStore } from 'store/modelStore'
-import SubSectionTitle from 'components/UI/SubSectionTitle'
+import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { useEffect, useState } from 'react'
 import { ModelDetails } from 'types/artbot'
 import { isEmptyObject } from 'utils/helperUtils'

@@ -7,7 +7,7 @@ import { SourceProcessing } from 'utils/promptUtils'
 import Head from 'next/head'
 import PromptInputSettings from 'models/PromptInputSettings'
 import { setI2iUploaded } from 'store/canvasStore'
-import Section from 'components/UI/Section'
+import Section from 'app/_components/Section'
 import Uploader from 'components/CreatePage/Uploader'
 import { IconPhotoUp, IconTrash } from '@tabler/icons-react'
 

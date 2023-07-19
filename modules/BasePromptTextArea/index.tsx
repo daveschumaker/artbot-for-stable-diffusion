@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import { IconArrowBarLeft } from '@tabler/icons-react'
 import isMobile from 'is-mobile'
 
-import TooltipComponent from '../../components/Tooltip'
+import TooltipComponent from 'app/_components/TooltipComponent'
 import TextArea from 'components/UI/TextArea'
 import { Button } from 'components/UI/Button'
 
@@ -39,7 +39,10 @@ const BasePromptTextArea = ({
           value={value}
         />
         <div className="flex flex-col gap-2">
-          <TooltipComponent disabled={isMobile()} targetId="promptText-tooltip">
+          <TooltipComponent
+            disabled={isMobile()}
+            tooltipId="promptText-tooltip"
+          >
             Clear input text
           </TooltipComponent>
           <Button

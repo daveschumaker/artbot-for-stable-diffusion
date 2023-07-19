@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useCallback, useEffect, useReducer, useState } from 'react'
 import { useStore } from 'statery'
-import SelectModel from '../components/CreatePage/AdvancedOptionsPanel/SelectModel/selectModel'
+import SelectModel from 'app/_modules/AdvancedOptionsPanel/SelectModel/selectModel'
 import Uploader from '../components/CreatePage/Uploader'
 import ArrowBarLeftIcon from '../components/icons/ArrowBarLeftIcon'
 import GrainIcon from '../components/icons/GrainIcon'
@@ -9,11 +9,11 @@ import { Button } from '../components/UI/Button'
 import Input from '../components/UI/Input'
 import MaxWidth from '../components/UI/MaxWidth'
 import PageTitle from 'app/_components/PageTitle'
-import Section from '../components/UI/Section'
+import Section from 'app/_components/Section'
 import SplitPanel from '../components/UI/SplitPanel'
-import SubSectionTitle from '../components/UI/SubSectionTitle'
-import TextTooltipRow from '../components/UI/TextTooltipRow'
-import Tooltip from '../components/UI/Tooltip'
+import SubSectionTitle from 'app/_components/SubSectionTitle'
+import TextTooltipRow from 'app/_components/TextTooltipRow'
+import TooltipComponent from 'app/_components/TooltipComponent'
 import TwoPanel from '../components/UI/TwoPanel'
 import DefaultPromptInput from '../models/DefaultPromptInput'
 import {
@@ -30,7 +30,7 @@ import { validModelsArray } from '../utils/modelUtils'
 import { SourceProcessing } from '../utils/promptUtils'
 import Checkbox from '../components/UI/Checkbox'
 import TrashIcon from '../components/icons/TrashIcon'
-import ActionPanel from '../components/CreatePage/ActionPanel'
+import ActionPanel from 'app/_pages/CreatePage/ActionPanel'
 import { createImageJob } from '../utils/imageCache'
 import CreateImageRequest from '../models/CreateImageRequest'
 import { useRouter } from 'next/router'
@@ -41,9 +41,9 @@ import AppSettings from '../models/AppSettings'
 import { toast } from 'react-toastify'
 import { getInputCache } from '../store/inputCache'
 import { kudosCostV2 } from '../utils/kudosCost'
-import NumericInputSlider from 'components/CreatePage/AdvancedOptionsPanel/NumericInputSlider'
-import ControlNetOptions from 'components/CreatePage/AdvancedOptionsPanel/ControlNetOptions'
-import UpscalerOptions from 'components/CreatePage/AdvancedOptionsPanel/UpscalerOptions'
+import NumericInputSlider from 'app/_modules/AdvancedOptionsPanel/NumericInputSlider'
+import ControlNetOptions from 'app/_modules/AdvancedOptionsPanel/ControlNetOptions'
+import UpscalerOptions from 'app/_modules/AdvancedOptionsPanel/UpscalerOptions'
 import useComponentState from 'hooks/useComponentState'
 import { trackEvent } from 'api/telemetry'
 import PromptTextArea from 'modules/PromptTextArea'
@@ -469,9 +469,9 @@ const ControlNet = () => {
         <SubSectionTitle>
           <TextTooltipRow>
             Seed
-            <Tooltip tooltipId="seed-tooltip">
+            <TooltipComponent tooltipId="seed-tooltip">
               Leave seed blank for random.
-            </Tooltip>
+            </TooltipComponent>
           </TextTooltipRow>
         </SubSectionTitle>
         <MaxWidth
@@ -523,10 +523,10 @@ const ControlNet = () => {
         <SubSectionTitle>
           <TextTooltipRow>
             Post-processing
-            <Tooltip tooltipId="post-processing-tooltip">
+            <TooltipComponent tooltipId="post-processing-tooltip">
               Post-processing options such as face improvement and image
               upscaling.
-            </Tooltip>
+            </TooltipComponent>
           </TextTooltipRow>
         </SubSectionTitle>
         <div className="flex flex-col items-start gap-2">
