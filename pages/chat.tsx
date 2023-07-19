@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
-import PageTitle from 'components/UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 import ChatPageComponent from 'modules/ChatPageComponent'
 import Head from 'next/head'
 

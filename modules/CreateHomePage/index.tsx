@@ -2,9 +2,9 @@
 import { useCallback, useEffect, useReducer, useState } from 'react'
 import { useRouter } from 'next/router'
 
-import PageTitle from '../../components/UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 import { loadEditPrompt, SourceProcessing } from '../../utils/promptUtils'
-import OptionsPanel from '../../components/CreatePage/OptionsPanel'
+import OptionsPanel from 'app/_pages/CreatePage/OptionsPanel'
 import {
   clearCanvasStore,
   getBase64FromDraw,
@@ -19,7 +19,7 @@ import { appInfoStore } from '../../store/appStore'
 import { countImagesToGenerate } from '../../utils/imageUtils'
 import PromptInputSettings from '../../models/PromptInputSettings'
 import { userInfoStore } from '../../store/userStore'
-import TriggerDropdown from '../../components/CreatePage/TriggerDropdown'
+import TriggerDropdown from 'app/_pages/CreatePage/TriggerDropdown'
 import DefaultPromptInput from '../../models/DefaultPromptInput'
 import { logToConsole } from '../../utils/debugTools'
 import {

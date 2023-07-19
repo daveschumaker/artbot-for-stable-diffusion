@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useRouter } from 'next/router'
 import { trackEvent } from '../api/telemetry'
-import PageTitle from '../components/UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 import { useEffectOnce } from '../hooks/useEffectOnce'
 
 export default function NotFoundPage() {

@@ -8,7 +8,7 @@ import {
   FaqStorageExceeded,
   FaqSyntax
 } from '../components/faqDetails'
-import PageTitle from '../components/UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 import Panel from 'app/_components/Panel'
 import { useEffectOnce } from '../hooks/useEffectOnce'
 

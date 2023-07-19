@@ -5,7 +5,7 @@ import { getBase64 } from '../../utils/imageUtils'
 import { isValidHttpUrl } from '../../utils/validationUtils'
 import { Button } from '../UI/Button'
 import Input from '../UI/Input'
-import PageTitle from '../UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 import { UploadButton } from '../UploadButton'
 
 const imgConfig = {

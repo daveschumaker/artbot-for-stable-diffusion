@@ -3,7 +3,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { userInfoStore } from '../store/userStore'
 import { logError } from '../utils/appUtils'
-import PageTitle from './UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 import { db } from 'utils/db'
 
 const StyledLink = styled.a`

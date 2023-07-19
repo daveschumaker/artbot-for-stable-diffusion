@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import PageTitle from '../components/UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 import Linker from '../components/UI/Linker'
 import FeedbackForm from '../components/FeedbackForm'
 import React, { useState } from 'react'

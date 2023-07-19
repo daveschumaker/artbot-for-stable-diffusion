@@ -2,7 +2,7 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
-import PageTitle from '../components/UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 import { useEffectOnce } from '../hooks/useEffectOnce'
 import { userInfoStore } from '../store/userStore'
 import { logError } from '../utils/appUtils'

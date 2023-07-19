@@ -1,6 +1,6 @@
 import Uploader from '../../../CreatePage/Uploader'
 import InteractiveModal from '../../../UI/InteractiveModal/interactiveModal'
-import PageTitle from '../../../UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 
 const UploadImage = ({
   handleClose = () => {},

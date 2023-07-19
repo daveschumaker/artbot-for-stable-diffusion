@@ -4,7 +4,7 @@ import { fetchModelUpdates } from '../../../api/fetchModelUpdates'
 import InfoPageMenuButton from '../../../components/InfoPage/Menu'
 import Row from '../../../components/Row'
 import Linker from '../../../components/UI/Linker'
-import PageTitle from '../../../components/UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 import { relativeTimeSec } from '../../../utils/numberUtils'
 
 interface IModelUpdatesResponse {

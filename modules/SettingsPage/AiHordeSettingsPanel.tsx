@@ -1,4 +1,4 @@
-import PageTitle from 'components/UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 import Section from 'components/UI/Section'
 import { useStore } from 'statery'
 import { unsetUserInfo, userInfoStore } from 'store/userStore'

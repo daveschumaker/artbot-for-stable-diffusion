@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import InteractiveModal from 'components/UI/InteractiveModal/interactiveModal'
-import PageTitle from 'components/UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 import styles from './component.module.css'
 import { useCallback, useState } from 'react'
 import clsx from 'clsx'

@@ -6,7 +6,7 @@ import Link from 'next/link'
 import LazyLoad from 'react-lazyload'
 import styled from 'styled-components'
 
-import PageTitle from '../components/UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 import Spinner from '../components/Spinner'
 import {
   bulkDeleteImages,

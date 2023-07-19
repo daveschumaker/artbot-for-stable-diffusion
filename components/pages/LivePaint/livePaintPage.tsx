@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
 import Editor from 'components/Fabric/Editor'
-import PageTitle from 'components/UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 import { useCallback, useEffect, useReducer, useState } from 'react'
 import DefaultPromptInput from 'models/DefaultPromptInput'
 import { useFetchImage } from 'hooks/useFetchImage'

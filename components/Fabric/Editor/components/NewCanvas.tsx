@@ -9,7 +9,7 @@ import {
 import CloseIcon from '../../../icons/CloseIcon'
 import { Button } from '../../../UI/Button'
 import InteractiveModal from '../../../UI/InteractiveModal/interactiveModal'
-import PageTitle from '../../../UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 import SelectComponent from '../../../UI/Select'
 import SubSectionTitle from '../../../UI/SubSectionTitle'
 

@@ -9,7 +9,7 @@ import TextArea from './UI/TextArea'
 import { userInfoStore } from '../store/userStore'
 import Input from './UI/Input'
 import FlexRow from './UI/FlexRow'
-import PageTitle from './UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => {
   return (

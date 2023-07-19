@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import InfoPageMenuButton from '../../../components/InfoPage/Menu'
 import ModelInfoPage from '../../../components/ModelInfoPage'
 import Row from '../../../components/Row'
-import PageTitle from '../../../components/UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 import AppSettings from 'models/AppSettings'
 
 export async function getServerSideProps() {

@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { useRouter } from 'next/router'
 
 import useComponentState from '../../hooks/useComponentState'
-import PageTitle from '../../components/UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 import { IWorkers, setWorkers, userInfoStore } from '../../store/userStore'
 import Linker from '../../components/UI/Linker'
 import { sleep } from '../../utils/sleep'

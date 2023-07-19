@@ -10,7 +10,7 @@ import HeartIcon from './icons/HeartIcon'
 import TrashIcon from './icons/TrashIcon'
 import { Button } from './UI/Button'
 import Input from './UI/Input'
-import PageTitle from './UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 import TextButton from './UI/TextButton'
 
 const PromptsList = styled.div`

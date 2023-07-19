@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useStore } from 'statery'
 import RobotProfile from '../components/icons/RobotProfile'
 import SpinnerV2 from '../components/Spinner'
-import PageTitle from '../components/UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 import { userInfoStore } from '../store/userStore'
 import styles from '../styles/profile.module.css'
 

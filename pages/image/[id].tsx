@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 
-import PageTitle from '../../components/UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 import Spinner from '../../components/Spinner'
 import { getImageDetails, updateCompletedJob } from '../../utils/db'
 import RelatedImages from '../../components/ImagePage/RelatedImages'

@@ -4,7 +4,7 @@
 import { useCallback, useEffect, useReducer, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
-import PageTitle from 'components/UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 import { loadEditPrompt, SourceProcessing } from 'utils/promptUtils'
 import {
   clearCanvasStore,
@@ -19,7 +19,7 @@ import { appInfoStore } from 'store/appStore'
 import { countImagesToGenerate } from 'utils/imageUtils'
 import PromptInputSettings from 'models/PromptInputSettings'
 import { userInfoStore } from 'store/userStore'
-import TriggerDropdown from 'components/CreatePage/TriggerDropdown'
+import TriggerDropdown from 'app/_pages/CreatePage/TriggerDropdown'
 import DefaultPromptInput from 'models/DefaultPromptInput'
 import { logToConsole } from 'utils/debugTools'
 import {
@@ -30,14 +30,14 @@ import AlertTriangleIcon from 'components/icons/AlertTriangle'
 import clsx from 'clsx'
 import { kudosCostV2 } from 'utils/kudosCost'
 import { CreatePageMode } from 'utils/loadInputCache'
-import ActionPanel from 'components/CreatePage/ActionPanel'
+import ActionPanel from 'app/_pages/CreatePage/ActionPanel'
 import useComponentState from 'hooks/useComponentState'
 import { uploadInpaint } from 'controllers/imageDetailsCommon'
 import useLockedBody from 'hooks/useLockedBody'
 import { handleCreateClick } from './createPage.controller'
-import PromptInput from './PromptInput'
+import PromptInput from 'app/_pages/CreatePage/PromptInput'
 import { CreatePageQueryParams } from 'types/artbot'
-import OptionsPanel from './OptionsPanel'
+import OptionsPanel from 'app/_pages/CreatePage/OptionsPanel'
 
 const defaultState: DefaultPromptInput = new DefaultPromptInput()
 

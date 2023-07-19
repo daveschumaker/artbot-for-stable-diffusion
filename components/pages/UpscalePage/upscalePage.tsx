@@ -8,7 +8,7 @@ import SettingsIcon from 'components/icons/SettingsIcon'
 import SquarePlusIcon from 'components/icons/SquarePlusIcon'
 import TrashIcon from 'components/icons/TrashIcon'
 import { Button } from 'components/UI/Button'
-import PageTitle from 'components/UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 import Section from 'components/UI/Section'
 import { useCallback, useEffect, useReducer } from 'react'
 

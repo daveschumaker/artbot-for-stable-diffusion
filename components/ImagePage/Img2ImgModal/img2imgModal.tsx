@@ -14,7 +14,7 @@ import { SourceProcessing } from '../../../utils/promptUtils'
 import EyeIcon from '../../icons/EyeIcon'
 import { Button } from '../../UI/Button'
 import InteractiveModal from '../../UI/InteractiveModal/interactiveModal'
-import PageTitle from '../../UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 import styles from './img2imgModal.module.css'
 
 const Img2ImgModal = ({

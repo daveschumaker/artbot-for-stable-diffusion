@@ -16,7 +16,7 @@ import TrashIcon from '../../icons/TrashIcon'
 import MasonryLayout from '../../MasonryLayout'
 import FloatingActionButton from '../../UI/FloatingActionButton'
 import MenuButton from '../../UI/MenuButton'
-import PageTitle from '../../UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 import TextButton from '../../UI/TextButton'
 import useRelatedImageModal from './useRelatedImageModal'
 

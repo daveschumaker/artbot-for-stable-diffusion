@@ -6,7 +6,7 @@ import FeedbackForm from '../components/FeedbackForm'
 import Modal from '../components/Modal'
 import Linker from '../components/UI/Linker'
 
-import PageTitle from '../components/UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 import Text from '../components/UI/Text'
 import { useEffectOnce } from '../hooks/useEffectOnce'
 import styles from '../styles/about.module.css'

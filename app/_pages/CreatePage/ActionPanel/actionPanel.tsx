@@ -1,8 +1,7 @@
+import { IconSquarePlus, IconTrash } from '@tabler/icons-react'
 import FormErrorMessage from './FormErrorMessage'
 
 import { Button } from 'components/UI/Button'
-import TrashIcon from 'components/icons/TrashIcon'
-import SquarePlusIcon from 'components/icons/SquarePlusIcon'
 import Linker from 'components/UI/Linker'
 import Errors from 'utils/errors'
 
@@ -53,7 +52,7 @@ const ActionPanel = ({
               onClick={resetInput}
             >
               <span>
-                <TrashIcon />
+                <IconTrash />
               </span>
               <span>Reset all?</span>
             </Button>
@@ -64,7 +63,7 @@ const ActionPanel = ({
               disabled={disableSubmit || pending || areThereCriticalErrors()}
               width="100px"
             >
-              <span>{pending ? '' : <SquarePlusIcon />}</span>
+              <span>{pending ? '' : <IconSquarePlus />}</span>
               {pending ? 'Creating...' : 'Create'}
             </Button>
           </div>

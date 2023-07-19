@@ -1,6 +1,6 @@
 import SpinnerV2 from 'components/Spinner'
 import Linker from 'components/UI/Linker'
-import PageTitle from 'components/UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 import Section from 'components/UI/Section'
 import WorkerInfo from 'components/WorkerInfo'
 import ExternalLinkIcon from 'components/icons/ExternalLinkIcon'

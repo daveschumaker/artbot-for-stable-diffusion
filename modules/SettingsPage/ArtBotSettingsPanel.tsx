@@ -1,6 +1,6 @@
 import Section from 'components/UI/Section'
 import AlertDialogBox from '../../components/UI/AlertDialogBox'
-import PageTitle from 'components/UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 import SubSectionTitle from 'components/UI/SubSectionTitle'
 import ReactSwitch from 'react-switch'
 import AppSettings from 'models/AppSettings'

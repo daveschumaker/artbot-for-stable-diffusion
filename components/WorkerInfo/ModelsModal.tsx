@@ -1,6 +1,6 @@
 import InteractiveModal from 'components/UI/InteractiveModal/interactiveModal'
 import Linker from 'components/UI/Linker'
-import PageTitle from 'components/UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 
 const ModelsModal = ({
   handleClose = () => {},
