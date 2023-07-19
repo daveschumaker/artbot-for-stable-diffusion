@@ -9,7 +9,7 @@ import {
   FaqSyntax
 } from '../components/faqDetails'
 import PageTitle from '../components/UI/PageTitle'
-import Panel from '../components/UI/Panel'
+import Panel from 'app/_components/Panel'
 import { useEffectOnce } from '../hooks/useEffectOnce'
 
 const FaqPage = () => {

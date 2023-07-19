@@ -33,6 +33,13 @@ export enum Common {
   Empty = ''
 }
 
+export interface CreatePageQueryParams {
+  drawing?: string | null
+  i?: string | null
+  model?: string | null
+  prompt?: string | null
+}
+
 export interface GetSetPromptInput {
   input: DefaultPromptInput
   setInput: SetInput

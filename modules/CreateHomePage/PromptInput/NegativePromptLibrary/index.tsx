@@ -44,8 +44,6 @@ export default function NegativePromptLibrary({
         containerRef.current.offsetHeight + TITLE_INPUT_HEIGHT
       const modal = document.getElementById(modalId)
 
-      console.log(`offsetHeight`, offsetHeight)
-
       if (modal) {
         modal.style.height = `${offsetHeight}px`
       }

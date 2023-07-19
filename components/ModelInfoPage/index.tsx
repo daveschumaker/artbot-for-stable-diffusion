@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 
 import { trackEvent } from '../../api/telemetry'
-import Panel from '../../components/UI/Panel'
+import Panel from 'app/_components/Panel'
 import TextButton from '../../components/UI/TextButton'
 import useComponentState from '../../hooks/useComponentState'
 import { useEffectOnce } from '../../hooks/useEffectOnce'

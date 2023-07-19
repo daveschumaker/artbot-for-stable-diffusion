@@ -6,7 +6,6 @@ import { useRouter, useSearchParams } from 'next/navigation'
 
 import PageTitle from 'components/UI/PageTitle'
 import { loadEditPrompt, SourceProcessing } from 'utils/promptUtils'
-import OptionsPanel from 'components/CreatePage/OptionsPanel'
 import {
   clearCanvasStore,
   getBase64FromDraw,
@@ -37,6 +36,8 @@ import { uploadInpaint } from 'controllers/imageDetailsCommon'
 import useLockedBody from 'hooks/useLockedBody'
 import { handleCreateClick } from './createPage.controller'
 import PromptInput from './PromptInput'
+import { CreatePageQueryParams } from 'types/artbot'
+import OptionsPanel from './OptionsPanel'
 
 const defaultState: DefaultPromptInput = new DefaultPromptInput()
 
@@ -48,18 +49,11 @@ const CreatePage = ({ modelDetails = {} }: any) => {
   const { loggedIn } = userInfo
 
   const [build, setBuild] = useState(buildId)
-
   const [, setLocked] = useLockedBody(false)
+  const [query, setQuery] = useState<CreatePageQueryParams>({})
 
   const router = useRouter()
-  // Look at: https://nextjs.org/docs/app/api-reference/functions/use-search-params[]
   const searchParams = useSearchParams()
-  const query = {
-    drawing: searchParams?.get('drawing'),
-    i: searchParams?.get('i'),
-    model: searchParams?.get('model'),
-    prompt: searchParams?.get('prompt')
-  }
 
   const [pageLoaded, setPageLoaded] = useState(false)
   const [flaggedPromptError, setFlaggedPromptError] = useState(false)
@@ -413,6 +407,15 @@ const CreatePage = ({ modelDetails = {} }: any) => {
     // Step 9. Set pageLoaded so we can start error checking and auto saving input.
     setPageLoaded(true)
   }, [query, setLocked])
+
+  useEffect(() => {
+    setQuery({
+      drawing: searchParams?.get('drawing'),
+      i: searchParams?.get('i'),
+      model: searchParams?.get('model'),
+      prompt: searchParams?.get('prompt')
+    })
+  }, [searchParams])
 
   const triggerArray = [...(modelDetails[input?.models[0]]?.trigger ?? '')]
   const totalImagesRequested = countImagesToGenerate(input)

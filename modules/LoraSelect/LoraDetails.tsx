@@ -2,7 +2,7 @@
 import * as DOMPurify from 'dompurify'
 import { IconDownload, IconHeart, IconHeartFilled } from '@tabler/icons-react'
 import { Button } from 'components/UI/Button'
-import Panel from 'components/UI/Panel'
+import Panel from 'app/_components/Panel'
 import { useState } from 'react'
 
 const isFavorite = (loraName: string) => {

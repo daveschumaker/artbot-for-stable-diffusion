@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
-import Panel from '../../UI/Panel'
-import SectionTitle from '../../UI/SectionTitle'
-import AdvancedOptionsPanel from '../AdvancedOptionsPanel'
+import SectionTitle from 'components/UI/SectionTitle'
 import Img2ImgPanel from '../Img2ImgPanel'
-import Uploader from '../Uploader'
-import { clearCanvasStore, setI2iUploaded } from '../../../store/canvasStore'
-import { SourceProcessing } from '../../../utils/promptUtils'
-import WarningPanel from '../WarningPanel'
-import { nearestWholeMultiple } from '../../../utils/imageUtils'
-import Editor from '../../Fabric/Editor'
+import Uploader from 'app/_modules/Uploader'
+import { clearCanvasStore, setI2iUploaded } from 'store/canvasStore'
+import { SourceProcessing } from 'utils/promptUtils'
+import { nearestWholeMultiple } from 'utils/imageUtils'
 import Head from 'next/head'
 import styles from './component.module.css'
 import clsx from 'clsx'
+import AdvancedOptionsPanel from 'components/CreatePage/AdvancedOptionsPanel'
+import WarningPanel from 'components/CreatePage/WarningPanel'
+import Editor from 'components/Fabric/Editor'
+import Panel from 'app/_components/Panel'
 
 const removeImageCanvasData = {
   canvasData: null,

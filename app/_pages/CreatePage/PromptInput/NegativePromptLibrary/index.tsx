@@ -27,7 +27,6 @@ export default function NegativePromptLibrary({
       const result = await getPrompts({ promptType: PromptTypes.Negative })
 
       if (Array.isArray(result)) {
-        console.log(`result?`, result)
         setPrompts(result)
       }
     } catch (err) {}
@@ -43,8 +42,6 @@ export default function NegativePromptLibrary({
       const offsetHeight =
         containerRef.current.offsetHeight + TITLE_INPUT_HEIGHT
       const modal = document.getElementById(modalId)
-
-      console.log(`offsetHeight`, offsetHeight)
 
       if (modal) {
         modal.style.height = `${offsetHeight}px`

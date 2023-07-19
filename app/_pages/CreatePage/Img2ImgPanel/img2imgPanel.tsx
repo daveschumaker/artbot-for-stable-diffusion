@@ -1,16 +1,15 @@
 import React, { useCallback } from 'react'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 
-import { Button } from '../../UI/Button'
-import Image from '../../Image'
-import TrashIcon from '../../icons/TrashIcon'
-import { SourceProcessing } from '../../../utils/promptUtils'
-import Uploader from '../Uploader'
-import PhotoUpIcon from '../../icons/PhotoUpIcon'
+import { Button } from 'components/UI/Button'
+import Image from 'components/Image'
+import { SourceProcessing } from 'utils/promptUtils'
 import Head from 'next/head'
-import PromptInputSettings from '../../../models/PromptInputSettings'
+import PromptInputSettings from 'models/PromptInputSettings'
 import { setI2iUploaded } from 'store/canvasStore'
 import Section from 'components/UI/Section'
+import Uploader from 'components/CreatePage/Uploader'
+import { IconPhotoUp, IconTrash } from '@tabler/icons-react'
 
 interface Props {
   handleChangeInput: any
@@ -94,11 +93,11 @@ const Img2ImgPanel = ({ input, saveForInpaint, setInput }: Props) => {
                   localStorage.removeItem('img2img_base64')
                 }}
               >
-                <TrashIcon />
+                <IconTrash />
                 Clear
               </Button>
               <Button onClick={handleInpaintClick}>
-                <PhotoUpIcon />
+                <IconPhotoUp />
                 Use Inpaint
               </Button>
             </div>

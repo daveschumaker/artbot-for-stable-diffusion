@@ -5,6 +5,7 @@ import '../styles/globals.css'
 import AppInit from './_modules/AppInit'
 import SlidingMenu from './_modules/SlidingMenu'
 import FixedMenu from './_modules/FixedMenu'
+import ModalProvider from './_modules/ModalProvider'
 
 export default function RootLayout({
   // Layouts must accept a children prop.
@@ -20,10 +21,12 @@ export default function RootLayout({
         <HeaderNav />
         <SlidingMenu />
         <FixedMenu />
-        <ContentWrapper>
-          <div>HELLO!</div>
-          {children}
-        </ContentWrapper>
+        <ModalProvider>
+          <ContentWrapper>
+            {children}
+            <div>HELLO!</div>
+          </ContentWrapper>
+        </ModalProvider>
       </body>
     </html>
   )

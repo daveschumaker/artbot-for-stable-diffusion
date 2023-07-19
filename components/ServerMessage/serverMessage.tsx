@@ -1,6 +1,6 @@
 import { useStore } from 'statery'
 import { appInfoStore } from '../../store/appStore'
-import Panel from '../UI/Panel'
+import Panel from 'app/_components/Panel'
 
 const ServerMessage = () => {
   const appState = useStore(appInfoStore)
