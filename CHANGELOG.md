@@ -1,3 +1,7 @@
+# 2023.07.19
+
+- Fix: Attempt to fix issue where pending jobs that 404 are not removed from the job queue and requests are still repeatedly sent to the AI Horde.
+
 # 2023.07.18
 
 - Fix: Super strange bug. Image size wasn't respected when hires fix was set to false. Thanks for reporting on Discord, Anonymous Derpling (and nice find)!

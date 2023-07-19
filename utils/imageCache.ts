@@ -36,6 +36,7 @@ import { hasPromptMatrix, promptMatrix } from './promptUtils'
 import { sleep } from './sleep'
 import { logToConsole } from './debugTools'
 import {
+  deletePendingJob,
   getAllPendingJobs,
   updateAllPendingJobsV2,
   updatePendingJobId,
@@ -65,6 +66,7 @@ export const checkImageJob = async (jobId: string): Promise<CheckImage> => {
     const { success, status = '' } = data
 
     if (status === 'NOT_FOUND') {
+      deletePendingJob(jobId)
       await deletePendingJobFromDb(jobId)
       return {
         success: false,
@@ -551,6 +553,40 @@ export const checkCurrentJob = async (imageDetails: any) => {
   // await updatePendingJobInDexie(jobDetails.id, Object.assign({}, jobDetails))
 
   let imgDetailsFromApi: FinishedImageResponse | FinishedImageResponseError
+  if ('status' in checkJobResult && checkJobResult.status === 'NOT_FOUND') {
+    const jobTimestamp = imageDetails.timestamp / 1000
+    const currentTimestamp = Date.now() / 1000
+
+    // Time in seconds. This handles any sort of initial request delay.
+    if (currentTimestamp - jobTimestamp > 60) {
+      updatePendingJobV2(
+        Object.assign({}, jobDetails, {
+          jobStatus: JobStatus.Error,
+          errorMessage:
+            'Job has gone stale and has been removed from the Stable Horde backend. Retry?'
+        })
+      )
+      await updatePendingJobInDexie(
+        imageDetails.id,
+        Object.assign({}, jobDetails, {
+          jobStatus: JobStatus.Error,
+          errorMessage:
+            'Job has gone stale and has been removed from the Stable Horde backend. Retry?'
+        })
+      )
+
+      return {
+        success: false,
+        status: 'NOT_FOUND'
+      }
+    }
+
+    return {
+      success: false,
+      status: 'NOT_FOUND'
+    }
+  }
+
   if (checkJobResult?.done) {
     imgDetailsFromApi = await getImage(jobId)
 
@@ -577,43 +613,6 @@ export const checkCurrentJob = async (imageDetails: any) => {
               'The worker GPU processing this request encountered an error. Retry?'
           })
         )
-      }
-
-      return {
-        success: false,
-        status: 'NOT_FOUND'
-      }
-    }
-
-    if (
-      'status' in imgDetailsFromApi &&
-      imgDetailsFromApi.status === 'NOT_FOUND'
-    ) {
-      const jobTimestamp = imageDetails.timestamp / 1000
-      const currentTimestamp = Date.now() / 1000
-
-      // Time in seconds. This handles any sort of initial request delay.
-      if (currentTimestamp - jobTimestamp > 60) {
-        updatePendingJobV2(
-          Object.assign({}, jobDetails, {
-            jobStatus: JobStatus.Error,
-            errorMessage:
-              'Job has gone stale and has been removed from the Stable Horde backend. Retry?'
-          })
-        )
-        await updatePendingJobInDexie(
-          imageDetails.id,
-          Object.assign({}, jobDetails, {
-            jobStatus: JobStatus.Error,
-            errorMessage:
-              'Job has gone stale and has been removed from the Stable Horde backend. Retry?'
-          })
-        )
-
-        return {
-          success: false,
-          status: 'NOT_FOUND'
-        }
       }
 
       return {
