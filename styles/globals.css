@@ -17,6 +17,7 @@
   --light-shade: #efedef;
   --input-text: #282828;
   --main-color: #14b8a6;
+  --overlay-background: #ffffff;
 
   /* SIZES */
   --fixedSideBar-width: 220px;
@@ -42,6 +43,7 @@
     --input-background: rgb(42, 48, 60);
     --input-color: #e1e1e1;
     --input-text: #e1e1e1;
+    --overlay-background: #000000;
   }
 }
 

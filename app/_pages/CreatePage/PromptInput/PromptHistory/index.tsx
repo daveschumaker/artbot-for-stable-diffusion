@@ -11,7 +11,7 @@ import {
 } from '@tabler/icons-react'
 import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import styles from './component.module.css'
-import FlexRow from 'components/FlexRow'
+import FlexRow from 'app/_components/FlexRow'
 
 const TITLE_INPUT_HEIGHT = 120
 

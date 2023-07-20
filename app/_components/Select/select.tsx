@@ -21,6 +21,7 @@ const SelectComponent = (props: SelectComponentProps) => {
       borderColor: `var(--input-text)`,
       color: `var(--input-text)`,
       fontSize: '16px',
+      width: '100%',
       zIndex: `var(--zIndex-default)`
     }),
     input: (provided: CSSProperties) => ({

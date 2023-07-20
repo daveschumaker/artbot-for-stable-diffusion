@@ -10,6 +10,8 @@ export const modelStore = makeStore<ModelStore>({
 })
 
 export const setAvailableModels = (models: Array<any> = []) => {
+  console.log(`oi boy!`, models)
+
   const modelsMap: any = {}
 
   if (!Array.isArray(models)) return

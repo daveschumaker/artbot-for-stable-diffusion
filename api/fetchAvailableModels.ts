@@ -75,7 +75,7 @@ export const buildModelAvailability = async () => {
 
     if (validCount || currentModelCount === 0) {
       // @ts-ignore
-      setAvailableModels(availableModelsMap)
+      setAvailableModels(modelAvailability)
     }
   }
 }

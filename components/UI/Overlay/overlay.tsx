@@ -7,19 +7,20 @@ export interface IOverlayProps {
 }
 
 const StyledOverlay = styled.div<IOverlayProps>`
+  background-color: black;
+  bottom: 0;
+  left: 0;
   opacity: 0.8;
   position: fixed;
-  top: 0;
   right: 0;
-  left: 0;
-  bottom: 0;
+  top: 0;
 `
 
 const Overlay = (props: IOverlayProps) => {
   const {
     disableBackground = false,
     handleClose = () => {},
-    zIndex = 30
+    zIndex = 'var(--zIndex-navBar)'
   } = props
   return (
     <StyledOverlay

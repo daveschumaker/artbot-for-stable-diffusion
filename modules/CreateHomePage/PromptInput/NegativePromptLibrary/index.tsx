@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react'
 import styles from './component.module.css'
 import { Button } from 'components/UI/Button'
 import { IconCopy, IconTrash } from '@tabler/icons-react'
-import FlexRow from 'components/FlexRow'
+import FlexRow from 'app/_components/FlexRow'
 
 const TITLE_INPUT_HEIGHT = 60
 

@@ -55,7 +55,7 @@ import ReplacementFilterToggle from './ReplacementFilterToggle'
 import LoraSelect from 'modules/LoraSelect'
 import FlexibleRow from 'app/_components/FlexibleRow'
 import FlexibleUnit from 'app/_components/FlexibleUnit'
-import SelectModel from 'modules/AdvancedOptions/SelectModel'
+import SelectModel from 'app/_modules/AdvancedOptionsPanel/SelectModel'
 import SelectModelDetails from 'modules/AdvancedOptions/ModelDetails/modelDetails'
 import ImageOrientationOptions from 'modules/AdvancedOptions/ImageOrientationOptions'
 

@@ -12,7 +12,6 @@
   --dark-shade: #244975;
 
   /* this is equivalent to props.theme.border on original ArtBot */
-  --overlay-background: #ffffff;
 
   --sticky-footer-padding: 80px;
   --sticky-footer-margin: -80px;
@@ -31,8 +30,6 @@
     --text-shade: #f3f3ef;
     --link-text: #5eedde;
     --link-active: #17cfbb;
-
-    --overlay-background: #00000;
 
     --nav-link-normal: #ffffff;
     --nav-link-active: #14b8a6;

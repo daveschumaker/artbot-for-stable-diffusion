@@ -14,6 +14,9 @@ export function useAvailableModels({
 }) {
   const { availableModels, modelDetails } = useStore(modelStore)
 
+  console.log(`availableModels`, availableModels)
+  console.log(`modelDetails`, modelDetails)
+
   const filteredModels = ImageModels.getValidModels({
     availableModels,
     modelDetails,

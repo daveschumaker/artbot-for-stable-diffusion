@@ -42,59 +42,54 @@ const SelectModel = ({ input, setInput, modelerOptions }: IProps) => {
           </TooltipComponent>
         </TextTooltipRow>
       </SubSectionTitle>
-      <MaxWidth
+      <Select
+        menuPlacement={'top'}
+        //@ts-ignore
+        options={modelerOptions(input)}
+        onChange={(obj: { value: string; label: string }) => {
+          if (router.query.model) {
+            router.push(
+              {
+                pathname: '/'
+              },
+              undefined,
+              { scroll: false }
+            )
+          }
+
+          if (obj.value === 'stable_diffusion_2.0') {
+            setInput({
+              models: [obj.value],
+              sampler: 'dpmsolver'
+            })
+
+            PromptInputSettings.set('models', [obj.value])
+            PromptInputSettings.set('sampler', 'dpmsolver')
+          } else if (
+            input.sampler === 'dpmsolver' &&
+            obj.value !== 'stable_diffusion_2.0'
+          ) {
+            setInput({ models: [obj.value], sampler: 'k_euler_a' })
+            PromptInputSettings.set('models', [obj.value])
+            PromptInputSettings.set('sampler', 'k_euler_a')
+          } else {
+            PromptInputSettings.set('models', [obj.value])
+            setInput({ models: [obj.value] })
+          }
+        }}
         // @ts-ignore
-        width="480px"
-      >
-        <Select
-          menuPlacement={'top'}
-          //@ts-ignore
-          options={modelerOptions(input)}
-          onChange={(obj: { value: string; label: string }) => {
-            if (router.query.model) {
-              router.push(
-                {
-                  pathname: '/'
-                },
-                undefined,
-                { scroll: false }
-              )
-            }
-
-            if (obj.value === 'stable_diffusion_2.0') {
-              setInput({
-                models: [obj.value],
-                sampler: 'dpmsolver'
-              })
-
-              PromptInputSettings.set('models', [obj.value])
-              PromptInputSettings.set('sampler', 'dpmsolver')
-            } else if (
-              input.sampler === 'dpmsolver' &&
-              obj.value !== 'stable_diffusion_2.0'
-            ) {
-              setInput({ models: [obj.value], sampler: 'k_euler_a' })
-              PromptInputSettings.set('models', [obj.value])
-              PromptInputSettings.set('sampler', 'k_euler_a')
-            } else {
-              PromptInputSettings.set('models', [obj.value])
-              setInput({ models: [obj.value] })
-            }
-          }}
-          // @ts-ignore
-          value={modelsValue}
-          isSearchable={true}
-        />
-        <div className="mt-2 text-xs">
-          <Linker
-            href={`/info/models${
-              input.models[0] !== 'random' ? `#${input.models[0]}` : ''
-            }`}
-          >
-            [ View detailed model info ]
-          </Linker>
-        </div>
-      </MaxWidth>
+        value={modelsValue}
+        isSearchable={true}
+      />
+      <div className="mt-2 text-xs">
+        <Linker
+          href={`/info/models${
+            input.models[0] !== 'random' ? `#${input.models[0]}` : ''
+          }`}
+        >
+          [ View detailed model info ]
+        </Linker>
+      </div>
       {availableModels[input.models[0]]?.count <= MODEL_LIMITED_BY_WORKERS && (
         <div className="mb-2">
           <ModelWarning>

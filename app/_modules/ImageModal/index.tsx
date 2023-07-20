@@ -11,7 +11,6 @@ import { useSwipeable } from 'react-swipeable'
 
 import styles from './imageModal.module.css'
 import clsx from 'clsx'
-import { setImageDetailsModalOpen } from 'store/appStore'
 import useLockedBody from 'hooks/useLockedBody'
 
 interface Props {
@@ -102,10 +101,7 @@ const ImageModal = ({
   useEffect(() => {
     setLocked(true)
 
-    // setImageDetailsModalOpen(true)
-
     return () => {
-      setImageDetailsModalOpen(false)
       setLocked(false)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -116,10 +112,7 @@ const ImageModal = ({
       <Overlay handleClose={onClose} />
       <div
         id="image-modal"
-        className={clsx(
-          styles['image-modal'],
-          'opacity-100 rounded md:border-[2px] p-2 flex flex-col items-start fixed left-2 md:left-4 right-2 md:right-4 z-[100] max-w-[1600px] m-auto overflow-y-overlay bg-[#f2f2f2] dark:bg-[#222222]'
-        )}
+        className={clsx(styles['image-modal'])}
         {...handlers}
         style={{ maxWidth: '1280px' }}
       >

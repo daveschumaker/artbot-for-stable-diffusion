@@ -20,7 +20,7 @@ import { useModal } from '@ebay/nice-modal-react'
 import PromptHistoryModal from './PromptHistoryModal'
 import NegativePromptLibraryModal from './NegativePromptLibraryModal'
 import { saveNegativePrompt } from '_db/prompts'
-import FlexRow from 'components/FlexRow'
+import FlexRow from 'app/_components/FlexRow'
 import TextArea from 'components/UI/TextArea'
 
 export default function PromptInput({ input, setInput }: GetSetPromptInput) {
