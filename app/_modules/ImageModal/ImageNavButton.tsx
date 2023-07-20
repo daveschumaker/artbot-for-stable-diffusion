@@ -1,6 +1,6 @@
 import styled from 'styled-components'
-import ChevronLeftIcon from '../icons/ChevronLeftIcon'
-import ChevronRightIcon from '../icons/ChevronRightIcon'
+import ChevronLeftIcon from 'components/icons/ChevronLeftIcon'
+import ChevronRightIcon from 'components/icons/ChevronRightIcon'
 
 interface INavButtonProps {
   action: string

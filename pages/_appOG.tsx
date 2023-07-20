@@ -33,7 +33,6 @@ import { initPendingJobService } from 'controllers/pendingJobsController'
 import ErrorComponent, { logErrorInComponent } from 'components/ErrorComponent'
 import ServerUpdateComponent from 'components/ServerUpdateComponent'
 import { useWindowSize } from 'hooks/useWindowSize'
-import { ImagePreviewProvider } from 'modules/ImagePreviewProvider'
 import AppInit from 'modules/AppInit'
 
 initBrowserTab()
@@ -199,45 +198,44 @@ function MyApp({ Component, pageProps }: MyAppProps) {
         <link rel="icon" type="image/x-icon" href="/artbot/favicon.ico"></link>
       </Head>
       <AppInit />
-      <ImagePreviewProvider>
-        <PollController />
-        <ContentWrapper>
-          <div className="absolute mx-auto w-full md:pb-[0] top-[48px] md:top-[44px] md:relative px-[8px]">
-            <ToastContainer
-              style={{ marginTop: `calc(env(safe-area-inset-top))` }}
-            />
-            {showServerUpdateModal && <ServerUpdateModal />}
-            <ServerMessage />
-            {showServerUpdateComponent && <ServerUpdateComponent />}
-            {unsupportedBrowser && (
-              <div className="px-2 py-1 mb-2 text-sm text-red-500 border-2 rounded border-rose-600">
-                <div className="mb-[8px]">
-                  <strong>WARNING:</strong> The current state of this web
-                  browser does not support the IndexedDb browser API.
-                </div>
-                <div className="mb-[8px]">
-                  Due to this, ArtBot will not work. (This commonly happens when
-                  using Firefox&apos;s private browsing mode.) Please try using
-                  a different browser or exit private mode in Firefox.
-                </div>
+      <PollController />
+      <ContentWrapper>
+        <div className="absolute mx-auto w-full md:pb-[0] top-[48px] md:top-[44px] md:relative px-[8px]">
+          <ToastContainer
+            style={{ marginTop: `calc(env(safe-area-inset-top))` }}
+          />
+          {showServerUpdateModal && <ServerUpdateModal />}
+          <ServerMessage />
+          {showServerUpdateComponent && <ServerUpdateComponent />}
+          {unsupportedBrowser && (
+            <div className="px-2 py-1 mb-2 text-sm text-red-500 border-2 rounded border-rose-600">
+              <div className="mb-[8px]">
+                <strong>WARNING:</strong> The current state of this web browser
+                does not support the IndexedDb browser API.
               </div>
-            )}
-            {!stableHordeApiOnline && (
-              <div className="px-2 py-1 mb-2 text-sm text-red-500 border-2 rounded border-rose-600">
-                <strong>Warning:</strong> ArtBot is currently unable to connect
-                to the Stable Horde API backend as it is currently unavailable.
-                Please try again soon or{' '}
-                <Linker
-                  href="https://discord.gg/3DxrhksKzn"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  check Discord
-                </Linker>{' '}
-                for more information.
+              <div className="mb-[8px]">
+                Due to this, ArtBot will not work. (This commonly happens when
+                using Firefox&apos;s private browsing mode.) Please try using a
+                different browser or exit private mode in Firefox.
               </div>
-            )}
-            {/* <div
+            </div>
+          )}
+          {!stableHordeApiOnline && (
+            <div className="px-2 py-1 mb-2 text-sm text-red-500 border-2 rounded border-rose-600">
+              <strong>Warning:</strong> ArtBot is currently unable to connect to
+              the Stable Horde API backend as it is currently unavailable.
+              Please try again soon or{' '}
+              <Linker
+                href="https://discord.gg/3DxrhksKzn"
+                target="_blank"
+                rel="noreferrer"
+              >
+                check Discord
+              </Linker>{' '}
+              for more information.
+            </div>
+          )}
+          {/* <div
             id="global-server-message"
             className="px-2 py-1 mb-2 text-sm text-red-500 border-2 rounded border-rose-600"
           >
@@ -256,31 +254,30 @@ function MyApp({ Component, pageProps }: MyAppProps) {
               Updated: 5:23 AM Thursday, February 23, 2023 UTC
             </div>
           </div> */}
-            <ErrorBoundary
-              FallbackComponent={ErrorComponent}
-              onError={logErrorInComponent}
-            >
-              <div className="pb-[72px] adCol:p-1">
-                <Component {...pageProps} />
+          <ErrorBoundary
+            FallbackComponent={ErrorComponent}
+            onError={logErrorInComponent}
+          >
+            <div className="pb-[72px] adCol:p-1">
+              <Component {...pageProps} />
+            </div>
+          </ErrorBoundary>
+          <Footer />
+          {size &&
+            // @ts-ignore
+            size.width >= 890 &&
+            !imageDetailsModalOpen && (
+              <div className="fixed right-[6px] bottom-[2px] max-w-[156px]">
+                <AdContainer
+                  code="CWYD62QI"
+                  placement="tinybotsnet"
+                  key={router.asPath}
+                  minSize={890}
+                />
               </div>
-            </ErrorBoundary>
-            <Footer />
-            {size &&
-              // @ts-ignore
-              size.width >= 890 &&
-              !imageDetailsModalOpen && (
-                <div className="fixed right-[6px] bottom-[2px] max-w-[156px]">
-                  <AdContainer
-                    code="CWYD62QI"
-                    placement="tinybotsnet"
-                    key={router.asPath}
-                    minSize={890}
-                  />
-                </div>
-              )}
-          </div>
-        </ContentWrapper>
-      </ImagePreviewProvider>
+            )}
+        </div>
+      </ContentWrapper>
       <MobileFooter />
     </>
   )

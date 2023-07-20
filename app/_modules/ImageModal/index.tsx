@@ -1,13 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
+import { useCallback, useEffect, useState } from 'react'
+import NiceModal, { useModal } from '@ebay/nice-modal-react'
+
 import Overlay from 'components/UI/Overlay'
-import { useEffect, useState } from 'react'
 import ImageDetails from 'components/ImageDetails'
 import { IImageDetails } from 'types'
 import ImageNavigation from './imageNavigation'
 import CloseIcon from 'components/icons/CloseIcon'
 import { useSwipeable } from 'react-swipeable'
 
-import styles from './imageModalV2.module.css'
+import styles from './imageModal.module.css'
 import clsx from 'clsx'
 import { setImageDetailsModalOpen } from 'store/appStore'
 import useLockedBody from 'hooks/useLockedBody'
@@ -23,9 +25,9 @@ interface Props {
   onDeleteCallback?: () => any
 }
 
-const ImageModalV2 = ({
+const ImageModal = ({
   disableNav = false,
-  handleClose,
+  handleClose = () => {},
   handleDeleteImageClick = () => {},
   handleLoadNext = () => {},
   handleLoadPrev = () => {},
@@ -33,6 +35,7 @@ const ImageModalV2 = ({
   onDeleteCallback = () => {},
   imageDetails
 }: Props) => {
+  const modal = useModal()
   const [, setLocked] = useLockedBody(false)
   const handlers = useSwipeable({
     onSwipedLeft: () => {
@@ -49,9 +52,14 @@ const ImageModalV2 = ({
     delta: 25
   })
 
+  const onClose = useCallback(() => {
+    handleClose()
+    modal.remove()
+  }, [handleClose, modal])
+
   const closeSwipe = useSwipeable({
     onSwipedDown: () => {
-      handleClose()
+      onClose()
     },
     preventScrollOnSwipe: true,
     swipeDuration: 250,
@@ -67,12 +75,15 @@ const ImageModalV2 = ({
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
+      e.preventDefault()
+      e.stopImmediatePropagation()
+
       if (e.key === 'Escape') {
         if (showTiles) {
           return
         }
 
-        handleClose()
+        onClose()
       }
 
       if (e.key === 'ArrowLeft') {
@@ -86,21 +97,23 @@ const ImageModalV2 = ({
 
     window.addEventListener('keydown', handleKeyPress)
     return () => window.removeEventListener('keydown', handleKeyPress)
-  }, [handleClose, handleLoadNext, handleLoadPrev, showTiles])
+  }, [onClose, handleLoadNext, handleLoadPrev, showTiles])
 
   useEffect(() => {
     setLocked(true)
-    setImageDetailsModalOpen(true)
+
+    // setImageDetailsModalOpen(true)
 
     return () => {
       setImageDetailsModalOpen(false)
       setLocked(false)
     }
-  })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <>
-      <Overlay handleClose={handleClose} />
+      <Overlay handleClose={onClose} />
       <div
         id="image-modal"
         className={clsx(
@@ -114,7 +127,7 @@ const ImageModalV2 = ({
           className="flex flex-row justify-end w-full pr-2 mb-2"
           {...closeSwipe}
         >
-          <div className={styles['close-btn']} onClick={handleClose}>
+          <div className={styles['close-btn']} onClick={onClose}>
             <CloseIcon size={28} />
           </div>
         </div>
@@ -129,7 +142,7 @@ const ImageModalV2 = ({
           className={styles['scrollable-content']}
         >
           <ImageDetails
-            handleClose={handleClose}
+            handleClose={onClose}
             handleDeleteImageClick={() => {
               onDeleteCallback()
               handleDeleteImageClick()
@@ -145,4 +158,4 @@ const ImageModalV2 = ({
   )
 }
 
-export default ImageModalV2
+export default NiceModal.create(ImageModal)

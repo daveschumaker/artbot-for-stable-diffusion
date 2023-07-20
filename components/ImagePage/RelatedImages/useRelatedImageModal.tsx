@@ -1,9 +1,12 @@
+import { useModal } from '@ebay/nice-modal-react'
+import ImageModal from 'app/_modules/ImageModal'
 import useComponentState from 'hooks/useComponentState'
-import { useImagePreview } from 'modules/ImagePreviewProvider'
+// import { useImagePreview } from 'modules/ImagePreviewProvider'
 import { useCallback, useEffect, useState } from 'react'
 
 const useRelatedImageModal = () => {
-  const { setImageData, showImagePreviewModal } = useImagePreview()
+  const imagePreviewModal = useModal(ImageModal)
+  // const { setImageData, showImagePreviewModal } = useImagePreview()
   const [componentState, setComponentState] = useComponentState({
     imagesList: null,
     imgIdx: null,
@@ -61,9 +64,9 @@ const useRelatedImageModal = () => {
       imgIdx: newIdx
     })
 
-    const imageDetails = componentState.imagesList[newIdx]
-    setImageData(imageDetails)
-  }, [componentState, setComponentState, setImageData])
+    // const imageDetails = componentState.imagesList[newIdx]
+    // setImageData(imageDetails)
+  }, [componentState, setComponentState])
 
   const handleLoadPrev = useCallback(() => {
     if (componentState.imgIdx === null) {
@@ -85,15 +88,15 @@ const useRelatedImageModal = () => {
       imgIdx: newIdx
     })
 
-    const imageDetails = componentState.imagesList[newIdx]
-    setImageData(imageDetails)
-  }, [componentState, setComponentState, setImageData])
+    // const imageDetails = componentState.imagesList[newIdx]
+    // setImageData(imageDetails)
+  }, [componentState, setComponentState])
 
   const triggerModal = useCallback(
     () => {
       const imageDetails = componentState.imagesList[componentState.imgIdx]
 
-      showImagePreviewModal({
+      imagePreviewModal.show({
         disableNav: false,
         imageDetails,
         handleLoadNext,
@@ -118,7 +121,7 @@ const useRelatedImageModal = () => {
       })
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [componentState, showImagePreviewModal]
+    [componentState, imagePreviewModal]
   )
 
   useEffect(() => {

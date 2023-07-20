@@ -1,5 +1,5 @@
 import ImageNavButton from './ImageNavButton'
-import styles from './imageModalV2.module.css'
+import styles from './imageModal.module.css'
 
 const ImageNavigation = ({
   handleLoadNext = () => {},

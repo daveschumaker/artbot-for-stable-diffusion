@@ -380,7 +380,7 @@ const ImageDetails = ({
 }
 
 function areEqual(prevProps: any, nextProps: any) {
-  if (prevProps.imageDetails.jobId !== nextProps.imageDetails.jobId) {
+  if (prevProps?.imageDetails?.jobId !== nextProps?.imageDetails?.jobId) {
     return false
   }
 

@@ -1,9 +1,0 @@
-.mobile-hide-text {
-  display: none;
-}
-
-@media (min-width: 718px) {
-  .mobile-hide-text {
-    display: inline-block;
-  }
-}

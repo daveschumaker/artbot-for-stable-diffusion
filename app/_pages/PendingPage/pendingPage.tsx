@@ -40,7 +40,7 @@ import {
   getAllPendingJobs
   // syncPendingJobsFromDb
 } from 'controllers/pendingJobsCache'
-import usePendingImageModal from './usePendingImageModal'
+// import usePendingImageModal from './usePendingImageModal'
 import PendingItem from 'modules/PendingItem'
 
 const MenuSeparator = styled.div`
@@ -59,7 +59,7 @@ const PendingPage = () => {
 
   const [pendingImages, setPendingImages] = useState([])
 
-  const [showImageModal] = usePendingImageModal()
+  // const [showImageModal] = usePendingImageModal()
 
   const initPageLoad = async () => {
     // @ts-ignore
@@ -146,7 +146,8 @@ const PendingPage = () => {
     processPending()
 
   const handleShowModalClick = (jobId: string) => {
-    showImageModal(jobId)
+    // showImageModal(jobId)
+    return jobId
   }
 
   const inProgress = [].concat(processing, queued, waiting)

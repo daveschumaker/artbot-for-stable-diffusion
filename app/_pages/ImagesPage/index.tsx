@@ -9,6 +9,8 @@ import Link from 'next/link'
 import LazyLoad from 'react-lazyload'
 import styled from 'styled-components'
 
+import useGalleryImageModal from 'app/_pages/ImagesPage/useGalleryImageModal'
+
 import PageTitle from 'app/_components/PageTitle'
 import Spinner from 'components/Spinner'
 import {
@@ -45,8 +47,6 @@ import FloatingActionButton from 'components/UI/FloatingActionButton'
 import TrashIcon from 'components/icons/TrashIcon'
 import { useStore } from 'statery'
 import { appInfoStore } from 'store/appStore'
-import useGalleryImageModal from 'components/ImagesPage/useGalleryImageModal'
-import { useImagePreview } from 'modules/ImagePreviewProvider'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import isMobile from 'is-mobile'
 import { parseQueryString } from 'utils/appUtils'
@@ -100,7 +100,7 @@ const ButtonContainer = styled.div`
 const ImagesPage = () => {
   console.log(`We rendering?`)
   const LIMIT = AppSettings.get('imagesPerPage') || 50
-  const { isImageModalOpen } = useImagePreview()
+  const [showImageModal, isImageModalOpen] = useGalleryImageModal()
 
   const handlers = useSwipeable({
     onSwipedLeft: () => {
@@ -155,8 +155,6 @@ const ImagesPage = () => {
     currentFilterImageIndex: 0,
     rawTotalImages: 0
   })
-
-  const [showImageModal] = useGalleryImageModal()
 
   const getImageCount = useCallback(async () => {
     let count
@@ -364,7 +362,7 @@ const ImagesPage = () => {
 
         showImageModal({
           jobId,
-          imagesList: componentState.images,
+          images: componentState.images,
           fetchImages
         })
       }

@@ -1,11 +1,13 @@
+import { useModal } from '@ebay/nice-modal-react'
+import ImageModal from 'app/_modules/ImageModal'
 import { getAllPendingJobs, getPendingJob } from 'controllers/pendingJobsCache'
 import useComponentState from 'hooks/useComponentState'
-import { useImagePreview } from 'modules/ImagePreviewProvider'
 import { useCallback, useEffect } from 'react'
 import { JobStatus } from 'types'
 
 const usePendingImageModal = () => {
-  const { setImageData, showImagePreviewModal } = useImagePreview()
+  const imagePreviewModal = useModal(ImageModal)
+  // const { setImageData, showImagePreviewModal } = useImagePreview()
 
   const [componentState, setComponentState] = useComponentState({
     imgIdx: null,
@@ -42,8 +44,16 @@ const usePendingImageModal = () => {
       imgIdx: newIdx
     })
 
-    setImageData(getPendingJob(jobId))
-  }, [componentState, setComponentState, setImageData])
+    // setImageData(getPendingJob(jobId))
+    imagePreviewModal.show({
+      imageDetails: getPendingJob(jobId)
+    })
+  }, [
+    componentState.imgIdx,
+    componentState.pendingImagesList,
+    imagePreviewModal,
+    setComponentState
+  ])
 
   const handleLoadPrev = useCallback(() => {
     if (componentState.imgIdx === null) {
@@ -64,11 +74,19 @@ const usePendingImageModal = () => {
       jobId,
       imgIdx: newIdx
     })
-    setImageData(getPendingJob(jobId))
-  }, [componentState, setComponentState, setImageData])
+    // setImageData(getPendingJob(jobId))
+    imagePreviewModal.show({
+      imageDetails: getPendingJob(jobId)
+    })
+  }, [
+    componentState.imgIdx,
+    componentState.pendingImagesList,
+    imagePreviewModal,
+    setComponentState
+  ])
 
   const triggerModal = useCallback(() => {
-    showImagePreviewModal({
+    imagePreviewModal.show({
       disableNav: false,
       imageDetails: getPendingJob(componentState.jobId),
       handleLoadNext,
@@ -92,7 +110,7 @@ const usePendingImageModal = () => {
     })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [componentState.jobId, showImagePreviewModal])
+  }, [componentState.jobId, imagePreviewModal])
 
   useEffect(() => {
     if (componentState.pendingImagesList) {
