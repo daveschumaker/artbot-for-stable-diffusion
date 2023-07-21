@@ -11,19 +11,13 @@ export default function HomePage() {
     <HomePageContentWrapper>
       <FlexRow style={{ justifyContent: 'center', width: '100%' }}>
         <h1 className={styles.HeroTitle}>
-          Welcome to <span style={{ color: `var(--main-color)` }}>ArtBot!</span>
+          Welcome to{' '}
+          <span style={{ color: `var(--main-color)`, fontWeight: '700' }}>
+            ArtBot!
+          </span>
         </h1>
       </FlexRow>
-      <div
-        style={{
-          fontSize: '20px',
-          lineHeight: '24px',
-          margin: '0 auto 12px auto',
-          maxWidth: '980px',
-          textAlign: 'center',
-          width: '100%'
-        }}
-      >
+      <div className={styles.Blurb}>
         ArtBot is your gateway to experiment with the wonderful world of
         generative AI art using the power of the <strong>AI Horde</strong>, a
         distributed open source network of GPUs running{' '}

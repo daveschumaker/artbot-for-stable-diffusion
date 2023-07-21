@@ -1,13 +1,27 @@
 .HeroTitle {
-  font-size: 84px;
+  font-size: 64px;
   line-height: 80px;
   margin: 0;
   margin-bottom: 12px;
+}
+
+.Blurb {
+  font-size: 18px;
+  line-height: 22px;
+  margin: 0 auto 12px auto;
+  max-width: 980px;
+  text-align: center;
+  width: 100%;
 }
 
 @media (min-width: 640px) {
   .HeroTitle {
     font-size: 108px;
     line-height: 100px;
+  }
+
+  .Blurb {
+    font-size: 20px;
+    line-height: 24px;
   }
 }

@@ -1,18 +1,25 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import styles from './typewriter.module.css'
 
+interface TypewriterProps {
+  cursor: string
+  eraseDelay: number
+  eraseSpeed: number
+  onEraseDelay: () => any
+  onEraseDone: () => any
+  text: string
+  typingDelay: number
+}
 function Typewriter({
   text,
-  speed,
-  eraseSpeed,
-  cursor,
-  typingDelay,
-  eraseDelay,
-  onEraseDone,
-  onEraseDelay,
+  eraseSpeed = 400,
+  cursor = '|',
+  typingDelay = 2500,
+  eraseDelay = 5000,
+  onEraseDone = () => {},
+  onEraseDelay = () => {},
   ...otherProps
-}) {
+}: Partial<TypewriterProps>) {
   const [currentText, setCurrentText] = React.useState('')
   const [__timeout, set__Timeout] = React.useState(null)
   const [isTyping, setIsTyping] = React.useState(true)
@@ -25,6 +32,7 @@ function Typewriter({
     return () => {
       __timeout && clearTimeout(__timeout)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   React.useEffect(() => {
@@ -32,10 +40,11 @@ function Typewriter({
     if (isTyping) {
       if (currentText.length < rawText.length) {
         const randomSpeed = Math.floor(Math.random() * (60 - 25 + 1)) + 25
+        // @ts-ignore
         set__Timeout(setTimeout(type, randomSpeed))
       } else {
         setIsTyping(false)
-        // setTimeout(onEraseDelay, 50)
+        // @ts-ignore
         set__Timeout(setTimeout(erase, eraseDelay))
       }
     } else {
@@ -49,12 +58,14 @@ function Typewriter({
           setTimeout(() => setCurrentIndex(index), typingDelay)
         }
       } else {
+        // @ts-ignore
         set__Timeout(setTimeout(erase, eraseSpeed))
       }
     }
     return () => {
       __timeout && clearTimeout(__timeout)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentText])
 
   React.useEffect(() => {
@@ -65,16 +76,19 @@ function Typewriter({
     return () => {
       __timeout && clearTimeout(__timeout)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentIndex])
 
   function getRawText() {
+    // @ts-ignore
     return typeof text === 'string' ? [text] : [...text]
   }
 
   function startTyping() {
     const randomSpeed = Math.floor(Math.random() * (60 - 25 + 1)) + 25
-
+    // @ts-ignore
     set__Timeout(
+      // @ts-ignore
       setTimeout(() => {
         onEraseDelay()
         type()
@@ -119,26 +133,6 @@ function Typewriter({
       </span>
     </div>
   )
-}
-
-Typewriter.propTypes = {
-  speed: PropTypes.number.isRequired,
-  eraseSpeed: PropTypes.number.isRequired,
-  typingDelay: PropTypes.number.isRequired,
-  eraseDelay: PropTypes.number.isRequired,
-  cursor: PropTypes.string,
-  text: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.string),
-    PropTypes.string
-  ]).isRequired
-}
-
-Typewriter.defaultProps = {
-  speed: 500,
-  eraseSpeed: 400,
-  typingDelay: 2500,
-  eraseDelay: 5000,
-  cursor: '|'
 }
 
 export default Typewriter

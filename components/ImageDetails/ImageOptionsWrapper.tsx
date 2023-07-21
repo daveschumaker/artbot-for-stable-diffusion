@@ -85,7 +85,7 @@ const ImageOptionsWrapper = ({
 
   const fetchParentJobDetails = useCallback(async () => {
     const details: IImageDetails = await getParentJobDetails(
-      imageDetails.parentJobId
+      imageDetails.parentJobId as string
     )
 
     if (imageDetails.jobId === details.jobId || !imageDetails.parentJobId) {
@@ -107,10 +107,10 @@ const ImageOptionsWrapper = ({
 
   const handleDeleteImageConfirm = async () => {
     handleDeleteImageClick()
-    await deletePendingJobFromDb(imageDetails.jobId)
-    await deleteCompletedImage(imageDetails.jobId)
-    deletePendingJob(imageDetails.jobId)
-    getImageDetails.delete(imageDetails.jobId) // bust memoization cache
+    await deletePendingJobFromDb(imageDetails.jobId as string)
+    await deleteCompletedImage(imageDetails.jobId as string)
+    deletePendingJob(imageDetails.jobId as string)
+    getImageDetails.delete(imageDetails.jobId as string) // bust memoization cache
     handleClose()
   }
 
@@ -162,7 +162,7 @@ const ImageOptionsWrapper = ({
     await upscaleImage(imageDetails)
     router.push('/pending')
     modal.remove()
-  }, [imageDetails, pendingUpscale, router])
+  }, [imageDetails, modal, pendingUpscale, router])
 
   const onDetachParent = useCallback(async () => {
     await updateCompletedJob(
@@ -173,7 +173,7 @@ const ImageOptionsWrapper = ({
     )
 
     // Bust memoization cache
-    getImageDetails.delete(imageDetails.jobId)
+    getImageDetails.delete(imageDetails.jobId as string)
 
     handleReloadImageData()
   }, [handleReloadImageData, imageDetails])
@@ -190,7 +190,7 @@ const ImageOptionsWrapper = ({
     )
 
     // Bust memoization cache
-    getImageDetails.delete(imageDetails.jobId)
+    getImageDetails.delete(imageDetails.jobId as string)
   }, [favorited, imageDetails])
 
   const copyShortlink = (_shortlink: string) => {
@@ -228,8 +228,8 @@ const ImageOptionsWrapper = ({
     setShortlinkPending(true)
 
     const resizedImage = await generateBase64Thumbnail(
-      imageDetails.base64String,
-      imageDetails.jobId,
+      imageDetails.base64String as string,
+      imageDetails.jobId as string,
       512,
       768,
       0.7
@@ -261,12 +261,12 @@ const ImageOptionsWrapper = ({
   }
 
   const checkFavorite = useCallback(async () => {
-    const details = await getImageDetails(imageDetails.jobId)
+    const details = await getImageDetails(imageDetails.jobId as string)
     setFavorited(details.favorited)
   }, [imageDetails.jobId])
 
   const fetchRelatedImages = useCallback(async () => {
-    const result = await getRelatedImages(imageDetails.parentJobId)
+    const result = await getRelatedImages(imageDetails.parentJobId as string)
 
     if (result && result.length > 0) {
       setHasRelatedImages(true)

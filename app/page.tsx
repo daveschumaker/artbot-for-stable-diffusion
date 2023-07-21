@@ -1,5 +1,5 @@
 import SharedImageView from './_modules/SharedImageView'
-import HomePage from './_pages/HomePage/index.page'
+import HomePage from './_pages/HomePage'
 
 async function getPageData(searchParams: any) {
   let shortlinkImageParams: any = ''
