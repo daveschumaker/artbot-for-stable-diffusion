@@ -1,15 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useCallback, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { useStore } from 'statery'
 // import Switch from 'react-switch'
 
 // UI component imports
-import { Button } from 'components/UI/Button'
-import Checkbox from 'components/UI/Checkbox'
 import Input from 'components/UI/Input'
 import Linker from 'components/UI/Linker'
-import MaxWidth from 'components/UI/MaxWidth'
 import Section from 'app/_components/Section'
 import Select from 'app/_components/Select'
 import SplitPanel from 'components/UI/SplitPanel'
@@ -18,10 +15,6 @@ import TextButton from 'components/UI/TextButton'
 import TextTooltipRow from 'app/_components/TextTooltipRow'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import TwoPanel from 'components/UI/TwoPanel'
-
-// Icon imports
-import ArrowBarLeftIcon from 'components/icons/ArrowBarLeftIcon'
-import GrainIcon from 'components/icons/GrainIcon'
 
 // Utils imports
 import { maxSteps } from 'utils/validationUtils'
@@ -32,8 +25,7 @@ import { validModelsArray } from 'utils/modelUtils'
 import ControlNetOptions from './ControlNetOptions'
 import HiresFix from './HiresFix'
 import InputSwitch from './InputSwitch'
-import NumericInputSlider from './NumericInputSlider'
-import Samplers from './Samplers'
+import NumericInputSlider from 'app/_modules/AdvancedOptionsPanel/NumericInputSlider'
 import UpscalerOptions from './UpscalerOptions'
 
 // Store imports
@@ -48,7 +40,6 @@ import PromptInputSettings from 'models/PromptInputSettings'
 
 // Other imports
 import { trackEvent } from 'api/telemetry'
-import { MAX_IMAGES_PER_JOB } from '_constants'
 import ParentImage from 'app/_components/ParentImage'
 import AllowNsfwImages from './AllowNsfwImages'
 import ReplacementFilterToggle from './ReplacementFilterToggle'
@@ -60,6 +51,8 @@ import SelectModelDetails from 'modules/AdvancedOptions/ModelDetails/modelDetail
 import ImageOrientationOptions from 'app/_modules/AdvancedOptionsPanel/ImageOrientationOptions'
 import Seed from './Seed'
 import SelectSampler from './SelectSampler'
+import ImageCount from './ImageCount'
+import PostProcessors from './PostProcessors'
 
 const NoSliderSpacer = styled.div`
   height: 14px;
@@ -104,29 +97,29 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
     return input?.models?.indexOf(option.value) >= 0
   })
 
-  const getPostProcessing = useCallback(
-    (value: string) => {
-      return input.post_processing.indexOf(value) >= 0
-    },
-    [input.post_processing]
-  )
+  // const getPostProcessing = useCallback(
+  //   (value: string) => {
+  //     return input.post_processing.indexOf(value) >= 0
+  //   },
+  //   [input.post_processing]
+  // )
 
-  const handlePostProcessing = useCallback(
-    (value: string) => {
-      let newPost = [...input.post_processing]
-      const index = newPost.indexOf(value)
+  // const handlePostProcessing = useCallback(
+  //   (value: string) => {
+  //     let newPost = [...input.post_processing]
+  //     const index = newPost.indexOf(value)
 
-      if (index > -1) {
-        newPost.splice(index, 1)
-      } else {
-        newPost.push(value)
-      }
+  //     if (index > -1) {
+  //       newPost.splice(index, 1)
+  //     } else {
+  //       newPost.push(value)
+  //     }
 
-      PromptInputSettings.set('post_processing', newPost)
-      setInput({ post_processing: newPost })
-    },
-    [input.post_processing, setInput]
-  )
+  //     PromptInputSettings.set('post_processing', newPost)
+  //     setInput({ post_processing: newPost })
+  //   },
+  //   [input.post_processing, setInput]
+  // )
 
   useEffect(() => {
     const favModels = AppSettings.get('favoriteModels') || {}
@@ -174,9 +167,6 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
     input.source_processing !==
       (SourceProcessing.InPainting || SourceProcessing.OutPainting)
 
-  const showNumImagesInput =
-    !input.useAllModels && !input.useMultiSteps && !input.useAllSamplers
-
   return (
     <div>
       {input.parentJobId && (
@@ -204,7 +194,14 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
           </div>
         </Section>
       )}
-
+      <FlexibleRow>
+        <FlexibleUnit>
+          <SelectSampler input={input} setInput={setInput} />
+        </FlexibleUnit>
+        <FlexibleUnit>
+          <ImageCount input={input} setInput={setInput} />
+        </FlexibleUnit>
+      </FlexibleRow>
       <FlexibleRow>
         <FlexibleUnit>
           {componentState.showMultiModel ? (
@@ -269,44 +266,68 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
           <ImageOrientationOptions input={input} setInput={setInput} />
         </FlexibleUnit>
       </FlexibleRow>
-
       <FlexibleRow>
         <FlexibleUnit>
-          <SelectSampler input={input} setInput={setInput} />
-        </FlexibleUnit>
-        <FlexibleUnit>
-          <Seed input={input} setInput={setInput} />
-        </FlexibleUnit>
-      </FlexibleRow>
-
-      <Samplers
-        input={input}
-        setInput={setInput}
-        showMultiModel={componentState.showMultiModel}
-      />
-      <TwoPanel className="mt-4">
-        <SplitPanel>
-          {!input.useMultiSteps && (
-            <NumericInputSlider
-              label="Steps"
-              tooltip="Fewer steps generally result in quicker image generations.
+          {/* TODO: Handle multi-steps, (e.g., disable this field and have mutliple guidance values way down below.)  */}
+          <NumericInputSlider
+            label="Steps"
+            tooltip="Fewer steps generally result in quicker image generations.
               Many models achieve full coherence after a certain number
               of finite steps (60 - 90). Keep your initial queries in
               the 30 - 50 range for best results."
-              from={1}
-              to={maxSteps({
-                sampler: input.sampler,
-                loggedIn: loggedIn === true ? true : false,
-                isSlider: true
-              })}
-              step={1}
-              input={input}
-              setInput={setInput}
-              fieldName="steps"
-              fullWidth
-              enforceStepValue
-            />
-          )}
+            from={1}
+            to={maxSteps({
+              sampler: input.sampler,
+              loggedIn: loggedIn === true ? true : false,
+              isSlider: true
+            })}
+            step={1}
+            input={input}
+            setInput={setInput}
+            fieldName="steps"
+            fullWidth
+            enforceStepValue
+          />
+        </FlexibleUnit>
+        <FlexibleUnit>
+          {/* TODO: Handle multi-guidance (e.g., disable this field and have mutliple guidance values way down below.) */}
+          <NumericInputSlider
+            label="Guidance"
+            tooltip="Higher numbers follow the prompt more closely. Lower
+                numbers give more creativity."
+            from={1}
+            to={30}
+            step={0.5}
+            input={input}
+            setInput={setInput}
+            fieldName="cfg_scale"
+            fullWidth
+          />
+        </FlexibleUnit>
+      </FlexibleRow>
+      <FlexibleRow>
+        <FlexibleUnit>
+          <Seed input={input} setInput={setInput} />
+        </FlexibleUnit>
+        <FlexibleUnit>
+          <NumericInputSlider
+            label="CLIP skip"
+            tooltip="Determine how early to stop processing a prompt using CLIP. Higher
+          values stop processing earlier. Default is 1 (no skip)."
+            from={1}
+            to={12}
+            step={1}
+            input={input}
+            setInput={setInput}
+            fieldName="clipskip"
+            fullWidth
+            enforceStepValue
+          />
+        </FlexibleUnit>
+      </FlexibleRow>
+
+      <TwoPanel className="mt-4">
+        <SplitPanel>
           {input.useMultiSteps && (
             <Section>
               <div className="flex flex-row items-center justify-between">
@@ -381,20 +402,6 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
         </SplitPanel>
 
         <SplitPanel>
-          {!input.useMultiGuidance && (
-            <NumericInputSlider
-              label="Guidance"
-              tooltip="Higher numbers follow the prompt more closely. Lower
-                numbers give more creativity."
-              from={1}
-              to={30}
-              step={0.5}
-              input={input}
-              setInput={setInput}
-              fieldName="cfg_scale"
-              fullWidth
-            />
-          )}
           {input.useMultiGuidance && (
             <Section>
               <div className="flex flex-row items-center justify-between">
@@ -497,9 +504,7 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
           </Section>
         </div>
       )}
-
       <ControlNetOptions input={input} setInput={setInput} />
-
       {/* <InputSwitch
         label="Tiling"
         disabled={input.source_image ? true : false}
@@ -520,55 +525,6 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
           ) : null
         }
       /> */}
-      <Section>
-        <SubSectionTitle>
-          <TextTooltipRow>
-            Seed
-            <TooltipComponent tooltipId="seed-tooltip">
-              Leave seed blank for random.
-            </TooltipComponent>
-          </TextTooltipRow>
-        </SubSectionTitle>
-        <MaxWidth
-          // @ts-ignore
-          width="240px"
-        >
-          <div className="flex flex-row gap-2">
-            <Input
-              // @ts-ignore
-              className="mb-2"
-              type="text"
-              name="seed"
-              onChange={handleChangeInput}
-              // @ts-ignore
-              value={input.seed}
-              width="100%"
-            />
-            <Button
-              title="Insert random seed"
-              onClick={() => {
-                const value = Math.abs((Math.random() * 2 ** 32) | 0)
-                if (AppSettings.get('saveSeedOnCreate')) {
-                  PromptInputSettings.set('seed', value)
-                }
-                setInput({ seed: value })
-              }}
-            >
-              <GrainIcon />
-            </Button>
-            <Button
-              theme="secondary"
-              title="Clear"
-              onClick={() => {
-                PromptInputSettings.set('seed', '')
-                setInput({ seed: '' })
-              }}
-            >
-              <ArrowBarLeftIcon />
-            </Button>
-          </div>
-        </MaxWidth>
-      </Section>
       {/* {input.source_processing !== SourceProcessing.OutPainting &&
         !input.useAllModels &&
         !componentState.showMultiModel &&
@@ -579,7 +535,6 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
             setInput={setInput}
           />
         )} */}
-
       {/* <div className="mt-2 flex flex-row items-center gap-2 text-[700] text-sm">
         Filter out NSFW models?{' '}
         <Switch
@@ -726,81 +681,17 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
         checked={input.karras}
       />
       <HiresFix input={input} setInput={setInput} />
-
-      <Section>
-        <SubSectionTitle>
-          <TextTooltipRow>
-            Post-processing
-            <TooltipComponent tooltipId="post-processing-tooltip">
-              Post-processing options such as face improvement and image
-              upscaling.
-            </TooltipComponent>
-          </TextTooltipRow>
-        </SubSectionTitle>
-        <div className="flex flex-col items-start gap-2">
-          <Checkbox
-            label={`GFPGAN (improves faces)`}
-            checked={getPostProcessing('GFPGAN')}
-            onChange={() => handlePostProcessing('GFPGAN')}
-          />
-          <Checkbox
-            label={`CodeFormers (improves faces)`}
-            checked={getPostProcessing('CodeFormers')}
-            onChange={() => handlePostProcessing('CodeFormers')}
-          />
-          {(getPostProcessing('GFPGAN') ||
-            getPostProcessing('CodeFormers')) && (
-            <NumericInputSlider
-              label="Face-fix strength"
-              tooltip="0.05 is the weakest effect (barely noticeable improvements), while 1.0 is the strongest effect."
-              from={0.05}
-              to={1.0}
-              step={0.05}
-              input={input}
-              setInput={setInput}
-              fieldName="facefixer_strength"
-            />
-          )}
-          <Checkbox
-            label={`Strip background`}
-            checked={getPostProcessing(`strip_background`)}
-            onChange={() => handlePostProcessing(`strip_background`)}
-          />
+      <Section></Section>
+      <FlexibleRow>
+        <FlexibleUnit>
+          <PostProcessors input={input} setInput={setInput} />
+        </FlexibleUnit>
+        <FlexibleUnit>
           <UpscalerOptions input={input} setInput={setInput} />
-        </div>
-      </Section>
+        </FlexibleUnit>
+      </FlexibleRow>
       <AllowNsfwImages />
       <ReplacementFilterToggle />
-      <Section>
-        <NumericInputSlider
-          label="CLIP skip"
-          tooltip="Determine how early to stop processing a prompt using CLIP. Higher
-          values stop processing earlier. Default is 1 (no skip)."
-          from={1}
-          to={12}
-          step={1}
-          input={input}
-          setInput={setInput}
-          fieldName="clipskip"
-          fullWidth
-          enforceStepValue
-        />
-      </Section>
-      {showNumImagesInput && (
-        <Section>
-          <NumericInputSlider
-            label="# of images"
-            from={1}
-            to={MAX_IMAGES_PER_JOB}
-            step={1}
-            input={input}
-            setInput={setInput}
-            fieldName="numImages"
-            fullWidth
-            enforceStepValue
-          />
-        </Section>
-      )}
     </div>
   )
 }

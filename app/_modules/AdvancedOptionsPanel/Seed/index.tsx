@@ -12,7 +12,9 @@ export default function Seed({ input, setInput }: GetSetPromptInput) {
     <div style={{ marginBottom: '12px' }}>
       <SubSectionTitle>
         Seed
-        <span style={{ fontSize: '12px' }}>&nbsp;(optional)</span>
+        <span style={{ fontSize: '12px', fontWeight: '400' }}>
+          &nbsp;(optional)
+        </span>
       </SubSectionTitle>
       <FlexRow style={{ columnGap: '4px' }}>
         <Input

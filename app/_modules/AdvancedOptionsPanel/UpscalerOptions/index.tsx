@@ -4,6 +4,7 @@ import TooltipComponent from 'app/_components/TooltipComponent'
 import DefaultPromptInput from 'models/DefaultPromptInput'
 import PromptInputSettings from 'models/PromptInputSettings'
 import { useCallback } from 'react'
+import SubSectionTitle from 'app/_components/SubSectionTitle'
 
 interface Props {
   input: DefaultPromptInput
@@ -49,15 +50,15 @@ const UpscalerOptions = ({ input, setInput }: Props) => {
 
   return (
     <div className="flex flex-col gap-2 items-start">
-      <div className="mt-2 mb-[-4px] text-sm font-[700]">
+      <SubSectionTitle>
         <TextTooltipRow>
           Upscalers
-          <TooltipComponent tooltipId="upscalers-tooltip">
+          <TooltipComponent tooltipId={'upscalers-tooltip'}>
             Upscales your image up to 4x. Some upscalers are tuned to specific
             styles. Only 1 can be selected at a time.
           </TooltipComponent>
         </TextTooltipRow>
-      </div>
+      </SubSectionTitle>
       {UPSCALERS.map((upscalerName) => {
         return (
           <Checkbox

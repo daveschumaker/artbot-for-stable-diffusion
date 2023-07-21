@@ -7,7 +7,7 @@ import styles from './loraSelect.module.css'
 import { Button } from 'components/UI/Button'
 import { IconExternalLink, IconPlus, IconTrash } from '@tabler/icons-react'
 import ChooseLoraModal from './ChooseLoraModal'
-import NumberInput from 'components/UI/NumberInput'
+import NumberInput from 'app/_components/NumberInput'
 import Slider from 'components/UI/Slider'
 import Linker from 'components/UI/Linker'
 

@@ -21,9 +21,3 @@
     margin-bottom: 12px;
   }
 }
-
-@media (min-width: 800px) {
-  .flexibleRow {
-    margin-bottom: 24px;
-  }
-}

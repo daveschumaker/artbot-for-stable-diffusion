@@ -10,7 +10,7 @@ import Select from 'app/_components/Select'
 import { Button } from 'components/UI/Button'
 import useWorkerDetails from 'hooks/useWorkerDetails'
 import FlexRow from 'app/_components/FlexRow'
-import FlexCol from 'components/FlexCol'
+import FlexCol from 'app/_components/FlexCol'
 import { ImageOrientation } from 'models/ImageOrientation'
 import { userInfoStore } from 'store/userStore'
 import TooltipComponent from 'app/_components/TooltipComponent'
@@ -170,9 +170,12 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
       <div
         style={{
           border: '1px solid rgb(126, 90, 108)',
+          display: 'flex',
+          flexDirection: 'column',
           padding: '8px 16px',
           borderRadius: '4px',
-          flexGrow: 1
+          flexGrow: 1,
+          justifyContent: 'space-between'
         }}
       >
         <FlexCol className="flex flex-col w-full gap-2">
@@ -227,9 +230,50 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
               callback={heightCallback}
             />
           </Section>
+          <Section>
+            <div style={{ fontSize: '12px' }}>
+              {input.height * input.width > 1024 * 1024 && (
+                <div className="text-amber-500" style={{ fontWeight: 700 }}>
+                  You will need to have enough kudos to complete this request.
+                </div>
+              )}
+              {input.height * input.width <= 1024 * 1024 && (
+                <div className="text-gray-400" style={{ fontWeight: 700 }}>
+                  High resolution requests require upfront kudos.
+                </div>
+              )}
+            </div>
+
+            {keepAspectRatio && (
+              <div
+                className={
+                  'block text-xs w-full font-bold' +
+                  getAspectRatioDeviationColor(getAspectRatioDeviation())
+                }
+                style={{ fontSize: '12px', fontWeight: 700 }}
+              >
+                Aspect ratio is locked! Deviation from target value:{' '}
+                {(getAspectRatioDeviation() * 100).toFixed(2)}%
+              </div>
+            )}
+
+            <div style={{ fontSize: '12px', marginTop: '8px' }}>
+              Height and width must be divisible by 64.
+            </div>
+
+            <div style={{ fontSize: '12px' }}>
+              Current image size: {getMegapixelSize()} megapixels
+            </div>
+          </Section>
         </FlexCol>
 
-        <FlexRow style={{ columnGap: '8px', marginBottom: '8px' }}>
+        <FlexRow
+          style={{
+            columnGap: '8px',
+            marginBottom: '8px',
+            justifyContent: 'flex-end'
+          }}
+        >
           <Button
             title={keepAspectRatio ? 'Free aspect ratio' : 'Lock aspect ratio'}
             disabled={input.orientationType === 'random'}
@@ -266,40 +310,6 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
             Swap
           </Button>
         </FlexRow>
-
-        <div style={{ fontSize: '12px' }}>
-          {input.height * input.width > 1024 * 1024 && (
-            <div className="text-amber-500" style={{ fontWeight: 700 }}>
-              You will need to have enough kudos to complete this request.
-            </div>
-          )}
-          {input.height * input.width <= 1024 * 1024 && (
-            <div className="text-gray-400" style={{ fontWeight: 700 }}>
-              High resolution requests require upfront kudos.
-            </div>
-          )}
-        </div>
-
-        {keepAspectRatio && (
-          <div
-            className={
-              'block text-xs w-full font-bold' +
-              getAspectRatioDeviationColor(getAspectRatioDeviation())
-            }
-            style={{ fontSize: '12px', fontWeight: 700 }}
-          >
-            Aspect ratio is locked! Deviation from target value:{' '}
-            {(getAspectRatioDeviation() * 100).toFixed(2)}%
-          </div>
-        )}
-
-        <div style={{ fontSize: '12px', marginTop: '8px' }}>
-          Height and width must be divisible by 64.
-        </div>
-
-        <div style={{ fontSize: '12px' }}>
-          Current image size: {getMegapixelSize()} megapixels
-        </div>
       </div>
     </Section>
   )

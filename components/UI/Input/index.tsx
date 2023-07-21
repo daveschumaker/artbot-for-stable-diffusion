@@ -6,6 +6,7 @@ interface InputProps {
   autoFocus?: boolean
   name?: string
   type?: string
+  disabled?: boolean
   className?: string
   id?: string
   inputMode?: any
@@ -22,6 +23,7 @@ interface InputProps {
   tabIndex?: number
   width?: string
   value: string
+  onKeyDown?: (e: any) => any
 }
 
 const Input = (props: InputProps) => {

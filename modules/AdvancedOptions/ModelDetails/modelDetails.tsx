@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 import { ModelDetails } from 'types/artbot'
 import { isEmptyObject } from 'utils/helperUtils'
 import ModelDetailsLoader from './ModelDetailsLoader'
-import FlexCol from 'components/FlexCol'
+import FlexCol from 'app/_components/FlexCol'
 
 // TODO: Need to split into some sort of wrapper so we don't collide with hook,
 // which cannot be used on server side render

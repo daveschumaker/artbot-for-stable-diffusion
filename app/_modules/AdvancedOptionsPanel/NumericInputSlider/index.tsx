@@ -5,8 +5,7 @@ import Section from 'app/_components/Section'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import TextTooltipRow from 'app/_components/TextTooltipRow'
 import TooltipComponent from 'app/_components/TooltipComponent'
-import NumberInput from 'components/UI/NumberInput'
-import Slider from 'components/UI/Slider'
+import NumberInput from 'app/_components/NumberInput'
 
 import clsx from 'clsx'
 
@@ -104,62 +103,52 @@ const NumericInputSlider = ({
   return (
     <div className={clsx('mb-4 w-full', !fullWidth && 'md:w-1/2')}>
       <Section style={{ paddingTop: 0 }}>
-        <div className="flex flex-row items-center justify-between">
-          <SubSectionTitle>
-            <TextTooltipRow>
-              {label}
-              {tooltip && (
-                <TooltipComponent tooltipId={fieldName}>
-                  {tooltip}
-                </TooltipComponent>
-              )}
-            </TextTooltipRow>
-
-            <div className="block text-xs w-full font-[400]">
-              ({from} - {to})
-            </div>
-          </SubSectionTitle>
-          <NumberInput
-            className="mb-2"
-            type="text"
-            inputMode="numeric"
-            min={from}
-            max={to}
-            step={step}
-            name={fieldName}
-            disabled={disabled}
-            onMinusClick={() => {
-              const value = Number((inputField - step).toFixed(2))
-              safelyUpdateField(value)
-            }}
-            onPlusClick={() => {
-              const value = Number((inputField + step).toFixed(2))
-              safelyUpdateField(value)
-            }}
-            onChange={(e: any) => {
-              // Note that we use setTemporaryValue, not safelyUpdateField.
-              // This is because we want to let users enter arbitrary data in the input.
-              // Validation and field update is performed after user finishes typing (see onBlur).
-              const value = e.target.value
-              setTemporaryValue(value)
-            }}
-            onBlur={(e: any) => {
-              const value = Number(e.target.value)
-              safelyUpdateField(value)
-            }}
-            value={temporaryValue}
-            width="100%"
-          />
-        </div>
-        <Slider
-          value={input[fieldName]}
+        <SubSectionTitle>
+          <TextTooltipRow>
+            {label}
+            <span
+              className="text-xs w-full font-[400]"
+              style={{ paddingRight: '4px', width: 'auto' }}
+            >
+              &nbsp;({from} - {to})
+            </span>
+            {tooltip && (
+              <TooltipComponent tooltipId={fieldName}>
+                {tooltip}
+              </TooltipComponent>
+            )}
+          </TextTooltipRow>
+        </SubSectionTitle>
+        <NumberInput
+          className="mb-2"
+          type="text"
+          inputMode="numeric"
           min={from}
           max={to}
           step={step}
+          name={fieldName}
           disabled={disabled}
-          onChange={(e: any) => {
-            safelyUpdateField(e.target.value)
+          onMinusClick={() => {
+            const value = Number((inputField - step).toFixed(2))
+            safelyUpdateField(value)
           }}
+          onPlusClick={() => {
+            const value = Number((inputField + step).toFixed(2))
+            safelyUpdateField(value)
+          }}
+          onChange={(e: any) => {
+            // Note that we use setTemporaryValue, not safelyUpdateField.
+            // This is because we want to let users enter arbitrary data in the input.
+            // Validation and field update is performed after user finishes typing (see onBlur).
+            const value = e.target.value
+            setTemporaryValue(value)
+          }}
+          onBlur={(e: any) => {
+            const value = Number(e.target.value)
+            safelyUpdateField(value)
+          }}
+          value={temporaryValue}
+          width="100%"
         />
         {showWarning && (
           <div className="mb-2 text-xs">
