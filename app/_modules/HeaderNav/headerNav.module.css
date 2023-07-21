@@ -6,7 +6,7 @@
   flex-direction: row;
   height: var(--headerNav-height);
   left: 0;
-  padding: env(safe-area-inset-top) 8px 0 8px;
+  padding: env(safe-area-inset-top) 16px 0 16px;
   position: fixed;
   right: 0;
   top: 0;

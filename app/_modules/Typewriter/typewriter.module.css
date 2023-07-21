@@ -31,6 +31,8 @@
 }
 
 .ImageWrapper {
+  background-color: #c7c7c7;
+  border-radius: 4px;
   margin-bottom: 12px;
   order: 2;
   width: 100%;

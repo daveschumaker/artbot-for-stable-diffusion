@@ -1,6 +1,6 @@
 .ContentWrapper {
   margin-top: var(--headerNav-height);
-  padding: 8px;
+  padding: 8px 16px;
 }
 
 @media (min-width: 1024px) {

@@ -30,7 +30,7 @@ const MenuOptions = ({
       <div
         className={styles.MenuOption}
         onClick={() => {
-          navigateToLink('/')
+          navigateToLink('/create')
         }}
       >
         <IconCamera stroke={1.5} />

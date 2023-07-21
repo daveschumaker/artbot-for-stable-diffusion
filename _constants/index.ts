@@ -11,6 +11,7 @@ export const MAX_CONCURRENT_JOBS_USER = 10
 export const MAX_IMAGES_PER_JOB = 200
 export const MAX_DIMENSIONS_LOGGED_IN = 2048
 export const MAX_DIMENSIONS_LOGGED_OUT = 1024
+export const MAX_STEPS_LOGGED_IN = 500
 export const POLL_COMPLETED_JOBS_INTERVAL = 1500 // ms
 export const DEFAULT_SAMPLER_ARRAY = [
   'k_dpm_2_a',

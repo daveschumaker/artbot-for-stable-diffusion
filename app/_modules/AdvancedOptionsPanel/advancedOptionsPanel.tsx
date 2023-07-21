@@ -58,6 +58,8 @@ import FlexibleUnit from 'app/_components/FlexibleUnit'
 import SelectModel from 'app/_modules/AdvancedOptionsPanel/SelectModel'
 import SelectModelDetails from 'modules/AdvancedOptions/ModelDetails/modelDetails'
 import ImageOrientationOptions from 'app/_modules/AdvancedOptionsPanel/ImageOrientationOptions'
+import Seed from './Seed'
+import SelectSampler from './SelectSampler'
 
 const NoSliderSpacer = styled.div`
   height: 14px;
@@ -265,6 +267,15 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
         </FlexibleUnit>
         <FlexibleUnit>
           <ImageOrientationOptions input={input} setInput={setInput} />
+        </FlexibleUnit>
+      </FlexibleRow>
+
+      <FlexibleRow>
+        <FlexibleUnit>
+          <SelectSampler input={input} setInput={setInput} />
+        </FlexibleUnit>
+        <FlexibleUnit>
+          <Seed input={input} setInput={setInput} />
         </FlexibleUnit>
       </FlexibleRow>
 
