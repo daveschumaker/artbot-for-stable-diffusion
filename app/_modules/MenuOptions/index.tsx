@@ -40,15 +40,6 @@ const MenuOptions = ({
         <div
           className={styles.SubOption}
           onClick={() => {
-            navigateToLink('/chat')
-          }}
-        >
-          <IconPoint stroke={1.5} />
-          Chat / Text
-        </div>
-        <div
-          className={styles.SubOption}
-          onClick={() => {
             navigateToLink('/controlnet')
           }}
         >
