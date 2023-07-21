@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import Overlay from './UI/Overlay'
+import Overlay from 'app/_components/Overlay'
 import { Portal } from 'react-portal'
 
 const ConfirmationModal = ({

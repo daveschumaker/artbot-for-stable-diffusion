@@ -55,7 +55,6 @@ const useGalleryImageModal = () => {
   }) => {
     if (!Array.isArray(images) || images.length === 0) return
     setImagesList(images)
-    let initialImageDetails
 
     images.forEach((item: any, i: number) => {
       if (item.jobId === jobId) {
@@ -63,12 +62,6 @@ const useGalleryImageModal = () => {
         setImageDetails(item)
       }
     })
-
-    // Using initialImageDetails here instead of imageDetails from stage since there is a potential
-    // race condition where the modal doesn't pop up on first click.
-    if (!initialImageDetails) return
-
-    console.log(`hehe!`)
   }
 
   const loadModal = useCallback(() => {

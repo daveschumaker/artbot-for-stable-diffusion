@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import Overlay from 'components/UI/Overlay'
+import Overlay from 'app/_components/Overlay'
 import {
   IconCloudSearch,
   IconHeart,

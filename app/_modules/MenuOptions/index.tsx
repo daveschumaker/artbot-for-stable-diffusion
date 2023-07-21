@@ -1,6 +1,7 @@
 'use client'
 
 import {
+  IconCamera,
   IconHelp,
   IconHourglass,
   IconInfoCircle,
@@ -32,7 +33,7 @@ const MenuOptions = ({
           navigateToLink('/')
         }}
       >
-        <IconPencil stroke={1.5} />
+        <IconCamera stroke={1.5} />
         Create
       </div>
       <div className={styles.SubOptions}>

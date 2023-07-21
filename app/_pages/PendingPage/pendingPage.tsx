@@ -25,7 +25,7 @@ import SquareIcon from 'components/icons/SquareIcon'
 import DropDownMenu from 'components/UI/DropDownMenu/dropDownMenu'
 import DropDownMenuItem from 'components/UI/DropDownMenuItem'
 import Linker from 'components/UI/Linker'
-import MenuButton from 'components/UI/MenuButton'
+import MenuButton from 'app/_components/MenuButton'
 import PageTitle from 'app/_components/PageTitle'
 import TextButton from 'components/UI/TextButton'
 import { useWindowSize } from 'hooks/useWindowSize'
@@ -40,7 +40,7 @@ import {
   getAllPendingJobs
   // syncPendingJobsFromDb
 } from 'controllers/pendingJobsCache'
-// import usePendingImageModal from './usePendingImageModal'
+import usePendingImageModal from './usePendingImageModal'
 import PendingItem from 'modules/PendingItem'
 
 const MenuSeparator = styled.div`
@@ -51,15 +51,13 @@ const MenuSeparator = styled.div`
 const PendingPage = () => {
   const size = useWindowSize()
   const [filter, setFilter] = useState('all')
-  // const [showImageModal, setShowImageModal] = useState<string | boolean>(false)
   const [showMenu, setShowMenu] = useState(false)
   const [validatePending, setValidatePending] = useState(false)
   const appState = useStore(appInfoStore)
   const { imageDetailsModalOpen } = appState
 
   const [pendingImages, setPendingImages] = useState([])
-
-  // const [showImageModal] = usePendingImageModal()
+  const [showImageModal] = usePendingImageModal()
 
   const initPageLoad = async () => {
     // @ts-ignore
@@ -146,7 +144,8 @@ const PendingPage = () => {
     processPending()
 
   const handleShowModalClick = (jobId: string) => {
-    // showImageModal(jobId)
+    console.log(`hi`, done)
+    showImageModal({ jobId, images: done })
     return jobId
   }
 

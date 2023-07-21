@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import NiceModal, { useModal } from '@ebay/nice-modal-react'
 
-import Overlay from 'components/UI/Overlay'
+import Overlay from 'app/_components/Overlay'
 import ImageDetails from 'components/ImageDetails'
 import { IImageDetails } from 'types'
 import ImageNavigation from './imageNavigation'

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import CloseIcon from '../../icons/CloseIcon'
-import Overlay from '../Overlay'
+import Overlay from 'app/_components/Overlay'
 import { useSwipeable } from 'react-swipeable'
 import clsx from 'clsx'
 import useLockedBody from 'hooks/useLockedBody'

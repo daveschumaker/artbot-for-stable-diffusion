@@ -12,7 +12,7 @@ import styles from './component.module.css'
 import clsx from 'clsx'
 import AdvancedOptionsPanel from 'app/_modules/AdvancedOptionsPanel'
 import WarningPanel from 'app/_modules/WarningPanel'
-import Editor from 'components/Fabric/Editor'
+import Editor from 'app/_modules/Editor'
 import Panel from 'app/_components/Panel'
 
 const removeImageCanvasData = {

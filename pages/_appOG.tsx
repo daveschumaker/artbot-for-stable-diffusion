@@ -33,7 +33,6 @@ import { initPendingJobService } from 'controllers/pendingJobsController'
 import ErrorComponent, { logErrorInComponent } from 'components/ErrorComponent'
 import ServerUpdateComponent from 'components/ServerUpdateComponent'
 import { useWindowSize } from 'hooks/useWindowSize'
-import AppInit from 'modules/AppInit'
 
 initBrowserTab()
 initAppSettings()
@@ -197,7 +196,6 @@ function MyApp({ Component, pageProps }: MyAppProps) {
         ></meta>
         <link rel="icon" type="image/x-icon" href="/artbot/favicon.ico"></link>
       </Head>
-      <AppInit />
       <PollController />
       <ContentWrapper>
         <div className="absolute mx-auto w-full md:pb-[0] top-[48px] md:top-[44px] md:relative px-[8px]">

@@ -448,7 +448,7 @@ const CreatePage = ({ modelDetails = {} }: any) => {
       <div className="flex flex-row items-center w-full">
         <div className="inline-block w-1/2">
           <PageTitle>
-            New image{' '}
+            Create a new image{' '}
             {input.source_processing === 'outpainting' && '(outpainting)'}
             {input.source_processing === 'inpainting' && '(inpainting)'}
             {input.source_processing === SourceProcessing.Img2Img &&

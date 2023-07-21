@@ -48,6 +48,7 @@ import { toast, ToastOptions } from 'react-toastify'
 import RefreshIcon from 'components/icons/RefreshIcon'
 import { deletePendingJob } from 'controllers/pendingJobsCache'
 import { getRelatedImages } from 'components/ImagePage/image.controller'
+import { useModal } from '@ebay/nice-modal-react'
 
 const ImageOptionsWrapper = ({
   handleClose,
@@ -69,6 +70,7 @@ const ImageOptionsWrapper = ({
   handleFullScreen: () => any
 }) => {
   const router = useRouter()
+  const modal = useModal()
 
   const [favorited, setFavorited] = useState(imageDetails.favorited)
   const [pendingReroll, setPendingReroll] = useState(false)
@@ -100,6 +102,7 @@ const ImageOptionsWrapper = ({
 
     copyEditPrompt(imageDetails)
     router.push(`/?edit=true`)
+    modal.remove()
   }
 
   const handleDeleteImageConfirm = async () => {
@@ -158,6 +161,7 @@ const ImageOptionsWrapper = ({
 
     await upscaleImage(imageDetails)
     router.push('/pending')
+    modal.remove()
   }, [imageDetails, pendingUpscale, router])
 
   const onDetachParent = useCallback(async () => {
@@ -367,6 +371,7 @@ const ImageOptionsWrapper = ({
                   className="text-sm"
                   onClick={() => {
                     router.push(`/image/${imageDetails.jobId}`)
+                    modal.remove()
                   }}
                 >
                   View image details page
@@ -389,6 +394,7 @@ const ImageOptionsWrapper = ({
                 onClick={() => {
                   interrogateImage(imageDetails)
                   router.push(`/interrogate?user-share=true`)
+                  modal.remove()
                 }}
               >
                 Interrogate (img2text)
@@ -402,6 +408,7 @@ const ImageOptionsWrapper = ({
                 onClick={() => {
                   uploadImg2Img(imageDetails)
                   router.push(`/?panel=img2img&edit=true`)
+                  modal.remove()
                 }}
               >
                 Use for img2img
@@ -411,6 +418,7 @@ const ImageOptionsWrapper = ({
                 onClick={() => {
                   uploadInpaint(imageDetails)
                   router.push(`/?panel=inpainting&edit=true`)
+                  modal.remove()
                 }}
               >
                 Use for inpainting
@@ -422,6 +430,7 @@ const ImageOptionsWrapper = ({
                     className="text-sm"
                     onClick={() => {
                       router.push(`/image/${imageDetails.jobId}#related-images`)
+                      modal.remove()
                     }}
                   >
                     View related images
@@ -446,6 +455,7 @@ const ImageOptionsWrapper = ({
                   router.push(
                     `/?prompt=${encodeURIComponent(imageDetails.prompt)}`
                   )
+                  modal.remove()
                 }}
               >
                 Use a prompt from this image

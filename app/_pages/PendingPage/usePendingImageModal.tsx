@@ -2,10 +2,102 @@ import { useModal } from '@ebay/nice-modal-react'
 import ImageModal from 'app/_modules/ImageModal'
 import { getAllPendingJobs, getPendingJob } from 'controllers/pendingJobsCache'
 import useComponentState from 'hooks/useComponentState'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { JobStatus } from 'types'
 
 const usePendingImageModal = () => {
+  const imagePreviewModal = useModal(ImageModal)
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false)
+  const [imageIdx, setImageIdx] = useState(0)
+  const [imagesList, setImagesList] = useState([])
+  const [imageDetails, setImageDetails] = useState(null)
+
+  const handleClose = () => {
+    setImageIdx(0)
+    setImagesList([])
+    setImageDetails(null)
+    setIsImageModalOpen(false)
+  }
+
+  const handleLoadNext = useCallback(() => {
+    if (imagesList.length === 0) {
+      return
+    }
+
+    let newIdx = imageIdx + 1
+    if (newIdx > imagesList.length - 1) {
+      return
+    }
+
+    setImageIdx(newIdx)
+    setImageDetails(imagesList[newIdx])
+  }, [imageIdx, imagesList])
+
+  const handleLoadPrev = useCallback(() => {
+    if (imagesList.length === 0) {
+      return
+    }
+
+    let newIdx = imageIdx - 1
+    if (newIdx < 0) {
+      return
+    }
+
+    setImageIdx(newIdx)
+    setImageDetails(imagesList[newIdx])
+  }, [imageIdx, imagesList])
+
+  const showImageModal = ({
+    images,
+    jobId
+  }: {
+    images: any[]
+    jobId: string
+  }) => {
+    if (!Array.isArray(images) || images.length === 0) return
+    setImagesList(images)
+
+    images.forEach((item: any, i: number) => {
+      if (item.jobId === jobId) {
+        setImageIdx(i)
+        setImageDetails(item)
+      }
+    })
+  }
+
+  const loadModal = useCallback(() => {
+    if (!imageDetails) return
+
+    imagePreviewModal.show({
+      handleClose,
+      handleLoadNext,
+      handleLoadPrev,
+      imageDetails
+    })
+
+    if (!isImageModalOpen) {
+      setIsImageModalOpen(true)
+    }
+  }, [
+    handleLoadNext,
+    handleLoadPrev,
+    imageDetails,
+    imagePreviewModal,
+    isImageModalOpen
+  ])
+
+  useEffect(() => {
+    if (!imageDetails) return
+    loadModal()
+
+    // DO NOT ADD "loadModal()" to this dep array. Otherwise we get a render loop.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [imageDetails])
+
+  return [showImageModal]
+}
+
+export const usePendingImageModalOG = () => {
   const imagePreviewModal = useModal(ImageModal)
   // const { setImageData, showImagePreviewModal } = useImagePreview()
 
