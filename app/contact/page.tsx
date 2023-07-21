@@ -1,4 +1,5 @@
-import FeedbackForm from '../components/FeedbackForm'
+'use client'
+import FeedbackForm from 'app/_modules/FeedbackForm'
 
 const ContactPage = () => {
   return (

@@ -3,38 +3,12 @@
 import Head from 'next/head'
 import { useSearchParams } from 'next/navigation'
 import InfoPageMenuButton from 'components/InfoPage/Menu'
-import ModelInfoPage from 'components/ModelInfoPage'
 import Row from 'components/Row'
 import PageTitle from 'app/_components/PageTitle'
 import AppSettings from 'models/AppSettings'
+import ModelDetailsList from 'app/_modules/ModelDetailsList'
 
-// export async function getServerSideProps() {
-//   let availableModels: Array<any> = []
-//   let modelDetails: any = {}
-
-//   try {
-//     const availableModelsRes = await fetch(
-//       `http://localhost:${process.env.PORT}/artbot/api/v1/models/available`
-//     )
-//     const availableModelsData = (await availableModelsRes.json()) || {}
-//     availableModels = availableModelsData.models
-
-//     const modelDetailsRes = await fetch(
-//       `http://localhost:${process.env.PORT}/artbot/api/v1/models/details`
-//     )
-//     const modelDetailsData = (await modelDetailsRes.json()) || {}
-//     modelDetails = modelDetailsData.models
-//   } catch (err) {}
-
-//   return {
-//     props: {
-//       availableModels,
-//       modelDetails
-//     }
-//   }
-// }
-
-const InfoPage = ({ availableModels, modelDetails }: any) => {
+const ModelDetailsPage = ({ availableModels, modelDetails }: any) => {
   const searchParams = useSearchParams()
 
   const getMenuTitle = () => {
@@ -48,6 +22,8 @@ const InfoPage = ({ availableModels, modelDetails }: any) => {
 
     return 'All models'
   }
+
+  console.log(`ModelDetailsPage modelDetails`, modelDetails)
 
   const handleClearFavoriteModels = () => {
     AppSettings.set('favoriteModels', {})
@@ -83,7 +59,7 @@ const InfoPage = ({ availableModels, modelDetails }: any) => {
           <InfoPageMenuButton title={getMenuTitle()} />
         </div>
       </Row>
-      <ModelInfoPage
+      <ModelDetailsList
         availableModels={availableModels}
         modelDetails={modelDetails}
       />
@@ -105,4 +81,4 @@ const InfoPage = ({ availableModels, modelDetails }: any) => {
   )
 }
 
-export default InfoPage
+export default ModelDetailsPage

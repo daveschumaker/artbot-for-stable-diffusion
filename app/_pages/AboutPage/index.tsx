@@ -4,7 +4,7 @@
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import { trackEvent } from 'api/telemetry'
-import FeedbackForm from 'components/FeedbackForm'
+import FeedbackForm from 'app/_modules/FeedbackForm'
 import Modal from 'components/Modal'
 import Linker from 'components/UI/Linker'
 

@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
 
-import { trackEvent } from '../api/telemetry'
-import { imageCount } from '../utils/db'
-import { Button } from './UI/Button'
+import { trackEvent } from '../../../api/telemetry'
+import { imageCount } from '../../../utils/db'
+import { Button } from '../../../components/UI/Button'
 import SectionTitle from 'app/_components/SectionTitle'
-import Text from './UI/Text'
-import TextArea from './UI/TextArea'
-import { userInfoStore } from '../store/userStore'
-import Input from './UI/Input'
-import FlexRow from './UI/FlexRow'
+import Text from '../../../components/UI/Text'
+import TextArea from '../../../components/UI/TextArea'
+import { userInfoStore } from '../../../store/userStore'
+import Input from '../../../components/UI/Input'
+import FlexRow from '../../../components/UI/FlexRow'
 import PageTitle from 'app/_components/PageTitle'
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => {

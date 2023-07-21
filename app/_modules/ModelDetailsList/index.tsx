@@ -1,30 +1,32 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect } from 'react'
-import { useRouter } from 'next/router'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { toast } from 'react-toastify'
 
-import { trackEvent } from '../../api/telemetry'
+import { trackEvent } from 'api/telemetry'
 import Panel from 'app/_components/Panel'
-import TextButton from '../../components/UI/TextButton'
-import useComponentState from '../../hooks/useComponentState'
-import { useEffectOnce } from '../../hooks/useEffectOnce'
-import { modelStore } from '../../store/modelStore'
-import SpinnerV2 from '../../components/Spinner'
-import LinkIcon from '../../components/icons/LinkIcon'
+import TextButton from 'components/UI/TextButton'
+import useComponentState from 'hooks/useComponentState'
+import { useEffectOnce } from 'hooks/useEffectOnce'
+import { modelStore } from 'store/modelStore'
+import SpinnerV2 from 'components/Spinner'
+import LinkIcon from 'components/icons/LinkIcon'
 import styled from 'styled-components'
-import Linker from '../../components/UI/Linker'
-import MenuButton from '../../components/UI/MenuButton'
-import HeartIcon from '../../components/icons/HeartIcon'
-import AppSettings from '../../models/AppSettings'
+import Linker from 'components/UI/Linker'
+import MenuButton from 'app/_components/MenuButton'
+import HeartIcon from 'components/icons/HeartIcon'
+import AppSettings from 'models/AppSettings'
 import { useStore } from 'statery'
-import ExternalLinkIcon from '../icons/ExternalLinkIcon'
+import ExternalLinkIcon from 'components/icons/ExternalLinkIcon'
 
 const StyledLinkIcon = styled(LinkIcon)`
   cursor: pointer;
 `
 
-const ModelInfoPage = ({ availableModels, modelDetails }: any) => {
+const ModelDetailsList = ({ availableModels, modelDetails }: any) => {
   const router = useRouter()
+  const searchParams = useSearchParams()
+
   const modelState = useStore(modelStore)
   const workerModels = modelState.availableModels
 
@@ -65,7 +67,7 @@ const ModelInfoPage = ({ availableModels, modelDetails }: any) => {
         }
       )
 
-      if (router.query.show === 'favorite-models') {
+      if (searchParams?.get('show') === 'favorite-models') {
         if (componentState.favoriteModels[model]) {
           modelDetailsArray.push({
             ...componentState.modelDetails[model],
@@ -166,7 +168,7 @@ const ModelInfoPage = ({ availableModels, modelDetails }: any) => {
           <a id={name} />
           <Panel className="mb-4 text-sm">
             <div className="flex flex-row w-full items-center">
-              <div className="flex flex-row  items-center gap-1 inline-block w-1/2 text-xl">
+              <div className="flex flex-row  items-center gap-1 w-1/2 text-xl">
                 <Linker
                   href={`/info/models#${name}`}
                   onClick={() => {
@@ -359,7 +361,7 @@ const ModelInfoPage = ({ availableModels, modelDetails }: any) => {
               images
             </TextButton> */}
           </div>
-          {router.query.show === 'favorite-models' &&
+          {searchParams?.get('show') === 'favorite-models' &&
             sortModels().length === 0 && (
               <div>
                 You currently have no favorite models selected.{' '}
@@ -373,4 +375,4 @@ const ModelInfoPage = ({ availableModels, modelDetails }: any) => {
   )
 }
 
-export default ModelInfoPage
+export default ModelDetailsList

@@ -1,11 +1,13 @@
+'use client'
+
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
-import { fetchModelUpdates } from '../../../api/fetchModelUpdates'
-import InfoPageMenuButton from '../../../components/InfoPage/Menu'
-import Row from '../../../components/Row'
-import Linker from '../../../components/UI/Linker'
+import { fetchModelUpdates } from 'api/fetchModelUpdates'
+import InfoPageMenuButton from 'components/InfoPage/Menu'
+import Row from 'components/Row'
+import Linker from 'components/UI/Linker'
 import PageTitle from 'app/_components/PageTitle'
-import { relativeTimeSec } from '../../../utils/numberUtils'
+import { relativeTimeSec } from 'utils/numberUtils'
 
 interface IModelUpdatesResponse {
   success: boolean
@@ -19,7 +21,7 @@ interface IModelUpdate {
   status: string
 }
 
-const InfoPage = () => {
+const ModelUpdatesPage = () => {
   const [updates, setUpdates] = useState<any>([])
 
   const getModelUpdates = async () => {
@@ -134,4 +136,4 @@ const InfoPage = () => {
   )
 }
 
-export default InfoPage
+export default ModelUpdatesPage

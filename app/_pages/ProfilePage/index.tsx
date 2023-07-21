@@ -1,12 +1,14 @@
+'use client'
+
 /* eslint-disable @next/next/no-img-element */
 import Head from 'next/head'
 import Link from 'next/link'
 import { useStore } from 'statery'
-import RobotProfile from '../components/icons/RobotProfile'
-import SpinnerV2 from '../components/Spinner'
+import RobotProfile from 'components/icons/RobotProfile'
+import SpinnerV2 from 'components/Spinner'
 import PageTitle from 'app/_components/PageTitle'
-import { userInfoStore } from '../store/userStore'
-import styles from '../styles/profile.module.css'
+import { userInfoStore } from 'store/userStore'
+import styles from './profile.module.css'
 
 const ProfilePage = () => {
   const userState = useStore(userInfoStore)
