@@ -35,7 +35,7 @@ const PostProcessors = ({ input, setInput }: GetSetPromptInput) => {
   )
 
   return (
-    <Section>
+    <Section style={{ paddingTop: 0 }}>
       <SubSectionTitle>
         <TextTooltipRow>
           Post-processing
