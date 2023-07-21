@@ -1,0 +1,5 @@
+.ContentWrapper {
+  padding: 16px;
+  margin: 0 auto;
+  margin-top: var(--headerNav-height);
+}

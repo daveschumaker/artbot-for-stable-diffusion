@@ -1,0 +1,13 @@
+.HeroTitle {
+  font-size: 84px;
+  line-height: 80px;
+  margin: 0;
+  margin-bottom: 12px;
+}
+
+@media (min-width: 640px) {
+  .HeroTitle {
+    font-size: 108px;
+    line-height: 100px;
+  }
+}

@@ -90,19 +90,19 @@ const HeaderNavLinks = () => {
           <NavigationMenu.Trigger
             className={clsx(
               styles.NavigationMenuTrigger,
-              isActiveRoute('/') && styles.isActive,
+              isActiveRoute('/create') && styles.isActive,
               isActiveRoute('/controlnet') && styles.isActive,
               isActiveRoute('/draw') && styles.isActive
             )}
           >
-            <Link className={styles.NavigationMenuLink} href="/">
+            <Link className={styles.NavigationMenuLink} href="/create">
               Create
             </Link>
             <IconChevronDown className={styles.CaretDown} stroke={1.5} />
           </NavigationMenu.Trigger>
           <NavigationMenu.Content className={styles.NavigationMenuContent}>
             <ul className={clsx(styles.List, styles.one)}>
-              <ListItem href="/" title="Create">
+              <ListItem href="/create" title="Create">
                 Create a new image using a prompt, image, or painting.
               </ListItem>
               <ListItem href="/controlnet" title="ControlNet">

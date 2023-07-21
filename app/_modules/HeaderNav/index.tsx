@@ -20,9 +20,7 @@ const HeaderNav = () => {
               className="min-w-[30px] max-w-[30px]"
             />
           </div>
-          <h1 className="ml-2 text-[24px] md:text-[26px] font-bold leading-7 text-teal-500">
-            ArtBot
-          </h1>
+          <h1 className={styles.Title}>ArtBot</h1>
         </Link>
         <NoSsr>
           <HeaderNavLinks />

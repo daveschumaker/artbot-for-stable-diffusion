@@ -1,11 +1,8 @@
 import { ReactNode } from 'react'
-import ContentWrapper from './_components/ContentWrapper'
 import HeaderNav from './_modules/HeaderNav'
 import '../styles/globals.css'
 import AppInit from './_modules/AppInit'
 import SlidingMenu from './_modules/SlidingMenu'
-import FixedMenu from './_modules/FixedMenu'
-import ModalProvider from './_modules/ModalProvider'
 
 export default function RootLayout({
   // Layouts must accept a children prop.
@@ -20,13 +17,7 @@ export default function RootLayout({
         <AppInit />
         <HeaderNav />
         <SlidingMenu />
-        <FixedMenu />
-        <ModalProvider>
-          <ContentWrapper>
-            {children}
-            <div>HELLO!</div>
-          </ContentWrapper>
-        </ModalProvider>
+        {children}
       </body>
     </html>
   )
