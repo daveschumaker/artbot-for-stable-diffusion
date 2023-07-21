@@ -57,7 +57,7 @@ import FlexibleRow from 'app/_components/FlexibleRow'
 import FlexibleUnit from 'app/_components/FlexibleUnit'
 import SelectModel from 'app/_modules/AdvancedOptionsPanel/SelectModel'
 import SelectModelDetails from 'modules/AdvancedOptions/ModelDetails/modelDetails'
-import ImageOrientationOptions from 'modules/AdvancedOptions/ImageOrientationOptions'
+import ImageOrientationOptions from 'app/_modules/AdvancedOptionsPanel/ImageOrientationOptions'
 
 const NoSliderSpacer = styled.div`
   height: 14px;
