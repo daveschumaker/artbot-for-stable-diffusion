@@ -465,17 +465,17 @@ const Interrogate = () => {
         </SubSectionTitle>
         <Checkbox
           label="Caption"
-          value={componentState.interrogations.caption}
+          checked={componentState.interrogations.caption}
           onChange={() => handleCheckboxClick('caption')}
         />
         <Checkbox
           label="Interrogation"
-          value={componentState.interrogations.tags}
+          checked={componentState.interrogations.tags}
           onChange={() => handleCheckboxClick('tags')}
         />
         <Checkbox
           label="NSFW"
-          value={componentState.interrogations.nsfw}
+          checked={componentState.interrogations.nsfw}
           onChange={() => handleCheckboxClick('nsfw')}
         />
       </OptionsWrapper>
