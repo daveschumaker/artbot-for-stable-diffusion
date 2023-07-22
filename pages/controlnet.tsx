@@ -532,12 +532,12 @@ const ControlNet = () => {
         <div className="flex flex-col items-start gap-2">
           <Checkbox
             label={`GFPGAN (improves faces)`}
-            value={getPostProcessing('GFPGAN')}
+            checked={getPostProcessing('GFPGAN')}
             onChange={() => handlePostProcessing('GFPGAN')}
           />
           <Checkbox
             label={`CodeFormers (improves faces)`}
-            value={getPostProcessing('CodeFormers')}
+            checked={getPostProcessing('CodeFormers')}
             onChange={() => handlePostProcessing('CodeFormers')}
           />
           {(getPostProcessing('GFPGAN') ||
