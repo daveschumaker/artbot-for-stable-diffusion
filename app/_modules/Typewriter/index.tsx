@@ -5,21 +5,37 @@ import { useState } from 'react'
 
 import image1 from './images/astronaut.jpg'
 import image2 from './images/amazon.jpg'
-import image3 from './images/robocop.jpg'
-import image4 from './images/daftpunk.jpg'
-import image5 from './images/mario.jpg'
-import image6 from './images/cabin.jpg'
+import image3 from './images/himalayas.jpg'
+import image4 from './images/robocop.jpg'
+import image5 from './images/daftpunk.jpg'
+import image6 from './images/mario.jpg'
+import image7 from './images/cabin.jpg'
+import image8 from './images/internet.jpg'
+import image9 from './images/mechanical_brain.jpg'
 
 const prompts = [
   'An astronaut resting on Mars in a beach chair',
   'A high tech solarpunk utopia in the Amazon rainforest with technology and nature mixed together',
+  'Himalayan mountains in the style of Moebius',
   'Cute 3D render of RoboCop',
   'Daft Punk in the style of a woodblock print',
   'Beautiful painting of Mario and Luigi eating ice cream on a park bench',
-  'Mountain chalet covered in snow, foggy, sunrise, sharp details, sharp focus, elegant, highly detailed, illustration, by Jordan Grimmer and Greg Rutkowski'
+  'Mountain chalet covered in snow, foggy, sunrise, sharp details, sharp focus, elegant, highly detailed, illustration, by Jordan Grimmer and Greg Rutkowski',
+  'A pencil drawing of the Internet',
+  'Model of a steampunk mechanical brain'
 ]
 
-const images = [image1, image2, image3, image4, image5, image6]
+const images = [
+  image1,
+  image2,
+  image3,
+  image4,
+  image5,
+  image6,
+  image7,
+  image8,
+  image9
+]
 
 // function shuffleArray(array: Array<string>) {
 //   for (let i = array.length - 1; i > 0; i--) {
