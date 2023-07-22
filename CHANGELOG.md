@@ -1,3 +1,7 @@
+# 2023.07.21
+
+- Fix: Issue where checkboxes for post-processors and upscalers weren't displaying correct values. Thanks to PixelDelightAI and Hinaloth for reporting this on Discord.
+
 # 2023.07.19
 
 - Fix: Attempt to fix issue where pending jobs that 404 are not removed from the job queue and requests are still repeatedly sent to the AI Horde.

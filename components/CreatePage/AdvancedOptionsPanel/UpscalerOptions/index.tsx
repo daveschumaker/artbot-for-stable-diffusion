@@ -63,7 +63,7 @@ const UpscalerOptions = ({ input, setInput }: Props) => {
           <Checkbox
             key={upscalerName}
             label={upscalerName}
-            value={getPostProcessing(upscalerName)}
+            checked={getPostProcessing(upscalerName)}
             onChange={() => handlePostProcessing(upscalerName)}
           />
         )

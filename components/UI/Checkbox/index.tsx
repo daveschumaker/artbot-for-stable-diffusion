@@ -2,7 +2,13 @@ import * as RadixCheckbox from '@radix-ui/react-checkbox'
 import { IconCheck } from '@tabler/icons-react'
 import { useId } from 'react'
 
-export default function Checkbox({ label, checked, onChange }: any) {
+interface CheckboxProps {
+  label: string
+  checked: boolean
+  onChange: () => any
+}
+
+export default function Checkbox({ label, checked, onChange }: CheckboxProps) {
   const id = useId()
 
   return (
