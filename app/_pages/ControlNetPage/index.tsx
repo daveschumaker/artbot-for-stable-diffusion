@@ -1,64 +1,59 @@
+'use client'
+
 /* eslint-disable @next/next/no-img-element */
 import { useCallback, useEffect, useReducer, useState } from 'react'
 import { useStore } from 'statery'
-import SelectModel from 'app/_modules/AdvancedOptionsPanel/SelectModel/selectModel'
-import Uploader from '../components/CreatePage/Uploader'
-import ArrowBarLeftIcon from '../components/icons/ArrowBarLeftIcon'
-import GrainIcon from '../components/icons/GrainIcon'
-import { Button } from '../components/UI/Button'
-import Input from '../components/UI/Input'
-import MaxWidth from '../components/UI/MaxWidth'
+import SelectModel from 'app/_modules/AdvancedOptionsPanel/SelectModel'
+import Uploader from 'app/_modules/Uploader'
+import ArrowBarLeftIcon from 'components/icons/ArrowBarLeftIcon'
+import GrainIcon from 'components/icons/GrainIcon'
+import { Button } from 'components/UI/Button'
+import Input from 'components/UI/Input'
+import MaxWidth from 'components/UI/MaxWidth'
 import PageTitle from 'app/_components/PageTitle'
 import Section from 'app/_components/Section'
-import SplitPanel from '../components/UI/SplitPanel'
+import SplitPanel from 'components/UI/SplitPanel'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import TextTooltipRow from 'app/_components/TextTooltipRow'
 import TooltipComponent from 'app/_components/TooltipComponent'
-import TwoPanel from '../components/UI/TwoPanel'
-import DefaultPromptInput from '../models/DefaultPromptInput'
+import TwoPanel from 'components/UI/TwoPanel'
+import DefaultPromptInput from 'models/DefaultPromptInput'
 import {
   clearBase64FromDraw,
   getBase64FromDraw,
   setI2iUploaded
-} from '../store/canvasStore'
-import { userInfoStore } from '../store/userStore'
-import {
-  countImagesToGenerate,
-  nearestWholeMultiple
-} from '../utils/imageUtils'
-import { validModelsArray } from '../utils/modelUtils'
-import { SourceProcessing } from '../utils/promptUtils'
-import Checkbox from '../components/UI/Checkbox'
-import TrashIcon from '../components/icons/TrashIcon'
+} from 'store/canvasStore'
+import { userInfoStore } from 'store/userStore'
+import { countImagesToGenerate, nearestWholeMultiple } from 'utils/imageUtils'
+import { SourceProcessing } from 'utils/promptUtils'
+import Checkbox from 'components/UI/Checkbox'
+import TrashIcon from 'components/icons/TrashIcon'
 import ActionPanel from 'app/_pages/CreatePage/ActionPanel'
-import { createImageJob } from '../utils/imageCache'
-import CreateImageRequest from '../models/CreateImageRequest'
-import { useRouter } from 'next/router'
+import { createImageJob } from 'utils/imageCache'
+import CreateImageRequest from 'models/CreateImageRequest'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Head from 'next/head'
-import { useEffectOnce } from '../hooks/useEffectOnce'
-import { modelStore } from '../store/modelStore'
-import AppSettings from '../models/AppSettings'
+import { useEffectOnce } from 'hooks/useEffectOnce'
+import AppSettings from 'models/AppSettings'
 import { toast } from 'react-toastify'
-import { getInputCache } from '../store/inputCache'
-import { kudosCostV2 } from '../utils/kudosCost'
+import { getInputCache } from 'store/inputCache'
+import { kudosCostV2 } from 'utils/kudosCost'
 import NumericInputSlider from 'app/_modules/AdvancedOptionsPanel/NumericInputSlider'
 import ControlNetOptions from 'app/_modules/AdvancedOptionsPanel/ControlNetOptions'
 import UpscalerOptions from 'app/_modules/AdvancedOptionsPanel/UpscalerOptions'
 import useComponentState from 'hooks/useComponentState'
 import { trackEvent } from 'api/telemetry'
-import PromptTextArea from 'modules/PromptTextArea'
-import NegativePromptArea from 'modules/NegativePromptArea'
-import { IModelsDetails } from 'types/artbot'
+import PromptInput from '../CreatePage/PromptInput'
 
 // Kind of a hacky way to persist output of image over the course of a session.
 let cachedImageDetails = {}
 
-const ControlNet = () => {
+const ControlNetPage = () => {
   const router = useRouter()
-  const modelState = useStore(modelStore)
+  const searchParams = useSearchParams()
+
   const userState = useStore(userInfoStore)
   const { loggedIn } = userState
-  const { modelDetails } = modelState
 
   const [pending, setPending] = useState(false)
 
@@ -193,21 +188,6 @@ const ControlNet = () => {
     })
   }
 
-  const modelerOptions = (imageParams: any) => {
-    const modelsArray = validModelsArray({ imageParams }) || []
-
-    const filteredArray = modelsArray.filter((model: IModelsDetails) => {
-      // @ts-ignore
-      if (!modelDetails[model.name]) {
-        return false
-      }
-
-      return true
-    })
-
-    return filteredArray
-  }
-
   const getPostProcessing = useCallback(
     (value: string) => {
       return input.post_processing.indexOf(value) >= 0
@@ -296,10 +276,10 @@ const ControlNet = () => {
   }, [input])
 
   useEffect(() => {
-    if (router.query.drawing) {
+    if (searchParams?.get('drawing')) {
       handleImportDrawing()
     }
-  }, [router.query.drawing])
+  }, [searchParams])
 
   const totalKudosCost = kudosCostV2({
     width: input.width,
@@ -391,8 +371,7 @@ const ControlNet = () => {
             marginBottom: '16px'
           }}
         >
-          <PromptTextArea input={input} setInput={setInput} />
-          <NegativePromptArea input={input} setInput={setInput} />
+          <PromptInput input={input} setInput={setInput} />
         </div>
       </Section>
       <Section>
@@ -512,11 +491,7 @@ const ControlNet = () => {
       </Section>
 
       <Section>
-        <SelectModel
-          input={input}
-          modelerOptions={modelerOptions}
-          setInput={setInput}
-        />
+        <SelectModel input={input} setInput={setInput} />
       </Section>
 
       <Section>
@@ -607,4 +582,4 @@ const ControlNet = () => {
   )
 }
 
-export default ControlNet
+export default ControlNetPage
