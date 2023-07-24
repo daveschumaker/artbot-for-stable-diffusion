@@ -1,16 +1,20 @@
 import { IconX } from '@tabler/icons-react'
 import { ReactNode, useEffect } from 'react'
-import ClickableOverlay from '../ClickableOverlay'
+import ClickableOverlay from 'app/_components/ClickableOverlay'
 import styles from './dropdownOptions.module.css'
 
 export default function DropdownOptions({
   children,
   handleClose,
-  height
+  height,
+  title,
+  top = '42px'
 }: {
   children: ReactNode
   handleClose: () => void
   height?: number
+  title?: string
+  top?: string
 }) {
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
@@ -30,7 +34,8 @@ export default function DropdownOptions({
   return (
     <>
       <ClickableOverlay disableBackground handleClose={handleClose} />
-      <div className={styles['DropdownOptions']}>
+      <div className={styles['DropdownOptions']} style={{ top }}>
+        {title && <div className={styles.Title}>{title}</div>}
         <div className={styles['CloseButton']} onClick={handleClose}>
           <IconX stroke={1.5} />
         </div>

@@ -8,7 +8,6 @@ import { useStore } from 'statery'
 import Input from 'components/UI/Input'
 import Linker from 'components/UI/Linker'
 import Section from 'app/_components/Section'
-import Select from 'app/_components/Select'
 import SplitPanel from 'components/UI/SplitPanel'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import TextButton from 'components/UI/TextButton'
@@ -19,7 +18,6 @@ import TwoPanel from 'components/UI/TwoPanel'
 // Utils imports
 import { maxSteps } from 'utils/validationUtils'
 import { SourceProcessing } from 'utils/promptUtils'
-import { validModelsArray } from 'utils/modelUtils'
 
 // Local imports
 import ControlNetOptions from './ControlNetOptions'
@@ -39,7 +37,6 @@ import AppSettings from 'models/AppSettings'
 import PromptInputSettings from 'models/PromptInputSettings'
 
 // Other imports
-import { trackEvent } from 'api/telemetry'
 import ParentImage from 'app/_components/ParentImage'
 import AllowNsfwImages from './AllowNsfwImages'
 import ReplacementFilterToggle from './ReplacementFilterToggle'
@@ -53,6 +50,7 @@ import Seed from './Seed'
 import SelectSampler from './SelectSampler'
 import ImageCount from './ImageCount'
 import PostProcessors from './PostProcessors'
+import Guidance from './Guidance'
 
 const NoSliderSpacer = styled.div`
   height: 14px;
@@ -74,98 +72,16 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
   const { loggedIn } = userState
 
   const [componentState, setComponentState] = useComponentState({
-    showMultiModel: PromptInputSettings.get('showMultiModel') || false,
     isNegativePromptLibraryPanelOpen: false,
     favoriteModelsCount: 0
   })
-
-  const modelerOptions = (imageParams: any) => {
-    const modelsArray =
-      validModelsArray({ imageParams, filterNsfw: false }) || []
-    modelsArray.push({
-      name: 'random',
-      value: 'random',
-      label: 'Random!',
-      count: 1
-    })
-
-    return modelsArray
-  }
-
-  // @ts-ignore
-  const modelsValue = modelerOptions(input).filter((option) => {
-    return input?.models?.indexOf(option.value) >= 0
-  })
-
-  // const getPostProcessing = useCallback(
-  //   (value: string) => {
-  //     return input.post_processing.indexOf(value) >= 0
-  //   },
-  //   [input.post_processing]
-  // )
-
-  // const handlePostProcessing = useCallback(
-  //   (value: string) => {
-  //     let newPost = [...input.post_processing]
-  //     const index = newPost.indexOf(value)
-
-  //     if (index > -1) {
-  //       newPost.splice(index, 1)
-  //     } else {
-  //       newPost.push(value)
-  //     }
-
-  //     PromptInputSettings.set('post_processing', newPost)
-  //     setInput({ post_processing: newPost })
-  //   },
-  //   [input.post_processing, setInput]
-  // )
 
   useEffect(() => {
     const favModels = AppSettings.get('favoriteModels') || {}
     const favoriteModelsCount = Object.keys(favModels).length
 
-    if (
-      !componentState.showMultiModel &&
-      input.models.length > 1 &&
-      !input.useAllModels
-    ) {
-      setComponentState({ showMultiModel: true })
-    }
-
     setComponentState({ favoriteModelsCount })
-  }, [componentState.showMultiModel, input, setComponentState])
-
-  // Dynamically display various options
-
-  const showMultiSamplerInput =
-    !input.useAllModels &&
-    !input.useFavoriteModels &&
-    !componentState.showMultiModel
-
-  const showMultiModelSelect =
-    !input.useMultiSteps &&
-    !input.useAllSamplers &&
-    !input.useAllModels &&
-    !input.useFavoriteModels &&
-    input.source_processing !== SourceProcessing.InPainting &&
-    input.source_processing !== SourceProcessing.OutPainting
-
-  const showUseAllModelsInput =
-    !input.useMultiSteps &&
-    !input.useAllSamplers &&
-    !componentState.showMultiModel &&
-    !input.useFavoriteModels &&
-    input.source_processing !== SourceProcessing.InPainting &&
-    input.source_processing !== SourceProcessing.OutPainting
-
-  const showUseFavoriteModelsInput =
-    !input.useMultiSteps &&
-    !input.useAllSamplers &&
-    !componentState.showMultiModel &&
-    !input.useAllModels &&
-    input.source_processing !==
-      (SourceProcessing.InPainting || SourceProcessing.OutPainting)
+  }, [componentState.showMultiModel, setComponentState])
 
   return (
     <div>
@@ -204,59 +120,7 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
       </FlexibleRow>
       <FlexibleRow>
         <FlexibleUnit>
-          {componentState.showMultiModel ? (
-            <Section style={{ marginBottom: '8px' }}>
-              <SubSectionTitle>
-                <TextTooltipRow>
-                  Select Models
-                  <TooltipComponent tooltipId="select-models-tooltip">
-                    Models currently available within the horde. Numbers in
-                    parentheses indicate number of works. Generally, these
-                    models will generate images quicker.
-                  </TooltipComponent>
-                </TextTooltipRow>
-              </SubSectionTitle>
-              <Select
-                isMulti
-                // menuPlacement={'top'}
-                //@ts-ignore
-                options={modelerOptions(input)}
-                onChange={(obj: Array<{ value: string; label: string }>) => {
-                  const modelArray: Array<string> = []
-
-                  obj.forEach((model: { value: string; label: string }) => {
-                    modelArray.push(model.value)
-                  })
-
-                  let sampler = input.sampler
-
-                  if (input.sampler === 'dpmsolver' && modelArray.length > 1) {
-                    sampler = 'k_euler_a'
-                  }
-
-                  PromptInputSettings.set('models', [...modelArray])
-                  PromptInputSettings.set('sampler', sampler)
-                  setInput({ models: [...modelArray], sampler })
-                }}
-                // @ts-ignore
-                value={modelsValue}
-                isSearchable={true}
-              />
-            </Section>
-          ) : (
-            <SelectModel
-              disabled={
-                input.source_processing !== SourceProcessing.OutPainting &&
-                !input.useAllModels &&
-                !componentState.showMultiModel &&
-                !input.useFavoriteModels
-                  ? false
-                  : true
-              }
-              input={input}
-              setInput={setInput}
-            />
-          )}
+          <SelectModel input={input} setInput={setInput} />
           <SelectModelDetails
             models={input.models}
             multiModels={input.useAllModels || input.useFavoriteModels}
@@ -291,18 +155,7 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
         </FlexibleUnit>
         <FlexibleUnit>
           {/* TODO: Handle multi-guidance (e.g., disable this field and have mutliple guidance values way down below.) */}
-          <NumericInputSlider
-            label="Guidance"
-            tooltip="Higher numbers follow the prompt more closely. Lower
-                numbers give more creativity."
-            from={1}
-            to={30}
-            step={0.5}
-            input={input}
-            setInput={setInput}
-            fieldName="cfg_scale"
-            fullWidth
-          />
+          <Guidance input={input} setInput={setInput} />
         </FlexibleUnit>
       </FlexibleRow>
       <FlexibleRow>
@@ -369,7 +222,7 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
             </Section>
           )}
 
-          {showMultiSamplerInput && (
+          {false && (
             <InputSwitch
               disabled={
                 input.useMultiGuidance || input.useAllSamplers ? true : false
@@ -436,7 +289,7 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
             </Section>
           )}
 
-          {showMultiSamplerInput && (
+          {false && (
             <InputSwitch
               label="Use multiple guidance"
               tooltip='Provide a list of comma separated values to create a series of images using multiple guidance: "3,6,9,12,15"'
@@ -550,114 +403,6 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
           }}
         />
       </div> */}
-      {showMultiModelSelect && (
-        <InputSwitch
-          label="Multi-model select"
-          tooltip="Pick from multiple models that you might prefer."
-          handleSwitchToggle={() => {
-            if (!componentState.showMultiModel) {
-              trackEvent({
-                event: 'USE_MULTI_MODEL_SELECT',
-                context: '/pages/index'
-              })
-              setComponentState({
-                showMultiModel: true
-              })
-              setInput({
-                useAllSamplers: false,
-                useAllModels: false,
-                useFavoriteModels: false,
-                useMultiSteps: false
-              })
-
-              PromptInputSettings.set('showMultiModel', true)
-              PromptInputSettings.set('useAllSamplers', false)
-              PromptInputSettings.set('useAllModels', false)
-              PromptInputSettings.set('useFavoriteModels', false)
-              PromptInputSettings.set('useMultiSteps', false)
-            } else {
-              PromptInputSettings.set('showMultiModel', false)
-              PromptInputSettings.set('models', [input.models[0]])
-
-              setComponentState({
-                showMultiModel: false
-              })
-              setInput({
-                models: [input.models[0]]
-              })
-            }
-          }}
-          checked={componentState.showMultiModel}
-        />
-      )}
-      {showUseAllModelsInput && (
-        <InputSwitch
-          label={`Use all available models (${
-            modelerOptions(input).length - 1
-          })`}
-          tooltip="Automatically generate an image for each model currently available on Stable Horde"
-          moreInfoLink={
-            <Linker href="/info/models">[ View all model details ]</Linker>
-          }
-          handleSwitchToggle={() => {
-            if (!input.useAllModels) {
-              trackEvent({
-                event: 'USE_ALL_MODELS_CLICK',
-                context: '/pages/index'
-              })
-              setInput({
-                useAllModels: true,
-                useFavoriteModels: false,
-                useMultiSteps: false,
-                useAllSamplers: false,
-                numImages: 1
-              })
-
-              PromptInputSettings.set('useAllModels', true)
-              PromptInputSettings.set('useFavoriteModels', false)
-              PromptInputSettings.set('useMultiSteps', false)
-              PromptInputSettings.set('useAllSamplers', false)
-              PromptInputSettings.set('numImages', false)
-            } else {
-              PromptInputSettings.set('useAllModels', false)
-              setInput({ useAllModels: false })
-            }
-          }}
-          checked={input.useAllModels}
-        />
-      )}
-      {showUseFavoriteModelsInput && (
-        <InputSwitch
-          label={`Use favorite models (${componentState.favoriteModelsCount})`}
-          tooltip="Automatically generate an image for each model you have favorited."
-          moreInfoLink={
-            <Linker href="/info/models?show=favorite-models">
-              [ View favorite models ]
-            </Linker>
-          }
-          disabled={componentState.favoriteModelsCount === 0 ? true : false}
-          handleSwitchToggle={() => {
-            if (!input.useFavoriteModels) {
-              trackEvent({
-                event: 'USE_FAV_MODELS_CLICK',
-                context: '/pages/index'
-              })
-              setInput({
-                useFavoriteModels: true,
-                useAllSamplers: false,
-                useMultiSteps: false
-              })
-              PromptInputSettings.set('useFavoriteModels', true)
-              PromptInputSettings.set('useAllSamplers', false)
-              PromptInputSettings.set('useMultiSteps', false)
-            } else {
-              PromptInputSettings.set('useFavoriteModels', false)
-              setInput({ useFavoriteModels: false })
-            }
-          }}
-          checked={input.useFavoriteModels}
-        />
-      )}
       <LoraSelect input={input} setInput={setInput} />
       <InputSwitch
         label="Enable karras"

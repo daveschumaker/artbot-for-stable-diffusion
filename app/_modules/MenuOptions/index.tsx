@@ -49,7 +49,7 @@ const MenuOptions = ({
         <div
           className={styles.SubOption}
           onClick={() => {
-            navigateToLink('/?panel=img2img')
+            navigateToLink('/create?panel=img2img')
           }}
         >
           <IconPoint stroke={1.5} />
@@ -58,7 +58,7 @@ const MenuOptions = ({
         <div
           className={styles.SubOption}
           onClick={() => {
-            navigateToLink('/?panel=inpainting')
+            navigateToLink('/create?panel=inpainting')
           }}
         >
           <IconPoint stroke={1.5} />

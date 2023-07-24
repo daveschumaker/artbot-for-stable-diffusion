@@ -17,7 +17,6 @@ export default function RootLayout({
       <ModalProvider>
         <ContentWrapper>
           <MaxWidth>{children}</MaxWidth>
-          <div>HELLO!</div>
         </ContentWrapper>
       </ModalProvider>
     </>

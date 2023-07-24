@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import Editor from '../components/Fabric/Editor'
+import Editor from 'app/_modules/Editor'
 import PageTitle from 'app/_components/PageTitle'
 import Section from 'app/_components/Section'
 import styles from '../styles/drawpage.module.css'

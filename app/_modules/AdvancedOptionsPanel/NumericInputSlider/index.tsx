@@ -120,7 +120,6 @@ const NumericInputSlider = ({
           </TextTooltipRow>
         </SubSectionTitle>
         <NumberInput
-          className="mb-2"
           type="text"
           inputMode="numeric"
           min={from}

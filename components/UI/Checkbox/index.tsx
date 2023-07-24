@@ -5,7 +5,7 @@ import { useId } from 'react'
 interface CheckboxProps {
   label: string
   checked: boolean
-  onChange: () => any
+  onChange: (bool: boolean) => any
 }
 
 export default function Checkbox({ label, checked, onChange }: CheckboxProps) {

@@ -1,7 +1,7 @@
-import ControlNetOptions from 'components/CreatePage/AdvancedOptionsPanel/ControlNetOptions'
-import NumericInputSlider from 'components/CreatePage/AdvancedOptionsPanel/NumericInputSlider'
-import Samplers from 'components/CreatePage/AdvancedOptionsPanel/Samplers'
-import SelectModel from 'components/CreatePage/AdvancedOptionsPanel/SelectModel/selectModel'
+import ControlNetOptions from 'app/_modules/AdvancedOptionsPanel/ControlNetOptions'
+import NumericInputSlider from 'app/_modules/AdvancedOptionsPanel/NumericInputSlider'
+import SelectSampler from 'app/_modules/AdvancedOptionsPanel/SelectSampler'
+import SelectModel from 'app/_modules/AdvancedOptionsPanel/SelectModel'
 import { Button } from 'components/UI/Button'
 import FlexRow from 'components/UI/FlexRow'
 import Input from 'components/UI/Input'
@@ -16,16 +16,11 @@ import PlaylistXIcon from 'components/icons/PlaylistXIcon'
 import { Tooltip } from 'react-tooltip'
 import { useStore } from 'statery'
 import { userInfoStore } from 'store/userStore'
-import { validModelsArray } from 'utils/modelUtils'
 import { maxSteps } from 'utils/validationUtils'
 
 export const LivePaintOptions = ({ input, setInput }: any) => {
   const userState = useStore(userInfoStore)
   const { loggedIn } = userState
-
-  const modelerOptions = (imageParams: any) => {
-    return validModelsArray({ imageParams }) || []
-  }
 
   return (
     <div className="flex flex-col w-full gap-2">
@@ -76,11 +71,7 @@ export const LivePaintOptions = ({ input, setInput }: any) => {
         </Button>
       </FlexRow>
       <FlexRow>
-        <Samplers
-          input={input}
-          setInput={setInput}
-          hideShowAllSamplers={true}
-        />
+        <SelectSampler input={input} setInput={setInput} />
       </FlexRow>
       <FlexRow>
         <NumericInputSlider
@@ -202,11 +193,7 @@ export const LivePaintOptions = ({ input, setInput }: any) => {
       </FlexRow>
 
       <FlexRow>
-        <SelectModel
-          input={input}
-          modelerOptions={modelerOptions}
-          setInput={setInput}
-        />
+        <SelectModel input={input} setInput={setInput} />
       </FlexRow>
 
       <FlexRow>

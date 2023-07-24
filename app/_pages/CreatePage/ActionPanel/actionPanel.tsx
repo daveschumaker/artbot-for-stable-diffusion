@@ -1,4 +1,4 @@
-import { IconSquarePlus, IconTrash } from '@tabler/icons-react'
+import { IconCalculator, IconSquarePlus, IconTrash } from '@tabler/icons-react'
 import FormErrorMessage from './FormErrorMessage'
 
 import { Button } from 'components/UI/Button'
@@ -65,6 +65,9 @@ const ActionPanel = ({
             >
               <span>{pending ? '' : <IconSquarePlus />}</span>
               {pending ? 'Creating...' : 'Create'}
+            </Button>
+            <Button>
+              <IconCalculator />
             </Button>
           </div>
           <div className="flex flex-row justify-end">

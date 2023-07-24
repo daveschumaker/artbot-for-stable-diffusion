@@ -86,7 +86,7 @@ const OptionsPanel = ({ input, setInput }: Props) => {
           )}
           onClick={() => {
             setActiveNav('advanced')
-            router.push(`/`)
+            router.push(`/create`)
           }}
         >
           [ advanced ]
@@ -97,7 +97,7 @@ const OptionsPanel = ({ input, setInput }: Props) => {
             activeNav === 'img2img' && styles['NavItem-Active']
           )}
           onClick={() => {
-            router.push(`?panel=img2img`)
+            router.push(`/create?panel=img2img`)
             setActiveNav('img2img')
           }}
         >
@@ -106,7 +106,7 @@ const OptionsPanel = ({ input, setInput }: Props) => {
         {/* <NavItem
           active={activeNav === 'draw'}
           onClick={() => {
-            router.push(`?panel=draw`)
+            router.push(`/create?panel=draw`)
             setActiveNav('draw')
           }}
         >
@@ -118,7 +118,7 @@ const OptionsPanel = ({ input, setInput }: Props) => {
             activeNav === 'inpainting' && styles['NavItem-Active']
           )}
           onClick={() => {
-            router.push(`?panel=inpainting`)
+            router.push(`/create?panel=inpainting`)
             setActiveNav('inpainting')
           }}
         >

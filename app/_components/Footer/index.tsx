@@ -1,7 +1,9 @@
+'use client'
+
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import { isInstalledPwa } from '../../../utils/appUtils'
-import Linker from '../Linker'
+import Linker from 'components/UI/Linker'
 import styles from './component.module.css'
 
 export default function Footer() {
@@ -23,7 +25,7 @@ export default function Footer() {
   return (
     <div className={clsx(styles.Footer, isSafari && styles['Footer-isSafari'])}>
       <div>
-        Web app created with ❤️ by{' '}
+        Web app created with ❤️ and ☕️ by{' '}
         <Linker
           href="https://mastodon.world/@davely"
           target="_blank"

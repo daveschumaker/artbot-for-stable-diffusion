@@ -63,6 +63,8 @@ const SelectModelDetails = ({
     Array.isArray(modelInfo.showcases) &&
     modelInfo.showcases.length >= 1
 
+  const panelDisabled = models.length > 1 || multiModels
+
   return (
     <Section
       style={{
@@ -88,17 +90,17 @@ const SelectModelDetails = ({
               Please choose a model.
             </div>
           )}
-          {(models.length > 1 || multiModels) && (
+          {panelDisabled && (
             <div style={{ fontSize: '14px', marginBottom: '4px' }}>
               Panel disabled when using multiple models
             </div>
           )}
-          {!modelInfo && models.length === 1 && !multiModels && (
+          {!modelInfo && !panelDisabled && (
             <div style={{ fontSize: '14px', marginBottom: '4px' }}>
               There is currently no information available for {models[0]}.
             </div>
           )}
-          {hasShowcase && (
+          {hasShowcase && !panelDisabled && (
             <>
               <div style={{ fontSize: '14px', marginBottom: '4px' }}>
                 Example output using {models[0]}
@@ -112,23 +114,26 @@ const SelectModelDetails = ({
               />
             </>
           )}
-          {modelInfo && modelInfo.description && !multiModels && (
-            <div style={{ fontSize: '12px', marginBottom: '8px' }}>
-              {modelInfo.description}
-            </div>
-          )}
-          {modelInfo && !modelInfo.description && (
+          {modelInfo &&
+            modelInfo.description &&
+            !multiModels &&
+            !panelDisabled && (
+              <div style={{ fontSize: '12px', marginBottom: '8px' }}>
+                {modelInfo.description}
+              </div>
+            )}
+          {modelInfo && !modelInfo.description && !panelDisabled && (
             <div style={{ fontSize: '12px', marginBottom: '8px' }}>
               No description available for this model
             </div>
           )}
-          {modelInfo && !multiModels && (
+          {modelInfo && !multiModels && !panelDisabled && (
             <div style={{ fontSize: '12px', marginBottom: '8px' }}>
               <strong>Style:</strong> {modelInfo.style}{' '}
               {modelInfo.nsfw ? '(nsfw)' : ''}
             </div>
           )}
-          {hasTrigger && (
+          {hasTrigger && !panelDisabled && (
             <div style={{ fontSize: '12px', marginBottom: '8px' }}>
               <strong>Trigger words: </strong>
               {modelInfo?.trigger?.map((word) => {

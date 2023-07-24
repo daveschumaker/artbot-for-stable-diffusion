@@ -1,12 +1,13 @@
+'use client'
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
-import Editor from 'components/Fabric/Editor'
+import Editor from 'app/_modules/Editor'
 import PageTitle from 'app/_components/PageTitle'
 import { useCallback, useEffect, useReducer, useState } from 'react'
 import DefaultPromptInput from 'models/DefaultPromptInput'
 import { useFetchImage } from 'hooks/useFetchImage'
 import SpinnerV2 from 'components/Spinner'
-import { LivePaintOptions } from 'components/LivePaintPage/Options'
+import { LivePaintOptions } from './LivePaintPage/Options'
 import { SourceProcessing } from 'utils/promptUtils'
 import { useEffectOnce } from 'hooks/useEffectOnce'
 import { Button } from 'components/UI/Button'

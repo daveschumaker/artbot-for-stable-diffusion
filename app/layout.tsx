@@ -3,6 +3,30 @@ import HeaderNav from './_modules/HeaderNav'
 import '../styles/globals.css'
 import AppInit from './_modules/AppInit'
 import SlidingMenu from './_modules/SlidingMenu'
+import Footer from './_components/Footer'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'ArtBot - Create images with Stable Diffusion, utilizing the AI Horde',
+  description:
+    'Generate AI-created images and photos with Stable Diffusion using a distributed computing cluster powered by the AI Horde. No login required and free to use.',
+  icons: '/artbot/favicon.ico',
+  manifest: 'https://tinybots.net/artbot/manifest.json',
+  openGraph: {
+    type: 'website',
+    url: 'https://tinybots.net/artbot',
+    title:
+      'ArtBot - Create images with Stable Diffusion, utilizing the AI Horde',
+    description:
+      'Generate AI-created images and photos with Stable Diffusion using a distributed computing cluster powered by the AI Horde. No login required and free to use.',
+    siteName: 'ArtBot for Stable Diffusion',
+    images: [
+      {
+        url: 'https://tinybots.net/artbot/painting_bot.png'
+      }
+    ]
+  }
+}
 
 export default function RootLayout({
   // Layouts must accept a children prop.
@@ -13,11 +37,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body
+        // This ensures that footer is always forced to bottom of page if there is extra room.
+        style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}
+      >
         <AppInit />
         <HeaderNav />
         <SlidingMenu />
         {children}
+        <Footer />
       </body>
     </html>
   )
