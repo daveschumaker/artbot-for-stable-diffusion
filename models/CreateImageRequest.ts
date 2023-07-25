@@ -169,7 +169,11 @@ class CreateImageRequest {
     }
 
     // SDXL models look best on at least 1024 x 1024
-    if (models[0].includes('SDXL') && this.orientation === 'square') {
+    if (
+      models[0].includes('SDXL') &&
+      this.orientation === 'square' &&
+      this.width < 1024
+    ) {
       this.width = 1024
       this.height = 1024
     }

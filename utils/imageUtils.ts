@@ -195,10 +195,10 @@ export const createNewImage = async (imageParams: CreateImageJob) => {
 
   if (
     isNaN(clonedParams.steps) ||
-    clonedParams.steps > 200 ||
+    clonedParams.steps > 500 ||
     clonedParams.steps < 1
   ) {
-    clonedParams.steps = 200
+    clonedParams.steps = 20
   }
 
   if (

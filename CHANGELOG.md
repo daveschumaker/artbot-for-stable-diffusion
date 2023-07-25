@@ -1,3 +1,9 @@
+# 2023.07.25
+
+- Fix: The Horde supports up to 500 steps for logged in users. ArtBot had capped that at 200. Thanks to Efreak for reporting this on Discord.
+- Fix: When generating square SDXL images greater than 1024 pixels, ArtBot would revert to 1024 pixels. Thanks to Efreak for reporting this on Discord.
+- I've also seen a report related to Firefox having trouble initializing the browser database after a crash. I've added a special page to try and further debug this problem with some users on Discord.
+
 # 2023.07.21
 
 - Fix: Issue where checkboxes for post-processors and upscalers weren't displaying correct values. Thanks to PixelDelightAI and Hinaloth for reporting this on Discord.
