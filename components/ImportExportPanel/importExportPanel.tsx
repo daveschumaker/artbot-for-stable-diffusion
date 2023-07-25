@@ -12,6 +12,8 @@ import SpinnerV2 from 'components/Spinner'
 import { IconChevronRight } from '@tabler/icons-react'
 import ExportDatabase from 'app/_pages/SettingsPage/ExportDatabase'
 import ImportDatabase from 'app/_pages/SettingsPage/ImportDatabase'
+import LastResortExport from 'app/_pages/SettingsPage/FirefoxDb/LastResortExport'
+import LastResortImport from 'app/_pages/SettingsPage/FirefoxDb/LastResortImport'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -164,6 +166,8 @@ const ImportExportPanel = () => {
                 Images per file:
                 <Select
                   options={[
+                    { value: 25, label: 25 },
+                    { value: 50, label: 50 },
                     { value: 100, label: 100 },
                     { value: 250, label: 250 },
                     { value: 500, label: 500 },
@@ -183,6 +187,10 @@ const ImportExportPanel = () => {
             <ul>{renderImageList()}</ul>
           </Section>
         </SubSectionTitle>
+      </Section>
+      <Section>
+        <LastResortExport chunkSize={componentState.filesPerZip.value || 100} />
+        <LastResortImport />
       </Section>
     </div>
   )
