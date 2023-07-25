@@ -4,6 +4,7 @@ import CloudUploadIcon from './icons/CloudUploadIcon'
 import MobileHideText from './UI/MobileHideText'
 
 interface UploadButtonProps {
+  accept?: string
   label: string
   disabled?: boolean
   handleFile: () => void
@@ -11,6 +12,7 @@ interface UploadButtonProps {
 
 // @ts-ignore
 export function UploadButton({
+  accept = 'image/*',
   label = '',
   disabled = false,
   handleFile
@@ -43,7 +45,7 @@ export function UploadButton({
       </Button>
       <input
         type="file"
-        accept="image/*"
+        accept={accept}
         ref={hiddenFileInput}
         // @ts-ignore
         onChange={handleChange}

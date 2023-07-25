@@ -8,7 +8,7 @@ const DynamicDropDownMenuItem = dynamic(() => import('./select'), {
 
 export default function Select(props: SelectPropsComponent) {
   return (
-    <div className="grow">
+    <div className="grow" style={{ width: props?.width ?? '100%' }}>
       <DynamicDropDownMenuItem {...props} />
     </div>
   )
