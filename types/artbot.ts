@@ -222,6 +222,7 @@ export interface SelectComponentProps {
   isMulti?: boolean
   isSearchable?: boolean
   menuPlacement?: string
+  hideSelectedOptions?: boolean
   name?: string
   onChange: any
   options: Array<any>

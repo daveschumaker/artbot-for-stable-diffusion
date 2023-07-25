@@ -174,6 +174,7 @@ export interface SelectPropsComponent {
   inputMode?: string
   isDisabled?: boolean
   isMulti?: boolean
+  hideSelectedOptions?: boolean
   isSearchable?: boolean
   menuPlacement?: string
   name?: string

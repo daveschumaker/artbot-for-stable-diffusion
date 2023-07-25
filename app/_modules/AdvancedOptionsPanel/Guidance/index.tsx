@@ -29,7 +29,7 @@ export default function Guidance({ input, setInput }: GetSetPromptInput) {
               </span>
               <TooltipComponent tooltipId="multi-guidance">
                 Comma separated values to create a series of images using
-                multiple steps. Example: 3,6,9,12,15
+                multiple guidance values. Example: 3,6,9,12,15
               </TooltipComponent>
             </TextTooltipRow>
           </SubSectionTitle>

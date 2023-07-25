@@ -6,31 +6,31 @@ import Select from 'app/_components/Select'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { useEffect, useState } from 'react'
 import DropdownOptions from 'app/_modules/DropdownOptions'
-import styles from './component.module.css'
+// import styles from './component.module.css'
 import FlexRow from 'app/_components/FlexRow'
 import { useAvailableModels } from 'hooks/useAvailableModels'
 import { Button } from 'components/UI/Button'
-import { IconSettings } from '@tabler/icons-react'
+import { IconFilter, IconSettings } from '@tabler/icons-react'
 import Checkbox from 'components/UI/Checkbox'
 import { validModelsArray } from 'utils/modelUtils'
 import AppSettings from 'models/AppSettings'
-
-/**
- * TODO:
- * Split out filter models dropdown
- * Dropdown should also have a dynamic height (similar to how modal works).
- */
+import { useStore } from 'statery'
+import { modelStore } from 'store/modelStore'
+import TooltipComponent from 'app/_components/TooltipComponent'
+import TextTooltipRow from 'app/_components/TextTooltipRow'
 
 interface SelectModelProps extends GetSetPromptInput {
   disabled?: boolean
 }
 
 const SelectModel = ({ disabled, input, setInput }: SelectModelProps) => {
+  const { modelDetails } = useStore(modelStore)
   const [favoriteModelsCount, setFavoriteModelsCount] = useState(0)
   const [modelsOptions] = useAvailableModels({ input })
   const [showSettingsDropdown, setShowSettingsDropdown] = useState(false)
   const [showMultiModel, setShowMultiModel] = useState(false)
   const [showFilter, setShowFilter] = useState(false)
+  const [filterMode, setFilterMode] = useState('all')
 
   const handleMultiModelSelect = (
     obj: Array<{ value: string; label: string }>
@@ -51,8 +51,8 @@ const SelectModel = ({ disabled, input, setInput }: SelectModelProps) => {
   }
 
   const modelerOptions = (imageParams: any) => {
-    const modelsArray =
-      validModelsArray({ imageParams, filterNsfw: false }) || []
+    let modelsArray = validModelsArray({ imageParams, filterNsfw: false }) || []
+
     modelsArray.push({
       name: 'random',
       value: 'random',
@@ -66,6 +66,28 @@ const SelectModel = ({ disabled, input, setInput }: SelectModelProps) => {
   const modelsValue = modelerOptions(input).filter((option: any) => {
     return input?.models?.indexOf(option.value) >= 0
   })
+
+  const filteredModels = () => {
+    if (filterMode === 'nsfw') {
+      return modelsOptions.filter((obj: any) => {
+        return modelDetails[obj.name]?.nsfw === true
+      })
+    }
+
+    if (filterMode === 'sfw') {
+      return modelsOptions.filter((obj: any) => {
+        return modelDetails[obj.name]?.nsfw === false
+      })
+    }
+
+    if (filterMode === 'inpainting') {
+      return modelsOptions.filter((obj: any) => {
+        return obj?.name?.toLowerCase().includes('inpainting')
+      })
+    }
+
+    return modelsOptions
+  }
 
   // let selectValue = ImageModels.dropdownValue(input)
   let selectValue = modelsValue
@@ -93,13 +115,14 @@ const SelectModel = ({ disabled, input, setInput }: SelectModelProps) => {
       style={{ display: 'flex', flexDirection: 'column', marginBottom: 0 }}
     >
       <SubSectionTitle>
-        Model
-        {/* <TooltipComponent targetId={`select-models-tooltip`}>
-          Models currently available within the horde. Numbers in parentheses
-          indicate number of works. Generally, these models will generate images
-          quicker.
-        </TooltipComponent>
-        <TooltipIcon id={`select-models-tooltip`} /> */}
+        <TextTooltipRow>
+          Model
+          <TooltipComponent tooltipId={`select-models-tooltip`}>
+            Models currently available within the horde. Numbers in parentheses
+            indicate number of works. Generally, these models will generate
+            images quicker.
+          </TooltipComponent>
+        </TextTooltipRow>
       </SubSectionTitle>
       <FlexRow
         style={{
@@ -110,15 +133,56 @@ const SelectModel = ({ disabled, input, setInput }: SelectModelProps) => {
         }}
       >
         {showFilter && (
-          <DropdownOptions handleClose={() => setShowFilter(false)}>
-            <SubSectionTitle>Filter models</SubSectionTitle>
-            <ul className={styles.DropdownList}>
-              <li>Show all</li>
-              <li>Show favorite models</li>
-              <li>Show SFW</li>
-              <li>Show NSFW</li>
-              <li>Show inpainting</li>
-            </ul>
+          <DropdownOptions
+            handleClose={() => setShowFilter(false)}
+            title="Filter models"
+            top="46px"
+          >
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                rowGap: '8px',
+                padding: '8px 0'
+              }}
+            >
+              <Checkbox
+                label={`Show favorite models`}
+                checked={filterMode === 'favorites'}
+                onChange={() =>
+                  filterMode === 'inpainting'
+                    ? setFilterMode('favorites')
+                    : setFilterMode('favorites')
+                }
+              />
+              <Checkbox
+                label={`Show SFW only`}
+                checked={filterMode === 'sfw'}
+                onChange={() =>
+                  filterMode === 'sfw'
+                    ? setFilterMode('all')
+                    : setFilterMode('sfw')
+                }
+              />
+              <Checkbox
+                label={`Show NSFW only`}
+                checked={filterMode === 'nsfw'}
+                onChange={() =>
+                  filterMode === 'nsfw'
+                    ? setFilterMode('all')
+                    : setFilterMode('nsfw')
+                }
+              />
+              <Checkbox
+                label={`Show inpainting`}
+                checked={filterMode === 'inpainting'}
+                onChange={() =>
+                  filterMode === 'inpainting'
+                    ? setFilterMode('all')
+                    : setFilterMode('inpainting')
+                }
+              />
+            </div>
           </DropdownOptions>
         )}
         {showSettingsDropdown && (
@@ -176,7 +240,7 @@ const SelectModel = ({ disabled, input, setInput }: SelectModelProps) => {
           isDisabled={selectDisabled}
           isMulti={showMultiModel}
           isSearchable={true}
-          options={modelsOptions}
+          options={filteredModels()}
           onChange={(obj: any) => {
             if (showMultiModel) {
               handleMultiModelSelect(obj)
@@ -186,12 +250,12 @@ const SelectModel = ({ disabled, input, setInput }: SelectModelProps) => {
           }}
           value={selectValue}
         />
+        <Button onClick={() => setShowFilter(true)}>
+          <IconFilter />
+        </Button>
         <Button onClick={() => setShowSettingsDropdown(true)}>
           <IconSettings />
         </Button>
-        {/* <Button onClick={() => setShowFilter(true)}>
-          <IconFilter />
-        </Button> */}
       </FlexRow>
     </Section>
   )
