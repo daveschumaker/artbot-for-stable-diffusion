@@ -1,4 +1,5 @@
 import ModelDetailsPage from 'app/_pages/InfoPage/models/details'
+import { Metadata } from 'next'
 
 export const revalidate = 2
 
@@ -25,6 +26,17 @@ async function getPageData() {
   return {
     availableModels,
     modelDetails
+  }
+}
+
+export const metadata: Metadata = {
+  title: 'Model Details - ArtBot for Stable Diffusion',
+  openGraph: {
+    title: 'ArtBot - Model Details',
+    images: ['/artbot/robot_clipboard.png']
+  },
+  twitter: {
+    images: '/artbot/robot_clipboard.png'
   }
 }
 

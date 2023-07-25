@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import InputSwitch from '../InputSwitch'
 import AppSettings from 'models/AppSettings'
+import InputSwitchV2 from '../InputSwitchV2'
 
 const KEY = 'useReplacementFilter'
 
@@ -19,7 +19,7 @@ const ReplacementFilterToggle = () => {
 
   return (
     <div>
-      <InputSwitch
+      <InputSwitchV2
         label="Use Prompt Replacement Filter"
         tooltip="When enabled, this tells the AI Horde backend to replace any inadvertently suspicious words sent along with a NSFW model that might normally trigger a user timeout."
         handleSwitchToggle={() => {

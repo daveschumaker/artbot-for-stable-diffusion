@@ -1,5 +1,8 @@
+import FlexRow from 'app/_components/FlexRow'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
+import SpinnerV2 from 'components/Spinner'
 import { UploadButton } from 'components/UploadButton'
+import { useState } from 'react'
 import { addCompletedJobToDexie, getImageDetails } from 'utils/db'
 
 // @ts-ignore
@@ -35,7 +38,10 @@ async function parseJSONFromFile(file) {
 }
 
 export default function LastResortImport() {
+  const [loading, setLoading] = useState(false)
+
   const handleFileSelect = async (file: any) => {
+    setLoading(true)
     try {
       const jsonData = await parseJSONFromFile(file)
       if (jsonData) {
@@ -50,7 +56,9 @@ export default function LastResortImport() {
           }
         }
       }
+      setLoading(false)
     } catch (error) {
+      setLoading(false)
       console.error('Error parsing JSON:', error)
     }
   }
@@ -63,12 +71,15 @@ export default function LastResortImport() {
           Select a raw JSON database file to import.
         </div>
       </SubSectionTitle>
-      <UploadButton
-        accept="application/JSON"
-        // @ts-ignore
-        handleFile={handleFileSelect}
-        label="Choose file"
-      />
+      <FlexRow>
+        <UploadButton
+          accept="application/JSON"
+          // @ts-ignore
+          handleFile={handleFileSelect}
+          label="Choose file"
+        />
+        {loading && <SpinnerV2 />}
+      </FlexRow>
     </div>
   )
 }

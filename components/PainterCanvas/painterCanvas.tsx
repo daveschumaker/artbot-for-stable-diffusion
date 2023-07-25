@@ -356,7 +356,7 @@ const PaintCanvas = ({ setActiveNav, setInput }: Props) => {
     })
 
     setActiveNav('img2img')
-    router.push('?panel=img2img')
+    router.push('/create?panel=img2img')
   }
 
   // <div className="overflow-x-hidden">

@@ -7,11 +7,12 @@ import Footer from './_components/Footer'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://1b46-23-93-98-252.ngrok-free.app'),
   title: 'ArtBot - Create images with Stable Diffusion, utilizing the AI Horde',
   description:
     'Generate AI-created images and photos with Stable Diffusion using a distributed computing cluster powered by the AI Horde. No login required and free to use.',
   icons: '/artbot/favicon.ico',
-  manifest: 'https://tinybots.net/artbot/manifest.json',
+  manifest: '/artbot/manifest.json',
   openGraph: {
     type: 'website',
     url: 'https://tinybots.net/artbot',
@@ -22,9 +23,14 @@ export const metadata: Metadata = {
     siteName: 'ArtBot for Stable Diffusion',
     images: [
       {
-        url: 'https://tinybots.net/artbot/painting_bot.png'
+        url: '/artbot/painting_bot.png'
       }
     ]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    creator: '@davely',
+    images: '/artbot/painting_bot.png'
   }
 }
 

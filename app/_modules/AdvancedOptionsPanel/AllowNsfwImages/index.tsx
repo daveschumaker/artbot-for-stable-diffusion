@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import InputSwitch from '../InputSwitch'
 import AppSettings from 'models/AppSettings'
+import InputSwitchV2 from '../InputSwitchV2'
 
 const KEY = 'allowNsfwImages'
 
@@ -19,7 +19,7 @@ const AllowNsfwImages = () => {
 
   return (
     <div>
-      <InputSwitch
+      <InputSwitchV2
         label="Allow NSFW Generations"
         tooltip="When disabled, this will tell GPU workers to attempt to filter and censor out any accidental NSFW generations."
         handleSwitchToggle={() => {

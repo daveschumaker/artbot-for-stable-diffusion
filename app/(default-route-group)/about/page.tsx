@@ -4,7 +4,7 @@ import { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'About - ArtBot for Stable Diffusion',
   openGraph: {
-    title: 'About - ArtBot for Stable Diffusion'
+    title: 'ArtBot - About'
   }
 }
 

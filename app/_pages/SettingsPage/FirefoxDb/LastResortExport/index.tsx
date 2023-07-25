@@ -37,12 +37,10 @@ async function downloadDbAsJson(chunkSize = 250) {
   }
 
   let endIndex = Math.min(rowsPerBatch, arr.length)
-  console.log(`rowsPerBatch, arr.length`, rowsPerBatch, arr.length)
 
   async function processArrayInBatches(index = 1, startIndex = 0) {
     if (startIndex >= arr.length) return
 
-    console.log(`what the batch?`, startIndex, endIndex)
     const batch = arr.slice(startIndex, endIndex)
     const jsonData = convertBatchToJson(batch)
     downloadBatch(jsonData, index)

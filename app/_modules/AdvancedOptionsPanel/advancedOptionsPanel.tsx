@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect } from 'react'
-import styled from 'styled-components'
 import { useStore } from 'statery'
 // import Switch from 'react-switch'
 
@@ -21,7 +20,6 @@ import { SourceProcessing } from 'utils/promptUtils'
 
 // Local imports
 import ControlNetOptions from './ControlNetOptions'
-import HiresFix from './HiresFix'
 import InputSwitch from './InputSwitch'
 import NumericInputSlider from 'app/_modules/AdvancedOptionsPanel/NumericInputSlider'
 import UpscalerOptions from './UpscalerOptions'
@@ -38,8 +36,6 @@ import PromptInputSettings from 'models/PromptInputSettings'
 
 // Other imports
 import ParentImage from 'app/_components/ParentImage'
-import AllowNsfwImages from './AllowNsfwImages'
-import ReplacementFilterToggle from './ReplacementFilterToggle'
 import LoraSelect from 'modules/LoraSelect'
 import FlexibleRow from 'app/_components/FlexibleRow'
 import FlexibleUnit from 'app/_components/FlexibleUnit'
@@ -52,11 +48,7 @@ import ImageCount from './ImageCount'
 import PostProcessors from './PostProcessors'
 import Guidance from './Guidance'
 import Steps from './Steps'
-
-const NoSliderSpacer = styled.div`
-  height: 14px;
-  margin-bottom: 16px;
-`
+import MiscOptions from './MiscOptions'
 
 interface Props {
   input: any
@@ -111,58 +103,69 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
           </div>
         </Section>
       )}
-      <FlexibleRow>
-        <FlexibleUnit>
-          <SelectSampler input={input} setInput={setInput} />
-        </FlexibleUnit>
-        <FlexibleUnit>
-          <ImageCount input={input} setInput={setInput} />
-        </FlexibleUnit>
-      </FlexibleRow>
-      <FlexibleRow>
-        <FlexibleUnit>
-          <SelectModel input={input} setInput={setInput} />
-          <SelectModelDetails
-            models={input.models}
-            multiModels={input.useAllModels || input.useFavoriteModels}
-          />
-        </FlexibleUnit>
-        <FlexibleUnit>
-          <ImageOrientationOptions input={input} setInput={setInput} />
-        </FlexibleUnit>
-      </FlexibleRow>
-      <FlexibleRow>
-        <FlexibleUnit>
-          <Steps input={input} setInput={setInput} />
-        </FlexibleUnit>
-        <FlexibleUnit>
-          <Guidance input={input} setInput={setInput} />
-        </FlexibleUnit>
-      </FlexibleRow>
-      <FlexibleRow>
-        <FlexibleUnit>
-          <Seed input={input} setInput={setInput} />
-        </FlexibleUnit>
-        <FlexibleUnit>
-          <NumericInputSlider
-            label="CLIP skip"
-            tooltip="Determine how early to stop processing a prompt using CLIP. Higher
+      <Section>
+        <FlexibleRow>
+          <FlexibleUnit>
+            <SelectSampler input={input} setInput={setInput} />
+          </FlexibleUnit>
+          <FlexibleUnit>
+            <ImageCount input={input} setInput={setInput} />
+          </FlexibleUnit>
+        </FlexibleRow>
+      </Section>
+
+      <Section>
+        <FlexibleRow>
+          <FlexibleUnit>
+            <SelectModel input={input} setInput={setInput} />
+            <SelectModelDetails
+              models={input.models}
+              multiModels={input.useAllModels || input.useFavoriteModels}
+            />
+          </FlexibleUnit>
+          <FlexibleUnit>
+            <ImageOrientationOptions input={input} setInput={setInput} />
+          </FlexibleUnit>
+        </FlexibleRow>
+      </Section>
+
+      <Section>
+        <FlexibleRow>
+          <FlexibleUnit>
+            <Steps input={input} setInput={setInput} />
+          </FlexibleUnit>
+          <FlexibleUnit>
+            <Guidance input={input} setInput={setInput} />
+          </FlexibleUnit>
+        </FlexibleRow>
+      </Section>
+
+      <Section>
+        <FlexibleRow>
+          <FlexibleUnit>
+            <Seed input={input} setInput={setInput} />
+          </FlexibleUnit>
+          <FlexibleUnit>
+            <NumericInputSlider
+              label="CLIP skip"
+              tooltip="Determine how early to stop processing a prompt using CLIP. Higher
           values stop processing earlier. Default is 1 (no skip)."
-            from={1}
-            to={12}
-            step={1}
-            input={input}
-            setInput={setInput}
-            fieldName="clipskip"
-            fullWidth
-            enforceStepValue
-          />
-        </FlexibleUnit>
-      </FlexibleRow>
+              from={1}
+              to={12}
+              step={1}
+              input={input}
+              setInput={setInput}
+              fieldName="clipskip"
+              fullWidth
+              enforceStepValue
+            />
+          </FlexibleUnit>
+        </FlexibleRow>
+      </Section>
 
       <TwoPanel className="mt-4">
         <SplitPanel>
-          {input.useMultiSteps && (
+          {false && (
             <Section>
               <div className="flex flex-row items-center justify-between">
                 <div className="w-[220px] pr-2">
@@ -199,7 +202,6 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
                   width="100%"
                 />
               </div>
-              <NoSliderSpacer />
             </Section>
           )}
 
@@ -236,40 +238,6 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
         </SplitPanel>
 
         <SplitPanel>
-          {input.useMultiGuidance && (
-            <Section>
-              <div className="flex flex-row items-center justify-between">
-                <div className="w-[220px] pr-2">
-                  <SubSectionTitle>
-                    <TextTooltipRow>
-                      Guidance
-                      <TooltipComponent tooltipId="guidance-tooltip">
-                        Comma separated values to create a series of images
-                        using multiple steps. Example: 3,6,9,12,15
-                      </TooltipComponent>
-                    </TextTooltipRow>
-                    <div className="block w-full text-xs">(1 - 30)</div>
-                  </SubSectionTitle>
-                </div>
-                <Input
-                  // @ts-ignore
-                  className="mb-2"
-                  type="text"
-                  name="multiGuidance"
-                  onChange={handleChangeInput}
-                  placeholder="3,5,7,9"
-                  // onBlur={() => {
-                  //   validateSteps()
-                  // }}
-                  // @ts-ignore
-                  value={input.multiGuidance}
-                  width="100%"
-                />
-              </div>
-              <NoSliderSpacer />
-            </Section>
-          )}
-
           {false && (
             <InputSwitch
               label="Use multiple guidance"
@@ -385,39 +353,17 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
         />
       </div> */}
       <LoraSelect input={input} setInput={setInput} />
-      <InputSwitch
-        label="Enable karras"
-        tooltip="Denoising magic. Dramatically improves image generation using fewer steps."
-        moreInfoLink={
-          input.source_image &&
-          input.control_type && (
-            <div className="mt-[-4px] text-xs text-slate-500 dark:text-slate-400 font-[600]">
-              <strong>Note:</strong> Cannot be used for ControlNet requests
-            </div>
-          )
-        }
-        disabled={input.source_image && input.control_type ? true : false}
-        handleSwitchToggle={() => {
-          if (!input.karras) {
-            setInput({ karras: true })
-          } else {
-            setInput({ karras: false })
-          }
-        }}
-        checked={input.karras}
-      />
-      <HiresFix input={input} setInput={setInput} />
-      <Section></Section>
-      <FlexibleRow>
-        <FlexibleUnit>
-          <PostProcessors input={input} setInput={setInput} />
-        </FlexibleUnit>
-        <FlexibleUnit>
-          <UpscalerOptions input={input} setInput={setInput} />
-        </FlexibleUnit>
-      </FlexibleRow>
-      <AllowNsfwImages />
-      <ReplacementFilterToggle />
+      <Section>
+        <FlexibleRow>
+          <FlexibleUnit>
+            <PostProcessors input={input} setInput={setInput} />
+          </FlexibleUnit>
+          <FlexibleUnit>
+            <UpscalerOptions input={input} setInput={setInput} />
+          </FlexibleUnit>
+        </FlexibleRow>
+      </Section>
+      <MiscOptions input={input} setInput={setInput} />
     </div>
   )
 }
