@@ -67,6 +67,26 @@ const SelectModel = ({ disabled, input, setInput }: SelectModelProps) => {
     return input?.models?.indexOf(option.value) >= 0
   })
 
+  const modelTitle = () => {
+    if (filterMode === 'nsfw') {
+      return 'NSFW Models'
+    }
+
+    if (filterMode === 'sfw') {
+      return 'SFW Models'
+    }
+
+    if (filterMode === 'inpainting') {
+      return 'Inpainting Models'
+    }
+
+    if (filterMode === 'favorites') {
+      return 'Favorite Models'
+    }
+
+    return 'Image Models'
+  }
+
   const filteredModels = () => {
     if (filterMode === 'nsfw') {
       return modelsOptions.filter((obj: any) => {
@@ -84,6 +104,23 @@ const SelectModel = ({ disabled, input, setInput }: SelectModelProps) => {
       return modelsOptions.filter((obj: any) => {
         return obj?.name?.toLowerCase().includes('inpainting')
       })
+    }
+
+    if (filterMode === 'favorites') {
+      const favoriteModels = AppSettings.get('favoriteModels') || {}
+      const modelsArray = []
+      for (const model in favoriteModels) {
+        if (modelDetails[model]) {
+          modelsArray.push({
+            label: model,
+            name: model,
+            value: model
+          })
+        }
+        modelsArray.push()
+      }
+
+      return modelsArray
     }
 
     return modelsOptions
@@ -116,7 +153,7 @@ const SelectModel = ({ disabled, input, setInput }: SelectModelProps) => {
     >
       <SubSectionTitle>
         <TextTooltipRow>
-          Model
+          {modelTitle()}
           <TooltipComponent tooltipId={`select-models-tooltip`}>
             Models currently available within the horde. Numbers in parentheses
             indicate number of works. Generally, these models will generate
@@ -150,8 +187,8 @@ const SelectModel = ({ disabled, input, setInput }: SelectModelProps) => {
                 label={`Show favorite models`}
                 checked={filterMode === 'favorites'}
                 onChange={() =>
-                  filterMode === 'inpainting'
-                    ? setFilterMode('favorites')
+                  filterMode === 'favorites'
+                    ? setFilterMode('all')
                     : setFilterMode('favorites')
                 }
               />
