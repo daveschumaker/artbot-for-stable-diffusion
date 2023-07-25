@@ -51,6 +51,7 @@ import SelectSampler from './SelectSampler'
 import ImageCount from './ImageCount'
 import PostProcessors from './PostProcessors'
 import Guidance from './Guidance'
+import Steps from './Steps'
 
 const NoSliderSpacer = styled.div`
   height: 14px;
@@ -132,29 +133,9 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
       </FlexibleRow>
       <FlexibleRow>
         <FlexibleUnit>
-          {/* TODO: Handle multi-steps, (e.g., disable this field and have mutliple guidance values way down below.)  */}
-          <NumericInputSlider
-            label="Steps"
-            tooltip="Fewer steps generally result in quicker image generations.
-              Many models achieve full coherence after a certain number
-              of finite steps (60 - 90). Keep your initial queries in
-              the 30 - 50 range for best results."
-            from={1}
-            to={maxSteps({
-              sampler: input.sampler,
-              loggedIn: loggedIn === true ? true : false,
-              isSlider: true
-            })}
-            step={1}
-            input={input}
-            setInput={setInput}
-            fieldName="steps"
-            fullWidth
-            enforceStepValue
-          />
+          <Steps input={input} setInput={setInput} />
         </FlexibleUnit>
         <FlexibleUnit>
-          {/* TODO: Handle multi-guidance (e.g., disable this field and have mutliple guidance values way down below.) */}
           <Guidance input={input} setInput={setInput} />
         </FlexibleUnit>
       </FlexibleRow>
