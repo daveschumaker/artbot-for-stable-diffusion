@@ -9,8 +9,6 @@ import { useEffectOnce } from 'hooks/useEffectOnce'
 import AppSettings from 'models/AppSettings'
 import { JobStatus } from 'types'
 import {
-  allPendingJobs,
-  clearPendingJobsTable,
   deleteAllPendingErrors,
   deleteAllPendingJobs,
   deleteDoneFromPending,
@@ -38,7 +36,6 @@ import {
   deletePendingJob,
   deletePendingJobs,
   getAllPendingJobs
-  // syncPendingJobsFromDb
 } from 'controllers/pendingJobsCache'
 import usePendingImageModal from './usePendingImageModal'
 import PendingItem from 'modules/PendingItem'
@@ -64,23 +61,6 @@ const PendingPage = () => {
     if (typeof window !== 'undefined' && window.DEBUG_PENDING_JOBS) {
       console.log(`pendingPage#initPageLoad`)
     }
-
-    // Temporarily hide this as I think this is what is causing the ghost jobs race condition
-    // await syncPendingJobsFromDb()
-
-    // // @ts-ignore
-    // setPendingImages(getAllPendingJobs())
-  }
-
-  const cleanPendingJobsOnUnload = async () => {
-    await clearPendingJobsTable()
-    deletePendingJobs()
-
-    // @ts-ignore
-    if (typeof window !== 'undefined' && window.DEBUG_PENDING_JOBS) {
-      const jobs = await allPendingJobs()
-      console.log(`cleanPendingJobsOnUnload (jobs in db)`, jobs)
-    }
   }
 
   useEffect(() => {
@@ -91,11 +71,6 @@ const PendingPage = () => {
 
     return () => {
       clearInterval(interval)
-      const pendingJobs = getAllPendingJobs()
-
-      if (pendingJobs.length === 0) {
-        cleanPendingJobsOnUnload()
-      }
     }
   }, [])
 
