@@ -1,3 +1,7 @@
+# 2023.07.26
+
+- Fix: Inverted image masks when using inpainting. Now, you should only need to highlight the areas you want to change. This used to work correctly, but an update to worker GPUs broke how ArtBot sent image masks to the AI Horde. You should be able to use inpainting as normal, now!
+
 # 2023.07.25
 
 - Fix: The Horde supports up to 500 steps for logged in users. ArtBot had capped that at 200. Thanks to Efreak for reporting this on Discord.

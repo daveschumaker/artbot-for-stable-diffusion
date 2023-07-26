@@ -57,19 +57,20 @@ const cloneImageParams = async (
     clonedParams.models[0] &&
     clonedParams.models[0].indexOf('_inpainting') === -1
 
+  // I believe this is deprecated as of ComfyUI worker upgrades?
   if (hasImg2ImgMask || needsImg2ImgMask) {
     clonedParams.source_processing = SourceProcessing.Img2Img
 
     // TODO: Importing this causes Fabric to be built as part of
     // app chunk, doubling size of initial JS library. Find a way to split this out.
     //@ts-ignore
-    const CreateCanvas = (await import('../models/CreateCanvas')).default
+    // const CreateCanvas = (await import('../models/CreateCanvas')).default
 
     // @ts-ignore
-    clonedParams.source_mask = await CreateCanvas.invert(
-      `data:image/webp;base64,${clonedParams.source_mask}`,
-      true
-    )
+    // clonedParams.source_mask = await CreateCanvas.invert(
+    //   `data:image/webp;base64,${clonedParams.source_mask}`,
+    //   true
+    // )
   }
 
   return clonedParams
