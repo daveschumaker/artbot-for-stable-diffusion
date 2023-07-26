@@ -21,9 +21,15 @@ import TextTooltipRow from 'app/_components/TextTooltipRow'
 
 interface SelectModelProps extends GetSetPromptInput {
   disabled?: boolean
+  hideOptions?: boolean
 }
 
-const SelectModel = ({ disabled, input, setInput }: SelectModelProps) => {
+const SelectModel = ({
+  disabled = false,
+  hideOptions = false,
+  input,
+  setInput
+}: SelectModelProps) => {
   const { modelDetails } = useStore(modelStore)
   const [favoriteModelsCount, setFavoriteModelsCount] = useState(0)
   const [modelsOptions] = useAvailableModels({ input })
@@ -290,9 +296,11 @@ const SelectModel = ({ disabled, input, setInput }: SelectModelProps) => {
         <Button onClick={() => setShowFilter(true)}>
           <IconFilter />
         </Button>
-        <Button onClick={() => setShowSettingsDropdown(true)}>
-          <IconSettings />
-        </Button>
+        {!hideOptions && (
+          <Button onClick={() => setShowSettingsDropdown(true)}>
+            <IconSettings />
+          </Button>
+        )}
       </FlexRow>
     </Section>
   )

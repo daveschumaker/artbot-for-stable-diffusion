@@ -11,7 +11,15 @@ import SubSectionTitle from 'app/_components/SubSectionTitle'
 import TextTooltipRow from 'app/_components/TextTooltipRow'
 import TooltipComponent from 'app/_components/TooltipComponent'
 
-export default function Guidance({ input, setInput }: GetSetPromptInput) {
+interface GuidanceProps extends GetSetPromptInput {
+  hideOptions?: boolean
+}
+
+export default function Guidance({
+  hideOptions = false,
+  input,
+  setInput
+}: GuidanceProps) {
   const [showDropdown, setShowDropdown] = useState(false)
 
   return (
@@ -83,9 +91,11 @@ export default function Guidance({ input, setInput }: GetSetPromptInput) {
             </div>
           </DropdownOptions>
         )}
-        <Button onClick={() => setShowDropdown(true)}>
-          <IconSettings />
-        </Button>
+        {!hideOptions && (
+          <Button onClick={() => setShowDropdown(true)}>
+            <IconSettings />
+          </Button>
+        )}
       </div>
     </FlexRow>
   )

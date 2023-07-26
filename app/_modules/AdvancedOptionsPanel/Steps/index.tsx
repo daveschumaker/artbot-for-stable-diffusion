@@ -14,7 +14,15 @@ import { maxSteps } from 'utils/validationUtils'
 import { useStore } from 'statery'
 import { userInfoStore } from 'store/userStore'
 
-export default function Steps({ input, setInput }: GetSetPromptInput) {
+interface StepsOptions extends GetSetPromptInput {
+  hideOptions?: boolean
+}
+
+export default function Steps({
+  hideOptions = false,
+  input,
+  setInput
+}: StepsOptions) {
   const userState = useStore(userInfoStore)
   const { loggedIn } = userState
 
@@ -101,9 +109,11 @@ export default function Steps({ input, setInput }: GetSetPromptInput) {
             </div>
           </DropdownOptions>
         )}
-        <Button onClick={() => setShowDropdown(true)}>
-          <IconSettings />
-        </Button>
+        {!hideOptions && (
+          <Button onClick={() => setShowDropdown(true)}>
+            <IconSettings />
+          </Button>
+        )}
       </div>
     </FlexRow>
   )

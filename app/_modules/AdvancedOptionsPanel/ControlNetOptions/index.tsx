@@ -1,4 +1,3 @@
-import MaxWidth from 'components/UI/MaxWidth'
 import Select from 'app/_components/Select'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import DefaultPromptInput from 'models/DefaultPromptInput'
@@ -12,7 +11,6 @@ import Checkbox from 'components/UI/Checkbox'
 import TooltipComponent from 'app/_components/TooltipComponent'
 
 const ControlNetOptions = ({
-  forceDisplay = false,
   input,
   setInput
 }: {
@@ -51,97 +49,81 @@ const ControlNetOptions = ({
     }
   }
 
-  const isDisabled = !input.source_image && !forceDisplay
-
   return (
     <div>
       <SubSectionTitle>Control Type</SubSectionTitle>
-      {isDisabled && !forceDisplay && (
-        <div className="mt-[-6px] text-sm text-slate-500 dark:text-slate-400 font-[600]">
-          <MaxWidth
-            // @ts-ignore
-            width="360px"
-          >
-            <strong>Note:</strong> ControlNet can only be used for img2img
-            requests. Please upload an image to use this feature.
-          </MaxWidth>
-        </div>
-      )}
-      {(input.source_image || forceDisplay) && (
-        <FlexRow style={{ columnGap: '4px', position: 'relative' }}>
-          <Select
-            isDisabled={isDisabled}
-            options={CONTROL_TYPE_ARRAY.map((value) => {
-              if (value === '') {
-                return { value: '', label: 'none' }
-              }
-
-              return { value, label: value }
-            })}
-            onChange={(obj: { value: string; label: string }) => {
-              setInput({ control_type: obj.value })
-
-              if (obj.value !== '') {
-                setInput({ karras: false, hires: false })
-              }
-            }}
-            isSearchable={false}
-            value={
-              controlTypeValue ? controlTypeValue : { value: '', label: 'none' }
+      <FlexRow style={{ columnGap: '4px', position: 'relative' }}>
+        <Select
+          options={CONTROL_TYPE_ARRAY.map((value) => {
+            if (value === '') {
+              return { value: '', label: 'none' }
             }
-          />
-          {showDropdown && (
-            <DropdownOptions
-              handleClose={() => setShowDropdown(false)}
-              title="Sampler options"
-              top="46px"
+
+            return { value, label: value }
+          })}
+          onChange={(obj: { value: string; label: string }) => {
+            setInput({ control_type: obj.value })
+
+            if (obj.value !== '') {
+              setInput({ karras: false, hires: false })
+            }
+          }}
+          isSearchable={false}
+          value={
+            controlTypeValue ? controlTypeValue : { value: '', label: 'none' }
+          }
+        />
+        {showDropdown && (
+          <DropdownOptions
+            handleClose={() => setShowDropdown(false)}
+            title="Sampler options"
+            top="46px"
+          >
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                rowGap: '8px',
+                padding: '8px 0'
+              }}
             >
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  rowGap: '8px',
-                  padding: '8px 0'
-                }}
-              >
-                <FlexRow>
-                  <Checkbox
-                    label="Return control map?"
-                    checked={input.return_control_map}
-                    onChange={() => {
-                      handleControlMapSelect('return_control_map')
-                    }}
-                  />
-                  <TooltipComponent tooltipId="return_control_map">
-                    <>
-                      This option returns the control map / depth map for a
-                      given image.
-                    </>
-                  </TooltipComponent>
-                </FlexRow>
-                <FlexRow>
-                  <Checkbox
-                    label="Use control map?"
-                    checked={input.image_is_control}
-                    onChange={() => {
-                      handleControlMapSelect('image_is_control')
-                    }}
-                  />
-                  <TooltipComponent tooltipId="image_is_control">
-                    <>
-                      Tell Stable Horde that the image you&apos;re uploading is
-                      a control map.
-                    </>
-                  </TooltipComponent>
-                </FlexRow>
-              </div>
-            </DropdownOptions>
-          )}
-          <Button onClick={() => setShowDropdown(true)}>
-            <IconSettings />
-          </Button>
-        </FlexRow>
-      )}
+              <FlexRow>
+                <Checkbox
+                  label="Return control map?"
+                  checked={input.return_control_map}
+                  onChange={() => {
+                    handleControlMapSelect('return_control_map')
+                  }}
+                />
+                <TooltipComponent tooltipId="return_control_map">
+                  <>
+                    This option returns the control map / depth map for a given
+                    image.
+                  </>
+                </TooltipComponent>
+              </FlexRow>
+              <FlexRow>
+                <Checkbox
+                  label="Use control map?"
+                  checked={input.image_is_control}
+                  onChange={() => {
+                    handleControlMapSelect('image_is_control')
+                  }}
+                />
+                <TooltipComponent tooltipId="image_is_control">
+                  <>
+                    Tell Stable Horde that the image you&apos;re uploading is a
+                    control map.
+                  </>
+                </TooltipComponent>
+              </FlexRow>
+            </div>
+          </DropdownOptions>
+        )}
+        <Button onClick={() => setShowDropdown(true)}>
+          <IconSettings />
+        </Button>
+      </FlexRow>
     </div>
   )
 }

@@ -5,18 +5,10 @@ import { useCallback, useEffect, useReducer, useState } from 'react'
 import { useStore } from 'statery'
 import SelectModel from 'app/_modules/AdvancedOptionsPanel/SelectModel'
 import Uploader from 'app/_modules/Uploader'
-import ArrowBarLeftIcon from 'components/icons/ArrowBarLeftIcon'
-import GrainIcon from 'components/icons/GrainIcon'
 import { Button } from 'components/UI/Button'
-import Input from 'components/UI/Input'
-import MaxWidth from 'components/UI/MaxWidth'
 import PageTitle from 'app/_components/PageTitle'
 import Section from 'app/_components/Section'
-import SplitPanel from 'components/UI/SplitPanel'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
-import TextTooltipRow from 'app/_components/TextTooltipRow'
-import TooltipComponent from 'app/_components/TooltipComponent'
-import TwoPanel from 'components/UI/TwoPanel'
 import DefaultPromptInput from 'models/DefaultPromptInput'
 import {
   clearBase64FromDraw,
@@ -26,7 +18,6 @@ import {
 import { userInfoStore } from 'store/userStore'
 import { countImagesToGenerate, nearestWholeMultiple } from 'utils/imageUtils'
 import { SourceProcessing } from 'utils/promptUtils'
-import Checkbox from 'components/UI/Checkbox'
 import TrashIcon from 'components/icons/TrashIcon'
 import ActionPanel from 'app/_pages/CreatePage/ActionPanel'
 import { createImageJob } from 'utils/imageCache'
@@ -44,6 +35,16 @@ import UpscalerOptions from 'app/_modules/AdvancedOptionsPanel/UpscalerOptions'
 import useComponentState from 'hooks/useComponentState'
 import { trackEvent } from 'api/telemetry'
 import PromptInput from '../CreatePage/PromptInput'
+import FlexibleRow from 'app/_components/FlexibleRow'
+import FlexibleUnit from 'app/_components/FlexibleUnit'
+import SelectSampler from 'app/_modules/AdvancedOptionsPanel/SelectSampler'
+import ImageCount from 'app/_modules/AdvancedOptionsPanel/ImageCount'
+import PostProcessors from 'app/_modules/AdvancedOptionsPanel/PostProcessors'
+import MiscOptions from 'app/_modules/AdvancedOptionsPanel/MiscOptions'
+import Seed from 'app/_modules/AdvancedOptionsPanel/Seed'
+import Steps from 'app/_modules/AdvancedOptionsPanel/Steps'
+import Guidance from 'app/_modules/AdvancedOptionsPanel/Guidance'
+import SelectModelDetails from 'app/_modules/AdvancedOptionsPanel/ModelDetails/modelDetails'
 
 // Kind of a hacky way to persist output of image over the course of a session.
 let cachedImageDetails = {}
@@ -73,46 +74,6 @@ const ControlNetPage = () => {
     const string = JSON.stringify(inputParams)
     localStorage.setItem('controlnetPageInput', string)
   }
-
-  const handleChangeInput = (event: InputEvent) => {
-    if (!event || !event.target) {
-      return
-    }
-
-    // @ts-ignore
-    const inputName = event.target.name
-
-    // @ts-ignore
-    const inputValue = event.target.value
-
-    setInput({ [inputName]: inputValue })
-  }
-
-  const handlePostProcessing = useCallback(
-    (value: string) => {
-      let newPost = [...input.post_processing]
-      const index = newPost.indexOf(value)
-
-      if (index > -1) {
-        newPost.splice(index, 1)
-      } else {
-        const idx_1 = input.post_processing.indexOf('RealESRGAN_x4plus')
-        const idx_2 = input.post_processing.indexOf(
-          'RealESRGAN_x4plus_anime_6B'
-        )
-        if (value === 'RealESRGAN_x4plus' && idx_2 >= 0) {
-          newPost.splice(idx_2, 1)
-        } else if (value === 'RealESRGAN_x4plus_anime_6B' && idx_1 >= 0) {
-          newPost.splice(idx_1, 1)
-        }
-
-        newPost.push(value)
-      }
-
-      setInput({ post_processing: newPost })
-    },
-    [input.post_processing, setInput]
-  )
 
   const handleImportDrawing = () => {
     const data = getBase64FromDraw()
@@ -187,13 +148,6 @@ const ControlNetPage = () => {
       source_processing: SourceProcessing.Img2Img
     })
   }
-
-  const getPostProcessing = useCallback(
-    (value: string) => {
-      return input.post_processing.indexOf(value) >= 0
-    },
-    [input.post_processing]
-  )
 
   const totalImagesRequested = countImagesToGenerate(input)
 
@@ -372,46 +326,15 @@ const ControlNetPage = () => {
           <PromptInput input={input} setInput={setInput} />
         </div>
       </Section>
+
       <Section>
         <SubSectionTitle>Step 3. Advanced settings</SubSectionTitle>
-        <ControlNetOptions forceDisplay input={input} setInput={setInput} />
 
-        <TwoPanel>
-          <SplitPanel>
-            <NumericInputSlider
-              label="Steps"
-              tooltip="Fewer steps generally result in quicker image generations.
-              Many models achieve full coherence after a certain number
-              of finite steps (60 - 90). Keep your initial queries in
-              the 30 - 50 range for best results."
-              from={1}
-              to={loggedIn ? 30 : 20}
-              step={1}
-              input={input}
-              setInput={setInput}
-              fieldName="steps"
-              fullWidth
-              enforceStepValue
-            />
-          </SplitPanel>
-          <SplitPanel>
-            <NumericInputSlider
-              label="Guidance"
-              tooltip="Higher numbers follow the prompt more closely. Lower
-                numbers give more creativity."
-              from={1}
-              to={30}
-              step={0.5}
-              input={input}
-              setInput={setInput}
-              fieldName="cfg_scale"
-              fullWidth
-            />
-          </SplitPanel>
-        </TwoPanel>
-
-        <div className="mr-8">
-          <Section>
+        <FlexibleRow style={{ paddingTop: '8px' }}>
+          <FlexibleUnit>
+            <ControlNetOptions input={input} setInput={setInput} />
+          </FlexibleUnit>
+          <FlexibleUnit>
             <NumericInputSlider
               label="Denoise"
               tooltip="Amount of noise added to input image. Values that
@@ -430,134 +353,63 @@ const ControlNetPage = () => {
                 input.models[0].indexOf('_inpainting') >= 0
               }
             />
-            {input.source_processing === SourceProcessing.InPainting &&
-              input.models &&
-              input.models[0] &&
-              input.models[0].indexOf('_inpainting') >= 0 && (
-                <div className="mt-0 text-sm text-slate-500">
-                  Note: Denoise disabled when inpainting model is used.
-                </div>
-              )}
-          </Section>
-        </div>
-      </Section>
+          </FlexibleUnit>
+        </FlexibleRow>
 
-      <Section>
-        <SubSectionTitle>
-          <TextTooltipRow>
-            Seed
-            <TooltipComponent tooltipId="seed-tooltip">
-              Leave seed blank for random.
-            </TooltipComponent>
-          </TextTooltipRow>
-        </SubSectionTitle>
-        <MaxWidth
-          // @ts-ignore
-          width="240px"
-        >
-          <div className="flex flex-row gap-2">
-            <Input
-              // @ts-ignore
-              className="mb-2"
-              type="text"
-              name="seed"
-              onChange={handleChangeInput}
-              // @ts-ignore
-              value={input.seed}
-              width="100%"
-            />
-            <Button
-              title="Insert random seed"
-              onClick={() => {
-                const value = Math.abs((Math.random() * 2 ** 32) | 0)
-                setInput({ seed: value })
-              }}
-            >
-              <GrainIcon />
-            </Button>
-            <Button
-              theme="secondary"
-              title="Clear"
-              onClick={() => {
-                setInput({ seed: '' })
-              }}
-            >
-              <ArrowBarLeftIcon />
-            </Button>
-          </div>
-        </MaxWidth>
-      </Section>
+        <Section>
+          <FlexibleRow>
+            <FlexibleUnit>
+              <SelectSampler input={input} setInput={setInput} />
+            </FlexibleUnit>
+            <FlexibleUnit>
+              <ImageCount input={input} setInput={setInput} />
+            </FlexibleUnit>
+          </FlexibleRow>
+        </Section>
 
-      <Section>
-        <SelectModel input={input} setInput={setInput} />
-      </Section>
-
-      <Section>
-        <SubSectionTitle>
-          <TextTooltipRow>
-            Post-processing
-            <TooltipComponent tooltipId="post-processing-tooltip">
-              Post-processing options such as face improvement and image
-              upscaling.
-            </TooltipComponent>
-          </TextTooltipRow>
-        </SubSectionTitle>
-        <div className="flex flex-col items-start gap-2">
-          <Checkbox
-            label={`GFPGAN (improves faces)`}
-            checked={getPostProcessing('GFPGAN')}
-            onChange={() => handlePostProcessing('GFPGAN')}
-          />
-          <Checkbox
-            label={`CodeFormers (improves faces)`}
-            checked={getPostProcessing('CodeFormers')}
-            onChange={() => handlePostProcessing('CodeFormers')}
-          />
-          {(getPostProcessing('GFPGAN') ||
-            getPostProcessing('CodeFormers')) && (
-            <NumericInputSlider
-              label="Face-fix strength"
-              tooltip="0.05 is the weakest effect (barely noticeable improvements), while 1.0 is the strongest effect."
-              from={0.05}
-              to={1.0}
-              step={0.05}
-              input={input}
-              setInput={setInput}
-              fieldName="facefixer_strength"
-            />
-          )}
-          <UpscalerOptions input={input} setInput={setInput} />
-        </div>
-      </Section>
-
-      <Section>
-        <NumericInputSlider
-          label="CLIP skip"
-          tooltip="Determine how early to stop processing a prompt using CLIP. Higher
+        <Section>
+          <FlexibleRow>
+            <FlexibleUnit>
+              <SelectModel input={input} setInput={setInput} />
+              <SelectModelDetails
+                models={input.models}
+                multiModels={input.useAllModels || input.useFavoriteModels}
+              />
+            </FlexibleUnit>
+            <FlexibleUnit>
+              <Section>
+                <Steps input={input} setInput={setInput} />
+                <Guidance input={input} setInput={setInput} />
+                <Seed input={input} setInput={setInput} />
+                <NumericInputSlider
+                  label="CLIP skip"
+                  tooltip="Determine how early to stop processing a prompt using CLIP. Higher
           values stop processing earlier. Default is 1 (no skip)."
-          from={1}
-          to={12}
-          step={1}
-          input={input}
-          setInput={setInput}
-          fieldName="clipskip"
-          fullWidth
-          enforceStepValue
-        />
-      </Section>
+                  from={1}
+                  to={12}
+                  step={1}
+                  input={input}
+                  setInput={setInput}
+                  fieldName="clipskip"
+                  fullWidth
+                  enforceStepValue
+                />
+              </Section>
+            </FlexibleUnit>
+          </FlexibleRow>
+        </Section>
 
-      <Section>
-        <NumericInputSlider
-          label="Number of images"
-          from={1}
-          to={30}
-          step={1}
-          input={input}
-          setInput={setInput}
-          fieldName="numImages"
-          fullWidth
-          enforceStepValue
-        />
+        <Section>
+          <FlexibleRow>
+            <FlexibleUnit>
+              <PostProcessors input={input} setInput={setInput} />
+            </FlexibleUnit>
+            <FlexibleUnit>
+              <UpscalerOptions input={input} setInput={setInput} />
+            </FlexibleUnit>
+          </FlexibleRow>
+        </Section>
+        <MiscOptions input={input} setInput={setInput} />
       </Section>
 
       <ActionPanel

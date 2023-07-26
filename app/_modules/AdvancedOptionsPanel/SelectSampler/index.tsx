@@ -10,7 +10,15 @@ import { useState } from 'react'
 import { GetSetPromptInput } from 'types/artbot'
 import { SourceProcessing } from 'types/horde'
 
-export default function SelectSampler({ input, setInput }: GetSetPromptInput) {
+interface SelectSamplerProps extends GetSetPromptInput {
+  hideOptions?: boolean
+}
+
+export default function SelectSampler({
+  hideOptions = false,
+  input,
+  setInput
+}: SelectSamplerProps) {
   const [showDropdown, setShowDropdown] = useState(false)
 
   return (
@@ -58,9 +66,11 @@ export default function SelectSampler({ input, setInput }: GetSetPromptInput) {
                 </div>
               </DropdownOptions>
             )}
-            <Button onClick={() => setShowDropdown(true)}>
-              <IconSettings />
-            </Button>
+            {!hideOptions && (
+              <Button onClick={() => setShowDropdown(true)}>
+                <IconSettings />
+              </Button>
+            )}
           </FlexRow>
           {input.useAllSamplers && (
             <div style={{ fontSize: '12px', paddingTop: '4px' }}>
