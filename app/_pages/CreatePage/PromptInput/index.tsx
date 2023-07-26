@@ -22,6 +22,8 @@ import NegativePromptLibraryModal from './NegativePromptLibraryModal'
 import { saveNegativePrompt } from '_db/prompts'
 import FlexRow from 'app/_components/FlexRow'
 import TextArea from 'components/UI/TextArea'
+import Accordion from 'app/_components/Accordion'
+import AccordionItem from 'app/_components/AccordionItem'
 
 export default function PromptInput({ input, setInput }: GetSetPromptInput) {
   const negativePromptLibraryModal = useModal(NegativePromptLibraryModal)
@@ -126,84 +128,93 @@ export default function PromptInput({ input, setInput }: GetSetPromptInput) {
           </div>
         </FlexRow>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <FlexRow
-          style={{
-            columnGap: '4px',
-            fontSize: '14px',
-            fontWeight: 700,
-            paddingBottom: '4px'
-          }}
-        >
-          <IconPlaylistX /> Negative prompt{' '}
-          <span style={{ fontSize: '12px', fontWeight: 400 }}>(optional)</span>
-        </FlexRow>
-        <TextArea
-          className={styles.textArea}
-          onChange={(e: any) => {
-            if (e.target.value) {
-              setUndoNegative('')
-            }
-
-            setInput({ negative: e.target.value })
-          }}
-          placeholder="Words to de-emphasize from this image"
-          value={input.negative}
-        />
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between'
-          }}
-        >
-          <FlexRow style={{ columnGap: '8px' }}>
-            <Button
-              onClick={() => {
-                if (!input.negative || input.negative.trim().length === 0)
-                  return
-
-                saveNegativePrompt(input.negative)
+      <Accordion>
+        <AccordionItem
+          title={
+            <FlexRow
+              style={{
+                columnGap: '4px',
+                fontSize: '14px',
+                fontWeight: 700,
+                paddingBottom: '4px'
               }}
-              size="small"
             >
-              <IconDeviceFloppy stroke={1.5} /> Save
-            </Button>
-            <Button
-              onClick={() => negativePromptLibraryModal.show({ setInput })}
-              size="small"
-            >
-              <IconFolder stroke={1.5} /> Load
-            </Button>
-          </FlexRow>
-          <div>
-            <Button
-              disabled={!input.negative && !undoNegative}
-              onClick={() => {
-                if (undoNegative) {
+              <IconPlaylistX /> Negative prompt{' '}
+              <span style={{ fontSize: '12px', fontWeight: 400 }}>
+                (optional)
+              </span>
+            </FlexRow>
+          }
+        >
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <TextArea
+              className={styles.textArea}
+              onChange={(e: any) => {
+                if (e.target.value) {
                   setUndoNegative('')
-                  setInput({ negative: undoNegative })
-                } else {
-                  setUndoNegative(input.negative)
-                  setInput({ negative: '' })
                 }
+
+                setInput({ negative: e.target.value })
               }}
-              size="small"
-              theme="secondary"
+              placeholder="Words to de-emphasize from this image"
+              value={input.negative}
+            />
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between'
+              }}
             >
-              {undoNegative ? (
-                <>
-                  <IconArrowBackUp stroke={1.5} /> Undo{' '}
-                </>
-              ) : (
-                <>
-                  <IconTrash stroke={1.5} /> Clear
-                </>
-              )}
-            </Button>
+              <FlexRow style={{ columnGap: '8px' }}>
+                <Button
+                  onClick={() => {
+                    if (!input.negative || input.negative.trim().length === 0)
+                      return
+
+                    saveNegativePrompt(input.negative)
+                  }}
+                  size="small"
+                >
+                  <IconDeviceFloppy stroke={1.5} /> Save
+                </Button>
+                <Button
+                  onClick={() => negativePromptLibraryModal.show({ setInput })}
+                  size="small"
+                >
+                  <IconFolder stroke={1.5} /> Load
+                </Button>
+              </FlexRow>
+              <div>
+                <Button
+                  disabled={!input.negative && !undoNegative}
+                  onClick={() => {
+                    if (undoNegative) {
+                      setUndoNegative('')
+                      setInput({ negative: undoNegative })
+                    } else {
+                      setUndoNegative(input.negative)
+                      setInput({ negative: '' })
+                    }
+                  }}
+                  size="small"
+                  theme="secondary"
+                >
+                  {undoNegative ? (
+                    <>
+                      <IconArrowBackUp stroke={1.5} /> Undo{' '}
+                    </>
+                  ) : (
+                    <>
+                      <IconTrash stroke={1.5} /> Clear
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </AccordionItem>
+      </Accordion>
     </div>
   )
 }
