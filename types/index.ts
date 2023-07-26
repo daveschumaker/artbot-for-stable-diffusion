@@ -194,6 +194,7 @@ export interface Lora {
 export interface GenerateResponse {
   id: string
   message?: string
+  kudos?: number
 }
 
 export type SetInput = Dispatch<Partial<DefaultPromptInput>>

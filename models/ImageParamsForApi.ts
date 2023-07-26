@@ -19,6 +19,7 @@ export interface IApiParams {
   workers?: Array<string>
   slow_workers?: boolean
   worker_blacklist?: boolean
+  dry_run?: boolean
 }
 
 export interface IArtBotImageDetails {
@@ -48,6 +49,7 @@ export interface IArtBotImageDetails {
   image_is_control?: boolean
   return_control_map?: boolean
   loras: Lora[]
+  dry_run?: boolean
 }
 
 interface ParamsObject {
@@ -109,7 +111,8 @@ class ImageParamsForApi {
       control_type,
       image_is_control,
       return_control_map,
-      loras = []
+      loras = [],
+      dry_run = false
     } = imageDetails
     let negative = imageDetails.negative || ''
 
@@ -139,7 +142,8 @@ class ImageParamsForApi {
       replacement_filter: AppSettings.get('useReplacementFilter') || false,
       worker_blacklist: false,
       shared: shareImage,
-      slow_workers: AppSettings.get('slow_workers') === false ? false : true
+      slow_workers: AppSettings.get('slow_workers') === false ? false : true,
+      dry_run
     }
 
     if (useBlocklist) {

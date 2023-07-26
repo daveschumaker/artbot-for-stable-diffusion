@@ -4,6 +4,9 @@ import FormErrorMessage from './FormErrorMessage'
 import { Button } from 'components/UI/Button'
 import Linker from 'components/UI/Linker'
 import Errors from 'utils/errors'
+import { useState } from 'react'
+import DropdownOptions from 'app/_modules/DropdownOptions'
+import DryRunCalculator from '../PromptInput/DryRunCalculator'
 
 interface Props {
   errors: { [key: string]: boolean }
@@ -25,12 +28,15 @@ const ActionPanel = ({
   errors,
   resetInput,
   handleSubmit,
+  input,
   pending,
   totalImagesRequested,
   loggedIn = false,
   totalKudosCost,
   kudosPerImage
 }: Props) => {
+  const [showDryRun, setShowDryRun] = useState(false)
+
   function areThereCriticalErrors() {
     return (
       Object.keys(errors || {}).filter(
@@ -46,29 +52,50 @@ const ActionPanel = ({
       <div className="flex flex-col items-start justify-end w-full gap-2 mt-2 mb-4 md:flex-row">
         <div className="flex flex-col justify-start w-full gap-2 md:w-1/2">
           <div className="flex flex-row justify-end gap-2 sm:mt-0">
-            <Button
-              title="Clear current input"
-              theme="secondary"
-              onClick={resetInput}
+            <div
+              style={{
+                columnGap: '4px',
+                display: 'flex',
+                position: 'relative'
+              }}
             >
-              <span>
-                <IconTrash />
-              </span>
-              <span>Reset all?</span>
-            </Button>
-            <Button
-              title="Create new image"
-              onClick={handleSubmit}
-              // @ts-ignore
-              disabled={disableSubmit || pending || areThereCriticalErrors()}
-              width="100px"
-            >
-              <span>{pending ? '' : <IconSquarePlus />}</span>
-              {pending ? 'Creating...' : 'Create'}
-            </Button>
-            <Button>
-              <IconCalculator />
-            </Button>
+              <Button
+                title="Clear current input"
+                theme="secondary"
+                onClick={resetInput}
+              >
+                <span>
+                  <IconTrash />
+                </span>
+                <span>Reset all?</span>
+              </Button>
+              <Button
+                title="Create new image"
+                onClick={handleSubmit}
+                // @ts-ignore
+                disabled={disableSubmit || pending || areThereCriticalErrors()}
+                width="100px"
+              >
+                <span>{pending ? '' : <IconSquarePlus />}</span>
+                {pending ? 'Creating...' : 'Create'}
+              </Button>
+              <Button onClick={() => setShowDryRun(true)}>
+                <IconCalculator />
+              </Button>
+
+              {showDryRun && (
+                <DropdownOptions
+                  handleClose={() => setShowDryRun(false)}
+                  title="Dry-run (kudos estimate)"
+                  top="46px"
+                >
+                  <DryRunCalculator
+                    input={input}
+                    totalImagesRequested={totalImagesRequested}
+                  />
+                </DropdownOptions>
+              )}
+            </div>
           </div>
           <div className="flex flex-row justify-end">
             <div className="flex flex-col justify-end">

@@ -12,6 +12,7 @@ interface CreateImageResponse {
   jobId?: string
   status?: string
   message?: string
+  kudos?: number
 }
 
 let isPending = false
@@ -53,8 +54,15 @@ export const createImage = async (
 
     const statusCode = resp.status
     const data = await resp.json()
-    const { id, message = '' }: GenerateResponse = data
+    const { id, message = '', kudos }: GenerateResponse = data
     isPending = false
+
+    if (imageDetails.dry_run && kudos) {
+      return {
+        success: true,
+        kudos
+      }
+    }
 
     if (message.indexOf('unethical images') >= 0) {
       return {
