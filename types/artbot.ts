@@ -231,6 +231,11 @@ export interface SelectComponentProps {
   width?: string
 }
 
+export interface SelectModelDetailsProps {
+  models: Array<string>
+  multiModels: boolean
+}
+
 export type SetInput = Dispatch<Partial<DefaultPromptInput>>
 
 export interface SliderComponentProps {

@@ -1,8 +1,12 @@
 import React from 'react'
+import { SelectModelDetailsProps } from 'types/artbot'
 
 const Loader = () => <div></div>
 
-export default function ModelDetails({ models }: { models: Array<string> }) {
+export default function ModelDetails({
+  models = [],
+  multiModels = false
+}: SelectModelDetailsProps) {
   // set the initial state to something that can be rendered on server
   const [Component, setComponent] = React.useState(() => Loader)
 
@@ -18,6 +22,7 @@ export default function ModelDetails({ models }: { models: Array<string> }) {
       <Component
         // @ts-ignore
         models={models}
+        multiModels={multiModels}
       />
     </React.Suspense>
   )

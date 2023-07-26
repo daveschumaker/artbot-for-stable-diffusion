@@ -4,10 +4,13 @@ import Section from 'app/_components/Section'
 import { modelStore } from 'store/modelStore'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { useEffect, useState } from 'react'
-import { ModelDetails } from 'types/artbot'
+import { ModelDetails, SelectModelDetailsProps } from 'types/artbot'
 import { isEmptyObject } from 'utils/helperUtils'
 import ModelDetailsLoader from './ModelDetailsLoader'
 import FlexCol from 'app/_components/FlexCol'
+import styles from './modelDetails.module.css'
+import { IconHeart, IconHeartFilled } from '@tabler/icons-react'
+import AppSettings from 'models/AppSettings'
 
 // TODO: Need to split into some sort of wrapper so we don't collide with hook,
 // which cannot be used on server side render
@@ -20,13 +23,23 @@ import FlexCol from 'app/_components/FlexCol'
 const SelectModelDetails = ({
   models = [],
   multiModels = false
-}: {
-  models: Array<string>
-  multiModels: boolean
-}) => {
+}: SelectModelDetailsProps) => {
   // const data = await fetchModelDetails()
+  const [favModels, setFavModels] = useState<{ [key: string]: boolean }>({})
   const { modelDetails } = useStore(modelStore)
   const [modelInfo, setModelInfo] = useState<ModelDetails | null>(null)
+
+  const handleFav = (model: string) => {
+    const favoriteModels = AppSettings.get('favoriteModels') || {}
+    if (!favoriteModels[model]) {
+      favoriteModels[model] = true
+    } else {
+      delete favoriteModels[model]
+    }
+
+    AppSettings.save('favoriteModels', favoriteModels)
+    setFavModels(favoriteModels)
+  }
 
   useEffect(() => {
     if (models && models.length === 1) {
@@ -50,6 +63,11 @@ const SelectModelDetails = ({
       setModelInfo(null)
     }
   }, [models, modelDetails, modelInfo, multiModels])
+
+  useEffect(() => {
+    const favoriteModels = AppSettings.get('favoriteModels') || {}
+    setFavModels(favoriteModels)
+  }, [])
 
   if (isEmptyObject(modelDetails)) {
     return <ModelDetailsLoader />
@@ -83,8 +101,22 @@ const SelectModelDetails = ({
           flexGrow: 1
         }}
       >
-        <FlexCol style={{ rowGap: '4px' }}>
+        <FlexCol style={{ position: 'relative', rowGap: '4px' }}>
           <SubSectionTitle>Model details</SubSectionTitle>
+          {models.length === 1 && !panelDisabled && (
+            <div
+              className={styles.FavButton}
+              onClick={() => handleFav(models[0])}
+              title="Add or remove model to your favorites list"
+            >
+              {favModels[models[0]] ? (
+                <IconHeartFilled size={32} style={{ color: 'red' }} />
+              ) : (
+                <IconHeart size={32} stroke={1.5} />
+              )}
+            </div>
+          )}
+
           {models.length === 0 && (
             <div style={{ fontSize: '14px', marginBottom: '4px' }}>
               Please choose a model.
