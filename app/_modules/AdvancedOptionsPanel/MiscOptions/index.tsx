@@ -12,7 +12,7 @@ import InputSwitchV2 from '../InputSwitchV2'
 export default function MiscOptions({ input, setInput }: GetSetPromptInput) {
   return (
     <Section>
-      <Panel style={{ borderWidth: '1px' }}>
+      <Panel style={{ borderWidth: '1px', padding: '8px' }}>
         <SubSectionTitle>Additional Options</SubSectionTitle>
         <FlexibleRow>
           <FlexibleUnit>

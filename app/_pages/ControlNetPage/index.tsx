@@ -366,9 +366,7 @@ const ControlNetPage = () => {
           className="flex flex-col w-full gap-2 rounded"
           style={{
             color: '#ffffff',
-            backgroundColor: 'var(--accent-color)',
-            padding: '8px 12px',
-            marginBottom: '16px'
+            backgroundColor: 'var(--accent-color)'
           }}
         >
           <PromptInput input={input} setInput={setInput} />

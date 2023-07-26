@@ -4,6 +4,8 @@ import { IconDownload, IconHeart, IconHeartFilled } from '@tabler/icons-react'
 import { Button } from 'components/UI/Button'
 import Panel from 'app/_components/Panel'
 import { useState } from 'react'
+import Accordion from 'app/_components/Accordion'
+import AccordionItem from 'app/_components/AccordionItem'
 
 const isFavorite = (loraName: string) => {
   let existingArray = localStorage.getItem('favoriteLoras')
@@ -111,17 +113,18 @@ const LoraDetails = ({
               }}
             >
               {loraDetails.description && (
-                <div className="flex flex-col gap-0 mb-2">
-                  <div>
-                    <strong>Description:</strong>
-                  </div>
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: DOMPurify.sanitize(loraDetails.description)
-                    }}
-                    style={{ fontSize: '14px' }}
-                  />
-                </div>
+                <Accordion>
+                  <AccordionItem title={<strong>Description</strong>}>
+                    <div className="flex flex-col gap-0 mb-2">
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: DOMPurify.sanitize(loraDetails.description)
+                        }}
+                        style={{ fontSize: '14px' }}
+                      />
+                    </div>
+                  </AccordionItem>
+                </Accordion>
               )}
               {loraDetails.baseModel && (
                 <div className="flex flex-col gap-0">

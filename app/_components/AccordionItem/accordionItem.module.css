@@ -35,7 +35,7 @@
 
 .accordion-content {
   animation: accordionOpen 0.3s;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .accordion-item:not(.open) .accordion-content {

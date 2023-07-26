@@ -128,7 +128,10 @@ const LoadLora = ({
             search box here.
           </div>
           <div>
-            <img src="/artbot/civitai-modelid.png" style={{ width: '100%' }} />
+            <img
+              src="/artbot/civitai-modelid.png"
+              style={{ maxWidth: '480px', width: '100%' }}
+            />
           </div>
         </div>
       )}

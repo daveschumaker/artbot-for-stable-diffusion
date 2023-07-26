@@ -70,7 +70,7 @@ const OptionsPanel = ({ input, setInput }: Props) => {
   }
 
   return (
-    <Panel>
+    <Panel style={{ overflow: 'unset' }}>
       <SectionTitle>
         {activeNav === 'advanced' && `Advanced Options`}
         {activeNav === 'img2img' && `Img2Img (source file)`}

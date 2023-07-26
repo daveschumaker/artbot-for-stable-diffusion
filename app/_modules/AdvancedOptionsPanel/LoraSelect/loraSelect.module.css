@@ -1,11 +1,12 @@
 .lora-model-box {
-  border: 1px solid white;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   display: flex;
   flex-direction: column;
   margin-bottom: 8px;
   padding: 8px 16px;
   width: 100%;
+  flex-grow: 1;
 }
 
 .lora-model-box:last-child {
@@ -22,7 +23,6 @@
   background-color: var(--input-background);
   position: absolute;
   top: 42px;
-  left: 0;
   right: 0;
   height: 380px;
   border-radius: 4px;

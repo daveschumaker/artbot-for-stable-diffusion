@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react'
-import MaxWidth from 'components/UI/MaxWidth'
 import Section from 'app/_components/Section'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { GetSetPromptInput } from 'types'
@@ -10,6 +9,9 @@ import ChooseLoraModal from './ChooseLoraModal'
 import NumberInput from 'app/_components/NumberInput'
 import Slider from 'components/UI/Slider'
 import Linker from 'components/UI/Linker'
+import FlexRow from 'app/_components/FlexRow'
+import FlexibleRow from 'app/_components/FlexibleRow'
+import FlexibleUnit from 'app/_components/FlexibleUnit'
 
 const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
   const [showModal, setShowModal] = useState(false)
@@ -113,7 +115,6 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
                   </div>
                 </SubSectionTitle>
                 <NumberInput
-                  className="mb-2"
                   type="text"
                   min={0.05}
                   max={1}
@@ -195,7 +196,26 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
       return null
     }
 
-    return arr
+    // Helper function to chunk the array into pairs
+    const chunkArray = (arr, size) =>
+      Array.from({ length: Math.ceil(arr.length / size) }, (_, index) =>
+        arr.slice(index * size, index * size + size)
+      )
+
+    // Chunk the components into pairs
+    const groupedComponents = chunkArray(arr, 2)
+
+    return (
+      <>
+        {groupedComponents.map((row, rowIndex) => (
+          <FlexibleRow key={rowIndex}>
+            {row.map((item, itemIndex) => (
+              <FlexibleUnit key={itemIndex}>{item}</FlexibleUnit>
+            ))}
+          </FlexibleRow>
+        ))}
+      </>
+    )
   }, [handleDeleteLora, handleUpdate, input.loras, input.prompt, setInput])
 
   // useEffect(() => {
@@ -207,43 +227,52 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
 
   return (
     <Section>
-      <MaxWidth width="512px">
-        <div
-          style={{
-            border: '1px solid rgb(126, 90, 108)',
-            padding: '8px 16px',
-            borderRadius: '4px'
-          }}
-        >
-          <SubSectionTitle>
-            Select LoRAs
-            <div style={{ fontWeight: 400, fontSize: '12px' }}>
-              (Maximum of 5 LoRAs)
-            </div>
-          </SubSectionTitle>
-          <div
-            className="mb-2 relative"
+      <div
+        style={{
+          border: '1px solid rgb(126, 90, 108)',
+          padding: '8px 16px',
+          borderRadius: '4px'
+        }}
+      >
+        <SubSectionTitle>
+          <FlexRow
             style={{
-              marginBottom: '12px'
+              columnGap: '8px',
+              justifyContent: 'space-between',
+              position: 'relative',
+              width: '100%'
             }}
           >
-            <Button
-              size="small"
-              onClick={() => setShowModal(true)}
-              disabled={input.loras.length >= 5}
+            <div>
+              Select LoRAs
+              <div style={{ fontWeight: 400, fontSize: '12px' }}>
+                (Maximum of 5 LoRAs)
+              </div>
+            </div>
+            <div
+              className="mb-2 relative"
+              style={{
+                marginBottom: '12px'
+              }}
             >
-              <IconPlus /> Add LoRA
-            </Button>
+              <Button
+                size="small"
+                onClick={() => setShowModal(true)}
+                disabled={input.loras.length >= 5}
+              >
+                <IconPlus />
+              </Button>
+            </div>
             {showModal && (
               <ChooseLoraModal
                 handleClose={() => setShowModal(false)}
                 handleAddLora={handleAddLora}
               />
             )}
-          </div>
-          <MaxWidth width="480px">{renderLoras()}</MaxWidth>
-        </div>
-      </MaxWidth>
+          </FlexRow>
+        </SubSectionTitle>
+        {renderLoras()}
+      </div>
     </Section>
   )
 }

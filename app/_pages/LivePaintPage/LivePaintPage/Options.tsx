@@ -8,15 +8,14 @@ import Input from 'components/UI/Input'
 import MaxWidth from 'components/UI/MaxWidth'
 import Section from 'app/_components/Section'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
-import TextArea from 'components/UI/TextArea'
 import TextTooltipRow from 'app/_components/TextTooltipRow'
 import ArrowBarLeftIcon from 'components/icons/ArrowBarLeftIcon'
 import GrainIcon from 'components/icons/GrainIcon'
-import PlaylistXIcon from 'components/icons/PlaylistXIcon'
 import { Tooltip } from 'react-tooltip'
 import { useStore } from 'statery'
 import { userInfoStore } from 'store/userStore'
 import { maxSteps } from 'utils/validationUtils'
+import PromptInput from 'app/_pages/CreatePage/PromptInput'
 
 export const LivePaintOptions = ({ input, setInput }: any) => {
   const userState = useStore(userInfoStore)
@@ -24,52 +23,7 @@ export const LivePaintOptions = ({ input, setInput }: any) => {
 
   return (
     <div className="flex flex-col w-full gap-2">
-      <div className="flex flex-row items-center gap-2 text-sm font-bold">
-        <PlaylistXIcon hideCross />
-        Prompt
-      </div>
-      <FlexRow>
-        <TextArea
-          name="prompt"
-          placeholder="Describe your image..."
-          onChange={(e: any) => {
-            setInput({ prompt: e.target.value })
-          }}
-          value={input.prompt}
-        />
-        <Button
-          title="Clear current input"
-          theme="secondary"
-          onClick={() => {
-            setInput({ prompt: '' })
-          }}
-        >
-          <ArrowBarLeftIcon />
-        </Button>
-      </FlexRow>
-      <div className="flex flex-row items-center gap-2 text-sm font-bold">
-        <PlaylistXIcon />
-        Negative prompt <span className="font-[400] text-xs">(optional)</span>
-      </div>
-      <FlexRow>
-        <TextArea
-          name="prompt"
-          placeholder="Words and descriptions to de-emphasize from an image..."
-          onChange={(e: any) => {
-            setInput({ negative: e.target.value })
-          }}
-          value={input.negative}
-        />
-        <Button
-          title="Clear current input"
-          theme="secondary"
-          onClick={() => {
-            setInput({ negative: '' })
-          }}
-        >
-          <ArrowBarLeftIcon />
-        </Button>
-      </FlexRow>
+      <PromptInput input={input} setInput={setInput} />
       <FlexRow>
         <SelectSampler input={input} setInput={setInput} />
       </FlexRow>

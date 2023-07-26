@@ -16,7 +16,6 @@ import TwoPanel from 'components/UI/TwoPanel'
 
 // Utils imports
 import { maxSteps } from 'utils/validationUtils'
-import { SourceProcessing } from 'utils/promptUtils'
 
 // Local imports
 import ControlNetOptions from './ControlNetOptions'
@@ -36,7 +35,7 @@ import PromptInputSettings from 'models/PromptInputSettings'
 
 // Other imports
 import ParentImage from 'app/_components/ParentImage'
-import LoraSelect from 'modules/LoraSelect'
+import LoraSelect from './LoraSelect'
 import FlexibleRow from 'app/_components/FlexibleRow'
 import FlexibleUnit from 'app/_components/FlexibleUnit'
 import SelectModel from 'app/_modules/AdvancedOptionsPanel/SelectModel'
@@ -49,6 +48,9 @@ import PostProcessors from './PostProcessors'
 import Guidance from './Guidance'
 import Steps from './Steps'
 import MiscOptions from './MiscOptions'
+import Accordion from 'app/_components/Accordion'
+import AccordionItem from 'app/_components/AccordionItem'
+import Panel from 'app/_components/Panel'
 
 interface Props {
   input: any
@@ -103,6 +105,47 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
           </div>
         </Section>
       )}
+
+      {input.source_image && (
+        <Panel style={{ borderWidth: '1px', overflow: 'unset' }}>
+          <Accordion>
+            <AccordionItem
+              title={
+                <SubSectionTitle style={{ paddingBottom: '0' }}>
+                  img2img options
+                </SubSectionTitle>
+              }
+            >
+              <FlexibleRow style={{ paddingTop: '8px' }}>
+                <FlexibleUnit>
+                  <ControlNetOptions input={input} setInput={setInput} />
+                </FlexibleUnit>
+                <FlexibleUnit>
+                  <NumericInputSlider
+                    label="Denoise"
+                    tooltip="Amount of noise added to input image. Values that
+                  approach 1.0 allow for lots of variations but will
+                  also produce images that are not semantically
+                  consistent with the input. Only available for img2img."
+                    from={0.0}
+                    to={1.0}
+                    step={0.05}
+                    input={input}
+                    setInput={setInput}
+                    fieldName="denoising_strength"
+                    disabled={
+                      input.models &&
+                      input.models[0] &&
+                      input.models[0].indexOf('_inpainting') >= 0
+                    }
+                  />
+                </FlexibleUnit>
+              </FlexibleRow>
+            </AccordionItem>
+          </Accordion>
+        </Panel>
+      )}
+
       <Section>
         <FlexibleRow>
           <FlexibleUnit>
@@ -272,41 +315,6 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
           )}
         </SplitPanel>
       </TwoPanel>
-      {(input.img2img ||
-        input.source_processing === SourceProcessing.Img2Img ||
-        input.source_processing === SourceProcessing.InPainting) && (
-        <div className="mr-8">
-          <Section>
-            <NumericInputSlider
-              label="Denoise"
-              tooltip="Amount of noise added to input image. Values that
-                  approach 1.0 allow for lots of variations but will
-                  also produce images that are not semantically
-                  consistent with the input. Only available for img2img."
-              from={0.0}
-              to={1.0}
-              step={0.05}
-              input={input}
-              setInput={setInput}
-              fieldName="denoising_strength"
-              disabled={
-                input.models &&
-                input.models[0] &&
-                input.models[0].indexOf('_inpainting') >= 0
-              }
-            />
-            {input.source_processing === SourceProcessing.InPainting &&
-              input.models &&
-              input.models[0] &&
-              input.models[0].indexOf('_inpainting') >= 0 && (
-                <div className="mt-0 text-sm text-slate-500">
-                  Note: Denoise disabled when inpainting model is used.
-                </div>
-              )}
-          </Section>
-        </div>
-      )}
-      <ControlNetOptions input={input} setInput={setInput} />
       {/* <InputSwitch
         label="Tiling"
         disabled={input.source_image ? true : false}

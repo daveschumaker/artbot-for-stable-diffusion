@@ -1,16 +1,18 @@
 import MaxWidth from 'components/UI/MaxWidth'
-import Section from 'app/_components/Section'
 import Select from 'app/_components/Select'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
-import TwoPanel from 'components/UI/TwoPanel'
 import DefaultPromptInput from 'models/DefaultPromptInput'
 import { CONTROL_TYPE_ARRAY } from '../../../../_constants'
-import InputSwitch from '../InputSwitch'
-import SplitPanel from 'components/UI/SplitPanel'
+import FlexRow from 'app/_components/FlexRow'
+import { Button } from 'components/UI/Button'
+import { IconSettings } from '@tabler/icons-react'
+import { useState } from 'react'
+import DropdownOptions from 'app/_modules/DropdownOptions'
+import Checkbox from 'components/UI/Checkbox'
+import TooltipComponent from 'app/_components/TooltipComponent'
 
 const ControlNetOptions = ({
   forceDisplay = false,
-  hideControlMap = false,
   input,
   setInput
 }: {
@@ -19,6 +21,7 @@ const ControlNetOptions = ({
   input: DefaultPromptInput
   setInput: any
 }) => {
+  const [showDropdown, setShowDropdown] = useState(false)
   let controlTypeValue = { value: '', label: 'none' }
 
   if (CONTROL_TYPE_ARRAY.indexOf(input.control_type) >= 0) {
@@ -52,87 +55,92 @@ const ControlNetOptions = ({
 
   return (
     <div>
-      <Section>
-        <SubSectionTitle>Control Type</SubSectionTitle>
-        {isDisabled && !forceDisplay && (
-          <div className="mt-[-6px] text-sm text-slate-500 dark:text-slate-400 font-[600]">
-            <MaxWidth
-              // @ts-ignore
-              width="360px"
+      <SubSectionTitle>Control Type</SubSectionTitle>
+      {isDisabled && !forceDisplay && (
+        <div className="mt-[-6px] text-sm text-slate-500 dark:text-slate-400 font-[600]">
+          <MaxWidth
+            // @ts-ignore
+            width="360px"
+          >
+            <strong>Note:</strong> ControlNet can only be used for img2img
+            requests. Please upload an image to use this feature.
+          </MaxWidth>
+        </div>
+      )}
+      {(input.source_image || forceDisplay) && (
+        <FlexRow style={{ columnGap: '4px', position: 'relative' }}>
+          <Select
+            isDisabled={isDisabled}
+            options={CONTROL_TYPE_ARRAY.map((value) => {
+              if (value === '') {
+                return { value: '', label: 'none' }
+              }
+
+              return { value, label: value }
+            })}
+            onChange={(obj: { value: string; label: string }) => {
+              setInput({ control_type: obj.value })
+
+              if (obj.value !== '') {
+                setInput({ karras: false, hires: false })
+              }
+            }}
+            isSearchable={false}
+            value={
+              controlTypeValue ? controlTypeValue : { value: '', label: 'none' }
+            }
+          />
+          {showDropdown && (
+            <DropdownOptions
+              handleClose={() => setShowDropdown(false)}
+              title="Sampler options"
+              top="46px"
             >
-              <strong>Note:</strong> ControlNet can only be used for img2img
-              requests. Please upload an image to use this feature.
-            </MaxWidth>
-          </div>
-        )}
-        {(input.source_image || forceDisplay) && (
-          <div className="max-w-[384px] w-full">
-            <Select
-              isDisabled={isDisabled}
-              options={CONTROL_TYPE_ARRAY.map((value) => {
-                if (value === '') {
-                  return { value: '', label: 'none' }
-                }
-
-                return { value, label: value }
-              })}
-              onChange={(obj: { value: string; label: string }) => {
-                setInput({ control_type: obj.value })
-
-                if (obj.value !== '') {
-                  setInput({ karras: false, hires: false })
-                }
-              }}
-              isSearchable={false}
-              value={
-                controlTypeValue
-                  ? controlTypeValue
-                  : { value: '', label: 'none' }
-              }
-            />
-          </div>
-        )}
-      </Section>
-      {!isDisabled && !hideControlMap && (
-        <TwoPanel>
-          <SplitPanel>
-            <InputSwitch
-              label="Return control map?"
-              disabled={!input.control_type}
-              tooltip="This option returns the control map / depth map for a given image."
-              checked={input.return_control_map}
-              handleSwitchToggle={() =>
-                handleControlMapSelect('return_control_map')
-              }
-              moreInfoLink={
-                input.control_type ? null : (
-                  <div className="text-slate-500 dark:text-slate-400">
-                    Select a control type to enable this option.
-                  </div>
-                )
-              }
-            />
-          </SplitPanel>
-
-          <SplitPanel>
-            <InputSwitch
-              label="Use control map?"
-              disabled={!input.control_type}
-              tooltip="Tell Stable Horde that the image you're uploading is a control map."
-              checked={input.image_is_control}
-              handleSwitchToggle={() =>
-                handleControlMapSelect('image_is_control')
-              }
-              moreInfoLink={
-                input.control_type ? null : (
-                  <div className="text-slate-500 dark:text-slate-400">
-                    Select a control type to enable this option.
-                  </div>
-                )
-              }
-            />
-          </SplitPanel>
-        </TwoPanel>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  rowGap: '8px',
+                  padding: '8px 0'
+                }}
+              >
+                <FlexRow>
+                  <Checkbox
+                    label="Return control map?"
+                    checked={input.return_control_map}
+                    onChange={() => {
+                      handleControlMapSelect('return_control_map')
+                    }}
+                  />
+                  <TooltipComponent tooltipId="return_control_map">
+                    <>
+                      This option returns the control map / depth map for a
+                      given image.
+                    </>
+                  </TooltipComponent>
+                </FlexRow>
+                <FlexRow>
+                  <Checkbox
+                    label="Use control map?"
+                    checked={input.image_is_control}
+                    onChange={() => {
+                      handleControlMapSelect('image_is_control')
+                    }}
+                  />
+                  <TooltipComponent tooltipId="image_is_control">
+                    <>
+                      Tell Stable Horde that the image you&apos;re uploading is
+                      a control map.
+                    </>
+                  </TooltipComponent>
+                </FlexRow>
+              </div>
+            </DropdownOptions>
+          )}
+          <Button onClick={() => setShowDropdown(true)}>
+            <IconSettings />
+          </Button>
+        </FlexRow>
       )}
     </div>
   )

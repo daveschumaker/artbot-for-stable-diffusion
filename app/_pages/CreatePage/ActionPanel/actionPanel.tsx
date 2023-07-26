@@ -7,10 +7,11 @@ import Errors from 'utils/errors'
 import { useState } from 'react'
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import DryRunCalculator from '../PromptInput/DryRunCalculator'
+import DefaultPromptInput from 'models/DefaultPromptInput'
 
 interface Props {
   errors: { [key: string]: boolean }
-  input: string
+  input: DefaultPromptInput
   disableSubmit?: boolean
   setInput: any
   resetInput: () => void
@@ -79,7 +80,10 @@ const ActionPanel = ({
                 <span>{pending ? '' : <IconSquarePlus />}</span>
                 {pending ? 'Creating...' : 'Create'}
               </Button>
-              <Button onClick={() => setShowDryRun(true)}>
+              <Button
+                disabled={!input.prompt}
+                onClick={() => setShowDryRun(true)}
+              >
                 <IconCalculator />
               </Button>
 

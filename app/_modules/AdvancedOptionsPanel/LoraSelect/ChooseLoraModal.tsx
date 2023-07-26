@@ -1,18 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 import Overlay from 'app/_components/Overlay'
-import {
-  IconCloudSearch,
-  IconHeart,
-  IconHistory,
-  IconX
-} from '@tabler/icons-react'
+import { IconCloudSearch, IconHeart, IconHistory } from '@tabler/icons-react'
 import { useEffect, useState } from 'react'
-import styles from './loraSelect.module.css'
 import Tabs from 'components/UI/Tabs'
 import Tab from 'components/UI/Tab'
 import LoadLora from './LoadLoraFromCivitai'
 import FavoriteLoras from './FavoriteLoras'
 import RecentLoras from './RecentLoras'
+import DropdownOptions from 'app/_modules/DropdownOptions'
 
 export let loraCache: Array<any> | null = null
 
@@ -72,23 +67,12 @@ const ChooseLoraModal = ({
   return (
     <>
       <Overlay handleClose={handleClose} disableBackground />
-      <div
-        className={styles['lora-select-modal']}
-        style={{
-          height: 'auto',
-          maxHeight: '400px',
-          paddingBottom: '16px',
-          overflowY: 'hidden'
-        }}
-      >
-        <div className={styles['StyledClose']} onClick={handleClose}>
-          <IconX stroke={1.5} />
-        </div>
+      <DropdownOptions handleClose={handleClose} title="Load LoRA">
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
-            marginTop: '32px'
+            marginTop: '16px'
           }}
         >
           <div>
@@ -162,7 +146,7 @@ const ChooseLoraModal = ({
             </div>
           )}
         </div>
-      </div>
+      </DropdownOptions>
     </>
   )
 }
