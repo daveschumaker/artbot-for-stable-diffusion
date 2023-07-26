@@ -5,9 +5,9 @@ const Accordion = ({
 }: {
   children: React.ReactNode | React.ReactNode[]
 }) => {
-  const [activeIndex, setActiveIndex] = useState(null)
+  const [activeIndex, setActiveIndex] = useState<number | null>(null)
 
-  const handleItemClick = (index) => {
+  const handleItemClick = (index: number) => {
     setActiveIndex((prevIndex) => (prevIndex === index ? null : index))
   }
 
@@ -16,6 +16,7 @@ const Accordion = ({
       {Children.map(children, (child, index) => {
         if (React.isValidElement(child)) {
           return React.cloneElement(child, {
+            //@ts-ignore
             isOpen: activeIndex === index,
             onClick: () => handleItemClick(index)
           })
