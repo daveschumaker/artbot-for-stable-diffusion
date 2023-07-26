@@ -1,6 +1,7 @@
 # 2023.07.26
 
-- Fix: Inverted image masks when using inpainting. Now, you should only need to highlight the areas you want to change. This used to work correctly, but an update to worker GPUs broke how ArtBot sent image masks to the AI Horde. You should be able to use inpainting as normal, now!
+- Fix: Inverted image masks when using inpainting. Now, you should only need to highlight the areas you want to change. This used to work correctly, but an update to worker GPUs broke how ArtBot sent image masks to the AI Horde. You should be able to use inpainting as normal, now! Thanks to Silvy, Efreak and others for reporting this.
+- Fix: Live painting would hang when trying to return an image. Thanks to Francis! for reporting this on Discord.
 
 # 2023.07.25
 

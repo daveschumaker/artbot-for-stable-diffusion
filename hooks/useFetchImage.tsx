@@ -16,10 +16,12 @@ export const useFetchImage = (input: DefaultPromptInput) => {
   const [imageResult, setImageResult] = useState('')
 
   const getImage = useCallback(async () => {
-    const data: any = await getFinishedImage(jobId)
+    const data: any = (await getFinishedImage(jobId)) || {}
+    const { generations = [] } = data
+    const [image = {}] = generations
 
-    if (data.base64String) {
-      setImageResult(data.base64String)
+    if (image.base64String) {
+      setImageResult(image.base64String)
       setPending(false)
       setJobDone(false)
       setJobStatus('requesting')
