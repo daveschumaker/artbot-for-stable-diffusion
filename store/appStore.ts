@@ -9,7 +9,6 @@ interface AppStore {
   indexDbSupport: boolean
   imageDetailsModalOpen: boolean
   newImageReady: string
-  primaryWindow: boolean
   serverMessage: {
     content: string
     title: string
@@ -42,8 +41,7 @@ export const appInfoStore = makeStore<AppStore>({
   showImageReadyToast: false,
   stableHordeApiOnline: true,
   storageQuotaLimit: false,
-  unsupportedBrowser: false,
-  primaryWindow: false
+  unsupportedBrowser: false
 })
 
 export const setStorageQuotaLimit = (val: boolean = false) => {
@@ -79,12 +77,6 @@ export const setHordePerformance = (obj: object) => {
 export const setUnsupportedBrowser = (val: boolean = false) => {
   appInfoStore.set(() => ({
     unsupportedBrowser: val
-  }))
-}
-
-export const setPrimaryWindow = (val: boolean = false) => {
-  appInfoStore.set(() => ({
-    primaryWindow: val
   }))
 }
 

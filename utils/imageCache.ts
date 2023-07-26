@@ -494,7 +494,7 @@ export const addCompletedJobToDb = async ({
 export const checkCurrentJob = async (imageDetails: any) => {
   let jobDetails: any = Object.assign({}, imageDetails)
 
-  if (!isAppActive() || !appInfoStore.state.primaryWindow) {
+  if (!isAppActive()) {
     return
   }
 
@@ -659,7 +659,7 @@ export const checkCurrentJob = async (imageDetails: any) => {
         ...imgDetailsFromApi
       }
 
-      if (isAppActive() || appInfoStore.state.primaryWindow) {
+      if (isAppActive()) {
         for (const idx in imgDetailsFromApi.generations) {
           const image = imgDetailsFromApi.generations[idx]
           if ('base64String' in image && image.base64String) {

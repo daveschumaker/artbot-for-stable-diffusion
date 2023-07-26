@@ -31,7 +31,7 @@ const checkMultiPendingJobs = async () => {
     return
   }
 
-  if (!isAppActive() || !appInfoStore.state.primaryWindow) {
+  if (!isAppActive()) {
     return
   }
 
@@ -67,7 +67,7 @@ const createImageJobs = async () => {
     return
   }
 
-  if (!isAppActive() || !appInfoStore.state.primaryWindow) {
+  if (!isAppActive()) {
     return
   }
 
