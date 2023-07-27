@@ -332,7 +332,10 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
           }}
         />
       </div> */}
-      <LoraSelect input={input} setInput={setInput} />
+      <Section style={{ paddingBottom: '12px' }}>
+        <LoraSelect input={input} setInput={setInput} />
+      </Section>
+
       <Section>
         <FlexibleRow>
           <FlexibleUnit>

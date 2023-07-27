@@ -7,7 +7,7 @@ import styles from './menuButton.module.css'
 export default function MenuButton() {
   return (
     <div className={styles.MenuButton} onClick={() => setShowAppMenu(true)}>
-      <IconMenuDeep size={28} stroke={1.5} />
+      <IconMenuDeep size={28} stroke={2} />
     </div>
   )
 }

@@ -15,7 +15,7 @@ export default function MiscOptions({ input, setInput }: GetSetPromptInput) {
       <Panel style={{ borderWidth: '1px', padding: '8px' }}>
         <SubSectionTitle>Additional Options</SubSectionTitle>
         <FlexibleRow>
-          <FlexibleUnit>
+          <FlexibleUnit style={{ rowGap: '8px' }}>
             <InputSwitchV2
               label="Karras"
               tooltip="Denoising magic. Dramatically improves image generation using fewer steps."
@@ -41,7 +41,7 @@ export default function MiscOptions({ input, setInput }: GetSetPromptInput) {
             />
             <HiresFix input={input} setInput={setInput} />
           </FlexibleUnit>
-          <FlexibleUnit>
+          <FlexibleUnit style={{ rowGap: '8px' }}>
             <AllowNsfwImages />
             <ReplacementFilterToggle />
           </FlexibleUnit>

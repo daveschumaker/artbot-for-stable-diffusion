@@ -1,8 +1,18 @@
-import { ReactNode } from 'react'
+import { CSSProperties, ReactNode } from 'react'
 import styles from './contentWrapper.module.css'
 
-const ContentWrapper = ({ children }: { children: ReactNode }) => {
-  return <div className={styles.ContentWrapper}>{children}</div>
+const ContentWrapper = ({
+  children,
+  style
+}: {
+  children: ReactNode
+  style?: CSSProperties
+}) => {
+  return (
+    <div className={styles.ContentWrapper} style={style}>
+      {children}
+    </div>
+  )
 }
 
 export default ContentWrapper

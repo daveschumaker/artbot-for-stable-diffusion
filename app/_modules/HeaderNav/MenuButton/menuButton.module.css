@@ -2,7 +2,7 @@
   align-items: center;
   display: flex;
   cursor: pointer;
-  margin-right: 8px;
+  margin-right: 12px;
 }
 
 .MenuButton:hover {
