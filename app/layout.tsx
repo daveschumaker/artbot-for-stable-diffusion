@@ -5,6 +5,7 @@ import AppInit from './_modules/AppInit'
 import SlidingMenu from './_modules/SlidingMenu'
 import Footer from './_components/Footer'
 import { Metadata } from 'next'
+import PollController from 'app/_modules/PollController'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://1b46-23-93-98-252.ngrok-free.app'),
@@ -48,6 +49,7 @@ export default function RootLayout({
         style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}
       >
         <AppInit />
+        <PollController />
         <HeaderNav />
         <SlidingMenu />
         {children}
