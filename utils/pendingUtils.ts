@@ -10,6 +10,7 @@ import { userInfoStore } from 'store/userStore'
 import { toast, ToastOptions } from 'react-toastify'
 import { logToConsole } from './debugTools'
 import { deletePendingJob, setPendingJob } from 'controllers/pendingJobsCache'
+import AppSettings from 'models/AppSettings'
 
 const addJobToPending = async (
   imageParams: CreateImageRequest | RerollImageRequest
@@ -219,10 +220,12 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
           }
           clonedParams.modelVersion = getModelVersion(clonedParams.models[0])
 
-          clonedParams.prompt = addTriggerToPrompt({
-            prompt,
-            model: clonedParams.models[0]
-          })
+          if (AppSettings.get('modelAutokeywords')) {
+            clonedParams.prompt = addTriggerToPrompt({
+              prompt,
+              model: clonedParams.models[0]
+            })
+          }
 
           if (clonedParams.orientation === 'random') {
             clonedParams = {
@@ -309,10 +312,12 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
       }
       clonedParams.modelVersion = getModelVersion(clonedParams.models[0])
 
-      clonedParams.prompt = addTriggerToPrompt({
-        prompt,
-        model: clonedParams.models[0]
-      })
+      if (AppSettings.get('modelAutokeywords')) {
+        clonedParams.prompt = addTriggerToPrompt({
+          prompt,
+          model: clonedParams.models[0]
+        })
+      }
 
       if (clonedParams.orientation === 'random') {
         clonedParams = {

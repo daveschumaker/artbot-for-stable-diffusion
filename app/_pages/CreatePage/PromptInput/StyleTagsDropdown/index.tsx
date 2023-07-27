@@ -42,7 +42,7 @@ export default function StyleTagsDropdown({
     <div className={styles['style-tags-wrapper']}>
       {usedTags.length > 0 && (
         <div className="mb-2 px-2">
-          <h2 className="font-[700] mb-1">Used tags</h2>
+          <h2 className="font-[700] mb-2">Used tags</h2>
           <div style={{ wordBreak: 'break-all' }}>
             {usedTags.map((element) => (
               <div
@@ -67,7 +67,7 @@ export default function StyleTagsDropdown({
           key={section}
           className="mb-2 px-2"
         >
-          <h2 className="font-[700] mb-1">{section}</h2>
+          <h2 className="font-[700] mb-2">{section}</h2>
           <div style={{ wordBreak: 'break-all' }}>
             {
               // @ts-ignore

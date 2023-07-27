@@ -38,6 +38,8 @@ const SelectModel = ({
   const [showFilter, setShowFilter] = useState(false)
   const [filterMode, setFilterMode] = useState('all')
 
+  const [autoKeyword, setAutoKeyword] = useState(false)
+
   const handleMultiModelSelect = (
     obj: Array<{ value: string; label: string }>
   ) => {
@@ -150,6 +152,8 @@ const SelectModel = ({
     const favModels = AppSettings.get('favoriteModels') || {}
     const numberFaves = Object.keys(favModels).length
 
+    const autoAppend = AppSettings.get('modelAutokeywords') || false
+    setAutoKeyword(autoAppend)
     setFavoriteModelsCount(numberFaves)
   }, [])
 
@@ -276,6 +280,32 @@ const SelectModel = ({
                   }
                 }}
               />
+              <div
+                style={{
+                  borderBottom: '1px solid var(--input-color)',
+                  width: '100%',
+                  height: '4px',
+                  paddingTop: '4px',
+                  marginBottom: '4px'
+                }}
+              />
+              <FlexRow>
+                <Checkbox
+                  label="Auto-append model(s) keywords?"
+                  checked={autoKeyword}
+                  onChange={(bool) => {
+                    setAutoKeyword(bool)
+                    AppSettings.set('modelAutokeywords', bool)
+                  }}
+                />
+                <TooltipComponent tooltipId="auto-append-keywords">
+                  <>
+                    Some models utilize keywords to trigger their specific
+                    effects. This option will auto-append all keywords to the
+                    prompt.
+                  </>
+                </TooltipComponent>
+              </FlexRow>
             </div>
           </DropdownOptions>
         )}

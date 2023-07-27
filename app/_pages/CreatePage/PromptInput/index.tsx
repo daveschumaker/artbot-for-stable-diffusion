@@ -2,6 +2,7 @@ import {
   IconArrowBackUp,
   IconBook,
   IconCamera,
+  IconCodePlus,
   IconDeviceFloppy,
   IconFolder,
   IconPlaylistAdd,
@@ -24,6 +25,7 @@ import FlexRow from 'app/_components/FlexRow'
 import TextArea from 'components/UI/TextArea'
 import Accordion from 'app/_components/Accordion'
 import AccordionItem from 'app/_components/AccordionItem'
+import KeywordsDropdown from './KeywordsDropdown'
 
 export default function PromptInput({ input, setInput }: GetSetPromptInput) {
   const negativePromptLibraryModal = useModal(NegativePromptLibraryModal)
@@ -31,6 +33,7 @@ export default function PromptInput({ input, setInput }: GetSetPromptInput) {
   const [undoPrompt, setUndoPrompt] = useState('')
   const [undoNegative, setUndoNegative] = useState('')
 
+  const [showKeywords, setShowKeywords] = useState(false)
   const [showPresets, setShowPresets] = useState(false)
   const [showTags, setShowTags] = useState(false)
 
@@ -79,6 +82,16 @@ export default function PromptInput({ input, setInput }: GetSetPromptInput) {
                 />
               </DropdownOptions>
             )}
+            {showKeywords && (
+              <DropdownOptions
+                handleClose={() => setShowKeywords(false)}
+                height={460}
+                title="Model keywords"
+                maxWidth="480px"
+              >
+                <KeywordsDropdown input={input} setInput={setInput} />
+              </DropdownOptions>
+            )}
             {showTags && (
               <DropdownOptions
                 handleClose={() => setShowTags(false)}
@@ -87,6 +100,9 @@ export default function PromptInput({ input, setInput }: GetSetPromptInput) {
                 <StyleTagsDropdown input={input} setInput={setInput} />
               </DropdownOptions>
             )}
+            <Button onClick={() => setShowKeywords(true)} size="small">
+              <IconCodePlus stroke={1.5} />
+            </Button>
             <Button
               onClick={() => promptHistoryModal.show({ setInput })}
               size="small"

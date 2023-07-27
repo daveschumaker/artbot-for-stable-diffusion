@@ -1,0 +1,115 @@
+import { GetSetPromptInput } from 'types/artbot'
+import styles from './component.module.css'
+import { useEffect, useState } from 'react'
+import { useStore } from 'statery'
+import { modelStore } from 'store/modelStore'
+import { IconX } from '@tabler/icons-react'
+
+const removeString = (originalString: string, stringToRemove: string) => {
+  const regex = new RegExp(stringToRemove, 'g')
+  return originalString.replace(regex, '')
+}
+
+export default function KeywordsDropdown({
+  input,
+  setInput
+}: GetSetPromptInput) {
+  const { modelDetails } = useStore(modelStore)
+  const [validModels, setValidModels] = useState<string[]>([])
+  const [modelKeywords, setModelKeywords] = useState<{
+    [key: string]: string[]
+  }>({})
+  const [usedKeywords, setUsedKeywords] = useState<string[]>([])
+
+  const addTagClick = (tag: string) => {
+    setInput({ prompt: `${input.prompt}, ${tag}` })
+  }
+
+  const removeTag = (tag: string) => {
+    const updatedPrompt = removeString(input.prompt, `, ${tag}`)
+    setInput({ prompt: updatedPrompt })
+  }
+
+  useEffect(() => {
+    if (input.models.length >= 1) {
+      let foundModels: string[] = []
+      let keywords: any = {}
+      input.models.forEach((model) => {
+        const details = modelDetails[model]
+        if (!details) return
+
+        if (details.trigger && details.trigger.length >= 1) {
+          foundModels.push(model)
+          keywords[model] = [...details.trigger]
+        }
+      })
+      setValidModels(foundModels)
+      setModelKeywords(keywords)
+    }
+  }, [input.models, modelDetails])
+
+  useEffect(() => {
+    const matchingTags: string[] = []
+    validModels.forEach((model: any) => {
+      modelKeywords[model].forEach((tag: string) => {
+        if (input.prompt.includes(`, ${tag}`)) {
+          matchingTags.push(tag)
+        }
+      })
+    })
+
+    setUsedKeywords(matchingTags)
+  }, [input.prompt, modelKeywords, validModels])
+
+  return (
+    <div className={styles['style-tags-wrapper']}>
+      {usedKeywords.length > 0 && (
+        <div className="mb-2 px-2">
+          <h2 className="font-[700] mb-2">Used keywords</h2>
+          <div style={{ wordBreak: 'break-all' }}>
+            {usedKeywords.map((element) => (
+              <div
+                className={styles['tag']}
+                key={element}
+                onClick={() => {
+                  removeTag(element)
+                }}
+              >
+                <span className="flex flex-row gap-1">
+                  <IconX size={18} stroke={1.5} />
+                  {element}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      {validModels.map((model) => (
+        <div
+          // @ts-ignore
+          key={model}
+          className="mb-2 px-2"
+        >
+          <h2 className="font-[700] mb-2">{model}</h2>
+          <div style={{ wordBreak: 'break-all' }}>
+            {
+              // @ts-ignore
+              modelKeywords[model].length >= 1 &&
+                modelKeywords[model].map((element) => (
+                  <div
+                    className={styles['tag']}
+                    key={element}
+                    onClick={() => {
+                      addTagClick(element)
+                    }}
+                  >
+                    {element}
+                  </div>
+                ))
+            }
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}

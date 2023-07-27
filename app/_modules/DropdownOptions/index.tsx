@@ -8,13 +8,15 @@ export default function DropdownOptions({
   handleClose,
   height,
   title,
-  top = '42px'
+  top = '42px',
+  maxWidth = '100%'
 }: {
   children: ReactNode
   handleClose: () => void
   height?: number
   title?: string
   top?: string
+  maxWidth?: string
 }) {
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
@@ -34,7 +36,7 @@ export default function DropdownOptions({
   return (
     <>
       <ClickableOverlay disableBackground handleClose={handleClose} />
-      <div className={styles['DropdownOptions']} style={{ top }}>
+      <div className={styles['DropdownOptions']} style={{ maxWidth, top }}>
         {title && <div className={styles.Title}>{title}</div>}
         <div className={styles['CloseButton']} onClick={handleClose}>
           <IconX stroke={1.5} />

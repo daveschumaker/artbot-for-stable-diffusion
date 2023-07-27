@@ -743,10 +743,14 @@ export const downloadFile = async (image: any) => {
 interface ICountImages {
   numImages: number
   multiSteps?: string
+  multiClip?: string
+  multiDenoise?: string
   multiGuidance?: string
   useAllModels?: boolean
   useFavoriteModels?: boolean
   useAllSamplers?: boolean
+  useMultiClip?: boolean
+  useMultiDenoise?: boolean
   useMultiSteps?: boolean
   useMultiGuidance?: boolean
   prompt?: string
@@ -768,10 +772,14 @@ export const countImagesToGenerate = (imageParams: ICountImages) => {
   const {
     numImages = 0,
     multiSteps = '',
+    multiClip = '',
+    multiDenoise = '',
     multiGuidance = '',
     useAllModels = false,
     useFavoriteModels = false,
     useAllSamplers = false,
+    useMultiClip = false,
+    useMultiDenoise = false,
     useMultiGuidance = false,
     useMultiSteps = false,
     models = [],
@@ -779,6 +787,38 @@ export const countImagesToGenerate = (imageParams: ICountImages) => {
     negative = ''
   } = imageParams
   let imageCount = numImages
+
+  if (useMultiClip) {
+    let splitClip = multiClip.split(',') || []
+    let splitCount = 0
+
+    splitClip.forEach((split) => {
+      // @ts-ignore
+      if (!isNaN(split) && split) {
+        splitCount++
+      }
+    })
+
+    if (splitCount > 0) {
+      imageCount = imageCount * splitCount
+    }
+  }
+
+  if (useMultiDenoise) {
+    let splitDenoise = multiDenoise.split(',') || []
+    let splitCount = 0
+
+    splitDenoise.forEach((split) => {
+      // @ts-ignore
+      if (!isNaN(split) && split) {
+        splitCount++
+      }
+    })
+
+    if (splitCount > 0) {
+      imageCount = imageCount * splitCount
+    }
+  }
 
   if (useMultiSteps) {
     let splitSteps = multiSteps.split(',') || []
@@ -791,7 +831,9 @@ export const countImagesToGenerate = (imageParams: ICountImages) => {
       }
     })
 
-    imageCount = imageCount * splitCount
+    if (splitCount > 0) {
+      imageCount = imageCount * splitCount
+    }
   }
 
   if (useMultiGuidance) {
@@ -805,7 +847,9 @@ export const countImagesToGenerate = (imageParams: ICountImages) => {
       }
     })
 
-    imageCount = imageCount * splitCount
+    if (splitCount > 0) {
+      imageCount = imageCount * splitCount
+    }
   }
 
   if (hasPromptMatrix(prompt) || hasPromptMatrix(negative)) {

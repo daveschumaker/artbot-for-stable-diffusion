@@ -121,7 +121,7 @@ export const initModelAvailabilityFetch = async () => {
     setInterval(async () => {
       await fetchAvailableModels()
       await fetchModelDetails()
-    }, 60000)
+    }, 30000)
   } catch (err) {
     console.error('Error initializing model data fetch:', err)
   }

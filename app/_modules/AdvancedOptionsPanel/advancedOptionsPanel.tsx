@@ -108,7 +108,13 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
       )}
 
       {input.source_image && (
-        <Panel style={{ borderWidth: '1px', overflow: 'unset' }}>
+        <Panel
+          style={{
+            borderWidth: '1px',
+            marginBottom: '12px',
+            overflow: 'unset'
+          }}
+        >
           <Accordion>
             <AccordionItem
               title={
@@ -117,7 +123,7 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
                 </SubSectionTitle>
               }
             >
-              <FlexibleRow style={{ paddingTop: '8px' }}>
+              <FlexibleRow style={{ marginBottom: 0, paddingTop: '8px' }}>
                 <FlexibleUnit>
                   <ControlNetOptions input={input} setInput={setInput} />
                 </FlexibleUnit>
