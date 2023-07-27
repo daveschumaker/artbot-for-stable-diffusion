@@ -20,6 +20,8 @@ export default function KeywordsDropdown({
     [key: string]: string[]
   }>({})
 
+  console.log(`input?`, input)
+
   const [validModels, setValidModels] = useState<string[]>([])
   const [modelKeywords, setModelKeywords] = useState<{
     [key: string]: string[]

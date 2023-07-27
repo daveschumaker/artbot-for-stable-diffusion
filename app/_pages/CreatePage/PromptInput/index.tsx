@@ -26,6 +26,7 @@ import TextArea from 'components/UI/TextArea'
 import Accordion from 'app/_components/Accordion'
 import AccordionItem from 'app/_components/AccordionItem'
 import KeywordsDropdown from './KeywordsDropdown'
+import { hasKeywords } from './KeywordsDropdown/keywordsController'
 
 export default function PromptInput({ input, setInput }: GetSetPromptInput) {
   const negativePromptLibraryModal = useModal(NegativePromptLibraryModal)
@@ -100,7 +101,11 @@ export default function PromptInput({ input, setInput }: GetSetPromptInput) {
                 <StyleTagsDropdown input={input} setInput={setInput} />
               </DropdownOptions>
             )}
-            <Button onClick={() => setShowKeywords(true)} size="small">
+            <Button
+              disabled={!hasKeywords(input)}
+              onClick={() => setShowKeywords(true)}
+              size="small"
+            >
               <IconCodePlus stroke={1.5} />
             </Button>
             <Button
