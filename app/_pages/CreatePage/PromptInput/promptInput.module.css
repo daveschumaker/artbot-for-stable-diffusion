@@ -16,3 +16,13 @@
   margin-bottom: 8px;
   padding: 8px;
 }
+
+.mobileHide {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .mobileHide {
+    display: inline;
+  }
+}

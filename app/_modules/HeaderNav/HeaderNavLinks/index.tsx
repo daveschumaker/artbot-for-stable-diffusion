@@ -259,10 +259,10 @@ const HeaderNavLinks = () => {
               <IconPoint
                 className={styles.WorkerStatus}
                 fill={workerBadgeColor}
-                stroke={1.5}
+                stroke={1}
               />
             )}
-            <IconDeviceDesktopAnalytics size={32} stroke={1.5} />
+            <IconDeviceDesktopAnalytics size={32} stroke={1} />
           </NavigationMenu.Trigger>
           <NavigationMenu.Content className={styles.NavigationMenuContent}>
             <HordeDropdown />

@@ -101,7 +101,7 @@ const HordeDropdown = () => {
   }
 
   return (
-    <div className="p-[12px] w-full tablet:w-[400px] text-[14px]">
+    <div className={styles.HordeDropdown}>
       <div className="font-[700] mb-[8px]">Stable Horde Performance</div>
       <div className="font-mono text-[12px] pl-[8px]">
         <div>

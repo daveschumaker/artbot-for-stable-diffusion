@@ -15,6 +15,11 @@ export default function KeywordsDropdown({
   setInput
 }: GetSetPromptInput) {
   const { modelDetails } = useStore(modelStore)
+  const [validLoras, setValidLoras] = useState<string[]>([])
+  const [loraKeywords, setLoraKeywords] = useState<{
+    [key: string]: string[]
+  }>({})
+
   const [validModels, setValidModels] = useState<string[]>([])
   const [modelKeywords, setModelKeywords] = useState<{
     [key: string]: string[]
@@ -49,6 +54,21 @@ export default function KeywordsDropdown({
   }, [input.models, modelDetails])
 
   useEffect(() => {
+    if (input.loras.length >= 1) {
+      let foundLoras: string[] = []
+      let keywords: any = {}
+
+      input.loras.forEach((obj: any) => {
+        foundLoras.push(obj.label)
+        keywords[obj.label] = [...obj.trainedWords]
+      })
+
+      setValidLoras(foundLoras)
+      setLoraKeywords(keywords)
+    }
+  }, [input.loras])
+
+  useEffect(() => {
     const matchingTags: string[] = []
     validModels.forEach((model: any) => {
       modelKeywords[model].forEach((tag: string) => {
@@ -58,8 +78,16 @@ export default function KeywordsDropdown({
       })
     })
 
+    validLoras.forEach((lora: any) => {
+      loraKeywords[lora].forEach((tag: string) => {
+        if (input.prompt.includes(`, ${tag}`)) {
+          matchingTags.push(tag)
+        }
+      })
+    })
+
     setUsedKeywords(matchingTags)
-  }, [input.prompt, modelKeywords, validModels])
+  }, [input.prompt, loraKeywords, modelKeywords, validLoras, validModels])
 
   return (
     <div className={styles['style-tags-wrapper']}>
@@ -96,6 +124,32 @@ export default function KeywordsDropdown({
               // @ts-ignore
               modelKeywords[model].length >= 1 &&
                 modelKeywords[model].map((element) => (
+                  <div
+                    className={styles['tag']}
+                    key={element}
+                    onClick={() => {
+                      addTagClick(element)
+                    }}
+                  >
+                    {element}
+                  </div>
+                ))
+            }
+          </div>
+        </div>
+      ))}
+      {validLoras.map((lora) => (
+        <div
+          // @ts-ignore
+          key={lora}
+          className="mb-2 px-2"
+        >
+          <h2 className="font-[700] mb-2">{lora}</h2>
+          <div style={{ wordBreak: 'break-all' }}>
+            {
+              // @ts-ignore
+              loraKeywords[lora].length >= 1 &&
+                loraKeywords[lora].map((element) => (
                   <div
                     className={styles['tag']}
                     key={element}
