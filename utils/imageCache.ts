@@ -334,12 +334,27 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
 }
 
 export const createImageJob = async (newImageRequest: CreateImageRequest) => {
-  if (newImageRequest.useMultiSteps && newImageRequest.multiSteps.length > 0) {
-    for (const idx in newImageRequest.multiSteps) {
+  if (newImageRequest.useMultiClip && newImageRequest.multiClip.length > 0) {
+    for (const idx in newImageRequest.multiClip) {
       const imageRequest = Object.assign({}, newImageRequest)
-      imageRequest.steps = newImageRequest.multiSteps[idx]
-      imageRequest.useMultiSteps = false
-      imageRequest.multiSteps = []
+      imageRequest.clipskip = newImageRequest.multiClip[idx]
+      imageRequest.useMultiClip = false
+      imageRequest.multiClip = []
+
+      await sleep(100)
+      await createPendingJob(imageRequest)
+    }
+  }
+
+  if (
+    newImageRequest.useMultiDenoise &&
+    newImageRequest.multiDenoise.length > 0
+  ) {
+    for (const idx in newImageRequest.multiDenoise) {
+      const imageRequest = Object.assign({}, newImageRequest)
+      imageRequest.denoising_strength = newImageRequest.multiDenoise[idx]
+      imageRequest.useMultiDenoise = false
+      imageRequest.multiDenoise = []
 
       await sleep(100)
       await createPendingJob(imageRequest)
@@ -359,7 +374,21 @@ export const createImageJob = async (newImageRequest: CreateImageRequest) => {
       await sleep(100)
       await createPendingJob(imageRequest)
     }
-  } else if (
+  }
+
+  if (newImageRequest.useMultiSteps && newImageRequest.multiSteps.length > 0) {
+    for (const idx in newImageRequest.multiSteps) {
+      const imageRequest = Object.assign({}, newImageRequest)
+      imageRequest.steps = newImageRequest.multiSteps[idx]
+      imageRequest.useMultiSteps = false
+      imageRequest.multiSteps = []
+
+      await sleep(100)
+      await createPendingJob(imageRequest)
+    }
+  }
+
+  if (
     hasPromptMatrix(newImageRequest.prompt) ||
     hasPromptMatrix(newImageRequest.negative)
   ) {

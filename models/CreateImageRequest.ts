@@ -11,137 +11,108 @@ import { orientationDetails, randomSampler } from '../utils/imageUtils'
 import { getModelVersion, validModelsArray } from '../utils/modelUtils'
 import { SourceProcessing } from '../utils/promptUtils'
 import AppSettings from './AppSettings'
+import DefaultPromptInput from './DefaultPromptInput'
 
 interface IRandomSampler {
   source_processing: string
   steps: number
 }
-export interface IRequestParams {
+export interface IRequestParams extends DefaultPromptInput {
   artbotJobType: ArtBotJobTypes
-  cfg_scale: number
-  denoising_strength?: number
-  control_type?: string
-  image_is_control: boolean
-  return_control_map: boolean
-  height: number
   imageMimeType: ImageMimeType
-  karras: boolean
-  hires: boolean
-  clipskip: number
-  models: Array<string>
   modelVersion: string
-  negative?: string
-  numImages: number
-  orientationType: string
-  parentJobId?: string
-  post_processing?: Array<string>
-  facefixer_strength: number
-  prompt: string
-  sampler: string
-  seed: string
-  source_image?: string
-  source_mask?: string
-  source_processing: SourceProcessing
-  stylePreset: string
-  steps: number
-  multiSteps: string
-  multiGuidance: string
-  tiling: boolean
-  triggers?: Array<string>
-  useAllModels: boolean
-  useAllSamplers: boolean
-  useMultiSteps: boolean
-  useMultiGuidance: boolean
-  width: number
-  canvasData: any
-  maskData: any
-  loras: Lora[]
 }
 
 class CreateImageRequest {
+  canvasData: any
   cfg_scale: number
-  denoising_strength: number | Common.Empty
+  clipskip: number
   control_type: string
-  image_is_control: boolean
-  return_control_map: boolean
+  denoising_strength: number | Common.Empty
+  facefixer_strength?: number
   height: number
+  hires: boolean
+  image_is_control: boolean
   imageMimeType: ImageMimeType
   jobId?: string
   jobStatus: JobStatus
   jobTimestamp: number
   karras: boolean
-  hires: boolean
-  clipskip: number
+  loras: Lora[]
+  maskData: any
   models: Array<string>
   modelVersion: string
+  multiClip: Array<number>
+  multiDenoise: Array<number>
+  multiGuidance: Array<number>
+  multiSteps: Array<number>
   negative: string
   numImages: number
   orientation: string
   parentJobId: string
   post_processing: Array<string>
-  facefixer_strength?: number
   prompt: string
+  return_control_map: boolean
   sampler: string
   seed: string
   shareImagesExternally: boolean
   source_image: string
   source_mask: string
   source_processing: SourceProcessing
-  stylePreset: string
   steps: number
-  multiSteps: Array<number>
-  multiGuidance: Array<number>
-  timestamp?: number
   tiling: boolean
+  timestamp?: number
   triggers: Array<string>
   upscaled?: boolean
   useAllModels: boolean
   useAllSamplers: boolean
-  useMultiSteps: boolean
+  useMultiClip: boolean
+  useMultiDenoise: boolean
   useMultiGuidance: boolean
+  useMultiSteps: boolean
   width: number
-  canvasData: any
-  maskData: any
-  loras: Lora[]
 
   constructor({
+    canvasData = null,
     cfg_scale = 7,
-    denoising_strength = 0.75,
+    clipskip = 1,
     control_type = '',
-    image_is_control = false,
-    return_control_map = false,
+    denoising_strength = 0.75,
+    facefixer_strength = 0.75,
     height = 512,
+    hires = false,
+    image_is_control = false,
     imageMimeType = ImageMimeType.WebP,
     karras = true,
-    hires = false,
-    clipskip = 1,
+    loras = [],
+    maskData = null,
     models = [],
+    multiClip = '',
+    multiDenoise = '',
+    multiGuidance = '',
+    multiSteps = '',
     negative = '',
     numImages = 1,
     orientationType = 'square',
     parentJobId = '',
     post_processing = [],
-    facefixer_strength = 0.75,
     prompt = '',
+    return_control_map = false,
     sampler = 'k_euler',
     seed = '',
     source_image = '',
     source_mask = '',
     source_processing = SourceProcessing.Prompt,
-    stylePreset = 'none',
     steps = 20,
-    multiGuidance = '',
-    multiSteps = '',
     tiling = false,
     triggers = [],
     useAllModels = false,
     useAllSamplers = false,
+    useMultiClip = false,
+    useMultiDenoise = false,
     useMultiGuidance = false,
     useMultiSteps = false,
-    width = 512,
-    canvasData = null,
-    maskData = null,
-    loras = []
+    width = 512
   }: IRequestParams) {
     this.cfg_scale = Number(cfg_scale)
     this.imageMimeType = imageMimeType
@@ -208,7 +179,6 @@ class CreateImageRequest {
     this.source_image = String(source_image)
     this.source_mask = String(source_mask)
     this.source_processing = source_processing
-    this.stylePreset = stylePreset
     this.loras = [...loras]
 
     if (
@@ -235,14 +205,18 @@ class CreateImageRequest {
       this.control_type = ''
     }
 
+    this.multiClip = []
+    this.multiDenoise = []
+    this.multiGuidance = []
+    this.multiSteps = []
     this.steps = Number(steps)
     this.triggers = [...triggers]
     this.useAllModels = Boolean(useAllModels)
     this.useAllSamplers = Boolean(useAllSamplers)
-    this.useMultiSteps = Boolean(useMultiSteps)
-    this.multiSteps = []
+    this.useMultiClip = Boolean(useMultiClip)
+    this.useMultiDenoise = Boolean(useMultiDenoise)
     this.useMultiGuidance = Boolean(useMultiGuidance)
-    this.multiGuidance = []
+    this.useMultiSteps = Boolean(useMultiSteps)
 
     this.shareImagesExternally = AppSettings.get('shareImagesExternally')
 
@@ -251,6 +225,34 @@ class CreateImageRequest {
     } else {
       // PendingUtils will set modelVersion in the case of random images, multiple images, etc.
       this.modelVersion = ''
+    }
+
+    if (useMultiClip) {
+      let cleanMultiClip = multiClip.replace(`"`, '')
+      cleanMultiClip = cleanMultiClip.replace(`'`, '')
+
+      let values = cleanMultiClip.split(',')
+      values.forEach((value) => {
+        if (isNaN(Number(value))) {
+          return
+        }
+
+        this.multiClip.push(Number(value))
+      })
+    }
+
+    if (useMultiDenoise) {
+      let cleanMultiDenoise = multiDenoise.replace(`"`, '')
+      cleanMultiDenoise = cleanMultiDenoise.replace(`'`, '')
+
+      let values = cleanMultiDenoise.split(',')
+      values.forEach((value) => {
+        if (isNaN(Number(value))) {
+          return
+        }
+
+        this.multiClip.push(Number(value))
+      })
     }
 
     if (useMultiSteps) {
