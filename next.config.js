@@ -12,6 +12,16 @@ const nextConfig = {
   },
   productionBrowserSourceMaps: false, // Setting to true seems to blow up our prod Node server
   reactStrictMode: true,
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/artbot',
+        basePath: false,
+        permanent: false
+      }
+    ]
+  },
   swcMinify: true,
   webpack: (config) => {
     config.externals.push({

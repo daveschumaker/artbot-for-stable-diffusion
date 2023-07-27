@@ -31,8 +31,8 @@ const TriggerDropdown = ({
             </a>
           }
           menuClassName={styles['styled-dropdown']}
-          offsetX={8}
-          offsetY={4}
+          gap={8}
+          shift={4}
         >
           {triggerArray.map((trigger: string, i: number) => {
             return (

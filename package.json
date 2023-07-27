@@ -14,7 +14,7 @@
     "pm2:stop-prod": "pm2 delete ecosystem.config.js --only horde-js",
     "pm2:start-staging": "pm2 start ecosystem.config.js --only horde-js-staging",
     "pm2:stop-staging": "pm2 delete ecosystem.config.js --only horde-js-staging",
-    "start": "NODE_ENV=production node server.js",
+    "start": "NODE_ENV=production next start",
     "update:build-id": "node ./x-build-scripts/updateBuildId.js",
     "test": "jest",
     "prepare": "husky install"
