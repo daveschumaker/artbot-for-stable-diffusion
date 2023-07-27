@@ -744,53 +744,52 @@ export const checkCurrentJob = async (imageDetails: any) => {
         ...imgDetailsFromApi
       }
 
-      if (isAppActive()) {
-        for (const idx in imgDetailsFromApi.generations) {
-          const image = imgDetailsFromApi.generations[idx]
-          if ('base64String' in image && image.base64String) {
-            if (Number(idx) > 0) {
-              // TODO: For now, this is for SDXL_beta logic, which returns an additional image
-              addImageToDexie({
-                jobId,
-                base64String: image.base64String,
-                hordeImageId: image.hordeImageId,
-                type: 'ab-test'
-              })
-
-              return
-            }
-
-            const jobWithImageDetails = {
-              ...job,
-              ...image
-            }
-
-            const result = await addCompletedJobToDb({
-              jobDetails: jobWithImageDetails
+      for (const idx in imgDetailsFromApi.generations) {
+        const image = imgDetailsFromApi.generations[idx]
+        if ('base64String' in image && image.base64String) {
+          if (Number(idx) > 0) {
+            // TODO: For now, this is for SDXL_beta logic, which returns an additional image
+            addImageToDexie({
+              jobId,
+              base64String: image.base64String,
+              hordeImageId: image.hordeImageId,
+              type: 'ab-test'
             })
 
-            if (result.success) {
-              updatePendingJobV2(
-                Object.assign({}, jobWithImageDetails, {
-                  timestamp: Date.now(),
-                  jobStatus: JobStatus.Done
-                })
-              )
+            return
+          }
 
-              await updatePendingJobInDexie(
-                imageDetails.id,
-                Object.assign({}, jobWithImageDetails, {
-                  timestamp: Date.now(),
-                  jobStatus: JobStatus.Done
-                })
-              )
+          const jobWithImageDetails = {
+            ...job,
+            ...image,
+            kudos: imgDetailsFromApi.kudos
+          }
 
-              logToConsole({
-                data: jobWithImageDetails,
-                name: 'imageCache.checkCurrentJob.updatePendingJobAfterComplete.success',
-                debugKey: 'ADD_COMPLETED_JOB_TO_DB'
+          const result = await addCompletedJobToDb({
+            jobDetails: jobWithImageDetails
+          })
+
+          if (result.success) {
+            updatePendingJobV2(
+              Object.assign({}, jobWithImageDetails, {
+                timestamp: Date.now(),
+                jobStatus: JobStatus.Done
               })
-            }
+            )
+
+            await updatePendingJobInDexie(
+              imageDetails.id,
+              Object.assign({}, jobWithImageDetails, {
+                timestamp: Date.now(),
+                jobStatus: JobStatus.Done
+              })
+            )
+
+            logToConsole({
+              data: jobWithImageDetails,
+              name: 'imageCache.checkCurrentJob.updatePendingJobAfterComplete.success',
+              debugKey: 'ADD_COMPLETED_JOB_TO_DB'
+            })
           }
         }
       }

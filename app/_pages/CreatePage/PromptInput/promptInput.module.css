@@ -4,7 +4,6 @@
   color: var(--light-shade);
   display: flex;
   flex-direction: column;
-  margin-bottom: 12px;
   padding: 8px 16px;
   row-gap: 12px;
 }

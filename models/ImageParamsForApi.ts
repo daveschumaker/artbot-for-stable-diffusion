@@ -122,7 +122,7 @@ class ImageParamsForApi {
       prompt,
       params: {
         cfg_scale: Number(cfg_scale),
-        seed,
+        seed: String(seed),
         sampler_name: sampler,
         height: Number(height),
         width: Number(width),

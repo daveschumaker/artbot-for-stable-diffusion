@@ -227,6 +227,7 @@ export interface FinishedImageResponse {
   success: boolean
   jobId: string
   canRate: boolean
+  kudos: number
   generations: Array<GeneratedImage | FinishedImageResponseError>
 }
 

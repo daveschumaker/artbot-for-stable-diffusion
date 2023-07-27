@@ -146,7 +146,13 @@ export default function PromptInput({ input, setInput }: GetSetPromptInput) {
             </FlexRow>
           }
         >
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              paddingBottom: '16px'
+            }}
+          >
             <TextArea
               className={styles.textArea}
               onChange={(e: any) => {
