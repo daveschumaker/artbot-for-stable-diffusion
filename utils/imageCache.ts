@@ -42,6 +42,7 @@ import {
   updatePendingJobId,
   updatePendingJobV2
 } from 'controllers/pendingJobsCache'
+import DefaultPromptInput from 'models/DefaultPromptInput'
 
 export const initIndexedDb = () => {}
 
@@ -334,58 +335,103 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
 }
 
 export const createImageJob = async (newImageRequest: CreateImageRequest) => {
+  const pendingJobArray: any[] = []
+
+  const addToPendingJobArray = async (
+    newItems: any[],
+    fieldsToOverwrite: string[]
+  ) => {
+    const newPendingJobArray = []
+
+    if (pendingJobArray.length > 0) {
+      // Loop over existing items in pendingJobArray and add new items
+      for (const existingItem of pendingJobArray) {
+        for (const newItem of newItems) {
+          const imageRequest = {
+            ...existingItem, // Clone existingItem properties
+            // Overwrite the specified fields with the new values
+            ...Object.fromEntries(
+              fieldsToOverwrite.map((field) => [field, newItem[field]])
+            )
+          }
+          newPendingJobArray.push(imageRequest)
+        }
+      }
+    } else {
+      // If pendingJobArray is empty, directly add new items
+      for (const newItem of newItems) {
+        const imageRequest = { ...newItem } // Clone newItem properties
+        newPendingJobArray.push(imageRequest)
+      }
+    }
+
+    // Update the pendingJobArray with the new items
+    pendingJobArray.length = 0
+    pendingJobArray.push(...newPendingJobArray)
+  }
+
   if (newImageRequest.useMultiClip && newImageRequest.multiClip.length > 0) {
+    const tempArray = []
     for (const idx in newImageRequest.multiClip) {
       const imageRequest = Object.assign({}, newImageRequest)
       imageRequest.clipskip = newImageRequest.multiClip[idx]
       imageRequest.useMultiClip = false
       imageRequest.multiClip = []
 
-      await sleep(100)
-      await createPendingJob(imageRequest)
+      tempArray.push(imageRequest)
     }
+
+    addToPendingJobArray(tempArray, ['clipskip'])
   }
 
   if (
     newImageRequest.useMultiDenoise &&
     newImageRequest.multiDenoise.length > 0
   ) {
+    const tempArray = []
+
     for (const idx in newImageRequest.multiDenoise) {
       const imageRequest = Object.assign({}, newImageRequest)
       imageRequest.denoising_strength = newImageRequest.multiDenoise[idx]
       imageRequest.useMultiDenoise = false
       imageRequest.multiDenoise = []
 
-      await sleep(100)
-      await createPendingJob(imageRequest)
+      tempArray.push(imageRequest)
     }
+
+    addToPendingJobArray(tempArray, ['denoising_strength'])
   }
 
   if (
     newImageRequest.useMultiGuidance &&
     newImageRequest.multiGuidance.length > 0
   ) {
+    const tempArray = []
+
     for (const idx in newImageRequest.multiGuidance) {
       const imageRequest = Object.assign({}, newImageRequest)
       imageRequest.cfg_scale = newImageRequest.multiGuidance[idx]
       imageRequest.useMultiGuidance = false
       imageRequest.multiGuidance = []
-
-      await sleep(100)
-      await createPendingJob(imageRequest)
+      tempArray.push(imageRequest)
     }
+
+    addToPendingJobArray(tempArray, ['cfg_scale'])
   }
 
   if (newImageRequest.useMultiSteps && newImageRequest.multiSteps.length > 0) {
+    const tempArray = []
+
     for (const idx in newImageRequest.multiSteps) {
       const imageRequest = Object.assign({}, newImageRequest)
       imageRequest.steps = newImageRequest.multiSteps[idx]
       imageRequest.useMultiSteps = false
       imageRequest.multiSteps = []
 
-      await sleep(100)
-      await createPendingJob(imageRequest)
+      tempArray.push(imageRequest)
     }
+
+    addToPendingJobArray(tempArray, ['steps'])
   }
 
   if (
@@ -397,36 +443,46 @@ export const createImageJob = async (newImageRequest: CreateImageRequest) => {
     const matrixNegative = [...promptMatrix(newImageRequest.negative)]
 
     if (matrixPrompts.length >= 1 && matrixNegative.length === 0) {
+      const tempArray = []
+
       for (const idx in matrixPrompts) {
         newImageRequest.prompt = matrixPrompts[idx]
-
-        await sleep(100)
-        await createPendingJob(newImageRequest)
+        tempArray.push(newImageRequest)
       }
-    }
 
-    if (matrixPrompts.length === 0 && matrixNegative.length >= 1) {
+      addToPendingJobArray(tempArray, ['prompt'])
+    } else if (matrixPrompts.length === 0 && matrixNegative.length >= 1) {
+      const tempArray = []
+
       for (const idx in matrixNegative) {
         newImageRequest.negative = matrixNegative[idx]
-
-        await sleep(100)
-        await createPendingJob(newImageRequest)
+        tempArray.push(newImageRequest)
       }
-    }
 
-    if (matrixPrompts.length >= 1 && matrixNegative.length >= 1) {
+      addToPendingJobArray(tempArray, ['negative'])
+    } else if (matrixPrompts.length >= 1 && matrixNegative.length >= 1) {
+      const tempArray = []
+
       for (const idx in matrixPrompts) {
         for (const idx2 in matrixNegative) {
           newImageRequest.prompt = matrixPrompts[idx]
           newImageRequest.negative = matrixNegative[idx2]
 
-          await sleep(100)
-          await createPendingJob(newImageRequest)
+          tempArray.push(newImageRequest)
         }
       }
+
+      addToPendingJobArray(tempArray, ['prompt', 'negative'])
     }
-  } else {
+  }
+
+  if (pendingJobArray.length === 0) {
     await createPendingJob(newImageRequest)
+  } else {
+    for (const job of pendingJobArray) {
+      await createPendingJob(job as unknown as CreateImageRequest)
+      await sleep(100)
+    }
   }
 
   return {

@@ -10,9 +10,6 @@ import Input from 'components/UI/Input'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import TextTooltipRow from 'app/_components/TextTooltipRow'
 import TooltipComponent from 'app/_components/TooltipComponent'
-import { maxSteps } from 'utils/validationUtils'
-import { useStore } from 'statery'
-import { userInfoStore } from 'store/userStore'
 
 interface ClipSkipOptions extends GetSetPromptInput {
   hideOptions?: boolean
@@ -23,9 +20,6 @@ export default function ClipSkip({
   input,
   setInput
 }: ClipSkipOptions) {
-  const userState = useStore(userInfoStore)
-  const { loggedIn } = userState
-
   const [showDropdown, setShowDropdown] = useState(false)
 
   return (
@@ -34,21 +28,16 @@ export default function ClipSkip({
         <div className="mb-4 w-full">
           <SubSectionTitle>
             <TextTooltipRow>
-              Steps
+              CLIP skip
               <span
                 className="text-xs w-full font-[400]"
                 style={{ paddingRight: '4px', width: 'auto' }}
               >
-                &nbsp;(1 -{' '}
-                {maxSteps({
-                  sampler: input.sampler,
-                  loggedIn: loggedIn === true ? true : false
-                })}
-                )
+                &nbsp;(1 - 12 )
               </span>
               <TooltipComponent tooltipId="multi-steps-tooltip">
                 Comma separated values to create a series of images using
-                multiple CLIP skip settings. Example: 3,6,9,12,15
+                multiple CLIP skip settings. Example: 3,6,9,12
               </TooltipComponent>
             </TextTooltipRow>
           </SubSectionTitle>

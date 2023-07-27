@@ -48,7 +48,7 @@ import { toast, ToastOptions } from 'react-toastify'
 import RefreshIcon from 'components/icons/RefreshIcon'
 import { deletePendingJob } from 'controllers/pendingJobsCache'
 import { getRelatedImages } from 'components/ImagePage/image.controller'
-import { useModal } from '@ebay/nice-modal-react'
+// import { useModal } from '@ebay/nice-modal-react'
 
 const ImageOptionsWrapper = ({
   handleClose,
@@ -70,7 +70,12 @@ const ImageOptionsWrapper = ({
   handleFullScreen: () => any
 }) => {
   const router = useRouter()
-  const modal = useModal()
+  // const modal = useModal()
+  // TODO: FIXME: Blarg!
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const modal = {
+    remove: () => false
+  }
 
   const [favorited, setFavorited] = useState(imageDetails.favorited)
   const [pendingReroll, setPendingReroll] = useState(false)
