@@ -11,6 +11,8 @@ import Steps from 'app/_modules/AdvancedOptionsPanel/Steps'
 import Guidance from 'app/_modules/AdvancedOptionsPanel/Guidance'
 import Seed from 'app/_modules/AdvancedOptionsPanel/Seed'
 import SelectModelDetails from 'app/_modules/AdvancedOptionsPanel/ModelDetails/modelDetails'
+import Denoise from 'app/_modules/AdvancedOptionsPanel/Denoise'
+import ClipSkip from 'app/_modules/AdvancedOptionsPanel/ClipSkip'
 
 export const LivePaintOptions = ({ input, setInput }: any) => {
   // const userState = useStore(userInfoStore)
@@ -25,24 +27,7 @@ export const LivePaintOptions = ({ input, setInput }: any) => {
           <SelectSampler input={input} setInput={setInput} hideOptions />
         </FlexibleUnit>
         <FlexibleUnit>
-          <NumericInputSlider
-            label="Denoise"
-            tooltip="Amount of noise added to input image. Values that
-                  approach 1.0 allow for lots of variations but will
-                  also produce images that are not semantically
-                  consistent with the input. Only available for img2img."
-            from={0.0}
-            to={1.0}
-            step={0.05}
-            input={input}
-            setInput={setInput}
-            fieldName="denoising_strength"
-            disabled={
-              input.models &&
-              input.models[0] &&
-              input.models[0].indexOf('_inpainting') >= 0
-            }
-          />
+          <Denoise input={input} setInput={setInput} hideOptions />
         </FlexibleUnit>
       </FlexibleRow>
 
@@ -86,19 +71,7 @@ export const LivePaintOptions = ({ input, setInput }: any) => {
           <Seed input={input} setInput={setInput} />
         </FlexibleUnit>
         <FlexibleUnit>
-          <NumericInputSlider
-            label="CLIP skip"
-            tooltip="Determine how early to stop processing a prompt using CLIP. Higher
-          values stop processing earlier. Default is 1 (no skip)."
-            from={1}
-            to={12}
-            step={1}
-            input={input}
-            setInput={setInput}
-            fieldName="clipskip"
-            fullWidth
-            enforceStepValue
-          />
+          <ClipSkip input={input} setInput={setInput} hideOptions />
         </FlexibleUnit>
       </FlexibleRow>
 

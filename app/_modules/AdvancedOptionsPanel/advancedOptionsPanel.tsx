@@ -20,7 +20,6 @@ import { maxSteps } from 'utils/validationUtils'
 // Local imports
 import ControlNetOptions from './ControlNetOptions'
 import InputSwitch from './InputSwitch'
-import NumericInputSlider from 'app/_modules/AdvancedOptionsPanel/NumericInputSlider'
 import UpscalerOptions from './UpscalerOptions'
 
 // Store imports
@@ -51,6 +50,8 @@ import MiscOptions from './MiscOptions'
 import Accordion from 'app/_components/Accordion'
 import AccordionItem from 'app/_components/AccordionItem'
 import Panel from 'app/_components/Panel'
+import ClipSkip from './ClipSkip'
+import Denoise from './Denoise'
 
 interface Props {
   input: any
@@ -121,24 +122,7 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
                   <ControlNetOptions input={input} setInput={setInput} />
                 </FlexibleUnit>
                 <FlexibleUnit>
-                  <NumericInputSlider
-                    label="Denoise"
-                    tooltip="Amount of noise added to input image. Values that
-                  approach 1.0 allow for lots of variations but will
-                  also produce images that are not semantically
-                  consistent with the input. Only available for img2img."
-                    from={0.0}
-                    to={1.0}
-                    step={0.05}
-                    input={input}
-                    setInput={setInput}
-                    fieldName="denoising_strength"
-                    disabled={
-                      input.models &&
-                      input.models[0] &&
-                      input.models[0].indexOf('_inpainting') >= 0
-                    }
-                  />
+                  <Denoise input={input} setInput={setInput} />
                 </FlexibleUnit>
               </FlexibleRow>
             </AccordionItem>
@@ -189,19 +173,7 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
             <Seed input={input} setInput={setInput} />
           </FlexibleUnit>
           <FlexibleUnit>
-            <NumericInputSlider
-              label="CLIP skip"
-              tooltip="Determine how early to stop processing a prompt using CLIP. Higher
-          values stop processing earlier. Default is 1 (no skip)."
-              from={1}
-              to={12}
-              step={1}
-              input={input}
-              setInput={setInput}
-              fieldName="clipskip"
-              fullWidth
-              enforceStepValue
-            />
+            <ClipSkip input={input} setInput={setInput} />
           </FlexibleUnit>
         </FlexibleRow>
       </Section>

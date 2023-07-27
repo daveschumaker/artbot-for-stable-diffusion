@@ -6,6 +6,7 @@
 - Moved various toggles and sliders into relevant options menus that now appear next to relevant components (e.g., clicking the options panel on the Samplers dropdown will show an option to "use all samplers")
 - New filter for model selection list. Easily filter by SFW / NSFW / favorites.
 - Add model to favorites right from the model details panel on the create page.
+- Add new options to create images using multiple denoise values and multiple CLIP values.
 
 # 2023.07.26
 

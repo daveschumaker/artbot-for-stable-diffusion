@@ -29,7 +29,6 @@ import AppSettings from 'models/AppSettings'
 import { toast } from 'react-toastify'
 import { getInputCache } from 'store/inputCache'
 import { kudosCostV2 } from 'utils/kudosCost'
-import NumericInputSlider from 'app/_modules/AdvancedOptionsPanel/NumericInputSlider'
 import ControlNetOptions from 'app/_modules/AdvancedOptionsPanel/ControlNetOptions'
 import UpscalerOptions from 'app/_modules/AdvancedOptionsPanel/UpscalerOptions'
 import useComponentState from 'hooks/useComponentState'
@@ -45,6 +44,8 @@ import Seed from 'app/_modules/AdvancedOptionsPanel/Seed'
 import Steps from 'app/_modules/AdvancedOptionsPanel/Steps'
 import Guidance from 'app/_modules/AdvancedOptionsPanel/Guidance'
 import SelectModelDetails from 'app/_modules/AdvancedOptionsPanel/ModelDetails/modelDetails'
+import Denoise from 'app/_modules/AdvancedOptionsPanel/Denoise'
+import ClipSkip from 'app/_modules/AdvancedOptionsPanel/ClipSkip'
 
 // Kind of a hacky way to persist output of image over the course of a session.
 let cachedImageDetails = {}
@@ -335,24 +336,7 @@ const ControlNetPage = () => {
             <ControlNetOptions input={input} setInput={setInput} />
           </FlexibleUnit>
           <FlexibleUnit>
-            <NumericInputSlider
-              label="Denoise"
-              tooltip="Amount of noise added to input image. Values that
-                  approach 1.0 allow for lots of variations but will
-                  also produce images that are not semantically
-                  consistent with the input. Only available for img2img."
-              from={0.0}
-              to={1.0}
-              step={0.05}
-              input={input}
-              setInput={setInput}
-              fieldName="denoising_strength"
-              disabled={
-                input.models &&
-                input.models[0] &&
-                input.models[0].indexOf('_inpainting') >= 0
-              }
-            />
+            <Denoise input={input} setInput={setInput} />
           </FlexibleUnit>
         </FlexibleRow>
 
@@ -381,19 +365,7 @@ const ControlNetPage = () => {
                 <Steps input={input} setInput={setInput} />
                 <Guidance input={input} setInput={setInput} />
                 <Seed input={input} setInput={setInput} />
-                <NumericInputSlider
-                  label="CLIP skip"
-                  tooltip="Determine how early to stop processing a prompt using CLIP. Higher
-          values stop processing earlier. Default is 1 (no skip)."
-                  from={1}
-                  to={12}
-                  step={1}
-                  input={input}
-                  setInput={setInput}
-                  fieldName="clipskip"
-                  fullWidth
-                  enforceStepValue
-                />
+                <ClipSkip input={input} setInput={setInput} />
               </Section>
             </FlexibleUnit>
           </FlexibleRow>
