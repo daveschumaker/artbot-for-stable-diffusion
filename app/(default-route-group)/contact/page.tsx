@@ -1,5 +1,4 @@
-'use client'
-import FeedbackForm from 'app/_modules/FeedbackForm'
+import ContactPage from 'app/_pages/ContactPage'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -21,14 +20,6 @@ export const metadata: Metadata = {
   }
 }
 
-const ContactPage = () => {
-  return (
-    <>
-      <div className="max-w-[512px]">
-        <FeedbackForm isContactPage />
-      </div>
-    </>
-  )
+export default function Page() {
+  return <ContactPage />
 }
-
-export default ContactPage

@@ -472,6 +472,8 @@ const ImageOptionsWrapper = ({
               <MenuItem
                 className="text-sm"
                 onClick={async () => {
+                  if (!imageDetails || !imageDetails.base64String) return
+
                   const success = await blobToClipboard(
                     imageDetails.base64String
                   )

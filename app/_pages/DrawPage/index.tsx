@@ -10,7 +10,7 @@ const DrawPage = () => {
       <PageTitle>
         Draw<sup className={styles.super}>something</sup>
       </PageTitle>
-      <Section first>
+      <Section>
         <Editor
           canvasId="drawing-canvas"
           canvasType="drawing"

@@ -1,8 +1,10 @@
+'use client'
+
 /* eslint-disable @next/next/no-img-element */
 import { checkInterrogate } from 'api/checkInterrogate'
 import { requestIterrogate } from 'api/requestInterrogate'
-import UpscalerOptions from 'components/CreatePage/AdvancedOptionsPanel/UpscalerOptions'
-import Uploader from 'components/CreatePage/Uploader'
+import UpscalerOptions from 'app/_modules/AdvancedOptionsPanel/UpscalerOptions'
+import Uploader from 'app/_modules/Uploader'
 import PhotoUpIcon from 'components/icons/PhotoUpIcon'
 import SettingsIcon from 'components/icons/SettingsIcon'
 import SquarePlusIcon from 'components/icons/SquarePlusIcon'
@@ -122,7 +124,7 @@ const UpscalePage = () => {
   return (
     <>
       <PageTitle>Image upscale / post-processing</PageTitle>
-      <Section first>
+      <Section>
         <div className="text-[16px] tablet:text-[18px] w-full max-w-[768px]">
           <div className="text-sm font-bold flex flex-row gap-2 items-center mb-[4px]">
             <PhotoUpIcon />

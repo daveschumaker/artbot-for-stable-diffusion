@@ -6,13 +6,15 @@ import { Button } from 'components/UI/Button'
 
 interface NumberInputProps {
   buttonsAtEnd?: boolean
-  value: number
-  min: number
+  disabled?: boolean
+  inputMode?: string
   max: number
+  min: number
+  onBlur?: (e: any) => any
   onInputChange: (e: any) => any
   onMinusClick: () => any
   onPlusClick: () => any
-  disabled?: boolean
+  value: number
   width?: string
 }
 
@@ -76,6 +78,7 @@ export default function NumberInput(props: NumberInputProps) {
       )}
       <Input
         disabled={disabled}
+        inputMode={props.inputMode}
         onChange={onInputChange}
         onKeyDown={handleKeyDown}
         {...rest}

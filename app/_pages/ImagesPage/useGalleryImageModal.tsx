@@ -8,7 +8,7 @@ const useGalleryImageModal = () => {
   const imagePreviewModal = useModal(ImageModal)
   const [isImageModalOpen, setIsImageModalOpen] = useState(false)
   const [imageIdx, setImageIdx] = useState(0)
-  const [imagesList, setImagesList] = useState([])
+  const [imagesList, setImagesList] = useState<any[]>([])
   const [imageDetails, setImageDetails] = useState(null)
 
   const handleClose = () => {
@@ -106,16 +106,14 @@ export const useGalleryImageModal_OG = () => {
     jobId: null
   })
 
-  const [onAfterDelete, setOnAfterDelete] = useState<() => any>(() => {})
+  // const [onAfterDelete, setOnAfterDelete] = useState<() => any>(() => {})
 
   const showImageModal = ({
     jobId,
-    imagesList,
-    fetchImages = () => {}
+    imagesList
   }: {
     jobId: string
     imagesList: Array<any>
-    fetchImages?: () => any
   }) => {
     let imgIdx
 
@@ -132,7 +130,7 @@ export const useGalleryImageModal_OG = () => {
       jobId
     })
 
-    setOnAfterDelete(() => fetchImages)
+    // setOnAfterDelete(() => fetchImages)
   }
 
   const handleLoadNext = useCallback(() => {
@@ -193,15 +191,15 @@ export const useGalleryImageModal_OG = () => {
       handleClose: () => imagePreviewModal.remove(),
       handleLoadNext,
       handleLoadPrev,
-      onCloseCallback: () => {
-        setComponentState({
-          imgIdx: null,
-          initJobId: null,
-          jobId: null,
-          imagesList: null
-        })
-        onAfterDelete()
-      },
+      // onCloseCallback: () => {
+      //   setComponentState({
+      //     imgIdx: null,
+      //     initJobId: null,
+      //     jobId: null,
+      //     imagesList: null
+      //   })
+      //   onAfterDelete()
+      // },
       onDeleteCallback: () => {
         setComponentState({
           imgIdx: null,
@@ -217,7 +215,6 @@ export const useGalleryImageModal_OG = () => {
     handleLoadNext,
     handleLoadPrev,
     imagePreviewModal,
-    onAfterDelete,
     setComponentState
   ])
 

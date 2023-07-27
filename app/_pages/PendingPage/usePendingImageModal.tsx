@@ -9,7 +9,7 @@ const usePendingImageModal = () => {
   const imagePreviewModal = useModal(ImageModal)
   const [isImageModalOpen, setIsImageModalOpen] = useState(false)
   const [imageIdx, setImageIdx] = useState(0)
-  const [imagesList, setImagesList] = useState([])
+  const [imagesList, setImagesList] = useState<any[]>([])
   const [imageDetails, setImageDetails] = useState(null)
 
   const handleClose = () => {
@@ -138,6 +138,7 @@ export const usePendingImageModalOG = () => {
 
     // setImageData(getPendingJob(jobId))
     imagePreviewModal.show({
+      // @ts-ignore
       imageDetails: getPendingJob(jobId)
     })
   }, [
@@ -168,6 +169,7 @@ export const usePendingImageModalOG = () => {
     })
     // setImageData(getPendingJob(jobId))
     imagePreviewModal.show({
+      // @ts-ignore
       imageDetails: getPendingJob(jobId)
     })
   }, [
@@ -180,6 +182,7 @@ export const usePendingImageModalOG = () => {
   const triggerModal = useCallback(() => {
     imagePreviewModal.show({
       disableNav: false,
+      // @ts-ignore
       imageDetails: getPendingJob(componentState.jobId),
       handleLoadNext,
       handleLoadPrev,

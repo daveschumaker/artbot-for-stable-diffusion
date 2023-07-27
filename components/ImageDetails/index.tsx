@@ -99,8 +99,6 @@ const ImageDetails = ({
     width: '100%'
   }
 
-  console.log(`imageDetails`, imageDetails)
-
   return (
     <>
       <FullScreen

@@ -114,9 +114,10 @@ const RelatedImages = ({
     })
   }
 
-  const handleAfterDelete = useCallback(async () => {
-    await updateRelatedImages(parentJobId)
-  }, [parentJobId, updateRelatedImages])
+  // TODO: FIXME:
+  // const handleAfterDelete = useCallback(async () => {
+  //   await updateRelatedImages(parentJobId)
+  // }, [parentJobId, updateRelatedImages])
 
   const handleImageClick = useCallback(
     // @ts-ignore
@@ -135,10 +136,10 @@ const RelatedImages = ({
 
         onModalOpen(true)
 
+        // @ts-ignore
         showImageModal({
           jobId,
-          imagesList: images,
-          fetchImages: handleAfterDelete
+          images
         })
       }
 
@@ -147,21 +148,12 @@ const RelatedImages = ({
     [
       componentState.deleteMode,
       componentState.deleteSelection,
-      handleAfterDelete,
       images,
       onModalOpen,
       setComponentState,
       showImageModal
     ]
   )
-
-  // useEffect(() => {
-  //   if (componentState.showImageModal) {
-  //     onModalOpen(false)
-  //     setComponentState({ showImageModal: false })
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [imageId])
 
   const LinkEl = componentState.deleteMode ? NonLink : Link
 

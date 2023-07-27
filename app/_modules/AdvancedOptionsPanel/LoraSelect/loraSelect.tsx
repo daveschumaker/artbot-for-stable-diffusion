@@ -115,17 +115,15 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
                   </div>
                 </SubSectionTitle>
                 <NumberInput
-                  type="text"
                   min={0.05}
                   max={1}
-                  step={0.05}
                   onMinusClick={() => {
                     handleUpdate(i, Number((lora.model - 0.05).toFixed(2)))
                   }}
                   onPlusClick={() => {
                     handleUpdate(i, Number((lora.model + 0.05).toFixed(2)))
                   }}
-                  onChange={(e: any) => {
+                  onInputChange={(e: any) => {
                     handleUpdate(i, Number(e.target.value))
                   }}
                   onBlur={(e: any) => {
@@ -197,7 +195,7 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
     }
 
     // Helper function to chunk the array into pairs
-    const chunkArray = (arr, size) =>
+    const chunkArray = (arr: any[], size: number) =>
       Array.from({ length: Math.ceil(arr.length / size) }, (_, index) =>
         arr.slice(index * size, index * size + size)
       )

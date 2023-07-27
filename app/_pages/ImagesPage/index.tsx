@@ -360,10 +360,10 @@ const ImagesPage = () => {
         e.preventDefault()
         e.stopPropagation()
 
+        // @ts-ignore
         showImageModal({
           jobId,
-          images: componentState.images,
-          fetchImages
+          images: componentState.images
         })
       }
     },
@@ -371,7 +371,6 @@ const ImagesPage = () => {
       componentState.deleteMode,
       componentState.deleteSelection,
       componentState.images,
-      fetchImages,
       setComponentState,
       showImageModal
     ]

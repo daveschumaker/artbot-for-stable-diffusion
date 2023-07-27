@@ -120,12 +120,9 @@ const NumericInputSlider = ({
           </TextTooltipRow>
         </SubSectionTitle>
         <NumberInput
-          type="text"
           inputMode="numeric"
           min={from}
           max={to}
-          step={step}
-          name={fieldName}
           disabled={disabled}
           onMinusClick={() => {
             const value = Number((inputField - step).toFixed(2))
@@ -135,7 +132,7 @@ const NumericInputSlider = ({
             const value = Number((inputField + step).toFixed(2))
             safelyUpdateField(value)
           }}
-          onChange={(e: any) => {
+          onInputChange={(e: any) => {
             // Note that we use setTemporaryValue, not safelyUpdateField.
             // This is because we want to let users enter arbitrary data in the input.
             // Validation and field update is performed after user finishes typing (see onBlur).

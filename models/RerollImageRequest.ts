@@ -30,7 +30,6 @@ export interface IRequestParams {
   source_image?: string
   source_mask?: string
   source_processing: SourceProcessing
-  stylePreset: string
   steps: number
   tiling?: boolean
   triggers?: Array<string>
@@ -61,7 +60,6 @@ class RerollImageRequest {
   source_image: string
   source_mask: string
   source_processing: SourceProcessing
-  stylePreset: string
   steps: number
   tiling?: boolean
   timestamp?: number
@@ -86,7 +84,6 @@ class RerollImageRequest {
     sampler = 'k_euler',
     source_image = '',
     source_mask = '',
-    stylePreset = 'none',
     source_processing = SourceProcessing.Prompt,
     steps = 20,
     tiling = false,
@@ -138,7 +135,6 @@ class RerollImageRequest {
       this.denoising_strength = Common.Empty
     }
 
-    this.stylePreset = stylePreset
     this.steps = Number(steps)
     this.triggers = [...triggers]
 

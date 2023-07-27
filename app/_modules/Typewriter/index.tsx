@@ -81,7 +81,6 @@ export default function PromptTypewriter() {
               // setIsHidden(false)
             }, 500)
           }}
-          speed={80}
           eraseSpeed={15}
           eraseDelay={5000}
         />

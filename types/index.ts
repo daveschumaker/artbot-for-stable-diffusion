@@ -108,6 +108,7 @@ export interface IImageDetails extends CreateImageJob {
   source_mask?: string
   source_processing: SourceProcessing
   stylePreset: string
+  timestamp: number
   thumbnail: string
   useTrusted?: boolean
   wait_time?: number
