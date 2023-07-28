@@ -48,6 +48,7 @@ import { toast, ToastOptions } from 'react-toastify'
 import RefreshIcon from 'components/icons/RefreshIcon'
 import { deletePendingJob } from 'controllers/pendingJobsCache'
 import { getRelatedImages } from 'components/ImagePage/image.controller'
+import { basePath } from 'BASE_PATH'
 // import { useModal } from '@ebay/nice-modal-react'
 
 const ImageOptionsWrapper = ({
@@ -204,7 +205,7 @@ const ImageOptionsWrapper = ({
         ? 'http://localhost:3000'
         : 'https://tinybots.net'
     navigator?.clipboard
-      ?.writeText(`${hostname}/artbot?i=${_shortlink}`)
+      ?.writeText(`${hostname}${basePath}?i=${_shortlink}`)
       .then(() => {
         toast.success('Shortlink URL copied to your clipboard!', {
           pauseOnFocusLoss: false,

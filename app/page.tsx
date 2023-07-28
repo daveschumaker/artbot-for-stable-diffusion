@@ -1,3 +1,4 @@
+import { basePath } from 'BASE_PATH'
 import SharedImageView from './_modules/SharedImageView'
 import HomePage from './_pages/HomePage'
 
@@ -9,7 +10,7 @@ async function getPageData(searchParams: any) {
   try {
     if (i) {
       const res = await fetch(
-        `http://localhost:${process.env.PORT}/artbot/api/get-shortlink?shortlink=${i}`
+        `http://localhost:${process.env.PORT}${basePath}/api/get-shortlink?shortlink=${i}`
       )
 
       const data = (await res.json()) || {}

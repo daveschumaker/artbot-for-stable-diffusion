@@ -11,6 +11,7 @@ import { useState } from 'react'
 import { Button } from 'components/UI/Button'
 import { db, generateThumbnails } from 'utils/db'
 import { deletePendingJobs } from 'controllers/pendingJobsCache'
+import { basePath } from 'BASE_PATH'
 
 const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
   const [processType, setProcessType] = useState<string | null>(null)
@@ -350,7 +351,7 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
             theme="secondary"
             onClick={() => {
               localStorage.removeItem('PromptInputSettings')
-              window.location.assign(`${window.location.origin}/artbot`)
+              window.location.assign(`${window.location.origin}${basePath}`)
             }}
           >
             Reset Input Cache?
@@ -380,7 +381,9 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
             onClick={async () => {
               await db.pending.clear()
               deletePendingJobs()
-              window.location.assign(`${window.location.origin}/artbot/pending`)
+              window.location.assign(
+                `${window.location.origin}${basePath}/pending`
+              )
             }}
           >
             Reset Pending Items?

@@ -5,6 +5,7 @@ import PageTitle from './_components/PageTitle'
 import Linker from 'components/UI/Linker'
 import ContentWrapper from './_components/ContentWrapper'
 import MaxWidth from './_components/MaxWidth'
+import { basePath } from 'BASE_PATH'
 
 export default function Error({
   error
@@ -27,7 +28,8 @@ export default function Error({
           automatically been created.
         </div>
         <div className="mb-[8px]">
-          Please hit the <Linker href="/artbot/contact">contact form</Linker> if
+          Please hit the{' '}
+          <Linker href={`${basePath}/contact`}>contact form</Linker> if
           you&apos;d like to provide more information about what happened or{' '}
           <Linker
             href="https://discord.com/channels/781145214752129095/1107628882783391744"

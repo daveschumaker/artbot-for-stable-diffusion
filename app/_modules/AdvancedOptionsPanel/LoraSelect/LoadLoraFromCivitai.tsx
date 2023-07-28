@@ -8,6 +8,7 @@ import { Button } from 'components/UI/Button'
 import Linker from 'components/UI/Linker'
 import styles from './loraSelect.module.css'
 import LoraDetails from './LoraDetails'
+import { basePath } from 'BASE_PATH'
 
 const extractModelNumber = (url: string) => {
   const regex = /\/models\/(\d+)/
@@ -129,7 +130,7 @@ const LoadLora = ({
           </div>
           <div>
             <img
-              src="/artbot/civitai-modelid.png"
+              src={`${basePath}/civitai-modelid.png`}
               style={{ maxWidth: '480px', width: '100%' }}
             />
           </div>

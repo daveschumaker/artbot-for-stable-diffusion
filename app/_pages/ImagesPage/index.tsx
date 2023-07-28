@@ -98,7 +98,6 @@ const ButtonContainer = styled.div`
 `
 
 const ImagesPage = () => {
-  console.log(`We rendering?`)
   const LIMIT = AppSettings.get('imagesPerPage') || 50
   const [showImageModal, isImageModalOpen] = useGalleryImageModal()
 

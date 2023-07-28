@@ -5,6 +5,7 @@ import { userInfoStore } from '../store/userStore'
 import { logError } from '../utils/appUtils'
 import PageTitle from 'app/_components/PageTitle'
 import { db } from 'utils/db'
+import { basePath } from 'BASE_PATH'
 
 const StyledLink = styled.a`
   color: ${(props) => props.theme.link};
@@ -68,7 +69,7 @@ const ErrorComponent = () => {
       </div>
       <div className="mb-[8px]">
         Please hit the{' '}
-        <StyledLink href="/artbot/contact">contact form</StyledLink> if
+        <StyledLink href={`${basePath}/contact`}>contact form</StyledLink> if
         you&apos;d like to provide more information about what happened or{' '}
         <StyledLink
           href="https://discord.com/channels/781145214752129095/1107628882783391744"

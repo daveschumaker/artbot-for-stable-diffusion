@@ -1,6 +1,8 @@
+import { basePath } from 'BASE_PATH'
+
 export const createShortlink = async (obj: any = {}) => {
   try {
-    const res = await fetch(`/artbot/api/create-shortlink`, {
+    const res = await fetch(`${basePath}/api/create-shortlink`, {
       method: 'POST',
       body: JSON.stringify(obj),
       headers: {

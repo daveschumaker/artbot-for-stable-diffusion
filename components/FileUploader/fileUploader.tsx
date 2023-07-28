@@ -7,6 +7,7 @@ import { Button } from '../UI/Button'
 import Input from '../UI/Input'
 import PageTitle from 'app/_components/PageTitle'
 import { UploadButton } from '../UploadButton'
+import { basePath } from 'BASE_PATH'
 
 const imgConfig = {
   quality: 0.8,
@@ -88,7 +89,7 @@ const Uploader = (props: UploaderProps) => {
       return false
     }
 
-    const resp = await fetch(`/artbot/api/img-from-url`, {
+    const resp = await fetch(`${basePath}/api/img-from-url`, {
       method: 'POST',
       body: JSON.stringify({
         imageUrl: imgUrl

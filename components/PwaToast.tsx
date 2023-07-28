@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { useWindowSize } from '../hooks/useWindowSize'
 import { isInstalledPwa } from '../utils/appUtils'
 import CloseIcon from './icons/CloseIcon'
+import { basePath } from 'BASE_PATH'
 
 const StyledToast = styled.div`
   align-items: center;
@@ -67,7 +68,7 @@ const PwaToast = () => {
     <StyledToast onClick={handleHideToast}>
       <StyledClose />
       <img
-        src="/artbot/artbot-logo.png"
+        src={`${basePath}/artbot-logo.png`}
         className="inline-block mr-2"
         alt="ArtBot logo"
       />

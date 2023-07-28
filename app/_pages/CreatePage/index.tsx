@@ -19,7 +19,6 @@ import { appInfoStore } from 'store/appStore'
 import { countImagesToGenerate } from 'utils/imageUtils'
 import PromptInputSettings from 'models/PromptInputSettings'
 import { userInfoStore } from 'store/userStore'
-import TriggerDropdown from 'app/_pages/CreatePage/TriggerDropdown'
 import DefaultPromptInput from 'models/DefaultPromptInput'
 import { logToConsole } from 'utils/debugTools'
 import {
@@ -417,7 +416,6 @@ const CreatePage = ({ modelDetails = {} }: any) => {
     })
   }, [searchParams])
 
-  const triggerArray = [...(modelDetails[input?.models[0]]?.trigger ?? '')]
   const totalImagesRequested = countImagesToGenerate(input)
 
   const totalKudosCost = kudosCostV2({
@@ -456,13 +454,6 @@ const CreatePage = ({ modelDetails = {} }: any) => {
           </PageTitle>
         </div>
       </div>
-      {modelDetails[input?.models[0]]?.trigger && (
-        <TriggerDropdown
-          setInput={setInput}
-          prompt={input.prompt}
-          triggerArray={triggerArray}
-        />
-      )}
       <div className={clsx('mt-0')}>
         {flaggedPromptError && (
           <div className="mb-4 bg-red-500 rounded-md px-4 py-2 font-[500] flex flex-row items-center gap-2 text-white">

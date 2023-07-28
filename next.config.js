@@ -4,8 +4,10 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true'
 })
 
+const { basePath } = require('./BASE_PATH.js')
+
 const nextConfig = {
-  basePath: '/artbot',
+  basePath,
   distDir: 'build',
   images: {
     domains: ['huggingface.co', 'raw.githubusercontent.com']
@@ -16,7 +18,7 @@ const nextConfig = {
     return [
       {
         source: '/',
-        destination: '/artbot',
+        destination: basePath,
         basePath: false,
         permanent: false
       }

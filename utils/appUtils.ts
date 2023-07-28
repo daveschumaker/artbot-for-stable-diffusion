@@ -1,3 +1,4 @@
+import { basePath } from 'BASE_PATH'
 import { HORDE_DEV, HORDE_PROD } from '../_constants'
 import AppSettings from '../models/AppSettings'
 import {
@@ -7,7 +8,7 @@ import {
 } from './primaryWindow'
 
 export const logError = async (data: any) => {
-  await fetch(`/artbot/api/log-error`, {
+  await fetch(`${basePath}/api/log-error`, {
     method: 'POST',
     body: JSON.stringify(data),
     headers: {

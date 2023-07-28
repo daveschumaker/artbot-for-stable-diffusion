@@ -1,3 +1,4 @@
+import { basePath } from 'BASE_PATH'
 import ProfilePage from 'app/_pages/ProfilePage'
 import { Metadata } from 'next'
 
@@ -5,10 +6,10 @@ export const metadata: Metadata = {
   title: 'User Details - ArtBot for Stable Diffusion',
   openGraph: {
     title: 'ArtBot - User Profile',
-    images: ['/artbot/robot_profile.png']
+    images: [`${basePath}/robot_profile.png`]
   },
   twitter: {
-    images: '/artbot/robot_profile.png'
+    images: `${basePath}/robot_profile.png`
   }
 }
 

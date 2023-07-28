@@ -8,6 +8,7 @@ import Row from 'components/Row'
 import Linker from 'components/UI/Linker'
 import PageTitle from 'app/_components/PageTitle'
 import { relativeTimeSec } from 'utils/numberUtils'
+import { basePath } from 'BASE_PATH'
 
 interface IModelUpdatesResponse {
   success: boolean
@@ -114,7 +115,7 @@ const ModelUpdatesPage = () => {
         />
         <meta
           name="twitter:image"
-          content="https://tinybots.net/artbot/robot_clipboard.png"
+          content={`https://tinybots.net${basePath}/robot_clipboard.png`}
         />
       </Head>
       <Row>

@@ -1,3 +1,4 @@
+import { basePath } from 'BASE_PATH'
 import StableDiffusionModel from '../models/StableDiffusionModel'
 import { modelStore, setAvailableModels } from '../store/modelStore'
 import { clientHeader, isAppActive } from '../utils/appUtils'
@@ -27,7 +28,7 @@ export const fetchAvailableModels = async () => {
   try {
     const res = await fetch(
       isInitial
-        ? `/artbot/api/models-available`
+        ? `${basePath}/api/models-available`
         : `https://aihorde.net/api/v2/status/models`,
       {
         headers: {

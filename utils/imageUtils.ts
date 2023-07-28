@@ -11,6 +11,7 @@ import AppSettings from '../models/AppSettings'
 import { DEFAULT_SAMPLER_ARRAY } from '../_constants'
 import { isiOS, isSafariBrowser } from './appUtils'
 import { fetchCompletedJobs } from './db'
+import { basePath } from 'BASE_PATH'
 
 interface CreateImageJob {
   base64String?: string
@@ -366,7 +367,7 @@ export const getImageFromUrl = async (imgUrl: string) => {
     }
   }
 
-  const resp = await fetch(`/artbot/api/img-from-url`, {
+  const resp = await fetch(`${basePath}/api/img-from-url`, {
     method: 'POST',
     body: JSON.stringify({
       imageUrl: imgUrl

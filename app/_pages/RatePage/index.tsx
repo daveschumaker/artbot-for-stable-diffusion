@@ -20,6 +20,7 @@ import { clientHeader } from 'utils/appUtils'
 import { sleep } from 'utils/sleep'
 import { NewRating } from 'types'
 import TooltipComponent from 'app/_components/TooltipComponent'
+import { basePath } from 'BASE_PATH'
 
 const MAX_ERROR_COUNT = 30
 
@@ -471,7 +472,7 @@ const RatePage = () => {
           />
           <meta
             name="twitter:image"
-            content="https://tinybots.net/artbot/robot_judge.png"
+            content={`https://tinybots.net${basePath}/robot_judge.png`}
           />
         </Head>
         <PageTitle>Rate images (disabled)</PageTitle>
@@ -499,7 +500,7 @@ const RatePage = () => {
           />
           <meta
             name="twitter:image"
-            content="https://tinybots.net/artbot/robot_judge.png"
+            content={`https://tinybots.net${basePath}/robot_judge.png`}
           />
         </Head>
         <PageTitle>Rate images (disabled)</PageTitle>
@@ -521,7 +522,7 @@ const RatePage = () => {
         />
         <meta
           name="twitter:image"
-          content="https://tinybots.net/artbot/robot_judge.png"
+          content={`https://tinybots.net${basePath}/robot_judge.png`}
         />
       </Head>
       <PageTitle>Rate images</PageTitle>

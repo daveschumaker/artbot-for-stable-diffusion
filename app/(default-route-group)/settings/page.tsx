@@ -1,3 +1,4 @@
+import { basePath } from 'BASE_PATH'
 import SettingsPage from 'app/_pages/SettingsPage'
 import { Metadata } from 'next'
 
@@ -6,10 +7,10 @@ export const metadata: Metadata = {
   openGraph: {
     description: 'Manage your preferences for ArtBot and the Stable Horde',
     title: 'ArtBot - Settings',
-    images: ['/artbot/robot_gears.png']
+    images: [`${basePath}/robot_gears.png`]
   },
   twitter: {
-    images: '/artbot/robot_gears.png'
+    images: `${basePath}/robot_gears.png`
   }
 }
 

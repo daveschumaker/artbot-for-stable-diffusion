@@ -1,3 +1,5 @@
+import { basePath } from 'BASE_PATH'
+
 let isPending = false
 
 interface IModelUpdatesResponse {
@@ -21,7 +23,7 @@ export const fetchModelUpdates = async () => {
   // let modelUpdates: Array<any> = []
 
   try {
-    const res = await fetch(`/artbot/api/model-updates`)
+    const res = await fetch(`${basePath}/api/model-updates`)
     const data: IModelUpdatesResponse = await res.json()
     const { success, changes = [], timestamp } = data
 

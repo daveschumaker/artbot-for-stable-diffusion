@@ -4,6 +4,7 @@ import HeaderNavLinks from './HeaderNavLinks'
 import styles from './headerNav.module.css'
 import NoSsr from 'app/_components/NoSsr'
 import MenuButton from './MenuButton'
+import { basePath } from 'BASE_PATH'
 
 const HeaderNav = () => {
   return (
@@ -13,7 +14,7 @@ const HeaderNav = () => {
         <Link href="/" className="flex items-center mb-1 gap-2">
           <div>
             <img
-              src="/artbot/artbot-logo.png"
+              src={`${basePath}/artbot-logo.png`}
               height={30}
               width={30}
               alt="AI ArtBot logo"

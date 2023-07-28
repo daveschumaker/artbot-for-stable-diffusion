@@ -1,3 +1,4 @@
+import { basePath } from 'BASE_PATH'
 import ModelDetailsPage from 'app/_pages/InfoPage/models/details'
 import { Metadata } from 'next'
 
@@ -9,13 +10,13 @@ async function getPageData() {
 
   try {
     const availableModelsRes = await fetch(
-      `http://localhost:${process.env.PORT}/artbot/api/models-available`
+      `http://localhost:${process.env.PORT}${basePath}/api/models-available`
     )
     const availableModelsData = (await availableModelsRes.json()) || {}
     availableModels = availableModelsData.models
 
     const modelDetailsRes = await fetch(
-      `http://localhost:${process.env.PORT}/artbot/api/model-details`
+      `http://localhost:${process.env.PORT}${basePath}/api/model-details`
     )
     const modelDetailsData = (await modelDetailsRes.json()) || {}
     modelDetails = modelDetailsData.models
@@ -33,10 +34,10 @@ export const metadata: Metadata = {
   title: 'Model Details - ArtBot for Stable Diffusion',
   openGraph: {
     title: 'ArtBot - Model Details',
-    images: ['/artbot/robot_clipboard.png']
+    images: [`${basePath}/robot_clipboard.png`]
   },
   twitter: {
-    images: '/artbot/robot_clipboard.png'
+    images: `${basePath}/robot_clipboard.png`
   }
 }
 

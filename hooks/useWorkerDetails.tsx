@@ -1,3 +1,4 @@
+import { basePath } from 'BASE_PATH'
 import AppSettings from 'models/AppSettings'
 import { useEffect, useState } from 'react'
 
@@ -8,7 +9,7 @@ const useWorkerDetails = () => {
   const useBlocklist = AppSettings.get('blockedWorkers')
 
   const fetchWorkers = async () => {
-    const resp = await fetch(`/artbot/api/worker-details`)
+    const resp = await fetch(`${basePath}/api/worker-details`)
     const data = (await resp.json()) || {}
     const { workers = [] } = data
 

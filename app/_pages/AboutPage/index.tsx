@@ -12,13 +12,14 @@ import PageTitle from 'app/_components/PageTitle'
 import Text from 'components/UI/Text'
 import { useEffectOnce } from 'hooks/useEffectOnce'
 import styles from './about.module.css'
+import { basePath } from 'BASE_PATH'
 
 const AboutPage = () => {
   const [totalImages, setTotalImages] = useState(0)
   const [showFeedback, setShowFeedback] = useState(false)
 
   const fetchImageCount = async () => {
-    const res = await fetch(`/artbot/api/image-count`)
+    const res = await fetch(`${basePath}/api/image-count`)
     const data = await res.json()
     if (data.totalImages) {
       setTotalImages(Number(data.totalImages))
@@ -64,7 +65,7 @@ const AboutPage = () => {
       <div className="mt-2">
         <img
           className={styles.HeroImage}
-          src="/artbot/painting_bot.png"
+          src={`${basePath}/painting_bot.png`}
           alt="painting of a robot painting robots"
         />
         <div className={styles.HelpfulLinks}>

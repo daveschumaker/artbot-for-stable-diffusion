@@ -5,6 +5,7 @@ import FlexRow from 'app/_components/FlexRow'
 import PromptTypewriter from 'app/_modules/Typewriter'
 import styles from './component.module.css'
 import HomePageContentWrapper from 'app/_components/HomePageContentWrapper'
+import { basePath } from 'BASE_PATH'
 
 export default function HomePage() {
   return (
@@ -25,7 +26,7 @@ export default function HomePage() {
         <br />
         It&apos;s free to use, no registration required.{' '}
         <a
-          href="/artbot/create"
+          href={`${basePath}/create`}
           style={{
             alignItems: 'center',
             color: 'var(--main-color)',

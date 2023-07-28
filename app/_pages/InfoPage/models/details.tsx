@@ -7,6 +7,7 @@ import Row from 'components/Row'
 import PageTitle from 'app/_components/PageTitle'
 import AppSettings from 'models/AppSettings'
 import ModelDetailsList from 'app/_modules/ModelDetailsList'
+import { basePath } from 'BASE_PATH'
 
 const ModelDetailsPage = ({ availableModels, modelDetails }: any) => {
   const searchParams = useSearchParams()
@@ -44,7 +45,7 @@ const ModelDetailsPage = ({ availableModels, modelDetails }: any) => {
         />
         <meta
           name="twitter:image"
-          content="https://tinybots.net/artbot/robot_clipboard.png"
+          content={`https://tinybots.net${basePath}/robot_clipboard.png`}
         />
       </Head>
       <Row>

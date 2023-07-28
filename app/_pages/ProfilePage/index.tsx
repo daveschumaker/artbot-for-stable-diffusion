@@ -9,6 +9,7 @@ import SpinnerV2 from 'components/Spinner'
 import PageTitle from 'app/_components/PageTitle'
 import { userInfoStore } from 'store/userStore'
 import styles from './profile.module.css'
+import { basePath } from 'BASE_PATH'
 
 const ProfilePage = () => {
   const userState = useStore(userInfoStore)
@@ -38,7 +39,7 @@ const ProfilePage = () => {
           <meta name="twitter:title" content="ArtBot - User Profile" />
           <meta
             name="twitter:image"
-            content="https://tinybots.net/artbot/robot_profile.png"
+            content={`https://tinybots.net${basePath}/robot_profile.png`}
           />
         </Head>
         <PageTitle>User Profile</PageTitle>
@@ -55,7 +56,7 @@ const ProfilePage = () => {
           <meta name="twitter:title" content="ArtBot - User Profile" />
           <meta
             name="twitter:image"
-            content="https://tinybots.net/artbot/robot_profile.png"
+            content={`https://tinybots.net${basePath}/robot_profile.png`}
           />
         </Head>
         <PageTitle>User Profile</PageTitle>
@@ -105,7 +106,7 @@ const ProfilePage = () => {
         <meta name="twitter:title" content="ArtBot - User Profile" />
         <meta
           name="twitter:image"
-          content="https://tinybots.net/artbot/robot_profile.png"
+          content={`https://tinybots.net${basePath}/robot_profile.png`}
         />
       </Head>
       <PageTitle>User Profile</PageTitle>

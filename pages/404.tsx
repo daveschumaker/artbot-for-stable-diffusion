@@ -6,6 +6,7 @@ import FixedMenu from 'app/_modules/FixedMenu'
 import '../styles/globals.css'
 import HeaderNav from 'app/_modules/HeaderNav'
 import SlidingMenu from 'app/_modules/SlidingMenu'
+import { basePath } from 'BASE_PATH'
 
 export default function NotFoundPage() {
   return (
@@ -19,7 +20,7 @@ export default function NotFoundPage() {
             <PageTitle>404 - ArtBot for Stable Diffusion</PageTitle>
             There is nothing for you here...
             <img
-              src="/artbot/sad-robot.svg"
+              src={`${basePath}/sad-robot.svg`}
               height={60}
               width={60}
               alt="Image not found"

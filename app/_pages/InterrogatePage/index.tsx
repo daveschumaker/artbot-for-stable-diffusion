@@ -23,6 +23,7 @@ import RecycleIcon from 'components/icons/RecycleIcon'
 import { clientHeader } from 'utils/appUtils'
 import FlexRow from 'components/UI/FlexRow'
 import TextButton from 'components/UI/TextButton'
+import { basePath } from 'BASE_PATH'
 
 const ContentWrapper = styled.div`
   padding-top: 16px;
@@ -138,7 +139,7 @@ const InterrogatePage = () => {
 
   const fetchRemoteImage = useCallback(async () => {
     try {
-      const resp = await fetch(`/artbot/api/img-from-url`, {
+      const resp = await fetch(`${basePath}/api/img-from-url`, {
         method: 'POST',
         body: JSON.stringify({
           imageUrl: componentState.imgUrl

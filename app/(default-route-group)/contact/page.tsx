@@ -1,3 +1,4 @@
+import { basePath } from 'BASE_PATH'
 import ContactPage from 'app/_pages/ContactPage'
 import { Metadata } from 'next'
 
@@ -5,7 +6,7 @@ export const metadata: Metadata = {
   title: 'Contact Us - ArtBot for Stable Diffusion',
   openGraph: {
     type: 'website',
-    url: 'https://tinybots.net/artbot',
+    url: `https://tinybots.net${basePath}`,
     title: 'ArtBot - Contact Form',
     images: [
       {
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     creator: '@davely',
-    images: '/artbot/robots_communicating.jpg'
+    images: `${basePath}/robots_communicating.jpg`
   }
 }
 

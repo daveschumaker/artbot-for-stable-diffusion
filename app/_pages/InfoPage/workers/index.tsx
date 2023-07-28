@@ -10,6 +10,7 @@ import { useEffectOnce } from 'hooks/useEffectOnce'
 import SpinnerV2 from 'components/Spinner'
 import InfoPageMenuButton from 'components/InfoPage/Menu'
 import styles from './workers.module.css'
+import { basePath } from 'BASE_PATH'
 
 const WorkerInfoPage = () => {
   const [componentState, setComponentState] = useComponentState({
@@ -21,7 +22,7 @@ const WorkerInfoPage = () => {
   })
 
   const fetchWorkers = async () => {
-    const resp = await fetch(`/artbot/api/worker-details`)
+    const resp = await fetch(`${basePath}/api/worker-details`)
     const data = (await resp.json()) || {}
     const { workers = [] } = data
 
