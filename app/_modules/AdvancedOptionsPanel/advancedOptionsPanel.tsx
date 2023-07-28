@@ -38,7 +38,6 @@ import LoraSelect from './LoraSelect'
 import FlexibleRow from 'app/_components/FlexibleRow'
 import FlexibleUnit from 'app/_components/FlexibleUnit'
 import SelectModel from 'app/_modules/AdvancedOptionsPanel/SelectModel'
-import SelectModelDetails from './ModelDetails'
 import ImageOrientationOptions from 'app/_modules/AdvancedOptionsPanel/ImageOrientationOptions'
 import Seed from './Seed'
 import SelectSampler from './SelectSampler'
@@ -151,10 +150,6 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
         <FlexibleRow>
           <FlexibleUnit>
             <SelectModel input={input} setInput={setInput} />
-            <SelectModelDetails
-              models={input.models}
-              multiModels={input.useAllModels || input.useFavoriteModels}
-            />
           </FlexibleUnit>
           <FlexibleUnit>
             <ImageOrientationOptions input={input} setInput={setInput} />

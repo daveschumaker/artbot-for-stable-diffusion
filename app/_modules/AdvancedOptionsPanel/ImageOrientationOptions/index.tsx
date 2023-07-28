@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useStore } from 'statery'
-import { IconLock, IconLockOpen, IconSwitch2 } from '@tabler/icons-react'
+import {
+  IconLock,
+  IconLockOpen,
+  IconSettings,
+  IconSwitch2
+} from '@tabler/icons-react'
 
 import { MAX_DIMENSIONS_LOGGED_IN, MAX_DIMENSIONS_LOGGED_OUT } from '_constants'
 import Section from 'app/_components/Section'
@@ -15,6 +20,7 @@ import { ImageOrientation } from 'models/ImageOrientation'
 import { userInfoStore } from 'store/userStore'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import NumericInputSlider from 'app/_modules/AdvancedOptionsPanel/NumericInputSlider'
+import DropdownOptions from 'app/_modules/DropdownOptions'
 
 const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
   const [workerDetails] = useWorkerDetails()
@@ -22,6 +28,7 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
   const { loggedIn } = userState
   const [keepAspectRatio, setKeepAspectRatio] = useState(false)
   const [targetAspectRatio, setTargetAspectRatio] = useState(0)
+  const [showOptions, setShowOptions] = useState(false)
 
   const getConstraints = () => {
     return {
@@ -144,7 +151,8 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
         display: 'flex',
         flexDirection: 'column',
         flexGrow: 1,
-        marginBottom: 0
+        marginBottom: 0,
+        position: 'relative'
       }}
     >
       <SubSectionTitle>Image orientation</SubSectionTitle>
@@ -157,7 +165,7 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
           </FlexRow>
         )
       }
-      <FlexRow style={{ marginBottom: '8px' }}>
+      <FlexRow style={{ marginBottom: '4px' }}>
         <Select
           options={ImageOrientation.dropdownOptions()}
           onChange={(obj: { value: string; label: string }) => {
@@ -167,150 +175,180 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
           isSearchable={false}
         />
       </FlexRow>
-      <div
+      <FlexRow
         style={{
-          border: '1px solid rgb(126, 90, 108)',
-          display: 'flex',
-          flexDirection: 'column',
-          padding: '8px 16px',
-          borderRadius: '4px',
-          flexGrow: 1,
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
+          marginBottom: '4px',
+          position: 'relative'
         }}
       >
-        <FlexCol className="flex flex-col w-full gap-2">
-          <SubSectionTitle style={{ paddingBottom: 0 }}>
-            <FlexRow>
-              Image dimensions
-              {keepAspectRatio ? (
-                <>
-                  <IconLock stroke={1.5} />
-                </>
-              ) : (
-                <>
-                  <IconLockOpen stroke={1.5} />
-                </>
-              )}
-              {keepAspectRatio && (
-                <>
-                  <TooltipComponent tooltipId={`tooltip-keepRatio`}>
-                    Aspect ratio is locked. Adjusting either dimension will
-                    update the other dimension accordingly.
-                  </TooltipComponent>
-                </>
-              )}
-            </FlexRow>
-          </SubSectionTitle>
-          <Section style={{ paddingTop: 0 }}>
-            <NumericInputSlider
-              label="Width"
-              from={getConstraints().from}
-              to={getConstraints().to}
-              step={64}
-              input={input}
-              setInput={setInput}
-              fieldName="width"
-              fullWidth
-              enforceStepValue
-              callback={widthCallback}
-            />
-          </Section>
+        <div style={{ fontSize: '12px', paddingLeft: '2px' }}>
+          {input.width} w x {input.height} h
+        </div>
+        <Button onClick={() => setShowOptions(true)}>
+          <IconSettings />
+        </Button>
+        {showOptions && (
+          <DropdownOptions
+            handleClose={() => setShowOptions(false)}
+            title="Image dimensions"
+            top="46px"
+          >
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                padding: '8px 0',
+                borderRadius: '4px',
+                flexGrow: 1,
+                justifyContent: 'space-between'
+              }}
+            >
+              <FlexCol className="flex flex-col w-full gap-2">
+                <SubSectionTitle style={{ paddingBottom: 0 }}>
+                  <FlexRow>
+                    Image dimensions
+                    {keepAspectRatio ? (
+                      <>
+                        <IconLock stroke={1.5} />
+                      </>
+                    ) : (
+                      <>
+                        <IconLockOpen stroke={1.5} />
+                      </>
+                    )}
+                    {keepAspectRatio && (
+                      <>
+                        <TooltipComponent tooltipId={`tooltip-keepRatio`}>
+                          Aspect ratio is locked. Adjusting either dimension
+                          will update the other dimension accordingly.
+                        </TooltipComponent>
+                      </>
+                    )}
+                  </FlexRow>
+                </SubSectionTitle>
+                <Section style={{ paddingTop: 0 }}>
+                  <NumericInputSlider
+                    label="Width"
+                    from={getConstraints().from}
+                    to={getConstraints().to}
+                    step={64}
+                    input={input}
+                    setInput={setInput}
+                    fieldName="width"
+                    fullWidth
+                    enforceStepValue
+                    callback={widthCallback}
+                  />
+                </Section>
 
-          <Section style={{ paddingTop: 0 }}>
-            <NumericInputSlider
-              label="Height"
-              from={getConstraints().from}
-              to={getConstraints().to}
-              step={64}
-              input={input}
-              setInput={setInput}
-              fieldName="height"
-              fullWidth
-              enforceStepValue
-              callback={heightCallback}
-            />
-          </Section>
-          <Section>
-            <div style={{ fontSize: '12px' }}>
-              {input.height * input.width > 1024 * 1024 && (
-                <div className="text-amber-500" style={{ fontWeight: 700 }}>
-                  You will need to have enough kudos to complete this request.
-                </div>
-              )}
-              {input.height * input.width <= 1024 * 1024 && (
-                <div className="text-gray-400" style={{ fontWeight: 700 }}>
-                  High resolution requests require upfront kudos.
-                </div>
-              )}
-            </div>
+                <Section style={{ paddingTop: 0 }}>
+                  <NumericInputSlider
+                    label="Height"
+                    from={getConstraints().from}
+                    to={getConstraints().to}
+                    step={64}
+                    input={input}
+                    setInput={setInput}
+                    fieldName="height"
+                    fullWidth
+                    enforceStepValue
+                    callback={heightCallback}
+                  />
+                </Section>
+                <Section>
+                  <div style={{ fontSize: '12px' }}>
+                    {input.height * input.width > 1024 * 1024 && (
+                      <div
+                        className="text-amber-500"
+                        style={{ fontWeight: 700 }}
+                      >
+                        You will need to have enough kudos to complete this
+                        request.
+                      </div>
+                    )}
+                    {input.height * input.width <= 1024 * 1024 && (
+                      <div
+                        className="text-gray-400"
+                        style={{ fontWeight: 700 }}
+                      >
+                        High resolution requests require upfront kudos.
+                      </div>
+                    )}
+                  </div>
 
-            {keepAspectRatio && (
-              <div
-                className={
-                  'block text-xs w-full font-bold' +
-                  getAspectRatioDeviationColor(getAspectRatioDeviation())
-                }
-                style={{ fontSize: '12px', fontWeight: 700 }}
+                  {keepAspectRatio && (
+                    <div
+                      className={
+                        'block text-xs w-full font-bold' +
+                        getAspectRatioDeviationColor(getAspectRatioDeviation())
+                      }
+                      style={{ fontSize: '12px', fontWeight: 700 }}
+                    >
+                      Aspect ratio is locked! Deviation from target value:{' '}
+                      {(getAspectRatioDeviation() * 100).toFixed(2)}%
+                    </div>
+                  )}
+
+                  <div style={{ fontSize: '12px', marginTop: '8px' }}>
+                    Height and width must be divisible by 64.
+                  </div>
+
+                  <div style={{ fontSize: '12px' }}>
+                    Current image size: {getMegapixelSize()} megapixels
+                  </div>
+                </Section>
+              </FlexCol>
+
+              <FlexRow
+                style={{
+                  columnGap: '8px',
+                  marginTop: '8px',
+                  justifyContent: 'flex-end'
+                }}
               >
-                Aspect ratio is locked! Deviation from target value:{' '}
-                {(getAspectRatioDeviation() * 100).toFixed(2)}%
-              </div>
-            )}
-
-            <div style={{ fontSize: '12px', marginTop: '8px' }}>
-              Height and width must be divisible by 64.
+                <Button
+                  title={
+                    keepAspectRatio ? 'Free aspect ratio' : 'Lock aspect ratio'
+                  }
+                  disabled={input.orientationType === 'random'}
+                  onClick={toggleKeepAspectRatio}
+                  style={{ width: '125px' }}
+                >
+                  {keepAspectRatio ? (
+                    <>
+                      <IconLock stroke={1.5} />
+                      Unlock ratio
+                    </>
+                  ) : (
+                    <>
+                      <IconLockOpen stroke={1.5} />
+                      Lock ratio
+                    </>
+                  )}
+                </Button>
+                <Button
+                  title="Swap dimensions"
+                  onClick={() => {
+                    if (keepAspectRatio) {
+                      setTargetAspectRatio(1 / targetAspectRatio) // Invert target aspect ratio
+                    }
+                    setInput({
+                      height: input.width,
+                      orientationType: 'custom',
+                      width: input.height
+                    })
+                  }}
+                  style={{ width: 'auto' }}
+                >
+                  <IconSwitch2 stroke={1.5} />
+                  Swap
+                </Button>
+              </FlexRow>
             </div>
-
-            <div style={{ fontSize: '12px' }}>
-              Current image size: {getMegapixelSize()} megapixels
-            </div>
-          </Section>
-        </FlexCol>
-
-        <FlexRow
-          style={{
-            columnGap: '8px',
-            marginBottom: '8px',
-            justifyContent: 'flex-end'
-          }}
-        >
-          <Button
-            title={keepAspectRatio ? 'Free aspect ratio' : 'Lock aspect ratio'}
-            disabled={input.orientationType === 'random'}
-            onClick={toggleKeepAspectRatio}
-            style={{ width: '125px' }}
-          >
-            {keepAspectRatio ? (
-              <>
-                <IconLock stroke={1.5} />
-                Unlock ratio
-              </>
-            ) : (
-              <>
-                <IconLockOpen stroke={1.5} />
-                Lock ratio
-              </>
-            )}
-          </Button>
-          <Button
-            title="Swap dimensions"
-            onClick={() => {
-              if (keepAspectRatio) {
-                setTargetAspectRatio(1 / targetAspectRatio) // Invert target aspect ratio
-              }
-              setInput({
-                height: input.width,
-                orientationType: 'custom',
-                width: input.height
-              })
-            }}
-            style={{ width: 'auto' }}
-          >
-            <IconSwitch2 stroke={1.5} />
-            Swap
-          </Button>
-        </FlexRow>
-      </div>
+          </DropdownOptions>
+        )}
+      </FlexRow>
     </Section>
   )
 }

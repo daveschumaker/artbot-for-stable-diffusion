@@ -49,7 +49,7 @@ export const fetchAvailableModels = async () => {
     console.log(`Warning: Unable to fetch available models. API offline?`)
   } finally {
     isPending = false
-    isInitial = false
+    // isInitial = false
 
     return availableModels
   }

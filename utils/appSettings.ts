@@ -145,7 +145,7 @@ export const initAppSettings = async () => {
   initWindowLogger()
   fixLocalStorage()
   fetchHordePerformance()
-  await fetchUserDetails(apikey)
+  fetchUserDetails(apikey)
   setUserId()
   buildModelAvailability()
   fetchMyWorkers()

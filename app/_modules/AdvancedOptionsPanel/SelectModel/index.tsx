@@ -10,7 +10,12 @@ import DropdownOptions from 'app/_modules/DropdownOptions'
 import FlexRow from 'app/_components/FlexRow'
 import { useAvailableModels } from 'hooks/useAvailableModels'
 import { Button } from 'components/UI/Button'
-import { IconFilter, IconSettings } from '@tabler/icons-react'
+import {
+  IconFilter,
+  IconInfoSquareRounded,
+  IconList,
+  IconSettings
+} from '@tabler/icons-react'
 import Checkbox from 'components/UI/Checkbox'
 import { validModelsArray } from 'utils/modelUtils'
 import AppSettings from 'models/AppSettings'
@@ -18,6 +23,7 @@ import { useStore } from 'statery'
 import { modelStore } from 'store/modelStore'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import TextTooltipRow from 'app/_components/TextTooltipRow'
+import SelectModelDetails from '../ModelDetails/modelDetails'
 
 interface SelectModelProps extends GetSetPromptInput {
   disabled?: boolean
@@ -34,6 +40,7 @@ const SelectModel = ({
   const [favoriteModelsCount, setFavoriteModelsCount] = useState(0)
   const [modelsOptions] = useAvailableModels({ input })
   const [showSettingsDropdown, setShowSettingsDropdown] = useState(false)
+  const [showDetails, setShowDetails] = useState(false)
   const [showMultiModel, setShowMultiModel] = useState(false)
   const [showFilter, setShowFilter] = useState(false)
   const [filterMode, setFilterMode] = useState('all')
@@ -171,14 +178,49 @@ const SelectModel = ({
           </TooltipComponent>
         </TextTooltipRow>
       </SubSectionTitle>
-      <FlexRow
+      <div
         style={{
           columnGap: '4px',
-          marginBottom: '8px',
+          marginBottom: '4px',
           position: 'relative',
           width: '100% !important'
         }}
       >
+        <Select
+          isDisabled={selectDisabled}
+          isMulti={showMultiModel}
+          isSearchable={true}
+          options={filteredModels()}
+          onChange={(obj: any) => {
+            if (showMultiModel) {
+              handleMultiModelSelect(obj)
+            } else {
+              setInput({ models: [obj.value] })
+            }
+          }}
+          value={selectValue}
+        />
+      </div>
+      <FlexRow
+        style={{
+          justifyContent: 'space-between',
+          marginBottom: '4px',
+          position: 'relative',
+          width: '100%'
+        }}
+      >
+        {showDetails && (
+          <DropdownOptions
+            handleClose={() => setShowDetails(false)}
+            title="Model details"
+            top="46px"
+          >
+            <SelectModelDetails
+              models={input.models}
+              multiModels={input.useAllModels || input.useFavoriteModels}
+            />
+          </DropdownOptions>
+        )}
         {showFilter && (
           <DropdownOptions
             handleClose={() => setShowFilter(false)}
@@ -309,28 +351,24 @@ const SelectModel = ({
             </div>
           </DropdownOptions>
         )}
-        <Select
-          isDisabled={selectDisabled}
-          isMulti={showMultiModel}
-          isSearchable={true}
-          options={filteredModels()}
-          onChange={(obj: any) => {
-            if (showMultiModel) {
-              handleMultiModelSelect(obj)
-            } else {
-              setInput({ models: [obj.value] })
-            }
-          }}
-          value={selectValue}
-        />
-        <Button onClick={() => setShowFilter(true)}>
-          <IconFilter />
-        </Button>
-        {!hideOptions && (
-          <Button onClick={() => setShowSettingsDropdown(true)}>
-            <IconSettings />
+        <FlexRow>
+          <Button onClick={() => setShowDetails(true)}>
+            <IconInfoSquareRounded />
           </Button>
-        )}
+          <Button onClick={() => setShowDetails(true)}>
+            <IconList />
+          </Button>
+        </FlexRow>
+        <FlexRow style={{ justifyContent: 'flex-end' }}>
+          <Button onClick={() => setShowFilter(true)}>
+            <IconFilter />
+          </Button>
+          {!hideOptions && (
+            <Button onClick={() => setShowSettingsDropdown(true)}>
+              <IconSettings />
+            </Button>
+          )}
+        </FlexRow>
       </FlexRow>
     </Section>
   )

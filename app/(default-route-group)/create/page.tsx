@@ -26,8 +26,10 @@ async function getPageData() {
 
 export default async function Page() {
   // Fetch data directly in a Server Component
-  const { modelDetails } = await getPageData()
+  const { availableModels, modelDetails } = await getPageData()
 
   // Forward fetched data to your Client Component
-  return <CreatePage modelDetails={modelDetails} />
+  return (
+    <CreatePage availableModels={availableModels} modelDetails={modelDetails} />
+  )
 }

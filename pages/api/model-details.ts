@@ -16,10 +16,7 @@ export default async function handler(
   }
 
   try {
-    const { models, timestamp } = getModelDetails()
-
-    // console.log(`models?`, models)
-    // console.log(`hiiii`)
+    const { models, timestamp } = await getModelDetails()
 
     return res.send({
       success: true,

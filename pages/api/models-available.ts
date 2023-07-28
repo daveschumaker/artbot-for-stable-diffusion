@@ -21,7 +21,7 @@ export default async function handler(
   }
 
   try {
-    const { timestamp, models } = getAvailableModels()
+    const { timestamp, models } = await getAvailableModels()
 
     return res.send({
       success: true,

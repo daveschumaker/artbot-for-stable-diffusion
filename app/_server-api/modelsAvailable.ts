@@ -22,16 +22,6 @@ const cache = {
   details: {}
 }
 
-export const getAvailableModels = () => ({
-  timestamp: cache.availableFetchTimestamp,
-  models: cache.models
-})
-
-export const getModelDetails = () => ({
-  timestamp: cache.detailsFetchTimestamp,
-  models: cache.details
-})
-
 const fetchAvailableModels = async () => {
   const __DEV__ = process.env.NODE_ENV !== 'production'
 
@@ -50,9 +40,11 @@ const fetchAvailableModels = async () => {
     if (Array.isArray(data) && data.length > 0) {
       cache.models = [...data]
       cache.availableFetchTimestamp = Date.now()
+      return true
     }
   } catch (err) {
     console.error(err)
+    return false
   }
 }
 
@@ -106,9 +98,54 @@ export const fetchModelDetails = async () => {
 
       cache.details = { ...modelDetails }
       cache.detailsFetchTimestamp = Date.now()
+
+      return true
     }
   } catch (err) {
     console.error(err)
+    return false
+  }
+}
+
+const CACHE_TIMEOUT = 20000
+
+export const getAvailableModels = async () => {
+  const currentTime = Date.now()
+
+  if (currentTime - cache.availableFetchTimestamp >= CACHE_TIMEOUT) {
+    const data = await fetchAvailableModels()
+
+    if (data) {
+      return {
+        timestamp: cache.availableFetchTimestamp,
+        models: cache.models
+      }
+    }
+  }
+
+  return {
+    timestamp: cache.availableFetchTimestamp,
+    models: cache.models
+  }
+}
+
+export const getModelDetails = async () => {
+  const currentTime = Date.now()
+
+  if (currentTime - cache.detailsFetchTimestamp >= CACHE_TIMEOUT) {
+    const data = await fetchModelDetails()
+
+    if (data) {
+      return {
+        timestamp: cache.detailsFetchTimestamp,
+        models: cache.details
+      }
+    }
+  }
+
+  return {
+    timestamp: cache.detailsFetchTimestamp,
+    models: cache.details
   }
 }
 

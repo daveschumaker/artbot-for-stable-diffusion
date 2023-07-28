@@ -2,7 +2,6 @@
 import { useStore } from 'statery'
 import Section from 'app/_components/Section'
 import { modelStore } from 'store/modelStore'
-import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { useEffect, useState } from 'react'
 import { ModelDetails, SelectModelDetailsProps } from 'types/artbot'
 import { isEmptyObject } from 'utils/helperUtils'
@@ -95,19 +94,18 @@ const SelectModelDetails = ({
     >
       <div
         style={{
-          border: '1px solid rgb(126, 90, 108)',
-          padding: '8px 16px',
+          padding: '8px 32px 8px 0',
           borderRadius: '4px',
           flexGrow: 1
         }}
       >
-        <FlexCol style={{ position: 'relative', rowGap: '4px' }}>
-          <SubSectionTitle>Model details</SubSectionTitle>
+        <FlexCol style={{ position: 'relative', rowGap: '4px', width: '100%' }}>
           {models.length === 1 && !panelDisabled && (
             <div
               className={styles.FavButton}
               onClick={() => handleFav(models[0])}
               title="Add or remove model to your favorites list"
+              style={{ position: 'absolute', right: '4px' }}
             >
               {favModels[models[0]] ? (
                 <IconHeartFilled size={32} style={{ color: 'red' }} />
