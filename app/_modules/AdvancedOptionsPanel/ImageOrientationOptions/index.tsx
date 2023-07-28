@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useStore } from 'statery'
 import {
+  IconEdit,
   IconLock,
   IconLockOpen,
   IconSettings,
@@ -182,12 +183,17 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
           position: 'relative'
         }}
       >
-        <div style={{ fontSize: '12px', paddingLeft: '2px' }}>
+        <FlexRow style={{ fontSize: '12px', paddingLeft: '2px' }}>
           {input.width} w x {input.height} h
-        </div>
-        <Button onClick={() => setShowOptions(true)}>
-          <IconSettings />
-        </Button>
+        </FlexRow>
+        <FlexRow style={{ justifyContent: 'flex-end' }}>
+          <Button onClick={() => setShowOptions(true)}>
+            <IconEdit />
+          </Button>
+          <Button onClick={() => setShowOptions(true)}>
+            <IconSettings />
+          </Button>
+        </FlexRow>
         {showOptions && (
           <DropdownOptions
             handleClose={() => setShowOptions(false)}

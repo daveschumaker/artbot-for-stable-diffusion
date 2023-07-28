@@ -41,9 +41,9 @@
 }
 
 .styled-button-disabled {
-  background-color: gray;
+  background-color: #bdbdbd;
 }
 
 .styled-button-disabled:hover {
-  background-color: gray;
+  background-color: #bdbdbd;
 }
