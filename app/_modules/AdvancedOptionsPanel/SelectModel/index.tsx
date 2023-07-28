@@ -203,6 +203,7 @@ const SelectModel = ({
       </div>
       <FlexRow
         style={{
+          columnGap: '4px',
           justifyContent: 'space-between',
           marginBottom: '4px',
           position: 'relative',
@@ -351,7 +352,7 @@ const SelectModel = ({
             </div>
           </DropdownOptions>
         )}
-        <FlexRow>
+        <FlexRow style={{ columnGap: '4px' }}>
           <Button onClick={() => setShowDetails(true)}>
             <IconInfoSquareRounded />
           </Button>
@@ -359,7 +360,7 @@ const SelectModel = ({
             <IconList />
           </Button>
         </FlexRow>
-        <FlexRow style={{ justifyContent: 'flex-end' }}>
+        <FlexRow style={{ columnGap: '4px', justifyContent: 'flex-end' }}>
           <Button onClick={() => setShowFilter(true)}>
             <IconFilter />
           </Button>
