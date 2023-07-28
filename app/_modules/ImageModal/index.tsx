@@ -28,8 +28,8 @@ const ImageModal = ({
   disableNav = false,
   handleClose = () => {},
   handleDeleteImageClick = () => {},
-  handleLoadNext = () => {},
-  handleLoadPrev = () => {},
+  handleLoadNext,
+  handleLoadPrev,
   handleReloadImageData = () => {},
   onDeleteCallback = () => {},
   imageDetails
@@ -38,11 +38,11 @@ const ImageModal = ({
   const [, setLocked] = useLockedBody(false)
   const handlers = useSwipeable({
     onSwipedLeft: () => {
-      if (disableNav) return
+      if (disableNav || !handleLoadNext) return
       handleLoadNext()
     },
     onSwipedRight: () => {
-      if (disableNav) return
+      if (disableNav || !handleLoadPrev) return
       handleLoadPrev()
     },
     preventScrollOnSwipe: true,
@@ -85,11 +85,11 @@ const ImageModal = ({
         onClose()
       }
 
-      if (e.key === 'ArrowLeft') {
+      if (e.key === 'ArrowLeft' && handleLoadPrev) {
         handleLoadPrev()
       }
 
-      if (e.key === 'ArrowRight') {
+      if (e.key === 'ArrowRight' && handleLoadNext) {
         handleLoadNext()
       }
     }
@@ -124,7 +124,7 @@ const ImageModal = ({
             <CloseIcon size={28} />
           </div>
         </div>
-        {!showTiles && !disableNav && (
+        {!showTiles && !disableNav && handleLoadPrev && handleLoadNext && (
           <ImageNavigation
             handleLoadNext={handleLoadNext}
             handleLoadPrev={handleLoadPrev}

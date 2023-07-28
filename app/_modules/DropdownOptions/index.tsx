@@ -6,6 +6,7 @@ import styles from './dropdownOptions.module.css'
 const FIXED_HEIGHT = 480
 
 export default function DropdownOptions({
+  autoSize = false,
   children,
   handleClose,
   height,
@@ -13,6 +14,7 @@ export default function DropdownOptions({
   top = '42px',
   maxWidth = '100%'
 }: {
+  autoSize?: boolean
   children: ReactNode
   handleClose: () => void
   height?: number
@@ -65,10 +67,11 @@ export default function DropdownOptions({
         >
           {React.Children.map(children, (child, index) => {
             if (index === 0 && React.isValidElement(child)) {
-              return React.cloneElement(child, {
-                // @ts-ignore
-                handleChildSizeChange
-              })
+              if (autoSize) {
+                return React.cloneElement(child as any, {
+                  handleChildSizeChange
+                })
+              }
             }
             return child
           })}

@@ -85,6 +85,7 @@ export default function PromptInput({ input, setInput }: GetSetPromptInput) {
             )}
             {showKeywords && (
               <DropdownOptions
+                autoSize
                 handleClose={() => setShowKeywords(false)}
                 height={460}
                 title="Model / LoRA keywords"

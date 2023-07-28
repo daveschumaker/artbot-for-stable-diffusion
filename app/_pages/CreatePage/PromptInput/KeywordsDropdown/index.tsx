@@ -100,6 +100,9 @@ export default function KeywordsDropdown({
       const { height, width } = ref?.current?.getBoundingClientRect()
       handleChildSizeChange({ height, width })
     }
+
+    // NOTE: adding 'handleChildSizeChange' here causes an infinite loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [input.prompt, loraKeywords, modelKeywords, validLoras, validModels])
 
   return (
