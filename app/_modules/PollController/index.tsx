@@ -2,7 +2,7 @@
 
 import { useStore } from 'statery'
 
-import Toast from '../../../components/UI/Toast'
+import Toast from '../Toast'
 import { useEffectOnce } from '../../../hooks/useEffectOnce'
 import { appInfoStore, setShowImageReadyToast } from '../../../store/appStore'
 import {
@@ -12,8 +12,12 @@ import {
   multiStore,
   onLocalStorageEvent
 } from '../../../store/multiStore'
+import { useModal } from '@ebay/nice-modal-react'
+import ImageModal from '../ImageModal'
+import { getImageDetails } from 'utils/db'
 
 const PollController = () => {
+  const imagePreviewModal = useModal(ImageModal)
   const appState = useStore(appInfoStore)
   const multiState = useStore(multiStore)
   const { newImageReady, showImageReadyToast } = appState
@@ -45,8 +49,12 @@ const PollController = () => {
           // THIS IS FOR DEBUGGING
           disableAutoClose={false}
           handleClose={handleCloseToast}
-          handleImageClick={() => {
-            // showImageModal(newImageReady)
+          handleImageClick={async () => {
+            const imageDetails = await getImageDetails(newImageReady)
+            imagePreviewModal.show({
+              handleClose: () => imagePreviewModal.remove(),
+              imageDetails
+            })
           }}
           jobId={newImageReady}
           showImageReadyToast={showImageReadyToast}

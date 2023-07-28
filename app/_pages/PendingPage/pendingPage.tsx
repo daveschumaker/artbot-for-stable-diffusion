@@ -119,7 +119,6 @@ const PendingPage = () => {
     processPending()
 
   const handleShowModalClick = (jobId: string) => {
-    console.log(`hi`, done)
     showImageModal({ jobId, images: done })
     return jobId
   }
