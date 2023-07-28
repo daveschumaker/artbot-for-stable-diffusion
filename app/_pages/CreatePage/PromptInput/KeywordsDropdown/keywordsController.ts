@@ -22,5 +22,5 @@ export const hasKeywords = (input: DefaultPromptInput) => {
     }
   })
 
-  return validLoras.length > 0 && validModels.length > 0
+  return validLoras.length > 0 || validModels.length > 0
 }

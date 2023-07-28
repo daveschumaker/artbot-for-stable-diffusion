@@ -231,11 +231,13 @@ export default function PromptInput({ input, setInput }: GetSetPromptInput) {
                 >
                   {undoNegative ? (
                     <>
-                      <IconArrowBackUp stroke={1.5} /> Undo{' '}
+                      <IconArrowBackUp stroke={1.5} />{' '}
+                      <span className={styles.mobileHide}>Undo</span>{' '}
                     </>
                   ) : (
                     <>
-                      <IconTrash stroke={1.5} /> Clear
+                      <IconTrash stroke={1.5} />{' '}
+                      <span className={styles.mobileHide}>Clear</span>
                     </>
                   )}
                 </Button>
