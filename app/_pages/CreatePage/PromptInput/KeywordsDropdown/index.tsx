@@ -1,9 +1,13 @@
 import { GetSetPromptInput } from 'types/artbot'
 import styles from './component.module.css'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useStore } from 'statery'
 import { modelStore } from 'store/modelStore'
 import { IconX } from '@tabler/icons-react'
+
+interface Props extends GetSetPromptInput {
+  handleChildSizeChange?: (value: any) => any
+}
 
 const removeString = (originalString: string, stringToRemove: string) => {
   const regex = new RegExp(stringToRemove, 'g')
@@ -12,15 +16,16 @@ const removeString = (originalString: string, stringToRemove: string) => {
 
 export default function KeywordsDropdown({
   input,
-  setInput
-}: GetSetPromptInput) {
+  setInput,
+  handleChildSizeChange = () => {}
+}: Props) {
+  const ref = useRef(null)
+
   const { modelDetails } = useStore(modelStore)
   const [validLoras, setValidLoras] = useState<string[]>([])
   const [loraKeywords, setLoraKeywords] = useState<{
     [key: string]: string[]
   }>({})
-
-  console.log(`input?`, input)
 
   const [validModels, setValidModels] = useState<string[]>([])
   const [modelKeywords, setModelKeywords] = useState<{
@@ -89,83 +94,91 @@ export default function KeywordsDropdown({
     })
 
     setUsedKeywords(matchingTags)
+
+    if (ref.current) {
+      // @ts-ignore
+      const { height, width } = ref?.current?.getBoundingClientRect()
+      handleChildSizeChange({ height, width })
+    }
   }, [input.prompt, loraKeywords, modelKeywords, validLoras, validModels])
 
   return (
     <div className={styles['style-tags-wrapper']}>
-      {usedKeywords.length > 0 && (
-        <div className="mb-2 px-2">
-          <h2 className="font-[700] mb-2">Used keywords</h2>
-          <div style={{ wordBreak: 'break-all' }}>
-            {usedKeywords.map((element) => (
-              <div
-                className={styles['tag']}
-                key={element}
-                onClick={() => {
-                  removeTag(element)
-                }}
-              >
-                <span className="flex flex-row gap-1">
-                  <IconX size={18} stroke={1.5} />
-                  {element}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-      {validModels.map((model) => (
-        <div
-          // @ts-ignore
-          key={model}
-          className="mb-2 px-2"
-        >
-          <h2 className="font-[700] mb-2">{model}</h2>
-          <div style={{ wordBreak: 'break-all' }}>
-            {
-              // @ts-ignore
-              modelKeywords[model].length >= 1 &&
-                modelKeywords[model].map((element) => (
-                  <div
-                    className={styles['tag']}
-                    key={element}
-                    onClick={() => {
-                      addTagClick(element)
-                    }}
-                  >
+      <div id="content-height-wrapper" ref={ref}>
+        {usedKeywords.length > 0 && (
+          <div className="mb-2 px-2">
+            <h2 className="font-[700] mb-2">Used keywords</h2>
+            <div style={{ wordBreak: 'break-all' }}>
+              {usedKeywords.map((element) => (
+                <div
+                  className={styles['tag']}
+                  key={element}
+                  onClick={() => {
+                    removeTag(element)
+                  }}
+                >
+                  <span className="flex flex-row gap-1">
+                    <IconX size={18} stroke={1.5} />
                     {element}
-                  </div>
-                ))
-            }
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
-      {validLoras.map((lora) => (
-        <div
-          // @ts-ignore
-          key={lora}
-          className="mb-2 px-2"
-        >
-          <h2 className="font-[700] mb-2">{lora}</h2>
-          <div style={{ wordBreak: 'break-all' }}>
-            {
-              // @ts-ignore
-              loraKeywords[lora].length >= 1 &&
-                loraKeywords[lora].map((element) => (
-                  <div
-                    className={styles['tag']}
-                    key={element}
-                    onClick={() => {
-                      addTagClick(element)
-                    }}
-                  >
-                    {element}
-                  </div>
-                ))
-            }
+        )}
+        {validModels.map((model) => (
+          <div
+            // @ts-ignore
+            key={model}
+            className="mb-2 px-2"
+          >
+            <h2 className="font-[700] mb-2">{model}</h2>
+            <div style={{ wordBreak: 'break-all' }}>
+              {
+                // @ts-ignore
+                modelKeywords[model].length >= 1 &&
+                  modelKeywords[model].map((element) => (
+                    <div
+                      className={styles['tag']}
+                      key={element}
+                      onClick={() => {
+                        addTagClick(element)
+                      }}
+                    >
+                      {element}
+                    </div>
+                  ))
+              }
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+        {validLoras.map((lora) => (
+          <div
+            // @ts-ignore
+            key={lora}
+            className="mb-2 px-2"
+          >
+            <h2 className="font-[700] mb-2">{lora}</h2>
+            <div style={{ wordBreak: 'break-all' }}>
+              {
+                // @ts-ignore
+                loraKeywords[lora].length >= 1 &&
+                  loraKeywords[lora].map((element) => (
+                    <div
+                      className={styles['tag']}
+                      key={element}
+                      onClick={() => {
+                        addTagClick(element)
+                      }}
+                    >
+                      {element}
+                    </div>
+                  ))
+              }
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
