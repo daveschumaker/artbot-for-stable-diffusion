@@ -66,11 +66,7 @@ const StyledInteractiveModal = styled.div<IStyle>`
     border: 2px solid var(--border-color);
     max-width: ${(props) => props.maxWidth || '864px'};
     width: calc(100% - 48px) !important;
-    /* max-width: 752px; */
-    /* min-height: 480px; */
     height: ${(props) => (props.height ? props.height + 'px' : '512px')};
-    /* max-height: ${(props) =>
-      props.height ? props.height + 'px' : '512px'}; */
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
@@ -113,7 +109,8 @@ const InteractiveModal = (props: any) => {
     disableSwipe = false,
     handleClose = () => {},
     setDynamicHeight = 512,
-    leftButton
+    leftButton,
+    maxHeight = '100%'
   } = props
   const [startAnimation, setStartAnimation] = useState(false)
   const [height, setHeight] = useState(512)
@@ -173,6 +170,7 @@ const InteractiveModal = (props: any) => {
         height={height}
         startAnimation={startAnimation}
         maxWidth={props.maxWidth}
+        style={{ maxHeight }}
       >
         <ContentWrapper>{props.children}</ContentWrapper>
         {!disableSwipe && <SwipeCapture {...handlers} />}
