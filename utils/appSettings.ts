@@ -158,7 +158,7 @@ export const initAppSettings = async () => {
 
     buildModelAvailability()
     fetchHordePerformance()
-  }, 5000)
+  }, 60000)
 
   setInterval(async () => {
     if (!isAppActive()) {

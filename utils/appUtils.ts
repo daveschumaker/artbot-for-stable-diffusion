@@ -32,11 +32,11 @@ export const isAppActive = () => {
     return true
   }
 
-  // All of these rules require a single primary window to be set and active.
-  if (!pageIsPrimaryWindow()) return false
-
   // Web app is always active if the page has focus.
   if (pageHasFocus()) return true
+
+  // All of these rules require a single primary window to be set and active.
+  if (!pageIsPrimaryWindow()) return false
 
   // Page behind another window but still visible. e.g., multitasking.
   if (AppSettings.get('runInBackground') === false && pageIsVisible()) {
