@@ -525,7 +525,7 @@ const InterrogatePage = () => {
           <SubSectionTitle>
             <strong>Upload an image from a URL</strong>
           </SubSectionTitle>
-          <FlexRow paddingBottom="8px">
+          <FlexRow pb={8}>
             <span style={{ lineHeight: '40px', marginRight: '16px' }}>
               URL:
             </span>

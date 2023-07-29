@@ -13,7 +13,7 @@ export default function ImageCount({ input, setInput }: GetSetPromptInput) {
           &nbsp;(1 - {MAX_IMAGES_PER_JOB})
         </span>
       </SubSectionTitle>
-      <FlexRow style={{ columnGap: '4px' }}>
+      <FlexRow gap={4}>
         <NumberInput
           min={1}
           max={MAX_IMAGES_PER_JOB}

@@ -32,7 +32,7 @@ export default function SelectSampler({
         </div>
       ) : (
         <>
-          <FlexRow style={{ columnGap: '4px', position: 'relative' }}>
+          <FlexRow gap={4} style={{ position: 'relative' }}>
             <Select
               isDisabled={input.useAllSamplers}
               options={Samplers.dropdownOptions({

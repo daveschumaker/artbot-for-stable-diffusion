@@ -31,7 +31,7 @@ const InputSwitchV2 = ({
 
   return (
     <Section>
-      <FlexRow style={{ columnGap: '8px' }}>
+      <FlexRow gap={8}>
         <ReactSwitch
           disabled={disabled}
           onChange={handleSwitchToggle}

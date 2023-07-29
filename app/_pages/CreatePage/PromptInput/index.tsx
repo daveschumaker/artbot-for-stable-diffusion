@@ -70,7 +70,7 @@ export default function PromptInput({ input, setInput }: GetSetPromptInput) {
             zIndex: 'var(--zIndex-overBase)'
           }}
         >
-          <FlexRow style={{ columnGap: '8px' }}>
+          <FlexRow gap={8}>
             {showPresets && (
               <DropdownOptions
                 handleClose={() => setShowPresets(false)}
@@ -156,11 +156,11 @@ export default function PromptInput({ input, setInput }: GetSetPromptInput) {
         <AccordionItem
           title={
             <FlexRow
+              gap={8}
+              pb={4}
               style={{
-                columnGap: '4px',
                 fontSize: '14px',
-                fontWeight: 700,
-                paddingBottom: '4px'
+                fontWeight: 700
               }}
             >
               <IconPlaylistX /> Negative prompt{' '}
@@ -196,7 +196,7 @@ export default function PromptInput({ input, setInput }: GetSetPromptInput) {
                 justifyContent: 'space-between'
               }}
             >
-              <FlexRow style={{ columnGap: '8px' }}>
+              <FlexRow gap={8}>
                 <Button
                   onClick={() => {
                     if (!input.negative || input.negative.trim().length === 0)

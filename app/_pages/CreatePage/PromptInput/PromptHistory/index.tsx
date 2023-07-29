@@ -94,7 +94,7 @@ export default function PromptHistory({
       <SubSectionTitle style={{ paddingBottom: '8px' }}>
         Prompt History
       </SubSectionTitle>
-      <FlexRow style={{ columnGap: '8px', marginBottom: '8px' }}>
+      <FlexRow gap={8} style={{ marginBottom: '8px' }}>
         <Button
           onClick={() => {
             if (visiblePrompts === 'all') {
@@ -151,8 +151,8 @@ export default function PromptHistory({
                         {new Date(prompt.timestamp).toLocaleString()}
                       </div>
                       <FlexRow
+                        gap={8}
                         style={{
-                          columnGap: '8px',
                           justifyContent: 'flex-end',
                           width: '160px'
                         }}

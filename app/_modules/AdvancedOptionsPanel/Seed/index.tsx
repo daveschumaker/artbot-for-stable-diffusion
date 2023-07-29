@@ -16,7 +16,7 @@ export default function Seed({ input, setInput }: GetSetPromptInput) {
           &nbsp;(optional)
         </span>
       </SubSectionTitle>
-      <FlexRow style={{ columnGap: '4px' }}>
+      <FlexRow gap={4}>
         <Input
           onChange={(e: any) => setInput({ seed: e.target.value })}
           value={input.seed}

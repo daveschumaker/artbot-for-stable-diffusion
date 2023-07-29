@@ -1,5 +1,5 @@
 import { IconX } from '@tabler/icons-react'
-import React, { ReactNode, useEffect, useState } from 'react'
+import React, { CSSProperties, ReactNode, useEffect, useState } from 'react'
 import ClickableOverlay from 'app/_components/ClickableOverlay'
 import styles from './dropdownOptions.module.css'
 
@@ -12,7 +12,8 @@ export default function DropdownOptions({
   height,
   title,
   top = '42px',
-  maxWidth = '100%'
+  maxWidth = '100%',
+  style
 }: {
   autoSize?: boolean
   children: ReactNode
@@ -21,6 +22,7 @@ export default function DropdownOptions({
   title?: string
   top?: string
   maxWidth?: string
+  style?: CSSProperties
 }) {
   const [childSize, setChildSize] = useState({ height: FIXED_HEIGHT, width: 0 })
 
@@ -54,7 +56,8 @@ export default function DropdownOptions({
               ? childSize.height + 56
               : FIXED_HEIGHT,
           maxWidth,
-          top
+          top,
+          ...style
         }}
       >
         {title && <div className={styles.Title}>{title}</div>}

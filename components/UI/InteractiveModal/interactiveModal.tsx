@@ -6,6 +6,7 @@ import Overlay from 'app/_components/Overlay'
 import { useSwipeable } from 'react-swipeable'
 import clsx from 'clsx'
 import useLockedBody from 'hooks/useLockedBody'
+import styles from './modal.module.css'
 
 interface IStyle {
   height: number | null
@@ -101,7 +102,19 @@ const ContentWrapper = styled.div`
   }
 `
 
-const InteractiveModal = (props: any) => {
+interface Props {
+  children: React.ReactNode
+  className?: string
+  disableSwipe?: boolean
+  handleClose: () => any
+  leftButton?: boolean
+  maxHeight?: string
+  maxWidth?: string
+  setDynamicHeight?: number
+  title?: string
+}
+
+const InteractiveModal = (props: Props) => {
   const [, setLocked] = useLockedBody(false)
 
   const {
@@ -109,6 +122,7 @@ const InteractiveModal = (props: any) => {
     disableSwipe = false,
     handleClose = () => {},
     setDynamicHeight = 512,
+    title = '',
     leftButton,
     maxHeight = '100%'
   } = props
@@ -172,6 +186,7 @@ const InteractiveModal = (props: any) => {
         maxWidth={props.maxWidth}
         style={{ maxHeight }}
       >
+        {title && <div className={styles.ModalTitle}>{title}</div>}
         <ContentWrapper>{props.children}</ContentWrapper>
         {!disableSwipe && <SwipeCapture {...handlers} />}
         <CloseIconWrapper onClick={onClose}>

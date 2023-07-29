@@ -52,7 +52,7 @@ const ControlNetOptions = ({
   return (
     <div>
       <SubSectionTitle>Control Type</SubSectionTitle>
-      <FlexRow style={{ columnGap: '4px', position: 'relative' }}>
+      <FlexRow gap={4} style={{ position: 'relative' }}>
         <Select
           options={CONTROL_TYPE_ARRAY.map((value) => {
             if (value === '') {

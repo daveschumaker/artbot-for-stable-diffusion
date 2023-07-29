@@ -23,7 +23,7 @@ export default function ClipSkip({
   const [showDropdown, setShowDropdown] = useState(false)
 
   return (
-    <FlexRow style={{ columnGap: '4px', position: 'relative' }}>
+    <FlexRow gap={4} style={{ position: 'relative' }}>
       {input.useMultiClip && (
         <div className="mb-4 w-full">
           <SubSectionTitle>

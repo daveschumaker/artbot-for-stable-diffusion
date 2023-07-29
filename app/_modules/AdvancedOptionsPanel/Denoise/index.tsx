@@ -29,7 +29,7 @@ export default function Denoise({
   const [showDropdown, setShowDropdown] = useState(false)
 
   return (
-    <FlexRow style={{ columnGap: '4px', position: 'relative' }}>
+    <FlexRow gap={4} style={{ position: 'relative' }}>
       {input.useMultiDenoise && (
         <div className="mb-4 w-full">
           <SubSectionTitle>

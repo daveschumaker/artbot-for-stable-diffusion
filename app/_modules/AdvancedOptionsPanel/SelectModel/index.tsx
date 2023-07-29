@@ -24,6 +24,8 @@ import { modelStore } from 'store/modelStore'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import TextTooltipRow from 'app/_components/TextTooltipRow'
 import SelectModelDetails from '../ModelDetails/modelDetails'
+import ModelsInfoModal from 'app/_modules/ModelsInfoModal'
+import { useModal } from '@ebay/nice-modal-react'
 
 interface SelectModelProps extends GetSetPromptInput {
   disabled?: boolean
@@ -36,11 +38,14 @@ const SelectModel = ({
   input,
   setInput
 }: SelectModelProps) => {
+  const modelsInfoModal = useModal(ModelsInfoModal)
+
   const { modelDetails } = useStore(modelStore)
   const [favoriteModelsCount, setFavoriteModelsCount] = useState(0)
   const [modelsOptions] = useAvailableModels({ input })
   const [showSettingsDropdown, setShowSettingsDropdown] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
+  const [showModelsInfo, setShowModelsInfo] = useState(false)
   const [showMultiModel, setShowMultiModel] = useState(false)
   const [showFilter, setShowFilter] = useState(false)
   const [filterMode, setFilterMode] = useState('all')
@@ -210,166 +215,168 @@ const SelectModel = ({
           width: '100%'
         }}
       >
-        {showDetails && (
-          <DropdownOptions
-            handleClose={() => setShowDetails(false)}
-            title="Model details"
-            top="46px"
-          >
-            <SelectModelDetails
-              models={input.models}
-              multiModels={input.useAllModels || input.useFavoriteModels}
-            />
-          </DropdownOptions>
-        )}
-        {showFilter && (
-          <DropdownOptions
-            handleClose={() => setShowFilter(false)}
-            title="Filter models"
-            top="46px"
-          >
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                rowGap: '8px',
-                padding: '8px 0'
-              }}
+        <>
+          {showDetails && (
+            <DropdownOptions
+              handleClose={() => setShowDetails(false)}
+              title="Model details"
+              top="46px"
             >
-              <Checkbox
-                label={`Show favorite models`}
-                checked={filterMode === 'favorites'}
-                onChange={() =>
-                  filterMode === 'favorites'
-                    ? setFilterMode('all')
-                    : setFilterMode('favorites')
-                }
+              <SelectModelDetails
+                models={input.models}
+                multiModels={input.useAllModels || input.useFavoriteModels}
               />
-              <Checkbox
-                label={`Show SFW only`}
-                checked={filterMode === 'sfw'}
-                onChange={() =>
-                  filterMode === 'sfw'
-                    ? setFilterMode('all')
-                    : setFilterMode('sfw')
-                }
-              />
-              <Checkbox
-                label={`Show NSFW only`}
-                checked={filterMode === 'nsfw'}
-                onChange={() =>
-                  filterMode === 'nsfw'
-                    ? setFilterMode('all')
-                    : setFilterMode('nsfw')
-                }
-              />
-              <Checkbox
-                label={`Show inpainting`}
-                checked={filterMode === 'inpainting'}
-                onChange={() =>
-                  filterMode === 'inpainting'
-                    ? setFilterMode('all')
-                    : setFilterMode('inpainting')
-                }
-              />
-            </div>
-          </DropdownOptions>
-        )}
-        {showSettingsDropdown && (
-          <DropdownOptions
-            handleClose={() => setShowSettingsDropdown(false)}
-            title="Model options"
-            top="46px"
-          >
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                rowGap: '8px',
-                padding: '8px 0'
-              }}
+            </DropdownOptions>
+          )}
+          {showFilter && (
+            <DropdownOptions
+              handleClose={() => setShowFilter(false)}
+              title="Filter models"
+              top="46px"
             >
-              <Checkbox
-                label={`Use all models? (${
-                  validModelsArray({
-                    imageParams: input,
-                    filterNsfw: false
-                  }).length
-                })`}
-                checked={input.useAllModels}
-                onChange={(bool) => {
-                  setInput({ useAllModels: bool, useFavoriteModels: false })
-                  setShowMultiModel(false)
-                }}
-              />
-              <Checkbox
-                label={`Use favorite models? (${favoriteModelsCount})`}
-                checked={input.useFavoriteModels}
-                onChange={(bool) => {
-                  setInput({ useAllModels: false, useFavoriteModels: bool })
-                  setShowMultiModel(false)
-                }}
-              />
-              <Checkbox
-                label="Use multiple models?"
-                checked={showMultiModel}
-                onChange={(bool) => {
-                  setShowMultiModel(bool)
-
-                  setInput({ useAllModels: false, useFavoriteModels: false })
-                  if (!bool && input.models.length === 0) {
-                    // TODO: Set this to user preference, if available.
-                    setInput({ models: ['stable_diffusion'] })
-                  }
-                }}
-              />
               <div
                 style={{
-                  borderBottom: '1px solid var(--input-color)',
-                  width: '100%',
-                  height: '4px',
-                  paddingTop: '4px',
-                  marginBottom: '4px'
+                  display: 'flex',
+                  flexDirection: 'column',
+                  rowGap: '8px',
+                  padding: '8px 0'
                 }}
-              />
-              <FlexRow>
+              >
                 <Checkbox
-                  label="Auto-append model(s) keywords?"
-                  checked={autoKeyword}
+                  label={`Show favorite models`}
+                  checked={filterMode === 'favorites'}
+                  onChange={() =>
+                    filterMode === 'favorites'
+                      ? setFilterMode('all')
+                      : setFilterMode('favorites')
+                  }
+                />
+                <Checkbox
+                  label={`Show SFW only`}
+                  checked={filterMode === 'sfw'}
+                  onChange={() =>
+                    filterMode === 'sfw'
+                      ? setFilterMode('all')
+                      : setFilterMode('sfw')
+                  }
+                />
+                <Checkbox
+                  label={`Show NSFW only`}
+                  checked={filterMode === 'nsfw'}
+                  onChange={() =>
+                    filterMode === 'nsfw'
+                      ? setFilterMode('all')
+                      : setFilterMode('nsfw')
+                  }
+                />
+                <Checkbox
+                  label={`Show inpainting`}
+                  checked={filterMode === 'inpainting'}
+                  onChange={() =>
+                    filterMode === 'inpainting'
+                      ? setFilterMode('all')
+                      : setFilterMode('inpainting')
+                  }
+                />
+              </div>
+            </DropdownOptions>
+          )}
+          {showSettingsDropdown && (
+            <DropdownOptions
+              handleClose={() => setShowSettingsDropdown(false)}
+              title="Model options"
+              top="46px"
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  rowGap: '8px',
+                  padding: '8px 0'
+                }}
+              >
+                <Checkbox
+                  label={`Use all models? (${
+                    validModelsArray({
+                      imageParams: input,
+                      filterNsfw: false
+                    }).length
+                  })`}
+                  checked={input.useAllModels}
                   onChange={(bool) => {
-                    setAutoKeyword(bool)
-                    AppSettings.set('modelAutokeywords', bool)
+                    setInput({ useAllModels: bool, useFavoriteModels: false })
+                    setShowMultiModel(false)
                   }}
                 />
-                <TooltipComponent tooltipId="auto-append-keywords">
-                  <>
-                    Some models utilize keywords to trigger their specific
-                    effects. This option will auto-append all keywords to the
-                    prompt.
-                  </>
-                </TooltipComponent>
-              </FlexRow>
-            </div>
-          </DropdownOptions>
-        )}
-        <FlexRow style={{ columnGap: '4px' }}>
-          <Button onClick={() => setShowDetails(true)}>
-            <IconInfoSquareRounded />
-          </Button>
-          <Button onClick={() => setShowDetails(true)}>
-            <IconList />
-          </Button>
-        </FlexRow>
-        <FlexRow style={{ columnGap: '4px', justifyContent: 'flex-end' }}>
-          <Button onClick={() => setShowFilter(true)}>
-            <IconFilter />
-          </Button>
-          {!hideOptions && (
-            <Button onClick={() => setShowSettingsDropdown(true)}>
-              <IconSettings />
-            </Button>
+                <Checkbox
+                  label={`Use favorite models? (${favoriteModelsCount})`}
+                  checked={input.useFavoriteModels}
+                  onChange={(bool) => {
+                    setInput({ useAllModels: false, useFavoriteModels: bool })
+                    setShowMultiModel(false)
+                  }}
+                />
+                <Checkbox
+                  label="Use multiple models?"
+                  checked={showMultiModel}
+                  onChange={(bool) => {
+                    setShowMultiModel(bool)
+
+                    setInput({ useAllModels: false, useFavoriteModels: false })
+                    if (!bool && input.models.length === 0) {
+                      // TODO: Set this to user preference, if available.
+                      setInput({ models: ['stable_diffusion'] })
+                    }
+                  }}
+                />
+                <div
+                  style={{
+                    borderBottom: '1px solid var(--input-color)',
+                    width: '100%',
+                    height: '4px',
+                    paddingTop: '4px',
+                    marginBottom: '4px'
+                  }}
+                />
+                <FlexRow>
+                  <Checkbox
+                    label="Auto-append model(s) keywords?"
+                    checked={autoKeyword}
+                    onChange={(bool) => {
+                      setAutoKeyword(bool)
+                      AppSettings.set('modelAutokeywords', bool)
+                    }}
+                  />
+                  <TooltipComponent tooltipId="auto-append-keywords">
+                    <>
+                      Some models utilize keywords to trigger their specific
+                      effects. This option will auto-append all keywords to the
+                      prompt.
+                    </>
+                  </TooltipComponent>
+                </FlexRow>
+              </div>
+            </DropdownOptions>
           )}
-        </FlexRow>
+          <FlexRow gap={4}>
+            <Button onClick={() => setShowDetails(true)}>
+              <IconInfoSquareRounded />
+            </Button>
+            <Button onClick={() => modelsInfoModal.show()}>
+              <IconList />
+            </Button>
+          </FlexRow>
+          <FlexRow gap={4} style={{ justifyContent: 'flex-end' }}>
+            <Button onClick={() => setShowFilter(true)}>
+              <IconFilter />
+            </Button>
+            {!hideOptions && (
+              <Button onClick={() => setShowSettingsDropdown(true)}>
+                <IconSettings />
+              </Button>
+            )}
+          </FlexRow>
+        </>
       </FlexRow>
     </Section>
   )

@@ -186,7 +186,7 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
         <FlexRow style={{ fontSize: '12px', paddingLeft: '2px' }}>
           {input.width} w x {input.height} h
         </FlexRow>
-        <FlexRow style={{ columnGap: '4px', justifyContent: 'flex-end' }}>
+        <FlexRow gap={4} style={{ justifyContent: 'flex-end' }}>
           <Button onClick={() => setShowOptions(true)}>
             <IconEdit />
           </Button>
