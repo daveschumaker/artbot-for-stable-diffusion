@@ -2,7 +2,6 @@ import Section from 'app/_components/Section'
 import AlertDialogBox from 'components/UI/AlertDialogBox'
 import PageTitle from 'app/_components/PageTitle'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
-import ReactSwitch from 'react-switch'
 import AppSettings from 'models/AppSettings'
 import MaxWidth from 'components/UI/MaxWidth'
 import Select from 'app/_components/Select'
@@ -12,6 +11,8 @@ import { Button } from 'components/UI/Button'
 import { db, generateThumbnails } from 'utils/db'
 import { deletePendingJobs } from 'controllers/pendingJobsCache'
 import { basePath } from 'BASE_PATH'
+import InputSwitchV2 from 'app/_modules/AdvancedOptionsPanel/InputSwitchV2'
+import FlexCol from 'app/_components/FlexCol'
 
 const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
   const [processType, setProcessType] = useState<string | null>(null)
@@ -47,39 +48,41 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
       )}
       <Section>
         <PageTitle as="h2">ArtBot Preferences</PageTitle>
-        <SubSectionTitle>
-          <strong>Stay on create page?</strong>
-          <div className="block w-full mt-2 mb-2 text-xs">
-            After clicking &quot;create&quot; on the image generation page, stay
-            on the page, rather than show pending items.
-          </div>
-        </SubSectionTitle>
-        <div className="flex flex-row items-center gap-2">
-          <ReactSwitch
-            onChange={() => {
-              if (componentState.stayOnCreate) {
-                handleSwitchSelect('stayOnCreate', false)
-              } else {
-                handleSwitchSelect('stayOnCreate', true)
-              }
-            }}
-            checked={componentState.stayOnCreate}
-          />
+      </Section>
+      <Section pb={12}>
+        <InputSwitchV2
+          label={<strong>Stay on create page?</strong>}
+          handleSwitchToggle={() => {
+            if (componentState.stayOnCreate) {
+              handleSwitchSelect('stayOnCreate', false)
+            } else {
+              handleSwitchSelect('stayOnCreate', true)
+            }
+          }}
+          checked={componentState.stayOnCreate}
+        />
+        <div
+          style={{ fontSize: '12px', maxWidth: '512px', paddingLeft: '64px' }}
+        >
+          After clicking &quot;create&quot; on the image generation page, stay
+          on the page, rather than show pending items.
         </div>
       </Section>
-      <Section>
+      <Section pb={12}>
         <SubSectionTitle>
           <strong>Save on create?</strong>
-          <div className="block w-full mt-2 mb-2 text-xs">
-            After clicking &quot;create&quot; on the image generation page,
-            preserve the following settings. (All other settings will be
-            remembered.)
-          </div>
         </SubSectionTitle>
-        <div className="flex flex-row items-center gap-2 mt-2">
-          <div className="w-[100px] text-sm">Prompt?</div>
-          <ReactSwitch
-            onChange={() => {
+        <div
+          style={{ fontSize: '12px', maxWidth: '512px', paddingBottom: '12px' }}
+        >
+          After clicking &quot;create&quot; on the image generation page,
+          preserve the following settings. (All other settings will be
+          remembered.)
+        </div>
+        <FlexCol style={{ rowGap: '8px' }}>
+          <InputSwitchV2
+            label={<strong>Prompt?</strong>}
+            handleSwitchToggle={() => {
               if (componentState.savePromptOnCreate) {
                 handleSwitchSelect('savePromptOnCreate', false)
               } else {
@@ -88,11 +91,9 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
             }}
             checked={componentState.savePromptOnCreate}
           />
-        </div>
-        <div className="flex flex-row items-center gap-2 mt-2">
-          <div className="w-[100px] text-sm">Seed?</div>
-          <ReactSwitch
-            onChange={() => {
+          <InputSwitchV2
+            label={<strong>Seed?</strong>}
+            handleSwitchToggle={() => {
               if (componentState.saveSeedOnCreate) {
                 handleSwitchSelect('saveSeedOnCreate', false)
               } else {
@@ -101,11 +102,9 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
             }}
             checked={componentState.saveSeedOnCreate}
           />
-        </div>
-        <div className="flex flex-row items-center gap-2 mt-2">
-          <div className="w-[100px] text-sm">Canvas</div>
-          <ReactSwitch
-            onChange={() => {
+          <InputSwitchV2
+            label={<strong>Canvas?</strong>}
+            handleSwitchToggle={() => {
               if (componentState.saveCanvasOnCreate) {
                 handleSwitchSelect('saveCanvasOnCreate', false)
               } else {
@@ -114,9 +113,9 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
             }}
             checked={componentState.saveCanvasOnCreate}
           />
-        </div>
+        </FlexCol>
       </Section>
-      <Section>
+      <Section pb={12}>
         <MaxWidth width="240px">
           <SubSectionTitle>
             <strong>Images per page</strong>
@@ -168,78 +167,65 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
           />
         </MaxWidth>
       </Section>
-      <Section>
-        <SubSectionTitle>
-          <strong>Run in background?</strong>
-          <div className="block w-full mt-2 mb-2 text-xs">
-            By default, ArtBot only runs in the active browser tab in order to
-            try and help prevent your IP address from being throttled. You may
-            disable this behavior if you wish.
-          </div>
-        </SubSectionTitle>
-        <div className="flex flex-row items-center gap-2">
-          <ReactSwitch
-            onChange={() => {
-              if (componentState.runInBackground) {
-                handleSwitchSelect('runInBackground', false)
-              } else {
-                handleSwitchSelect('runInBackground', true)
-              }
-            }}
-            checked={componentState.runInBackground}
-          />
+      <Section style={{ paddingTop: '24px' }}>
+        <InputSwitchV2
+          label={<strong>Run in background?</strong>}
+          handleSwitchToggle={() => {
+            if (componentState.runInBackground) {
+              handleSwitchSelect('runInBackground', false)
+            } else {
+              handleSwitchSelect('runInBackground', true)
+            }
+          }}
+          checked={componentState.runInBackground}
+        />
+        <div
+          style={{ fontSize: '12px', maxWidth: '512px', paddingLeft: '64px' }}
+        >
+          By default, ArtBot only runs in the active browser tab in order to try
+          and help prevent your IP address from being throttled. You may disable
+          this behavior if you wish.
         </div>
       </Section>
       <Section>
-        <SubSectionTitle>
-          <strong>Enable page swipe on image gallery page?</strong>
-          <div className="block w-full mt-2 mb-2 text-xs">
-            On mobile devices, this option allows you to swipe between full
-            pages of images on the{' '}
-            <Linker href="/images">images gallery page</Linker>.
-          </div>
-        </SubSectionTitle>
-        <MaxWidth
-          // @ts-ignore
-          width="240px"
+        <InputSwitchV2
+          label={<strong>Enable page swipe on image gallery page?</strong>}
+          handleSwitchToggle={() => {
+            if (componentState.enableGallerySwipe) {
+              handleSwitchSelect('enableGallerySwipe', false)
+            } else {
+              handleSwitchSelect('enableGallerySwipe', true)
+            }
+          }}
+          checked={componentState.enableGallerySwipe}
+        />
+        <div
+          style={{ fontSize: '12px', maxWidth: '512px', paddingLeft: '64px' }}
         >
-          <ReactSwitch
-            onChange={() => {
-              if (componentState.enableGallerySwipe) {
-                handleSwitchSelect('enableGallerySwipe', false)
-              } else {
-                handleSwitchSelect('enableGallerySwipe', true)
-              }
-            }}
-            checked={componentState.enableGallerySwipe}
-          />
-        </MaxWidth>
+          On mobile devices, this option allows you to swipe between full pages
+          of images on the <Linker href="/images">images gallery page</Linker>.
+        </div>
       </Section>
       <Section>
-        <SubSectionTitle>
-          <strong>Disable new image notification?</strong>
-          <div className="block w-full mt-2 mb-2 text-xs">
-            This option disabled the new image notification toast that pops up
-            in the top right corner of the web app when ArtBot receives a new
-            image from the AI Horde backend.
-          </div>
-        </SubSectionTitle>
-        <MaxWidth
-          // @ts-ignore
-          width="240px"
+        <InputSwitchV2
+          label={<strong>Disable new image notification?</strong>}
+          handleSwitchToggle={() => {
+            handleSwitchSelect(
+              'disableNewImageNotification',
+              !componentState.disableNewImageNotification
+            )
+          }}
+          checked={componentState.disableNewImageNotification}
+        />
+        <div
+          style={{ fontSize: '12px', maxWidth: '512px', paddingLeft: '64px' }}
         >
-          <ReactSwitch
-            onChange={() => {
-              handleSwitchSelect(
-                'disableNewImageNotification',
-                !componentState.disableNewImageNotification
-              )
-            }}
-            checked={componentState.disableNewImageNotification}
-          />
-        </MaxWidth>
+          This option disabled the new image notification toast that pops up in
+          the top right corner of the web app when ArtBot receives a new image
+          from the AI Horde backend.
+        </div>
       </Section>
-      <Section>
+      <Section pb={12}>
         <SubSectionTitle>
           <strong>Generate thumbnails?</strong>
           <div className="block w-full mt-2 mb-2 text-xs">
@@ -279,7 +265,7 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
           </Button>
         </MaxWidth>
       </Section>
-      <Section>
+      <Section pb={12}>
         <SubSectionTitle>
           <strong>Download debugging logs?</strong>
           <div className="block w-full mt-2 mb-2 text-xs">
@@ -301,7 +287,7 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
           </Button>
         </MaxWidth>
       </Section>
-      <Section>
+      <Section pb={12}>
         <SubSectionTitle>
           <strong>Reset ArtBot settings in local storage?</strong>
           <div className="block w-full mt-2 mb-2 text-xs">
@@ -330,7 +316,7 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
           </Button>
         </MaxWidth>
       </Section>
-      <Section>
+      <Section pb={12}>
         <SubSectionTitle>
           <strong>Reset Input Cache?</strong>
           <div className="block w-full mt-2 mb-2 text-xs">

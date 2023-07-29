@@ -68,6 +68,19 @@ export const isInstalledPwa = () => {
   return false
 }
 
+export function generateRandomString(length: number = 6) {
+  const characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  let randomString = ''
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length)
+    randomString += characters[randomIndex]
+  }
+
+  return randomString
+}
+
 // Simple UUID generator for ArtBot's own purposes (tracking groups of images generated at once)
 // Since this will only be used for lookup's on a user's own device, it's safe to use.
 // Do not seriously use it in any sort of mission critical production environment.

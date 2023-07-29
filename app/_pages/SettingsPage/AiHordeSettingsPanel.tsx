@@ -11,13 +11,13 @@ import Input from 'components/UI/Input'
 import { Button } from 'components/UI/Button'
 import EyeIcon from 'components/icons/EyeIcon'
 import Linker from 'components/UI/Linker'
-import ReactSwitch from 'react-switch'
 import Select from 'app/_components/Select'
 import AppSettings from 'models/AppSettings'
 import React from 'react'
 import { fetchUserDetails } from 'api/userInfo'
 import SharedKeys from './SharedKeys'
 import WorkerBlocklist from './WorkerBlocklist'
+import InputSwitchV2 from 'app/_modules/AdvancedOptionsPanel/InputSwitchV2'
 
 const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
   const userStore = useStore(userInfoStore)
@@ -74,11 +74,11 @@ const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
 
   return (
     <>
-      <Section>
+      <Section pb={12}>
         <PageTitle as="h2">AI Horde Settings</PageTitle>
       </Section>
       {loggedIn && username && sharedKey && (
-        <Section>
+        <Section pb={12}>
           <div className="flex flex-col gap-[1px]">
             <div className="text-[16px]">Welcome back,</div>
             <div className="text-[24px] font-[700] mt-[-8px]">
@@ -96,7 +96,7 @@ const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
         </Section>
       )}
       {loggedIn && username && !sharedKey && (
-        <Section>
+        <Section pb={12}>
           <div className="flex flex-col gap-[1px]">
             <div className="text-[16px]">Welcome back,</div>
             <div className="text-[24px] font-[700] mt-[-8px]">{username}</div>
@@ -151,7 +151,7 @@ const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
           </div>
         </Section>
       )}
-      <Section>
+      <Section pb={12}>
         <SubSectionTitle>
           <TextTooltipRow>
             <strong>API key</strong>
@@ -227,31 +227,16 @@ const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
           </div>
         </MaxWidth>
       </Section>
-      {loggedIn && <SharedKeys></SharedKeys>}
-      <Section>
-        <SubSectionTitle>
-          <strong>Share images with LAION</strong>
-          <div className="block w-full mt-2 mb-2 text-xs">
-            Automatically and anonymously share images with LAION (the
-            non-profit that helped to train Stable Diffusion) for use in
-            aesthetic training in order to improve future models. See{' '}
-            <Linker
-              href="https://discord.com/channels/781145214752129095/1107628882783391744"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              this announcement
-            </Linker>{' '}
-            on Discord for more information.{' '}
-            <strong>
-              NOTE: This option is automatically enabled for users without a
-              valid API key.
-            </strong>
-          </div>
-        </SubSectionTitle>
-        <ReactSwitch
+      {loggedIn && (
+        <Section pb={12}>
+          <SharedKeys />
+        </Section>
+      )}
+      <Section pb={12}>
+        <InputSwitchV2
+          label={<strong>Share images with LAION?</strong>}
           disabled={!componentState.apiKey}
-          onChange={() => {
+          handleSwitchToggle={() => {
             if (componentState.shareImagesExternally) {
               handleSwitchSelect('shareImagesExternally', false)
             } else {
@@ -260,32 +245,46 @@ const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
           }}
           checked={componentState.shareImagesExternally}
         />
-      </Section>
-      <Section>
-        <SubSectionTitle>
-          <strong>Allow NSFW images</strong>
-          <div className="block w-full mt-2 mb-2 text-xs">
-            Workers attempt to block NSFW queries. Images flagged by NSFW filter
-            will be blacked out.
-          </div>
-        </SubSectionTitle>
-        <MaxWidth
-          // @ts-ignore
-          width="240px"
+        <div
+          style={{ fontSize: '12px', maxWidth: '512px', paddingLeft: '64px' }}
         >
-          <ReactSwitch
-            onChange={() => {
-              if (componentState.allowNsfwImages) {
-                handleSwitchSelect('allowNsfwImages', false)
-              } else {
-                handleSwitchSelect('allowNsfwImages', true)
-              }
-            }}
-            checked={componentState.allowNsfwImages}
-          />
-        </MaxWidth>
+          Automatically and anonymously share images with LAION (the non-profit
+          that helped to train Stable Diffusion) for use in aesthetic training
+          in order to improve future models. See{' '}
+          <Linker
+            href="https://discord.com/channels/781145214752129095/1107628882783391744"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            this announcement
+          </Linker>{' '}
+          on Discord for more information.{' '}
+          <strong>
+            NOTE: This option is automatically enabled for users without a valid
+            API key.
+          </strong>
+        </div>
       </Section>
-      <Section>
+      <Section pb={12}>
+        <InputSwitchV2
+          label={<strong>Allow NSFW images?</strong>}
+          handleSwitchToggle={() => {
+            if (componentState.allowNsfwImages) {
+              handleSwitchSelect('allowNsfwImages', false)
+            } else {
+              handleSwitchSelect('allowNsfwImages', true)
+            }
+          }}
+          checked={componentState.allowNsfwImages}
+        />
+        <div
+          style={{ fontSize: '12px', maxWidth: '512px', paddingLeft: '64px' }}
+        >
+          Workers attempt to block NSFW queries. Images flagged by NSFW filter
+          will be blacked out.
+        </div>
+      </Section>
+      <Section pb={12}>
         <SubSectionTitle>
           <strong>Worker type</strong>
           <div className="block w-full mt-2 mb-2 text-xs">
@@ -313,32 +312,29 @@ const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
           />
         </MaxWidth>
       </Section>
-      <Section>
-        <SubSectionTitle>
-          <strong>Allow slow workers</strong>
-          <div className="block w-full mt-2 mb-2 text-xs">
-            Allow slower workers to pick up your requests. Disabling this incurs
-            an extra kudos cost.
-          </div>
-        </SubSectionTitle>
-        <MaxWidth
-          // @ts-ignore
-          width="240px"
+      <Section pb={12}>
+        <InputSwitchV2
+          label={<strong>Allow slow workers?</strong>}
+          handleSwitchToggle={() => {
+            if (componentState.slow_workers) {
+              handleSwitchSelect('slow_workers', false)
+            } else {
+              handleSwitchSelect('slow_workers', true)
+            }
+          }}
+          checked={componentState.slow_workers !== false}
+        />
+        <div
+          style={{ fontSize: '12px', maxWidth: '512px', paddingLeft: '64px' }}
         >
-          <ReactSwitch
-            onChange={() => {
-              if (componentState.slow_workers) {
-                handleSwitchSelect('slow_workers', false)
-              } else {
-                handleSwitchSelect('slow_workers', true)
-              }
-            }}
-            checked={componentState.slow_workers !== false}
-          />
-        </MaxWidth>
+          Allow slower workers to pick up your requests. Disabling this incurs
+          an extra kudos cost.
+        </div>
       </Section>
-      <WorkerBlocklist />
-      <Section>
+      <Section pb={12}>
+        <WorkerBlocklist />
+      </Section>
+      <Section pb={12}>
         <SubSectionTitle>
           <strong>Use a specific worker ID</strong>
           <div className="block w-full mt-2 mb-2 text-xs">
