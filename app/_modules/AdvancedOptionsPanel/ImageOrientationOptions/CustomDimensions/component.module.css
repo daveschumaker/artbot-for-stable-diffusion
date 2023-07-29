@@ -1,0 +1,10 @@
+.CustomDimension {
+  border-bottom: 1px dotted var(--input-color);
+  margin-bottom: 4px;
+  padding-bottom: 4px;
+}
+
+.EditIcon {
+  cursor: pointer;
+  color: var(--main-color);
+}

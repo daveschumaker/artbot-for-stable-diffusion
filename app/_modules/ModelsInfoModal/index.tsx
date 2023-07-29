@@ -1,8 +1,10 @@
+/* eslint-disable @next/next/no-img-element */
 import NiceModal, { useModal } from '@ebay/nice-modal-react'
-import { IconArrowBarLeft, IconFilter } from '@tabler/icons-react'
+import { IconArrowBarLeft, IconFilter, IconHeart } from '@tabler/icons-react'
 import FlexRow from 'app/_components/FlexRow'
 import Modal from 'components/Modal'
 import { Button } from 'components/UI/Button'
+import Checkbox from 'components/UI/Checkbox'
 import Input from 'components/UI/Input'
 import { useState } from 'react'
 import { useStore } from 'statery'
@@ -18,12 +20,24 @@ const ModelsInfoModal = () => {
   // NSFW, SFW, Favorites, hasShowcase, NoShowCase, Inpainting, Etc
   const [filterMode, setFilterMode] = useState('')
   const [activeModel, setActiveModel] = useState('')
-  const { availableModelNames, modelDetails } = useStore(modelStore)
+  const { availableModelNames, availableModels, modelDetails } =
+    useStore(modelStore)
 
   const [inputFilter, setInputFilter] = useState('')
 
   const activeModelDetails = modelDetails[activeModel]
-  console.log(`activeModelDetails`, activeModelDetails)
+  let activeModelStats = {}
+
+  for (const key in availableModels) {
+    if (availableModels[key].name === activeModel) {
+      activeModelStats = Object.assign({}, availableModels[key])
+    }
+  }
+
+  const filteredNames = availableModelNames.filter((name) => {
+    if (!inputFilter) return true
+    return name.toLowerCase().indexOf(inputFilter) >= 0
+  })
 
   return (
     <Modal
@@ -49,7 +63,60 @@ const ModelsInfoModal = () => {
                 width: '100%'
               }}
             >
-              Hi
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  rowGap: '8px',
+                  padding: '8px 0'
+                }}
+              >
+                <Checkbox
+                  label={`Favorite models`}
+                  checked={filterMode === 'favorites'}
+                  onChange={() =>
+                    filterMode === 'favorites'
+                      ? setFilterMode('all')
+                      : setFilterMode('favorites')
+                  }
+                />
+                <Checkbox
+                  label={`SFW only`}
+                  checked={filterMode === 'sfw'}
+                  onChange={() =>
+                    filterMode === 'sfw'
+                      ? setFilterMode('all')
+                      : setFilterMode('sfw')
+                  }
+                />
+                <Checkbox
+                  label={`NSFW only`}
+                  checked={filterMode === 'nsfw'}
+                  onChange={() =>
+                    filterMode === 'nsfw'
+                      ? setFilterMode('all')
+                      : setFilterMode('nsfw')
+                  }
+                />
+                <Checkbox
+                  label={`Inpainting`}
+                  checked={filterMode === 'inpainting'}
+                  onChange={() =>
+                    filterMode === 'inpainting'
+                      ? setFilterMode('all')
+                      : setFilterMode('inpainting')
+                  }
+                />
+                <Checkbox
+                  label={`Has showcase image`}
+                  checked={filterMode === 'showcase'}
+                  onChange={() =>
+                    filterMode === 'showcase'
+                      ? setFilterMode('all')
+                      : setFilterMode('showcase')
+                  }
+                />
+              </div>
             </DropdownOptions>
           )}
           <Input
@@ -66,7 +133,6 @@ const ModelsInfoModal = () => {
           </Button>
           <Button
             onClick={() => {
-              console.log(`hii!`)
               setInputFilter('')
             }}
             theme="secondary"
@@ -76,7 +142,7 @@ const ModelsInfoModal = () => {
         </FlexRow>
         <FlexRow gap={8}>
           <div className={styles.ModelsList}>
-            {availableModelNames.map((model) => {
+            {filteredNames.map((model) => {
               return (
                 <div
                   className={styles.ModelsListName}
@@ -95,6 +161,11 @@ const ModelsInfoModal = () => {
             {activeModel && (
               <>
                 <div className={styles.ModelInfoName}>{activeModel}</div>
+                <div className={styles.ModelInfoStats}>
+                  Workers: {activeModelStats.count}
+                  {' / '}
+                  Requests: {activeModelStats.jobs}
+                </div>
                 <div className={styles.ModelInfoDescription}>
                   {activeModelDetails.description}
                 </div>

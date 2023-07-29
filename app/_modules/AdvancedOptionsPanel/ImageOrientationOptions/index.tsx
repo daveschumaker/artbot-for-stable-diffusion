@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useStore } from 'statery'
 import {
-  IconEdit,
   IconLock,
   IconLockOpen,
+  IconRuler,
   IconSettings,
   IconSwitch2
 } from '@tabler/icons-react'
@@ -22,6 +22,7 @@ import { userInfoStore } from 'store/userStore'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import NumericInputSlider from 'app/_modules/AdvancedOptionsPanel/NumericInputSlider'
 import DropdownOptions from 'app/_modules/DropdownOptions'
+import CustomDimensions from './CustomDimensions'
 
 const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
   const [workerDetails] = useWorkerDetails()
@@ -30,6 +31,7 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
   const [keepAspectRatio, setKeepAspectRatio] = useState(false)
   const [targetAspectRatio, setTargetAspectRatio] = useState(0)
   const [showOptions, setShowOptions] = useState(false)
+  const [showCustomDimensions, setShowCustomDimensions] = useState(false)
 
   const getConstraints = () => {
     return {
@@ -187,13 +189,18 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
           {input.width} w x {input.height} h
         </FlexRow>
         <FlexRow gap={4} style={{ justifyContent: 'flex-end' }}>
-          <Button onClick={() => setShowOptions(true)}>
-            <IconEdit />
+          <Button onClick={() => setShowCustomDimensions(true)}>
+            <IconRuler />
           </Button>
           <Button onClick={() => setShowOptions(true)}>
             <IconSettings />
           </Button>
         </FlexRow>
+        {showCustomDimensions && (
+          <CustomDimensions
+            handleClose={() => setShowCustomDimensions(false)}
+          />
+        )}
         {showOptions && (
           <DropdownOptions
             handleClose={() => setShowOptions(false)}

@@ -45,7 +45,6 @@ const SelectModel = ({
   const [modelsOptions] = useAvailableModels({ input })
   const [showSettingsDropdown, setShowSettingsDropdown] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
-  const [showModelsInfo, setShowModelsInfo] = useState(false)
   const [showMultiModel, setShowMultiModel] = useState(false)
   const [showFilter, setShowFilter] = useState(false)
   const [filterMode, setFilterMode] = useState('all')
