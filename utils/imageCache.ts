@@ -42,7 +42,6 @@ import {
   updatePendingJobId,
   updatePendingJobV2
 } from 'controllers/pendingJobsCache'
-import DefaultPromptInput from 'models/DefaultPromptInput'
 
 export const initIndexedDb = () => {}
 

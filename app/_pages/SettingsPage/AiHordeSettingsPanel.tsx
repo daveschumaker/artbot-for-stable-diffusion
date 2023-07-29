@@ -1,3 +1,5 @@
+'use client'
+
 import PageTitle from 'app/_components/PageTitle'
 import Section from 'app/_components/Section'
 import { useStore } from 'statery'
@@ -283,6 +285,39 @@ const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
           Workers attempt to block NSFW queries. Images flagged by NSFW filter
           will be blacked out.
         </div>
+      </Section>
+      <Section pb={12}>
+        <SubSectionTitle>
+          <strong>Max concurrency</strong>
+        </SubSectionTitle>
+        <div style={{ fontSize: '12px', paddingBottom: '8px' }}>
+          Maximum number of concurrent job requests that ArtBot will send to the
+          AI Horde.
+        </div>
+        <MaxWidth width="240px">
+          <div className="flex flex-row gap-2 items-center">
+            <Select
+              options={[
+                { value: 1, label: 1 },
+                { value: 3, label: 3 },
+                { value: 5, label: 5 },
+                { value: 10, label: 10 },
+                { value: 15, label: 15 },
+                { value: 20, label: 20 },
+                { value: 25, label: 25 },
+                { value: 30, label: 30 }
+              ]}
+              isSearchable={false}
+              onChange={(obj: any) => {
+                handleUpdateSelect('maxConcurrency', obj)
+              }}
+              value={{
+                value: componentState.maxConcurrency,
+                label: componentState.maxConcurrency
+              }}
+            />
+          </div>
+        </MaxWidth>
       </Section>
       <Section pb={12}>
         <SubSectionTitle>

@@ -85,6 +85,7 @@ const SettingsPage = () => {
     runInBackground: false,
     saveInputOnCreate: false, // DEPRECATE
 
+    maxConcurrency: 5,
     imagesPerPage: 50,
     savePromptOnCreate: false,
     saveSeedOnCreate: false,
@@ -115,6 +116,7 @@ const SettingsPage = () => {
     updateObj.enableGallerySwipe =
       AppSettings.get('enableGallerySwipe') === false ? false : true
 
+    updateObj.maxConcurrency = AppSettings.get('maxConcurrency') || 5
     updateObj.imagesPerPage = AppSettings.get('imagesPerPage') || 50
     updateObj.saveInputOnCreate = AppSettings.get('saveInputOnCreate') || false // DEPRECATE
     updateObj.savePromptOnCreate =
