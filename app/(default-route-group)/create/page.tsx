@@ -7,7 +7,7 @@ async function getPageData() {
 
   try {
     const availableModelsRes = await fetch(
-      `http://localhost:${process.env.PORT}${basePath}api/models-available`
+      `http://localhost:${process.env.PORT}${basePath}/api/models-available`
     )
     const availableModelsData = (await availableModelsRes.json()) || {}
     availableModels = availableModelsData.models
