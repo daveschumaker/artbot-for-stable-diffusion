@@ -68,7 +68,7 @@ export default function SelectSampler({
             )}
             {!hideOptions && (
               <Button onClick={() => setShowDropdown(true)}>
-                <IconSettings />
+                <IconSettings stroke={1.5} />
               </Button>
             )}
           </FlexRow>

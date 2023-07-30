@@ -1,7 +1,12 @@
+.ContentWrapper {
+  padding-top: 12px;
+}
+
 .CustomDimension {
-  border-bottom: 1px dotted var(--input-color);
-  margin-bottom: 4px;
-  padding-bottom: 4px;
+  border: 1px solid var(--accent-color);
+  border-radius: 4px;
+  padding: 8px;
+  margin-bottom: 8px;
 }
 
 .EditIcon {

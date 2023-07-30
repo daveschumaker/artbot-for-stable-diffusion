@@ -190,10 +190,10 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
         </FlexRow>
         <FlexRow gap={4} style={{ justifyContent: 'flex-end' }}>
           <Button onClick={() => setShowCustomDimensions(true)}>
-            <IconRuler />
+            <IconRuler stroke={1.5} />
           </Button>
           <Button onClick={() => setShowOptions(true)}>
-            <IconSettings />
+            <IconSettings stroke={1.5} />
           </Button>
         </FlexRow>
         {showCustomDimensions && (

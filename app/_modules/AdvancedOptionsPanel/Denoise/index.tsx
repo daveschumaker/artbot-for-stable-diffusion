@@ -105,7 +105,7 @@ export default function Denoise({
         )}
         {!hideOptions && (
           <Button onClick={() => setShowDropdown(true)}>
-            <IconSettings />
+            <IconSettings stroke={1.5} />
           </Button>
         )}
       </div>

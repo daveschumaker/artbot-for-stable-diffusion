@@ -359,19 +359,19 @@ const SelectModel = ({
           )}
           <FlexRow gap={4}>
             <Button onClick={() => setShowDetails(true)}>
-              <IconInfoSquareRounded />
+              <IconInfoSquareRounded stroke={1.5} />
             </Button>
             <Button onClick={() => modelsInfoModal.show()}>
-              <IconList />
+              <IconList stroke={1.5} />
             </Button>
           </FlexRow>
           <FlexRow gap={4} style={{ justifyContent: 'flex-end' }}>
             <Button onClick={() => setShowFilter(true)}>
-              <IconFilter />
+              <IconFilter stroke={1.5} />
             </Button>
             {!hideOptions && (
               <Button onClick={() => setShowSettingsDropdown(true)}>
-                <IconSettings />
+                <IconSettings stroke={1.5} />
               </Button>
             )}
           </FlexRow>
