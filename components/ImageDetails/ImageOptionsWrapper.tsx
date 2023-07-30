@@ -332,7 +332,9 @@ const ImageOptionsWrapper = ({
     window.addEventListener('keydown', handleKeyPress)
     return () => window.removeEventListener('keydown', handleKeyPress)
   }, [
+    confirmationModal,
     handleClose,
+    handleDeleteImageConfirm,
     handleRerollClick,
     imageDetails,
     onFavoriteClick,

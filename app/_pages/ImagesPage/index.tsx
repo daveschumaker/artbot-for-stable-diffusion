@@ -25,7 +25,6 @@ import ImageSquare from 'components/ImageSquare'
 import { trackEvent } from 'api/telemetry'
 import { Button } from 'components/UI/Button'
 import { useWindowSize } from 'hooks/useWindowSize'
-import ImageCard from 'components/ImagesPage/ImageCard/imageCard'
 import DotsVerticalIcon from 'components/icons/DotsVerticalIcon'
 import CircleCheckIcon from 'components/icons/CircleCheckIcon'
 import TextButton from 'components/UI/TextButton'
@@ -50,6 +49,7 @@ import { appInfoStore } from 'store/appStore'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import isMobile from 'is-mobile'
 import { parseQueryString } from 'utils/appUtils'
+import { useModal } from '@ebay/nice-modal-react'
 
 const MenuSeparator = styled.div`
   width: 100%;
@@ -98,6 +98,7 @@ const ButtonContainer = styled.div`
 `
 
 const ImagesPage = () => {
+  const confirmationModal = useModal(ConfirmationModal)
   const LIMIT = AppSettings.get('imagesPerPage') || 50
   const [showImageModal, isImageModalOpen] = useGalleryImageModal()
 
@@ -137,7 +138,6 @@ const ImagesPage = () => {
   const [componentState, setComponentState] = useComponentState({
     deleteMode: false,
     deleteSelection: [],
-    showDeleteModal: false,
     showDownloadModal: false,
 
     offset: Number(searchParams?.get('offset')) || 0,
@@ -212,8 +212,7 @@ const ImagesPage = () => {
     await fetchImages()
     setComponentState({
       deleteMode: false,
-      deleteSelection: [],
-      showDeleteModal: false
+      deleteSelection: []
     })
   }
 
@@ -405,8 +404,7 @@ const ImagesPage = () => {
 
     setComponentState({
       deleteMode: false,
-      deleteSelection: [],
-      showDeleteModal: false
+      deleteSelection: []
     })
   }
 
@@ -440,13 +438,21 @@ const ImagesPage = () => {
       if (componentState.deleteMode && e.key === 'Escape') {
         setComponentState({
           deleteMode: false,
-          deleteSelection: [],
-          showDeleteModal: false
+          deleteSelection: []
         })
       }
 
       if (componentState.deleteMode && e.keyCode === 13) {
-        setComponentState({ showDeleteModal: true })
+        confirmationModal.show({
+          multiImage: componentState.deleteSelection.length > 1,
+          onConfirmClick: handleDeleteImageClick,
+          closeModal: () => {
+            setComponentState({
+              deleteMode: false,
+              deleteSelection: []
+            })
+          }
+        })
       } else if (e.key === 'ArrowLeft' && isImageModalOpen === false) {
         if (isImageModalOpen || currentOffset <= 1) return
         handleLoadMore('prev')
@@ -531,7 +537,16 @@ const ImagesPage = () => {
         <FloatingActionButton
           onClick={() => {
             if (componentState.deleteSelection.length > 0) {
-              setComponentState({ showDeleteModal: true })
+              confirmationModal.show({
+                multiImage: componentState.deleteSelection.length > 1,
+                onConfirmClick: handleDeleteImageClick,
+                closeModal: () => {
+                  setComponentState({
+                    deleteMode: false,
+                    deleteSelection: []
+                  })
+                }
+              })
             }
           }}
         >
@@ -542,17 +557,6 @@ const ImagesPage = () => {
             : '?'}
         </FloatingActionButton>
       )}
-      {/* {componentState.showImageModal && (
-        <ImageModalController
-          onAfterDelete={() => {
-            setComponentState({ updateTimestamp: Date.now() })
-            fetchImages()
-          }}
-          handleClose={() => setComponentState({ showImageModal: false })}
-          imageId={componentState.showImageModal}
-          useFilteredItems={componentState.filterMode !== 'all'}
-        />
-      )} */}
       {componentState.showDownloadModal && (
         <Modal visible={true}>
           <>
@@ -566,19 +570,6 @@ const ImagesPage = () => {
             </div>
           </>
         </Modal>
-      )}
-      {componentState.showDeleteModal && (
-        <ConfirmationModal
-          multiImage={componentState.deleteSelection.length > 1}
-          onConfirmClick={handleDeleteImageClick}
-          closeModal={() => {
-            setComponentState({
-              deleteMode: false,
-              deleteSelection: [],
-              showDeleteModal: false
-            })
-          }}
-        />
       )}
       <Head>
         <title>Your images - ArtBot for Stable Diffusion</title>
@@ -923,7 +914,16 @@ const ImagesPage = () => {
                 color="red"
                 onClick={() => {
                   if (componentState.deleteSelection.length > 0) {
-                    setComponentState({ showDeleteModal: true })
+                    confirmationModal.show({
+                      multiImage: componentState.deleteSelection.length > 1,
+                      onConfirmClick: handleDeleteImageClick,
+                      closeModal: () => {
+                        setComponentState({
+                          deleteMode: false,
+                          deleteSelection: []
+                        })
+                      }
+                    })
                   }
                 }}
                 tabIndex={0}
@@ -1141,29 +1141,6 @@ const ImagesPage = () => {
                 }
               )}
             </>
-          )}
-        {!componentState.isLoading &&
-          componentState.images.length > 0 &&
-          componentState.layoutMode === 'list' &&
-          componentState.images.map(
-            (image: {
-              jobId: string
-              base64String: string
-              thumbnail: string
-              prompt: string
-              timestamp: number
-              seed: number
-              height: number
-              width: number
-            }) => {
-              return (
-                <ImageCard
-                  key={image.jobId}
-                  imageDetails={image}
-                  handleDeleteImageClick={handleDeleteImageClick}
-                />
-              )
-            }
           )}
       </div>
       {!componentState.isLoading && componentState.totalImages > LIMIT && (

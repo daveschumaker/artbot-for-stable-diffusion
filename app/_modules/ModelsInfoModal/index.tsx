@@ -1,12 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 import NiceModal, { useModal } from '@ebay/nice-modal-react'
-import { IconArrowBarLeft, IconFilter, IconHeart } from '@tabler/icons-react'
+import { IconArrowBarLeft, IconFilter } from '@tabler/icons-react'
 import FlexRow from 'app/_components/FlexRow'
 import Modal from 'components/Modal'
 import { Button } from 'components/UI/Button'
 import Checkbox from 'components/UI/Checkbox'
 import Input from 'components/UI/Input'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useStore } from 'statery'
 import { modelStore } from 'store/modelStore'
 import DropdownOptions from '../DropdownOptions'
@@ -26,7 +26,7 @@ const ModelsInfoModal = () => {
   const [inputFilter, setInputFilter] = useState('')
 
   const activeModelDetails = modelDetails[activeModel]
-  let activeModelStats = {}
+  let activeModelStats: any = {}
 
   for (const key in availableModels) {
     if (availableModels[key].name === activeModel) {
@@ -120,7 +120,9 @@ const ModelsInfoModal = () => {
             </DropdownOptions>
           )}
           <Input
-            onChange={(e) => setInputFilter(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setInputFilter(e.target.value)
+            }
             placeholder="Filter models by name"
             value={inputFilter}
           />

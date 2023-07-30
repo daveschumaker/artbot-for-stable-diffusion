@@ -1,5 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-import styled from 'styled-components'
 import { useSwipeable } from 'react-swipeable'
 
 import { setNewImageReady, setShowImageReadyToast } from 'store/appStore'
@@ -10,44 +9,8 @@ import ImageSquare from 'components/ImageSquare'
 import CloseIcon from 'components/icons/CloseIcon'
 import Linker from 'components/UI/Linker'
 import AppSettings from 'models/AppSettings'
-
-const StyledToast = styled.div`
-  align-items: center;
-  background-color: var(--body-color);
-  border-radius: 4px;
-  border: 2px solid var(--border-color);
-  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
-  color: ${(props) => props.theme.text};
-  cursor: pointer;
-  display: flex;
-  flex-direction: row;
-  height: 96px;
-  padding: 8px;
-  position: fixed;
-  right: 8px;
-  top: ${(props) =>
-    props.active ? 'calc(env(safe-area-inset-top) + 8px)' : '-200px'};
-  transition: all 0.4s;
-  width: 300px;
-  z-index: 26;
-`
-
-const StyledClose = styled.div`
-  position: absolute;
-  top: 4px;
-  right: 4px;
-`
-
-const StyledTextPanel = styled.div`
-  display: flex;
-  flex-direction: column;
-  font-size: 14px;
-  height: 80px;
-  justify-content: space-between;
-  padding-top: 20px;
-  padding-bottom: 8px;
-  padding-left: 8px;
-`
+import styles from './toast.module.css'
+import { JobImageDetails } from 'types'
 
 interface ToastProps {
   disableAutoClose: boolean
@@ -77,7 +40,7 @@ export default function Toast({
     delta: 35
   })
 
-  const [imageDetails, setImageDetails] = useState({})
+  const [imageDetails, setImageDetails] = useState<JobImageDetails>()
 
   const fetchImageDetails = async (jobId: string) => {
     const details = await getImageDetails(jobId)
@@ -126,7 +89,10 @@ export default function Toast({
   }
 
   return (
-    <StyledToast active={isActive} {...handlers}>
+    <div
+      className={`${styles.toast} ${isActive ? styles.active : ''}`}
+      {...handlers}
+    >
       {isActive && (
         <>
           <div>
@@ -138,7 +104,7 @@ export default function Toast({
               <ImageSquare imageDetails={imageDetails} size={80} />
             </Linker>
           </div>
-          <StyledTextPanel>
+          <div className={styles.textPanel}>
             <div>Your new image is ready.</div>
             <Linker
               disableLinkClick
@@ -147,12 +113,12 @@ export default function Toast({
             >
               Check it out!
             </Linker>
-          </StyledTextPanel>
-          <StyledClose onClick={handleClose}>
+          </div>
+          <div onClick={handleClose} className={styles.close}>
             <CloseIcon />
-          </StyledClose>
+          </div>
         </>
       )}
-    </StyledToast>
+    </div>
   )
 }

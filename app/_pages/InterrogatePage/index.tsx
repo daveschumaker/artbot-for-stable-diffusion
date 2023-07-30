@@ -21,7 +21,7 @@ import { getImageForInterrogation } from 'utils/interrogateUtils'
 import PlusIcon from 'components/icons/PlusIcon'
 import RecycleIcon from 'components/icons/RecycleIcon'
 import { clientHeader } from 'utils/appUtils'
-import FlexRow from 'components/UI/FlexRow'
+import FlexRow from 'app/_components/FlexRow'
 import TextButton from 'components/UI/TextButton'
 import { basePath } from 'BASE_PATH'
 

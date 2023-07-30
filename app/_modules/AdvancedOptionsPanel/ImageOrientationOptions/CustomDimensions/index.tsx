@@ -9,7 +9,7 @@ import NumberInput from 'app/_components/NumberInput'
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import { Button } from 'components/UI/Button'
 import Input from 'components/UI/Input'
-import { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { SetInput } from 'types/artbot'
 import styles from './component.module.css'
 
@@ -21,10 +21,10 @@ interface Props {
 }
 
 export default function CustomDimensions({ handleClose, setInput }: Props) {
-  const [customValues, setCustomValues] = useState([])
+  const [customValues, setCustomValues] = useState<any[]>([])
   const [editMode, setEditMode] = useState(false)
 
-  const [idx, setIdx] = useState(0)
+  const [idx, setIdx] = useState<number>(0)
   const [name, setName] = useState('')
   const [height, setHeight] = useState(512)
   const [width, setWidth] = useState(512)
@@ -75,7 +75,12 @@ export default function CustomDimensions({ handleClose, setInput }: Props) {
           <>
             <div style={{ paddingBottom: '4px' }}>
               Name:
-              <Input onChange={(e) => setName(e.target.value)} value={name} />
+              <Input
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setName(e.target.value)
+                }
+                value={name}
+              />
             </div>
             <div style={{ paddingBottom: '4px' }}>
               Width:

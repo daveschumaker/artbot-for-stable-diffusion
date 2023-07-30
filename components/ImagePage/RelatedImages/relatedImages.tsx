@@ -19,6 +19,7 @@ import MenuButton from 'app/_components/MenuButton'
 import PageTitle from 'app/_components/PageTitle'
 import TextButton from '../../UI/TextButton'
 import useRelatedImageModal from './useRelatedImageModal'
+import { useModal } from '@ebay/nice-modal-react'
 
 const NonLink = styled.div`
   cursor: pointer;
@@ -74,12 +75,12 @@ const RelatedImages = ({
   onModalOpen: (value: boolean) => void
   updateRelatedImages: (parentJobId: string) => void
 }) => {
+  const confirmationModal = useModal(ConfirmationModal)
   useScrollToLocation()
   const size = useWindowSize()
   const [componentState, setComponentState] = useComponentState({
     deleteMode: false,
     deleteSelection: [],
-    showDeleteModal: false,
     initialIndexJobId: 0
   })
 
@@ -109,8 +110,7 @@ const RelatedImages = ({
 
     setComponentState({
       deleteMode: false,
-      deleteSelection: [],
-      showDeleteModal: false
+      deleteSelection: []
     })
   }
 
@@ -171,26 +171,22 @@ const RelatedImages = ({
         <FloatingActionButton
           onClick={() => {
             if (componentState.deleteSelection.length > 0) {
-              setComponentState({ showDeleteModal: true })
+              confirmationModal.show({
+                multiImage: componentState.deleteSelection.length > 1,
+                onConfirmClick: handleDeleteImageClick,
+                closeModal: () => {
+                  setComponentState({
+                    deleteMode: false,
+                    deleteSelection: []
+                  })
+                }
+              })
             }
           }}
         >
           <TrashIcon />
           DELETE ({componentState.deleteSelection.length})?
         </FloatingActionButton>
-      )}
-      {componentState.showDeleteModal && (
-        <ConfirmationModal
-          multiImage={componentState.deleteSelection.length > 1}
-          onConfirmClick={() => handleDeleteImageClick()}
-          closeModal={() => {
-            setComponentState({
-              deleteMode: false,
-              deleteSelection: [],
-              showDeleteModal: false
-            })
-          }}
-        />
       )}
       <div className="flex flex-row w-full items-center">
         <div className="inline-block w-1/2">
@@ -249,7 +245,16 @@ const RelatedImages = ({
                 color="red"
                 onClick={() => {
                   if (componentState.deleteSelection.length > 0) {
-                    setComponentState({ showDeleteModal: true })
+                    confirmationModal.show({
+                      multiImage: componentState.deleteSelection.length > 1,
+                      onConfirmClick: handleDeleteImageClick,
+                      closeModal: () => {
+                        setComponentState({
+                          deleteMode: false,
+                          deleteSelection: []
+                        })
+                      }
+                    })
                   }
                 }}
                 tabIndex={0}

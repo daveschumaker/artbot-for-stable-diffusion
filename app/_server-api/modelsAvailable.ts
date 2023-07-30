@@ -60,7 +60,7 @@ export const fetchModelDetails = async () => {
       }
     )
 
-    const data = (await resp.json()) || {}
+    const data: any = (await resp.json()) || {}
 
     if (typeof data === 'object' && !Array.isArray(data) && data !== null) {
       for (const model in data) {

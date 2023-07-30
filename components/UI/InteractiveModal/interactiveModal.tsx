@@ -10,7 +10,7 @@ import styles from './modal.module.css'
 
 interface IStyle {
   height: number | null
-  maxWidth?: number
+  maxWidth?: string
   startAnimation: boolean
 }
 
