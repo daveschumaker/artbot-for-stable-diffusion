@@ -361,7 +361,7 @@ const SelectModel = ({
             <Button onClick={() => setShowDetails(true)}>
               <IconInfoSquareRounded stroke={1.5} />
             </Button>
-            <Button onClick={() => modelsInfoModal.show()}>
+            <Button onClick={() => modelsInfoModal.show({ input })}>
               <IconList stroke={1.5} />
             </Button>
           </FlexRow>

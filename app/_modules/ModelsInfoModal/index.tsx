@@ -11,13 +11,14 @@ import Modal from 'components/Modal'
 import { Button } from 'components/UI/Button'
 import Checkbox from 'components/UI/Checkbox'
 import Input from 'components/UI/Input'
-import React, { useState } from 'react'
+import DefaultPromptInput from 'models/DefaultPromptInput'
+import React, { useEffect, useState } from 'react'
 import { useStore } from 'statery'
 import { modelStore } from 'store/modelStore'
 import DropdownOptions from '../DropdownOptions'
 import styles from './component.module.css'
 
-const ModelsInfoModal = () => {
+const ModelsInfoModal = ({ input }: { input: DefaultPromptInput }) => {
   const modal = useModal()
 
   const [showFilterDropdown, setShowFilterDropdown] = useState(false)
@@ -43,6 +44,12 @@ const ModelsInfoModal = () => {
     if (!inputFilter) return true
     return name.toLowerCase().indexOf(inputFilter) >= 0
   })
+
+  useEffect(() => {
+    if (input.models.length === 1) {
+      setActiveModel(input.models[0])
+    }
+  }, [])
 
   return (
     <Modal
