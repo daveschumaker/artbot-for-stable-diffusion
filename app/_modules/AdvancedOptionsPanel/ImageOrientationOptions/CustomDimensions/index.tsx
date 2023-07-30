@@ -10,13 +10,14 @@ import DropdownOptions from 'app/_modules/DropdownOptions'
 import { Button } from 'components/UI/Button'
 import Input from 'components/UI/Input'
 import { useCallback, useEffect, useState } from 'react'
-import { GetSetPromptInput } from 'types/artbot'
+import { SetInput } from 'types/artbot'
 import styles from './component.module.css'
 
 const key = 'CustomDimensions'
 
-interface Props extends GetSetPromptInput {
+interface Props {
   handleClose: () => any
+  setInput: SetInput
 }
 
 export default function CustomDimensions({ handleClose, setInput }: Props) {
@@ -43,8 +44,8 @@ export default function CustomDimensions({ handleClose, setInput }: Props) {
     copyArray[idx] = [name, width, height]
     setCustomValues(copyArray)
 
-    // const jsonString = JSON.stringify(customValues)
-    // localStorage.setItem(key, jsonString)
+    const jsonString = JSON.stringify(copyArray)
+    localStorage.setItem(key, jsonString)
   }, [customValues, height, idx, name, width])
 
   const deleteValue = useCallback(
@@ -52,6 +53,9 @@ export default function CustomDimensions({ handleClose, setInput }: Props) {
       const copyArray = [...customValues]
       copyArray.splice(idx, 1)
       setCustomValues(copyArray)
+
+      const jsonString = JSON.stringify(copyArray)
+      localStorage.setItem(key, jsonString)
     },
     [customValues]
   )
@@ -79,7 +83,7 @@ export default function CustomDimensions({ handleClose, setInput }: Props) {
                 min={64}
                 max={2048}
                 onInputChange={(e) => {
-                  setWidth(e.target.value)
+                  setWidth(Number(e.target.value))
                 }}
                 onMinusClick={() => {
                   setWidth(width - 64)
@@ -140,6 +144,11 @@ export default function CustomDimensions({ handleClose, setInput }: Props) {
                   <FlexRow gap={4}>
                     <div
                       onClick={() => {
+                        setInput({
+                          height: arr[2],
+                          width: arr[1],
+                          orientationType: 'custom'
+                        })
                         handleClose()
                       }}
                       style={{ color: 'var(--main-color)', cursor: 'pointer' }}
@@ -178,6 +187,7 @@ export default function CustomDimensions({ handleClose, setInput }: Props) {
                 setHeight(512)
                 setEditMode(true)
               }}
+              style={{ color: 'var(--main-color)', cursor: 'pointer' }}
             >
               Create a new dimension?
             </div>
@@ -195,6 +205,7 @@ export default function CustomDimensions({ handleClose, setInput }: Props) {
                 setHeight(512)
                 setEditMode(true)
               }}
+              style={{ color: 'var(--main-color)', cursor: 'pointer' }}
             >
               Create a new dimension?
             </div>

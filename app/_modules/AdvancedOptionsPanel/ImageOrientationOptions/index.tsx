@@ -198,6 +198,7 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
         </FlexRow>
         {showCustomDimensions && (
           <CustomDimensions
+            setInput={setInput}
             handleClose={() => setShowCustomDimensions(false)}
           />
         )}

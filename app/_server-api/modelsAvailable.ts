@@ -8,6 +8,7 @@
  * where AI Horde API might be slow to respond or is down.
  */
 
+import fetch from 'node-fetch'
 import { clientHeader } from 'utils/appUtils'
 
 // Temporarily import a static version of available models
