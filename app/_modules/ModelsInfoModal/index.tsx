@@ -1,6 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 import NiceModal, { useModal } from '@ebay/nice-modal-react'
-import { IconArrowBarLeft, IconFilter } from '@tabler/icons-react'
+import {
+  IconArrowBarLeft,
+  IconEyeOff,
+  IconFilter,
+  IconHeart
+} from '@tabler/icons-react'
 import FlexRow from 'app/_components/FlexRow'
 import Modal from 'components/Modal'
 import { Button } from 'components/UI/Button'
@@ -162,7 +167,13 @@ const ModelsInfoModal = () => {
             )}
             {activeModel && (
               <>
-                <div className={styles.ModelInfoName}>{activeModel}</div>
+                <FlexRow style={{ justifyContent: 'space-between' }}>
+                  <div className={styles.ModelInfoName}>{activeModel}</div>
+                  <FlexRow gap={8} style={{ justifyContent: 'flex-end' }}>
+                    <IconEyeOff stroke={1.5} />
+                    <IconHeart stroke={1.5} />
+                  </FlexRow>
+                </FlexRow>
                 <div className={styles.ModelInfoStats}>
                   Workers: {activeModelStats.count}
                   {' / '}
