@@ -214,6 +214,7 @@ const ImagesPage = () => {
       deleteMode: false,
       deleteSelection: []
     })
+    confirmationModal.remove()
   }
 
   const handleLoadMore = useCallback(
@@ -440,6 +441,7 @@ const ImagesPage = () => {
           deleteMode: false,
           deleteSelection: []
         })
+        confirmationModal.remove()
       }
 
       if (componentState.deleteMode && e.keyCode === 13) {
@@ -469,9 +471,12 @@ const ImagesPage = () => {
   }, [
     LIMIT,
     componentState.deleteMode,
+    componentState.deleteSelection.length,
     componentState.offset,
     componentState.totalImages,
+    confirmationModal,
     currentOffset,
+    handleDeleteImageClick,
     handleLoadMore,
     isImageModalOpen,
     setComponentState
