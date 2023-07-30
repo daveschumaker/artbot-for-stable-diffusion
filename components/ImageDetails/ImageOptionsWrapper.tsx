@@ -49,6 +49,7 @@ import RefreshIcon from 'components/icons/RefreshIcon'
 import { deletePendingJob } from 'controllers/pendingJobsCache'
 import { getRelatedImages } from 'components/ImagePage/image.controller'
 import { basePath } from 'BASE_PATH'
+import { useModal } from '@ebay/nice-modal-react'
 // import { useModal } from '@ebay/nice-modal-react'
 
 const ImageOptionsWrapper = ({
@@ -71,17 +72,16 @@ const ImageOptionsWrapper = ({
   handleFullScreen: () => any
 }) => {
   const router = useRouter()
-  // const modal = useModal()
+  const confirmationModal = useModal(ConfirmationModal)
   // TODO: FIXME: Blarg!
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const modal = {
-    remove: () => false
-  }
+  // const modal = {
+  //   remove: () => false
+  // }
 
   const [favorited, setFavorited] = useState(imageDetails.favorited)
   const [pendingReroll, setPendingReroll] = useState(false)
   const [pendingUpscale, setPendingUpscale] = useState(false)
-  const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [hasParentJob, setHasParentJob] = useState(false)
   const [hasRelatedImages, setHasRelatedImages] = useState(false)
 
@@ -108,7 +108,7 @@ const ImageOptionsWrapper = ({
 
     copyEditPrompt(imageDetails)
     router.push(`/?edit=true`)
-    modal.remove()
+    handleClose()
   }
 
   const handleDeleteImageConfirm = async () => {
@@ -117,6 +117,7 @@ const ImageOptionsWrapper = ({
     await deleteCompletedImage(imageDetails.jobId as string)
     deletePendingJob(imageDetails.jobId as string)
     getImageDetails.delete(imageDetails.jobId as string) // bust memoization cache
+    confirmationModal.remove()
     handleClose()
   }
 
@@ -167,8 +168,8 @@ const ImageOptionsWrapper = ({
 
     await upscaleImage(imageDetails)
     router.push('/pending')
-    modal.remove()
-  }, [imageDetails, modal, pendingUpscale, router])
+    handleClose()
+  }, [handleClose, imageDetails, pendingUpscale, router])
 
   const onDetachParent = useCallback(async () => {
     await updateCompletedJob(
@@ -298,11 +299,21 @@ const ImageOptionsWrapper = ({
       }
 
       if (e.key === 'Backspace') {
-        setShowDeleteModal(true)
+        confirmationModal.show({
+          onConfirmClick: () => {
+            // setShowDeleteModal(false)
+            handleDeleteImageConfirm()
+          }
+        })
       }
 
       if (e.key === 'Delete') {
-        setShowDeleteModal(true)
+        confirmationModal.show({
+          onConfirmClick: () => {
+            // setShowDeleteModal(false)
+            handleDeleteImageConfirm()
+          }
+        })
       }
 
       if (e.key === 'f') {
@@ -345,15 +356,6 @@ const ImageOptionsWrapper = ({
           }}
         ></div>
       )}
-      {showDeleteModal && (
-        <ConfirmationModal
-          onConfirmClick={() => {
-            setShowDeleteModal(false)
-            handleDeleteImageConfirm()
-          }}
-          closeModal={() => setShowDeleteModal(false)}
-        />
-      )}
       <div
         id="image-options-wrapper"
         className="flex flex-row justify-center w-full mt-3"
@@ -377,7 +379,7 @@ const ImageOptionsWrapper = ({
                   className="text-sm"
                   onClick={() => {
                     router.push(`/image/${imageDetails.jobId}`)
-                    modal.remove()
+                    handleClose()
                   }}
                 >
                   View image details page
@@ -400,7 +402,7 @@ const ImageOptionsWrapper = ({
                 onClick={() => {
                   interrogateImage(imageDetails)
                   router.push(`/interrogate?user-share=true`)
-                  modal.remove()
+                  handleClose()
                 }}
               >
                 Interrogate (img2text)
@@ -414,7 +416,7 @@ const ImageOptionsWrapper = ({
                 onClick={() => {
                   uploadImg2Img(imageDetails)
                   router.push(`/?panel=img2img&edit=true`)
-                  modal.remove()
+                  handleClose()
                 }}
               >
                 Use for img2img
@@ -424,7 +426,7 @@ const ImageOptionsWrapper = ({
                 onClick={() => {
                   uploadInpaint(imageDetails)
                   router.push(`/?panel=inpainting&edit=true`)
-                  modal.remove()
+                  handleClose()
                 }}
               >
                 Use for inpainting
@@ -436,7 +438,7 @@ const ImageOptionsWrapper = ({
                     className="text-sm"
                     onClick={() => {
                       router.push(`/image/${imageDetails.jobId}#related-images`)
-                      modal.remove()
+                      handleClose()
                     }}
                   >
                     View related images
@@ -461,7 +463,7 @@ const ImageOptionsWrapper = ({
                   router.push(
                     `/?prompt=${encodeURIComponent(imageDetails.prompt)}`
                   )
-                  modal.remove()
+                  handleClose()
                 }}
               >
                 Use a prompt from this image
@@ -584,7 +586,13 @@ const ImageOptionsWrapper = ({
           </div>
           <div
             className={clsx(styles['button-icon'])}
-            onClick={() => setShowDeleteModal(true)}
+            onClick={() => {
+              confirmationModal.show({
+                onConfirmClick: () => {
+                  handleDeleteImageConfirm()
+                }
+              })
+            }}
           >
             <TrashIcon />
           </div>
