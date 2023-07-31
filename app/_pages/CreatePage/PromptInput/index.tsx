@@ -120,13 +120,16 @@ export default function PromptInput({ input, setInput }: GetSetPromptInput) {
               onClick={() => promptHistoryModal.show({ setInput })}
               size="small"
             >
-              <IconBook stroke={1.5} /> Prompts
+              <IconBook stroke={1.5} />{' '}
+              <span className={styles.mobileHide}>Prompts</span>
             </Button>
             <Button onClick={() => setShowTags(true)} size="small">
-              <IconTags stroke={1.5} /> Tags
+              <IconTags stroke={1.5} />{' '}
+              <span className={styles.mobileHide}>Tags</span>
             </Button>
             <Button onClick={() => setShowPresets(true)} size="small">
-              <IconCamera stroke={1.5} /> Presets
+              <IconCamera stroke={1.5} />{' '}
+              <span className={styles.mobileHide}>Presets</span>
             </Button>
           </FlexRow>
           <div>
@@ -213,13 +216,15 @@ export default function PromptInput({ input, setInput }: GetSetPromptInput) {
                   }}
                   size="small"
                 >
-                  <IconDeviceFloppy stroke={1.5} /> Save
+                  <IconDeviceFloppy stroke={1.5} />{' '}
+                  <span className={styles.mobileHide}>Save</span>
                 </Button>
                 <Button
                   onClick={() => negativePromptLibraryModal.show({ setInput })}
                   size="small"
                 >
-                  <IconFolder stroke={1.5} /> Load
+                  <IconFolder stroke={1.5} />{' '}
+                  <span className={styles.mobileHide}>Load</span>
                 </Button>
               </FlexRow>
               <div>

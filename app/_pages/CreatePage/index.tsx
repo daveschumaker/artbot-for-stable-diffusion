@@ -446,15 +446,12 @@ const CreatePage = ({ modelDetails = {} }: any) => {
   return (
     <main className="pb-[90px]">
       <div className="flex flex-row items-center w-full">
-        <div className="inline-block w-1/2">
-          <PageTitle>
-            Create a new image{' '}
-            {input.source_processing === 'outpainting' && '(outpainting)'}
-            {input.source_processing === 'inpainting' && '(inpainting)'}
-            {input.source_processing === SourceProcessing.Img2Img &&
-              '(img2img)'}
-          </PageTitle>
-        </div>
+        <PageTitle>
+          Create a new image{' '}
+          {input.source_processing === 'outpainting' && '(outpainting)'}
+          {input.source_processing === 'inpainting' && '(inpainting)'}
+          {input.source_processing === SourceProcessing.Img2Img && '(img2img)'}
+        </PageTitle>
       </div>
       <div className={clsx('mt-0')}>
         {flaggedPromptError && (
