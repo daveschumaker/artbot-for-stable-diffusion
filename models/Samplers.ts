@@ -94,17 +94,28 @@ class Samplers {
     const options: Array<{ value: string; label: string }> = []
 
     for (const [key, value] of Object.entries(Samplers.samplerDetails())) {
-      const filterImg2Img = isImg2Img ? true : true || false
-      if (
-        value.modelValidation(model) &&
-        value.supportsImg2Img === filterImg2Img
-      ) {
-        options.push({
-          value: key,
-          label: key
-        })
+      if (isImg2Img && value.supportsImg2Img === true) {
+        continue
       }
+
+      options.push({
+        value: key,
+        label: key
+      })
     }
+
+    options.sort((a, b) => {
+      const labelA = a.label.toLowerCase()
+      const labelB = b.label.toLowerCase()
+
+      if (labelA < labelB) {
+        return -1
+      }
+      if (labelA > labelB) {
+        return 1
+      }
+      return 0
+    })
 
     if (model !== 'stable_diffusion_2.0') {
       options.push({ value: 'random', label: 'Random!' })
