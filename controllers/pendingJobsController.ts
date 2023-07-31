@@ -107,15 +107,15 @@ const createImageJobs = async () => {
 
 export const updatePendingJobs = async () => {
   await fetchPendingImageJobs()
-  await sleep(2000)
+  await sleep(250)
   updatePendingJobs()
 }
 
 // Monitors pending jobs db to create new jobs
 export const createPendingJobInterval = async () => {
   await fetchPendingImageJobs()
-  await createImageJobs()
-  await sleep(250)
+  createImageJobs()
+  await sleep(10)
   createPendingJobInterval()
 }
 

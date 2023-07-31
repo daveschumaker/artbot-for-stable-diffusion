@@ -259,7 +259,10 @@ const PendingPage = () => {
 
   return (
     <div style={{ overflowAnchor: 'none' }}>
-      <div className="flex flex-row items-center w-full">
+      <div
+        className="flex flex-row items-center w-full"
+        style={{ justifyContent: 'space-between' }}
+      >
         <div className="inline-block w-3/4">
           <PageTitle>Image queue</PageTitle>
         </div>

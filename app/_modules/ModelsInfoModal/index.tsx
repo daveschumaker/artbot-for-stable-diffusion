@@ -385,7 +385,10 @@ const ModelsInfoModal = ({ input }: { input: DefaultPromptInput }) => {
                 )}
                 {activeModelDetails.showcases && (
                   <div className={styles.ModelInfoShowcase}>
-                    <img src={activeModelDetails.showcases[0]} />
+                    <img
+                      src={activeModelDetails.showcases[0]}
+                      alt={`Image showcase for ${activeModel}`}
+                    />
                   </div>
                 )}
               </>

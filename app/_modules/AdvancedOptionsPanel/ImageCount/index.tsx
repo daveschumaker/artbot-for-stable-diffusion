@@ -19,7 +19,7 @@ export default function ImageCount({ input, setInput }: GetSetPromptInput) {
           max={MAX_IMAGES_PER_JOB}
           // disabled={disabled}
           onInputChange={(e) => {
-            setInput({ numImages: e.target.value })
+            setInput({ numImages: Number(e.target.value) })
           }}
           onMinusClick={() => {
             if (input.numImages - 1 < 1) {

@@ -118,13 +118,12 @@ const SelectModel = ({
       const favoriteModels = AppSettings.get('favoriteModels') || {}
       const modelsArray = []
       for (const model in favoriteModels) {
-        if (modelDetails[model]) {
-          modelsArray.push({
-            label: model,
-            name: model,
-            value: model
-          })
-        }
+        modelsArray.push({
+          label: model,
+          name: model,
+          value: model
+        })
+
         modelsArray.push()
       }
 

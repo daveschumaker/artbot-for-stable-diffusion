@@ -196,7 +196,10 @@ const SettingsPage = () => {
         <title>Settings - ArtBot for Stable Diffusion</title>
         <meta name="twitter:title" content="ArtBot - Settings" />
       </Head>
-      <div className="flex flex-row items-center w-full">
+      <div
+        className="flex flex-row items-center w-full"
+        style={{ justifyContent: 'space-between' }}
+      >
         <div className="inline-block w-1/4">
           <PageTitle>Settings</PageTitle>
         </div>
