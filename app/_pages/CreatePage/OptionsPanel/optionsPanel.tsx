@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
-import SectionTitle from 'app/_components/SectionTitle'
 import Img2ImgPanel from '../Img2ImgPanel'
 import Uploader from 'app/_modules/Uploader'
 import { clearCanvasStore, setI2iUploaded } from 'store/canvasStore'
@@ -14,6 +13,7 @@ import AdvancedOptionsPanel from 'app/_modules/AdvancedOptionsPanel'
 import WarningPanel from 'app/_modules/WarningPanel'
 import Editor from 'app/_modules/Editor'
 import Panel from 'app/_components/Panel'
+import FlexRow from 'app/_components/FlexRow'
 
 const removeImageCanvasData = {
   canvasData: null,
@@ -71,14 +71,7 @@ const OptionsPanel = ({ input, setInput }: Props) => {
 
   return (
     <Panel style={{ overflow: 'unset' }}>
-      <SectionTitle>
-        {activeNav === 'advanced' && `Advanced Options`}
-        {activeNav === 'img2img' && `Img2Img (source file)`}
-        {/* {activeNav === 'draw' && `Draw (img2img)`} */}
-        {activeNav === 'inpainting' &&
-          `Inpainting / Outpainting / Img2Img Mask`}
-      </SectionTitle>
-      <ul className="flex flex-row gap-1 md:gap-4 mb-3 text-sm md:text-base">
+      <FlexRow gap={8} pb={12} style={{ justifyContent: 'flex-end' }}>
         <div
           className={clsx(
             styles.NavItem,
@@ -89,7 +82,7 @@ const OptionsPanel = ({ input, setInput }: Props) => {
             router.push(`/create`)
           }}
         >
-          [ advanced ]
+          Options
         </div>
         <div
           className={clsx(
@@ -101,7 +94,7 @@ const OptionsPanel = ({ input, setInput }: Props) => {
             setActiveNav('img2img')
           }}
         >
-          [ img2img ]
+          Image-to-image
         </div>
         {/* <NavItem
           active={activeNav === 'draw'}
@@ -122,9 +115,9 @@ const OptionsPanel = ({ input, setInput }: Props) => {
             setActiveNav('inpainting')
           }}
         >
-          [ inpainting / outpainting ]
+          Inpainting
         </div>
-      </ul>
+      </FlexRow>
       {activeNav === 'advanced' && (
         <AdvancedOptionsPanel input={input} setInput={setInput} />
       )}
