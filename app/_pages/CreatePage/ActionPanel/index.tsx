@@ -68,7 +68,7 @@ const ActionPanel = ({
                 onClick={resetInput}
               >
                 <span>
-                  <IconTrash />
+                  <IconTrash stroke={1.5} />
                 </span>
                 <span>Reset all?</span>
               </Button>
@@ -79,14 +79,14 @@ const ActionPanel = ({
                 disabled={disableSubmit || pending || areThereCriticalErrors()}
                 width="100px"
               >
-                <span>{pending ? '' : <IconSquarePlus />}</span>
+                <span>{pending ? '' : <IconSquarePlus stroke={1.5} />}</span>
                 {pending ? 'Creating...' : 'Create'}
               </Button>
               <Button
                 disabled={!input.prompt}
                 onClick={() => setShowDryRun(true)}
               >
-                <IconCalculator />
+                <IconCalculator stroke={1.5} />
               </Button>
 
               {showDryRun && (

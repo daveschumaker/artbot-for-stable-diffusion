@@ -37,6 +37,8 @@ import { handleCreateClick } from './createPage.controller'
 import PromptInput from 'app/_pages/CreatePage/PromptInput'
 import { CreatePageQueryParams } from 'types/artbot'
 import OptionsPanel from 'app/_pages/CreatePage/OptionsPanel'
+import FlexRow from 'app/_components/FlexRow'
+import CreatePageSettings from './Settings'
 
 const defaultState: DefaultPromptInput = new DefaultPromptInput()
 
@@ -470,19 +472,25 @@ const CreatePage = ({ modelDetails = {} }: any) => {
 
         <PromptInput input={input} setInput={setInput} />
 
-        <ActionPanel
-          errors={errors}
-          input={input}
-          setInput={setInput}
-          resetInput={resetInput}
-          handleSubmit={handleSubmit}
-          pending={pending}
-          totalImagesRequested={totalImagesRequested}
-          loggedIn={loggedIn}
-          totalKudosCost={totalKudosCost}
-          kudosPerImage={kudosPerImage}
-          showStylesDropdown
-        />
+        <FlexRow
+          gap={4}
+          style={{ alignItems: 'flex-start', position: 'relative' }}
+        >
+          <CreatePageSettings />
+          <ActionPanel
+            errors={errors}
+            input={input}
+            setInput={setInput}
+            resetInput={resetInput}
+            handleSubmit={handleSubmit}
+            pending={pending}
+            totalImagesRequested={totalImagesRequested}
+            loggedIn={loggedIn}
+            totalKudosCost={totalKudosCost}
+            kudosPerImage={kudosPerImage}
+            showStylesDropdown
+          />
+        </FlexRow>
       </div>
 
       <OptionsPanel input={input} setInput={setInput} />

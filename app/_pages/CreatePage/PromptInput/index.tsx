@@ -13,7 +13,7 @@ import {
 import styles from './promptInput.module.css'
 import { Button } from 'components/UI/Button'
 import { GetSetPromptInput } from 'types/artbot'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import StyleTagsDropdown from './StyleTagsDropdown'
 import StylePresetsDropdown from './StylePresetsDropdown'
@@ -27,8 +27,10 @@ import Accordion from 'app/_components/Accordion'
 import AccordionItem from 'app/_components/AccordionItem'
 import KeywordsDropdown from './KeywordsDropdown'
 import { hasKeywords } from './KeywordsDropdown/keywordsController'
+import AppSettings from 'models/AppSettings'
 
 export default function PromptInput({ input, setInput }: GetSetPromptInput) {
+  const [negativePanelOpen, setNegativePanelOpen] = useState(false)
   const negativePromptLibraryModal = useModal(NegativePromptLibraryModal)
   const promptHistoryModal = useModal(PromptHistoryModal)
   const [undoPrompt, setUndoPrompt] = useState('')
@@ -37,6 +39,11 @@ export default function PromptInput({ input, setInput }: GetSetPromptInput) {
   const [showKeywords, setShowKeywords] = useState(false)
   const [showPresets, setShowPresets] = useState(false)
   const [showTags, setShowTags] = useState(false)
+
+  useEffect(() => {
+    const negOpen = AppSettings.get('negativePanelOpen') || false
+    setNegativePanelOpen(negOpen)
+  }, [])
 
   return (
     <div className={styles.wrapper}>
@@ -152,7 +159,7 @@ export default function PromptInput({ input, setInput }: GetSetPromptInput) {
           </div>
         </FlexRow>
       </div>
-      <Accordion>
+      <Accordion forceOpen={negativePanelOpen}>
         <AccordionItem
           title={
             <FlexRow

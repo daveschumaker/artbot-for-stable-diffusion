@@ -1,9 +1,11 @@
 import React, { Children, useState } from 'react'
 
 const Accordion = ({
-  children
+  children,
+  forceOpen
 }: {
   children: React.ReactNode | React.ReactNode[]
+  forceOpen?: boolean
 }) => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
 
@@ -17,7 +19,7 @@ const Accordion = ({
         if (React.isValidElement(child)) {
           return React.cloneElement(child, {
             //@ts-ignore
-            isOpen: activeIndex === index,
+            isOpen: forceOpen || activeIndex === index,
             onClick: () => handleItemClick(index)
           })
         }
