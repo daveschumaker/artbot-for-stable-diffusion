@@ -86,7 +86,7 @@ export default function NumberInput(props: NumberInputProps) {
         style={{
           borderColor: 'var(--input-color)',
           borderLeftColor: buttonsAtEnd ? 'var(--input-color)' : '#e1e1e1',
-          borderRightColor: '#e1e1e1',
+          borderRight: 0,
           borderRadius: 0,
           borderTopLeftRadius: buttonsAtEnd ? '4px' : 0,
           borderBottomLeftRadius: buttonsAtEnd ? '4px' : 0,

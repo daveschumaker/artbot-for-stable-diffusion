@@ -31,9 +31,11 @@ const ModelsInfoModal = ({ input }: { input: DefaultPromptInput }) => {
     {}
   )
 
+  console.log(`hiddenModels`, hiddenModels)
+
   // TODO: Should be an array so you can filter by multiple items:
   // NSFW, SFW, Favorites, hasShowcase, NoShowCase, Inpainting, Etc
-  const [filterMode, setFilterMode] = useState('')
+  const [filterMode, setFilterMode] = useState('all')
   const [activeModel, setActiveModel] = useState('')
   const { availableModelNames, availableModels, modelDetails } =
     useStore(modelStore)
@@ -82,7 +84,39 @@ const ModelsInfoModal = ({ input }: { input: DefaultPromptInput }) => {
     setHiddenModels(hidden)
   }
 
-  const filteredNames = availableModelNames.filter((name) => {
+  const filtered = availableModelNames.filter((name) => {
+    if (filterMode === 'all') return true
+
+    if (filterMode === 'favorites') {
+      return favModels[name] === true
+    }
+
+    if (filterMode === 'hidden') {
+      return hiddenModels[name] === true
+    }
+
+    if (filterMode === 'sfw') {
+      return modelDetails[name] && modelDetails[name].nsfw === false
+    }
+
+    if (filterMode === 'nsfw') {
+      return modelDetails[name] && modelDetails[name].nsfw === true
+    }
+
+    if (filterMode === 'inpainting') {
+      return name.toLowerCase().includes('inpainting')
+    }
+
+    if (filterMode === 'showcase') {
+      return modelDetails[name] && modelDetails[name].showcases
+    }
+
+    if (filterMode === 'trigger') {
+      return modelDetails[name] && modelDetails[name].trigger
+    }
+  })
+
+  const filteredNames = filtered.filter((name) => {
     if (!inputFilter) return true
     return name.toLowerCase().indexOf(inputFilter) >= 0
   })
@@ -102,6 +136,7 @@ const ModelsInfoModal = ({ input }: { input: DefaultPromptInput }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  console.log(`filteredNames`, filteredNames)
   console.log(`activeModelDetails`, activeModelDetails)
 
   return (
@@ -146,6 +181,15 @@ const ModelsInfoModal = ({ input }: { input: DefaultPromptInput }) => {
                   }
                 />
                 <Checkbox
+                  label={`Hidden models`}
+                  checked={filterMode === 'hidden'}
+                  onChange={() =>
+                    filterMode === 'hidden'
+                      ? setFilterMode('all')
+                      : setFilterMode('hidden')
+                  }
+                />
+                <Checkbox
                   label={`SFW only`}
                   checked={filterMode === 'sfw'}
                   onChange={() =>
@@ -179,6 +223,15 @@ const ModelsInfoModal = ({ input }: { input: DefaultPromptInput }) => {
                     filterMode === 'showcase'
                       ? setFilterMode('all')
                       : setFilterMode('showcase')
+                  }
+                />
+                <Checkbox
+                  label={`Has trigger word`}
+                  checked={filterMode === 'trigger'}
+                  onChange={() =>
+                    filterMode === 'trigger'
+                      ? setFilterMode('all')
+                      : setFilterMode('trigger')
                   }
                 />
               </div>
@@ -225,7 +278,7 @@ const ModelsInfoModal = ({ input }: { input: DefaultPromptInput }) => {
             {!activeModel && (
               <div>Select a model to display detailed information.</div>
             )}
-            {activeModel && (
+            {activeModel && !activeModelDetails && (
               <>
                 <FlexRow style={{ justifyContent: 'space-between' }}>
                   <div className={styles.ModelInfoName}>{activeModel}</div>
@@ -238,14 +291,52 @@ const ModelsInfoModal = ({ input }: { input: DefaultPromptInput }) => {
                     }}
                   >
                     <div onClick={() => handleHide(activeModel)}>
-                      {hiddenModels[input.models[0]] ? (
+                      {hiddenModels[activeModel] ? (
                         <IconEyeOff size={28} style={{ color: 'red' }} />
                       ) : (
                         <IconEyeOff size={28} stroke={1.5} />
                       )}
                     </div>
                     <div onClick={() => handleFav(activeModel)}>
-                      {favModels[input.models[0]] ? (
+                      {favModels[activeModel] ? (
+                        <IconHeartFilled size={28} style={{ color: 'red' }} />
+                      ) : (
+                        <IconHeart size={28} stroke={1.5} />
+                      )}
+                    </div>
+                  </FlexRow>
+                </FlexRow>
+                <div className={styles.ModelInfoStats}>
+                  Workers: {activeModelStats.count}
+                  {' / '}
+                  Requests: {activeModelStats.jobs}
+                </div>
+                <div className={styles.ModelInfoDescription}>
+                  No information is available for this model.
+                </div>
+              </>
+            )}
+            {activeModel && activeModelDetails && (
+              <>
+                <FlexRow style={{ justifyContent: 'space-between' }}>
+                  <div className={styles.ModelInfoName}>{activeModel}</div>
+                  <FlexRow
+                    gap={8}
+                    style={{
+                      cursor: 'pointer',
+                      justifyContent: 'flex-end',
+                      width: 'unset'
+                    }}
+                  >
+                    <div onClick={() => handleHide(activeModel)}>
+                      {hiddenModels[activeModel] ? (
+                        <IconEyeOff size={28} style={{ color: 'red' }} />
+                      ) : (
+                        <IconEyeOff size={28} stroke={1.5} />
+                      )}
+                    </div>
+                    <div onClick={() => handleFav(activeModel)}>
+                      {favModels[activeModel] ? (
                         <IconHeartFilled size={28} style={{ color: 'red' }} />
                       ) : (
                         <IconHeart size={28} stroke={1.5} />

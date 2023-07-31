@@ -11,6 +11,7 @@ import { Button } from 'components/UI/Button'
 import Input from 'components/UI/Input'
 import React, { useCallback, useEffect, useState } from 'react'
 import { SetInput } from 'types/artbot'
+import { nearestWholeMultiple } from 'utils/imageUtils'
 import styles from './component.module.css'
 
 const key = 'CustomDimensions'
@@ -91,10 +92,15 @@ export default function CustomDimensions({ handleClose, setInput }: Props) {
                   setWidth(Number(e.target.value))
                 }}
                 onMinusClick={() => {
-                  setWidth(width - 64)
+                  const num = nearestWholeMultiple(Number(width) - 64)
+                  setWidth(num)
                 }}
                 onPlusClick={() => {
-                  setWidth(width + 64)
+                  const num = nearestWholeMultiple(Number(width) + 64)
+                  setWidth(num)
+                }}
+                onBlur={() => {
+                  setWidth(nearestWholeMultiple(width))
                 }}
                 value={width}
                 width="100%"
@@ -109,10 +115,15 @@ export default function CustomDimensions({ handleClose, setInput }: Props) {
                   setHeight(e.target.value)
                 }}
                 onMinusClick={() => {
-                  setHeight(height - 64)
+                  const num = nearestWholeMultiple(Number(height) - 64)
+                  setHeight(num)
                 }}
                 onPlusClick={() => {
-                  setHeight(height + 64)
+                  const num = nearestWholeMultiple(Number(height) + 64)
+                  setHeight(num)
+                }}
+                onBlur={() => {
+                  setHeight(nearestWholeMultiple(height))
                 }}
                 value={height}
                 width="100%"
