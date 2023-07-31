@@ -12,7 +12,7 @@ class DefaultPromptInput {
   hires: boolean = false
   image_is_control: boolean = false
   imageType: string = ''
-  karras: boolean = false
+  karras: boolean = true
   loras: Lora[] = []
   maskData: any | null = ''
   models: Array<string> = ['stable_diffusion']

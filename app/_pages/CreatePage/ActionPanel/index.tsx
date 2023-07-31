@@ -82,12 +82,14 @@ const ActionPanel = ({
                 <span>{pending ? '' : <IconSquarePlus stroke={1.5} />}</span>
                 {pending ? 'Creating...' : 'Create'}
               </Button>
-              <Button
-                disabled={!input.prompt}
-                onClick={() => setShowDryRun(true)}
-              >
-                <IconCalculator stroke={1.5} />
-              </Button>
+              {loggedIn && (
+                <Button
+                  disabled={!input.prompt}
+                  onClick={() => setShowDryRun(true)}
+                >
+                  <IconCalculator stroke={1.5} />
+                </Button>
+              )}
 
               {showDryRun && (
                 <DropdownOptions

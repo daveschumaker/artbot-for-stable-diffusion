@@ -21,7 +21,7 @@ export default function TooltipComponent({
   if (disabled) return null
 
   return (
-    <div className="text-sm font-normal ml-[4px]">
+    <div className="text-sm font-normal" style={{ marginLeft: '4px' }}>
       {!hideIcon && (
         <a id={tooltipId}>
           <InfoIcon stroke="white" fill="#14B8A6" />

@@ -8,6 +8,7 @@ import ReplacementFilterToggle from '../ReplacementFilterToggle'
 import Panel from 'app/_components/Panel'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import InputSwitchV2 from '../InputSwitchV2'
+import SlowWorkers from '../SlowWorkers'
 
 export default function MiscOptions({ input, setInput }: GetSetPromptInput) {
   return (
@@ -40,6 +41,7 @@ export default function MiscOptions({ input, setInput }: GetSetPromptInput) {
               checked={input.karras}
             />
             <HiresFix input={input} setInput={setInput} />
+            <SlowWorkers />
           </FlexibleUnit>
           <FlexibleUnit style={{ rowGap: '8px' }}>
             <AllowNsfwImages />
