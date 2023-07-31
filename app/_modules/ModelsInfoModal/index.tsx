@@ -118,7 +118,7 @@ const ModelsInfoModal = ({ input }: { input: DefaultPromptInput }) => {
 
   const filteredNames = filtered.filter((name) => {
     if (!inputFilter) return true
-    return name.toLowerCase().indexOf(inputFilter) >= 0
+    return name.toLowerCase().indexOf(inputFilter.toLowerCase()) >= 0
   })
 
   useEffect(() => {

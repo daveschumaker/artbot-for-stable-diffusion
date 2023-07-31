@@ -3,7 +3,7 @@ import { GetSetPromptInput } from 'types/artbot'
 import Section from 'app/_components/Section'
 import Select from 'app/_components/Select'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import FlexRow from 'app/_components/FlexRow'
 import { useAvailableModels } from 'hooks/useAvailableModels'
@@ -18,6 +18,7 @@ import TooltipComponent from 'app/_components/TooltipComponent'
 import TextTooltipRow from 'app/_components/TextTooltipRow'
 import ModelsInfoModal from 'app/_modules/ModelsInfoModal'
 import { useModal } from '@ebay/nice-modal-react'
+import ShowSettingsDropDown from './ShowSettingsDropdown'
 
 interface SelectModelProps extends GetSetPromptInput {
   disabled?: boolean
@@ -33,14 +34,11 @@ const SelectModel = ({
   const modelsInfoModal = useModal(ModelsInfoModal)
 
   const { modelDetails } = useStore(modelStore)
-  const [favoriteModelsCount, setFavoriteModelsCount] = useState(0)
   const [modelsOptions] = useAvailableModels({ input })
   const [showSettingsDropdown, setShowSettingsDropdown] = useState(false)
   const [showMultiModel, setShowMultiModel] = useState(false)
   const [showFilter, setShowFilter] = useState(false)
   const [filterMode, setFilterMode] = useState('all')
-
-  const [autoKeyword, setAutoKeyword] = useState(false)
 
   const handleMultiModelSelect = (
     obj: Array<{ value: string; label: string }>
@@ -150,15 +148,6 @@ const SelectModel = ({
     selectValue = { label: 'Use favorite models', value: '' }
   }
 
-  useEffect(() => {
-    const favModels = AppSettings.get('favoriteModels') || {}
-    const numberFaves = Object.keys(favModels).length
-
-    const autoAppend = AppSettings.get('modelAutokeywords') || false
-    setAutoKeyword(autoAppend)
-    setFavoriteModelsCount(numberFaves)
-  }, [])
-
   return (
     <Section
       style={{ display: 'flex', flexDirection: 'column', marginBottom: 0 }}
@@ -260,81 +249,13 @@ const SelectModel = ({
             </DropdownOptions>
           )}
           {showSettingsDropdown && (
-            <DropdownOptions
-              handleClose={() => setShowSettingsDropdown(false)}
-              title="Model options"
-              top="46px"
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  rowGap: '8px',
-                  padding: '8px 0'
-                }}
-              >
-                <Checkbox
-                  label={`Use all models? (${
-                    validModelsArray({
-                      imageParams: input,
-                      filterNsfw: false
-                    }).length
-                  })`}
-                  checked={input.useAllModels}
-                  onChange={(bool) => {
-                    setInput({ useAllModels: bool, useFavoriteModels: false })
-                    setShowMultiModel(false)
-                  }}
-                />
-                <Checkbox
-                  label={`Use favorite models? (${favoriteModelsCount})`}
-                  checked={input.useFavoriteModels}
-                  onChange={(bool) => {
-                    setInput({ useAllModels: false, useFavoriteModels: bool })
-                    setShowMultiModel(false)
-                  }}
-                />
-                <Checkbox
-                  label="Use multiple models?"
-                  checked={showMultiModel}
-                  onChange={(bool) => {
-                    setShowMultiModel(bool)
-
-                    setInput({ useAllModels: false, useFavoriteModels: false })
-                    if (!bool && input.models.length === 0) {
-                      // TODO: Set this to user preference, if available.
-                      setInput({ models: ['stable_diffusion'] })
-                    }
-                  }}
-                />
-                <div
-                  style={{
-                    borderBottom: '1px solid var(--input-color)',
-                    width: '100%',
-                    height: '4px',
-                    paddingTop: '4px',
-                    marginBottom: '4px'
-                  }}
-                />
-                <FlexRow>
-                  <Checkbox
-                    label="Auto-append model(s) keywords?"
-                    checked={autoKeyword}
-                    onChange={(bool) => {
-                      setAutoKeyword(bool)
-                      AppSettings.set('modelAutokeywords', bool)
-                    }}
-                  />
-                  <TooltipComponent tooltipId="auto-append-keywords">
-                    <>
-                      Some models utilize keywords to trigger their specific
-                      effects. This option will auto-append all keywords to the
-                      prompt.
-                    </>
-                  </TooltipComponent>
-                </FlexRow>
-              </div>
-            </DropdownOptions>
+            <ShowSettingsDropDown
+              input={input}
+              setInput={setInput}
+              setShowMultiModel={setShowMultiModel}
+              setShowSettingsDropdown={setShowSettingsDropdown}
+              showMultiModel={showMultiModel}
+            />
           )}
           <FlexRow gap={4}>
             <Button onClick={() => modelsInfoModal.show({ input })}>
