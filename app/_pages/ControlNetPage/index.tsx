@@ -43,7 +43,6 @@ import MiscOptions from 'app/_modules/AdvancedOptionsPanel/MiscOptions'
 import Seed from 'app/_modules/AdvancedOptionsPanel/Seed'
 import Steps from 'app/_modules/AdvancedOptionsPanel/Steps'
 import Guidance from 'app/_modules/AdvancedOptionsPanel/Guidance'
-import SelectModelDetails from 'app/_modules/AdvancedOptionsPanel/ModelDetails/modelDetails'
 import Denoise from 'app/_modules/AdvancedOptionsPanel/Denoise'
 import ClipSkip from 'app/_modules/AdvancedOptionsPanel/ClipSkip'
 import { basePath } from 'BASE_PATH'
@@ -356,10 +355,6 @@ const ControlNetPage = () => {
           <FlexibleRow>
             <FlexibleUnit>
               <SelectModel input={input} setInput={setInput} />
-              <SelectModelDetails
-                models={input.models}
-                multiModels={input.useAllModels || input.useFavoriteModels}
-              />
             </FlexibleUnit>
             <FlexibleUnit>
               <Section>

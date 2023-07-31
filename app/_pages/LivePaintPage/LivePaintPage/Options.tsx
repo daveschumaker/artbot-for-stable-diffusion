@@ -10,7 +10,6 @@ import FlexibleUnit from 'app/_components/FlexibleUnit'
 import Steps from 'app/_modules/AdvancedOptionsPanel/Steps'
 import Guidance from 'app/_modules/AdvancedOptionsPanel/Guidance'
 import Seed from 'app/_modules/AdvancedOptionsPanel/Seed'
-import SelectModelDetails from 'app/_modules/AdvancedOptionsPanel/ModelDetails/modelDetails'
 import Denoise from 'app/_modules/AdvancedOptionsPanel/Denoise'
 import ClipSkip from 'app/_modules/AdvancedOptionsPanel/ClipSkip'
 
@@ -78,10 +77,6 @@ export const LivePaintOptions = ({ input, setInput }: any) => {
       <FlexibleRow>
         <FlexibleUnit>
           <SelectModel input={input} setInput={setInput} hideOptions />
-          <SelectModelDetails
-            models={input.models}
-            multiModels={input.useAllModels || input.useFavoriteModels}
-          />
         </FlexibleUnit>
         <FlexibleUnit>
           <div></div>

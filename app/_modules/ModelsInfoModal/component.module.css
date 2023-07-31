@@ -100,7 +100,7 @@
 
 .ModelInfoName {
   font-weight: 700;
-  padding-bottom: 2px;
+  /* padding-bottom: 2px; */
 }
 
 .ModelInfoStats {
@@ -115,5 +115,7 @@
   padding-bottom: 8px;
 }
 
-.ModelInfoShowcase {
+.ModelInfoTrigger {
+  font-size: 14px;
+  padding-bottom: 8px;
 }

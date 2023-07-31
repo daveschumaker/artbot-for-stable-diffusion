@@ -1,21 +1,14 @@
 import { GetSetPromptInput } from 'types/artbot'
 
 import Section from 'app/_components/Section'
-// import ImageModels from 'models/ImageModels'
 import Select from 'app/_components/Select'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { useEffect, useState } from 'react'
 import DropdownOptions from 'app/_modules/DropdownOptions'
-// import styles from './component.module.css'
 import FlexRow from 'app/_components/FlexRow'
 import { useAvailableModels } from 'hooks/useAvailableModels'
 import { Button } from 'components/UI/Button'
-import {
-  IconFilter,
-  IconInfoSquareRounded,
-  IconList,
-  IconSettings
-} from '@tabler/icons-react'
+import { IconFilter, IconList, IconSettings } from '@tabler/icons-react'
 import Checkbox from 'components/UI/Checkbox'
 import { validModelsArray } from 'utils/modelUtils'
 import AppSettings from 'models/AppSettings'
@@ -23,7 +16,6 @@ import { useStore } from 'statery'
 import { modelStore } from 'store/modelStore'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import TextTooltipRow from 'app/_components/TextTooltipRow'
-import SelectModelDetails from '../ModelDetails/modelDetails'
 import ModelsInfoModal from 'app/_modules/ModelsInfoModal'
 import { useModal } from '@ebay/nice-modal-react'
 
@@ -44,7 +36,6 @@ const SelectModel = ({
   const [favoriteModelsCount, setFavoriteModelsCount] = useState(0)
   const [modelsOptions] = useAvailableModels({ input })
   const [showSettingsDropdown, setShowSettingsDropdown] = useState(false)
-  const [showDetails, setShowDetails] = useState(false)
   const [showMultiModel, setShowMultiModel] = useState(false)
   const [showFilter, setShowFilter] = useState(false)
   const [filterMode, setFilterMode] = useState('all')
@@ -215,18 +206,6 @@ const SelectModel = ({
         }}
       >
         <>
-          {showDetails && (
-            <DropdownOptions
-              handleClose={() => setShowDetails(false)}
-              title="Model details"
-              top="46px"
-            >
-              <SelectModelDetails
-                models={input.models}
-                multiModels={input.useAllModels || input.useFavoriteModels}
-              />
-            </DropdownOptions>
-          )}
           {showFilter && (
             <DropdownOptions
               handleClose={() => setShowFilter(false)}
@@ -358,9 +337,6 @@ const SelectModel = ({
             </DropdownOptions>
           )}
           <FlexRow gap={4}>
-            <Button onClick={() => setShowDetails(true)}>
-              <IconInfoSquareRounded stroke={1.5} />
-            </Button>
             <Button onClick={() => modelsInfoModal.show({ input })}>
               <IconList stroke={1.5} />
             </Button>

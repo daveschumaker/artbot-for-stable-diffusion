@@ -2,15 +2,19 @@
 import NiceModal, { useModal } from '@ebay/nice-modal-react'
 import {
   IconArrowBarLeft,
+  IconExternalLink,
   IconEyeOff,
   IconFilter,
-  IconHeart
+  IconHeart,
+  IconHeartFilled
 } from '@tabler/icons-react'
 import FlexRow from 'app/_components/FlexRow'
 import Modal from 'components/Modal'
 import { Button } from 'components/UI/Button'
 import Checkbox from 'components/UI/Checkbox'
 import Input from 'components/UI/Input'
+import Linker from 'components/UI/Linker'
+import AppSettings from 'models/AppSettings'
 import DefaultPromptInput from 'models/DefaultPromptInput'
 import React, { useEffect, useState } from 'react'
 import { useStore } from 'statery'
@@ -22,6 +26,11 @@ const ModelsInfoModal = ({ input }: { input: DefaultPromptInput }) => {
   const modal = useModal()
 
   const [showFilterDropdown, setShowFilterDropdown] = useState(false)
+  const [favModels, setFavModels] = useState<{ [key: string]: boolean }>({})
+  const [hiddenModels, setHiddenModels] = useState<{ [key: string]: boolean }>(
+    {}
+  )
+
   // TODO: Should be an array so you can filter by multiple items:
   // NSFW, SFW, Favorites, hasShowcase, NoShowCase, Inpainting, Etc
   const [filterMode, setFilterMode] = useState('')
@@ -40,16 +49,60 @@ const ModelsInfoModal = ({ input }: { input: DefaultPromptInput }) => {
     }
   }
 
+  const handleFav = (model: string) => {
+    const favoriteModels = AppSettings.get('favoriteModels') || {}
+    const hidden = AppSettings.get('hiddenModels') || {}
+
+    if (!favoriteModels[model]) {
+      favoriteModels[model] = true
+      delete hidden[model]
+    } else {
+      delete favoriteModels[model]
+    }
+
+    AppSettings.save('favoriteModels', favoriteModels)
+    AppSettings.save('hiddenModels', hidden)
+    setFavModels(favoriteModels)
+    setHiddenModels(hidden)
+  }
+
+  const handleHide = (model: string) => {
+    const favoriteModels = AppSettings.get('favoriteModels') || {}
+    const hidden = AppSettings.get('hiddenModels') || {}
+    if (!hidden[model]) {
+      hidden[model] = true
+      delete favoriteModels[model]
+    } else {
+      delete hidden[model]
+    }
+
+    AppSettings.save('favoriteModels', favoriteModels)
+    AppSettings.save('hiddenModels', hidden)
+    setFavModels(favoriteModels)
+    setHiddenModels(hidden)
+  }
+
   const filteredNames = availableModelNames.filter((name) => {
     if (!inputFilter) return true
     return name.toLowerCase().indexOf(inputFilter) >= 0
   })
 
   useEffect(() => {
+    const favoriteModels = AppSettings.get('favoriteModels') || {}
+    setFavModels(favoriteModels)
+
+    const hidden = AppSettings.get('hiddenModels') || {}
+    setHiddenModels(hidden)
+
     if (input.models.length === 1) {
       setActiveModel(input.models[0])
     }
+
+    // Ignore deps, we want this to only run on initial load.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  console.log(`activeModelDetails`, activeModelDetails)
 
   return (
     <Modal
@@ -176,19 +229,69 @@ const ModelsInfoModal = ({ input }: { input: DefaultPromptInput }) => {
               <>
                 <FlexRow style={{ justifyContent: 'space-between' }}>
                   <div className={styles.ModelInfoName}>{activeModel}</div>
-                  <FlexRow gap={8} style={{ justifyContent: 'flex-end' }}>
-                    <IconEyeOff stroke={1.5} />
-                    <IconHeart stroke={1.5} />
+                  <FlexRow
+                    gap={8}
+                    style={{
+                      cursor: 'pointer',
+                      justifyContent: 'flex-end',
+                      width: 'unset'
+                    }}
+                  >
+                    <div onClick={() => handleHide(activeModel)}>
+                      {hiddenModels[input.models[0]] ? (
+                        <IconEyeOff size={28} style={{ color: 'red' }} />
+                      ) : (
+                        <IconEyeOff size={28} stroke={1.5} />
+                      )}
+                    </div>
+                    <div onClick={() => handleFav(activeModel)}>
+                      {favModels[input.models[0]] ? (
+                        <IconHeartFilled size={28} style={{ color: 'red' }} />
+                      ) : (
+                        <IconHeart size={28} stroke={1.5} />
+                      )}
+                    </div>
                   </FlexRow>
                 </FlexRow>
+                {activeModelDetails.homepage && (
+                  <div>
+                    <Linker
+                      href={activeModelDetails.homepage}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <span
+                        className="flex flex-row gap-1 items-center"
+                        style={{ fontSize: '14px', fontWeight: 400 }}
+                      >
+                        view homepage
+                        <IconExternalLink stroke={1.5} size={16} />
+                      </span>
+                    </Linker>{' '}
+                  </div>
+                )}
                 <div className={styles.ModelInfoStats}>
                   Workers: {activeModelStats.count}
                   {' / '}
                   Requests: {activeModelStats.jobs}
+                  <br />
+                  Style: {activeModelDetails.style}
+                  <br />
+                  Version: {activeModelDetails.version}
                 </div>
                 <div className={styles.ModelInfoDescription}>
                   {activeModelDetails.description}
                 </div>
+                {activeModelDetails.trigger && (
+                  <div className={styles.ModelInfoTrigger}>
+                    Keywords to trigger model:
+                    <div style={{ fontFamily: 'monospace', paddingTop: '4px' }}>
+                      {activeModelDetails.trigger.map((word) => {
+                        return <span key={word}>&quot;{word}&quot; </span>
+                      })}
+                    </div>
+                  </div>
+                )}
                 {activeModelDetails.showcases && (
                   <div className={styles.ModelInfoShowcase}>
                     <img src={activeModelDetails.showcases[0]} />
