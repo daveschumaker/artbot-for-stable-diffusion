@@ -3,7 +3,7 @@ import React from 'react'
 import { toast } from 'react-toastify'
 import LinkIcon from './icons/LinkIcon'
 import Linker from './UI/Linker'
-import { basePath } from 'BASE_PATH'
+import { baseHost, basePath } from 'BASE_PATH'
 
 const showToast = () => {
   toast.success('FAQ URL copied!', {
@@ -43,7 +43,7 @@ export const FaqKudos = () => {
           href={`/faq#kudos`}
           onClick={() => {
             navigator?.clipboard
-              ?.writeText(`https://tinybots.net${basePath}/faq/#kudos`)
+              ?.writeText(`${baseHost}${basePath}/faq/#kudos`)
               ?.then(() => showToast())
           }}
         >
@@ -109,7 +109,7 @@ export const FaqSyntax = () => {
           href={`/faq#syntax`}
           onClick={() => {
             navigator?.clipboard
-              ?.writeText(`https://tinybots.net${basePath}/faq/#syntax`)
+              ?.writeText(`${baseHost}${basePath}/faq/#syntax`)
               ?.then(() => showToast())
           }}
         >
@@ -161,9 +161,7 @@ export const FaqEstimatedTime = () => {
           href={`/faq#generation-time`}
           onClick={() => {
             navigator?.clipboard
-              ?.writeText(
-                `https://tinybots.net${basePath}/faq/#generation-time`
-              )
+              ?.writeText(`${baseHost}${basePath}/faq/#generation-time`)
               ?.then(() => showToast())
           }}
         >
@@ -191,9 +189,7 @@ export const FaqMissingRequests = () => {
           href={`/faq#requests-missing`}
           onClick={() => {
             navigator?.clipboard
-              ?.writeText(
-                `https://tinybots.net${basePath}/faq/#requests-missing`
-              )
+              ?.writeText(`${baseHost}${basePath}/faq/#requests-missing`)
               ?.then(() => showToast())
           }}
         >
@@ -220,7 +216,7 @@ export const FaqBlackImage = () => {
           href={`/faq#black-image`}
           onClick={() => {
             navigator?.clipboard
-              ?.writeText(`https://tinybots.net${basePath}/faq/#kudos`)
+              ?.writeText(`${baseHost}${basePath}/faq/#kudos`)
               ?.then(() => showToast())
           }}
         >
@@ -249,9 +245,7 @@ export const FaqStorageExceeded = () => {
           href={`/faq#storage-exceeded`}
           onClick={() => {
             navigator?.clipboard
-              ?.writeText(
-                `https://tinybots.net${basePath}/faq/#storage-exceeded`
-              )
+              ?.writeText(`${baseHost}${basePath}/faq/#storage-exceeded`)
               ?.then(() => showToast())
           }}
         >

@@ -45,7 +45,7 @@ import Steps from 'app/_modules/AdvancedOptionsPanel/Steps'
 import Guidance from 'app/_modules/AdvancedOptionsPanel/Guidance'
 import Denoise from 'app/_modules/AdvancedOptionsPanel/Denoise'
 import ClipSkip from 'app/_modules/AdvancedOptionsPanel/ClipSkip'
-import { basePath } from 'BASE_PATH'
+import { baseHost, basePath } from 'BASE_PATH'
 
 // Kind of a hacky way to persist output of image over the course of a session.
 let cachedImageDetails = {}
@@ -270,7 +270,7 @@ const ControlNetPage = () => {
         />
         <meta
           name="twitter:image"
-          content={`https://tinybots.net${basePath}/robot_control.jpg`}
+          content={`${baseHost}${basePath}/robot_control.jpg`}
         />
       </Head>
       <div className="flex flex-row items-center w-full">

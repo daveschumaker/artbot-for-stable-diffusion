@@ -1,6 +1,8 @@
 import clsx from 'clsx'
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
+import { usePathname } from 'next/navigation'
+let isMounted = false
 
 function AdContainer({
   code = 'CWYD62QI',
@@ -12,9 +14,13 @@ function AdContainer({
   maxSize?: number
   override?: false
 }) {
+  const pathname = usePathname()
   const reference = useRef<HTMLInputElement | undefined>()
 
-  useEffectOnce(() => {
+  const mountAd = () => {
+    if (isMounted) return
+
+    isMounted = true
     setTimeout(() => {
       if (document.getElementById('carbonads')) {
         return
@@ -28,16 +34,32 @@ function AdContainer({
       ) {
         return
       }
-
       reference.current.innerHTML = ''
       const s = document.createElement('script')
       s.id = '_carbonads_js'
       s.src = `//cdn.carbonads.com/carbon.js?serve=${code}&placement=${placement}`
       reference.current.appendChild(s)
     }, 250)
+  }
+
+  useEffectOnce(() => {
+    mountAd()
   })
 
-  const classes = ['flex', 'justify-center', 'my-2', `w-full`]
+  useEffect(() => {
+    mountAd()
+
+    return () => {
+      var el = document.getElementById('carbonads')
+      if (el && el.parentNode) {
+        el.parentNode.removeChild(el)
+        isMounted = false
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname])
+
+  const classes = ['flex', 'justify-center', `w-full`]
 
   if (typeof window === 'undefined') {
     return null

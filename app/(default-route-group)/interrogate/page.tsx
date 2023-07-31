@@ -1,4 +1,4 @@
-import { basePath } from 'BASE_PATH'
+import { baseHost, basePath } from 'BASE_PATH'
 import InterrogatePage from 'app/_pages/InterrogatePage'
 import { Metadata } from 'next'
 
@@ -8,10 +8,10 @@ export const metadata: Metadata = {
     description:
       'Discover AI generated descriptions, suggested tags, or even predicted NSFW status for a given image.',
     title: 'ArtBot - Interrogate images (img2text)',
-    images: [`${basePath}/robot_exam.png`]
+    images: [`${baseHost}${basePath}/robot_exam.png`]
   },
   twitter: {
-    images: `${basePath}/robot_exam.png`
+    images: `${baseHost}${basePath}/robot_exam.png`
   }
 }
 

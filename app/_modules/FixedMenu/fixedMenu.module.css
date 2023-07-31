@@ -8,8 +8,29 @@
   width: var(--fixedSideBar-width);
 }
 
-@media (min-width: 1024px) {
+/*
+ * Fun fact: If you  want to adjust this, you'll need to also adjust
+ * corresponding value in:
+ * ./app/_components/ContentWrapper/contentWrapper.module.css
+ * ./app/_modules/HeaderNav/MenuButton/menuButton.module.css
+ */
+@media (min-width: 800px) {
   .FixedMenu {
     display: block;
   }
+}
+
+.MenuWrapper {
+  position: absolute;
+  bottom: 262px;
+  left: 0;
+  right: 0;
+  top: 0;
+}
+
+.SidebarAd {
+  bottom: 0px;
+  left: 0;
+  width: 219px;
+  position: fixed;
 }

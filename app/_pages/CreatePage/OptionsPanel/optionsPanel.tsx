@@ -14,6 +14,7 @@ import WarningPanel from 'app/_modules/WarningPanel'
 import Editor from 'app/_modules/Editor'
 import Panel from 'app/_components/Panel'
 import FlexRow from 'app/_components/FlexRow'
+import { IconPointFilled } from '@tabler/icons-react'
 
 const removeImageCanvasData = {
   canvasData: null,
@@ -84,6 +85,7 @@ const OptionsPanel = ({ input, setInput }: Props) => {
         >
           Options
         </div>
+        <IconPointFilled size={18} />
         <div
           className={clsx(
             styles.NavItem,
@@ -96,6 +98,7 @@ const OptionsPanel = ({ input, setInput }: Props) => {
         >
           Image-to-image
         </div>
+        <IconPointFilled size={18} />
         {/* <NavItem
           active={activeNav === 'draw'}
           onClick={() => {

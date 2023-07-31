@@ -9,7 +9,13 @@
   color: rgb(20, 184, 166);
 }
 
-@media (min-width: 1024px) {
+/*
+ * Fun fact: If you  want to adjust this, you'll need to also adjust
+ * corresponding value in:
+ * ./app/_components/ContentWrapper/contentWrapper.module.css
+ * ./app/_modules/FixedMenu/fixedMenu.module.css
+ */
+@media (min-width: 800px) {
   .MenuButton {
     display: none;
   }

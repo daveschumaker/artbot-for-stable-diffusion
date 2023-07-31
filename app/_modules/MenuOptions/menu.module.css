@@ -19,6 +19,14 @@
   display: none;
 }
 
+@media (min-width: 800px) {
+  .MenuOptions {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+  }
+}
+
 .MenuOption {
   align-items: center;
   column-gap: 8px;

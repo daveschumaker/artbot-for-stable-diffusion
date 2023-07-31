@@ -18,7 +18,7 @@ import HeartIcon from 'components/icons/HeartIcon'
 import AppSettings from 'models/AppSettings'
 import { useStore } from 'statery'
 import ExternalLinkIcon from 'components/icons/ExternalLinkIcon'
-import { basePath } from 'BASE_PATH'
+import { baseHost, basePath } from 'BASE_PATH'
 
 const StyledLinkIcon = styled(LinkIcon)`
   cursor: pointer;
@@ -174,9 +174,7 @@ const ModelDetailsList = ({ availableModels, modelDetails }: any) => {
                   href={`/info/models#${name}`}
                   onClick={() => {
                     navigator?.clipboard
-                      ?.writeText(
-                        `https://tinybots.net${basePath}/info/models#${name}`
-                      )
+                      ?.writeText(`${baseHost}${basePath}/info/models#${name}`)
                       .then(() => {
                         toast.success('Model URL copied!', {
                           pauseOnFocusLoss: false,

@@ -1,4 +1,4 @@
-import { basePath } from 'BASE_PATH'
+import { baseHost, basePath } from 'BASE_PATH'
 import { trackEvent } from '../api/telemetry'
 
 const ServerUpdateComponent = ({}) => {
@@ -6,7 +6,7 @@ const ServerUpdateComponent = ({}) => {
     trackEvent({
       event: 'SERVER_UPDATE_CHANGELOG_CLICK'
     })
-    window.location.assign(`https://tinybots.net${basePath}/changelog`)
+    window.location.assign(`${baseHost}${basePath}/changelog`)
   }
 
   const reloadPageClick = () => {

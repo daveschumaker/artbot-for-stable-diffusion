@@ -6,10 +6,10 @@ import SlidingMenu from './_modules/SlidingMenu'
 import Footer from './_components/Footer'
 import { Metadata } from 'next'
 import PollController from 'app/_modules/PollController'
-import { basePath } from 'BASE_PATH'
+import { baseHost, basePath } from 'BASE_PATH'
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://1b46-23-93-98-252.ngrok-free.app'),
+  metadataBase: new URL(baseHost),
   title: 'ArtBot - Create images with Stable Diffusion, utilizing the AI Horde',
   description:
     'Generate AI-created images and photos with Stable Diffusion using a distributed computing cluster powered by the AI Horde. No login required and free to use.',
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   manifest: `${basePath}/manifest.json`,
   openGraph: {
     type: 'website',
-    url: `https://tinybots.net${basePath}`,
+    url: `${baseHost}${basePath}`,
     title:
       'ArtBot - Create images with Stable Diffusion, utilizing the AI Horde',
     description:
@@ -25,14 +25,14 @@ export const metadata: Metadata = {
     siteName: 'ArtBot for Stable Diffusion',
     images: [
       {
-        url: `${basePath}/painting_bot.png`
+        url: `${baseHost}${basePath}/painting_bot.png`
       }
     ]
   },
   twitter: {
     card: 'summary_large_image',
     creator: '@davely',
-    images: `${basePath}/painting_bot.png`
+    images: `${baseHost}${basePath}/painting_bot.png`
   }
 }
 
