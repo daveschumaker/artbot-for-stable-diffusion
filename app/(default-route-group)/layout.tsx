@@ -5,6 +5,7 @@ import ModalProvider from 'app/_modules/ModalProvider'
 import MaxWidth from 'app/_components/MaxWidth'
 import ToastContainer from 'components/ToastContainer'
 import MobileFooter from 'app/_modules/MobileFooter'
+import AppUpdate from 'app/_modules/AppUpdate'
 
 export default function RootLayout({
   // Layouts must accept a children prop.
@@ -19,6 +20,7 @@ export default function RootLayout({
       <ModalProvider>
         <ContentWrapper>
           <ToastContainer />
+          <AppUpdate />
           <MaxWidth>{children}</MaxWidth>
         </ContentWrapper>
       </ModalProvider>
