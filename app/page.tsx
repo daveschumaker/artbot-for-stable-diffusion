@@ -3,21 +3,25 @@ import SharedImageView from './_modules/SharedImageView'
 import HomePage from './_pages/HomePage'
 
 async function getPageData(searchParams: any) {
-  let shortlinkImageParams: any = ''
+  let shortlinkImageParams: any = null
 
   const { i } = searchParams
 
   try {
     if (i) {
-      const res = await fetch(
-        `http://localhost:${process.env.PORT}${basePath}/api/get-shortlink?shortlink=${i}`
+      const resp = await fetch(
+        `${process.env.NEXT_SHORTLINK_SERVICE}/api/v1/shortlink/load/${i}`,
+        {
+          method: 'GET'
+        }
       )
-
-      const data = (await res.json()) || {}
-      const { imageParams } = data.imageParams || {}
-      shortlinkImageParams = imageParams || null
+      const data = (await resp.json()) || {}
+      const { data: shortlinkData = {} } = data || {}
+      shortlinkImageParams = shortlinkData.imageParams || null
     }
-  } catch (err) {}
+  } catch (err) {
+    console.log(`getPageData error?`, err)
+  }
 
   return {
     shortlinkImageParams
@@ -28,6 +32,9 @@ interface Props {
   searchParams: { [key: string]: string | string[] | undefined }
 }
 
+// THIS IS BROKEN IN NEXT.JS v13.4.10+
+// CAUSES PRODUCTION BUILDS TO BLOW UP.
+// DO NOT UPGRADE UNTIL FIXED
 export async function generateMetadata({ searchParams }: Props) {
   const { i } = searchParams
 
@@ -41,12 +48,11 @@ export async function generateMetadata({ searchParams }: Props) {
       )
 
       const data = (await resp.json()) || {}
-      const { data: shortlinkData } = data
+      const { data: shortlinkData = {} } = data || {}
       const shortlinkImageParams = shortlinkData.imageParams || null
 
       const title = `ArtBot - Shareable link created with ${shortlinkImageParams.models[0]}`
       return {
-        metadataBase: new URL(baseHost),
         title: `🤖 ${title}`,
         description: shortlinkImageParams.prompt,
         openGraph: {
@@ -69,17 +75,23 @@ export async function generateMetadata({ searchParams }: Props) {
         }
       }
     }
-  } catch (err) {}
+  } catch (err) {
+    console.log(`Error?`, err)
+    return {}
+  }
 }
 
 export default async function Page({ searchParams }: { searchParams: any }) {
   const { i: id } = searchParams
 
-  // Fetch data directly in a Server Component
-  const { shortlinkImageParams } = await getPageData(searchParams)
+  if (id) {
+    const { shortlinkImageParams } = await getPageData(searchParams)
 
-  if (shortlinkImageParams) {
-    return <SharedImageView imageDetails={shortlinkImageParams} imageId={id} />
+    if (shortlinkImageParams) {
+      return (
+        <SharedImageView imageDetails={shortlinkImageParams} imageId={id} />
+      )
+    }
   }
 
   return <HomePage />

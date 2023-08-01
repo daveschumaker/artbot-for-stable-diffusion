@@ -20,8 +20,6 @@ async function getPageData() {
     )
     const modelDetailsData = (await modelDetailsRes.json()) || {}
     modelDetails = modelDetailsData.models
-
-    console.log(`modelDetailsData`, modelDetailsData)
   } catch (err) {}
 
   return {
