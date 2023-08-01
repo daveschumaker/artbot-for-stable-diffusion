@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import Typewriter from './typewriter'
 import styles from './typewriter.module.css'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import image0 from './images/astronaut.jpg'
 import image1 from './images/amazon.jpg'
@@ -59,17 +59,18 @@ const images = [
   }
 ]
 
-function shuffleArray(array: Array<any>) {
+function shuffleArray(array: any) {
+  console.log('oiii')
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
     ;[array[i], array[j]] = [array[j], array[i]]
   }
-  return array
 }
 
-const shuffled = shuffleArray(images)
+shuffleArray(images)
 
 export default function PromptTypewriter() {
+  const [shuffled, setShuffled] = useState([])
   const [isHidden, setIsHidden] = useState(true)
   const [promptIndex, setPromptIndex] = useState(0)
 
@@ -81,10 +82,23 @@ export default function PromptTypewriter() {
     }, 1000)
   }
 
+  useEffect(() => {
+    shuffleArray(images)
+    const update = [...images]
+
+    //@ts-ignore
+    setShuffled(update)
+  }, [])
+
+  if (shuffled.length === 0) {
+    return null
+  }
+
   return (
     <div className={styles.TypeWriterWrapper}>
       <div className={styles.TextWrapper}>
         <Typewriter
+          // @ts-ignore
           text={shuffled[promptIndex].prompt}
           onEraseDelay={() => {
             handleImageChange()
@@ -92,7 +106,7 @@ export default function PromptTypewriter() {
           onEraseDone={() => {
             let updatedPrompt = promptIndex + 1
 
-            if (updatedPrompt > shuffled.length - 1) {
+            if (updatedPrompt > images.length - 1) {
               updatedPrompt = 0
             }
 
@@ -117,7 +131,13 @@ export default function PromptTypewriter() {
             right: 8
           }}
         >
-          created with <strong>{shuffled[promptIndex].model}</strong>
+          created with{' '}
+          <strong>
+            {
+              // @ts-ignore
+              shuffled[promptIndex].model
+            }
+          </strong>
         </div>
       </div>
       <div className={styles.ImageWrapper}>
@@ -126,6 +146,7 @@ export default function PromptTypewriter() {
           className={`${styles['fade-in-out']} ${
             isHidden ? styles.hidden : ''
           }`}
+          // @ts-ignore
           src={shuffled[promptIndex].file.src}
           style={{ borderRadius: '4px', width: '100%' }}
         />
