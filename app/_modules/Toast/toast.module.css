@@ -14,7 +14,7 @@
   top: -200px;
   transition: all 0.4s;
   width: 300px;
-  z-index: 26;
+  z-index: var(--zIndex-overNavBar);
 }
 
 .toast.active {

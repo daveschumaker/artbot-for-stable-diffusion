@@ -107,7 +107,7 @@ const ImageOptionsWrapper = ({
     }
 
     copyEditPrompt(imageDetails)
-    router.push(`/?edit=true`)
+    router.push(`/create?edit=true`)
     handleClose()
   }
 
@@ -468,7 +468,7 @@ const ImageOptionsWrapper = ({
                 className="text-sm"
                 onClick={() => {
                   router.push(
-                    `/?prompt=${encodeURIComponent(imageDetails.prompt)}`
+                    `/create?prompt=${encodeURIComponent(imageDetails.prompt)}`
                   )
                   handleClose()
                 }}

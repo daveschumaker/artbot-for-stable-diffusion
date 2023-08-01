@@ -31,37 +31,42 @@ export default function FilterOptions({
         <Checkbox
           label={`All (${jobCount})`}
           checked={filter === 'all'}
-          onChange={() =>
+          onChange={() => {
             filter === 'all' ? setFilter('all') : setFilter('all')
-          }
+            setShowFilterDropdown(false)
+          }}
         />
         <Checkbox
           label={`Waiting (${waiting.length})`}
           checked={filter === 'waiting'}
-          onChange={() =>
+          onChange={() => {
             filter === 'waiting' ? setFilter('all') : setFilter('waiting')
-          }
+            setShowFilterDropdown(false)
+          }}
         />
         <Checkbox
           label={`Processing (${jobsInProgress})`}
           checked={filter === 'processing'}
-          onChange={() =>
+          onChange={() => {
             filter === 'processing' ? setFilter('all') : setFilter('processing')
-          }
+            setShowFilterDropdown(false)
+          }}
         />
         <Checkbox
           label={`Done (${done.length})`}
           checked={filter === 'done'}
-          onChange={() =>
+          onChange={() => {
             filter === 'done' ? setFilter('all') : setFilter('done')
-          }
+            setShowFilterDropdown(false)
+          }}
         />
         <Checkbox
           label={`Error (${error.length})`}
           checked={filter === 'error'}
-          onChange={() =>
+          onChange={() => {
             filter === 'error' ? setFilter('all') : setFilter('error')
-          }
+            setShowFilterDropdown(false)
+          }}
         />
       </div>
     </DropdownOptions>

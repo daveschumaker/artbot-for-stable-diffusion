@@ -9,12 +9,15 @@ import {
   deleteDoneFromPending
 } from 'utils/db'
 import { deletePendingJobs } from 'controllers/pendingJobsCache'
+import DropdownOptions from 'app/_modules/DropdownOptions'
 
 export default function ClearJobs({ filter }: any) {
-  const [showConfirm, setShowConfirm] = useState(false)
-  const handleClear = () => {
-    setShowConfirm(true)
-  }
+  const [showDropdown, setShowDropdown] = useState(false)
+  const [showConfirm, setShowConfirm] = useState('')
+
+  // const handleClear = () => {
+  //   setShowConfirm(true)
+  // }
 
   return (
     <>
@@ -25,27 +28,68 @@ export default function ClearJobs({ filter }: any) {
             This will clear all images with a status of ${filter} from the pending items page.
           `}
           onConfirmClick={async () => {
-            if (filter === 'done') {
+            if (showConfirm === 'done') {
               deletePendingJobs(JobStatus.Done)
               await deleteDoneFromPending()
-            } else if (filter === 'pending') {
+            } else if (showConfirm === 'pending') {
               await deleteAllPendingJobs()
               deletePendingJobs(JobStatus.Waiting)
               deletePendingJobs(JobStatus.Queued)
-            } else if (filter === 'error') {
+            } else if (showConfirm === 'error') {
               deletePendingJobs(JobStatus.Error)
               await deleteAllPendingErrors()
             }
 
-            setShowConfirm(false)
+            setShowDropdown(false)
+            setShowConfirm('')
           }}
           closeModal={() => {
-            setShowConfirm(false)
+            setShowConfirm('')
+            setShowDropdown(false)
           }}
           showWarningIcon={false}
         />
       )}
-      <Button disabled={filter === 'processing'} onClick={handleClear}>
+      {showDropdown && (
+        <DropdownOptions
+          handleClose={() => setShowDropdown(false)}
+          title="Clear Jobs"
+          top="46px"
+          maxWidth="280px"
+        >
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              rowGap: '16px',
+              padding: '16px 0 4px 0'
+            }}
+          >
+            <div
+              style={{ cursor: 'pointer' }}
+              onClick={() => setShowConfirm('done')}
+            >
+              Done
+            </div>
+            <div
+              style={{ cursor: 'pointer' }}
+              onClick={() => setShowConfirm('pending')}
+            >
+              Pending
+            </div>
+            <div
+              style={{ cursor: 'pointer' }}
+              onClick={() => setShowConfirm('error')}
+            >
+              Error
+            </div>
+          </div>
+        </DropdownOptions>
+      )}
+      <Button
+        disabled={filter === 'processing'}
+        onClick={() => setShowDropdown(true)}
+      >
         <IconClearAll stroke={1.5} /> Clear jobs
       </Button>
     </>

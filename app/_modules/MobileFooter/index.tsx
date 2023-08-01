@@ -15,6 +15,7 @@ import {
 import StarsIcon from 'components/icons/StarsIcon'
 import styles from './mobileFooter.module.css'
 import clsx from 'clsx'
+import { basePath } from 'BASE_PATH'
 
 export default function MobileFooter() {
   const pathname = usePathname()
@@ -23,7 +24,7 @@ export default function MobileFooter() {
   const { newImageReady } = appState
 
   const isActive = (path = '') => {
-    return `${path}` === pathname
+    return `${basePath}${path}` === pathname
   }
 
   const handleForceReload = () => {
@@ -35,11 +36,11 @@ export default function MobileFooter() {
   return (
     <div className={styles['footer-wrapper']}>
       <div className={styles['nav-icons-wrapper']}>
-        <Link href="/">
+        <Link href="/create">
           <div
             className={clsx(
               styles['nav-icon'],
-              isActive('/') && styles['nav-icon-active']
+              isActive('/create') && styles['nav-icon-active']
             )}
           >
             <CreateIcon className={clsx(styles['svg'])} size={32} />
