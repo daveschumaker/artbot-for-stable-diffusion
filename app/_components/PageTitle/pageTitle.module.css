@@ -10,9 +10,3 @@
     font-size: 24px;
   }
 }
-
-@media (prefers-color-scheme: dark) {
-  .pageTitle {
-    color: var(--main-color);
-  }
-}

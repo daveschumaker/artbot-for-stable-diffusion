@@ -1,18 +1,18 @@
 'use client'
 import { usePathname } from 'next/navigation'
 
-import CreateIcon from '../icons/CreateIcon'
-import HourglassIcon from '../icons/HourglassIcon'
-import PhotoIcon from '../icons/PhotoIcon'
-import SettingsIcon from '../icons/SettingsIcon'
+import CreateIcon from 'components/icons/CreateIcon'
+import HourglassIcon from 'components/icons/HourglassIcon'
+import PhotoIcon from 'components/icons/PhotoIcon'
+import SettingsIcon from 'components/icons/SettingsIcon'
 import Link from 'next/link'
 import { useStore } from 'statery'
 import {
   appInfoStore,
   setNewImageReady,
   setShowImageReadyToast
-} from '../../store/appStore'
-import StarsIcon from '../icons/StarsIcon'
+} from 'store/appStore'
+import StarsIcon from 'components/icons/StarsIcon'
 import styles from './mobileFooter.module.css'
 import clsx from 'clsx'
 

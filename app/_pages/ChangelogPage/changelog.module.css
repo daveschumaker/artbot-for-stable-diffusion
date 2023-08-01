@@ -35,17 +35,3 @@
 .link-btn:hover {
   color: #5eedde;
 }
-
-@media (prefers-color-scheme: dark) {
-  .more-info {
-    border-left: 2px solid #f3f3ef;
-  }
-
-  .link-btn {
-    color: #5eedde;
-  }
-
-  .link-btn:hover {
-    color: #17cfbb;
-  }
-}

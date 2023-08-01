@@ -11,7 +11,9 @@
   --btn-primary-hover: #8fc9d4;
   --btn-secondary: #c77b68;
   --btn-secondary-hover: #d59c8e;
+  --carbon-bg: #dadada;
   --card-background: #7e5a6c;
+  --footer-color: #344c50;
   --input-background: #ffffff;
   --input-color: #282828;
   --light-shade: #efedef;
@@ -38,15 +40,24 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
-    /* COLORS */
     --body-color: #222222;
     --input-background: rgb(42, 48, 60);
     --input-color: #e1e1e1;
     --input-text: #e1e1e1;
     --overlay-background: #000000;
   }
+} */
+
+[data-theme='dark'] {
+  --body-color: #222222;
+  --carbon-bg: #323232;
+  --footer-color: #f3f3ef;
+  --input-background: rgb(42, 48, 60);
+  --input-color: #e1e1e1;
+  --input-text: #e1e1e1;
+  --overlay-background: #000000;
 }
 
 html {
@@ -57,8 +68,8 @@ html {
 
 body,
 html {
-  background-color: #f2f2f2;
-  color: #344c50;
+  background-color: var(--body-color);
+  color: var(--input-color);
   padding: 0;
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
   letter-spacing: 0.4px;
@@ -89,14 +100,6 @@ a {
 
 .canvas-container {
   margin: 0 auto;
-}
-
-@media (prefers-color-scheme: dark) {
-  body,
-  html {
-    background-color: #222222;
-    color: #f3f3ef;
-  }
 }
 
 .global-wrapper {
@@ -139,9 +142,9 @@ a {
   --carbon-font-size: 14px;
   --carbon-padding: 1.5ch;
   --carbon-max-char: 20ch;
-  --carbon-bg-primary: hsl(0, 0%, 98%);
-  --carbon-bg-secondary: hsl(0, 0%, 92%);
-  --carbon-text-color: hsl(0, 0%, 20%);
+  --carbon-bg-primary: var(--carbon-bg);
+  --carbon-bg-secondary: var(--carbon-bg);
+  --carbon-text-color: var(--input-color);
   z-index: var(--zIndex-default);
   font-size: var(--carbon-font-size);
   font-family: var(--carbon-font-family);
@@ -201,14 +204,6 @@ a {
   letter-spacing: 0.2ch;
   text-align: center;
   text-transform: uppercase;
-}
-
-@media (prefers-color-scheme: dark) {
-  #carbonads {
-    --carbon-bg-primary: hsl(0, 0%, 12%);
-    --carbon-bg-secondary: hsl(0, 0%, 15%);
-    --carbon-text-color: hsl(0, 0%, 90%);
-  }
 }
 
 @layer base {

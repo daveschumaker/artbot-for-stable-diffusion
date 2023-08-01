@@ -4,7 +4,7 @@ import FixedMenu from 'app/_modules/FixedMenu'
 import ModalProvider from 'app/_modules/ModalProvider'
 import MaxWidth from 'app/_components/MaxWidth'
 import ToastContainer from 'components/ToastContainer'
-import MobileFooter from 'components/MobileFooter/mobileFooter'
+import MobileFooter from 'app/_modules/MobileFooter'
 
 export default function RootLayout({
   // Layouts must accept a children prop.

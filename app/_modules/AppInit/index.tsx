@@ -5,6 +5,7 @@ import { useEffectOnce } from 'hooks/useEffectOnce'
 import { initAppSettings } from 'utils/appSettings'
 import { initDb } from 'utils/db'
 import { initializePrimaryWindowOnLoad } from 'utils/primaryWindow'
+import AppTheme from '../AppTheme'
 
 export default function AppInit() {
   useEffectOnce(() => {
@@ -14,5 +15,5 @@ export default function AppInit() {
     initializePrimaryWindowOnLoad()
   })
 
-  return null
+  return <AppTheme />
 }

@@ -404,7 +404,7 @@ const PendingPage = () => {
       <MaxWidth>
         <div className={styles.ListWrapper}>
           {pendingImages.length === 0 && (
-            <div style={{ padding: '0 16px' }}>
+            <div style={{ padding: '0 16px 12px 16px' }}>
               No images pending.{' '}
               <Linker href="/" className="text-cyan-400">
                 Why not create something?
@@ -463,8 +463,8 @@ const PendingPage = () => {
             !imageDetailsModalOpen &&
             // @ts-ignore
             size.width < 800 && (
-              <div className="w-full">
-                <AdContainer />
+              <div style={{ padding: '0 16px', width: '100%' }}>
+                <AdContainer style={{ margin: '0 auto', maxWidth: '480px' }} />
               </div>
             )}
 

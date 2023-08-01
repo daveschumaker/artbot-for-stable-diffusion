@@ -31,8 +31,6 @@ const ModelsInfoModal = ({ input }: { input: DefaultPromptInput }) => {
     {}
   )
 
-  console.log(`hiddenModels`, hiddenModels)
-
   // TODO: Should be an array so you can filter by multiple items:
   // NSFW, SFW, Favorites, hasShowcase, NoShowCase, Inpainting, Etc
   const [filterMode, setFilterMode] = useState('all')
@@ -135,9 +133,6 @@ const ModelsInfoModal = ({ input }: { input: DefaultPromptInput }) => {
     // Ignore deps, we want this to only run on initial load.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  console.log(`filteredNames`, filteredNames)
-  console.log(`activeModelDetails`, activeModelDetails)
 
   return (
     <Modal

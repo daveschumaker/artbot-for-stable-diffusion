@@ -50,23 +50,29 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
         <PageTitle as="h2">ArtBot Preferences</PageTitle>
       </Section>
       <Section pb={12}>
-        <InputSwitchV2
-          label={<strong>Stay on create page?</strong>}
-          handleSwitchToggle={() => {
-            if (componentState.stayOnCreate) {
-              handleSwitchSelect('stayOnCreate', false)
-            } else {
-              handleSwitchSelect('stayOnCreate', true)
-            }
-          }}
-          checked={componentState.stayOnCreate}
-        />
-        <div
-          style={{ fontSize: '12px', maxWidth: '512px', paddingLeft: '64px' }}
-        >
-          After clicking &quot;create&quot; on the image generation page, stay
-          on the page, rather than show pending items.
-        </div>
+        <MaxWidth width="240px">
+          <SubSectionTitle>
+            <strong>ArtBot Theme</strong>
+          </SubSectionTitle>
+          <div className="flex flex-row gap-2 items-center">
+            <Select
+              options={[
+                { value: 'dark', label: 'dark' },
+                { value: 'light', label: 'light' },
+                { value: 'system', label: 'system' }
+              ]}
+              isSearchable={false}
+              onChange={(obj: any) => {
+                localStorage.setItem('theme', obj.value)
+                handleUpdateSelect('theme', obj)
+              }}
+              value={{
+                value: componentState.theme,
+                label: componentState.theme
+              }}
+            />
+          </div>
+        </MaxWidth>
       </Section>
       <Section pb={12}>
         <SubSectionTitle>
@@ -114,6 +120,25 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
             checked={componentState.saveCanvasOnCreate}
           />
         </FlexCol>
+      </Section>
+      <Section pb={12}>
+        <InputSwitchV2
+          label={<strong>Stay on create page?</strong>}
+          handleSwitchToggle={() => {
+            if (componentState.stayOnCreate) {
+              handleSwitchSelect('stayOnCreate', false)
+            } else {
+              handleSwitchSelect('stayOnCreate', true)
+            }
+          }}
+          checked={componentState.stayOnCreate}
+        />
+        <div
+          style={{ fontSize: '12px', maxWidth: '512px', paddingLeft: '64px' }}
+        >
+          After clicking &quot;create&quot; on the image generation page, stay
+          on the page, rather than show pending items.
+        </div>
       </Section>
       <Section pb={12}>
         <MaxWidth width="240px">

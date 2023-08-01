@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   }
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   // Layouts must accept a children prop.
   // This will be populated with nested layouts or pages
   children
@@ -45,6 +45,21 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+            (function() {
+              if (window.localStorage.getItem('theme') === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+              } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+              }
+            }());
+          `
+          }}
+        ></script>
+      </head>
       <body
         // This ensures that footer is always forced to bottom of page if there is extra room.
         style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}

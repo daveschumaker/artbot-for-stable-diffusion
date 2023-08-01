@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import React, { useEffect, useRef } from 'react'
+import React, { CSSProperties, useEffect, useRef } from 'react'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
 import { usePathname } from 'next/navigation'
 import { appInfoStore, setAdHidden } from 'store/appStore'
@@ -12,7 +12,8 @@ function AdContainer({
   className,
   code = 'CWYD62QI',
   id = 'carbonads',
-  placement = 'tinybotsnet'
+  placement = 'tinybotsnet',
+  style
 }: {
   className?: any
   code: string
@@ -21,6 +22,7 @@ function AdContainer({
   minSize?: number
   maxSize?: number
   override?: false
+  style?: CSSProperties
 }) {
   const { adHidden } = useStore(appInfoStore)
   const pathname = usePathname()
@@ -107,6 +109,7 @@ function AdContainer({
       className={clsx(classes, className)}
       //@ts-ignore
       ref={reference}
+      style={style}
     />
   )
 }

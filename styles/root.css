@@ -22,7 +22,7 @@
   --rt-opacity: 0.95;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --text-color: #efedef;
     --text-shade: #f3f3ef;
@@ -32,4 +32,4 @@
     --nav-link-normal: #ffffff;
     --nav-link-active: #14b8a6;
   }
-}
+} */

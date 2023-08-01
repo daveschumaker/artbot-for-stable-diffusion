@@ -21,16 +21,9 @@
   align-items: center;
   display: flex;
   justify-content: center;
-  background-color: #f2f2f2;
   border-radius: 6px;
   list-style: none;
   margin: 0;
-}
-
-@media (prefers-color-scheme: dark) {
-  .NavigationMenuList {
-    background-color: #222222;
-  }
 }
 
 .NavigationMenuLink {
@@ -138,12 +131,6 @@
   transition: width, height, 300ms ease;
 }
 
-@media (prefers-color-scheme: dark) {
-  .NavigationMenuViewport {
-    background-color: black;
-  }
-}
-
 .NavigationMenuViewport[data-state='open'] {
   animation: scaleIn 200ms ease;
 }
@@ -180,12 +167,6 @@
 
 .ListItemLink:hover {
   background-color: #f2f2f2;
-}
-
-@media (prefers-color-scheme: dark) {
-  .ListItemLink:hover {
-    background-color: #222222;
-  }
 }
 
 .ListItemHeading {
@@ -238,12 +219,6 @@
   position: absolute;
   top: -2px;
   right: -7px;
-}
-
-@media (prefers-color-scheme: dark) {
-  .Arrow {
-    background-color: black;
-  }
 }
 
 @keyframes enterFromRight {

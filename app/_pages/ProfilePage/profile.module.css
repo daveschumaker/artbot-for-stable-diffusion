@@ -1,13 +1,7 @@
 .profile-img {
-  border: 1px solid black;
+  border: 1px solid var(--input-color);
   border-radius: 50%;
   padding: 12px;
-}
-
-@media (prefers-color-scheme: dark) {
-  .profile-img {
-    border: 1px solid white;
-  }
 }
 
 .info-wrapper {

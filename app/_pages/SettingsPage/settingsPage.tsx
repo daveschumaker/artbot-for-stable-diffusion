@@ -118,6 +118,7 @@ const SettingsPage = () => {
 
     updateObj.maxConcurrency = AppSettings.get('maxConcurrency') || 5
     updateObj.imagesPerPage = AppSettings.get('imagesPerPage') || 50
+    updateObj.theme = AppSettings.get('theme') || 'system'
     updateObj.saveInputOnCreate = AppSettings.get('saveInputOnCreate') || false // DEPRECATE
     updateObj.savePromptOnCreate =
       AppSettings.get('savePromptOnCreate') || false
