@@ -21,6 +21,7 @@ interface Props {
   handleLoadNext?: () => any
   handleLoadPrev?: () => any
   handleReloadImageData?: () => any
+  onCloseCallback?: () => any
   onDeleteCallback?: () => any
 }
 
@@ -31,6 +32,7 @@ const ImageModal = ({
   handleLoadNext,
   handleLoadPrev,
   handleReloadImageData = () => {},
+  onCloseCallback = () => {},
   onDeleteCallback = () => {},
   imageDetails
 }: Props) => {
@@ -139,6 +141,7 @@ const ImageModal = ({
             handleDeleteImageClick={() => {
               onDeleteCallback()
               handleDeleteImageClick()
+              onCloseCallback()
             }}
             handleReloadImageData={handleReloadImageData}
             imageDetails={imageDetails}

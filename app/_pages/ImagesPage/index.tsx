@@ -100,7 +100,6 @@ const ButtonContainer = styled.div`
 const ImagesPage = () => {
   const confirmationModal = useModal(ConfirmationModal)
   const LIMIT = AppSettings.get('imagesPerPage') || 50
-  const [showImageModal, isImageModalOpen] = useGalleryImageModal()
 
   const handlers = useSwipeable({
     onSwipedLeft: () => {
@@ -197,6 +196,7 @@ const ImagesPage = () => {
     }
     await getImageCount()
     setComponentState({ images: data, isLoading: false })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     LIMIT,
     componentState.filterMode,
@@ -206,16 +206,66 @@ const ImagesPage = () => {
     setComponentState
   ])
 
-  const handleDeleteImageClick = async () => {
+  const [showImageModal, isImageModalOpen] = useGalleryImageModal({
+    fetchImages
+  })
+
+  // const fetchImages = useCallback(async () => {
+  //   console.log(`OH FETCHY!`)
+  //   // This is a hack to get around linting error with dependency array.
+  //   // After an image is deleted, force update a timestamp. useCallback here
+  //   // sees that it was updated and reruns the fetch query.
+  //   if (!componentState.updateTimestamp) {
+  //     return
+  //   }
+
+  //   const offset = Number(searchParams?.get('offset')) || 0
+  //   let data
+  //   const sort = localStorage.getItem('imagePageSort') || 'new'
+
+  //   if (componentState.filterMode === 'all') {
+  //     data = await fetchCompletedJobs({ limit: LIMIT, offset, sort })
+  //   } else {
+  //     data = await filterCompletedJobs({
+  //       limit: LIMIT,
+  //       offset,
+  //       sort,
+  //       filterType: componentState.filterMode,
+  //       model: searchParams?.get('model') as string,
+  //       callback: (i) => setComponentState({ currentFilterImageIndex: i })
+  //     })
+  //     setFilteredItemsArray(data)
+  //   }
+  //   await getImageCount()
+  //   setComponentState({ images: data, isLoading: false })
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [
+  //   forceFetchRef.current, // Required dep in order to force function call
+  //   LIMIT,
+  //   componentState.filterMode,
+  //   componentState.updateTimestamp,
+  //   getImageCount,
+  //   searchParams,
+  //   setComponentState
+  // ])
+
+  const handleDeleteImageClick = useCallback(async () => {
     await bulkDeleteImages(componentState.deleteSelection)
     await getImageCount()
     await fetchImages()
     setComponentState({
       deleteMode: false,
-      deleteSelection: []
+      deleteSelection: [],
+      updateTimestamp: Date.now()
     })
     confirmationModal.remove()
-  }
+  }, [
+    componentState.deleteSelection,
+    confirmationModal,
+    fetchImages,
+    getImageCount,
+    setComponentState
+  ])
 
   const handleLoadMore = useCallback(
     async (btn: string) => {
@@ -361,8 +411,9 @@ const ImagesPage = () => {
 
         // @ts-ignore
         showImageModal({
+          images: componentState.images,
           jobId,
-          images: componentState.images
+          handleDeleteImageClick: () => console.log('DICK BUTT')
         })
       }
     },

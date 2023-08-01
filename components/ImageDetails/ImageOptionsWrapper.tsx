@@ -111,7 +111,7 @@ const ImageOptionsWrapper = ({
     handleClose()
   }
 
-  const handleDeleteImageConfirm = async () => {
+  const handleDeleteImageConfirm = useCallback(async () => {
     handleDeleteImageClick()
     await deletePendingJobFromDb(imageDetails.jobId as string)
     await deleteCompletedImage(imageDetails.jobId as string)
@@ -119,7 +119,12 @@ const ImageOptionsWrapper = ({
     getImageDetails.delete(imageDetails.jobId as string) // bust memoization cache
     confirmationModal.remove()
     handleClose()
-  }
+  }, [
+    confirmationModal,
+    handleClose,
+    handleDeleteImageClick,
+    imageDetails.jobId
+  ])
 
   const handleRerollClick = useCallback(
     async (imageDetails: any) => {

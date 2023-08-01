@@ -231,8 +231,9 @@ const PendingPage = () => {
         )}
         {index === 0 &&
           !imageDetailsModalOpen &&
-          //@ts-ignore
-          size.width < 800 && <AdContainer className={styles.AdUnit} />}
+          (size.width ?? Infinity < 800) && (
+            <AdContainer className={styles.AdUnit} />
+          )}
         <PendingItem
           handleCloseClick={() => {
             onClosePanel(job.jobId)
@@ -461,8 +462,7 @@ const PendingPage = () => {
 
           {sorted.length === 0 &&
             !imageDetailsModalOpen &&
-            // @ts-ignore
-            size.width < 800 && (
+            (size.width ?? Infinity < 800) && (
               <div style={{ padding: '0 16px', width: '100%' }}>
                 <AdContainer style={{ margin: '0 auto', maxWidth: '480px' }} />
               </div>

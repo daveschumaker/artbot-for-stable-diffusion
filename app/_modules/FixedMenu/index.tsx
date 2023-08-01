@@ -28,7 +28,7 @@ export default function FixedMenu() {
       </div>
       {
         // @ts-ignore
-        size.width >= 800 && (
+        (size.width ?? 0 >= 800) && (
           <div className={styles.SidebarAd}>
             <AdContainer />
           </div>

@@ -1,22 +1,21 @@
-import useComponentState from 'hooks/useComponentState'
-// import { useImagePreview } from 'modules/ImagePreviewProvider'
 import { useCallback, useEffect, useState } from 'react'
 import { useModal } from '@ebay/nice-modal-react'
 import ImageModal from 'app/_modules/ImageModal'
 
-const useGalleryImageModal = () => {
+const useGalleryImageModal = ({ fetchImages }: { fetchImages: any }) => {
   const imagePreviewModal = useModal(ImageModal)
   const [isImageModalOpen, setIsImageModalOpen] = useState(false)
   const [imageIdx, setImageIdx] = useState(0)
   const [imagesList, setImagesList] = useState<any[]>([])
   const [imageDetails, setImageDetails] = useState(null)
 
-  const handleClose = () => {
+  const handleClose = useCallback(async () => {
+    await fetchImages()
     setImageIdx(0)
     setImagesList([])
     setImageDetails(null)
     setIsImageModalOpen(false)
-  }
+  }, [fetchImages])
 
   const handleLoadNext = useCallback(() => {
     if (imagesList.length === 0) {
@@ -78,6 +77,7 @@ const useGalleryImageModal = () => {
       setIsImageModalOpen(true)
     }
   }, [
+    handleClose,
     handleLoadNext,
     handleLoadPrev,
     imageDetails,
@@ -94,137 +94,6 @@ const useGalleryImageModal = () => {
   }, [imageDetails])
 
   return [showImageModal, isImageModalOpen]
-}
-
-export const useGalleryImageModal_OG = () => {
-  const imagePreviewModal = useModal(ImageModal)
-  // const { setImageData, showImagePreviewModal } = useImagePreview()
-  const [componentState, setComponentState] = useComponentState({
-    imagesList: null,
-    imgIdx: null,
-    initJobId: null,
-    jobId: null
-  })
-
-  // const [onAfterDelete, setOnAfterDelete] = useState<() => any>(() => {})
-
-  const showImageModal = ({
-    jobId,
-    imagesList
-  }: {
-    jobId: string
-    imagesList: Array<any>
-  }) => {
-    let imgIdx
-
-    imagesList.forEach((item: any, i: number) => {
-      if (item.jobId === jobId) {
-        imgIdx = i
-      }
-    })
-
-    setComponentState({
-      imagesList,
-      imgIdx,
-      initJobId: jobId,
-      jobId
-    })
-
-    // setOnAfterDelete(() => fetchImages)
-  }
-
-  const handleLoadNext = useCallback(() => {
-    if (componentState.imgIdx === null) {
-      return
-    }
-
-    if (!componentState.imagesList) {
-      return
-    }
-
-    let newIdx = componentState.imgIdx + 1
-
-    if (newIdx > componentState.imagesList.length - 1) {
-      return
-    }
-
-    const jobId = componentState.imagesList[newIdx].jobId
-    setComponentState({
-      jobId,
-      imgIdx: newIdx
-    })
-
-    // const imageDetails = componentState.imagesList[newIdx]
-    // setImageData(imageDetails)
-  }, [componentState, setComponentState])
-
-  const handleLoadPrev = useCallback(() => {
-    if (componentState.imgIdx === null) {
-      return
-    }
-
-    if (!componentState.imagesList) {
-      return
-    }
-
-    let newIdx = componentState.imgIdx - 1
-    if (newIdx < 0) {
-      return
-    }
-
-    const jobId = componentState.imagesList[newIdx].jobId
-    setComponentState({
-      jobId,
-      imgIdx: newIdx
-    })
-
-    // const imageDetails = componentState.imagesList[newIdx]
-    // setImageData(imageDetails)
-  }, [componentState, setComponentState])
-
-  const triggerModal = useCallback(() => {
-    const imageDetails = componentState.imagesList[componentState.imgIdx]
-
-    imagePreviewModal.show({
-      disableNav: false,
-      imageDetails,
-      handleClose: () => imagePreviewModal.remove(),
-      handleLoadNext,
-      handleLoadPrev,
-      // onCloseCallback: () => {
-      //   setComponentState({
-      //     imgIdx: null,
-      //     initJobId: null,
-      //     jobId: null,
-      //     imagesList: null
-      //   })
-      //   onAfterDelete()
-      // },
-      onDeleteCallback: () => {
-        setComponentState({
-          imgIdx: null,
-          initJobId: null,
-          jobId: null,
-          imagesList: null
-        })
-      }
-    })
-  }, [
-    componentState.imagesList,
-    componentState.imgIdx,
-    handleLoadNext,
-    handleLoadPrev,
-    imagePreviewModal,
-    setComponentState
-  ])
-
-  useEffect(() => {
-    if (componentState.imagesList) {
-      triggerModal()
-    }
-  }, [componentState.imagesList, triggerModal])
-
-  return [showImageModal]
 }
 
 export default useGalleryImageModal

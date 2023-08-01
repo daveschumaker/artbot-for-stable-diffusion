@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { appInfoStore, setAdHidden } from 'store/appStore'
 import { useStore } from 'statery'
 
+let isInit = true
 let isMounted = false
 let pageTransition = false
 
@@ -70,12 +71,15 @@ function AdContainer({
   })
 
   useEffect(() => {
-    mountAd()
+    if (!isInit) {
+      mountAd()
+    }
 
     // This attempts to avoid a race condition where ad check is fired while page is transitioning
     pageTransition = true
 
     setTimeout(() => {
+      isInit = false
       pageTransition = false
     }, 2500)
 
@@ -104,7 +108,6 @@ function AdContainer({
 
   return (
     <div
-      // component-name={component}
       id="_adUnit"
       className={clsx(classes, className)}
       //@ts-ignore
