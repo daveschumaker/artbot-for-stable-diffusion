@@ -14,7 +14,6 @@ async function getPageData(searchParams: any) {
       )
 
       const data = (await res.json()) || {}
-      console.log(i, data)
       const { imageParams } = data.imageParams || {}
       shortlinkImageParams = imageParams || null
     }
@@ -30,24 +29,25 @@ interface Props {
 }
 
 export async function generateMetadata({ searchParams }: Props) {
-  // parent?: ResolvingMetadata
   const { i } = searchParams
 
   try {
     if (i) {
-      const res = await fetch(
-        `http://localhost:${process.env.PORT}${basePath}/api/get-shortlink?shortlink=${i}`
+      const resp = await fetch(
+        `${process.env.NEXT_SHORTLINK_SERVICE}/api/v1/shortlink/load/${i}`,
+        {
+          method: 'GET'
+        }
       )
 
-      const data = (await res.json()) || {}
-      console.log(i, data)
-      const { imageParams } = data.imageParams || {}
-      const shortlinkImageParams = imageParams || null
+      const data = (await resp.json()) || {}
+      const { data: shortlinkData } = data
+      const shortlinkImageParams = shortlinkData.imageParams || null
 
       const title = `ArtBot - Shareable link created with ${shortlinkImageParams.models[0]}`
       return {
         metadataBase: new URL(baseHost),
-        title,
+        title: `🤖 ${title}`,
         description: shortlinkImageParams.prompt,
         openGraph: {
           type: 'website',
