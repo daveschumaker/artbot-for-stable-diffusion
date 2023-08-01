@@ -36,6 +36,42 @@ const mountAd = debounce(() => {
         setAdHidden(true)
       }
     }, 850)
+
+    // Handle weird race condition
+    setTimeout(() => {
+      const divElement = document.getElementById('carbon-container')
+      const rect = divElement?.getBoundingClientRect()
+      const divHeight = rect?.height
+      initPageLoad = false
+
+      if (divHeight) {
+        setAdHidden(false)
+      }
+    }, 1500)
+
+    // Handle weird race condition
+    setTimeout(() => {
+      const divElement = document.getElementById('carbon-container')
+      const rect = divElement?.getBoundingClientRect()
+      const divHeight = rect?.height
+      initPageLoad = false
+
+      if (divHeight) {
+        setAdHidden(false)
+      }
+    }, 2500)
+
+    // Handle weird race condition
+    setTimeout(() => {
+      const divElement = document.getElementById('carbon-container')
+      const rect = divElement?.getBoundingClientRect()
+      const divHeight = rect?.height
+      initPageLoad = false
+
+      if (divHeight) {
+        setAdHidden(false)
+      }
+    }, 5000)
   }
 }, 500)
 
