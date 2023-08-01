@@ -5,6 +5,7 @@
   right: 16px;
   bottom: 8px;
   overflow-y: auto;
+  max-width: var(--fixedSideBar-width);
 
   -ms-overflow-style: none;
   /* IE and Edge */

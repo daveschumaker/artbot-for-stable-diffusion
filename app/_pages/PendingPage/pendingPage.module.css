@@ -3,6 +3,12 @@
   padding: 0 8px;
 }
 
+.MobileAd {
+  display: block;
+  padding: 0 16px;
+  width: 100%;
+}
+
 .AdUnit {
   margin-bottom: 16px;
   min-height: 164px;
@@ -10,7 +16,8 @@
 }
 
 @media (min-width: 800px) {
-  .AdUnit {
+  .AdUnit,
+  .MobileAd {
     display: none;
   }
 }

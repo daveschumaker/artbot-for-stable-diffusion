@@ -22,7 +22,7 @@
 
 .MenuWrapper {
   position: absolute;
-  bottom: 262px;
+  bottom: 0;
   left: 0;
   right: 0;
   top: 0;
@@ -33,8 +33,15 @@
 }
 
 .SidebarAd {
-  bottom: 0px;
-  left: 0;
-  width: 219px;
-  position: fixed;
+  display: none;
+}
+
+@media (min-width: 800px) {
+  .SidebarAd {
+    display: block;
+    bottom: 0px;
+    left: 0;
+    width: 219px;
+    position: fixed;
+  }
 }

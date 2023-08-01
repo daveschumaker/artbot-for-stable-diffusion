@@ -51,7 +51,7 @@ const PendingPage = () => {
   const [filter, setFilter] = useState('all')
   const [validatePending, setValidatePending] = useState(false)
   const appState = useStore(appInfoStore)
-  const { imageDetailsModalOpen } = appState
+  const { adHidden, imageDetailsModalOpen } = appState
 
   const [showFilterDropdown, setShowFilterDropdown] = useState(false)
   const [showSettingsDropdown, setShowSettingsDropdown] = useState(false)
@@ -231,9 +231,9 @@ const PendingPage = () => {
         )}
         {index === 0 &&
           !imageDetailsModalOpen &&
-          (size.width ?? Infinity < 800) && (
-            <AdContainer className={styles.AdUnit} />
-          )}
+          !adHidden &&
+          // @ts-ignore
+          size?.width < 800 && <AdContainer className={styles.AdUnit} />}
         <PendingItem
           handleCloseClick={() => {
             onClosePanel(job.jobId)
@@ -460,13 +460,11 @@ const PendingPage = () => {
             </div>
           )}
 
-          {sorted.length === 0 &&
-            !imageDetailsModalOpen &&
-            (size.width ?? Infinity < 800) && (
-              <div style={{ padding: '0 16px', width: '100%' }}>
-                <AdContainer style={{ margin: '0 auto', maxWidth: '480px' }} />
-              </div>
-            )}
+          {sorted.length === 0 && !imageDetailsModalOpen && (
+            <div className={styles.MobileAd}>
+              <AdContainer style={{ margin: '0 auto', maxWidth: '480px' }} />
+            </div>
+          )}
 
           {sorted.length > 0 && (
             <Virtuoso

@@ -68,6 +68,8 @@
 }
 
 .NavigationMenuContent {
+  background-color: var(--carbon-bg);
+  color: var(--input-text);
   position: absolute;
   top: 0;
   right: 0;
@@ -122,7 +124,7 @@
   transform-origin: top center;
   margin-top: 10px;
   width: 100%;
-  background-color: white;
+  background-color: var(--carbon-bg);
   border-radius: 6px;
   overflow: hidden;
   box-shadow: hsl(206 22% 7% / 35%) 0px 10px 38px -10px,
@@ -166,7 +168,7 @@
 }
 
 .ListItemLink:hover {
-  background-color: #f2f2f2;
+  background-color: var(--carbon-bg);
 }
 
 .ListItemHeading {
@@ -208,7 +210,7 @@
 .Arrow {
   position: relative;
   top: 70%;
-  background-color: white;
+  background-color: var(--carbon-bg);
   width: 12px;
   height: 12px;
   transform: rotate(45deg);

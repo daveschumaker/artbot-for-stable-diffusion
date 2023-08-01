@@ -13,7 +13,7 @@ const nextConfig = {
     domains: ['huggingface.co', 'raw.githubusercontent.com']
   },
   productionBrowserSourceMaps: false, // Setting to true seems to blow up our prod Node server
-  reactStrictMode: true,
+  reactStrictMode: false,
   async redirects() {
     return [
       {

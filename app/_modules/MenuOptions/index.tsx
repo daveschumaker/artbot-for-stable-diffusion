@@ -19,9 +19,11 @@ import styles from './menu.module.css'
 import { CSSProperties } from 'react'
 
 const MenuOptions = ({
+  forceAdPadding = false,
   navigateToLink = () => {},
   style
 }: {
+  forceAdPadding?: boolean
   navigateToLink: (path: string) => any
   style?: CSSProperties
 }) => {
@@ -260,6 +262,7 @@ const MenuOptions = ({
           Contact
         </div>
       </div>
+      {forceAdPadding && <div style={{ paddingBottom: '260px' }}></div>}
     </div>
   )
 }

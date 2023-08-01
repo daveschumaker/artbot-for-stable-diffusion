@@ -22,13 +22,14 @@ export default function FixedMenu() {
     <div className={styles.FixedMenu}>
       <div className={clsx(styles.MenuWrapper, adHidden && styles.AdHidden)}>
         <MenuOptions
+          forceAdPadding={!adHidden}
           navigateToLink={navigateToLink}
           style={{ marginTop: '8px', width: 'var(--fixedSideBar-width)' }}
         />
       </div>
       {
         // @ts-ignore
-        (size.width ?? 0 >= 800) && (
+        size?.width >= 800 && (
           <div className={styles.SidebarAd}>
             <AdContainer />
           </div>
