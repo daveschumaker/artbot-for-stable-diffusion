@@ -3,47 +3,71 @@ import Typewriter from './typewriter'
 import styles from './typewriter.module.css'
 import { useState } from 'react'
 
-import image1 from './images/astronaut.jpg'
-import image2 from './images/amazon.jpg'
-import image3 from './images/himalayas.jpg'
-import image4 from './images/robocop.jpg'
-import image5 from './images/daftpunk.jpg'
-import image6 from './images/mario.jpg'
-import image7 from './images/cabin.jpg'
-import image8 from './images/internet.jpg'
-import image9 from './images/mechanical_brain.jpg'
-
-const prompts = [
-  'An astronaut resting on Mars in a beach chair',
-  'A high tech solarpunk utopia in the Amazon rainforest with technology and nature mixed together',
-  'Himalayan mountains in the style of Moebius',
-  'Cute 3D render of RoboCop',
-  'Daft Punk in the style of a woodblock print',
-  'Beautiful painting of Mario and Luigi eating ice cream on a park bench',
-  'Mountain chalet covered in snow, foggy, sunrise, sharp details, sharp focus, elegant, highly detailed, illustration, by Jordan Grimmer and Greg Rutkowski',
-  'A pencil drawing of the Internet',
-  'Model of a steampunk mechanical brain'
-]
+import image0 from './images/astronaut.jpg'
+import image1 from './images/amazon.jpg'
+import image2 from './images/himalayas.jpg'
+import image3 from './images/cabin.jpg'
+import image4 from './images/mechanical_brain.jpg'
+import image5 from './images/cake.jpg'
+import image6 from './images/dino.jpg'
+import image7 from './images/food.jpg'
 
 const images = [
-  image1,
-  image2,
-  image3,
-  image4,
-  image5,
-  image6,
-  image7,
-  image8,
-  image9
+  {
+    file: image0,
+    prompt: 'An astronaut resting on Mars in a beach chair',
+    model: 'stable_diffusion'
+  },
+  {
+    file: image1,
+    prompt:
+      'A high tech solarpunk utopia in the Amazon rainforest with technology and nature mixed together',
+    model: 'stable_diffusion'
+  },
+  {
+    file: image2,
+    prompt: 'Himalayan mountains in the style of Moebius',
+    model: 'stable_diffusion'
+  },
+  {
+    file: image3,
+    prompt:
+      'Mountain chalet covered in snow, foggy, sunrise, sharp details, sharp focus, elegant, highly detailed, illustration, by Jordan Grimmer and Greg Rutkowski',
+    model: 'stable_diffusion'
+  },
+  {
+    file: image4,
+    prompt: 'Model of a steampunk mechanical brain',
+    model: 'stable_diffusion'
+  },
+  {
+    file: image5,
+    prompt: 'Geologic cross section of a birthday cake, colored pencil drawing',
+    model: 'SDXL'
+  },
+  {
+    file: image6,
+    prompt:
+      'Happy people toasting and having a fine dinner outside on a patio while a menacing dinosaur is in the background',
+    model: 'SDXL'
+  },
+  {
+    file: image7,
+    prompt:
+      'macro photograph of a brisket on a table with beer, in a blurred restaurant with depth of field, bokeh, soft diffused light, professional food photography',
+    model: 'SDXL'
+  }
 ]
 
-// function shuffleArray(array: Array<string>) {
-//   for (let i = array.length - 1; i > 0; i--) {
-//     const j = Math.floor(Math.random() * (i + 1))
-//     ;[array[i], array[j]] = [array[j], array[i]]
-//   }
-//   return array
-// }
+function shuffleArray(array: Array<any>) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[array[i], array[j]] = [array[j], array[i]]
+  }
+  return array
+}
+
+const shuffled = shuffleArray(images)
 
 export default function PromptTypewriter() {
   const [isHidden, setIsHidden] = useState(true)
@@ -61,14 +85,14 @@ export default function PromptTypewriter() {
     <div className={styles.TypeWriterWrapper}>
       <div className={styles.TextWrapper}>
         <Typewriter
-          text={prompts[promptIndex]}
+          text={shuffled[promptIndex].prompt}
           onEraseDelay={() => {
             handleImageChange()
           }}
           onEraseDone={() => {
             let updatedPrompt = promptIndex + 1
 
-            if (updatedPrompt > prompts.length - 1) {
+            if (updatedPrompt > shuffled.length - 1) {
               updatedPrompt = 0
             }
 
@@ -84,6 +108,17 @@ export default function PromptTypewriter() {
           eraseSpeed={15}
           eraseDelay={5000}
         />
+        <div
+          style={{
+            fontFamily: 'monospace',
+            fontSize: '12px',
+            position: 'absolute',
+            bottom: 8,
+            right: 8
+          }}
+        >
+          created with <strong>{shuffled[promptIndex].model}</strong>
+        </div>
       </div>
       <div className={styles.ImageWrapper}>
         <img
@@ -91,7 +126,7 @@ export default function PromptTypewriter() {
           className={`${styles['fade-in-out']} ${
             isHidden ? styles.hidden : ''
           }`}
-          src={images[promptIndex].src}
+          src={shuffled[promptIndex].file.src}
           style={{ borderRadius: '4px', width: '100%' }}
         />
       </div>
