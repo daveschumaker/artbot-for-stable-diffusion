@@ -8,10 +8,12 @@ import { useEffect, useState } from 'react'
 export default function CreatePageSettings() {
   const [showDropdown, setShowDropdown] = useState(false)
 
+  const [savePromptOnCreate, setSavePromptOnCreate] = useState(false)
   const [stayOnCreate, setStayOnCreate] = useState(false)
   const [negativePanelOpen, setNegativePanelOpen] = useState(false)
 
   useEffect(() => {
+    setSavePromptOnCreate(AppSettings.get('savePromptOnCreate') || false)
     setStayOnCreate(AppSettings.get('stayOnCreate') || false)
     setNegativePanelOpen(AppSettings.get('negativePanelOpen'))
   }, [])
@@ -25,6 +27,16 @@ export default function CreatePageSettings() {
           top="52px"
           maxWidth="320px"
         >
+          <div style={{ padding: '4px 0' }}>
+            <Checkbox
+              label="Preserve prompt?"
+              checked={savePromptOnCreate}
+              onChange={(bool: boolean) => {
+                setSavePromptOnCreate(bool)
+                AppSettings.set('savePromptOnCreate', bool)
+              }}
+            />
+          </div>
           <div style={{ padding: '4px 0' }}>
             <Checkbox
               label="Stay on page after create?"

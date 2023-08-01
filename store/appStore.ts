@@ -21,6 +21,8 @@ interface AppStore {
   stableHordeApiOnline: boolean
   storageQuotaLimit: boolean
   unsupportedBrowser: boolean
+  lockedToWorker: boolean
+  pauseJobQueue: boolean
 }
 
 export const appInfoStore = makeStore<AppStore>({
@@ -43,8 +45,22 @@ export const appInfoStore = makeStore<AppStore>({
   showImageReadyToast: false,
   stableHordeApiOnline: true,
   storageQuotaLimit: false,
-  unsupportedBrowser: false
+  unsupportedBrowser: false,
+  pauseJobQueue: false,
+  lockedToWorker: false
 })
+
+export const setPauseJobQueue = (val: boolean) => {
+  appInfoStore.set(() => ({
+    pauseJobQueue: val
+  }))
+}
+
+export const setLockedToWorker = (val: boolean) => {
+  appInfoStore.set(() => ({
+    lockedToWorker: val
+  }))
+}
 
 export const setAdHidden = (val: boolean) => {
   appInfoStore.set(() => ({

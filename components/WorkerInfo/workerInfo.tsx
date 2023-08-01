@@ -21,6 +21,7 @@ import { Button } from '../UI/Button'
 import ModelsModal from './ModelsModal'
 import styles from './workerInfo.module.css'
 import { useForceUpdate } from 'hooks/useForceUpdate'
+import { setLockedToWorker } from 'store/appStore'
 
 const WorkerTitle = styled.div`
   align-items: center;
@@ -256,6 +257,7 @@ const WorkerInfo = ({
             <Button
               theme="secondary"
               onClick={() => {
+                setLockedToWorker(false)
                 AppSettings.save('useWorkerId', '')
                 forceUpdate()
               }}
@@ -266,6 +268,7 @@ const WorkerInfo = ({
           ) : (
             <Button
               onClick={() => {
+                setLockedToWorker(true)
                 AppSettings.save('useWorkerId', worker.id)
                 forceUpdate()
               }}

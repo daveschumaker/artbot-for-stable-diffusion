@@ -17,10 +17,12 @@ import {
   setShowImageReadyToast
 } from 'store/appStore'
 import {
+  IconAlertTriangle,
   IconChevronDown,
   IconDeviceDesktopAnalytics,
   IconPoint
 } from '@tabler/icons-react'
+import AlertDropdown from '../AlertDropdown'
 
 const ListItem = ({ className, children, href, title, ...props }: any) => (
   <li>
@@ -38,6 +40,7 @@ const ListItem = ({ className, children, href, title, ...props }: any) => (
 )
 
 const HeaderNavLinks = () => {
+  const { lockedToWorker, pauseJobQueue } = useStore(appInfoStore)
   const pathname = usePathname()
 
   const appState = useStore(appInfoStore)
@@ -247,6 +250,22 @@ const HeaderNavLinks = () => {
             </NavigationMenu.Trigger>
             <NavigationMenu.Content className={styles.NavigationMenuContent}>
               <ErrorDropdown />
+            </NavigationMenu.Content>
+          </NavigationMenu.Item>
+        )}
+
+        {(lockedToWorker || pauseJobQueue) && (
+          <NavigationMenu.Item>
+            <NavigationMenu.Trigger
+              className={clsx(
+                styles.NavigationMenuTrigger,
+                styles.AnalyticsIcon
+              )}
+            >
+              <IconAlertTriangle size={28} stroke={1} />
+            </NavigationMenu.Trigger>
+            <NavigationMenu.Content className={styles.NavigationMenuContent}>
+              <AlertDropdown />
             </NavigationMenu.Content>
           </NavigationMenu.Item>
         )}

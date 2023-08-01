@@ -20,6 +20,7 @@ import { fetchUserDetails } from 'api/userInfo'
 import SharedKeys from './SharedKeys'
 import WorkerBlocklist from './WorkerBlocklist'
 import InputSwitchV2 from 'app/_modules/AdvancedOptionsPanel/InputSwitchV2'
+import { setLockedToWorker } from 'store/appStore'
 
 const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
   const userStore = useStore(userInfoStore)
@@ -70,6 +71,11 @@ const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
 
   const handleSetWorkerId = (e: React.ChangeEvent<HTMLInputElement>) => {
     const workerId = e.target.value || ''
+
+    if (workerId) {
+      setLockedToWorker(true)
+    }
+
     AppSettings.save('useWorkerId', workerId.trim())
     setComponentState({ useWorkerId: e.target.value })
   }
@@ -398,6 +404,7 @@ const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
               onClick={() => {
                 unsetUserInfo()
                 setComponentState({ useWorkerId: '' })
+                setLockedToWorker(false)
                 AppSettings.save('useWorkerId', '')
               }}
             >

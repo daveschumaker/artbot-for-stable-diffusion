@@ -2,17 +2,18 @@ import DropdownOptions from 'app/_modules/DropdownOptions'
 import Checkbox from 'components/UI/Checkbox'
 import AppSettings from 'models/AppSettings'
 import { useEffect, useState } from 'react'
+import { setPauseJobQueue } from 'store/appStore'
 
 export default function PendingSettings({ setShowSettingsDropdown }: any) {
   const [autoclear, setAutoclear] = useState(false)
-  const [pauseJobQueue, setPauseJobQueue] = useState(false)
+  const [pauseQueue, setPauseQueue] = useState(false)
 
   useEffect(() => {
     const clearValue = AppSettings.get('autoClearPending') || false
     const pauseValue = AppSettings.get('pauseJobQueue') || false
 
     setAutoclear(clearValue)
-    setPauseJobQueue(pauseValue)
+    setPauseQueue(pauseValue)
   }, [])
 
   return (
@@ -40,8 +41,9 @@ export default function PendingSettings({ setShowSettingsDropdown }: any) {
         />
         <Checkbox
           label={`Pause job queue?`}
-          checked={pauseJobQueue}
+          checked={pauseQueue}
           onChange={(bool: boolean) => {
+            setPauseQueue(bool)
             setPauseJobQueue(bool)
             AppSettings.set('pauseJobQueue', bool)
           }}
