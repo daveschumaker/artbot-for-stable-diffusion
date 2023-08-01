@@ -4,7 +4,9 @@ import { useEffectOnce } from '../../hooks/useEffectOnce'
 import { usePathname } from 'next/navigation'
 import { appInfoStore, setAdHidden } from 'store/appStore'
 import { useStore } from 'statery'
+
 let isMounted = false
+let pageTransition = false
 
 function AdContainer({
   className,
@@ -26,8 +28,10 @@ function AdContainer({
 
   const mountAd = () => {
     if (isMounted) return
+    if (adHidden) return
 
     isMounted = true
+
     setTimeout(() => {
       if (document.getElementById(id)) {
         return
@@ -51,10 +55,12 @@ function AdContainer({
     setTimeout(() => {
       var el = document.getElementById(id)
 
-      if (!el) {
+      if (!el && !pageTransition) {
+        console.log(`__AD NOT FOUND`)
         setAdHidden(true)
+        isMounted = false
       }
-    }, 1000)
+    }, 1500)
   }
 
   useEffectOnce(() => {
@@ -63,6 +69,13 @@ function AdContainer({
 
   useEffect(() => {
     mountAd()
+
+    // This attempts to avoid a race condition where ad check is fired while page is transitioning
+    pageTransition = true
+
+    setTimeout(() => {
+      pageTransition = false
+    }, 2500)
 
     return () => {
       var el = document.getElementById(id)

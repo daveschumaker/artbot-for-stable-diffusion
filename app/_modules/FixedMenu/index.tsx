@@ -7,10 +7,12 @@ import AdContainer from 'components/AdContainer'
 import { useStore } from 'statery'
 import { appInfoStore } from 'store/appStore'
 import clsx from 'clsx'
+import { useWindowSize } from 'hooks/useWindowSize'
 
 export default function FixedMenu() {
   const { adHidden } = useStore(appInfoStore)
   const router = useRouter()
+  const size = useWindowSize()
 
   const navigateToLink = (path: string) => {
     router.push(path)
@@ -24,9 +26,14 @@ export default function FixedMenu() {
           style={{ marginTop: '8px', width: 'var(--fixedSideBar-width)' }}
         />
       </div>
-      <div className={styles.SidebarAd}>
-        <AdContainer />
-      </div>
+      {
+        // @ts-ignore
+        size.width >= 800 && (
+          <div className={styles.SidebarAd}>
+            <AdContainer />
+          </div>
+        )
+      }
     </div>
   )
 }

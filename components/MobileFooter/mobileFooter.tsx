@@ -1,4 +1,5 @@
-import { useRouter } from 'next/router'
+'use client'
+import { usePathname } from 'next/navigation'
 
 import CreateIcon from '../icons/CreateIcon'
 import HourglassIcon from '../icons/HourglassIcon'
@@ -16,8 +17,7 @@ import styles from './mobileFooter.module.css'
 import clsx from 'clsx'
 
 export default function MobileFooter() {
-  const router = useRouter()
-  const { pathname } = router
+  const pathname = usePathname()
 
   const appState = useStore(appInfoStore)
   const { newImageReady } = appState
