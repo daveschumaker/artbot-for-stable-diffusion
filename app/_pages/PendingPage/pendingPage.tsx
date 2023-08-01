@@ -2,34 +2,31 @@
 
 import { fetchPendingImageJobs } from 'controllers/pendingJobsController'
 import React, { useCallback, useEffect, useState } from 'react'
-import styled from 'styled-components'
 import { Virtuoso } from 'react-virtuoso'
 
 import { useEffectOnce } from 'hooks/useEffectOnce'
 import AppSettings from 'models/AppSettings'
 import { JobStatus } from 'types'
 import {
-  deleteAllPendingErrors,
-  deleteAllPendingJobs,
   deleteDoneFromPending,
   deletePendingJobFromDb,
   getImageDetails
 } from 'utils/db'
 
 import AdContainer from 'components/AdContainer'
-import CheckboxIcon from 'components/icons/CheckboxIcon'
-import DotsVerticalIcon from 'components/icons/DotsVerticalIcon'
-import SquareIcon from 'components/icons/SquareIcon'
-import DropDownMenu from 'components/UI/DropDownMenu/dropDownMenu'
-import DropDownMenuItem from 'components/UI/DropDownMenuItem'
+// import CheckboxIcon from 'components/icons/CheckboxIcon'
+// import DotsVerticalIcon from 'components/icons/DotsVerticalIcon'
+// import SquareIcon from 'components/icons/SquareIcon'
+// import DropDownMenu from 'components/UI/DropDownMenu/dropDownMenu'
+// import DropDownMenuItem from 'components/UI/DropDownMenuItem'
 import Linker from 'components/UI/Linker'
-import MenuButton from 'app/_components/MenuButton'
+// import MenuButton from 'app/_components/MenuButton'
 import PageTitle from 'app/_components/PageTitle'
 import TextButton from 'components/UI/TextButton'
 import { useWindowSize } from 'hooks/useWindowSize'
 import styles from './pendingPage.module.css'
-import FilterClearOptions from './filterClearOptions'
-import { isInstalledPwa } from 'utils/appUtils'
+// import FilterClearOptions from './filterClearOptions'
+// import { isInstalledPwa } from 'utils/appUtils'
 import { useStore } from 'statery'
 import { appInfoStore } from 'store/appStore'
 import {
@@ -39,19 +36,25 @@ import {
 } from 'controllers/pendingJobsCache'
 import usePendingImageModal from './usePendingImageModal'
 import PendingItem from 'modules/PendingItem'
-
-const MenuSeparator = styled.div`
-  width: 100%;
-  border-bottom: 1px solid ${(props) => props.theme.navLinkActive};
-`
+import FlexRow from 'app/_components/FlexRow'
+import { IconFilter, IconInfoTriangle, IconSettings } from '@tabler/icons-react'
+import { Button } from 'components/UI/Button'
+import FilterOptions from './FilterOptions'
+import Accordion from 'app/_components/Accordion'
+import AccordionItem from 'app/_components/AccordionItem'
+import MaxWidth from 'components/UI/MaxWidth'
+import PendingSettings from './PendingSettings'
+import ClearJobs from './ClearJobs'
 
 const PendingPage = () => {
   const size = useWindowSize()
   const [filter, setFilter] = useState('all')
-  const [showMenu, setShowMenu] = useState(false)
   const [validatePending, setValidatePending] = useState(false)
   const appState = useStore(appInfoStore)
   const { imageDetailsModalOpen } = appState
+
+  const [showFilterDropdown, setShowFilterDropdown] = useState(false)
+  const [showSettingsDropdown, setShowSettingsDropdown] = useState(false)
 
   const [pendingImages, setPendingImages] = useState([])
   const [showImageModal] = usePendingImageModal()
@@ -133,6 +136,10 @@ const PendingPage = () => {
 
       if (filter === 'done') {
         return job.jobStatus === JobStatus.Done
+      }
+
+      if (filter === 'waiting') {
+        return job.jobStatus === JobStatus.Waiting
       }
 
       if (filter === 'processing') {
@@ -217,7 +224,7 @@ const PendingPage = () => {
     return (
       <>
         {inProgress.length > 0 && index === 0 && (
-          <div className="mt-2 mb-2">
+          <div style={{ paddingBottom: '12px' }}>
             Why not <Linker href="/rate">rate some images</Linker> (and earn
             kudos) while you wait?
           </div>
@@ -225,11 +232,7 @@ const PendingPage = () => {
         {index === 0 &&
           !imageDetailsModalOpen &&
           //@ts-ignore
-          size.width < 800 && (
-            <div className={styles.AdUnit}>
-              <AdContainer />
-            </div>
-          )}
+          size.width < 800 && <AdContainer className={styles.AdUnit} />}
         <PendingItem
           handleCloseClick={() => {
             onClosePanel(job.jobId)
@@ -246,24 +249,48 @@ const PendingPage = () => {
     )
   }
 
-  let listHeight = 500
+  // let listHeight = 500
 
-  if (isInstalledPwa() && size.height) {
-    listHeight = size.height - 276
-  } else if (size.height) {
-    listHeight = size.height - 240
+  // if (isInstalledPwa() && size.height) {
+  //   listHeight = size.height - 276
+  // } else if (size.height) {
+  //   listHeight = size.height - 240
+  // }
+
+  let titleDescript = `All images (${pendingImages.length})`
+
+  if (filter === 'processing') {
+    titleDescript = `Processing (${jobsInProgress})`
+  }
+
+  if (filter === 'done') {
+    titleDescript = `Finished (${done.length})`
+  }
+
+  if (filter === 'waiting') {
+    titleDescript = `Waiting (${waiting.length})`
+  }
+
+  if (filter === 'error') {
+    titleDescript = `Errors (${error.length})`
   }
 
   return (
     <div style={{ overflowAnchor: 'none' }}>
       <div
         className="flex flex-row items-center w-full"
-        style={{ justifyContent: 'space-between' }}
+        style={{
+          justifyContent: 'space-between',
+          paddingBottom: '8px',
+          position: 'relative'
+        }}
       >
-        <div className="inline-block w-3/4">
-          <PageTitle>Image queue</PageTitle>
+        <div style={{ width: '100%' }}>
+          <PageTitle style={{ marginBottom: 0 }}>
+            Image queue: {titleDescript}
+          </PageTitle>
         </div>
-        <div className="flex flex-row justify-end w-1/4 items-start h-[38px] relative gap-2">
+        {/* <div className="flex flex-row justify-end w-1/4 items-start h-[38px] relative gap-2">
           <MenuButton
             active={showMenu}
             title="Pending options"
@@ -343,81 +370,133 @@ const PendingPage = () => {
               </DropDownMenuItem>
             </DropDownMenu>
           )}
-        </div>
+        </div> */}
       </div>
-      <FilterClearOptions
-        filter={filter}
-        setFilter={setFilter}
-        pendingImages={pendingImages}
-      />
-      {pendingImages.length === 0 && (
-        <div className="mt-4 mb-2">
-          No images pending.{' '}
-          <Linker href="/" className="text-cyan-400">
-            Why not create something?
-          </Linker>
-        </div>
-      )}
-
-      {pendingImages.length === 0 && done.length > 0 && (
-        <>
-          <PageTitle as="h2">Recently completed images</PageTitle>
-          <div className="mb-2">
-            <TextButton
-              onClick={() => {
-                deletePendingJobs(JobStatus.Done)
-                deleteDoneFromPending()
-              }}
-            >
-              Clear all completed
-            </TextButton>
-          </div>
-        </>
-      )}
-
-      {AppSettings.get('useWorkerId') && (
-        <div className="mt-4 mb-4 text-amber-400 font-semibold rounded border border-amber-400 p-[8px]">
-          FYI: You are currently sending jobs to only one worker. Jobs may not
-          complete if worker is not available or under heavy load, or certain
-          request parameters aren&apos;t available (i.e., model, image
-          resolution, post-processors).
-        </div>
-      )}
-
-      {sorted.length === 0 &&
-        !imageDetailsModalOpen &&
-        // @ts-ignore
-        size.width < 890 && (
-          <div className="w-full">
-            <AdContainer />
-          </div>
+      <FlexRow
+        gap={4}
+        style={{
+          justifyContent: 'flex-start',
+          position: 'relative',
+          width: '100%'
+        }}
+      >
+        {showFilterDropdown && (
+          <FilterOptions
+            filter={filter}
+            setFilter={setFilter}
+            jobs={processPending()}
+            jobCount={pendingImages.length}
+            setShowFilterDropdown={setShowFilterDropdown}
+          />
         )}
+        {showSettingsDropdown && (
+          <PendingSettings setShowSettingsDropdown={setShowSettingsDropdown} />
+        )}
+        <ClearJobs filter={filter} pendingImages={pendingImages} />
+        <Button onClick={() => setShowFilterDropdown(true)}>
+          <IconFilter stroke={1.5} />
+        </Button>
+        <Button onClick={() => setShowSettingsDropdown(true)}>
+          <IconSettings stroke={1.5} />
+        </Button>
+      </FlexRow>
+      {/* <FilterClearOptions filter={filter} pendingImages={pendingImages} /> */}
+      <MaxWidth>
+        <div className={styles.ListWrapper}>
+          {pendingImages.length === 0 && (
+            <div style={{ padding: '0 16px' }}>
+              No images pending.{' '}
+              <Linker href="/" className="text-cyan-400">
+                Why not create something?
+              </Linker>
+            </div>
+          )}
 
-      {sorted.length > 0 && (
-        <Virtuoso
-          className={styles['virtual-list']}
-          style={{
-            height: `${listHeight}px`,
-            padding: '60px 0'
-          }}
-          totalCount={sorted.length}
-          components={{
-            Footer: () => {
-              return (
-                <div
-                  style={{
-                    height: '30px',
-                    marginBottom: '30px'
+          {pendingImages.length === 0 && done.length > 0 && (
+            <>
+              <PageTitle as="h2">Recently completed images</PageTitle>
+              <div className="mb-2">
+                <TextButton
+                  onClick={() => {
+                    deletePendingJobs(JobStatus.Done)
+                    deleteDoneFromPending()
                   }}
                 >
-                  {' '}
-                </div>
-              )
-            }
-          }}
-          itemContent={(index) => <>{renderRow({ index })}</>}
-        />
-      )}
+                  Clear all completed
+                </TextButton>
+              </div>
+            </>
+          )}
+
+          {AppSettings.get('useWorkerId') && (
+            <div style={{ paddingTop: '12px' }}>
+              <Accordion>
+                <AccordionItem
+                  title={
+                    <FlexRow gap={4}>
+                      <IconInfoTriangle />
+                      <strong>Using single worker</strong>
+                    </FlexRow>
+                  }
+                >
+                  <div
+                    className="text-amber-400 font-semibold rounded border border-amber-400"
+                    style={{
+                      border: '1px solid rgb(251 191 36)',
+                      fontSize: '14px',
+                      fontWeight: 700,
+                      margin: '8px 0',
+                      padding: '8px'
+                    }}
+                  >
+                    FYI: You are currently sending jobs to only one worker. Jobs
+                    may not complete if worker is not available or under heavy
+                    load, or certain request parameters aren&apos;t available
+                    (i.e., model, image resolution, post-processors).
+                  </div>
+                </AccordionItem>
+              </Accordion>
+            </div>
+          )}
+
+          {sorted.length === 0 &&
+            !imageDetailsModalOpen &&
+            // @ts-ignore
+            size.width < 800 && (
+              <div className="w-full">
+                <AdContainer />
+              </div>
+            )}
+
+          {sorted.length > 0 && (
+            <Virtuoso
+              className={styles['virtual-list']}
+              totalCount={sorted.length}
+              style={{
+                height: 'unset',
+                marginTop: '12px',
+                position: 'absolute',
+                top: 0
+              }}
+              components={{
+                Footer: () => {
+                  return (
+                    <div
+                      style={{
+                        height: '30px',
+                        marginBottom: '30px'
+                      }}
+                    >
+                      {' '}
+                    </div>
+                  )
+                }
+              }}
+              itemContent={(index) => <>{renderRow({ index })}</>}
+            />
+          )}
+        </div>
+      </MaxWidth>
     </div>
   )
 }

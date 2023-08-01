@@ -1,5 +1,4 @@
 import CircleXIcon from 'components/icons/CircleXIcon'
-import FilterIcon from 'components/icons/FilterIcon'
 import Separator from 'components/UI/Separator'
 import AlertDialogBox from 'components/UI/AlertDialogBox'
 
@@ -13,9 +12,7 @@ import {
 import { deletePendingJobs } from 'controllers/pendingJobsCache'
 
 const FilterClearOptions = ({
-  filter,
-  pendingImages = [],
-  setFilter = () => {}
+  pendingImages = []
 }: {
   pendingImages: Array<any>
   filter: string
@@ -71,9 +68,8 @@ const FilterClearOptions = ({
     })
   }, [pendingImages])
 
-  const { done, processing, queued, waiting, error } = imageStatus
+  const { done, queued, waiting, error } = imageStatus
 
-  const jobsInProgress = processing.length + queued.length
   const jobsWaiting = queued.length + waiting.length
 
   return (
@@ -105,45 +101,6 @@ const FilterClearOptions = ({
           showWarningIcon={false}
         />
       )}
-      <div className="flex flex-row w-full items-center text-xs font-[500] tablet:text-sm mb-2">
-        <div className="flex flex-row gap-[2px] items-center mr-2">
-          <FilterIcon />
-          <strong>View:</strong>
-        </div>
-        <div
-          className="flex flex-row gap-[2px] items-center cursor-pointer text-[#14b8a5]"
-          onClick={() => setFilter('all')}
-          style={{ textDecoration: filter === 'all' ? 'underline' : 'unset' }}
-        >
-          all ({pendingImages.length})
-        </div>
-        <Separator />
-        <div
-          className="flex flex-row gap-[2px] items-center cursor-pointer text-[#14b8a5]"
-          onClick={() => setFilter('done')}
-          style={{ textDecoration: filter === 'done' ? 'underline' : 'unset' }}
-        >
-          completed ({done.length})
-        </div>
-        <Separator />
-        <div
-          className="flex flex-row gap-[2px] items-center cursor-pointer text-[#14b8a5]"
-          onClick={() => setFilter('processing')}
-          style={{
-            textDecoration: filter === 'processing' ? 'underline' : 'unset'
-          }}
-        >
-          processing ({jobsInProgress})
-        </div>
-        <Separator />
-        <div
-          className="flex flex-row gap-[2px] items-center cursor-pointer text-[#14b8a5]"
-          onClick={() => setFilter('error')}
-          style={{ textDecoration: filter === 'error' ? 'underline' : 'unset' }}
-        >
-          errors ({error.length})
-        </div>
-      </div>
       <div className="flex flex-row w-full items-center text-xs font-[500] tablet:text-sm mb-2">
         <div className="flex flex-row gap-[2px] items-center mr-2">
           <CircleXIcon />

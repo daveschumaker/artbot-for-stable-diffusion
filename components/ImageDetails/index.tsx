@@ -193,7 +193,7 @@ const ImageDetails = ({
       )}
       {
         // @ts-ignore
-        size.width < 890 && (
+        size.width < 800 && (
           <div
             className="flex flex-row justify-center w-full mt-3"
             style={{ minHeight: '214px' }}
@@ -331,14 +331,14 @@ const ImageDetails = ({
                 </ul>
               )}
             </div>
-            {
+            {/* {
               // @ts-ignore
-              size.width >= 890 && isModal && (
+              size.width >= 800 && isModal && (
                 <div className="w-[154px]">
-                  <AdContainer />
+                  <AdContainer id="cardbonads_img_modal" />
                 </div>
               )
-            }
+            } */}
           </div>
         </div>
       </div>

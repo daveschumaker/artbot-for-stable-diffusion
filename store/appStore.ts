@@ -1,6 +1,7 @@
 import { makeStore } from 'statery'
 
 interface AppStore {
+  adHidden: boolean
   buildId: string
   clusterSettings: {
     forceReloadOnServerUpdate: boolean
@@ -23,6 +24,7 @@ interface AppStore {
 }
 
 export const appInfoStore = makeStore<AppStore>({
+  adHidden: false,
   buildId: '',
   clusterSettings: {
     forceReloadOnServerUpdate: true
@@ -43,6 +45,12 @@ export const appInfoStore = makeStore<AppStore>({
   storageQuotaLimit: false,
   unsupportedBrowser: false
 })
+
+export const setAdHidden = (val: boolean) => {
+  appInfoStore.set(() => ({
+    adHidden: val
+  }))
+}
 
 export const setStorageQuotaLimit = (val: boolean = false) => {
   appInfoStore.set(() => ({

@@ -1,14 +1,15 @@
 import {
   IconArrowBackUp,
+  IconArrowBarLeft,
   IconBook,
   IconCamera,
+  IconCircleCheck,
   IconCodePlus,
   IconDeviceFloppy,
   IconFolder,
   IconPlaylistAdd,
   IconPlaylistX,
-  IconTags,
-  IconTrash
+  IconTags
 } from '@tabler/icons-react'
 import styles from './promptInput.module.css'
 import { Button } from 'components/UI/Button'
@@ -154,7 +155,7 @@ export default function PromptInput({ input, setInput }: GetSetPromptInput) {
                 </>
               ) : (
                 <>
-                  <IconTrash stroke={1.5} />{' '}
+                  <IconArrowBarLeft stroke={1.5} />{' '}
                   <span className={styles.mobileHide}>Clear</span>
                 </>
               )}
@@ -177,6 +178,7 @@ export default function PromptInput({ input, setInput }: GetSetPromptInput) {
               <span style={{ fontSize: '12px', fontWeight: 400 }}>
                 (optional)
               </span>
+              {input.negative && <IconCircleCheck size={22} stroke={1.5} />}
             </FlexRow>
           }
         >
@@ -249,7 +251,7 @@ export default function PromptInput({ input, setInput }: GetSetPromptInput) {
                     </>
                   ) : (
                     <>
-                      <IconTrash stroke={1.5} />{' '}
+                      <IconArrowBarLeft stroke={1.5} />{' '}
                       <span className={styles.mobileHide}>Clear</span>
                     </>
                   )}

@@ -104,7 +104,7 @@ export default function Toast({
               <ImageSquare imageDetails={imageDetails} size={80} />
             </Linker>
           </div>
-          <div className={styles.textPanel}>
+          <div className={styles.textPanel} style={{ paddingLeft: '8px' }}>
             <div>Your new image is ready.</div>
             <Linker
               disableLinkClick

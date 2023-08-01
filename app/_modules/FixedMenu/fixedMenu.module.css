@@ -28,6 +28,10 @@
   top: 0;
 }
 
+.AdHidden {
+  bottom: 0;
+}
+
 .SidebarAd {
   bottom: 0px;
   left: 0;

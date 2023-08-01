@@ -10,6 +10,7 @@ import {
   POLL_COMPLETED_JOBS_INTERVAL
 } from '_constants'
 import { getAllPendingJobs } from './pendingJobsCache'
+import AppSettings from 'models/AppSettings'
 
 let MAX_JOBS = MAX_CONCURRENT_JOBS_ANON
 let pendingJobs: Array<any> = []
@@ -68,6 +69,10 @@ const createImageJobs = async () => {
   }
 
   if (!isAppActive()) {
+    return
+  }
+
+  if (AppSettings.get('pauseJobQueue')) {
     return
   }
 

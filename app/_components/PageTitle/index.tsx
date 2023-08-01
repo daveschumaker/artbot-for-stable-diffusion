@@ -1,15 +1,21 @@
-import { ReactNode } from 'react'
+import { CSSProperties, ReactNode } from 'react'
 import styles from './pageTitle.module.css'
 
 export default function PageTitle({
   as = 'h1',
-  children
+  children,
+  style
 }: {
   as?: string
   children: ReactNode
+  style?: CSSProperties
 }) {
   const Element = as
 
-  // @ts-ignore
-  return <Element className={styles.pageTitle}>{children}</Element>
+  return (
+    // @ts-ignore
+    <Element className={styles.pageTitle} style={style}>
+      {children}
+    </Element>
+  )
 }

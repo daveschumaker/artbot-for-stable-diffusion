@@ -2,18 +2,25 @@ import clsx from 'clsx'
 import React, { useEffect, useRef } from 'react'
 import { useEffectOnce } from '../../hooks/useEffectOnce'
 import { usePathname } from 'next/navigation'
+import { appInfoStore, setAdHidden } from 'store/appStore'
+import { useStore } from 'statery'
 let isMounted = false
 
 function AdContainer({
+  className,
   code = 'CWYD62QI',
+  id = 'carbonads',
   placement = 'tinybotsnet'
 }: {
+  className?: any
   code: string
+  id?: string
   placement: string
   minSize?: number
   maxSize?: number
   override?: false
 }) {
+  const { adHidden } = useStore(appInfoStore)
   const pathname = usePathname()
   const reference = useRef<HTMLInputElement | undefined>()
 
@@ -22,7 +29,7 @@ function AdContainer({
 
     isMounted = true
     setTimeout(() => {
-      if (document.getElementById('carbonads')) {
+      if (document.getElementById(id)) {
         return
       }
 
@@ -40,6 +47,14 @@ function AdContainer({
       s.src = `//cdn.carbonads.com/carbon.js?serve=${code}&placement=${placement}`
       reference.current.appendChild(s)
     }, 250)
+
+    setTimeout(() => {
+      var el = document.getElementById(id)
+
+      if (!el) {
+        setAdHidden(true)
+      }
+    }, 1000)
   }
 
   useEffectOnce(() => {
@@ -50,11 +65,14 @@ function AdContainer({
     mountAd()
 
     return () => {
-      var el = document.getElementById('carbonads')
+      var el = document.getElementById(id)
       if (el && el.parentNode) {
         el.parentNode.removeChild(el)
-        isMounted = false
       }
+
+      setTimeout(() => {
+        isMounted = false
+      }, 250)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname])
@@ -65,11 +83,15 @@ function AdContainer({
     return null
   }
 
+  if (adHidden) {
+    return null
+  }
+
   return (
     <div
       // component-name={component}
       id="_adUnit"
-      className={clsx(classes)}
+      className={clsx(classes, className)}
       //@ts-ignore
       ref={reference}
     />

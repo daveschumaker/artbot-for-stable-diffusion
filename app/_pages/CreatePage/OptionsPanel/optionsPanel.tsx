@@ -85,7 +85,7 @@ const OptionsPanel = ({ input, setInput }: Props) => {
         >
           Options
         </div>
-        <IconPointFilled size={18} />
+        <IconPointFilled size={16} />
         <div
           className={clsx(
             styles.NavItem,
@@ -98,7 +98,7 @@ const OptionsPanel = ({ input, setInput }: Props) => {
         >
           Image-to-image
         </div>
-        <IconPointFilled size={18} />
+        <IconPointFilled size={16} />
         {/* <NavItem
           active={activeNav === 'draw'}
           onClick={() => {

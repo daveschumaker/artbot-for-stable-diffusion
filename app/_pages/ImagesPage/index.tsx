@@ -973,7 +973,7 @@ const ImagesPage = () => {
       {
         //@ts-ignore
         size && size.width < 890 && !imageDetailsModalOpen && (
-          <div className="w-full">
+          <div style={{ margin: '0 auto', maxWidth: '520px' }}>
             <AdContainer minSize={0} maxSize={640} key={window.location.href} />
           </div>
         )
