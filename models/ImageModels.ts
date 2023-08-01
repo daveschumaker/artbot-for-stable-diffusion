@@ -13,20 +13,17 @@ class ImageModels {
   }
 
   static getValidModels = ({
-    availableModels,
-    modelDetails,
     input,
     sort = 'workers',
     filterNsfw = false,
     showHidden = false
   }: {
-    availableModels: any
-    modelDetails: any
     input: DefaultPromptInput
     sort?: string
     filterNsfw?: boolean
     showHidden?: boolean
   }) => {
+    const { availableModels, modelDetails } = modelStore.state
     const hidden = AppSettings.get('hiddenModels') || {}
     const modelsArray: Array<any> = []
 
@@ -110,6 +107,13 @@ class ImageModels {
       let displayName = availableModels[key].name
       if (availableModels[key].name === 'stable_diffusion_inpainting') {
         displayName = 'Stable Diffusion v1.5 Inpainting'
+      }
+
+      if (
+        !isInpainting &&
+        availableModels[key].name.toLowerCase().includes('inpainting')
+      ) {
+        continue
       }
 
       if (hidden[availableModels[key].name] && !showHidden) {

@@ -1,6 +1,4 @@
-import { useStore } from 'statery'
 import DefaultPromptInput from 'models/DefaultPromptInput'
-import { modelStore } from 'store/modelStore'
 import ImageModels from 'models/ImageModels'
 
 export function useAvailableModels({
@@ -12,11 +10,7 @@ export function useAvailableModels({
   filterNsfw?: boolean
   sort?: string
 }) {
-  const { availableModels, modelDetails } = useStore(modelStore)
-
   const filteredModels = ImageModels.getValidModels({
-    availableModels,
-    modelDetails,
     input,
     filterNsfw,
     sort
@@ -52,5 +46,5 @@ export function useAvailableModels({
     })
   }
 
-  return [modelsOptions]
+  return [modelsOptions, filteredModels]
 }

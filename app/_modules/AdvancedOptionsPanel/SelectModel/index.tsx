@@ -10,7 +10,6 @@ import { useAvailableModels } from 'hooks/useAvailableModels'
 import { Button } from 'components/UI/Button'
 import { IconFilter, IconList, IconSettings } from '@tabler/icons-react'
 import Checkbox from 'components/UI/Checkbox'
-import { validModelsArray } from 'utils/modelUtils'
 import AppSettings from 'models/AppSettings'
 import { useStore } from 'statery'
 import { modelStore } from 'store/modelStore'
@@ -19,6 +18,7 @@ import TextTooltipRow from 'app/_components/TextTooltipRow'
 import ModelsInfoModal from 'app/_modules/ModelsInfoModal'
 import { useModal } from '@ebay/nice-modal-react'
 import ShowSettingsDropDown from './ShowSettingsDropdown'
+import ImageModels from 'models/ImageModels'
 
 interface SelectModelProps extends GetSetPromptInput {
   disabled?: boolean
@@ -59,7 +59,9 @@ const SelectModel = ({
   }
 
   const modelerOptions = (imageParams: any) => {
-    let modelsArray = validModelsArray({ imageParams, filterNsfw: false }) || []
+    let modelsArray =
+      ImageModels.getValidModels({ input: imageParams, filterNsfw: false }) ||
+      []
 
     modelsArray.push({
       name: 'random',
@@ -134,7 +136,7 @@ const SelectModel = ({
   }
 
   // let selectValue = ImageModels.dropdownValue(input)
-  let selectValue = modelsValue
+  let selectValue: any = modelsValue
   let selectDisabled = disabled
 
   if (input.useAllModels) {

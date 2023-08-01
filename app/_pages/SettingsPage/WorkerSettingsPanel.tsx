@@ -3,9 +3,9 @@ import Linker from 'components/UI/Linker'
 import PageTitle from 'app/_components/PageTitle'
 import Section from 'app/_components/Section'
 import WorkerInfo from 'components/WorkerInfo'
-import ExternalLinkIcon from 'components/icons/ExternalLinkIcon'
 import { useStore } from 'statery'
 import { userInfoStore } from 'store/userStore'
+import { IconExternalLink } from '@tabler/icons-react'
 
 const WorkerSettingsPanel = ({ componentState, setComponentState }: any) => {
   const userStore = useStore(userInfoStore)
@@ -19,20 +19,34 @@ const WorkerSettingsPanel = ({ componentState, setComponentState }: any) => {
         {(Array.isArray(worker_ids) && worker_ids.length === 0) ||
         !componentState.apiKey ? (
           <>
-            <Section>
-              You currently have no active workers on Stable Horde.
+            <Section pb={12}>
+              You currently have no active workers on AI Horde.
             </Section>
             <Section>
+              You can help contribute to the AI Horde by running your own AI
+              Horde worker. Join the Horde using{' '}
               <Linker
-                href="https://bit.ly/SimpleHordeColab"
+                href="https://github.com/Haidra-Org/Simple-AI-Horde-Colab"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <div className="flex flex-row items-center gap-2">
-                  Create your own Stable Horde worker using Google Colab.{' '}
-                  <ExternalLinkIcon />
+                <div className="flex flex-row items-center">
+                  this Colab notebook (
+                  <IconExternalLink stroke={1.5} size={18} />)
+                </div>
+              </Linker>{' '}
+              or downloading a worker to{' '}
+              <Linker
+                href="https://github.com/Haidra-Org/AI-Horde-Worker"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <div className="flex flex-row items-center">
+                  run on your GPU (
+                  <IconExternalLink stroke={1.5} size={18} />)
                 </div>
               </Linker>
+              .
             </Section>
           </>
         ) : null}

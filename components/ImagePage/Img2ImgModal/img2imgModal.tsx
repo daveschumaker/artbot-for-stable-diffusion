@@ -132,7 +132,7 @@ const Img2ImgModal = ({
           <Button
             onClick={() => {
               uploadImg2Img(imageDetails, { useSourceImg: true })
-              router.push(`/?panel=img2img&edit=true`)
+              router.push(`/create?panel=img2img&edit=true`)
             }}
             size="small"
             width={isMobile ? '100%' : ''}
@@ -142,7 +142,7 @@ const Img2ImgModal = ({
           <Button
             onClick={() => {
               uploadInpaint(imageDetails, { clone: false, useSourceImg: true })
-              router.push(`/?panel=inpainting&edit=true`)
+              router.push(`/create?panel=inpainting&edit=true`)
             }}
             size="small"
             width={isMobile ? '100%' : ''}
@@ -157,7 +157,7 @@ const Img2ImgModal = ({
                   useSourceImg: true,
                   useSourceMask: true
                 })
-                router.push(`/?panel=inpainting&edit=true`)
+                router.push(`/create?panel=inpainting&edit=true`)
               }}
               size="small"
               width={isMobile ? '100%' : ''}

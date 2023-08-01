@@ -13,6 +13,7 @@ import { deletePendingJobs } from 'controllers/pendingJobsCache'
 import { basePath } from 'BASE_PATH'
 import InputSwitchV2 from 'app/_modules/AdvancedOptionsPanel/InputSwitchV2'
 import FlexCol from 'app/_components/FlexCol'
+import { updateTheme } from 'app/_modules/AppTheme/controller'
 
 const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
   const [processType, setProcessType] = useState<string | null>(null)
@@ -65,6 +66,7 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
               onChange={(obj: any) => {
                 localStorage.setItem('theme', obj.value)
                 handleUpdateSelect('theme', obj)
+                updateTheme(obj.value)
               }}
               value={{
                 value: componentState.theme,

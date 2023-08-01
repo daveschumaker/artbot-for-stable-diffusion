@@ -422,7 +422,7 @@ const ImageOptionsWrapper = ({
                 className="text-sm"
                 onClick={() => {
                   uploadImg2Img(imageDetails)
-                  router.push(`/?panel=img2img&edit=true`)
+                  router.push(`/create?panel=img2img&edit=true`)
                   handleClose()
                 }}
               >
@@ -432,7 +432,7 @@ const ImageOptionsWrapper = ({
                 className="text-sm"
                 onClick={() => {
                   uploadInpaint(imageDetails)
-                  router.push(`/?panel=inpainting&edit=true`)
+                  router.push(`/create?panel=inpainting&edit=true`)
                   handleClose()
                 }}
               >

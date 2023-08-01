@@ -2,10 +2,10 @@ import FlexRow from 'app/_components/FlexRow'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import Checkbox from 'components/UI/Checkbox'
+import { useAvailableModels } from 'hooks/useAvailableModels'
 import AppSettings from 'models/AppSettings'
 import { useEffect, useState } from 'react'
 import { GetSetPromptInput } from 'types/artbot'
-import { validModelsArray } from 'utils/modelUtils'
 
 interface Props extends GetSetPromptInput {
   setShowSettingsDropdown: (bool: boolean) => any
@@ -20,6 +20,7 @@ export default function ShowSettingsDropDown({
   setShowSettingsDropdown,
   showMultiModel
 }: Props) {
+  const [, filteredModels] = useAvailableModels({ input })
   const [favoriteModelsCount, setFavoriteModelsCount] = useState(0)
   const [autoKeyword, setAutoKeyword] = useState(false)
 
@@ -47,12 +48,7 @@ export default function ShowSettingsDropDown({
         }}
       >
         <Checkbox
-          label={`Use all models? (${
-            validModelsArray({
-              imageParams: input,
-              filterNsfw: false
-            }).length
-          })`}
+          label={`Use all models? (${filteredModels.length})`}
           checked={input.useAllModels}
           onChange={(bool) => {
             setInput({ useAllModels: bool, useFavoriteModels: false })

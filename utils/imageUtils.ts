@@ -6,12 +6,13 @@ import { SourceProcessing } from './promptUtils'
 import { stylePresets } from './stylePresets'
 import { isValidHttpUrl } from './validationUtils'
 import { hasPromptMatrix, promptMatrix } from './promptUtils'
-import { validModelsArray } from './modelUtils'
 import AppSettings from '../models/AppSettings'
 import { DEFAULT_SAMPLER_ARRAY } from '../_constants'
 import { isiOS, isSafariBrowser } from './appUtils'
 import { fetchCompletedJobs } from './db'
 import { basePath } from 'BASE_PATH'
+import ImageModels from 'models/ImageModels'
+import DefaultPromptInput from 'models/DefaultPromptInput'
 
 interface CreateImageJob {
   base64String?: string
@@ -868,8 +869,10 @@ export const countImagesToGenerate = (imageParams: ICountImages) => {
   }
 
   if (useAllModels) {
-    // @ts-ignore
-    const modelsArray = validModelsArray({ imageParams }) || ['']
+    const filteredModels = ImageModels.getValidModels({
+      input: imageParams as DefaultPromptInput
+    })
+    const modelsArray = filteredModels.map((obj) => obj.name)
     imageCount = imageCount * modelsArray.length
   }
 

@@ -75,7 +75,7 @@ const PendingItem = memo(
     const handleEditClick = async () => {
       savePrompt({ ...jobDetails })
       deletePendingJob(jobId)
-      router.push(`/?edit=true`)
+      router.push(`/create?edit=true`)
     }
 
     const handleRetryJob = async () => {
@@ -113,7 +113,7 @@ const PendingItem = memo(
 
     const handleCopyPromptClick = (imageDetails: any) => {
       copyEditPrompt(imageDetails)
-      router.push(`/?edit=true`)
+      router.push(`/create?edit=true`)
     }
 
     const timeDiff = jobDetails?.initWaitTime - jobDetails?.wait_time || 0

@@ -288,7 +288,7 @@ const ModelDetailsList = ({ availableModels, modelDetails }: any) => {
                   isNaN(modelStats[0]?.count) || modelStats[0]?.count <= 0
                 }
                 onClick={() => {
-                  router.push(`/?model=${name}`)
+                  router.push(`/create?model=${name}`)
                 }}
               >
                 Create
