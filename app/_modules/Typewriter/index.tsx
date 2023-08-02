@@ -60,7 +60,6 @@ const images = [
 ]
 
 function shuffleArray(array: any) {
-  console.log('oiii')
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
     ;[array[i], array[j]] = [array[j], array[i]]
@@ -97,32 +96,37 @@ export default function PromptTypewriter() {
   return (
     <div className={styles.TypeWriterWrapper}>
       <div className={styles.TextWrapper}>
-        <Typewriter
-          // @ts-ignore
-          text={shuffled[promptIndex].prompt}
-          onEraseDelay={() => {
-            handleImageChange()
-          }}
-          onEraseDone={() => {
-            let updatedPrompt = promptIndex + 1
+        <div style={{ paddingBottom: '24px' }}>
+          <Typewriter
+            // @ts-ignore
+            text={shuffled[promptIndex].prompt}
+            onEraseDelay={() => {
+              handleImageChange()
+            }}
+            onEraseDone={() => {
+              let updatedPrompt = promptIndex + 1
 
-            if (updatedPrompt > images.length - 1) {
-              updatedPrompt = 0
-            }
+              if (updatedPrompt > images.length - 1) {
+                updatedPrompt = 0
+              }
 
-            setIsHidden(true)
-            setTimeout(() => {
-              setPromptIndex(updatedPrompt)
-            }, 350)
+              setIsHidden(true)
+              setTimeout(() => {
+                setPromptIndex(updatedPrompt)
+              }, 350)
 
-            setTimeout(() => {
-              // setIsHidden(false)
-            }, 500)
-          }}
-          eraseSpeed={15}
-          eraseDelay={5000}
-        />
+              setTimeout(() => {
+                // setIsHidden(false)
+              }, 500)
+            }}
+            eraseSpeed={15}
+            eraseDelay={5000}
+          />
+        </div>
         <div
+          className={`${styles['fade-in-out']} ${
+            isHidden ? styles.hidden : ''
+          }`}
           style={{
             fontFamily: 'monospace',
             fontSize: '12px',
