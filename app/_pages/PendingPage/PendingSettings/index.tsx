@@ -22,6 +22,7 @@ export default function PendingSettings({ setShowSettingsDropdown }: any) {
       title="Pending settings"
       top="46px"
       maxWidth="320px"
+      style={{ left: 'unset', right: '0', width: '100%' }}
     >
       <div
         style={{

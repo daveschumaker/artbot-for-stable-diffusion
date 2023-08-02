@@ -233,7 +233,11 @@ const PendingPage = () => {
           !imageDetailsModalOpen &&
           !adHidden &&
           // @ts-ignore
-          size?.width < 800 && <AdContainer className={styles.AdUnit} />}
+          size?.width < 800 && (
+            <div className={styles.AdUnit}>
+              <AdContainer />
+            </div>
+          )}
         <PendingItem
           handleCloseClick={() => {
             onClosePanel(job.jobId)
@@ -376,7 +380,7 @@ const PendingPage = () => {
       <FlexRow
         gap={4}
         style={{
-          justifyContent: 'flex-start',
+          justifyContent: 'space-between',
           position: 'relative',
           width: '100%'
         }}
@@ -393,13 +397,17 @@ const PendingPage = () => {
         {showSettingsDropdown && (
           <PendingSettings setShowSettingsDropdown={setShowSettingsDropdown} />
         )}
-        <ClearJobs filter={filter} pendingImages={pendingImages} />
-        <Button onClick={() => setShowFilterDropdown(true)}>
-          <IconFilter stroke={1.5} />
-        </Button>
-        <Button onClick={() => setShowSettingsDropdown(true)}>
-          <IconSettings stroke={1.5} />
-        </Button>
+        <FlexRow>
+          <ClearJobs filter={filter} pendingImages={pendingImages} />
+        </FlexRow>
+        <FlexRow gap={4} style={{ justifyContent: 'flex-end' }}>
+          <Button onClick={() => setShowFilterDropdown(true)}>
+            <IconFilter stroke={1.5} />
+          </Button>
+          <Button onClick={() => setShowSettingsDropdown(true)}>
+            <IconSettings stroke={1.5} />
+          </Button>
+        </FlexRow>
       </FlexRow>
       {/* <FilterClearOptions filter={filter} pendingImages={pendingImages} /> */}
       <MaxWidth>

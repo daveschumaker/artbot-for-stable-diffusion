@@ -176,8 +176,13 @@ a {
 
 #carbonads .carbon-wrap {
   display: flex;
-  flex-wrap: wrap;
   gap: 1.5ex;
+}
+
+@media (min-width: 800px) {
+  #carbonads .carbon-wrap {
+    flex-wrap: wrap;
+  }
 }
 
 #carbonads .carbon-img {

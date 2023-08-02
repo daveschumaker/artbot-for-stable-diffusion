@@ -101,10 +101,10 @@ export default function Toast({
               href={`/image/${jobId}`}
               onClick={handleClick}
             >
-              <ImageSquare imageDetails={imageDetails} size={80} />
+              <ImageSquare imageDetails={imageDetails} size={60} />
             </Linker>
           </div>
-          <div className={styles.textPanel} style={{ paddingLeft: '8px' }}>
+          <div className={styles.textPanel} style={{ paddingLeft: '12px' }}>
             <div>Your new image is ready.</div>
             <Linker
               disableLinkClick

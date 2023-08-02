@@ -2,7 +2,7 @@
 import InteractiveModal from 'components/UI/InteractiveModal/interactiveModal'
 import PageTitle from 'app/_components/PageTitle'
 import styles from './component.module.css'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import clsx from 'clsx'
 import { Button } from 'components/UI/Button'
 import { clientHeader, getApiHostServer } from 'utils/appUtils'
@@ -29,11 +29,10 @@ function AbTestModal({
   const ref = useRef(null)
   const modal = useModal()
   const [selectedImg, setSelectedImg] = useState(0)
-  const [modalHeight, setModalHeight] = useState(512)
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     modal.remove()
-  }
+  }, [modal])
 
   const handleRateImage = useCallback(async () => {
     const imageId = selectedImg === 1 ? jobDetails.hordeImageId : secondaryId
@@ -94,19 +93,11 @@ function AbTestModal({
     setIsRated
   ])
 
-  useEffect(() => {
-    if (ref.current) {
-      // @ts-ignore
-      const { height } = ref?.current?.getBoundingClientRect()
-      setModalHeight(height)
-    }
-  }, [])
-
   return (
     <InteractiveModal
       className={styles.ModalStyle}
+      disableSwipe
       handleClose={handleClose}
-      maxHeight={`${modalHeight + 56}px`}
     >
       <div ref={ref}>
         <div>

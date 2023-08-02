@@ -1,7 +1,6 @@
 import { IconClearAll } from '@tabler/icons-react'
 import { Button } from 'components/UI/Button'
 import { useState } from 'react'
-import AlertDialogBox from 'components/UI/AlertDialogBox'
 import { JobStatus } from 'types/artbot'
 import {
   deleteAllPendingErrors,
@@ -13,43 +12,25 @@ import DropdownOptions from 'app/_modules/DropdownOptions'
 
 export default function ClearJobs({ filter }: any) {
   const [showDropdown, setShowDropdown] = useState(false)
-  const [showConfirm, setShowConfirm] = useState('')
 
-  // const handleClear = () => {
-  //   setShowConfirm(true)
-  // }
+  const handleClear = async (filter: string) => {
+    if (filter === 'done') {
+      deletePendingJobs(JobStatus.Done)
+      await deleteDoneFromPending()
+    } else if (filter === 'pending') {
+      await deleteAllPendingJobs()
+      deletePendingJobs(JobStatus.Waiting)
+      deletePendingJobs(JobStatus.Queued)
+    } else if (filter === 'error') {
+      deletePendingJobs(JobStatus.Error)
+      await deleteAllPendingErrors()
+    }
+
+    setShowDropdown(false)
+  }
 
   return (
     <>
-      {showConfirm && (
-        <AlertDialogBox
-          title="Clear images?"
-          message={`
-            This will clear all images with a status of ${filter} from the pending items page.
-          `}
-          onConfirmClick={async () => {
-            if (showConfirm === 'done') {
-              deletePendingJobs(JobStatus.Done)
-              await deleteDoneFromPending()
-            } else if (showConfirm === 'pending') {
-              await deleteAllPendingJobs()
-              deletePendingJobs(JobStatus.Waiting)
-              deletePendingJobs(JobStatus.Queued)
-            } else if (showConfirm === 'error') {
-              deletePendingJobs(JobStatus.Error)
-              await deleteAllPendingErrors()
-            }
-
-            setShowDropdown(false)
-            setShowConfirm('')
-          }}
-          closeModal={() => {
-            setShowConfirm('')
-            setShowDropdown(false)
-          }}
-          showWarningIcon={false}
-        />
-      )}
       {showDropdown && (
         <DropdownOptions
           handleClose={() => setShowDropdown(false)}
@@ -67,19 +48,19 @@ export default function ClearJobs({ filter }: any) {
           >
             <div
               style={{ cursor: 'pointer' }}
-              onClick={() => setShowConfirm('done')}
+              onClick={() => handleClear('done')}
             >
               Done
             </div>
             <div
               style={{ cursor: 'pointer' }}
-              onClick={() => setShowConfirm('pending')}
+              onClick={() => handleClear('pending')}
             >
               Pending
             </div>
             <div
               style={{ cursor: 'pointer' }}
-              onClick={() => setShowConfirm('error')}
+              onClick={() => handleClear('error')}
             >
               Error
             </div>

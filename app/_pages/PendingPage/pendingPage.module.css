@@ -10,6 +10,7 @@
 }
 
 .AdUnit {
+  background-color: var(--carbon-bg);
   margin-bottom: 16px;
   min-height: 164px;
   width: 100%;

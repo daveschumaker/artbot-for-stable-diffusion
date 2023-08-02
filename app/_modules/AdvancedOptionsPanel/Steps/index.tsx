@@ -48,7 +48,7 @@ export default function Steps({
               </span>
               <TooltipComponent tooltipId="multi-steps-tooltip">
                 Comma separated values to create a series of images using
-                multiple steps. Example: 3,6,9,12,15
+                multiple steps. Example: 16, 20, 25, 40
               </TooltipComponent>
             </TextTooltipRow>
           </SubSectionTitle>
@@ -59,7 +59,7 @@ export default function Steps({
             onChange={(e: any) => {
               setInput({ multiSteps: e.target.value })
             }}
-            placeholder="3,5,7,9"
+            placeholder="16, 20, 25, 40"
             // @ts-ignore
             value={input.multiSteps}
             width="100%"

@@ -98,6 +98,7 @@ const ButtonContainer = styled.div`
 `
 
 const ImagesPage = () => {
+  const { adHidden } = useStore(appInfoStore)
   const confirmationModal = useModal(ConfirmationModal)
   const LIMIT = AppSettings.get('imagesPerPage') || 50
 
@@ -1023,9 +1024,16 @@ const ImagesPage = () => {
         )}
       {
         //@ts-ignore
-        size && size.width < 890 && !imageDetailsModalOpen && (
-          <div style={{ margin: '0 auto', maxWidth: '520px' }}>
-            <AdContainer minSize={0} maxSize={640} key={window.location.href} />
+        size && size.width < 890 && !imageDetailsModalOpen && !adHidden && (
+          <div
+            style={{
+              margin: '0 auto',
+              maxWidth: '520px',
+              minHeight: '164px',
+              backgroundColor: 'var(--carbon-bg)'
+            }}
+          >
+            <AdContainer key={window.location.href} />
           </div>
         )
       }

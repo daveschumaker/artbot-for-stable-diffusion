@@ -19,6 +19,7 @@ export default function FilterOptions({
       title="Filter jobs"
       top="46px"
       maxWidth="320px"
+      style={{ left: 'unset', right: '0', width: '100%' }}
     >
       <div
         style={{
