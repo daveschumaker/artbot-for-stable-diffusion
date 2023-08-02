@@ -1,16 +1,8 @@
-@media (max-width: 639px) {
+@media (min-width: 0) {
   .img,
   .image-loading,
   .img-container {
-    --image-container-size: 400px;
-  }
-}
-
-@media (min-width: 640px) {
-  .img,
-  .img-loading,
-  .img-container {
-    --image-container-size: 512px;
+    --image-container-size: 100%;
   }
 }
 

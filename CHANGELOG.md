@@ -3,6 +3,7 @@
 - Some growing pains naturally. One thing that seems to be fixed though are memory leaks in Node. Hopefully this means you'll only see the "ArtBot will be right back" page only when an actual update is being pushed live.
 - Fix: I broke how prompt matrices work. This is now fixed. Thanks to DirtNub2K17 for reporting this on Discord and DisneyPrincess for reporting this via the contact form.
 - Fix: Prompt replacement filter option would always revert back to true. Thanks to KD25 on Discord for reporting this.
+- Fix: Fullscreen mode wasn't showing images at correct size when in full screen. Thanks to BOMBbejaan on Discord for reporting this.
 
 # 2023.08.01
 
