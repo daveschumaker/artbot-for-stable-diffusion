@@ -16,11 +16,9 @@ import ImageSquare from 'components/ImageSquare'
 import styles from './imageDetails.module.css'
 import ImageOptionsWrapper from './ImageOptionsWrapper'
 import Img2ImgModal from 'components/ImagePage/Img2ImgModal'
-import RenderParentImage from 'components/ParentImage'
+import ParentImage from 'app/_components/ParentImage'
 import { logError } from 'utils/appUtils'
 import { userInfoStore } from 'store/userStore'
-import AdContainer from 'components/AdContainer'
-import { useWindowSize } from 'hooks/useWindowSize'
 
 interface Props {
   imageDetails: IImageDetails
@@ -39,7 +37,6 @@ const ImageDetails = ({
   handleReloadImageData = () => {},
   handleTiling = () => {}
 }: Props) => {
-  const size = useWindowSize()
   const showFullScreen = useFullScreenHandle()
   const [fullscreen, setFullscreen] = useState(false)
   const [showImg2ImgModal, setShowImg2ImgModal] = useState(false)
@@ -191,9 +188,9 @@ const ImageDetails = ({
           </div>
         </div>
       )}
-      {
+      {/* {
         // @ts-ignore
-        size.width < 890 && (
+        size.width < 800 && (
           <div
             className="flex flex-row justify-center w-full mt-3"
             style={{ minHeight: '214px' }}
@@ -201,7 +198,7 @@ const ImageDetails = ({
             <AdContainer />
           </div>
         )
-      }
+      } */}
       <div
         id="image-params-wrapper"
         className="flex flex-col items-center justify-start w-full mt-3"
@@ -331,14 +328,14 @@ const ImageDetails = ({
                 </ul>
               )}
             </div>
-            {
+            {/* {
               // @ts-ignore
-              size.width >= 890 && isModal && (
+              size.width >= 800 && isModal && (
                 <div className="w-[154px]">
-                  <AdContainer />
+                  <AdContainer id="cardbonads_img_modal" />
                 </div>
               )
-            }
+            } */}
           </div>
         </div>
       </div>
@@ -348,7 +345,7 @@ const ImageDetails = ({
       >
         <div className="text-[16px] tablet:text-[18px] px-4 w-full max-w-[768px] gap-4 flex flex-row mb-3">
           {imageDetails.parentJobId && (
-            <RenderParentImage
+            <ParentImage
               jobId={imageDetails.jobId}
               parentJobId={imageDetails.parentJobId}
             />
@@ -380,7 +377,7 @@ const ImageDetails = ({
 }
 
 function areEqual(prevProps: any, nextProps: any) {
-  if (prevProps.imageDetails.jobId !== nextProps.imageDetails.jobId) {
+  if (prevProps?.imageDetails?.jobId !== nextProps?.imageDetails?.jobId) {
     return false
   }
 

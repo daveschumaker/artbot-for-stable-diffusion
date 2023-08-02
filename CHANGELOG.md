@@ -1,3 +1,17 @@
+# 2023.08.01
+
+- WELCOME TO THE NEWISH ARTBOT!
+- Tons of changes! Where to even start.
+- Updated web-app to use new app router architecture in NextJS.
+- Compact and re-organize advanced options panel.
+- Moved various toggles and sliders into relevant options menus that now appear next to relevant components (e.g., clicking the options panel on the Samplers dropdown will show an option to "use all samplers")
+- New filter for model selection list. Easily filter by SFW / NSFW / favorites.
+- Add model to favorites right from the model details panel on the create page.
+- Add new options to create images using multiple denoise values and multiple CLIP values.
+- Do you have frequently used custom dimensions? You can now save and reuse them.
+- Tons more stuff!
+- Thanks to Efreak, magic, and hmal on Discord for helping to beta test this!
+
 # 2023.07.26
 
 - Fix: Inverted image masks when using inpainting. Now, you should only need to highlight the areas you want to change. This used to work correctly, but an update to worker GPUs broke how ArtBot sent image masks to the AI Horde. You should be able to use inpainting as normal, now! Thanks to Silvy, Efreak and others for reporting this.

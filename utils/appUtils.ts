@@ -1,10 +1,14 @@
-import { BroadcastChannel } from 'broadcast-channel'
+import { basePath } from 'BASE_PATH'
 import { HORDE_DEV, HORDE_PROD } from '../_constants'
 import AppSettings from '../models/AppSettings'
-import { appInfoStore, setPrimaryWindow } from 'store/appStore'
+import {
+  pageHasFocus,
+  pageIsPrimaryWindow,
+  pageIsVisible
+} from './primaryWindow'
 
 export const logError = async (data: any) => {
-  await fetch(`/artbot/api/log-error`, {
+  await fetch(`${basePath}/api/log-error`, {
     method: 'POST',
     body: JSON.stringify(data),
     headers: {
@@ -22,28 +26,25 @@ export const isAppActive = () => {
     return true
   }
 
-  if (appInfoStore.state.primaryWindow) {
-    return true
-  }
-
   // Browser doesn't support document.hidden or visibility state?
   // Then always run in background
   if (typeof document.hidden === 'undefined') {
     return true
   }
 
-  // User defined runInBackground is false
-  // if (AppSettings.get('runInBackground') === false && document.hidden) {
-  //   return false;
-  // }
+  // Web app is always active if the page has focus.
+  if (pageHasFocus()) return true
 
-  // Either user defined runInBackground explicitly set to true
-  // (or new user -- where runInBackground will be undefined)
-  if (AppSettings.get('runInBackground') !== false) {
+  // All of these rules require a single primary window to be set and active.
+  if (!pageIsPrimaryWindow()) return false
+
+  // Page behind another window but still visible. e.g., multitasking.
+  if (AppSettings.get('runInBackground') === false && pageIsVisible()) {
     return true
   }
 
-  if (document.visibilityState === 'visible') {
+  // User hasn't explicitly disabled "runInBackground"
+  if (AppSettings.get('runInBackground') !== false) {
     return true
   }
 
@@ -65,6 +66,19 @@ export const isInstalledPwa = () => {
   }
 
   return false
+}
+
+export function generateRandomString(length: number = 6) {
+  const characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  let randomString = ''
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length)
+    randomString += characters[randomIndex]
+  }
+
+  return randomString
 }
 
 // Simple UUID generator for ArtBot's own purposes (tracking groups of images generated at once)
@@ -164,51 +178,6 @@ export const exitFullscreen = () => {
   }
 }
 
-let primaryTab = false
-let channel: any
-let windowUuid: string
-
-const setActive = () => {
-  if (primaryTab === true) {
-    return
-  }
-
-  primaryTab = true
-  let msg = {
-    windowId: windowUuid,
-    msg: 'active'
-  }
-
-  setPrimaryWindow(true)
-  channel.postMessage(msg)
-}
-
-/**
- * BroadcastChannel
- * This library has a leaderElection method for helping to determine
- * the primary tab for a web app. However, I couldn't get this to work
- * so I implemented my own leader election system here, using event listeners
- * and a unique window ID.
- */
-export const initBrowserTab = () => {
-  if (typeof window === 'undefined') {
-    return
-  }
-
-  document?.querySelector('body')?.addEventListener('mouseover', setActive)
-  document?.querySelector('body')?.addEventListener('keydown', setActive)
-  window.addEventListener('scroll', setActive)
-
-  windowUuid = uuidv4()
-  channel = new BroadcastChannel('activeTab')
-  channel.onmessage = (msg: any) => {
-    if (msg.windowId !== windowUuid) {
-      primaryTab = false
-      setPrimaryWindow(false)
-    }
-  }
-}
-
 export const formatDate = () => {
   const currentDate = new Date()
 
@@ -221,19 +190,25 @@ export const formatDate = () => {
   return `${year}.${month}.${day}_${hours}:${minutes}`
 }
 
-// Function to handle visibility change events
-export const documentIsVisible = () => {
-  if (document.hidden) {
-    return false
-  } else {
-    return true
+export const parseQueryString = (
+  queryString: string
+): {
+  [key: string]: string | boolean
+} => {
+  if (!queryString) return {}
+
+  const params = new URLSearchParams(queryString)
+  const result: { [key: string]: string | boolean } = {}
+
+  for (const [key, value] of params.entries()) {
+    if (value === 'true') {
+      result[key] = true
+    } else if (value === 'false') {
+      result[key] = false
+    } else {
+      result[key] = value
+    }
   }
+
+  return result
 }
-
-// export const broadcastMessage = (msg: string) => {
-//   if (!channel) {
-//     return
-//   }
-
-//   channel.postMessage(msg)
-// }

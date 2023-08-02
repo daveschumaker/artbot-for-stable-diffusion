@@ -1,0 +1,122 @@
+.Modal {
+  background-color: var(--body-color);
+  min-height: 480px;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .Modal {
+    background-color: var(--body-color);
+    height: 90%;
+    max-height: 640px;
+    max-width: 720px;
+    width: 80%;
+  }
+}
+
+.Modal {
+  background-color: var(--body-color);
+  min-height: 480px;
+}
+
+.Wrapper {
+  padding: 16px 0 8px 0px;
+}
+
+.ModalTitle {
+  font-size: 24px;
+  font-weight: 700;
+  position: absolute;
+  top: 4px;
+}
+
+.ModelsList,
+.ModelInfo {
+  padding: 4px;
+}
+
+.ModelsList {
+  border: 1px solid var(--input-color);
+  border-radius: 4px;
+  bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  left: 16px;
+  overflow-y: auto;
+  position: fixed;
+  right: 16px;
+  top: 92px;
+  width: 180px;
+
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+}
+
+.ModelsList * {
+  -ms-overflow-style: none;
+}
+
+.ModelsList::-webkit-scrollbar {
+  display: none;
+}
+
+.ModelsListName {
+  align-items: center;
+  display: flex;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 4px;
+  margin-bottom: 6px;
+}
+
+.ModelsListName:hover {
+  background-color: var(--accent-color);
+  border-radius: 4px;
+}
+
+.ModelInfo {
+  bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  left: 204px;
+  overflow-y: auto;
+  position: fixed;
+  right: 16px;
+  top: 92px;
+
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+}
+
+.ModelInfo * {
+  -ms-overflow-style: none;
+}
+
+.ModelInfo::-webkit-scrollbar {
+  display: none;
+}
+
+.ModelInfoName {
+  font-weight: 700;
+  width: calc(100% - 68px);
+  word-break: break-all;
+}
+
+.ModelInfoStats {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
+  font-weight: 400;
+  padding-bottom: 8px;
+}
+
+.ModelInfoDescription {
+  font-size: 14px;
+  padding-bottom: 8px;
+}
+
+.ModelInfoTrigger {
+  font-size: 14px;
+  padding-bottom: 8px;
+}

@@ -1,0 +1,85 @@
+.TypeWriterWrapper {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  row-gap: 24px;
+  width: 100%;
+}
+
+.Typewriter {
+  display: inline-block;
+  font-family: monospace;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.TextWrapper {
+  background-color: #c7c7c7;
+  border-radius: 4px;
+  color: black;
+  min-height: 34px;
+  padding: 8px;
+  order: 1;
+  width: 100%;
+  position: relative;
+}
+
+.ImageWrapper {
+  background-color: #c7c7c7;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  order: 2;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .TypeWriterWrapper {
+    column-gap: 12px;
+    flex-direction: row;
+  }
+
+  .TextWrapper {
+    width: 50%;
+  }
+
+  .ImageWrapper {
+    margin-bottom: 0;
+    width: 50%;
+  }
+}
+
+@media (min-width: 840px) {
+  .TypeWriterWrapper {
+    column-gap: 24px;
+  }
+}
+
+/* ////////////// */
+
+.Typewriter__text {
+  display: inline-block;
+}
+
+.Typewriter__cursor {
+  display: inline-block;
+  color: currentColor;
+  animation: blink 0.5s ease-in-out 0s infinite alternate;
+}
+
+@keyframes blink {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+.fade-in-out {
+  transition: opacity 0.4s ease-in-out;
+}
+
+.hidden {
+  opacity: 0;
+}

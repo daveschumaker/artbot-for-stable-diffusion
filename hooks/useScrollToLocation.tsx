@@ -1,11 +1,9 @@
-import { useRouter } from 'next/router'
 import React from 'react'
 import { sleep } from 'utils/sleep'
 
 const useScrollToLocation = () => {
   const scrolledRef = React.useRef(false)
-  const router = useRouter()
-  const [, hash] = router.asPath.split('#')
+  const [, hash] = window.location.href.split('#')
 
   const scroll = async () => {
     await sleep(250)

@@ -1,0 +1,36 @@
+.DropdownOptions {
+  background-color: var(--body-color);
+  border-radius: 8px;
+  border: 2px solid var(--accent-color);
+  color: var(--input-text);
+  display: flex;
+  height: auto;
+  left: 0;
+  padding: 8px;
+  position: absolute;
+  right: 0;
+  top: 42px;
+  z-index: var(--zIndex-overNavBar);
+  filter: drop-shadow(4px 4px 12px #000);
+}
+
+.CloseButton {
+  cursor: pointer;
+  position: absolute;
+  top: 4px;
+  right: 4px;
+}
+
+.Title {
+  position: absolute;
+  top: 4px;
+  left: 8px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.DropdownContent {
+  /* flex-grow: 1; */
+  margin-top: 18px;
+  width: calc(100% - 16px);
+}

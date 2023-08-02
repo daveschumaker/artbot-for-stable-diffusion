@@ -1,11 +1,11 @@
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import styled from 'styled-components'
-import useComponentState from '../../hooks/useComponentState'
-import ChevronDownIcon from '../icons/ChevronDownIcon'
-import ChevronRightIcon from '../icons/ChevronRightIcon'
-import DropDownMenu from '../UI/DropDownMenu/dropDownMenu'
-import DropDownMenuItem from '../UI/DropDownMenuItem'
-import MenuButton from '../UI/MenuButton'
+import useComponentState from 'hooks/useComponentState'
+import ChevronDownIcon from 'components/icons/ChevronDownIcon'
+import ChevronRightIcon from 'components/icons/ChevronRightIcon'
+import DropDownMenu from 'components/UI/DropDownMenu/dropDownMenu'
+import DropDownMenuItem from 'components/UI/DropDownMenuItem'
+import MenuButton from 'app/_components/MenuButton'
 
 const MenuSeparator = styled.div`
   width: 100%;

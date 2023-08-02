@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import InteractiveModal from 'components/UI/InteractiveModal/interactiveModal'
-import PageTitle from 'components/UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 import styles from './component.module.css'
-import { useCallback, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import clsx from 'clsx'
 import { Button } from 'components/UI/Button'
 import { clientHeader, getApiHostServer } from 'utils/appUtils'
@@ -26,12 +26,13 @@ function AbTestModal({
   secondaryImage: string
   setIsRated: (value: boolean) => any
 }) {
+  const ref = useRef(null)
   const modal = useModal()
   const [selectedImg, setSelectedImg] = useState(0)
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     modal.remove()
-  }
+  }, [modal])
 
   const handleRateImage = useCallback(async () => {
     const imageId = selectedImg === 1 ? jobDetails.hordeImageId : secondaryId
@@ -93,58 +94,66 @@ function AbTestModal({
   ])
 
   return (
-    <InteractiveModal className={styles.ModalStyle} handleClose={handleClose}>
-      <div>
-        <PageTitle>SDXL: Choose the best image</PageTitle>
-      </div>
-      <div className={styles.Images} style={{ marginBottom: '12px' }}>
-        <img
-          className={clsx(
-            styles.ImageElement,
-            selectedImg !== 0 && selectedImg !== 1 && styles.NotSelected
-          )}
-          src={'data:image/webp;base64,' + jobDetails.base64String}
-          alt={jobDetails.prompt}
-          onClick={() => setSelectedImg(1)}
-          style={{
-            border: selectedImg === 1 ? '4px solid var(--main-color)' : 'unset'
-          }}
-        />
+    <InteractiveModal
+      className={styles.ModalStyle}
+      disableSwipe
+      handleClose={handleClose}
+    >
+      <div ref={ref}>
+        <div>
+          <PageTitle>SDXL: Choose the best image</PageTitle>
+        </div>
+        <div className={styles.Images} style={{ marginBottom: '12px' }}>
+          <img
+            className={clsx(
+              styles.ImageElement,
+              selectedImg !== 0 && selectedImg !== 1 && styles.NotSelected
+            )}
+            src={'data:image/webp;base64,' + jobDetails.base64String}
+            alt={jobDetails.prompt}
+            onClick={() => setSelectedImg(1)}
+            style={{
+              border:
+                selectedImg === 1 ? '4px solid var(--main-color)' : 'unset'
+            }}
+          />
 
-        <img
-          className={clsx(
-            styles.ImageElement,
-            selectedImg !== 0 && selectedImg !== 2 && styles.NotSelected
-          )}
-          src={'data:image/webp;base64,' + secondaryImage}
-          alt={jobDetails.prompt}
-          onClick={() => setSelectedImg(2)}
-          style={{
-            border: selectedImg === 2 ? '4px solid var(--main-color)' : 'unset'
-          }}
-        />
-      </div>
-      <div
-        className="flex flex-row w-full justify-center"
-        style={{ fontSize: '14px', marginBottom: '8px' }}
-      >
-        Choose which image you think looks the best. The result will be sent
-        back to Stability.ai in order to further improve SDXL. In return, you
-        will receive 15 kudos per image rated.
-      </div>
-      <div
-        className="flex flex-row w-full justify-center"
-        style={{ marginBottom: '12px' }}
-      >
-        <Button
-          disabled={selectedImg === 0}
-          onClick={() => {
-            if (selectedImg === 0) return
-            handleRateImage()
-          }}
+          <img
+            className={clsx(
+              styles.ImageElement,
+              selectedImg !== 0 && selectedImg !== 2 && styles.NotSelected
+            )}
+            src={'data:image/webp;base64,' + secondaryImage}
+            alt={jobDetails.prompt}
+            onClick={() => setSelectedImg(2)}
+            style={{
+              border:
+                selectedImg === 2 ? '4px solid var(--main-color)' : 'unset'
+            }}
+          />
+        </div>
+        <div
+          className="flex flex-row w-full justify-center"
+          style={{ fontSize: '14px', marginBottom: '8px' }}
         >
-          Select favorite image
-        </Button>
+          Choose which image you think looks the best. The result will be sent
+          back to Stability.ai in order to further improve SDXL. In return, you
+          will receive 15 kudos per image rated.
+        </div>
+        <div
+          className="flex flex-row w-full justify-center"
+          style={{ marginBottom: '12px' }}
+        >
+          <Button
+            disabled={selectedImg === 0}
+            onClick={() => {
+              if (selectedImg === 0) return
+              handleRateImage()
+            }}
+          >
+            Select favorite image
+          </Button>
+        </div>
       </div>
     </InteractiveModal>
   )

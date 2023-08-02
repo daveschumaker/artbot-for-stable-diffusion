@@ -1,3 +1,4 @@
+import AppSettings from 'models/AppSettings'
 import { modelStore } from '../store/modelStore'
 import { SourceProcessing } from './promptUtils'
 
@@ -17,8 +18,10 @@ export const validModelsArray = ({
     source_processing: SourceProcessing.Prompt
   },
   sort = 'workers',
-  filterNsfw = false
+  filterNsfw = false,
+  showHidden = false
 } = {}) => {
+  const hidden = AppSettings.get('hiddenModels') || {}
   const modelDetails = modelStore.state.modelDetails
   const img2img =
     imageParams.source_processing === SourceProcessing.Img2Img ||
@@ -60,6 +63,10 @@ export const validModelsArray = ({
       availableModels[key].name === 'stable_diffusion_2.0' &&
       (img2img !== false || inpainting !== false)
     ) {
+      continue
+    }
+
+    if (hidden[availableModels[key].name] && !showHidden) {
       continue
     }
 

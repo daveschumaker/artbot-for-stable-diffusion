@@ -9,7 +9,7 @@ import { GithubPicker } from 'react-color'
 import { Button } from '../UI/Button'
 import UndoIcon from '../icons/UndoIcon'
 import RedoIcon from '../icons/RedoIcon'
-import SelectComponent from '../UI/Select'
+import Select from 'app/_components/Select'
 import TrashIcon from '../icons/TrashIcon'
 import CaptureClickOverlay from '../UI/CaptureClickOverly'
 import BrushIcon from '../icons/BrushIcon'
@@ -356,7 +356,7 @@ const PaintCanvas = ({ setActiveNav, setInput }: Props) => {
     })
 
     setActiveNav('img2img')
-    router.push('?panel=img2img')
+    router.push('/create?panel=img2img')
   }
 
   // <div className="overflow-x-hidden">
@@ -415,7 +415,7 @@ const PaintCanvas = ({ setActiveNav, setInput }: Props) => {
           )}
         </ColorButton>
         <div style={{ width: '80px' }}>
-          <SelectComponent
+          <Select
             components={{
               DropdownIndicator: () => null,
               IndicatorSeparator: () => null
@@ -456,7 +456,7 @@ const PaintCanvas = ({ setActiveNav, setInput }: Props) => {
             //@ts-ignore
             handleFile={handleFileSelect}
           />
-          <SelectComponent
+          <Select
             options={[
               { value: 'landscape', label: 'Landscape' },
               { value: 'portrait', label: 'Portrait' },

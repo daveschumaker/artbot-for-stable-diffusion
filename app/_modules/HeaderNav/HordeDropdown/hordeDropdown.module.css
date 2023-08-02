@@ -1,0 +1,21 @@
+.HordeDropdown {
+  background-color: var(--body-color);
+  font-size: 12px;
+  padding: 12px;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .HordeDropdown {
+    width: 400px;
+  }
+}
+
+.separator {
+  border-bottom-style: dotted;
+  width: 100%;
+  padding-top: 12px;
+  margin-bottom: 12px;
+  border-bottom-color: var(--input-text);
+  border-bottom-width: 1px;
+}

@@ -12,7 +12,7 @@ import PromptInputSettings from '../models/PromptInputSettings'
 
 // @ts-ignore
 import { trackNewSession } from './analytics'
-import { documentIsVisible, isAppActive } from './appUtils'
+import { isAppActive } from './appUtils'
 import {
   deleteDoneFromPending,
   deleteInvalidPendingJobs,
@@ -20,12 +20,6 @@ import {
   deleteRequestedFromPending
 } from './db'
 import { initWindowLogger } from './debugTools'
-
-// Check if the Page Visibility API is supported
-if (typeof window !== 'undefined' && typeof document.hidden !== 'undefined') {
-  // Add event listeners for visibility change
-  document.addEventListener('visibilitychange', documentIsVisible)
-}
 
 export const updateShowGrid = () => {
   if (localStorage.getItem('showGrid') === 'true') {
@@ -151,7 +145,7 @@ export const initAppSettings = async () => {
   initWindowLogger()
   fixLocalStorage()
   fetchHordePerformance()
-  await fetchUserDetails(apikey)
+  fetchUserDetails(apikey)
   setUserId()
   buildModelAvailability()
   fetchMyWorkers()
@@ -164,7 +158,7 @@ export const initAppSettings = async () => {
 
     buildModelAvailability()
     fetchHordePerformance()
-  }, 20000)
+  }, 60000)
 
   setInterval(async () => {
     if (!isAppActive()) {
@@ -172,6 +166,6 @@ export const initAppSettings = async () => {
     }
 
     await fetchUserDetails(apikey)
-    fetchMyWorkers()
+    await fetchMyWorkers()
   }, 60000)
 }

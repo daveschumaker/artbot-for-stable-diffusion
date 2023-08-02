@@ -1,3 +1,4 @@
+import { basePath } from 'BASE_PATH'
 import AppSettings from '../models/AppSettings'
 import { logToConsole } from '../utils/debugTools'
 import serverFetchWithTimeout from '../utils/serverFetchWithTimeout'
@@ -52,7 +53,7 @@ export const trackEvent = async (obj: any = {}) => {
   // }
 
   try {
-    serverFetchWithTimeout(`/artbot/api/telemetry`, {
+    serverFetchWithTimeout(`${basePath}/api/telemetry`, {
       method: 'POST',
       body: JSON.stringify(obj),
       headers: {

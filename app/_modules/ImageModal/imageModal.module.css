@@ -1,0 +1,87 @@
+/* 'p-2 flex flex-col items-start left-2 md:left-4 right-2 md:right-4 z-[100] m-auto overflow-y-overlay' */
+
+.image-modal {
+  background-color: var(--body-color);
+  border-radius: 4px;
+  bottom: calc(env(safe-area-inset-bottom) + 8px);
+  left: 0;
+  margin: 0 auto;
+  max-width: 1600px;
+  opacity: 1;
+  padding: 8px 0px;
+  position: fixed;
+  right: 0;
+  top: calc(env(safe-area-inset-top) + 8px);
+  width: 100%;
+  z-index: var(--zIndex-overNavBar);
+}
+
+.left-nav-btn {
+  display: none;
+  position: absolute;
+  bottom: calc(env(safe-area-inset-bottom) + 4px);
+  left: -14px;
+  z-index: 101;
+}
+
+.right-nav-btn {
+  display: none;
+  position: absolute;
+  bottom: calc(env(safe-area-inset-bottom) + 4px);
+  right: -14px;
+  z-index: 101;
+}
+
+.close-btn {
+  cursor: pointer;
+  height: 28px;
+  width: 28px;
+}
+
+.scrollable-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  overflow-y: auto;
+  top: 38px;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  position: absolute;
+  padding-bottom: 60px;
+
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollable-content::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .left-nav-btn {
+    display: block;
+    bottom: auto;
+    top: 50%;
+  }
+
+  .right-nav-btn {
+    display: block;
+    bottom: auto;
+    top: 50%;
+  }
+}
+
+@media (min-width: 1730px) {
+  .left-nav-btn {
+    left: -68px;
+  }
+
+  .right-nav-btn {
+    right: -68px;
+  }
+}

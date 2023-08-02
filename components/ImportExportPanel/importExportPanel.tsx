@@ -4,14 +4,16 @@ import { useEffectOnce } from '../../hooks/useEffectOnce'
 import { initBlob } from '../../utils/blobUtils'
 import { countCompletedJobs } from '../../utils/db'
 import { downloadImages } from '../../utils/imageUtils'
-import PageTitle from '../UI/PageTitle'
-import SelectComponent from 'components/UI/Select'
+import PageTitle from 'app/_components/PageTitle'
+import Select from 'app/_components/Select'
 import MaxWidth from 'components/UI/MaxWidth'
 import { useState } from 'react'
 import SpinnerV2 from 'components/Spinner'
 import { IconChevronRight } from '@tabler/icons-react'
-import ExportDatabase from 'modules/SettingsPage/ExportDatabase'
-import ImportDatabase from 'modules/SettingsPage/ImportDatabase'
+import ExportDatabase from 'app/_pages/SettingsPage/ExportDatabase'
+import ImportDatabase from 'app/_pages/SettingsPage/ImportDatabase'
+import LastResortExport from 'app/_pages/SettingsPage/FirefoxDb/LastResortExport'
+import LastResortImport from 'app/_pages/SettingsPage/FirefoxDb/LastResortImport'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -162,8 +164,10 @@ const ImportExportPanel = () => {
             <MaxWidth width="240px">
               <div className="flex flex-row gap-2 items-center">
                 Images per file:
-                <SelectComponent
+                <Select
                   options={[
+                    { value: 25, label: 25 },
+                    { value: 50, label: 50 },
                     { value: 100, label: 100 },
                     { value: 250, label: 250 },
                     { value: 500, label: 500 },
@@ -183,6 +187,10 @@ const ImportExportPanel = () => {
             <ul>{renderImageList()}</ul>
           </Section>
         </SubSectionTitle>
+      </Section>
+      <Section>
+        <LastResortExport chunkSize={componentState.filesPerZip.value || 100} />
+        <LastResortImport />
       </Section>
     </div>
   )

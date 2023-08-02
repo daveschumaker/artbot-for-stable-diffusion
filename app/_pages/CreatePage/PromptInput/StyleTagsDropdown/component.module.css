@@ -1,0 +1,36 @@
+.style-tags-wrapper {
+  position: absolute;
+  top: 32px;
+  bottom: 8px;
+  left: 8px;
+  right: 8px;
+  overflow-y: auto;
+
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+}
+
+.style-tags-wrapper * {
+  -ms-overflow-style: none;
+}
+
+.style-tags-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.tag {
+  background-color: var(--main-color);
+  border-radius: 12px;
+  color: white;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 14px;
+  margin-bottom: 8px;
+  margin-right: 8px;
+  padding: 4px 12px;
+}
+
+.tag:hover {
+  background-color: var(--btn-primary-hover);
+}

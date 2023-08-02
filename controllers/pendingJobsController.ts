@@ -10,6 +10,7 @@ import {
   POLL_COMPLETED_JOBS_INTERVAL
 } from '_constants'
 import { getAllPendingJobs } from './pendingJobsCache'
+import AppSettings from 'models/AppSettings'
 
 let MAX_JOBS = MAX_CONCURRENT_JOBS_ANON
 let pendingJobs: Array<any> = []
@@ -31,7 +32,7 @@ const checkMultiPendingJobs = async () => {
     return
   }
 
-  if (!isAppActive() || !appInfoStore.state.primaryWindow) {
+  if (!isAppActive()) {
     return
   }
 
@@ -67,7 +68,11 @@ const createImageJobs = async () => {
     return
   }
 
-  if (!isAppActive() || !appInfoStore.state.primaryWindow) {
+  if (!isAppActive()) {
+    return
+  }
+
+  if (AppSettings.get('pauseJobQueue')) {
     return
   }
 
@@ -107,15 +112,15 @@ const createImageJobs = async () => {
 
 export const updatePendingJobs = async () => {
   await fetchPendingImageJobs()
-  await sleep(2000)
+  await sleep(250)
   updatePendingJobs()
 }
 
 // Monitors pending jobs db to create new jobs
 export const createPendingJobInterval = async () => {
   await fetchPendingImageJobs()
-  await createImageJobs()
-  await sleep(250)
+  createImageJobs()
+  await sleep(10)
   createPendingJobInterval()
 }
 

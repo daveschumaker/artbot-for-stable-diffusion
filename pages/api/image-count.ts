@@ -1,4 +1,7 @@
+import { getImageCount, initLoadImageCount } from 'app/_server-api/counters'
 import type { NextApiRequest, NextApiResponse } from 'next'
+
+initLoadImageCount()
 
 type Data = {
   success: boolean
@@ -14,15 +17,8 @@ export default async function handler(
   }
 
   try {
-    const resp = await fetch(
-      `http://localhost:${process.env.PORT}/artbot/api/v1/status/image-count`,
-      {
-        method: 'GET'
-      }
-    )
+    const totalImages = getImageCount()
 
-    const data = (await resp.json()) || {}
-    const { totalImages } = data
     return res.send({
       success: true,
       totalImages

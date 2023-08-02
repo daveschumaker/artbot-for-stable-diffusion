@@ -37,13 +37,13 @@
 
 .styled-button-small {
   height: 34px;
-  padding: 2px 4px;
+  padding: 2px 6px;
 }
 
 .styled-button-disabled {
-  background-color: gray;
+  background-color: #bdbdbd;
 }
 
 .styled-button-disabled:hover {
-  background-color: gray;
+  background-color: #bdbdbd;
 }

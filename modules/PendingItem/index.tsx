@@ -1,11 +1,11 @@
 import { memo } from 'react'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 
 import ProgressBar from './ProgressBar'
 import { setNewImageReady, setShowImageReadyToast } from '../../store/appStore'
 import { Button } from '../../components/UI/Button'
 import TrashIcon from '../../components/icons/TrashIcon'
-import Panel from '../../components/UI/Panel'
+import Panel from 'app/_components/Panel'
 import { trackEvent, trackGaEvent } from '../../api/telemetry'
 import AlertTriangleIcon from '../../components/icons/AlertTriangle'
 import { JobStatus } from '../../types'
@@ -28,7 +28,7 @@ import { deletePendingJob } from 'controllers/pendingJobsCache'
 import styles from './pendingItem.module.css'
 import clsx from 'clsx'
 import ImageThumbnail from './ImageThumbnail'
-import Tooltip from 'components/UI/Tooltip'
+import TooltipComponent from 'app/_components/TooltipComponent'
 import { IconInfoHexagon } from '@tabler/icons-react'
 
 const RATINGS_ENABLED = false
@@ -75,7 +75,7 @@ const PendingItem = memo(
     const handleEditClick = async () => {
       savePrompt({ ...jobDetails })
       deletePendingJob(jobId)
-      router.push(`/?edit=true`)
+      router.push(`/create?edit=true`)
     }
 
     const handleRetryJob = async () => {
@@ -113,7 +113,7 @@ const PendingItem = memo(
 
     const handleCopyPromptClick = (imageDetails: any) => {
       copyEditPrompt(imageDetails)
-      router.push(`/?edit=true`)
+      router.push(`/create?edit=true`)
     }
 
     const timeDiff = jobDetails?.initWaitTime - jobDetails?.wait_time || 0
@@ -186,13 +186,13 @@ const PendingItem = memo(
                   >
                     <IconInfoHexagon style={{ marginRight: '8px' }} />
                     SDXL beta{' '}
-                    <Tooltip tooltipId="sdxl-beta-tooltip">
+                    <TooltipComponent tooltipId="sdxl-beta-tooltip">
                       SDXL is currently in beta and provided by Stability.ai in
                       order to refine future image models. Please select one of
                       the following two images to choose as the best image for
                       this particular generation. You will be rewarded 15 kudos
                       for each rating.
-                    </Tooltip>
+                    </TooltipComponent>
                   </div>
                 )}
                 {jobDetails.upscaled && <div>[ UPSCALING ]</div>}

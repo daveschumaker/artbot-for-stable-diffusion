@@ -1,0 +1,47 @@
+.FixedMenu {
+  border-right: 1px solid black;
+  bottom: 0;
+  display: none;
+  left: 0;
+  position: fixed;
+  top: var(--headerNav-height);
+  width: var(--fixedSideBar-width);
+}
+
+/*
+ * Fun fact: If you  want to adjust this, you'll need to also adjust
+ * corresponding value in:
+ * ./app/_components/ContentWrapper/contentWrapper.module.css
+ * ./app/_modules/HeaderNav/MenuButton/menuButton.module.css
+ */
+@media (min-width: 800px) {
+  .FixedMenu {
+    display: block;
+  }
+}
+
+.MenuWrapper {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+}
+
+.AdHidden {
+  bottom: 0;
+}
+
+.SidebarAd {
+  display: none;
+}
+
+@media (min-width: 800px) {
+  .SidebarAd {
+    display: block;
+    bottom: 0px;
+    left: 0;
+    width: 219px;
+    position: fixed;
+  }
+}

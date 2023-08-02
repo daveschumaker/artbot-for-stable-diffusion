@@ -1,17 +1,21 @@
 import { useEffect } from 'react'
-import Overlay from './UI/Overlay'
+import Overlay from 'app/_components/Overlay'
 import { Portal } from 'react-portal'
+import NiceModal, { useModal } from '@ebay/nice-modal-react'
 
 const ConfirmationModal = ({
   onConfirmClick = () => {},
   closeModal = () => {},
   multiImage = false
 }) => {
+  const modal = useModal()
+
   useEffect(() => {
     // @ts-ignore
     const handleKeyPress = (e) => {
       if (e.key === 'Escape') {
         closeModal()
+        modal.remove()
       }
 
       if (e.keyCode === 13) {
@@ -82,7 +86,10 @@ const ConfirmationModal = ({
             <button
               type="button"
               className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-              onClick={closeModal}
+              onClick={() => {
+                closeModal()
+                modal.remove()
+              }}
             >
               Cancel
             </button>
@@ -91,10 +98,13 @@ const ConfirmationModal = ({
       </div>
       <div
         className="inset-0 fixed bg-slate-400 opacity-60"
-        onClick={closeModal}
+        onClick={() => {
+          closeModal()
+          modal.remove()
+        }}
       />
     </Portal>
   )
 }
 
-export default ConfirmationModal
+export default NiceModal.create(ConfirmationModal)

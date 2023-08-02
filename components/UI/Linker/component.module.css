@@ -1,5 +1,6 @@
 .Linker {
   color: var(--link-text);
+  display: inline-block;
   font-weight: 600;
 }
 

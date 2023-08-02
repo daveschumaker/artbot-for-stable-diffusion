@@ -3,15 +3,14 @@ import CreateImageRequest from '../models/CreateImageRequest'
 import RerollImageRequest from '../models/RerollImageRequest'
 import { logError, uuidv4 } from './appUtils'
 import { addPendingJobToDexie } from './db'
-import { randomPropertyName } from './helperUtils'
 import { getModelVersion, validModelsArray } from './modelUtils'
-import { stylePresets } from './stylePresets'
 import { modelStore } from '../store/modelStore'
 import { SourceProcessing } from './promptUtils'
 import { userInfoStore } from 'store/userStore'
 import { toast, ToastOptions } from 'react-toastify'
 import { logToConsole } from './debugTools'
 import { deletePendingJob, setPendingJob } from 'controllers/pendingJobsCache'
+import AppSettings from 'models/AppSettings'
 
 const addJobToPending = async (
   imageParams: CreateImageRequest | RerollImageRequest
@@ -214,13 +213,6 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
 
       try {
         for (let i = 0; i < numImages; i++) {
-          if (clonedParams.stylePreset === 'random') {
-            clonedParams.stylePreset = randomPropertyName(stylePresets)
-
-            // @ts-ignore
-            clonedParams.models = [stylePresets[clonedParams.stylePreset].model]
-          }
-
           if (clonedParams.models[0] === 'random') {
             clonedParams.models = [
               CreateImageRequest.getRandomModel({ imageParams: clonedParams })
@@ -228,10 +220,12 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
           }
           clonedParams.modelVersion = getModelVersion(clonedParams.models[0])
 
-          clonedParams.prompt = addTriggerToPrompt({
-            prompt,
-            model: clonedParams.models[0]
-          })
+          if (AppSettings.get('modelAutokeywords')) {
+            clonedParams.prompt = addTriggerToPrompt({
+              prompt,
+              model: clonedParams.models[0]
+            })
+          }
 
           if (clonedParams.orientation === 'random') {
             clonedParams = {
@@ -318,10 +312,12 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
       }
       clonedParams.modelVersion = getModelVersion(clonedParams.models[0])
 
-      clonedParams.prompt = addTriggerToPrompt({
-        prompt,
-        model: clonedParams.models[0]
-      })
+      if (AppSettings.get('modelAutokeywords')) {
+        clonedParams.prompt = addTriggerToPrompt({
+          prompt,
+          model: clonedParams.models[0]
+        })
+      }
 
       if (clonedParams.orientation === 'random') {
         clonedParams = {
@@ -349,19 +345,6 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
     // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
     for (const _num of count) {
       clonedParams = await cloneImageParams(imageParams)
-
-      if (clonedParams.stylePreset === 'random') {
-        clonedParams.stylePreset = randomPropertyName(stylePresets)
-
-        // @ts-ignore
-        clonedParams.models = [stylePresets[clonedParams.stylePreset].model]
-      }
-
-      if (clonedParams.models[0] === 'random') {
-        clonedParams.models = [
-          CreateImageRequest.getRandomModel({ imageParams: clonedParams })
-        ]
-      }
       clonedParams.modelVersion = getModelVersion(clonedParams.models[0])
 
       if (clonedParams.orientation === 'random') {

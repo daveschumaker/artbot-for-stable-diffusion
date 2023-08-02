@@ -1,14 +1,15 @@
 import { makeStore } from 'statery'
-import { IClusterSettings } from './clusterSettings'
 
 interface AppStore {
+  adHidden: boolean
   buildId: string
-  clusterSettings: IClusterSettings
+  clusterSettings: {
+    forceReloadOnServerUpdate: boolean
+  }
   hordePerformance: object
   indexDbSupport: boolean
   imageDetailsModalOpen: boolean
   newImageReady: string
-  primaryWindow: boolean
   serverMessage: {
     content: string
     title: string
@@ -20,9 +21,12 @@ interface AppStore {
   stableHordeApiOnline: boolean
   storageQuotaLimit: boolean
   unsupportedBrowser: boolean
+  lockedToWorker: boolean
+  pauseJobQueue: boolean
 }
 
 export const appInfoStore = makeStore<AppStore>({
+  adHidden: false,
   buildId: '',
   clusterSettings: {
     forceReloadOnServerUpdate: true
@@ -42,8 +46,27 @@ export const appInfoStore = makeStore<AppStore>({
   stableHordeApiOnline: true,
   storageQuotaLimit: false,
   unsupportedBrowser: false,
-  primaryWindow: false
+  pauseJobQueue: false,
+  lockedToWorker: false
 })
+
+export const setPauseJobQueue = (val: boolean) => {
+  appInfoStore.set(() => ({
+    pauseJobQueue: val
+  }))
+}
+
+export const setLockedToWorker = (val: boolean) => {
+  appInfoStore.set(() => ({
+    lockedToWorker: val
+  }))
+}
+
+export const setAdHidden = (val: boolean) => {
+  appInfoStore.set(() => ({
+    adHidden: val
+  }))
+}
 
 export const setStorageQuotaLimit = (val: boolean = false) => {
   appInfoStore.set(() => ({
@@ -57,7 +80,7 @@ export const setImageDetailsModalOpen = (val: boolean = false) => {
   }))
 }
 
-export const setClusterSettings = (obj: IClusterSettings) => {
+export const setClusterSettings = (obj: any) => {
   appInfoStore.set(() => ({
     clusterSettings: obj
   }))
@@ -78,12 +101,6 @@ export const setHordePerformance = (obj: object) => {
 export const setUnsupportedBrowser = (val: boolean = false) => {
   appInfoStore.set(() => ({
     unsupportedBrowser: val
-  }))
-}
-
-export const setPrimaryWindow = (val: boolean = false) => {
-  appInfoStore.set(() => ({
-    primaryWindow: val
   }))
 }
 

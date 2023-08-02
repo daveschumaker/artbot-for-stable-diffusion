@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import Overlay from './UI/Overlay'
+import Overlay from 'app/_components/Overlay'
 
 interface IProps {
   children: React.ReactNode

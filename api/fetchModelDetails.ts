@@ -2,6 +2,7 @@ import { IAvailableModels, IModelsDetails } from 'types/artbot'
 import StableDiffusionModel from '../models/StableDiffusionModel'
 import { setModelDetails } from '../store/modelStore'
 import { isAppActive } from '../utils/appUtils'
+import { basePath } from 'BASE_PATH'
 
 let isPending = false
 const fetchModelDetails = async () => {
@@ -18,7 +19,7 @@ const fetchModelDetails = async () => {
   let availableModelsMap: IAvailableModels = {}
 
   try {
-    const res = await fetch(`/artbot/api/model-details`)
+    const res = await fetch(`${basePath}/api/model-details`)
     const { models }: { models: IModelsDetails } = await res.json()
 
     for (const model in models) {

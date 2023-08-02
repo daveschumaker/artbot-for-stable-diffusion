@@ -1,0 +1,64 @@
+.MenuOptions {
+  position: fixed;
+  top: calc(env(safe-area-inset-top) + 48px);
+  left: 12px;
+  right: 16px;
+  bottom: 8px;
+  overflow-y: auto;
+  max-width: var(--fixedSideBar-width);
+
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+}
+
+.MenuOptions > * {
+  -ms-overflow-style: none;
+}
+
+.MenuOptions::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-width: 800px) {
+  .MenuOptions {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+  }
+}
+
+.MenuOption {
+  align-items: center;
+  column-gap: 8px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.MenuOption:hover {
+  color: rgb(20, 184, 166);
+}
+
+.SubOptions {
+  display: flex;
+  flex-direction: column;
+  margin-top: -8px;
+  padding-left: 12px;
+  margin-bottom: 12px;
+}
+
+.SubOption {
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  font-size: 14px;
+  column-gap: 4px;
+}
+
+.SubOption:hover {
+  color: rgb(20, 184, 166);
+}

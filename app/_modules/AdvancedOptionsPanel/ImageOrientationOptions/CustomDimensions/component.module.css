@@ -1,0 +1,15 @@
+.ContentWrapper {
+  padding-top: 12px;
+}
+
+.CustomDimension {
+  border: 1px solid var(--accent-color);
+  border-radius: 4px;
+  padding: 8px;
+  margin-bottom: 8px;
+}
+
+.EditIcon {
+  cursor: pointer;
+  color: var(--main-color);
+}

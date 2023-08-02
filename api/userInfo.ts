@@ -1,10 +1,8 @@
 import AppSettings from '../models/AppSettings'
 import { setHordeStatus } from '../store/appStore'
 import {
-  IWorker,
   setLoggedInState,
   setUserInfo,
-  setWorkers,
   userInfoStore
 } from '../store/userStore'
 import {
@@ -66,7 +64,6 @@ export const fetchUserDetails = async (apikey: string) => {
       trusted = false,
       username = '',
       worker_ids = null,
-      sharedKey = false,
       sharedkey_ids = []
     } = userDetails
 
@@ -106,56 +103,6 @@ export const fetchUserDetails = async (apikey: string) => {
       worker_ids,
       sharedkey_ids
     })
-
-    if (worker_ids && worker_ids.length > 0) {
-      let workerInfo: { [key: string]: IWorker } = {}
-
-      for (const idx in worker_ids) {
-        const workerRes = await fetch(
-          `${getApiHostServer()}/api/v2/workers/${worker_ids[idx]}`,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'Client-Agent': clientHeader()
-            }
-          }
-        )
-        const workerData = await workerRes.json()
-        const {
-          id,
-          kudos_rewards,
-          maintenance_mode,
-          max_pixels,
-          models,
-          name,
-          online,
-          performance,
-          requests_fulfilled,
-          team,
-          threads,
-          trusted,
-          uptime
-        } = workerData
-
-        workerInfo[id] = {
-          id,
-          kudos_rewards,
-          maintenance_mode,
-          max_pixels,
-          models,
-          name,
-          online,
-          performance,
-          requests_fulfilled,
-          team,
-          threads,
-          trusted,
-          uptime
-        }
-      }
-
-      setWorkers(workerInfo)
-    }
 
     isPending = false
     setHordeStatus(true)

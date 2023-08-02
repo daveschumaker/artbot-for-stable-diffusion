@@ -1,0 +1,58 @@
+@keyframes accordionOpen {
+  0% {
+    opacity: 0;
+    max-height: 0;
+  }
+
+  100% {
+    opacity: 1;
+    max-height: 1000px;
+    /* Adjust as needed */
+  }
+}
+
+@keyframes accordionClose {
+  0% {
+    opacity: 1;
+    max-height: 1000px;
+    /* Adjust as needed */
+  }
+
+  100% {
+    opacity: 0;
+    max-height: 0;
+  }
+}
+
+.accordion-title {
+  display: flex;
+  flex-direction: row;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.accordion-item {
+  cursor: pointer;
+}
+
+.accordion-content {
+  animation: accordionOpen 0.3s;
+  /* overflow: hidden; */
+}
+
+.accordion-item:not(.open) .accordion-content {
+  animation: accordionClose 0.3s;
+}
+
+/* New styles for the rotating icon */
+.accordion-icon {
+  /* Define the initial position of the icon */
+  transform: rotate(0deg);
+  transition: transform 0.3s ease;
+}
+
+/* Define the rotated position when the accordion is expanded */
+.rotated {
+  transform: rotate(-90deg);
+}

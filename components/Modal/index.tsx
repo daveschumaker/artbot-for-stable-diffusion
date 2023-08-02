@@ -1,6 +1,6 @@
 import { IconX } from '@tabler/icons-react'
 import React, { CSSProperties, useEffect, useId } from 'react'
-import ClickableOverlay from 'components/ClickableOverlay'
+import ClickableOverlay from 'app/_components/ClickableOverlay'
 import styles from './modal.module.css'
 import useLockedBody from 'hooks/useLockedBody'
 import clsx from 'clsx'

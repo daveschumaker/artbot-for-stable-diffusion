@@ -33,6 +33,13 @@ export enum Common {
   Empty = ''
 }
 
+export interface CreatePageQueryParams {
+  drawing?: string | null
+  i?: string | null
+  model?: string | null
+  prompt?: string | null
+}
+
 export interface GetSetPromptInput {
   input: DefaultPromptInput
   setInput: SetInput
@@ -215,12 +222,18 @@ export interface SelectComponentProps {
   isMulti?: boolean
   isSearchable?: boolean
   menuPlacement?: string
+  hideSelectedOptions?: boolean
   name?: string
   onChange: any
   options: Array<any>
   styles?: any
   value?: Value
   width?: string
+}
+
+export interface SelectModelDetailsProps {
+  models: Array<string>
+  multiModels: boolean
 }
 
 export type SetInput = Dispatch<Partial<DefaultPromptInput>>

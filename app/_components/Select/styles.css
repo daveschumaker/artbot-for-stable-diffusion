@@ -1,0 +1,5 @@
+.select-control {
+  background-color: var(--body-color);
+  border: 1px solid var(--input-color);
+  color: var(--input-color);
+}

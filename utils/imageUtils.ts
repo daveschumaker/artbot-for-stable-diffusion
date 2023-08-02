@@ -6,11 +6,13 @@ import { SourceProcessing } from './promptUtils'
 import { stylePresets } from './stylePresets'
 import { isValidHttpUrl } from './validationUtils'
 import { hasPromptMatrix, promptMatrix } from './promptUtils'
-import { validModelsArray } from './modelUtils'
 import AppSettings from '../models/AppSettings'
 import { DEFAULT_SAMPLER_ARRAY } from '../_constants'
 import { isiOS, isSafariBrowser } from './appUtils'
 import { fetchCompletedJobs } from './db'
+import { basePath } from 'BASE_PATH'
+import ImageModels from 'models/ImageModels'
+import DefaultPromptInput from 'models/DefaultPromptInput'
 
 interface CreateImageJob {
   base64String?: string
@@ -366,7 +368,7 @@ export const getImageFromUrl = async (imgUrl: string) => {
     }
   }
 
-  const resp = await fetch(`/artbot/api/img-from-url`, {
+  const resp = await fetch(`${basePath}/api/img-from-url`, {
     method: 'POST',
     body: JSON.stringify({
       imageUrl: imgUrl
@@ -743,10 +745,14 @@ export const downloadFile = async (image: any) => {
 interface ICountImages {
   numImages: number
   multiSteps?: string
+  multiClip?: string
+  multiDenoise?: string
   multiGuidance?: string
   useAllModels?: boolean
   useFavoriteModels?: boolean
   useAllSamplers?: boolean
+  useMultiClip?: boolean
+  useMultiDenoise?: boolean
   useMultiSteps?: boolean
   useMultiGuidance?: boolean
   prompt?: string
@@ -768,10 +774,14 @@ export const countImagesToGenerate = (imageParams: ICountImages) => {
   const {
     numImages = 0,
     multiSteps = '',
+    multiClip = '',
+    multiDenoise = '',
     multiGuidance = '',
     useAllModels = false,
     useFavoriteModels = false,
     useAllSamplers = false,
+    useMultiClip = false,
+    useMultiDenoise = false,
     useMultiGuidance = false,
     useMultiSteps = false,
     models = [],
@@ -779,6 +789,38 @@ export const countImagesToGenerate = (imageParams: ICountImages) => {
     negative = ''
   } = imageParams
   let imageCount = numImages
+
+  if (useMultiClip) {
+    let splitClip = multiClip.split(',') || []
+    let splitCount = 0
+
+    splitClip.forEach((split) => {
+      // @ts-ignore
+      if (!isNaN(split) && split) {
+        splitCount++
+      }
+    })
+
+    if (splitCount > 0) {
+      imageCount = imageCount * splitCount
+    }
+  }
+
+  if (useMultiDenoise) {
+    let splitDenoise = multiDenoise.split(',') || []
+    let splitCount = 0
+
+    splitDenoise.forEach((split) => {
+      // @ts-ignore
+      if (!isNaN(split) && split) {
+        splitCount++
+      }
+    })
+
+    if (splitCount > 0) {
+      imageCount = imageCount * splitCount
+    }
+  }
 
   if (useMultiSteps) {
     let splitSteps = multiSteps.split(',') || []
@@ -791,7 +833,9 @@ export const countImagesToGenerate = (imageParams: ICountImages) => {
       }
     })
 
-    imageCount = imageCount * splitCount
+    if (splitCount > 0) {
+      imageCount = imageCount * splitCount
+    }
   }
 
   if (useMultiGuidance) {
@@ -805,7 +849,9 @@ export const countImagesToGenerate = (imageParams: ICountImages) => {
       }
     })
 
-    imageCount = imageCount * splitCount
+    if (splitCount > 0) {
+      imageCount = imageCount * splitCount
+    }
   }
 
   if (hasPromptMatrix(prompt) || hasPromptMatrix(negative)) {
@@ -823,8 +869,10 @@ export const countImagesToGenerate = (imageParams: ICountImages) => {
   }
 
   if (useAllModels) {
-    // @ts-ignore
-    const modelsArray = validModelsArray({ imageParams }) || ['']
+    const filteredModels = ImageModels.getValidModels({
+      input: imageParams as DefaultPromptInput
+    })
+    const modelsArray = filteredModels.map((obj) => obj.name)
     imageCount = imageCount * modelsArray.length
   }
 

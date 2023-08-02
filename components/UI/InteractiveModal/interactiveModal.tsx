@@ -2,14 +2,15 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import CloseIcon from '../../icons/CloseIcon'
-import Overlay from '../Overlay'
+import Overlay from 'app/_components/Overlay'
 import { useSwipeable } from 'react-swipeable'
 import clsx from 'clsx'
 import useLockedBody from 'hooks/useLockedBody'
+import styles from './modal.module.css'
 
 interface IStyle {
   height: number | null
-  maxWidth?: number
+  maxWidth?: string
   startAnimation: boolean
 }
 
@@ -66,11 +67,7 @@ const StyledInteractiveModal = styled.div<IStyle>`
     border: 2px solid var(--border-color);
     max-width: ${(props) => props.maxWidth || '864px'};
     width: calc(100% - 48px) !important;
-    /* max-width: 752px; */
-    /* min-height: 480px; */
     height: ${(props) => (props.height ? props.height + 'px' : '512px')};
-    /* max-height: ${(props) =>
-      props.height ? props.height + 'px' : '512px'}; */
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
@@ -105,7 +102,19 @@ const ContentWrapper = styled.div`
   }
 `
 
-const InteractiveModal = (props: any) => {
+interface Props {
+  children: React.ReactNode
+  className?: string
+  disableSwipe?: boolean
+  handleClose: () => any
+  leftButton?: boolean
+  maxHeight?: string
+  maxWidth?: string
+  setDynamicHeight?: number
+  title?: string
+}
+
+const InteractiveModal = (props: Props) => {
   const [, setLocked] = useLockedBody(false)
 
   const {
@@ -113,7 +122,9 @@ const InteractiveModal = (props: any) => {
     disableSwipe = false,
     handleClose = () => {},
     setDynamicHeight = 512,
-    leftButton
+    title = '',
+    leftButton,
+    maxHeight = '100%'
   } = props
   const [startAnimation, setStartAnimation] = useState(false)
   const [height, setHeight] = useState(512)
@@ -173,7 +184,9 @@ const InteractiveModal = (props: any) => {
         height={height}
         startAnimation={startAnimation}
         maxWidth={props.maxWidth}
+        style={{ maxHeight }}
       >
+        {title && <div className={styles.ModalTitle}>{title}</div>}
         <ContentWrapper>{props.children}</ContentWrapper>
         {!disableSwipe && <SwipeCapture {...handlers} />}
         <CloseIconWrapper onClick={onClose}>

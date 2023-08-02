@@ -1,0 +1,11 @@
+.ContentWrapper {
+  padding: 16px 32px;
+  margin: 0 auto;
+  margin-top: var(--headerNav-height);
+}
+
+@media (min-width: 640px) {
+  .ContentWrapper {
+    padding: 32px;
+  }
+}

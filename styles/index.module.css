@@ -7,17 +7,3 @@
   margin-bottom: 4px;
   position: relative;
 }
-
-.sticky-text-area {
-  background-color: #f2f2f2;
-  padding-bottom: 4px;
-  position: relative;
-  z-index: 20;
-  width: 100%;
-}
-
-@media (prefers-color-scheme: dark) {
-  .sticky-text-area {
-    background-color: #222222;
-  }
-}

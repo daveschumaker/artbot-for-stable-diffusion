@@ -1,3 +1,4 @@
+import { basePath } from 'BASE_PATH'
 import StableDiffusionModel from '../models/StableDiffusionModel'
 import { modelStore, setAvailableModels } from '../store/modelStore'
 import { clientHeader, isAppActive } from '../utils/appUtils'
@@ -27,7 +28,7 @@ export const fetchAvailableModels = async () => {
   try {
     const res = await fetch(
       isInitial
-        ? `/artbot/api/models-available`
+        ? `${basePath}/api/models-available`
         : `https://aihorde.net/api/v2/status/models`,
       {
         headers: {
@@ -49,7 +50,7 @@ export const fetchAvailableModels = async () => {
     console.log(`Warning: Unable to fetch available models. API offline?`)
   } finally {
     isPending = false
-    isInitial = false
+    // isInitial = false
 
     return availableModels
   }
@@ -75,7 +76,7 @@ export const buildModelAvailability = async () => {
 
     if (validCount || currentModelCount === 0) {
       // @ts-ignore
-      setAvailableModels(availableModelsMap)
+      setAvailableModels(modelAvailability)
     }
   }
 }

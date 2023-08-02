@@ -1,0 +1,23 @@
+.flexibleRow {
+  column-gap: 12px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0;
+  width: 100%;
+}
+
+/* .flexibleRow {
+  column-gap: 12px;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 24px;
+  margin-bottom: 0;
+  width: 100%;
+} */
+
+@media (min-width: 640px) {
+  .flexibleRow {
+    flex-direction: row;
+    margin-bottom: 12px;
+  }
+}

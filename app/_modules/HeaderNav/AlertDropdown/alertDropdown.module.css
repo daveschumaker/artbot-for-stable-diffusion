@@ -1,0 +1,12 @@
+.AlertDropdown {
+  background-color: var(--body-color);
+  font-size: 12px;
+  padding: 12px;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .AlertDropdown {
+    width: 400px;
+  }
+}

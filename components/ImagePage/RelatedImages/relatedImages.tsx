@@ -15,10 +15,11 @@ import HeartIcon from '../../icons/HeartIcon'
 import TrashIcon from '../../icons/TrashIcon'
 import MasonryLayout from '../../MasonryLayout'
 import FloatingActionButton from '../../UI/FloatingActionButton'
-import MenuButton from '../../UI/MenuButton'
-import PageTitle from '../../UI/PageTitle'
+import MenuButton from 'app/_components/MenuButton'
+import PageTitle from 'app/_components/PageTitle'
 import TextButton from '../../UI/TextButton'
 import useRelatedImageModal from './useRelatedImageModal'
+import { useModal } from '@ebay/nice-modal-react'
 
 const NonLink = styled.div`
   cursor: pointer;
@@ -74,12 +75,12 @@ const RelatedImages = ({
   onModalOpen: (value: boolean) => void
   updateRelatedImages: (parentJobId: string) => void
 }) => {
+  const confirmationModal = useModal(ConfirmationModal)
   useScrollToLocation()
   const size = useWindowSize()
   const [componentState, setComponentState] = useComponentState({
     deleteMode: false,
     deleteSelection: [],
-    showDeleteModal: false,
     initialIndexJobId: 0
   })
 
@@ -109,14 +110,14 @@ const RelatedImages = ({
 
     setComponentState({
       deleteMode: false,
-      deleteSelection: [],
-      showDeleteModal: false
+      deleteSelection: []
     })
   }
 
-  const handleAfterDelete = useCallback(async () => {
-    await updateRelatedImages(parentJobId)
-  }, [parentJobId, updateRelatedImages])
+  // TODO: FIXME:
+  // const handleAfterDelete = useCallback(async () => {
+  //   await updateRelatedImages(parentJobId)
+  // }, [parentJobId, updateRelatedImages])
 
   const handleImageClick = useCallback(
     // @ts-ignore
@@ -135,10 +136,10 @@ const RelatedImages = ({
 
         onModalOpen(true)
 
+        // @ts-ignore
         showImageModal({
           jobId,
-          imagesList: images,
-          fetchImages: handleAfterDelete
+          images
         })
       }
 
@@ -147,21 +148,12 @@ const RelatedImages = ({
     [
       componentState.deleteMode,
       componentState.deleteSelection,
-      handleAfterDelete,
       images,
       onModalOpen,
       setComponentState,
       showImageModal
     ]
   )
-
-  // useEffect(() => {
-  //   if (componentState.showImageModal) {
-  //     onModalOpen(false)
-  //     setComponentState({ showImageModal: false })
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [imageId])
 
   const LinkEl = componentState.deleteMode ? NonLink : Link
 
@@ -179,26 +171,22 @@ const RelatedImages = ({
         <FloatingActionButton
           onClick={() => {
             if (componentState.deleteSelection.length > 0) {
-              setComponentState({ showDeleteModal: true })
+              confirmationModal.show({
+                multiImage: componentState.deleteSelection.length > 1,
+                onConfirmClick: handleDeleteImageClick,
+                closeModal: () => {
+                  setComponentState({
+                    deleteMode: false,
+                    deleteSelection: []
+                  })
+                }
+              })
             }
           }}
         >
           <TrashIcon />
           DELETE ({componentState.deleteSelection.length})?
         </FloatingActionButton>
-      )}
-      {componentState.showDeleteModal && (
-        <ConfirmationModal
-          multiImage={componentState.deleteSelection.length > 1}
-          onConfirmClick={() => handleDeleteImageClick()}
-          closeModal={() => {
-            setComponentState({
-              deleteMode: false,
-              deleteSelection: [],
-              showDeleteModal: false
-            })
-          }}
-        />
       )}
       <div className="flex flex-row w-full items-center">
         <div className="inline-block w-1/2">
@@ -257,7 +245,16 @@ const RelatedImages = ({
                 color="red"
                 onClick={() => {
                   if (componentState.deleteSelection.length > 0) {
-                    setComponentState({ showDeleteModal: true })
+                    confirmationModal.show({
+                      multiImage: componentState.deleteSelection.length > 1,
+                      onConfirmClick: handleDeleteImageClick,
+                      closeModal: () => {
+                        setComponentState({
+                          deleteMode: false,
+                          deleteSelection: []
+                        })
+                      }
+                    })
                   }
                 }}
                 tabIndex={0}

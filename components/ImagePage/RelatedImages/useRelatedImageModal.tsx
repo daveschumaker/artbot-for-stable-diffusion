@@ -1,133 +1,100 @@
-import useComponentState from 'hooks/useComponentState'
-import { useImagePreview } from 'modules/ImagePreviewProvider'
+import { useModal } from '@ebay/nice-modal-react'
+import ImageModal from 'app/_modules/ImageModal'
 import { useCallback, useEffect, useState } from 'react'
 
 const useRelatedImageModal = () => {
-  const { setImageData, showImagePreviewModal } = useImagePreview()
-  const [componentState, setComponentState] = useComponentState({
-    imagesList: null,
-    imgIdx: null,
-    initJobId: null,
-    jobId: null
-  })
+  const imagePreviewModal = useModal(ImageModal)
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false)
+  const [imageIdx, setImageIdx] = useState(0)
+  const [imagesList, setImagesList] = useState<any[]>([])
+  const [imageDetails, setImageDetails] = useState(null)
 
-  const [onAfterDelete, setOnAfterDelete] = useState<() => any>(() => {})
-
-  const showImageModal = ({
-    jobId,
-    imagesList,
-    fetchImages = () => {}
-  }: {
-    jobId: string
-    imagesList: Array<any>
-    fetchImages?: () => any
-  }) => {
-    let imgIdx
-
-    imagesList.forEach((item: any, i: number) => {
-      if (item.jobId === jobId) {
-        imgIdx = i
-      }
-    })
-
-    setComponentState({
-      imagesList,
-      imgIdx,
-      initJobId: jobId,
-      jobId
-    })
-
-    setOnAfterDelete(() => fetchImages)
+  const handleClose = () => {
+    setImageIdx(0)
+    setImagesList([])
+    setImageDetails(null)
+    setIsImageModalOpen(false)
   }
 
   const handleLoadNext = useCallback(() => {
-    if (componentState.imgIdx === null) {
+    if (imagesList.length === 0) {
       return
     }
 
-    if (!componentState.imagesList) {
+    let newIdx = imageIdx + 1
+    if (newIdx > imagesList.length - 1) {
       return
     }
 
-    let newIdx = componentState.imgIdx + 1
-
-    if (newIdx > componentState.imagesList.length - 1) {
-      return
-    }
-
-    const jobId = componentState.imagesList[newIdx].jobId
-    setComponentState({
-      jobId,
-      imgIdx: newIdx
-    })
-
-    const imageDetails = componentState.imagesList[newIdx]
-    setImageData(imageDetails)
-  }, [componentState, setComponentState, setImageData])
+    setImageIdx(newIdx)
+    setImageDetails(imagesList[newIdx])
+  }, [imageIdx, imagesList])
 
   const handleLoadPrev = useCallback(() => {
-    if (componentState.imgIdx === null) {
+    if (imagesList.length === 0) {
       return
     }
 
-    if (!componentState.imagesList) {
-      return
-    }
-
-    let newIdx = componentState.imgIdx - 1
+    let newIdx = imageIdx - 1
     if (newIdx < 0) {
       return
     }
 
-    const jobId = componentState.imagesList[newIdx].jobId
-    setComponentState({
-      jobId,
-      imgIdx: newIdx
+    setImageIdx(newIdx)
+    setImageDetails(imagesList[newIdx])
+  }, [imageIdx, imagesList])
+
+  const showImageModal = ({
+    images,
+    jobId
+  }: {
+    images: any[]
+    jobId: string
+  }) => {
+    console.log(`jobId`, jobId)
+    console.log(`okie`, images)
+
+    if (!Array.isArray(images) || images.length === 0) return
+    setImagesList(images)
+
+    images.forEach((item: any, i: number) => {
+      if (item.jobId === jobId) {
+        setImageIdx(i)
+        setImageDetails(item)
+      }
+    })
+  }
+
+  const loadModal = useCallback(() => {
+    if (!imageDetails) return
+
+    imagePreviewModal.show({
+      handleClose,
+      handleLoadNext,
+      handleLoadPrev,
+      imageDetails
     })
 
-    const imageDetails = componentState.imagesList[newIdx]
-    setImageData(imageDetails)
-  }, [componentState, setComponentState, setImageData])
-
-  const triggerModal = useCallback(
-    () => {
-      const imageDetails = componentState.imagesList[componentState.imgIdx]
-
-      showImagePreviewModal({
-        disableNav: false,
-        imageDetails,
-        handleLoadNext,
-        handleLoadPrev,
-        onCloseCallback: () => {
-          setComponentState({
-            imgIdx: null,
-            initJobId: null,
-            jobId: null,
-            imagesList: null
-          })
-          onAfterDelete()
-        },
-        onDeleteCallback: () => {
-          setComponentState({
-            imgIdx: null,
-            initJobId: null,
-            jobId: null,
-            imagesList: null
-          })
-        }
-      })
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [componentState, showImagePreviewModal]
-  )
+    if (!isImageModalOpen) {
+      setIsImageModalOpen(true)
+    }
+  }, [
+    handleLoadNext,
+    handleLoadPrev,
+    imageDetails,
+    imagePreviewModal,
+    isImageModalOpen
+  ])
 
   useEffect(() => {
-    if (componentState.imagesList) {
-      triggerModal()
-    }
-  }, [componentState.imagesList, triggerModal])
+    if (!imageDetails) return
+    loadModal()
 
-  return [showImageModal]
+    // DO NOT ADD "loadModal()" to this dep array. Otherwise we get a render loop.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [imageDetails])
+
+  return [showImageModal, isImageModalOpen]
 }
 
 export default useRelatedImageModal

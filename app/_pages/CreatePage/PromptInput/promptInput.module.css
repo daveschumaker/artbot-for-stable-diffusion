@@ -1,0 +1,28 @@
+.wrapper {
+  background-color: var(--accent-color);
+  border-radius: 4px;
+  color: var(--light-shade);
+  display: flex;
+  flex-direction: column;
+  padding: 8px 16px;
+  row-gap: 12px;
+}
+
+.textArea {
+  background-color: var(--input-background);
+  border: 1px solid var(--input-color);
+  border-radius: 8px;
+  color: var(--input-color);
+  margin-bottom: 8px;
+  padding: 8px;
+}
+
+.mobileHide {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .mobileHide {
+    display: inline;
+  }
+}

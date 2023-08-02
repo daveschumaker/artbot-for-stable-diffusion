@@ -4,6 +4,12 @@
   z-index: 30;
 }
 
+@media (min-width: 800px) {
+  .ModalStyle {
+    max-height: 512px;
+  }
+}
+
 .ImageWrapper {
   height: auto;
   width: 50%;
@@ -17,7 +23,7 @@
 }
 
 .ImageElement {
-  max-width: 80%;
+  max-width: 100%;
   height: 100%;
 }
 

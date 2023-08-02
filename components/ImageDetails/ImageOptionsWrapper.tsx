@@ -35,7 +35,7 @@ import {
   uploadInpaint,
   upscaleImage
 } from 'controllers/imageDetailsCommon'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import WallIcon from 'components/icons/WallIcon'
 import ResizeIcon from 'components/icons/ResizeIcon'
 import { isiOS, uuidv4 } from 'utils/appUtils'
@@ -48,6 +48,9 @@ import { toast, ToastOptions } from 'react-toastify'
 import RefreshIcon from 'components/icons/RefreshIcon'
 import { deletePendingJob } from 'controllers/pendingJobsCache'
 import { getRelatedImages } from 'components/ImagePage/image.controller'
+import { baseHost, basePath } from 'BASE_PATH'
+import { useModal } from '@ebay/nice-modal-react'
+// import { useModal } from '@ebay/nice-modal-react'
 
 const ImageOptionsWrapper = ({
   handleClose,
@@ -69,11 +72,16 @@ const ImageOptionsWrapper = ({
   handleFullScreen: () => any
 }) => {
   const router = useRouter()
+  const confirmationModal = useModal(ConfirmationModal)
+  // TODO: FIXME: Blarg!
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // const modal = {
+  //   remove: () => false
+  // }
 
   const [favorited, setFavorited] = useState(imageDetails.favorited)
   const [pendingReroll, setPendingReroll] = useState(false)
   const [pendingUpscale, setPendingUpscale] = useState(false)
-  const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [hasParentJob, setHasParentJob] = useState(false)
   const [hasRelatedImages, setHasRelatedImages] = useState(false)
 
@@ -83,7 +91,7 @@ const ImageOptionsWrapper = ({
 
   const fetchParentJobDetails = useCallback(async () => {
     const details: IImageDetails = await getParentJobDetails(
-      imageDetails.parentJobId
+      imageDetails.parentJobId as string
     )
 
     if (imageDetails.jobId === details.jobId || !imageDetails.parentJobId) {
@@ -99,17 +107,24 @@ const ImageOptionsWrapper = ({
     }
 
     copyEditPrompt(imageDetails)
-    router.push(`/?edit=true`)
-  }
-
-  const handleDeleteImageConfirm = async () => {
-    handleDeleteImageClick()
-    await deletePendingJobFromDb(imageDetails.jobId)
-    await deleteCompletedImage(imageDetails.jobId)
-    deletePendingJob(imageDetails.jobId)
-    getImageDetails.delete(imageDetails.jobId) // bust memoization cache
+    router.push(`/create?edit=true`)
     handleClose()
   }
+
+  const handleDeleteImageConfirm = useCallback(async () => {
+    handleDeleteImageClick()
+    await deletePendingJobFromDb(imageDetails.jobId as string)
+    await deleteCompletedImage(imageDetails.jobId as string)
+    deletePendingJob(imageDetails.jobId as string)
+    getImageDetails.delete(imageDetails.jobId as string) // bust memoization cache
+    confirmationModal.remove()
+    handleClose()
+  }, [
+    confirmationModal,
+    handleClose,
+    handleDeleteImageClick,
+    imageDetails.jobId
+  ])
 
   const handleRerollClick = useCallback(
     async (imageDetails: any) => {
@@ -158,7 +173,8 @@ const ImageOptionsWrapper = ({
 
     await upscaleImage(imageDetails)
     router.push('/pending')
-  }, [imageDetails, pendingUpscale, router])
+    handleClose()
+  }, [handleClose, imageDetails, pendingUpscale, router])
 
   const onDetachParent = useCallback(async () => {
     await updateCompletedJob(
@@ -169,7 +185,7 @@ const ImageOptionsWrapper = ({
     )
 
     // Bust memoization cache
-    getImageDetails.delete(imageDetails.jobId)
+    getImageDetails.delete(imageDetails.jobId as string)
 
     handleReloadImageData()
   }, [handleReloadImageData, imageDetails])
@@ -186,16 +202,16 @@ const ImageOptionsWrapper = ({
     )
 
     // Bust memoization cache
-    getImageDetails.delete(imageDetails.jobId)
+    getImageDetails.delete(imageDetails.jobId as string)
   }, [favorited, imageDetails])
 
   const copyShortlink = (_shortlink: string) => {
     const hostname =
       window.location.hostname === 'localhost'
         ? 'http://localhost:3000'
-        : 'https://tinybots.net'
+        : baseHost
     navigator?.clipboard
-      ?.writeText(`${hostname}/artbot?i=${_shortlink}`)
+      ?.writeText(`${hostname}${basePath}?i=${_shortlink}`)
       .then(() => {
         toast.success('Shortlink URL copied to your clipboard!', {
           pauseOnFocusLoss: false,
@@ -224,8 +240,8 @@ const ImageOptionsWrapper = ({
     setShortlinkPending(true)
 
     const resizedImage = await generateBase64Thumbnail(
-      imageDetails.base64String,
-      imageDetails.jobId,
+      imageDetails.base64String as string,
+      imageDetails.jobId as string,
       512,
       768,
       0.7
@@ -257,12 +273,12 @@ const ImageOptionsWrapper = ({
   }
 
   const checkFavorite = useCallback(async () => {
-    const details = await getImageDetails(imageDetails.jobId)
+    const details = await getImageDetails(imageDetails.jobId as string)
     setFavorited(details.favorited)
   }, [imageDetails.jobId])
 
   const fetchRelatedImages = useCallback(async () => {
-    const result = await getRelatedImages(imageDetails.parentJobId)
+    const result = await getRelatedImages(imageDetails.parentJobId as string)
 
     if (result && result.length > 0) {
       setHasRelatedImages(true)
@@ -288,11 +304,21 @@ const ImageOptionsWrapper = ({
       }
 
       if (e.key === 'Backspace') {
-        setShowDeleteModal(true)
+        confirmationModal.show({
+          onConfirmClick: () => {
+            // setShowDeleteModal(false)
+            handleDeleteImageConfirm()
+          }
+        })
       }
 
       if (e.key === 'Delete') {
-        setShowDeleteModal(true)
+        confirmationModal.show({
+          onConfirmClick: () => {
+            // setShowDeleteModal(false)
+            handleDeleteImageConfirm()
+          }
+        })
       }
 
       if (e.key === 'f') {
@@ -311,7 +337,9 @@ const ImageOptionsWrapper = ({
     window.addEventListener('keydown', handleKeyPress)
     return () => window.removeEventListener('keydown', handleKeyPress)
   }, [
+    confirmationModal,
     handleClose,
+    handleDeleteImageConfirm,
     handleRerollClick,
     imageDetails,
     onFavoriteClick,
@@ -334,15 +362,6 @@ const ImageOptionsWrapper = ({
             backgroundSize: tileSize
           }}
         ></div>
-      )}
-      {showDeleteModal && (
-        <ConfirmationModal
-          onConfirmClick={() => {
-            setShowDeleteModal(false)
-            handleDeleteImageConfirm()
-          }}
-          closeModal={() => setShowDeleteModal(false)}
-        />
       )}
       <div
         id="image-options-wrapper"
@@ -367,6 +386,7 @@ const ImageOptionsWrapper = ({
                   className="text-sm"
                   onClick={() => {
                     router.push(`/image/${imageDetails.jobId}`)
+                    handleClose()
                   }}
                 >
                   View image details page
@@ -389,6 +409,7 @@ const ImageOptionsWrapper = ({
                 onClick={() => {
                   interrogateImage(imageDetails)
                   router.push(`/interrogate?user-share=true`)
+                  handleClose()
                 }}
               >
                 Interrogate (img2text)
@@ -401,7 +422,8 @@ const ImageOptionsWrapper = ({
                 className="text-sm"
                 onClick={() => {
                   uploadImg2Img(imageDetails)
-                  router.push(`/?panel=img2img&edit=true`)
+                  router.push(`/create?panel=img2img&edit=true`)
+                  handleClose()
                 }}
               >
                 Use for img2img
@@ -410,7 +432,8 @@ const ImageOptionsWrapper = ({
                 className="text-sm"
                 onClick={() => {
                   uploadInpaint(imageDetails)
-                  router.push(`/?panel=inpainting&edit=true`)
+                  router.push(`/create?panel=inpainting&edit=true`)
+                  handleClose()
                 }}
               >
                 Use for inpainting
@@ -422,6 +445,7 @@ const ImageOptionsWrapper = ({
                     className="text-sm"
                     onClick={() => {
                       router.push(`/image/${imageDetails.jobId}#related-images`)
+                      handleClose()
                     }}
                   >
                     View related images
@@ -444,8 +468,9 @@ const ImageOptionsWrapper = ({
                 className="text-sm"
                 onClick={() => {
                   router.push(
-                    `/?prompt=${encodeURIComponent(imageDetails.prompt)}`
+                    `/create?prompt=${encodeURIComponent(imageDetails.prompt)}`
                   )
+                  handleClose()
                 }}
               >
                 Use a prompt from this image
@@ -457,6 +482,8 @@ const ImageOptionsWrapper = ({
               <MenuItem
                 className="text-sm"
                 onClick={async () => {
+                  if (!imageDetails || !imageDetails.base64String) return
+
                   const success = await blobToClipboard(
                     imageDetails.base64String
                   )
@@ -566,7 +593,13 @@ const ImageOptionsWrapper = ({
           </div>
           <div
             className={clsx(styles['button-icon'])}
-            onClick={() => setShowDeleteModal(true)}
+            onClick={() => {
+              confirmationModal.show({
+                onConfirmClick: () => {
+                  handleDeleteImageConfirm()
+                }
+              })
+            }}
           >
             <TrashIcon />
           </div>

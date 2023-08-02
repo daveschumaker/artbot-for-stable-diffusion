@@ -1,0 +1,80 @@
+.menu-title {
+  border-right: 1px solid green;
+  padding: 0 8px;
+}
+
+.MobileAd {
+  display: block;
+  padding: 0 16px;
+  width: 100%;
+}
+
+.AdUnit {
+  background-color: var(--carbon-bg);
+  margin-bottom: 16px;
+  min-height: 164px;
+  width: 100%;
+}
+
+@media (min-width: 800px) {
+  .AdUnit,
+  .MobileAd {
+    display: none;
+  }
+}
+
+.ListWrapper {
+  bottom: 0;
+  left: 0;
+  padding: 16px 0;
+  position: absolute;
+  right: 0;
+  top: 128px;
+}
+
+@media (min-width: 800px) {
+  .ListWrapper {
+    bottom: 78px;
+    left: var(--fixedSideBar-width);
+    overflow-y: hidden;
+    top: 136px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .ListWrapper {
+    margin: 0 auto;
+    max-width: 1024px;
+  }
+}
+
+.virtual-list {
+  outline: none;
+  overflow-y: auto;
+  position: absolute;
+  padding: 60px 0px;
+  bottom: 0;
+  left: 16px;
+  right: 16px;
+  top: 128px;
+}
+
+/* @media (min-width: 800px) {
+  .virtual-list {
+    left: 0;
+    right: 0;
+  }
+} */
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.virtual-list::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.virtual-list {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}

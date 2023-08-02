@@ -1,37 +1,20 @@
 :root {
-  --body-color: #f2f2f2;
-  --border-color: #7e5a6c;
   --text-color: #244975;
   --text-shade: #ffffff;
-  --link-text: #17cfbb;
-  --link-active: #5eedde;
 
   --nav-link-normal: #282828;
   --nav-link-active: #14b8a6;
 
-  --light-shade: #efedef;
   --light-accent: #9ca8bd;
-  --main-color: #14b8a6;
-  --accent-color: #8e6f7e;
   --dark-accent: #8e7fb8;
   --dark-shade: #244975;
 
   /* this is equivalent to props.theme.border on original ArtBot */
-  --card-background: #7e5a6c;
-  --overlay-background: #ffffff;
 
   --sticky-footer-padding: 80px;
   --sticky-footer-margin: -80px;
 
-  --btn-primary: #6ab7c6;
-  --btn-primary-hover: #8fc9d4;
-  --btn-secondary: #c77b68;
-  --btn-secondary-hover: #d59c8e;
-
   --placeholder-text: #9299a6;
-  --input-background: #ffffff;
-  --input-text: #282828;
-  --input-color: #282828;
 
   --sidebar-width: 240px;
 
@@ -39,21 +22,14 @@
   --rt-opacity: 0.95;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
-    --body-color: #222222;
     --text-color: #efedef;
     --text-shade: #f3f3ef;
     --link-text: #5eedde;
     --link-active: #17cfbb;
 
-    --overlay-background: #00000;
-
-    --input-background: rgb(42, 48, 60);
-    --input-text: #e1e1e1;
-    --input-color: #e1e1e1;
-
     --nav-link-normal: #ffffff;
     --nav-link-active: #14b8a6;
   }
-}
+} */

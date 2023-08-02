@@ -81,7 +81,7 @@ export const getFinishedImage = async (
     const status = res.status
     const data = await res.json()
 
-    const { generations, message, shared, faulted } = data
+    const { generations, kudos, message, shared, faulted } = data
 
     if (status === 404) {
       apiCooldown(5000)
@@ -156,6 +156,7 @@ export const getFinishedImage = async (
         success: true,
         jobId,
         canRate: shared ? true : false,
+        kudos: kudos / generationDetails.length,
         generations: generationDetails // Initial work to handle returning multiple images
       }
     }

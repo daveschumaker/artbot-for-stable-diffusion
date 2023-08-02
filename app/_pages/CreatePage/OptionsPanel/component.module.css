@@ -1,0 +1,16 @@
+.NavItem {
+  color: var(--nav-link-normal);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.NavItem:hover {
+  color: var(--main-color);
+  border-bottom: 2px solid var(--main-color);
+}
+
+.NavItem-Active {
+  color: var(--main-color);
+  border-bottom: 2px solid var(--main-color);
+}

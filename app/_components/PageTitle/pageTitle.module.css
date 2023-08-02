@@ -1,0 +1,12 @@
+.pageTitle {
+  color: var(--main-color);
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+@media (min-width: 640px) {
+  .pageTitle {
+    font-size: 24px;
+  }
+}

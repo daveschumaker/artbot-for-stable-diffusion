@@ -14,7 +14,7 @@ import { SourceProcessing } from '../../../utils/promptUtils'
 import EyeIcon from '../../icons/EyeIcon'
 import { Button } from '../../UI/Button'
 import InteractiveModal from '../../UI/InteractiveModal/interactiveModal'
-import PageTitle from '../../UI/PageTitle'
+import PageTitle from 'app/_components/PageTitle'
 import styles from './img2imgModal.module.css'
 
 const Img2ImgModal = ({
@@ -132,7 +132,7 @@ const Img2ImgModal = ({
           <Button
             onClick={() => {
               uploadImg2Img(imageDetails, { useSourceImg: true })
-              router.push(`/?panel=img2img&edit=true`)
+              router.push(`/create?panel=img2img&edit=true`)
             }}
             size="small"
             width={isMobile ? '100%' : ''}
@@ -142,7 +142,7 @@ const Img2ImgModal = ({
           <Button
             onClick={() => {
               uploadInpaint(imageDetails, { clone: false, useSourceImg: true })
-              router.push(`/?panel=inpainting&edit=true`)
+              router.push(`/create?panel=inpainting&edit=true`)
             }}
             size="small"
             width={isMobile ? '100%' : ''}
@@ -157,7 +157,7 @@ const Img2ImgModal = ({
                   useSourceImg: true,
                   useSourceMask: true
                 })
-                router.push(`/?panel=inpainting&edit=true`)
+                router.push(`/create?panel=inpainting&edit=true`)
               }}
               size="small"
               width={isMobile ? '100%' : ''}

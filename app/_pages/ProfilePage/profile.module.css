@@ -1,0 +1,33 @@
+.profile-img {
+  border: 1px solid var(--input-color);
+  border-radius: 50%;
+  padding: 12px;
+}
+
+.info-wrapper {
+  padding: 8px 16px;
+  /* border: 1px solid black; */
+  border-radius: 8px;
+}
+
+.section {
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  margin-bottom: 0;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.info-wrapper-title {
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  margin-bottom: 0;
+  text-transform: uppercase;
+}
+
+.info-wrapper-details {
+  font-size: 20px;
+  font-weight: 600;
+}

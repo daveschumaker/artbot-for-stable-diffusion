@@ -10,18 +10,22 @@ export const modelStore = makeStore<ModelStore>({
 })
 
 export const setAvailableModels = (models: Array<any> = []) => {
+  const modelNames: string[] = []
   const modelsMap: any = {}
 
   if (!Array.isArray(models)) return
 
   models.forEach((model: any) => {
     modelsMap[model.name] = model
+    modelNames.push(model.name)
   })
 
+  modelNames.sort()
   const currentModelCount = models.length
 
   if (currentModelCount > 1) {
     modelStore.set(() => ({
+      availableModelNames: modelNames,
       availableModels: { ...models }
     }))
   }

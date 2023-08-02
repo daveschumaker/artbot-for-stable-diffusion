@@ -1,0 +1,27 @@
+.MenuButton {
+  border-radius: 4px;
+  border: 2px solid var(--input-color);
+  color: var(--input-color);
+  cursor: pointer;
+  padding: 2px;
+  position: relative;
+}
+
+.MenuButton-isActive {
+  background-color: var(--input-color);
+  color: var(--body-color);
+}
+
+.MenuButton:active {
+  transform: scale(0.96);
+}
+
+/*
+    * Disables hover effect for mobile devices:
+    * https://stackoverflow.com/a/59210149
+    */
+@media (hover: hover) and (pointer: fine) {
+  .MenuButton:hover {
+    transform: scale(0.96);
+  }
+}

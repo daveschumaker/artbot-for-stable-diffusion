@@ -12,10 +12,12 @@ class DefaultPromptInput {
   hires: boolean = false
   image_is_control: boolean = false
   imageType: string = ''
-  karras: boolean = false
+  karras: boolean = true
   loras: Lora[] = []
   maskData: any | null = ''
   models: Array<string> = ['stable_diffusion']
+  multiClip: string = ''
+  multiDenoise: string = ''
   multiGuidance: string = ''
   multiSteps: string = ''
   negative: string = ''
@@ -37,6 +39,8 @@ class DefaultPromptInput {
   useAllModels: boolean = false
   useAllSamplers: boolean = false
   useFavoriteModels: boolean = false
+  useMultiClip: boolean = false
+  useMultiDenoise: boolean = false
   useMultiGuidance: boolean = false
   useMultiSteps: boolean = false
   width: number = 512
