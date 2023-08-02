@@ -7,6 +7,7 @@ import Footer from './_components/Footer'
 import { Metadata } from 'next'
 import PollController from 'app/_modules/PollController'
 import { baseHost, basePath } from 'BASE_PATH'
+import AppAnalytics from './_modules/AppAnalytics'
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseHost),
@@ -65,6 +66,7 @@ export default async function RootLayout({
         style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}
       >
         <AppInit />
+        <AppAnalytics />
         <PollController />
         <HeaderNav />
         <SlidingMenu />

@@ -1,5 +1,4 @@
 import { baseHost, basePath } from 'BASE_PATH'
-import Script from 'next/script'
 import SharedImageView from './_modules/SharedImageView'
 import HomePage from './_pages/HomePage'
 
@@ -95,28 +94,5 @@ export default async function Page({ searchParams }: { searchParams: any }) {
     }
   }
 
-  return (
-    <>
-      {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS ? (
-        <>
-          <Script
-            strategy="lazyOnload"
-            src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
-          />
-
-          <Script id="analytics" strategy="lazyOnload">
-            {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}', {
-            page_path: window.location.pathname,
-          });
-          `}
-          </Script>
-        </>
-      ) : null}
-      <HomePage />
-    </>
-  )
+  return <HomePage />
 }
