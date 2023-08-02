@@ -350,7 +350,9 @@ export const createImageJob = async (newImageRequest: CreateImageRequest) => {
             ...existingItem, // Clone existingItem properties
             // Overwrite the specified fields with the new values
             ...Object.fromEntries(
-              fieldsToOverwrite.map((field) => [field, newItem[field]])
+              fieldsToOverwrite.map((field) => {
+                return [field, newItem[field]]
+              })
             )
           }
           newPendingJobArray.push(imageRequest)
@@ -360,7 +362,7 @@ export const createImageJob = async (newImageRequest: CreateImageRequest) => {
       // If pendingJobArray is empty, directly add new items
       for (const newItem of newItems) {
         const imageRequest = { ...newItem } // Clone newItem properties
-        newPendingJobArray.push(imageRequest)
+        newPendingJobArray.push({ ...imageRequest })
       }
     }
 
@@ -377,7 +379,7 @@ export const createImageJob = async (newImageRequest: CreateImageRequest) => {
       imageRequest.useMultiClip = false
       imageRequest.multiClip = []
 
-      tempArray.push(imageRequest)
+      tempArray.push({ ...newImageRequest })
     }
 
     addToPendingJobArray(tempArray, ['clipskip'])
@@ -395,7 +397,7 @@ export const createImageJob = async (newImageRequest: CreateImageRequest) => {
       imageRequest.useMultiDenoise = false
       imageRequest.multiDenoise = []
 
-      tempArray.push(imageRequest)
+      tempArray.push({ ...newImageRequest })
     }
 
     addToPendingJobArray(tempArray, ['denoising_strength'])
@@ -412,7 +414,7 @@ export const createImageJob = async (newImageRequest: CreateImageRequest) => {
       imageRequest.cfg_scale = newImageRequest.multiGuidance[idx]
       imageRequest.useMultiGuidance = false
       imageRequest.multiGuidance = []
-      tempArray.push(imageRequest)
+      tempArray.push({ ...newImageRequest })
     }
 
     addToPendingJobArray(tempArray, ['cfg_scale'])
@@ -427,7 +429,7 @@ export const createImageJob = async (newImageRequest: CreateImageRequest) => {
       imageRequest.useMultiSteps = false
       imageRequest.multiSteps = []
 
-      tempArray.push(imageRequest)
+      tempArray.push({ ...newImageRequest })
     }
 
     addToPendingJobArray(tempArray, ['steps'])
@@ -446,7 +448,7 @@ export const createImageJob = async (newImageRequest: CreateImageRequest) => {
 
       for (const idx in matrixPrompts) {
         newImageRequest.prompt = matrixPrompts[idx]
-        tempArray.push(newImageRequest)
+        tempArray.push({ ...newImageRequest })
       }
 
       addToPendingJobArray(tempArray, ['prompt'])
@@ -455,7 +457,7 @@ export const createImageJob = async (newImageRequest: CreateImageRequest) => {
 
       for (const idx in matrixNegative) {
         newImageRequest.negative = matrixNegative[idx]
-        tempArray.push(newImageRequest)
+        tempArray.push({ ...newImageRequest })
       }
 
       addToPendingJobArray(tempArray, ['negative'])
@@ -467,7 +469,7 @@ export const createImageJob = async (newImageRequest: CreateImageRequest) => {
           newImageRequest.prompt = matrixPrompts[idx]
           newImageRequest.negative = matrixNegative[idx2]
 
-          tempArray.push(newImageRequest)
+          tempArray.push({ ...newImageRequest })
         }
       }
 
