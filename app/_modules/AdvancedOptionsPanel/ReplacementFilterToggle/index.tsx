@@ -13,7 +13,12 @@ const ReplacementFilterToggle = () => {
   }
 
   useEffect(() => {
-    const isAllowed = AppSettings.get(KEY) || true
+    let isAllowed = false
+
+    if (AppSettings.get(KEY) !== false) {
+      isAllowed = true
+    }
+
     setAllow(isAllowed)
   }, [])
 
