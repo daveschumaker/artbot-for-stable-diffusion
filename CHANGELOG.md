@@ -1,6 +1,9 @@
 # 2023.08.03
 
 - Fix: When using multiple values (e.g., multi-guidance), the same value would be passed multiple times. Thans to OxOnWater for reporting this on the contact form.
+- UI feature: Added a new adjustable step count button to some number fields (number of images and steps). Thanks to Anonymous Derpling for the suggestion.
+- Fix: Unable to load details for some LoRAs. Thanks to Memetic for reporting this on Discord.
+- Fix: Issue with sending incorrect parameter when trying to inpaint. Thanks to jskaall for reporting this on Discord.
 
 # 2023.08.02
 
