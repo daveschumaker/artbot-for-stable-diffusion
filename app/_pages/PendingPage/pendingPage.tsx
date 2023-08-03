@@ -25,7 +25,6 @@ import PageTitle from 'app/_components/PageTitle'
 import TextButton from 'components/UI/TextButton'
 import { useWindowSize } from 'hooks/useWindowSize'
 import styles from './pendingPage.module.css'
-// import FilterClearOptions from './filterClearOptions'
 // import { isInstalledPwa } from 'utils/appUtils'
 import { useStore } from 'statery'
 import { appInfoStore } from 'store/appStore'
@@ -409,7 +408,6 @@ const PendingPage = () => {
           </Button>
         </FlexRow>
       </FlexRow>
-      {/* <FilterClearOptions filter={filter} pendingImages={pendingImages} /> */}
       <MaxWidth>
         {AppSettings.get('useWorkerId') && (
           <div style={{ paddingTop: '12px' }}>

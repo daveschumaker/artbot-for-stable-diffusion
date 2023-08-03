@@ -12,7 +12,6 @@
 .AdUnit {
   background-color: var(--carbon-bg);
   margin-bottom: 16px;
-  min-height: 164px;
   width: 100%;
 }
 
@@ -32,11 +31,17 @@
   top: 128px;
 }
 
-@media (min-width: 800px) {
+@media (min-width: 640px) {
   .ListWrapper {
     bottom: 78px;
-    left: var(--fixedSideBar-width);
     overflow-y: hidden;
+    top: 144px;
+  }
+}
+
+@media (min-width: 800px) {
+  .ListWrapper {
+    left: var(--fixedSideBar-width);
     top: 136px;
   }
 }

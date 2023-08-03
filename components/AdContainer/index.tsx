@@ -2,24 +2,25 @@
 
 import React, { CSSProperties, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
-import { appInfoStore, setAdHidden } from 'store/appStore'
 import { debounce } from 'utils/debounce'
-import { useStore } from 'statery'
 
-let initPageLoad = true
+let minHeight: string | undefined = undefined
 
 const mountAd = debounce(() => {
   setTimeout(() => {
     const isCarbonExist = document.querySelector('#carbonads')
 
+    if (isCarbonExist) {
+      minHeight = '164px'
+    }
+
     if (!!isCarbonExist) {
+      minHeight = '164px'
       // @ts-ignore
       // eslint-disable-next-line no-undef
       _carbonads.refresh()
       return
     }
-
-    if (appInfoStore.state.adHidden) return
 
     const script = document.createElement('script')
     script.src =
@@ -28,57 +29,8 @@ const mountAd = debounce(() => {
     script.async = true
 
     document.querySelectorAll('#carbon-container')[0].appendChild(script)
-  }, 250)
-
-  if (initPageLoad) {
-    setTimeout(() => {
-      const divElement = document.getElementById('carbon-container')
-      const rect = divElement?.getBoundingClientRect()
-      const divHeight = rect?.height
-      initPageLoad = false
-
-      if (!divHeight) {
-        setAdHidden(true)
-      }
-    }, 850)
-
-    // Handle weird race condition
-    setTimeout(() => {
-      const divElement = document.getElementById('carbon-container')
-      const rect = divElement?.getBoundingClientRect()
-      const divHeight = rect?.height
-      initPageLoad = false
-
-      if (divHeight) {
-        setAdHidden(false)
-      }
-    }, 1500)
-
-    // Handle weird race condition
-    setTimeout(() => {
-      const divElement = document.getElementById('carbon-container')
-      const rect = divElement?.getBoundingClientRect()
-      const divHeight = rect?.height
-      initPageLoad = false
-
-      if (divHeight) {
-        setAdHidden(false)
-      }
-    }, 2500)
-
-    // Handle weird race condition
-    setTimeout(() => {
-      const divElement = document.getElementById('carbon-container')
-      const rect = divElement?.getBoundingClientRect()
-      const divHeight = rect?.height
-      initPageLoad = false
-
-      if (divHeight) {
-        setAdHidden(false)
-      }
-    }, 5000)
-  }
-}, 500)
+  }, 0)
+}, 250)
 
 const CarbonAds = ({
   className,
@@ -87,18 +39,33 @@ const CarbonAds = ({
   className?: any
   style?: CSSProperties
 }) => {
-  const { adHidden } = useStore(appInfoStore)
   const pathname = usePathname()
 
   useEffect(() => {
     mountAd()
+  }, [])
+
+  useEffect(() => {
+    mountAd()
+
+    const interval = setInterval(() => {
+      const isCarbonExist = document.querySelector('#carbonads')
+
+      if (isCarbonExist) {
+        minHeight = '164px'
+      }
+    }, 250)
+
+    return () => clearInterval(interval)
   }, [pathname])
 
-  if (adHidden) {
-    return null
-  }
-
-  return <div id="carbon-container" className={className} style={style}></div>
+  return (
+    <div
+      id="carbon-container"
+      className={className}
+      style={{ minHeight, ...style }}
+    ></div>
+  )
 }
 
 export default CarbonAds

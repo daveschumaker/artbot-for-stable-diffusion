@@ -1029,7 +1029,6 @@ const ImagesPage = () => {
             style={{
               margin: '0 auto',
               maxWidth: '520px',
-              minHeight: '164px',
               backgroundColor: 'var(--carbon-bg)'
             }}
           >
