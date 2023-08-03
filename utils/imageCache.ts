@@ -334,6 +334,10 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
 }
 
 export const createImageJob = async (newImageRequest: CreateImageRequest) => {
+  // NOTE: To debug this (usually needed when looking into "useMulti" options)
+  // Disable here by returning early.
+  const DEBUG_MULTI = false
+
   const pendingJobArray: any[] = []
 
   const addToPendingJobArray = async (
@@ -373,13 +377,12 @@ export const createImageJob = async (newImageRequest: CreateImageRequest) => {
 
   if (newImageRequest.useMultiClip && newImageRequest.multiClip.length > 0) {
     const tempArray = []
+    if (DEBUG_MULTI) console.log(`useMultiClip Enabled`)
     for (const idx in newImageRequest.multiClip) {
       const imageRequest = Object.assign({}, newImageRequest)
       imageRequest.clipskip = newImageRequest.multiClip[idx]
-      imageRequest.useMultiClip = false
-      imageRequest.multiClip = []
 
-      tempArray.push({ ...newImageRequest })
+      tempArray.push({ ...imageRequest })
     }
 
     addToPendingJobArray(tempArray, ['clipskip'])
@@ -389,15 +392,14 @@ export const createImageJob = async (newImageRequest: CreateImageRequest) => {
     newImageRequest.useMultiDenoise &&
     newImageRequest.multiDenoise.length > 0
   ) {
+    if (DEBUG_MULTI) console.log(`useMultiDenoise Enabled`)
     const tempArray = []
 
     for (const idx in newImageRequest.multiDenoise) {
       const imageRequest = Object.assign({}, newImageRequest)
       imageRequest.denoising_strength = newImageRequest.multiDenoise[idx]
-      imageRequest.useMultiDenoise = false
-      imageRequest.multiDenoise = []
 
-      tempArray.push({ ...newImageRequest })
+      tempArray.push({ ...imageRequest })
     }
 
     addToPendingJobArray(tempArray, ['denoising_strength'])
@@ -407,29 +409,28 @@ export const createImageJob = async (newImageRequest: CreateImageRequest) => {
     newImageRequest.useMultiGuidance &&
     newImageRequest.multiGuidance.length > 0
   ) {
+    if (DEBUG_MULTI) console.log(`useMultiGuidance Enabled`)
     const tempArray = []
 
     for (const idx in newImageRequest.multiGuidance) {
       const imageRequest = Object.assign({}, newImageRequest)
       imageRequest.cfg_scale = newImageRequest.multiGuidance[idx]
-      imageRequest.useMultiGuidance = false
-      imageRequest.multiGuidance = []
-      tempArray.push({ ...newImageRequest })
+
+      tempArray.push({ ...imageRequest })
     }
 
     addToPendingJobArray(tempArray, ['cfg_scale'])
   }
 
   if (newImageRequest.useMultiSteps && newImageRequest.multiSteps.length > 0) {
+    if (DEBUG_MULTI) console.log(`useMultiSteps Enabled`)
     const tempArray = []
 
     for (const idx in newImageRequest.multiSteps) {
       const imageRequest = Object.assign({}, newImageRequest)
       imageRequest.steps = newImageRequest.multiSteps[idx]
-      imageRequest.useMultiSteps = false
-      imageRequest.multiSteps = []
 
-      tempArray.push({ ...newImageRequest })
+      tempArray.push({ ...imageRequest })
     }
 
     addToPendingJobArray(tempArray, ['steps'])
@@ -439,6 +440,7 @@ export const createImageJob = async (newImageRequest: CreateImageRequest) => {
     hasPromptMatrix(newImageRequest.prompt) ||
     hasPromptMatrix(newImageRequest.negative)
   ) {
+    if (DEBUG_MULTI) console.log(`hasPromptMatrix Enabled`)
     // Check for prompt matrix
     const matrixPrompts = [...promptMatrix(newImageRequest.prompt)]
     const matrixNegative = [...promptMatrix(newImageRequest.negative)]
@@ -474,6 +476,15 @@ export const createImageJob = async (newImageRequest: CreateImageRequest) => {
       }
 
       addToPendingJobArray(tempArray, ['prompt', 'negative'])
+    }
+  }
+
+  if (DEBUG_MULTI) {
+    console.log(`DEBUG_MULTI MODE ENABLED`)
+    console.log(`pendingJobArray`)
+    console.log(pendingJobArray)
+    return {
+      success: true
     }
   }
 

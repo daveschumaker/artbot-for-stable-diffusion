@@ -194,6 +194,18 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
     return []
   }
 
+  // Clean up any useMulti options:
+  imageParams.useAllModels = false
+  imageParams.useAllSamplers = false
+  imageParams.useMultiClip = false
+  imageParams.useMultiDenoise = false
+  imageParams.useMultiGuidance = true
+  imageParams.useMultiSteps = false
+  imageParams.multiClip = []
+  imageParams.multiDenoise = []
+  imageParams.multiGuidance = []
+  imageParams.multiSteps = []
+
   if (isNaN(numImages) || numImages < 1) {
     numImages = 1
   } else if (numImages > MAX_IMAGES_PER_JOB) {
@@ -252,7 +264,6 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
   } else if (imageParams.useAllSamplers) {
     imageParams.numImages = 1
 
-    // TODO: Blarg. Should not hard code this. Constants, man. CONSTANTS.
     let samplerArray = [...DEFAULT_SAMPLER_ARRAY]
 
     if (imageParams.models[0] === 'stable_diffusion_2') {
