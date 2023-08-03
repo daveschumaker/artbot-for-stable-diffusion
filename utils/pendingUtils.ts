@@ -58,7 +58,7 @@ const cloneImageParams = async (
 
   // I believe this is deprecated as of ComfyUI worker upgrades?
   if (hasImg2ImgMask || needsImg2ImgMask) {
-    clonedParams.source_processing = SourceProcessing.Img2Img
+    clonedParams.source_processing = SourceProcessing.InPainting
 
     // TODO: Importing this causes Fabric to be built as part of
     // app chunk, doubling size of initial JS library. Find a way to split this out.
