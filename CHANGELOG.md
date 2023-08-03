@@ -1,3 +1,7 @@
+# 2023.08.03
+
+- Fix: When using multiple values (e.g., multi-guidance), the same value would be passed multiple times. Thans to OxOnWater for reporting this on the contact form.
+
 # 2023.08.02
 
 - Some growing pains naturally. One thing that seems to be fixed though are memory leaks in Node. Hopefully this means you'll only see the "ArtBot will be right back" page only when an actual update is being pushed live.
