@@ -1,8 +1,9 @@
-import { IconMinus, IconPlus } from '@tabler/icons-react'
+import { IconMinus, IconPlus, IconPlusMinus } from '@tabler/icons-react'
 import clsx from 'clsx'
 import Input from 'components/UI/Input'
 import styles from './component.module.css'
 import { Button } from 'components/UI/Button'
+import FlexRow from '../FlexRow'
 
 interface NumberInputProps {
   buttonsAtEnd?: boolean
@@ -11,18 +12,28 @@ interface NumberInputProps {
   max: number
   min: number
   onBlur?: (e: any) => any
+  onChangeStep?: () => any | undefined
   onInputChange: (e: any) => any
   onMinusClick: () => any
   onPlusClick: () => any
   value: number
   width?: string
+  step?: number
 }
 
 export default function NumberInput(props: NumberInputProps) {
   const { value, max, min } = props
   let { buttonsAtEnd = true } = props
-  const { onInputChange, onMinusClick, onPlusClick, disabled, width, ...rest } =
-    props
+  const {
+    onChangeStep,
+    onInputChange,
+    onMinusClick,
+    onPlusClick,
+    disabled,
+    step,
+    width,
+    ...rest
+  } = props
 
   const handleMinusClick = () => {
     if (Number(value) <= min || disabled) {
@@ -113,6 +124,19 @@ export default function NumberInput(props: NumberInputProps) {
       >
         <IconPlus stroke={1.5} />
       </Button>
+      {onChangeStep && (
+        <FlexRow
+          gap={4}
+          style={{
+            justifyContent: 'flex-end',
+            paddingLeft: '6px',
+            width: 'unset'
+          }}
+        >
+          <IconPlusMinus stroke={1.5} size={18} />
+          <Button onClick={onChangeStep}>{step}</Button>
+        </FlexRow>
+      )}
     </div>
   )
 }

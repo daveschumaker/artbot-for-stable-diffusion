@@ -3,8 +3,21 @@ import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { GetSetPromptInput } from 'types/artbot'
 import NumberInput from 'app/_components/NumberInput'
 import { MAX_IMAGES_PER_JOB } from '_constants'
+import { useCallback, useState } from 'react'
 
 export default function ImageCount({ input, setInput }: GetSetPromptInput) {
+  const [step, setStep] = useState(1)
+
+  const handleChangeStep = useCallback(() => {
+    if (step === 1) {
+      setStep(5)
+    } else if (step === 5) {
+      setStep(10)
+    } else {
+      setStep(1)
+    }
+  }, [step])
+
   return (
     <div style={{ marginBottom: '12px' }}>
       <SubSectionTitle>
@@ -22,19 +35,21 @@ export default function ImageCount({ input, setInput }: GetSetPromptInput) {
             setInput({ numImages: Number(e.target.value) })
           }}
           onMinusClick={() => {
-            if (input.numImages - 1 < 1) {
+            if (input.numImages - step < 1) {
               return
             }
 
-            setInput({ numImages: input.numImages - 1 })
+            setInput({ numImages: input.numImages - step })
           }}
           onPlusClick={() => {
-            if (input.numImages + 1 > MAX_IMAGES_PER_JOB) {
+            if (input.numImages + step > MAX_IMAGES_PER_JOB) {
               return
             }
 
-            setInput({ numImages: input.numImages + 1 })
+            setInput({ numImages: input.numImages + step })
           }}
+          onChangeStep={handleChangeStep}
+          step={step}
           value={input.numImages}
           width="100%"
         />
