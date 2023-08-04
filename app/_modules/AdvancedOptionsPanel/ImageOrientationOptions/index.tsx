@@ -189,6 +189,18 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
           {input.width} w x {input.height} h
         </FlexRow>
         <FlexRow gap={4} style={{ justifyContent: 'flex-end' }}>
+          <Button
+            title="Swap dimensions"
+            onClick={() => {
+              setInput({
+                height: input.width,
+                orientationType: 'custom',
+                width: input.height
+              })
+            }}
+          >
+            <IconSwitch2 stroke={1.5} />
+          </Button>
           <Button onClick={() => setShowCustomDimensions(true)}>
             <IconRuler stroke={1.5} />
           </Button>
