@@ -50,6 +50,7 @@ import { deletePendingJob } from 'controllers/pendingJobsCache'
 import { getRelatedImages } from 'components/ImagePage/image.controller'
 import { baseHost, basePath } from 'BASE_PATH'
 import { useModal } from '@ebay/nice-modal-react'
+import { showSuccessToast } from 'utils/notificationUtils'
 // import { useModal } from '@ebay/nice-modal-react'
 
 const ImageOptionsWrapper = ({
@@ -213,17 +214,7 @@ const ImageOptionsWrapper = ({
     navigator?.clipboard
       ?.writeText(`${hostname}${basePath}?i=${_shortlink}`)
       .then(() => {
-        toast.success('Shortlink URL copied to your clipboard!', {
-          pauseOnFocusLoss: false,
-          position: 'top-center',
-          autoClose: 2500,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: false,
-          progress: undefined,
-          theme: 'light'
-        })
+        showSuccessToast({ message: 'Shortlink URL copied to your clipboard!' })
       })
   }
 

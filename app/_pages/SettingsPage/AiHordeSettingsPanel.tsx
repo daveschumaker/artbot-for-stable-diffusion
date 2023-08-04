@@ -16,11 +16,11 @@ import Linker from 'components/UI/Linker'
 import Select from 'app/_components/Select'
 import AppSettings from 'models/AppSettings'
 import React from 'react'
-import { fetchUserDetails } from 'api/userInfo'
 import SharedKeys from './SharedKeys'
 import WorkerBlocklist from './WorkerBlocklist'
 import InputSwitchV2 from 'app/_modules/AdvancedOptionsPanel/InputSwitchV2'
 import { setLockedToWorker } from 'store/appStore'
+import { handleApiKeyLogin } from 'utils/hordeUtils'
 
 const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
   const userStore = useStore(userInfoStore)
@@ -40,21 +40,18 @@ const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
 
   const handleSaveApiKey = async () => {
     try {
-      const data = await fetchUserDetails(componentState.apiKey)
+      const data = await handleApiKeyLogin(componentState.apiKey)
       const { success } = data
 
       if (success === true) {
-        AppSettings.save('apiKey', componentState.apiKey)
         setComponentState({ apiErrorMsg: '' })
       } else if (success === false) {
         setComponentState({ apiErrorMsg: 'Error: Unable to load API key.' })
         handleSwitchSelect('shareImagesExternally', true)
-        AppSettings.delete('apiKey')
       }
     } catch (err) {
       setComponentState({ apiErrorMsg: 'Error: Unable to load API key.' })
       handleSwitchSelect('shareImagesExternally', true)
-      AppSettings.delete('apiKey')
     }
   }
 
