@@ -13,7 +13,6 @@ import { fetchCompletedJobs } from './db'
 import { basePath } from 'BASE_PATH'
 import ImageModels from 'models/ImageModels'
 import DefaultPromptInput from 'models/DefaultPromptInput'
-import { inputCSS } from 'react-select/dist/declarations/src/components/Input'
 
 interface CreateImageJob {
   base64String?: string
