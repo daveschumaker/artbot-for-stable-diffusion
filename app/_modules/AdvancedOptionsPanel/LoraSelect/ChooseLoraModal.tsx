@@ -67,7 +67,11 @@ const ChooseLoraModal = ({
   return (
     <>
       <Overlay handleClose={handleClose} disableBackground />
-      <DropdownOptions handleClose={handleClose} title="Load LoRA">
+      <DropdownOptions
+        handleClose={handleClose}
+        title="Load LoRA"
+        style={{ maxWidth: '640px', right: 0, left: 'unset', width: '100%' }}
+      >
         <div
           style={{
             display: 'flex',

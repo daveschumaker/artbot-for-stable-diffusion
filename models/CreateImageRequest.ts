@@ -251,7 +251,7 @@ class CreateImageRequest {
           return
         }
 
-        this.multiClip.push(Number(value))
+        this.multiDenoise.push(Number(value))
       })
     }
 

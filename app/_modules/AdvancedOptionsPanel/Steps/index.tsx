@@ -1,9 +1,8 @@
 import { GetSetPromptInput } from 'types'
-import NumericInputSlider from '../NumericInputSlider'
 import FlexRow from 'app/_components/FlexRow'
 import { Button } from 'components/UI/Button'
 import { IconSettings } from '@tabler/icons-react'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import Checkbox from 'components/UI/Checkbox'
 import Input from 'components/UI/Input'
@@ -13,6 +12,7 @@ import TooltipComponent from 'app/_components/TooltipComponent'
 import { maxSteps } from 'utils/validationUtils'
 import { useStore } from 'statery'
 import { userInfoStore } from 'store/userStore'
+import NumberInput from 'app/_components/NumberInput'
 
 interface StepsOptions extends GetSetPromptInput {
   hideOptions?: boolean
@@ -27,11 +27,30 @@ export default function Steps({
   const { loggedIn } = userState
 
   const [showDropdown, setShowDropdown] = useState(false)
+  const [step, setStep] = useState(1)
+
+  const handleChangeStep = useCallback(() => {
+    if (step === 1) {
+      setStep(5)
+    } else if (step === 5) {
+      setStep(10)
+    } else {
+      setStep(1)
+    }
+  }, [step])
+
+  const MAX_STEPS = maxSteps({
+    sampler: input.sampler,
+    loggedIn: loggedIn === true ? true : false,
+    isSlider: true
+  })
 
   return (
-    <FlexRow style={{ columnGap: '4px', position: 'relative' }}>
+    <FlexRow
+      style={{ alignItems: 'flex-end', columnGap: '4px', position: 'relative' }}
+    >
       {input.useMultiSteps && (
-        <div className="mb-4 w-full">
+        <div className="w-full">
           <SubSectionTitle>
             <TextTooltipRow>
               Steps
@@ -67,25 +86,50 @@ export default function Steps({
         </div>
       )}
       {!input.useMultiSteps && (
-        <NumericInputSlider
-          label="Steps"
-          tooltip="Fewer steps generally result in quicker image generations.
-              Many models achieve full coherence after a certain number
-              of finite steps (60 - 90). Keep your initial queries in
-              the 30 - 50 range for best results."
-          from={1}
-          to={maxSteps({
-            sampler: input.sampler,
-            loggedIn: loggedIn === true ? true : false,
-            isSlider: true
-          })}
-          step={1}
-          input={input}
-          setInput={setInput}
-          fieldName="steps"
-          fullWidth
-          enforceStepValue
-        />
+        <div style={{ width: '100%' }}>
+          <SubSectionTitle>
+            <TextTooltipRow>
+              Steps
+              <span style={{ fontSize: '12px', fontWeight: '400' }}>
+                &nbsp;(1 - {MAX_STEPS})
+              </span>
+              <TooltipComponent tooltipId="steps-tooltip">
+                Fewer steps generally result in quicker image generations. Many
+                models achieve full coherence after a certain number of finite
+                steps (60 - 90). Keep your initial queries in the 30 - 50 range
+                for best results.
+              </TooltipComponent>
+            </TextTooltipRow>
+          </SubSectionTitle>
+          <FlexRow gap={4}>
+            <NumberInput
+              min={1}
+              max={MAX_STEPS}
+              // disabled={disabled}
+              onInputChange={(e) => {
+                setInput({ steps: Number(e.target.value) })
+              }}
+              onMinusClick={() => {
+                if (input.steps - step < 1) {
+                  return
+                }
+
+                setInput({ steps: input.steps - step })
+              }}
+              onPlusClick={() => {
+                if (input.steps + step > MAX_STEPS) {
+                  return
+                }
+
+                setInput({ steps: input.steps + step })
+              }}
+              onChangeStep={handleChangeStep}
+              step={step}
+              value={input.steps}
+              width="100%"
+            />
+          </FlexRow>
+        </div>
       )}
       <div>
         <div

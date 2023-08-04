@@ -8,6 +8,7 @@ import { Metadata } from 'next'
 import PollController from 'app/_modules/PollController'
 import { baseHost, basePath } from 'BASE_PATH'
 import AppAnalytics from './_modules/AppAnalytics'
+import ToastContainer from 'components/ToastContainer'
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseHost),
@@ -69,6 +70,7 @@ export default async function RootLayout({
         <AppAnalytics />
         <PollController />
         <HeaderNav />
+        <ToastContainer />
         <SlidingMenu />
         {children}
         <Footer />

@@ -8,10 +8,11 @@ import Section from 'app/_components/Section'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import AppSettings from 'models/AppSettings'
 import React, { useCallback, useEffect, useState } from 'react'
-import { toast } from 'react-toastify'
 import { useStore } from 'statery'
 import { userInfoStore } from 'store/userStore'
 import { clientHeader } from 'utils/appUtils'
+import { baseHost, basePath } from 'BASE_PATH'
+import { showSuccessToast } from 'utils/notificationUtils'
 
 const cacheKeyIds: Array<string> = []
 const cacheKeyDetails: any = {}
@@ -42,17 +43,16 @@ const SharedKeys = () => {
   }, [])
 
   const handleCopyKeyClick = (key: string) => {
-    navigator?.clipboard?.writeText(key).then(() => {
-      toast.success('Shared API key copied!', {
-        pauseOnFocusLoss: false,
-        position: 'top-center',
-        autoClose: 2500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: false,
-        progress: undefined,
-        theme: 'light'
+    const hostname =
+      window.location.hostname === 'localhost'
+        ? 'http://localhost:3000'
+        : baseHost
+
+    const url = `${hostname}${basePath}?shared_key=${key}`
+
+    navigator?.clipboard?.writeText(url).then(() => {
+      showSuccessToast({
+        message: 'URL for shared API key copied to clipboard!'
       })
     })
   }

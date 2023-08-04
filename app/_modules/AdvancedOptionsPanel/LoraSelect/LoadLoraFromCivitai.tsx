@@ -70,7 +70,7 @@ const LoadLora = ({
         description: DOMPurify.sanitize(data.description || ''),
         baseModel: modelVersions[0].baseModel,
         trainedWords: modelVersions[0].trainedWords,
-        image: images[0].url
+        image: images[0] && images[0].url ? images[0].url : ''
       }
 
       setLoraDetails({
