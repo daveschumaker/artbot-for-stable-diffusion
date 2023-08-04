@@ -3,13 +3,17 @@ import ShowcasePage from 'app/_pages/ShowcasePage'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Showcase - ArtBot for Stable Diffusion',
+  title: 'Community Showcase - ArtBot for Stable Diffusion',
+  description:
+    'Get inspiration and discover what other ArtBot fans have created and publicly shared with the ArtBot Showcase.',
   openGraph: {
-    title: 'ArtBot - Showcase',
-    images: [`${baseHost}${basePath}/robot_profile.png`]
+    title: 'ArtBot - Community Showcase',
+    images: [`${baseHost}${basePath}/robot_showcase.jpg`],
+    description:
+      'Get inspiration and discover what other ArtBot fans have created and publicly shared with the ArtBot Showcase.'
   },
   twitter: {
-    images: `${baseHost}${basePath}/robot_profile.png`
+    images: `${baseHost}${basePath}/robot_showcase.jpg`
   }
 }
 
