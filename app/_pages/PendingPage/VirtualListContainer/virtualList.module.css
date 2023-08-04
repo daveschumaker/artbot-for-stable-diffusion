@@ -1,0 +1,21 @@
+.VirtualList {
+  bottom: 0;
+  left: 0;
+  padding: 16px 0;
+  position: absolute;
+  right: 0;
+  top: 12px;
+}
+
+@media (min-width: 640px) {
+  .VirtualList {
+    bottom: 78px;
+    overflow-y: hidden;
+  }
+}
+
+.AdUnit {
+  background-color: var(--carbon-bg);
+  margin-bottom: 16px;
+  width: 100%;
+}

@@ -1,7 +1,6 @@
 .Footer {
   display: none;
   margin-top: auto;
-  margin-bottom: 16px;
   padding-top: 16px;
   text-align: center;
   width: 100%;
@@ -17,7 +16,6 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin-bottom: 12px;
     padding-bottom: 12px;
     padding-top: 16px;
   }
