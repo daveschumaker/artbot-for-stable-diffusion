@@ -1,22 +1,12 @@
 import Link from 'next/link'
 import React from 'react'
-import { toast } from 'react-toastify'
 import LinkIcon from './icons/LinkIcon'
 import Linker from './UI/Linker'
 import { baseHost, basePath } from 'BASE_PATH'
+import { showSuccessToast } from 'utils/notificationUtils'
 
 const showToast = () => {
-  toast.success('FAQ URL copied!', {
-    pauseOnFocusLoss: false,
-    position: 'top-center',
-    autoClose: 2500,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: false,
-    draggable: false,
-    progress: undefined,
-    theme: 'light'
-  })
+  showSuccessToast({ message: 'FAQ URL copied!' })
 }
 
 const MonoFont = ({ children }: { children: React.ReactNode }) => {

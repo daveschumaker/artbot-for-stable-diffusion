@@ -1,10 +1,10 @@
 import clsx from 'clsx'
 import { useState } from 'react'
-import { toast } from 'react-toastify'
 import ImageParamsForApi from '../models/ImageParamsForApi'
 import CopyIcon from './icons/CopyIcon'
 import EyeIcon from './icons/EyeIcon'
 import { Button } from './UI/Button'
+import { showSuccessToast } from 'utils/notificationUtils'
 
 const DisplayRawData = ({ data }: { data: any }) => {
   const [expandJson, setExpandJson] = useState(false)
@@ -61,17 +61,7 @@ const DisplayRawData = ({ data }: { data: any }) => {
           )
         : JSON.stringify(cleanData(), null, 2)
     navigator?.clipboard?.writeText(dataToCopy).then(() => {
-      toast.success('Data copied', {
-        pauseOnFocusLoss: false,
-        position: 'top-center',
-        autoClose: 2500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: false,
-        progress: undefined,
-        theme: 'light'
-      })
+      showSuccessToast({ message: 'Data copied' })
     })
   }
 

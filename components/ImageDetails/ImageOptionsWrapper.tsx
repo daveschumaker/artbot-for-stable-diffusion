@@ -44,14 +44,12 @@ import ShareIcon from 'components/icons/ShareIcon'
 import ImageParamsForApi from 'models/ImageParamsForApi'
 import { userInfoStore } from 'store/userStore'
 import { createShortlink } from 'api/createShortlink'
-import { toast, ToastOptions } from 'react-toastify'
 import RefreshIcon from 'components/icons/RefreshIcon'
 import { deletePendingJob } from 'controllers/pendingJobsCache'
 import { getRelatedImages } from 'components/ImagePage/image.controller'
 import { baseHost, basePath } from 'BASE_PATH'
 import { useModal } from '@ebay/nice-modal-react'
-import { showSuccessToast } from 'utils/notificationUtils'
-// import { useModal } from '@ebay/nice-modal-react'
+import { showErrorToast, showSuccessToast } from 'utils/notificationUtils'
 
 const ImageOptionsWrapper = ({
   handleClose,
@@ -144,17 +142,7 @@ const ImageOptionsWrapper = ({
         // router.push('/pending')
         // handleClose()
 
-        toast.success('Re-rolling and requesting new image', {
-          pauseOnFocusLoss: false,
-          position: 'top-center',
-          autoClose: 2500,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: false,
-          progress: undefined,
-          theme: 'light'
-        })
+        showSuccessToast({ message: 'Re-rolling and requesting new image' })
       }
     },
     [pendingReroll]
@@ -479,28 +467,14 @@ const ImageOptionsWrapper = ({
                     imageDetails.base64String
                   )
 
-                  const toastObject: ToastOptions = {
-                    pauseOnFocusLoss: false,
-                    position: 'top-center',
-                    autoClose: 2500,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: false,
-                    draggable: false,
-                    progress: undefined,
-                    theme: 'light'
-                  }
-
                   if (success) {
-                    toast.success(
-                      'Image copied to your clipboard!',
-                      toastObject
-                    )
+                    showSuccessToast({
+                      message: 'Image copied to your clipboard!'
+                    })
                   } else {
-                    toast.error(
-                      'Unable to copy image to clipboard.',
-                      toastObject
-                    )
+                    showErrorToast({
+                      message: 'Unable to copy image to clipboard.'
+                    })
                   }
                 }}
               >

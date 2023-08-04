@@ -26,7 +26,6 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Head from 'next/head'
 import { useEffectOnce } from 'hooks/useEffectOnce'
 import AppSettings from 'models/AppSettings'
-import { toast } from 'react-toastify'
 import { getInputCache } from 'store/inputCache'
 import { kudosCostV2 } from 'utils/kudosCost'
 import ControlNetOptions from 'app/_modules/AdvancedOptionsPanel/ControlNetOptions'
@@ -46,6 +45,7 @@ import Guidance from 'app/_modules/AdvancedOptionsPanel/Guidance'
 import Denoise from 'app/_modules/AdvancedOptionsPanel/Denoise'
 import ClipSkip from 'app/_modules/AdvancedOptionsPanel/ClipSkip'
 import { baseHost, basePath } from 'BASE_PATH'
+import { showSuccessToast } from 'utils/notificationUtils'
 
 // Kind of a hacky way to persist output of image over the course of a session.
 let cachedImageDetails = {}
@@ -182,20 +182,9 @@ const ControlNetPage = () => {
     if (!AppSettings.get('stayOnCreate')) {
       router.push('/pending')
     } else {
-      toast.success(
-        `${totalImagesRequested > 1 ? 'Images' : 'Image'} requested!`,
-        {
-          pauseOnFocusLoss: false,
-          position: 'top-center',
-          autoClose: 2500,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: false,
-          progress: undefined,
-          theme: 'light'
-        }
-      )
+      showSuccessToast({
+        message: `${totalImagesRequested > 1 ? 'Images' : 'Image'} requested!`
+      })
 
       setErrors({ SOURCE_IMAGE_EMPTY: false })
       setErrors({ PROMPT_EMPTY: false })

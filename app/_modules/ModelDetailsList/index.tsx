@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { toast } from 'react-toastify'
 
 import { trackEvent } from 'api/telemetry'
 import Panel from 'app/_components/Panel'
@@ -19,6 +18,7 @@ import AppSettings from 'models/AppSettings'
 import { useStore } from 'statery'
 import ExternalLinkIcon from 'components/icons/ExternalLinkIcon'
 import { baseHost, basePath } from 'BASE_PATH'
+import { showSuccessToast } from 'utils/notificationUtils'
 
 const StyledLinkIcon = styled(LinkIcon)`
   cursor: pointer;
@@ -176,17 +176,7 @@ const ModelDetailsList = ({ availableModels, modelDetails }: any) => {
                     navigator?.clipboard
                       ?.writeText(`${baseHost}${basePath}/info/models#${name}`)
                       .then(() => {
-                        toast.success('Model URL copied!', {
-                          pauseOnFocusLoss: false,
-                          position: 'top-center',
-                          autoClose: 2500,
-                          hideProgressBar: false,
-                          closeOnClick: true,
-                          pauseOnHover: false,
-                          draggable: false,
-                          progress: undefined,
-                          theme: 'light'
-                        })
+                        showSuccessToast({ message: 'Model URL copied!' })
                       })
                   }}
                 >
