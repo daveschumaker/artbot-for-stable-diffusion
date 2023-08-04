@@ -10,9 +10,6 @@ import Input from 'components/UI/Input'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import TextTooltipRow from 'app/_components/TextTooltipRow'
 import TooltipComponent from 'app/_components/TooltipComponent'
-import { maxSteps } from 'utils/validationUtils'
-import { useStore } from 'statery'
-import { userInfoStore } from 'store/userStore'
 
 interface DenoiseOptions extends GetSetPromptInput {
   hideOptions?: boolean
@@ -23,9 +20,6 @@ export default function Denoise({
   input,
   setInput
 }: DenoiseOptions) {
-  const userState = useStore(userInfoStore)
-  const { loggedIn } = userState
-
   const [showDropdown, setShowDropdown] = useState(false)
 
   return (
@@ -34,19 +28,14 @@ export default function Denoise({
         <div className="mb-4 w-full">
           <SubSectionTitle>
             <TextTooltipRow>
-              Steps
+              Denoise
               <span
                 className="text-xs w-full font-[400]"
                 style={{ paddingRight: '4px', width: 'auto' }}
               >
-                &nbsp;(1 -{' '}
-                {maxSteps({
-                  sampler: input.sampler,
-                  loggedIn: loggedIn === true ? true : false
-                })}
-                )
+                &nbsp;(0 - 1)
               </span>
-              <TooltipComponent tooltipId="multi-steps-tooltip">
+              <TooltipComponent tooltipId="multi-denoise-tooltip">
                 Comma separated values to create a series of images using
                 multiple denoise settings. Example: 0.2, 0.25, 0.3
               </TooltipComponent>
