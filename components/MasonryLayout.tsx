@@ -1,4 +1,21 @@
-const MasonryLayout = ({ children, columns = 2, gap = 20 }: any = {}) => {
+'use client'
+
+import { useWindowSize } from 'hooks/useWindowSize'
+
+const MasonryLayout = ({ children, gap = 20 }: any = {}) => {
+  const { width } = useWindowSize()
+
+  let columns = 2
+  // @ts-ignore
+  if (width > 1280) {
+    columns = 4
+    // @ts-ignore
+  } else if (width > 800) {
+    columns = 2
+  }
+
+  if (!width) return null
+
   const columnWrapper: any = {}
   const result = []
 
