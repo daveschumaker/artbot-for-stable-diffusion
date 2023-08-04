@@ -390,7 +390,8 @@ export const createImageJob = async (newImageRequest: CreateImageRequest) => {
 
   if (
     newImageRequest.useMultiDenoise &&
-    newImageRequest.multiDenoise.length > 0
+    newImageRequest.multiDenoise.length > 0 &&
+    newImageRequest.source_image
   ) {
     if (DEBUG_MULTI) console.log(`useMultiDenoise Enabled`)
     const tempArray = []

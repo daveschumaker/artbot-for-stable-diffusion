@@ -13,6 +13,7 @@ import { fetchCompletedJobs } from './db'
 import { basePath } from 'BASE_PATH'
 import ImageModels from 'models/ImageModels'
 import DefaultPromptInput from 'models/DefaultPromptInput'
+import { inputCSS } from 'react-select/dist/declarations/src/components/Input'
 
 interface CreateImageJob {
   base64String?: string
@@ -744,6 +745,7 @@ export const downloadFile = async (image: any) => {
 
 interface ICountImages {
   numImages: number
+  source_image?: string
   multiSteps?: string
   multiClip?: string
   multiDenoise?: string
@@ -806,7 +808,7 @@ export const countImagesToGenerate = (imageParams: ICountImages) => {
     }
   }
 
-  if (useMultiDenoise) {
+  if (useMultiDenoise && imageParams.source_image) {
     let splitDenoise = multiDenoise.split(',') || []
     let splitCount = 0
 
