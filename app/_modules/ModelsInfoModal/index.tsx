@@ -114,6 +114,17 @@ const ModelsInfoModal = ({ input }: { input: DefaultPromptInput }) => {
     }
   })
 
+  // Add favorite models that might not be available anymore.
+  if (filterMode === 'favorites') {
+    for (const key in favModels) {
+      if (filtered.indexOf(key) === -1) {
+        filtered.push(key)
+      }
+    }
+
+    filtered.sort()
+  }
+
   const filteredNames = filtered.filter((name) => {
     if (!inputFilter) return true
     return name.toLowerCase().indexOf(inputFilter.toLowerCase()) >= 0
@@ -273,7 +284,7 @@ const ModelsInfoModal = ({ input }: { input: DefaultPromptInput }) => {
             {!activeModel && (
               <div>Select a model to display detailed information.</div>
             )}
-            {activeModel && !activeModelDetails && (
+            {activeModel && !activeModelDetails && !activeModelStats.count && (
               <>
                 <FlexRow style={{ justifyContent: 'space-between' }}>
                   <div className={styles.ModelInfoName}>{activeModel}</div>
@@ -301,16 +312,55 @@ const ModelsInfoModal = ({ input }: { input: DefaultPromptInput }) => {
                     </div>
                   </FlexRow>
                 </FlexRow>
-                <div className={styles.ModelInfoStats}>
-                  Workers: {activeModelStats.count}
-                  {' / '}
-                  Requests: {activeModelStats.jobs}
-                </div>
-                <div className={styles.ModelInfoDescription}>
-                  No information is available for this model.
+                <div
+                  className={styles.ModelInfoDescription}
+                  style={{ paddingTop: '12px' }}
+                >
+                  No details exist for this model. It may not be available on
+                  the AI Horde.
                 </div>
               </>
             )}
+            {activeModel &&
+              !activeModelDetails &&
+              activeModelStats.count > 0 && (
+                <>
+                  <FlexRow style={{ justifyContent: 'space-between' }}>
+                    <div className={styles.ModelInfoName}>{activeModel}</div>
+                    <FlexRow
+                      gap={8}
+                      style={{
+                        cursor: 'pointer',
+                        justifyContent: 'flex-end',
+                        width: 'unset'
+                      }}
+                    >
+                      <div onClick={() => handleHide(activeModel)}>
+                        {hiddenModels[activeModel] ? (
+                          <IconEyeOff size={28} style={{ color: 'red' }} />
+                        ) : (
+                          <IconEyeOff size={28} stroke={1.5} />
+                        )}
+                      </div>
+                      <div onClick={() => handleFav(activeModel)}>
+                        {favModels[activeModel] ? (
+                          <IconHeartFilled size={28} style={{ color: 'red' }} />
+                        ) : (
+                          <IconHeart size={28} stroke={1.5} />
+                        )}
+                      </div>
+                    </FlexRow>
+                  </FlexRow>
+                  <div className={styles.ModelInfoStats}>
+                    Workers: {activeModelStats.count}
+                    {' / '}
+                    Requests: {activeModelStats.jobs}
+                  </div>
+                  <div className={styles.ModelInfoDescription}>
+                    No information is available for this model.
+                  </div>
+                </>
+              )}
             {activeModel && activeModelDetails && (
               <>
                 <FlexRow style={{ justifyContent: 'space-between' }}>
