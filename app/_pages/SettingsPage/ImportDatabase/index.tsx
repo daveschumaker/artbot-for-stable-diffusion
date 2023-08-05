@@ -4,7 +4,7 @@ import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { useState } from 'react'
 import { dbImport } from 'utils/db'
 import styles from './component.module.css'
-import { toast } from 'react-toastify'
+import { showSuccessToast } from 'utils/notificationUtils'
 
 export default function ImportDatabase() {
   const [done, setDone] = useState(false)
@@ -52,18 +52,7 @@ export default function ImportDatabase() {
           const file = event.target.files[0]
           const blob = new Blob([file], { type: file.type })
           await dbImport(blob)
-
-          toast.success('ArtBot database imported!', {
-            pauseOnFocusLoss: false,
-            position: 'top-center',
-            autoClose: 2500,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: false,
-            progress: undefined,
-            theme: 'light'
-          })
+          showSuccessToast({ message: 'ArtBot database imported!' })
 
           setLoading(false)
           setDone(true)

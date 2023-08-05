@@ -13,7 +13,8 @@ import {
   IconRobot,
   IconSettings,
   IconStars,
-  IconZoomQuestion
+  IconZoomQuestion,
+  IconLayoutDashboard
 } from '@tabler/icons-react'
 import styles from './menu.module.css'
 import { CSSProperties } from 'react'
@@ -75,6 +76,15 @@ const MenuOptions = ({
           <IconPoint stroke={1.5} />
           Live Paint
         </div>
+      </div>
+      <div
+        className={styles.MenuOption}
+        onClick={() => {
+          navigateToLink('/showcase')
+        }}
+      >
+        <IconLayoutDashboard stroke={1.5} />
+        Showcase
       </div>
       <div
         className={styles.MenuOption}

@@ -1,6 +1,5 @@
 import clsx from 'clsx'
 import { useState } from 'react'
-import { toast } from 'react-toastify'
 import styled from 'styled-components'
 import { fetchUserDetails } from '../../api/userInfo'
 import AppSettings from '../../models/AppSettings'
@@ -22,6 +21,7 @@ import ModelsModal from './ModelsModal'
 import styles from './workerInfo.module.css'
 import { useForceUpdate } from 'hooks/useForceUpdate'
 import { setLockedToWorker } from 'store/appStore'
+import { showSuccessToast } from 'utils/notificationUtils'
 
 const WorkerTitle = styled.div`
   align-items: center;
@@ -144,17 +144,7 @@ const WorkerInfo = ({
           <WorkerId
             onClick={() => {
               navigator?.clipboard?.writeText(`${worker.id}`).then(() => {
-                toast.success('Worker ID copied!', {
-                  pauseOnFocusLoss: false,
-                  position: 'top-center',
-                  autoClose: 2500,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: false,
-                  draggable: false,
-                  progress: undefined,
-                  theme: 'light'
-                })
+                showSuccessToast({ message: 'Worker ID copied!' })
               })
             }}
           >

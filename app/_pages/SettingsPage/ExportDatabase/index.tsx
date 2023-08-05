@@ -3,9 +3,9 @@ import { Button } from 'components/UI/Button'
 import Section from 'app/_components/Section'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { useState } from 'react'
-import { toast } from 'react-toastify'
 import { downloadBlob, formatDate } from 'utils/appUtils'
 import { dbExport } from 'utils/db'
+import { showSuccessToast } from 'utils/notificationUtils'
 
 export default function ExportDatabase() {
   const [loading, setLoading] = useState(false)
@@ -40,18 +40,7 @@ export default function ExportDatabase() {
             //@ts-ignore
             const blob = await dbExport(progressCallback)
             downloadBlob(blob, `artbot-db_${formatDate()}.json`)
-
-            toast.success('ArtBot database downloaded!', {
-              pauseOnFocusLoss: false,
-              position: 'top-center',
-              autoClose: 2500,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: false,
-              draggable: false,
-              progress: undefined,
-              theme: 'light'
-            })
+            showSuccessToast({ message: 'ArtBot database downloaded!' })
 
             setLoading(false)
           }}
