@@ -1,8 +1,6 @@
 'use client'
 
-import { fetchPendingImageJobs } from 'controllers/pendingJobsController'
 import React, { useCallback, useEffect, useState } from 'react'
-import { Virtuoso } from 'react-virtuoso'
 
 import { useEffectOnce } from 'hooks/useEffectOnce'
 import AppSettings from 'models/AppSettings'
@@ -14,18 +12,10 @@ import {
 } from 'utils/db'
 
 import AdContainer from 'components/AdContainer'
-// import CheckboxIcon from 'components/icons/CheckboxIcon'
-// import DotsVerticalIcon from 'components/icons/DotsVerticalIcon'
-// import SquareIcon from 'components/icons/SquareIcon'
-// import DropDownMenu from 'components/UI/DropDownMenu/dropDownMenu'
-// import DropDownMenuItem from 'components/UI/DropDownMenuItem'
 import Linker from 'components/UI/Linker'
-// import MenuButton from 'app/_components/MenuButton'
 import PageTitle from 'app/_components/PageTitle'
 import TextButton from 'components/UI/TextButton'
-import { useWindowSize } from 'hooks/useWindowSize'
 import styles from './pendingPage.module.css'
-// import { isInstalledPwa } from 'utils/appUtils'
 import { useStore } from 'statery'
 import { appInfoStore } from 'store/appStore'
 import {
@@ -33,8 +23,6 @@ import {
   deletePendingJobs,
   getAllPendingJobs
 } from 'controllers/pendingJobsCache'
-import usePendingImageModal from './usePendingImageModal'
-import PendingItem from 'modules/PendingItem'
 import FlexRow from 'app/_components/FlexRow'
 import { IconFilter, IconInfoTriangle, IconSettings } from '@tabler/icons-react'
 import { Button } from 'components/UI/Button'
@@ -44,19 +32,19 @@ import AccordionItem from 'app/_components/AccordionItem'
 import MaxWidth from 'components/UI/MaxWidth'
 import PendingSettings from './PendingSettings'
 import ClearJobs from './ClearJobs'
+import clsx from 'clsx'
+import VirtualListContainer from './VirtualListContainer'
 
 const PendingPage = () => {
-  const size = useWindowSize()
   const [filter, setFilter] = useState('all')
   const [validatePending, setValidatePending] = useState(false)
   const appState = useStore(appInfoStore)
-  const { adHidden, imageDetailsModalOpen } = appState
+  const { imageDetailsModalOpen } = appState
 
   const [showFilterDropdown, setShowFilterDropdown] = useState(false)
   const [showSettingsDropdown, setShowSettingsDropdown] = useState(false)
 
   const [pendingImages, setPendingImages] = useState([])
-  const [showImageModal] = usePendingImageModal()
 
   const initPageLoad = async () => {
     // @ts-ignore
@@ -75,12 +63,6 @@ const PendingPage = () => {
       clearInterval(interval)
     }
   }, [])
-
-  const onClosePanel = async (jobId: string) => {
-    await deletePendingJobFromDb(jobId)
-    deletePendingJob(jobId)
-    fetchPendingImageJobs()
-  }
 
   const processPending = useCallback(() => {
     const done: any = []
@@ -119,11 +101,6 @@ const PendingPage = () => {
 
   const [done = [], processing = [], queued = [], waiting = [], error = []] =
     processPending()
-
-  const handleShowModalClick = (jobId: string) => {
-    showImageModal({ jobId, images: done })
-    return jobId
-  }
 
   const inProgress = [].concat(processing, queued, waiting)
 
@@ -213,46 +190,6 @@ const PendingPage = () => {
     }
   }, [validatePending, verifyImagesExist])
 
-  const renderRow = ({ index }: { index: any }) => {
-    const job = sorted[index]
-
-    if (!job || !job.jobId) {
-      return null
-    }
-
-    return (
-      <>
-        {inProgress.length > 0 && index === 0 && (
-          <div style={{ paddingBottom: '12px' }}>
-            Why not <Linker href="/rate">rate some images</Linker> (and earn
-            kudos) while you wait?
-          </div>
-        )}
-        {index === 0 &&
-          !imageDetailsModalOpen &&
-          !adHidden &&
-          // @ts-ignore
-          size?.width < 800 && (
-            <div className={styles.AdUnit}>
-              <AdContainer />
-            </div>
-          )}
-        <PendingItem
-          handleCloseClick={() => {
-            onClosePanel(job.jobId)
-          }}
-          //@ts-ignore
-          onImageClick={handleShowModalClick}
-          // onHideClick={}
-          //@ts-ignore
-          jobDetails={job}
-          //@ts-ignore
-          jobId={job.jobId}
-        />
-      </>
-    )
-  }
-
   // let listHeight = 500
 
   // if (isInstalledPwa() && size.height) {
@@ -294,87 +231,6 @@ const PendingPage = () => {
             Image queue: {titleDescript}
           </PageTitle>
         </div>
-        {/* <div className="flex flex-row justify-end w-1/4 items-start h-[38px] relative gap-2">
-          <MenuButton
-            active={showMenu}
-            title="Pending options"
-            onClick={() => {
-              if (showMenu) {
-                setShowMenu(false)
-              } else {
-                setShowMenu(true)
-              }
-            }}
-          >
-            <div className="flex flex-row items-center">
-              <div className={styles['menu-title']}>{filter}</div>
-              <DotsVerticalIcon size={24} />
-            </div>
-          </MenuButton>
-          {showMenu && (
-            <DropDownMenu
-              handleClose={() => {
-                setShowMenu(false)
-              }}
-            >
-              <DropDownMenuItem onClick={() => setFilter('all')}>
-                View all ({pendingImages.length})
-              </DropDownMenuItem>
-              <DropDownMenuItem onClick={() => setFilter('processing')}>
-                View processing ({jobsInProgress})
-              </DropDownMenuItem>
-              <DropDownMenuItem onClick={() => setFilter('done')}>
-                View done ({done.length})
-              </DropDownMenuItem>
-              <DropDownMenuItem onClick={() => setFilter('error')}>
-                View errors ({error.length})
-              </DropDownMenuItem>
-              <MenuSeparator />
-              <DropDownMenuItem
-                onClick={() => {
-                  deletePendingJobs(JobStatus.Done)
-                  deleteDoneFromPending()
-                }}
-              >
-                Clear completed
-              </DropDownMenuItem>
-              <DropDownMenuItem
-                onClick={() => {
-                  deletePendingJobs(JobStatus.Queued)
-                  deletePendingJobs(JobStatus.Waiting)
-                  deleteAllPendingJobs()
-                }}
-              >
-                Clear pending
-              </DropDownMenuItem>
-              <DropDownMenuItem onClick={deleteAllPendingErrors}>
-                Clear errors
-              </DropDownMenuItem>
-              <MenuSeparator />
-              <DropDownMenuItem
-                onClick={() => {
-                  if (AppSettings.get('autoClearPending')) {
-                    AppSettings.set('autoClearPending', false)
-                  } else {
-                    AppSettings.set('autoClearPending', true)
-                  }
-                }}
-              >
-                <div className="flex flex-row gap-[8px]">
-                  {AppSettings.get('autoClearPending') ? (
-                    <CheckboxIcon />
-                  ) : (
-                    <SquareIcon />
-                  )}
-                  <div>
-                    Auto-clear completed?
-                    <div className="text-xs">(when leaving pending page)</div>
-                  </div>
-                </div>
-              </DropDownMenuItem>
-            </DropDownMenu>
-          )}
-        </div> */}
       </div>
       <FlexRow
         gap={4}
@@ -408,7 +264,14 @@ const PendingPage = () => {
           </Button>
         </FlexRow>
       </FlexRow>
-      <MaxWidth>
+      <MaxWidth
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          flexGrow: 1,
+          position: 'relative'
+        }}
+      >
         {AppSettings.get('useWorkerId') && (
           <div style={{ paddingTop: '12px' }}>
             <Accordion>
@@ -439,67 +302,51 @@ const PendingPage = () => {
             </Accordion>
           </div>
         )}
+        <VirtualListContainer
+          completedJobs={done}
+          items={sorted}
+          jobsInProgress={inProgress.length > 0}
+        />
 
-        <div className={styles.ListWrapper}>
-          {pendingImages.length === 0 && (
-            <div style={{ padding: '0 16px 12px 16px' }}>
-              No images pending.{' '}
-              <Linker href="/" className="text-cyan-400">
-                Why not create something?
-              </Linker>
-            </div>
-          )}
-
-          {pendingImages.length === 0 && done.length > 0 && (
-            <>
-              <PageTitle as="h2">Recently completed images</PageTitle>
-              <div className="mb-2">
-                <TextButton
-                  onClick={() => {
-                    deletePendingJobs(JobStatus.Done)
-                    deleteDoneFromPending()
-                  }}
-                >
-                  Clear all completed
-                </TextButton>
+        {(pendingImages.length === 0 || sorted.length === 0) && (
+          <div
+            className={clsx(
+              styles.ListWrapper,
+              pendingImages.length > 0 && styles.ListWrapperHasItems
+            )}
+          >
+            {pendingImages.length === 0 && (
+              <div style={{ padding: '16px 16px 12px 0' }}>
+                No images pending.{' '}
+                <Linker href="/" style={{ color: 'rgb(34 211 238)' }}>
+                  Why not create something?
+                </Linker>
               </div>
-            </>
-          )}
+            )}
 
-          {sorted.length === 0 && !imageDetailsModalOpen && (
-            <div className={styles.MobileAd}>
-              <AdContainer style={{ margin: '0 auto', maxWidth: '480px' }} />
-            </div>
-          )}
+            {pendingImages.length === 0 && done.length > 0 && (
+              <>
+                <PageTitle as="h2">Recently completed images</PageTitle>
+                <div className="mb-2">
+                  <TextButton
+                    onClick={() => {
+                      deletePendingJobs(JobStatus.Done)
+                      deleteDoneFromPending()
+                    }}
+                  >
+                    Clear all completed
+                  </TextButton>
+                </div>
+              </>
+            )}
 
-          {sorted.length > 0 && (
-            <Virtuoso
-              className={styles['virtual-list']}
-              totalCount={sorted.length}
-              style={{
-                height: 'unset',
-                marginTop: '12px',
-                position: 'absolute',
-                top: 0
-              }}
-              components={{
-                Footer: () => {
-                  return (
-                    <div
-                      style={{
-                        height: '30px',
-                        marginBottom: '30px'
-                      }}
-                    >
-                      {' '}
-                    </div>
-                  )
-                }
-              }}
-              itemContent={(index) => <>{renderRow({ index })}</>}
-            />
-          )}
-        </div>
+            {sorted.length === 0 && !imageDetailsModalOpen && (
+              <div className={styles.MobileAd}>
+                <AdContainer style={{ margin: '0 auto', maxWidth: '480px' }} />
+              </div>
+            )}
+          </div>
+        )}
       </MaxWidth>
     </div>
   )

@@ -4,7 +4,6 @@ import CreateImageRequest from 'models/CreateImageRequest'
 import DefaultPromptInput from 'models/DefaultPromptInput'
 import PromptInputSettings from 'models/PromptInputSettings'
 import { Dispatch } from 'react'
-import { toast } from 'react-toastify'
 import {
   clearCanvasStore,
   getCanvasStore,
@@ -14,6 +13,7 @@ import { clearInputCache, setInputCache } from 'store/inputCache'
 import { SetInput } from 'types'
 import { logDataForDebugging } from 'utils/debugTools'
 import { createImageJob } from 'utils/imageCache'
+import { showSuccessToast } from 'utils/notificationUtils'
 import {
   SourceProcessing,
   clearSavedInputCache,
@@ -146,17 +146,7 @@ export const handleCreateClick = async ({
       setInput({ ...inpaintCache })
     }
 
-    toast.success('Image requested!', {
-      pauseOnFocusLoss: false,
-      position: 'top-center',
-      autoClose: 2500,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: false,
-      draggable: false,
-      progress: undefined,
-      theme: 'light'
-    })
+    showSuccessToast({ message: 'Image requested!' })
     setPending(false)
   }
 }

@@ -1,6 +1,14 @@
+# 2023.08.04
+
+- Fix: Issue with multi-denoise still being active, even if you are no longer using img2img mode. Thanks to Sidorok for reporting on Discord.
+- UI: Add a quick swap dimension button near the image settings drop down. Thanks to Anonymous Derpling for the suggestion.
+- UI: You can now remove unavailable / re-named models from your favorites list using the model info popup on the create page.
+- UI: Fix "server updated" modal being displayed behind some content (this will take affect after the next update).
+- Feature: Brand new, swanky ["Community Showcase"](https://tinybots.net/artbot/showcase), featuring neat images that have been publicly shared by ArtBot users.
+
 # 2023.08.03
 
-- Fix: When using multiple values (e.g., multi-guidance), the same value would be passed multiple times. Thans to OxOnWater for reporting this on the contact form.
+- Fix: When using multiple values (e.g., multi-guidance), the same value would be passed multiple times. Thanks to OxOnWater for reporting this on the contact form.
 - UI feature: Added a new adjustable step count button to some number fields (number of images and steps). Thanks to Anonymous Derpling for the suggestion.
 - Fix: Unable to load details for some LoRAs. Thanks to Memetic for reporting this on Discord.
 - Fix: Issue with sending incorrect parameter when trying to inpaint. Thanks to jskaall for reporting this on Discord.

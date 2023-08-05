@@ -22,27 +22,26 @@
   }
 }
 
-.ListWrapper {
+.ListWrapperHasItems {
   bottom: 0;
   left: 0;
   padding: 16px 0;
   position: absolute;
   right: 0;
-  top: 128px;
+  top: 0;
 }
 
 @media (min-width: 640px) {
-  .ListWrapper {
+  .ListWrapperHasItems {
+    left: unset;
     bottom: 78px;
     overflow-y: hidden;
-    top: 144px;
   }
 }
 
 @media (min-width: 800px) {
   .ListWrapper {
     left: var(--fixedSideBar-width);
-    top: 136px;
   }
 }
 
