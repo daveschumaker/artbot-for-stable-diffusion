@@ -5,9 +5,9 @@ import PageTitle from 'app/_components/PageTitle'
 import styles from './showcase.module.css'
 import MasonryLayout from 'components/MasonryLayout'
 import Link from 'next/link'
-import LazyLoad from 'react-lazyload'
 import { useCallback, useEffect, useState } from 'react'
 import { basePath } from 'BASE_PATH'
+import { debounce } from 'utils/debounce'
 
 // Starts at 20 since SSR feeds in offset 0 info.
 let offset = 20
@@ -32,15 +32,15 @@ export default function ShowcasePage({ images = [] }: { images: any[] }) {
     }
   }, [])
 
-  const handleScroll = () => {
+  const handleScroll = debounce(() => {
     const isAtBottom =
-      window.innerHeight + document.documentElement.scrollTop ===
-      document.documentElement.offsetHeight
+      window.innerHeight + document.documentElement.scrollTop >=
+      document.documentElement.offsetHeight - 10
 
     if (isAtBottom && !loading) {
       fetchImages()
     }
-  }
+  }, 450)
 
   useEffect(() => {
     offset = 20
@@ -65,25 +65,23 @@ export default function ShowcasePage({ images = [] }: { images: any[] }) {
       >
         Images created with and publicly shared by ArtBot users
       </div>
-      <div className={styles.ImageList}>
-        <MasonryLayout gap={8}>
-          {imageList.map((image) => {
-            return (
-              <LazyLoad key={image.shortlink} once>
-                <div key={image.shortlink} className={styles.ImageCard}>
-                  <Link href={`/?i=${image.shortlink}`}>
-                    <img
-                      className={styles.ShowcaseImage}
-                      src={`https://s3.amazonaws.com/tinybots.artbot/artbot/images/${image.shortlink}.webp`}
-                      alt={image.image_params.prompt}
-                    />
-                  </Link>
-                </div>
-              </LazyLoad>
-            )
-          })}
-        </MasonryLayout>
-      </div>
+      <MasonryLayout gap={8}>
+        {imageList.map((image) => {
+          return (
+            <div key={image.shortlink}>
+              <div key={image.shortlink} className={styles.ImageCard}>
+                <Link href={`/?i=${image.shortlink}`}>
+                  <img
+                    className={styles.ShowcaseImage}
+                    src={`https://s3.amazonaws.com/tinybots.artbot/artbot/images/${image.shortlink}.webp`}
+                    alt={image.image_params.prompt}
+                  />
+                </Link>
+              </div>
+            </div>
+          )
+        })}
+      </MasonryLayout>
     </>
   )
 }

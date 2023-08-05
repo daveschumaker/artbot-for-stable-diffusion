@@ -6,6 +6,12 @@ import { debounce } from 'utils/debounce'
 
 let minHeight: string | undefined = undefined
 
+const refreshAd = debounce(() => {
+  // @ts-ignore
+  // eslint-disable-next-line no-undef
+  _carbonads.refresh()
+}, 450)
+
 const mountAd = debounce(() => {
   setTimeout(() => {
     const isCarbonExist = document.querySelector('#carbonads')
@@ -16,9 +22,7 @@ const mountAd = debounce(() => {
 
     if (!!isCarbonExist) {
       minHeight = '164px'
-      // @ts-ignore
-      // eslint-disable-next-line no-undef
-      _carbonads.refresh()
+      refreshAd()
       return
     }
 

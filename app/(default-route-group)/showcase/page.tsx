@@ -4,8 +4,6 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Community Showcase - ArtBot for Stable Diffusion',
-  description:
-    'Get inspiration and discover what other ArtBot fans have created and publicly shared with the ArtBot Showcase.',
   openGraph: {
     title: 'ArtBot - Community Showcase',
     images: [`${baseHost}${basePath}/robot_showcase.jpg`],

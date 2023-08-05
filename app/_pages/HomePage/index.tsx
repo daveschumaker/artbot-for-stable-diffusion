@@ -24,9 +24,9 @@ export default function HomePage() {
         distributed open source network of GPUs running{' '}
         <strong>Stable Diffusion</strong>. <br />
         <br />
-        It&apos;s free to use, no registration required.{' '}
+        It&apos;s free to use, no registration required. View the{' '}
         <a
-          href={`${basePath}/create`}
+          href={`${basePath}/showcase`}
           style={{
             alignItems: 'center',
             color: 'var(--main-color)',
@@ -35,7 +35,21 @@ export default function HomePage() {
             whiteSpace: 'pre'
           }}
         >
-          Get started <IconCircleArrowRight size={18} />
+          community showcase
+        </a>{' '}
+        or{' '}
+        <a
+          href={`${basePath}/create`}
+          style={{
+            alignItems: 'center',
+            color: 'var(--main-color)',
+            cursor: 'pointer',
+            display: 'inline-flex',
+            whiteSpace: 'nowrap',
+            gap: '2px'
+          }}
+        >
+          <span>get started</span> <IconCircleArrowRight size={16} />
         </a>
       </div>
       <div style={{ margin: '24px auto 0 auto', maxWidth: '1400px' }}>

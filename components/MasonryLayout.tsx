@@ -7,8 +7,8 @@ const MasonryLayout = ({ children, gap = 20 }: any = {}) => {
 
   let columns = 2
   // @ts-ignore
-  if (width > 1280) {
-    columns = 4
+  if (width > 1200) {
+    columns = 3
     // @ts-ignore
   } else if (width > 800) {
     columns = 2
