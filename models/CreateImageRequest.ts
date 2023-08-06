@@ -227,7 +227,7 @@ class CreateImageRequest {
       this.modelVersion = ''
     }
 
-    if (useMultiClip) {
+    if (useMultiClip && multiClip.length > 0) {
       let cleanMultiClip = multiClip.replace(`"`, '')
       cleanMultiClip = cleanMultiClip.replace(`'`, '')
 
@@ -241,7 +241,7 @@ class CreateImageRequest {
       })
     }
 
-    if (useMultiDenoise) {
+    if (useMultiDenoise && multiDenoise.length > 0) {
       let cleanMultiDenoise = multiDenoise.replace(`"`, '')
       cleanMultiDenoise = cleanMultiDenoise.replace(`'`, '')
 
@@ -255,7 +255,7 @@ class CreateImageRequest {
       })
     }
 
-    if (useMultiSteps) {
+    if (useMultiSteps && multiSteps.length > 0) {
       let cleanMultiSteps = multiSteps.replace(`"`, '')
       cleanMultiSteps = cleanMultiSteps.replace(`'`, '')
 
@@ -269,7 +269,7 @@ class CreateImageRequest {
       })
     }
 
-    if (useMultiGuidance) {
+    if (useMultiGuidance && multiGuidance.length > 0) {
       let cleanMulti = multiGuidance.replace(`"`, '')
       cleanMulti = cleanMulti.replace(`'`, '')
 

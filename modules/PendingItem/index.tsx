@@ -30,6 +30,7 @@ import clsx from 'clsx'
 import ImageThumbnail from './ImageThumbnail'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import { IconInfoHexagon } from '@tabler/icons-react'
+import { uuidv4 } from 'utils/appUtils'
 
 const RATINGS_ENABLED = false
 
@@ -87,6 +88,7 @@ const PendingItem = memo(
       jobDetails.orientationType = jobDetails.orientation
 
       const clonedParams = new CreateImageRequest(jobDetails)
+      clonedParams.jobId = uuidv4()
       clonedParams.useAllModels = false
       clonedParams.useAllSamplers = false
       clonedParams.numImages = 1
@@ -96,8 +98,8 @@ const PendingItem = memo(
         context: '/pages/pending'
       })
 
-      await createImageJob(clonedParams)
       deletePendingJob(jobId)
+      await createImageJob(clonedParams)
       window.scrollTo(0, 0)
     }
 
