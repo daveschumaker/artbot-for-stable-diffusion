@@ -264,6 +264,36 @@ const PendingPage = () => {
           </Button>
         </FlexRow>
       </FlexRow>
+      {AppSettings.get('useWorkerId') && (
+        <div style={{ paddingTop: '12px' }}>
+          <Accordion>
+            <AccordionItem
+              title={
+                <FlexRow gap={4}>
+                  <IconInfoTriangle />
+                  <strong>Using single worker</strong>
+                </FlexRow>
+              }
+            >
+              <div
+                className="text-amber-400 font-semibold rounded border border-amber-400"
+                style={{
+                  border: '1px solid rgb(251 191 36)',
+                  fontSize: '14px',
+                  fontWeight: 700,
+                  margin: '8px 0',
+                  padding: '8px'
+                }}
+              >
+                FYI: You are currently sending jobs to only one worker. Jobs may
+                not complete if worker is not available or under heavy load, or
+                certain request parameters aren&apos;t available (i.e., model,
+                image resolution, post-processors).
+              </div>
+            </AccordionItem>
+          </Accordion>
+        </div>
+      )}
       <MaxWidth
         style={{
           display: 'flex',
@@ -272,36 +302,6 @@ const PendingPage = () => {
           position: 'relative'
         }}
       >
-        {AppSettings.get('useWorkerId') && (
-          <div style={{ paddingTop: '12px' }}>
-            <Accordion>
-              <AccordionItem
-                title={
-                  <FlexRow gap={4}>
-                    <IconInfoTriangle />
-                    <strong>Using single worker</strong>
-                  </FlexRow>
-                }
-              >
-                <div
-                  className="text-amber-400 font-semibold rounded border border-amber-400"
-                  style={{
-                    border: '1px solid rgb(251 191 36)',
-                    fontSize: '14px',
-                    fontWeight: 700,
-                    margin: '8px 0',
-                    padding: '8px'
-                  }}
-                >
-                  FYI: You are currently sending jobs to only one worker. Jobs
-                  may not complete if worker is not available or under heavy
-                  load, or certain request parameters aren&apos;t available
-                  (i.e., model, image resolution, post-processors).
-                </div>
-              </AccordionItem>
-            </Accordion>
-          </div>
-        )}
         <VirtualListContainer
           completedJobs={done}
           items={sorted}
