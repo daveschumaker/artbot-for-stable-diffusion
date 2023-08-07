@@ -39,6 +39,7 @@ import { CreatePageQueryParams } from 'types/artbot'
 import OptionsPanel from 'app/_pages/CreatePage/OptionsPanel'
 import FlexRow from 'app/_components/FlexRow'
 import CreatePageSettings from './Settings'
+import FormErrorMessage from './ActionPanel/FormErrorMessage'
 
 const defaultState: DefaultPromptInput = new DefaultPromptInput()
 
@@ -468,7 +469,9 @@ const CreatePage = ({ modelDetails = {} }: any) => {
         )}
 
         <PromptInput input={input} setInput={setInput} />
-
+        <FlexRow>
+          <FormErrorMessage errors={errors} />
+        </FlexRow>
         <FlexRow
           gap={4}
           style={{ alignItems: 'flex-start', position: 'relative' }}
