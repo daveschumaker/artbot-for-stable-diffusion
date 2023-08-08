@@ -1,7 +1,6 @@
 'use client'
 
 import { IconCalculator, IconSquarePlus, IconTrash } from '@tabler/icons-react'
-import FormErrorMessage from './FormErrorMessage'
 
 import { Button } from 'components/UI/Button'
 import Linker from 'components/UI/Linker'
@@ -50,8 +49,6 @@ const ActionPanel = ({
 
   return (
     <>
-      <FormErrorMessage errors={errors} />
-
       <div className="flex flex-col items-start justify-end w-full gap-2 mt-2 mb-4 md:flex-row">
         <div className="flex flex-col justify-start w-full gap-2 md:w-1/2">
           <div className="flex flex-row justify-end gap-2 sm:mt-0">

@@ -1,3 +1,4 @@
+import { IconInfoTriangle } from '@tabler/icons-react'
 import React from 'react'
 import Errors from 'utils/errors'
 
@@ -21,8 +22,15 @@ function FormErrorMessage({ errors }: Props) {
           return (
             <div
               key={key}
-              className={'mt-2 font-semibold ' + Errors[key].className}
+              className={'mt-2 ' + Errors[key].className}
+              style={{
+                color: 'rgb(251 191 36)',
+                display: 'flex',
+                fontWeight: 600,
+                gap: '4px'
+              }}
             >
+              <IconInfoTriangle stroke={1.5} />
               {Errors[key].text}
             </div>
           )

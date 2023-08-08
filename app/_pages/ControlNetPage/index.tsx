@@ -46,6 +46,8 @@ import Denoise from 'app/_modules/AdvancedOptionsPanel/Denoise'
 import ClipSkip from 'app/_modules/AdvancedOptionsPanel/ClipSkip'
 import { baseHost, basePath } from 'BASE_PATH'
 import { showSuccessToast } from 'utils/notificationUtils'
+import FlexRow from 'app/_components/FlexRow'
+import FormErrorMessage from '../CreatePage/ActionPanel/FormErrorMessage'
 
 // Kind of a hacky way to persist output of image over the course of a session.
 let cachedImageDetails = {}
@@ -368,7 +370,9 @@ const ControlNetPage = () => {
         </Section>
         <MiscOptions input={input} setInput={setInput} />
       </Section>
-
+      <FlexRow>
+        <FormErrorMessage errors={errors} />
+      </FlexRow>
       <ActionPanel
         disableSubmit={!input.source_image}
         errors={errors}
