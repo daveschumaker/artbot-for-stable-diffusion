@@ -1,0 +1,12 @@
+
+version: '3'
+services:
+  artbot:
+    image: nextjs-app
+    ports:
+      - 3000:3000
+
+
+
+
+#  docker-compose up
