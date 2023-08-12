@@ -1,3 +1,11 @@
+# 2023.08.08
+
+- I've been traveling for work, so updates have been a bit slow.
+- A bunch of new style tags have been added, thanks to Anonnymous Derpling.
+- Fix: display issue with "using single worker" warning.
+- Fix: display issue with "fixed seed / multiple images" warning
+- Fix (I think): retry button causing job to disappear.
+
 # 2023.08.04
 
 - Fix: Issue with multi-denoise still being active, even if you are no longer using img2img mode. Thanks to Sidorok for reporting on Discord.
