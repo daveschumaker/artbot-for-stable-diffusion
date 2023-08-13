@@ -3,6 +3,7 @@
 - Fix: Issue when adding images from a URL. Thanks to the aislingeach on Discord for reporting this.
 - Fix: Issue when trying to select "use all samplers". Only one image was ever generated. Thanks to magic on Discord for reporting this.
 - Not really user facing, but I've added a whole bunch of tests for verifying that certain aspects of job creation are working correctly. It's a bunch of complex code and I've often had to just rely on bug reports to find out if something it broken. That's bad. I need to be more proactive in testing the logic before it ever goes out.
+- Fix: "Use slow worker" setting gets reset when leaving and coming back to creation page. Thanks to hmal for reporting this on Discord.
 - Also, there's been a couple of really cool PRs that have been submitted!
 - You can now run ArtBot using Docker. Thanks to pawkygame [for the PR](https://github.com/daveschumaker/artbot-for-stable-diffusion/pull/142).
 - When exporting / downloading JPEG files, basic metadata will now be included in the EXIF details. Thanks to tijszwinkels on GitHub [for the PR](https://github.com/daveschumaker/artbot-for-stable-diffusion/pull/147)!
