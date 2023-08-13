@@ -65,9 +65,28 @@ describe('createImageJob', () => {
     // expect(createPendingJobMock).toHaveBeenCalledTimes(1)
   })
 
+  it('should create 4 jobs with different CLIP values', async () => {
+    const newImageRequest = Object.assign({}, baseImageRequest)
+    newImageRequest.useMultiClip = true
+    newImageRequest.multiClip = [1, 2, 3, 4] as unknown as never[]
+    const result = await createImageJob(newImageRequest as CreateImageRequest)
+
+    expect(result.success).toBe(true)
+    expect(require('./pendingUtils').createPendingJob).toHaveBeenCalledTimes(4)
+  })
+
+  it('should create 2 jobs with useMultiGuidance', async () => {
+    const newImageRequest = Object.assign({}, baseImageRequest)
+    newImageRequest.useMultiGuidance = true
+    newImageRequest.multiGuidance = [1, 2] as unknown as never[]
+    const result = await createImageJob(newImageRequest as CreateImageRequest)
+
+    expect(result.success).toBe(true)
+    expect(require('./pendingUtils').createPendingJob).toHaveBeenCalledTimes(2)
+  })
+
   it('should create 3 jobs with different denoise values', async () => {
     const newImageRequest = Object.assign({}, baseImageRequest)
-    newImageRequest.useMultiDenoise = true
     newImageRequest.useMultiDenoise = true
     newImageRequest.source_image = true as unknown as string
     newImageRequest.multiDenoise = [1, 2, 3] as unknown as never[]
@@ -88,5 +107,42 @@ describe('createImageJob', () => {
 
     expect(result.success).toBe(true)
     expect(require('./pendingUtils').createPendingJob).toHaveBeenCalledTimes(9)
+  })
+
+  it('should create correct number of jobs with useAllSamplers', async () => {
+    const newImageRequest = Object.assign({}, baseImageRequest)
+    newImageRequest.useAllSamplers = true
+    const result = await createImageJob(newImageRequest as CreateImageRequest)
+
+    expect(result.success).toBe(true)
+    expect(require('./pendingUtils').createPendingJob).toHaveBeenCalledTimes(11) // Hard code 11 for now
+  })
+
+  it('should create correct number of jobs with promptMatrix', async () => {
+    const newImageRequest = Object.assign({}, baseImageRequest)
+    newImageRequest.prompt = 'Test {1|2|3}'
+    const result = await createImageJob(newImageRequest as CreateImageRequest)
+
+    expect(result.success).toBe(true)
+    expect(require('./pendingUtils').createPendingJob).toHaveBeenCalledTimes(3)
+  })
+
+  it('should create correct number of jobs with negative promptMatrix', async () => {
+    const newImageRequest = Object.assign({}, baseImageRequest)
+    newImageRequest.negative = 'Test {1|2|3}'
+    const result = await createImageJob(newImageRequest as CreateImageRequest)
+
+    expect(result.success).toBe(true)
+    expect(require('./pendingUtils').createPendingJob).toHaveBeenCalledTimes(3)
+  })
+
+  it('should create correct number of jobs with combination of positive and negative promptMatrix', async () => {
+    const newImageRequest = Object.assign({}, baseImageRequest)
+    newImageRequest.prompt = 'Test {1|2}'
+    newImageRequest.negative = 'Test {1|2|3}'
+    const result = await createImageJob(newImageRequest as CreateImageRequest)
+
+    expect(result.success).toBe(true)
+    expect(require('./pendingUtils').createPendingJob).toHaveBeenCalledTimes(6)
   })
 })
