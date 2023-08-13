@@ -2,6 +2,7 @@ jest.mock('./pendingUtils', () => ({
   createPendingJob: jest.fn(() => true)
 }))
 
+import CreateImageRequest from 'models/CreateImageRequest'
 import { createImageJob } from './imageCache'
 
 const baseImageRequest = {
@@ -55,28 +56,37 @@ describe('createImageJob', () => {
     jest.clearAllMocks() // Clear mock function call history before each test
   })
 
-  it('should create a single job without any modifications', async () => {
+  it('should create 1 job without any modifications', async () => {
     const newImageRequest = Object.assign({}, baseImageRequest)
-
-    // @ts-ignore
-    const result = await createImageJob(newImageRequest)
+    const result = await createImageJob(newImageRequest as CreateImageRequest)
 
     expect(result.success).toBe(true)
     expect(require('./pendingUtils').createPendingJob).toHaveBeenCalledTimes(1)
     // expect(createPendingJobMock).toHaveBeenCalledTimes(1)
   })
 
-  it('should create three jobs with different denoise values', async () => {
+  it('should create 3 jobs with different denoise values', async () => {
     const newImageRequest = Object.assign({}, baseImageRequest)
     newImageRequest.useMultiDenoise = true
-    // @ts-ignore
-    newImageRequest.source_image = true
-    // @ts-ignore
-    newImageRequest.multiDenoise = [1, 2, 3]
-    // @ts-ignore
-    const result = await createImageJob(newImageRequest)
+    newImageRequest.useMultiDenoise = true
+    newImageRequest.source_image = true as unknown as string
+    newImageRequest.multiDenoise = [1, 2, 3] as unknown as never[]
+    const result = await createImageJob(newImageRequest as CreateImageRequest)
 
     expect(result.success).toBe(true)
     expect(require('./pendingUtils').createPendingJob).toHaveBeenCalledTimes(3)
+  })
+
+  it('should create 9 jobs with different denoise values and step counts', async () => {
+    const newImageRequest = Object.assign({}, baseImageRequest)
+    newImageRequest.useMultiDenoise = true
+    newImageRequest.source_image = true as unknown as string
+    newImageRequest.multiDenoise = [1, 2, 3] as unknown as never[]
+    newImageRequest.useMultiSteps = true
+    newImageRequest.multiSteps = [1, 2, 3] as unknown as never[]
+    const result = await createImageJob(newImageRequest as CreateImageRequest)
+
+    expect(result.success).toBe(true)
+    expect(require('./pendingUtils').createPendingJob).toHaveBeenCalledTimes(9)
   })
 })
