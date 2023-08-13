@@ -1,4 +1,5 @@
 // @ts-nocheck
+import piexif from 'piexifjs';
 
 export const initBlob = () => {
   if (!Blob.prototype.toPNG) {
@@ -14,8 +15,8 @@ export const initBlob = () => {
   }
 
   if (!Blob.prototype.toJPEG) {
-    Blob.prototype.toJPEG = function (callback: any) {
-      return convertBlob(this, 'image/jpeg', callback)
+    Blob.prototype.toJPEG = function (callback: any, userComment: string) {
+      return convertBlob(this, 'image/jpeg', callback, userComment)
     }
   }
 }
@@ -23,7 +24,8 @@ export const initBlob = () => {
 function convertBlob(
   blob: Blob | MediaSource,
   type: string,
-  callback: (arg0: Blob) => void
+  callback: (arg0: Blob) => void,
+  userComment: string,
 ) {
   return new Promise((resolve) => {
     let canvas = <HTMLCanvasElement>createTempCanvas()
@@ -34,16 +36,33 @@ function convertBlob(
       canvas.width = image.width
       canvas.height = image.height
       ctx.drawImage(image, 0, 0)
-      let result = dataURItoBlob(canvas.toDataURL(type, 1))
+      let result = dataURItoBlob(canvas.toDataURL(type, 1), userComment)
       if (callback) callback(result)
       else resolve(result)
     }
   })
 }
 
-function dataURItoBlob(dataURI: string) {
+function dataURItoBlob(dataURI: string, userComment: string) {
   var byteString = atob(dataURI.split(',')[1])
   var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+
+  // Add exif data if filetype is jpeg, and userComment is set
+  if (mimeString == "image/jpeg") {
+    const zeroth = {
+      [piexif.ImageIFD.Software]: "ArtBot - Create images with Stable Diffusion, utilizing the AI Horde"
+    };
+    const exif = userComment ? {
+      [piexif.ExifIFD.UserComment]: `ASCII\0\0\0${userComment}`
+    } : undefined;
+    const exifObj = {
+      "0th": zeroth,
+      "Exif": exif
+    };
+    const exifbytes = piexif.dump(exifObj);
+    byteString = piexif.insert(exifbytes, byteString)
+  }
+
   var ab = new ArrayBuffer(byteString.length)
   var ia = new Uint8Array(ab)
   for (var i = 0; i < byteString.length; i++) {
