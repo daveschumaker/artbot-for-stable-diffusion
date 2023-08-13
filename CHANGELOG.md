@@ -1,3 +1,14 @@
+# 2023.08.12
+
+- Fix: Issue when adding images from a URL. Thanks to the aislingeach on Discord for reporting this.
+- Fix: Issue when trying to select "use all samplers". Only one image was ever generated. Thanks to magic on Discord for reporting this.
+- Not really user facing, but I've added a whole bunch of tests for verifying that certain aspects of job creation are working correctly. It's a bunch of complex code and I've often had to just rely on bug reports to find out if something it broken. That's bad. I need to be more proactive in testing the logic before it ever goes out.
+
+# 2023.08.09
+
+- MILESTONE: 🎉🎉🎉🎉🎉🎉 ‼️‼️‼️ **10,000,000 images** have been created with ArtBot!!!!‼️‼️‼️ 🎉🎉🎉🎉🎉🎉
+- I remember when I was surprised and amazed to have gotten our first 1,000 images generated. It took 2 days. And 998 of them were probably me testing things out. Now, we're pushing over 1,000 images an hour. It's an incredible pace and represents about 12.5% of all images ever generated using the AI Horde! Thank you so much for all the use and support. Here's to the next 10 million!
+
 # 2023.08.08
 
 - I've been traveling for work, so updates have been a bit slow.
