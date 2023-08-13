@@ -1,4 +1,4 @@
-import { DEFAULT_SAMPLER_ARRAY, MAX_IMAGES_PER_JOB } from '../_constants'
+import { MAX_IMAGES_PER_JOB } from '../_constants'
 import CreateImageRequest from '../models/CreateImageRequest'
 import RerollImageRequest from '../models/RerollImageRequest'
 import { logError, uuidv4 } from './appUtils'
@@ -261,40 +261,9 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
     return {
       success: true
     }
-  } else if (imageParams.useAllSamplers) {
-    imageParams.numImages = 1
+  }
 
-    let samplerArray = [...DEFAULT_SAMPLER_ARRAY]
-
-    if (imageParams.models[0] === 'stable_diffusion_2') {
-      samplerArray = ['dpmsolver']
-    }
-
-    for (const sampler of samplerArray) {
-      clonedParams = await cloneImageParams(imageParams)
-      clonedParams.sampler = sampler
-
-      if (clonedParams.models[0] === 'random') {
-        clonedParams.models = [
-          CreateImageRequest.getRandomModel({ imageParams: clonedParams })
-        ]
-      }
-      clonedParams.modelVersion = getModelVersion(clonedParams.models[0])
-
-      if (clonedParams.orientation === 'random') {
-        clonedParams = {
-          ...clonedParams,
-          ...CreateImageRequest.getRandomOrientation()
-        }
-      }
-
-      await addJobToPending(clonedParams)
-    }
-
-    return {
-      success: true
-    }
-  } else if (imageParams.useAllModels) {
+  if (imageParams.useAllModels) {
     imageParams.numImages = 1
     const models = validModelsArray({ imageParams })
 

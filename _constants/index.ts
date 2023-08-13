@@ -15,6 +15,8 @@ export const MAX_DIMENSIONS_LOGGED_IN = 2048
 export const MAX_DIMENSIONS_LOGGED_OUT = 1024
 export const MAX_STEPS_LOGGED_IN = 500
 export const POLL_COMPLETED_JOBS_INTERVAL = 1500 // ms
+
+// TODO: Move into Samplers model file and add better ways to sort based on input type (txt2img vs img2img)
 export const DEFAULT_SAMPLER_ARRAY = [
   'k_dpm_2_a',
   'k_dpm_2',
