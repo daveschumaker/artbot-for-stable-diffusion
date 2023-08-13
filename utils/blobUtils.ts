@@ -48,9 +48,17 @@ function dataURItoBlob(dataURI: string, userComment: string) {
   var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
 
   // Add exif data if filetype is jpeg, and userComment is set
-  if (userComment && mimeString == "image/jpeg") {
-    const exif = {[piexif.ExifIFD.UserComment]: `ASCII\0\0\0${userComment}`};
-    const exifObj = {"Exif":exif};
+  if (mimeString == "image/jpeg") {
+    const zeroth = {
+      [piexif.ImageIFD.Software]: "ArtBot - Create images with Stable Diffusion, utilizing the AI Horde"
+    };
+    const exif = userComment ? {
+      [piexif.ExifIFD.UserComment]: `ASCII\0\0\0${userComment}`
+    } : undefined;
+    const exifObj = {
+      "0th": zeroth,
+      "Exif": exif
+    };
     const exifbytes = piexif.dump(exifObj);
     byteString = piexif.insert(exifbytes, byteString)
   }
