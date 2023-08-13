@@ -729,8 +729,13 @@ export const downloadFile = async (image: any) => {
     }
 
     if (fileType === 'jpg') {
+      // For jpeg, add image parameters in exif metadata
+      const metaData: string = `${image.prompt}\n` +
+        `Steps: ${image.steps}, Sampler: ${image.sampler}, CFG scale: ${image.cfg_scale}, Seed: ${image.seed}` +
+        `, Size: ${image.width}x${image.height}, model: ${image.models}`
+
       // @ts-ignore
-      newBlob = await input?.toJPEG()
+      newBlob = await input?.toJPEG(null, metaData)
     }
 
     if (fileType === 'webp') {
