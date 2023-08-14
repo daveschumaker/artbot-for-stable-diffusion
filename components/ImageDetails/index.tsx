@@ -7,7 +7,7 @@ import PlaylistXIcon from 'components/icons/PlaylistXIcon'
 import SettingsIcon from 'components/icons/SettingsIcon'
 import Linker from 'components/UI/Linker'
 import ImageParamsForApi from 'models/ImageParamsForApi'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FullScreen, useFullScreenHandle } from 'react-full-screen'
 import { IImageDetails } from 'types'
 import { SourceProcessing } from 'utils/promptUtils'
@@ -42,6 +42,19 @@ const ImageDetails = ({
   const [showImg2ImgModal, setShowImg2ImgModal] = useState(false)
   const [showTiles, setShowTiles] = useState(false)
   const [showRequestParams, setShowRequestParams] = useState(false)
+  const [windowHeight, setWindowHeight] = useState(window.innerHeight)
+
+  const updateWindowHeight = () => {
+    setWindowHeight(window.innerHeight)
+  }
+
+  useEffect(() => {
+    window.addEventListener('resize', updateWindowHeight)
+
+    return () => {
+      window.removeEventListener('resize', updateWindowHeight)
+    }
+  }, [])
 
   if (!imageDetails || !imageDetails.id) {
     logError({
@@ -144,7 +157,7 @@ const ImageDetails = ({
             className={clsx(styles.img)}
             src={'data:image/webp;base64,' + imageDetails.base64String}
             alt={imageDetails.prompt}
-            style={{ ...imgStyle }}
+            style={{ ...imgStyle, maxHeight: `${windowHeight - 64}px` }}
           />
         </div>
       </div>
