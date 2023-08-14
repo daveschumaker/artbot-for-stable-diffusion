@@ -23,8 +23,12 @@ const cache = {
   details: {}
 }
 
+let pendingModelsRequest = false
 const fetchAvailableModels = async () => {
   const __DEV__ = process.env.NODE_ENV !== 'production'
+
+  if (pendingModelsRequest) return
+  pendingModelsRequest = true
 
   try {
     const resp = await fetch(`https://aihorde.net/api/v2/status/models`, {
@@ -46,6 +50,8 @@ const fetchAvailableModels = async () => {
   } catch (err) {
     console.error(err)
     return false
+  } finally {
+    pendingModelsRequest = false
   }
 }
 
