@@ -13,6 +13,7 @@ import { fetchCompletedJobs } from './db'
 import { basePath } from 'BASE_PATH'
 import ImageModels from 'models/ImageModels'
 import DefaultPromptInput from 'models/DefaultPromptInput'
+import ImageParamsForApi from 'models/ImageParamsForApi'
 
 interface CreateImageJob {
   base64String?: string
@@ -730,7 +731,8 @@ export const downloadFile = async (image: any) => {
 
     if (fileType === 'jpg') {
       // For jpeg, add image parameters in exif metadata
-      const metaData: string = `${image.prompt}\n` +
+      const metaData: string =
+        `${image.prompt}\n` +
         `Steps: ${image.steps}, Sampler: ${image.sampler}, CFG scale: ${image.cfg_scale}, Seed: ${image.seed}` +
         `, Size: ${image.width}x${image.height}, model: ${image.models}`
 
@@ -981,4 +983,84 @@ export const isBase64UrlImage = async (base64String: string) => {
       resolve(false)
     }
   })
+}
+
+export const cleanDataForApiRequestDisplay = (imageDetails: any) => {
+  // @ts-ignore
+  const params = new ImageParamsForApi(imageDetails)
+
+  // @ts-ignore
+
+  if (params.source_image) {
+    // @ts-ignore
+    params.source_image = '[true]'
+  }
+
+  // @ts-ignore
+  if (params.source_mask) {
+    // @ts-ignore
+    params.source_mask = '[true]'
+  }
+
+  // @ts-ignore
+  delete params.nsfw
+  // @ts-ignore
+  delete params.censor_nsfw
+  // @ts-ignore
+  delete params.trusted_workers
+  // @ts-ignore
+  delete params.shared
+  // @ts-ignore
+  delete params.slow_workers
+  // @ts-ignore
+  delete params.r2
+  // @ts-ignore
+  delete params.dry_run
+
+  /*** Remove these as they are the default options ***/
+  // @ts-ignore
+  if (params.params.post_processing.length === 0) {
+    // @ts-ignore
+    delete params.params.post_processing
+  }
+
+  // @ts-ignore
+  if (params.params.clip_skip === 1) {
+    // @ts-ignore
+    delete params.params.clip_skip
+  }
+
+  // @ts-ignore
+  if (params.params.n === 1) {
+    // @ts-ignore
+    delete params.params.n
+  }
+
+  // @ts-ignore
+  if (!params.params.tiling) {
+    // @ts-ignore
+    delete params.params.tiling
+  }
+
+  // @ts-ignore
+  if (params.replacement_filter) {
+    // @ts-ignore
+    delete params.replacement_filter
+  }
+
+  // @ts-ignore
+  if (!params.params.return_control_map) {
+    // @ts-ignore
+    delete params.params.return_control_map
+  }
+
+  // @ts-ignore
+  if (!params.params.image_is_control) {
+    // @ts-ignore
+    delete params.params.image_is_control
+  }
+
+  console.log(params)
+
+  return params
 }

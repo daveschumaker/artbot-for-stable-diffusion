@@ -6,7 +6,6 @@ import PhotoUpIcon from 'components/icons/PhotoUpIcon'
 import PlaylistXIcon from 'components/icons/PlaylistXIcon'
 import SettingsIcon from 'components/icons/SettingsIcon'
 import Linker from 'components/UI/Linker'
-import ImageParamsForApi from 'models/ImageParamsForApi'
 import React, { useEffect, useState } from 'react'
 import { FullScreen, useFullScreenHandle } from 'react-full-screen'
 import { IImageDetails } from 'types'
@@ -19,6 +18,7 @@ import Img2ImgModal from 'components/ImagePage/Img2ImgModal'
 import ParentImage from 'app/_components/ParentImage'
 import { logError } from 'utils/appUtils'
 import { userInfoStore } from 'store/userStore'
+import { cleanDataForApiRequestDisplay } from 'utils/imageUtils'
 
 interface Props {
   imageDetails: IImageDetails
@@ -75,26 +75,6 @@ const ImageDetails = ({
   const handleOnTilingClick = (bool: boolean) => {
     handleTiling(bool)
     setShowTiles(bool)
-  }
-
-  const cleanData = () => {
-    // @ts-ignore
-    const params = new ImageParamsForApi(imageDetails)
-
-    // @ts-ignore
-
-    if (params.source_image) {
-      // @ts-ignore
-      params.source_image = '[true]'
-    }
-
-    // @ts-ignore
-    if (params.source_mask) {
-      // @ts-ignore
-      params.source_mask = '[true]'
-    }
-
-    return params
   }
 
   const modelName =
@@ -251,7 +231,11 @@ const ImageDetails = ({
             >
               {showRequestParams && (
                 <pre className="whitespace-pre-wrap">
-                  {JSON.stringify(cleanData(), null, 2)}
+                  {JSON.stringify(
+                    cleanDataForApiRequestDisplay(imageDetails),
+                    null,
+                    2
+                  )}
                 </pre>
               )}
               {!showRequestParams && (
