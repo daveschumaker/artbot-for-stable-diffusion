@@ -1,6 +1,7 @@
-import { IconShare } from '@tabler/icons-react'
+import { IconRefresh, IconShare } from '@tabler/icons-react'
 import { createShortlink } from 'api/createShortlink'
 import { baseHost, basePath } from 'BASE_PATH'
+import clsx from 'clsx'
 import ImageParamsForApi from 'models/ImageParamsForApi'
 import { useState } from 'react'
 import { userInfoStore } from 'store/userStore'
@@ -77,12 +78,18 @@ export default function ShortlinkButton({
 
   return (
     <div
-      className={styles['button-icon']}
+      className={clsx(
+        styles['button-icon'],
+        shortlinkPending && styles.buttonLoading
+      )}
       onClick={async () => {
         getShortlink()
       }}
     >
-      <IconShare stroke={1.5} />
+      {shortlinkPending && (
+        <IconRefresh className={styles.spinner} stroke={1.5} />
+      )}
+      {!shortlinkPending && <IconShare stroke={1.5} />}
     </div>
   )
 }

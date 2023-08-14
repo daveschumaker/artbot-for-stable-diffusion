@@ -9,3 +9,23 @@
 .button-icon:hover {
   background-color: gray;
 }
+
+.buttonLoading {
+  background-color: gray;
+  cursor: default;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+  cursor: unset !important;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
