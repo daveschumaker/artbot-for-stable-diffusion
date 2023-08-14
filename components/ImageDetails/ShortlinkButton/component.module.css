@@ -1,0 +1,11 @@
+.button-icon {
+  cursor: pointer;
+  display: flex;
+  padding: 4px;
+  /* background-color: green; */
+  border-radius: 4px;
+}
+
+.button-icon:hover {
+  background-color: gray;
+}
