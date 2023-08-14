@@ -1,9 +1,14 @@
 import { IconAlertTriangle } from '@tabler/icons-react'
+import FlexRow from 'app/_components/FlexRow'
+import MaxWidth from 'app/_components/MaxWidth'
+import Select from 'app/_components/Select'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { Button } from 'components/UI/Button'
+import { useState } from 'react'
+import { Value } from 'types'
 import { sleep } from 'utils/sleep'
 
-async function downloadDbAsJson(chunkSize = 250) {
+async function downloadDbAsJson(chunkSize: number) {
   // Fetch the array from the database (replace this with your database query)
   // @ts-ignore
   const arr = await window._artbotDb.completed.toArray()
@@ -23,7 +28,7 @@ async function downloadDbAsJson(chunkSize = 250) {
 
   // Function to download a batch of JSON data
   function downloadBatch(jsonData: any, index: number) {
-    const blob = new Blob([jsonData], { type: 'application/json' })
+    let blob = new Blob([jsonData], { type: 'application/json' })
 
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
@@ -34,6 +39,9 @@ async function downloadDbAsJson(chunkSize = 250) {
     document.body.removeChild(link)
 
     URL.revokeObjectURL(url)
+
+    // Attempt to handle OOM condition
+    blob = null as unknown as Blob
   }
 
   let endIndex = Math.min(rowsPerBatch, arr.length)
@@ -41,8 +49,8 @@ async function downloadDbAsJson(chunkSize = 250) {
   async function processArrayInBatches(index = 1, startIndex = 0) {
     if (startIndex >= arr.length) return
 
-    const batch = arr.slice(startIndex, endIndex)
-    const jsonData = convertBatchToJson(batch)
+    let batch = arr.slice(startIndex, endIndex)
+    let jsonData = convertBatchToJson(batch)
     downloadBatch(jsonData, index)
 
     startIndex = endIndex
@@ -50,27 +58,67 @@ async function downloadDbAsJson(chunkSize = 250) {
     console.log(`new end?`, endIndex)
     index++
 
-    await sleep(500)
+    await sleep(1000)
+
+    // Attempt to handle OOM condition
+    batch = null
+    jsonData = null as unknown as string
+
     processArrayInBatches(index, startIndex)
   }
 
   processArrayInBatches()
 }
 
-export default function LastResortExport({ chunkSize }: { chunkSize: number }) {
+export default function LastResortExport() {
+  const [filesPer, setFilesPer] = useState({
+    value: 100,
+    label: '100 images / zip'
+  })
+
   return (
     <div style={{ marginTop: '8px' }}>
       <SubSectionTitle>
         Export Method
-        <div className="text-xs font-[400]" style={{ maxWidth: '480px' }}>
+        <div className="text-xs" style={{ fontWeight: 400, maxWidth: '480px' }}>
           Automatically download a series of raw JSON files directly from the
           browser&apos;s database. This is useful in instances where the browser
           (usually Firefox) is having trouble initializing the Dexie library.
         </div>
+        <div
+          style={{
+            fontSize: '12px',
+            fontWeight: 700,
+            maxWidth: '480px',
+            paddingTop: '8px'
+          }}
+        >
+          (!) Adjust number of rows per zip file if you encounter memory errors
+          or the browser crashing.
+        </div>
       </SubSectionTitle>
-      <Button onClick={() => downloadDbAsJson(chunkSize)}>
-        <IconAlertTriangle /> Download JSON
-      </Button>
+      <FlexRow gap={8}>
+        <Button onClick={() => downloadDbAsJson(filesPer.value)}>
+          <IconAlertTriangle /> Download JSON
+        </Button>
+        <MaxWidth style={{ margin: 0, maxWidth: '200px' }}>
+          <Select
+            options={[
+              { value: 25, label: '25 images / zip' },
+              { value: 50, label: '50 images / zip' },
+              { value: 100, label: '100 images / zip' },
+              { value: 250, label: '250 images / zip' },
+              { value: 500, label: '500 images / zip' },
+              { value: 750, label: '750 images / zip' }
+            ]}
+            onChange={(option: any) => {
+              setFilesPer(option)
+            }}
+            inputMode="none"
+            value={filesPer as unknown as Value}
+          />
+        </MaxWidth>
+      </FlexRow>
     </div>
   )
 }
