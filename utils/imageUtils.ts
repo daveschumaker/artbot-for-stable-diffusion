@@ -733,6 +733,7 @@ export const downloadFile = async (image: any) => {
       // For jpeg, add image parameters in exif metadata
       const metaData: string =
         `${image.prompt}\n` +
+        ((image.negative) ? `Negative prompt: ${image.negative}\n` : ``) +
         `Steps: ${image.steps}, Sampler: ${image.sampler}, CFG scale: ${image.cfg_scale}, Seed: ${image.seed}` +
         `, Size: ${image.width}x${image.height}, model: ${image.models}`
 
