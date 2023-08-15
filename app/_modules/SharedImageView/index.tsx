@@ -8,8 +8,6 @@ import MaxWidth from 'app/_components/MaxWidth'
 import { cleanDataForApiRequestDisplay } from 'utils/imageUtils'
 
 export default function SharedImageView({ imageDetails, imageId }: any) {
-  console.log(`imageDetails`, imageDetails)
-
   return (
     <>
       <FixedMenu />
