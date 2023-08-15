@@ -40,7 +40,7 @@ export default function LastResort() {
         />
       </Section>
       <Section>
-        <LastResortExport chunkSize={chunkSize.value} />
+        <LastResortExport />
       </Section>
       <Section>
         <LastResortImport />

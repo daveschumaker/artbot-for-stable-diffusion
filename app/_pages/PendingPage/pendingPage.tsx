@@ -47,6 +47,7 @@ const PendingPage = () => {
 
   const [pendingImages, setPendingImages] = useState([])
   const [pendingJobUpdateTimestamp, setPendingJobUpdateTimestamp] = useState(0)
+  const [initLoad, setInitLoad] = useState(true)
 
   const initPageLoad = async () => {
     // @ts-ignore
@@ -56,11 +57,18 @@ const PendingPage = () => {
   }
 
   useEffect(() => {
+    if (!initLoad && getPendingJobsTimestamp() === 0) {
+      setInitLoad(false)
+    }
+  }, [initLoad])
+
+  useEffect(() => {
     const interval = setInterval(() => {
       if (pendingJobUpdateTimestamp !== getPendingJobsTimestamp()) {
         setPendingJobUpdateTimestamp(getPendingJobsTimestamp())
         // @ts-ignore
         setPendingImages(getAllPendingJobs())
+        setInitLoad(false)
       }
     }, 250)
 
@@ -345,7 +353,7 @@ const PendingPage = () => {
               </>
             )}
 
-            {sorted.length === 0 && !imageDetailsModalOpen && (
+            {sorted.length === 0 && !imageDetailsModalOpen && !initLoad && (
               <div className={styles.MobileAd}>
                 <AdContainer style={{ margin: '0 auto', maxWidth: '480px' }} />
               </div>

@@ -18,13 +18,15 @@ const mountAd = debounce(() => {
 
     if (isCarbonExist) {
       minHeight = '164px'
-    }
-
-    if (!!isCarbonExist) {
-      minHeight = '164px'
       refreshAd()
       return
     }
+
+    // if (!!isCarbonExist) {
+    //   minHeight = '164px'
+    //   refreshAd()
+    //   return
+    // }
 
     const script = document.createElement('script')
     script.src =
