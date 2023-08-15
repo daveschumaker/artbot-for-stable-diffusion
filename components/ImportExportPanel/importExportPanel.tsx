@@ -189,7 +189,7 @@ const ImportExportPanel = () => {
         </SubSectionTitle>
       </Section>
       <Section>
-        <LastResortExport chunkSize={componentState.filesPerZip.value || 100} />
+        <LastResortExport />
         <LastResortImport />
       </Section>
     </div>

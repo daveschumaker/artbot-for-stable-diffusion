@@ -6,8 +6,7 @@ import PhotoUpIcon from 'components/icons/PhotoUpIcon'
 import PlaylistXIcon from 'components/icons/PlaylistXIcon'
 import SettingsIcon from 'components/icons/SettingsIcon'
 import Linker from 'components/UI/Linker'
-import ImageParamsForApi from 'models/ImageParamsForApi'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FullScreen, useFullScreenHandle } from 'react-full-screen'
 import { IImageDetails } from 'types'
 import { SourceProcessing } from 'utils/promptUtils'
@@ -19,6 +18,7 @@ import Img2ImgModal from 'components/ImagePage/Img2ImgModal'
 import ParentImage from 'app/_components/ParentImage'
 import { logError } from 'utils/appUtils'
 import { userInfoStore } from 'store/userStore'
+import { cleanDataForApiRequestDisplay } from 'utils/imageUtils'
 
 interface Props {
   imageDetails: IImageDetails
@@ -42,6 +42,19 @@ const ImageDetails = ({
   const [showImg2ImgModal, setShowImg2ImgModal] = useState(false)
   const [showTiles, setShowTiles] = useState(false)
   const [showRequestParams, setShowRequestParams] = useState(false)
+  const [windowHeight, setWindowHeight] = useState(window.innerHeight)
+
+  const updateWindowHeight = () => {
+    setWindowHeight(window.innerHeight)
+  }
+
+  useEffect(() => {
+    window.addEventListener('resize', updateWindowHeight)
+
+    return () => {
+      window.removeEventListener('resize', updateWindowHeight)
+    }
+  }, [])
 
   if (!imageDetails || !imageDetails.id) {
     logError({
@@ -62,26 +75,6 @@ const ImageDetails = ({
   const handleOnTilingClick = (bool: boolean) => {
     handleTiling(bool)
     setShowTiles(bool)
-  }
-
-  const cleanData = () => {
-    // @ts-ignore
-    const params = new ImageParamsForApi(imageDetails)
-
-    // @ts-ignore
-
-    if (params.source_image) {
-      // @ts-ignore
-      params.source_image = '[true]'
-    }
-
-    // @ts-ignore
-    if (params.source_mask) {
-      // @ts-ignore
-      params.source_mask = '[true]'
-    }
-
-    return params
   }
 
   const modelName =
@@ -144,7 +137,7 @@ const ImageDetails = ({
             className={clsx(styles.img)}
             src={'data:image/webp;base64,' + imageDetails.base64String}
             alt={imageDetails.prompt}
-            style={{ ...imgStyle }}
+            style={{ ...imgStyle, maxHeight: `${windowHeight - 64}px` }}
           />
         </div>
       </div>
@@ -238,7 +231,11 @@ const ImageDetails = ({
             >
               {showRequestParams && (
                 <pre className="whitespace-pre-wrap">
-                  {JSON.stringify(cleanData(), null, 2)}
+                  {JSON.stringify(
+                    cleanDataForApiRequestDisplay(imageDetails),
+                    null,
+                    2
+                  )}
                 </pre>
               )}
               {!showRequestParams && (

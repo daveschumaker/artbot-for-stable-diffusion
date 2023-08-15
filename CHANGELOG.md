@@ -1,3 +1,30 @@
+# 2023.08.14
+
+- Fix: Issue when adding images from a URL. Thanks to the aislingeach on Discord for reporting this.
+- Fix: Issue when trying to select "use all samplers". Only one image was ever generated. Thanks to magic on Discord for reporting this.
+- Not really user facing, but I've added a whole bunch of tests for verifying that certain aspects of job creation are working correctly. It's a bunch of complex code and I've often had to just rely on bug reports to find out if something it broken. That's bad. I need to be more proactive in testing the logic before it ever goes out.
+- Fix: "Use slow worker" setting gets reset when leaving and coming back to creation page. Thanks to hmal for reporting this on Discord.
+- Clean up some output related to the image request parameters. Thanks to Anonymous Derpling for the suggestion.
+- Also, there's been a couple of really cool PRs that have been submitted!
+- Adjust size of image inside image preview modal so the entire thing fits on your screen (you can obviously still download the full size image).
+- Fix: issues with selecting wrong sampler when using img2img mode
+- Added some logic to handle connection issues with multiple requests for model details to AI Horde from ArtBot's server (this was probably only an issue in a development environment)
+- You can now run ArtBot using Docker. Thanks to pawkygame [for the PR](https://github.com/daveschumaker/artbot-for-stable-diffusion/pull/142).
+- When exporting / downloading JPEG files, basic metadata will now be included in the EXIF details. Thanks to tijszwinkels on GitHub [for the PR](https://github.com/daveschumaker/artbot-for-stable-diffusion/pull/147)!
+
+# 2023.08.09
+
+- MILESTONE: 🎉🎉🎉🎉🎉🎉 ‼️‼️‼️ **10,000,000 images** have been created with ArtBot!!!!‼️‼️‼️ 🎉🎉🎉🎉🎉🎉
+- I remember when I was surprised and amazed to have gotten our first 1,000 images generated. It took 2 days. And 998 of them were probably me testing things out. Now, we're pushing over 1,000 images _an hour_. It's an incredible pace and represents about 12.5% of all images ever generated using the AI Horde! Thank you so much for all the use and support. Here's to the next 10 million!
+
+# 2023.08.08
+
+- I've been traveling for work, so updates have been a bit slow.
+- A bunch of new style tags have been added, thanks to Anonnymous Derpling.
+- Fix: display issue with "using single worker" warning.
+- Fix: display issue with "fixed seed / multiple images" warning
+- Fix (I think): retry button causing job to disappear.
+
 # 2023.08.04
 
 - Fix: Issue with multi-denoise still being active, even if you are no longer using img2img mode. Thanks to Sidorok for reporting on Discord.

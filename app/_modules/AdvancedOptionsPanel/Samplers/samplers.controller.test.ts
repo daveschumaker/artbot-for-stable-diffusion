@@ -20,7 +20,7 @@ describe('samplers.controller.ts', () => {
 
     test('handle samplers for img2img', () => {
       const samplers = samplerOptions({
-        source_processing: SourceProcessing.Img2Img,
+        source_image: 'true',
         models: ['stable_diffusion']
       })
 

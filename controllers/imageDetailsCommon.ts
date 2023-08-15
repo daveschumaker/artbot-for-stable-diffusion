@@ -13,6 +13,7 @@ import { downloadFile } from '../utils/imageUtils'
 import { setImageForInterrogation } from '../utils/interrogateUtils'
 import { createPendingRerollJob } from '../utils/pendingUtils'
 import { savePrompt, SourceProcessing } from '../utils/promptUtils'
+import Samplers from 'models/Samplers'
 
 export const interrogateImage = (imageDetails: any) => {
   setImageForInterrogation(imageDetails)
@@ -89,11 +90,16 @@ export const uploadInpaint = async (imageDetails: any, options: any = {}) => {
 
   setI2iUploaded(i2iBase64String)
 
+  let sampler = imageDetails.sampler
+  if (!Samplers.validSamplersForImg2Img().includes(sampler)) {
+    sampler = 'k_dpm_2'
+  }
+
   PromptInputSettings.clear()
   savePrompt({
     imageType: imageDetails.imageType,
     prompt: imageDetails.prompt,
-    sampler: imageDetails.sampler,
+    sampler,
     steps: imageDetails.steps,
     orientation: imageDetails.orientation,
     karras: imageDetails.karras,
@@ -137,10 +143,15 @@ export const uploadImg2Img = (imageDetails: any, options: any = {}) => {
     imageDetails.models[0] = 'stable_diffusion'
   }
 
+  let sampler = imageDetails.sampler
+  if (!Samplers.validSamplersForImg2Img().includes(sampler)) {
+    sampler = 'k_dpm_2'
+  }
+
   savePrompt({
     imageType: imageDetails.imageType,
     prompt: imageDetails.prompt,
-    sampler: imageDetails.sampler,
+    sampler,
     steps: imageDetails.steps,
     orientation: imageDetails.orientation,
     karras: imageDetails.karras,

@@ -13,7 +13,7 @@ const SlowWorkers = () => {
   }
 
   useEffect(() => {
-    const isAllowed = AppSettings.get(KEY) || true
+    const isAllowed = AppSettings.get(KEY) !== false
     setOptionBoolean(isAllowed)
   }, [])
 

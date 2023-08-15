@@ -21,7 +21,8 @@ import { appInfoStore } from 'store/appStore'
 import {
   deletePendingJob,
   deletePendingJobs,
-  getAllPendingJobs
+  getAllPendingJobs,
+  getPendingJobsTimestamp
 } from 'controllers/pendingJobsCache'
 import FlexRow from 'app/_components/FlexRow'
 import { IconFilter, IconInfoTriangle, IconSettings } from '@tabler/icons-react'
@@ -45,6 +46,8 @@ const PendingPage = () => {
   const [showSettingsDropdown, setShowSettingsDropdown] = useState(false)
 
   const [pendingImages, setPendingImages] = useState([])
+  const [pendingJobUpdateTimestamp, setPendingJobUpdateTimestamp] = useState(0)
+  const [initLoad, setInitLoad] = useState(true)
 
   const initPageLoad = async () => {
     // @ts-ignore
@@ -54,15 +57,25 @@ const PendingPage = () => {
   }
 
   useEffect(() => {
+    if (!initLoad && getPendingJobsTimestamp() === 0) {
+      setInitLoad(false)
+    }
+  }, [initLoad])
+
+  useEffect(() => {
     const interval = setInterval(() => {
-      // @ts-ignore
-      setPendingImages(getAllPendingJobs())
+      if (pendingJobUpdateTimestamp !== getPendingJobsTimestamp()) {
+        setPendingJobUpdateTimestamp(getPendingJobsTimestamp())
+        // @ts-ignore
+        setPendingImages(getAllPendingJobs())
+        setInitLoad(false)
+      }
     }, 250)
 
     return () => {
       clearInterval(interval)
     }
-  }, [])
+  }, [pendingJobUpdateTimestamp])
 
   const processPending = useCallback(() => {
     const done: any = []
@@ -340,7 +353,7 @@ const PendingPage = () => {
               </>
             )}
 
-            {sorted.length === 0 && !imageDetailsModalOpen && (
+            {sorted.length === 0 && !imageDetailsModalOpen && !initLoad && (
               <div className={styles.MobileAd}>
                 <AdContainer style={{ margin: '0 auto', maxWidth: '480px' }} />
               </div>

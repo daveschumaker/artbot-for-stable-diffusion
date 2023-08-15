@@ -1,35 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 import PageTitle from 'app/_components/PageTitle'
 import clsx from 'clsx'
-import ImageParamsForApi from 'models/ImageParamsForApi'
 import FixedMenu from '../FixedMenu'
 import ModalProvider from '../ModalProvider'
 import ContentWrapper from 'app/_components/ContentWrapper'
 import MaxWidth from 'app/_components/MaxWidth'
-
-const cleanData = (imageDetails: any) => {
-  // @ts-ignore
-  const params = new ImageParamsForApi(imageDetails)
-
-  // @ts-ignore
-
-  if (params.source_image) {
-    // @ts-ignore
-    params.source_image = '[true]'
-  }
-
-  // @ts-ignore
-  if (params.source_mask) {
-    // @ts-ignore
-    params.source_mask = '[true]'
-  }
-
-  return params
-}
+import { cleanDataForApiRequestDisplay } from 'utils/imageUtils'
 
 export default function SharedImageView({ imageDetails, imageId }: any) {
-  console.log(`imageDetails`, imageDetails)
-
   return (
     <>
       <FixedMenu />
@@ -64,7 +42,7 @@ export default function SharedImageView({ imageDetails, imageId }: any) {
               >
                 <pre className="whitespace-pre-wrap">
                   {JSON.stringify(
-                    cleanData({
+                    cleanDataForApiRequestDisplay({
                       ...imageDetails,
                       ...imageDetails.params
                     }),

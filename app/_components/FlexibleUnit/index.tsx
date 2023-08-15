@@ -7,7 +7,7 @@ export default function FlexibleUnit({
   className,
   style
 }: {
-  children: ReactNode
+  children?: ReactNode
   className?: string
   style?: CSSProperties
 }) {

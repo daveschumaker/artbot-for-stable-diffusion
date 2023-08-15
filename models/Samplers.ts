@@ -94,7 +94,7 @@ class Samplers {
     const options: Array<{ value: string; label: string }> = []
 
     for (const [key, value] of Object.entries(Samplers.samplerDetails())) {
-      if (isImg2Img && value.supportsImg2Img === true) {
+      if (isImg2Img && value.supportsImg2Img === false) {
         continue
       }
 
@@ -172,6 +172,18 @@ class Samplers {
       const limitedArray = ['k_euler_a', 'k_euler']
       return limitedArray[Math.floor(Math.random() * limitedArray.length)]
     }
+  }
+
+  static validSamplersForImg2Img = () => {
+    return [
+      'DDIM',
+      'k_dpm_2_a',
+      'k_dpm_2',
+      'k_euler_a',
+      'k_euler',
+      'k_heun',
+      'k_lms'
+    ]
   }
 }
 

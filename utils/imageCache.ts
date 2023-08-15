@@ -27,6 +27,7 @@ import { createNewImage } from './imageUtils'
 import { createPendingJob } from './pendingUtils'
 import {
   CREATE_NEW_JOB_INTERVAL,
+  DEFAULT_SAMPLER_ARRAY,
   MAX_CONCURRENT_JOBS_ANON,
   MAX_CONCURRENT_JOBS_USER
 } from '../_constants'
@@ -333,6 +334,7 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
   }
 }
 
+// TODO: This whole thing needs way more robust tests.
 export const createImageJob = async (newImageRequest: CreateImageRequest) => {
   // NOTE: To debug this (usually needed when looking into "useMulti" options)
   // Disable here by returning early.
@@ -404,6 +406,28 @@ export const createImageJob = async (newImageRequest: CreateImageRequest) => {
     }
 
     addToPendingJobArray(tempArray, ['denoising_strength'])
+  }
+
+  // TODO: Handle img2img related requests
+  if (newImageRequest.useAllSamplers) {
+    if (DEBUG_MULTI) console.log(`useAllSamplers Enabled`)
+    const tempArray = []
+
+    // TODO: Need to get this from Samplers model file instead
+    let samplerArray = [...DEFAULT_SAMPLER_ARRAY]
+
+    if (newImageRequest.models[0] === 'stable_diffusion_2') {
+      samplerArray = ['dpmsolver']
+    }
+
+    for (const sampler of samplerArray) {
+      const imageRequest = Object.assign({}, newImageRequest)
+      imageRequest.numImages = 1
+      imageRequest.sampler = sampler
+      tempArray.push({ ...imageRequest })
+    }
+
+    addToPendingJobArray(tempArray, ['sampler'])
   }
 
   if (

@@ -1,5 +1,3 @@
-import { SourceProcessing } from '../../../../utils/promptUtils'
-
 export const samplerOptions = (input: any) => {
   if (input.models[0] === 'stable_diffusion_2.0') {
     return [{ value: 'dpmsolver', label: 'dpmsolver' }]
@@ -24,11 +22,7 @@ export const samplerOptions = (input: any) => {
   // }
 
   // Per hlky, these samplers do not currently work for img2img
-  if (
-    !input.img2img &&
-    input.source_processing !== SourceProcessing.Img2Img &&
-    input.source_processing !== SourceProcessing.InPainting
-  ) {
+  if (!input.source_image) {
     options.push({ value: 'k_dpm_fast', label: 'k_dpm_fast' })
     options.push({ value: 'k_dpm_adaptive', label: 'k_dpm_adaptive' })
     options.push({ value: 'k_dpmpp_2m', label: 'k_dpmpp_2m' })

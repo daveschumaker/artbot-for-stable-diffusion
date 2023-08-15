@@ -9,11 +9,12 @@ import {
   MAX_CONCURRENT_JOBS_USER,
   POLL_COMPLETED_JOBS_INTERVAL
 } from '_constants'
-import { getAllPendingJobs } from './pendingJobsCache'
+import { getAllPendingJobs, getPendingJobsTimestamp } from './pendingJobsCache'
 import AppSettings from 'models/AppSettings'
 
 let MAX_JOBS = MAX_CONCURRENT_JOBS_ANON
 let pendingJobs: Array<any> = []
+let pendingJobsUpdatedTimestamp = 0
 
 export const getPendingJobsFromCache = () => {
   return [...pendingJobs]
@@ -23,8 +24,12 @@ export const getPendingJobsFromCache = () => {
 // Periodically fetch latest pending jobs from database
 // This call ensures it only happens one time (at a set interval)
 export const fetchPendingImageJobs = async () => {
-  const jobs = getAllPendingJobs()
-  pendingJobs = [...jobs]
+  if (pendingJobsUpdatedTimestamp !== getPendingJobsTimestamp()) {
+    pendingJobsUpdatedTimestamp = getPendingJobsTimestamp()
+
+    const jobs = getAllPendingJobs()
+    pendingJobs = [...jobs]
+  }
 }
 
 const checkMultiPendingJobs = async () => {

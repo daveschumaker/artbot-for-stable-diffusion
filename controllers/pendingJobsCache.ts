@@ -13,10 +13,19 @@ interface IPendingJobs {
 }
 
 let pendingJobs: IPendingJobs = {}
+let lastUpdated = Date.now()
 
 // TODO: If people start encountering OOM errors, strip
 // base64 image from object on JobStatus.Done and
 // do a direct db lookup using the pending image modal.
+
+const updateTimestamp = () => {
+  lastUpdated = Date.now()
+}
+
+export const getPendingJobsTimestamp = () => {
+  return lastUpdated
+}
 
 const DEBUG_PENDING_CACHE = async () => {
   if (typeof window === 'undefined') {
@@ -79,11 +88,13 @@ export const deletePendingJobs = async (status?: any) => {
     // @ts-ignore
     pendingJobs = {}
   }
+  updateTimestamp()
 }
 
 export const deletePendingJob = async (jobId: string) => {
   delete pendingJobs[jobId]
   deletePendingJobFromDb(jobId)
+  updateTimestamp()
 }
 
 export const getPendingJob = (jobId: string) => {
@@ -119,6 +130,7 @@ export const setPendingJob = (pendingJob: IPendingJob) => {
 
   const { jobId } = pendingJob
   pendingJobs[jobId] = cloneDeep(pendingJob)
+  updateTimestamp()
 }
 
 // V2 due to method existing in db
@@ -140,6 +152,7 @@ export const updatePendingJobV2 = (pendingJob: IPendingJob) => {
   }
 
   pendingJobs[jobId] = cloneDeep(pendingJob)
+  updateTimestamp()
 }
 
 export const updatePendingJobProperties = (
@@ -152,6 +165,7 @@ export const updatePendingJobProperties = (
 
   const updated = Object.assign({}, pendingJobs[jobId], { ...updateObject })
   pendingJobs[jobId] = cloneDeep(updated)
+  updateTimestamp()
 }
 
 export const updatePendingJobId = (oldId: string = '', newId: string) => {
@@ -166,6 +180,7 @@ export const updatePendingJobId = (oldId: string = '', newId: string) => {
   }
 
   delete pendingJobs[oldId]
+  updateTimestamp()
 }
 
 export const updateAllPendingJobsV2 = async (
@@ -193,4 +208,6 @@ export const updateAllPendingJobsV2 = async (
     // @ts-ignore
     pendingJobs = {}
   }
+
+  updateTimestamp()
 }

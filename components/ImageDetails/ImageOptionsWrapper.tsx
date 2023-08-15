@@ -18,11 +18,7 @@ import {
   getParentJobDetails,
   updateCompletedJob
 } from 'utils/db'
-import {
-  blobToClipboard,
-  downloadFile,
-  generateBase64Thumbnail
-} from 'utils/imageUtils'
+import { blobToClipboard, downloadFile } from 'utils/imageUtils'
 
 import styles from './imageDetails.module.css'
 import AppSettings from 'models/AppSettings'
@@ -40,16 +36,12 @@ import WallIcon from 'components/icons/WallIcon'
 import ResizeIcon from 'components/icons/ResizeIcon'
 import { isiOS, uuidv4 } from 'utils/appUtils'
 import { SourceProcessing } from 'utils/promptUtils'
-import ShareIcon from 'components/icons/ShareIcon'
-import ImageParamsForApi from 'models/ImageParamsForApi'
-import { userInfoStore } from 'store/userStore'
-import { createShortlink } from 'api/createShortlink'
 import RefreshIcon from 'components/icons/RefreshIcon'
 import { deletePendingJob } from 'controllers/pendingJobsCache'
 import { getRelatedImages } from 'components/ImagePage/image.controller'
-import { baseHost, basePath } from 'BASE_PATH'
 import { useModal } from '@ebay/nice-modal-react'
 import { showErrorToast, showSuccessToast } from 'utils/notificationUtils'
+import ShortlinkButton from './ShortlinkButton'
 
 const ImageOptionsWrapper = ({
   handleClose,
@@ -83,10 +75,7 @@ const ImageOptionsWrapper = ({
   const [pendingUpscale, setPendingUpscale] = useState(false)
   const [hasParentJob, setHasParentJob] = useState(false)
   const [hasRelatedImages, setHasRelatedImages] = useState(false)
-
   const [tileSize, setTileSize] = useState('128px')
-  const [savedShortlink, setSavedShortlink] = useState('')
-  const [shortlinkPending, setShortlinkPending] = useState(false)
 
   const fetchParentJobDetails = useCallback(async () => {
     const details: IImageDetails = await getParentJobDetails(
@@ -193,63 +182,6 @@ const ImageOptionsWrapper = ({
     // Bust memoization cache
     getImageDetails.delete(imageDetails.jobId as string)
   }, [favorited, imageDetails])
-
-  const copyShortlink = (_shortlink: string) => {
-    const hostname =
-      window.location.hostname === 'localhost'
-        ? 'http://localhost:3000'
-        : baseHost
-    navigator?.clipboard
-      ?.writeText(`${hostname}${basePath}?i=${_shortlink}`)
-      .then(() => {
-        showSuccessToast({ message: 'Shortlink URL copied to your clipboard!' })
-      })
-  }
-
-  const getShortlink = async () => {
-    if (imageDetails.shortlink || savedShortlink) {
-      copyShortlink(imageDetails.shortlink || savedShortlink)
-      return
-    }
-
-    if (shortlinkPending) {
-      return
-    }
-
-    setShortlinkPending(true)
-
-    const resizedImage = await generateBase64Thumbnail(
-      imageDetails.base64String as string,
-      imageDetails.jobId as string,
-      512,
-      768,
-      0.7
-    )
-
-    const data = {
-      // @ts-ignore
-      imageParams: new ImageParamsForApi(imageDetails),
-      imageBase64: resizedImage,
-      username: userInfoStore.state.username
-    }
-
-    const shortlinkData = await createShortlink(data)
-    const { shortlink } = shortlinkData
-
-    if (shortlink) {
-      await updateCompletedJob(
-        imageDetails.id,
-        Object.assign({}, imageDetails, {
-          shortlink
-        })
-      )
-
-      copyShortlink(shortlink)
-    }
-
-    setShortlinkPending(false)
-    setSavedShortlink(shortlink)
-  }
 
   const checkFavorite = useCallback(async () => {
     const details = await getImageDetails(imageDetails.jobId as string)
@@ -483,14 +415,7 @@ const ImageOptionsWrapper = ({
             </Menu>
           </div>
           {imageDetails.source_processing === SourceProcessing.Prompt && (
-            <div
-              className={styles['button-icon']}
-              onClick={async () => {
-                getShortlink()
-              }}
-            >
-              <ShareIcon />
-            </div>
+            <ShortlinkButton imageDetails={imageDetails} />
           )}
           {imageDetails.tiling && (
             <div className={styles['button-icon']}>
