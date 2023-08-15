@@ -51,6 +51,11 @@ import AccordionItem from 'app/_components/AccordionItem'
 import Panel from 'app/_components/Panel'
 import ClipSkip from './ClipSkip'
 import Denoise from './Denoise'
+import FlexRow from 'app/_components/FlexRow'
+import ImageSquare from 'components/ImageSquare'
+import { Button } from 'components/UI/Button'
+import { SourceProcessing } from 'types/horde'
+import { IconTrash } from '@tabler/icons-react'
 
 interface Props {
   input: any
@@ -117,19 +122,54 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
           <Accordion>
             <AccordionItem
               title={
-                <SubSectionTitle style={{ paddingBottom: '0' }}>
-                  img2img options
-                </SubSectionTitle>
+                <FlexRow style={{ justifyContent: 'space-between' }}>
+                  <SubSectionTitle style={{ paddingBottom: '0' }}>
+                    img2img options
+                  </SubSectionTitle>
+                  <div>
+                    <ImageSquare
+                      imageDetails={{
+                        ...input,
+                        ...{ base64String: input.source_image, thumbnail: '' }
+                      }}
+                      imageType={input.imageType}
+                      size={24}
+                    />
+                  </div>
+                </FlexRow>
               }
             >
-              <FlexibleRow style={{ marginBottom: 0, paddingTop: '8px' }}>
-                <FlexibleUnit>
-                  <ControlNetOptions input={input} setInput={setInput} />
-                </FlexibleUnit>
-                <FlexibleUnit>
-                  <Denoise input={input} setInput={setInput} />
-                </FlexibleUnit>
-              </FlexibleRow>
+              <>
+                <FlexibleRow style={{ marginBottom: 0, paddingTop: '8px' }}>
+                  <FlexibleUnit>
+                    <ControlNetOptions input={input} setInput={setInput} />
+                  </FlexibleUnit>
+                  <FlexibleUnit>
+                    <Denoise input={input} setInput={setInput} />
+                  </FlexibleUnit>
+                </FlexibleRow>
+                <FlexibleRow style={{ marginBottom: 0, paddingTop: '8px' }}>
+                  <FlexibleUnit></FlexibleUnit>
+                  <FlexibleUnit style={{ alignItems: 'flex-end' }}>
+                    <Button
+                      theme="secondary"
+                      onClick={() => {
+                        setInput({
+                          img2img: false,
+                          imageType: '',
+                          source_image: '',
+                          source_processing: SourceProcessing.Prompt
+                        })
+                        localStorage.removeItem('img2img_base64')
+                      }}
+                      style={{ maxWidth: '50%' }}
+                    >
+                      <IconTrash stroke={1.5} />
+                      Remove image
+                    </Button>
+                  </FlexibleUnit>
+                </FlexibleRow>
+              </>
             </AccordionItem>
           </Accordion>
         </Panel>

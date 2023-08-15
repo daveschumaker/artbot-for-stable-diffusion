@@ -10,6 +10,7 @@ import { setI2iUploaded } from 'store/canvasStore'
 import Section from 'app/_components/Section'
 import Uploader from 'app/_modules/Uploader'
 import { IconPhotoUp, IconTrash } from '@tabler/icons-react'
+import Samplers from 'models/Samplers'
 
 interface Props {
   handleChangeInput: any
@@ -33,12 +34,18 @@ const Img2ImgPanel = ({ input, saveForInpaint, setInput }: Props) => {
     PromptInputSettings.set('height', height)
     PromptInputSettings.set('width', width)
 
+    let sampler = input.sampler
+    if (!Samplers.validSamplersForImg2Img().includes(sampler)) {
+      sampler = 'k_dpm_2'
+    }
+
     setInput({
       img2img: true,
       imageType,
       height,
       width,
       orientationType: 'custom',
+      sampler,
       source_image,
       source_processing: SourceProcessing.Img2Img
     })

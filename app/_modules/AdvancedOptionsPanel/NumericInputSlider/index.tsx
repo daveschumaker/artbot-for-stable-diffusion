@@ -146,12 +146,12 @@ const NumericInputSlider = ({
           value={temporaryValue}
           width="100%"
         />
-        {showWarning && (
-          <div className="mb-2 text-xs">
-            This field only accepts numbers between {from} and {to}.
-          </div>
-        )}
       </Section>
+      {showWarning && (
+        <div className="mb-2 text-xs">
+          This field only accepts numbers between {from} and {to}.
+        </div>
+      )}
     </div>
   )
 }
