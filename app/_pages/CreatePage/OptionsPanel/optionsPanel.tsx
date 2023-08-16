@@ -28,9 +28,10 @@ const removeImageCanvasData = {
 interface Props {
   input: any
   setInput: any
+  setErrors: any
 }
 
-const OptionsPanel = ({ input, setInput }: Props) => {
+const OptionsPanel = ({ input, setInput, setErrors }: Props) => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const panel = searchParams?.get('panel')
@@ -122,7 +123,11 @@ const OptionsPanel = ({ input, setInput }: Props) => {
         </div>
       </FlexRow>
       {activeNav === 'advanced' && (
-        <AdvancedOptionsPanel input={input} setInput={setInput} />
+        <AdvancedOptionsPanel
+          input={input}
+          setErrors={setErrors}
+          setInput={setInput}
+        />
       )}
       {activeNav === 'img2img' &&
         input.source_processing === SourceProcessing.InPainting && (

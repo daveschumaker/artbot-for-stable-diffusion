@@ -21,7 +21,7 @@ import { useStore } from 'statery'
 import { userInfoStore } from 'store/userStore'
 import Linker from 'components/UI/Linker'
 import { clearCanvasStore } from 'store/canvasStore'
-
+import styles from './livePaint.module.css'
 const TWO_COLUMN_SIZE = 789
 
 const removeImageCanvasData = {
@@ -124,7 +124,8 @@ const LivePaint = () => {
         className="flex flex-row justify-center w-full"
         id="live-paint-container"
         style={{
-          columnGap: isSinglePanel ? '0' : '8px'
+          columnGap: isSinglePanel ? '0' : '8px',
+          paddingTop: '60px'
         }}
       >
         <div
@@ -148,7 +149,7 @@ const LivePaint = () => {
               canvasHeight={size}
               canvasWidth={size}
               editorClassName="relative mt-[67px]"
-              toolbarClassName="mt-[-60px]"
+              toolbarClassName={styles.LivePaintToolbar}
               toolbarAbsolute
               toolbarDisableMenu
             />

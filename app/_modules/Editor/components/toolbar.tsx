@@ -27,38 +27,34 @@ import { Button } from 'components/UI/Button'
 import RulerIcon from 'components/icons/RulerIcon'
 import PointerIcon from 'components/icons/PointerIcon'
 import useLockedBody from 'hooks/useLockedBody'
+import styles from './toolbar.module.css'
 
 const DEBUG_MODE = false
 const DISABLE_OUTPAINTING = true
 
-const ToolBarButton = ({
-  active,
-  btnType,
-  children,
-  onClick = () => {}
-}: any) => {
+const ToolBarButton = ({ active, btnType, onClick, children }: any) => {
   const classes = [
-    ,
-    `border-[1px]`,
-    `border-[#ffffff]`,
-    `p-[4px]`,
-    `rounded-[4px]`,
-    `active:border-[1px]`,
-    'select-none'
+    styles.border,
+    styles.borderWhite,
+    styles.p4,
+    styles.rounded4,
+    styles.activeBorder,
+    styles.selectNone
   ]
 
-  if (active) {
-    classes.push(`bg-[#6AB7C6]`)
-    classes.push(`active:bg-[#8fc9d4]`)
-  }
   if (btnType === 'secondary') {
-    classes.push('hover:bg-[#fce9e9]')
-    classes.push(`active:border-[#6AB7C6]`)
-    classes.push(`active:bg-[#fce9e9]`)
+    classes.push(styles.bgSecondaryHover)
+    classes.push(styles.activeBorder) // Repeated, but that's what your original code did
+    classes.push(styles.bgSecondaryHover) // Repeated, but that's what your original code did
   } else {
-    classes.push('hover:bg-[#f3f3f3]')
-    classes.push(`active:border-[#6AB7C6]`)
-    classes.push(`active:bg-[#f3f3f3]`)
+    classes.push(styles.bgDefaultHover)
+    classes.push(styles.activeBorder) // Repeated, but that's what your original code did
+    classes.push(styles.bgDefaultHover) // Repeated, but that's what your original code did
+  }
+
+  if (active) {
+    classes.push(styles.bgActive)
+    classes.push(styles.activeBg)
   }
 
   return (
@@ -158,28 +154,13 @@ const ToolBar = ({
     setColor(CanvasSettings.get('brushColor') || '#000000')
   }, [])
 
-  const wrapperClasses = [
-    'flex',
-    'flex-row',
-    'items-center',
-    'bg-[#ffffff]',
-    `rounded-[4px]`,
-    'relative',
-    'mb-[8px]',
-    'md:mb-[16px]',
-    'md:gap-[4px]',
-    'justify-between',
-    'p-[2px]',
-    'md:p-[8px]',
-    'shadow-md',
-    'select-none',
-    toolbarClassName
-  ]
-
   return (
     <div
-      className={clsx(wrapperClasses)}
-      style={{ position: toolbarAbsolute ? 'absolute' : 'relative' }}
+      className={clsx(
+        styles.toolbar,
+        toolbarAbsolute && styles.toolbarAbsolute,
+        toolbarClassName
+      )}
     >
       <div className="flex flex-row items-center gap-1">
         {canvasType === 'inpainting' && !DISABLE_OUTPAINTING && (

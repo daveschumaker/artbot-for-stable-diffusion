@@ -9,6 +9,8 @@ import Linker from 'components/UI/Linker'
 import styles from './loraSelect.module.css'
 import LoraDetails from './LoraDetails'
 import { basePath } from 'BASE_PATH'
+import FlexRow from 'app/_components/FlexRow'
+import { IconAlertTriangle, IconArrowBarLeft } from '@tabler/icons-react'
 
 const extractModelNumber = (url: string) => {
   const regex = /\/models\/(\d+)/
@@ -19,6 +21,16 @@ const extractModelNumber = (url: string) => {
   return null // Return null if no model number is found
 }
 
+// TODO: Dynamic import
+// https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/lora.json
+const curatedLoras = [
+  48139, 25995, 16014, 51686, 51145, 44960, 60724, 47085, 7016, 20830, 14605,
+  53493, 55543, 5529, 4982, 42260, 10679, 48356, 62700, 39760, 24150, 43229,
+  77121, 22462, 26580, 58410, 15246, 54798, 45892, 60132, 59338, 38414, 31988,
+  57933, 49374, 23433, 45713, 43944, 46994, 47489, 56336, 13910, 73756, 13941,
+  82098, 58390
+]
+
 const LoadLora = ({
   cacheLoaded = (lora: any) => lora,
   tempCache = null,
@@ -26,6 +38,7 @@ const LoadLora = ({
   handleClose = () => {},
   handleSaveRecent = (lora: any) => lora
 }) => {
+  const [errorMsg, setErrorMsg] = useState('')
   const [loraId, setLoraId] = useState('')
   const [loraDetails, setLoraDetails] = useState<any>(tempCache)
 
@@ -36,6 +49,8 @@ const LoadLora = ({
         return
       }
 
+      setErrorMsg('')
+
       // @ts-ignore
       let validLoraId = !isNaN(loraId) ? loraId : null
 
@@ -45,6 +60,7 @@ const LoadLora = ({
       }
 
       if (!validLoraId) {
+        setErrorMsg('Unable to load: Check LORA ID or URL and try again.')
         return
       }
 
@@ -58,11 +74,21 @@ const LoadLora = ({
       const data = await res.json()
 
       if (data.type !== 'LORA') {
+        setErrorMsg('Unable to load: Not a valid LORA.')
         return
       }
 
       const { modelVersions = [] } = data
-      const { images = [] } = modelVersions[0]
+      const { files = [], images = [] } = modelVersions[0]
+
+      if (
+        files[0]?.sizeKB &&
+        files[0]?.sizeKB > 150000 &&
+        !curatedLoras.includes(data.id)
+      ) {
+        setErrorMsg('Unable to load: LORA size is over 150MB.')
+        return
+      }
 
       const lora = {
         name: data.id,
@@ -70,7 +96,8 @@ const LoadLora = ({
         description: DOMPurify.sanitize(data.description || ''),
         baseModel: modelVersions[0].baseModel,
         trainedWords: modelVersions[0].trainedWords,
-        image: images[0] && images[0].url ? images[0].url : ''
+        image: images[0] && images[0].url ? images[0].url : '',
+        sizeKb: files[0].sizeKB
       }
 
       setLoraDetails({
@@ -105,6 +132,14 @@ const LoadLora = ({
           width="100%"
         />
         <Button
+          onClick={() => {
+            setLoraId('')
+          }}
+          theme="secondary"
+        >
+          <IconArrowBarLeft />
+        </Button>
+        <Button
           style={{
             width: '100px'
           }}
@@ -113,10 +148,16 @@ const LoadLora = ({
           Search
         </Button>
       </div>
+      {errorMsg && (
+        <FlexRow gap={4} pb={8} style={{ color: 'red' }}>
+          <IconAlertTriangle stroke={1.5} />
+          {errorMsg}
+        </FlexRow>
+      )}
       {!loraDetails && (
         <div className="mt-2">
           <div style={{ fontSize: '14px', marginBottom: '8px' }}>
-            Use any LoRA found on{' '}
+            Use nearly any LoRA found on{' '}
             <Linker
               href="https://civitai.com/"
               target="_blank"

@@ -60,9 +60,10 @@ import { IconTrash } from '@tabler/icons-react'
 interface Props {
   input: any
   setInput: any
+  setErrors: any
 }
 
-const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
+const AdvancedOptionsPanel = ({ input, setInput, setErrors }: Props) => {
   const handleChangeInput = (event: any) => {
     setInput({ [event.target.name]: event.target.value })
   }
@@ -374,7 +375,7 @@ const AdvancedOptionsPanel = ({ input, setInput }: Props) => {
         />
       </div> */}
       <Section style={{ paddingBottom: '12px' }}>
-        <LoraSelect input={input} setInput={setInput} />
+        <LoraSelect input={input} setInput={setInput} setErrors={setErrors} />
       </Section>
 
       <Section>

@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import Section from 'app/_components/Section'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
-import { GetSetPromptInput } from 'types'
 import styles from './loraSelect.module.css'
 import { Button } from 'components/UI/Button'
 import { IconExternalLink, IconPlus, IconTrash } from '@tabler/icons-react'
@@ -12,11 +11,14 @@ import Linker from 'components/UI/Linker'
 import FlexRow from 'app/_components/FlexRow'
 import FlexibleRow from 'app/_components/FlexibleRow'
 import FlexibleUnit from 'app/_components/FlexibleUnit'
+import { modelStore } from 'store/modelStore'
 
-const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
+const LoraSelect = ({ input, setInput, setErrors }: any) => {
   const [showModal, setShowModal] = useState(false)
 
   const handleAddLora = (loraDetails: any) => {
+    const modelDetails = modelStore.state.modelDetails[input.models[0]]
+
     const lorasToUpdate = [...input.loras]
 
     const exists = lorasToUpdate.filter(
@@ -25,6 +27,20 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
 
     if (exists.length > 0) {
       return
+    }
+
+    if (
+      loraDetails.baseModel === 'SD 1.5' &&
+      modelDetails.baseline === 'stable diffusion 1'
+    ) {
+      // do nothing, things are cool
+    } else if (
+      loraDetails.baseModel.includes('SDXL') &&
+      input.models[0].includes('SDXL')
+    ) {
+      // do nothing, things are cool
+    } else {
+      setErrors({ UNCOMPATIBLE_LORA: true })
     }
 
     lorasToUpdate.push(
@@ -66,7 +82,7 @@ const LoraSelect = ({ input, setInput }: GetSetPromptInput) => {
       return null
     }
 
-    input.loras.forEach((lora, i) => {
+    input.loras.forEach((lora: any, i: number) => {
       // Need to cast input to correct type
       // @ts-ignore
       const hasWords = lora?.trainedWords?.length > 0

@@ -493,7 +493,7 @@ const CreatePage = ({ modelDetails = {} }: any) => {
         </FlexRow>
       </div>
 
-      <OptionsPanel input={input} setInput={setInput} />
+      <OptionsPanel input={input} setInput={setInput} setErrors={setErrors} />
 
       <ActionPanel
         errors={errors}

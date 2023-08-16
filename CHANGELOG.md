@@ -1,3 +1,9 @@
+# 2013.08.15
+
+- Add some logic that attempts to check for model mismatch between LORA and image modal and warn user if an incompatibility is found.
+- Additional PR from tijszwinkels on GitHub that adds negative prompt to JPEG metadata (thank you!)
+- Fix: Styling issues with inpainting toolbar
+
 # 2023.08.14
 
 - Fix: Issue when adding images from a URL. Thanks to the aislingeach on Discord for reporting this.
