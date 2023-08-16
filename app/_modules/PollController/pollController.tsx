@@ -4,7 +4,11 @@ import { useStore } from 'statery'
 
 import Toast from '../Toast'
 import { useEffectOnce } from '../../../hooks/useEffectOnce'
-import { appInfoStore, setShowImageReadyToast } from '../../../store/appStore'
+import {
+  appInfoStore,
+  setImageDetailsModalOpen,
+  setShowImageReadyToast
+} from '../../../store/appStore'
 import {
   decideNewMain,
   enablePingChecker,
@@ -51,6 +55,7 @@ const PollController = () => {
           handleClose={handleCloseToast}
           handleImageClick={async () => {
             const imageDetails = await getImageDetails(newImageReady)
+            setImageDetailsModalOpen(true)
             imagePreviewModal.show({
               handleClose: () => imagePreviewModal.remove(),
               imageDetails

@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useModal } from '@ebay/nice-modal-react'
 import ImageModal from 'app/_modules/ImageModal'
+import { setImageDetailsModalOpen } from 'store/appStore'
 
 const useGalleryImageModal = ({ fetchImages }: { fetchImages: any }) => {
   const imagePreviewModal = useModal(ImageModal)
-  const [isImageModalOpen, setIsImageModalOpen] = useState(false)
   const [imageIdx, setImageIdx] = useState(0)
   const [imagesList, setImagesList] = useState<any[]>([])
   const [imageDetails, setImageDetails] = useState(null)
@@ -14,7 +14,7 @@ const useGalleryImageModal = ({ fetchImages }: { fetchImages: any }) => {
     setImageIdx(0)
     setImagesList([])
     setImageDetails(null)
-    setIsImageModalOpen(false)
+    setImageDetailsModalOpen(false)
   }, [fetchImages])
 
   const handleLoadNext = useCallback(() => {
@@ -73,16 +73,13 @@ const useGalleryImageModal = ({ fetchImages }: { fetchImages: any }) => {
       imageDetails
     })
 
-    if (!isImageModalOpen) {
-      setIsImageModalOpen(true)
-    }
+    setImageDetailsModalOpen(true)
   }, [
     handleClose,
     handleLoadNext,
     handleLoadPrev,
     imageDetails,
-    imagePreviewModal,
-    isImageModalOpen
+    imagePreviewModal
   ])
 
   useEffect(() => {
@@ -93,7 +90,7 @@ const useGalleryImageModal = ({ fetchImages }: { fetchImages: any }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imageDetails])
 
-  return [showImageModal, isImageModalOpen]
+  return [showImageModal]
 }
 
 export default useGalleryImageModal

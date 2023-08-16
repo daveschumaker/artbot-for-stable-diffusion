@@ -11,6 +11,7 @@ import { FullScreen, useFullScreenHandle } from 'react-full-screen'
 import { IImageDetails } from 'types'
 import { SourceProcessing } from 'utils/promptUtils'
 import ImageSquare from 'components/ImageSquare'
+import AdContainer from 'components/AdContainer'
 
 import styles from './imageDetails.module.css'
 import ImageOptionsWrapper from './ImageOptionsWrapper'
@@ -19,6 +20,9 @@ import ParentImage from 'app/_components/ParentImage'
 import { logError } from 'utils/appUtils'
 import { userInfoStore } from 'store/userStore'
 import { cleanDataForApiRequestDisplay } from 'utils/imageUtils'
+import { useWindowSize } from 'hooks/useWindowSize'
+import { useStore } from 'statery'
+import { appInfoStore } from 'store/appStore'
 
 interface Props {
   imageDetails: IImageDetails
@@ -37,6 +41,8 @@ const ImageDetails = ({
   handleReloadImageData = () => {},
   handleTiling = () => {}
 }: Props) => {
+  const size = useWindowSize()
+  const { imageDetailsModalOpen } = useStore(appInfoStore)
   const showFullScreen = useFullScreenHandle()
   const [fullscreen, setFullscreen] = useState(false)
   const [showImg2ImgModal, setShowImg2ImgModal] = useState(false)
@@ -181,17 +187,21 @@ const ImageDetails = ({
           </div>
         </div>
       )}
-      {/* {
+      {
         // @ts-ignore
-        size.width < 800 && (
-          <div
-            className="flex flex-row justify-center w-full mt-3"
-            style={{ minHeight: '214px' }}
-          >
-            <AdContainer />
+        (size.width < 800 || imageDetailsModalOpen) && (
+          <div className="flex flex-row justify-center w-full mt-3">
+            <div
+              style={{
+                maxWidth: '704px',
+                minHeight: '164px'
+              }}
+            >
+              <AdContainer shouldRefresh={imageDetails.id} />
+            </div>
           </div>
         )
-      } */}
+      }
       <div
         id="image-params-wrapper"
         className="flex flex-col items-center justify-start w-full mt-3"

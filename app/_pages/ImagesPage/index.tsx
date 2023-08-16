@@ -45,7 +45,7 @@ import { setFilteredItemsArray } from 'store/filteredImagesCache'
 import FloatingActionButton from 'components/UI/FloatingActionButton'
 import TrashIcon from 'components/icons/TrashIcon'
 import { useStore } from 'statery'
-import { appInfoStore } from 'store/appStore'
+import { appInfoStore, setImageDetailsModalOpen } from 'store/appStore'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import isMobile from 'is-mobile'
 import { parseQueryString } from 'utils/appUtils'
@@ -134,6 +134,7 @@ const ImagesPage = () => {
   const size = useWindowSize()
   const appState = useStore(appInfoStore)
   const { imageDetailsModalOpen } = appState
+  const isImageModalOpen = imageDetailsModalOpen
 
   const [componentState, setComponentState] = useComponentState({
     deleteMode: false,
@@ -207,7 +208,7 @@ const ImagesPage = () => {
     setComponentState
   ])
 
-  const [showImageModal, isImageModalOpen] = useGalleryImageModal({
+  const [showImageModal] = useGalleryImageModal({
     fetchImages
   })
 
@@ -413,9 +414,10 @@ const ImagesPage = () => {
         // @ts-ignore
         showImageModal({
           images: componentState.images,
-          jobId,
-          handleDeleteImageClick: () => console.log('DICK BUTT')
+          jobId
         })
+
+        setImageDetailsModalOpen(true)
       }
     },
     [

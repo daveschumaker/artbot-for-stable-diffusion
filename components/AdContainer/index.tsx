@@ -22,12 +22,6 @@ const mountAd = debounce(() => {
       return
     }
 
-    // if (!!isCarbonExist) {
-    //   minHeight = '164px'
-    //   refreshAd()
-    //   return
-    // }
-
     const script = document.createElement('script')
     script.src =
       '//cdn.carbonads.com/carbon.js?serve=CWYD62QI&placement=tinybotsnet'
@@ -40,9 +34,11 @@ const mountAd = debounce(() => {
 
 const CarbonAds = ({
   className,
+  shouldRefresh,
   style
 }: {
   className?: any
+  shouldRefresh?: any
   style?: CSSProperties
 }) => {
   const pathname = usePathname()
@@ -64,6 +60,17 @@ const CarbonAds = ({
 
     return () => clearInterval(interval)
   }, [pathname])
+
+  useEffect(() => {
+    // @ts-ignore
+    // eslint-disable-next-line no-undef
+    const isCarbonExist = document.querySelector('#carbonads')
+    if (isCarbonExist) {
+      // @ts-ignore
+      // eslint-disable-next-line no-undef
+      _carbonads?.refresh()
+    }
+  }, [shouldRefresh])
 
   return (
     <div

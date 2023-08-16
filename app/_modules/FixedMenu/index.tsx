@@ -10,6 +10,7 @@ import clsx from 'clsx'
 import { useWindowSize } from 'hooks/useWindowSize'
 
 export default function FixedMenu() {
+  const { imageDetailsModalOpen } = useStore(appInfoStore)
   const { adHidden } = useStore(appInfoStore)
   const router = useRouter()
   const size = useWindowSize()
@@ -29,7 +30,7 @@ export default function FixedMenu() {
       </div>
       {
         // @ts-ignore
-        size?.width >= 800 && (
+        size?.width >= 800 && !imageDetailsModalOpen && (
           <div className={styles.SidebarAd}>
             <AdContainer />
           </div>
