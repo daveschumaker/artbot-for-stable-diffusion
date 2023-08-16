@@ -1,10 +1,10 @@
 import { useModal } from '@ebay/nice-modal-react'
 import ImageModal from 'app/_modules/ImageModal'
 import { useCallback, useEffect, useState } from 'react'
+import { setImageDetailsModalOpen } from 'store/appStore'
 
 const useRelatedImageModal = () => {
   const imagePreviewModal = useModal(ImageModal)
-  const [isImageModalOpen, setIsImageModalOpen] = useState(false)
   const [imageIdx, setImageIdx] = useState(0)
   const [imagesList, setImagesList] = useState<any[]>([])
   const [imageDetails, setImageDetails] = useState(null)
@@ -13,7 +13,7 @@ const useRelatedImageModal = () => {
     setImageIdx(0)
     setImagesList([])
     setImageDetails(null)
-    setIsImageModalOpen(false)
+    setImageDetailsModalOpen(false)
   }
 
   const handleLoadNext = useCallback(() => {
@@ -75,16 +75,8 @@ const useRelatedImageModal = () => {
       imageDetails
     })
 
-    if (!isImageModalOpen) {
-      setIsImageModalOpen(true)
-    }
-  }, [
-    handleLoadNext,
-    handleLoadPrev,
-    imageDetails,
-    imagePreviewModal,
-    isImageModalOpen
-  ])
+    setImageDetailsModalOpen(true)
+  }, [handleLoadNext, handleLoadPrev, imageDetails, imagePreviewModal])
 
   useEffect(() => {
     if (!imageDetails) return
@@ -94,7 +86,7 @@ const useRelatedImageModal = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imageDetails])
 
-  return [showImageModal, isImageModalOpen]
+  return [showImageModal]
 }
 
 export default useRelatedImageModal

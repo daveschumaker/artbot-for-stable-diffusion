@@ -12,6 +12,7 @@ import { useSwipeable } from 'react-swipeable'
 import styles from './imageModal.module.css'
 import clsx from 'clsx'
 import useLockedBody from 'hooks/useLockedBody'
+import { setImageDetailsModalOpen } from 'store/appStore'
 
 interface Props {
   disableNav?: boolean
@@ -55,6 +56,7 @@ const ImageModal = ({
 
   const onClose = useCallback(() => {
     handleClose()
+    setImageDetailsModalOpen(false)
     modal.remove()
   }, [handleClose, modal])
 
