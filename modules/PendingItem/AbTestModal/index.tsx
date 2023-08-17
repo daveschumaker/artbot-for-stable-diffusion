@@ -8,6 +8,7 @@ import { Button } from 'components/UI/Button'
 import { clientHeader, getApiHostServer } from 'utils/appUtils'
 import AppSettings from 'models/AppSettings'
 import {
+  deleteImageFromDexie,
   getImageDetails,
   updateCompletedJob,
   updatePendingJobInDexie
@@ -75,6 +76,8 @@ function AbTestModal({
         ratingSubmitted: true,
         thumbnail: null
       })
+
+      await deleteImageFromDexie(jobDetails.jobId)
 
       setIsRated(true)
       handleClose()

@@ -14,11 +14,18 @@ const refreshAd = debounce(() => {
 
 const mountAd = debounce(() => {
   setTimeout(() => {
-    const isCarbonExist = document.querySelector('#carbonads')
+    const isCarbonExist = document.querySelector('[id^="carbonads"]')
 
     if (isCarbonExist) {
       minHeight = '164px'
       refreshAd()
+      return
+    }
+
+    const outerDiv = document.querySelector('#carbon-container')
+    const divElements = outerDiv?.querySelectorAll('div') ?? []
+
+    if (divElements.length >= 1) {
       return
     }
 
@@ -44,6 +51,13 @@ const CarbonAds = ({
   const pathname = usePathname()
 
   useEffect(() => {
+    const outerDiv = document.querySelector('#carbon-container')
+    const divElements = outerDiv?.querySelectorAll('div') ?? []
+
+    if (divElements.length >= 1) {
+      return
+    }
+
     mountAd()
   }, [])
 

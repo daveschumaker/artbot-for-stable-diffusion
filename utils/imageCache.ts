@@ -31,7 +31,7 @@ import {
   MAX_CONCURRENT_JOBS_ANON,
   MAX_CONCURRENT_JOBS_USER
 } from '../_constants'
-import { isAppActive, logError } from './appUtils'
+import { isAppActive, logError, uuidv4 } from './appUtils'
 import CreateImageRequest from '../models/CreateImageRequest'
 import { hasPromptMatrix, promptMatrix } from './promptUtils'
 import { sleep } from './sleep'
@@ -784,6 +784,12 @@ export const checkCurrentJob = async (imageDetails: any) => {
       for (const idx in imgDetailsFromApi.generations) {
         const image = imgDetailsFromApi.generations[idx]
         if ('base64String' in image && image.base64String) {
+          const jobWithImageDetails = {
+            ...job,
+            ...image,
+            kudos: imgDetailsFromApi.kudos
+          }
+
           if (Number(idx) > 0) {
             // TODO: For now, this is for SDXL_beta logic, which returns an additional image
             addImageToDexie({
@@ -793,13 +799,14 @@ export const checkCurrentJob = async (imageDetails: any) => {
               type: 'ab-test'
             })
 
-            return
-          }
+            // SDXL beta / store second image as a new discrete job
+            await addCompletedJobToDb({
+              jobDetails: Object.assign({}, jobWithImageDetails, {
+                jobId: uuidv4()
+              })
+            })
 
-          const jobWithImageDetails = {
-            ...job,
-            ...image,
-            kudos: imgDetailsFromApi.kudos
+            return
           }
 
           const result = await addCompletedJobToDb({
