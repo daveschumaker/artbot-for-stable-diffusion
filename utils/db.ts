@@ -87,6 +87,10 @@ export const addImageToDexie = async ({
   })
 }
 
+export const deleteImageFromDexie = async (jobId: string) => {
+  await db.images.where('jobId').equals(jobId).delete()
+}
+
 export const getJobImagesFromDexie = async (jobId: string) => {
   return await db.images.where('jobId').equals(jobId).toArray()
 }

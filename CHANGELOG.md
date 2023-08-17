@@ -2,6 +2,7 @@
 
 - Increase max image dimensions to 3072 x 3072 for users with API key (there probably aren't many workers that can support that)
 - Bump up max size of supported LORAs to 220MB
+- Add both images created from SDXL beta to your image gallery (previously, ArtBot would throw away one image after it was rated)
 
 # 2023.08.15
 
