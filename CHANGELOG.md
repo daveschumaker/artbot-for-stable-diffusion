@@ -1,3 +1,7 @@
+# 2023.08.17
+
+- Fix issue with creating shareable links when swiping between images in the image modal.
+
 # 2023.08.16
 
 - Increase max image dimensions to 3072 x 3072 for users with API key (there probably aren't many workers that can support that)
@@ -6,7 +10,7 @@
 
 # 2023.08.15
 
-- Add some logic that attempts to check for model mismatch between LORA and image modal and warn user if an incompatibility is found.
+- Add some logic that attempts to check for model mismatch between LORA and image model and warn user if an incompatibility is found.
 - Additional PR from tijszwinkels on GitHub that adds negative prompt to JPEG metadata (thank you!)
 - Fix: Styling issues with inpainting toolbar
 

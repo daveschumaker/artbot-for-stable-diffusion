@@ -6,7 +6,7 @@ import ImageParamsForApi from 'models/ImageParamsForApi'
 import { useState } from 'react'
 import { userInfoStore } from 'store/userStore'
 import { IImageDetails } from 'types'
-import { updateCompletedJob } from 'utils/db'
+import { getImageDetails, updateCompletedJob } from 'utils/db'
 import { generateBase64Thumbnail } from 'utils/imageUtils'
 import { showSuccessToast } from 'utils/notificationUtils'
 import styles from './component.module.css'
@@ -16,7 +16,6 @@ export default function ShortlinkButton({
 }: {
   imageDetails: IImageDetails
 }) {
-  const [savedShortlink, setSavedShortlink] = useState('')
   const [shortlinkPending, setShortlinkPending] = useState(false)
 
   const copyShortlink = (_shortlink: string) => {
@@ -24,6 +23,7 @@ export default function ShortlinkButton({
       window.location.hostname === 'localhost'
         ? 'http://localhost:3000'
         : baseHost
+
     navigator?.clipboard
       ?.writeText(`${hostname}${basePath}?i=${_shortlink}`)
       .then(() => {
@@ -32,8 +32,10 @@ export default function ShortlinkButton({
   }
 
   const getShortlink = async () => {
-    if (imageDetails.shortlink || savedShortlink) {
-      copyShortlink(imageDetails.shortlink || savedShortlink)
+    const updatedImageDetails = await getImageDetails(imageDetails.jobId)
+
+    if (updatedImageDetails.shortlink) {
+      copyShortlink(imageDetails.shortlink)
       return
     }
 
@@ -73,7 +75,6 @@ export default function ShortlinkButton({
     }
 
     setShortlinkPending(false)
-    setSavedShortlink(shortlink)
   }
 
   return (

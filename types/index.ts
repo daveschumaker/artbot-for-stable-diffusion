@@ -82,6 +82,7 @@ export interface NewRating {
 }
 
 export interface IImageDetails extends CreateImageJob {
+  jobId: string
   allowNsfw?: boolean
   apikey?: string
   canvasStore?: any
