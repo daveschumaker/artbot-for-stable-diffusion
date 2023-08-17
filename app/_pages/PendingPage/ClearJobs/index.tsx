@@ -10,7 +10,7 @@ import {
 import { deletePendingJobs } from 'controllers/pendingJobsCache'
 import DropdownOptions from 'app/_modules/DropdownOptions'
 
-export default function ClearJobs({ filter }: any) {
+export default function ClearJobs({ filter, size }: any) {
   const [showDropdown, setShowDropdown] = useState(false)
 
   const handleClear = async (filter: string) => {
@@ -70,6 +70,7 @@ export default function ClearJobs({ filter }: any) {
       <Button
         disabled={filter === 'processing'}
         onClick={() => setShowDropdown(true)}
+        size={size}
       >
         <IconClearAll stroke={1.5} /> Clear jobs
       </Button>
