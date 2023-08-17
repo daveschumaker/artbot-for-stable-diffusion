@@ -83,10 +83,10 @@ const LoadLora = ({
 
       if (
         files[0]?.sizeKB &&
-        files[0]?.sizeKB > 150000 &&
+        files[0]?.sizeKB > 220000 &&
         !curatedLoras.includes(data.id)
       ) {
-        setErrorMsg('Unable to load: LORA size is over 150MB.')
+        setErrorMsg('Unable to load: LORA size is over 220MB.')
         return
       }
 
