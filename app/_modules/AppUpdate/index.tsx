@@ -1,5 +1,7 @@
 'use client'
 
+import MaxWidth from 'app/_components/MaxWidth'
+import ServerMessage from 'components/ServerMessage'
 import ServerUpdateComponent from 'components/ServerUpdateComponent'
 import { useCallback, useEffect, useState } from 'react'
 import { useStore } from 'statery'
@@ -10,6 +12,8 @@ let waitingForServerInfoRes = false
 
 export default function AppUpdate() {
   const { buildId } = useStore(appInfoStore)
+  const [serverMsg, setServerMsg] = useState<any>(false)
+
   const [showServerUpdateComponent, setShowServerUpdateComponent] =
     useState(false)
 
@@ -26,7 +30,7 @@ export default function AppUpdate() {
       waitingForServerInfoRes = true
       const res = await fetch('/artbot/api/server-info')
       const data = await res.json()
-      const { build } = data
+      const { build, serverMessage } = data
 
       waitingForServerInfoRes = false
 
@@ -38,6 +42,12 @@ export default function AppUpdate() {
         console.log(
           'Application was just updated in the background. Reload this page for the latest code.'
         )
+      }
+
+      if (serverMessage) {
+        setServerMsg(serverMessage)
+      } else {
+        setServerMsg(false)
       }
     } catch (err) {
       console.log(`Unable to fetch latest server-info. Connectivity issue?`)
@@ -54,7 +64,18 @@ export default function AppUpdate() {
     return () => clearInterval(interval)
   }, [fetchAppInfo])
 
-  if (showServerUpdateComponent) return <ServerUpdateComponent />
-
-  return null
+  return (
+    <>
+      {serverMsg && (
+        <MaxWidth>
+          <ServerMessage
+            title={serverMsg.title}
+            content={serverMsg.content}
+            timestamp={serverMsg.timestamp}
+          />
+        </MaxWidth>
+      )}
+      {showServerUpdateComponent && <ServerUpdateComponent />}
+    </>
+  )
 }

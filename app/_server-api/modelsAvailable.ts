@@ -40,6 +40,12 @@ const fetchAvailableModels = async () => {
           : clientHeader()
       }
     })
+
+    if (resp.status === 522) {
+      console.log(`Error: fetchAvailableModels - connection timed out.`)
+      return false
+    }
+
     const data = await resp.json()
 
     if (Array.isArray(data) && data.length > 0) {

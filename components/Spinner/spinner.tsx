@@ -1,3 +1,4 @@
+import { CSSProperties } from 'react'
 import styled from 'styled-components'
 
 interface StyleProps {
@@ -39,9 +40,15 @@ const StyledCircle = styled.circle`
   }
 `
 
-export default function SpinnerV2({ size = 50 }: { size?: number }) {
+export default function SpinnerV2({
+  style,
+  size = 50
+}: {
+  size?: number
+  style?: CSSProperties
+}) {
   return (
-    <StyledSVG viewBox={`0 0 50 50`} size={size}>
+    <StyledSVG viewBox={`0 0 50 50`} size={size} style={style}>
       <StyledCircle
         cx="25"
         cy="25"
