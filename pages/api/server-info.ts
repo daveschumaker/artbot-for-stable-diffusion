@@ -5,6 +5,41 @@ type Data = {
   success: boolean
   build?: string
   clusterSettings?: string
+  serverMessage?: any
+}
+
+let cachedStatus: any = null
+let lastRefreshTime = 0
+
+async function refreshStatus() {
+  try {
+    const status: any = await import('../../server-status.json')
+
+    if (status.live === true) {
+      cachedStatus = {
+        title: status.title,
+        content: status.content,
+        live: status.live
+      }
+
+      if (!isNaN(status.timestamp) && status.timestamp > 0) {
+        cachedStatus.timestamp = status.timestamp
+      }
+
+      lastRefreshTime = Date.now()
+    } else {
+      cachedStatus = null
+    }
+  } catch (err) {
+    // Ignore
+  }
+}
+
+export async function getServerStatus() {
+  if (!cachedStatus || Date.now() - lastRefreshTime >= 15000) {
+    await refreshStatus()
+  }
+  return cachedStatus
 }
 
 export default async function handler(
@@ -16,9 +51,11 @@ export default async function handler(
   }
 
   const { build } = buildInfo
+  const serverMessage = await getServerStatus()
 
   res.send({
     success: true,
-    build
+    build,
+    serverMessage
   })
 }

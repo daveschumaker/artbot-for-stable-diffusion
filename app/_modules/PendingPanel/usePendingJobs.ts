@@ -79,8 +79,6 @@ export default function usePendingJobs() {
       return array
     }
 
-    console.log(`pending_done`, pending_done)
-
     setDone(sortByTimestamp(pending_done))
     setProcessing(sortById(pending_processing))
     setQueued(sortById(pending_queued))
