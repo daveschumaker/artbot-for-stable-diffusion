@@ -4,9 +4,12 @@
 import {
   IconAlertTriangle,
   IconFilter,
+  IconHeart,
   IconPhoto,
+  IconPhotoOff,
   IconPhotoUp,
   IconSettings,
+  IconTrash,
   IconX
 } from '@tabler/icons-react'
 import styles from './pendingPanel.module.css'
@@ -15,7 +18,11 @@ import usePendingJobs from './usePendingJobs'
 import placeholderImage from '../../../public/placeholder.gif'
 import { JobStatus } from 'types'
 import SpinnerV2 from 'components/Spinner'
-import { getImageDetails } from 'utils/db'
+import {
+  deleteCompletedImage,
+  deleteImageFromDexie,
+  getImageDetails
+} from 'utils/db'
 import { setImageDetailsModalOpen } from 'store/appStore'
 import { useModal } from '@ebay/nice-modal-react'
 import ImageModal from '../ImageModal'
@@ -24,8 +31,13 @@ import FilterOptions from 'app/_pages/PendingPage/FilterOptions'
 import PendingSettings from 'app/_pages/PendingPage/PendingSettings'
 import ClearJobs from 'app/_pages/PendingPage/ClearJobs'
 import { Button } from 'components/UI/Button'
-import { deletePendingJob } from 'controllers/pendingJobsCache'
+import {
+  deletePendingJob,
+  getPendingJob,
+  updatePendingJobV2
+} from 'controllers/pendingJobsCache'
 import { deletePendingJobFromApi } from 'api/deletePendingJobFromApi'
+import clsx from 'clsx'
 
 export default function PendingPanel() {
   const imagePreviewModal = useModal(ImageModal)
@@ -35,6 +47,23 @@ export default function PendingPanel() {
   const [showSettingsDropdown, setShowSettingsDropdown] = useState(false)
 
   const jobs = [...done, ...processing, ...queued, ...waiting, ...error]
+
+  const handleDeleteImage = async (jobId: string, e: any) => {
+    e.stopPropagation()
+
+    await deleteImageFromDexie(jobId)
+    await deleteCompletedImage(jobId)
+    deletePendingJob(jobId)
+  }
+
+  const handleFavClick = (jobId: string, e: any) => {
+    e.stopPropagation()
+    const job = getPendingJob(jobId)
+
+    // @ts-ignore
+    job.favorited = job.favorited ? false : true
+    updatePendingJobV2(job)
+  }
 
   const hideFromPending = (jobId: string, jobStatus: JobStatus, e: any) => {
     e.stopPropagation()
@@ -125,7 +154,8 @@ export default function PendingPanel() {
       </FlexRow>
       <div className={styles.PendingImagesContainer} style={{}}>
         {filteredJobs.length === 0 && (
-          <div>
+          <div className={styles.NoRequests}>
+            <IconPhotoOff size={36} stroke={1} />
             You have no pending image requests. Why not create something?
           </div>
         )}
@@ -149,6 +179,21 @@ export default function PendingPanel() {
                   }
                 }}
               >
+                {imageJob.jobStatus === JobStatus.Done && (
+                  <div
+                    className={clsx(
+                      styles.FavButton,
+                      imageJob.favorited && styles.favorited
+                    )}
+                    onClick={(e) => handleFavClick(imageJob.jobId, e)}
+                  >
+                    <IconHeart
+                      fill={imageJob.favorited ? 'red' : 'rgb(0,0,0,0)'}
+                      size={26}
+                      stroke={1}
+                    />
+                  </div>
+                )}
                 <div
                   className={styles.CloseButton}
                   onClick={(e) =>
@@ -157,6 +202,14 @@ export default function PendingPanel() {
                 >
                   <IconX />
                 </div>
+                {imageJob.jobStatus === JobStatus.Done && (
+                  <div
+                    className={styles.TrashButton}
+                    onClick={(e) => handleDeleteImage(imageJob.jobId, e)}
+                  >
+                    <IconTrash stroke={1.5} />
+                  </div>
+                )}
                 {imageJob.jobStatus !== JobStatus.Done && (
                   <img
                     alt="Pending image"

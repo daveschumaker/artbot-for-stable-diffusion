@@ -6,6 +6,16 @@
   width: 100%;
 }
 
+.NoRequests {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-size: 12px;
+  padding: 16px;
+  text-align: center;
+}
+
 /* @media (min-width: 1024px) {
   .PendingPanelWrapper {
     right: calc(100% - 1024);
@@ -55,16 +65,47 @@
 }
 
 .imageContainer:hover > div {
+  background-color: rgb(0, 0, 0, 0.6);
   opacity: 1;
 }
 
+.favorited {
+  /* background-color: unset !important; */
+  opacity: 1 !important;
+}
+
+.favorited:hover {
+  opacity: 1 !important;
+}
+
 .CloseButton {
-  background-color: rgb(0, 0, 0, 0.6);
   border-radius: 4px;
   cursor: pointer;
   padding: 8px;
   position: absolute;
   right: 0;
   top: 0;
+  user-select: none;
+}
+
+.FavButton {
+  /* background-color: rgb(0, 0, 0, 0.6); */
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 8px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  user-select: none;
+}
+
+.TrashButton {
+  background-color: rgba(195, 47, 47, 0.6) !important;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 8px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
   user-select: none;
 }
