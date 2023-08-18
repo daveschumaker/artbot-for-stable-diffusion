@@ -29,13 +29,16 @@ export default function ShortlinkButton({
       .then(() => {
         showSuccessToast({ message: 'Shortlink URL copied to your clipboard!' })
       })
+    // .catch((err) => {
+    //   alert(err)
+    // })
   }
 
   const getShortlink = async () => {
     const updatedImageDetails = await getImageDetails(imageDetails.jobId)
 
     if (updatedImageDetails.shortlink) {
-      copyShortlink(imageDetails.shortlink)
+      copyShortlink(updatedImageDetails.shortlink)
       return
     }
 
