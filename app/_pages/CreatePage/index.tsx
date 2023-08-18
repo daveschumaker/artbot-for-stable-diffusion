@@ -40,10 +40,12 @@ import OptionsPanel from 'app/_pages/CreatePage/OptionsPanel'
 import FlexRow from 'app/_components/FlexRow'
 import CreatePageSettings from './Settings'
 import FormErrorMessage from './ActionPanel/FormErrorMessage'
+import { useWindowSize } from 'hooks/useWindowSize'
 
 const defaultState: DefaultPromptInput = new DefaultPromptInput()
 
 const CreatePage = ({ modelDetails = {} }: any) => {
+  const { width } = useWindowSize()
   const appState = useStore(appInfoStore)
   const userInfo = useStore(userInfoStore)
 
@@ -107,7 +109,8 @@ const CreatePage = ({ modelDetails = {} }: any) => {
       router,
       setErrors,
       setInput,
-      setPending
+      setPending,
+      disableRedirect: width && width > 1100
     })
   }
 

@@ -38,6 +38,7 @@ import {
 } from 'controllers/pendingJobsCache'
 import { deletePendingJobFromApi } from 'api/deletePendingJobFromApi'
 import clsx from 'clsx'
+import { Virtuoso } from 'react-virtuoso'
 
 export default function PendingPanel() {
   const imagePreviewModal = useModal(ImageModal)
@@ -115,6 +116,100 @@ export default function PendingPanel() {
 
   const filteredJobs = filterJobs()
 
+  const renderRow = ({ index }: { index: number }) => {
+    const imageJob: any = filteredJobs[index]
+
+    const serverHasJob =
+      imageJob.jobStatus === JobStatus.Queued ||
+      imageJob.jobStatus === JobStatus.Processing ||
+      imageJob.jobStatus === JobStatus.Requested
+    return (
+      <div className={styles.PendingJobCard} key={imageJob.jobId}>
+        <div
+          className={styles.imageContainer}
+          onClick={async () => {
+            if (imageJob.jobStatus === JobStatus.Done) {
+              const imageDetails = await getImageDetails(imageJob.jobId)
+              setImageDetailsModalOpen(true)
+              imagePreviewModal.show({
+                handleClose: () => imagePreviewModal.remove(),
+                imageDetails
+              })
+            }
+          }}
+        >
+          {imageJob.jobStatus === JobStatus.Done && (
+            <div
+              className={clsx(
+                styles.FavButton,
+                imageJob.favorited && styles.favorited
+              )}
+              onClick={(e) => handleFavClick(imageJob.jobId, e)}
+            >
+              <IconHeart
+                fill={imageJob.favorited ? 'red' : 'rgb(0,0,0,0)'}
+                size={26}
+                stroke={1}
+              />
+            </div>
+          )}
+          <div
+            className={styles.CloseButton}
+            onClick={(e) =>
+              hideFromPending(imageJob.jobId, imageJob.jobStatus, e)
+            }
+          >
+            <IconX />
+          </div>
+          {imageJob.jobStatus === JobStatus.Done && (
+            <div
+              className={styles.TrashButton}
+              onClick={(e) => handleDeleteImage(imageJob.jobId, e)}
+            >
+              <IconTrash stroke={1.5} />
+            </div>
+          )}
+          {imageJob.jobStatus !== JobStatus.Done && (
+            <img
+              alt="Pending image"
+              src={placeholderImage.src}
+              height={imageJob.height}
+              width={imageJob.width}
+              style={{ borderRadius: '4px' }}
+            />
+          )}
+          {serverHasJob && <SpinnerV2 style={{ position: 'absolute' }} />}
+          {imageJob.jobStatus === JobStatus.Waiting && (
+            <IconPhotoUp
+              stroke={1.5}
+              size={36}
+              style={{ position: 'absolute' }}
+            />
+          )}
+          {imageJob.jobStatus === JobStatus.Error && (
+            <IconAlertTriangle
+              color="rgb(234 179 8)"
+              size={36}
+              stroke={1.5}
+              style={{ position: 'absolute' }}
+            />
+          )}
+          {imageJob.jobStatus === JobStatus.Done && (
+            <img
+              alt="Completed image"
+              src={`data:image/webp;base64,${
+                imageJob.thumbnail || imageJob.base64String
+              }`}
+              height={imageJob.height}
+              width={imageJob.width}
+              style={{ borderRadius: '4px', cursor: 'pointer' }}
+            />
+          )}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className={styles.PendingPanelWrapper}>
       <FlexRow gap={4} pb={8}>
@@ -159,97 +254,36 @@ export default function PendingPanel() {
             You have no pending image requests. Why not create something?
           </div>
         )}
-        {filteredJobs.map((imageJob) => {
-          const serverHasJob =
-            imageJob.jobStatus === JobStatus.Queued ||
-            imageJob.jobStatus === JobStatus.Processing ||
-            imageJob.jobStatus === JobStatus.Requested
-          return (
-            <div className={styles.PendingJobCard} key={imageJob.jobId}>
-              <div
-                className={styles.imageContainer}
-                onClick={async () => {
-                  if (imageJob.jobStatus === JobStatus.Done) {
-                    const imageDetails = await getImageDetails(imageJob.jobId)
-                    setImageDetailsModalOpen(true)
-                    imagePreviewModal.show({
-                      handleClose: () => imagePreviewModal.remove(),
-                      imageDetails
-                    })
-                  }
-                }}
-              >
-                {imageJob.jobStatus === JobStatus.Done && (
+        {filteredJobs.length > 0 && (
+          <Virtuoso
+            className={styles['virtual-list']}
+            totalCount={filteredJobs.length}
+            style={{
+              overflowY: 'auto',
+              position: 'absolute',
+              marginTop: '0',
+              top: '0',
+              bottom: '0',
+              left: '0',
+              right: '0'
+            }}
+            components={{
+              Footer: () => {
+                return (
                   <div
-                    className={clsx(
-                      styles.FavButton,
-                      imageJob.favorited && styles.favorited
-                    )}
-                    onClick={(e) => handleFavClick(imageJob.jobId, e)}
+                    style={{
+                      height: '8px',
+                      marginBottom: '8px'
+                    }}
                   >
-                    <IconHeart
-                      fill={imageJob.favorited ? 'red' : 'rgb(0,0,0,0)'}
-                      size={26}
-                      stroke={1}
-                    />
+                    {' '}
                   </div>
-                )}
-                <div
-                  className={styles.CloseButton}
-                  onClick={(e) =>
-                    hideFromPending(imageJob.jobId, imageJob.jobStatus, e)
-                  }
-                >
-                  <IconX />
-                </div>
-                {imageJob.jobStatus === JobStatus.Done && (
-                  <div
-                    className={styles.TrashButton}
-                    onClick={(e) => handleDeleteImage(imageJob.jobId, e)}
-                  >
-                    <IconTrash stroke={1.5} />
-                  </div>
-                )}
-                {imageJob.jobStatus !== JobStatus.Done && (
-                  <img
-                    alt="Pending image"
-                    src={placeholderImage.src}
-                    height={imageJob.height}
-                    width={imageJob.width}
-                    style={{ borderRadius: '4px' }}
-                  />
-                )}
-                {serverHasJob && <SpinnerV2 style={{ position: 'absolute' }} />}
-                {imageJob.jobStatus === JobStatus.Waiting && (
-                  <IconPhotoUp
-                    stroke={1.5}
-                    size={36}
-                    style={{ position: 'absolute' }}
-                  />
-                )}
-                {imageJob.jobStatus === JobStatus.Error && (
-                  <IconAlertTriangle
-                    color="rgb(234 179 8)"
-                    size={36}
-                    stroke={1.5}
-                    style={{ position: 'absolute' }}
-                  />
-                )}
-                {imageJob.jobStatus === JobStatus.Done && (
-                  <img
-                    alt="Completed image"
-                    src={`data:image/webp;base64,${
-                      imageJob.thumbnail || imageJob.base64String
-                    }`}
-                    height={imageJob.height}
-                    width={imageJob.width}
-                    style={{ borderRadius: '4px', cursor: 'pointer' }}
-                  />
-                )}
-              </div>
-            </div>
-          )
-        })}
+                )
+              }
+            }}
+            itemContent={(index) => <>{renderRow({ index })}</>}
+          />
+        )}
       </div>
     </div>
   )

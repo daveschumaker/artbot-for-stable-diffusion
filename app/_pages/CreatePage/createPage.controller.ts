@@ -27,6 +27,7 @@ interface CreateClick {
   setErrors: Dispatch<any>
   setInput: SetInput
   router: any
+  disableRedirect?: boolean
 }
 
 export const handleCreateClick = async ({
@@ -35,7 +36,8 @@ export const handleCreateClick = async ({
   setPending,
   setErrors,
   setInput,
-  router
+  router,
+  disableRedirect = false
 }: CreateClick) => {
   // TODO: Rather than directly send to API, we should queue up
   // jobs so we only ever send one job at a time to the API?
@@ -128,7 +130,7 @@ export const handleCreateClick = async ({
     source_mask: input.source_mask
   }
 
-  if (!AppSettings.get('stayOnCreate')) {
+  if (!AppSettings.get('stayOnCreate') && !disableRedirect) {
     if (!AppSettings.get('saveInputOnCreate')) {
       resetSavedDrawingState()
       clearInputCache()

@@ -32,7 +32,7 @@
   height: calc(100vh - 154px);
   margin-top: 8px;
   max-width: 320px;
-  overflow-y: scroll;
+  overflow-y: hidden;
   padding: 8px;
   position: relative;
 }
