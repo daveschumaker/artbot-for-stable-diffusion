@@ -15,6 +15,10 @@ import {
 } from 'utils/db'
 import { updatePendingJobProperties } from 'controllers/pendingJobsCache'
 import NiceModal, { useModal } from '@ebay/nice-modal-react'
+// import { Carousel, CarouselItem } from './carousel'
+
+import { Carousel } from 'react-responsive-carousel'
+import 'react-responsive-carousel/lib/styles/carousel.min.css'
 
 function AbTestModal({
   jobDetails,
@@ -107,7 +111,48 @@ function AbTestModal({
           <PageTitle>SDXL: Choose the best image</PageTitle>
         </div>
         <div className={styles.Images} style={{ marginBottom: '12px' }}>
-          <img
+          <Carousel
+            showArrows={true}
+            showThumbs={false}
+            onChange={() => {}}
+            onClickItem={() => {}}
+            onClickThumb={() => {}}
+            useKeyboardArrows={true}
+            infiniteLoop={true}
+          >
+            <div>
+              <img
+                // className={clsx(
+                //   styles.ImageElement,
+                //   selectedImg !== 0 && selectedImg !== 1 && styles.NotSelected
+                // )}
+                src={'data:image/webp;base64,' + jobDetails.base64String}
+                alt={jobDetails.prompt}
+                onClick={() => setSelectedImg(1)}
+                style={{
+                  border:
+                    selectedImg === 1 ? '4px solid var(--main-color)' : 'unset'
+                }}
+              />
+            </div>
+            <div>
+              <img
+                // className={clsx(
+                //   styles.ImageElement,
+                //   selectedImg !== 0 && selectedImg !== 2 && styles.NotSelected
+                // )}
+                src={'data:image/webp;base64,' + secondaryImage}
+                alt={jobDetails.prompt}
+                onClick={() => setSelectedImg(2)}
+                style={{
+                  border:
+                    selectedImg === 2 ? '4px solid var(--main-color)' : 'unset'
+                }}
+              />
+            </div>
+          </Carousel>
+
+          {/* <img
             className={clsx(
               styles.ImageElement,
               selectedImg !== 0 && selectedImg !== 1 && styles.NotSelected
@@ -133,7 +178,7 @@ function AbTestModal({
               border:
                 selectedImg === 2 ? '4px solid var(--main-color)' : 'unset'
             }}
-          />
+          /> */}
         </div>
         <div
           className="flex flex-row w-full justify-center"
