@@ -1,7 +1,7 @@
 # 2023.08.17
 
 - Fix issue with creating shareable links when swiping between images in the image modal.
-- Feature: Experimenting with adding a new pending panel on the create page for wider displays (anything over 1100px wide). I may try to adjust that. Regardless, I'd like to start getting feedback. I think this layout makes it nice to get immediate feedback on images while you're still messing around with new image settings.
+- Feature: Experimenting with adding a new pending panel on the create page for wider displays (anything over 1100px wide). I may try to adjust that. Regardless, I'd like to start getting feedback. I think this layout makes it nice to get immediate feedback on images while you're still messing around with new image settings. The old school pending page is still in place (besides, it still currently has more information and features -- plus it will need to remain for mobile devices).
 
 # 2023.08.16
 
