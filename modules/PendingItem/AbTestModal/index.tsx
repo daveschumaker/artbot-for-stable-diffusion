@@ -1,9 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
-import InteractiveModal from 'components/UI/InteractiveModal/interactiveModal'
 import PageTitle from 'app/_components/PageTitle'
 import styles from './component.module.css'
-import { useCallback, useRef, useState } from 'react'
-import clsx from 'clsx'
+import { useCallback, useEffect, useState } from 'react'
 import { Button } from 'components/UI/Button'
 import { clientHeader, getApiHostServer } from 'utils/appUtils'
 import AppSettings from 'models/AppSettings'
@@ -15,10 +13,14 @@ import {
 } from 'utils/db'
 import { updatePendingJobProperties } from 'controllers/pendingJobsCache'
 import NiceModal, { useModal } from '@ebay/nice-modal-react'
-// import { Carousel, CarouselItem } from './carousel'
+import Overlay from 'app/_components/Overlay'
+import { IconInfoHexagon, IconX } from '@tabler/icons-react'
 
-import { Carousel } from 'react-responsive-carousel'
-import 'react-responsive-carousel/lib/styles/carousel.min.css'
+import Carousel from 'react-gallery-carousel'
+import 'react-gallery-carousel/dist/index.css'
+import FlexRow from 'app/_components/FlexRow'
+import TooltipComponent from 'app/_components/TooltipComponent'
+import useLockedBody from 'hooks/useLockedBody'
 
 function AbTestModal({
   jobDetails,
@@ -31,16 +33,22 @@ function AbTestModal({
   secondaryImage: string
   setIsRated: (value: boolean) => any
 }) {
-  const ref = useRef(null)
   const modal = useModal()
+  const [, setLocked] = useLockedBody(false)
   const [selectedImg, setSelectedImg] = useState(0)
+  const [modalHeight, setModalHeight] = useState<string | number>('auto')
+
+  const updateModalHeight = () => {
+    const maxHeight = window.innerHeight - 64 // 64px is subtracted for header/footer
+    setModalHeight(maxHeight)
+  }
 
   const handleClose = useCallback(() => {
     modal.remove()
   }, [modal])
 
   const handleRateImage = useCallback(async () => {
-    const imageId = selectedImg === 1 ? jobDetails.hordeImageId : secondaryId
+    const imageId = selectedImg === 0 ? jobDetails.hordeImageId : secondaryId
 
     try {
       await fetch(
@@ -62,21 +70,21 @@ function AbTestModal({
 
       updatePendingJobProperties(jobDetails.jobId, {
         base64String:
-          selectedImg === 1 ? jobDetails.base64String : secondaryImage,
+          selectedImg === 0 ? jobDetails.base64String : secondaryImage,
         ratingSubmitted: true,
         thumbnail: null
       })
 
       await updatePendingJobInDexie(jobDetails.id, {
         base64String:
-          selectedImg === 1 ? jobDetails.base64String : secondaryImage,
+          selectedImg === 0 ? jobDetails.base64String : secondaryImage,
         ratingSubmitted: true,
         thumbnail: null
       })
 
       await updateCompletedJob(imageDetailsFromCompleted.id, {
         base64String:
-          selectedImg === 1 ? jobDetails.base64String : secondaryImage,
+          selectedImg === 0 ? jobDetails.base64String : secondaryImage,
         ratingSubmitted: true,
         thumbnail: null
       })
@@ -87,6 +95,8 @@ function AbTestModal({
       handleClose()
     } catch (e) {
       console.log(e)
+      setIsRated(true)
+      handleClose()
     }
   }, [
     handleClose,
@@ -100,110 +110,106 @@ function AbTestModal({
     setIsRated
   ])
 
-  return (
-    <InteractiveModal
-      className={styles.ModalStyle}
-      disableSwipe
-      handleClose={handleClose}
-    >
-      <div ref={ref}>
-        <div>
-          <PageTitle>SDXL: Choose the best image</PageTitle>
-        </div>
-        <div className={styles.Images} style={{ marginBottom: '12px' }}>
-          <Carousel
-            showArrows={true}
-            showThumbs={false}
-            onChange={() => {}}
-            onClickItem={() => {}}
-            onClickThumb={() => {}}
-            useKeyboardArrows={true}
-            infiniteLoop={true}
-          >
-            <div>
-              <img
-                // className={clsx(
-                //   styles.ImageElement,
-                //   selectedImg !== 0 && selectedImg !== 1 && styles.NotSelected
-                // )}
-                src={'data:image/webp;base64,' + jobDetails.base64String}
-                alt={jobDetails.prompt}
-                onClick={() => setSelectedImg(1)}
-                style={{
-                  border:
-                    selectedImg === 1 ? '4px solid var(--main-color)' : 'unset'
-                }}
-              />
-            </div>
-            <div>
-              <img
-                // className={clsx(
-                //   styles.ImageElement,
-                //   selectedImg !== 0 && selectedImg !== 2 && styles.NotSelected
-                // )}
-                src={'data:image/webp;base64,' + secondaryImage}
-                alt={jobDetails.prompt}
-                onClick={() => setSelectedImg(2)}
-                style={{
-                  border:
-                    selectedImg === 2 ? '4px solid var(--main-color)' : 'unset'
-                }}
-              />
-            </div>
-          </Carousel>
+  useEffect(() => {
+    if (modal.visible) {
+      updateModalHeight()
+      window.addEventListener('resize', updateModalHeight)
+      setLocked(true)
+      return () => {
+        setLocked(false)
+        window.removeEventListener('resize', updateModalHeight)
+      }
+    }
+  }, [modal.visible, setLocked])
 
-          {/* <img
-            className={clsx(
-              styles.ImageElement,
-              selectedImg !== 0 && selectedImg !== 1 && styles.NotSelected
-            )}
-            src={'data:image/webp;base64,' + jobDetails.base64String}
-            alt={jobDetails.prompt}
-            onClick={() => setSelectedImg(1)}
+  if (!modal.visible) {
+    return null
+  }
+
+  const images = [
+    { src: 'data:image/webp;base64,' + jobDetails.base64String },
+    { src: 'data:image/webp;base64,' + secondaryImage }
+  ]
+
+  return (
+    <>
+      <style>
+        {`
+          #sdxl-abtest-content>div>div>div>ul>li>figure {
+            background-color: var(--body-color);
+          }
+
+          #sdxl-abtest-content>div>div>div>ul>li>figure>img {
+            border: unset !important;
+            border-bottom: unset !important;
+            height: unset;
+            margin: 0 auto;
+            max-height: ${Number(modalHeight) - 132}px;
+            width: unset;
+          }
+      `}
+      </style>
+      <Overlay handleClose={handleClose} />
+      <div className={styles.ModalStyle} style={{ maxHeight: modalHeight }}>
+        <div className={styles['close-btn']} onClick={handleClose}>
+          <IconX stroke={1.5} size={28} />
+        </div>
+        <PageTitle>
+          <FlexRow gap={4}>
+            <IconInfoHexagon />
+            SDXL Beta
+            <TooltipComponent tooltipId="sdxl-beta-tooltip-modal">
+              SDXL is currently in beta and provided by Stability.ai in order to
+              refine future image models. Please select one of the following two
+              images to choose as the best image for this particular generation.
+              You will be rewarded 15 kudos for each rating.
+            </TooltipComponent>
+          </FlexRow>
+          <div style={{ fontWeight: 400, fontSize: '14px', marginTop: '-4px' }}>
+            Choose which image you think is best:
+          </div>
+        </PageTitle>
+        <div
+          id="sdxl-abtest-content"
+          className={styles.ModalContent}
+          tabIndex={0}
+        >
+          <Carousel
+            hasMediaButton={false}
+            hasSizeButton={false}
+            hasThumbnails={false}
+            widgetsHasShadow={true}
+            images={images}
+            transitionSpeed={4}
             style={{
-              border:
-                selectedImg === 1 ? '4px solid var(--main-color)' : 'unset'
+              backgroundColor: 'unset',
+              maxHeight: `${Number(modalHeight) - 128}px`
+            }}
+            index={selectedImg}
+            onIndexChange={({ curIndex, curIndexForDisplay }) => {
+              setSelectedImg(curIndex)
+              return { curIndex, curIndexForDisplay }
             }}
           />
 
-          <img
-            className={clsx(
-              styles.ImageElement,
-              selectedImg !== 0 && selectedImg !== 2 && styles.NotSelected
-            )}
-            src={'data:image/webp;base64,' + secondaryImage}
-            alt={jobDetails.prompt}
-            onClick={() => setSelectedImg(2)}
+          <div
+            className="flex flex-row w-full justify-center"
             style={{
-              border:
-                selectedImg === 2 ? '4px solid var(--main-color)' : 'unset'
-            }}
-          /> */}
-        </div>
-        <div
-          className="flex flex-row w-full justify-center"
-          style={{ fontSize: '14px', marginBottom: '8px' }}
-        >
-          Choose which image you think looks the best. The result will be sent
-          back to Stability.ai in order to further improve SDXL. In return, you
-          will receive 15 kudos per image rated.
-        </div>
-        <div
-          className="flex flex-row w-full justify-center"
-          style={{ marginBottom: '12px' }}
-        >
-          <Button
-            disabled={selectedImg === 0}
-            onClick={() => {
-              if (selectedImg === 0) return
-              handleRateImage()
+              marginBottom: '12px',
+              marginTop: '12px'
             }}
           >
-            Select favorite image
-          </Button>
+            <Button
+              onClick={() => {
+                handleRateImage()
+              }}
+            >
+              Select favorite image
+            </Button>
+          </div>
         </div>
       </div>
-    </InteractiveModal>
+    </>
   )
 }
 

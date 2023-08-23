@@ -18,18 +18,21 @@ import {
 } from '@tabler/icons-react'
 import styles from './menu.module.css'
 import { CSSProperties } from 'react'
+import clsx from 'clsx'
 
 const MenuOptions = ({
+  className,
   forceAdPadding = false,
   navigateToLink = () => {},
   style
 }: {
+  className?: string
   forceAdPadding?: boolean
   navigateToLink: (path: string) => any
   style?: CSSProperties
 }) => {
   return (
-    <div className={styles.MenuOptions} style={style}>
+    <div className={clsx(styles.MenuOptions, className)} style={style}>
       <div
         className={styles.MenuOption}
         onClick={() => {
