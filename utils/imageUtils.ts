@@ -3,7 +3,6 @@ import { trackEvent } from '../api/telemetry'
 import { userInfoStore } from '../store/userStore'
 import { initBlob } from './blobUtils'
 import { SourceProcessing } from './promptUtils'
-import { stylePresets } from './stylePresets'
 import { isValidHttpUrl } from './validationUtils'
 import { hasPromptMatrix, promptMatrix } from './promptUtils'
 import AppSettings from '../models/AppSettings'
@@ -442,15 +441,6 @@ export const modifyPromptForStylePreset = ({
   let stylePresetPrompt = ''
   let stylePresetNeg = ''
 
-  if (stylePreset !== 'none') {
-    // @ts-ignore
-    const presetTextFromStyle = { ...stylePresets[stylePreset] }
-
-    // Split any negative prompt from presetTextFromStyle (so we can combine with user's existing negative prompt)
-    stylePresetPrompt = presetTextFromStyle.prompt.split('###')[0] || ''
-    stylePresetNeg = presetTextFromStyle.prompt.split('###')[1] || ''
-  }
-
   // If it exists, split negative part off of whole prompt,
   // so it can be combined with preset negative prompt.
   let [initPrompt = '', splitNegative = ''] = prompt.split('###')
@@ -733,7 +723,7 @@ export const downloadFile = async (image: any) => {
       // For jpeg, add image parameters in exif metadata
       const metaData: string =
         `${image.prompt}\n` +
-        ((image.negative) ? `Negative prompt: ${image.negative}\n` : ``) +
+        (image.negative ? `Negative prompt: ${image.negative}\n` : ``) +
         `Steps: ${image.steps}, Sampler: ${image.sampler}, CFG scale: ${image.cfg_scale}, Seed: ${image.seed}` +
         `, Size: ${image.width}x${image.height}, model: ${image.models}`
 
