@@ -1,3 +1,10 @@
+# 2023.08.24
+
+- Oh, boy. I've been trying to be more diligent about [documenting various issues on GitHub](https://github.com/daveschumaker/artbot-for-stable-diffusion/issues). Needless to say, there are a lot of minor (and not-so-minor) things to fix! Slowly (very slowly), but surely!
+- Simple update this evening as I haven't had much time to work on the project as of late:
+- Refactored some logic around the SDXL A/B test modal. It sounds like that once SDXL is officially supported on the Horde, Stability.ai may still want to utilize the power of the Horde to refine their image models using the A/B testing framework. I've cleaned up the presentation of the A/B test modal. You can now choose your favorite image and optionally trash the other result, save both, or delete both.
+- Refactored some logic around the misbehaving ad component (you might have seen multiple ads stacked up in the sidebar under certain conditions).
+
 # 2023.08.17
 
 - Fix issue with creating shareable links when swiping between images in the image modal.

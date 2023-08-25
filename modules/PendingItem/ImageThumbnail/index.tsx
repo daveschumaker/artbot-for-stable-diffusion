@@ -21,8 +21,8 @@ export default function ImageThumbnail({
 }) {
   const abTestModal = useModal(AbTestModal)
   // const [showAbTestModal, setShowAbTestModal] = useState(false) // SDXL_beta
-  const [secondaryImage, setSecondaryImage] = useState('') // SDXL_beta
-  const [secondaryId, setSecondaryId] = useState('') // SDXL_beta
+  const [secondaryImage, setSecondaryImage] = useState<string>('') // SDXL_beta
+  const [secondaryId, setSecondaryId] = useState<string>('') // SDXL_beta
   const [isRated, setIsRated] = useState(false)
 
   const { jobId, jobStatus, ratingSubmitted } = jobDetails

@@ -26,6 +26,9 @@ import {
   IconX
 } from '@tabler/icons-react'
 import SpinnerV2 from 'components/Spinner'
+import useSdxlModal from './useSdxlModal'
+import { useState } from 'react'
+import AbTestModal from 'modules/PendingItem/AbTestModal'
 
 export default function PendingPanelImageCard({
   index,
@@ -34,9 +37,12 @@ export default function PendingPanelImageCard({
   index: number
   jobs: any[]
 }) {
-  const imagePreviewModal = useModal(ImageModal)
-
   const imageJob: any = jobs[index]
+  const imagePreviewModal = useModal(ImageModal)
+  const abTestModal = useModal(AbTestModal)
+
+  const [isSdxlAbTest, secondaryId, secondaryImage] = useSdxlModal(imageJob)
+  const [isRated, setIsRated] = useState(false)
 
   const serverHasJob =
     imageJob.jobStatus === JobStatus.Queued ||
@@ -81,10 +87,23 @@ export default function PendingPanelImageCard({
           if (imageJob.jobStatus === JobStatus.Done) {
             const imageDetails = await getImageDetails(imageJob.jobId)
             setImageDetailsModalOpen(true)
-            imagePreviewModal.show({
-              handleClose: () => imagePreviewModal.remove(),
-              imageDetails
-            })
+
+            if (isSdxlAbTest && !isRated) {
+              abTestModal.show({
+                jobDetails: imageDetails,
+                // @ts-ignore
+                secondaryId,
+                // @ts-ignore
+                secondaryImage,
+                setIsRated
+              })
+              return
+            } else {
+              imagePreviewModal.show({
+                handleClose: () => imagePreviewModal.remove(),
+                imageDetails
+              })
+            }
           }
         }}
       >
@@ -98,6 +117,7 @@ export default function PendingPanelImageCard({
           >
             <IconHeart
               fill={imageJob.favorited ? 'red' : 'rgb(0,0,0,0)'}
+              color="white"
               size={26}
               stroke={1}
             />
@@ -109,14 +129,14 @@ export default function PendingPanelImageCard({
             hideFromPending(imageJob.jobId, imageJob.jobStatus, e)
           }
         >
-          <IconX />
+          <IconX color="white" stroke={1} />
         </div>
         {imageJob.jobStatus === JobStatus.Done && (
           <div
             className={styles.TrashButton}
             onClick={(e) => handleDeleteImage(imageJob.jobId, e)}
           >
-            <IconTrash stroke={1.5} />
+            <IconTrash color="white" stroke={1} />
           </div>
         )}
         {imageJob.jobStatus !== JobStatus.Done && (
@@ -131,6 +151,7 @@ export default function PendingPanelImageCard({
         {serverHasJob && <SpinnerV2 style={{ position: 'absolute' }} />}
         {imageJob.jobStatus === JobStatus.Waiting && (
           <IconPhotoUp
+            color="white"
             stroke={1.5}
             size={36}
             style={{ position: 'absolute' }}
@@ -140,7 +161,7 @@ export default function PendingPanelImageCard({
           <IconAlertTriangle
             color="rgb(234 179 8)"
             size={36}
-            stroke={1.5}
+            stroke={1}
             style={{ position: 'absolute' }}
           />
         )}
