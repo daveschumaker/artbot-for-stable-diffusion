@@ -6,21 +6,32 @@ import { Button } from 'components/UI/Button'
 import { clientHeader, getApiHostServer } from 'utils/appUtils'
 import AppSettings from 'models/AppSettings'
 import {
+  deleteCompletedImage,
   deleteImageFromDexie,
   getImageDetails,
   updateCompletedJob,
   updatePendingJobInDexie
 } from 'utils/db'
-import { updatePendingJobProperties } from 'controllers/pendingJobsCache'
+import {
+  deletePendingJob,
+  updatePendingJobProperties
+} from 'controllers/pendingJobsCache'
 import NiceModal, { useModal } from '@ebay/nice-modal-react'
 import Overlay from 'app/_components/Overlay'
-import { IconInfoHexagon, IconX } from '@tabler/icons-react'
+import {
+  IconDeviceFloppy,
+  IconInfoHexagon,
+  IconTrash,
+  IconTrashX,
+  IconX
+} from '@tabler/icons-react'
 
 import Carousel from 'react-gallery-carousel'
 import 'react-gallery-carousel/dist/index.css'
 import FlexRow from 'app/_components/FlexRow'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import useLockedBody from 'hooks/useLockedBody'
+import FlexCol from 'app/_components/FlexCol'
 
 function AbTestModal({
   jobDetails,
@@ -66,47 +77,112 @@ function AbTestModal({
         }
       )
 
-      const imageDetailsFromCompleted = await getImageDetails(jobDetails.jobId)
-
-      updatePendingJobProperties(jobDetails.jobId, {
-        base64String:
-          selectedImg === 0 ? jobDetails.base64String : secondaryImage,
-        ratingSubmitted: true,
-        thumbnail: null
-      })
-
-      await updatePendingJobInDexie(jobDetails.id, {
-        base64String:
-          selectedImg === 0 ? jobDetails.base64String : secondaryImage,
-        ratingSubmitted: true,
-        thumbnail: null
-      })
-
-      await updateCompletedJob(imageDetailsFromCompleted.id, {
-        base64String:
-          selectedImg === 0 ? jobDetails.base64String : secondaryImage,
-        ratingSubmitted: true,
-        thumbnail: null
-      })
-
-      await deleteImageFromDexie(jobDetails.jobId)
-
-      setIsRated(true)
-      handleClose()
+      return true
     } catch (e) {
       console.log(e)
-      setIsRated(true)
-      handleClose()
+      return false
     }
+  }, [jobDetails.hordeImageId, jobDetails.jobId, secondaryId, selectedImg])
+
+  const handleRateSaveBoth = useCallback(async () => {
+    await handleRateImage()
+
+    const imageDetailsFromCompleted = await getImageDetails(jobDetails.jobId)
+
+    updatePendingJobProperties(jobDetails.jobId, {
+      base64String:
+        selectedImg === 0 ? jobDetails.base64String : secondaryImage,
+      jobId: selectedImg === 0 ? jobDetails.jobId : jobDetails.sdxlCompanionJob,
+      ratingSubmitted: true,
+      thumbnail: null
+    })
+
+    await updatePendingJobInDexie(jobDetails.id, {
+      base64String:
+        selectedImg === 0 ? jobDetails.base64String : secondaryImage,
+      ratingSubmitted: true,
+      thumbnail: null
+    })
+
+    await updateCompletedJob(imageDetailsFromCompleted.id, {
+      ratingSubmitted: true,
+      thumbnail: null
+    })
+
+    await deleteImageFromDexie(jobDetails.jobId)
+
+    setIsRated(true)
+    handleClose()
   }, [
     handleClose,
+    handleRateImage,
     jobDetails.base64String,
-    jobDetails.hordeImageId,
     jobDetails.id,
     jobDetails.jobId,
-    secondaryId,
+    jobDetails.sdxlCompanionJob,
     secondaryImage,
     selectedImg,
+    setIsRated
+  ])
+
+  const handleRateDeleteOther = useCallback(async () => {
+    await handleRateImage()
+
+    const imageDetailsFromCompleted = await getImageDetails(jobDetails.jobId)
+
+    updatePendingJobProperties(jobDetails.jobId, {
+      base64String:
+        selectedImg === 0 ? jobDetails.base64String : secondaryImage,
+      ratingSubmitted: true,
+      thumbnail: null
+    })
+
+    await updatePendingJobInDexie(jobDetails.id, {
+      base64String:
+        selectedImg === 0 ? jobDetails.base64String : secondaryImage,
+      ratingSubmitted: true,
+      thumbnail: null
+    })
+
+    await updateCompletedJob(imageDetailsFromCompleted.id, {
+      base64String:
+        selectedImg === 0 ? jobDetails.base64String : secondaryImage,
+      ratingSubmitted: true,
+      thumbnail: null,
+      sdxlCompanionJob: null
+    })
+
+    await deleteCompletedImage(jobDetails.sdxlCompanionJob)
+    await deleteImageFromDexie(jobDetails.jobId)
+
+    setIsRated(true)
+    handleClose()
+  }, [
+    handleClose,
+    handleRateImage,
+    jobDetails.base64String,
+    jobDetails.id,
+    jobDetails.jobId,
+    jobDetails.sdxlCompanionJob,
+    secondaryImage,
+    selectedImg,
+    setIsRated
+  ])
+
+  const handleRateDeleteBoth = useCallback(async () => {
+    await handleRateImage()
+
+    await deleteCompletedImage(jobDetails.jobId)
+    await deleteCompletedImage(jobDetails.sdxlCompanionJob)
+    deletePendingJob(jobDetails.jobId)
+
+    setIsRated(true)
+    handleClose()
+  }, [
+    handleClose,
+    handleRateImage,
+    jobDetails.jobId,
+    jobDetails.sdxlCompanionJob,
     setIsRated
   ])
 
@@ -183,7 +259,7 @@ function AbTestModal({
             transitionSpeed={4}
             style={{
               backgroundColor: 'unset',
-              maxHeight: `${Number(modalHeight) - 128}px`
+              maxHeight: `${Number(modalHeight) - 240}px`
             }}
             index={selectedImg}
             onIndexChange={({ curIndex, curIndexForDisplay }) => {
@@ -191,22 +267,42 @@ function AbTestModal({
               return { curIndex, curIndexForDisplay }
             }}
           />
-
-          <div
-            className="flex flex-row w-full justify-center"
+          <FlexCol
+            gap={8}
             style={{
-              marginBottom: '12px',
-              marginTop: '12px'
+              marginTop: '12px',
+              alignItems: 'center'
             }}
           >
             <Button
               onClick={() => {
-                handleRateImage()
+                handleRateSaveBoth()
               }}
+              style={{ minWidth: '260px' }}
             >
-              Select favorite image
+              <IconDeviceFloppy stroke={1.5} />
+              Select as favorite (save both)
             </Button>
-          </div>
+            <Button
+              onClick={() => {
+                handleRateDeleteOther()
+              }}
+              style={{ minWidth: '260px' }}
+            >
+              <IconTrashX stroke={1.5} />
+              Select as favorite (delete other)
+            </Button>
+            <Button
+              onClick={() => {
+                handleRateDeleteBoth()
+              }}
+              theme="secondary"
+              style={{ minWidth: '260px' }}
+            >
+              <IconTrash stroke={1.5} />
+              Select as favorite (delete both)
+            </Button>
+          </FlexCol>
         </div>
       </div>
     </>
