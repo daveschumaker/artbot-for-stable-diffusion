@@ -1,3 +1,8 @@
+# 2023.08.26
+
+- Ensure that the prompt-replacement filter is working. If set to true (this is the default setting for all users), it will tell the Horde backend to automatically replace certain keywords (e.g., girl -> woman / boy -> man) when using NSFW models to ensure that you don't receive a ban from the AI Horde for potentially generating inappropriate content.
+- However, the prompt replacement filter does not work for prompts greater than 1,000 characters. If the Horde receives a request like this, it will reject the job and return an error. ArtBot will now automatically disable the prompt replacement filter when more than 1,000 characters are used.
+
 # 2023.08.24
 
 - Oh, boy. I've been trying to be more diligent about [documenting various issues on GitHub](https://github.com/daveschumaker/artbot-for-stable-diffusion/issues). Needless to say, there are a lot of minor (and not-so-minor) things to fix! Slowly (very slowly), but surely!

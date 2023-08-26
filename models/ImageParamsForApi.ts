@@ -118,6 +118,14 @@ class ImageParamsForApi {
 
     const { hasError = false } = options
 
+    // explicitly check if prompt-replacement filter is disabled by user. Otherwise, set to true.
+    let replacement_filter =
+      AppSettings.get('useReplacementFilter') === false ? false : true
+
+    if (replacement_filter && prompt.length >= 1000) {
+      replacement_filter = false
+    }
+
     const apiParams: IApiParams = {
       prompt,
       params: {
@@ -139,7 +147,7 @@ class ImageParamsForApi {
       trusted_workers: useTrusted,
       models,
       r2: true,
-      replacement_filter: AppSettings.get('useReplacementFilter') || false,
+      replacement_filter,
       worker_blacklist: false,
       shared: shareImage,
       slow_workers: AppSettings.get('slow_workers') === false ? false : true,

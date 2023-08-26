@@ -41,6 +41,7 @@ import FlexRow from 'app/_components/FlexRow'
 import CreatePageSettings from './Settings'
 import FormErrorMessage from './ActionPanel/FormErrorMessage'
 import { useWindowSize } from 'hooks/useWindowSize'
+import AppSettings from 'models/AppSettings'
 
 const defaultState: DefaultPromptInput = new DefaultPromptInput()
 
@@ -60,6 +61,7 @@ const CreatePage = ({ modelDetails = {} }: any) => {
   const searchParams = useSearchParams()
 
   const [pageLoaded, setPageLoaded] = useState(false)
+  const [promptReplacementError, setPromptReplacementError] = useState(false)
   const [flaggedPromptError, setFlaggedPromptError] = useState(false)
   const [pending, setPending] = useState(false)
 
@@ -145,6 +147,15 @@ const CreatePage = ({ modelDetails = {} }: any) => {
     }
     if ((!promptFlagged && flaggedPromptError) || hasNsfwModel.length === 0) {
       setFlaggedPromptError(false)
+    }
+
+    if (
+      input.prompt.length >= 1000 &&
+      AppSettings.get('useReplacementFilter') !== false
+    ) {
+      setPromptReplacementError(true)
+    } else if (input.prompt.length < 1000 && promptReplacementError) {
+      setPromptReplacementError(false)
     }
 
     if (input.source_image && input.tiling) {
@@ -458,28 +469,48 @@ const CreatePage = ({ modelDetails = {} }: any) => {
         </PageTitle>
       </div>
       <div className={clsx('mt-0')}>
-        {flaggedPromptError && (
-          <div className="mb-4 bg-red-500 rounded-md px-4 py-2 font-[500] flex flex-row items-center gap-2 text-white">
-            <div>
-              <AlertTriangleIcon size={38} />
-            </div>
-            <div>
-              You are about to send a prompt that likely violates the Stable
-              Horde terms of use and may be rejected by the API. Please edit
-              your prompt or choose a non-NSFW model and try again.
-            </div>
-          </div>
-        )}
-
         <PromptInput input={input} setInput={setInput} />
         <FlexRow>
           <FormErrorMessage errors={errors} />
         </FlexRow>
+        <div>
+          {promptReplacementError && (
+            <div
+              className="bg-red-500 rounded-md px-4 py-2 font-[500] flex flex-row items-center gap-2 text-white"
+              style={{ color: 'rgb(239 68 68)', fontSize: '14px' }}
+            >
+              <div>
+                <AlertTriangleIcon size={38} />
+              </div>
+              <div>
+                Prompt length is greater than 1,000 characters. Prompt
+                replacement filter will automatically be disabled.
+              </div>
+            </div>
+          )}
+          {flaggedPromptError && (
+            <div
+              className="bg-red-500 rounded-md px-4 py-2 font-[500] flex flex-row items-center gap-2 text-white"
+              style={{ color: 'rgb(239 68 68)', fontSize: '14px' }}
+            >
+              <div>
+                <AlertTriangleIcon size={38} />
+              </div>
+              <div>
+                You are about to send a prompt that likely violates the Stable
+                Horde terms of use and may be rejected by the API. Please edit
+                your prompt, choose a non-NSFW model, or enable the prompt
+                replacement filter and try again.
+              </div>
+            </div>
+          )}
+        </div>
         <FlexRow
           gap={4}
           style={{ alignItems: 'flex-start', position: 'relative' }}
         >
           <CreatePageSettings />
+
           <ActionPanel
             errors={errors}
             input={input}
