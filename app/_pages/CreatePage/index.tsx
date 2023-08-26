@@ -21,11 +21,6 @@ import PromptInputSettings from 'models/PromptInputSettings'
 import { userInfoStore } from 'store/userStore'
 import DefaultPromptInput from 'models/DefaultPromptInput'
 import { logToConsole } from 'utils/debugTools'
-import {
-  promptSafetyExclusions,
-  validatePromptSafety
-} from 'utils/validationUtils'
-import AlertTriangleIcon from 'components/icons/AlertTriangle'
 import clsx from 'clsx'
 import { kudosCostV2 } from 'utils/kudosCost'
 import { CreatePageMode } from 'utils/loadInputCache'
@@ -41,7 +36,7 @@ import FlexRow from 'app/_components/FlexRow'
 import CreatePageSettings from './Settings'
 import FormErrorMessage from './ActionPanel/FormErrorMessage'
 import { useWindowSize } from 'hooks/useWindowSize'
-import AppSettings from 'models/AppSettings'
+import InputValidationErrorDisplay from './PromptInput/InputValidationErrorDisplay'
 
 const defaultState: DefaultPromptInput = new DefaultPromptInput()
 
@@ -61,8 +56,6 @@ const CreatePage = ({ modelDetails = {} }: any) => {
   const searchParams = useSearchParams()
 
   const [pageLoaded, setPageLoaded] = useState(false)
-  const [promptReplacementError, setPromptReplacementError] = useState(false)
-  const [flaggedPromptError, setFlaggedPromptError] = useState(false)
   const [pending, setPending] = useState(false)
 
   const [errors, setErrors] = useComponentState(
@@ -131,44 +124,10 @@ const CreatePage = ({ modelDetails = {} }: any) => {
 
   // Various input validation stuff.
   useEffect(() => {
-    const modifiedPrompt = promptSafetyExclusions(input.prompt, input.models[0])
-    const promptFlagged = validatePromptSafety(modifiedPrompt)
-    const hasNsfwModel =
-      input?.models?.filter((model: string) => {
-        if (!model) {
-          return false
-        }
-
-        return modelDetails[model] && modelDetails[model].nsfw === true
-      }) || []
-
-    if (promptFlagged && !flaggedPromptError && hasNsfwModel.length > 0) {
-      setFlaggedPromptError(true)
-    }
-    if ((!promptFlagged && flaggedPromptError) || hasNsfwModel.length === 0) {
-      setFlaggedPromptError(false)
-    }
-
-    if (
-      input.prompt.length >= 1000 &&
-      AppSettings.get('useReplacementFilter') !== false
-    ) {
-      setPromptReplacementError(true)
-    } else if (input.prompt.length < 1000 && promptReplacementError) {
-      setPromptReplacementError(false)
-    }
-
     if (input.source_image && input.tiling) {
       setInput({ tiling: false })
     }
-  }, [
-    input.prompt,
-    input.models,
-    flaggedPromptError,
-    modelDetails,
-    input.source_image,
-    input.tiling
-  ])
+  }, [input.source_image, input.tiling])
 
   useEffect(() => {
     const hasInpaintingModels = input.models.filter(
@@ -473,38 +432,10 @@ const CreatePage = ({ modelDetails = {} }: any) => {
         <FlexRow>
           <FormErrorMessage errors={errors} />
         </FlexRow>
-        <div>
-          {promptReplacementError && (
-            <div
-              className="bg-red-500 rounded-md px-4 py-2 font-[500] flex flex-row items-center gap-2 text-white"
-              style={{ color: 'rgb(239 68 68)', fontSize: '14px' }}
-            >
-              <div>
-                <AlertTriangleIcon size={38} />
-              </div>
-              <div>
-                Prompt length is greater than 1,000 characters. Prompt
-                replacement filter will automatically be disabled.
-              </div>
-            </div>
-          )}
-          {flaggedPromptError && (
-            <div
-              className="bg-red-500 rounded-md px-4 py-2 font-[500] flex flex-row items-center gap-2 text-white"
-              style={{ color: 'rgb(239 68 68)', fontSize: '14px' }}
-            >
-              <div>
-                <AlertTriangleIcon size={38} />
-              </div>
-              <div>
-                You are about to send a prompt that likely violates the Stable
-                Horde terms of use and may be rejected by the API. Please edit
-                your prompt, choose a non-NSFW model, or enable the prompt
-                replacement filter and try again.
-              </div>
-            </div>
-          )}
-        </div>
+        <InputValidationErrorDisplay
+          input={input}
+          modelDetails={modelDetails}
+        />
         <FlexRow
           gap={4}
           style={{ alignItems: 'flex-start', position: 'relative' }}

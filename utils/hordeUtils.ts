@@ -1,5 +1,6 @@
 import { fetchUserDetails } from 'api/userInfo'
 import AppSettings from 'models/AppSettings'
+import { setLoggedInState } from 'store/userStore'
 
 export const handleApiKeyLogin = async (apikey: string) => {
   if (!apikey) {
@@ -11,6 +12,7 @@ export const handleApiKeyLogin = async (apikey: string) => {
 
     if (success) {
       AppSettings.save('apiKey', apikey)
+      setLoggedInState(true)
       return { success: true }
     }
 
