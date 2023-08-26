@@ -1,6 +1,6 @@
 'use client'
 
-import React, { CSSProperties, useEffect } from 'react'
+import React, { CSSProperties, useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { debounce } from 'utils/debounce'
 
@@ -10,13 +10,14 @@ const refreshAd = debounce(() => {
   // @ts-ignore
   // eslint-disable-next-line no-undef
   _carbonads.refresh()
-}, 450)
+}, 250)
 
 const mountAd = debounce(() => {
   setTimeout(() => {
-    const isCarbonExist = document.querySelector('[id^="carbonads"]')
+    const isCarbonExist =
+      document.querySelectorAll('div[id^="carbonads"]') || []
 
-    if (isCarbonExist) {
+    if (isCarbonExist.length > 0) {
       minHeight = '164px'
       refreshAd()
       return
@@ -26,6 +27,12 @@ const mountAd = debounce(() => {
     const divElements = outerDiv?.querySelectorAll('div') ?? []
 
     if (divElements.length >= 1) {
+      return
+    }
+
+    const hasAds = document.querySelector('_carbonads_js')
+
+    if (hasAds) {
       return
     }
 
@@ -49,6 +56,7 @@ const CarbonAds = ({
   style?: CSSProperties
 }) => {
   const pathname = usePathname()
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     const outerDiv = document.querySelector('#carbon-container')
@@ -62,24 +70,28 @@ const CarbonAds = ({
   }, [])
 
   useEffect(() => {
-    mountAd()
-
     const interval = setInterval(() => {
-      const isCarbonExist = document.querySelector('#carbonads')
+      const isCarbonExist =
+        document.querySelectorAll('div[id^="carbonads"]') || []
+      const hasAdScript = document.querySelector('#_carbonads_js')
 
-      if (isCarbonExist) {
+      if (isCarbonExist.length > 0) {
         minHeight = '164px'
+      } else if (!mounted && !hasAdScript) {
+        mountAd()
+        setMounted(true)
       }
-    }, 250)
+    }, 150)
 
     return () => clearInterval(interval)
-  }, [pathname])
+  }, [mounted, pathname])
 
   useEffect(() => {
     // @ts-ignore
     // eslint-disable-next-line no-undef
-    const isCarbonExist = document.querySelector('#carbonads')
-    if (isCarbonExist) {
+    const isCarbonExist =
+      document.querySelectorAll('div[id^="carbonads"]') || []
+    if (isCarbonExist.length > 0) {
       // @ts-ignore
       // eslint-disable-next-line no-undef
       _carbonads?.refresh()

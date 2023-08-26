@@ -6,7 +6,7 @@ import PhotoUpIcon from 'components/icons/PhotoUpIcon'
 import PlaylistXIcon from 'components/icons/PlaylistXIcon'
 import SettingsIcon from 'components/icons/SettingsIcon'
 import Linker from 'components/UI/Linker'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { FullScreen, useFullScreenHandle } from 'react-full-screen'
 import { IImageDetails } from 'types'
 import { SourceProcessing } from 'utils/promptUtils'
@@ -23,6 +23,7 @@ import { cleanDataForApiRequestDisplay } from 'utils/imageUtils'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { useStore } from 'statery'
 import { appInfoStore } from 'store/appStore'
+import useWindowHeight from 'hooks/useWindowHeight'
 
 interface Props {
   imageDetails: IImageDetails
@@ -42,25 +43,13 @@ const ImageDetails = ({
   handleTiling = () => {}
 }: Props) => {
   const size = useWindowSize()
+  const windowHeight = useWindowHeight()
   const { imageDetailsModalOpen } = useStore(appInfoStore)
   const showFullScreen = useFullScreenHandle()
   const [fullscreen, setFullscreen] = useState(false)
   const [showImg2ImgModal, setShowImg2ImgModal] = useState(false)
   const [showTiles, setShowTiles] = useState(false)
   const [showRequestParams, setShowRequestParams] = useState(false)
-  const [windowHeight, setWindowHeight] = useState(window.innerHeight)
-
-  const updateWindowHeight = () => {
-    setWindowHeight(window.innerHeight)
-  }
-
-  useEffect(() => {
-    window.addEventListener('resize', updateWindowHeight)
-
-    return () => {
-      window.removeEventListener('resize', updateWindowHeight)
-    }
-  }, [])
 
   if (!imageDetails || !imageDetails.id) {
     logError({

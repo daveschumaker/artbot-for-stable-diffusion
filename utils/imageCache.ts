@@ -781,6 +781,7 @@ export const checkCurrentJob = async (imageDetails: any) => {
         ...imgDetailsFromApi
       }
 
+      let sdxlCompanionJob
       for (const idx in imgDetailsFromApi.generations) {
         const image = imgDetailsFromApi.generations[idx]
         if ('base64String' in image && image.base64String) {
@@ -790,7 +791,10 @@ export const checkCurrentJob = async (imageDetails: any) => {
             kudos: imgDetailsFromApi.kudos
           }
 
-          if (Number(idx) > 0) {
+          // Handle SDXL_beta
+          if (Number(idx) === 0 && imgDetailsFromApi.generations.length > 1) {
+            sdxlCompanionJob = uuidv4()
+          } else if (Number(idx) > 0) {
             // TODO: For now, this is for SDXL_beta logic, which returns an additional image
             addImageToDexie({
               jobId,
@@ -799,14 +803,18 @@ export const checkCurrentJob = async (imageDetails: any) => {
               type: 'ab-test'
             })
 
-            // SDXL beta / store second image as a new discrete job
+            // SDXL_beta / store second image as a new discrete job
             await addCompletedJobToDb({
               jobDetails: Object.assign({}, jobWithImageDetails, {
-                jobId: uuidv4()
+                jobId: sdxlCompanionJob
               })
             })
 
             return
+          }
+
+          if (sdxlCompanionJob) {
+            jobWithImageDetails.sdxlCompanionJob = sdxlCompanionJob
           }
 
           const result = await addCompletedJobToDb({

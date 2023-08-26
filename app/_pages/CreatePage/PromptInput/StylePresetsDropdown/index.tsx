@@ -27,6 +27,14 @@ export default function StylePresetsDropdown({
       models: stylePresets[key].model
         ? [stylePresets[key].model]
         : input.models,
+      sampler: stylePresets[key].sampler_name
+        ? stylePresets[key].sampler_name
+        : input.sampler,
+      cfg_scale: stylePresets[key].cfg_scale
+        ? stylePresets[key].cfg_scale
+        : input.cfg_scale,
+      loras: stylePresets[key].loras ? stylePresets[key].loras : input.loras,
+      steps: stylePresets[key].steps ? stylePresets[key].steps : input.steps,
       orientationType: input.orientationType,
       height: input.height,
       width: input.width

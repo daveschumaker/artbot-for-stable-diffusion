@@ -2,6 +2,7 @@ import {
   deletePendingJobs,
   initLoadPendingJobsFromDb
 } from 'controllers/pendingJobsCache'
+import { setLoggedInState } from 'store/userStore'
 import { JobStatus } from 'types'
 import { buildModelAvailability } from '../api/fetchAvailableModels'
 import { fetchHordePerformance } from '../api/fetchHordePerformance'
@@ -140,6 +141,8 @@ export const initAppSettings = async () => {
 
   if (!apikey) {
     AppSettings.set('shareImagesExternally', true)
+  } else {
+    setLoggedInState(true)
   }
 
   initWindowLogger()

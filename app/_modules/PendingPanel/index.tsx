@@ -2,82 +2,30 @@
 'use client'
 
 import {
-  IconAlertTriangle,
   IconFilter,
-  IconHeart,
   IconPhoto,
   IconPhotoOff,
-  IconPhotoUp,
-  IconSettings,
-  IconTrash,
-  IconX
+  IconSettings
 } from '@tabler/icons-react'
 import styles from './pendingPanel.module.css'
 import FlexRow from 'app/_components/FlexRow'
 import usePendingJobs from './usePendingJobs'
-import placeholderImage from '../../../public/placeholder.gif'
 import { JobStatus } from 'types'
-import SpinnerV2 from 'components/Spinner'
-import {
-  deleteCompletedImage,
-  deleteImageFromDexie,
-  getImageDetails
-} from 'utils/db'
-import { setImageDetailsModalOpen } from 'store/appStore'
-import { useModal } from '@ebay/nice-modal-react'
-import ImageModal from '../ImageModal'
 import { useCallback, useState } from 'react'
 import FilterOptions from 'app/_pages/PendingPage/FilterOptions'
 import PendingSettings from 'app/_pages/PendingPage/PendingSettings'
 import ClearJobs from 'app/_pages/PendingPage/ClearJobs'
 import { Button } from 'components/UI/Button'
-import {
-  deletePendingJob,
-  getPendingJob,
-  updatePendingJobV2
-} from 'controllers/pendingJobsCache'
-import { deletePendingJobFromApi } from 'api/deletePendingJobFromApi'
-import clsx from 'clsx'
 import { Virtuoso } from 'react-virtuoso'
+import PendingPanelImageCard from './PendingPanelImageCard'
 
 export default function PendingPanel() {
-  const imagePreviewModal = useModal(ImageModal)
   const [done, processing, queued, waiting, error] = usePendingJobs()
   const [filter, setFilter] = useState('all')
   const [showFilterDropdown, setShowFilterDropdown] = useState(false)
   const [showSettingsDropdown, setShowSettingsDropdown] = useState(false)
 
   const jobs = [...done, ...processing, ...queued, ...waiting, ...error]
-
-  const handleDeleteImage = async (jobId: string, e: any) => {
-    e.stopPropagation()
-
-    await deleteImageFromDexie(jobId)
-    await deleteCompletedImage(jobId)
-    deletePendingJob(jobId)
-  }
-
-  const handleFavClick = (jobId: string, e: any) => {
-    e.stopPropagation()
-    const job = getPendingJob(jobId)
-
-    // @ts-ignore
-    job.favorited = job.favorited ? false : true
-    updatePendingJobV2(job)
-  }
-
-  const hideFromPending = (jobId: string, jobStatus: JobStatus, e: any) => {
-    e.stopPropagation()
-
-    const serverHasJob =
-      jobStatus === JobStatus.Queued || jobStatus === JobStatus.Processing
-
-    if (serverHasJob) {
-      deletePendingJobFromApi(jobId)
-    }
-
-    deletePendingJob(jobId)
-  }
 
   const filterJobs = useCallback(() => {
     let filterJobs = [
@@ -115,100 +63,6 @@ export default function PendingPanel() {
   }, [done, error, filter, processing, queued, waiting])
 
   const filteredJobs = filterJobs()
-
-  const renderRow = ({ index }: { index: number }) => {
-    const imageJob: any = filteredJobs[index]
-
-    const serverHasJob =
-      imageJob.jobStatus === JobStatus.Queued ||
-      imageJob.jobStatus === JobStatus.Processing ||
-      imageJob.jobStatus === JobStatus.Requested
-    return (
-      <div className={styles.PendingJobCard} key={imageJob.jobId}>
-        <div
-          className={styles.imageContainer}
-          onClick={async () => {
-            if (imageJob.jobStatus === JobStatus.Done) {
-              const imageDetails = await getImageDetails(imageJob.jobId)
-              setImageDetailsModalOpen(true)
-              imagePreviewModal.show({
-                handleClose: () => imagePreviewModal.remove(),
-                imageDetails
-              })
-            }
-          }}
-        >
-          {imageJob.jobStatus === JobStatus.Done && (
-            <div
-              className={clsx(
-                styles.FavButton,
-                imageJob.favorited && styles.favorited
-              )}
-              onClick={(e) => handleFavClick(imageJob.jobId, e)}
-            >
-              <IconHeart
-                fill={imageJob.favorited ? 'red' : 'rgb(0,0,0,0)'}
-                size={26}
-                stroke={1}
-              />
-            </div>
-          )}
-          <div
-            className={styles.CloseButton}
-            onClick={(e) =>
-              hideFromPending(imageJob.jobId, imageJob.jobStatus, e)
-            }
-          >
-            <IconX />
-          </div>
-          {imageJob.jobStatus === JobStatus.Done && (
-            <div
-              className={styles.TrashButton}
-              onClick={(e) => handleDeleteImage(imageJob.jobId, e)}
-            >
-              <IconTrash stroke={1.5} />
-            </div>
-          )}
-          {imageJob.jobStatus !== JobStatus.Done && (
-            <img
-              alt="Pending image"
-              src={placeholderImage.src}
-              height={imageJob.height}
-              width={imageJob.width}
-              style={{ borderRadius: '4px' }}
-            />
-          )}
-          {serverHasJob && <SpinnerV2 style={{ position: 'absolute' }} />}
-          {imageJob.jobStatus === JobStatus.Waiting && (
-            <IconPhotoUp
-              stroke={1.5}
-              size={36}
-              style={{ position: 'absolute' }}
-            />
-          )}
-          {imageJob.jobStatus === JobStatus.Error && (
-            <IconAlertTriangle
-              color="rgb(234 179 8)"
-              size={36}
-              stroke={1.5}
-              style={{ position: 'absolute' }}
-            />
-          )}
-          {imageJob.jobStatus === JobStatus.Done && (
-            <img
-              alt="Completed image"
-              src={`data:image/webp;base64,${
-                imageJob.thumbnail || imageJob.base64String
-              }`}
-              height={imageJob.height}
-              width={imageJob.width}
-              style={{ borderRadius: '4px', cursor: 'pointer' }}
-            />
-          )}
-        </div>
-      </div>
-    )
-  }
 
   return (
     <div className={styles.PendingPanelWrapper}>
@@ -281,7 +135,9 @@ export default function PendingPanel() {
                 )
               }
             }}
-            itemContent={(index) => <>{renderRow({ index })}</>}
+            itemContent={(index) => (
+              <PendingPanelImageCard index={index} jobs={filteredJobs} />
+            )}
           />
         )}
       </div>

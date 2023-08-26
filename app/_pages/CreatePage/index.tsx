@@ -21,11 +21,6 @@ import PromptInputSettings from 'models/PromptInputSettings'
 import { userInfoStore } from 'store/userStore'
 import DefaultPromptInput from 'models/DefaultPromptInput'
 import { logToConsole } from 'utils/debugTools'
-import {
-  promptSafetyExclusions,
-  validatePromptSafety
-} from 'utils/validationUtils'
-import AlertTriangleIcon from 'components/icons/AlertTriangle'
 import clsx from 'clsx'
 import { kudosCostV2 } from 'utils/kudosCost'
 import { CreatePageMode } from 'utils/loadInputCache'
@@ -41,6 +36,7 @@ import FlexRow from 'app/_components/FlexRow'
 import CreatePageSettings from './Settings'
 import FormErrorMessage from './ActionPanel/FormErrorMessage'
 import { useWindowSize } from 'hooks/useWindowSize'
+import InputValidationErrorDisplay from './PromptInput/InputValidationErrorDisplay'
 
 const defaultState: DefaultPromptInput = new DefaultPromptInput()
 
@@ -60,7 +56,6 @@ const CreatePage = ({ modelDetails = {} }: any) => {
   const searchParams = useSearchParams()
 
   const [pageLoaded, setPageLoaded] = useState(false)
-  const [flaggedPromptError, setFlaggedPromptError] = useState(false)
   const [pending, setPending] = useState(false)
 
   const [errors, setErrors] = useComponentState(
@@ -129,35 +124,10 @@ const CreatePage = ({ modelDetails = {} }: any) => {
 
   // Various input validation stuff.
   useEffect(() => {
-    const modifiedPrompt = promptSafetyExclusions(input.prompt, input.models[0])
-    const promptFlagged = validatePromptSafety(modifiedPrompt)
-    const hasNsfwModel =
-      input?.models?.filter((model: string) => {
-        if (!model) {
-          return false
-        }
-
-        return modelDetails[model] && modelDetails[model].nsfw === true
-      }) || []
-
-    if (promptFlagged && !flaggedPromptError && hasNsfwModel.length > 0) {
-      setFlaggedPromptError(true)
-    }
-    if ((!promptFlagged && flaggedPromptError) || hasNsfwModel.length === 0) {
-      setFlaggedPromptError(false)
-    }
-
     if (input.source_image && input.tiling) {
       setInput({ tiling: false })
     }
-  }, [
-    input.prompt,
-    input.models,
-    flaggedPromptError,
-    modelDetails,
-    input.source_image,
-    input.tiling
-  ])
+  }, [input.source_image, input.tiling])
 
   useEffect(() => {
     const hasInpaintingModels = input.models.filter(
@@ -458,28 +428,20 @@ const CreatePage = ({ modelDetails = {} }: any) => {
         </PageTitle>
       </div>
       <div className={clsx('mt-0')}>
-        {flaggedPromptError && (
-          <div className="mb-4 bg-red-500 rounded-md px-4 py-2 font-[500] flex flex-row items-center gap-2 text-white">
-            <div>
-              <AlertTriangleIcon size={38} />
-            </div>
-            <div>
-              You are about to send a prompt that likely violates the Stable
-              Horde terms of use and may be rejected by the API. Please edit
-              your prompt or choose a non-NSFW model and try again.
-            </div>
-          </div>
-        )}
-
         <PromptInput input={input} setInput={setInput} />
         <FlexRow>
           <FormErrorMessage errors={errors} />
         </FlexRow>
+        <InputValidationErrorDisplay
+          input={input}
+          modelDetails={modelDetails}
+        />
         <FlexRow
           gap={4}
           style={{ alignItems: 'flex-start', position: 'relative' }}
         >
           <CreatePageSettings />
+
           <ActionPanel
             errors={errors}
             input={input}

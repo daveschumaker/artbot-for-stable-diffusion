@@ -2,7 +2,12 @@ interface Preset {
   [key: string]: {
     cfg_scale?: number
     height?: number
-    loras?: Array<{ name: string }>
+    loras?: Array<{
+      name: string
+      inject_trigger?: string
+      model?: number
+      clip?: number
+    }>
     model?: string
     prompt: string
     sampler_name?: string
@@ -25,6 +30,13 @@ function sortAlphabetically(obj: any) {
 // Via: https://github.com/Haidra-Org/AI-Horde-Styles
 // TODO: Automatically import and update
 export const stableHordeStyles: Preset = {
+  sdxl: {
+    prompt: '{p}{np}',
+    model: 'SDXL_beta::stability.ai#6901',
+    width: 1024,
+    height: 1024,
+    steps: 50
+  },
   raw: {
     prompt: '{p}{np}',
     model: 'stable_diffusion'
@@ -36,18 +48,314 @@ export const stableHordeStyles: Preset = {
     width: 768,
     height: 768
   },
+  rpiracy: {
+    prompt:
+      'Masterpiece, splash art, digital painting, a full body shot of a sexy male pirate (John Oliver:1.3) in pirate captain clothes {p}, glasses, global illumination, hot, art by artgerm and paul cadmus, and viktoria gavrilenko###{np}woman, fully dressed, blurry, bad drawing, double head, blurry, ugly, deformed, malformed, lowres, mutant, mutated, disfigured, compressed, noise, artifacts, dithering, simple, watermark, text, font, signage, collage, pixel',
+    model: 'Dreamshaper',
+    sampler_name: 'k_dpm_adaptive',
+    steps: 43,
+    cfg_scale: 8.5
+  },
+  sdxlcatgirlportrait: {
+    prompt:
+      'high quality, intricate, fluffy tail, cat ears, a full-body portrait of a catgirl, {p}, photorealistic, magical realism, fantasy###{np}, (Drawing cartoon comic sketch 2d render:0.7)',
+    model: 'SDXL_beta::stability.ai#6901',
+    sampler_name: 'k_dpmpp_sde',
+    width: 832,
+    height: 1152,
+    steps: 50,
+    cfg_scale: 8.5
+  },
+  sovietpropaganda: {
+    prompt:
+      'USSR soviet propaganda poster, {p}###photorealistic, cute, modern,{np}',
+    model: 'SDXL_beta::stability.ai#6901',
+    sampler_name: 'k_dpmpp_sde',
+    width: 768,
+    height: 1152,
+    steps: 50,
+    cfg_scale: 8.5
+  },
+  embroidery: {
+    prompt:
+      '(Embroidery) knitting pattern of {p}, (cross stitch)###photorealistic, {np}',
+    model: 'SDXL_beta::stability.ai#6901',
+    sampler_name: 'k_dpmpp_sde',
+    width: 1024,
+    height: 1024,
+    steps: 50,
+    cfg_scale: 8.5
+  },
+  broadsheetart: {
+    prompt: 'antique broadsheet drawing, {p}, text, monotone###{np}, colorful',
+    model: 'SDXL_beta::stability.ai#6901',
+    sampler_name: 'k_dpmpp_sde',
+    width: 1024,
+    height: 1024,
+    steps: 50,
+    cfg_scale: 8.5
+  },
+  watercolorscenery: {
+    prompt:
+      'watercolor painting of {p}, broad brush strokes, soft colors###photorealistic, 3d, {np}',
+    model: 'SDXL_beta::stability.ai#6901',
+    sampler_name: 'k_dpmpp_sde',
+    width: 1344,
+    height: 832,
+    steps: 40,
+    cfg_scale: 7.5
+  },
+  pencilscribbles: {
+    prompt:
+      '`Scribbled random lines, shape of {p}, pencil scribbles sketch###solid outlines, color, fill, 3d, {np}',
+    model: 'SDXL_beta::stability.ai#6901',
+    sampler_name: 'k_dpmpp_sde',
+    width: 1024,
+    height: 1024,
+    steps: 50,
+    cfg_scale: 8.5
+  },
+  sdxlchibis: {
+    prompt:
+      'high quality, a chibi {p}, blindbox style, 3dcute, 3dcutecharacter, 3d, cute###{np}, (Drawing cartoon comic sketch 2d:0.6), spritesheet, multiple angles',
+    model: 'SDXL_beta::stability.ai#6901',
+    sampler_name: 'k_dpmpp_sde',
+    width: 1024,
+    height: 1024,
+    steps: 45,
+    cfg_scale: 8
+  },
+  sdxlstreetfashion: {
+    prompt:
+      'high quality, intricate, (fashionable clothes, street fashion:1.2), a full-body portrait of a fashionable {p}, attractive, photorealistic, magical realism, fantasy###{np}, (Drawing cartoon comic sketch 2d render, sexy:0.7)',
+    model: 'SDXL_beta::stability.ai#6901',
+    sampler_name: 'k_dpmpp_sde',
+    width: 832,
+    height: 1152,
+    steps: 50,
+    cfg_scale: 8.5
+  },
+  sdxlhorror: {
+    prompt:
+      'nighmare horror trypophobia odontophobia thalassophobia disgusting nasty ugly bloody terror, {p}###{np}, attractive, sexy',
+    model: 'SDXL_beta::stability.ai#6901',
+    sampler_name: 'k_dpmpp_sde',
+    width: 1024,
+    height: 1024,
+    steps: 50,
+    cfg_scale: 8.5
+  },
+  glitchart: {
+    prompt:
+      '{p}###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
+    model: 'Dreamshaper',
+    steps: 40,
+    cfg_scale: 7.5,
+    width: 512,
+    height: 640,
+    loras: [{ name: '71125', inject_trigger: 'any' }]
+  },
+  oldvhs: {
+    prompt:
+      'old vhs footage of {p}, distortion, glitch###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
+    model: 'Dreamshaper',
+    steps: 40,
+    cfg_scale: 7.5,
+    width: 512,
+    height: 640,
+    loras: [{ name: '103667' }]
+  },
+  pixelsorting: {
+    prompt:
+      '{p}###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
+    model: 'Dreamshaper',
+    steps: 40,
+    cfg_scale: 7.5,
+    width: 512,
+    height: 640,
+    loras: [{ name: '57963', inject_trigger: 'any' }]
+  },
+  analogdistortion: {
+    prompt:
+      'AnalogDistortion, Analog Photo of {p}###{np}, worst quality, EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, Humpbacked, disfigured, mutation, mutated, extra limb, ugly, missing limb, floating limbs, disconnected limbs, malformed hands, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
+    model: 'Dreamshaper',
+    steps: 40,
+    cfg_scale: 7.5,
+    width: 512,
+    height: 640,
+    loras: [{ name: '104917' }]
+  },
+  gothichorrorai: {
+    prompt:
+      '{p}###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
+    model: 'Dreamshaper',
+    steps: 40,
+    cfg_scale: 7.5,
+    loras: [{ name: '39760', inject_trigger: 'any' }]
+  },
+  tentaclehorrorai: {
+    prompt:
+      '{p}###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
+    model: 'Dreamshaper',
+    steps: 40,
+    cfg_scale: 7.5,
+    loras: [{ name: '42468', inject_trigger: 'any' }]
+  },
+  reelhorror: {
+    prompt:
+      'portrait of {p}, reelhorror, blood, dripping, mutation, mouthface, trash, pov, pov scene, extra eyes###{np}, cropped, out of focus, monochrome, symbol, text, logo, window frame, mirror frame',
+    model: 'Dreamshaper',
+    steps: 40,
+    cfg_scale: 7.5,
+    loras: [{ name: '67666' }]
+  },
+  bodyhorror: {
+    prompt:
+      '{p}###{np}, cropped, out of focus, monochrome, symbol, text, logo, window frame, mirror frame',
+    model: 'Dreamshaper',
+    steps: 40,
+    cfg_scale: 7.5,
+    loras: [
+      {
+        name: '51288',
+        model: 0.8,
+        clip: 1,
+        inject_trigger: 'body horror, mutation, blood'
+      }
+    ]
+  },
+  nastyhorrors: {
+    prompt:
+      '{p}, body horror, mutation, blood, reelhorror, dripping, trash###{np}, cropped, out of focus, monochrome, symbol, text, logo, window frame, mirror frame',
+    model: 'Dreamshaper',
+    steps: 40,
+    cfg_scale: 7.5,
+    loras: [
+      {
+        name: '51288',
+        model: 0.7,
+        clip: 1,
+        inject_trigger: 'body horror, mutation, blood'
+      },
+      { name: '67666', model: 0.7, clip: 1 }
+    ]
+  },
+  ivorygoldai: {
+    prompt:
+      '{p}###{np}, cropped, out of focus, symbol, text, logo, door frame, window frame, mirror frame',
+    model: 'Dreamshaper',
+    steps: 40,
+    cfg_scale: 7.5,
+    loras: [{ name: '62700', inject_trigger: 'any' }]
+  },
+  arielphorror: {
+    prompt:
+      '{p}, arielpstyle, dark horror, creepy creepy-looking, painting, lovecraftian, grease, painting \\(medium\\), drawing, brush stroke###{np}, cropped, out of focus, symbol, text, logo, door frame, window frame, mirror frame',
+    model: 'Lyriel',
+    steps: 40,
+    cfg_scale: 7.5,
+    loras: [{ name: '39760' }]
+  },
+  dreadhorror: {
+    prompt:
+      '{p}, Dread, horror, nightmare###{np}, cropped, out of focus, symbol, text, logo, door frame, window frame, mirror frame',
+    model: 'Deliberate',
+    steps: 40,
+    cfg_scale: 7.5,
+    loras: [{ name: '98011' }]
+  },
   piratepunk: {
     prompt:
       '{p}, piratepunkai###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '45892' }]
   },
-  coalppunk: {
+  lunarpunk: {
+    prompt:
+      '{p}###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
+    model: 'Dreamshaper',
+    steps: 40,
+    cfg_scale: 7.5,
+    loras: [{ name: '97136', inject_trigger: 'any' }]
+  },
+  celtpunk: {
+    prompt:
+      '{p}###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
+    model: 'Dreamshaper',
+    steps: 40,
+    cfg_scale: 7.5,
+    loras: [{ name: '92008', inject_trigger: 'any' }]
+  },
+  toxicpunk: {
+    prompt:
+      '{p}###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
+    model: 'Dreamshaper',
+    steps: 40,
+    cfg_scale: 7.5,
+    loras: [{ name: '95802', inject_trigger: 'any' }]
+  },
+  mongolpunk: {
+    prompt:
+      '{p}###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
+    model: 'Dreamshaper',
+    steps: 40,
+    cfg_scale: 7.5,
+    loras: [{ name: '85109', inject_trigger: 'any' }]
+  },
+  musketpunk: {
+    prompt:
+      '{p}###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
+    model: 'Dreamshaper',
+    steps: 40,
+    cfg_scale: 7.5,
+    loras: [{ name: '90543', inject_trigger: 'any' }]
+  },
+  absinthepunk: {
+    prompt:
+      '{p}###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
+    model: 'Dreamshaper',
+    steps: 40,
+    cfg_scale: 7.5,
+    loras: [{ name: '89183', inject_trigger: 'any' }]
+  },
+  cattlepunk: {
+    prompt:
+      '{p}###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
+    model: 'Dreamshaper',
+    steps: 40,
+    cfg_scale: 7.5,
+    loras: [{ name: '95828', inject_trigger: 'any' }]
+  },
+  circuspunk: {
+    prompt:
+      '{p}###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
+    model: 'Dreamshaper',
+    steps: 40,
+    cfg_scale: 7.5,
+    loras: [{ name: '87884', inject_trigger: 'any' }]
+  },
+  aetherpunk: {
+    prompt:
+      '{p}###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
+    model: 'Dreamshaper',
+    steps: 40,
+    cfg_scale: 7.5,
+    loras: [{ name: '85036', inject_trigger: 'any' }]
+  },
+  potatopunk: {
+    prompt:
+      '{p}###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
+    model: 'Dreamshaper',
+    steps: 40,
+    cfg_scale: 7.5,
+    loras: [{ name: '72231', inject_trigger: 'any' }]
+  },
+  coalpunk: {
     prompt:
       '{p}, coalpunkai###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '84753' }]
@@ -55,15 +363,15 @@ export const stableHordeStyles: Preset = {
   alchemypunk: {
     prompt:
       '{p}, alchemypunkai###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '78766' }]
   },
-  gotchicpunk: {
+  gothicpunk: {
     prompt:
       '{p}, gothicpunkai###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '78695' }]
@@ -71,7 +379,7 @@ export const stableHordeStyles: Preset = {
   witchpunk: {
     prompt:
       '{p}, WitchcraftPunkAI###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '78280' }]
@@ -79,7 +387,7 @@ export const stableHordeStyles: Preset = {
   colorpunk: {
     prompt:
       '{p}, PunkPunkAI, colorful###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '78060' }]
@@ -87,7 +395,7 @@ export const stableHordeStyles: Preset = {
   bronzepunk: {
     prompt:
       '{p}, bronzepunkai###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '77293' }]
@@ -95,7 +403,7 @@ export const stableHordeStyles: Preset = {
   neonpunk: {
     prompt:
       '{p}, CyberpunkAI, neon###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '77121' }]
@@ -103,7 +411,7 @@ export const stableHordeStyles: Preset = {
   kazakpunk: {
     prompt:
       '{p}, kazakpunkai###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '76737' }]
@@ -111,7 +419,7 @@ export const stableHordeStyles: Preset = {
   grecopunk: {
     prompt:
       '{p}, grecopunkai###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '76190' }]
@@ -119,7 +427,7 @@ export const stableHordeStyles: Preset = {
   romanpunk: {
     prompt:
       '{p}, romapunkai###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '76190' }]
@@ -127,7 +435,7 @@ export const stableHordeStyles: Preset = {
   sovietpunk: {
     prompt:
       '{p}, sovietpunkai###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '75709' }]
@@ -135,7 +443,7 @@ export const stableHordeStyles: Preset = {
   arabiannightspunk: {
     prompt:
       '{p}, 1001ArabianNights###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '69315' }]
@@ -143,7 +451,7 @@ export const stableHordeStyles: Preset = {
   steampunk: {
     prompt:
       '{p}, SteampunkAI###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '59338' }]
@@ -151,7 +459,7 @@ export const stableHordeStyles: Preset = {
   cogpunk: {
     prompt:
       '{p}, CogPunkAI###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '59338' }]
@@ -159,7 +467,7 @@ export const stableHordeStyles: Preset = {
   victorianpunk: {
     prompt:
       '{p}, VictorianPunkAI###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '84250' }]
@@ -167,7 +475,7 @@ export const stableHordeStyles: Preset = {
   biopunk: {
     prompt:
       '{p}, BiopunkAI###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '80375' }]
@@ -175,7 +483,7 @@ export const stableHordeStyles: Preset = {
   mahabharatapunk: {
     prompt:
       '{p}, MahabharataPunkAI###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '71478' }]
@@ -183,7 +491,7 @@ export const stableHordeStyles: Preset = {
   javapunk: {
     prompt:
       '{p}, javapunkai###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '72415' }]
@@ -191,7 +499,7 @@ export const stableHordeStyles: Preset = {
   balipunk: {
     prompt:
       '{p}, balipunkai###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '72347' }]
@@ -199,7 +507,7 @@ export const stableHordeStyles: Preset = {
   dieselpunk: {
     prompt:
       '{p}, dieselpunkAI###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '64676' }]
@@ -207,7 +515,7 @@ export const stableHordeStyles: Preset = {
   totempunk: {
     prompt:
       '{p}, TotempunkAI###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '71819' }]
@@ -215,7 +523,7 @@ export const stableHordeStyles: Preset = {
   samuraipunk: {
     prompt:
       '{p}, SamuraiPunkAI###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '69108' }]
@@ -223,7 +531,7 @@ export const stableHordeStyles: Preset = {
   zulupunk: {
     prompt:
       '{p}, zulupunkai###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '65725' }]
@@ -231,7 +539,7 @@ export const stableHordeStyles: Preset = {
   teslapunk: {
     prompt:
       '{p}, teslapunkai###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '64955' }]
@@ -239,7 +547,7 @@ export const stableHordeStyles: Preset = {
   valvepunk: {
     prompt:
       '{p}, valvepunkai###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '64955' }]
@@ -247,7 +555,7 @@ export const stableHordeStyles: Preset = {
   infernalpunk: {
     prompt:
       '{p}, 1nf3rnalAI###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '62585' }]
@@ -255,7 +563,7 @@ export const stableHordeStyles: Preset = {
   solarpunk: {
     prompt:
       '{p}, solarpunkai###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '43944' }]
@@ -263,7 +571,7 @@ export const stableHordeStyles: Preset = {
   stonepunk: {
     prompt:
       '{p}, stonepunkAI###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '51539' }]
@@ -271,7 +579,7 @@ export const stableHordeStyles: Preset = {
   gempunk: {
     prompt:
       '{p}, GemstoneAI###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '49374' }]
@@ -279,7 +587,7 @@ export const stableHordeStyles: Preset = {
   horrorpunk: {
     prompt:
       '{p}, ManyEyedHorrorAI###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '47489' }]
@@ -287,7 +595,7 @@ export const stableHordeStyles: Preset = {
   bonepunk: {
     prompt:
       '{p}, BoneyardAI###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '48356' }]
@@ -295,7 +603,7 @@ export const stableHordeStyles: Preset = {
   oldegyptpunk: {
     prompt:
       '{p}, OldEgyptAI###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '43229' }]
@@ -303,7 +611,7 @@ export const stableHordeStyles: Preset = {
   vikingpunk: {
     prompt:
       '{p}, vikingpunkai###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '41364' }]
@@ -311,7 +619,7 @@ export const stableHordeStyles: Preset = {
   gaslamppunk: {
     prompt:
       '{p}, GasLampFantasyAI###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '71335' }]
@@ -319,7 +627,7 @@ export const stableHordeStyles: Preset = {
   atompunk: {
     prompt:
       '{p}, 1970retrofuturism###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '64235' }]
@@ -327,7 +635,7 @@ export const stableHordeStyles: Preset = {
   gothpunk: {
     prompt:
       '{p}, PastelGothAI###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '75265' }]
@@ -335,7 +643,7 @@ export const stableHordeStyles: Preset = {
   circuitpunk: {
     prompt:
       '{p}, CircuitBoardAI###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '58410' }]
@@ -343,7 +651,7 @@ export const stableHordeStyles: Preset = {
   nightmarepunk: {
     prompt:
       '{p}, NightmarishAI###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '56336' }]
@@ -351,7 +659,7 @@ export const stableHordeStyles: Preset = {
   crystalpunk: {
     prompt:
       '{p}, crystallineAI###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '48859' }]
@@ -359,7 +667,7 @@ export const stableHordeStyles: Preset = {
   fantasypunk: {
     prompt:
       '{p}, fairytaleai###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
-    model: 'RCNZ Gorilla With A Brick',
+    model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
     loras: [{ name: '42260' }]

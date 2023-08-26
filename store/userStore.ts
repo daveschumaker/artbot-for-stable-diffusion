@@ -96,7 +96,8 @@ export const unsetUserInfo = () => {
 
 // Due to caching issues, shared_keys might not be immediately available from the API.
 // Use this to update and store keys in the cache
-export const updateSharedKey = (id: string) => {}
+// TODO: FIXME:
+export const updateSharedKey = () => {}
 
 export const setWorker = (worker: IWorker) => {
   const workers = { ...userInfoStore.state.workers }

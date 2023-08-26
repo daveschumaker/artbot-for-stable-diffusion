@@ -1,3 +1,16 @@
+# 2023.08.26
+
+- Ensure that the prompt-replacement filter is working. If set to true (this is the default setting for all users), it will tell the Horde backend to automatically replace certain keywords (e.g., girl -> woman / boy -> man) when using NSFW models to ensure that you don't receive a ban from the AI Horde for potentially generating inappropriate content.
+- However, the prompt replacement filter does not work for prompts greater than 1,000 characters. If the Horde receives a request like this, it will reject the job and return an error. ArtBot will now automatically disable the prompt replacement filter when more than 1,000 characters are used.
+- Official SDXL support on the AI Horde is coming soon™! Very Soon™ in fact. I've updated some validation logic related to SDXL image requests ahead of the release.
+
+# 2023.08.24
+
+- Oh, boy. I've been trying to be more diligent about [documenting various issues on GitHub](https://github.com/daveschumaker/artbot-for-stable-diffusion/issues). Needless to say, there are a lot of minor (and not-so-minor) things to fix! Slowly (very slowly), but surely!
+- Simple update this evening as I haven't had much time to work on the project as of late:
+- Refactored some logic around the SDXL A/B test modal. It sounds like that once SDXL is officially supported on the Horde, Stability.ai may still want to utilize the power of the Horde to refine their image models using the A/B testing framework. I've cleaned up the presentation of the A/B test modal. You can now choose your favorite image and optionally trash the other result, save both, or delete both.
+- Refactored some logic around the misbehaving ad component (you might have seen multiple ads stacked up in the sidebar under certain conditions).
+
 # 2023.08.17
 
 - Fix issue with creating shareable links when swiping between images in the image modal.
