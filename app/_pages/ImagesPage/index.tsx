@@ -1103,8 +1103,9 @@ const ImagesPage = () => {
                             }
                             style={{
                               borderRadius: '4px',
-                              width: '100%',
-                              display: 'block'
+                              display: 'block',
+                              maxWidth: '300px',
+                              width: '100%'
                             }}
                             alt={image.prompt}
                           />

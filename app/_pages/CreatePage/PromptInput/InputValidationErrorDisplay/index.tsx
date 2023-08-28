@@ -41,6 +41,13 @@ export default function InputValidationErrorDisplay({
       )
     }
 
+    if (hasSdxlBeta && input.post_processing.length > 0) {
+      hasError = true
+      setSdxlBetaError(
+        'SDXL_beta Error: Unable to use post processors with SDXL beta workers. Please remove them in order to continue.'
+      )
+    }
+
     if (
       (!hasSdxlBeta && sdxlBetaError) ||
       (hasSdxlBeta && !hasError && sdxlBetaError)

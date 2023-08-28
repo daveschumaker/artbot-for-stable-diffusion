@@ -261,6 +261,19 @@ class ImageParamsForApi {
       delete apiParams.params.loras
     }
 
+    // SDXL_beta validation options for Stability.ai beta workers
+    const filteredBetaModels = models.filter((model) =>
+      model.toLowerCase().includes('sdxl_beta')
+    )
+    const hasSdxlBeta = filteredBetaModels.length > 0
+
+    if (hasSdxlBeta) {
+      apiParams.params.karras = false
+      apiParams.params.hires_fix = false
+      apiParams.params.post_processing = []
+      delete apiParams.params.loras
+    }
+
     return apiParams
   }
 }
