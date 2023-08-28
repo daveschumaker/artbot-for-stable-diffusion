@@ -240,7 +240,7 @@ export const stableHordeStyles: Preset = {
     steps: 50,
     cfg_scale: 5
   },
-  space: {
+  sdxlspace: {
     prompt:
       '{p}, by Andrew McCarthy, Navaneeth Unnikrishnan, Manuel Dietrich, photo realistic, 8 k, cinematic lighting, hd, atmospheric, hyperdetailed, trending on artstation, deviantart, photography, glow effect###{np}',
     model: 'SDXL_beta::stability.ai#6901',
@@ -1440,7 +1440,7 @@ export const stableHordeStyles: Preset = {
     prompt: '{p}, IconsMi{np}',
     model: 'App Icon Diffusion'
   },
-  deep_space: {
+  space: {
     prompt: '{p}, jwst{np}',
     model: 'JWST Deep Space Diffusion'
   },

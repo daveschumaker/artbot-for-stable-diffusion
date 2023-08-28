@@ -1,3 +1,9 @@
+# 2023.08.27
+
+- Fix: Denoise value and ControlNet values would be overwritten if you imported settings from an existing image.
+- Fix: Opening source image on image details modal crashes ArtBot.
+- Updated style presets based on the latest wizardry from Efreak.
+
 # 2023.08.26
 
 - Ensure that the prompt-replacement filter is working. If set to true (this is the default setting for all users), it will tell the Horde backend to automatically replace certain keywords (e.g., girl -> woman / boy -> man) when using NSFW models to ensure that you don't receive a ban from the AI Horde for potentially generating inappropriate content.
