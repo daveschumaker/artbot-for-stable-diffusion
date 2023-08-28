@@ -40,6 +40,8 @@ export const copyEditPrompt = (imageDetails: any) => {
     source_processing: imageDetails.source_processing,
     source_image: imageDetails.source_image,
     source_mask: imageDetails.source_mask,
+    control_type: imageDetails.control_type,
+    denoising_strength: imageDetails.denoising_strength,
     post_processing: imageDetails.post_processing,
     // @ts-ignore
     loras: imageDetails.loras ? [...imageDetails.loras] : [],
