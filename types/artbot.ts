@@ -2,6 +2,16 @@ import React, { CSSProperties, Dispatch, ReactNode } from 'react'
 import DefaultPromptInput from 'models/DefaultPromptInput'
 import { IKudosDetails, WorkerDetails } from './horde'
 
+declare global {
+  interface Window {
+    _artbot?: {
+      getAllPendingJobs?: any
+      getAllPendingJobsFromController?: any
+      togglePendingJobsControllerLogs?: any
+    }
+  }
+}
+
 export interface AppDetailsStore {
   unsupportedBrowser: boolean
 }

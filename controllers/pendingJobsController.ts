@@ -15,6 +15,7 @@ import AppSettings from 'models/AppSettings'
 let MAX_JOBS = MAX_CONCURRENT_JOBS_ANON
 let pendingJobs: Array<any> = []
 let pendingJobsUpdatedTimestamp = 0
+let enableDebugLogs = false
 
 export const getPendingJobsFromCache = () => {
   return [...pendingJobs]
@@ -34,6 +35,10 @@ export const fetchPendingImageJobs = async () => {
 
 const checkMultiPendingJobs = async () => {
   if (typeof window === 'undefined') {
+    return
+  }
+
+  if (pendingJobs.length === 0) {
     return
   }
 
@@ -69,15 +74,25 @@ const createImageJobs = async () => {
     return
   }
 
+  if (pendingJobs.length === 0) {
+    return
+  }
+
   if (appInfoStore.state.storageQuotaLimit) {
+    if (enableDebugLogs)
+      console.log(
+        `pendingJobsController: Unable to request image. Storage Quota limit is full.`
+      )
     return
   }
 
   if (!isAppActive()) {
+    if (enableDebugLogs) console.log(`pendingJobsController: App is not active`)
     return
   }
 
   if (AppSettings.get('pauseJobQueue')) {
+    if (enableDebugLogs) console.log(`pendingJobsController: job queue paused`)
     return
   }
 
@@ -99,6 +114,9 @@ const createImageJobs = async () => {
 
   const processingOrQueued = [...processing, ...queued]
 
+  if (enableDebugLogs)
+    console.log(`createImageJobs / processingOrQueued:`, processingOrQueued)
+
   if (processingOrQueued.length < MAX_JOBS) {
     const waitingJobs = pendingJobs.filter((job: { jobStatus: JobStatus }) => {
       if (job && job.jobStatus) {
@@ -107,6 +125,8 @@ const createImageJobs = async () => {
     })
 
     const [nextJobParams] = waitingJobs
+
+    if (enableDebugLogs) console.log(`nextJobParams:`, nextJobParams)
 
     if (nextJobParams) {
       await sendJobToApi(nextJobParams)
@@ -140,3 +160,21 @@ export const initPendingJobService = () => {
   pendingJobCheckInterval()
   createPendingJobInterval()
 }
+
+const toggleLogs = () => {
+  if (enableDebugLogs) {
+    enableDebugLogs = false
+  } else {
+    enableDebugLogs = true
+  }
+}
+
+const initWindow = () => {
+  if (typeof window !== 'undefined') {
+    if (!window._artbot) window._artbot = {}
+    window._artbot.getAllPendingJobsFromController = getAllPendingJobs
+    window._artbot.togglePendingJobsControllerLogs = toggleLogs
+  }
+}
+
+initWindow()

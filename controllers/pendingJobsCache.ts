@@ -211,3 +211,12 @@ export const updateAllPendingJobsV2 = async (
 
   updateTimestamp()
 }
+
+const initWindow = () => {
+  if (typeof window !== 'undefined') {
+    if (!window._artbot) window._artbot = {}
+    window._artbot.getAllPendingJobs = getAllPendingJobs
+  }
+}
+
+initWindow()
