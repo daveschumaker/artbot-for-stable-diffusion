@@ -2,6 +2,7 @@ import { Lora } from 'types'
 import { modifyPromptForStylePreset } from '../utils/imageUtils'
 import { SourceProcessing } from '../utils/promptUtils'
 import AppSettings from './AppSettings'
+import { TextualInversion } from 'types/horde'
 
 export interface IApiParams {
   prompt: string
@@ -49,11 +50,12 @@ export interface IArtBotImageDetails {
   image_is_control?: boolean
   return_control_map?: boolean
   loras: Lora[]
+  tis: TextualInversion[]
   dry_run?: boolean
 }
 
 interface ParamsObject {
-  sampler_name?: string // Optional due to controlNet
+  sampler_name?: string // Optional due to ControlNet
   cfg_scale: number
   height: number
   width: number
@@ -71,6 +73,7 @@ interface ParamsObject {
   post_processing: string[]
   n: number
   loras?: Lora[]
+  tis?: TextualInversion[]
 }
 
 interface IOptions {
@@ -112,6 +115,7 @@ class ImageParamsForApi {
       image_is_control,
       return_control_map,
       loras = [],
+      tis = [],
       dry_run = false
     } = imageDetails
     let negative = imageDetails.negative || ''
@@ -191,6 +195,16 @@ class ImageParamsForApi {
           name: String(lora.name),
           model: lora.model,
           clip: lora.clip
+        }
+      })
+    }
+
+    if (tis && Array.isArray(tis) && tis.length > 0) {
+      apiParams.params.tis = tis.map((ti) => {
+        return {
+          name: String(ti.name),
+          inject_ti: ti.inject_ti,
+          strength: ti.strength
         }
       })
     }
