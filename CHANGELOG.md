@@ -1,7 +1,8 @@
-# 2023.08.28
+# 2023.08.29
 
 - Show warning if image dimensions are over 4,194,303 pixels (max supported size on the Horde). e.g, Maxing out each dimension would make a 3072 x 1344 image.
 - Fix style for red notification dot that alerts you to new images in the header nav bar.
+- Adjust limits for LoRA strength to be a range from -5.0 to 5.0 (before, it was 0 to 1.0). Cautionary note: values greater than 1 may not actually work on the AI Horde worker side of things.
 
 # 2023.08.27
 
