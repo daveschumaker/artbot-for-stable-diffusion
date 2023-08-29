@@ -127,12 +127,12 @@ const LoraSelect = ({ input, setInput, setErrors }: any) => {
                 <SubSectionTitle>
                   LoRA strength
                   <div className="block text-xs w-full">
-                    ({0.05} - {1})
+                    ({-5.0} - {5.0})
                   </div>
                 </SubSectionTitle>
                 <NumberInput
-                  min={0.05}
-                  max={1}
+                  min={-5.0}
+                  max={5.0}
                   onMinusClick={() => {
                     handleUpdate(i, Number((lora.model - 0.05).toFixed(2)))
                   }}
@@ -151,8 +151,8 @@ const LoraSelect = ({ input, setInput, setErrors }: any) => {
               </div>
               <Slider
                 value={lora.model}
-                min={0.05}
-                max={1}
+                min={-5.0}
+                max={5.0}
                 step={0.05}
                 onChange={(e: any) => {
                   handleUpdate(i, Number(e.target.value))

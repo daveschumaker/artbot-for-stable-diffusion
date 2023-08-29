@@ -13,40 +13,7 @@ import { basePath } from 'BASE_PATH'
 import ImageModels from 'models/ImageModels'
 import DefaultPromptInput from 'models/DefaultPromptInput'
 import ImageParamsForApi from 'models/ImageParamsForApi'
-
-interface CreateImageJob {
-  base64String?: string
-  jobId?: string
-  img2img?: boolean
-  prompt: string
-  height: number
-  width: number
-  cfg_scale: number
-  steps: number
-  sampler: string
-  karras: boolean
-  hires: boolean
-  clipskip: number
-  seed: string
-  numImages?: number
-  parentJobId?: string
-  models: Array<string>
-  negative: string
-  source_image?: string
-  source_mask?: string
-  tiling: boolean
-  stylePreset: string
-  denoising_strength?: number
-  post_processing: Array<string>
-  loras: Array<any>
-
-  has_source_image?: boolean
-  has_source_mask?: boolean
-  canvasStore?: any
-  canvasData?: any
-  maskData?: any
-}
-
+import { CreateImageJob } from 'types'
 interface OrientationLookup {
   [key: string]: ImageOrientation
 }

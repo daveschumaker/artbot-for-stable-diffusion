@@ -140,15 +140,26 @@ const HeaderNavLinks = () => {
         >
           {newImageReady && (
             <span
-              className="flex flex-row justify-center items-center opacity-1 w-[12px] h-[12px] pl-[1.5px] mr-1 bg-red-600 rounded-full border-white border-[1px] text-[8px] text-white"
               style={{
+                alignItems: 'center',
+                backgroundColor: '#DC2626',
+                border: '1px solid white',
+                borderRadius: '50%',
+                color: 'white',
+                display: 'flex',
+                flexDirection: 'row',
+                fontSize: '8px',
+                height: '8px',
+                justifyContent: 'center',
+                marginRight: '0.25rem',
+                opacity: 1,
+                paddingLeft: '1.5px',
                 position: 'absolute',
-                top: '-4px',
-                right: '-11px'
+                right: '-8px',
+                top: '0',
+                width: '8px'
               }}
-            >
-              !
-            </span>
+            ></span>
           )}
 
           <Link

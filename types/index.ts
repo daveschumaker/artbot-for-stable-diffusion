@@ -1,6 +1,7 @@
 import DefaultPromptInput from 'models/DefaultPromptInput'
 import { Dispatch } from 'react'
 import { SourceProcessing } from 'utils/promptUtils'
+import { TextualInversion } from './horde'
 
 export enum ArtBotJobTypes {
   Text2Img = 'Text2Img',
@@ -32,47 +33,48 @@ export enum Common {
   Empty = ''
 }
 export interface CreateImageJob {
+  allowNsfw?: boolean
+  base64String?: string
+  canvasData?: any
+  canvasStore?: any
+  cfg_scale: number
+  clipskip: number
+  denoising_strength?: number
+  has_source_image?: boolean
+  has_source_mask?: boolean
+  height: number
+  hires: boolean
   id: number
+  img2img?: boolean
+  initWaitTime?: number
   is_possible?: boolean
-  jobTimestamp?: number
   jobId?: string
   jobStatus?: string
-  img2img?: boolean
-  prompt: string
-  height: number
-  width: number
-  timestamp?: number
-  cfg_scale: number
+  jobTimestamp?: number
   karras: boolean
-  hires: boolean
-  clipskip: number
-  steps: number
-  sampler: string
-  apikey?: string
-  seed: string
-  numImages?: number
-  useTrusted?: boolean
-  parentJobId?: string
+  loras: Lora[]
+  maskData?: any
   models: Array<string>
   negative: string
-  allowNsfw?: boolean
+  numImages?: number
+  orientation?: string
+  orientationType?: string
+  parentJobId?: string
+  post_processing: Array<string>
+  prompt: string
+  queue_position?: number
+  sampler: string
+  seed: string
   source_image?: string
   source_mask?: string
+  steps: number
   stylePreset: string
-  denoising_strength?: number
-  orientationType?: string
-  orientation?: string
-  wait_time?: number
-  queue_position?: number
-  base64String?: string
-  initWaitTime?: number
-  canvasStore?: any
   tiling: boolean
-  post_processing: Array<string>
-  loras: Array<any>
-
-  has_source_mask?: boolean
-  has_source_image?: boolean
+  timestamp?: number
+  tis: TextualInversion[]
+  useTrusted?: boolean
+  wait_time?: number
+  width: number
 }
 
 export interface NewRating {

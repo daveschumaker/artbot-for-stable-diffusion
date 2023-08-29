@@ -126,6 +126,12 @@ export enum SourceProcessing {
   OutPainting = 'outpainting'
 }
 
+export interface TextualInversion {
+  name: string
+  inject_ti: string
+  strength: number
+}
+
 export interface WorkerDetails {
   id: string
 }

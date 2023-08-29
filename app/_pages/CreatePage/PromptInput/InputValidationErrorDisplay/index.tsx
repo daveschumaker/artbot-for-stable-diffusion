@@ -1,3 +1,4 @@
+import { MAX_IMAGE_PIXELS } from '_constants'
 import FlexCol from 'app/_components/FlexCol'
 import AlertTriangleIcon from 'components/icons/AlertTriangle'
 import AppSettings from 'models/AppSettings'
@@ -10,6 +11,26 @@ import {
   validatePromptSafety
 } from 'utils/validationUtils'
 
+const RenderError = ({ msg }: { msg: string | boolean }) => {
+  if (!msg) return null
+
+  return (
+    <div
+      className="rounded-md px-4 py-2 font-[500] flex flex-row items-center gap-2"
+      style={{
+        border: '1px solid rgb(239, 68, 68)',
+        color: 'rgb(239 68 68)',
+        fontSize: '12px'
+      }}
+    >
+      <div>
+        <AlertTriangleIcon size={38} />
+      </div>
+      <div>{msg}</div>
+    </div>
+  )
+}
+
 export default function InputValidationErrorDisplay({
   input,
   modelDetails = {}
@@ -20,11 +41,35 @@ export default function InputValidationErrorDisplay({
   const userState = useStore(userInfoStore)
   const { loggedIn } = userState
 
+  const [imageError, setImageError] = useState<boolean | string>(false)
   const [sdxlBetaError, setSdxlBetaError] = useState<boolean | string>(false)
   const [sdxlError, setSdxlError] = useState<boolean | string>(false)
-  const [flaggedPromptError, setFlaggedPromptError] = useState<boolean>(false)
+  const [flaggedPromptError, setFlaggedPromptError] = useState<
+    boolean | string
+  >(false)
   const [promptReplacementError, setPromptReplacementError] =
     useState<boolean>(false)
+
+  // Image dimensions
+  useEffect(() => {
+    let hasError = false
+
+    const pixels = input.height * input.width
+    if (pixels > MAX_IMAGE_PIXELS) {
+      hasError = true
+      setImageError(
+        `Error: Please adjust image resolution before submitting this request. ${
+          input.width
+        }w x ${
+          input.height
+        }h (${pixels.toLocaleString()} px) is more than the max supported value: ${MAX_IMAGE_PIXELS.toLocaleString()} px`
+      )
+    }
+
+    if (imageError && !hasError) {
+      setImageError(false)
+    }
+  }, [imageError, input.height, input.width])
 
   // SDXL Beta
   useEffect(() => {
@@ -54,7 +99,7 @@ export default function InputValidationErrorDisplay({
     ) {
       setSdxlBetaError(false)
     }
-  }, [input.models, loggedIn, sdxlBetaError])
+  }, [input.models, input.post_processing.length, loggedIn, sdxlBetaError])
 
   // SDXL
   useEffect(() => {
@@ -142,7 +187,9 @@ export default function InputValidationErrorDisplay({
       !flaggedPromptError &&
       hasNsfwModel.length > 0
     ) {
-      setFlaggedPromptError(true)
+      setFlaggedPromptError(
+        `You are about to send a prompt that likely violates the Stable Horde terms of use and may be rejected by the API. Please edit your prompt, choose a non-NSFW model, or enable the prompt replacement filter and try again.`
+      )
     }
     if ((!promptFlagged && flaggedPromptError) || hasNsfwModel.length === 0) {
       setFlaggedPromptError(false)
@@ -165,81 +212,19 @@ export default function InputValidationErrorDisplay({
     !promptReplacementError &&
     !flaggedPromptError &&
     !sdxlError &&
-    !sdxlBetaError
+    !sdxlBetaError &&
+    !imageError
   ) {
     return null
   }
 
   return (
     <FlexCol gap={8} style={{ marginTop: '8px' }}>
-      {sdxlBetaError && (
-        <div
-          className="rounded-md px-4 py-2 font-[500] flex flex-row items-center gap-2"
-          style={{
-            border: '1px solid rgb(239, 68, 68)',
-            color: 'rgb(239 68 68)',
-            fontSize: '12px'
-          }}
-        >
-          <div>
-            <AlertTriangleIcon size={38} />
-          </div>
-          <div>{sdxlBetaError}</div>
-        </div>
-      )}
-      {sdxlError && (
-        <div
-          className="rounded-md px-4 py-2 font-[500] flex flex-row items-center gap-2"
-          style={{
-            border: '1px solid rgb(239, 68, 68)',
-            color: 'rgb(239 68 68)',
-            fontSize: '12px'
-          }}
-        >
-          <div>
-            <AlertTriangleIcon size={38} />
-          </div>
-          <div>{sdxlError}</div>
-        </div>
-      )}
-      {promptReplacementError && (
-        <div
-          className="rounded-md px-4 py-2 font-[500] flex flex-row items-center gap-2"
-          style={{
-            border: '1px solid rgb(239, 68, 68)',
-            color: 'rgb(239 68 68)',
-            fontSize: '12px'
-          }}
-        >
-          <div>
-            <AlertTriangleIcon size={38} />
-          </div>
-          <div>
-            Prompt length is greater than 1,000 characters. Prompt replacement
-            filter will automatically be disabled.
-          </div>
-        </div>
-      )}
-      {flaggedPromptError && (
-        <div
-          className="rounded-md px-4 py-2 font-[500] flex flex-row items-center gap-2"
-          style={{
-            border: '1px solid rgb(239, 68, 68)',
-            color: 'rgb(239 68 68)',
-            fontSize: '12px'
-          }}
-        >
-          <div>
-            <AlertTriangleIcon size={38} />
-          </div>
-          <div>
-            You are about to send a prompt that likely violates the Stable Horde
-            terms of use and may be rejected by the API. Please edit your
-            prompt, choose a non-NSFW model, or enable the prompt replacement
-            filter and try again.
-          </div>
-        </div>
-      )}
+      {imageError && <RenderError msg={imageError} />}
+      {sdxlBetaError && <RenderError msg={sdxlBetaError} />}
+      {sdxlError && <RenderError msg={sdxlError} />}
+      {promptReplacementError && <RenderError msg={promptReplacementError} />}
+      {flaggedPromptError && <RenderError msg={flaggedPromptError} />}
     </FlexCol>
   )
 }

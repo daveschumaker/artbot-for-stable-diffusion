@@ -25,6 +25,7 @@
 }
 
 .accordion-title {
+  align-items: center;
   display: flex;
   flex-direction: row;
   -webkit-user-select: none;

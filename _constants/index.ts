@@ -14,6 +14,7 @@ export const MAX_IMAGES_PER_JOB = 200
 export const MAX_DIMENSIONS_LOGGED_IN = 3072
 export const MAX_DIMENSIONS_LOGGED_OUT = 1024
 export const MAX_STEPS_LOGGED_IN = 500
+export const MAX_IMAGE_PIXELS = 4194303 // Maximum supported resolution for image requests to the AI Horde
 export const POLL_COMPLETED_JOBS_INTERVAL = 1500 // ms
 
 // TODO: Move into Samplers model file and add better ways to sort based on input type (txt2img vs img2img)
