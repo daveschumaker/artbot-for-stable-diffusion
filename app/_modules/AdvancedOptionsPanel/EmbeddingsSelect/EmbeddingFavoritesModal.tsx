@@ -71,7 +71,6 @@ const EmbeddingFavoritesModal = ({
             type="text"
             name="filterEmbeddings"
             placeholder="Search your favorite embeddings"
-            inputMode="numeric"
             onChange={handleInputChange}
             value={input}
             width="100%"
