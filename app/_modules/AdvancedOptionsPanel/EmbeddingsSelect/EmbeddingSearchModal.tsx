@@ -12,6 +12,7 @@ import ReactPaginate from 'react-paginate'
 import styles from './component.module.css'
 import Checkbox from 'components/UI/Checkbox'
 import EmbeddingDetailsCard from './EmbeddingDetailsCard'
+import AppSettings from 'models/AppSettings'
 
 const debounce = (func: (str: string) => Promise<any>, delay: number) => {
   let timerId: any
@@ -80,7 +81,7 @@ const EmbeddingSearchModal = ({
   handleAddEmbedding = (value: any) => value
 }) => {
   const [showOptionsMenu, setShowOptionsMenu] = useState(false)
-  const [showNsfw, setShowNsfw] = useState(false)
+  const [showNsfw, setShowNsfw] = useState(AppSettings.get('civitaiShowNsfw'))
   const [currentPage, setCurrentPage] = useState(1)
   const [totalItems, setTotalItems] = useState(-1) // Setting 0 here causes brief flash between loading finished and totalItems populated
   const [totalPages, setTotalPages] = useState(0)
@@ -193,6 +194,7 @@ const EmbeddingSearchModal = ({
                   label="Show NSFW embeddings?"
                   checked={showNsfw}
                   onChange={(bool: boolean) => {
+                    AppSettings.set('civitaiShowNsfw', bool)
                     setShowNsfw(bool)
                   }}
                 />

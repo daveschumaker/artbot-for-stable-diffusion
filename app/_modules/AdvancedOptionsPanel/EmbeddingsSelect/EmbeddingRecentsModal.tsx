@@ -9,6 +9,7 @@ import { IconArrowBarLeft, IconSettings } from '@tabler/icons-react'
 import styles from './component.module.css'
 import Checkbox from 'components/UI/Checkbox'
 import EmbeddingDetailsCard from './EmbeddingDetailsCard'
+import AppSettings from 'models/AppSettings'
 
 const loadFromLocalStorage = () => {
   let existingArray = localStorage.getItem('recentEmbeddings')
@@ -31,7 +32,9 @@ const EmbeddingRecentsModal = ({
 }) => {
   const [recentEmbeddings] = useState(loadFromLocalStorage())
   const [showOptionsMenu, setShowOptionsMenu] = useState(false)
-  const [showNsfw, setShowNsfw] = useState(false)
+  const [showNsfw, setShowNsfw] = useState<boolean>(
+    AppSettings.get('civitaiShowNsfw')
+  )
   const [input, setInput] = useState<string>('')
 
   const handleInputChange = async (
@@ -40,13 +43,10 @@ const EmbeddingRecentsModal = ({
     setInput(event.target.value)
   }
 
-  let filtered = [...recentEmbeddings]
-
-  if (input) {
-    filtered = recentEmbeddings.filter((ti: Embedding) => {
-      return ti.name.toLowerCase().includes(input.toLowerCase())
-    })
-  }
+  const filtered = recentEmbeddings.filter((ti: Embedding) => {
+    const nsfwStatus = ti.nsfw === false || ti.nsfw === showNsfw
+    return ti.name.toLowerCase().includes(input.toLowerCase()) && nsfwStatus
+  })
 
   return (
     <>
@@ -98,6 +98,7 @@ const EmbeddingRecentsModal = ({
                   label="Show NSFW embeddings?"
                   checked={showNsfw}
                   onChange={(bool: boolean) => {
+                    AppSettings.set('civitaiShowNsfw', bool)
                     setShowNsfw(bool)
                   }}
                 />
