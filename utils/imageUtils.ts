@@ -644,7 +644,7 @@ export const downloadImages = async ({
   }
 
   const date = new Date()
-  const dateString = date.toISOString().substring(0, 16).replace('T', '-')
+  const dateString = date.toISOString().substring(0, 19).replace('T', '-')
   let zipFilename = `artbot-image-export-${dateString}.zip`
 
   if (offset >= 0 && limit > 0) {
