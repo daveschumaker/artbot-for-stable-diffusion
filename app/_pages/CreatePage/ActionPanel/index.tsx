@@ -9,6 +9,8 @@ import { useState } from 'react'
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import DryRunCalculator from '../PromptInput/DryRunCalculator'
 import DefaultPromptInput from 'models/DefaultPromptInput'
+import DeleteConfirmModal from 'components/DeleteConfirmModal'
+import useLockedBody from 'hooks/useLockedBody'
 
 interface Props {
   errors: { [key: string]: boolean }
@@ -37,6 +39,8 @@ const ActionPanel = ({
   totalKudosCost,
   kudosPerImage
 }: Props) => {
+  const [, setLocked] = useLockedBody(false)
+  const [showResetConfirmModal, setShowResetConfirmModal] = useState(false)
   const [showDryRun, setShowDryRun] = useState(false)
 
   function areThereCriticalErrors() {
@@ -49,6 +53,34 @@ const ActionPanel = ({
 
   return (
     <>
+      {showResetConfirmModal && (
+        <DeleteConfirmModal
+          deleteButtonText="Reset"
+          onConfirmClick={() => {
+            setLocked(false)
+            resetInput()
+            setShowResetConfirmModal(false)
+          }}
+          closeModal={() => {
+            setLocked(false)
+            setShowResetConfirmModal(false)
+          }}
+        >
+          <h3
+            className="text-lg font-medium leading-6 text-gray-900"
+            id="modal-title"
+          >
+            Reset all settings?
+          </h3>
+          <div className="mt-2">
+            <p className="text-sm text-gray-500">
+              Are you sure you want to reset all image generation parameters to
+              default settings?
+            </p>
+          </div>
+        </DeleteConfirmModal>
+      )}
+
       <div className="flex flex-col items-start justify-end w-full gap-2 mt-2 mb-4 md:flex-row">
         <div className="flex flex-col justify-start w-full gap-2 md:w-1/2">
           <div className="flex flex-row justify-end gap-2 sm:mt-0">
@@ -62,7 +94,9 @@ const ActionPanel = ({
               <Button
                 title="Clear current input"
                 theme="secondary"
-                onClick={resetInput}
+                onClick={() => {
+                  setShowResetConfirmModal(true)
+                }}
               >
                 <span>
                   <IconTrash stroke={1.5} />
