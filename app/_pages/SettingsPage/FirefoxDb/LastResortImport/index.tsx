@@ -51,7 +51,6 @@ export default function LastResortImport() {
           const imageExists = await getImageDetails(idx.jobId)
 
           if (!imageExists) {
-            console.log(`we rolling!`, idx)
             await addCompletedJobToDexie(idx)
           }
         }

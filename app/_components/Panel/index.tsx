@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { CSSProperties } from 'react'
 import styles from './component.module.css'
 
 interface PanelProps {
   children?: React.ReactNode
   className?: string
   open?: boolean
-  style?: any
+  style?: CSSProperties
   padding?: string
 }
 

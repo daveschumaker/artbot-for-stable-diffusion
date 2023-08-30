@@ -55,7 +55,6 @@ async function downloadDbAsJson(chunkSize: number) {
 
     startIndex = endIndex
     endIndex = Math.min(startIndex + rowsPerBatch, arr.length)
-    console.log(`new end?`, endIndex)
     index++
 
     await sleep(1000)

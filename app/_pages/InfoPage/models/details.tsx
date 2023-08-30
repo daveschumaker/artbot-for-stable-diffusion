@@ -24,8 +24,6 @@ const ModelDetailsPage = ({ availableModels, modelDetails }: any) => {
     return 'All models'
   }
 
-  console.log(`ModelDetailsPage modelDetails`, modelDetails)
-
   const handleClearFavoriteModels = () => {
     AppSettings.set('favoriteModels', {})
     window.location.reload()

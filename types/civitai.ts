@@ -8,7 +8,7 @@ export interface ModelVersion {
 }
 
 export interface Embedding {
-  id: number
+  id: number | string
   description: string
   modelVersions: ModelVersion[]
   name: string

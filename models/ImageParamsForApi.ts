@@ -201,11 +201,19 @@ class ImageParamsForApi {
 
     if (tis && Array.isArray(tis) && tis.length > 0) {
       apiParams.params.tis = tis.map((ti) => {
-        return {
-          name: String(ti.name),
-          inject_ti: ti.inject_ti,
-          strength: ti.strength
+        const obj: TextualInversion = {
+          name: String(ti.name)
         }
+
+        if (ti.inject_ti) {
+          obj.inject_ti = ti.inject_ti
+        }
+
+        if (ti.strength) {
+          obj.strength = ti.strength
+        }
+
+        return obj
       })
     }
 
