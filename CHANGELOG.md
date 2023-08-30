@@ -3,6 +3,9 @@
 - Show warning if image dimensions are over 4,194,303 pixels (max supported size on the Horde). e.g, Maxing out each dimension would make a 3072 x 1344 image.
 - Fix style for red notification dot that alerts you to new images in the header nav bar.
 - Adjust limits for LoRA strength to be a range from -5.0 to 5.0 (before, it was 0 to 1.0). Cautionary note: values greater than 1 may not actually work on the AI Horde worker side of things.
+- Merged in a PR from Efreak that updates zip files to include seconds within filename timestamp.
+- Added confirmation modal when clicking "reset all?" on the create page. Thanks to TheGlosser for the suggestion.
+- Added initial support for AI Horde's implementation of Textual Inversions (Embeddings) from CivitAI. See [db0's blog post](https://dbzer0.com/blog/the-ai-horde-now-seamlessly-provides-all-civitai-textual-inversions/) for more information. In a future update, I'll modify things to let you add the embeddings anywhere in the prompt. For now, it will just be auto applied on the backend side of things.
 
 # 2023.08.28
 
