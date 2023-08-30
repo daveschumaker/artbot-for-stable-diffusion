@@ -71,7 +71,6 @@ const EmbeddingRecentsModal = ({
             type="text"
             name="filterEmbeddings"
             placeholder="Search recently used embeddings"
-            inputMode="numeric"
             onChange={handleInputChange}
             value={input}
             width="100%"
