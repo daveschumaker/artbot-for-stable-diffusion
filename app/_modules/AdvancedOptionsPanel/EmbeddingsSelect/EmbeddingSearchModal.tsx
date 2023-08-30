@@ -167,7 +167,6 @@ const EmbeddingSearchModal = ({
             type="text"
             name="filterEmbeddings"
             placeholder="Search CivitAI for embeddings"
-            inputMode="numeric"
             onChange={handleInputChange}
             value={input}
             width="100%"
