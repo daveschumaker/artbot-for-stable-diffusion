@@ -1,0 +1,19 @@
+.CreatePageLayout {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.CreatePanel {
+  width: 100%;
+}
+
+@media (min-width: 1100px) {
+  .CreatePageLayout {
+    flex-direction: row;
+  }
+
+  .CreatePanel {
+    width: calc(100% - 320px);
+  }
+}

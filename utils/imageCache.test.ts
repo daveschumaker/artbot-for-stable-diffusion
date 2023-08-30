@@ -58,7 +58,9 @@ describe('createImageJob', () => {
 
   it('should create 1 job without any modifications', async () => {
     const newImageRequest = Object.assign({}, baseImageRequest)
-    const result = await createImageJob(newImageRequest as CreateImageRequest)
+    const result = await createImageJob(
+      newImageRequest as unknown as CreateImageRequest
+    )
 
     expect(result.success).toBe(true)
     expect(require('./pendingUtils').createPendingJob).toHaveBeenCalledTimes(1)
@@ -69,7 +71,9 @@ describe('createImageJob', () => {
     const newImageRequest = Object.assign({}, baseImageRequest)
     newImageRequest.useMultiClip = true
     newImageRequest.multiClip = [1, 2, 3, 4] as unknown as never[]
-    const result = await createImageJob(newImageRequest as CreateImageRequest)
+    const result = await createImageJob(
+      newImageRequest as unknown as CreateImageRequest
+    )
 
     expect(result.success).toBe(true)
     expect(require('./pendingUtils').createPendingJob).toHaveBeenCalledTimes(4)
@@ -79,7 +83,9 @@ describe('createImageJob', () => {
     const newImageRequest = Object.assign({}, baseImageRequest)
     newImageRequest.useMultiGuidance = true
     newImageRequest.multiGuidance = [1, 2] as unknown as never[]
-    const result = await createImageJob(newImageRequest as CreateImageRequest)
+    const result = await createImageJob(
+      newImageRequest as unknown as CreateImageRequest
+    )
 
     expect(result.success).toBe(true)
     expect(require('./pendingUtils').createPendingJob).toHaveBeenCalledTimes(2)
@@ -90,7 +96,9 @@ describe('createImageJob', () => {
     newImageRequest.useMultiDenoise = true
     newImageRequest.source_image = true as unknown as string
     newImageRequest.multiDenoise = [1, 2, 3] as unknown as never[]
-    const result = await createImageJob(newImageRequest as CreateImageRequest)
+    const result = await createImageJob(
+      newImageRequest as unknown as CreateImageRequest
+    )
 
     expect(result.success).toBe(true)
     expect(require('./pendingUtils').createPendingJob).toHaveBeenCalledTimes(3)
@@ -103,7 +111,9 @@ describe('createImageJob', () => {
     newImageRequest.multiDenoise = [1, 2, 3] as unknown as never[]
     newImageRequest.useMultiSteps = true
     newImageRequest.multiSteps = [1, 2, 3] as unknown as never[]
-    const result = await createImageJob(newImageRequest as CreateImageRequest)
+    const result = await createImageJob(
+      newImageRequest as unknown as CreateImageRequest
+    )
 
     expect(result.success).toBe(true)
     expect(require('./pendingUtils').createPendingJob).toHaveBeenCalledTimes(9)
@@ -112,7 +122,9 @@ describe('createImageJob', () => {
   it('should create correct number of jobs with useAllSamplers', async () => {
     const newImageRequest = Object.assign({}, baseImageRequest)
     newImageRequest.useAllSamplers = true
-    const result = await createImageJob(newImageRequest as CreateImageRequest)
+    const result = await createImageJob(
+      newImageRequest as unknown as CreateImageRequest
+    )
 
     expect(result.success).toBe(true)
     expect(require('./pendingUtils').createPendingJob).toHaveBeenCalledTimes(11) // Hard code 11 for now
@@ -121,7 +133,9 @@ describe('createImageJob', () => {
   it('should create correct number of jobs with promptMatrix', async () => {
     const newImageRequest = Object.assign({}, baseImageRequest)
     newImageRequest.prompt = 'Test {1|2|3}'
-    const result = await createImageJob(newImageRequest as CreateImageRequest)
+    const result = await createImageJob(
+      newImageRequest as unknown as CreateImageRequest
+    )
 
     expect(result.success).toBe(true)
     expect(require('./pendingUtils').createPendingJob).toHaveBeenCalledTimes(3)
@@ -130,7 +144,9 @@ describe('createImageJob', () => {
   it('should create correct number of jobs with negative promptMatrix', async () => {
     const newImageRequest = Object.assign({}, baseImageRequest)
     newImageRequest.negative = 'Test {1|2|3}'
-    const result = await createImageJob(newImageRequest as CreateImageRequest)
+    const result = await createImageJob(
+      newImageRequest as unknown as CreateImageRequest
+    )
 
     expect(result.success).toBe(true)
     expect(require('./pendingUtils').createPendingJob).toHaveBeenCalledTimes(3)
@@ -140,7 +156,9 @@ describe('createImageJob', () => {
     const newImageRequest = Object.assign({}, baseImageRequest)
     newImageRequest.prompt = 'Test {1|2}'
     newImageRequest.negative = 'Test {1|2|3}'
-    const result = await createImageJob(newImageRequest as CreateImageRequest)
+    const result = await createImageJob(
+      newImageRequest as unknown as CreateImageRequest
+    )
 
     expect(result.success).toBe(true)
     expect(require('./pendingUtils').createPendingJob).toHaveBeenCalledTimes(6)

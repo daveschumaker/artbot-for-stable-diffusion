@@ -113,6 +113,11 @@ export interface IKudosDetails {
   recurring: number
 }
 
+export enum InjectTi {
+  Prompt = 'prompt',
+  NegPrompt = 'negprompt'
+}
+
 export interface Lora {
   name: string
   model: number
@@ -128,8 +133,8 @@ export enum SourceProcessing {
 
 export interface TextualInversion {
   name: string
-  inject_ti: string
-  strength: number
+  inject_ti?: string
+  strength?: number
 }
 
 export interface WorkerDetails {

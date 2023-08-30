@@ -51,9 +51,6 @@ const useRelatedImageModal = () => {
     images: any[]
     jobId: string
   }) => {
-    console.log(`jobId`, jobId)
-    console.log(`okie`, images)
-
     if (!Array.isArray(images) || images.length === 0) return
     setImagesList(images)
 

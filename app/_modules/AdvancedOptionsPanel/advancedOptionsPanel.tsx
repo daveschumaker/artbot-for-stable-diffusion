@@ -56,6 +56,7 @@ import ImageSquare from 'components/ImageSquare'
 import { Button } from 'components/UI/Button'
 import { SourceProcessing } from 'types/horde'
 import { IconTrash } from '@tabler/icons-react'
+import EmbeddingsSelect from './EmbeddingsSelect'
 
 interface Props {
   input: any
@@ -376,6 +377,14 @@ const AdvancedOptionsPanel = ({ input, setInput, setErrors }: Props) => {
       </div> */}
       <Section style={{ paddingBottom: '12px' }}>
         <LoraSelect input={input} setInput={setInput} setErrors={setErrors} />
+      </Section>
+
+      <Section style={{ paddingBottom: '12px' }}>
+        <EmbeddingsSelect
+          input={input}
+          setInput={setInput}
+          setErrors={setErrors}
+        />
       </Section>
 
       <Section>

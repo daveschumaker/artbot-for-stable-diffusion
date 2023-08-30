@@ -2,12 +2,14 @@ import { IconX } from '@tabler/icons-react'
 import React, { CSSProperties, ReactNode, useEffect, useState } from 'react'
 import ClickableOverlay from 'app/_components/ClickableOverlay'
 import styles from './dropdownOptions.module.css'
+import clsx from 'clsx'
 
 const FIXED_HEIGHT = 480
 
 export default function DropdownOptions({
   autoSize = false,
   children,
+  className,
   handleClose,
   height,
   title,
@@ -17,6 +19,7 @@ export default function DropdownOptions({
 }: {
   autoSize?: boolean
   children: ReactNode
+  className?: string
   handleClose: () => void
   height?: number
   title?: string
@@ -49,7 +52,7 @@ export default function DropdownOptions({
     <>
       <ClickableOverlay disableBackground handleClose={handleClose} />
       <div
-        className={styles['DropdownOptions']}
+        className={clsx(styles['DropdownOptions'], className)}
         style={{
           maxHeight:
             childSize.height < FIXED_HEIGHT

@@ -1,5 +1,5 @@
-import { Common } from 'types/artbot'
-import { Lora, SourceProcessing, TextualInversion } from 'types/horde'
+import { AiHordeEmbedding, Common } from 'types/artbot'
+import { Lora, SourceProcessing } from 'types/horde'
 
 class DefaultPromptInput {
   canvasData: any | null = ''
@@ -34,7 +34,7 @@ class DefaultPromptInput {
   source_processing: SourceProcessing = SourceProcessing.Prompt
   steps: number = 20
   tiling: boolean = false
-  tis: TextualInversion[] = []
+  tis: AiHordeEmbedding[] = []
   triggers: Array<string> = []
   upscaled: boolean = false
   useAllModels: boolean = false

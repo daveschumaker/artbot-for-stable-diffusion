@@ -32,5 +32,5 @@
 .DropdownContent {
   /* flex-grow: 1; */
   margin-top: 18px;
-  width: calc(100% - 16px);
+  width: 100%;
 }

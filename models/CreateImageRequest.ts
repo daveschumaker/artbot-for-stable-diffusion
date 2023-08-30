@@ -12,6 +12,7 @@ import { getModelVersion, validModelsArray } from '../utils/modelUtils'
 import { SourceProcessing } from '../utils/promptUtils'
 import AppSettings from './AppSettings'
 import DefaultPromptInput from './DefaultPromptInput'
+import { TextualInversion } from 'types/horde'
 
 interface IRandomSampler {
   source_processing: string
@@ -61,6 +62,7 @@ class CreateImageRequest {
   source_processing: SourceProcessing
   steps: number
   tiling: boolean
+  tis: TextualInversion[]
   timestamp?: number
   triggers: Array<string>
   upscaled?: boolean
@@ -105,6 +107,7 @@ class CreateImageRequest {
     source_processing = SourceProcessing.Prompt,
     steps = 20,
     tiling = false,
+    tis = [],
     triggers = [],
     useAllModels = false,
     useAllSamplers = false,
@@ -180,6 +183,26 @@ class CreateImageRequest {
     this.source_mask = String(source_mask)
     this.source_processing = source_processing
     this.loras = [...loras]
+
+    if (Array.isArray(tis) && tis.length > 0) {
+      this.tis = tis.map((ti) => {
+        const obj: TextualInversion = {
+          name: String(ti.name)
+        }
+
+        if (ti.inject_ti) {
+          obj.inject_ti = ti.inject_ti
+        }
+
+        if (ti.strength) {
+          obj.strength = ti.strength
+        }
+
+        return obj
+      })
+    } else {
+      this.tis = []
+    }
 
     if (
       this.post_processing.includes('GFPGAN') ||

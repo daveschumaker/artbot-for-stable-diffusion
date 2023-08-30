@@ -1,6 +1,7 @@
 import React, { CSSProperties, Dispatch, ReactNode } from 'react'
 import DefaultPromptInput from 'models/DefaultPromptInput'
-import { IKudosDetails, WorkerDetails } from './horde'
+import { IKudosDetails, InjectTi, WorkerDetails } from './horde'
+import { Embedding } from './civitai'
 
 declare global {
   interface Window {
@@ -17,6 +18,11 @@ export interface AppDetailsStore {
 }
 
 /** AI Horde and site settings used across ArtBot */
+
+export interface AiHordeEmbedding extends Embedding {
+  strength: number
+  inject_ti?: InjectTi
+}
 export interface AppSettingsParams {
   allowNsfwImages: boolean
   apiKey: string
