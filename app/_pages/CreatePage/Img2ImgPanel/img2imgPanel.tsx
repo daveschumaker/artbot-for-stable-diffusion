@@ -115,6 +115,7 @@ const Img2ImgPanel = ({ input, saveForInpaint, setInput }: Props) => {
                 imageType={input.imageType}
                 height={input.height}
                 width={input.width}
+                unsetDivDimensions
               />
             </div>
           </>

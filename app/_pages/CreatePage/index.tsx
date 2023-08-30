@@ -40,7 +40,7 @@ import InputValidationErrorDisplay from './PromptInput/InputValidationErrorDispl
 
 const defaultState: DefaultPromptInput = new DefaultPromptInput()
 
-const CreatePage = ({ modelDetails = {} }: any) => {
+const CreatePage = ({ className, modelDetails = {} }: any) => {
   const { width } = useWindowSize()
   const appState = useStore(appInfoStore)
   const userInfo = useStore(userInfoStore)
@@ -418,7 +418,7 @@ const CreatePage = ({ modelDetails = {} }: any) => {
   }, [totalImagesRequested, input.seed, setErrors])
 
   return (
-    <main className="pb-[90px]">
+    <main className={className}>
       <div className="flex flex-row items-center w-full">
         <PageTitle>
           Create a new image{' '}

@@ -1,7 +1,7 @@
 import { basePath } from 'BASE_PATH'
-import FlexRow from 'app/_components/FlexRow'
 import PendingPanelView from 'app/_modules/PendingPanel/PendingPanelView'
 import CreatePage from 'app/_pages/CreatePage'
+import styles from './page.module.css'
 
 async function getPageData() {
   let availableModels: Array<any> = []
@@ -33,19 +33,13 @@ export default async function Page() {
 
   // Forward fetched data to your Client Component
   return (
-    <FlexRow
-      gap={8}
-      style={{
-        alignItems: 'flex-start',
-        justifyContent: 'flex-start',
-        position: 'relative'
-      }}
-    >
+    <div className={styles.CreatePageLayout}>
       <CreatePage
         availableModels={availableModels}
+        className={styles.CreatePanel}
         modelDetails={modelDetails}
       />
       <PendingPanelView />
-    </FlexRow>
+    </div>
   )
 }
