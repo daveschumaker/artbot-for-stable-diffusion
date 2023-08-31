@@ -1,8 +1,8 @@
-import { Lora } from 'types'
+import { SavedLora } from 'types/artbot'
 import { modifyPromptForStylePreset } from '../utils/imageUtils'
 import { SourceProcessing } from '../utils/promptUtils'
 import AppSettings from './AppSettings'
-import { TextualInversion } from 'types/horde'
+import { Lora, TextualInversion } from 'types/horde'
 import { castTiInject } from 'utils/hordeUtils'
 
 export interface IApiParams {
@@ -50,7 +50,7 @@ export interface IArtBotImageDetails {
   control_type?: string
   image_is_control?: boolean
   return_control_map?: boolean
-  loras: Lora[]
+  loras: SavedLora[]
   tis: TextualInversion[]
   dry_run?: boolean
 }

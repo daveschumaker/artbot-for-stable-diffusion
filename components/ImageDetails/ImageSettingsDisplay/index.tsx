@@ -1,11 +1,18 @@
-import { IconCodeDots, IconList, IconSettings } from '@tabler/icons-react'
+import {
+  IconCodeDots,
+  IconExternalLink,
+  IconList,
+  IconSettings
+} from '@tabler/icons-react'
 import clsx from 'clsx'
 import Linker from 'components/UI/Linker'
 import CreateImageRequest from 'models/CreateImageRequest'
 import { useState } from 'react'
-import { SourceProcessing } from 'types/horde'
+import { InjectTi, SourceProcessing } from 'types/horde'
 import { cleanDataForApiRequestDisplay } from 'utils/imageUtils'
 import styles from './component.module.css'
+import { arrayHasValue } from 'utils/validationUtils'
+import FlexRow from 'app/_components/FlexRow'
 
 export default function ImageSettingsDisplay({
   imageDetails
@@ -127,6 +134,75 @@ export default function ImageSettingsDisplay({
                     <strong>Denoise:</strong>{' '}
                     {Number(imageDetails.denoising_strength).toFixed(2)}
                   </li>
+                )}
+                {arrayHasValue(imageDetails.loras) && (
+                  <>
+                    <li>&zwnj;</li>
+                    <li>
+                      <strong>LoRAs:</strong>
+                      {imageDetails.loras.map((lora, i: number) => {
+                        return (
+                          <div
+                            key={`ts_${i}`}
+                            style={{ paddingTop: i > 0 ? '4px' : 'unset' }}
+                          >
+                            {'- '}
+                            <Linker
+                              inline
+                              href={`https://civitai.com/models/${lora.name}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              passHref
+                              className="text-cyan-500"
+                            >
+                              <FlexRow gap={8}>
+                                {lora.label}
+                                <IconExternalLink stroke={1.5} size={16} />
+                              </FlexRow>
+                            </Linker>
+                            <div>&nbsp;&nbsp;Strength: {lora.clip}</div>
+                          </div>
+                        )
+                      })}
+                    </li>
+                  </>
+                )}
+                {arrayHasValue(imageDetails.tis) && (
+                  <>
+                    <li>&zwnj;</li>
+                    <li>
+                      <strong>Embeddings:</strong>
+                      {imageDetails.tis.map((ti, i: number) => {
+                        return (
+                          <div
+                            key={`ts_${i}`}
+                            style={{ paddingTop: i > 0 ? '4px' : 'unset' }}
+                          >
+                            {'- '}
+                            <Linker
+                              inline
+                              href={`https://civitai.com/models/${ti.id}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              passHref
+                              className="text-cyan-500"
+                            >
+                              <FlexRow gap={8}>
+                                {ti.name}
+                                <IconExternalLink stroke={1.5} size={16} />
+                              </FlexRow>
+                            </Linker>
+                            <div>
+                              &nbsp;&nbsp;Strength: {ti.strength}{' '}
+                              {ti.inject_ti === InjectTi.NegPrompt
+                                ? '(negative prompt)'
+                                : ''}
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </li>
+                  </>
                 )}
                 <li>&zwnj;</li>
                 <li>

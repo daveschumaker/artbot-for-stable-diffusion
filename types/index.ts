@@ -1,6 +1,7 @@
 import DefaultPromptInput from 'models/DefaultPromptInput'
 import { Dispatch } from 'react'
 import { TextualInversion } from './horde'
+import { SavedLora } from './artbot'
 
 export enum ArtBotJobTypes {
   Text2Img = 'Text2Img',
@@ -51,7 +52,7 @@ export interface CreateImageJob {
   jobStatus?: string
   jobTimestamp?: number
   karras: boolean
-  loras: Lora[]
+  loras: SavedLora[]
   maskData?: any
   models: Array<string>
   negative: string
@@ -149,12 +150,6 @@ export interface SelectPropsComponent {
   styles?: any
   value?: Value
   width?: string
-}
-
-export interface Lora {
-  name: string
-  model: number
-  clip: number
 }
 
 export interface GenerateResponse {

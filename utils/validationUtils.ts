@@ -115,3 +115,11 @@ export const validatePromptSafety = (prompt: string) => {
   const regex = /girl|boy|student|young|lit[tl]le|\blil\b|small|tiny/gm
   return prompt.match(regex)
 }
+
+export const arrayHasValue = (arr: any[]) => {
+  if (!arr) return false
+
+  if (!Array.isArray(arr)) return false
+
+  return arr.length > 0
+}

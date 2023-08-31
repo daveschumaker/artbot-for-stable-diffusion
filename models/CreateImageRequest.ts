@@ -1,5 +1,5 @@
-import { AiHordeEmbedding } from 'types/artbot'
-import { Common, ImageMimeType, ImageSize, JobStatus, Lora } from '../types'
+import { AiHordeEmbedding, SavedLora } from 'types/artbot'
+import { Common, ImageMimeType, ImageSize, JobStatus } from '../types'
 import { uuidv4 } from '../utils/appUtils'
 import { orientationDetails, randomSampler } from '../utils/imageUtils'
 import { getModelVersion, validModelsArray } from '../utils/modelUtils'
@@ -30,7 +30,7 @@ class CreateImageRequest {
   jobStatus: JobStatus
   jobTimestamp: number
   karras: boolean
-  loras: Lora[]
+  loras: SavedLora[]
   maskData: any
   models: Array<string>
   modelVersion: string
