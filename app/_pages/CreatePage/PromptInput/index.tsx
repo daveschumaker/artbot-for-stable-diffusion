@@ -12,7 +12,7 @@ import {
   IconTags
 } from '@tabler/icons-react'
 import styles from './promptInput.module.css'
-import { Button } from 'components/UI/Button'
+import { Button } from 'app/_components/Button'
 import { GetSetPromptInput } from 'types/artbot'
 import { useEffect, useState } from 'react'
 import DropdownOptions from 'app/_modules/DropdownOptions'

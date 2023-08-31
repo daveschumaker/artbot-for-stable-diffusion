@@ -1,5 +1,5 @@
 import SpinnerV2 from 'components/Spinner'
-import { Button } from 'components/UI/Button'
+import { Button } from 'app/_components/Button'
 import Section from 'app/_components/Section'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { useState } from 'react'

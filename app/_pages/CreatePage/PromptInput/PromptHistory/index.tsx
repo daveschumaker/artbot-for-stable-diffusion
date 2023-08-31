@@ -1,4 +1,4 @@
-import { Button } from 'components/UI/Button'
+import { Button } from 'app/_components/Button'
 import Input from 'components/UI/Input'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { deletePromptFromHistory, getPrompts, updatePrompt } from '_db/prompts'

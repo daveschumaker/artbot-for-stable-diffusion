@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation'
 
 import ProgressBar from './ProgressBar'
 import { setNewImageReady, setShowImageReadyToast } from '../../store/appStore'
-import { Button } from '../../components/UI/Button'
+import { Button } from 'app/_components/Button'
 import TrashIcon from '../../components/icons/TrashIcon'
 import Panel from 'app/_components/Panel'
 import { trackEvent, trackGaEvent } from '../../api/telemetry'

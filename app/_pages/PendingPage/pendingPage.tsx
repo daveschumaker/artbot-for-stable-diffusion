@@ -26,7 +26,7 @@ import {
 } from 'controllers/pendingJobsCache'
 import FlexRow from 'app/_components/FlexRow'
 import { IconFilter, IconInfoTriangle, IconSettings } from '@tabler/icons-react'
-import { Button } from 'components/UI/Button'
+import { Button } from 'app/_components/Button'
 import FilterOptions from './FilterOptions'
 import Accordion from 'app/_components/Accordion'
 import AccordionItem from 'app/_components/AccordionItem'

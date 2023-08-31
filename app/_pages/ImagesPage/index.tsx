@@ -23,7 +23,7 @@ import {
 } from 'utils/db'
 import ImageSquare from 'components/ImageSquare'
 import { trackEvent } from 'api/telemetry'
-import { Button } from 'components/UI/Button'
+import { Button } from 'app/_components/Button'
 import { useWindowSize } from 'hooks/useWindowSize'
 import DotsVerticalIcon from 'components/icons/DotsVerticalIcon'
 import CircleCheckIcon from 'components/icons/CircleCheckIcon'

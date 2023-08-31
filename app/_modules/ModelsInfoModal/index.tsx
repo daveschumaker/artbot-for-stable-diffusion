@@ -10,7 +10,7 @@ import {
 } from '@tabler/icons-react'
 import FlexRow from 'app/_components/FlexRow'
 import Modal from 'components/Modal'
-import { Button } from 'components/UI/Button'
+import { Button } from 'app/_components/Button'
 import Checkbox from 'components/UI/Checkbox'
 import Input from 'components/UI/Input'
 import Linker from 'components/UI/Linker'

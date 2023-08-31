@@ -7,7 +7,7 @@ import {
 import FlexRow from 'app/_components/FlexRow'
 import NumberInput from 'app/_components/NumberInput'
 import DropdownOptions from 'app/_modules/DropdownOptions'
-import { Button } from 'components/UI/Button'
+import { Button } from 'app/_components/Button'
 import Input from 'components/UI/Input'
 import React, { useCallback, useEffect, useState } from 'react'
 import { SetInput } from 'types/artbot'

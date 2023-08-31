@@ -3,7 +3,7 @@ import Input from 'components/UI/Input'
 import { stylePresets } from './presets'
 import styles from './component.module.css'
 import { IconArrowBarLeft, IconPlayerPlayFilled } from '@tabler/icons-react'
-import { Button } from 'components/UI/Button'
+import { Button } from 'app/_components/Button'
 import FlexRow from 'app/_components/FlexRow'
 
 export default function StylePresetsDropdown({

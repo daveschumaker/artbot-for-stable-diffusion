@@ -4,7 +4,7 @@ import * as DOMPurify from 'dompurify'
 import { useState } from 'react'
 
 import Input from 'components/UI/Input'
-import { Button } from 'components/UI/Button'
+import { Button } from 'app/_components/Button'
 import Linker from 'components/UI/Linker'
 import styles from './loraSelect.module.css'
 import LoraDetails from './LoraDetails'

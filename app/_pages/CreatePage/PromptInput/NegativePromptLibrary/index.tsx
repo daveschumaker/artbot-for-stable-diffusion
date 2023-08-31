@@ -4,7 +4,7 @@ import { PromptHistoryDetails, PromptTypes, SetInput } from 'types/artbot'
 import { useModal } from '@ebay/nice-modal-react'
 import { useEffect, useRef, useState } from 'react'
 import styles from './component.module.css'
-import { Button } from 'components/UI/Button'
+import { Button } from 'app/_components/Button'
 import { IconCopy, IconTrash } from '@tabler/icons-react'
 import FlexRow from 'app/_components/FlexRow'
 

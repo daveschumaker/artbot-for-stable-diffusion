@@ -3,7 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useCallback, useEffect } from 'react'
 import styled from 'styled-components'
-import { Button } from 'components/UI/Button'
+import { Button } from 'app/_components/Button'
 import Input from 'components/UI/Input'
 import PageTitle from 'app/_components/PageTitle'
 import Dropzone from 'components/Dropzone'

@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { Button } from './UI/Button'
+import { Button } from 'app/_components/Button'
 import CloudUploadIcon from './icons/CloudUploadIcon'
 import MobileHideText from './UI/MobileHideText'
 

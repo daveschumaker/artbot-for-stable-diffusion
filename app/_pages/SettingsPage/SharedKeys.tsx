@@ -1,7 +1,7 @@
 import { IconCopy, IconPencil, IconTrash } from '@tabler/icons-react'
 import { fetchUserDetails } from 'api/userInfo'
 import DeleteConfirmModal from 'components/DeleteConfirmModal'
-import { Button } from 'components/UI/Button'
+import { Button } from 'app/_components/Button'
 import Input from 'components/UI/Input'
 import InteractiveModal from 'components/UI/InteractiveModal/interactiveModal'
 import Section from 'app/_components/Section'

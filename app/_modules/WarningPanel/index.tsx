@@ -1,4 +1,4 @@
-import { Button } from 'components/UI/Button'
+import { Button } from 'app/_components/Button'
 
 interface Props {
   panelType: string

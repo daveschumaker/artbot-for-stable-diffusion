@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { useRouter } from 'next/router'
 
 import { trackEvent } from '../../api/telemetry'
-import { Button } from '../UI/Button'
+import { Button } from 'app/_components/Button'
 import BrushIcon from '../icons/BrushIcon'
 import ToolIcon from '../icons/ToolIcon'
 
