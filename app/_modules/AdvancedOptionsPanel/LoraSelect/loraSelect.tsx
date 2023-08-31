@@ -17,6 +17,7 @@ const LoraSelect = ({ input, setInput, setErrors }: any) => {
   const [showModal, setShowModal] = useState(false)
 
   const handleAddLora = (loraDetails: any) => {
+    console.log(`loraDetails`, loraDetails)
     const modelDetails = modelStore.state.modelDetails[input.models[0]]
 
     const lorasToUpdate = [...input.loras]

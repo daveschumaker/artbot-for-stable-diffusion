@@ -10,7 +10,6 @@ import DownloadIcon from 'components/icons/DownloadIcon'
 import HeartIcon from 'components/icons/HeartIcon'
 import TrashIcon from 'components/icons/TrashIcon'
 import { useCallback, useEffect, useState } from 'react'
-import { IImageDetails } from 'types'
 import {
   deleteCompletedImage,
   deletePendingJobFromDb,
@@ -42,6 +41,7 @@ import { getRelatedImages } from 'components/ImagePage/image.controller'
 import { useModal } from '@ebay/nice-modal-react'
 import { showErrorToast, showSuccessToast } from 'utils/notificationUtils'
 import ShortlinkButton from './ShortlinkButton'
+import CreateImageRequest from 'models/CreateImageRequest'
 
 const ImageOptionsWrapper = ({
   handleClose,
@@ -56,7 +56,7 @@ const ImageOptionsWrapper = ({
   handleClose: () => any
   handleDeleteImageClick?: () => any
   handleReloadImageData?: () => any
-  imageDetails: IImageDetails
+  imageDetails: CreateImageRequest
   isModal: boolean
   showTiles: boolean
   setShowTiles: (bool: boolean) => any
@@ -70,7 +70,7 @@ const ImageOptionsWrapper = ({
   //   remove: () => false
   // }
 
-  const [favorited, setFavorited] = useState(imageDetails.favorited)
+  const [favorited, setFavorited] = useState<boolean>(imageDetails.favorited)
   const [pendingReroll, setPendingReroll] = useState(false)
   const [pendingUpscale, setPendingUpscale] = useState(false)
   const [hasParentJob, setHasParentJob] = useState(false)
@@ -78,7 +78,7 @@ const ImageOptionsWrapper = ({
   const [tileSize, setTileSize] = useState('128px')
 
   const fetchParentJobDetails = useCallback(async () => {
-    const details: IImageDetails = await getParentJobDetails(
+    const details: CreateImageRequest = await getParentJobDetails(
       imageDetails.parentJobId as string
     )
 

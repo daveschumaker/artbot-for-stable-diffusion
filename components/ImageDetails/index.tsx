@@ -1,15 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 import clsx from 'clsx'
-import CodeDotsIcon from 'components/icons/CodeDots'
-import ListIcon from 'components/icons/ListIcon'
 import PhotoUpIcon from 'components/icons/PhotoUpIcon'
 import PlaylistXIcon from 'components/icons/PlaylistXIcon'
-import SettingsIcon from 'components/icons/SettingsIcon'
-import Linker from 'components/UI/Linker'
 import React, { useState } from 'react'
 import { FullScreen, useFullScreenHandle } from 'react-full-screen'
-import { IImageDetails } from 'types'
-import { SourceProcessing } from 'utils/promptUtils'
 import ImageSquare from 'components/ImageSquare'
 import AdContainer from 'components/AdContainer'
 
@@ -19,14 +13,15 @@ import Img2ImgModal from 'components/ImagePage/Img2ImgModal'
 import ParentImage from 'app/_components/ParentImage'
 import { logError } from 'utils/appUtils'
 import { userInfoStore } from 'store/userStore'
-import { cleanDataForApiRequestDisplay } from 'utils/imageUtils'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { useStore } from 'statery'
 import { appInfoStore } from 'store/appStore'
 import useWindowHeight from 'hooks/useWindowHeight'
+import ImageSettingsDisplay from './ImageSettingsDisplay'
+import CreateImageRequest from 'models/CreateImageRequest'
 
 interface Props {
-  imageDetails: IImageDetails
+  imageDetails: CreateImageRequest
   isModal?: boolean
   handleClose?: () => any
   handleDeleteImageClick?: () => any
@@ -49,7 +44,6 @@ const ImageDetails = ({
   const [fullscreen, setFullscreen] = useState(false)
   const [showImg2ImgModal, setShowImg2ImgModal] = useState(false)
   const [showTiles, setShowTiles] = useState(false)
-  const [showRequestParams, setShowRequestParams] = useState(false)
 
   if (!imageDetails || !imageDetails.id) {
     logError({
@@ -71,12 +65,6 @@ const ImageDetails = ({
     handleTiling(bool)
     setShowTiles(bool)
   }
-
-  const modelName =
-    imageDetails && (imageDetails?.models[0] || imageDetails?.model)
-  const isImg2Img =
-    imageDetails.source_processing === SourceProcessing.Img2Img ||
-    imageDetails.img2img
 
   const imgStyle: any = {
     maxWidth: '1024px',
@@ -191,150 +179,9 @@ const ImageDetails = ({
           </div>
         )
       }
-      <div
-        id="image-params-wrapper"
-        className="flex flex-col items-center justify-start w-full mt-3"
-      >
-        <div className="text-[16px] tablet:text-[18px] px-4 w-full max-w-[768px]">
-          <div className="flex flex-row items-center gap-2 text-sm font-bold">
-            <SettingsIcon />
-            Image details
-          </div>
-          <div className="mt-2 ml-4 w-full flex flex-row justify-start max-w-[768px]">
-            <div
-              className="flex flex-row items-center gap-2 text-sm cursor-pointer"
-              onClick={() => {
-                setShowRequestParams(!showRequestParams)
-              }}
-            >
-              {showRequestParams ? <ListIcon /> : <CodeDotsIcon />}
-              {showRequestParams
-                ? 'show image details'
-                : 'show request parameters'}
-            </div>
-          </div>
-          <div className="flex flex-row">
-            <div
-              className={clsx([
-                'bg-slate-800',
-                'font-mono',
-                'text-white',
-                'text-sm',
-                'overflow-x-auto',
-                'mt-2',
-                'mx-4',
-                'rounded-md',
-                'p-4',
-                styles['image-details']
-              ])}
-            >
-              {showRequestParams && (
-                <pre className="whitespace-pre-wrap">
-                  {JSON.stringify(
-                    cleanDataForApiRequestDisplay(imageDetails),
-                    null,
-                    2
-                  )}
-                </pre>
-              )}
-              {!showRequestParams && (
-                <ul>
-                  <li>
-                    <strong>Created:</strong>{' '}
-                    {new Date(imageDetails.timestamp).toLocaleString()}
-                  </li>
-                  <li>
-                    <strong>Job ID:</strong> {imageDetails.jobId}
-                  </li>
-                  <li>&zwnj;</li>
-                  <li>
-                    <strong>Worker ID:</strong> {imageDetails.worker_id}
-                  </li>
-                  <li>
-                    <strong>Worker name:</strong> {imageDetails.worker_name}
-                  </li>
-                  <li>&zwnj;</li>
-                  <li>
-                    <strong>Sampler:</strong> {imageDetails.sampler}
-                  </li>
-                  {modelName ? (
-                    <li>
-                      <strong>Model:</strong>{' '}
-                      <Linker
-                        href={`/images?model=${modelName}`}
-                        passHref
-                        className="text-cyan-500"
-                      >
-                        {modelName}
-                      </Linker>
-                    </li>
-                  ) : null}
-                  {imageDetails.modelVersion && (
-                    <li>
-                      <strong>Model version:</strong>{' '}
-                      {imageDetails.modelVersion}
-                    </li>
-                  )}
-                  <li>&zwnj;</li>
-                  <li>
-                    <strong>Seed:</strong> {imageDetails.seed}
-                  </li>
-                  <li>
-                    <strong>Steps:</strong> {imageDetails.steps}
-                  </li>
-                  <li>
-                    <strong>Guidance / cfg scale:</strong>{' '}
-                    {imageDetails.cfg_scale}
-                  </li>
-                  {isImg2Img && imageDetails.denoising_strength && (
-                    <li>
-                      <strong>Denoise:</strong>{' '}
-                      {Number(imageDetails.denoising_strength).toFixed(2)}
-                    </li>
-                  )}
-                  <li>&zwnj;</li>
-                  <li>
-                    <strong>Karras:</strong>{' '}
-                    {imageDetails.karras ? 'true' : 'false'}
-                  </li>
-                  <li>
-                    <strong>Hi-res fix:</strong>{' '}
-                    {imageDetails.hires ? 'true' : 'false'}
-                  </li>
-                  <li>
-                    <strong>CLIP skip:</strong>{' '}
-                    {imageDetails.clipskip ? imageDetails.clipskip : 1}
-                  </li>
-                  <li>
-                    <strong>tiled:</strong>{' '}
-                    {imageDetails.tiling ? 'true' : 'false'}
-                  </li>
-                  <li>&zwnj;</li>
-                  {imageDetails.control_type && (
-                    <li>
-                      <strong>Control type:</strong> {imageDetails.control_type}
-                    </li>
-                  )}
-                  {imageDetails.image_is_control && (
-                    <li>
-                      <strong>Control map:</strong>{' '}
-                      {imageDetails.image_is_control}
-                    </li>
-                  )}
-                </ul>
-              )}
-            </div>
-            {/* {
-              // @ts-ignore
-              size.width >= 800 && isModal && (
-                <div className="w-[154px]">
-                  <AdContainer id="cardbonads_img_modal" />
-                </div>
-              )
-            } */}
-          </div>
-        </div>
-      </div>
+
+      <ImageSettingsDisplay imageDetails={imageDetails} />
+
       <div
         id="image-params-wrapper"
         className="flex flex-col items-center justify-start w-full mt-3"
@@ -360,7 +207,7 @@ const ImageDetails = ({
                   imageDetails={{
                     base64String: imageDetails.source_image
                   }}
-                  imageType={imageDetails.imageType}
+                  imageType={imageDetails.imageMimeType}
                   size={140}
                 />
               </div>

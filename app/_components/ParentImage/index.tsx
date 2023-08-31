@@ -1,7 +1,7 @@
 import PhotoUpIcon from 'components/icons/PhotoUpIcon'
 import ImageSquare from 'components/ImageSquare'
+import CreateImageRequest from 'models/CreateImageRequest'
 import { useCallback, useEffect, useState } from 'react'
-import { IImageDetails } from 'types'
 import { getParentJobDetails } from 'utils/db'
 
 export default function ParentImage({
@@ -15,7 +15,7 @@ export default function ParentImage({
   const [parentImage, setParentImage] = useState('')
 
   const fetchParentJobDetails = useCallback(async () => {
-    const details: IImageDetails = await getParentJobDetails(parentJobId)
+    const details: CreateImageRequest = await getParentJobDetails(parentJobId)
 
     if (jobId === details.jobId) {
       setParentImage('')
@@ -24,7 +24,7 @@ export default function ParentImage({
 
     if (details.base64String) {
       setParentImage(details.base64String)
-      setImageType(details.imageType)
+      setImageType(details.imageMimeType)
     }
   }, [jobId, parentJobId])
 

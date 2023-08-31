@@ -19,10 +19,7 @@ const addJobToPending = async (imageParams: CreateImageRequest) => {
 
   try {
     const imageId = await addPendingJobToDexie(imageParams)
-    setPendingJob({
-      id: imageId,
-      ...imageParams
-    })
+    setPendingJob(Object.assign({}, imageParams, { id: imageId }))
     return {
       success: true
     }
