@@ -1,3 +1,8 @@
+# 2023.08.30
+
+- Fix: On mobile devices, the search embedding field was a numeric input. Thanks to TheUnamusedFox for reporting this on Discord.
+- Fix: Reroll and copy image settings would not use LoRA settings, TIs, denoise values. I rewrote this whole module, so it should work now (and going forward as new properties are added). Thanks to Sidorok and Efreak for reporting this.
+
 # 2023.08.29
 
 - Show warning if image dimensions are over 4,194,303 pixels (max supported size on the Horde). e.g, Maxing out each dimension would make a 3072 x 1344 image.

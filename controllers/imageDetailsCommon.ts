@@ -1,5 +1,4 @@
 import PromptInputSettings from 'models/PromptInputSettings'
-import RerollImageRequest from '../models/RerollImageRequest'
 import UpscaleImageRequest from '../models/UpscaleImageRequest'
 import {
   clearCanvasStore,
@@ -12,8 +11,13 @@ import { createImageJob } from '../utils/imageCache'
 import { downloadFile } from '../utils/imageUtils'
 import { setImageForInterrogation } from '../utils/interrogateUtils'
 import { createPendingRerollJob } from '../utils/pendingUtils'
-import { savePrompt, SourceProcessing } from '../utils/promptUtils'
+import {
+  savePrompt,
+  savePromptV2,
+  SourceProcessing
+} from '../utils/promptUtils'
 import Samplers from 'models/Samplers'
+import CreateImageRequest from 'models/CreateImageRequest'
 
 export const interrogateImage = (imageDetails: any) => {
   setImageForInterrogation(imageDetails)
@@ -21,34 +25,7 @@ export const interrogateImage = (imageDetails: any) => {
 
 export const copyEditPrompt = (imageDetails: any) => {
   PromptInputSettings.clear()
-
-  savePrompt({
-    prompt: imageDetails.prompt,
-    sampler: imageDetails.sampler,
-    steps: imageDetails.steps,
-    orientation: imageDetails.orientation,
-    karras: imageDetails.karras,
-    hires: imageDetails.hires,
-    clipskip: imageDetails.clipskip,
-    height: imageDetails.height,
-    width: imageDetails.width,
-    seed: imageDetails.seed,
-    cfg_scale: imageDetails.cfg_scale,
-    parentJobId: imageDetails.parentJobId,
-    negative: imageDetails.negative,
-    tiling: imageDetails.tiling,
-    source_processing: imageDetails.source_processing,
-    source_image: imageDetails.source_image,
-    source_mask: imageDetails.source_mask,
-    control_type: imageDetails.control_type,
-    denoising_strength: imageDetails.denoising_strength,
-    post_processing: imageDetails.post_processing,
-    // @ts-ignore
-    loras: imageDetails.loras ? [...imageDetails.loras] : [],
-    models: imageDetails?.models[0]
-      ? imageDetails.models
-      : [imageDetails.model || 'stable_diffusion']
-  })
+  savePromptV2(imageDetails)
 }
 
 /**
@@ -182,7 +159,10 @@ export const downloadImage = async (imageDetails: any) => {
 }
 
 export const rerollImage = async (imageDetails: any) => {
-  const rerollImageJob = new RerollImageRequest(imageDetails)
+  const transformJob = CreateImageRequest.toDefaultPromptInput(
+    Object.assign({}, imageDetails, { numImages: 1, seed: '' })
+  )
+  const rerollImageJob = new CreateImageRequest(transformJob)
   const res = await createPendingRerollJob(rerollImageJob)
 
   // @ts-ignore

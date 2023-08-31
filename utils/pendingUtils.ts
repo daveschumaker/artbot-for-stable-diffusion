@@ -1,6 +1,5 @@
 import { MAX_IMAGES_PER_JOB } from '../_constants'
 import CreateImageRequest from '../models/CreateImageRequest'
-import RerollImageRequest from '../models/RerollImageRequest'
 import { logError, uuidv4 } from './appUtils'
 import { addPendingJobToDexie } from './db'
 import { getModelVersion, validModelsArray } from './modelUtils'
@@ -12,9 +11,7 @@ import { logToConsole } from './debugTools'
 import { deletePendingJob, setPendingJob } from 'controllers/pendingJobsCache'
 import AppSettings from 'models/AppSettings'
 
-const addJobToPending = async (
-  imageParams: CreateImageRequest | RerollImageRequest
-) => {
+const addJobToPending = async (imageParams: CreateImageRequest) => {
   // Create a temporary uuid for easier lookups.
   // Will be replaced later when job is accepted
   // by API
@@ -39,9 +36,7 @@ const addJobToPending = async (
   }
 }
 
-const cloneImageParams = async (
-  imageParams: CreateImageRequest | RerollImageRequest
-) => {
+const cloneImageParams = async (imageParams: CreateImageRequest) => {
   const clonedParams = Object.assign({}, imageParams)
 
   clonedParams.timestamp = Date.now()
@@ -76,7 +71,7 @@ const cloneImageParams = async (
 }
 
 export const createPendingRerollJob = async (
-  imageParams: RerollImageRequest
+  imageParams: CreateImageRequest
 ) => {
   const clonedParams = await cloneImageParams(imageParams)
   return await addJobToPending(clonedParams)

@@ -1,3 +1,4 @@
+import CreateImageRequest from 'models/CreateImageRequest'
 import PromptInputSettings from '../models/PromptInputSettings'
 import { setInputCache } from '../store/inputCache'
 import { PromptTypes } from '../types'
@@ -83,6 +84,13 @@ let initPromptDetails: SavePrompt = {
 }
 
 let promptDetails: SavePrompt = Object.assign({}, initPromptDetails)
+
+export const savePromptV2 = (imageDetails: any) => {
+  const transformJob = CreateImageRequest.toDefaultPromptInput(
+    Object.assign({}, imageDetails, { numImages: 1 })
+  )
+  localStorage.setItem('PromptInputSettings', JSON.stringify(transformJob))
+}
 
 // TODO: Restore other parameters relate to image
 // e.g., height, width, sampler, etc.

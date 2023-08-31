@@ -1,4 +1,4 @@
-import { AiHordeEmbedding, Common } from 'types/artbot'
+import { AiHordeEmbedding, Common, ImageMimeType } from 'types/artbot'
 import { Lora, SourceProcessing } from 'types/horde'
 
 class DefaultPromptInput {
@@ -11,6 +11,7 @@ class DefaultPromptInput {
   height: number = 512
   hires: boolean = false
   image_is_control: boolean = false
+  imageMimeType = ImageMimeType.WebP
   imageType: string = ''
   karras: boolean = true
   loras: Lora[] = []

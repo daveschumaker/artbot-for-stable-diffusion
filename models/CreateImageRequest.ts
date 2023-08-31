@@ -1,27 +1,15 @@
-import {
-  ArtBotJobTypes,
-  Common,
-  ImageMimeType,
-  ImageSize,
-  JobStatus,
-  Lora
-} from '../types'
+import { AiHordeEmbedding } from 'types/artbot'
+import { Common, ImageMimeType, ImageSize, JobStatus, Lora } from '../types'
 import { uuidv4 } from '../utils/appUtils'
 import { orientationDetails, randomSampler } from '../utils/imageUtils'
 import { getModelVersion, validModelsArray } from '../utils/modelUtils'
 import { SourceProcessing } from '../utils/promptUtils'
 import AppSettings from './AppSettings'
 import DefaultPromptInput from './DefaultPromptInput'
-import { TextualInversion } from 'types/horde'
 
 interface IRandomSampler {
   source_processing: string
   steps: number
-}
-export interface IRequestParams extends DefaultPromptInput {
-  artbotJobType: ArtBotJobTypes
-  imageMimeType: ImageMimeType
-  modelVersion: string
 }
 
 class CreateImageRequest {
@@ -62,10 +50,10 @@ class CreateImageRequest {
   source_processing: SourceProcessing
   steps: number
   tiling: boolean
-  tis: TextualInversion[]
+  tis: AiHordeEmbedding[]
   timestamp?: number
   triggers: Array<string>
-  upscaled?: boolean
+  upscaled: boolean
   useAllModels: boolean
   useAllSamplers: boolean
   useMultiClip: boolean
@@ -109,6 +97,7 @@ class CreateImageRequest {
     tiling = false,
     tis = [],
     triggers = [],
+    upscaled = false,
     useAllModels = false,
     useAllSamplers = false,
     useMultiClip = false,
@@ -116,7 +105,7 @@ class CreateImageRequest {
     useMultiGuidance = false,
     useMultiSteps = false,
     width = 512
-  }: IRequestParams) {
+  }: DefaultPromptInput) {
     this.cfg_scale = Number(cfg_scale)
     this.imageMimeType = imageMimeType
     this.jobStatus = JobStatus.Waiting
@@ -183,26 +172,8 @@ class CreateImageRequest {
     this.source_mask = String(source_mask)
     this.source_processing = source_processing
     this.loras = [...loras]
-
-    if (Array.isArray(tis) && tis.length > 0) {
-      this.tis = tis.map((ti) => {
-        const obj: TextualInversion = {
-          name: String(ti.name)
-        }
-
-        if (ti.inject_ti) {
-          obj.inject_ti = ti.inject_ti
-        }
-
-        if (ti.strength) {
-          obj.strength = ti.strength
-        }
-
-        return obj
-      })
-    } else {
-      this.tis = []
-    }
+    this.tis = [...tis]
+    this.upscaled = upscaled || false
 
     if (
       this.post_processing.includes('GFPGAN') ||
@@ -334,6 +305,59 @@ class CreateImageRequest {
   static getRandomSampler({ source_processing, steps }: IRandomSampler) {
     const isImg2Img = source_processing !== SourceProcessing.Prompt
     return randomSampler(steps, isImg2Img)
+  }
+
+  static toDefaultPromptInput = (
+    imageDetails: CreateImageRequest
+  ): DefaultPromptInput => {
+    const promptInput: DefaultPromptInput = {
+      canvasData: imageDetails.canvasData,
+      cfg_scale: imageDetails.cfg_scale,
+      clipskip: imageDetails.clipskip,
+      control_type: imageDetails.control_type,
+      denoising_strength: imageDetails.denoising_strength,
+      facefixer_strength: imageDetails.facefixer_strength ?? 0.75,
+      height: imageDetails.height,
+      hires: imageDetails.hires,
+      image_is_control: imageDetails.image_is_control,
+      imageMimeType: imageDetails.imageMimeType,
+      imageType: '',
+      karras: imageDetails.karras,
+      loras: imageDetails.loras,
+      maskData: imageDetails.maskData,
+      models: imageDetails.models,
+      multiClip: '',
+      multiDenoise: '',
+      multiGuidance: '',
+      multiSteps: '',
+      negative: imageDetails.negative,
+      numImages: imageDetails.numImages,
+      orientationType: imageDetails.orientation,
+      parentJobId: imageDetails.parentJobId,
+      post_processing: imageDetails.post_processing,
+      prompt: imageDetails.prompt,
+      return_control_map: imageDetails.return_control_map,
+      sampler: imageDetails.sampler,
+      seed: imageDetails.seed,
+      source_image: imageDetails.source_image,
+      source_mask: imageDetails.source_mask,
+      source_processing: imageDetails.source_processing,
+      steps: imageDetails.steps,
+      tiling: imageDetails.tiling,
+      tis: imageDetails.tis,
+      triggers: imageDetails.triggers,
+      upscaled: imageDetails.upscaled,
+      useAllModels: imageDetails.useAllModels,
+      useAllSamplers: imageDetails.useAllSamplers,
+      useFavoriteModels: false,
+      useMultiClip: false,
+      useMultiDenoise: false,
+      useMultiGuidance: false,
+      useMultiSteps: false,
+      width: imageDetails.width
+    }
+
+    return promptInput
   }
 }
 

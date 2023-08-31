@@ -1,13 +1,10 @@
 import { ImageSize } from '../types'
 import { orientationDetails } from '../utils/imageUtils'
-import CreateImageRequest, { IRequestParams } from './CreateImageRequest'
-
-export interface IUpscaleRequestParams extends IRequestParams {
-  orientation?: string
-}
+import CreateImageRequest from './CreateImageRequest'
 
 class UpscaleImageRequest extends CreateImageRequest {
-  constructor(params: IUpscaleRequestParams) {
+  constructor(params: CreateImageRequest) {
+    // @ts-ignore
     super(params)
 
     const {
