@@ -1,6 +1,7 @@
 # 2023.09.01
 
 - Fix: Show both LoRA strength and clip values on image modals and pages. Expose LoRA CLIP values in the advanced options panel.
+- Fix: I broke the pending images modal. Whoops. It's now fixed! Thanks to Sidorok for reporting.
 
 # 2023.08.31
 

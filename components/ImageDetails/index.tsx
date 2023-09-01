@@ -45,7 +45,7 @@ const ImageDetails = ({
   const [showImg2ImgModal, setShowImg2ImgModal] = useState(false)
   const [showTiles, setShowTiles] = useState(false)
 
-  if (!imageDetails || !imageDetails.id) {
+  if (!imageDetails || !imageDetails.base64String) {
     logError({
       path: window.location.href,
       errorMessage: 'ImageDetails.missingImageDetails',
