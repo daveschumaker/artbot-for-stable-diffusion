@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 import { trackEvent } from '../../../api/telemetry'
 import { imageCount } from '../../../utils/db'
-import { Button } from '../../../components/UI/Button'
+import { Button } from 'app/_components/Button'
 import SectionTitle from 'app/_components/SectionTitle'
 import Text from '../../../components/UI/Text'
 import TextArea from '../../../components/UI/TextArea'

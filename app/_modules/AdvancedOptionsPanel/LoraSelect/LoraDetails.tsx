@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import * as DOMPurify from 'dompurify'
 import { IconDownload, IconHeart, IconHeartFilled } from '@tabler/icons-react'
-import { Button } from 'components/UI/Button'
+import { Button } from 'app/_components/Button'
 import Panel from 'app/_components/Panel'
 import { useState } from 'react'
 import Accordion from 'app/_components/Accordion'

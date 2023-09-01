@@ -2,7 +2,7 @@
 
 import { IconCalculator, IconSquarePlus, IconTrash } from '@tabler/icons-react'
 
-import { Button } from 'components/UI/Button'
+import { Button } from 'app/_components/Button'
 import Linker from 'components/UI/Linker'
 import Errors from 'utils/errors'
 import { useState } from 'react'

@@ -1,5 +1,5 @@
 import { IconClearAll } from '@tabler/icons-react'
-import { Button } from 'components/UI/Button'
+import { Button } from 'app/_components/Button'
 import { useState } from 'react'
 import { JobStatus } from 'types/artbot'
 import {

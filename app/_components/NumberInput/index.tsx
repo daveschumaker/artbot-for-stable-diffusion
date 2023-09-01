@@ -2,7 +2,7 @@ import { IconMinus, IconPlus, IconPlusMinus } from '@tabler/icons-react'
 import clsx from 'clsx'
 import Input from 'components/UI/Input'
 import styles from './component.module.css'
-import { Button } from 'components/UI/Button'
+import { Button } from 'app/_components/Button'
 import FlexRow from '../FlexRow'
 
 interface NumberInputProps {

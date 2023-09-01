@@ -2,7 +2,7 @@
 import PageTitle from 'app/_components/PageTitle'
 import styles from './component.module.css'
 import { useCallback, useEffect, useState } from 'react'
-import { Button } from 'components/UI/Button'
+import { Button } from 'app/_components/Button'
 import { clientHeader, getApiHostServer } from 'utils/appUtils'
 import AppSettings from 'models/AppSettings'
 import {

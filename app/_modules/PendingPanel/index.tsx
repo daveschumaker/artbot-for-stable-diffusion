@@ -15,7 +15,7 @@ import { useCallback, useState } from 'react'
 import FilterOptions from 'app/_pages/PendingPage/FilterOptions'
 import PendingSettings from 'app/_pages/PendingPage/PendingSettings'
 import ClearJobs from 'app/_pages/PendingPage/ClearJobs'
-import { Button } from 'components/UI/Button'
+import { Button } from 'app/_components/Button'
 import { Virtuoso } from 'react-virtuoso'
 import PendingPanelImageCard from './PendingPanelImageCard'
 

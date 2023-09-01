@@ -5,16 +5,16 @@ import clsx from 'clsx'
 import ImageParamsForApi from 'models/ImageParamsForApi'
 import { useState } from 'react'
 import { userInfoStore } from 'store/userStore'
-import { IImageDetails } from 'types'
 import { getImageDetails, updateCompletedJob } from 'utils/db'
 import { generateBase64Thumbnail } from 'utils/imageUtils'
 import { showSuccessToast } from 'utils/notificationUtils'
 import styles from './component.module.css'
+import CreateImageRequest from 'models/CreateImageRequest'
 
 export default function ShortlinkButton({
   imageDetails
 }: {
-  imageDetails: IImageDetails
+  imageDetails: CreateImageRequest
 }) {
   const [shortlinkPending, setShortlinkPending] = useState(false)
 

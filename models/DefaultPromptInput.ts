@@ -1,5 +1,10 @@
-import { AiHordeEmbedding, Common, ImageMimeType } from 'types/artbot'
-import { Lora, SourceProcessing } from 'types/horde'
+import {
+  AiHordeEmbedding,
+  Common,
+  ImageMimeType,
+  SavedLora
+} from 'types/artbot'
+import { SourceProcessing } from 'types/horde'
 
 class DefaultPromptInput {
   canvasData: any | null = ''
@@ -14,7 +19,7 @@ class DefaultPromptInput {
   imageMimeType = ImageMimeType.WebP
   imageType: string = ''
   karras: boolean = true
-  loras: Lora[] = []
+  loras: SavedLora[] = []
   maskData: any | null = ''
   models: Array<string> = ['stable_diffusion']
   multiClip: string = ''

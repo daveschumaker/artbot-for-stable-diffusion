@@ -10,10 +10,11 @@
 
 @media (min-width: 1100px) {
   .CreatePageLayout {
-    flex-direction: row;
+    display: block;
   }
 
   .CreatePanel {
+    display: inline-block;
     width: calc(100% - 320px);
   }
 }

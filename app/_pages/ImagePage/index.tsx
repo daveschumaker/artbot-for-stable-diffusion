@@ -12,17 +12,17 @@ import { getImageDetails, updateCompletedJob } from 'utils/db'
 import RelatedImages from 'components/ImagePage/RelatedImages'
 import { getRelatedImages } from 'components/ImagePage/image.controller'
 import ImageDetails from 'components/ImageDetails'
-import { IImageDetails } from 'types'
+import CreateImageRequest from 'models/CreateImageRequest'
 
 const ImagePage = ({ id }: { id: string }) => {
   const router = useRouter()
 
   const [isInitialLoad, setIsInitialLoad] = useState(true)
-  const [imageDetails, setImageDetails] = useState<IImageDetails>()
-  const [relatedImages, setRelatedImages] = useState<Array<IImageDetails>>([])
+  const [imageDetails, setImageDetails] = useState<CreateImageRequest>()
+  const [relatedImages, setRelatedImages] = useState<CreateImageRequest[]>([])
   const [imageModalOpen, setImageModalOpen] = useState(false)
 
-  const currentIndex = relatedImages.findIndex((el: IImageDetails) => {
+  const currentIndex = relatedImages.findIndex((el: CreateImageRequest) => {
     return el.jobId === id
   })
 

@@ -1,5 +1,5 @@
-import { AiHordeEmbedding } from 'types/artbot'
-import { Common, ImageMimeType, ImageSize, JobStatus, Lora } from '../types'
+import { AiHordeEmbedding, SavedLora } from 'types/artbot'
+import { Common, ImageMimeType, ImageSize, JobStatus } from '../types'
 import { uuidv4 } from '../utils/appUtils'
 import { orientationDetails, randomSampler } from '../utils/imageUtils'
 import { getModelVersion, validModelsArray } from '../utils/modelUtils'
@@ -13,21 +13,24 @@ interface IRandomSampler {
 }
 
 class CreateImageRequest {
+  base64String: string
   canvasData: any
   cfg_scale: number
   clipskip: number
   control_type: string
   denoising_strength: number | Common.Empty
   facefixer_strength?: number
+  favorited: false
   height: number
   hires: boolean
+  id: number
   image_is_control: boolean
   imageMimeType: ImageMimeType
-  jobId?: string
+  jobId: string
   jobStatus: JobStatus
   jobTimestamp: number
   karras: boolean
-  loras: Lora[]
+  loras: SavedLora[]
   maskData: any
   models: Array<string>
   modelVersion: string
@@ -61,6 +64,8 @@ class CreateImageRequest {
   useMultiGuidance: boolean
   useMultiSteps: boolean
   width: number
+  worker_id: string
+  worker_name: string
 
   constructor({
     canvasData = null,
@@ -285,6 +290,13 @@ class CreateImageRequest {
     if (this.source_image || this.source_mask) {
       this.tiling = false
     }
+
+    this.id = 0
+    this.base64String = ''
+    this.favorited = false
+    this.jobId = ''
+    this.worker_id = ''
+    this.worker_name = ''
   }
 
   static getRandomModel(imageParams: any) {

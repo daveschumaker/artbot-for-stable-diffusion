@@ -6,7 +6,7 @@ import styled from 'styled-components'
 //@ts-ignore
 import { GithubPicker } from 'react-color'
 
-import { Button } from '../UI/Button'
+import { Button } from 'app/_components/Button'
 import UndoIcon from '../icons/UndoIcon'
 import RedoIcon from '../icons/RedoIcon'
 import Select from 'app/_components/Select'

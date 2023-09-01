@@ -232,6 +232,16 @@ export interface RandomSamplerParams {
   steps: number
 }
 
+export interface SavedLora {
+  name: string
+  baseModel: string
+  image: string
+  label: string
+  model: number
+  clip: number
+  trainedWords: string[]
+}
+
 export interface SelectComponentProps {
   className?: string
   isDisabled?: boolean

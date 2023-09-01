@@ -2,21 +2,21 @@ import React, { useCallback, useState } from 'react'
 import Section from 'app/_components/Section'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import styles from './loraSelect.module.css'
-import { Button } from 'components/UI/Button'
+import { Button } from 'app/_components/Button'
 import { IconExternalLink, IconPlus, IconTrash } from '@tabler/icons-react'
 import ChooseLoraModal from './ChooseLoraModal'
 import NumberInput from 'app/_components/NumberInput'
 import Slider from 'components/UI/Slider'
 import Linker from 'components/UI/Linker'
 import FlexRow from 'app/_components/FlexRow'
-import FlexibleRow from 'app/_components/FlexibleRow'
-import FlexibleUnit from 'app/_components/FlexibleUnit'
 import { modelStore } from 'store/modelStore'
+import MaxWidth from 'app/_components/MaxWidth'
 
 const LoraSelect = ({ input, setInput, setErrors }: any) => {
   const [showModal, setShowModal] = useState(false)
 
   const handleAddLora = (loraDetails: any) => {
+    console.log(`loraDetails`, loraDetails)
     const modelDetails = modelStore.state.modelDetails[input.models[0]]
 
     const lorasToUpdate = [...input.loras]
@@ -62,13 +62,13 @@ const LoraSelect = ({ input, setInput, setErrors }: any) => {
   )
 
   const handleUpdate = useCallback(
-    (i: number, value: any) => {
+    (i: number, field: string, value: any) => {
       if (!i && i !== 0) {
         return
       }
 
       const lorasToUpdate = [...input.loras]
-      lorasToUpdate[Number(i)].model = value
+      lorasToUpdate[Number(i)][field] = value
 
       setInput({ loras: [...lorasToUpdate] })
     },
@@ -126,28 +126,41 @@ const LoraSelect = ({ input, setInput, setErrors }: any) => {
               <div className="flex flex-row items-center justify-between">
                 <SubSectionTitle>
                   LoRA strength
-                  <div className="block text-xs w-full">
-                    ({-5.0} - {5.0})
+                  <div
+                    className="block text-xs w-full"
+                    style={{ fontWeight: 400 }}
+                  >
+                    Range: {-5.0} to {5.0}
                   </div>
                 </SubSectionTitle>
-                <NumberInput
-                  min={-5.0}
-                  max={5.0}
-                  onMinusClick={() => {
-                    handleUpdate(i, Number((lora.model - 0.05).toFixed(2)))
-                  }}
-                  onPlusClick={() => {
-                    handleUpdate(i, Number((lora.model + 0.05).toFixed(2)))
-                  }}
-                  onInputChange={(e: any) => {
-                    handleUpdate(i, Number(e.target.value))
-                  }}
-                  onBlur={(e: any) => {
-                    handleUpdate(i, Number(e.target.value))
-                  }}
-                  value={lora.model}
-                  width="100%"
-                />
+                <MaxWidth max={'160px'} style={{ margin: 0 }}>
+                  <NumberInput
+                    min={-5.0}
+                    max={5.0}
+                    onMinusClick={() => {
+                      handleUpdate(
+                        i,
+                        'model',
+                        Number((lora.model - 0.05).toFixed(2))
+                      )
+                    }}
+                    onPlusClick={() => {
+                      handleUpdate(
+                        i,
+                        'model',
+                        Number((lora.model + 0.05).toFixed(2))
+                      )
+                    }}
+                    onInputChange={(e: any) => {
+                      handleUpdate(i, 'model', Number(e.target.value))
+                    }}
+                    onBlur={(e: any) => {
+                      handleUpdate(i, 'model', Number(e.target.value))
+                    }}
+                    value={lora.model}
+                    width="100%"
+                  />
+                </MaxWidth>
               </div>
               <Slider
                 value={lora.model}
@@ -155,7 +168,57 @@ const LoraSelect = ({ input, setInput, setErrors }: any) => {
                 max={5.0}
                 step={0.05}
                 onChange={(e: any) => {
-                  handleUpdate(i, Number(e.target.value))
+                  handleUpdate(i, 'model', Number(e.target.value))
+                }}
+              />
+            </Section>
+            <Section style={{ marginTop: '8px' }}>
+              <div className="flex flex-row items-center justify-between">
+                <SubSectionTitle>
+                  CLIP strength
+                  <div
+                    className="block text-xs w-full"
+                    style={{ fontWeight: 400 }}
+                  >
+                    Range: {-5.0} to {5.0}
+                  </div>
+                </SubSectionTitle>
+                <MaxWidth max={'160px'} style={{ margin: 0 }}>
+                  <NumberInput
+                    min={-5.0}
+                    max={5.0}
+                    onMinusClick={() => {
+                      handleUpdate(
+                        i,
+                        'clip',
+                        Number((lora.clip - 0.05).toFixed(2))
+                      )
+                    }}
+                    onPlusClick={() => {
+                      handleUpdate(
+                        i,
+                        'clip',
+                        Number((lora.clip + 0.05).toFixed(2))
+                      )
+                    }}
+                    onInputChange={(e: any) => {
+                      handleUpdate(i, 'clip', Number(e.target.value))
+                    }}
+                    onBlur={(e: any) => {
+                      handleUpdate(i, 'clip', Number(e.target.value))
+                    }}
+                    value={lora.clip}
+                    width="100%"
+                  />
+                </MaxWidth>
+              </div>
+              <Slider
+                value={lora.model}
+                min={-5.0}
+                max={5.0}
+                step={0.05}
+                onChange={(e: any) => {
+                  handleUpdate(i, 'clip', Number(e.target.value))
                 }}
               />
             </Section>
@@ -210,26 +273,7 @@ const LoraSelect = ({ input, setInput, setErrors }: any) => {
       return null
     }
 
-    // Helper function to chunk the array into pairs
-    const chunkArray = (arr: any[], size: number) =>
-      Array.from({ length: Math.ceil(arr.length / size) }, (_, index) =>
-        arr.slice(index * size, index * size + size)
-      )
-
-    // Chunk the components into pairs
-    const groupedComponents = chunkArray(arr, 2)
-
-    return (
-      <>
-        {groupedComponents.map((row, rowIndex) => (
-          <FlexibleRow key={rowIndex}>
-            {row.map((item, itemIndex) => (
-              <FlexibleUnit key={itemIndex}>{item}</FlexibleUnit>
-            ))}
-          </FlexibleRow>
-        ))}
-      </>
-    )
+    return arr
   }, [handleDeleteLora, handleUpdate, input.loras, input.prompt, setInput])
 
   // useEffect(() => {

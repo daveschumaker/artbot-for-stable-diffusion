@@ -1,8 +1,9 @@
-import { Lora } from 'types'
+import { SavedLora } from 'types/artbot'
 import { modifyPromptForStylePreset } from '../utils/imageUtils'
 import { SourceProcessing } from '../utils/promptUtils'
 import AppSettings from './AppSettings'
-import { TextualInversion } from 'types/horde'
+import { Lora, TextualInversion } from 'types/horde'
+import { castTiInject } from 'utils/hordeUtils'
 
 export interface IApiParams {
   prompt: string
@@ -49,7 +50,7 @@ export interface IArtBotImageDetails {
   control_type?: string
   image_is_control?: boolean
   return_control_map?: boolean
-  loras: Lora[]
+  loras: SavedLora[]
   tis: TextualInversion[]
   dry_run?: boolean
 }
@@ -200,21 +201,7 @@ class ImageParamsForApi {
     }
 
     if (tis && Array.isArray(tis) && tis.length > 0) {
-      apiParams.params.tis = tis.map((ti) => {
-        const obj: TextualInversion = {
-          name: String(ti.name)
-        }
-
-        if (ti.inject_ti) {
-          obj.inject_ti = ti.inject_ti
-        }
-
-        if (ti.strength) {
-          obj.strength = ti.strength
-        }
-
-        return obj
-      })
+      apiParams.params.tis = castTiInject(tis)
     }
 
     if (

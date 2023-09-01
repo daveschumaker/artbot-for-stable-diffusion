@@ -4,7 +4,6 @@ import NiceModal, { useModal } from '@ebay/nice-modal-react'
 
 import Overlay from 'app/_components/Overlay'
 import ImageDetails from 'components/ImageDetails'
-import { IImageDetails } from 'types'
 import ImageNavigation from './imageNavigation'
 import CloseIcon from 'components/icons/CloseIcon'
 import { useSwipeable } from 'react-swipeable'
@@ -13,10 +12,11 @@ import styles from './imageModal.module.css'
 import clsx from 'clsx'
 import useLockedBody from 'hooks/useLockedBody'
 import { setImageDetailsModalOpen } from 'store/appStore'
+import CreateImageRequest from 'models/CreateImageRequest'
 
 interface Props {
   disableNav?: boolean
-  imageDetails: IImageDetails
+  imageDetails: CreateImageRequest
   handleClose: () => any
   handleDeleteImageClick?: () => any
   handleLoadNext?: () => any

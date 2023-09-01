@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 
-import { Button } from 'components/UI/Button'
+import { Button } from 'app/_components/Button'
 import Image from 'components/Image'
 import { SourceProcessing } from 'utils/promptUtils'
 import Head from 'next/head'

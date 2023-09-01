@@ -1,8 +1,10 @@
 .PendingPanelWrapper {
+  display: inline-block;
   max-width: 320px;
   padding: 16px;
   position: sticky;
   top: 56px;
+  vertical-align: top;
   width: 100%;
 }
 

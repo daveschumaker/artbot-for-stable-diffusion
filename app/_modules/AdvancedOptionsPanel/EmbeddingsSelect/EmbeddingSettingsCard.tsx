@@ -6,7 +6,7 @@ import NumberInput from 'app/_components/NumberInput'
 import Panel from 'app/_components/Panel'
 import Section from 'app/_components/Section'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
-import { Button } from 'components/UI/Button'
+import { Button } from 'app/_components/Button'
 import Linker from 'components/UI/Linker'
 import Slider from 'components/UI/Slider'
 import { AiHordeEmbedding } from 'types/artbot'
@@ -65,7 +65,7 @@ export default function EmbeddingSettingsCard({
             <SubSectionTitle>
               Strength
               <div className="block text-xs w-full" style={{ fontWeight: 400 }}>
-                ({0.05} - {1})
+                Range: {0.05} to {1}
               </div>
             </SubSectionTitle>
             <MaxWidth max={'160px'} style={{ margin: 0 }}>

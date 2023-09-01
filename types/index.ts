@@ -1,7 +1,7 @@
 import DefaultPromptInput from 'models/DefaultPromptInput'
 import { Dispatch } from 'react'
-import { SourceProcessing } from 'utils/promptUtils'
 import { TextualInversion } from './horde'
+import { SavedLora } from './artbot'
 
 export enum ArtBotJobTypes {
   Text2Img = 'Text2Img',
@@ -52,7 +52,7 @@ export interface CreateImageJob {
   jobStatus?: string
   jobTimestamp?: number
   karras: boolean
-  loras: Lora[]
+  loras: SavedLora[]
   maskData?: any
   models: Array<string>
   negative: string
@@ -81,43 +81,6 @@ export interface NewRating {
   dataset_id: string
   id: string
   url: string
-}
-
-export interface IImageDetails extends CreateImageJob {
-  jobId: string
-  allowNsfw?: boolean
-  apikey?: string
-  canvasStore?: any
-  control_type: string
-  favorited: boolean
-  has_source_image?: boolean
-  has_source_mask?: boolean
-  height: number
-  image_is_control: boolean
-  imageType: string
-  initWaitTime?: number
-  is_possible?: boolean
-  jobStatus?: string
-  jobTimestamp?: number
-  loras: Array<any>
-  model: string
-  modelVersion: string
-  numImages?: number
-  orientation?: string
-  orientationType?: string
-  post_processing: Array<string>
-  queue_position?: number
-  shortlink: string
-  source_mask?: string
-  source_processing: SourceProcessing
-  stylePreset: string
-  timestamp: number
-  thumbnail: string
-  useTrusted?: boolean
-  wait_time?: number
-  width: number
-  worker_id: string
-  worker_name: string
 }
 
 interface ImageOrientation {
@@ -187,12 +150,6 @@ export interface SelectPropsComponent {
   styles?: any
   value?: Value
   width?: string
-}
-
-export interface Lora {
-  name: string
-  model: number
-  clip: number
 }
 
 export interface GenerateResponse {

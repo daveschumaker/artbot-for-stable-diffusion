@@ -2,10 +2,11 @@ import Dexie from 'dexie'
 import memoize from 'memoizee'
 
 import { setStorageQuotaLimit, setUnsupportedBrowser } from '../store/appStore'
-import { IImageDetails, JobStatus } from '../types'
+import { JobStatus } from '../types'
 import { generateBase64Thumbnail } from './imageUtils'
 import { SourceProcessing } from './promptUtils'
 import { deletePendingJobs } from 'controllers/pendingJobsCache'
+import CreateImageRequest from 'models/CreateImageRequest'
 
 export class MySubClassedDexie extends Dexie {
   completed: any
@@ -506,9 +507,9 @@ export const fetchRelatedImages = async (
 }
 
 export const getParentJobDetails = async (jobId: string) => {
-  const results: Array<IImageDetails> =
+  const results: CreateImageRequest[] =
     (await fetchRelatedImages(jobId, 1, 'normal')) || []
-  const details: IImageDetails = results[0] || {}
+  const details: CreateImageRequest = results[0] || {}
   return details
 }
 

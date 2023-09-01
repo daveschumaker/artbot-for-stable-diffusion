@@ -1,6 +1,6 @@
 import { GetSetPromptInput } from 'types'
 import FlexRow from 'app/_components/FlexRow'
-import { Button } from 'components/UI/Button'
+import { Button } from 'app/_components/Button'
 import { IconSettings } from '@tabler/icons-react'
 import { useCallback, useState } from 'react'
 import DropdownOptions from 'app/_modules/DropdownOptions'

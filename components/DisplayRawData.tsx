@@ -3,7 +3,7 @@ import { useState } from 'react'
 import ImageParamsForApi from '../models/ImageParamsForApi'
 import CopyIcon from './icons/CopyIcon'
 import EyeIcon from './icons/EyeIcon'
-import { Button } from './UI/Button'
+import { Button } from 'app/_components/Button'
 import { showSuccessToast } from 'utils/notificationUtils'
 
 const DisplayRawData = ({ data }: { data: any }) => {
