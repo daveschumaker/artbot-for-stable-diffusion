@@ -1,3 +1,7 @@
+# 2023.09.01
+
+- Fix: Show both LoRA strength and clip values on image modals and pages. Expose LoRA CLIP values in the advanced options panel.
+
 # 2023.08.31
 
 - Add LoRA and embedding details to image modals and image pages. Thanks to Sidorok for the suggestion.

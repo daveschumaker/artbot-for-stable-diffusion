@@ -160,7 +160,8 @@ export default function ImageSettingsDisplay({
                                 <IconExternalLink stroke={1.5} size={16} />
                               </FlexRow>
                             </Linker>
-                            <div>&nbsp;&nbsp;Strength: {lora.clip}</div>
+                            <div>&nbsp;&nbsp;Strength: {lora.model}</div>
+                            <div>&nbsp;&nbsp;CLIP: {lora.clip}</div>
                           </div>
                         )
                       })}
