@@ -213,7 +213,7 @@ const LoraSelect = ({ input, setInput, setErrors }: any) => {
                 </MaxWidth>
               </div>
               <Slider
-                value={lora.model}
+                value={lora.clip}
                 min={-5.0}
                 max={5.0}
                 step={0.05}
