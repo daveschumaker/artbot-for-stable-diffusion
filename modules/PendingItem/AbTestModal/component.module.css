@@ -27,12 +27,6 @@
   }
 }
 
-/* @media (min-width: 800px) {
-  .ModalStyle {
-    max-height: 512px;
-  }
-} */
-
 .close-btn {
   cursor: pointer;
   position: absolute;
@@ -45,11 +39,6 @@
 .ModalContent {
   position: relative;
 }
-
-/* .ImageWrapper {
-  height: auto;
-  width: 50%;
-} */
 
 .Images {
   display: flex;
