@@ -8,7 +8,7 @@
 import NiceModal, { useModal } from '@ebay/nice-modal-react'
 import Overlay from 'app/_components/Overlay'
 import useLockedBody from 'hooks/useLockedBody'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styles from './awesomeModal.module.css'
 import useModalHeight from './useModalHeight'
 import { IconX } from '@tabler/icons-react'
@@ -38,7 +38,7 @@ function AwesomeModal({
   const modal = useModal()
   const [locked, setLocked] = useLockedBody(false)
   const [maxModalHeight] = useModalHeight()
-  const [contentHeight, setContentHeight] = useState(100)
+  const [contentHeight, setContentHeight] = useState(0)
 
   const onClose = () => {
     modal.remove()
@@ -73,13 +73,31 @@ function AwesomeModal({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const getContentHeight = useCallback(
+    (height: number) => {
+      setTimeout(() => {
+        const el = document?.getElementById('modal-content-wrapper')
+          ?.children[0]
+        const clientHeight = el?.clientHeight
+
+        if (clientHeight && clientHeight !== height) {
+          setContentHeight(clientHeight)
+        } else {
+          if (contentHeight !== height) {
+            setContentHeight(height)
+          }
+        }
+      }, 250)
+    },
+    [contentHeight]
+  )
+
   if (!modal.visible) {
     return null
   }
 
-  const getContentHeight = (height: number) => {
-    setContentHeight(height)
-  }
+  console.log(`contentHeight`, contentHeight)
+  console.log(`modalHuieght`, maxModalHeight)
 
   return (
     <>
@@ -120,8 +138,21 @@ function AwesomeModal({
             maxHeight: `calc(${maxModalHeight}px - ${subtitle ? 72 : 56}px)`
           }}
         >
-          <ModalContentWrapper getContentHeight={getContentHeight}>
-            {children}
+          <ModalContentWrapper
+            getContentHeight={getContentHeight}
+            style={{ maxHeight: contentHeight - 72 }}
+          >
+            {React.Children.map(children, (child) => {
+              if (React.isValidElement(child)) {
+                return React.cloneElement(child, {
+                  // @ts-ignore
+                  handleClose: onClose,
+                  // @ts-ignore
+                  modalHeight: maxModalHeight - 72
+                })
+              }
+              return child
+            })}
           </ModalContentWrapper>
         </div>
       </div>

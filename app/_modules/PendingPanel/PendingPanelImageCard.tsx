@@ -29,6 +29,7 @@ import SpinnerV2 from 'components/Spinner'
 import useSdxlModal from './useSdxlModal'
 import { useState } from 'react'
 import AbTestModal from 'modules/PendingItem/AbTestModal'
+import AwesomeModal from '../AwesomeModal'
 
 export default function PendingPanelImageCard({
   index,
@@ -39,7 +40,8 @@ export default function PendingPanelImageCard({
 }) {
   const imageJob: any = jobs[index]
   const imagePreviewModal = useModal(ImageModal)
-  const abTestModal = useModal(AbTestModal)
+  // const abTestModal = useModal(AbTestModal)
+  const abTestModal = useModal(AwesomeModal)
 
   const [isSdxlAbTest, secondaryId, secondaryImage] = useSdxlModal(imageJob)
   const [isRated, setIsRated] = useState(false)
@@ -90,12 +92,16 @@ export default function PendingPanelImageCard({
 
             if (isSdxlAbTest && !isRated) {
               abTestModal.show({
-                jobDetails: imageDetails,
-                // @ts-ignore
-                secondaryId,
-                // @ts-ignore
-                secondaryImage,
-                setIsRated
+                label: 'SDXL Beta Test',
+                children: (
+                  <AbTestModal
+                    jobDetails={imageDetails}
+                    secondaryId={secondaryId as string}
+                    secondaryImage={secondaryImage as string}
+                    setIsRated={setIsRated}
+                  />
+                ),
+                subtitle: 'Choose which image you think is best:'
               })
               return
             } else {

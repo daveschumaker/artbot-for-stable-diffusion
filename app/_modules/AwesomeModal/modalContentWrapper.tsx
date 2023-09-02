@@ -26,11 +26,13 @@ import useContentHeight from './useContentHeight'
 interface Props {
   getContentHeight?: (height: number) => any
   children: React.ReactNode
+  style?: React.CSSProperties
 }
 
 export default function ModalContentWrapper({
   getContentHeight = () => {},
-  children
+  children,
+  style
 }: Props) {
   const [contentRef, height]: any = useContentHeight()
 
@@ -38,5 +40,17 @@ export default function ModalContentWrapper({
     getContentHeight(height)
   }, [getContentHeight, height])
 
-  return <div ref={contentRef}>{children}</div>
+  return (
+    <div
+      id="modal-content-wrapper"
+      ref={contentRef}
+      style={{
+        margin: '0 auto',
+        overflowY: 'auto',
+        ...style
+      }}
+    >
+      {children}
+    </div>
+  )
 }

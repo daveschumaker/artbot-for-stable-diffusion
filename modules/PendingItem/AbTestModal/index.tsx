@@ -1,7 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import PageTitle from 'app/_components/PageTitle'
-import styles from './component.module.css'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Button } from 'app/_components/Button'
 import { clientHeader, getApiHostServer } from 'utils/appUtils'
 import AppSettings from 'models/AppSettings'
@@ -16,48 +14,28 @@ import {
   deletePendingJob,
   updatePendingJobProperties
 } from 'controllers/pendingJobsCache'
-import NiceModal, { useModal } from '@ebay/nice-modal-react'
-import Overlay from 'app/_components/Overlay'
-import {
-  IconDeviceFloppy,
-  IconInfoHexagon,
-  IconTrash,
-  IconTrashX,
-  IconX
-} from '@tabler/icons-react'
+import { IconDeviceFloppy, IconTrash, IconTrashX } from '@tabler/icons-react'
 
 import Carousel from 'react-gallery-carousel'
 import 'react-gallery-carousel/dist/index.css'
-import FlexRow from 'app/_components/FlexRow'
-import TooltipComponent from 'app/_components/TooltipComponent'
-import useLockedBody from 'hooks/useLockedBody'
 import FlexCol from 'app/_components/FlexCol'
 
 function AbTestModal({
+  handleClose = () => {},
   jobDetails,
+  modalHeight,
   secondaryId,
   secondaryImage,
   setIsRated = () => {}
 }: {
+  handleClose?: () => any
   jobDetails: any
+  modalHeight?: number
   secondaryId: string
   secondaryImage: string
   setIsRated: (value: boolean) => any
 }) {
-  const modal = useModal()
-  const [, setLocked] = useLockedBody(false)
   const [selectedImg, setSelectedImg] = useState(0)
-  const [modalHeight, setModalHeight] = useState<string | number>('auto')
-
-  const updateModalHeight = () => {
-    const maxHeight = window.innerHeight - 64 // 64px is subtracted for header/footer
-    setModalHeight(maxHeight)
-  }
-
-  const handleClose = useCallback(() => {
-    modal.remove()
-  }, [modal])
-
   const handleRateImage = useCallback(async () => {
     const imageId = selectedImg === 0 ? jobDetails.hordeImageId : secondaryId
 
@@ -186,29 +164,13 @@ function AbTestModal({
     setIsRated
   ])
 
-  useEffect(() => {
-    if (modal.visible) {
-      updateModalHeight()
-      window.addEventListener('resize', updateModalHeight)
-      setLocked(true)
-      return () => {
-        setLocked(false)
-        window.removeEventListener('resize', updateModalHeight)
-      }
-    }
-  }, [modal.visible, setLocked])
-
-  if (!modal.visible) {
-    return null
-  }
-
   const images = [
     { src: 'data:image/webp;base64,' + jobDetails.base64String },
     { src: 'data:image/webp;base64,' + secondaryImage }
   ]
 
   return (
-    <>
+    <div style={{ maxHeight: modalHeight }}>
       <style>
         {`
           #sdxl-abtest-content>div>div>div>ul>li>figure {
@@ -225,88 +187,63 @@ function AbTestModal({
           }
       `}
       </style>
-      <Overlay handleClose={handleClose} />
-      <div className={styles.ModalStyle} style={{ maxHeight: modalHeight }}>
-        <div className={styles['close-btn']} onClick={handleClose}>
-          <IconX stroke={1.5} size={28} />
-        </div>
-        <PageTitle>
-          <FlexRow gap={4}>
-            <IconInfoHexagon />
-            SDXL Beta
-            <TooltipComponent tooltipId="sdxl-beta-tooltip-modal">
-              SDXL is currently in beta and provided by Stability.ai in order to
-              refine future image models. Please select one of the following two
-              images to choose as the best image for this particular generation.
-              You will be rewarded 15 kudos for each rating.
-            </TooltipComponent>
-          </FlexRow>
-          <div style={{ fontWeight: 400, fontSize: '14px', marginTop: '-4px' }}>
-            Choose which image you think is best:
-          </div>
-        </PageTitle>
-        <div
-          id="sdxl-abtest-content"
-          className={styles.ModalContent}
-          tabIndex={0}
+      <div id="sdxl-abtest-content" tabIndex={0}>
+        <Carousel
+          hasMediaButton={false}
+          hasSizeButton={false}
+          hasThumbnails={false}
+          widgetsHasShadow={true}
+          images={images}
+          transitionSpeed={4}
+          style={{
+            backgroundColor: 'unset',
+            maxHeight: `${Number(modalHeight) - 240}px`
+          }}
+          index={selectedImg}
+          onIndexChange={({ curIndex, curIndexForDisplay }) => {
+            setSelectedImg(curIndex)
+            return { curIndex, curIndexForDisplay }
+          }}
+        />
+        <FlexCol
+          gap={8}
+          style={{
+            marginTop: '12px',
+            alignItems: 'center'
+          }}
         >
-          <Carousel
-            hasMediaButton={false}
-            hasSizeButton={false}
-            hasThumbnails={false}
-            widgetsHasShadow={true}
-            images={images}
-            transitionSpeed={4}
-            style={{
-              backgroundColor: 'unset',
-              maxHeight: `${Number(modalHeight) - 240}px`
+          <Button
+            onClick={() => {
+              handleRateSaveBoth()
             }}
-            index={selectedImg}
-            onIndexChange={({ curIndex, curIndexForDisplay }) => {
-              setSelectedImg(curIndex)
-              return { curIndex, curIndexForDisplay }
-            }}
-          />
-          <FlexCol
-            gap={8}
-            style={{
-              marginTop: '12px',
-              alignItems: 'center'
-            }}
+            style={{ minWidth: '260px' }}
           >
-            <Button
-              onClick={() => {
-                handleRateSaveBoth()
-              }}
-              style={{ minWidth: '260px' }}
-            >
-              <IconDeviceFloppy stroke={1.5} />
-              Select as favorite (save both)
-            </Button>
-            <Button
-              onClick={() => {
-                handleRateDeleteOther()
-              }}
-              style={{ minWidth: '260px' }}
-            >
-              <IconTrashX stroke={1.5} />
-              Select as favorite (delete other)
-            </Button>
-            <Button
-              onClick={() => {
-                handleRateDeleteBoth()
-              }}
-              theme="secondary"
-              style={{ minWidth: '260px' }}
-            >
-              <IconTrash stroke={1.5} />
-              Select as favorite (delete both)
-            </Button>
-          </FlexCol>
-        </div>
+            <IconDeviceFloppy stroke={1.5} />
+            Select as favorite (save both)
+          </Button>
+          <Button
+            onClick={() => {
+              handleRateDeleteOther()
+            }}
+            style={{ minWidth: '260px' }}
+          >
+            <IconTrashX stroke={1.5} />
+            Select as favorite (delete other)
+          </Button>
+          <Button
+            onClick={() => {
+              handleRateDeleteBoth()
+            }}
+            theme="secondary"
+            style={{ minWidth: '260px' }}
+          >
+            <IconTrash stroke={1.5} />
+            Select as favorite (delete both)
+          </Button>
+        </FlexCol>
       </div>
-    </>
+    </div>
   )
 }
 
-export default NiceModal.create(AbTestModal)
+export default AbTestModal
