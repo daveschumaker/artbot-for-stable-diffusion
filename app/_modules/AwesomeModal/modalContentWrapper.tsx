@@ -47,6 +47,7 @@ export default function ModalContentWrapper({
       style={{
         margin: '0 auto',
         overflowY: 'auto',
+        width: '100%',
         ...style
       }}
     >

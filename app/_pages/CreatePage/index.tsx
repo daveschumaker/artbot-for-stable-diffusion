@@ -38,6 +38,10 @@ import FormErrorMessage from './ActionPanel/FormErrorMessage'
 import { useWindowSize } from 'hooks/useWindowSize'
 import InputValidationErrorDisplay from './PromptInput/InputValidationErrorDisplay'
 import { setAvailableModels } from 'store/modelStore'
+import { Button } from 'app/_components/Button'
+import { useModal } from '@ebay/nice-modal-react'
+import AwesomeModal from 'app/_modules/AwesomeModal'
+import TestContent from 'app/_modules/AwesomeModal/TestContent'
 
 const defaultState: DefaultPromptInput = new DefaultPromptInput()
 
@@ -49,6 +53,7 @@ const CreatePage = ({
   const { width } = useWindowSize()
   const appState = useStore(appInfoStore)
   const userInfo = useStore(userInfoStore)
+  const testModal = useModal(AwesomeModal)
 
   const { buildId } = appState
   const { loggedIn } = userInfo
@@ -438,6 +443,16 @@ const CreatePage = ({
           {input.source_processing === SourceProcessing.Img2Img && '(img2img)'}
         </PageTitle>
       </div>
+      <Button
+        onClick={() =>
+          testModal.show({
+            children: <TestContent />,
+            label: 'Test Component'
+          })
+        }
+      >
+        TEST
+      </Button>
       <div className={clsx('mt-0')}>
         <PromptInput input={input} setInput={setInput} />
         <FlexRow>

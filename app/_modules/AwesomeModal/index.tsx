@@ -81,7 +81,7 @@ function AwesomeModal({
         const clientHeight = el?.clientHeight
 
         if (clientHeight && clientHeight !== height) {
-          setContentHeight(clientHeight)
+          setContentHeight(clientHeight + 72)
         } else {
           if (contentHeight !== height) {
             setContentHeight(height)

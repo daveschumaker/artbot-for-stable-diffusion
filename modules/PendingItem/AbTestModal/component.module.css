@@ -1,0 +1,43 @@
+.carousel-container {
+  position: relative;
+}
+
+.iconCaretLeft,
+.iconCaretRight {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  user-select: none
+}
+
+.iconCaretLeft {
+  left: 0;
+}
+
+.iconCaretRight {
+  right: 0;
+}
+
+.carouselImage {
+  margin: 0 auto;
+  max-height: 100%;
+  max-width: 100%;
+  transition: transform 0.3s ease-out;
+}
+
+.currentLeft {
+  transform: translateX(-100%);
+}
+
+.nextLeft {
+  transform: translateX(0);
+}
+
+.currentRight {
+  transform: translateX(100%);
+}
+
+.nextRight {
+  transform: translateX(-100%);
+}
