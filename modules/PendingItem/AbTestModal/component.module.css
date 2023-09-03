@@ -1,4 +1,4 @@
-.carousel-container {
+.carouselContainer {
   position: relative;
 }
 
@@ -8,7 +8,7 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  user-select: none
+  user-select: none;
 }
 
 .iconCaretLeft {
@@ -20,24 +20,15 @@
 }
 
 .carouselImage {
+  border-radius: 4px;
   margin: 0 auto;
   max-height: 100%;
-  max-width: 100%;
-  transition: transform 0.3s ease-out;
+  max-width: calc(100% - 84px);
+  opacity: 0;
+  position: absolute;
+  transition: opacity 0.4s ease-in-out;
 }
 
-.currentLeft {
-  transform: translateX(-100%);
-}
-
-.nextLeft {
-  transform: translateX(0);
-}
-
-.currentRight {
-  transform: translateX(100%);
-}
-
-.nextRight {
-  transform: translateX(-100%);
+.fadeIn {
+  opacity: 1;
 }

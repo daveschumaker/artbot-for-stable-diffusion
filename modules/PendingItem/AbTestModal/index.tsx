@@ -3,6 +3,7 @@ import { IconCaretLeftFilled, IconCaretRightFilled } from '@tabler/icons-react'
 import { useCallback, useEffect, useState } from 'react'
 import styles from './component.module.css'
 import clsx from 'clsx'
+import FlexRow from 'app/_components/FlexRow'
 
 export default function AbTestModal({
   handleClose = () => {},
@@ -64,17 +65,35 @@ export default function AbTestModal({
       style={{ height: `${modalHeight}px` }}
     >
       <div className={styles.iconCaretLeft}>
-        <IconCaretLeftFilled onClick={goPrev} />
+        <IconCaretLeftFilled onClick={goPrev} size={48} />
       </div>
-      <img
-        src={images[currentIndex].src}
-        alt="current-carousel-item"
-        className={clsx(styles.carouselImage)}
-      />
+      <FlexRow
+        style={{
+          alignItems: 'unset',
+          justifyContent: 'center',
+          height: `${modalHeight}px`,
+          position: 'relative'
+        }}
+      >
+        {images.map((img, index) => (
+          <img
+            key={index}
+            src={img.src}
+            alt={`Image ${index + 1}`}
+            className={clsx(
+              styles.carouselImage,
+              currentIndex === index && styles.fadeIn
+            )}
+            style={{ opacity: currentIndex === index ? '1' : 0 }}
+          />
+        ))}
+      </FlexRow>
       <IconCaretRightFilled
         className={styles.iconCaretRight}
         onClick={goNext}
+        size={48}
       />
+      <div>Hello.</div>
     </div>
   )
 }

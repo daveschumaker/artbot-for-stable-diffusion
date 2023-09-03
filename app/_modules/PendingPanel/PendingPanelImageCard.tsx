@@ -101,7 +101,8 @@ export default function PendingPanelImageCard({
                     setIsRated={setIsRated}
                   />
                 ),
-                subtitle: 'Choose which image you think is best:'
+                subtitle: 'Choose which image you think is best:',
+                tooltip: 'SDXL is currently in beta and provided by Stability.ai in order to refine future image models. Please select one of the following two images to choose as the best image for this particular generation. You will be rewarded 15 kudos for each rating.
               })
               return
             } else {

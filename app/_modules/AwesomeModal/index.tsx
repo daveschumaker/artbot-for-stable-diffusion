@@ -75,19 +75,30 @@ function AwesomeModal({
 
   const getContentHeight = useCallback(
     (height: number) => {
-      setTimeout(() => {
-        const el = document?.getElementById('modal-content-wrapper')
-          ?.children[0]
-        const clientHeight = el?.clientHeight
+      const el = document?.getElementById('modal-content-wrapper')?.children[0]
+      const clientHeight = el?.clientHeight
 
-        if (clientHeight && clientHeight !== height) {
-          setContentHeight(clientHeight + 72)
-        } else {
-          if (contentHeight !== height) {
-            setContentHeight(height)
-          }
+      if (clientHeight && clientHeight !== height) {
+        setContentHeight(clientHeight + 72)
+      } else {
+        if (contentHeight !== height) {
+          setContentHeight(height)
         }
-      }, 250)
+      }
+
+      // setTimeout(() => {
+      //   const el = document?.getElementById('modal-content-wrapper')
+      //     ?.children[0]
+      //   const clientHeight = el?.clientHeight
+
+      //   if (clientHeight && clientHeight !== height) {
+      //     setContentHeight(clientHeight + 72)
+      //   } else {
+      //     if (contentHeight !== height) {
+      //       setContentHeight(height)
+      //     }
+      //   }
+      // }, 250)
     },
     [contentHeight]
   )
