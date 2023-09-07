@@ -61,7 +61,6 @@ function dataURItoBlob(dataURI: string, userComment: string) {
     '0th': zeroth,
     Exif: exif
   }
-
   const exifbytes = exifLib.dump(exifObj)
   byteString = exifLib.insert(exifbytes, byteString)
 
@@ -78,4 +77,23 @@ function createTempCanvas() {
   let canvas = document.createElement('CANVAS')
   canvas.style.display = 'none'
   return canvas
+}
+
+export function blobToBase64(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onloadend = function () {
+      if (reader.result) {
+        resolve(reader.result as string)
+      } else {
+        const err = new Error('Failed to convert blob to base64')
+        console.error(err)
+        reject(err)
+      }
+    }
+    reader.onerror = function (error) {
+      reject(error)
+    }
+    reader.readAsDataURL(blob)
+  })
 }
