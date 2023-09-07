@@ -19,6 +19,12 @@ export const initBlob = () => {
       return convertBlob(this, 'image/jpeg', callback, userComment)
     }
   }
+
+  if (!Blob.prototype.addOrUpdateExifData) {
+    Blob.prototype.addOrUpdateExifData = function (userComment: string): Blob {
+      return addOrUpdateExifData(this, userComment)
+    }
+  }
 }
 
 function convertBlob(
@@ -46,29 +52,14 @@ function convertBlob(
 function dataURItoBlob(dataURI: string, userComment: string) {
   var byteString = atob(dataURI.split(',')[1])
   var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
-
-  // Insert exif metadata (works for jpg, webp, and png)
-  const zeroth = {
-    [exifLib.TagNumbers.ImageIFD.Software]:
-      'ArtBot - Create images with Stable Diffusion, utilizing the AI Horde'
-  }
-  const exif = userComment
-    ? {
-        [exifLib.TagNumbers.ExifIFD.UserComment]: `ASCII\0\0\0${userComment}`
-      }
-    : {}
-  const exifObj = {
-    '0th': zeroth,
-    Exif: exif
-  }
-  const exifbytes = exifLib.dump(exifObj)
-  byteString = exifLib.insert(exifbytes, byteString)
+  byteString = byteStringWithExifData(dataURI, byteString, userComment) // insert exif data
 
   var ab = new ArrayBuffer(byteString.length)
   var ia = new Uint8Array(ab)
   for (var i = 0; i < byteString.length; i++) {
     ia[i] = byteString.charCodeAt(i)
   }
+
   var blob = new Blob([ab], { type: mimeString })
   return blob
 }
@@ -77,6 +68,46 @@ function createTempCanvas() {
   let canvas = document.createElement('CANVAS')
   canvas.style.display = 'none'
   return canvas
+}
+
+function byteStringWithExifData(
+  dataURI: string,
+  byteString: string,
+  userComment: string
+) {
+  let existing_exif = {}
+  try {
+    existing_exif = exifLib.load(dataURI)
+  } catch (e) {}
+
+  // 0th IFD
+  const zeroth = {
+    [exifLib.TagNumbers.ImageIFD.Software]:
+      'ArtBot - Create images with Stable Diffusion, utilizing the AI Horde'
+  }
+  // exif IFD
+  const exif = userComment
+    ? {
+        [exifLib.TagNumbers.ExifIFD.UserComment]: `ASCII\0\0\0${userComment}`
+      }
+    : {}
+  // exif main obj
+  const exifObj = {
+    ...existing_exif,
+    '0th': existing_exif['0th']
+      ? { ...existing_exif['0th'], ...zeroth }
+      : zeroth,
+    Exif: existing_exif.Exif ? { ...existing_exif.Exif, ...exif } : exif
+  }
+  const exifbytes = exifLib.dump(exifObj)
+  byteString = exifLib.insert(exifbytes, byteString)
+  return byteString
+}
+
+async function addOrUpdateExifData(blob: Blob, userComment: string) {
+  const dataURI = await blobToBase64(blob)
+  const newBlob = dataURItoBlob(dataURI, userComment)
+  return newBlob
 }
 
 export function blobToBase64(blob: Blob): Promise<string> {

@@ -789,7 +789,6 @@ export const checkCurrentJob = async (imageDetails: any) => {
         if ('base64String' in image && image.base64String) {
           initBlob()
           // Insert exif information in the image
-          // TODO: Refactor: extract
           const metaData: string =
             `${job.prompt}\n` +
             (job.negative ? `Negative prompt: ${job.negative}\n` : ``) +
@@ -806,7 +805,7 @@ export const checkCurrentJob = async (imageDetails: any) => {
             continue
           }
           // @ts-ignore
-          let newBlob = await oldBlob?.toWebP(null, metaData)
+          let newBlob = await oldBlob?.addOrUpdateExifData(metaData)
           image.base64String = (await blobToBase64(newBlob)).split(',')[1]
 
           const jobWithImageDetails = {
