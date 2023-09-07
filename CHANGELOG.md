@@ -2,6 +2,7 @@
 
 - Fix: Models dropdown would sometimes be unavailable on initial page load.
 - Fix: Image details modal and details page would hijack native browser commands (e.g., trying to reload a page with "CTRL + R" would trigger the "reroll" shortcut, which should just be "R".)
+- For desktop / laptop users: on Create Page, added a new button to sort the pending image panel by newest images.
 
 # 2023.09.01
 

@@ -5,7 +5,9 @@ import {
   IconFilter,
   IconPhoto,
   IconPhotoOff,
-  IconSettings
+  IconSettings,
+  IconSortAscending,
+  IconSortDescending
 } from '@tabler/icons-react'
 import styles from './pendingPanel.module.css'
 import FlexRow from 'app/_components/FlexRow'
@@ -24,6 +26,13 @@ export default function PendingPanel() {
   const [filter, setFilter] = useState('all')
   const [showFilterDropdown, setShowFilterDropdown] = useState(false)
   const [showSettingsDropdown, setShowSettingsDropdown] = useState(false)
+  const [sort, setSort] = useState('old')
+
+  if (sort === 'old') {
+    done.sort((a, b) => a.timestamp - b.timestamp)
+  } else if (sort === 'new') {
+    done.sort((a, b) => b.timestamp - a.timestamp)
+  }
 
   const jobs = [...done, ...processing, ...queued, ...waiting, ...error]
 
@@ -62,7 +71,7 @@ export default function PendingPanel() {
     return filterJobs
   }, [done, error, filter, processing, queued, waiting])
 
-  const filteredJobs = filterJobs()
+  let filteredJobs = filterJobs()
 
   return (
     <div className={styles.PendingPanelWrapper}>
@@ -95,6 +104,19 @@ export default function PendingPanel() {
         <FlexRow gap={4} style={{ justifyContent: 'flex-end' }}>
           <Button onClick={() => setShowFilterDropdown(true)} size="small">
             <IconFilter stroke={1.5} />
+          </Button>
+          <Button
+            onClick={() => {
+              if (sort === 'old') {
+                setSort('new')
+              } else {
+                setSort('old')
+              }
+            }}
+            size="small"
+          >
+            {sort === 'old' && <IconSortDescending stroke={1.5} />}
+            {sort === 'new' && <IconSortAscending stroke={1.5} />}
           </Button>
           <Button onClick={() => setShowSettingsDropdown(true)} size="small">
             <IconSettings stroke={1.5} />
