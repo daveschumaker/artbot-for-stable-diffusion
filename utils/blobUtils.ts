@@ -1,16 +1,16 @@
 // @ts-nocheck
-import piexif from 'piexifjs';
+import * as exifLib from '@asc0910/exif-library'
 
 export const initBlob = () => {
   if (!Blob.prototype.toPNG) {
-    Blob.prototype.toPNG = function (callback: any) {
-      return convertBlob(this, 'image/png', callback)
+    Blob.prototype.toPNG = function (callback: any, userComment: string) {
+      return convertBlob(this, 'image/png', callback, userComment)
     }
   }
 
   if (!Blob.prototype.toWebP) {
-    Blob.prototype.toWebP = function (callback: any) {
-      return convertBlob(this, 'image/webp', callback)
+    Blob.prototype.toWebP = function (callback: any, userComment: string) {
+      return convertBlob(this, 'image/webp', callback, userComment)
     }
   }
 
@@ -25,7 +25,7 @@ function convertBlob(
   blob: Blob | MediaSource,
   type: string,
   callback: (arg0: Blob) => void,
-  userComment: string,
+  userComment: string
 ) {
   return new Promise((resolve) => {
     let canvas = <HTMLCanvasElement>createTempCanvas()
@@ -47,21 +47,23 @@ function dataURItoBlob(dataURI: string, userComment: string) {
   var byteString = atob(dataURI.split(',')[1])
   var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
 
-  // Add exif data if filetype is jpeg, and userComment is set
-  if (mimeString == "image/jpeg") {
-    const zeroth = {
-      [piexif.ImageIFD.Software]: "ArtBot - Create images with Stable Diffusion, utilizing the AI Horde"
-    };
-    const exif = userComment ? {
-      [piexif.ExifIFD.UserComment]: `ASCII\0\0\0${userComment}`
-    } : undefined;
-    const exifObj = {
-      "0th": zeroth,
-      "Exif": exif
-    };
-    const exifbytes = piexif.dump(exifObj);
-    byteString = piexif.insert(exifbytes, byteString)
+  // Insert exif metadata (works for jpg, webp, and png)
+  const zeroth = {
+    [exifLib.TagNumbers.ImageIFD.Software]:
+      'ArtBot - Create images with Stable Diffusion, utilizing the AI Horde'
   }
+  const exif = userComment
+    ? {
+        [exifLib.TagNumbers.ExifIFD.UserComment]: `ASCII\0\0\0${userComment}`
+      }
+    : {}
+  const exifObj = {
+    '0th': zeroth,
+    Exif: exif
+  }
+
+  const exifbytes = exifLib.dump(exifObj)
+  byteString = exifLib.insert(exifbytes, byteString)
 
   var ab = new ArrayBuffer(byteString.length)
   var ia = new Uint8Array(ab)
