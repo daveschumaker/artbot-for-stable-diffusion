@@ -678,29 +678,22 @@ export const downloadFile = async (image: any) => {
   if (image.imageMimeType == `image/${fileType}`) {
     saveAs(input, filename)
   } else {
-    // Add image parameters in exif metadata
-    const metaData: string =
-      `${image.prompt}\n` +
-      (image.negative ? `Negative prompt: ${image.negative}\n` : ``) +
-      `Steps: ${image.steps}, Sampler: ${image.sampler}, CFG scale: ${image.cfg_scale}, Seed: ${image.seed}` +
-      `, Size: ${image.width}x${image.height}, model: ${image.models}`
-
     // otherwise we'll convert if necessary
     let newBlob
 
     if (fileType === 'png') {
       // @ts-ignore
-      newBlob = await input?.toPNG(null, metaData)
+      newBlob = await input?.toPNG(null)
     }
 
     if (fileType === 'jpg') {
       // @ts-ignore
-      newBlob = await input?.toJPEG(null, metaData)
+      newBlob = await input?.toJPEG(null)
     }
 
     if (fileType === 'webp') {
       // @ts-ignore
-      newBlob = await input?.toWebP(null, metaData)
+      newBlob = await input?.toWebP(null)
     }
 
     saveAs(newBlob, filename)

@@ -3,20 +3,25 @@ import * as exifLib from '@asc0910/exif-library'
 
 export const initBlob = () => {
   if (!Blob.prototype.toPNG) {
-    Blob.prototype.toPNG = function (callback: any, userComment: string) {
-      return convertBlob(this, 'image/png', callback, userComment)
+    Blob.prototype.toPNG = async function (callback: any) {
+      // Converting through canvas will remove exif data
+      // So extract exif first, and then add it back when ceating new blob
+      const exif = await getExifFromBlob(this)
+      return convertBlob(this, 'image/png', callback, exif)
     }
   }
 
   if (!Blob.prototype.toWebP) {
-    Blob.prototype.toWebP = function (callback: any, userComment: string) {
-      return convertBlob(this, 'image/webp', callback, userComment)
+    Blob.prototype.toWebP = async function (callback: any) {
+      const exif = await getExifFromBlob(this)
+      return convertBlob(this, 'image/webp', callback, exif)
     }
   }
 
   if (!Blob.prototype.toJPEG) {
-    Blob.prototype.toJPEG = function (callback: any, userComment: string) {
-      return convertBlob(this, 'image/jpeg', callback, userComment)
+    Blob.prototype.toJPEG = async function (callback: any) {
+      const exif = await getExifFromBlob(this)
+      return convertBlob(this, 'image/jpeg', callback, exif)
     }
   }
 
@@ -31,7 +36,7 @@ function convertBlob(
   blob: Blob | MediaSource,
   type: string,
   callback: (arg0: Blob) => void,
-  userComment: string
+  exif: any = {}
 ) {
   return new Promise((resolve) => {
     let canvas = <HTMLCanvasElement>createTempCanvas()
@@ -42,17 +47,23 @@ function convertBlob(
       canvas.width = image.width
       canvas.height = image.height
       ctx.drawImage(image, 0, 0)
-      let result = dataURItoBlob(canvas.toDataURL(type, 1), userComment)
+      let result = dataURItoBlob(canvas.toDataURL(type, 1), exif)
       if (callback) callback(result)
       else resolve(result)
     }
   })
 }
 
-function dataURItoBlob(dataURI: string, userComment: string) {
+function createTempCanvas() {
+  let canvas = document.createElement('CANVAS')
+  canvas.style.display = 'none'
+  return canvas
+}
+
+function dataURItoBlob(dataURI: string, exif: any) {
   var byteString = atob(dataURI.split(',')[1])
   var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
-  byteString = byteStringWithExifData(dataURI, byteString, userComment) // insert exif data
+  byteString = byteStringWithExifData(dataURI, byteString, exif) // insert exif data
 
   var ab = new ArrayBuffer(byteString.length)
   var ia = new Uint8Array(ab)
@@ -64,22 +75,20 @@ function dataURItoBlob(dataURI: string, userComment: string) {
   return blob
 }
 
-function createTempCanvas() {
-  let canvas = document.createElement('CANVAS')
-  canvas.style.display = 'none'
-  return canvas
-}
-
-function byteStringWithExifData(
-  dataURI: string,
-  byteString: string,
-  userComment: string
-) {
+function getExifFromDataURI(dataURI: string): any {
   let existing_exif = {}
   try {
     existing_exif = exifLib.load(dataURI)
   } catch (e) {}
+  return existing_exif
+}
 
+async function getExifFromBlob(blob: Blob) {
+  const dataURI = await blobToBase64(blob)
+  return getExifFromDataURI(dataURI)
+}
+
+function mergeExifData(existing_exif: any, userComment: string): any {
   // 0th IFD
   const zeroth = {
     [exifLib.TagNumbers.ImageIFD.Software]:
@@ -99,14 +108,24 @@ function byteStringWithExifData(
       : zeroth,
     Exif: existing_exif.Exif ? { ...existing_exif.Exif, ...exif } : exif
   }
-  const exifbytes = exifLib.dump(exifObj)
+  return exifObj
+}
+
+function byteStringWithExifData(
+  dataURI: string,
+  byteString: string,
+  exif: any
+): string {
+  const exifbytes = exifLib.dump(exif)
   byteString = exifLib.insert(exifbytes, byteString)
   return byteString
 }
 
-async function addOrUpdateExifData(blob: Blob, userComment: string) {
+async function addOrUpdateExifData(blob: Blob, userComment: string): Blob {
   const dataURI = await blobToBase64(blob)
-  const newBlob = dataURItoBlob(dataURI, userComment)
+  let existing_exif = getExifFromDataURI(dataURI)
+  let new_efix = mergeExifData(existing_exif, userComment)
+  const newBlob = dataURItoBlob(dataURI, new_efix)
   return newBlob
 }
 
