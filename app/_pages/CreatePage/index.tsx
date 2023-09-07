@@ -42,6 +42,7 @@ import { Button } from 'app/_components/Button'
 import { useModal } from '@ebay/nice-modal-react'
 import AwesomeModal from 'app/_modules/AwesomeModal'
 import TestContent from 'app/_modules/AwesomeModal/TestContent'
+import { setAvailableModels } from 'store/modelStore'
 
 const defaultState: DefaultPromptInput = new DefaultPromptInput()
 

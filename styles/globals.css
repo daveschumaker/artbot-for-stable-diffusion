@@ -21,7 +21,7 @@
   --link-active: #5eedde;
   --input-text: #282828;
   --main-color: #14b8a6;
-  --overlay-background: rgba(255, 255, 255, 0.1);
+  --overlay-background: rgba(255, 255, 255, 0.6);
 
   /* SIZES */
   --fixedSideBar-width: 220px;
@@ -57,7 +57,7 @@
   --input-background: rgb(42, 48, 60);
   --input-color: #e1e1e1;
   --input-text: #e1e1e1;
-  --overlay-background: rgba(0, 0, 0, 0.1);
+  --overlay-background: rgba(0, 0, 0, 0.6);
 }
 
 html {

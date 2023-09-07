@@ -1,5 +1,11 @@
-.carouselContainer {
+.AbTestCarousel {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin: 0 auto;
+  width: 100%;
+  justify-content: center;
 }
 
 .iconCaretLeft,
@@ -12,21 +18,30 @@
 }
 
 .iconCaretLeft {
-  left: 0;
+  left: -12px;
 }
 
 .iconCaretRight {
-  right: 0;
+  right: -12px;
+}
+
+.baseImage {
+  border-radius: 4px;
+}
+
+.imageContainer {
+  margin: 0 auto;
+  max-width: calc(100% - 88px);
 }
 
 .carouselImage {
   border-radius: 4px;
   margin: 0 auto;
-  max-height: 100%;
-  max-width: calc(100% - 84px);
   opacity: 0;
   position: absolute;
-  transition: opacity 0.4s ease-in-out;
+  top: 0;
+  max-width: calc(100% - 88px);
+  transition: opacity 0.25s ease-in-out;
 }
 
 .fadeIn {

@@ -8,13 +8,12 @@
 import NiceModal, { useModal } from '@ebay/nice-modal-react'
 import Overlay from 'app/_components/Overlay'
 import useLockedBody from 'hooks/useLockedBody'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import styles from './awesomeModal.module.css'
-import useModalHeight from './useModalHeight'
 import { IconX } from '@tabler/icons-react'
 import clsx from 'clsx'
-import ModalContentWrapper from './modalContentWrapper'
 import TooltipComponent from 'app/_components/TooltipComponent'
+import { useContentHeight } from './awesomeModalProvider'
 
 interface Props {
   children?: React.ReactNode
@@ -37,16 +36,12 @@ function AwesomeModal({
 }: Props) {
   const modal = useModal()
   const [locked, setLocked] = useLockedBody(false)
-  const [maxModalHeight] = useModalHeight()
-  const [contentHeight, setContentHeight] = useState(0)
+  const { maxModalHeight } = useContentHeight()
 
   const onClose = () => {
     modal.remove()
     handleClose()
   }
-
-  // Handle modal content height
-  useEffect(() => {}, [contentHeight])
 
   // Handle lock body
   useEffect(() => {
@@ -73,42 +68,7 @@ function AwesomeModal({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const getContentHeight = useCallback(
-    (height: number) => {
-      const el = document?.getElementById('modal-content-wrapper')?.children[0]
-      const clientHeight = el?.clientHeight
-
-      if (clientHeight && clientHeight !== height) {
-        setContentHeight(clientHeight + 72)
-      } else {
-        if (contentHeight !== height) {
-          setContentHeight(height)
-        }
-      }
-
-      // setTimeout(() => {
-      //   const el = document?.getElementById('modal-content-wrapper')
-      //     ?.children[0]
-      //   const clientHeight = el?.clientHeight
-
-      //   if (clientHeight && clientHeight !== height) {
-      //     setContentHeight(clientHeight + 72)
-      //   } else {
-      //     if (contentHeight !== height) {
-      //       setContentHeight(height)
-      //     }
-      //   }
-      // }, 250)
-    },
-    [contentHeight]
-  )
-
-  if (!modal.visible) {
-    return null
-  }
-
-  console.log(`contentHeight`, contentHeight)
-  console.log(`modalHuieght`, maxModalHeight)
+  console.log(`in awesome modal`, maxModalHeight)
 
   return (
     <>
@@ -120,7 +80,7 @@ function AwesomeModal({
       <div
         className={clsx(styles.ModalWrapper, className)}
         style={{
-          height: `${contentHeight}px`,
+          // height: `${HEIGHT}`,
           maxHeight: `${maxModalHeight}px`
         }}
       >
@@ -140,31 +100,30 @@ function AwesomeModal({
         {subtitle && <div className={styles.ModalSubtitle}>{subtitle}</div>}
         <div
           className={clsx(
-            styles.ModalContent,
+            styles.ModalContentV2,
             subtitle && styles.ModalContentSubtitleOffset
           )}
           id="modal_content"
           style={{
-            height: `${contentHeight}px`,
-            maxHeight: `calc(${maxModalHeight}px - ${subtitle ? 72 : 56}px)`
+            overflowY: 'auto',
+            maxHeight: maxModalHeight
           }}
         >
-          <ModalContentWrapper
-            getContentHeight={getContentHeight}
-            style={{ maxHeight: contentHeight - 72 }}
-          >
-            {React.Children.map(children, (child) => {
-              if (React.isValidElement(child)) {
-                return React.cloneElement(child, {
-                  // @ts-ignore
-                  handleClose: onClose,
-                  // @ts-ignore
-                  modalHeight: maxModalHeight - 72
-                })
-              }
-              return child
-            })}
-          </ModalContentWrapper>
+          {React.Children.map(children, (child) => {
+            if (React.isValidElement(child)) {
+              return React.cloneElement(child, {
+                // @ts-ignore
+                handleClose: onClose,
+                // @ts-ignore
+                modalHeight: maxModalHeight - 72
+                // style: {
+                //   overflowY: 'auto',
+                //   flex: 1
+                // }
+              })
+            }
+            return child
+          })}
         </div>
       </div>
     </>
