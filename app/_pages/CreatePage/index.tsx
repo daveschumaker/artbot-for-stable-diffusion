@@ -37,10 +37,15 @@ import CreatePageSettings from './Settings'
 import FormErrorMessage from './ActionPanel/FormErrorMessage'
 import { useWindowSize } from 'hooks/useWindowSize'
 import InputValidationErrorDisplay from './PromptInput/InputValidationErrorDisplay'
+import { setAvailableModels } from 'store/modelStore'
 
 const defaultState: DefaultPromptInput = new DefaultPromptInput()
 
-const CreatePage = ({ className, modelDetails = {} }: any) => {
+const CreatePage = ({
+  availableModels = [],
+  className,
+  modelDetails = {}
+}: any) => {
   const { width } = useWindowSize()
   const appState = useStore(appInfoStore)
   const userInfo = useStore(userInfoStore)
@@ -416,6 +421,12 @@ const CreatePage = ({ className, modelDetails = {} }: any) => {
   useEffect(() => {
     setErrors({ FIXED_SEED: Boolean(totalImagesRequested > 1 && input.seed) })
   }, [totalImagesRequested, input.seed, setErrors])
+
+  useEffect(() => {
+    // Ensures that available models payload fetched from API on SSR
+    // is set to store and made available for consuming components
+    setAvailableModels(availableModels)
+  }, [availableModels])
 
   return (
     <main className={className}>

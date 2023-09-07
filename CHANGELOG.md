@@ -1,3 +1,7 @@
+# 2023.09.06
+
+- Fix: Models dropdown would sometimes be unavailable on initial page load.
+
 # 2023.09.01
 
 - Fix: Show both LoRA strength and clip values on image modals and pages. Expose LoRA CLIP values in the advanced options panel.
