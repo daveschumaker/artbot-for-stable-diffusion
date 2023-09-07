@@ -232,15 +232,15 @@ const ImageOptionsWrapper = ({
         })
       }
 
-      if (e.key === 'f') {
+      if (e.key === 'f' && !e.ctrlKey && !e.metaKey) {
         onFavoriteClick()
       }
 
-      if (e.key === 'd') {
+      if (e.key === 'd' && !e.ctrlKey && !e.metaKey) {
         downloadFile(imageDetails)
       }
 
-      if (e.key === 'r') {
+      if (e.key === 'r' && !e.ctrlKey && !e.metaKey) {
         handleRerollClick(imageDetails)
       }
     }

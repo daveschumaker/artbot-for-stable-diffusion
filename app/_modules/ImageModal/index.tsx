@@ -78,9 +78,6 @@ const ImageModal = ({
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      e.preventDefault()
-      e.stopImmediatePropagation()
-
       if (e.key === 'Escape') {
         if (showTiles) {
           return
