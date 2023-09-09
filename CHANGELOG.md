@@ -1,3 +1,8 @@
+# 2023.09.09
+
+- Merge PR from StuckState that automatically adds EXIF data to all images. Hot diggity! Thank you for doing this.
+- Revert back to earlier version of NextJS, as the latest version seems to be causing memory issues and crashing the server. (I updated it in the 2023.09.06 update and have been encountering issues ever since.)
+
 # 2023.09.06
 
 - Fix: Models dropdown would sometimes be unavailable on initial page load.
