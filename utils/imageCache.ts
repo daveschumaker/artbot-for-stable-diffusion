@@ -43,6 +43,8 @@ import {
   updatePendingJobId,
   updatePendingJobV2
 } from 'controllers/pendingJobsCache'
+import { base64toBlob } from './imageUtils'
+import { initBlob, blobToBase64 } from './blobUtils'
 
 export const initIndexedDb = () => {}
 
@@ -785,6 +787,27 @@ export const checkCurrentJob = async (imageDetails: any) => {
       for (const idx in imgDetailsFromApi.generations) {
         const image = imgDetailsFromApi.generations[idx]
         if ('base64String' in image && image.base64String) {
+          initBlob()
+          // Insert exif information in the image
+          const metaData: string =
+            `${job.prompt}\n` +
+            (job.negative ? `Negative prompt: ${job.negative}\n` : ``) +
+            `Steps: ${job.steps}, Sampler: ${job.sampler}, CFG scale: ${job.cfg_scale}, Seed: ${image.seed}` +
+            `, Size: ${job.width}x${job.height}, model: ${job.models}`
+          let oldBlob
+          try {
+            oldBlob = await base64toBlob(image.base64String, `image/webp`)
+          } catch (err) {
+            console.log(
+              `Error: Something unfortunate happened when attempting to convert base64string to file blob`
+            )
+            console.log(err)
+            continue
+          }
+          // @ts-ignore
+          let newBlob = await oldBlob?.addOrUpdateExifData(metaData)
+          image.base64String = (await blobToBase64(newBlob)).split(',')[1]
+
           const jobWithImageDetails = {
             ...job,
             ...image,

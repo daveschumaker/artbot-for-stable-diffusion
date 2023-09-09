@@ -31,6 +31,7 @@
     }
   },
   "dependencies": {
+    "@asc0910/exif-library": "github:asc0910/exif-library",
     "@ebay/nice-modal-react": "1.2.10",
     "@next/bundle-analyzer": "13.4.19",
     "@radix-ui/react-checkbox": "1.0.4",
@@ -60,7 +61,6 @@
     "node-cron": "3.0.2",
     "node-fetch": "^3.3.2",
     "node-localstorage": "2.2.1",
-    "piexifjs": "^1.0.6",
     "react": "18.2.0",
     "react-colorful": "5.6.1",
     "react-dom": "18.2.0",
