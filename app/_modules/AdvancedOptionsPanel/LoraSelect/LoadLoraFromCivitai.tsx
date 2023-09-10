@@ -73,7 +73,7 @@ const LoadLora = ({
       )
       const data = await res.json()
 
-      if (data.type !== 'LORA') {
+      if (data.type !== 'LORA' && data.type !== 'LoCon') {
         setErrorMsg('Unable to load: Not a valid LORA.')
         return
       }

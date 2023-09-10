@@ -1,3 +1,7 @@
+# 2023.09.10
+
+- Allow importing of LyCORIS models from CivitAI from the Lora import panel.
+
 # 2023.09.09
 
 - Merge PR from StuckState that automatically adds EXIF data to all images. Hot diggity! Thank you for doing this.
