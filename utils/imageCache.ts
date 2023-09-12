@@ -776,6 +776,7 @@ export const checkCurrentJob = async (imageDetails: any) => {
     ) {
       imageDetails.done = true
       imageDetails.jobStatus = JobStatus.Done
+      imageDetails.kudos = imgDetailsFromApi.kudos
       imageDetails.timestamp = Date.now()
 
       const job = {
@@ -810,8 +811,7 @@ export const checkCurrentJob = async (imageDetails: any) => {
 
           const jobWithImageDetails = {
             ...job,
-            ...image,
-            kudos: imgDetailsFromApi.kudos
+            ...image
           }
 
           // Handle SDXL_beta

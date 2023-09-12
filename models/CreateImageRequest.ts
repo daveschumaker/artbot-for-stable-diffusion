@@ -23,6 +23,7 @@ class CreateImageRequest {
   favorited: false
   height: number
   hires: boolean
+  kudos: number
   id: number
   image_is_control: boolean
   imageMimeType: ImageMimeType
@@ -147,6 +148,7 @@ class CreateImageRequest {
     }
 
     this.karras = Boolean(karras)
+    this.kudos = 0
     this.hires = Boolean(hires)
     this.clipskip = Number(clipskip)
 

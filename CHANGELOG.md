@@ -1,6 +1,8 @@
-# 2023.09.10
+# 2023.09.12
 
 - Allow importing of LyCORIS models from CivitAI from the Lora import panel.
+- Display final kudos cost of image from API on image details page.
+- Add ability to copy image request parameters from image details page.
 
 # 2023.09.09
 

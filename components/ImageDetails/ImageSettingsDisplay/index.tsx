@@ -1,5 +1,6 @@
 import {
   IconCodeDots,
+  IconCopy,
   IconExternalLink,
   IconList,
   IconSettings
@@ -13,6 +14,7 @@ import { cleanDataForApiRequestDisplay } from 'utils/imageUtils'
 import styles from './component.module.css'
 import { arrayHasValue } from 'utils/validationUtils'
 import FlexRow from 'app/_components/FlexRow'
+import { showSuccessToast } from 'utils/notificationUtils'
 
 export default function ImageSettingsDisplay({
   imageDetails
@@ -20,6 +22,20 @@ export default function ImageSettingsDisplay({
   imageDetails: CreateImageRequest
 }) {
   const [showRequestParams, setShowRequestParams] = useState(false)
+
+  const handleCopy = () => {
+    const prettyJson = JSON.stringify(
+      cleanDataForApiRequestDisplay(imageDetails),
+      null,
+      2
+    )
+
+    navigator?.clipboard?.writeText(prettyJson).then(() => {
+      showSuccessToast({
+        message: 'Request parameters copied to your clipboard!'
+      })
+    })
+  }
 
   const modelName =
     // @ts-ignore // imageDetails.model is deprecated. Old instances of ArtBot may still use this.
@@ -38,7 +54,7 @@ export default function ImageSettingsDisplay({
           <IconSettings stroke={1.5} />
           Image details
         </div>
-        <div className="mt-2 ml-4 w-full flex flex-row justify-start max-w-[768px]">
+        <div className="mt-2 ml-4 w-full gap-2 flex flex-row justify-start max-w-[768px]">
           <div
             className="flex flex-row items-center gap-2 text-sm cursor-pointer"
             onClick={() => {
@@ -54,6 +70,18 @@ export default function ImageSettingsDisplay({
               ? 'show image details'
               : 'show request parameters'}
           </div>
+          {showRequestParams && (
+            <>
+              <div>{' | '}</div>
+              <div
+                className="flex flex-row items-center gap-2 text-sm cursor-pointer"
+                onClick={handleCopy}
+              >
+                <IconCopy stroke={1.5} />
+                Copy to clipboard
+              </div>
+            </>
+          )}
         </div>
         <div className="flex flex-row">
           <div
@@ -116,6 +144,18 @@ export default function ImageSettingsDisplay({
                 {imageDetails.modelVersion && (
                   <li>
                     <strong>Model version:</strong> {imageDetails.modelVersion}
+                  </li>
+                )}
+                {imageDetails.kudos && (
+                  <li>
+                    <strong>Kudos cost:</strong>{' '}
+                    <Linker
+                      href="/faq#kudos"
+                      passHref
+                      className="text-cyan-500"
+                    >
+                      {imageDetails.kudos.toFixed(2)}
+                    </Linker>
                   </li>
                 )}
                 <li>&zwnj;</li>
