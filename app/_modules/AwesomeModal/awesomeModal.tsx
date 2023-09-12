@@ -36,7 +36,7 @@ function AwesomeModal({
 }: Props) {
   const modal = useModal()
   const [locked, setLocked] = useLockedBody(false)
-  const { maxModalHeight } = useContentHeight()
+  let { maxModalHeight } = useContentHeight()
 
   const onClose = () => {
     modal.remove()
@@ -68,8 +68,6 @@ function AwesomeModal({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  console.log(`in awesome modal`, maxModalHeight)
-
   return (
     <>
       <Overlay
@@ -80,8 +78,8 @@ function AwesomeModal({
       <div
         className={clsx(styles.ModalWrapper, className)}
         style={{
-          // height: `${HEIGHT}`,
-          maxHeight: `${maxModalHeight}px`
+          maxHeight: `${maxModalHeight}px`,
+          paddingTop: !label ? '38px' : 0
         }}
       >
         <div className={styles.CloseButton} onClick={onClose}>
@@ -106,7 +104,8 @@ function AwesomeModal({
           id="modal_content"
           style={{
             overflowY: 'auto',
-            maxHeight: maxModalHeight
+            // @ts-ignore
+            maxHeight: !label ? maxModalHeight - 38 : maxModalHeight - 56
           }}
         >
           {React.Children.map(children, (child) => {
@@ -115,11 +114,12 @@ function AwesomeModal({
                 // @ts-ignore
                 handleClose: onClose,
                 // @ts-ignore
-                modalHeight: maxModalHeight - 72
-                // style: {
-                //   overflowY: 'auto',
-                //   flex: 1
-                // }
+                modalHeight: maxModalHeight - 72,
+                style: {
+                  paddingBottom: !label ? '38px' : 0
+                  //   overflowY: 'auto',
+                  //   flex: 1
+                }
               })
             }
             return child

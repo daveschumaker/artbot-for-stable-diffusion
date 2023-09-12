@@ -10,7 +10,6 @@ import { setImageDetailsModalOpen } from 'store/appStore'
 import { useModal } from '@ebay/nice-modal-react'
 import placeholderImage from '../../../public/placeholder.gif'
 
-import ImageModal from '../ImageModal'
 import clsx from 'clsx'
 import {
   deletePendingJob,
@@ -30,6 +29,7 @@ import useSdxlModal from './useSdxlModal'
 import { useState } from 'react'
 import AbTestModal from 'modules/PendingItem/AbTestModal'
 import AwesomeModal from '../AwesomeModal'
+import ImageModalV2 from '../ImageModalV2'
 
 export default function PendingPanelImageCard({
   index,
@@ -39,8 +39,7 @@ export default function PendingPanelImageCard({
   jobs: any[]
 }) {
   const imageJob: any = jobs[index]
-  const imagePreviewModal = useModal(ImageModal)
-  // const abTestModal = useModal(AbTestModal)
+  const imagePreviewModalV2 = useModal(AwesomeModal)
   const abTestModal = useModal(AwesomeModal)
 
   const [isSdxlAbTest, secondaryId, secondaryImage] = useSdxlModal(imageJob)
@@ -102,13 +101,19 @@ export default function PendingPanelImageCard({
                   />
                 ),
                 subtitle: 'Choose which image you think is best:',
-                tooltip: 'SDXL is currently in beta and provided by Stability.ai in order to refine future image models. Please select one of the following two images to choose as the best image for this particular generation. You will be rewarded 15 kudos for each rating.
+                tooltip:
+                  'SDXL is currently in beta and provided by Stability.ai in order to refine future image models. Please select one of the following two images to choose as the best image for this particular generation. You will be rewarded 15 kudos for each rating.'
               })
               return
             } else {
-              imagePreviewModal.show({
-                handleClose: () => imagePreviewModal.remove(),
-                imageDetails
+              imagePreviewModalV2.show({
+                label: 'Image',
+                children: (
+                  <ImageModalV2
+                    handleClose={() => imagePreviewModalV2.remove()}
+                    imageDetails={imageDetails}
+                  />
+                )
               })
             }
           }
