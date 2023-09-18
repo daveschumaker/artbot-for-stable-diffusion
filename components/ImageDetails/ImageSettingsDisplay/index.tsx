@@ -6,7 +6,7 @@ import {
   IconSettings
 } from '@tabler/icons-react'
 import clsx from 'clsx'
-import Linker from 'components/UI/Linker'
+import Linker from 'app/_components/Linker'
 import CreateImageRequest from 'models/CreateImageRequest'
 import { useState } from 'react'
 import { InjectTi, SourceProcessing } from 'types/horde'

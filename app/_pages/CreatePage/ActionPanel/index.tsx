@@ -3,13 +3,13 @@
 import { IconCalculator, IconSquarePlus, IconTrash } from '@tabler/icons-react'
 
 import { Button } from 'app/_components/Button'
-import Linker from 'components/UI/Linker'
+import Linker from 'app/_components/Linker'
 import Errors from 'utils/errors'
 import { useState } from 'react'
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import DryRunCalculator from '../PromptInput/DryRunCalculator'
 import DefaultPromptInput from 'models/DefaultPromptInput'
-import DeleteConfirmModal from 'components/DeleteConfirmModal'
+import DeleteConfirmModal from 'app/_modules/DeleteConfirmModal'
 import useLockedBody from 'hooks/useLockedBody'
 
 interface Props {

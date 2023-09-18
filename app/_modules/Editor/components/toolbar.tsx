@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { HexAlphaColorPicker } from 'react-colorful'
 import { useRouter } from 'next/navigation'
 
-import DeleteConfirmModal from 'components/DeleteConfirmModal'
+import DeleteConfirmModal from 'app/_modules/DeleteConfirmModal'
 import AdjustmentIcon from 'components/icons/AdjustmentIcon'
 import EraserIcon from 'components/icons/EraserIcon'
 import MinusVertical from 'components/icons/MinusVertical'

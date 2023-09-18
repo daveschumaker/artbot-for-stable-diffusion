@@ -5,7 +5,7 @@ import { useStore } from 'statery'
 
 // UI component imports
 import Input from 'components/UI/Input'
-import Linker from 'components/UI/Linker'
+import Linker from 'app/_components/Linker'
 import Section from 'app/_components/Section'
 import SplitPanel from 'components/UI/SplitPanel'
 import SubSectionTitle from 'app/_components/SubSectionTitle'

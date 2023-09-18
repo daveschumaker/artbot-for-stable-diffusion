@@ -1,8 +1,8 @@
 import clsx from 'clsx'
 import { useState } from 'react'
-import ImageParamsForApi from '../models/ImageParamsForApi'
-import CopyIcon from './icons/CopyIcon'
-import EyeIcon from './icons/EyeIcon'
+import ImageParamsForApi from '../../models/ImageParamsForApi'
+import CopyIcon from '../../components/icons/CopyIcon'
+import EyeIcon from '../../components/icons/EyeIcon'
 import { Button } from 'app/_components/Button'
 import { showSuccessToast } from 'utils/notificationUtils'
 

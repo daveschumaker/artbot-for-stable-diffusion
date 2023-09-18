@@ -1,5 +1,5 @@
 import InteractiveModal from 'components/UI/InteractiveModal/interactiveModal'
-import Linker from 'components/UI/Linker'
+import Linker from 'app/_components/Linker'
 import PageTitle from 'app/_components/PageTitle'
 
 const ModelsModal = ({

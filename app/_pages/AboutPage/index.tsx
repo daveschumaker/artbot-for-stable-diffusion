@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import { trackEvent } from 'api/telemetry'
 import FeedbackForm from 'app/_modules/FeedbackForm'
 import Modal from 'components/Modal'
-import Linker from 'components/UI/Linker'
+import Linker from 'app/_components/Linker'
 
 import PageTitle from 'app/_components/PageTitle'
 import Text from 'components/UI/Text'

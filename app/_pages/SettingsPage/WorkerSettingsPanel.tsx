@@ -1,5 +1,5 @@
 import SpinnerV2 from 'components/Spinner'
-import Linker from 'components/UI/Linker'
+import Linker from 'app/_components/Linker'
 import PageTitle from 'app/_components/PageTitle'
 import Section from 'app/_components/Section'
 import WorkerInfo from 'components/WorkerInfo'

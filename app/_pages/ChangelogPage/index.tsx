@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import Head from 'next/head'
 import PageTitle from 'app/_components/PageTitle'
-import Linker from 'components/UI/Linker'
+import Linker from 'app/_components/Linker'
 import FeedbackForm from 'app/_modules/FeedbackForm'
 import { useEffectOnce } from 'hooks/useEffectOnce'
 import { trackEvent } from 'api/telemetry'

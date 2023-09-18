@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { Button } from 'app/_components/Button'
-import Image from 'components/Image'
+import Image from 'app/_modules/Image'
 import { SourceProcessing } from 'utils/promptUtils'
 import Head from 'next/head'
 import PromptInputSettings from 'models/PromptInputSettings'

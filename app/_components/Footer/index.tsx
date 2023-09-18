@@ -3,7 +3,7 @@
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import { isInstalledPwa } from '../../../utils/appUtils'
-import Linker from 'components/UI/Linker'
+import Linker from 'app/_components/Linker'
 import styles from './component.module.css'
 
 export default function Footer() {

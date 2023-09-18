@@ -12,7 +12,7 @@ import {
 } from 'utils/db'
 
 import AdContainer from 'app/_components/AdContainer'
-import Linker from 'components/UI/Linker'
+import Linker from 'app/_components/Linker'
 import PageTitle from 'app/_components/PageTitle'
 import TextButton from 'components/UI/TextButton'
 import styles from './pendingPage.module.css'

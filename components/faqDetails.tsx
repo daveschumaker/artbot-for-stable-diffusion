@@ -1,9 +1,9 @@
 import Link from 'next/link'
 import React from 'react'
 import LinkIcon from './icons/LinkIcon'
-import Linker from './UI/Linker'
 import { baseHost, basePath } from 'BASE_PATH'
 import { showSuccessToast } from 'utils/notificationUtils'
+import Linker from 'app/_components/Linker'
 
 const showToast = () => {
   showSuccessToast({ message: 'FAQ URL copied!' })

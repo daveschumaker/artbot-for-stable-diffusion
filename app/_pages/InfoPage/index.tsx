@@ -3,7 +3,7 @@
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import Row from 'components/Row'
-import Linker from 'components/UI/Linker'
+import Linker from 'app/_components/Linker'
 import PageTitle from 'app/_components/PageTitle'
 
 interface IPerfStats {

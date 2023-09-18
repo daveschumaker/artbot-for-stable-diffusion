@@ -19,7 +19,7 @@ import PhotoIcon from 'components/icons/PhotoIcon'
 import PointIcon from 'components/icons/PointIcon'
 import { useStore } from 'statery'
 import { userInfoStore } from 'store/userStore'
-import Linker from 'components/UI/Linker'
+import Linker from 'app/_components/Linker'
 import { clearCanvasStore } from 'store/canvasStore'
 import styles from './livePaint.module.css'
 const TWO_COLUMN_SIZE = 789

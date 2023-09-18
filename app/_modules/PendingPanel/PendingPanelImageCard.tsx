@@ -28,7 +28,7 @@ import {
 import SpinnerV2 from 'components/Spinner'
 import useSdxlModal from './useSdxlModal'
 import { useState } from 'react'
-import AbTestModal from 'modules/PendingItem/AbTestModal'
+import AbTestModal from 'app/_pages/PendingPage/PendingItem/AbTestModal'
 
 export default function PendingPanelImageCard({
   index,
