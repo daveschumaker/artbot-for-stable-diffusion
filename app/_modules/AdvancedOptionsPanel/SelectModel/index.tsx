@@ -10,7 +10,11 @@ import { useAvailableModels } from 'app/_hooks/useAvailableModels'
 import { Button } from 'app/_components/Button'
 import { IconFilter, IconList, IconSettings } from '@tabler/icons-react'
 import Checkbox from 'app/_components/Checkbox'
+<<<<<<< HEAD
 import AppSettings from 'app/_data-models/AppSettings'
+=======
+import AppSettings from 'models/AppSettings'
+>>>>>>> 463d88f (chore: move components)
 import { useStore } from 'statery'
 import { modelStore } from 'app/_store/modelStore'
 import TooltipComponent from 'app/_components/TooltipComponent'
