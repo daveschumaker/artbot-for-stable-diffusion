@@ -8,7 +8,7 @@ import styles from './settings.module.css'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import TextTooltipRow from 'app/_components/TextTooltipRow'
 import TooltipComponent from 'app/_components/TooltipComponent'
-import MaxWidth from 'components/UI/MaxWidth'
+import MaxWidth from 'app/_components/MaxWidth'
 import Input from 'components/UI/Input'
 import { Button } from 'app/_components/Button'
 import EyeIcon from 'components/icons/EyeIcon'
@@ -188,10 +188,7 @@ const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
             </div>
           )}
         </SubSectionTitle>
-        <MaxWidth
-          // @ts-ignore
-          width="480px"
-        >
+        <MaxWidth style={{ maxWidth: '480px' }}>
           <div className="flex flex-row gap-2">
             <Input
               type={componentState.showApiKey ? 'text' : 'password'}
@@ -297,7 +294,7 @@ const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
           Maximum number of concurrent job requests that ArtBot will send to the
           AI Horde.
         </div>
-        <MaxWidth width="240px">
+        <MaxWidth style={{ maxWidth: '240px' }}>
           <div className="flex flex-row gap-2 items-center">
             <Select
               options={[

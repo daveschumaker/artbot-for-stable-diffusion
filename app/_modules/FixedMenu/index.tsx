@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation'
 import MenuOptions from '../MenuOptions'
 import styles from './fixedMenu.module.css'
-import AdContainer from 'components/AdContainer'
+import AdContainer from 'app/_components/AdContainer'
 import { useStore } from 'statery'
 import { appInfoStore } from 'store/appStore'
 import clsx from 'clsx'

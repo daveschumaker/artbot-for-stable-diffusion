@@ -8,7 +8,7 @@ import usePendingImageModal from '../usePendingImageModal'
 import { deletePendingJobFromDb } from 'utils/db'
 import { deletePendingJob } from 'controllers/pendingJobsCache'
 import { fetchPendingImageJobs } from 'controllers/pendingJobsController'
-import AdContainer from 'components/AdContainer'
+import AdContainer from 'app/_components/AdContainer'
 
 const FOOTER_HEIGHT_PX = 66
 const MOBILE_FOOTER_PX = 66

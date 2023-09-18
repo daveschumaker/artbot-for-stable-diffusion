@@ -8,7 +8,7 @@ import Text from '../../../components/UI/Text'
 import TextArea from '../../../components/UI/TextArea'
 import { userInfoStore } from '../../../store/userStore'
 import Input from '../../../components/UI/Input'
-import FlexRow from '../../../components/UI/FlexRow'
+import FlexRow from 'app/_components/FlexRow'
 import PageTitle from 'app/_components/PageTitle'
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => {
@@ -83,7 +83,7 @@ const FeedbackForm = ({
             </div>
           </div>
         )}
-        <FlexRow justify="flex-end">
+        <FlexRow style={{ justifyContent: 'flex-end' }}>
           <Button onClick={handleSubmit} disabled={feedbackSent}>
             {feedbackSent ? 'Message sent!' : 'Send Message'}
           </Button>

@@ -1,7 +1,7 @@
 import FlexRow from 'app/_components/FlexRow'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import DropdownOptions from 'app/_modules/DropdownOptions'
-import Checkbox from 'components/UI/Checkbox'
+import Checkbox from 'app/_components/Checkbox'
 import { useAvailableModels } from 'hooks/useAvailableModels'
 import AppSettings from 'models/AppSettings'
 import { useEffect, useState } from 'react'

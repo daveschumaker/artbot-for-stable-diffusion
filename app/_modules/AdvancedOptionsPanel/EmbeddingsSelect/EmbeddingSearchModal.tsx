@@ -10,7 +10,7 @@ import { Button } from 'app/_components/Button'
 import { IconArrowBarLeft, IconSettings } from '@tabler/icons-react'
 import ReactPaginate from 'react-paginate'
 import styles from './component.module.css'
-import Checkbox from 'components/UI/Checkbox'
+import Checkbox from 'app/_components/Checkbox'
 import EmbeddingDetailsCard from './EmbeddingDetailsCard'
 import AppSettings from 'models/AppSettings'
 

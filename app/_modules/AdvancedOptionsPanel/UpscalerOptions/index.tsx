@@ -1,4 +1,4 @@
-import Checkbox from 'components/UI/Checkbox'
+import Checkbox from 'app/_components/Checkbox'
 import TextTooltipRow from 'app/_components/TextTooltipRow'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import DefaultPromptInput from 'models/DefaultPromptInput'

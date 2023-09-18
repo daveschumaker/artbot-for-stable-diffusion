@@ -3,7 +3,7 @@ import { trackEvent } from '../../../../api/telemetry'
 import DefaultPromptInput from '../../../../models/DefaultPromptInput'
 import PromptInputSettings from '../../../../models/PromptInputSettings'
 import { SourceProcessing } from '../../../../utils/promptUtils'
-import MaxWidth from 'components/UI/MaxWidth'
+import MaxWidth from 'app/_components/MaxWidth'
 import Section from 'app/_components/Section'
 import Select from 'app/_components/Select'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
@@ -49,10 +49,7 @@ const Samplers = ({
               used.
             </div>
           ) : (
-            <MaxWidth
-              // @ts-ignore
-              width="240px"
-            >
+            <MaxWidth style={{ maxWidth: '240px' }}>
               <Select
                 options={samplerOptions(input)}
                 onChange={(obj: { value: string; label: string }) => {

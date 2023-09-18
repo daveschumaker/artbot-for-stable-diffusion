@@ -11,7 +11,7 @@ import {
   getImageDetails
 } from 'utils/db'
 
-import AdContainer from 'components/AdContainer'
+import AdContainer from 'app/_components/AdContainer'
 import Linker from 'components/UI/Linker'
 import PageTitle from 'app/_components/PageTitle'
 import TextButton from 'components/UI/TextButton'
@@ -30,7 +30,7 @@ import { Button } from 'app/_components/Button'
 import FilterOptions from './FilterOptions'
 import Accordion from 'app/_components/Accordion'
 import AccordionItem from 'app/_components/AccordionItem'
-import MaxWidth from 'components/UI/MaxWidth'
+import MaxWidth from 'app/_components/MaxWidth'
 import PendingSettings from './PendingSettings'
 import ClearJobs from './ClearJobs'
 import clsx from 'clsx'

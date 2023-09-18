@@ -6,7 +6,7 @@ import { countCompletedJobs } from '../../utils/db'
 import { downloadImages } from '../../utils/imageUtils'
 import PageTitle from 'app/_components/PageTitle'
 import Select from 'app/_components/Select'
-import MaxWidth from 'components/UI/MaxWidth'
+import MaxWidth from 'app/_components/MaxWidth'
 import { useState } from 'react'
 import SpinnerV2 from 'components/Spinner'
 import { IconChevronRight } from '@tabler/icons-react'
@@ -161,7 +161,7 @@ const ImportExportPanel = () => {
             download images.
           </div>
           <Section>
-            <MaxWidth width="240px">
+            <MaxWidth style={{ maxWidth: '240px' }}>
               <div className="flex flex-row gap-2 items-center">
                 Images per file:
                 <Select

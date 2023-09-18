@@ -3,7 +3,7 @@ import AlertDialogBox from 'components/UI/AlertDialogBox'
 import PageTitle from 'app/_components/PageTitle'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import AppSettings from 'models/AppSettings'
-import MaxWidth from 'components/UI/MaxWidth'
+import MaxWidth from 'app/_components/MaxWidth'
 import Select from 'app/_components/Select'
 import Linker from 'components/UI/Linker'
 import { useState } from 'react'
@@ -51,7 +51,7 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
         <PageTitle as="h2">ArtBot Preferences</PageTitle>
       </Section>
       <Section pb={12}>
-        <MaxWidth width="240px">
+        <MaxWidth style={{ maxWidth: '240px' }}>
           <SubSectionTitle>
             <strong>ArtBot Theme</strong>
           </SubSectionTitle>
@@ -143,7 +143,7 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
         </div>
       </Section>
       <Section pb={12}>
-        <MaxWidth width="240px">
+        <MaxWidth style={{ maxWidth: '240px' }}>
           <SubSectionTitle>
             <strong>Images per page</strong>
           </SubSectionTitle>
@@ -173,10 +173,7 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
             Choose your preferred format when downloading images from ArtBot
           </div>
         </SubSectionTitle>
-        <MaxWidth
-          // @ts-ignore
-          width="240px"
-        >
+        <MaxWidth style={{ maxWidth: '240px' }}>
           <Select
             isSearchable={false}
             onChange={(obj: any) => {
@@ -273,10 +270,7 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
             </div>
           )}
         </SubSectionTitle>
-        <MaxWidth
-          // @ts-ignore
-          width="240px"
-        >
+        <MaxWidth style={{ maxWidth: '240px' }}>
           <Button
             onClick={() => {
               setProcessType('thumbnails')
@@ -300,10 +294,7 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
             issues with ArtBot and are asked to provide some additional logs.
           </div>
         </SubSectionTitle>
-        <MaxWidth
-          // @ts-ignore
-          width="240px"
-        >
+        <MaxWidth style={{ maxWidth: '240px' }}>
           <Button
             onClick={() => {
               //@ts-ignore
@@ -331,10 +322,7 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
             and your images will still be available after this reset.
           </div>
         </SubSectionTitle>
-        <MaxWidth
-          // @ts-ignore
-          width="240px"
-        >
+        <MaxWidth style={{ maxWidth: '240px' }}>
           <Button
             theme="secondary"
             onClick={() => setComponentState({ showResetConfirmation: true })}
@@ -356,10 +344,7 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
             and your images will still be available after this reset.
           </div>
         </SubSectionTitle>
-        <MaxWidth
-          // @ts-ignore
-          width="240px"
-        >
+        <MaxWidth style={{ maxWidth: '240px' }}>
           <Button
             theme="secondary"
             onClick={() => {
@@ -385,10 +370,7 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
             available after this reset.
           </div>
         </SubSectionTitle>
-        <MaxWidth
-          // @ts-ignore
-          width="240px"
-        >
+        <MaxWidth style={{ maxWidth: '240px' }}>
           <Button
             theme="secondary"
             onClick={async () => {
@@ -403,35 +385,6 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
           </Button>
         </MaxWidth>
       </Section>
-      {/* <Section>
-                <SubSectionTitle>
-                  Disable snow flakes
-                  <div className="block w-full mt-2 mb-2 text-xs">
-                    Turn off snow flakes (a temporary feature enabled during
-                    Christmastime here in California). NOTE: Requires page
-                    reload.
-                  </div>
-                </SubSectionTitle>
-                <MaxWidth
-                  // @ts-ignore
-                  width="240px"
-                >
-                  <Select
-                    options={[
-                      { value: true, label: 'Yes' },
-                      { value: false, label: 'No' }
-                    ]}
-                    onChange={(obj: any) =>
-                      handleUpdateSelect('disableSnowflakes', obj)
-                    }
-                    value={
-                      componentState.disableSnowflakes
-                        ? { value: true, label: 'Yes' }
-                        : { value: true, label: 'No' }
-                    }
-                  />
-                </MaxWidth>
-              </Section> */}
     </>
   )
 }

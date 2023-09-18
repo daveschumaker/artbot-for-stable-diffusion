@@ -7,7 +7,7 @@ import { Button } from 'app/_components/Button'
 import { IconSettings } from '@tabler/icons-react'
 import { useState } from 'react'
 import DropdownOptions from 'app/_modules/DropdownOptions'
-import Checkbox from 'components/UI/Checkbox'
+import Checkbox from 'app/_components/Checkbox'
 import TooltipComponent from 'app/_components/TooltipComponent'
 
 const ControlNetOptions = ({

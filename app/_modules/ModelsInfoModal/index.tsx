@@ -11,7 +11,7 @@ import {
 import FlexRow from 'app/_components/FlexRow'
 import Modal from 'components/Modal'
 import { Button } from 'app/_components/Button'
-import Checkbox from 'components/UI/Checkbox'
+import Checkbox from 'app/_components/Checkbox'
 import Input from 'components/UI/Input'
 import Linker from 'components/UI/Linker'
 import AppSettings from 'models/AppSettings'

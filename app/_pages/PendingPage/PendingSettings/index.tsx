@@ -1,5 +1,5 @@
 import DropdownOptions from 'app/_modules/DropdownOptions'
-import Checkbox from 'components/UI/Checkbox'
+import Checkbox from 'app/_components/Checkbox'
 import AppSettings from 'models/AppSettings'
 import { useEffect, useState } from 'react'
 import { setPauseJobQueue } from 'store/appStore'

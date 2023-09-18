@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { getImageFromUrl } from 'utils/imageUtils'
 import { Button } from 'app/_components/Button'
-import FlexRow from 'components/UI/FlexRow'
+import FlexRow from 'app/_components/FlexRow'
 import Input from 'components/UI/Input'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import Dropzone from 'app/_modules/Dropzone'
@@ -37,7 +37,7 @@ const Uploader = ({ handleSaveImage, type = 'img2img' }: Props) => {
       <SubSectionTitle>
         Upload an image from your device or import from URL
       </SubSectionTitle>
-      <FlexRow paddingBottom="8px">
+      <FlexRow pb={8}>
         <span style={{ lineHeight: '40px', marginRight: '16px' }}>URL:</span>
         <Input
           className="mb-2"

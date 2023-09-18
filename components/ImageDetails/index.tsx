@@ -5,7 +5,7 @@ import PlaylistXIcon from 'components/icons/PlaylistXIcon'
 import React, { useState } from 'react'
 import { FullScreen, useFullScreenHandle } from 'react-full-screen'
 import ImageSquare from 'components/ImageSquare'
-import AdContainer from 'components/AdContainer'
+import AdContainer from 'app/_components/AdContainer'
 
 import styles from './imageDetails.module.css'
 import ImageOptionsWrapper from './ImageOptionsWrapper'
