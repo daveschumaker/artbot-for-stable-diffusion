@@ -4,18 +4,15 @@ import { useStore } from 'statery'
 // import Switch from 'react-switch'
 
 // UI component imports
-import Input from 'components/UI/Input'
+import Input from 'app/_components/Input'
 import Linker from 'app/_components/Linker'
 import Section from 'app/_components/Section'
-import SplitPanel from 'components/UI/SplitPanel'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
-import TextButton from 'components/UI/TextButton'
 import TextTooltipRow from 'app/_components/TextTooltipRow'
 import TooltipComponent from 'app/_components/TooltipComponent'
-import TwoPanel from 'components/UI/TwoPanel'
 
 // Utils imports
-import { maxSteps } from 'utils/validationUtils'
+import { maxSteps } from 'app/_utils/validationUtils'
 
 // Local imports
 import ControlNetOptions from './ControlNetOptions'
@@ -23,14 +20,14 @@ import InputSwitch from './InputSwitch'
 import UpscalerOptions from './UpscalerOptions'
 
 // Store imports
-import { userInfoStore } from 'store/userStore'
+import { userInfoStore } from 'app/_store/userStore'
 
 // Hook imports
-import useComponentState from 'hooks/useComponentState'
+import useComponentState from 'app/_hooks/useComponentState'
 
 // Model imports
-import AppSettings from 'models/AppSettings'
-import PromptInputSettings from 'models/PromptInputSettings'
+import AppSettings from 'app/_data-models/AppSettings'
+import PromptInputSettings from 'app/_data-models/PromptInputSettings'
 
 // Other imports
 import ParentImage from 'app/_components/ParentImage'
@@ -52,11 +49,14 @@ import Panel from 'app/_components/Panel'
 import ClipSkip from './ClipSkip'
 import Denoise from './Denoise'
 import FlexRow from 'app/_components/FlexRow'
-import ImageSquare from 'components/ImageSquare'
 import { Button } from 'app/_components/Button'
-import { SourceProcessing } from 'types/horde'
+import { SourceProcessing } from '_types/horde'
 import { IconTrash } from '@tabler/icons-react'
 import EmbeddingsSelect from './EmbeddingsSelect'
+import TextButton from 'app/_components/TextButton'
+import ImageSquare from '../ImageSquare'
+import TwoPanel from 'app/_components/TwoPanel'
+import SplitPanel from 'app/_components/SplitPanel'
 
 interface Props {
   input: any

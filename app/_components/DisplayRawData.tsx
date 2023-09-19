@@ -1,10 +1,9 @@
 import clsx from 'clsx'
 import { useState } from 'react'
-import ImageParamsForApi from '../../models/ImageParamsForApi'
-import CopyIcon from '../../components/icons/CopyIcon'
-import EyeIcon from '../../components/icons/EyeIcon'
+import ImageParamsForApi from 'app/_data-models/ImageParamsForApi'
 import { Button } from 'app/_components/Button'
-import { showSuccessToast } from 'utils/notificationUtils'
+import { showSuccessToast } from 'app/_utils/notificationUtils'
+import { IconCopy, IconEye } from '@tabler/icons-react'
 
 const DisplayRawData = ({ data }: { data: any }) => {
   const [expandJson, setExpandJson] = useState(false)
@@ -114,12 +113,12 @@ const DisplayRawData = ({ data }: { data: any }) => {
                 }
               }}
             >
-              <EyeIcon />
+              <IconEye />
               {display === 'apiParams' && <>View raw input</>}
               {display === 'rawInput' && <>View request params</>}
             </Button>
             <Button title="Copy data" onClick={() => handleCopyData()}>
-              <CopyIcon />
+              <IconCopy />
               Copy JSON
             </Button>
           </div>

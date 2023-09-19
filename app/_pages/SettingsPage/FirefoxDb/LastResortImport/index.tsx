@@ -1,9 +1,9 @@
 import FlexRow from 'app/_components/FlexRow'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
-import SpinnerV2 from 'components/Spinner'
-import { UploadButton } from 'components/UploadButton'
+import SpinnerV2 from 'app/_components/Spinner'
 import { useState } from 'react'
-import { addCompletedJobToDexie, getImageDetails } from 'utils/db'
+import { addCompletedJobToDexie, getImageDetails } from 'app/_utils/db'
+import { UploadButton } from 'app/_modules/UploadButton'
 
 // @ts-ignore
 function readFileAsText(file) {

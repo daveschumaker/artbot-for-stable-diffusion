@@ -3,7 +3,7 @@ import NumericInputSlider from 'app/_modules/AdvancedOptionsPanel/NumericInputSl
 import SelectSampler from 'app/_modules/AdvancedOptionsPanel/SelectSampler'
 import SelectModel from 'app/_modules/AdvancedOptionsPanel/SelectModel'
 // import { useStore } from 'statery'
-// import { userInfoStore } from 'store/userStore'
+// import { userInfoStore } from 'app/_store/userStore'
 import PromptInput from 'app/_pages/CreatePage/PromptInput'
 import FlexibleRow from 'app/_components/FlexibleRow'
 import FlexibleUnit from 'app/_components/FlexibleUnit'

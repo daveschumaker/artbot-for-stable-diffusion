@@ -1,15 +1,15 @@
 import clsx from 'clsx'
 import { useState } from 'react'
 import { useStore } from 'statery'
-import fetchMyWorkers from '../../../../api/fetchMyWorkers'
-import AppSettings from '../../../../models/AppSettings'
-import { appInfoStore } from '../../../../store/appStore'
-import { userInfoStore } from '../../../../store/userStore'
-import { clientHeader, getApiHostServer } from '../../../../utils/appUtils'
-import { sleep } from '../../../../utils/sleep'
+import fetchMyWorkers from 'app/_api/fetchMyWorkers'
+import AppSettings from 'app/_data-models/AppSettings'
+import { appInfoStore } from 'app/_store/appStore'
+import { userInfoStore } from 'app/_store/userStore'
+import { clientHeader, getApiHostServer } from 'app/_utils/appUtils'
+import { sleep } from 'app/_utils/sleep'
 import styles from './hordeDropdown.module.css'
 import { IconPlayerPause, IconPlayerPlay, IconPoint } from '@tabler/icons-react'
-import SpinnerV2 from 'components/Spinner'
+import SpinnerV2 from 'app/_components/Spinner'
 
 const HordeDropdown = () => {
   const appStore = useStore(appInfoStore)

@@ -4,26 +4,26 @@
 import React, { useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { Button } from 'app/_components/Button'
-import Input from 'components/UI/Input'
+import Input from 'app/_components/Input'
 import PageTitle from 'app/_components/PageTitle'
-import Dropzone from 'components/Dropzone'
-import useComponentState from 'hooks/useComponentState'
-import { requestIterrogate } from 'api/requestInterrogate'
-import SpinnerV2 from 'components/Spinner'
-import { checkInterrogate } from 'api/checkInterrogate'
+
+import useComponentState from 'app/_hooks/useComponentState'
+import { requestIterrogate } from 'app/_api/requestInterrogate'
+import SpinnerV2 from 'app/_components/Spinner'
+import { checkInterrogate } from 'app/_api/checkInterrogate'
 import Checkbox from 'app/_components/Checkbox'
 import Linker from 'app/_components/Linker'
-import { useEffectOnce } from 'hooks/useEffectOnce'
-import AlertTriangleIcon from 'components/icons/AlertTriangle'
-import AppSettings from 'models/AppSettings'
+import { useEffectOnce } from 'app/_hooks/useEffectOnce'
+
+import AppSettings from 'app/_data-models/AppSettings'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { getImageForInterrogation } from 'utils/interrogateUtils'
-import PlusIcon from 'components/icons/PlusIcon'
-import RecycleIcon from 'components/icons/RecycleIcon'
-import { clientHeader } from 'utils/appUtils'
+import { getImageForInterrogation } from 'app/_utils/interrogateUtils'
+import { clientHeader } from 'app/_utils/appUtils'
 import FlexRow from 'app/_components/FlexRow'
-import TextButton from 'components/UI/TextButton'
 import { basePath } from 'BASE_PATH'
+import { IconAlertTriangle, IconPlus, IconRecycle } from '@tabler/icons-react'
+import Dropzone from 'app/_modules/Dropzone'
+import TextButton from 'app/_components/TextButton'
 
 const ContentWrapper = styled.div`
   padding-top: 16px;
@@ -432,7 +432,7 @@ const InterrogatePage = () => {
       {componentState.workers === 0 ? (
         <SubSectionTitle>
           <div className="flex flex-row items-center text-amber-500">
-            <AlertTriangleIcon size={32} /> Warning: There are currently no
+            <IconAlertTriangle size={32} /> Warning: There are currently no
             workers available to process interrogation requests.
           </div>
         </SubSectionTitle>
@@ -492,7 +492,7 @@ const InterrogatePage = () => {
                 router.replace('/interrogate')
               }}
             >
-              <PlusIcon />
+              <IconPlus />
               New
             </Button>
             <Button
@@ -502,7 +502,7 @@ const InterrogatePage = () => {
                 })
               }}
             >
-              <RecycleIcon /> Retry?
+              <IconRecycle /> Retry?
             </Button>
           </div>
         </Section>

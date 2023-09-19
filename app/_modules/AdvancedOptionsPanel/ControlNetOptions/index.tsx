@@ -1,6 +1,6 @@
 import Select from 'app/_components/Select'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
-import DefaultPromptInput from 'models/DefaultPromptInput'
+import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
 import { CONTROL_TYPE_ARRAY } from '../../../../_constants'
 import FlexRow from 'app/_components/FlexRow'
 import { Button } from 'app/_components/Button'

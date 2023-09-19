@@ -8,7 +8,7 @@
  * where AI Horde API might be slow to respond or is down.
  */
 
-import { clientHeader } from 'utils/appUtils'
+import { clientHeader } from 'app/_utils/appUtils'
 
 let perf = {}
 

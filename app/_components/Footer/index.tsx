@@ -2,7 +2,7 @@
 
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
-import { isInstalledPwa } from '../../../utils/appUtils'
+import { isInstalledPwa } from 'app/_utils/appUtils'
 import Linker from 'app/_components/Linker'
 import styles from './component.module.css'
 

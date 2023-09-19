@@ -1,6 +1,6 @@
 import FlexRow from 'app/_components/FlexRow'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
-import { GetSetPromptInput } from 'types/artbot'
+import { GetSetPromptInput } from '_types/artbot'
 import NumberInput from 'app/_components/NumberInput'
 import { MAX_IMAGES_PER_JOB } from '_constants'
 import { useCallback, useState } from 'react'

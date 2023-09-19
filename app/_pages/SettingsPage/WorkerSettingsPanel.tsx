@@ -1,11 +1,11 @@
-import SpinnerV2 from 'components/Spinner'
+import SpinnerV2 from 'app/_components/Spinner'
 import Linker from 'app/_components/Linker'
 import PageTitle from 'app/_components/PageTitle'
 import Section from 'app/_components/Section'
-import WorkerInfo from 'components/WorkerInfo'
 import { useStore } from 'statery'
-import { userInfoStore } from 'store/userStore'
+import { userInfoStore } from 'app/_store/userStore'
 import { IconExternalLink } from '@tabler/icons-react'
+import WorkerInfo from 'app/_modules/WorkerInfo'
 
 const WorkerSettingsPanel = ({ componentState, setComponentState }: any) => {
   const userStore = useStore(userInfoStore)

@@ -20,7 +20,9 @@ export default function Checkbox({ label, checked, onChange }: CheckboxProps) {
         onCheckedChange={onChange}
         style={{
           backgroundColor: 'rgb(1, 171, 171)',
+          borderRadius: '4px',
           height: '25px',
+          marginRight: '4px',
           width: '25px',
           minWidth: '25px'
         }}

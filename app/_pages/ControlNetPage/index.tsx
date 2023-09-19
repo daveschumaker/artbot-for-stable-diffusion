@@ -9,29 +9,31 @@ import { Button } from 'app/_components/Button'
 import PageTitle from 'app/_components/PageTitle'
 import Section from 'app/_components/Section'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
-import DefaultPromptInput from 'models/DefaultPromptInput'
+import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
 import {
   clearBase64FromDraw,
   getBase64FromDraw,
   setI2iUploaded
-} from 'store/canvasStore'
-import { userInfoStore } from 'store/userStore'
-import { countImagesToGenerate, nearestWholeMultiple } from 'utils/imageUtils'
-import { SourceProcessing } from 'utils/promptUtils'
-import TrashIcon from 'components/icons/TrashIcon'
+} from 'app/_store/canvasStore'
+import { userInfoStore } from 'app/_store/userStore'
+import {
+  countImagesToGenerate,
+  nearestWholeMultiple
+} from 'app/_utils/imageUtils'
+import { SourceProcessing } from 'app/_utils/promptUtils'
 import ActionPanel from 'app/_pages/CreatePage/ActionPanel'
-import { createImageJob } from 'utils/imageCache'
-import CreateImageRequest from 'models/CreateImageRequest'
+import { createImageJob } from 'app/_utils/imageCache'
+import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Head from 'next/head'
-import { useEffectOnce } from 'hooks/useEffectOnce'
-import AppSettings from 'models/AppSettings'
-import { getInputCache } from 'store/inputCache'
-import { kudosCostV2 } from 'utils/kudosCost'
+import { useEffectOnce } from 'app/_hooks/useEffectOnce'
+import AppSettings from 'app/_data-models/AppSettings'
+import { getInputCache } from 'app/_store/inputCache'
+import { kudosCostV2 } from 'app/_utils/kudosCost'
 import ControlNetOptions from 'app/_modules/AdvancedOptionsPanel/ControlNetOptions'
 import UpscalerOptions from 'app/_modules/AdvancedOptionsPanel/UpscalerOptions'
-import useComponentState from 'hooks/useComponentState'
-import { trackEvent } from 'api/telemetry'
+import useComponentState from 'app/_hooks/useComponentState'
+import { trackEvent } from 'app/_api/telemetry'
 import PromptInput from '../CreatePage/PromptInput'
 import FlexibleRow from 'app/_components/FlexibleRow'
 import FlexibleUnit from 'app/_components/FlexibleUnit'
@@ -45,9 +47,10 @@ import Guidance from 'app/_modules/AdvancedOptionsPanel/Guidance'
 import Denoise from 'app/_modules/AdvancedOptionsPanel/Denoise'
 import ClipSkip from 'app/_modules/AdvancedOptionsPanel/ClipSkip'
 import { baseHost, basePath } from 'BASE_PATH'
-import { showSuccessToast } from 'utils/notificationUtils'
+import { showSuccessToast } from 'app/_utils/notificationUtils'
 import FlexRow from 'app/_components/FlexRow'
 import FormErrorMessage from '../CreatePage/ActionPanel/FormErrorMessage'
+import { IconTrash } from '@tabler/icons-react'
 
 // Kind of a hacky way to persist output of image over the course of a session.
 let cachedImageDetails = {}
@@ -298,7 +301,7 @@ const ControlNetPage = () => {
                     clearBase64FromDraw()
                   }}
                 >
-                  <TrashIcon />
+                  <IconTrash />
                   Remove image?
                 </Button>
               </div>

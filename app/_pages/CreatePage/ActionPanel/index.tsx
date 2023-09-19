@@ -4,13 +4,13 @@ import { IconCalculator, IconSquarePlus, IconTrash } from '@tabler/icons-react'
 
 import { Button } from 'app/_components/Button'
 import Linker from 'app/_components/Linker'
-import Errors from 'utils/errors'
+import Errors from 'app/_utils/errors'
 import { useState } from 'react'
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import DryRunCalculator from '../PromptInput/DryRunCalculator'
-import DefaultPromptInput from 'models/DefaultPromptInput'
+import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
 import DeleteConfirmModal from 'app/_modules/DeleteConfirmModal'
-import useLockedBody from 'hooks/useLockedBody'
+import useLockedBody from 'app/_hooks/useLockedBody'
 
 interface Props {
   errors: { [key: string]: boolean }
@@ -81,9 +81,19 @@ const ActionPanel = ({
         </DeleteConfirmModal>
       )}
 
-      <div className="flex flex-col items-start justify-end w-full gap-2 mt-2 mb-4 md:flex-row">
+      <div
+        className="CreateImageActionPanel w-full gap-2 mt-2 mb-4 md:flex-row"
+        style={{
+          marginBottom: '8px'
+        }}
+      >
         <div className="flex flex-col justify-start w-full gap-2 md:w-1/2">
-          <div className="flex flex-row justify-end gap-2 sm:mt-0">
+          <div
+            className="flex flex-row gap-2 sm:mt-0"
+            style={{
+              justifyContent: 'flex-end'
+            }}
+          >
             <div
               style={{
                 columnGap: '4px',
@@ -136,21 +146,42 @@ const ActionPanel = ({
               )}
             </div>
           </div>
-          <div className="flex flex-row justify-end">
+          <div
+            className="flex flex-row"
+            style={{
+              fontSize: '12px',
+              justifyContent: 'flex-end'
+            }}
+          >
             <div className="flex flex-col justify-end">
-              <div className="flex flex-row justify-end gap-2 text-xs">
+              <div
+                className="flex flex-row gap-2 text-xs"
+                style={{
+                  justifyContent: 'flex-end'
+                }}
+              >
                 Images to request: <strong>{' ' + totalImagesRequested}</strong>
               </div>
               {loggedIn && (
                 <>
-                  <div className="flex flex-row justify-end gap-2 text-xs">
+                  <div
+                    className="flex flex-row gap-2 text-xs"
+                    style={{
+                      justifyContent: 'flex-end'
+                    }}
+                  >
                     {' '}
                     Generation cost:{' '}
                     <Linker href="/faq#kudos" passHref>
                       <>{totalKudosCost} kudos</>
                     </Linker>
                   </div>
-                  <div className="flex flex-row justify-end gap-2 text-xs">
+                  <div
+                    className="flex flex-rowgap-2 text-xs"
+                    style={{
+                      justifyContent: 'flex-end'
+                    }}
+                  >
                     Per image:{' '}
                     <Linker href="/faq#kudos" passHref>
                       <>{kudosPerImage} kudos</>

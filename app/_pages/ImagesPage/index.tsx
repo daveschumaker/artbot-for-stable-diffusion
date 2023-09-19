@@ -12,7 +12,6 @@ import styled from 'styled-components'
 import useGalleryImageModal from 'app/_pages/ImagesPage/useGalleryImageModal'
 
 import PageTitle from 'app/_components/PageTitle'
-import Spinner from 'components/Spinner'
 import {
   bulkDeleteImages,
   countCompletedJobs,
@@ -20,36 +19,39 @@ import {
   fetchCompletedJobs,
   filterCompletedJobs,
   imageCount
-} from 'utils/db'
-import ImageSquare from 'components/ImageSquare'
-import { trackEvent } from 'api/telemetry'
+} from 'app/_utils/db'
+import { trackEvent } from 'app/_api/telemetry'
 import { Button } from 'app/_components/Button'
-import { useWindowSize } from 'hooks/useWindowSize'
-import DotsVerticalIcon from 'components/icons/DotsVerticalIcon'
-import CircleCheckIcon from 'components/icons/CircleCheckIcon'
-import TextButton from 'components/UI/TextButton'
-import ConfirmationModal from 'components/ConfirmationModal'
+import { useWindowSize } from 'app/_hooks/useWindowSize'
 import MenuButton from 'app/_components/MenuButton'
-import FilterIcon from 'components/icons/FilterIcon'
-import HeartIcon from 'components/icons/HeartIcon'
-import useComponentState from 'hooks/useComponentState'
-import { downloadImages } from 'utils/imageUtils'
-import { useEffectOnce } from 'hooks/useEffectOnce'
-import MasonryLayout from 'components/MasonryLayout'
-import Modal from 'components/Modal'
-import DropDownMenu from 'components/UI/DropDownMenu'
-import DropDownMenuItem from 'components/UI/DropDownMenuItem'
-import AppSettings from 'models/AppSettings'
+import useComponentState from 'app/_hooks/useComponentState'
+import { downloadImages } from 'app/_utils/imageUtils'
+import { useEffectOnce } from 'app/_hooks/useEffectOnce'
+import AppSettings from 'app/_data-models/AppSettings'
 import AdContainer from 'app/_components/AdContainer'
-import { setFilteredItemsArray } from 'store/filteredImagesCache'
-import FloatingActionButton from 'components/UI/FloatingActionButton'
-import TrashIcon from 'components/icons/TrashIcon'
+import { setFilteredItemsArray } from 'app/_store/filteredImagesCache'
 import { useStore } from 'statery'
-import { appInfoStore, setImageDetailsModalOpen } from 'store/appStore'
+import { appInfoStore, setImageDetailsModalOpen } from 'app/_store/appStore'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import isMobile from 'is-mobile'
-import { parseQueryString } from 'utils/appUtils'
+import { parseQueryString } from 'app/_utils/appUtils'
 import { useModal } from '@ebay/nice-modal-react'
+import {
+  IconCircleCheck,
+  IconDotsVertical,
+  IconFilter,
+  IconHeart,
+  IconTrash
+} from '@tabler/icons-react'
+import ConfirmationModal from 'app/_modules/ConfirmationModal'
+import FloatingActionButton from 'app/_components/FloatingActionButton/floatingActionButton'
+import Modal from 'app/_modules/Modal'
+import SpinnerV2 from 'app/_components/Spinner'
+import DropDownMenu from 'app/_components/DropDownMenu/dropDownMenu'
+import DropDownMenuItem from 'app/_components/DropDownMenuItem'
+import TextButton from 'app/_components/TextButton'
+import MasonryLayout from 'app/_modules/MasonryLayout'
+import ImageSquare from 'app/_modules/ImageSquare'
 
 const MenuSeparator = styled.div`
   width: 100%;
@@ -71,13 +73,13 @@ const ImageOverlay = styled.div`
   opacity: 0.6;
 `
 
-const SelectCheck = styled(CircleCheckIcon)`
+const SelectCheck = styled(IconCircleCheck)`
   position: absolute;
   bottom: 4px;
   right: 4px;
 `
 
-const StyledHeartIcon = styled(HeartIcon)`
+const StyledHeartIcon = styled(IconHeart)`
   position: absolute;
   top: 4px;
   right: 4px;
@@ -609,7 +611,7 @@ const ImagesPage = () => {
             }
           }}
         >
-          <TrashIcon />
+          <IconTrash />
           DELETE
           {componentState.deleteSelection.length > 0
             ? ` (${componentState.deleteSelection.length})?`
@@ -625,7 +627,7 @@ const ImagesPage = () => {
               {AppSettings.get('imageDownloadFormat') || 'JPG'}s. Please wait.
             </div>
             <div className="flex flex-row justify-center w-full">
-              <Spinner />
+              <SpinnerV2 />
             </div>
           </>
         </Modal>
@@ -654,7 +656,7 @@ const ImagesPage = () => {
               }
             }}
           >
-            <CircleCheckIcon size={24} />
+            <IconCircleCheck size={24} />
           </MenuButton>
           <div className="relative">
             <MenuButton
@@ -662,7 +664,7 @@ const ImagesPage = () => {
               title="Filter images"
               onClick={handleFilterButtonClick}
             >
-              <FilterIcon />
+              <IconFilter />
             </MenuButton>
             {componentState.showFilterMenu && (
               <DropDownMenu
@@ -833,7 +835,7 @@ const ImagesPage = () => {
               }
             }}
           >
-            <DotsVerticalIcon size={24} />
+            <IconDotsVertical size={24} />
           </MenuButton>
           {componentState.showLayoutMenu && (
             <DropDownMenu
@@ -1041,7 +1043,7 @@ const ImagesPage = () => {
 
       {componentState.isLoading && (
         <div style={{ height: '100vh' }}>
-          <Spinner />
+          <SpinnerV2 />
         </div>
       )}
       <div className={defaultStyle}>
@@ -1123,7 +1125,6 @@ const ImagesPage = () => {
                               fill="#14B8A6"
                               width={1}
                               size={32}
-                              shadow
                             />
                           )}
                         </LinkEl>
@@ -1197,7 +1198,6 @@ const ImagesPage = () => {
                               fill="#14B8A6"
                               width={1}
                               size={32}
-                              shadow
                             />
                           )}
                         </LinkEl>

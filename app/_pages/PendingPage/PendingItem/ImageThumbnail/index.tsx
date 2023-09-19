@@ -1,14 +1,13 @@
-import SpinnerV2 from 'components/Spinner'
+import SpinnerV2 from 'app/_components/Spinner'
 import styles from './component.module.css'
-import AlertTriangleIcon from 'components/icons/AlertTriangle'
-import { JobStatus } from 'types'
-import ImageSquare from 'components/ImageSquare'
-import PhotoUpIcon from 'components/icons/PhotoUpIcon'
+import { JobStatus } from '_types'
 import { useCallback, useEffect, useState } from 'react'
-import { getJobImagesFromDexie } from 'utils/db'
+import { getJobImagesFromDexie } from 'app/_utils/db'
 import clsx from 'clsx'
 import AbTestModal from '../AbTestModal'
 import { useModal } from '@ebay/nice-modal-react'
+import ImageSquare from 'app/_modules/ImageSquare'
+import { IconAlertTriangle, IconPhotoUp } from '@tabler/icons-react'
 
 export default function ImageThumbnail({
   jobDetails,
@@ -53,6 +52,7 @@ export default function ImageThumbnail({
     }
 
     onImageClick(jobId)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRated, jobId, onImageClick, ratingSubmitted, secondaryImage])
 
   useEffect(() => {
@@ -80,10 +80,10 @@ export default function ImageThumbnail({
           </div>
         )}
         {jobDetails.jobStatus === JobStatus.Waiting && (
-          <PhotoUpIcon size={48} />
+          <IconPhotoUp size={48} />
         )}
         {jobDetails.jobStatus === JobStatus.Error && (
-          <AlertTriangleIcon size={48} stroke="rgb(234 179 8)" />
+          <IconAlertTriangle size={48} stroke="rgb(234 179 8)" />
         )}
       </div>
       {!isRated && !ratingSubmitted && secondaryImage && (

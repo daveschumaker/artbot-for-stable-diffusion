@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import AppSettings from 'models/AppSettings'
+import AppSettings from 'app/_data-models/AppSettings'
 import InputSwitchV2 from '../InputSwitchV2'
 
 const KEY = 'allowNsfwImages'

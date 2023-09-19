@@ -1,8 +1,8 @@
-import PhotoUpIcon from 'components/icons/PhotoUpIcon'
-import ImageSquare from 'components/ImageSquare'
-import CreateImageRequest from 'models/CreateImageRequest'
+import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 import { useCallback, useEffect, useState } from 'react'
-import { getParentJobDetails } from 'utils/db'
+import { getParentJobDetails } from 'app/_utils/db'
+import { IconPhotoUp } from '@tabler/icons-react'
+import ImageSquare from 'app/_modules/ImageSquare'
 
 export default function ParentImage({
   jobId = '',
@@ -43,7 +43,7 @@ export default function ParentImage({
   return (
     <div className="flex flex-col gap-2">
       <div className="text-sm font-bold flex flex-row gap-2 items-center mb-[4px]">
-        <PhotoUpIcon />
+        <IconPhotoUp />
         Parent image
       </div>
       <div>

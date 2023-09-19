@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { getImageFromUrl } from 'utils/imageUtils'
+import { getImageFromUrl } from 'app/_utils/imageUtils'
 import { Button } from 'app/_components/Button'
 import FlexRow from 'app/_components/FlexRow'
-import Input from 'components/UI/Input'
+import Input from 'app/_components/Input'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import Dropzone from 'app/_modules/Dropzone'
 

@@ -1,7 +1,7 @@
 'use client'
 
 import { IconMenuDeep } from '@tabler/icons-react'
-import { setShowAppMenu } from 'store/appStore'
+import { setShowAppMenu } from 'app/_store/appStore'
 import styles from './menuButton.module.css'
 
 export default function MenuButton() {

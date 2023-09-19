@@ -6,7 +6,7 @@
  * of browser window.
  */
 
-import { useWindowSize } from 'hooks/useWindowSize'
+import { useWindowSize } from 'app/_hooks/useWindowSize'
 import PendingPanel from '.'
 
 export default function PendingPanelView() {

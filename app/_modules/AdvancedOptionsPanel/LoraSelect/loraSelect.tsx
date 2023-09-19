@@ -6,11 +6,11 @@ import { Button } from 'app/_components/Button'
 import { IconExternalLink, IconPlus, IconTrash } from '@tabler/icons-react'
 import ChooseLoraModal from './ChooseLoraModal'
 import NumberInput from 'app/_components/NumberInput'
-import Slider from 'components/UI/Slider'
 import Linker from 'app/_components/Linker'
 import FlexRow from 'app/_components/FlexRow'
-import { modelStore } from 'store/modelStore'
+import { modelStore } from 'app/_store/modelStore'
 import MaxWidth from 'app/_components/MaxWidth'
+import Slider from 'app/_components/Slider'
 
 const LoraSelect = ({ input, setInput, setErrors }: any) => {
   const [showModal, setShowModal] = useState(false)

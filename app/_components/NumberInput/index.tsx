@@ -1,6 +1,6 @@
 import { IconMinus, IconPlus, IconPlusMinus } from '@tabler/icons-react'
 import clsx from 'clsx'
-import Input from 'components/UI/Input'
+import Input from 'app/_components/Input'
 import styles from './component.module.css'
 import { Button } from 'app/_components/Button'
 import FlexRow from '../FlexRow'

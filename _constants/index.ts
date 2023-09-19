@@ -1,5 +1,5 @@
-import AppSettings from 'models/AppSettings'
-import { IOrientation } from '../types'
+import AppSettings from 'app/_data-models/AppSettings'
+import { IOrientation } from '_types'
 
 export const ANON_API_KEY = '0000000000'
 export const HORDE_PROD = 'https://aihorde.net'

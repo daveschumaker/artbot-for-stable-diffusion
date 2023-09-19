@@ -1,12 +1,12 @@
 import { useCallback } from 'react'
 import NumericInputSlider from '../NumericInputSlider'
-import { GetSetPromptInput } from 'types/artbot'
+import { GetSetPromptInput } from '_types/artbot'
 import Section from 'app/_components/Section'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import Checkbox from 'app/_components/Checkbox'
 import FlexCol from 'app/_components/FlexCol'
-import PromptInputSettings from 'models/PromptInputSettings'
+import PromptInputSettings from 'app/_data-models/PromptInputSettings'
 import TextTooltipRow from 'app/_components/TextTooltipRow'
 
 const PostProcessors = ({ input, setInput }: GetSetPromptInput) => {
@@ -36,7 +36,7 @@ const PostProcessors = ({ input, setInput }: GetSetPromptInput) => {
 
   return (
     <Section style={{ paddingTop: 0 }}>
-      <SubSectionTitle>
+      <SubSectionTitle pb={8}>
         <TextTooltipRow>
           Post-processing
           <TooltipComponent tooltipId={'post-processing-tooltip'}>

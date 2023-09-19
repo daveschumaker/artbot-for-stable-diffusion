@@ -2,32 +2,34 @@ import { memo } from 'react'
 import { useRouter } from 'next/navigation'
 
 import ProgressBar from './ProgressBar'
-import { setNewImageReady, setShowImageReadyToast } from 'store/appStore'
+import { setNewImageReady, setShowImageReadyToast } from 'app/_store/appStore'
 import { Button } from 'app/_components/Button'
-import TrashIcon from 'components/icons/TrashIcon'
 import Panel from 'app/_components/Panel'
-import { trackEvent, trackGaEvent } from 'api/telemetry'
-import AlertTriangleIcon from 'components/icons/AlertTriangle'
-import { JobStatus } from 'types'
-import CloseIcon from 'components/icons/CloseIcon'
-import { deletePendingJobFromApi } from 'api/deletePendingJobFromApi'
-import { createImageJob } from 'utils/imageCache'
-import { savePrompt } from 'utils/promptUtils'
-import CreateImageRequest from 'models/CreateImageRequest'
+import { trackEvent, trackGaEvent } from 'app/_api/telemetry'
+import { JobStatus } from '_types'
+import { deletePendingJobFromApi } from 'app/_api/deletePendingJobFromApi'
+import { createImageJob } from 'app/_utils/imageCache'
+import { savePrompt } from 'app/_utils/promptUtils'
+import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 import Linker from 'app/_components/Linker'
 import { useStore } from 'statery'
-import { modelStore } from 'store/modelStore'
+import { modelStore } from 'app/_store/modelStore'
 import { MODEL_LIMITED_BY_WORKERS, RATE_IMAGE_CUTOFF_SEC } from '_constants'
 import DisplayRawData from 'app/_components/DisplayRawData'
-import CopyIcon from 'components/icons/CopyIcon'
-import { copyEditPrompt } from 'controllers/imageDetailsCommon'
-import { deletePendingJob } from 'controllers/pendingJobsCache'
+import { copyEditPrompt } from 'app/_controllers/imageDetailsCommon'
+import { deletePendingJob } from 'app/_controllers/pendingJobsCache'
 import styles from './pendingItem.module.css'
 import clsx from 'clsx'
 import ImageThumbnail from './ImageThumbnail'
 import TooltipComponent from 'app/_components/TooltipComponent'
-import { IconInfoHexagon } from '@tabler/icons-react'
-import { uuidv4 } from 'utils/appUtils'
+import {
+  IconAlertTriangle,
+  IconCopy,
+  IconInfoHexagon,
+  IconTrash,
+  IconX
+} from '@tabler/icons-react'
+import { uuidv4 } from 'app/_utils/appUtils'
 
 const RATINGS_ENABLED = false
 
@@ -165,7 +167,7 @@ const PendingItem = memo(
         >
           {processDoneOrError ? (
             <div className={styles.CloseButton} onClick={handleRemovePanel}>
-              <CloseIcon width={2} stroke="white" />
+              <IconX width={2} stroke="white" />
             </div>
           ) : null}
           <div className={styles.InfoPanel}>
@@ -217,7 +219,7 @@ const PendingItem = memo(
                   <>
                     <div>
                       <div className={styles.ModelWarning}>
-                        <AlertTriangleIcon size={32} /> This model has limited
+                        <IconAlertTriangle size={32} /> This model has limited
                         availability.
                         <br />
                         Images may take a long time to generate.
@@ -348,7 +350,7 @@ const PendingItem = memo(
                     // @ts-ignore
                     onClick={() => handleCopyPromptClick(jobDetails)}
                   >
-                    <CopyIcon />
+                    <IconCopy />
                     <span className="hidden md:inline-block">Copy</span>
                   </Button>
                   <Button
@@ -386,11 +388,11 @@ const PendingItem = memo(
                     // @ts-ignore
                     onClick={() => handleCopyPromptClick(jobDetails)}
                   >
-                    <CopyIcon />
+                    <IconCopy />
                     <span className="hidden md:inline-block">Copy</span>
                   </Button>
                   <Button theme="secondary" onClick={handleDeleteJob}>
-                    <TrashIcon />
+                    <IconTrash />
                     <div className={styles.MobileHideText}>
                       {jobDetails.jobStatus === JobStatus.Error
                         ? 'Remove'

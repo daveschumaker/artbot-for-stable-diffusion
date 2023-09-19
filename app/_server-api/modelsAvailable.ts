@@ -9,7 +9,7 @@
  */
 
 import fetch from 'node-fetch'
-import { clientHeader } from 'utils/appUtils'
+import { clientHeader } from 'app/_utils/appUtils'
 
 // Temporarily import a static version of available models
 // in order to get page up and running while API loads.

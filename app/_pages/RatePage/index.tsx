@@ -5,22 +5,22 @@ import Head from 'next/head'
 import { useStore } from 'statery'
 import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { trackEvent } from 'api/telemetry'
-import ExternalLinkIcon from 'components/icons/ExternalLinkIcon'
-import SpinnerV2 from 'components/Spinner'
-import StarRating from 'components/StarRating/starRating'
-import Linker from 'app/_components/Linker'
+import { trackEvent } from 'app/_api/telemetry'
 import PageTitle from 'app/_components/PageTitle'
 import { ANON_API_KEY, RATING_API, RATING_QUALITY_MAP } from '_constants'
-import useComponentState from 'hooks/useComponentState'
-import { useEffectOnce } from 'hooks/useEffectOnce'
-import AppSettings from 'models/AppSettings'
-import { userInfoStore } from 'store/userStore'
-import { clientHeader } from 'utils/appUtils'
-import { sleep } from 'utils/sleep'
-import { NewRating } from 'types'
+import useComponentState from 'app/_hooks/useComponentState'
+import { useEffectOnce } from 'app/_hooks/useEffectOnce'
+import AppSettings from 'app/_data-models/AppSettings'
+import { userInfoStore } from 'app/_store/userStore'
+import { clientHeader } from 'app/_utils/appUtils'
+import { sleep } from 'app/_utils/sleep'
+import { NewRating } from '_types'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import { baseHost, basePath } from 'BASE_PATH'
+import Linker from 'app/_components/Linker'
+import { IconExternalLink } from '@tabler/icons-react'
+import SpinnerV2 from 'app/_components/Spinner'
+import StarRating from 'app/_modules/StarRating'
 
 const MAX_ERROR_COUNT = 30
 
@@ -570,7 +570,7 @@ const RatePage = () => {
             >
               <LinkDetails className="flex flex-row gap-2 items-center">
                 Create one here
-                <ExternalLinkIcon />
+                <IconExternalLink />
               </LinkDetails>
             </Linker>
           </SubTitle>

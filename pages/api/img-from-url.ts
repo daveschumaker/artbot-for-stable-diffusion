@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import sizeOf from 'buffer-image-size'
 import sharp from 'sharp'
-import ufs from '../../server/utils/fileSize'
+import ufs from 'app/_utils/server_fileSize'
 
 const MAX_FILESIZE = 10 * 1000000
 

@@ -2,25 +2,23 @@
 import React, { useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
-import { trackEvent } from 'api/telemetry'
+import { trackEvent } from 'app/_api/telemetry'
 import Panel from 'app/_components/Panel'
-import TextButton from 'components/UI/TextButton'
-import useComponentState from 'hooks/useComponentState'
-import { useEffectOnce } from 'hooks/useEffectOnce'
-import { modelStore } from 'store/modelStore'
-import SpinnerV2 from 'components/Spinner'
-import LinkIcon from 'components/icons/LinkIcon'
+import useComponentState from 'app/_hooks/useComponentState'
+import { useEffectOnce } from 'app/_hooks/useEffectOnce'
+import { modelStore } from 'app/_store/modelStore'
+import SpinnerV2 from 'app/_components/Spinner'
 import styled from 'styled-components'
 import Linker from 'app/_components/Linker'
 import MenuButton from 'app/_components/MenuButton'
-import HeartIcon from 'components/icons/HeartIcon'
-import AppSettings from 'models/AppSettings'
+import AppSettings from 'app/_data-models/AppSettings'
 import { useStore } from 'statery'
-import ExternalLinkIcon from 'components/icons/ExternalLinkIcon'
 import { baseHost, basePath } from 'BASE_PATH'
-import { showSuccessToast } from 'utils/notificationUtils'
+import { showSuccessToast } from 'app/_utils/notificationUtils'
+import { IconExternalLink, IconHeart, IconLink } from '@tabler/icons-react'
+import TextButton from 'app/_components/TextButton'
 
-const StyledLinkIcon = styled(LinkIcon)`
+const StyledLinkIcon = styled(IconLink)`
   cursor: pointer;
 `
 
@@ -190,7 +188,7 @@ const ModelDetailsList = ({ availableModels, modelDetails }: any) => {
                   title="Save model as favorite"
                   onClick={() => handleFavoriteClick(name)}
                 >
-                  <HeartIcon />
+                  <IconHeart />
                 </MenuButton>
               </div>
             </div>
@@ -203,7 +201,7 @@ const ModelDetailsList = ({ availableModels, modelDetails }: any) => {
                 >
                   <span className="flex flex-row gap-2 items-center">
                     view homepage
-                    <ExternalLinkIcon />
+                    <IconExternalLink />
                   </span>
                 </Linker>{' '}
               </div>

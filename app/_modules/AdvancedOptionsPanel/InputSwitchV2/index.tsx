@@ -4,7 +4,7 @@ import Section from 'app/_components/Section'
 import TextTooltipRow from 'app/_components/TextTooltipRow'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import FlexRow from 'app/_components/FlexRow'
-import { generateRandomString } from 'utils/appUtils'
+import { generateRandomString } from 'app/_utils/appUtils'
 
 interface Props {
   checked: boolean

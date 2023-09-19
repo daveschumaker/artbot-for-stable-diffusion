@@ -1,4 +1,4 @@
-import { SourceProcessing } from '../../../../utils/promptUtils'
+import { SourceProcessing } from 'app/_utils/promptUtils'
 import { samplerOptions } from './samplers.controller'
 
 describe('samplers.controller.ts', () => {

@@ -1,8 +1,8 @@
 import Checkbox from 'app/_components/Checkbox'
 import TextTooltipRow from 'app/_components/TextTooltipRow'
 import TooltipComponent from 'app/_components/TooltipComponent'
-import DefaultPromptInput from 'models/DefaultPromptInput'
-import PromptInputSettings from 'models/PromptInputSettings'
+import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
+import PromptInputSettings from 'app/_data-models/PromptInputSettings'
 import { useCallback } from 'react'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 

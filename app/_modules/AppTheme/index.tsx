@@ -1,6 +1,6 @@
 'use client'
 
-import AppSettings from 'models/AppSettings'
+import AppSettings from 'app/_data-models/AppSettings'
 import { useEffect } from 'react'
 import { checkDarkModePreference, updateTheme } from './controller'
 

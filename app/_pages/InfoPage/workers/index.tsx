@@ -2,15 +2,15 @@
 
 import Head from 'next/head'
 import Select from 'app/_components/Select'
-import WorkerInfo from 'components/WorkerInfo'
-import Row from 'components/Row'
 import PageTitle from 'app/_components/PageTitle'
-import useComponentState from 'hooks/useComponentState'
-import { useEffectOnce } from 'hooks/useEffectOnce'
-import SpinnerV2 from 'components/Spinner'
-import InfoPageMenuButton from 'components/InfoPage/Menu'
+import useComponentState from 'app/_hooks/useComponentState'
+import { useEffectOnce } from 'app/_hooks/useEffectOnce'
+import SpinnerV2 from 'app/_components/Spinner'
 import styles from './workers.module.css'
 import { basePath } from 'BASE_PATH'
+import Row from 'app/_modules/Row'
+import InfoPageMenuButton from '../Menu'
+import WorkerInfo from 'app/_modules/WorkerInfo'
 
 const WorkerInfoPage = () => {
   const [componentState, setComponentState] = useComponentState({

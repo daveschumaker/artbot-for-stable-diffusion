@@ -1,10 +1,10 @@
-import SpinnerV2 from 'components/Spinner'
+import SpinnerV2 from 'app/_components/Spinner'
 import Section from 'app/_components/Section'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { useState } from 'react'
-import { dbImport } from 'utils/db'
+import { dbImport } from 'app/_utils/db'
 import styles from './component.module.css'
-import { showSuccessToast } from 'utils/notificationUtils'
+import { showSuccessToast } from 'app/_utils/notificationUtils'
 
 export default function ImportDatabase() {
   const [done, setDone] = useState(false)

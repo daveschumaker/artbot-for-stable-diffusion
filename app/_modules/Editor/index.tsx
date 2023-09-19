@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic'
-import { EditorProps } from 'types/props'
+import { EditorProps } from '_types/props'
 
 const DynamicEditor = dynamic(() => import('./editor'), {
   ssr: false

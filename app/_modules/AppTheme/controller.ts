@@ -1,4 +1,4 @@
-import AppSettings from 'models/AppSettings'
+import AppSettings from 'app/_data-models/AppSettings'
 
 export const checkDarkModePreference = () => {
   const theme = AppSettings.get('theme') || 'system'

@@ -1,7 +1,7 @@
 import { fabric } from 'fabric'
 
-import { getCanvasHeight, getPanelWidth } from '../../../utils/fabricUtils'
-import { getI2IString } from '../../../store/canvasStore'
+import { getCanvasHeight, getPanelWidth } from 'app/_utils/fabricUtils'
+import { getI2IString } from 'app/_store/canvasStore'
 
 let canvas: any
 let drawLayer: any

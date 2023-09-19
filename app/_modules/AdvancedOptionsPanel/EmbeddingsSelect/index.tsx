@@ -7,10 +7,10 @@ import { useCallback, useState } from 'react'
 import EmbeddingSearchModal from './EmbeddingSearchModal'
 import EmbeddingSettingsCard from './EmbeddingSettingsCard'
 import FlexCol from 'app/_components/FlexCol'
-import { AiHordeEmbedding } from 'types/artbot'
+import { AiHordeEmbedding } from '_types/artbot'
 import EmbeddingFavoritesModal from './EmbeddingFavoritesModal'
 import EmbeddingRecentsModal from './EmbeddingRecentsModal'
-import { InjectTi } from 'types/horde'
+import { InjectTi } from '_types/horde'
 
 // Search / display TI / Textual Inversion Embeddings from Civitai
 export default function EmbeddingsSelect({ input, setInput }: any) {

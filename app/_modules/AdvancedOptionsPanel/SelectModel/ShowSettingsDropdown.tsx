@@ -2,10 +2,10 @@ import FlexRow from 'app/_components/FlexRow'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import Checkbox from 'app/_components/Checkbox'
-import { useAvailableModels } from 'hooks/useAvailableModels'
-import AppSettings from 'models/AppSettings'
+import { useAvailableModels } from 'app/_hooks/useAvailableModels'
+import AppSettings from 'app/_data-models/AppSettings'
 import { useEffect, useState } from 'react'
-import { GetSetPromptInput } from 'types/artbot'
+import { GetSetPromptInput } from '_types/artbot'
 
 interface Props extends GetSetPromptInput {
   setShowSettingsDropdown: (bool: boolean) => any

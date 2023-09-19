@@ -8,10 +8,10 @@ import Section from 'app/_components/Section'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { Button } from 'app/_components/Button'
 import Linker from 'app/_components/Linker'
-import Slider from 'components/UI/Slider'
-import { AiHordeEmbedding } from 'types/artbot'
+import { AiHordeEmbedding } from '_types/artbot'
 import InputSwitchV2 from '../InputSwitchV2'
-import { InjectTi } from 'types/horde'
+import { InjectTi } from '_types/horde'
+import Slider from 'app/_components/Slider'
 
 export default function EmbeddingSettingsCard({
   embedding,

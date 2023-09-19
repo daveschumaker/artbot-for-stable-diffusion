@@ -1,12 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
-import { JobStatus } from 'types'
+import { JobStatus } from '_types'
 import styles from './pendingPanel.module.css'
 import {
   deleteCompletedImage,
   deleteImageFromDexie,
   getImageDetails
-} from 'utils/db'
-import { setImageDetailsModalOpen } from 'store/appStore'
+} from 'app/_utils/db'
+import { setImageDetailsModalOpen } from 'app/_store/appStore'
 import { useModal } from '@ebay/nice-modal-react'
 import placeholderImage from '../../../public/placeholder.gif'
 
@@ -16,8 +16,8 @@ import {
   deletePendingJob,
   getPendingJob,
   updatePendingJobV2
-} from 'controllers/pendingJobsCache'
-import { deletePendingJobFromApi } from 'api/deletePendingJobFromApi'
+} from 'app/_controllers/pendingJobsCache'
+import { deletePendingJobFromApi } from 'app/_api/deletePendingJobFromApi'
 import {
   IconAlertTriangle,
   IconHeart,
@@ -25,7 +25,7 @@ import {
   IconTrash,
   IconX
 } from '@tabler/icons-react'
-import SpinnerV2 from 'components/Spinner'
+import SpinnerV2 from 'app/_components/Spinner'
 import useSdxlModal from './useSdxlModal'
 import { useState } from 'react'
 import AbTestModal from 'app/_pages/PendingPage/PendingItem/AbTestModal'

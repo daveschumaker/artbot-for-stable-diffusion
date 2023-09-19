@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { getJobImagesFromDexie } from 'utils/db'
+import { getJobImagesFromDexie } from 'app/_utils/db'
 
 export default function useSdxlModal(jobDetails: any) {
   const [secondaryImage, setSecondaryImage] = useState<string>('') // SDXL_beta

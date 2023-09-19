@@ -1,4 +1,4 @@
-import { Embedding } from 'types/civitai'
+import { Embedding } from '_types/civitai'
 
 export const handleSaveRecentEmbedding = (embedding: Embedding) => {
   // Check if the local storage already has an array stored

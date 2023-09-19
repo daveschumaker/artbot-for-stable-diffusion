@@ -3,16 +3,16 @@
 /* eslint-disable @next/next/no-img-element */
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
-import { trackEvent } from 'api/telemetry'
+import { trackEvent } from 'app/_api/telemetry'
 import FeedbackForm from 'app/_modules/FeedbackForm'
-import Modal from 'components/Modal'
 import Linker from 'app/_components/Linker'
 
 import PageTitle from 'app/_components/PageTitle'
-import Text from 'components/UI/Text'
-import { useEffectOnce } from 'hooks/useEffectOnce'
+import { useEffectOnce } from 'app/_hooks/useEffectOnce'
 import styles from './about.module.css'
 import { basePath } from 'BASE_PATH'
+import Modal from 'app/_modules/Modal'
+import Text from 'app/_components/Text'
 
 const AboutPage = () => {
   const [totalImages, setTotalImages] = useState(0)

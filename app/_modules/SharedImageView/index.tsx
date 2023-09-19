@@ -5,7 +5,7 @@ import FixedMenu from '../FixedMenu'
 import ModalProvider from '../ModalProvider'
 import ContentWrapper from 'app/_components/ContentWrapper'
 import MaxWidth from 'app/_components/MaxWidth'
-import { cleanDataForApiRequestDisplay } from 'utils/imageUtils'
+import { cleanDataForApiRequestDisplay } from 'app/_utils/imageUtils'
 
 export default function SharedImageView({ imageDetails, imageId }: any) {
   return (

@@ -3,19 +3,19 @@ import PageTitle from 'app/_components/PageTitle'
 import styles from './component.module.css'
 import { useCallback, useEffect, useState } from 'react'
 import { Button } from 'app/_components/Button'
-import { clientHeader, getApiHostServer } from 'utils/appUtils'
-import AppSettings from 'models/AppSettings'
+import { clientHeader, getApiHostServer } from 'app/_utils/appUtils'
+import AppSettings from 'app/_data-models/AppSettings'
 import {
   deleteCompletedImage,
   deleteImageFromDexie,
   getImageDetails,
   updateCompletedJob,
   updatePendingJobInDexie
-} from 'utils/db'
+} from 'app/_utils/db'
 import {
   deletePendingJob,
   updatePendingJobProperties
-} from 'controllers/pendingJobsCache'
+} from 'app/_controllers/pendingJobsCache'
 import NiceModal, { useModal } from '@ebay/nice-modal-react'
 import Overlay from 'app/_components/Overlay'
 import {
@@ -30,7 +30,7 @@ import Carousel from 'react-gallery-carousel'
 import 'react-gallery-carousel/dist/index.css'
 import FlexRow from 'app/_components/FlexRow'
 import TooltipComponent from 'app/_components/TooltipComponent'
-import useLockedBody from 'hooks/useLockedBody'
+import useLockedBody from 'app/_hooks/useLockedBody'
 import FlexCol from 'app/_components/FlexCol'
 
 function AbTestModal({

@@ -1,11 +1,11 @@
 import { Button } from 'app/_components/Button'
 import FlexRow from 'app/_components/FlexRow'
-import Input from 'components/UI/Input'
+import Input from 'app/_components/Input'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
-import { GetSetPromptInput } from 'types/artbot'
+import { GetSetPromptInput } from '_types/artbot'
 import { IconArrowBarLeft, IconGrain } from '@tabler/icons-react'
-import AppSettings from 'models/AppSettings'
-import PromptInputSettings from 'models/PromptInputSettings'
+import AppSettings from 'app/_data-models/AppSettings'
+import PromptInputSettings from 'app/_data-models/PromptInputSettings'
 
 export default function Seed({ input, setInput }: GetSetPromptInput) {
   return (

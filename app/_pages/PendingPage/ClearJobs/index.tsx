@@ -1,13 +1,13 @@
 import { IconClearAll } from '@tabler/icons-react'
 import { Button } from 'app/_components/Button'
 import { useState } from 'react'
-import { JobStatus } from 'types/artbot'
+import { JobStatus } from '_types/artbot'
 import {
   deleteAllPendingErrors,
   deleteAllPendingJobs,
   deleteDoneFromPending
-} from 'utils/db'
-import { deletePendingJobs } from 'controllers/pendingJobsCache'
+} from 'app/_utils/db'
+import { deletePendingJobs } from 'app/_controllers/pendingJobsCache'
 import DropdownOptions from 'app/_modules/DropdownOptions'
 
 export default function ClearJobs({ filter, size }: any) {

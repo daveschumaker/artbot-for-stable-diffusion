@@ -1,8 +1,12 @@
 import { Button } from 'app/_components/Button'
-import Input from 'components/UI/Input'
+import Input from 'app/_components/Input'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
-import { deletePromptFromHistory, getPrompts, updatePrompt } from '_db/prompts'
-import { PromptHistoryDetails, PromptTypes, SetInput } from 'types/artbot'
+import {
+  deletePromptFromHistory,
+  getPrompts,
+  updatePrompt
+} from 'app/_db/prompts'
+import { PromptHistoryDetails, PromptTypes, SetInput } from '_types/artbot'
 import {
   IconArrowBarLeft,
   IconCopy,

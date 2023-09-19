@@ -5,9 +5,9 @@ import MenuOptions from '../MenuOptions'
 import styles from './fixedMenu.module.css'
 import AdContainer from 'app/_components/AdContainer'
 import { useStore } from 'statery'
-import { appInfoStore } from 'store/appStore'
+import { appInfoStore } from 'app/_store/appStore'
 import clsx from 'clsx'
-import { useWindowSize } from 'hooks/useWindowSize'
+import { useWindowSize } from 'app/_hooks/useWindowSize'
 
 export default function FixedMenu() {
   const { imageDetailsModalOpen } = useStore(appInfoStore)

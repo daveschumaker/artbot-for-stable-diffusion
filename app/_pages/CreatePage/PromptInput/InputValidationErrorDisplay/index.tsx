@@ -1,15 +1,15 @@
 import { MAX_IMAGE_PIXELS } from '_constants'
 import FlexCol from 'app/_components/FlexCol'
-import AlertTriangleIcon from 'components/icons/AlertTriangle'
-import AppSettings from 'models/AppSettings'
-import DefaultPromptInput from 'models/DefaultPromptInput'
+import AppSettings from 'app/_data-models/AppSettings'
+import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
 import { useEffect, useState } from 'react'
 import { useStore } from 'statery'
-import { userInfoStore } from 'store/userStore'
+import { userInfoStore } from 'app/_store/userStore'
 import {
   promptSafetyExclusions,
   validatePromptSafety
-} from 'utils/validationUtils'
+} from 'app/_utils/validationUtils'
+import { IconAlertTriangle } from '@tabler/icons-react'
 
 const RenderError = ({ msg }: { msg: string | boolean }) => {
   if (!msg) return null
@@ -24,7 +24,7 @@ const RenderError = ({ msg }: { msg: string | boolean }) => {
       }}
     >
       <div>
-        <AlertTriangleIcon size={38} />
+        <IconAlertTriangle size={38} />
       </div>
       <div>{msg}</div>
     </div>

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useModal } from '@ebay/nice-modal-react'
 import ImageModal from 'app/_modules/ImageModal'
-import { setImageDetailsModalOpen } from 'store/appStore'
+import { setImageDetailsModalOpen } from 'app/_store/appStore'
 
 const useGalleryImageModal = ({ fetchImages }: { fetchImages: any }) => {
   const imagePreviewModal = useModal(ImageModal)

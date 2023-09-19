@@ -7,12 +7,12 @@ import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import PageTitle from 'app/_components/PageTitle'
-import Spinner from 'components/Spinner'
-import { getImageDetails, updateCompletedJob } from 'utils/db'
-import RelatedImages from 'components/ImagePage/RelatedImages'
-import { getRelatedImages } from 'components/ImagePage/image.controller'
-import ImageDetails from 'components/ImageDetails'
-import CreateImageRequest from 'models/CreateImageRequest'
+import { getImageDetails, updateCompletedJob } from 'app/_utils/db'
+import CreateImageRequest from 'app/_data-models/CreateImageRequest'
+import { getRelatedImages } from './image.controller'
+import SpinnerV2 from 'app/_components/Spinner'
+import ImageDetails from 'app/_modules/ImageDetails'
+import RelatedImages from './RelatedImages'
 
 const ImagePage = ({ id }: { id: string }) => {
   const router = useRouter()
@@ -144,7 +144,7 @@ const ImagePage = ({ id }: { id: string }) => {
           )}
         </div>
       </div>
-      {isInitialLoad && <Spinner />}
+      {isInitialLoad && <SpinnerV2 />}
       {!isInitialLoad && noImageFound && (
         <>
           <div>Oops!</div>

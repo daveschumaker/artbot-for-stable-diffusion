@@ -2,7 +2,7 @@
 
 import React, { CSSProperties, useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
-import { debounce } from 'utils/debounce'
+import { debounce } from 'app/_utils/debounce'
 
 let minHeight: string | undefined = undefined
 

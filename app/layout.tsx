@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import HeaderNav from './_modules/HeaderNav'
-import '../styles/globals.css'
+import 'app/_styles/globals.css'
 import AppInit from './_modules/AppInit'
 import SlidingMenu from './_modules/SlidingMenu'
 import Footer from './_components/Footer'
@@ -8,7 +8,7 @@ import { Metadata } from 'next'
 import PollController from 'app/_modules/PollController'
 import { baseHost, basePath } from 'BASE_PATH'
 import AppAnalytics from './_modules/AppAnalytics'
-import ToastContainer from 'components/ToastContainer'
+import ToastContainer from './_modules/ToastContainer'
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseHost),

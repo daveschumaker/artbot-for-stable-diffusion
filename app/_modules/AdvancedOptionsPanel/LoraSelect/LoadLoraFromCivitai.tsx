@@ -3,7 +3,7 @@
 import * as DOMPurify from 'dompurify'
 import { useState } from 'react'
 
-import Input from 'components/UI/Input'
+import Input from 'app/_components/Input'
 import { Button } from 'app/_components/Button'
 import Linker from 'app/_components/Linker'
 import styles from './loraSelect.module.css'
