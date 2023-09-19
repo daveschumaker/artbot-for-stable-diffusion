@@ -2,17 +2,17 @@
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import Overlay from 'app/_components/Overlay'
 import React, { useCallback, useEffect, useState } from 'react'
-import { Embedding } from 'types/civitai'
+import { Embedding } from '_types/civitai'
 import FlexCol from 'app/_components/FlexCol'
-import Input from 'components/UI/Input'
-import SpinnerV2 from 'components/Spinner'
+import Input from 'app/_components/Input'
 import { Button } from 'app/_components/Button'
 import { IconArrowBarLeft, IconSettings } from '@tabler/icons-react'
 import ReactPaginate from 'react-paginate'
 import styles from './component.module.css'
-import Checkbox from 'components/UI/Checkbox'
+import Checkbox from 'app/_components/Checkbox'
 import EmbeddingDetailsCard from './EmbeddingDetailsCard'
-import AppSettings from 'models/AppSettings'
+import AppSettings from 'app/_data-models/AppSettings'
+import SpinnerV2 from 'app/_components/Spinner'
 
 const debounce = (func: (str: string) => Promise<any>, delay: number) => {
   let timerId: any

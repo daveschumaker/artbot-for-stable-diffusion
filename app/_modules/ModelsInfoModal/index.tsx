@@ -9,18 +9,18 @@ import {
   IconHeartFilled
 } from '@tabler/icons-react'
 import FlexRow from 'app/_components/FlexRow'
-import Modal from 'components/Modal'
 import { Button } from 'app/_components/Button'
-import Checkbox from 'components/UI/Checkbox'
-import Input from 'components/UI/Input'
-import Linker from 'components/UI/Linker'
-import AppSettings from 'models/AppSettings'
-import DefaultPromptInput from 'models/DefaultPromptInput'
+import Checkbox from 'app/_components/Checkbox'
+import Input from 'app/_components/Input'
+import Linker from 'app/_components/Linker'
+import AppSettings from 'app/_data-models/AppSettings'
+import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
 import React, { useEffect, useState } from 'react'
 import { useStore } from 'statery'
-import { modelStore } from 'store/modelStore'
+import { modelStore } from 'app/_store/modelStore'
 import DropdownOptions from '../DropdownOptions'
 import styles from './component.module.css'
+import Modal from '../Modal'
 
 const ModelsInfoModal = ({ input }: { input: DefaultPromptInput }) => {
   const modal = useModal()

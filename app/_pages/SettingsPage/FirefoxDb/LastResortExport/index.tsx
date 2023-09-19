@@ -5,8 +5,8 @@ import Select from 'app/_components/Select'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { Button } from 'app/_components/Button'
 import { useState } from 'react'
-import { Value } from 'types'
-import { sleep } from 'utils/sleep'
+import { Value } from '_types'
+import { sleep } from 'app/_utils/sleep'
 
 async function downloadDbAsJson(chunkSize: number) {
   // Fetch the array from the database (replace this with your database query)

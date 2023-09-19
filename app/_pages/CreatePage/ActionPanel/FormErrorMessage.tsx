@@ -1,6 +1,6 @@
 import { IconInfoTriangle } from '@tabler/icons-react'
 import React from 'react'
-import Errors from 'utils/errors'
+import Errors from 'app/_utils/errors'
 
 interface Props {
   errors: { [key: string]: boolean }

@@ -11,10 +11,10 @@ import FlexCol from 'app/_components/FlexCol'
 import FlexRow from 'app/_components/FlexRow'
 import Panel from 'app/_components/Panel'
 import { Button } from 'app/_components/Button'
-import Linker from 'components/UI/Linker'
+import Linker from 'app/_components/Linker'
 import DOMPurify from 'dompurify'
 import { useState } from 'react'
-import { Embedding } from 'types/civitai'
+import { Embedding } from '_types/civitai'
 import { handleSaveRecentEmbedding } from './saveRecentEmbeddings'
 
 const isFavorite = (tiId: string) => {

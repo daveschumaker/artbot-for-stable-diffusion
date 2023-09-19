@@ -2,12 +2,12 @@
 
 import Head from 'next/head'
 import { useSearchParams } from 'next/navigation'
-import InfoPageMenuButton from 'components/InfoPage/Menu'
-import Row from 'components/Row'
 import PageTitle from 'app/_components/PageTitle'
-import AppSettings from 'models/AppSettings'
+import AppSettings from 'app/_data-models/AppSettings'
 import ModelDetailsList from 'app/_modules/ModelDetailsList'
 import { baseHost, basePath } from 'BASE_PATH'
+import Row from 'app/_modules/Row'
+import InfoPageMenuButton from '../Menu'
 
 const ModelDetailsPage = ({ availableModels, modelDetails }: any) => {
   const searchParams = useSearchParams()

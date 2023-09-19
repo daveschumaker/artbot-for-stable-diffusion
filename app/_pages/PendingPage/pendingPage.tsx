@@ -2,39 +2,39 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 
-import { useEffectOnce } from 'hooks/useEffectOnce'
-import AppSettings from 'models/AppSettings'
-import { JobStatus } from 'types'
+import { useEffectOnce } from 'app/_hooks/useEffectOnce'
+import AppSettings from 'app/_data-models/AppSettings'
+import { JobStatus } from '_types'
 import {
   deleteDoneFromPending,
   deletePendingJobFromDb,
   getImageDetails
-} from 'utils/db'
+} from 'app/_utils/db'
 
-import AdContainer from 'components/AdContainer'
-import Linker from 'components/UI/Linker'
+import AdContainer from 'app/_components/AdContainer'
+import Linker from 'app/_components/Linker'
 import PageTitle from 'app/_components/PageTitle'
-import TextButton from 'components/UI/TextButton'
 import styles from './pendingPage.module.css'
 import { useStore } from 'statery'
-import { appInfoStore } from 'store/appStore'
+import { appInfoStore } from 'app/_store/appStore'
 import {
   deletePendingJob,
   deletePendingJobs,
   getAllPendingJobs,
   getPendingJobsTimestamp
-} from 'controllers/pendingJobsCache'
+} from 'app/_controllers/pendingJobsCache'
 import FlexRow from 'app/_components/FlexRow'
 import { IconFilter, IconInfoTriangle, IconSettings } from '@tabler/icons-react'
 import { Button } from 'app/_components/Button'
 import FilterOptions from './FilterOptions'
 import Accordion from 'app/_components/Accordion'
 import AccordionItem from 'app/_components/AccordionItem'
-import MaxWidth from 'components/UI/MaxWidth'
+import MaxWidth from 'app/_components/MaxWidth'
 import PendingSettings from './PendingSettings'
 import ClearJobs from './ClearJobs'
 import clsx from 'clsx'
 import VirtualListContainer from './VirtualListContainer'
+import TextButton from 'app/_components/TextButton'
 
 const PendingPage = () => {
   const [filter, setFilter] = useState('all')

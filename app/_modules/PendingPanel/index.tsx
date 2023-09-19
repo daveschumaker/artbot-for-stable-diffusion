@@ -12,7 +12,7 @@ import {
 import styles from './pendingPanel.module.css'
 import FlexRow from 'app/_components/FlexRow'
 import usePendingJobs from './usePendingJobs'
-import { JobStatus } from 'types'
+import { JobStatus } from '_types'
 import { useCallback, useState } from 'react'
 import FilterOptions from 'app/_pages/PendingPage/FilterOptions'
 import PendingSettings from 'app/_pages/PendingPage/PendingSettings'

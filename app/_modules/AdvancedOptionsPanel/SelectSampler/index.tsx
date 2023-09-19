@@ -4,11 +4,11 @@ import Select from 'app/_components/Select'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import { Button } from 'app/_components/Button'
-import Checkbox from 'components/UI/Checkbox'
-import Samplers from 'models/Samplers'
+import Checkbox from 'app/_components/Checkbox'
+import Samplers from 'app/_data-models/Samplers'
 import { useState } from 'react'
-import { GetSetPromptInput } from 'types/artbot'
-import { SourceProcessing } from 'types/horde'
+import { GetSetPromptInput } from '_types/artbot'
+import { SourceProcessing } from '_types/horde'
 
 interface SelectSamplerProps extends GetSetPromptInput {
   hideOptions?: boolean

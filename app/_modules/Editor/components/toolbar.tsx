@@ -3,31 +3,33 @@ import { useEffect, useState } from 'react'
 import { HexAlphaColorPicker } from 'react-colorful'
 import { useRouter } from 'next/navigation'
 
-import DeleteConfirmModal from 'components/DeleteConfirmModal'
-import AdjustmentIcon from 'components/icons/AdjustmentIcon'
-import EraserIcon from 'components/icons/EraserIcon'
-import MinusVertical from 'components/icons/MinusVertical'
-import PencilIcon from 'components/icons/PencilIcon'
-import RedoIcon from 'components/icons/RedoIcon'
-import TrashIcon from 'components/icons/TrashIcon'
-import UndoIcon from 'components/icons/UndoIcon'
-import CreateCanvas from 'components/../models/CreateCanvas'
-import MenuIcon from 'components/icons/MenuIcon'
+import DeleteConfirmModal from 'app/_modules/DeleteConfirmModal'
+import CreateCanvas from 'app/_data-models/CreateCanvas'
 import DropDown from './DropDown'
 import DropDownItem from './DropDownItem'
-import DownloadIcon from 'components/icons/DownloadIcon'
 import NewCanvas from './NewCanvas'
-import ColorPickerIcon from 'components/icons/ColorPickerIcon'
-import CanvasSettings from 'components/../models/CanvasSettings'
-import FileIcon from 'components/icons/FileIcon'
-import { setBase64FromDraw, setI2iUploaded } from 'store/canvasStore'
-import UploadIcon from 'components/icons/UploadIcon'
+import CanvasSettings from 'app/_data-models/CanvasSettings'
+import { setBase64FromDraw, setI2iUploaded } from 'app/_store/canvasStore'
 import UploadImage from './UploadImage'
 import { Button } from 'app/_components/Button'
-import RulerIcon from 'components/icons/RulerIcon'
-import PointerIcon from 'components/icons/PointerIcon'
-import useLockedBody from 'hooks/useLockedBody'
+import useLockedBody from 'app/_hooks/useLockedBody'
 import styles from './toolbar.module.css'
+import {
+  IconAdjustments,
+  IconArrowBackUp,
+  IconArrowForwardUp,
+  IconColorPicker,
+  IconDownload,
+  IconEraser,
+  IconFile,
+  IconMenu,
+  IconMinusVertical,
+  IconPencil,
+  IconPointer,
+  IconRuler,
+  IconTrash,
+  IconUpload
+} from '@tabler/icons-react'
 
 const DEBUG_MODE = false
 const DISABLE_OUTPAINTING = true
@@ -170,7 +172,7 @@ const ToolBar = ({
               setShowScaleMenu(!showScaleMenu)
             }}
           >
-            <RulerIcon stroke="black" />
+            <IconRuler stroke="black" />
           </ToolBarButton>
         )}
         {canvasType === 'drawing' && !toolbarDisableMenu && (
@@ -185,9 +187,9 @@ const ToolBar = ({
                 }
               }}
             >
-              <MenuIcon stroke="black" />
+              <IconMenu stroke="black" />
             </ToolBarButton>
-            <MinusVertical stroke="#949494" />
+            <IconMinusVertical stroke="#949494" />
           </>
         )}
         {!DISABLE_OUTPAINTING && (
@@ -198,7 +200,7 @@ const ToolBar = ({
               canvas?.setDrawingMode(false)
             }}
           >
-            <PointerIcon stroke="black" />
+            <IconPointer stroke="black" />
           </ToolBarButton>
         )}
         <ToolBarButton
@@ -210,7 +212,7 @@ const ToolBar = ({
             canvas?.updateBrush()
           }}
         >
-          <PencilIcon stroke="black" />
+          <IconPencil stroke="black" />
         </ToolBarButton>
         <ToolBarButton
           active={activeBrush === 'erase'}
@@ -220,16 +222,16 @@ const ToolBar = ({
             canvas?.toggleErase(true)
           }}
         >
-          <EraserIcon stroke="black" />
+          <IconEraser stroke="black" />
         </ToolBarButton>
-        <MinusVertical stroke="#949494" />
+        <IconMinusVertical stroke="#949494" />
         <ToolBarButton onClick={canvas?.undo}>
-          <UndoIcon stroke="black" />
+          <IconArrowBackUp stroke="black" />
         </ToolBarButton>
         <ToolBarButton onClick={canvas?.redo}>
-          <RedoIcon stroke="black" />
+          <IconArrowForwardUp stroke="black" />
         </ToolBarButton>
-        <MinusVertical stroke="#949494" />
+        <IconMinusVertical stroke="#949494" />
         <ToolBarButton
           active={showAdjustmentMenu}
           onClick={() => {
@@ -240,7 +242,7 @@ const ToolBar = ({
             }
           }}
         >
-          <AdjustmentIcon stroke="black" />
+          <IconAdjustments stroke="black" />
         </ToolBarButton>
         {canvasType === 'drawing' && (
           <>
@@ -264,7 +266,7 @@ const ToolBar = ({
                 }
               }}
             >
-              <ColorPickerIcon stroke="black" />
+              <IconColorPicker stroke="black" />
             </ToolBarButton>
             <div
               className="w-6 h-6 border-[1px] border-slate-500 cursor-pointer rounded-full "
@@ -283,7 +285,7 @@ const ToolBar = ({
         )}
         {DEBUG_MODE && (
           <Button onClick={canvas?.saveToDisk}>
-            <DownloadIcon />
+            <IconDownload />
           </Button>
         )}
       </div>
@@ -295,7 +297,7 @@ const ToolBar = ({
             setShowDeleteModal(true)
           }}
         >
-          <TrashIcon stroke="black" />
+          <IconTrash stroke="black" />
         </ToolBarButton>
       </div>
       {showMainMenu && (
@@ -318,7 +320,7 @@ const ToolBar = ({
                 }
               }}
             >
-              <FileIcon size={20} />
+              <IconFile size={20} />
               New canvas...
             </DropDownItem>
             <DropDownItem
@@ -332,7 +334,7 @@ const ToolBar = ({
                 }
               }}
             >
-              <UploadIcon size={20} />
+              <IconUpload size={20} />
               Upload image
             </DropDownItem>
             <div className="w-full pt-[4px] mb-[4px] border-b-[1px] border-b-slate-300 h-[3px] flex flex-row" />
@@ -350,7 +352,7 @@ const ToolBar = ({
                 router.push('/controlnet?drawing=true')
               }}
             >
-              <UploadIcon size={20} />
+              <IconUpload size={20} />
               Use for ControlNet
             </DropDownItem>
             <DropDownItem
@@ -367,7 +369,7 @@ const ToolBar = ({
                 router.push('/?drawing=true')
               }}
             >
-              <UploadIcon size={20} />
+              <IconUpload size={20} />
               Use for img2img
             </DropDownItem>
             <div className="w-full pt-[4px] mb-[4px] border-b-[1px] border-b-slate-300 h-[3px] flex flex-row" />
@@ -376,7 +378,7 @@ const ToolBar = ({
                 canvas.saveToDisk()
               }}
             >
-              <DownloadIcon size={20} />
+              <IconDownload size={20} />
               Download
             </DropDownItem>
             {/* <DropDownItem

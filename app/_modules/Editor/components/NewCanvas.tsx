@@ -1,14 +1,17 @@
 import { useState } from 'react'
 import { HexAlphaColorPicker } from 'react-colorful'
 import { ORIENTATION_OPTIONS } from '_constants'
-import { IOrientation } from 'types'
-import { calculateAspectRatioFit, nearestWholeMultiple } from 'utils/imageUtils'
-import CloseIcon from 'components/icons/CloseIcon'
+import { IOrientation } from '_types'
+import {
+  calculateAspectRatioFit,
+  nearestWholeMultiple
+} from 'app/_utils/imageUtils'
 import { Button } from 'app/_components/Button'
-import InteractiveModal from 'components/UI/InteractiveModal/interactiveModal'
 import PageTitle from 'app/_components/PageTitle'
 import Select from 'app/_components/Select'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
+import InteractiveModal from 'app/_components/InteractiveModal/interactiveModal'
+import { IconX } from '@tabler/icons-react'
 
 const NewCanvas = ({
   handleClose = () => {},
@@ -88,7 +91,7 @@ const NewCanvas = ({
                 setShowColorPicker(false)
               }}
             >
-              <CloseIcon />
+              <IconX />
             </div>
           </div>
         )}

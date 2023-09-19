@@ -1,6 +1,5 @@
+import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react'
 import styled from 'styled-components'
-import ChevronLeftIcon from 'components/icons/ChevronLeftIcon'
-import ChevronRightIcon from 'components/icons/ChevronRightIcon'
 
 interface INavButtonProps {
   action: string
@@ -51,9 +50,9 @@ const ImageNavButton = ({ action, handleOnClick = () => {} }: IProps) => {
   return (
     <NextPrevButton action={action} onClick={handleOnClick}>
       {action === 'NEXT' ? (
-        <ChevronRightIcon stroke="#000000" />
+        <IconChevronRight stroke="#000000" />
       ) : (
-        <ChevronLeftIcon stroke="#000000" />
+        <IconChevronLeft stroke="#000000" />
       )}
     </NextPrevButton>
   )

@@ -3,21 +3,21 @@
 import React, { useState } from 'react'
 import Head from 'next/head'
 import PageTitle from 'app/_components/PageTitle'
-import Linker from 'components/UI/Linker'
+import Linker from 'app/_components/Linker'
 import FeedbackForm from 'app/_modules/FeedbackForm'
-import { useEffectOnce } from 'hooks/useEffectOnce'
-import { trackEvent } from 'api/telemetry'
-import AdContainer from 'components/AdContainer'
+import { useEffectOnce } from 'app/_hooks/useEffectOnce'
+import { trackEvent } from 'app/_api/telemetry'
+import AdContainer from 'app/_components/AdContainer'
 import Section from 'app/_components/Section'
 import styles from './changelog.module.css'
-import Modal from 'components/Modal'
-import { useWindowSize } from 'hooks/useWindowSize'
-import { appInfoStore } from 'store/appStore'
+import { useWindowSize } from 'app/_hooks/useWindowSize'
+import { appInfoStore } from 'app/_store/appStore'
 import { useStore } from 'statery'
 
 import ReactMarkdown from 'react-markdown'
 import CHANGELOG from '../../../CHANGELOG.md'
 import clsx from 'clsx'
+import Modal from 'app/_modules/Modal'
 
 export const StyledUl = ({
   children,

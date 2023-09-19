@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import PageTitle from './_components/PageTitle'
-import Linker from 'components/UI/Linker'
+import Linker from 'app/_components/Linker'
 import ContentWrapper from './_components/ContentWrapper'
 import MaxWidth from './_components/MaxWidth'
 import { basePath } from 'BASE_PATH'

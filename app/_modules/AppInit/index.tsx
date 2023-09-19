@@ -1,16 +1,16 @@
 'use client'
 
-import { initPendingJobService } from 'controllers/pendingJobsController'
-import { useEffectOnce } from 'hooks/useEffectOnce'
-import { initAppSettings } from 'utils/appSettings'
-import { initDb } from 'utils/db'
-import { initializePrimaryWindowOnLoad } from 'utils/primaryWindow'
-import AppTheme from '../AppTheme'
-import AppSettings from 'models/AppSettings'
-import { setLockedToWorker, setPauseJobQueue } from 'store/appStore'
 import { useSearchParams } from 'next/navigation'
-import { handleApiKeyLogin } from 'utils/hordeUtils'
-import { showSuccessToast } from 'utils/notificationUtils'
+import { initPendingJobService } from 'app/_controllers/pendingJobsController'
+import { useEffectOnce } from 'app/_hooks/useEffectOnce'
+import { initAppSettings } from 'app/_utils/appSettings'
+import { initDb } from 'app/_utils/db'
+import { initializePrimaryWindowOnLoad } from 'app/_utils/primaryWindow'
+import AppTheme from '../AppTheme'
+import AppSettings from 'app/_data-models/AppSettings'
+import { setLockedToWorker, setPauseJobQueue } from 'app/_store/appStore'
+import { handleApiKeyLogin } from 'app/_utils/hordeUtils'
+import { showSuccessToast } from 'app/_utils/notificationUtils'
 
 export default function AppInit() {
   const searchParams = useSearchParams()

@@ -1,6 +1,6 @@
 import { ReactElement } from 'react'
 import ReactSwitch from 'react-switch'
-import { formatStringRemoveSpaces } from '../../../../utils/htmlUtils'
+import { formatStringRemoveSpaces } from 'app/_utils/htmlUtils'
 import Section from 'app/_components/Section'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import TextTooltipRow from 'app/_components/TextTooltipRow'

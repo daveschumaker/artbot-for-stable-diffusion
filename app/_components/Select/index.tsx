@@ -1,6 +1,6 @@
 import React from 'react'
 import dynamic from 'next/dynamic'
-import { SelectPropsComponent } from 'types'
+import { SelectPropsComponent } from '_types'
 
 const DynamicDropDownMenuItem = dynamic(() => import('./select'), {
   ssr: false

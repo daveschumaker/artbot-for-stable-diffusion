@@ -1,8 +1,8 @@
 import DropdownOptions from 'app/_modules/DropdownOptions'
-import Checkbox from 'components/UI/Checkbox'
-import AppSettings from 'models/AppSettings'
+import Checkbox from 'app/_components/Checkbox'
+import AppSettings from 'app/_data-models/AppSettings'
 import { useEffect, useState } from 'react'
-import { setPauseJobQueue } from 'store/appStore'
+import { setPauseJobQueue } from 'app/_store/appStore'
 
 export default function PendingSettings({ setShowSettingsDropdown }: any) {
   const [autoclear, setAutoclear] = useState(false)

@@ -1,4 +1,4 @@
-import PromptInputSettings from '../../../../models/PromptInputSettings'
+import PromptInputSettings from 'app/_data-models/PromptInputSettings'
 import { useEffect, useState } from 'react'
 import InputSwitchV2 from '../InputSwitchV2'
 const HiresFix = ({ input, setInput }: any) => {

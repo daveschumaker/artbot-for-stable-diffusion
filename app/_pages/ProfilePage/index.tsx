@@ -4,12 +4,12 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import { useStore } from 'statery'
-import RobotProfile from 'components/icons/RobotProfile'
-import SpinnerV2 from 'components/Spinner'
+import SpinnerV2 from 'app/_components/Spinner'
 import PageTitle from 'app/_components/PageTitle'
-import { userInfoStore } from 'store/userStore'
+import { userInfoStore } from 'app/_store/userStore'
 import styles from './profile.module.css'
 import { baseHost, basePath } from 'BASE_PATH'
+import { IconRobot } from '@tabler/icons-react'
 
 const ProfilePage = () => {
   const userState = useStore(userInfoStore)
@@ -112,7 +112,7 @@ const ProfilePage = () => {
       <PageTitle>User Profile</PageTitle>
       <div className="flex flex-row items-center gap-4 mb-[16px]">
         <div className={styles['profile-img']}>
-          <RobotProfile size={52} />
+          <IconRobot size={52} />
         </div>
         <div className="flex flex-col gap-[1px]">
           <div className="text-[16px]">Welcome back,</div>

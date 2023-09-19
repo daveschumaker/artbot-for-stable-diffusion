@@ -1,11 +1,11 @@
-import SpinnerV2 from 'components/Spinner'
+import SpinnerV2 from 'app/_components/Spinner'
 import { Button } from 'app/_components/Button'
 import Section from 'app/_components/Section'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { useState } from 'react'
-import { downloadBlob, formatDate } from 'utils/appUtils'
-import { dbExport } from 'utils/db'
-import { showSuccessToast } from 'utils/notificationUtils'
+import { downloadBlob, formatDate } from 'app/_utils/appUtils'
+import { dbExport } from 'app/_utils/db'
+import { showSuccessToast } from 'app/_utils/notificationUtils'
 
 export default function ExportDatabase() {
   const [loading, setLoading] = useState(false)

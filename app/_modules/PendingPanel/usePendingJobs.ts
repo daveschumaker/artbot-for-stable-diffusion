@@ -1,9 +1,9 @@
 import {
   getAllPendingJobs,
   getPendingJobsTimestamp
-} from 'controllers/pendingJobsCache'
+} from 'app/_controllers/pendingJobsCache'
 import { useEffect, useState } from 'react'
-import { JobStatus } from 'types'
+import { JobStatus } from '_types'
 
 export default function usePendingJobs() {
   const [pendingJobUpdateTimestamp, setPendingJobUpdateTimestamp] = useState(0)

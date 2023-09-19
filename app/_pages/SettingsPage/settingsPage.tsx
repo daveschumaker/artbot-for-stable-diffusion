@@ -6,23 +6,22 @@ import { useStore } from 'statery'
 import styled from 'styled-components'
 import { useRouter, useSearchParams } from 'next/navigation'
 
-import useComponentState from 'hooks/useComponentState'
+import useComponentState from 'app/_hooks/useComponentState'
 import PageTitle from 'app/_components/PageTitle'
-import { IWorkers, setWorkers, userInfoStore } from 'store/userStore'
-import Linker from 'components/UI/Linker'
-import { sleep } from 'utils/sleep'
-import { clientHeader, getApiHostServer } from 'utils/appUtils'
+import { IWorkers, setWorkers, userInfoStore } from 'app/_store/userStore'
+import Linker from 'app/_components/Linker'
+import { sleep } from 'app/_utils/sleep'
+import { clientHeader, getApiHostServer } from 'app/_utils/appUtils'
 import MenuButton from 'app/_components/MenuButton'
-import ChevronRightIcon from 'components/icons/ChevronRightIcon'
-import ChevronDownIcon from 'components/icons/ChevronDownIcon'
-import AppSettings from 'models/AppSettings'
-import DropDownMenu from 'components/UI/DropDownMenu'
-import DropDownMenuItem from 'components/UI/DropDownMenuItem'
-import ImportExportPanel from 'components/ImportExportPanel'
-import { useEffectOnce } from 'hooks/useEffectOnce'
+import AppSettings from 'app/_data-models/AppSettings'
+import { useEffectOnce } from 'app/_hooks/useEffectOnce'
 import AiHordeSettingsPanel from './AiHordeSettingsPanel'
 import WorkerSettingsPanel from './WorkerSettingsPanel'
 import ArtBotSettingsPanel from './ArtBotSettingsPanel'
+import { IconChevronDown, IconChevronRight } from '@tabler/icons-react'
+import DropDownMenu from 'app/_components/DropDownMenu/dropDownMenu'
+import DropDownMenuItem from 'app/_components/DropDownMenuItem'
+import ImportExportPanel from './ImportExportPanel'
 
 const SettingsWrapper = styled.div`
   width: 100%;
@@ -223,9 +222,9 @@ const SettingsPage = () => {
             >
               <div className="flex flex-row gap-1 pr-2">
                 {componentState.showOptionsMenu ? (
-                  <ChevronDownIcon />
+                  <IconChevronDown />
                 ) : (
-                  <ChevronRightIcon />
+                  <IconChevronRight />
                 )}
                 {!searchParams?.get('panel') &&
                   `

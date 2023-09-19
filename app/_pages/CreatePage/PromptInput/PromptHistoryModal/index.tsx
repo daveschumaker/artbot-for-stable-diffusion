@@ -1,7 +1,7 @@
-import Modal from 'components/Modal'
 import NiceModal, { useModal } from '@ebay/nice-modal-react'
 import PromptHistory from '../PromptHistory'
-import { SetInput } from 'types/artbot'
+import { SetInput } from '_types/artbot'
+import Modal from 'app/_modules/Modal'
 
 const PromptLibraryModal = ({
   modalId,

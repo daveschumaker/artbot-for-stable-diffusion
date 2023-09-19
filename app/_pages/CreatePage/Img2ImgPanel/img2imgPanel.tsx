@@ -2,15 +2,15 @@ import React, { useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { Button } from 'app/_components/Button'
-import Image from 'components/Image'
-import { SourceProcessing } from 'utils/promptUtils'
+import Image from 'app/_modules/Image'
+import { SourceProcessing } from 'app/_utils/promptUtils'
 import Head from 'next/head'
-import PromptInputSettings from 'models/PromptInputSettings'
-import { setI2iUploaded } from 'store/canvasStore'
+import PromptInputSettings from 'app/_data-models/PromptInputSettings'
+import { setI2iUploaded } from 'app/_store/canvasStore'
 import Section from 'app/_components/Section'
 import Uploader from 'app/_modules/Uploader'
 import { IconPhotoUp, IconTrash } from '@tabler/icons-react'
-import Samplers from 'models/Samplers'
+import Samplers from 'app/_data-models/Samplers'
 
 interface Props {
   handleChangeInput: any

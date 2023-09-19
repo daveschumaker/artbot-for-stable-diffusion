@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
 
-import { trackEvent } from '../../../api/telemetry'
-import { imageCount } from '../../../utils/db'
+import { trackEvent } from 'app/_api/telemetry'
+import { imageCount } from 'app/_utils/db'
 import { Button } from 'app/_components/Button'
 import SectionTitle from 'app/_components/SectionTitle'
-import Text from '../../../components/UI/Text'
-import TextArea from '../../../components/UI/TextArea'
-import { userInfoStore } from '../../../store/userStore'
-import Input from '../../../components/UI/Input'
-import FlexRow from '../../../components/UI/FlexRow'
+import { userInfoStore } from 'app/_store/userStore'
+import FlexRow from 'app/_components/FlexRow'
 import PageTitle from 'app/_components/PageTitle'
+import Input from 'app/_components/Input'
+import Text from 'app/_components/Text'
+import TextArea from 'app/_components/TextArea'
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -83,7 +83,7 @@ const FeedbackForm = ({
             </div>
           </div>
         )}
-        <FlexRow justify="flex-end">
+        <FlexRow style={{ justifyContent: 'flex-end' }}>
           <Button onClick={handleSubmit} disabled={feedbackSent}>
             {feedbackSent ? 'Message sent!' : 'Send Message'}
           </Button>

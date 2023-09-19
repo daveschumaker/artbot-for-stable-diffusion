@@ -1,5 +1,5 @@
 import { useStore } from 'statery'
-import { appInfoStore } from '../../../../store/appStore'
+import { appInfoStore } from 'app/_store/appStore'
 import styles from './alertDropdown.module.css'
 
 const AlertDropdown = () => {

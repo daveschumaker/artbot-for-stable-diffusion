@@ -1,8 +1,8 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 // import { useEffect, useState } from 'react'
-// import { getPendingJobsFromCache } from 'controllers/pendingJobsController'
-import { JobStatus } from 'types'
-import { db } from 'utils/db'
+// import { getPendingJobsFromCache } from 'app/_controllers/pendingJobsController'
+import { JobStatus } from '_types'
+import { db } from 'app/_utils/db'
 
 export default function usePendingItems(filter: string = 'all') {
   let pendingImages =

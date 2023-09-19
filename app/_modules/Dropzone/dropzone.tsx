@@ -7,7 +7,7 @@ import {
   getBase64,
   imageDimensions,
   nearestWholeMultiple
-} from 'utils/imageUtils'
+} from 'app/_utils/imageUtils'
 import { IconPlus } from '@tabler/icons-react'
 
 const imgConfig = {

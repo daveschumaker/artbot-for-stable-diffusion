@@ -4,24 +4,26 @@
 import Editor from 'app/_modules/Editor'
 import PageTitle from 'app/_components/PageTitle'
 import { useCallback, useEffect, useReducer, useState } from 'react'
-import DefaultPromptInput from 'models/DefaultPromptInput'
-import { useFetchImage } from 'hooks/useFetchImage'
-import SpinnerV2 from 'components/Spinner'
+import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
+import { useFetchImage } from 'app/_hooks/useFetchImage'
+import SpinnerV2 from 'app/_components/Spinner'
 import { LivePaintOptions } from './LivePaintPage/Options'
-import { SourceProcessing } from 'utils/promptUtils'
-import { useEffectOnce } from 'hooks/useEffectOnce'
+import { SourceProcessing } from 'app/_utils/promptUtils'
+import { useEffectOnce } from 'app/_hooks/useEffectOnce'
 import { Button } from 'app/_components/Button'
-import DownloadIcon from 'components/icons/DownloadIcon'
-import { downloadFile, nearestWholeMultiple } from 'utils/imageUtils'
-import { trackEvent } from 'api/telemetry'
-import BrushIcon from 'components/icons/BrushIcon'
-import PhotoIcon from 'components/icons/PhotoIcon'
-import PointIcon from 'components/icons/PointIcon'
+import { downloadFile, nearestWholeMultiple } from 'app/_utils/imageUtils'
+import { trackEvent } from 'app/_api/telemetry'
 import { useStore } from 'statery'
-import { userInfoStore } from 'store/userStore'
-import Linker from 'components/UI/Linker'
-import { clearCanvasStore } from 'store/canvasStore'
+import { userInfoStore } from 'app/_store/userStore'
+import Linker from 'app/_components/Linker'
+import { clearCanvasStore } from 'app/_store/canvasStore'
 import styles from './livePaint.module.css'
+import {
+  IconBrush,
+  IconDownload,
+  IconPhoto,
+  IconPoint
+} from '@tabler/icons-react'
 const TWO_COLUMN_SIZE = 789
 
 const removeImageCanvasData = {
@@ -229,7 +231,7 @@ const LivePaint = () => {
               })
             }}
           >
-            <DownloadIcon />
+            <IconDownload />
             Download
           </Button>
           {isSinglePanel && (
@@ -245,7 +247,7 @@ const LivePaint = () => {
               }}
             >
               {newResult && (
-                <PointIcon
+                <IconPoint
                   // className={styles.WorkerStatus}
                   fill={'red'}
                   stroke="white"
@@ -259,14 +261,14 @@ const LivePaint = () => {
               {showResult && (
                 <>
                   <>
-                    <BrushIcon />
+                    <IconBrush />
                     View canvas
                   </>
                 </>
               )}
               {!showResult && (
                 <>
-                  <PhotoIcon />
+                  <IconPhoto />
                   View result
                 </>
               )}

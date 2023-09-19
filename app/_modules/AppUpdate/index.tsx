@@ -1,12 +1,12 @@
 'use client'
 
 import MaxWidth from 'app/_components/MaxWidth'
-import ServerMessage from 'components/ServerMessage'
-import ServerUpdateComponent from 'components/ServerUpdateComponent'
 import { useCallback, useEffect, useState } from 'react'
 import { useStore } from 'statery'
-import { appInfoStore, setBuildId } from 'store/appStore'
-import { isAppActive } from 'utils/appUtils'
+import { appInfoStore, setBuildId } from 'app/_store/appStore'
+import { isAppActive } from 'app/_utils/appUtils'
+import ServerMessage from '../ServerMessage'
+import ServerUpdateComponent from '../ServerUpdateComponent'
 
 let waitingForServerInfoRes = false
 

@@ -2,13 +2,13 @@
 
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
-import { fetchModelUpdates } from 'api/fetchModelUpdates'
-import InfoPageMenuButton from 'components/InfoPage/Menu'
-import Row from 'components/Row'
-import Linker from 'components/UI/Linker'
+import { fetchModelUpdates } from 'app/_api/fetchModelUpdates'
+import Linker from 'app/_components/Linker'
 import PageTitle from 'app/_components/PageTitle'
-import { relativeTimeSec } from 'utils/numberUtils'
+import { relativeTimeSec } from 'app/_utils/numberUtils'
 import { baseHost, basePath } from 'BASE_PATH'
+import Row from 'app/_modules/Row'
+import InfoPageMenuButton from '../Menu'
 
 interface IModelUpdatesResponse {
   success: boolean

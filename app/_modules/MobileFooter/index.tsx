@@ -1,21 +1,23 @@
 'use client'
 import { usePathname } from 'next/navigation'
 
-import CreateIcon from 'components/icons/CreateIcon'
-import HourglassIcon from 'components/icons/HourglassIcon'
-import PhotoIcon from 'components/icons/PhotoIcon'
-import SettingsIcon from 'components/icons/SettingsIcon'
 import Link from 'next/link'
 import { useStore } from 'statery'
 import {
   appInfoStore,
   setNewImageReady,
   setShowImageReadyToast
-} from 'store/appStore'
-import StarsIcon from 'components/icons/StarsIcon'
+} from 'app/_store/appStore'
 import styles from './mobileFooter.module.css'
 import clsx from 'clsx'
 import { basePath } from 'BASE_PATH'
+import {
+  IconEdit,
+  IconHourglass,
+  IconPhoto,
+  IconSettings,
+  IconStars
+} from '@tabler/icons-react'
 
 export default function MobileFooter() {
   const pathname = usePathname()
@@ -43,7 +45,7 @@ export default function MobileFooter() {
               isActive('/create') && styles['nav-icon-active']
             )}
           >
-            <CreateIcon className={clsx(styles['svg'])} size={32} />
+            <IconEdit className={clsx(styles['svg'])} size={32} />
           </div>
         </Link>
         <Link href="/pending">
@@ -53,7 +55,7 @@ export default function MobileFooter() {
               isActive('/pending') && styles['nav-icon-active']
             )}
           >
-            <HourglassIcon className={clsx(styles['svg'])} size={32} />
+            <IconHourglass className={clsx(styles['svg'])} size={32} />
           </div>
         </Link>
         <Link
@@ -77,7 +79,7 @@ export default function MobileFooter() {
                 style={{ position: 'absolute', top: '20px', left: '2px' }}
               ></span>
             )}
-            <PhotoIcon className={clsx(styles['svg'])} size={32} />
+            <IconPhoto className={clsx(styles['svg'])} size={32} />
           </div>
         </Link>
         <Link href="/rate">
@@ -87,7 +89,7 @@ export default function MobileFooter() {
               isActive('/rate') && styles['nav-icon-active']
             )}
           >
-            <StarsIcon className={clsx(styles['svg'])} size={32} />
+            <IconStars className={clsx(styles['svg'])} size={32} />
           </div>
         </Link>
         <Link href="/settings">
@@ -97,7 +99,7 @@ export default function MobileFooter() {
               isActive('/settings') && styles['nav-icon-active']
             )}
           >
-            <SettingsIcon className={clsx(styles['svg'])} size={32} />
+            <IconSettings className={clsx(styles['svg'])} size={32} />
           </div>
         </Link>
       </div>

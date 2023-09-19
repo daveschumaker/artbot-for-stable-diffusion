@@ -1,10 +1,10 @@
 import { IconTrash } from '@tabler/icons-react'
 import { Button } from 'app/_components/Button'
-import Input from 'components/UI/Input'
-import InteractiveModal from 'components/UI/InteractiveModal/interactiveModal'
+import Input from 'app/_components/Input'
+import InteractiveModal from 'app/_components/InteractiveModal/interactiveModal'
 import Section from 'app/_components/Section'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
-import AppSettings from 'models/AppSettings'
+import AppSettings from 'app/_data-models/AppSettings'
 import React, { useEffect, useState } from 'react'
 
 const MAX_BLOCKED_WORKER_COUNT = 5

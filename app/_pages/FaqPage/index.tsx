@@ -1,7 +1,7 @@
 'use client'
 
 import Head from 'next/head'
-import { trackEvent } from 'api/telemetry'
+import { trackEvent } from 'app/_api/telemetry'
 import {
   FaqBlackImage,
   FaqEstimatedTime,
@@ -9,10 +9,10 @@ import {
   FaqMissingRequests,
   FaqStorageExceeded,
   FaqSyntax
-} from 'components/faqDetails'
+} from 'app/_modules/faqDetails'
 import PageTitle from 'app/_components/PageTitle'
 import Panel from 'app/_components/Panel'
-import { useEffectOnce } from 'hooks/useEffectOnce'
+import { useEffectOnce } from 'app/_hooks/useEffectOnce'
 
 const FaqPage = () => {
   useEffectOnce(() => {

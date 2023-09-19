@@ -1,4 +1,4 @@
-import Loras from 'models/Loras'
+import Loras from 'app/_data-models/Loras'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 type Data = {

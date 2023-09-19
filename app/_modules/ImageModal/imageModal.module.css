@@ -33,6 +33,8 @@
 .close-btn {
   cursor: pointer;
   height: 28px;
+  position: absolute;
+  right: 8px;
   width: 28px;
 }
 

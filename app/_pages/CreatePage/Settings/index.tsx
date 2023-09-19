@@ -1,8 +1,8 @@
 import { IconSettings } from '@tabler/icons-react'
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import { Button } from 'app/_components/Button'
-import Checkbox from 'components/UI/Checkbox'
-import AppSettings from 'models/AppSettings'
+import Checkbox from 'app/_components/Checkbox'
+import AppSettings from 'app/_data-models/AppSettings'
 import { useEffect, useState } from 'react'
 
 export default function CreatePageSettings() {

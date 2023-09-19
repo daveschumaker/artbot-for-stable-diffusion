@@ -8,14 +8,12 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import HordeDropdown from '../HordeDropdown'
 import { useStore } from 'statery'
-import { userInfoStore } from '../../../../store/userStore'
-import AlertTriangleIcon from 'components/icons/AlertTriangle'
 import ErrorDropdown from '../ErrorDropdown'
 import {
   appInfoStore,
   setNewImageReady,
   setShowImageReadyToast
-} from 'store/appStore'
+} from 'app/_store/appStore'
 import {
   IconAlertTriangle,
   IconChevronDown,
@@ -23,6 +21,7 @@ import {
   IconPoint
 } from '@tabler/icons-react'
 import AlertDropdown from '../AlertDropdown'
+import { userInfoStore } from 'app/_store/userStore'
 
 const ListItem = ({ className, children, href, title, ...props }: any) => (
   <li>
@@ -257,7 +256,7 @@ const HeaderNavLinks = () => {
                 styles.AnalyticsIcon
               )}
             >
-              <AlertTriangleIcon size={32} stroke="red" />
+              <IconAlertTriangle size={32} stroke="red" />
             </NavigationMenu.Trigger>
             <NavigationMenu.Content className={styles.NavigationMenuContent}>
               <ErrorDropdown />

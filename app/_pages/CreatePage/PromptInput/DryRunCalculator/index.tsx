@@ -1,5 +1,5 @@
-import { createImage } from 'api/createImage'
-import SpinnerV2 from 'components/Spinner'
+import { createImage } from 'app/_api/createImage'
+import SpinnerV2 from 'app/_components/Spinner'
 import { useEffect, useState } from 'react'
 
 export default function DryRunCalculator({

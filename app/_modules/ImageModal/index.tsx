@@ -3,16 +3,16 @@ import { useCallback, useEffect, useState } from 'react'
 import NiceModal, { useModal } from '@ebay/nice-modal-react'
 
 import Overlay from 'app/_components/Overlay'
-import ImageDetails from 'components/ImageDetails'
 import ImageNavigation from './imageNavigation'
-import CloseIcon from 'components/icons/CloseIcon'
 import { useSwipeable } from 'react-swipeable'
 
 import styles from './imageModal.module.css'
 import clsx from 'clsx'
-import useLockedBody from 'hooks/useLockedBody'
-import { setImageDetailsModalOpen } from 'store/appStore'
-import CreateImageRequest from 'models/CreateImageRequest'
+import useLockedBody from 'app/_hooks/useLockedBody'
+import { setImageDetailsModalOpen } from 'app/_store/appStore'
+import CreateImageRequest from 'app/_data-models/CreateImageRequest'
+import { IconX } from '@tabler/icons-react'
+import ImageDetails from '../ImageDetails'
 
 interface Props {
   disableNav?: boolean
@@ -122,7 +122,7 @@ const ImageModal = ({
           {...closeSwipe}
         >
           <div className={styles['close-btn']} onClick={onClose}>
-            <CloseIcon size={28} />
+            <IconX size={28} />
           </div>
         </div>
         {!showTiles && !disableNav && handleLoadPrev && handleLoadNext && (

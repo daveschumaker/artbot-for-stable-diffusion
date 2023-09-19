@@ -2,12 +2,12 @@
 import Overlay from 'app/_components/Overlay'
 import { IconCloudSearch, IconHeart, IconHistory } from '@tabler/icons-react'
 import { useEffect, useState } from 'react'
-import Tabs from 'components/UI/Tabs'
-import Tab from 'components/UI/Tab'
 import LoadLora from './LoadLoraFromCivitai'
 import FavoriteLoras from './FavoriteLoras'
 import RecentLoras from './RecentLoras'
 import DropdownOptions from 'app/_modules/DropdownOptions'
+import Tabs from 'app/_components/Tabs'
+import Tab from 'app/_components/Tab'
 
 export let loraCache: Array<any> | null = null
 

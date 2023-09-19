@@ -1,4 +1,4 @@
-import { GetSetPromptInput } from 'types/artbot'
+import { GetSetPromptInput } from '_types/artbot'
 import tags from './tags'
 import styles from './component.module.css'
 import { useEffect, useState } from 'react'

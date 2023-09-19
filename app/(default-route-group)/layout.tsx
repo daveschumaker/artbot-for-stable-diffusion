@@ -19,7 +19,7 @@ export default function RootLayout({
       <ModalProvider>
         <ContentWrapper>
           <AppUpdate />
-          <MaxWidth>{children}</MaxWidth>
+          <MaxWidth margin="0 auto">{children}</MaxWidth>
         </ContentWrapper>
       </ModalProvider>
       <MobileFooter />

@@ -1,24 +1,24 @@
-import { trackEvent, trackGaEvent } from 'api/telemetry'
-import AppSettings from 'models/AppSettings'
-import CreateImageRequest from 'models/CreateImageRequest'
-import DefaultPromptInput from 'models/DefaultPromptInput'
-import PromptInputSettings from 'models/PromptInputSettings'
+import { trackEvent, trackGaEvent } from 'app/_api/telemetry'
+import AppSettings from 'app/_data-models/AppSettings'
+import CreateImageRequest from 'app/_data-models/CreateImageRequest'
+import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
+import PromptInputSettings from 'app/_data-models/PromptInputSettings'
 import { Dispatch } from 'react'
 import {
   clearCanvasStore,
   getCanvasStore,
   resetSavedDrawingState
-} from 'store/canvasStore'
-import { clearInputCache, setInputCache } from 'store/inputCache'
-import { SetInput } from 'types'
-import { logDataForDebugging } from 'utils/debugTools'
-import { createImageJob } from 'utils/imageCache'
-import { showSuccessToast } from 'utils/notificationUtils'
+} from 'app/_store/canvasStore'
+import { clearInputCache, setInputCache } from 'app/_store/inputCache'
+import { SetInput } from '_types'
+import { logDataForDebugging } from 'app/_utils/debugTools'
+import { createImageJob } from 'app/_utils/imageCache'
+import { showSuccessToast } from 'app/_utils/notificationUtils'
 import {
   SourceProcessing,
   clearSavedInputCache,
   savePromptHistory
-} from 'utils/promptUtils'
+} from 'app/_utils/promptUtils'
 
 interface CreateClick {
   pending: boolean

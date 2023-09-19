@@ -1,4 +1,4 @@
-import Linker from 'components/UI/Linker'
+import Linker from 'app/_components/Linker'
 
 const ErrorDropdown = () => {
   return (

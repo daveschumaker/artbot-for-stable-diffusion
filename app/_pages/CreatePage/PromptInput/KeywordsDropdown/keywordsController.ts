@@ -1,5 +1,5 @@
-import DefaultPromptInput from 'models/DefaultPromptInput'
-import { modelStore } from 'store/modelStore'
+import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
+import { modelStore } from 'app/_store/modelStore'
 
 export const hasKeywords = (input: DefaultPromptInput) => {
   const modelDetails = modelStore?.state?.modelDetails

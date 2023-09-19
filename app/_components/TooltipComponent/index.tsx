@@ -1,9 +1,9 @@
 import React from 'react'
-import InfoIcon from 'components/icons/InfoIcon'
 
 import { Tooltip } from 'react-tooltip'
 import 'react-tooltip/dist/react-tooltip.css'
 import styles from './tooltip.module.css'
+import { IconInfoCircleFilled } from '@tabler/icons-react'
 
 interface TooltipProps {
   children: React.ReactNode
@@ -24,7 +24,7 @@ export default function TooltipComponent({
     <div className="text-sm font-normal" style={{ marginLeft: '4px' }}>
       {!hideIcon && (
         <a id={tooltipId}>
-          <InfoIcon stroke="white" fill="#14B8A6" />
+          <IconInfoCircleFilled style={{ color: '#14B8A6' }} size={20} />
         </a>
       )}
       <Tooltip

@@ -3,24 +3,24 @@
 import PageTitle from 'app/_components/PageTitle'
 import Section from 'app/_components/Section'
 import { useStore } from 'statery'
-import { unsetUserInfo, userInfoStore } from 'store/userStore'
+import { unsetUserInfo, userInfoStore } from 'app/_store/userStore'
 import styles from './settings.module.css'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import TextTooltipRow from 'app/_components/TextTooltipRow'
 import TooltipComponent from 'app/_components/TooltipComponent'
-import MaxWidth from 'components/UI/MaxWidth'
-import Input from 'components/UI/Input'
+import MaxWidth from 'app/_components/MaxWidth'
+import Input from 'app/_components/Input'
 import { Button } from 'app/_components/Button'
-import EyeIcon from 'components/icons/EyeIcon'
-import Linker from 'components/UI/Linker'
+import Linker from 'app/_components/Linker'
 import Select from 'app/_components/Select'
-import AppSettings from 'models/AppSettings'
+import AppSettings from 'app/_data-models/AppSettings'
 import React from 'react'
 import SharedKeys from './SharedKeys'
 import WorkerBlocklist from './WorkerBlocklist'
 import InputSwitchV2 from 'app/_modules/AdvancedOptionsPanel/InputSwitchV2'
-import { setLockedToWorker } from 'store/appStore'
-import { handleApiKeyLogin } from 'utils/hordeUtils'
+import { setLockedToWorker } from 'app/_store/appStore'
+import { handleApiKeyLogin } from 'app/_utils/hordeUtils'
+import { IconEye } from '@tabler/icons-react'
 
 const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
   const userStore = useStore(userInfoStore)
@@ -188,10 +188,7 @@ const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
             </div>
           )}
         </SubSectionTitle>
-        <MaxWidth
-          // @ts-ignore
-          width="480px"
-        >
+        <MaxWidth style={{ maxWidth: '480px' }}>
           <div className="flex flex-row gap-2">
             <Input
               type={componentState.showApiKey ? 'text' : 'password'}
@@ -208,7 +205,7 @@ const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
                 }
               }}
             >
-              <EyeIcon />
+              <IconEye />
             </Button>
           </div>
           <div className="flex justify-start gap-2 mt-2">
@@ -297,7 +294,7 @@ const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
           Maximum number of concurrent job requests that ArtBot will send to the
           AI Horde.
         </div>
-        <MaxWidth width="240px">
+        <MaxWidth style={{ maxWidth: '240px' }}>
           <div className="flex flex-row gap-2 items-center">
             <Select
               options={[

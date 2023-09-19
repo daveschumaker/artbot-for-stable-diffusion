@@ -1,16 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
 import { useSwipeable } from 'react-swipeable'
 
-import { setNewImageReady, setShowImageReadyToast } from 'store/appStore'
+import { setNewImageReady, setShowImageReadyToast } from 'app/_store/appStore'
 import { useEffect, useState } from 'react'
-import { trackEvent, trackGaEvent } from 'api/telemetry'
-import { getImageDetails } from 'utils/db'
-import ImageSquare from 'components/ImageSquare'
-import CloseIcon from 'components/icons/CloseIcon'
-import Linker from 'components/UI/Linker'
-import AppSettings from 'models/AppSettings'
+import { trackEvent, trackGaEvent } from 'app/_api/telemetry'
+import { getImageDetails } from 'app/_utils/db'
+import Linker from 'app/_components/Linker'
+import AppSettings from 'app/_data-models/AppSettings'
 import styles from './toast.module.css'
-import { JobImageDetails } from 'types'
+import { JobImageDetails } from '_types'
+import ImageSquare from '../ImageSquare'
+import { IconX } from '@tabler/icons-react'
 
 interface ToastProps {
   disableAutoClose: boolean
@@ -115,7 +115,7 @@ export default function Toast({
             </Linker>
           </div>
           <div onClick={handleClose} className={styles.close}>
-            <CloseIcon />
+            <IconX />
           </div>
         </>
       )}

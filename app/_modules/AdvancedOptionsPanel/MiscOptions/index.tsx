@@ -1,7 +1,7 @@
 import FlexibleRow from 'app/_components/FlexibleRow'
 import FlexibleUnit from 'app/_components/FlexibleUnit'
 import Section from 'app/_components/Section'
-import { GetSetPromptInput } from 'types'
+import { GetSetPromptInput } from '_types'
 import HiresFix from '../HiresFix'
 import AllowNsfwImages from '../AllowNsfwImages'
 import ReplacementFilterToggle from '../ReplacementFilterToggle'

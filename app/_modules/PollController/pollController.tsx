@@ -3,22 +3,22 @@
 import { useStore } from 'statery'
 
 import Toast from '../Toast'
-import { useEffectOnce } from '../../../hooks/useEffectOnce'
+import { useEffectOnce } from 'app/_hooks/useEffectOnce'
 import {
   appInfoStore,
   setImageDetailsModalOpen,
   setShowImageReadyToast
-} from '../../../store/appStore'
+} from 'app/_store/appStore'
 import {
   decideNewMain,
   enablePingChecker,
   LocalStorageEvents,
   multiStore,
   onLocalStorageEvent
-} from '../../../store/multiStore'
+} from 'app/_store/multiStore'
 import { useModal } from '@ebay/nice-modal-react'
 import ImageModal from '../ImageModal'
-import { getImageDetails } from 'utils/db'
+import { getImageDetails } from 'app/_utils/db'
 
 const PollController = () => {
   const imagePreviewModal = useModal(ImageModal)

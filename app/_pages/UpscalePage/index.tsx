@@ -1,18 +1,20 @@
 'use client'
 
 /* eslint-disable @next/next/no-img-element */
-import { checkInterrogate } from 'api/checkInterrogate'
-import { requestIterrogate } from 'api/requestInterrogate'
+import { checkInterrogate } from 'app/_api/checkInterrogate'
+import { requestIterrogate } from 'app/_api/requestInterrogate'
 import UpscalerOptions from 'app/_modules/AdvancedOptionsPanel/UpscalerOptions'
 import Uploader from 'app/_modules/Uploader'
-import PhotoUpIcon from 'components/icons/PhotoUpIcon'
-import SettingsIcon from 'components/icons/SettingsIcon'
-import SquarePlusIcon from 'components/icons/SquarePlusIcon'
-import TrashIcon from 'components/icons/TrashIcon'
 import { Button } from 'app/_components/Button'
 import PageTitle from 'app/_components/PageTitle'
 import Section from 'app/_components/Section'
 import { useCallback, useEffect, useReducer } from 'react'
+import {
+  IconPhotoUp,
+  IconSettings,
+  IconSquarePlus,
+  IconTrash
+} from '@tabler/icons-react'
 
 interface ComponentState {
   apiError?: string
@@ -127,7 +129,7 @@ const UpscalePage = () => {
       <Section>
         <div className="text-[16px] tablet:text-[18px] w-full max-w-[768px]">
           <div className="text-sm font-bold flex flex-row gap-2 items-center mb-[4px]">
-            <PhotoUpIcon />
+            <IconPhotoUp />
             Upload image
           </div>
         </div>
@@ -154,7 +156,7 @@ const UpscalePage = () => {
                   setInput({ source_image: '' })
                 }}
               >
-                <TrashIcon />
+                <IconTrash />
                 Remove image?
               </Button>
             </div>
@@ -164,7 +166,7 @@ const UpscalePage = () => {
       <Section>
         <div className="text-[16px] tablet:text-[18px] w-full max-w-[768px]">
           <div className="text-sm font-bold flex flex-row gap-2 items-center mb-[4px]">
-            <SettingsIcon />
+            <IconSettings />
             Advanced options
           </div>
         </div>
@@ -179,7 +181,7 @@ const UpscalePage = () => {
               onClick={resetInput}
             >
               <span>
-                <TrashIcon />
+                <IconTrash />
               </span>
               <span>Reset all?</span>
             </Button>
@@ -190,7 +192,7 @@ const UpscalePage = () => {
               disabled={componentState.pending}
               width="100px"
             >
-              <span>{componentState.pending ? '' : <SquarePlusIcon />}</span>
+              <span>{componentState.pending ? '' : <IconSquarePlus />}</span>
               {componentState.pending ? 'Processing...' : 'Process'}
             </Button>
           </div>

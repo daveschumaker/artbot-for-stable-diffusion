@@ -3,11 +3,11 @@
 /* eslint-disable @next/next/no-img-element */
 import PageTitle from 'app/_components/PageTitle'
 import styles from './showcase.module.css'
-import MasonryLayout from 'components/MasonryLayout'
 import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
 import { basePath } from 'BASE_PATH'
-import { debounce } from 'utils/debounce'
+import { debounce } from 'app/_utils/debounce'
+import MasonryLayout from 'app/_modules/MasonryLayout'
 
 // Starts at 20 since SSR feeds in offset 0 info.
 let offset = 20

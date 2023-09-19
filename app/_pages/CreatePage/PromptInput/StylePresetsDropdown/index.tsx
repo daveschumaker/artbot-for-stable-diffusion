@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import Input from 'components/UI/Input'
+import Input from 'app/_components/Input'
 import { stylePresets } from './presets'
 import styles from './component.module.css'
 import { IconArrowBarLeft, IconPlayerPlayFilled } from '@tabler/icons-react'

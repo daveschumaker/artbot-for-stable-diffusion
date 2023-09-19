@@ -1,8 +1,8 @@
-import { GetSetPromptInput } from 'types/artbot'
+import { GetSetPromptInput } from '_types/artbot'
 import styles from './component.module.css'
 import { useEffect, useRef, useState } from 'react'
 import { useStore } from 'statery'
-import { modelStore } from 'store/modelStore'
+import { modelStore } from 'app/_store/modelStore'
 import { IconX } from '@tabler/icons-react'
 
 interface Props extends GetSetPromptInput {

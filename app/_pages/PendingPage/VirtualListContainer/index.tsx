@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
 import styles from './virtualList.module.css'
 import { Virtuoso } from 'react-virtuoso'
-import Linker from 'components/UI/Linker'
-import { useWindowSize } from 'hooks/useWindowSize'
-import PendingItem from 'modules/PendingItem'
+import Linker from 'app/_components/Linker'
+import { useWindowSize } from 'app/_hooks/useWindowSize'
+import PendingItem from 'app/_pages/PendingPage/PendingItem'
 import usePendingImageModal from '../usePendingImageModal'
-import { deletePendingJobFromDb } from 'utils/db'
-import { deletePendingJob } from 'controllers/pendingJobsCache'
-import { fetchPendingImageJobs } from 'controllers/pendingJobsController'
-import AdContainer from 'components/AdContainer'
+import { deletePendingJobFromDb } from 'app/_utils/db'
+import { deletePendingJob } from 'app/_controllers/pendingJobsCache'
+import { fetchPendingImageJobs } from 'app/_controllers/pendingJobsController'
+import AdContainer from 'app/_components/AdContainer'
 
 const FOOTER_HEIGHT_PX = 66
 const MOBILE_FOOTER_PX = 66

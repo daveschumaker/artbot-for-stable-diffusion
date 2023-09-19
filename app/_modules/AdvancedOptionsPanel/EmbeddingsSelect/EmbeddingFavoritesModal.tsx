@@ -2,14 +2,14 @@
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import Overlay from 'app/_components/Overlay'
 import React, { useState } from 'react'
-import { Embedding } from 'types/civitai'
-import Input from 'components/UI/Input'
+import { Embedding } from '_types/civitai'
+import Input from 'app/_components/Input'
 import { Button } from 'app/_components/Button'
 import { IconArrowBarLeft, IconSettings } from '@tabler/icons-react'
 import styles from './component.module.css'
-import Checkbox from 'components/UI/Checkbox'
+import Checkbox from 'app/_components/Checkbox'
 import EmbeddingDetailsCard from './EmbeddingDetailsCard'
-import AppSettings from 'models/AppSettings'
+import AppSettings from 'app/_data-models/AppSettings'
 
 const loadFromLocalStorage = () => {
   let existingArray = localStorage.getItem('favoriteEmbeddings')

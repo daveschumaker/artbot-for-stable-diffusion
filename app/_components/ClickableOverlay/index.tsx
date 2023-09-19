@@ -1,4 +1,4 @@
-import { OverlayComponentProps } from 'types/artbot'
+import { OverlayComponentProps } from '_types/artbot'
 import clsx from 'clsx'
 import styles from './overlay.module.css'
 

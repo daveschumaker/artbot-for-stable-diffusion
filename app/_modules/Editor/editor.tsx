@@ -1,13 +1,13 @@
 import React, { useRef, useState } from 'react'
-import { useEffectOnce } from '../../../hooks/useEffectOnce'
+import { useEffectOnce } from 'app/_hooks/useEffectOnce'
 import {
   clearCanvasStore,
   getCanvasStore,
   resetSavedDrawingState
-} from '../../../store/canvasStore'
-import CreateCanvas from '../../../models/CreateCanvas'
+} from 'app/_store/canvasStore'
+import CreateCanvas from 'app/_data-models/CreateCanvas'
 import ToolBar from './components/toolbar'
-import { EditorProps } from 'types/props'
+import { EditorProps } from '_types/props'
 
 const Editor = ({
   canvasId = 'canvas',

@@ -1,7 +1,7 @@
 import { CSSProperties, useId } from 'react'
 import Select, { OptionProps } from 'react-select'
 
-import { SelectComponentProps } from 'types/artbot'
+import { SelectComponentProps } from '_types/artbot'
 
 const SelectComponent = (props: SelectComponentProps) => {
   // Fixes a bunch of weird SSR related issues with react-select

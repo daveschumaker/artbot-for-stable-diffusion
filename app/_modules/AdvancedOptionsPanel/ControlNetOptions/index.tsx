@@ -1,13 +1,13 @@
 import Select from 'app/_components/Select'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
-import DefaultPromptInput from 'models/DefaultPromptInput'
+import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
 import { CONTROL_TYPE_ARRAY } from '../../../../_constants'
 import FlexRow from 'app/_components/FlexRow'
 import { Button } from 'app/_components/Button'
 import { IconSettings } from '@tabler/icons-react'
 import { useState } from 'react'
 import DropdownOptions from 'app/_modules/DropdownOptions'
-import Checkbox from 'components/UI/Checkbox'
+import Checkbox from 'app/_components/Checkbox'
 import TooltipComponent from 'app/_components/TooltipComponent'
 
 const ControlNetOptions = ({
