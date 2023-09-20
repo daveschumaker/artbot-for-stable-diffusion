@@ -10,8 +10,8 @@ const HeaderNav = () => {
   return (
     <header className={styles.HeaderNav}>
       <MenuButton />
-      <div className="flex items-center w-full">
-        <Link href="/" className="flex items-center mb-1 gap-2">
+      <div className={styles.HeaderNavWrapper}>
+        <Link href="/" className={styles.HeaderNavWrapper}>
           <div>
             <img
               src={`${basePath}/artbot-logo.png`}

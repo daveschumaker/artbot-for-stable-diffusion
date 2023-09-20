@@ -11,6 +11,7 @@ import DryRunCalculator from '../PromptInput/DryRunCalculator'
 import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
 import DeleteConfirmModal from 'app/_modules/DeleteConfirmModal'
 import useLockedBody from 'app/_hooks/useLockedBody'
+import styles from './actionPanel.module.css'
 
 interface Props {
   errors: { [key: string]: boolean }
@@ -81,12 +82,7 @@ const ActionPanel = ({
         </DeleteConfirmModal>
       )}
 
-      <div
-        className="CreateImageActionPanel w-full gap-2 mt-2 mb-4 md:flex-row"
-        style={{
-          marginBottom: '8px'
-        }}
-      >
+      <div className={styles.CreateImageActionPanel}>
         <div className="flex flex-col justify-start w-full gap-2 md:w-1/2">
           <div
             className="flex flex-row gap-2 sm:mt-0"
