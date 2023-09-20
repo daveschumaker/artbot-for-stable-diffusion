@@ -52,6 +52,7 @@ import DropDownMenuItem from 'app/_components/DropDownMenuItem'
 import TextButton from 'app/_components/TextButton'
 import MasonryLayout from 'app/_modules/MasonryLayout'
 import ImageSquare from 'app/_modules/ImageSquare'
+import Pagination from './Pagination'
 
 const MenuSeparator = styled.div`
   width: 100%;
@@ -278,6 +279,7 @@ const ImagesPage = () => {
       })
       window.scrollTo(0, 0)
       let newNum
+
       if (btn === 'last') {
         const count = await countCompletedJobs()
         const sort = localStorage.getItem('imagePageSort') || 'new'
@@ -286,6 +288,7 @@ const ImagesPage = () => {
           offset: count - LIMIT,
           sort
         })
+
         setComponentState({
           images: data,
           isLoading: false,
@@ -479,6 +482,13 @@ const ImagesPage = () => {
     })
   }
 
+  const getCurrentPage = useCallback(() => {
+    const currentOffset = componentState.offset
+    const limitPerPage = LIMIT
+
+    return Math.floor(currentOffset / limitPerPage) + 1
+  }, [LIMIT, componentState.offset])
+
   const handleFilterButtonClick = useCallback(() => {
     if (componentState.showFilterMenu) {
       setComponentState({ showFilterMenu: false })
@@ -591,6 +601,57 @@ const ImagesPage = () => {
       componentState.filterMode as keyof typeof descriptorMap
     ]
   }
+
+  const handlePageClick = useCallback(
+    async (page: number) => {
+      const itemsPerPage = LIMIT
+      const totalImages = componentState.totalImages
+
+      console.log(`page`, page)
+      console.log(`totalImages`, totalImages)
+      console.log(`itemsPerPage`, itemsPerPage)
+      console.log(`LIMIT`, LIMIT)
+
+      let newOffset = page * itemsPerPage - LIMIT
+
+      if (newOffset <= 0) {
+        newOffset = 0
+      } else if (newOffset >= totalImages) {
+        newOffset = totalImages - 25
+      }
+
+      console.log(
+        `User requested page number ${page}, which is offset ${newOffset}`
+      )
+
+      setComponentState({
+        isLoading: true
+      })
+      window.scrollTo(0, 0)
+
+      // const sort = localStorage.getItem('imagePageSort') || 'new'
+      // const data = await fetchCompletedJobs({
+      //   limit: LIMIT,
+      //   offset: newOffset,
+      //   sort
+      // })
+
+      setComponentState({
+        // images: data,
+        isLoading: false,
+        offset: newOffset
+      })
+
+      const newQuery = Object.assign(
+        {},
+        parseQueryString(window?.location?.search)
+      )
+      newQuery.offset = String(newOffset)
+      //@ts-ignore
+      router.push(`?${new URLSearchParams(newQuery).toString()}`)
+    },
+    [LIMIT, componentState.totalImages, router, setComponentState]
+  )
 
   return (
     <div className="relative pb-[88px]" {...handlers}>
@@ -1240,6 +1301,14 @@ const ImagesPage = () => {
             Last
           </Button>
         </div>
+      )}
+      {!componentState.isLoading && componentState.totalImages > LIMIT && (
+        <Pagination
+          currentPage={getCurrentPage()}
+          totalCount={componentState.totalImages}
+          pageSize={LIMIT}
+          onPageChange={handlePageClick}
+        />
       )}
     </div>
   )
