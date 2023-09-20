@@ -1,6 +1,5 @@
 import { ReactNode } from 'react'
 import HeaderNav from './_modules/HeaderNav'
-import 'app/_styles/globals.css'
 import AppInit from './_modules/AppInit'
 import SlidingMenu from './_modules/SlidingMenu'
 import Footer from './_components/Footer'
@@ -9,6 +8,9 @@ import PollController from 'app/_modules/PollController'
 import { baseHost, basePath } from 'BASE_PATH'
 import AppAnalytics from './_modules/AppAnalytics'
 import ToastContainer from './_modules/ToastContainer'
+
+import 'tailwindcss/tailwind.css'
+import 'app/_styles/globals.css'
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseHost),
