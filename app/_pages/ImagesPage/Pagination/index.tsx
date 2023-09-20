@@ -2,6 +2,7 @@ import React from 'react'
 import { usePagination, DOTS } from './usePagination'
 import clsx from 'clsx'
 import styles from './pagination.module.css'
+import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react'
 
 interface PaginationProps {
   onPageChange: (page: number) => void
@@ -25,9 +26,6 @@ const Pagination: React.FC<PaginationProps> = ({
     pageSize
   })
 
-  console.log(`currentPage`, currentPage)
-
-  // If there are less than 2 times in pagination range, we shall not render the component
   if (currentPage === 0 || paginationRange.length < 2) {
     return null
   }
@@ -54,7 +52,6 @@ const Pagination: React.FC<PaginationProps> = ({
         justifyContent: 'center'
       }}
     >
-      {/* Left navigation arrow */}
       <li
         className={clsx(
           styles.PaginationPageButton,
@@ -62,8 +59,9 @@ const Pagination: React.FC<PaginationProps> = ({
         )}
         onClick={onPrevious}
       >
-        {'< previous'}
+        <IconChevronLeft />
       </li>
+
       <div className={styles.PageNumberWrapper}>
         {paginationRange.map((pageNumber, i) => {
           if (pageNumber === DOTS) {
@@ -71,6 +69,9 @@ const Pagination: React.FC<PaginationProps> = ({
               <li
                 key={`pagination_dots_${i}`}
                 className={styles.DisabledButton}
+                style={{
+                  padding: '0 4px'
+                }}
               >
                 &#8230;
               </li>
@@ -104,7 +105,7 @@ const Pagination: React.FC<PaginationProps> = ({
         )}
         onClick={onNext}
       >
-        {'next >'}
+        <IconChevronRight />
       </li>
     </ul>
   )

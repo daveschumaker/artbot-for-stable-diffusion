@@ -4,6 +4,7 @@
   flex-direction: row;
   gap: 4px;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 .PaginationPageButton {
@@ -21,7 +22,7 @@
   height: 30px;
   justify-content: center;
   min-width: 30px;
-  padding: 2px 8px;
+  padding: 2px 4px;
 
   -webkit-user-select: none;
   -ms-user-select: none;
@@ -73,4 +74,29 @@
 .DisabledButton:hover {
   background-color: #bdbdbd !important;
   cursor: default;
+
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+@media (min-width: 640px) {
+  .ModalStyle {
+    bottom: unset;
+    left: 50%;
+    max-width: calc(100% - 64px);
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@media (min-width: 1264px) {
+  .PaginationPageButton {
+    font-size: 14px;
+  }
+
+  .PageNumberWrapper>li {
+    font-size: 14px;
+    padding: 0 12px;
+  }
 }

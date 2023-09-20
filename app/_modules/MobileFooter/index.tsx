@@ -45,7 +45,7 @@ export default function MobileFooter() {
               isActive('/create') && styles['nav-icon-active']
             )}
           >
-            <IconEdit className={clsx(styles['svg'])} size={32} />
+            <IconEdit className={clsx(styles['svg'])} size={32} stroke={1} />
           </div>
         </Link>
         <Link href="/pending">
@@ -55,7 +55,11 @@ export default function MobileFooter() {
               isActive('/pending') && styles['nav-icon-active']
             )}
           >
-            <IconHourglass className={clsx(styles['svg'])} size={32} />
+            <IconHourglass
+              className={clsx(styles['svg'])}
+              size={32}
+              stroke={1}
+            />
           </div>
         </Link>
         <Link
@@ -79,7 +83,7 @@ export default function MobileFooter() {
                 style={{ position: 'absolute', top: '20px', left: '2px' }}
               ></span>
             )}
-            <IconPhoto className={clsx(styles['svg'])} size={32} />
+            <IconPhoto className={clsx(styles['svg'])} size={32} stroke={1} />
           </div>
         </Link>
         <Link href="/rate">
@@ -89,7 +93,7 @@ export default function MobileFooter() {
               isActive('/rate') && styles['nav-icon-active']
             )}
           >
-            <IconStars className={clsx(styles['svg'])} size={32} />
+            <IconStars className={clsx(styles['svg'])} size={32} stroke={1} />
           </div>
         </Link>
         <Link href="/settings">
@@ -99,7 +103,11 @@ export default function MobileFooter() {
               isActive('/settings') && styles['nav-icon-active']
             )}
           >
-            <IconSettings className={clsx(styles['svg'])} size={32} />
+            <IconSettings
+              className={clsx(styles['svg'])}
+              size={32}
+              stroke={1}
+            />
           </div>
         </Link>
       </div>

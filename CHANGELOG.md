@@ -1,3 +1,10 @@
+# 2023.09.20
+
+- Update: No more SDXL beta on the Horde. SDXL is coming Soon™️ according to the powers that be. In the meantime, Stability.ai pulled their SDXL beta workers from the Horde. _Sad Trombone Noises_ It might have something to do with their new music feature that just launched. I'm just bitter because I had to make [@MrRossBot](https://botsin.space/@MrRossBot) switch back to Deliberate after using SDXL for awhile. The SDXL images were SO good.
+- Finished an ongoing project where I consolidated a [ton of spaghetti code](https://github.com/daveschumaker/artbot-for-stable-diffusion/pull/186) into a more manageable file structure (444 files touched). Don't get me wrong, my code is still made of pasta, but it should now taste slightly better.
+- Upgrade to NextJS v13.5. Allegedly uses 40% less memory. We'll see what happens.
+- Updated the pagination component on the images page to behave like an actual pagination component. Also, now display the component at the top and bottom of the page.
+
 # 2023.09.12
 
 - Allow importing of LyCORIS models from CivitAI from the Lora import panel.
@@ -99,7 +106,7 @@
 # 2023.08.08
 
 - I've been traveling for work, so updates have been a bit slow.
-- A bunch of new style tags have been added, thanks to Anonnymous Derpling.
+- A bunch of new style tags have been added, thanks to Anonymous Derpling.
 - Fix: display issue with "using single worker" warning.
 - Fix: display issue with "fixed seed / multiple images" warning
 - Fix (I think): retry button causing job to disappear.
@@ -165,7 +172,7 @@
 
 # 2023.07.16
 
-- Updated shared images feauture to utilize AWS (before... they were just saved locally and taking up space on my own server. Almost 4,000 shared images so far!) All existing shared images have been migrated and should continue to work.
+- Updated shared images feature to utilize AWS (before... they were just saved locally and taking up space on my own server. Almost 4,000 shared images so far!) All existing shared images have been migrated and should continue to work.
 - Fix: Issues with image orientation settings getting reset and just acting ridiculous every time you come back to the create image page. Thanks to Chief of Booty for reporting this on Discord.
 
 # 2023.07.15
@@ -178,7 +185,7 @@
 
 # 2023.07.13
 
-- Fix: Dropdown menus for tags and style presets were unscrollable due to a pesky z-index issue. Thanks to Noli and Anonymous Derpling on Discord for reporting this issue.
+- Fix: Dropdown menus for tags and style presets were un-scrollable due to a pesky z-index issue. Thanks to Noli and Anonymous Derpling on Discord for reporting this issue.
 
 # 2023.07.12
 
@@ -195,7 +202,7 @@
 
 - Added support for SDXL beta! Stability.ai is kindly providing some computing power to the AI Horde in order to help fine tune and improve future image models. Once you've generated an image using SDXL, you'll be presented with two thumbnails. Choose which image you think looks best and the result will be sent back to Stability.ai. In return, AI Horde will reward you with kudos (currently 15 per rating). More information is available on [Db0's blog post announcing the partnership](https://dbzer0.com/blog/stable-diffusion-xl-beta-on-the-ai-horde/).
 - Fix: Issue with page scroll being locked after closing shared image modal (Thanks for reporting, Anonymous Derpling!)
-- UI Refactor: Mostly invisible to users. But the prompt input and associated dropdowns (prompt history, negative prompt history, tags, styles) have been cleaned up. (The old negative prompt modal was especially ugly. No more slider!)
+- UI Refactor: Mostly invisible to users. But the prompt input and associated drop-downs (prompt history, negative prompt history, tags, styles) have been cleaned up. (The old negative prompt modal was especially ugly. No more slider!)
   - This is based on some redesign work I've been doing on a development branch. I figure that I should start porting components over to my production build, otherwise, they'll never see the light of day at the pace I've been going at!
 - Issues I'm currently investigating:
   - Once you've voted on an image for SDXL, you lose access to the previous image. I should probably save all images to the browser database, regardless.
@@ -430,7 +437,7 @@
 
 # 2023.03.23
 
-- Fix: Image ratings have been inconsistent and broken since some griefing countermeasures were implemented on the backend. Ratings should now work properly again. Protip: If you see an image that literally says something like "rate this image a 4", then please do that. It"s a form of captcha to verify ratings. Thanks to ƊαякƊ, R3H and others for reporting issues with this on Discord.
+- Fix: Image ratings have been inconsistent and broken since some griefing countermeasures were implemented on the backend. Ratings should now work properly again. Pro tip: If you see an image that literally says something like "rate this image a 4", then please do that. It"s a form of captcha to verify ratings. Thanks to ƊαякƊ, R3H and others for reporting issues with this on Discord.
 - Feature: Swanky new image details page and modal. (And modal?). Yes! They are now basically the same thing. Same info available on both. Easier to update. Buttons with dropdown options, if needed. Can now view tile-able images on the image details page. Can now view tile-able images fullscreen! Will there be bugs? Probably! But that's what makes things fun. (But seriously, if you see any, you know what to do.)
 - Oh, yeah. With the new image page / modal, you can now copy images directly to your clipboard. That's kind of neat for things like Discord, text messages, etc.
 

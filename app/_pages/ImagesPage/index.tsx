@@ -21,7 +21,6 @@ import {
   imageCount
 } from 'app/_utils/db'
 import { trackEvent } from 'app/_api/telemetry'
-import { Button } from 'app/_components/Button'
 import { useWindowSize } from 'app/_hooks/useWindowSize'
 import MenuButton from 'app/_components/MenuButton'
 import useComponentState from 'app/_hooks/useComponentState'
@@ -607,11 +606,6 @@ const ImagesPage = () => {
       const itemsPerPage = LIMIT
       const totalImages = componentState.totalImages
 
-      console.log(`page`, page)
-      console.log(`totalImages`, totalImages)
-      console.log(`itemsPerPage`, itemsPerPage)
-      console.log(`LIMIT`, LIMIT)
-
       let newOffset = page * itemsPerPage - LIMIT
 
       if (newOffset <= 0) {
@@ -628,13 +622,6 @@ const ImagesPage = () => {
         isLoading: true
       })
       window.scrollTo(0, 0)
-
-      // const sort = localStorage.getItem('imagePageSort') || 'new'
-      // const data = await fetchCompletedJobs({
-      //   limit: LIMIT,
-      //   offset: newOffset,
-      //   sort
-      // })
 
       setComponentState({
         // images: data,
@@ -654,7 +641,7 @@ const ImagesPage = () => {
   )
 
   return (
-    <div className="relative pb-[88px]" {...handlers}>
+    <div className="relative" {...handlers}>
       {componentState.deleteMode && (
         <FloatingActionButton
           onClick={() => {
@@ -1092,7 +1079,7 @@ const ImagesPage = () => {
         size && size.width < 890 && !imageDetailsModalOpen && !adHidden && (
           <div
             style={{
-              margin: '0 auto',
+              margin: '0 auto 12px 0',
               maxWidth: '520px',
               backgroundColor: 'var(--carbon-bg)'
             }}
@@ -1107,6 +1094,16 @@ const ImagesPage = () => {
           <SpinnerV2 />
         </div>
       )}
+
+      {!componentState.isLoading && componentState.totalImages > LIMIT && (
+        <Pagination
+          currentPage={getCurrentPage()}
+          totalCount={componentState.totalImages}
+          pageSize={LIMIT}
+          onPageChange={handlePageClick}
+        />
+      )}
+
       <div className={defaultStyle}>
         {!componentState.isLoading &&
           componentState.images.length > 0 &&
@@ -1270,38 +1267,7 @@ const ImagesPage = () => {
             </>
           )}
       </div>
-      {!componentState.isLoading && componentState.totalImages > LIMIT && (
-        <div className="flex flex-row justify-center gap-2 mt-4">
-          <Button
-            disabled={componentState.offset === 0}
-            onClick={() => handleLoadMore('first')}
-            width="52px"
-          >
-            First
-          </Button>
-          <Button
-            disabled={componentState.offset === 0}
-            onClick={() => handleLoadMore('prev')}
-            width="52px"
-          >
-            Prev
-          </Button>
-          <Button
-            disabled={currentOffset >= componentState.totalImages - LIMIT - 1}
-            onClick={() => handleLoadMore('next')}
-            width="52px"
-          >
-            Next
-          </Button>
-          <Button
-            disabled={currentOffset >= componentState.totalImages - LIMIT - 1}
-            onClick={() => handleLoadMore('last')}
-            width="52px"
-          >
-            Last
-          </Button>
-        </div>
-      )}
+
       {!componentState.isLoading && componentState.totalImages > LIMIT && (
         <Pagination
           currentPage={getCurrentPage()}
