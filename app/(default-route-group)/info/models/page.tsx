@@ -20,7 +20,10 @@ async function getPageData() {
     )
     const modelDetailsData = (await modelDetailsRes.json()) || {}
     modelDetails = modelDetailsData.models
-  } catch (err) {}
+  } catch (err) {
+    console.log(`Unable to load model details page (/info/models) on SSR`)
+    console.log(err)
+  }
 
   return {
     availableModels,

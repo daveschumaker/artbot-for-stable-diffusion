@@ -1,3 +1,11 @@
+# 2023.09.22
+
+- Fix: Issue with model details page not loading.
+
+# 2023.09.21
+
+- MILESTONE: 🎉🎉🎉 ‼️‼️‼️ **11,000,000 images** have been created with ArtBot!‼️‼️‼️ 🎉🎉🎉
+
 # 2023.09.20
 
 - Update: No more SDXL beta on the Horde. SDXL is coming Soon™️ according to the powers that be. In the meantime, Stability.ai pulled their SDXL beta workers from the Horde. _Sad Trombone Noises_ It might have something to do with their new music feature that just launched. I'm just bitter because I had to make [@MrRossBot](https://botsin.space/@MrRossBot) switch back to Deliberate after using SDXL for awhile. The SDXL images were SO good.

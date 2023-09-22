@@ -162,11 +162,15 @@ export const getModelDetails = async () => {
   }
 }
 
+let modelFetchActive = false
 export const initModelAvailabilityFetch = async () => {
   try {
+    if (modelFetchActive) return
+
     loadInitChanges()
     await fetchAvailableModels()
     await fetchModelDetails()
+    modelFetchActive = true
 
     setInterval(async () => {
       await fetchAvailableModels()
@@ -174,5 +178,13 @@ export const initModelAvailabilityFetch = async () => {
     }, 30000)
   } catch (err) {
     console.error('Error initializing model data fetch:', err)
+
+    // Encountered a random issue where there was an error fetching model availability on initial boot.
+    // If this happens, wait a bit of time and try again.
+    if (!modelFetchActive) {
+      setTimeout(() => {
+        initModelAvailabilityFetch()
+      }, 60000)
+    }
   }
 }

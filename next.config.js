@@ -8,6 +8,11 @@ const { basePath } = require('./BASE_PATH.js')
 
 const nextConfig = {
   basePath,
+  compiler: {
+    // TODO: Remove me when styled-components is gone
+    // https://nextjs.org/docs/architecture/nextjs-compiler#styled-components
+    styledComponents: true
+  },
   distDir: 'build',
   images: {
     domains: ['huggingface.co', 'raw.githubusercontent.com']

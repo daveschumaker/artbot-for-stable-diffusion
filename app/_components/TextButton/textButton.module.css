@@ -1,0 +1,28 @@
+/* TextButton.module.css */
+.textButton {
+  cursor: pointer;
+  font-size: 14px;
+  letter-spacing: 0.2px;
+}
+
+.textButton:active {
+  transform: scale(0.98);
+}
+
+.textButton.disabled {
+  color: gray;
+}
+
+/* Disables hover effect for mobile devices: */
+/* https://stackoverflow.com/a/59210149 */
+@media (hover: hover) and (pointer: fine) {
+  .textButton:hover {
+    text-decoration: underline;
+  }
+}
+
+@media (min-width: 640px) {
+  .textButton {
+    font-size: 16px;
+  }
+}
