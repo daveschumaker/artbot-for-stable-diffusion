@@ -4,17 +4,14 @@ import { setModelDetails } from 'app/_store/modelStore'
 import { isAppActive } from 'app/_utils/appUtils'
 import { basePath } from 'BASE_PATH'
 
-let isPending = false
 const fetchModelDetails = async () => {
-  if (isPending) {
-    return
-  }
-
   if (!isAppActive()) {
-    return
+    return {
+      success: false,
+      status: 'App is not active'
+    }
   }
 
-  isPending = true
   let modelDetails: IModelsDetails = {}
   let availableModelsMap: IAvailableModels = {}
 
@@ -56,7 +53,6 @@ const fetchModelDetails = async () => {
   } catch (err) {
     console.log(`Warning: Unable to fetch model details. API offline?`)
   } finally {
-    isPending = false
     setModelDetails(modelDetails)
 
     return availableModelsMap

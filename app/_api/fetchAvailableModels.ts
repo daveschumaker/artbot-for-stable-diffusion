@@ -4,19 +4,10 @@ import { modelStore, setAvailableModels } from 'app/_store/modelStore'
 import { clientHeader, isAppActive } from 'app/_utils/appUtils'
 import fetchModelDetails from './fetchModelDetails'
 
-let isInitial = true
-let isPending = false
-
 export const fetchAvailableModels = async () => {
-  if (isPending) {
-    return
-  }
-
   if (!isAppActive()) {
     return
   }
-
-  isPending = true
 
   let availableModels = [
     new StableDiffusionModel({
@@ -26,17 +17,12 @@ export const fetchAvailableModels = async () => {
   ]
 
   try {
-    const res = await fetch(
-      isInitial
-        ? `${basePath}/api/models-available`
-        : `https://aihorde.net/api/v2/status/models`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'Client-Agent': clientHeader()
-        }
+    const res = await fetch(`${basePath}/api/models-available`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Client-Agent': clientHeader()
       }
-    )
+    })
     const data = await res.json()
 
     if (Array.isArray(data)) {
@@ -49,9 +35,6 @@ export const fetchAvailableModels = async () => {
   } catch (err) {
     console.log(`Warning: Unable to fetch available models. API offline?`)
   } finally {
-    isPending = false
-    // isInitial = false
-
     return availableModels
   }
 }

@@ -15,6 +15,9 @@ import { clientHeader } from 'app/_utils/appUtils'
 // in order to get page up and running while API loads.
 import availableModels from './availableModels.json'
 import { modelDiff, loadInitChanges } from './modelUpdates'
+import { ModelDetails } from '_types/horde'
+
+const SHOW_DEBUG_LOGS = false
 
 const cache = {
   availableFetchTimestamp: 0,
@@ -30,6 +33,17 @@ const fetchAvailableModels = async () => {
   if (pendingModelsRequest) return
   pendingModelsRequest = true
 
+  if (SHOW_DEBUG_LOGS) {
+    console.log(`\n${new Date().toLocaleTimeString()}`)
+    console.log(`Fetching available models from aihorde.net`)
+  }
+
+  const controller = new AbortController()
+  const timeout = setTimeout(() => {
+    controller.abort()
+    console.log('Error: fetchAvailableModels - request timed out.')
+  }, 5000)
+
   try {
     const resp = await fetch(`https://aihorde.net/api/v2/status/models`, {
       method: 'GET',
@@ -38,8 +52,11 @@ const fetchAvailableModels = async () => {
         'Client-Agent': __DEV__
           ? `ArtBot_DEV_Build:v.1:(discord)rockbandit#4910`
           : clientHeader()
-      }
+      },
+      signal: controller.signal
     })
+
+    clearTimeout(timeout)
 
     if (resp.status === 522) {
       console.log(`Error: fetchAvailableModels - connection timed out.`)
@@ -49,6 +66,10 @@ const fetchAvailableModels = async () => {
     const data = await resp.json()
 
     if (Array.isArray(data) && data.length > 0) {
+      if (SHOW_DEBUG_LOGS) {
+        console.log(`Valid data. Updating cache. Size:`, data.length, `\n`)
+      }
+
       cache.models = [...data]
       cache.availableFetchTimestamp = Date.now()
       return true
@@ -61,20 +82,44 @@ const fetchAvailableModels = async () => {
   }
 }
 
-export const fetchModelDetails = async () => {
+const fetchModelDetails = async () => {
+  const controller = new AbortController()
+  const timeout = setTimeout(() => {
+    controller.abort()
+    console.log('Error: fetchModelDetails - request timed out.')
+  }, 5000)
+
   try {
     let modelDetails: any = {}
+
+    if (SHOW_DEBUG_LOGS) {
+      console.log(`\n${new Date().toLocaleTimeString()}`)
+      console.log(`Fetching model details from github`)
+    }
 
     const resp = await fetch(
       `https://raw.githubusercontent.com/db0/AI-Horde-image-model-reference/main/stable_diffusion.json`,
       {
-        method: 'GET'
+        method: 'GET',
+        signal: controller.signal
       }
     )
 
-    const data: any = (await resp.json()) || {}
+    clearTimeout(timeout)
+
+    const data: { [key: string]: ModelDetails } = (await resp.json()) as {
+      [key: string]: ModelDetails
+    }
 
     if (typeof data === 'object' && !Array.isArray(data) && data !== null) {
+      if (SHOW_DEBUG_LOGS) {
+        console.log(
+          `Valid data. Updating cache. Size:`,
+          Object.keys(data).length,
+          `\n`
+        )
+      }
+
       for (const model in data) {
         const {
           description,
@@ -120,22 +165,39 @@ export const fetchModelDetails = async () => {
   }
 }
 
-const CACHE_TIMEOUT = 20000
+// Interval is every 30 seconds, so in theory, that should handle any updates.
+// If we noticed that the cache hasn't been updated, then sometime must have happened,
+// so we try to force an update after a certain amount of time has passed.
+const CACHE_TIMEOUT = 60000
 
 export const getAvailableModels = async () => {
   const currentTime = Date.now()
 
-  if (currentTime - cache.availableFetchTimestamp >= CACHE_TIMEOUT) {
-    const data = await fetchAvailableModels()
+  if (SHOW_DEBUG_LOGS) {
+    console.log(
+      `getAvailable models, time since last fetch`,
+      currentTime - cache.availableFetchTimestamp
+    )
+  }
 
-    if (data) {
-      return {
-        timestamp: cache.availableFetchTimestamp,
-        models: cache.models
-      }
+  if (currentTime - cache.availableFetchTimestamp >= CACHE_TIMEOUT) {
+    // No await here, since we want to immediately return data to user without waiting
+    // for API call to finish. This means data may be, at most (in optimal scenarios),
+    // only 1 minute out of date.
+    fetchAvailableModels()
+
+    if (SHOW_DEBUG_LOGS) {
+      console.log(`Refreshing availableModels`)
+    }
+    return {
+      timestamp: cache.availableFetchTimestamp,
+      models: cache.models
     }
   }
 
+  if (SHOW_DEBUG_LOGS) {
+    console.log(`Pulling availableModels from cache`)
+  }
   return {
     timestamp: cache.availableFetchTimestamp,
     models: cache.models
@@ -145,15 +207,31 @@ export const getAvailableModels = async () => {
 export const getModelDetails = async () => {
   const currentTime = Date.now()
 
-  if (currentTime - cache.detailsFetchTimestamp >= CACHE_TIMEOUT) {
-    const data = await fetchModelDetails()
+  if (SHOW_DEBUG_LOGS) {
+    console.log(
+      `getModelDetails models, time since last fetch`,
+      currentTime - cache.availableFetchTimestamp
+    )
+  }
 
-    if (data) {
-      return {
-        timestamp: cache.detailsFetchTimestamp,
-        models: cache.details
-      }
+  if (currentTime - cache.detailsFetchTimestamp >= CACHE_TIMEOUT) {
+    // No await here, since we want to immediately return data to user without waiting
+    // for API call to finish. This means data may be, at most (in optimal scenarios),
+    // only 1 minute out of date.
+    fetchModelDetails()
+
+    if (SHOW_DEBUG_LOGS) {
+      console.log(`Refreshing modelDetails`)
     }
+
+    return {
+      timestamp: cache.detailsFetchTimestamp,
+      models: cache.details
+    }
+  }
+
+  if (SHOW_DEBUG_LOGS) {
+    console.log(`Pulling modelDetails from cache`)
   }
 
   return {
@@ -167,17 +245,31 @@ export const initModelAvailabilityFetch = async () => {
   try {
     if (modelFetchActive) return
 
+    if (SHOW_DEBUG_LOGS) {
+      console.log(`Calling initModelAvailabilityFetch`)
+    }
+
     loadInitChanges()
     await fetchAvailableModels()
     await fetchModelDetails()
     modelFetchActive = true
 
     setInterval(async () => {
+      if (SHOW_DEBUG_LOGS) {
+        console.log(`\n${new Date().toLocaleTimeString()}`)
+        console.log(
+          `30s interval refreshing available models and model details`
+        )
+      }
+
       await fetchAvailableModels()
       await fetchModelDetails()
     }, 30000)
   } catch (err) {
-    console.error('Error initializing model data fetch:', err)
+    console.error(
+      'Error initializing model data fetch. Will try again in 60 seconds:'
+    )
+    console.log(err)
 
     // Encountered a random issue where there was an error fetching model availability on initial boot.
     // If this happens, wait a bit of time and try again.

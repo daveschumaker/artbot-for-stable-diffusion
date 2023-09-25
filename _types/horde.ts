@@ -124,6 +124,23 @@ export interface Lora {
   clip: number
 }
 
+export interface ModelDetails {
+  name: string
+  baseline: string
+  type: string
+  homepage?: string
+  inpainting: boolean
+  description: string
+  showcases: string[]
+  version: string
+  style: string
+  nsfw: boolean
+  trigger?: string[]
+  download_all: boolean
+  config: { files: string[]; download: string[] }
+  available: boolean
+}
+
 export enum SourceProcessing {
   Prompt = 'prompt',
   Img2Img = 'img2img',
