@@ -1,3 +1,8 @@
+# 2023.09.26
+
+- Fix: Fix issue where my previous "fix issue with model details page not loading" didn't actually fix things.
+- Fix: Pending image requests disappear when reloading the page.
+
 # 2023.09.22
 
 - Fix: Issue with model details page not loading.

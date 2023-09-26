@@ -293,6 +293,9 @@ export const deleteInvalidPendingJobs = async () => {
   })
 
   const ids = done.map((job: any) => job.id)
+
+  console.log(`Found IDs for invalid pending jobs:`, ids)
+
   await db.pending.bulkDelete(ids)
 }
 
@@ -538,9 +541,19 @@ export const addCompletedJobToDexie = async (imageDetails = {}) => {
   }
 }
 
-export const addPendingJobToDexie = async (jobDetails: any) => {
-  const info = await db.pending.put({ ...jobDetails })
-  return info
+export const addPendingJobToDexie = async (jobDetails: CreateImageRequest) => {
+  const jobExists = await getPendingJobDetails(jobDetails.jobId)
+
+  if (!jobExists) {
+    // @ts-ignore
+    delete jobDetails.id
+
+    const info = await db.pending.add(jobDetails)
+    return info
+  } else {
+    const info = await db.pending.put({ ...jobDetails })
+    return info
+  }
 }
 
 // @ts-ignore
@@ -571,7 +584,10 @@ export const updateAllPendingJobs = async (
 export const deleteAllPendingErrors = async () => {
   await db.pending
     .filter(function (job: { jobStatus: string }) {
-      return job.jobStatus === JobStatus.Error
+      if (job.jobStatus === JobStatus.Error) {
+        console.log(`Found jobs with error, deleting`)
+        return true
+      }
     })
     .delete()
 

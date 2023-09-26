@@ -1,7 +1,6 @@
 import { MAX_IMAGES_PER_JOB } from '_constants'
 import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 import { logError, uuidv4 } from './appUtils'
-import { addPendingJobToDexie } from './db'
 import { getModelVersion, validModelsArray } from './modelUtils'
 import { modelStore } from 'app/_store/modelStore'
 import { SourceProcessing } from './promptUtils'
@@ -13,8 +12,11 @@ import {
   setPendingJob
 } from 'app/_controllers/pendingJobsCache'
 import AppSettings from 'app/_data-models/AppSettings'
+import { addPendingJobToDexie } from './db'
 
-const addJobToPending = async (imageParams: CreateImageRequest) => {
+export const addPendingJobToDexieDb = async (
+  imageParams: CreateImageRequest
+) => {
   // Create a temporary uuid for easier lookups.
   // Will be replaced later when job is accepted
   // by API
@@ -74,7 +76,7 @@ export const createPendingRerollJob = async (
   imageParams: CreateImageRequest
 ) => {
   const clonedParams = await cloneImageParams(imageParams)
-  return await addJobToPending(clonedParams)
+  return await addPendingJobToDexieDb(clonedParams)
 }
 
 export const addTriggerToPrompt = ({
@@ -132,7 +134,7 @@ export const addPendingJobToDb = async ({
       return { success: false }
     }
 
-    await addJobToPending(clonedParams)
+    await addPendingJobToDexieDb(clonedParams)
 
     logToConsole({
       data: clonedParams,
@@ -248,7 +250,7 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
             })
           }
 
-          await addJobToPending(clonedParams)
+          await addPendingJobToDexieDb(clonedParams)
         }
       } catch (err) {}
     }
@@ -308,7 +310,7 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
         })
       }
 
-      await addJobToPending(clonedParams)
+      await addPendingJobToDexieDb(clonedParams)
     }
 
     return {
@@ -336,7 +338,7 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
         })
       }
 
-      await addJobToPending(clonedParams)
+      await addPendingJobToDexieDb(clonedParams)
     }
 
     return {
