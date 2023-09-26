@@ -17,7 +17,11 @@ import availableModels from './availableModels.json'
 import { modelDiff, loadInitChanges } from './modelUpdates'
 import { ModelDetails } from '_types/horde'
 
-const SHOW_DEBUG_LOGS = false
+let SHOW_DEBUG_LOGS = false
+// Prevent me from accidentally deploying debug logs to production
+if (process.env.NODE_ENV === 'production') {
+  SHOW_DEBUG_LOGS = false
+}
 
 const cache = {
   availableFetchTimestamp: 0,
@@ -41,6 +45,7 @@ const fetchAvailableModels = async () => {
   const controller = new AbortController()
   const timeout = setTimeout(() => {
     controller.abort()
+    console.log(`\n${new Date().toString()}`)
     console.log('Error: fetchAvailableModels - request timed out.')
   }, 5000)
 
@@ -65,9 +70,13 @@ const fetchAvailableModels = async () => {
 
     const data = await resp.json()
 
-    if (Array.isArray(data) && data.length > 0) {
+    if (Array.isArray(data) && data.length > 1) {
       if (SHOW_DEBUG_LOGS) {
-        console.log(`Valid data. Updating cache. Size:`, data.length, `\n`)
+        console.log(
+          `Valid data. Updating available models cache. Size:`,
+          data.length,
+          `\n`
+        )
       }
 
       cache.models = [...data]
@@ -86,6 +95,7 @@ const fetchModelDetails = async () => {
   const controller = new AbortController()
   const timeout = setTimeout(() => {
     controller.abort()
+    console.log(`\n${new Date().toString()}`)
     console.log('Error: fetchModelDetails - request timed out.')
   }, 5000)
 
@@ -114,10 +124,17 @@ const fetchModelDetails = async () => {
     if (typeof data === 'object' && !Array.isArray(data) && data !== null) {
       if (SHOW_DEBUG_LOGS) {
         console.log(
-          `Valid data. Updating cache. Size:`,
+          `Valid data. Updating model details cache. Size:`,
           Object.keys(data).length,
           `\n`
         )
+      }
+
+      if (Object.keys(data).length <= 1) {
+        console.log(`\n${new Date().toString()}`)
+        console.log(`Potentially invalid model data detected?`)
+        console.log(data)
+        return false
       }
 
       for (const model in data) {
@@ -175,7 +192,7 @@ export const getAvailableModels = async () => {
 
   if (SHOW_DEBUG_LOGS) {
     console.log(
-      `getAvailable models, time since last fetch`,
+      `\ngetAvailable models, time since last fetch`,
       currentTime - cache.availableFetchTimestamp
     )
   }
@@ -196,7 +213,10 @@ export const getAvailableModels = async () => {
   }
 
   if (SHOW_DEBUG_LOGS) {
-    console.log(`Pulling availableModels from cache`)
+    console.log(
+      `Pulling availableModels from cache. Size:`,
+      cache.models.length
+    )
   }
   return {
     timestamp: cache.availableFetchTimestamp,
@@ -231,7 +251,10 @@ export const getModelDetails = async () => {
   }
 
   if (SHOW_DEBUG_LOGS) {
-    console.log(`Pulling modelDetails from cache`)
+    console.log(
+      `Pulling modelDetails from cache. Size:`,
+      Object.keys(cache.details).length
+    )
   }
 
   return {
