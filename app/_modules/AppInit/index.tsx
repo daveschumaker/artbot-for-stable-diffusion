@@ -3,7 +3,7 @@
 import { useSearchParams } from 'next/navigation'
 import { initPendingJobService } from 'app/_controllers/pendingJobsController'
 import { useEffectOnce } from 'app/_hooks/useEffectOnce'
-import { initAppSettings } from 'app/_utils/appSettings'
+import { initAppSettings } from 'app/_utils/initArtBotAppSettings'
 import { initDb } from 'app/_utils/db'
 import { initializePrimaryWindowOnLoad } from 'app/_utils/primaryWindow'
 import AppTheme from '../AppTheme'
