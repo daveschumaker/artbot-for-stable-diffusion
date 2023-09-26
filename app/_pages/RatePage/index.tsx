@@ -60,8 +60,10 @@ const ImageOverlay = styled.div`
 `
 
 const Image = styled.img<{ pending?: boolean; status?: string }>`
-  box-shadow: 0 16px 38px -12px rgb(0 0 0 / 56%),
-    0 4px 25px 0px rgb(0 0 0 / 12%), 0 8px 10px -5px rgb(0 0 0 / 20%);
+  box-shadow:
+    0 16px 38px -12px rgb(0 0 0 / 56%),
+    0 4px 25px 0px rgb(0 0 0 / 12%),
+    0 8px 10px -5px rgb(0 0 0 / 20%);
   filter: brightness(100%);
   transition: all 250ms ease-in-out;
   height: auto;
@@ -319,8 +321,9 @@ const RatePage = () => {
 
       if (res.status === 403) {
         console.log(`Rate Image Error?!`)
-        loadNextImage()
         fetchImage()
+        loadNextImage()
+        return
       }
 
       const data = await res.json()
@@ -363,7 +366,6 @@ const RatePage = () => {
         loadNextImage()
 
         await sleep(1000)
-        // fetchImage({ getNextImage: true }) // Try to fetch an additional image, if possible.
       }
     } catch (err: any) {
       errorCount++
