@@ -6,37 +6,35 @@ import { trackEvent } from 'app/_api/telemetry'
 import Panel from 'app/_components/Panel'
 import useComponentState from 'app/_hooks/useComponentState'
 import { useEffectOnce } from 'app/_hooks/useEffectOnce'
-import { modelStore } from 'app/_store/modelStore'
 import SpinnerV2 from 'app/_components/Spinner'
 import styled from 'styled-components'
 import Linker from 'app/_components/Linker'
 import MenuButton from 'app/_components/MenuButton'
 import AppSettings from 'app/_data-models/AppSettings'
-import { useStore } from 'statery'
 import { baseHost, basePath } from 'BASE_PATH'
 import { showSuccessToast } from 'app/_utils/notificationUtils'
 import { IconExternalLink, IconHeart, IconLink } from '@tabler/icons-react'
 import TextButton from 'app/_components/TextButton'
+import { useStore } from 'statery'
+import { modelStore } from 'app/_store/modelStore'
 
 const StyledLinkIcon = styled(IconLink)`
   cursor: pointer;
 `
 
-const ModelDetailsList = ({ availableModels, modelDetails }: any) => {
+const ModelDetailsList = () => {
+  const { availableModels = {}, modelDetails = {} } = useStore(modelStore)
+
   const router = useRouter()
   const searchParams = useSearchParams()
-
-  const modelState = useStore(modelStore)
-  const workerModels = modelState.availableModels
+  const workerModels = availableModels
 
   // TODO: Filter and include all inpainting models (but per worker...)
   const inpaintingWorkers =
     workerModels?.['stable_diffusion_inpainting']?.count ?? 0
 
   const [componentState, setComponentState] = useComponentState({
-    availableModels: availableModels,
     favoriteModels: {},
-    modelDetails: modelDetails,
     imageCounts: {},
     isLoading: false,
     showOptionsMenu: false,
@@ -59,8 +57,8 @@ const ModelDetailsList = ({ availableModels, modelDetails }: any) => {
   const sortModels = () => {
     const modelDetailsArray: Array<any> = []
 
-    for (const model in componentState.modelDetails) {
-      const [modelStats = {}] = componentState.availableModels.filter(
+    for (const model in modelDetails) {
+      const [modelStats = {}] = Object.values(availableModels).filter(
         (obj: any) => {
           return obj.name === model
         }
@@ -69,7 +67,7 @@ const ModelDetailsList = ({ availableModels, modelDetails }: any) => {
       if (searchParams?.get('show') === 'favorite-models') {
         if (componentState.favoriteModels[model]) {
           modelDetailsArray.push({
-            ...componentState.modelDetails[model],
+            ...modelDetails[model],
             // @ts-ignore
             count: modelStats.count || 0,
             numImages: componentState?.imageCounts[model] || 0,
@@ -79,7 +77,7 @@ const ModelDetailsList = ({ availableModels, modelDetails }: any) => {
         }
       } else {
         modelDetailsArray.push({
-          ...componentState.modelDetails[model],
+          ...modelDetails[model],
           // @ts-ignore
           count: modelStats.count || 0,
           numImages: componentState?.imageCounts[model] || 0,
@@ -121,24 +119,6 @@ const ModelDetailsList = ({ availableModels, modelDetails }: any) => {
     setComponentState({ favoriteModels })
   })
 
-  // const updateLocalCount = useCallback(async () => {
-  //   const count: IModelCount = {}
-
-  //   for (const model in modelState.modelDetails) {
-  //     try {
-  //       const data: number = await filterCompletedByModel(model)
-  //       console.log(`model data`, model, data)
-  //       count[model] = data
-  //     } catch (err) {
-  //       count[model] = 0
-  //     }
-  //   }
-
-  //   setComponentState({
-  //     imageCounts: { ...count }
-  //   })
-  // }, [modelState.modelDetails, setComponentState])
-
   const renderModelDetails = () => {
     const modelDetailsArray: Array<React.ReactNode> = []
 
@@ -154,7 +134,7 @@ const ModelDetailsList = ({ availableModels, modelDetails }: any) => {
         version
       } = modelDetails
 
-      const modelStats = componentState.availableModels.filter((obj: any) => {
+      const modelStats = Object.values(availableModels).filter((obj: any) => {
         return obj.name === name
       })
 
@@ -313,10 +293,6 @@ const ModelDetailsList = ({ availableModels, modelDetails }: any) => {
     }
   }, [])
 
-  // useEffect(() => {
-  //   updateLocalCount()
-  // }, [updateLocalCount])
-
   return (
     <div className="mb-4">
       {componentState.isLoading && <SpinnerV2 />}
@@ -324,7 +300,7 @@ const ModelDetailsList = ({ availableModels, modelDetails }: any) => {
         <>
           <div className="">Workers w/ inpainting: {inpaintingWorkers}</div>
           <div className="mb-2">
-            Total models available: {availableModels.length}
+            Total models available: {Object.keys(availableModels).length}
           </div>
           <div className="flex flex-row gap-1 text-sm">
             <span className="mr-2">sort by:</span>{' '}

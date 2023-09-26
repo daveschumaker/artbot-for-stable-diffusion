@@ -9,7 +9,7 @@ import { baseHost, basePath } from 'BASE_PATH'
 import Row from 'app/_modules/Row'
 import InfoPageMenuButton from '../Menu'
 
-const ModelDetailsPage = ({ availableModels, modelDetails }: any) => {
+const ModelDetailsPage = () => {
   const searchParams = useSearchParams()
 
   const getMenuTitle = () => {
@@ -58,10 +58,7 @@ const ModelDetailsPage = ({ availableModels, modelDetails }: any) => {
           <InfoPageMenuButton title={getMenuTitle()} />
         </div>
       </Row>
-      <ModelDetailsList
-        availableModels={availableModels}
-        modelDetails={modelDetails}
-      />
+      <ModelDetailsList />
       {searchParams?.get('show') === 'favorite-models' && (
         <div>
           <div
