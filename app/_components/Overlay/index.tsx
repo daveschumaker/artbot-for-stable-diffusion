@@ -1,37 +1,41 @@
-import styled from 'styled-components'
+import clsx from 'clsx'
+import styles from './overlay.module.css'
+import { CSSProperties } from 'react'
 
 export interface IOverlayProps {
+  className?: string
+  blurBackground?: boolean
   disableBackground?: boolean
   handleClose?: () => void
   zIndex?: number
 }
 
-const StyledOverlay = styled.div<IOverlayProps>`
-  background-color: black;
-  bottom: 0;
-  left: 0;
-  opacity: 0.8;
-  position: fixed;
-  right: 0;
-  top: 0;
-`
-
 const Overlay = (props: IOverlayProps) => {
   const {
+    className,
+    blurBackground = false,
     disableBackground = false,
     handleClose = () => {},
-    zIndex = 'var(--zIndex-navBar)'
+    zIndex = 'var(--zIndex-overNavBar)'
   } = props
+
+  const style: CSSProperties = {
+    zIndex
+  }
+
+  if (disableBackground) {
+    style.backgroundColor = 'unset'
+  }
+
   return (
-    <StyledOverlay
-      className="StyledOverlay"
+    <div
+      className={clsx(
+        styles.Overlay,
+        blurBackground && styles.OverlayBlurBackground,
+        className
+      )}
       onClick={handleClose}
-      style={{
-        backgroundColor: disableBackground
-          ? 'unset'
-          : 'var(--overlay-background)',
-        zIndex
-      }}
+      style={{ ...style }}
     />
   )
 }

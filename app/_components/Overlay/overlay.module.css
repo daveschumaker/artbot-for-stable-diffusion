@@ -1,0 +1,14 @@
+.Overlay {
+  background-color: var(--body-color);
+  bottom: 0;
+  left: 0;
+  opacity: 0.8;
+  position: fixed;
+  right: 0;
+  top: 0;
+}
+
+.OverlayBlurBackground {
+  backdrop-filter: blur(2px);
+  background-color: var(--overlay-background);
+}
