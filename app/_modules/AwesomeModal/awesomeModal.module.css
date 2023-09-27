@@ -1,8 +1,9 @@
 .ModalWrapper {
   background-color: var(--modal-background);
   border-radius: 8px;
-  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08),
-    0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 3px 4px 10px 2px rgba(0, 0, 0, 0.62);
+  -webkit-box-shadow: 3px 4px 10px 2px rgba(0, 0, 0, 0.62);
+  -moz-box-shadow: 3px 4px 10px 2px rgba(0, 0, 0, 0.62);
   margin: 0 auto;
   min-height: 88px;
   opacity: 1;

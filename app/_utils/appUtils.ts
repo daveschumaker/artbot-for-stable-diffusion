@@ -212,3 +212,19 @@ export const parseQueryString = (
 
   return result
 }
+
+export const debounce = (
+  func: (str: string) => Promise<any>,
+  delay: number
+) => {
+  let timerId: any
+
+  return (...args: any) => {
+    clearTimeout(timerId)
+    return new Promise((resolve) => {
+      timerId = setTimeout(() => {
+        resolve(func.apply(null, args))
+      }, delay)
+    })
+  }
+}

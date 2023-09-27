@@ -12,8 +12,8 @@ import styles from './awesomeModal.module.css'
 import { IconX } from '@tabler/icons-react'
 import clsx from 'clsx'
 import TooltipComponent from 'app/_components/TooltipComponent'
-import { useContentHeight } from './awesomeModalProvider'
 import useLockedBody from 'app/_hooks/useLockedBody'
+import { debounce } from 'app/_utils/debounce'
 
 interface Props {
   children?: React.ReactNode
@@ -34,11 +34,12 @@ function AwesomeModal({
   subtitle,
   tooltip
 }: Props) {
-  const modalRef = useRef()
+  const modalRef = useRef<HTMLDivElement | null>(null)
 
   const modal = useModal()
   const [locked, setLocked] = useLockedBody(false)
-  let { maxModalHeight } = useContentHeight()
+
+  const [maxHeight, setMaxHeight] = useState(window.innerHeight - 64)
   const [minHeight, setMinHeight] = useState(180)
 
   const onClose = () => {
@@ -74,12 +75,18 @@ function AwesomeModal({
   useEffect(() => {
     const modalNode = modalRef.current
     if (modalNode) {
+      const debouncedUpdateMaxHeight = debounce(() => {
+        const viewportHeight = window.innerHeight
+        const maxModalHeight = viewportHeight - 64
+        setMaxHeight(maxModalHeight)
+
+        if (minHeight > maxModalHeight) {
+          setMinHeight(maxModalHeight)
+        }
+      }, 500)
+
       const observer = new MutationObserver(() => {
         const computedStyle = getComputedStyle(modalNode)
-        console.log('height:', computedStyle.height)
-        console.log('Top:', computedStyle.top)
-        console.log('bottom:', computedStyle.bottom)
-
         const [modalHeightStr] = computedStyle.height.split('px')
         const modalHeight = Number(modalHeightStr)
 
@@ -94,9 +101,49 @@ function AwesomeModal({
         subtree: true
       })
 
-      return () => observer.disconnect()
+      window.addEventListener('resize', debouncedUpdateMaxHeight) // update max height on window resize
+
+      return () => {
+        observer.disconnect()
+        window.removeEventListener('resize', debouncedUpdateMaxHeight) // Clean up the event listener
+      }
     }
   }, [minHeight])
+
+  // useEffect(() => {
+  //   const modalNode = modalRef.current
+
+  //   if (modalNode) {
+  //     const updateMaxHeight = () => {
+  //       const viewportHeight = window.innerHeight
+  //       const topPosition = parseFloat(getComputedStyle(modalNode).top)
+  //       const maxModalHeight =
+  //         viewportHeight -
+  //         (topPosition + 32) /* Bottom Padding */ -
+  //         32 /* Top Padding */
+  //       modalNode.style.maxHeight = `${maxModalHeight}px`
+  //     }
+
+  //     const observer = new MutationObserver(updateMaxHeight)
+
+  //     // Initially setting max height
+  //     updateMaxHeight()
+
+  //     observer.observe(modalNode, {
+  //       attributes: true,
+  //       attributeFilter: ['style'], // Observe changes to style attribute only
+  //       childList: true,
+  //       subtree: true
+  //     })
+
+  //     window.addEventListener('resize', updateMaxHeight) // update max height on window resize
+
+  //     return () => {
+  //       observer.disconnect()
+  //       window.removeEventListener('resize', updateMaxHeight) // Clean up the event listener
+  //     }
+  //   }
+  // }, [])
 
   return (
     <>
@@ -108,7 +155,7 @@ function AwesomeModal({
       <div
         className={clsx(styles.ModalWrapper, className)}
         style={{
-          maxHeight: `${maxModalHeight}px`,
+          maxHeight: `${maxHeight}px`,
           minHeight: `${minHeight}px`,
           paddingTop: !label ? '38px' : 0
         }}
@@ -137,7 +184,7 @@ function AwesomeModal({
           style={{
             overflowY: 'auto',
             // @ts-ignore
-            maxHeight: !label ? maxModalHeight - 38 : maxModalHeight - 56
+            maxHeight: !label ? maxHeight - 38 : maxHeight - 56
           }}
         >
           {React.Children.map(children, (child) => {
@@ -146,7 +193,7 @@ function AwesomeModal({
                 // @ts-ignore
                 handleClose: onClose,
                 // @ts-ignore
-                modalHeight: maxModalHeight - 72,
+                modalHeight: maxHeight - 72,
                 style: {
                   paddingBottom: !label ? '38px' : 0
                   //   overflowY: 'auto',

@@ -6,13 +6,13 @@ import FlexCol from 'app/_components/FlexCol'
 import Input from 'app/_components/Input'
 import { Button } from 'app/_components/Button'
 import { IconArrowBarLeft, IconSettings } from '@tabler/icons-react'
-import ReactPaginate from 'react-paginate'
 import styles from './component.module.css'
 import Checkbox from 'app/_components/Checkbox'
 import EmbeddingDetailsCard from './EmbeddingDetailsCard'
 import AppSettings from 'app/_data-models/AppSettings'
 import SpinnerV2 from 'app/_components/Spinner'
 import Pagination from 'app/_components/Pagination'
+import CacheController from 'app/_data-models/CacheController'
 
 const debounce = (func: (str: string) => Promise<any>, delay: number) => {
   let timerId: any
@@ -28,6 +28,8 @@ const debounce = (func: (str: string) => Promise<any>, delay: number) => {
 }
 
 const LIMIT = 20
+
+const cache = new CacheController()
 
 let pendingRequest = false
 // API reference: https://github.com/civitai/civitai/wiki/REST-API-Reference
@@ -49,6 +51,18 @@ const searchRequest = async ({
     const signal = controller.signal
 
     const query = input ? `&query=${input}` : ''
+    const searchKey = `limit=${LIMIT}${query}&page=${page}&nsfw=${nsfw}`
+
+    if (cache.get(searchKey)) {
+      const data = cache.get(searchKey)
+
+      console.log(`Cached search key?`, searchKey)
+      console.log(data)
+
+      const { items = [], metadata = {} } = data
+      pendingRequest = false
+      return { items, metadata }
+    }
 
     const timeout = setTimeout(() => {
       controller.abort()
@@ -57,12 +71,16 @@ const searchRequest = async ({
     }, 5000) // Change the timeout duration as needed
 
     const response = await fetch(
-      `https://civitai.com/api/v1/models?types=TextualInversion&sort=Highest Rated&limit=${LIMIT}${query}&page=${page}&nsfw=${nsfw}`,
+      `https://civitai.com/api/v1/models?types=TextualInversion&sort=Highest Rated&${searchKey}`,
       { signal }
     )
     clearTimeout(timeout)
 
     const data = await response.json()
+    cache.set(searchKey, data)
+
+    console.log(`Search key:`, searchKey)
+
     const { items = [], metadata = {} } = data
     pendingRequest = false
     return { items, metadata }
@@ -134,6 +152,10 @@ const EmbeddingSearchModal = ({
     setInput(event.target.value)
   }
 
+  const handlePageClick = (page: number) => {
+    setCurrentPage(page)
+  }
+
   useEffect(() => {
     fetchModels()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -147,73 +169,66 @@ const EmbeddingSearchModal = ({
   return (
     <>
       <FlexCol mt={-1}>
-        <div
-          style={{
-            backgroundColor: 'var(--modal-background)',
-            columnGap: '4px',
-            display: 'flex',
-            flexDirection: 'row',
-            paddingBottom: '8px',
-            paddingTop: '8px',
-            position: 'absolute',
-            left: '16px',
-            right: '16px'
-          }}
-        >
-          <Input
-            type="text"
-            name="filterEmbeddings"
-            placeholder="Search CivitAI for embeddings"
-            onChange={handleInputChange}
-            value={input}
-            width="100%"
-          />
-          <Button
-            onClick={() => {
-              setInput('')
+        <FlexCol>
+          <div
+            style={{
+              backgroundColor: 'var(--modal-background)',
+              columnGap: '4px',
+              display: 'flex',
+              flexDirection: 'row',
+              paddingBottom: '8px',
+              paddingTop: '8px',
+              position: 'absolute',
+              left: '16px',
+              right: '16px',
+              zIndex: 1
             }}
-            theme="secondary"
           >
-            <IconArrowBarLeft />
-          </Button>
-          <Button onClick={() => setShowOptionsMenu(true)}>
-            <IconSettings />
-          </Button>
-          {showOptionsMenu && (
-            <DropdownOptions
-              handleClose={() => setShowOptionsMenu(false)}
-              title="Embedding Search Options"
-              top="12px"
-              maxWidth="280px"
-              style={{
-                left: 'unset',
-                right: 0,
-                top: '46px'
+            <Input
+              type="text"
+              name="filterEmbeddings"
+              placeholder="Search CivitAI for embeddings"
+              onChange={handleInputChange}
+              value={input}
+              width="100%"
+            />
+            <Button
+              onClick={() => {
+                setInput('')
               }}
+              theme="secondary"
             >
-              <div style={{ padding: '8px 0' }}>
-                <Checkbox
-                  label="Show NSFW embeddings?"
-                  checked={showNsfw}
-                  onChange={(bool: boolean) => {
-                    AppSettings.set('civitaiShowNsfw', bool)
-                    setShowNsfw(bool)
-                  }}
-                />
-              </div>
-            </DropdownOptions>
-          )}
-        </div>
-        {!loading && totalItems === 0 && (
-          <div style={{ fontWeight: 400, marginTop: '8px' }}>
-            No matches found. Please try a different search.
+              <IconArrowBarLeft />
+            </Button>
+            <Button onClick={() => setShowOptionsMenu(true)}>
+              <IconSettings />
+            </Button>
+            {showOptionsMenu && (
+              <DropdownOptions
+                handleClose={() => setShowOptionsMenu(false)}
+                title="Embedding Search Options"
+                top="12px"
+                maxWidth="280px"
+                style={{
+                  left: 'unset',
+                  right: 0,
+                  top: '56px'
+                }}
+              >
+                <div style={{ padding: '8px 0' }}>
+                  <Checkbox
+                    label="Show NSFW embeddings?"
+                    checked={showNsfw}
+                    onChange={(bool: boolean) => {
+                      AppSettings.set('civitaiShowNsfw', bool)
+                      setShowNsfw(bool)
+                    }}
+                  />
+                </div>
+              </DropdownOptions>
+            )}
           </div>
-        )}
-        {totalPages >= 1 && totalItems > 0 && (
-          <div style={{ fontSize: '12px', fontWeight: 400, marginTop: '4px' }}>
-            Page {currentPage} of {totalPages}
-          </div>
-        )}
+        </FlexCol>
         <div
           style={{
             display: 'flex',
@@ -228,10 +243,23 @@ const EmbeddingSearchModal = ({
               display: 'flex',
               gap: '8px',
               flexWrap: 'wrap',
-              marginTop: '30px',
+              marginTop: '46px',
+              marginBottom: '40px',
               overflow: 'auto'
             }}
           >
+            {!loading && totalItems === 0 && (
+              <div style={{ fontWeight: 400, marginTop: '8px' }}>
+                No matches found. Please try a different search.
+              </div>
+            )}
+            {totalPages >= 1 && totalItems > 0 && (
+              <div
+                style={{ fontSize: '12px', fontWeight: 400, marginTop: '4px' }}
+              >
+                Page {currentPage} of {totalPages} ({totalItems} results)
+              </div>
+            )}
             {(loading || !Array.isArray(searchResult)) && (
               <FlexCol
                 gap={12}
@@ -263,16 +291,16 @@ const EmbeddingSearchModal = ({
         </div>
       </FlexCol>
       {totalPages > 1 && (
-        <div>
+        <div className={styles.Pagination}>
           <Pagination
-            currentPage={1}
-            totalCount={totalPages}
-            pageSize={5}
-            onPageChange={() => {}}
+            currentPage={currentPage}
+            totalCount={totalItems}
+            pageSize={LIMIT}
+            onPageChange={handlePageClick}
           />
         </div>
       )}
-      {totalPages > 1 && (
+      {/* {totalPages > 1 && (
         <ReactPaginate
           className={styles.Pagination}
           breakLabel="..."
@@ -291,7 +319,7 @@ const EmbeddingSearchModal = ({
           previousLabel="< "
           renderOnZeroPageCount={null}
         />
-      )}
+      )} */}
     </>
   )
 }

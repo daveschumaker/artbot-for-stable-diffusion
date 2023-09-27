@@ -17,6 +17,7 @@
 }
 
 .Pagination {
+  background-color: var(--modal-background);
   display: flex;
   flex-direction: row;
   position: absolute;
