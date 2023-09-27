@@ -7,7 +7,7 @@
 
 import NiceModal, { useModal } from '@ebay/nice-modal-react'
 import Overlay from 'app/_components/Overlay'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styles from './awesomeModal.module.css'
 import { IconX } from '@tabler/icons-react'
 import clsx from 'clsx'
@@ -34,9 +34,12 @@ function AwesomeModal({
   subtitle,
   tooltip
 }: Props) {
+  const modalRef = useRef()
+
   const modal = useModal()
   const [locked, setLocked] = useLockedBody(false)
   let { maxModalHeight } = useContentHeight()
+  const [minHeight, setMinHeight] = useState(180)
 
   const onClose = () => {
     modal.remove()
@@ -68,6 +71,33 @@ function AwesomeModal({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  useEffect(() => {
+    const modalNode = modalRef.current
+    if (modalNode) {
+      const observer = new MutationObserver(() => {
+        const computedStyle = getComputedStyle(modalNode)
+        console.log('height:', computedStyle.height)
+        console.log('Top:', computedStyle.top)
+        console.log('bottom:', computedStyle.bottom)
+
+        const [modalHeightStr] = computedStyle.height.split('px')
+        const modalHeight = Number(modalHeightStr)
+
+        if (modalHeight > minHeight) {
+          setMinHeight(modalHeight)
+        }
+      })
+
+      observer.observe(modalNode, {
+        attributes: true,
+        childList: true,
+        subtree: true
+      })
+
+      return () => observer.disconnect()
+    }
+  }, [minHeight])
+
   return (
     <>
       <Overlay
@@ -79,8 +109,10 @@ function AwesomeModal({
         className={clsx(styles.ModalWrapper, className)}
         style={{
           maxHeight: `${maxModalHeight}px`,
+          minHeight: `${minHeight}px`,
           paddingTop: !label ? '38px' : 0
         }}
+        ref={modalRef}
       >
         <div className={styles.CloseButton} onClick={onClose}>
           <IconX stroke={1.5} size={28} />
