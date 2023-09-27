@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import DropdownOptions from 'app/_modules/DropdownOptions'
-import Overlay from 'app/_components/Overlay'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Embedding } from '_types/civitai'
 import FlexCol from 'app/_components/FlexCol'
@@ -151,7 +150,8 @@ const EmbeddingSearchModal = ({
           columnGap: '4px',
           display: 'flex',
           flexDirection: 'row',
-          marginTop: '8px'
+          marginTop: '8px',
+          position: 'relative'
         }}
       >
         <Input
@@ -177,8 +177,13 @@ const EmbeddingSearchModal = ({
           <DropdownOptions
             handleClose={() => setShowOptionsMenu(false)}
             title="Embedding Search Options"
-            top="80px"
-            maxWidth="200px"
+            top="12px"
+            maxWidth="280px"
+            style={{
+              left: 'unset',
+              right: 0,
+              top: '46px'
+            }}
           >
             <div style={{ padding: '8px 0' }}>
               <Checkbox

@@ -16,16 +16,6 @@
   }
 }
 
-.SearchResultsWrapper {
-  max-height: 458px;
-}
-
-@media (min-width: 640px) {
-  .SearchResultsWrapper {
-    max-height: 358px;
-  }
-}
-
 .Pagination {
   display: flex;
   flex-direction: row;
