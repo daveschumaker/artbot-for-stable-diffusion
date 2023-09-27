@@ -293,9 +293,6 @@ export const deleteInvalidPendingJobs = async () => {
   })
 
   const ids = done.map((job: any) => job.id)
-
-  console.log(`Found IDs for invalid pending jobs:`, ids)
-
   await db.pending.bulkDelete(ids)
 }
 

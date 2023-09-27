@@ -286,7 +286,10 @@ export const base64toBlob = async (base64Data: string, contentType: string) => {
 }
 
 export const imageDimensions = (fullDataString: string) => {
-  if (!fullDataString.includes('data:image/webp;base64,')) {
+  if (
+    fullDataString.indexOf('data:image/') !== 0 &&
+    !fullDataString.includes('data:image/webp;base64,')
+  ) {
     fullDataString = `data:image/webp;base64,` + fullDataString
   }
 

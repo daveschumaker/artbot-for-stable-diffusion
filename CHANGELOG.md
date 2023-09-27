@@ -2,6 +2,7 @@
 
 - Fix: Fix issue where my previous "fix issue with model details page not loading" didn't actually fix things.
 - Fix: Pending image requests disappear when reloading the page.
+- Fix: While fixing other things, I also broke img2img uploads. This has now been fixed.
 
 # 2023.09.22
 
