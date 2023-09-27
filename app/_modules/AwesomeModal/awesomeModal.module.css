@@ -71,7 +71,7 @@
   flex-direction: row;
   font-size: 24px;
   font-weight: 700;
-  margin-bottom: 12px;
+  padding-top: 8px;
 }
 
 .ModalSubtitle {

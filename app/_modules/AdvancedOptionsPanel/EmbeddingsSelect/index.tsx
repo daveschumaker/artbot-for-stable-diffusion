@@ -11,9 +11,12 @@ import { AiHordeEmbedding } from '_types/artbot'
 import EmbeddingFavoritesModal from './EmbeddingFavoritesModal'
 import EmbeddingRecentsModal from './EmbeddingRecentsModal'
 import { InjectTi } from '_types/horde'
+import { useModal } from '@ebay/nice-modal-react'
+import AwesomeModalWrapper from 'app/_modules/AwesomeModal'
 
 // Search / display TI / Textual Inversion Embeddings from Civitai
 export default function EmbeddingsSelect({ input, setInput }: any) {
+  const embeddingSearchModal = useModal(AwesomeModalWrapper)
   const [showFavoritesModal, setShowFavoritesModal] = useState(false)
   const [showRecentModal, setShowRecentModal] = useState(false)
   const [showSearchModal, setShowSearchModal] = useState(false)
@@ -111,7 +114,18 @@ export default function EmbeddingsSelect({ input, setInput }: any) {
             >
               <Button
                 size="small"
-                onClick={() => setShowSearchModal(true)}
+                onClick={() => {
+                  embeddingSearchModal.show({
+                    children: (
+                      <EmbeddingSearchModal
+                        handleClose={() => setShowSearchModal(false)}
+                        handleAddEmbedding={handleAddEmbedding}
+                      />
+                    ),
+                    label: 'Search Embeddings'
+                  })
+                  // setShowSearchModal(true)
+                }}
                 // disabled={input.loras.length >= 5}
               >
                 <IconPlus stroke={1.5} />

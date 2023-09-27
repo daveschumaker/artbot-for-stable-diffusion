@@ -145,140 +145,131 @@ const EmbeddingSearchModal = ({
   }, [currentPage, input, showNsfw])
 
   return (
-    <>
-      <Overlay handleClose={handleClose} disableBackground />
-      <DropdownOptions
-        className={styles.Dropdown}
-        handleClose={handleClose}
-        title="Search for Embeddings"
-        maxWidth="unset"
-        height={600}
-        style={{ maxHeight: '600px' }}
+    <FlexCol>
+      <div
+        style={{
+          columnGap: '4px',
+          display: 'flex',
+          flexDirection: 'row',
+          marginTop: '8px'
+        }}
+      >
+        <Input
+          type="text"
+          name="filterEmbeddings"
+          placeholder="Search CivitAI for embeddings"
+          onChange={handleInputChange}
+          value={input}
+          width="100%"
+        />
+        <Button
+          onClick={() => {
+            setInput('')
+          }}
+          theme="secondary"
+        >
+          <IconArrowBarLeft />
+        </Button>
+        <Button onClick={() => setShowOptionsMenu(true)}>
+          <IconSettings />
+        </Button>
+        {showOptionsMenu && (
+          <DropdownOptions
+            handleClose={() => setShowOptionsMenu(false)}
+            title="Embedding Search Options"
+            top="80px"
+            maxWidth="200px"
+          >
+            <div style={{ padding: '8px 0' }}>
+              <Checkbox
+                label="Show NSFW embeddings?"
+                checked={showNsfw}
+                onChange={(bool: boolean) => {
+                  AppSettings.set('civitaiShowNsfw', bool)
+                  setShowNsfw(bool)
+                }}
+              />
+            </div>
+          </DropdownOptions>
+        )}
+      </div>
+      {!loading && totalItems === 0 && (
+        <div style={{ fontWeight: 400, marginTop: '8px' }}>
+          No matches found. Please try a different search.
+        </div>
+      )}
+      {totalPages >= 1 && totalItems > 0 && (
+        <div style={{ fontSize: '12px', fontWeight: 400, marginTop: '4px' }}>
+          Page {currentPage} of {totalPages}
+        </div>
+      )}
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          marginTop: '4px'
+        }}
       >
         <div
+          className={styles.SearchResultsWrapper}
+          id="embedded-search-results"
           style={{
-            columnGap: '4px',
             display: 'flex',
-            flexDirection: 'row',
-            marginTop: '8px'
+            gap: '8px',
+            flexWrap: 'wrap',
+            overflow: 'auto'
           }}
         >
-          <Input
-            type="text"
-            name="filterEmbeddings"
-            placeholder="Search CivitAI for embeddings"
-            onChange={handleInputChange}
-            value={input}
-            width="100%"
-          />
-          <Button
-            onClick={() => {
-              setInput('')
-            }}
-            theme="secondary"
-          >
-            <IconArrowBarLeft />
-          </Button>
-          <Button onClick={() => setShowOptionsMenu(true)}>
-            <IconSettings />
-          </Button>
-          {showOptionsMenu && (
-            <DropdownOptions
-              handleClose={() => setShowOptionsMenu(false)}
-              title="Embedding Search Options"
-              top="80px"
+          {(loading || !Array.isArray(searchResult)) && (
+            <FlexCol
+              gap={12}
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginTop: '24px'
+              }}
             >
-              <div style={{ padding: '8px 0' }}>
-                <Checkbox
-                  label="Show NSFW embeddings?"
-                  checked={showNsfw}
-                  onChange={(bool: boolean) => {
-                    AppSettings.set('civitaiShowNsfw', bool)
-                    setShowNsfw(bool)
-                  }}
-                />
+              <SpinnerV2 />
+              <div style={{ fontSize: '12px', fontWeight: '400' }}>
+                Loading remote data from CivitAI...
               </div>
-            </DropdownOptions>
+            </FlexCol>
           )}
+          {!loading &&
+            Array.isArray(searchResult) &&
+            searchResult.map((item) => {
+              return (
+                <EmbeddingDetailsCard
+                  key={`ti_${item.id}`}
+                  embedding={item}
+                  handleAddEmbedding={handleAddEmbedding}
+                  handleClose={handleClose}
+                />
+              )
+            })}
         </div>
-        {!loading && totalItems === 0 && (
-          <div style={{ fontWeight: 400, marginTop: '8px' }}>
-            No matches found. Please try a different search.
-          </div>
-        )}
-        {totalPages >= 1 && totalItems > 0 && (
-          <div style={{ fontSize: '12px', fontWeight: 400, marginTop: '4px' }}>
-            Page {currentPage} of {totalPages}
-          </div>
-        )}
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            marginTop: '4px'
+      </div>
+      {totalPages > 1 && (
+        <ReactPaginate
+          className={styles.Pagination}
+          breakLabel="..."
+          nextLabel=" >"
+          forcePage={currentPage - 1}
+          onPageChange={(p) => {
+            setCurrentPage(p.selected + 1)
           }}
-        >
-          <div
-            className={styles.SearchResultsWrapper}
-            id="embedded-search-results"
-            style={{
-              display: 'flex',
-              gap: '8px',
-              flexWrap: 'wrap',
-              overflow: 'auto'
-            }}
-          >
-            {(loading || !Array.isArray(searchResult)) && (
-              <FlexCol
-                gap={12}
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginTop: '24px'
-                }}
-              >
-                <SpinnerV2 />
-                <div style={{ fontSize: '12px', fontWeight: '400' }}>
-                  Loading remote data from CivitAI...
-                </div>
-              </FlexCol>
-            )}
-            {!loading &&
-              Array.isArray(searchResult) &&
-              searchResult.map((item) => {
-                return (
-                  <EmbeddingDetailsCard
-                    key={`ti_${item.id}`}
-                    embedding={item}
-                    handleAddEmbedding={handleAddEmbedding}
-                    handleClose={handleClose}
-                  />
-                )
-              })}
-          </div>
-        </div>
-        {totalPages > 1 && (
-          <ReactPaginate
-            className={styles.Pagination}
-            breakLabel="..."
-            nextLabel=" >"
-            forcePage={currentPage - 1}
-            onPageChange={(p) => {
-              setCurrentPage(p.selected + 1)
-            }}
-            disableInitialCallback={true}
-            pageClassName={styles.PageLi}
-            pageRangeDisplayed={3}
-            marginPagesDisplayed={1}
-            pageCount={totalPages}
-            nextClassName={styles.Next}
-            previousClassName={styles.Previous}
-            previousLabel="< "
-            renderOnZeroPageCount={null}
-          />
-        )}
-      </DropdownOptions>
-    </>
+          disableInitialCallback={true}
+          pageClassName={styles.PageLi}
+          pageRangeDisplayed={3}
+          marginPagesDisplayed={1}
+          pageCount={totalPages}
+          nextClassName={styles.Next}
+          previousClassName={styles.Previous}
+          previousLabel="< "
+          renderOnZeroPageCount={null}
+        />
+      )}
+    </FlexCol>
   )
 }
 
