@@ -1,3 +1,8 @@
+# 2023.09.27
+
+- No more silly "copy and paste URL from CivitAI" behavior. You can now search for LORAs, Lycoris, and Embeddings right within ArtBot!
+- Start integrating my new, unified AwesomeModal component that should hopefully make managing popup modals across ArtBot much easier and more logical. It's now visible in LORA and Embedding search popups. (Would you believe, this is like the fourth unique modal component within the web app -- anyway, long term goal is to only have one.)
+
 # 2023.09.26
 
 - Fix: Fix issue where my previous "fix issue with model details page not loading" didn't actually fix things.

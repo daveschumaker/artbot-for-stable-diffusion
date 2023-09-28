@@ -1,24 +1,67 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback } from 'react'
 import Section from 'app/_components/Section'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import styles from './loraSelect.module.css'
 import { Button } from 'app/_components/Button'
-import { IconExternalLink, IconPlus, IconTrash } from '@tabler/icons-react'
-import ChooseLoraModal from './ChooseLoraModal'
+import {
+  IconExternalLink,
+  IconHeart,
+  IconHistory,
+  IconPlus,
+  IconTrash
+} from '@tabler/icons-react'
 import NumberInput from 'app/_components/NumberInput'
 import Linker from 'app/_components/Linker'
 import FlexRow from 'app/_components/FlexRow'
 import { modelStore } from 'app/_store/modelStore'
 import MaxWidth from 'app/_components/MaxWidth'
 import Slider from 'app/_components/Slider'
+import { useModal } from '@ebay/nice-modal-react'
+import AwesomeModalWrapper from 'app/_modules/AwesomeModal'
+import LoraSearchModal from './modals/LoraSearchModal'
+import { handleConvertLora } from './loraUtils'
+import LoraFavRecentModal from './modals/LoraFavRecentModal'
 
 const LoraSelect = ({ input, setInput, setErrors }: any) => {
-  const [showModal, setShowModal] = useState(false)
+  const lorasModal = useModal(AwesomeModalWrapper)
+
+  const handleSaveRecent = (loraDetails: any) => {
+    // Check if the local storage already has an array stored
+    let existingArray = localStorage.getItem('recentLoras')
+    let newArray
+
+    if (existingArray) {
+      // Parse the existing array from the local storage
+      newArray = JSON.parse(existingArray)
+
+      // Check if the object with the same id already exists in the array
+      const existingObjectIndex = newArray.findIndex(
+        (obj: any) => obj.name === loraDetails.name
+      )
+
+      if (existingObjectIndex !== -1) {
+        // Remove the existing object from the array
+        newArray.splice(existingObjectIndex, 1)
+      }
+
+      // Add the object to the front of the array
+      newArray.unshift(loraDetails)
+
+      // Limit the array to 25 elements
+      if (newArray.length > 25) {
+        newArray = newArray.slice(0, 25)
+      }
+    } else {
+      // Create a new array with the object
+      newArray = [loraDetails]
+    }
+
+    // Store the updated array back in the local storage
+    localStorage.setItem('recentLoras', JSON.stringify(newArray))
+  }
 
   const handleAddLora = (loraDetails: any) => {
-    console.log(`loraDetails`, loraDetails)
     const modelDetails = modelStore.state.modelDetails[input.models[0]]
-
     const lorasToUpdate = [...input.loras]
 
     const exists = lorasToUpdate.filter(
@@ -34,11 +77,13 @@ const LoraSelect = ({ input, setInput, setErrors }: any) => {
       modelDetails.baseline === 'stable diffusion 1'
     ) {
       // do nothing, things are cool
+      handleSaveRecent(loraDetails)
     } else if (
       loraDetails.baseModel.includes('SDXL') &&
       input.models[0].includes('SDXL')
     ) {
       // do nothing, things are cool
+      handleSaveRecent(loraDetails)
     } else {
       setErrors({ UNCOMPATIBLE_LORA: true })
     }
@@ -244,21 +289,19 @@ const LoraSelect = ({ input, setInput, setErrors }: any) => {
                         color: '#17cfbb'
                       }}
                     >
-                      {
-                        // @ts-ignore
-                        lora?.trainedWords?.map((word: string, i: number) => {
-                          return (
-                            <div
-                              key={lora.name + '_' + i}
-                              onClick={() => {
-                                setInput({ prompt: input.prompt + ' ' + word })
-                              }}
-                            >
-                              {word}
-                            </div>
-                          )
-                        })
-                      }
+                      {// @ts-ignore
+                      lora?.trainedWords?.map((word: string, i: number) => {
+                        return (
+                          <div
+                            key={lora.name + '_' + i}
+                            onClick={() => {
+                              setInput({ prompt: input.prompt + ' ' + word })
+                            }}
+                          >
+                            {word}
+                          </div>
+                        )
+                      })}
                     </div>
                   </SubSectionTitle>
                 </div>
@@ -313,20 +356,67 @@ const LoraSelect = ({ input, setInput, setErrors }: any) => {
                 marginBottom: '12px'
               }}
             >
-              <Button
-                size="small"
-                onClick={() => setShowModal(true)}
-                disabled={input.loras.length >= 5}
+              <FlexRow
+                gap={4}
+                style={{ justifyContent: 'flex-end', width: 'auto' }}
               >
-                <IconPlus />
-              </Button>
+                <Button
+                  size="small"
+                  onClick={() => {
+                    lorasModal.show({
+                      children: (
+                        <LoraSearchModal
+                          handleAddLora={(lora) => {
+                            const loraDetails = handleConvertLora(lora)
+                            handleAddLora(loraDetails)
+                          }}
+                        />
+                      ),
+                      label: 'Search LORAs'
+                    })
+                  }}
+                  disabled={input.loras.length >= 5}
+                >
+                  <IconPlus stroke={1.5} />
+                </Button>
+                <Button
+                  size="small"
+                  onClick={() => {
+                    lorasModal.show({
+                      children: (
+                        <LoraFavRecentModal
+                          filterType="favorites"
+                          handleAddLora={handleAddLora}
+                          handleSaveRecent={handleSaveRecent}
+                        />
+                      ),
+                      label: 'Favorite LORAs'
+                    })
+                  }}
+                  disabled={input.loras.length >= 5}
+                >
+                  <IconHeart stroke={1.5} />
+                </Button>
+                <Button
+                  size="small"
+                  onClick={() => {
+                    lorasModal.show({
+                      children: (
+                        <LoraFavRecentModal
+                          filterType="recents"
+                          handleAddLora={handleAddLora}
+                          handleSaveRecent={handleSaveRecent}
+                        />
+                      ),
+                      label: 'Recently Used LORAs'
+                    })
+                  }}
+                  disabled={input.loras.length >= 5}
+                >
+                  <IconHistory stroke={1.5} />
+                </Button>
+              </FlexRow>
             </div>
-            {showModal && (
-              <ChooseLoraModal
-                handleClose={() => setShowModal(false)}
-                handleAddLora={handleAddLora}
-              />
-            )}
           </FlexRow>
         </SubSectionTitle>
         {renderLoras()}

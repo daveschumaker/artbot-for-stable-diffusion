@@ -1,0 +1,46 @@
+.Dropdown {
+  max-width: unset;
+  overflow: hidden;
+  left: -18px;
+  right: -28px;
+  width: auto;
+}
+
+@media (min-width: 640px) {
+  .Dropdown {
+    height: 500px;
+    max-width: 640px;
+    right: 0;
+    left: unset;
+    width: 100%;
+  }
+}
+
+.Pagination {
+  background-color: var(--modal-background);
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  bottom: 0;
+  left: 8px;
+  right: 8px;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px;
+}
+
+.PageLi {
+  font-size: 16px;
+  text-align: center;
+  width: 30px;
+}
+
+.Previous {
+  position: absolute;
+  left: 8px;
+}
+
+.Next {
+  position: absolute;
+  right: 8px;
+}

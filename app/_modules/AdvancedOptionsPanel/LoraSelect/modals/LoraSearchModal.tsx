@@ -8,7 +8,7 @@ import { Button } from 'app/_components/Button'
 import { IconArrowBarLeft, IconSettings } from '@tabler/icons-react'
 import styles from './component.module.css'
 import Checkbox from 'app/_components/Checkbox'
-import EmbeddingDetailsCard from './EmbeddingDetailsCard'
+import LoraSearchDetailsCard from './LoraSearchDetailsCard'
 import AppSettings from 'app/_data-models/AppSettings'
 import SpinnerV2 from 'app/_components/Spinner'
 import Pagination from 'app/_components/Pagination'
@@ -71,7 +71,7 @@ const searchRequest = async ({
     }, 5000) // Change the timeout duration as needed
 
     const response = await fetch(
-      `https://civitai.com/api/v1/models?types=TextualInversion&sort=Highest Rated&${searchKey}`,
+      `https://civitai.com/api/v1/models?types=LORA&types=LoCon&sort=Highest Rated&${searchKey}`,
       { signal }
     )
     clearTimeout(timeout)
@@ -94,9 +94,9 @@ const searchRequest = async ({
 // @ts-ignore
 const debouncedSearchRequest = debounce(searchRequest, 500)
 
-const EmbeddingSearchModal = ({
+const LoraSearchModal = ({
   handleClose = () => {},
-  handleAddEmbedding = (value: any) => value
+  handleAddLora = (value: any) => value
 }) => {
   const [hasError, setHasError] = useState<string | boolean>(false)
   const [showOptionsMenu, setShowOptionsMenu] = useState(false)
@@ -190,7 +190,7 @@ const EmbeddingSearchModal = ({
             <Input
               type="text"
               name="filterEmbeddings"
-              placeholder="Search CivitAI for embeddings"
+              placeholder="Search CivitAI for LORAs / Lycoris"
               onChange={handleInputChange}
               value={input}
               width="100%"
@@ -220,7 +220,7 @@ const EmbeddingSearchModal = ({
               >
                 <div style={{ padding: '8px 0' }}>
                   <Checkbox
-                    label="Show NSFW embeddings?"
+                    label="Show NSFW LORAs?"
                     checked={showNsfw}
                     onChange={(bool: boolean) => {
                       AppSettings.set('civitaiShowNsfw', bool)
@@ -287,10 +287,10 @@ const EmbeddingSearchModal = ({
               Array.isArray(searchResult) &&
               searchResult.map((item) => {
                 return (
-                  <EmbeddingDetailsCard
+                  <LoraSearchDetailsCard
                     key={`ti_${item.id}`}
                     embedding={item}
-                    handleAddEmbedding={handleAddEmbedding}
+                    handleAddEmbedding={handleAddLora}
                     handleClose={handleClose}
                   />
                 )
@@ -308,28 +308,8 @@ const EmbeddingSearchModal = ({
           />
         </div>
       )}
-      {/* {totalPages > 1 && (
-        <ReactPaginate
-          className={styles.Pagination}
-          breakLabel="..."
-          nextLabel=" >"
-          forcePage={currentPage - 1}
-          onPageChange={(p) => {
-            setCurrentPage(p.selected + 1)
-          }}
-          disableInitialCallback={true}
-          pageClassName={styles.PageLi}
-          pageRangeDisplayed={3}
-          marginPagesDisplayed={1}
-          pageCount={totalPages}
-          nextClassName={styles.Next}
-          previousClassName={styles.Previous}
-          previousLabel="< "
-          renderOnZeroPageCount={null}
-        />
-      )} */}
     </>
   )
 }
 
-export default EmbeddingSearchModal
+export default LoraSearchModal
