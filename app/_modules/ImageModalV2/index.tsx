@@ -1,6 +1,5 @@
-import ImageDetails from 'components/ImageDetails'
-// import styles from './imageModal.module.css'
-import CreateImageRequest from 'models/CreateImageRequest'
+import CreateImageRequest from 'app/_data-models/CreateImageRequest'
+import ImageDetails from '../ImageDetails'
 
 interface Props {
   handleClose?: () => any
