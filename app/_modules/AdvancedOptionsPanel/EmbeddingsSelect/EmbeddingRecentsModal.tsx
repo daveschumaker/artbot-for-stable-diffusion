@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import DropdownOptions from 'app/_modules/DropdownOptions'
-import Overlay from 'app/_components/Overlay'
 import React, { useState } from 'react'
 import { Embedding } from '_types/civitai'
 import Input from 'app/_components/Input'
@@ -10,6 +9,7 @@ import styles from './component.module.css'
 import Checkbox from 'app/_components/Checkbox'
 import EmbeddingDetailsCard from './EmbeddingDetailsCard'
 import AppSettings from 'app/_data-models/AppSettings'
+import FlexCol from 'app/_components/FlexCol'
 
 const loadFromLocalStorage = () => {
   let existingArray = localStorage.getItem('recentEmbeddings')
@@ -50,71 +50,67 @@ const EmbeddingRecentsModal = ({
 
   return (
     <>
-      <Overlay handleClose={handleClose} disableBackground />
-      <DropdownOptions
-        className={styles.Dropdown}
-        handleClose={handleClose}
-        title="Recently Used Embeddings"
-        maxWidth="unset"
-        height={600}
-        style={{ maxHeight: '600px' }}
-      >
-        <div
-          style={{
-            columnGap: '4px',
-            display: 'flex',
-            flexDirection: 'row',
-            marginTop: '8px'
-          }}
-        >
-          <Input
-            type="text"
-            name="filterEmbeddings"
-            placeholder="Search recently used embeddings"
-            onChange={handleInputChange}
-            value={input}
-            width="100%"
-          />
-          <Button
-            onClick={() => {
-              setInput('')
+      <FlexCol mt={-1}>
+        <FlexCol>
+          <div
+            style={{
+              backgroundColor: 'var(--modal-background)',
+              columnGap: '4px',
+              display: 'flex',
+              flexDirection: 'row',
+              paddingBottom: '8px',
+              paddingTop: '8px',
+              position: 'absolute',
+              left: '16px',
+              right: '16px',
+              zIndex: 1
             }}
-            theme="secondary"
           >
-            <IconArrowBarLeft />
-          </Button>
-          <Button onClick={() => setShowOptionsMenu(true)}>
-            <IconSettings />
-          </Button>
-          {showOptionsMenu && (
-            <DropdownOptions
-              handleClose={() => setShowOptionsMenu(false)}
-              title="Embedding Search Options"
-              top="80px"
+            <Input
+              type="text"
+              name="filterEmbeddings"
+              placeholder="Search recently used embeddings"
+              onChange={handleInputChange}
+              value={input}
+              width="100%"
+            />
+            <Button
+              onClick={() => {
+                setInput('')
+              }}
+              theme="secondary"
             >
-              <div style={{ padding: '8px 0' }}>
-                <Checkbox
-                  label="Show NSFW embeddings?"
-                  checked={showNsfw}
-                  onChange={(bool: boolean) => {
-                    AppSettings.set('civitaiShowNsfw', bool)
-                    setShowNsfw(bool)
-                  }}
-                />
-              </div>
-            </DropdownOptions>
-          )}
-        </div>
-        {filtered.length === 0 && (
-          <div style={{ fontWeight: 400, marginTop: '8px' }}>
-            No recent embeddings found.
+              <IconArrowBarLeft />
+            </Button>
+            <Button onClick={() => setShowOptionsMenu(true)}>
+              <IconSettings />
+            </Button>
+            {showOptionsMenu && (
+              <DropdownOptions
+                handleClose={() => setShowOptionsMenu(false)}
+                title="Embedding Search Options"
+                top="12px"
+                maxWidth="280px"
+                style={{
+                  left: 'unset',
+                  right: 0,
+                  top: '56px'
+                }}
+              >
+                <div style={{ padding: '8px 0' }}>
+                  <Checkbox
+                    label="Show NSFW embeddings?"
+                    checked={showNsfw}
+                    onChange={(bool: boolean) => {
+                      AppSettings.set('civitaiShowNsfw', bool)
+                      setShowNsfw(bool)
+                    }}
+                  />
+                </div>
+              </DropdownOptions>
+            )}
           </div>
-        )}
-        {filtered.length >= 1 && (
-          <div style={{ fontSize: '12px', fontWeight: 400, marginTop: '4px' }}>
-            Showing {filtered.length} recently used embeddings
-          </div>
-        )}
+        </FlexCol>
         <div
           style={{
             display: 'flex',
@@ -129,9 +125,23 @@ const EmbeddingRecentsModal = ({
               display: 'flex',
               gap: '8px',
               flexWrap: 'wrap',
+              marginTop: '46px',
+              marginBottom: '40px',
               overflow: 'auto'
             }}
           >
+            {filtered.length === 0 && (
+              <div style={{ fontWeight: 400, marginTop: '8px' }}>
+                No recent embeddings found.
+              </div>
+            )}
+            {filtered.length >= 1 && (
+              <div
+                style={{ fontSize: '12px', fontWeight: 400, marginTop: '4px' }}
+              >
+                Showing {filtered.length} recently used embeddings
+              </div>
+            )}
             {filtered.map((item: Embedding) => {
               return (
                 <EmbeddingDetailsCard
@@ -144,7 +154,7 @@ const EmbeddingRecentsModal = ({
             })}
           </div>
         </div>
-      </DropdownOptions>
+      </FlexCol>
     </>
   )
 }

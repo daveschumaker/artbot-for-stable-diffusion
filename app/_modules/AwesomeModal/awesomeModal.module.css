@@ -1,0 +1,107 @@
+.ModalWrapper {
+  background-color: var(--modal-background);
+  border: 1px solid #333333;
+  border-radius: 8px;
+  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08),
+    0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  margin: 0 auto;
+  min-height: 88px;
+  opacity: 1;
+  overflow: hidden;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 64px);
+  padding: 8px 16px;
+  position: fixed;
+  transition: all 250ms ease-in-out;
+  width: 100%;
+  z-index: var(--zIndex-overNavBar);
+
+  /* Imported from bigger screen down below */
+  /* Experiment with non-fullscreen modal on mobile devices */
+  bottom: unset;
+  left: 50%;
+  max-width: calc(100% - 16px);
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@media (prefers-color-scheme: dark) {
+  .ModalWrapper {
+    background-color: black;
+  }
+}
+
+@media (min-width: 640px) {
+  .ModalWrapper {
+    bottom: unset;
+    left: 50%;
+    max-width: calc(100% - 64px);
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@media (min-width: 1264px) {
+  .ModalWrapper {
+    max-width: 1200px;
+  }
+}
+
+.CloseButton {
+  cursor: pointer;
+  height: 28px;
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  width: 28px;
+}
+
+.CloseButton:hover {
+  background-color: #cccccc;
+  border-radius: 4px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .CloseButton:hover {
+    background-color: #a3a3a3;
+  }
+}
+
+.ModalLabel {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  font-size: 24px;
+  font-weight: 700;
+  padding-top: 8px;
+}
+
+.ModalSubtitle {
+  font-size: 14px;
+  font-weight: 400;
+  margin-bottom: 12px;
+  margin-top: -18px;
+}
+
+.ModalContent {
+  align-items: flex-start;
+  bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  left: 16px;
+  overflow-y: auto;
+  position: absolute;
+  right: 16px;
+  top: 48px;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.ModalContentV2 {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.ModalContentSubtitleOffset {
+  top: 64px;
+}

@@ -51,7 +51,7 @@ import DropDownMenuItem from 'app/_components/DropDownMenuItem'
 import TextButton from 'app/_components/TextButton'
 import MasonryLayout from 'app/_modules/MasonryLayout'
 import ImageSquare from 'app/_modules/ImageSquare'
-import Pagination from './Pagination'
+import Pagination from 'app/_components/Pagination'
 
 const MenuSeparator = styled.div`
   width: 100%;

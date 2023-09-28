@@ -21,7 +21,8 @@
   --link-active: #5eedde;
   --input-text: #282828;
   --main-color: #14b8a6;
-  --overlay-background: rgba(255, 255, 255, 0.8);
+  --modal-background: white;
+  --overlay-background: rgba(217, 217, 217, 0.8);
 
   /* SIZES */
   --fixedSideBar-width: 220px;
@@ -48,6 +49,7 @@
   --input-color: #e1e1e1;
   --input-text: #e1e1e1;
   --overlay-background: rgba(0, 0, 0, 0.8);
+  --modal-background: black;
 }
 
 html {

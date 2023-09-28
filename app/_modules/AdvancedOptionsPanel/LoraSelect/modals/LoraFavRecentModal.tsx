@@ -1,18 +1,23 @@
 /* eslint-disable @next/next/no-img-element */
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import React, { useState } from 'react'
-import { Embedding } from '_types/civitai'
 import Input from 'app/_components/Input'
 import { Button } from 'app/_components/Button'
 import { IconArrowBarLeft, IconSettings } from '@tabler/icons-react'
 import styles from './component.module.css'
 import Checkbox from 'app/_components/Checkbox'
-import EmbeddingDetailsCard from './EmbeddingDetailsCard'
 import AppSettings from 'app/_data-models/AppSettings'
 import FlexCol from 'app/_components/FlexCol'
+import LoraDetails from '../LoraDetails'
 
-const loadFromLocalStorage = () => {
-  let existingArray = localStorage.getItem('favoriteEmbeddings')
+const loadFromLocalStorage = (filterType = 'favorites') => {
+  let existingArray
+
+  if (filterType === 'favorites') {
+    existingArray = localStorage.getItem('favoriteLoras')
+  } else if ((filterType = 'recents')) {
+    existingArray = localStorage.getItem('recentLoras')
+  }
 
   if (existingArray) {
     try {
@@ -26,11 +31,13 @@ const loadFromLocalStorage = () => {
   return []
 }
 
-const EmbeddingFavoritesModal = ({
+const LoraFavRecentModal = ({
+  filterType = 'favorites',
   handleClose = () => {},
-  handleAddEmbedding = (value: any) => value
+  handleAddLora = (value: any) => value,
+  handleSaveRecent = (value: any) => value
 }) => {
-  const [favoriteEmbeddings] = useState(loadFromLocalStorage())
+  const [favoriteLoras] = useState(loadFromLocalStorage(filterType))
   const [showOptionsMenu, setShowOptionsMenu] = useState(false)
   const [showNsfw, setShowNsfw] = useState<boolean>(
     AppSettings.get('civitaiShowNsfw')
@@ -43,10 +50,20 @@ const EmbeddingFavoritesModal = ({
     setInput(event.target.value)
   }
 
-  const filtered = favoriteEmbeddings.filter((ti: Embedding) => {
-    const nsfwStatus = ti.nsfw === false || ti.nsfw === showNsfw
-    return ti.name.toLowerCase().includes(input.toLowerCase()) && nsfwStatus
+  const filtered = favoriteLoras.filter((lora: any) => {
+    if (lora && lora.label) {
+      // const nsfwStatus = ti.nsfw === false || ti.nsfw === showNsfw
+      return lora.label.toLowerCase().includes(input.toLowerCase())
+    }
   })
+
+  let adj = 'favorite'
+  let inputPlaceholder = 'Search your favorite LORAs'
+
+  if (filterType === 'recents') {
+    adj = 'recent'
+    inputPlaceholder = 'Search your recently used LORAs'
+  }
 
   return (
     <>
@@ -69,7 +86,7 @@ const EmbeddingFavoritesModal = ({
             <Input
               type="text"
               name="filterEmbeddings"
-              placeholder="Search your favorite embeddings"
+              placeholder={inputPlaceholder}
               onChange={handleInputChange}
               value={input}
               width="100%"
@@ -88,7 +105,7 @@ const EmbeddingFavoritesModal = ({
             {showOptionsMenu && (
               <DropdownOptions
                 handleClose={() => setShowOptionsMenu(false)}
-                title="Embedding Search Options"
+                title="LORA Search Options"
                 top="12px"
                 maxWidth="280px"
                 style={{
@@ -99,7 +116,7 @@ const EmbeddingFavoritesModal = ({
               >
                 <div style={{ padding: '8px 0' }}>
                   <Checkbox
-                    label="Show NSFW embeddings?"
+                    label="Show NSFW LORAs?"
                     checked={showNsfw}
                     onChange={(bool: boolean) => {
                       AppSettings.set('civitaiShowNsfw', bool)
@@ -132,23 +149,25 @@ const EmbeddingFavoritesModal = ({
           >
             {filtered.length === 0 && (
               <div style={{ fontWeight: 400, marginTop: '8px' }}>
-                No favorite models found.
+                No {adj} models found.
               </div>
             )}
             {filtered.length >= 1 && (
               <div
                 style={{ fontSize: '12px', fontWeight: 400, marginTop: '4px' }}
               >
-                Showing {filtered.length} favorites
+                Showing {filtered.length} {adj}s
               </div>
             )}
-            {filtered.map((item: Embedding) => {
+            {filtered.map((loraDetails: any) => {
+              console.log(`lora deetz`, loraDetails)
               return (
-                <EmbeddingDetailsCard
-                  key={`ti_${item.id}`}
-                  embedding={item}
-                  handleAddEmbedding={handleAddEmbedding}
+                <LoraDetails
+                  key={loraDetails.name}
+                  loraDetails={loraDetails}
+                  handleAddLora={handleAddLora}
                   handleClose={handleClose}
+                  handleSaveRecent={handleSaveRecent}
                 />
               )
             })}
@@ -159,4 +178,4 @@ const EmbeddingFavoritesModal = ({
   )
 }
 
-export default EmbeddingFavoritesModal
+export default LoraFavRecentModal
