@@ -1,3 +1,5 @@
+'use client'
+
 /* eslint-disable @next/next/no-img-element */
 import { Menu, MenuItem, MenuButton } from '@szhsin/react-menu'
 import '@szhsin/react-menu/dist/index.css'
@@ -40,7 +42,6 @@ export default function ImageModal({
   const router = useRouter()
   const { image_params, shortlink } = imageDetails
   const { models, params } = image_params
-  console.log(`imageDetails`, imageDetails)
 
   const [positivePrompt, negativePrompt] = image_params.prompt.split('###')
 

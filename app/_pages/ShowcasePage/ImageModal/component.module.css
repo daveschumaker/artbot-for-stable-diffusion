@@ -1,9 +1,7 @@
-.ImageWrapper {}
-
 .MenuWrapper {
   display: flex;
   flex-direction: row;
-  gap: 4px;
+  gap: 12px;
   justify-content: flex-end;
   margin-bottom: 8px;
   width: 100%

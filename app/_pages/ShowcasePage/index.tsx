@@ -11,6 +11,7 @@ import MasonryLayout from 'app/_modules/MasonryLayout'
 import { useModal } from '@ebay/nice-modal-react'
 import ImageModal from './ImageModal'
 import AwesomeModalWrapper from 'app/_modules/AwesomeModal'
+import Link from 'next/link'
 
 // Starts at 20 since SSR feeds in offset 0 info.
 let offset = 20
@@ -81,18 +82,21 @@ export default function ShowcasePage({ images = [] }: { images: any[] }) {
         {imageList.map((image) => {
           return (
             <div key={image.shortlink}>
-              <div
-                key={image.shortlink}
-                className={styles.ImageCard}
-                onClick={() => handleImageClick(image)}
-              >
-                {/* <Link href={`/?i=${image.shortlink}`}> */}
-                <img
-                  className={styles.ShowcaseImage}
-                  src={`https://s3.amazonaws.com/tinybots.artbot/artbot/images/${image.shortlink}.webp`}
-                  alt={image.image_params.prompt}
-                />
-                {/* </Link> */}
+              <div key={image.shortlink} className={styles.ImageCard}>
+                <Link
+                  href={`/?i=${image.shortlink}`}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    handleImageClick(image)
+                  }}
+                >
+                  <img
+                    className={styles.ShowcaseImage}
+                    src={`https://s3.amazonaws.com/tinybots.artbot/artbot/images/${image.shortlink}.webp`}
+                    alt={image.image_params.prompt}
+                  />
+                </Link>
               </div>
             </div>
           )
