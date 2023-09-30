@@ -1,3 +1,8 @@
+# 2023.09.30
+
+- Update showcase page with new popup modal.
+- Added dropdown menu options to shared image modal / shared image page to easily recreate image or modify the settings.
+
 # 2023.09.27
 
 - No more silly "copy and paste URL from CivitAI" behavior. You can now search for LORAs, Lycoris, and Embeddings right within ArtBot!
