@@ -3,19 +3,32 @@
 /* eslint-disable @next/next/no-img-element */
 import PageTitle from 'app/_components/PageTitle'
 import styles from './showcase.module.css'
-import Link from 'next/link'
+// import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
 import { basePath } from 'BASE_PATH'
 import { debounce } from 'app/_utils/debounce'
 import MasonryLayout from 'app/_modules/MasonryLayout'
+import { useModal } from '@ebay/nice-modal-react'
+import ImageModal from './ImageModal'
+import AwesomeModalWrapper from 'app/_modules/AwesomeModal'
+import Link from 'next/link'
 
 // Starts at 20 since SSR feeds in offset 0 info.
 let offset = 20
 
 export default function ShowcasePage({ images = [] }: { images: any[] }) {
+  const imageModal = useModal(AwesomeModalWrapper)
   const [imageList, setImageList] = useState(images)
   const [loading, setLoading] = useState(false)
   const perPage = 20 // Number of images to load per API call
+
+  const handleImageClick = (imageDetails: any) => {
+    imageModal.show({
+      children: <ImageModal imageDetails={imageDetails} />,
+      handleClose: () => imageModal.remove(),
+      style: { maxWidth: '768px' }
+    })
+  }
 
   const fetchImages = useCallback(async () => {
     try {
@@ -70,7 +83,14 @@ export default function ShowcasePage({ images = [] }: { images: any[] }) {
           return (
             <div key={image.shortlink}>
               <div key={image.shortlink} className={styles.ImageCard}>
-                <Link href={`/?i=${image.shortlink}`}>
+                <Link
+                  href={`/?i=${image.shortlink}`}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    handleImageClick(image)
+                  }}
+                >
                   <img
                     className={styles.ShowcaseImage}
                     src={`https://s3.amazonaws.com/tinybots.artbot/artbot/images/${image.shortlink}.webp`}

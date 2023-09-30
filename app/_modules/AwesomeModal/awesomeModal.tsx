@@ -7,7 +7,7 @@
 
 import NiceModal, { useModal } from '@ebay/nice-modal-react'
 import Overlay from 'app/_components/Overlay'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { CSSProperties, useEffect, useRef, useState } from 'react'
 import styles from './awesomeModal.module.css'
 import { IconX } from '@tabler/icons-react'
 import clsx from 'clsx'
@@ -21,6 +21,7 @@ interface Props {
   disableBackground?: boolean
   handleClose?(): any
   label?: string
+  style?: CSSProperties
   subtitle?: string
   tooltip?: string
 }
@@ -32,6 +33,7 @@ function AwesomeModal({
   handleClose = () => {},
   label,
   subtitle,
+  style,
   tooltip
 }: Props) {
   const modalRef = useRef<HTMLDivElement | null>(null)
@@ -110,41 +112,6 @@ function AwesomeModal({
     }
   }, [minHeight])
 
-  // useEffect(() => {
-  //   const modalNode = modalRef.current
-
-  //   if (modalNode) {
-  //     const updateMaxHeight = () => {
-  //       const viewportHeight = window.innerHeight
-  //       const topPosition = parseFloat(getComputedStyle(modalNode).top)
-  //       const maxModalHeight =
-  //         viewportHeight -
-  //         (topPosition + 32) /* Bottom Padding */ -
-  //         32 /* Top Padding */
-  //       modalNode.style.maxHeight = `${maxModalHeight}px`
-  //     }
-
-  //     const observer = new MutationObserver(updateMaxHeight)
-
-  //     // Initially setting max height
-  //     updateMaxHeight()
-
-  //     observer.observe(modalNode, {
-  //       attributes: true,
-  //       attributeFilter: ['style'], // Observe changes to style attribute only
-  //       childList: true,
-  //       subtree: true
-  //     })
-
-  //     window.addEventListener('resize', updateMaxHeight) // update max height on window resize
-
-  //     return () => {
-  //       observer.disconnect()
-  //       window.removeEventListener('resize', updateMaxHeight) // Clean up the event listener
-  //     }
-  //   }
-  // }, [])
-
   return (
     <>
       <Overlay
@@ -157,7 +124,8 @@ function AwesomeModal({
         style={{
           maxHeight: `${maxHeight}px`,
           minHeight: `${minHeight}px`,
-          paddingTop: !label ? '38px' : 0
+          paddingTop: !label ? '38px' : 0,
+          ...style
         }}
         ref={modalRef}
       >

@@ -1,0 +1,23 @@
+.MenuWrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+  width: 100%
+}
+
+.MenuButton {
+  padding: 2px;
+}
+
+.MenuButton:hover {
+  background-color: #cccccc;
+  border-radius: 4px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .MenuButton:hover {
+    background-color: #a3a3a3;
+  }
+}

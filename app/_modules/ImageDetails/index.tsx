@@ -16,7 +16,11 @@ import useWindowHeight from 'app/_hooks/useWindowHeight'
 import ImageSettingsDisplay from './ImageSettingsDisplay'
 import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 import Img2ImgModal from 'app/_pages/ImagePage/Img2ImgModal'
-import { IconPhotoUp, IconPlaylistX } from '@tabler/icons-react'
+import {
+  IconPhotoUp,
+  IconPlaylistAdd,
+  IconPlaylistX
+} from '@tabler/icons-react'
 import ImageSquare from '../ImageSquare'
 
 interface Props {
@@ -141,7 +145,7 @@ const ImageDetails = ({
       >
         <div className="text-[16px] tablet:text-[18px] px-4 w-full max-w-[768px]">
           <div className="text-sm font-bold flex flex-row gap-2 items-center mb-[4px]">
-            <IconPlaylistX />
+            <IconPlaylistAdd />
             Prompt
           </div>
           <div className="w-full text-sm ml-[8px] break-words">
