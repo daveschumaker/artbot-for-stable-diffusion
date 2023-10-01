@@ -1,3 +1,7 @@
+# 2023.10.01
+
+- Merge PR from Efreak that fixes megapixel calculations. Thank you!
+
 # 2023.09.30
 
 - Update showcase page with new popup modal.
