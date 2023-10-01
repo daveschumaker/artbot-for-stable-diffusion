@@ -63,8 +63,7 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
 
   const getMegapixelSize = () => {
     const size = input.height * input.width
-    const megapixel = 1024 * 1024
-    return (size / megapixel).toFixed(2)
+    return (size / 1E6).toFixed(2)
   }
 
   const toggleKeepAspectRatio = () => {
