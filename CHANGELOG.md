@@ -2,6 +2,7 @@
 
 - No more silly "copy and paste URL from CivitAI" behavior. You can now search for LORAs, Lycoris, and Embeddings right within ArtBot!
 - Start integrating my new, unified AwesomeModal component that should hopefully make managing popup modals across ArtBot much easier and more logical. It's now visible in LORA and Embedding search popups. (Would you believe, this is like the fourth unique modal component within the web app -- anyway, long term goal is to only have one.)
+- Did you create something you're particularly proud of and want to show it off? You can now submit a request for consideration to the community showcase. It appears as an additional menu item under the share icon on each image details page.
 
 # 2023.09.26
 

@@ -39,6 +39,8 @@ export default async function handler(
       })
     }
   } catch (err) {
+    console.log(`Error: Unable to create shortlink.`)
+    console.log(err)
     res.send({
       success: false
     })

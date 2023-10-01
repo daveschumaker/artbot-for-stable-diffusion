@@ -1,4 +1,8 @@
 import { IconRefresh, IconShare } from '@tabler/icons-react'
+import { Menu, MenuItem, MenuButton } from '@szhsin/react-menu'
+import '@szhsin/react-menu/dist/index.css'
+import '@szhsin/react-menu/dist/transitions/slide.css'
+
 import { createShortlink } from 'app/_api/createShortlink'
 import { baseHost, basePath } from 'BASE_PATH'
 import clsx from 'clsx'
@@ -8,8 +12,8 @@ import { userInfoStore } from 'app/_store/userStore'
 import { getImageDetails, updateCompletedJob } from 'app/_utils/db'
 import { generateBase64Thumbnail } from 'app/_utils/imageUtils'
 import { showSuccessToast } from 'app/_utils/notificationUtils'
-import styles from './component.module.css'
 import CreateImageRequest from 'app/_data-models/CreateImageRequest'
+import styles from './component.module.css'
 
 export default function ShortlinkButton({
   imageDetails
@@ -29,9 +33,6 @@ export default function ShortlinkButton({
       .then(() => {
         showSuccessToast({ message: 'Shortlink URL copied to your clipboard!' })
       })
-    // .catch((err) => {
-    //   alert(err)
-    // })
   }
 
   const getShortlink = async () => {
@@ -80,20 +81,117 @@ export default function ShortlinkButton({
     setShortlinkPending(false)
   }
 
+  const requestShowcase = async () => {
+    const updatedImageDetails = await getImageDetails(imageDetails.jobId)
+
+    if (shortlinkPending) {
+      return
+    }
+
+    if (imageDetails.showcaseRequested) {
+      showSuccessToast({
+        message: 'Community showcase request sent!'
+      })
+    }
+
+    setShortlinkPending(true)
+
+    let shortlink
+    if (updatedImageDetails.shortlink) {
+      shortlink = updatedImageDetails.shortlink
+    } else {
+      const resizedImage = await generateBase64Thumbnail(
+        imageDetails.base64String as string,
+        imageDetails.jobId as string,
+        512,
+        768,
+        0.9
+      )
+
+      const data = {
+        // @ts-ignore
+        imageParams: new ImageParamsForApi(imageDetails),
+        imageBase64: resizedImage,
+        username: userInfoStore.state.username
+      }
+
+      const shortlinkData = await createShortlink(data)
+      shortlink = shortlinkData.shortlink
+
+      if (shortlink) {
+        await updateCompletedJob(
+          imageDetails.id,
+          Object.assign({}, imageDetails, {
+            shortlink,
+            showcaseRequested: true
+          })
+        )
+      }
+    }
+
+    if (shortlink) {
+      await fetch(`${basePath}/api/showcase-submit`, {
+        method: 'POST',
+        body: JSON.stringify({ shortlink }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    }
+
+    showSuccessToast({
+      message: 'Community showcase request sent!'
+    })
+
+    setShortlinkPending(false)
+  }
+
   return (
     <div
       className={clsx(
         styles['button-icon'],
         shortlinkPending && styles.buttonLoading
       )}
-      onClick={async () => {
-        getShortlink()
-      }}
     >
-      {shortlinkPending && (
-        <IconRefresh className={styles.spinner} stroke={1.5} />
-      )}
-      {!shortlinkPending && <IconShare stroke={1.5} />}
+      <Menu
+        menuButton={
+          <MenuButton>
+            {shortlinkPending && (
+              <IconRefresh className={styles.spinner} stroke={1.5} />
+            )}
+            {!shortlinkPending && <IconShare stroke={1.5} />}
+          </MenuButton>
+        }
+        transition
+        menuClassName={styles['menu']}
+      >
+        <MenuItem
+          className="text-sm"
+          onClick={async () => {
+            getShortlink()
+          }}
+        >
+          {imageDetails.shortlink ? 'Copy ' : 'Create '}
+          shareable link
+        </MenuItem>
+        <MenuItem
+          className="text-sm"
+          disabled={imageDetails.showcaseRequested}
+          onClick={async () => {
+            if (!imageDetails.showcaseRequested) {
+              requestShowcase()
+            } else {
+              showSuccessToast({
+                message: 'Community showcase request sent!'
+              })
+            }
+          }}
+        >
+          {!imageDetails.showcaseRequested
+            ? 'Request showcase consideration'
+            : 'Community showcase requested'}
+        </MenuItem>
+      </Menu>
     </div>
   )
 }

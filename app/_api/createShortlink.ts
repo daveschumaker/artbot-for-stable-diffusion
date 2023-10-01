@@ -14,6 +14,8 @@ export const createShortlink = async (obj: any = {}) => {
 
     return shortlinkData
   } catch (err) {
+    console.log(`Error: Unable to create shortlink`)
+    console.log(err)
     return {
       success: false
     }

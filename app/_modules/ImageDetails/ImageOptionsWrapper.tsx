@@ -298,7 +298,7 @@ const ImageOptionsWrapper = ({
             <Menu
               menuButton={
                 <MenuButton>
-                  <IconDotsVertical />
+                  <IconDotsVertical stroke={1.5} />
                 </MenuButton>
               }
               transition
@@ -381,7 +381,7 @@ const ImageOptionsWrapper = ({
             <Menu
               menuButton={
                 <MenuButton>
-                  <IconCopy />
+                  <IconCopy stroke={1.5} />
                 </MenuButton>
               }
               transition
@@ -434,7 +434,7 @@ const ImageOptionsWrapper = ({
               <Menu
                 menuButton={
                   <MenuButton>
-                    <IconWall />
+                    <IconWall stroke={1.5} />
                   </MenuButton>
                 }
                 transition
@@ -482,13 +482,13 @@ const ImageOptionsWrapper = ({
             className={clsx(styles['button-icon'], styles['mobile-hide'])}
             onClick={() => downloadFile(imageDetails)}
           >
-            <IconDownload />
+            <IconDownload stroke={1.5} />
           </div>
           <div
             className={clsx(styles['button-icon'])}
             onClick={() => handleRerollClick(imageDetails)}
           >
-            <IconRefresh />
+            <IconRefresh stroke={1.5} />
           </div>
           <div className={styles['button-icon']} onClick={onFavoriteClick}>
             <IconHeart
@@ -496,6 +496,7 @@ const ImageOptionsWrapper = ({
                 color: favorited ? '#14B8A6' : undefined,
                 fill: favorited ? '#14B8A6' : undefined
               }}
+              stroke={1.5}
             />
           </div>
           <div
@@ -508,7 +509,7 @@ const ImageOptionsWrapper = ({
               })
             }}
           >
-            <IconTrash />
+            <IconTrash stroke={1.5} />
           </div>
         </div>
       </div>

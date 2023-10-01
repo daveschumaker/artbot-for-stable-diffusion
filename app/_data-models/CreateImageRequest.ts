@@ -49,6 +49,8 @@ class CreateImageRequest {
   sampler: string
   seed: string
   shareImagesExternally: boolean
+  shortlink?: string
+  showcaseRequested?: boolean
   source_image: string
   source_mask: string
   source_processing: SourceProcessing
