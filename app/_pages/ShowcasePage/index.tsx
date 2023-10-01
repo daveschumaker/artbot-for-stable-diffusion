@@ -3,7 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 import PageTitle from 'app/_components/PageTitle'
 import styles from './showcase.module.css'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { basePath } from 'BASE_PATH'
 import MasonryLayout from 'app/_modules/MasonryLayout'
 import { useModal } from '@ebay/nice-modal-react'
@@ -14,11 +14,11 @@ import { Button } from 'app/_components/Button'
 import FlexRow from 'app/_components/FlexRow'
 import SpinnerV2 from 'app/_components/Spinner'
 
-export default function ShowcasePage({ images = [] }: { images: any[] }) {
+export default function ShowcasePage() {
   const imageModal = useModal(AwesomeModalWrapper)
-  const [imageList, setImageList] = useState(images)
+  const [imageList, setImageList] = useState<any[]>([])
   const [canLoadMore, setCanLoadMore] = useState(true)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [offset, setOffset] = useState(0)
   const perPage = 20 // Number of images to load per API call
 
@@ -28,6 +28,22 @@ export default function ShowcasePage({ images = [] }: { images: any[] }) {
       handleClose: () => imageModal.remove(),
       style: { maxWidth: '768px' }
     })
+  }
+
+  const initFetch = async () => {
+    try {
+      setLoading(true)
+
+      // Make your API
+      // call to fetch more images, passing the page number and perPage as parameters
+      const response = await fetch(`${basePath}/api/showcase?offset=0`)
+      const data = await response.json()
+      setImageList((prevImages) => [...prevImages, ...data])
+    } catch (error) {
+      console.error('Error fetching images:', error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const fetchImages = useCallback(async () => {
@@ -53,6 +69,10 @@ export default function ShowcasePage({ images = [] }: { images: any[] }) {
       setLoading(false)
     }
   }, [offset])
+
+  useEffect(() => {
+    initFetch()
+  }, [])
 
   return (
     <>

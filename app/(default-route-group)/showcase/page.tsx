@@ -15,24 +15,6 @@ export const metadata: Metadata = {
   }
 }
 
-async function getPageData() {
-  try {
-    const resp = await fetch(
-      `${process.env.NEXT_SHORTLINK_SERVICE}/api/v1/images/public/list/0`,
-      {
-        method: 'GET',
-        next: { revalidate: 60 }
-      }
-    )
-    const imageList = (await resp.json()) || []
-    return imageList
-  } catch (err) {
-    console.log(`getPageData error?`, err)
-    return []
-  }
-}
-
 export default async function Page() {
-  const imageList = await getPageData()
-  return <ShowcasePage images={imageList} />
+  return <ShowcasePage />
 }
