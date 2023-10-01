@@ -3,23 +3,23 @@
 /* eslint-disable @next/next/no-img-element */
 import PageTitle from 'app/_components/PageTitle'
 import styles from './showcase.module.css'
-// import Link from 'next/link'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { basePath } from 'BASE_PATH'
-import { debounce } from 'app/_utils/debounce'
 import MasonryLayout from 'app/_modules/MasonryLayout'
 import { useModal } from '@ebay/nice-modal-react'
 import ImageModal from './ImageModal'
 import AwesomeModalWrapper from 'app/_modules/AwesomeModal'
 import Link from 'next/link'
-
-// Starts at 20 since SSR feeds in offset 0 info.
-let offset = 20
+import { Button } from 'app/_components/Button'
+import FlexRow from 'app/_components/FlexRow'
+import SpinnerV2 from 'app/_components/Spinner'
 
 export default function ShowcasePage({ images = [] }: { images: any[] }) {
   const imageModal = useModal(AwesomeModalWrapper)
   const [imageList, setImageList] = useState(images)
+  const [canLoadMore, setCanLoadMore] = useState(true)
   const [loading, setLoading] = useState(false)
+  const [offset, setOffset] = useState(0)
   const perPage = 20 // Number of images to load per API call
 
   const handleImageClick = (imageDetails: any) => {
@@ -33,39 +33,26 @@ export default function ShowcasePage({ images = [] }: { images: any[] }) {
   const fetchImages = useCallback(async () => {
     try {
       setLoading(true)
-      // Make your API call to fetch more images, passing the page number and perPage as parameters
-      const response = await fetch(`${basePath}/api/showcase?offset=${offset}`)
+      const newOffset = offset + perPage
+
+      // Make your API
+      // call to fetch more images, passing the page number and perPage as parameters
+      const response = await fetch(
+        `${basePath}/api/showcase?offset=${newOffset}`
+      )
       const data = await response.json()
       setImageList((prevImages) => [...prevImages, ...data])
-      offset = offset + perPage
+      setOffset(newOffset)
+
+      if (data.length < perPage) {
+        setCanLoadMore(false)
+      }
     } catch (error) {
       console.error('Error fetching images:', error)
     } finally {
       setLoading(false)
     }
-  }, [])
-
-  const handleScroll = debounce(() => {
-    const isAtBottom =
-      window.innerHeight + document.documentElement.scrollTop >=
-      document.documentElement.offsetHeight - 10
-
-    if (isAtBottom && !loading) {
-      fetchImages()
-    }
-  }, 450)
-
-  useEffect(() => {
-    offset = 20
-    // Attach the scroll event listener when the component mounts
-    window.addEventListener('scroll', handleScroll)
-    return () => {
-      // Remove the scroll event listener when the component unmounts
-      window.removeEventListener('scroll', handleScroll)
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [offset])
 
   return (
     <>
@@ -102,6 +89,16 @@ export default function ShowcasePage({ images = [] }: { images: any[] }) {
           )
         })}
       </MasonryLayout>
+      {loading && (
+        <FlexRow style={{ marginTop: '8px', justifyContent: 'center' }}>
+          <SpinnerV2 />
+        </FlexRow>
+      )}
+      {canLoadMore && (
+        <FlexRow style={{ marginTop: '8px', justifyContent: 'center' }}>
+          <Button onClick={fetchImages}>Load more</Button>
+        </FlexRow>
+      )}
     </>
   )
 }

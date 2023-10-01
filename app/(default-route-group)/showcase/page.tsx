@@ -20,7 +20,8 @@ async function getPageData() {
     const resp = await fetch(
       `${process.env.NEXT_SHORTLINK_SERVICE}/api/v1/images/public/list/0`,
       {
-        method: 'GET'
+        method: 'GET',
+        next: { revalidate: 60 }
       }
     )
     const imageList = (await resp.json()) || []

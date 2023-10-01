@@ -19,7 +19,8 @@ export default async function handler(
   const resp = await fetch(
     `${process.env.NEXT_SHORTLINK_SERVICE}/api/v1/images/public/list/${offset}`,
     {
-      method: 'GET'
+      method: 'GET',
+      next: { revalidate: 60 }
     }
   )
 
