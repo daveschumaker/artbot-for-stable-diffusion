@@ -23,8 +23,10 @@ import TooltipComponent from 'app/_components/TooltipComponent'
 import NumericInputSlider from 'app/_modules/AdvancedOptionsPanel/NumericInputSlider'
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import CustomDimensions from './CustomDimensions'
+import { modelStore } from 'app/_store/modelStore'
 
 const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
+  const { modelDetails } = useStore(modelStore)
   const [workerDetails] = useWorkerDetails()
   const userState = useStore(userInfoStore)
   const { loggedIn } = userState
@@ -32,6 +34,66 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
   const [targetAspectRatio, setTargetAspectRatio] = useState(0)
   const [showOptions, setShowOptions] = useState(false)
   const [showCustomDimensions, setShowCustomDimensions] = useState(false)
+
+  const [baselineLoaded, setBaselineLoaded] = useState(false)
+
+  let baseline: string = ''
+  const { models } = input
+  const [model] = models
+
+  if (modelDetails[model]) {
+    baseline = modelDetails[model].baseline
+  }
+
+  console.log(`we got a baseline?`, baseline)
+
+  useEffect(() => {
+    function scaleProportionally(height: number, width: number) {
+      // Ensure inputs are numbers
+      if (
+        typeof height !== 'number' ||
+        typeof width !== 'number' ||
+        height <= 0 ||
+        width <= 0
+      ) {
+        throw new Error(
+          'Invalid input: height and width must be positive numbers.'
+        )
+      }
+
+      // Calculate the aspect ratio
+      let aspectRatio = width / height
+
+      let newHeight, newWidth
+
+      if (aspectRatio >= 1) {
+        // width is greater or equal to height
+        newWidth = 1024
+        newHeight = newWidth / aspectRatio
+      } else {
+        // height is greater than width
+        newHeight = 1024
+        newWidth = newHeight * aspectRatio
+      }
+
+      // Find the closest lower number that is divisible by 64
+      newWidth = Math.floor(newWidth / 64) * 64
+      newHeight = Math.floor(newHeight / 64) * 64
+
+      return { newWidth, newHeight }
+    }
+
+    if (!baselineLoaded && baseline) {
+      if (baseline === 'stable_diffusion_xl') {
+        const updatedSizes = scaleProportionally(input.height, input.width)
+        setInput({
+          height: updatedSizes.newHeight,
+          width: updatedSizes.newWidth
+        })
+        setBaselineLoaded(true)
+      }
+    }
+  }, [baseline, baselineLoaded])
 
   const getConstraints = () => {
     return {
@@ -42,11 +104,12 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
   }
 
   const handleOrientationSelect = (orientation: string) => {
-    const details = ImageOrientation.getOrientationDetails(
+    const details = ImageOrientation.getOrientationDetails({
+      baseline,
       orientation,
-      input.height,
-      input.width
-    )
+      height: input.height,
+      width: input.width
+    })
 
     // Automatically keep aspect ratio
     if (orientation !== 'custom') {
@@ -63,7 +126,7 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
 
   const getMegapixelSize = () => {
     const size = input.height * input.width
-    return (size / 1E6).toFixed(2)
+    return (size / 1e6).toFixed(2)
   }
 
   const toggleKeepAspectRatio = () => {
@@ -130,11 +193,11 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
     return 'text-gray-500'
   }
 
-  const orientationValue = ImageOrientation.dropdownOptions().filter(
-    (option: any) => {
-      return input.orientationType === option.value
-    }
-  )[0]
+  const orientationValue = ImageOrientation.dropdownOptions({
+    baseline
+  }).filter((option: any) => {
+    return input.orientationType === option.value
+  })[0]
 
   const totalPixels = input.height * input.width
 
@@ -169,7 +232,7 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
       }
       <FlexRow style={{ marginBottom: '4px' }}>
         <Select
-          options={ImageOrientation.dropdownOptions()}
+          options={ImageOrientation.dropdownOptions({ baseline })}
           onChange={(obj: { value: string; label: string }) => {
             handleOrientationSelect(obj.value)
           }}

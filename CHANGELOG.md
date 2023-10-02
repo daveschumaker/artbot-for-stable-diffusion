@@ -1,6 +1,11 @@
+# 2023.10.02
+
+- Adjusted some validation logic ahead of the official SDXL release on the Horde.
+
 # 2023.10.01
 
 - Merge PR from Efreak that fixes megapixel calculations. Thank you!
+- Fixed caching issue with community showcase page. You can now see fresh content!
 
 # 2023.09.30
 
