@@ -50,8 +50,6 @@ export default function AdminPage() {
       const { notification = {} } = serverSettings
       setNewsTitle(notification.title || '')
       setNewsContent(notification.content || '')
-
-      console.log(`data?`, data)
     } catch (err) {}
   }
 

@@ -24,7 +24,6 @@ const ProfilePage = () => {
 
   // const fetchFirstJob = async () => {
   //   const data = await fetchFirstCompletedJob()
-  //   console.log('data??', new Date(data.jobTimestamp))
   // }
 
   // useEffect(() => {
@@ -47,8 +46,6 @@ const ProfilePage = () => {
       </>
     )
   }
-
-  console.log(`userState?`, userState)
 
   if (loggedIn === false) {
     return (

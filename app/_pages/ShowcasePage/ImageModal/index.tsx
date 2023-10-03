@@ -73,8 +73,6 @@ export default function ImageModal({
       })
   }
 
-  console.log(`imageDetails`, imageDetails)
-
   return (
     <div
       id="showcase-image-modal"
