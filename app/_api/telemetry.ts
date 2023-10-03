@@ -36,6 +36,7 @@ export const trackEvent = async (obj: any = {}) => {
   logToConsole({ data: obj, name: 'Telemetry', debugKey: 'DEBUG_TELEMETRY' })
 
   if (
+    obj.event !== 'IMAGE_RECEIVED_FROM_API' &&
     typeof window !== 'undefined' &&
     window.location.host.indexOf('localhost') >= 0
   ) {

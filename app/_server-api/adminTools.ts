@@ -1,4 +1,5 @@
 require('dotenv').config()
+import appRoot from 'app-root-path'
 import { promises as fs } from 'fs'
 import * as crypto from 'crypto'
 import os from 'os'
@@ -8,8 +9,10 @@ import jwt, { VerifyErrors } from 'jsonwebtoken'
 const SECRET_KEY = process.env.SECRET
 
 export const readServerSettingsFile = async () => {
-  const homeDirectory = os.homedir()
+  const isProd = process.env.NODE_ENV === 'production'
+  const homeDirectory = isProd ? os.homedir() : appRoot + '/__local_db'
   const filePath = path.join(homeDirectory, '.artbot_server_settings')
+
   try {
     const data = await fs.readFile(filePath, 'utf8')
 
@@ -36,7 +39,8 @@ export const readServerSettingsFile = async () => {
 
 export const updateServerSettingsFile = async (data: any) => {
   try {
-    const homeDirectory = os.homedir()
+    const isProd = process.env.NODE_ENV === 'production'
+    const homeDirectory = isProd ? os.homedir() : appRoot + '/__local_db'
     const filePath = path.join(homeDirectory, '.artbot_server_settings')
 
     await fs.writeFile(filePath, JSON.stringify(data), 'utf8')

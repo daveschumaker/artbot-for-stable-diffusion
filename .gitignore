@@ -25,8 +25,6 @@ release.tar.gz
 build_info.json
 *.pem
 /analyze
-/ArtBot_ModelChanges
-/ArtBot_ServerMessage
 build.sh
 release.sh
 
@@ -46,5 +44,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local dev DB files
+/__local_db/*
+# But do not ignore _README.md
+!/__local_db/_README.md
 
 .vscode

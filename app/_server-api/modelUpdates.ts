@@ -1,20 +1,11 @@
 require('dotenv').config()
-import fs from 'fs'
+import appRoot from 'app-root-path'
+import os from 'os'
 import { LocalStorage } from 'node-localstorage'
 
-const __DEV__ = process.env.NODE_ENV !== 'production'
-
-let dataPath = ''
-
-if (process.env.DEV_MODEL_CHANGE_DB && process.env.PROD_MODEL_CHANGE_DB) {
-  dataPath = __DEV__
-    ? process.env.DEV_MODEL_CHANGE_DB
-    : process.env.PROD_MODEL_CHANGE_DB
-}
-
-if (typeof dataPath === 'undefined' || !dataPath || !fs.existsSync(dataPath)) {
-  dataPath = './ArtBot_ModelChanges'
-}
+const isProd = process.env.NODE_ENV === 'production'
+const homeDirectory = isProd ? os.homedir() : appRoot + '/__local_db'
+const dataPath = homeDirectory + '/.ArtBot_ModelChanges'
 
 const localStorage = new LocalStorage(dataPath, 10485760)
 
@@ -108,7 +99,6 @@ export const modelDiff = (modelDetails: any = {}) => {
   // Check if any models have been removed
   for (const key in cachedModelDetails) {
     if (!modelDetails[key]) {
-      // modelUpdatesCache.push(modelActions.remove(key))
       storageActions.set(modelActions.remove(key))
     }
   }
@@ -117,7 +107,6 @@ export const modelDiff = (modelDetails: any = {}) => {
   for (const key in modelDetails) {
     if (!cachedModelDetails[key]) {
       const version = modelDetails[key].version
-      // modelUpdatesCache.push(modelActions.add(key, version))
       storageActions.set(modelActions.add(key, version))
     }
 

@@ -1,26 +1,22 @@
 require('dotenv').config()
+import appRoot from 'app-root-path'
 import cron from 'node-cron'
 import fs from 'fs'
+import os from 'os'
 
 const cache: any = {
   previousHour: null,
   totalImages: 0
 }
 
-const saveCache = () => {
-  if (process.env.NODE_ENV !== 'production') {
-    return
-  }
+const isProd = process.env.NODE_ENV === 'production'
+const homeDirectory = isProd ? os.homedir() : appRoot + '/__local_db'
+const filePath = homeDirectory + '/ArtBot_ImageCount.txt'
 
-  if (process.env.PROD_COUNT_FILE) {
-    fs.writeFile(
-      process.env.PROD_COUNT_FILE,
-      String(cache.totalImages),
-      function (err) {
-        if (err) return console.log(err)
-      }
-    )
-  }
+const saveCache = () => {
+  fs.writeFile(filePath, String(cache.totalImages), function (err) {
+    if (err) return console.log(err)
+  })
 }
 
 export const getImageCount = () => {
@@ -32,26 +28,23 @@ export const updateImageCount = () => {
 }
 
 export const initLoadImageCount = () => {
-  if (process.env.NODE_ENV !== 'production') {
-    return
-  }
-
   cron.schedule('0 * * * *', () => {
     logCountTotal()
   })
 
-  if (
-    process.env.PROD_COUNT_FILE &&
-    fs.existsSync(process.env.PROD_COUNT_FILE)
-  ) {
-    const data = fs.readFileSync(process.env.PROD_COUNT_FILE, 'utf8') || ''
+  if (fs.existsSync(filePath)) {
+    const data = fs.readFileSync(filePath, 'utf8') || ''
     const [totalImages] = data.split('#')
 
     cache.totalImages = Number(totalImages)
 
     setInterval(() => {
       saveCache()
-    }, 60000)
+    }, 30000)
+  } else {
+    fs.writeFile(filePath, String(cache.totalImages), function (err) {
+      if (err) return console.log(err)
+    })
   }
 }
 
