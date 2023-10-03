@@ -23,7 +23,7 @@ export const fetchModelUpdates = async () => {
   // let modelUpdates: Array<any> = []
 
   try {
-    const res = await fetch(`${basePath}/api/model-updates`)
+    const res = await fetch(`${basePath}/api/models/updates`)
     const data: IModelUpdatesResponse = await res.json()
     const { success, changes = [], timestamp } = data
 

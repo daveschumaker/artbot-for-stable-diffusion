@@ -16,7 +16,7 @@ const fetchModelDetails = async () => {
   let availableModelsMap: IAvailableModels = {}
 
   try {
-    const res = await fetch(`${basePath}/api/model-details`)
+    const res = await fetch(`${basePath}/api/models/details`)
     const { models }: { models: IModelsDetails } = await res.json()
 
     for (const model in models) {

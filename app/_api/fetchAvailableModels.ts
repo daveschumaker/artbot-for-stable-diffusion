@@ -17,7 +17,7 @@ export const fetchAvailableModels = async () => {
   ]
 
   try {
-    const res = await fetch(`${basePath}/api/models-available`, {
+    const res = await fetch(`${basePath}/api/models/available`, {
       headers: {
         'Content-Type': 'application/json',
         'Client-Agent': clientHeader()

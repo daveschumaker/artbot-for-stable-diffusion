@@ -9,13 +9,13 @@ async function getPageData() {
 
   try {
     const availableModelsRes = await fetch(
-      `http://localhost:${process.env.PORT}${basePath}/api/models-available`
+      `http://localhost:${process.env.PORT}${basePath}/api/models/available`
     )
     const availableModelsData = (await availableModelsRes.json()) || {}
     availableModels = availableModelsData.models
 
     const modelDetailsRes = await fetch(
-      `http://localhost:${process.env.PORT}${basePath}/api/model-details`
+      `http://localhost:${process.env.PORT}${basePath}/api/models/details`
     )
     const modelDetailsData = (await modelDetailsRes.json()) || {}
     modelDetails = modelDetailsData.models
