@@ -396,7 +396,7 @@ const ImageOptionsWrapper = ({
                   handleClose()
                 }}
               >
-                Use a prompt from this image
+                Use the prompt from this image
               </MenuItem>
               <MenuItem className="text-sm" onClick={handleCopyPromptClick}>
                 Use all settings from this image
