@@ -24,7 +24,6 @@ const ProfilePage = () => {
 
   // const fetchFirstJob = async () => {
   //   const data = await fetchFirstCompletedJob()
-  //   console.log('data??', new Date(data.jobTimestamp))
   // }
 
   // useEffect(() => {
@@ -146,22 +145,26 @@ const ProfilePage = () => {
               {Math.abs(kudos_details.gifted).toLocaleString()}
             </div>
           </div>
-          <div className={styles['info-wrapper']}>
-            <div className={styles['info-wrapper-title']}>
-              Images you&apos;ve requested
+          {records.request && (
+            <div className={styles['info-wrapper']}>
+              <div className={styles['info-wrapper-title']}>
+                Images you&apos;ve requested
+              </div>
+              <div className={styles['info-wrapper-details']}>
+                {records.request.image.toLocaleString()}
+              </div>
             </div>
-            <div className={styles['info-wrapper-details']}>
-              {records.request.image.toLocaleString()}
+          )}
+          {records.fulfillment && (
+            <div className={styles['info-wrapper']}>
+              <div className={styles['info-wrapper-title']}>
+                Images generated from your workers
+              </div>
+              <div className={styles['info-wrapper-details']}>
+                {records.fulfillment.image.toLocaleString()}
+              </div>
             </div>
-          </div>
-          <div className={styles['info-wrapper']}>
-            <div className={styles['info-wrapper-title']}>
-              Images generated from your workers
-            </div>
-            <div className={styles['info-wrapper-details']}>
-              {records.fulfillment.image.toLocaleString()}
-            </div>
-          </div>
+          )}
           <div className={styles['info-wrapper']}>
             <div className={styles['info-wrapper-title']}>Your Workers</div>
             <div className={styles['info-wrapper-details']}>

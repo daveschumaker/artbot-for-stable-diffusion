@@ -168,6 +168,9 @@ const HordeDropdown = () => {
         <>
           <div className={styles.separator} />
           <div className="font-[700] mb-[8px]">Your workers</div>
+          {Object.keys(workers).length === 0 && (
+            <div className="text-[12px]">You have no active GPU workers.</div>
+          )}
           <div className="text-[12px]">
             {Object.keys(workers).map((key) => {
               const worker = workers[key]

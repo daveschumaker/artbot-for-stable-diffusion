@@ -1,0 +1,8 @@
+.SvgWrapper {
+  color: var(--input-color);
+  cursor: pointer;
+}
+
+.SvgWrapper:hover {
+  color: #14b8a6;
+}

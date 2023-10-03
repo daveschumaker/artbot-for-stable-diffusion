@@ -7,6 +7,17 @@
   z-index: 1;
 }
 
+.MobileHide {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .MobileHide {
+    display: flex;
+  }
+}
+
+
 .NavigationMenuItem {
   display: none;
 }
@@ -97,6 +108,23 @@
 @media only screen and (min-width: 600px) {
   .NavigationMenuContent {
     width: auto;
+  }
+}
+
+.HordeDropdownContent {
+  background-color: var(--body-color);
+  position: fixed;
+  top: 46px;
+  right: 0;
+  left: 0;
+}
+
+@media (min-width: 640px) {
+  .HordeDropdownContent {
+    position: absolute;
+    top: 46px;
+    left: -320px;
+    width: 320px;
   }
 }
 
@@ -203,7 +231,7 @@
   left: -3px;
 }
 
-[data-state='open'] > .CaretDown {
+[data-state='open']>.CaretDown {
   transform: scale(0.82) rotate(-180deg);
 }
 

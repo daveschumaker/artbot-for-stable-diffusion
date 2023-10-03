@@ -45,8 +45,6 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
     baseline = modelDetails[model].baseline
   }
 
-  console.log(`we got a baseline?`, baseline)
-
   useEffect(() => {
     function scaleProportionally(height: number, width: number) {
       // Ensure inputs are numbers
@@ -93,7 +91,7 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
         setBaselineLoaded(true)
       }
     }
-  }, [baseline, baselineLoaded])
+  }, [baseline, baselineLoaded, input.height, input.width, setInput])
 
   const getConstraints = () => {
     return {
