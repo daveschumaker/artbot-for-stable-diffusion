@@ -28,6 +28,8 @@ export interface ITeam {
 interface UserStore {
   records: any
   username: string
+  jwt: string | null
+  role: string
   kudos: number
   kudos_details: IKudosDetails
   loggedIn: boolean | null
@@ -68,6 +70,8 @@ export const userInfoStore = makeStore<UserStore>({
     received: 0,
     recurring: 0
   },
+  jwt: null,
+  role: 'user',
   worker_ids: null,
   trusted: false,
   loggedIn: false,
@@ -79,6 +83,20 @@ export const userInfoStore = makeStore<UserStore>({
 export const setLoggedInState = (bool: boolean | null) => {
   userInfoStore.set(() => ({
     loggedIn: bool
+  }))
+}
+
+export const setAuthToken = (token: string | null) => {
+  userInfoStore.set(() => ({
+    jwt: token,
+    role: 'admin'
+  }))
+}
+
+export const clearAuthToken = () => {
+  userInfoStore.set(() => ({
+    jwt: null,
+    role: 'user'
   }))
 }
 

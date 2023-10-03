@@ -3,7 +3,7 @@
 import MaxWidth from 'app/_components/MaxWidth'
 import { useCallback, useEffect, useState } from 'react'
 import { useStore } from 'statery'
-import { appInfoStore, setBuildId } from 'app/_store/appStore'
+import { appInfoStore, setBuildId, setNotification } from 'app/_store/appStore'
 import { isAppActive } from 'app/_utils/appUtils'
 import ServerMessage from '../ServerMessage'
 import ServerUpdateComponent from '../ServerUpdateComponent'
@@ -30,7 +30,7 @@ export default function AppUpdate() {
       waitingForServerInfoRes = true
       const res = await fetch('/artbot/api/server-info')
       const data = await res.json()
-      const { build, serverMessage } = data
+      const { build, serverMessage, cachedNotification = {} } = data
 
       waitingForServerInfoRes = false
 
@@ -49,6 +49,8 @@ export default function AppUpdate() {
       } else {
         setServerMsg(false)
       }
+
+      setNotification(cachedNotification)
     } catch (err) {
       console.log(`Unable to fetch latest server-info. Connectivity issue?`)
       waitingForServerInfoRes = false
@@ -67,7 +69,7 @@ export default function AppUpdate() {
   return (
     <>
       {serverMsg && (
-        <MaxWidth>
+        <MaxWidth style={{ margin: '0 auto' }}>
           <ServerMessage
             title={serverMsg.title}
             content={serverMsg.content}

@@ -8,6 +8,7 @@ import styles from './component.module.css'
 import {
   IconCopy,
   IconDotsVertical,
+  IconEyeOff,
   IconPlaylistAdd,
   IconPlaylistX,
   IconRefresh,
@@ -26,6 +27,9 @@ import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
 import { uuidv4 } from 'app/_utils/appUtils'
 import { rerollImage } from 'app/_controllers/imageDetailsCommon'
+import { useStore } from 'statery'
+import { userInfoStore } from 'app/_store/userStore'
+import { publishToShowcase } from 'app/_modules/SharedImageView/controller'
 
 interface SharedImageDetails {
   image_params: any
@@ -40,6 +44,7 @@ export default function ImageModal({
   imageDetails: SharedImageDetails
 }) {
   const router = useRouter()
+  const { role } = useStore(userInfoStore)
   const { image_params, shortlink } = imageDetails
   const { models, params } = image_params
 
@@ -67,6 +72,8 @@ export default function ImageModal({
         })
       })
   }
+
+  console.log(`imageDetails`, imageDetails)
 
   return (
     <div
@@ -130,6 +137,23 @@ export default function ImageModal({
               Use all settings from this image
             </MenuItem>
           </Menu>
+          {role === 'admin' && (
+            <Menu
+              menuButton={
+                <MenuButton className={styles.MenuButton}>
+                  <IconEyeOff stroke={1.5} />
+                </MenuButton>
+              }
+              transition
+            >
+              <MenuItem
+                className="text-sm"
+                onClick={() => publishToShowcase({ shortlink })}
+              >
+                (admin) Publish to showcase
+              </MenuItem>
+            </Menu>
+          )}
           <Menu
             menuButton={
               <MenuButton className={styles.MenuButton}>
@@ -172,7 +196,6 @@ export default function ImageModal({
                   newImageParams as DefaultPromptInput
                 )
                 newImageRequest.jobId = uuidv4()
-                // const reRollStatus = await rerollImage(newImageRequest)
                 await rerollImage(newImageRequest)
 
                 router.push(`/pending`)

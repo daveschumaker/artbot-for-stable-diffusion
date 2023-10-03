@@ -1,5 +1,5 @@
 .styled-textarea {
-  background-color: var(--body-color);
+  background-color: white;
   border: 1px solid var(--input-color);
   border-radius: 4px;
   color: var(--input-color);
@@ -10,4 +10,10 @@
   padding: 4px 8px;
   max-height: 250px;
   overflow-y: scroll;
+}
+
+@media (prefers-color-scheme: dark) {
+  .styled-textarea {
+    background-color: black;
+  }
 }

@@ -38,6 +38,7 @@ export default function InputValidationErrorDisplay({
   input: DefaultPromptInput
   modelDetails: any
 }) {
+  // const { modelDetails } = useStore(modelStore)
   const userState = useStore(userInfoStore)
   const { loggedIn } = userState
 
@@ -73,18 +74,17 @@ export default function InputValidationErrorDisplay({
 
   // SDXL Beta
   useEffect(() => {
-    const filteredBetaModels = input.models.filter((model) =>
-      model.toLowerCase().includes('sdxl_beta')
-    )
+    const filteredBetaModels = input.models.filter((model) => {
+      if (
+        modelDetails[model] &&
+        modelDetails[model].baseline === 'stable_diffusion_xl'
+      ) {
+        return true
+      }
+    })
+
     const hasSdxlBeta = filteredBetaModels.length > 0
     let hasError = false
-
-    if (hasSdxlBeta && !loggedIn) {
-      hasError = true
-      setSdxlBetaError(
-        'SDXL_beta Error: Anonymous users are currently unable to use the SDXL beta. Please log in with your AI Horde API key in order to continue.'
-      )
-    }
 
     if (hasSdxlBeta && input.post_processing.length > 0) {
       hasError = true
@@ -99,7 +99,13 @@ export default function InputValidationErrorDisplay({
     ) {
       setSdxlBetaError(false)
     }
-  }, [input.models, input.post_processing.length, loggedIn, sdxlBetaError])
+  }, [
+    input.models,
+    input.post_processing.length,
+    loggedIn,
+    modelDetails,
+    sdxlBetaError
+  ])
 
   // SDXL
   useEffect(() => {
@@ -138,14 +144,12 @@ export default function InputValidationErrorDisplay({
         )
       }
 
-      const minPixels = 983040
-      const pixels = input.height * input.width
-      if (pixels < minPixels) {
+      // const minPixels = 983040
+      // const pixels = input.height * input.width
+      if (input.width < 1024 && input.height < 1024) {
         hasError = true
         setSdxlError(
-          `SDXL Error: Please adjust image resolution. ${input.width}w x ${
-            input.height
-          }h (${pixels.toLocaleString()} px) is less than the minimum amount: ${minPixels.toLocaleString()} px`
+          `SDXL Error: Please adjust image resolution so that one side is at least 1024 px. Current size: ${input.width}w x ${input.height}`
         )
       }
     }

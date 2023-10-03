@@ -21,7 +21,11 @@ export default async function handler(
 
   sendEmail({
     subject: '🤖 ArtBot Showcase Request',
-    text: `New showcase candidate requested:\nhttps://tinybots.net/artbot?i=${req.body.shortlink}`
+    text: `New showcase candidate requested:\nhttps://tinybots.net/artbot?i=${req.body.shortlink}`,
+    html: `
+    New showcase candidate requested:<br/>https://tinybots.net/artbot?i=${req.body.shortlink}<br/><br/>
+    <img src="https://s3.amazonaws.com/tinybots.artbot/artbot/images/${req.body.shortlink}.webp" style="width:100px;">
+    `
   })
 
   res.send({

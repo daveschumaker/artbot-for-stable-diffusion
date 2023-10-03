@@ -10,6 +10,11 @@ interface AppStore {
   indexDbSupport: boolean
   imageDetailsModalOpen: boolean
   newImageReady: string
+  notification: {
+    title: string
+    content: string
+    timestamp: number
+  }
   serverMessage: {
     content: string
     title: string
@@ -35,6 +40,11 @@ export const appInfoStore = makeStore<AppStore>({
   indexDbSupport: true,
   imageDetailsModalOpen: false,
   newImageReady: '',
+  notification: {
+    title: '',
+    content: '',
+    timestamp: 0
+  },
   serverMessage: {
     content: '',
     title: '',
@@ -89,6 +99,20 @@ export const setClusterSettings = (obj: any) => {
 export const setServerMessage = (obj: any) => {
   appInfoStore.set(() => ({
     serverMessage: { ...obj }
+  }))
+}
+
+export const setNotification = (obj: any) => {
+  // Prevent un-neccesary rerenders. This might not be needed?
+  if (
+    obj.title === appInfoStore.state.notification.title &&
+    obj.content === appInfoStore.state.notification.content
+  ) {
+    return
+  }
+
+  appInfoStore.set(() => ({
+    notification: { ...obj }
   }))
 }
 

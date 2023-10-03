@@ -21,6 +21,7 @@ import {
   deleteRequestedFromPending
 } from './db'
 import { initWindowLogger } from './debugTools'
+import { loadAuthToken } from './authUtils'
 
 export const updateShowGrid = () => {
   if (localStorage.getItem('showGrid') === 'true') {
@@ -132,6 +133,7 @@ export const initAppSettings = async () => {
 
   // app settings from local storage
   updateShowGrid()
+  loadAuthToken()
 
   initLoadPendingJobsFromDb()
 

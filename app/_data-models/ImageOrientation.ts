@@ -13,7 +13,47 @@ class ImageOrientation {
     ]
   }
 
-  static orientationDetails = () => {
+  static orientationDetails = ({ baseline }: { baseline?: string } = {}) => {
+    if (baseline === 'stable_diffusion_xl') {
+      return {
+        'landscape-16x9': {
+          label: 'Landscape (16 x 9)',
+          orientation: 'landscape-16x9',
+          height: 576,
+          width: 1024
+        },
+        landscape: {
+          label: 'Landscape (3 x 2)',
+          orientation: 'landscape',
+          height: 704,
+          width: 1024
+        },
+        portrait: {
+          label: 'Portrait (2 x 3)',
+          orientation: 'portrait',
+          height: 1024,
+          width: 704
+        },
+        'phone-bg': {
+          label: 'Phone background (9 x 21)',
+          orientation: 'phone-bg',
+          height: 1024,
+          width: 448
+        },
+        ultrawide: {
+          label: 'Ultrawide (21 x 9)',
+          orientation: 'ultrawide',
+          height: 448,
+          width: 1024
+        },
+        square: {
+          label: 'Square',
+          orientation: 'square',
+          height: 1024,
+          width: 1024
+        }
+      }
+    }
     const data: OrientationLookup = {
       'landscape-16x9': {
         label: 'Landscape (16 x 9)',
@@ -56,11 +96,17 @@ class ImageOrientation {
     return data
   }
 
-  static getOrientationDetails = (
-    orientation: string,
-    height: number = 512,
-    width: number = 512
-  ) => {
+  static getOrientationDetails = ({
+    baseline,
+    orientation,
+    height = 512,
+    width = 512
+  }: {
+    baseline?: string
+    orientation: string
+    height: number
+    width: number
+  }) => {
     if (orientation === 'custom') {
       return {
         orientation: 'custom',
@@ -75,11 +121,11 @@ class ImageOrientation {
         orientationIds[Math.floor(Math.random() * orientationIds.length)]
 
       return {
-        ...ImageOrientation.orientationDetails()[value]
+        ...ImageOrientation.orientationDetails({ baseline })[value]
       }
-    } else if (ImageOrientation.orientationDetails()[orientation]) {
+    } else if (ImageOrientation.orientationDetails({ baseline })[orientation]) {
       return {
-        ...ImageOrientation.orientationDetails()[orientation]
+        ...ImageOrientation.orientationDetails({ baseline })[orientation]
       }
     }
 
@@ -90,13 +136,13 @@ class ImageOrientation {
     }
   }
 
-  static dropdownOptions = () => {
+  static dropdownOptions = ({ baseline }: { baseline?: string } = {}) => {
     const options: Array<{ value: string; label: string }> = []
 
-    for (const key in ImageOrientation.orientationDetails()) {
+    for (const key in ImageOrientation.orientationDetails({ baseline })) {
       options.push({
         value: key,
-        label: ImageOrientation.orientationDetails()[key].label
+        label: ImageOrientation.orientationDetails({ baseline })[key].label
       })
     }
 

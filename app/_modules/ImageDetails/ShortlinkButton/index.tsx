@@ -28,6 +28,8 @@ export default function ShortlinkButton({
         ? 'http://localhost:3000'
         : baseHost
 
+    console.log(`New shortlink: ${hostname}${basePath}?i=${_shortlink} `)
+
     navigator?.clipboard
       ?.writeText(`${hostname}${basePath}?i=${_shortlink}`)
       .then(() => {
