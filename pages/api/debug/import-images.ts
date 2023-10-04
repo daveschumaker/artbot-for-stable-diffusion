@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 // @ts-ignore
-import db from './db'
+import db from 'app/_utils/debug/db'
 
 export const config = {
   api: {

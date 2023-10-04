@@ -1,3 +1,10 @@
+/**
+ * ONLY USED IN LOCAL DEV ENVIRONMENTS
+ *
+ * This bootstraps a simple SQLite database so that I can reliably clone my IndexedDb database for
+ * export / import in order to test new migration strategies and schema.
+ */
+
 // @ts-ignore
 import Database from 'better-sqlite3'
 import appRoot from 'app-root-path'
