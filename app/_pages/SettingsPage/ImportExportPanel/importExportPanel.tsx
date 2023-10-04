@@ -14,6 +14,7 @@ import ExportDatabase from 'app/_pages/SettingsPage/ExportDatabase'
 import ImportDatabase from 'app/_pages/SettingsPage/ImportDatabase'
 import LastResortExport from 'app/_pages/SettingsPage/FirefoxDb/LastResortExport'
 import LastResortImport from 'app/_pages/SettingsPage/FirefoxDb/LastResortImport'
+import DevExportImport from '../_DevExportImport'
 
 const Section = styled.div`
   padding-top: 16px;
@@ -192,6 +193,11 @@ const ImportExportPanel = () => {
         <LastResortExport />
         <LastResortImport />
       </Section>
+      {process.env.NEXT_PUBLIC_ENVIRONMENT === 'development' && (
+        <Section>
+          <DevExportImport />
+        </Section>
+      )}
     </div>
   )
 }
