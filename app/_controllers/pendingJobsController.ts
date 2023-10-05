@@ -1,5 +1,4 @@
 import { appInfoStore } from 'app/_store/appStore'
-import { userInfoStore } from 'app/_store/userStore'
 import { JobStatus } from '_types'
 import { isAppActive } from 'app/_utils/appUtils'
 import { checkCurrentJob, sendJobToApi } from 'app/_utils/imageCache'
@@ -11,148 +10,117 @@ import {
 } from '_constants'
 import { getAllPendingJobs, getPendingJobsTimestamp } from './pendingJobsCache'
 import AppSettings from 'app/_data-models/AppSettings'
+import { userInfoStore } from 'app/_store/userStore'
 
-let MAX_JOBS = MAX_CONCURRENT_JOBS_ANON
-let pendingJobs: Array<any> = []
+const MAX_JOBS_ANON = MAX_CONCURRENT_JOBS_ANON
+const MAX_JOBS_USER = MAX_CONCURRENT_JOBS_USER
+const MAX_JOBS = userInfoStore.state.loggedIn ? MAX_JOBS_USER : MAX_JOBS_ANON
+
+let pendingJobs: any = []
 let pendingJobsUpdatedTimestamp = 0
 let enableDebugLogs = false
 
-export const getPendingJobsFromCache = () => {
-  return [...pendingJobs]
+let isAppCurrentlyActive = isAppActive()
+
+const logDebug = (message: string) => {
+  if (enableDebugLogs) console.log(`pendingJobsController: ${message}`)
 }
 
-// Optimization hack?
-// Periodically fetch latest pending jobs from database
-// This call ensures it only happens one time (at a set interval)
+export const getPendingJobsFromCache = () => [...pendingJobs]
+
 export const fetchPendingImageJobs = async () => {
-  if (pendingJobsUpdatedTimestamp !== getPendingJobsTimestamp()) {
-    pendingJobsUpdatedTimestamp = getPendingJobsTimestamp()
-
-    const jobs = getAllPendingJobs()
-    pendingJobs = [...jobs]
+  const timestamp = getPendingJobsTimestamp()
+  if (pendingJobsUpdatedTimestamp !== timestamp) {
+    pendingJobsUpdatedTimestamp = timestamp
+    pendingJobs = [...getAllPendingJobs()]
   }
 }
 
-const checkMultiPendingJobs = async () => {
-  if (typeof window === 'undefined') {
+export const checkMultiPendingJobs = async () => {
+  if (
+    typeof window === 'undefined' ||
+    pendingJobs.length === 0 ||
+    !isAppCurrentlyActive
+  ) {
     return
   }
 
-  if (pendingJobs.length === 0) {
-    return
-  }
+  const processingOrQueued = pendingJobs.filter((job: any) =>
+    [JobStatus.Queued, JobStatus.Processing].includes(job.jobStatus)
+  )
+  const limitCheck = processingOrQueued.slice(-MAX_JOBS)
 
-  if (!isAppActive()) {
-    return
-  }
-
-  const queued = pendingJobs.filter((job: { jobStatus: JobStatus }) => {
-    if (job && job.jobStatus) {
-      return job.jobStatus === JobStatus.Queued
-    }
-  })
-
-  const processing = pendingJobs.filter((job: { jobStatus: JobStatus }) => {
-    if (job && job.jobStatus) {
-      return job.jobStatus === JobStatus.Processing
-    }
-  })
-
-  const processingOrQueued = [...processing, ...queued]
-
-  const limitCheck = processingOrQueued.slice(MAX_JOBS * -1)
-
-  for (const idx in limitCheck) {
-    const jobDetails = limitCheck[idx]
+  for (const jobDetails of limitCheck) {
     await checkCurrentJob(jobDetails)
     await sleep(300)
   }
 }
 
-const createImageJobs = async () => {
-  if (typeof window === 'undefined') {
-    return
-  }
-
-  if (pendingJobs.length === 0) {
+export const createImageJobs = async () => {
+  if (typeof window === 'undefined' || pendingJobs.length === 0) {
     return
   }
 
   if (appInfoStore.state.storageQuotaLimit) {
-    if (enableDebugLogs)
-      console.log(
-        `pendingJobsController: Unable to request image. Storage Quota limit is full.`
-      )
+    logDebug(`Unable to request image. Storage Quota limit is full.`)
     return
   }
 
-  if (!isAppActive()) {
-    if (enableDebugLogs) console.log(`pendingJobsController: App is not active`)
+  if (!isAppCurrentlyActive) {
+    logDebug(`App is not active`)
     return
   }
 
   if (AppSettings.get('pauseJobQueue')) {
-    if (enableDebugLogs) console.log(`pendingJobsController: job queue paused`)
+    logDebug(`job queue paused`)
     return
   }
 
-  if (userInfoStore.state.loggedIn) {
-    MAX_JOBS = MAX_CONCURRENT_JOBS_USER
-  }
+  const processingOrQueued = pendingJobs.filter((job: any) =>
+    [JobStatus.Queued, JobStatus.Processing].includes(job.jobStatus)
+  )
 
-  const queued = pendingJobs.filter((job: { jobStatus: JobStatus }) => {
-    if (job && job.jobStatus) {
-      return job.jobStatus === JobStatus.Queued
-    }
-  })
-
-  const processing = pendingJobs.filter((job: { jobStatus: JobStatus }) => {
-    if (job && job.jobStatus) {
-      return job.jobStatus === JobStatus.Processing
-    }
-  })
-
-  const processingOrQueued = [...processing, ...queued]
-
-  if (enableDebugLogs)
-    console.log(`createImageJobs / processingOrQueued:`, processingOrQueued)
+  logDebug(`createImageJobs / processingOrQueued: ${processingOrQueued}`)
 
   if (processingOrQueued.length < MAX_JOBS) {
-    const waitingJobs = pendingJobs.filter((job: { jobStatus: JobStatus }) => {
-      if (job && job.jobStatus) {
-        return job.jobStatus === JobStatus.Waiting
-      }
-    })
+    const nextJobParams = pendingJobs.find(
+      (job: any) => job.jobStatus === JobStatus.Waiting
+    )
 
-    const [nextJobParams] = waitingJobs
-
-    if (enableDebugLogs) console.log(`nextJobParams:`, nextJobParams)
+    logDebug(`nextJobParams: ${nextJobParams}`)
 
     if (nextJobParams) {
       await sendJobToApi(nextJobParams)
-      await fetchPendingImageJobs() // Update pending jobs queue
+      await fetchPendingImageJobs()
     }
   }
 }
 
 export const updatePendingJobs = async () => {
   await fetchPendingImageJobs()
-  await sleep(250)
-  updatePendingJobs()
+  await sleep(100)
+  while (true) {
+    await fetchPendingImageJobs()
+    await sleep(100)
+  }
 }
 
-// Monitors pending jobs db to create new jobs
 export const createPendingJobInterval = async () => {
   await fetchPendingImageJobs()
   createImageJobs()
-  await sleep(10)
-  createPendingJobInterval()
+  await sleep(25)
+  while (true) {
+    await fetchPendingImageJobs()
+    createImageJobs()
+    await sleep(25)
+  }
 }
 
 export const pendingJobCheckInterval = async () => {
-  await checkMultiPendingJobs()
-  await sleep(POLL_COMPLETED_JOBS_INTERVAL)
-  pendingJobCheckInterval()
+  while (true) {
+    await checkMultiPendingJobs()
+    await sleep(POLL_COMPLETED_JOBS_INTERVAL)
+  }
 }
 
 export const initPendingJobService = () => {
@@ -162,11 +130,7 @@ export const initPendingJobService = () => {
 }
 
 const toggleLogs = () => {
-  if (enableDebugLogs) {
-    enableDebugLogs = false
-  } else {
-    enableDebugLogs = true
-  }
+  enableDebugLogs = !enableDebugLogs
 }
 
 const initWindow = () => {
@@ -174,6 +138,14 @@ const initWindow = () => {
     if (!window._artbot) window._artbot = {}
     window._artbot.getAllPendingJobsFromController = getAllPendingJobs
     window._artbot.togglePendingJobsControllerLogs = toggleLogs
+
+    window.addEventListener('focus', function () {
+      isAppCurrentlyActive = true
+    })
+
+    setInterval(() => {
+      isAppCurrentlyActive = isAppActive()
+    }, 10000)
   }
 }
 

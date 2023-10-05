@@ -49,7 +49,7 @@ export interface CreateImageJob {
   initWaitTime?: number
   is_possible?: boolean
   jobId?: string
-  jobStatus?: string
+  jobStatus: JobStatus
   jobTimestamp?: number
   karras: boolean
   loras: SavedLora[]

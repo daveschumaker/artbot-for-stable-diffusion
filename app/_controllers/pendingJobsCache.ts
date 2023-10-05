@@ -2,10 +2,17 @@ import cloneDeep from 'clone-deep'
 import { JobStatus } from '_types'
 import { allPendingJobs, deletePendingJobFromDb } from 'app/_utils/db'
 
+declare global {
+  interface Window {
+    DEBUG_PENDING_JOBS?: boolean
+  }
+}
+
 interface IPendingJob {
   id: number
   jobId?: string | undefined
   errorMessage?: string
+  jobStatus: JobStatus
 }
 
 interface IPendingJobs {
@@ -14,10 +21,6 @@ interface IPendingJobs {
 
 let pendingJobs: IPendingJobs = {}
 let lastUpdated = Date.now()
-
-// TODO: If people start encountering OOM errors, strip
-// base64 image from object on JobStatus.Done and
-// do a direct db lookup using the pending image modal.
 
 const updateTimestamp = () => {
   lastUpdated = Date.now()
@@ -32,11 +35,11 @@ const DEBUG_PENDING_CACHE = async () => {
     return
   }
 
-  console.log(`-- pendingJobs cache:`)
+  console.log('-- pendingJobs cache:')
   console.log(pendingJobs)
 
   const jobs = await allPendingJobs()
-  console.log(`\n-- pendingJobs IndexedDb table:`)
+  console.log('\n-- pendingJobs IndexedDb table:')
   console.log(jobs)
 }
 
@@ -48,9 +51,8 @@ export const initLoadPendingJobsFromDb = async () => {
 
   const jobs = await allPendingJobs()
 
-  // @ts-ignore
   if (typeof window !== 'undefined' && window.DEBUG_PENDING_JOBS) {
-    console.log(`initLoadPendingJobsFromDb`, jobs)
+    console.log('initLoadPendingJobsFromDb', jobs)
   }
 
   jobs.forEach((job: any) => {
@@ -61,31 +63,26 @@ export const initLoadPendingJobsFromDb = async () => {
 export const syncPendingJobsFromDb = async () => {
   const jobs = await allPendingJobs()
 
-  // @ts-ignore
   if (typeof window !== 'undefined' && window.DEBUG_PENDING_JOBS) {
-    console.log(`syncPendingJobsFromDb`, jobs)
+    console.log('syncPendingJobsFromDb', jobs)
   }
 
   jobs.forEach((job: any) => {
-    if (pendingJobs[job.jobId]) {
-      return
+    if (!pendingJobs[job.jobId]) {
+      pendingJobs[job.jobId] = job
     }
-
-    pendingJobs[job.jobId] = job
   })
 }
 
 export const deletePendingJobs = async (status?: any) => {
   if (status) {
-    const jobs = Object.assign({}, pendingJobs)
-    for (const [key, value] of Object.entries(jobs)) {
-      // @ts-ignore
-      if (value.jobStatus === status) {
+    const jobs = { ...pendingJobs }
+    for (const key in jobs) {
+      if (jobs[key]?.jobStatus === status) {
         delete pendingJobs[key]
       }
     }
   } else {
-    // @ts-ignore
     pendingJobs = {}
   }
   updateTimestamp()
@@ -102,17 +99,10 @@ export const getPendingJob = (jobId: string) => {
 }
 
 export const getAllPendingJobs = (status?: any): Array<any> => {
-  let jobsArray: Array<IPendingJob> = []
-  for (const [, value] of Object.entries(pendingJobs)) {
-    jobsArray.push(cloneDeep(value))
-  }
+  const jobsArray = Object.values(pendingJobs).map((job) => cloneDeep(job))
 
   if (status) {
-    return jobsArray.filter((job: any) => {
-      if (job && job.jobStatus) {
-        return job.jobStatus === status
-      }
-    })
+    return jobsArray.filter((job) => job?.jobStatus === status)
   }
 
   return jobsArray
@@ -123,9 +113,8 @@ export const setPendingJob = (pendingJob: IPendingJob) => {
     return
   }
 
-  // @ts-ignore
   if (typeof window !== 'undefined' && window.DEBUG_PENDING_JOBS) {
-    console.log(`setPendingJob`, pendingJob)
+    console.log('setPendingJob', pendingJob)
   }
 
   const { jobId } = pendingJob
@@ -133,7 +122,6 @@ export const setPendingJob = (pendingJob: IPendingJob) => {
   updateTimestamp()
 }
 
-// V2 due to method existing in db
 export const updatePendingJobV2 = (pendingJob: IPendingJob) => {
   if (!pendingJob || !pendingJob.jobId) {
     return
@@ -141,46 +129,34 @@ export const updatePendingJobV2 = (pendingJob: IPendingJob) => {
 
   const { jobId } = pendingJob
 
-  // @ts-ignore
   if (typeof window !== 'undefined' && window.DEBUG_PENDING_JOBS) {
-    console.log(`updatePendingJobV2`, pendingJob)
+    console.log('updatePendingJobV2', pendingJob)
   }
 
-  // Fix ghosting issue that could occur when in-progress jobs were deleted.
-  if (!pendingJobs[jobId]) {
-    return false
+  if (pendingJobs[jobId]) {
+    pendingJobs[jobId] = cloneDeep(pendingJob)
+    updateTimestamp()
   }
-
-  pendingJobs[jobId] = cloneDeep(pendingJob)
-  updateTimestamp()
 }
 
 export const updatePendingJobProperties = (
   jobId: string,
   updateObject = {}
 ) => {
-  if (!pendingJobs[jobId]) {
-    return false
+  if (pendingJobs[jobId]) {
+    const updated = { ...pendingJobs[jobId], ...updateObject }
+    pendingJobs[jobId] = cloneDeep(updated)
+    updateTimestamp()
   }
-
-  const updated = Object.assign({}, pendingJobs[jobId], { ...updateObject })
-  pendingJobs[jobId] = cloneDeep(updated)
-  updateTimestamp()
 }
 
 export const updatePendingJobId = (oldId: string = '', newId: string) => {
-  if (!oldId || !newId || !pendingJobs[oldId]) {
-    return
-  }
-
-  pendingJobs[newId] = cloneDeep(pendingJobs[oldId])
-
-  if (pendingJobs[newId]) {
+  if (oldId && newId && pendingJobs[oldId]) {
+    pendingJobs[newId] = cloneDeep(pendingJobs[oldId])
     pendingJobs[newId].jobId = newId
+    delete pendingJobs[oldId]
+    updateTimestamp()
   }
-
-  delete pendingJobs[oldId]
-  updateTimestamp()
 }
 
 export const updateAllPendingJobsV2 = async (
@@ -188,24 +164,19 @@ export const updateAllPendingJobsV2 = async (
   options: any = {}
 ) => {
   if (status) {
-    const jobs = Object.assign({}, pendingJobs)
-    for (const [key, value = {}] of Object.entries(jobs)) {
+    for (const key in pendingJobs) {
+      if (!pendingJobs[key]) continue
       const inProgress =
-        // @ts-ignore
-        value.jobStatus === JobStatus.Done ||
-        // @ts-ignore
-        value.jobStatus === JobStatus.Processing ||
-        // @ts-ignore
-        value.jobStatus === JobStatus.Requested
+        pendingJobs[key].jobStatus === JobStatus.Done ||
+        pendingJobs[key].jobStatus === JobStatus.Processing ||
+        pendingJobs[key].jobStatus === JobStatus.Requested
 
-      if (!inProgress && pendingJobs[key]) {
-        // @ts-ignore
+      if (!inProgress) {
         pendingJobs[key].jobStatus = status
         pendingJobs[key].errorMessage = options?.errorMessage
       }
     }
   } else {
-    // @ts-ignore
     pendingJobs = {}
   }
 
