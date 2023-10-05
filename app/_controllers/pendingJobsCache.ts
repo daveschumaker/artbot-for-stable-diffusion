@@ -30,17 +30,28 @@ export const getPendingJobsTimestamp = () => {
   return lastUpdated
 }
 
+const logDebug = (message: string, obj?: any) => {
+  if (typeof window !== 'undefined' && window.DEBUG_PENDING_JOBS) {
+    if (obj) {
+      console.log(`pendingJobsCache: ${message}`)
+      console.log(obj)
+    } else {
+      console.log(`pendingJobsCache: ${message}`)
+    }
+  }
+}
+
 const DEBUG_PENDING_CACHE = async () => {
   if (typeof window === 'undefined') {
     return
   }
 
-  console.log('-- pendingJobs cache:')
-  console.log(pendingJobs)
-
   const jobs = await allPendingJobs()
   console.log('\n-- pendingJobs IndexedDb table:')
   console.log(jobs)
+
+  logDebug('-- pendingJobs cache', pendingJobs)
+  logDebug('-- pendingJobs IndexedDb table', jobs)
 }
 
 export const initLoadPendingJobsFromDb = async () => {
@@ -50,10 +61,7 @@ export const initLoadPendingJobsFromDb = async () => {
   }
 
   const jobs = await allPendingJobs()
-
-  if (typeof window !== 'undefined' && window.DEBUG_PENDING_JOBS) {
-    console.log('initLoadPendingJobsFromDb', jobs)
-  }
+  logDebug('initLoadPendingJobsFromDb', jobs)
 
   jobs.forEach((job: any) => {
     pendingJobs[job.jobId] = job
@@ -62,10 +70,7 @@ export const initLoadPendingJobsFromDb = async () => {
 
 export const syncPendingJobsFromDb = async () => {
   const jobs = await allPendingJobs()
-
-  if (typeof window !== 'undefined' && window.DEBUG_PENDING_JOBS) {
-    console.log('syncPendingJobsFromDb', jobs)
-  }
+  logDebug('syncPendingJobsFromDb', jobs)
 
   jobs.forEach((job: any) => {
     if (!pendingJobs[job.jobId]) {
@@ -113,10 +118,7 @@ export const setPendingJob = (pendingJob: IPendingJob) => {
     return
   }
 
-  if (typeof window !== 'undefined' && window.DEBUG_PENDING_JOBS) {
-    console.log('setPendingJob', pendingJob)
-  }
-
+  logDebug('setPendingJob', pendingJob)
   const { jobId } = pendingJob
   pendingJobs[jobId] = cloneDeep(pendingJob)
   updateTimestamp()
@@ -128,10 +130,7 @@ export const updatePendingJobV2 = (pendingJob: IPendingJob) => {
   }
 
   const { jobId } = pendingJob
-
-  if (typeof window !== 'undefined' && window.DEBUG_PENDING_JOBS) {
-    console.log('updatePendingJobV2', pendingJob)
-  }
+  logDebug('updatePendingJobV2', pendingJob)
 
   if (pendingJobs[jobId]) {
     pendingJobs[jobId] = cloneDeep(pendingJob)

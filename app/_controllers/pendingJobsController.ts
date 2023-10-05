@@ -12,9 +12,9 @@ import { getAllPendingJobs, getPendingJobsTimestamp } from './pendingJobsCache'
 import AppSettings from 'app/_data-models/AppSettings'
 import { userInfoStore } from 'app/_store/userStore'
 
-const MAX_JOBS_ANON = MAX_CONCURRENT_JOBS_ANON
-const MAX_JOBS_USER = MAX_CONCURRENT_JOBS_USER
-const MAX_JOBS = userInfoStore.state.loggedIn ? MAX_JOBS_USER : MAX_JOBS_ANON
+const MAX_JOBS = userInfoStore.state.loggedIn
+  ? MAX_CONCURRENT_JOBS_USER
+  : MAX_CONCURRENT_JOBS_ANON
 
 let pendingJobs: any = []
 let pendingJobsUpdatedTimestamp = 0
@@ -22,8 +22,21 @@ let enableDebugLogs = false
 
 let isAppCurrentlyActive = isAppActive()
 
-const logDebug = (message: string) => {
-  if (enableDebugLogs) console.log(`pendingJobsController: ${message}`)
+const logDebug = (message: string, obj?: any) => {
+  if (enableDebugLogs) {
+    if (obj) {
+      console.log(`pendingJobsController: ${message}`)
+      console.log(obj)
+    } else {
+      console.log(`pendingJobsController: ${message}`)
+    }
+  }
+}
+
+const getProcessingOrQueuedJobs = (jobs: any[]): any[] => {
+  return jobs.filter((job: any) =>
+    [JobStatus.Queued, JobStatus.Processing].includes(job.jobStatus)
+  )
 }
 
 export const getPendingJobsFromCache = () => [...pendingJobs]
@@ -45,9 +58,7 @@ export const checkMultiPendingJobs = async () => {
     return
   }
 
-  const processingOrQueued = pendingJobs.filter((job: any) =>
-    [JobStatus.Queued, JobStatus.Processing].includes(job.jobStatus)
-  )
+  const processingOrQueued = getProcessingOrQueuedJobs(pendingJobs)
   const limitCheck = processingOrQueued.slice(-MAX_JOBS)
 
   for (const jobDetails of limitCheck) {
@@ -76,18 +87,15 @@ export const createImageJobs = async () => {
     return
   }
 
-  const processingOrQueued = pendingJobs.filter((job: any) =>
-    [JobStatus.Queued, JobStatus.Processing].includes(job.jobStatus)
-  )
-
-  logDebug(`createImageJobs / processingOrQueued: ${processingOrQueued}`)
+  const processingOrQueued = getProcessingOrQueuedJobs(pendingJobs)
+  logDebug(`createImageJobs / processingOrQueued:`, processingOrQueued)
 
   if (processingOrQueued.length < MAX_JOBS) {
     const nextJobParams = pendingJobs.find(
       (job: any) => job.jobStatus === JobStatus.Waiting
     )
 
-    logDebug(`nextJobParams: ${nextJobParams}`)
+    logDebug(`nextJobParams:`, nextJobParams)
 
     if (nextJobParams) {
       await sendJobToApi(nextJobParams)
