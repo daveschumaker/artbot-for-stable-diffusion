@@ -1,5 +1,5 @@
 import { AiHordeEmbedding, SavedLora } from '_types/artbot'
-import { Common, ImageMimeType, ImageSize, JobStatus } from '_types'
+import { Common, ImageSize, JobStatus } from '_types'
 import { uuidv4 } from 'app/_utils/appUtils'
 import { orientationDetails, randomSampler } from 'app/_utils/imageUtils'
 import { getModelVersion, validModelsArray } from 'app/_utils/modelUtils'
@@ -26,7 +26,6 @@ class CreateImageRequest {
   kudos: number
   id: number
   image_is_control: boolean
-  imageMimeType: ImageMimeType
   jobId: string
   jobStatus: JobStatus
   jobTimestamp: number
@@ -80,7 +79,6 @@ class CreateImageRequest {
     height = 512,
     hires = false,
     image_is_control = false,
-    imageMimeType = ImageMimeType.WebP,
     karras = true,
     loras = [],
     maskData = null,
@@ -115,7 +113,6 @@ class CreateImageRequest {
     width = 512
   }: DefaultPromptInput) {
     this.cfg_scale = Number(cfg_scale)
-    this.imageMimeType = imageMimeType
     this.jobStatus = JobStatus.Waiting
     this.jobTimestamp = Date.now()
 
@@ -336,7 +333,6 @@ class CreateImageRequest {
       height: imageDetails.height,
       hires: imageDetails.hires,
       image_is_control: imageDetails.image_is_control,
-      imageMimeType: imageDetails.imageMimeType,
       imageType: '',
       karras: imageDetails.karras,
       loras: imageDetails.loras,

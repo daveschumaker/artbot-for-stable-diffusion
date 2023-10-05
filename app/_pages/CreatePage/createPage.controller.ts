@@ -12,13 +12,13 @@ import {
 import { clearInputCache, setInputCache } from 'app/_store/inputCache'
 import { SetInput } from '_types'
 import { logDataForDebugging } from 'app/_utils/debugTools'
-import { createImageJob } from 'app/_utils/imageCache'
 import { showSuccessToast } from 'app/_utils/notificationUtils'
 import {
   SourceProcessing,
   clearSavedInputCache,
   savePromptHistory
 } from 'app/_utils/promptUtils'
+import { createImageJob } from 'app/_utils/V2/createImageJob'
 
 interface CreateClick {
   pending: boolean

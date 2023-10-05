@@ -22,8 +22,6 @@ import {
 } from 'app/_utils/imageUtils'
 import { SourceProcessing } from 'app/_utils/promptUtils'
 import ActionPanel from 'app/_pages/CreatePage/ActionPanel'
-import { createImageJob } from 'app/_utils/imageCache'
-import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Head from 'next/head'
 import { useEffectOnce } from 'app/_hooks/useEffectOnce'
@@ -51,6 +49,7 @@ import { showSuccessToast } from 'app/_utils/notificationUtils'
 import FlexRow from 'app/_components/FlexRow'
 import FormErrorMessage from '../CreatePage/ActionPanel/FormErrorMessage'
 import { IconTrash } from '@tabler/icons-react'
+import { createImageJob } from 'app/_utils/V2/createImageJob'
 
 // Kind of a hacky way to persist output of image over the course of a session.
 let cachedImageDetails = {}
@@ -181,8 +180,7 @@ const ControlNetPage = () => {
     }
 
     const inputToSubmit = { ...input }
-
-    await createImageJob(new CreateImageRequest(inputToSubmit))
+    await createImageJob(inputToSubmit)
 
     if (!AppSettings.get('stayOnCreate')) {
       router.push('/pending')

@@ -8,7 +8,6 @@ import Panel from 'app/_components/Panel'
 import { trackEvent, trackGaEvent } from 'app/_api/telemetry'
 import { JobStatus } from '_types'
 import { deletePendingJobFromApi } from 'app/_api/deletePendingJobFromApi'
-import { createImageJob } from 'app/_utils/imageCache'
 import { savePrompt } from 'app/_utils/promptUtils'
 import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 import Linker from 'app/_components/Linker'
@@ -30,6 +29,7 @@ import {
   IconX
 } from '@tabler/icons-react'
 import { uuidv4 } from 'app/_utils/appUtils'
+import { createImageJob } from 'app/_utils/V2/createImageJob'
 
 const RATINGS_ENABLED = false
 
@@ -98,7 +98,8 @@ const PendingItem = memo(
       })
 
       deletePendingJob(jobId)
-      await createImageJob(clonedParams)
+      const defaultInput = CreateImageRequest.toDefaultPromptInput(clonedParams)
+      await createImageJob(defaultInput)
       window.scrollTo(0, 0)
     }
 

@@ -7,7 +7,6 @@ import {
   setI2iUploaded,
   storeCanvas
 } from 'app/_store/canvasStore'
-import { createImageJob } from 'app/_utils/imageCache'
 import { downloadFile } from 'app/_utils/imageUtils'
 import { setImageForInterrogation } from 'app/_utils/interrogateUtils'
 import { createPendingRerollJob } from 'app/_utils/pendingUtils'
@@ -18,6 +17,7 @@ import {
 } from 'app/_utils/promptUtils'
 import Samplers from 'app/_data-models/Samplers'
 import CreateImageRequest from 'app/_data-models/CreateImageRequest'
+import { createImageJob } from 'app/_utils/V2/createImageJob'
 
 export const interrogateImage = (imageDetails: any) => {
   setImageForInterrogation(imageDetails)
@@ -179,7 +179,8 @@ export const rerollImage = async (imageDetails: any) => {
 
 export const upscaleImage = async (imageDetails: any) => {
   const cleanParams = new UpscaleImageRequest(imageDetails)
-  const res = await createImageJob(cleanParams)
+  const defaultInput = CreateImageRequest.toDefaultPromptInput(cleanParams)
+  const res = await createImageJob(defaultInput)
 
   if (res?.success) {
     return {

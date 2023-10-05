@@ -11,7 +11,6 @@ export default function ParentImage({
   jobId?: string
   parentJobId: string
 }) {
-  const [imageType, setImageType] = useState('')
   const [parentImage, setParentImage] = useState('')
 
   const fetchParentJobDetails = useCallback(async () => {
@@ -24,7 +23,6 @@ export default function ParentImage({
 
     if (details.base64String) {
       setParentImage(details.base64String)
-      setImageType(details.imageMimeType)
     }
   }, [jobId, parentJobId])
 
@@ -47,11 +45,7 @@ export default function ParentImage({
         Parent image
       </div>
       <div>
-        <ImageSquare
-          imageDetails={{ base64String: parentImage }}
-          imageType={imageType}
-          size={140}
-        />
+        <ImageSquare imageDetails={{ base64String: parentImage }} size={140} />
       </div>
     </div>
   )

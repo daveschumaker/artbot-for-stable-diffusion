@@ -216,7 +216,6 @@ const ImageDetails = ({
                   imageDetails={{
                     base64String: imageDetails.source_image
                   }}
-                  imageType={imageDetails.imageMimeType}
                   size={140}
                 />
               </div>
