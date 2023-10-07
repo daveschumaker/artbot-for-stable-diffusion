@@ -31,7 +31,7 @@ import { useStore } from 'statery'
 import { userInfoStore } from 'app/_store/userStore'
 import { publishToShowcase } from 'app/_modules/SharedImageView/controller'
 import { IconWall } from '@tabler/icons-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 interface SharedImageDetails {
   image_params: any
@@ -48,7 +48,7 @@ export default function ImageModal({
   const router = useRouter()
 
   const [showTiles, setShowTiles] = useState(false)
-  const [tileSize, setTileSize] = useState('128px')
+  const [tileSize, setTileSize] = useState('256px')
 
   const { role } = useStore(userInfoStore)
   const { image_params, shortlink } = imageDetails
@@ -83,6 +83,25 @@ export default function ImageModal({
     setTileSize(size)
     setShowTiles(true)
   }
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search)
+    if (queryParams.get('view_tiles')) {
+      setShowTiles(true)
+    }
+  }, [])
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search)
+
+    if (showTiles && !queryParams.get('view_tiles')) {
+      queryParams.set('view_tiles', 'true')
+      window.history.pushState(null, '', `?${queryParams.toString()}`)
+    } else if (!showTiles && queryParams.get('view_tiles')) {
+      queryParams.delete('view_tiles')
+      window.history.pushState(null, '', `?${queryParams.toString()}`)
+    }
+  }, [showTiles])
 
   return (
     <>
@@ -343,6 +362,12 @@ export default function ImageModal({
               <li>
                 <strong>Karras:</strong> {params.karras ? 'true' : 'false'}
               </li>
+              {params.tiling && (
+                <li>
+                  <strong>Tiling:</strong>
+                  {' true'}
+                </li>
+              )}
             </ul>
           </div>
         </div>

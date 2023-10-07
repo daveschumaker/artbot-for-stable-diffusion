@@ -1,3 +1,7 @@
+# 2023.10.06
+
+- Thansk to some AI Horde API updates, support for tiling is back! Now, you can start making those amazing wallpapers all over again.
+
 # 2023.10.02
 
 - Adjusted some validation logic ahead of the official SDXL release on the Horde.
