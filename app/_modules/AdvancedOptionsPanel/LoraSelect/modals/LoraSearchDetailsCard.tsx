@@ -97,7 +97,7 @@ export default function LoraSearchDetailsCard({
         )}
         {hasImage && (
           <img
-            alt="Example of embedding"
+            alt="Example of LORA"
             src={embedding.modelVersions[0].images[0].url}
             style={{ maxHeight: '300px', maxWidth: '140px' }}
           />
@@ -141,7 +141,7 @@ export default function LoraSearchDetailsCard({
               size="small"
             >
               <IconDownload />
-              Use Embedding
+              Use LORA
             </Button>
           </FlexRow>
         </FlexCol>

@@ -600,7 +600,7 @@ const InterrogatePage = () => {
                   <TextButton
                     onClick={() => {
                       router.push(
-                        `/?prompt=${encodeURIComponent(
+                        `/create?prompt=${encodeURIComponent(
                           componentState.results.caption
                         )}`
                       )

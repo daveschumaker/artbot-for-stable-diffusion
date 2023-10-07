@@ -49,9 +49,15 @@ export async function generateMetadata({ searchParams }: Props) {
 
       const data = (await resp.json()) || {}
       const { data: shortlinkData = {} } = data || {}
-      const shortlinkImageParams = shortlinkData.imageParams || null
+      const shortlinkImageParams = shortlinkData.imageParams || {}
 
-      const title = `ArtBot - Shareable link created with ${shortlinkImageParams.models[0]}`
+      let imageTitleType = 'Shared image'
+
+      if (shortlinkImageParams.params.tiling) {
+        imageTitleType = `Shared image tile`
+      }
+
+      const title = `ArtBot - ${imageTitleType} created with ${shortlinkImageParams.models[0]}`
       return {
         title: `🤖 ${title}`,
         description: shortlinkImageParams.prompt,

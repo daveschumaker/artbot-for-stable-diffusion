@@ -4,15 +4,6 @@ export const handleConvertLora = (rawLoraDetails: any) => {
   const { modelVersions = [] } = rawLoraDetails
   const { files = [], images = [] } = modelVersions[0]
 
-  // if (
-  //   files[0]?.sizeKB &&
-  //   files[0]?.sizeKB > 220000 &&
-  //   !curatedLoras.includes(data.id)
-  // ) {
-  //   setErrorMsg('Unable to load: LORA size is over 220MB.')
-  //   return
-  // }
-
   return {
     name: rawLoraDetails.id,
     label: rawLoraDetails.name,
