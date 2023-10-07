@@ -42,6 +42,26 @@ export default function MiscOptions({ input, setInput }: GetSetPromptInput) {
             />
             <HiresFix input={input} setInput={setInput} />
             <SlowWorkers />
+            <InputSwitchV2
+              label="Tiling"
+              disabled={input.source_image ? true : false}
+              tooltip="Attempt to create seamless, repeatable textures. Note: This will not work for img2img or inpainting requests."
+              handleSwitchToggle={() => {
+                if (!input.tiling) {
+                  setInput({ tiling: true })
+                } else {
+                  setInput({ tiling: false })
+                }
+              }}
+              checked={input.tiling}
+              moreInfoLink={
+                input.source_image ? (
+                  <div className="text-slate-500 dark:text-slate-400">
+                    This option cannot be used with img2img requests.
+                  </div>
+                ) : null
+              }
+            />
           </FlexibleUnit>
           <FlexibleUnit style={{ rowGap: '8px' }}>
             <AllowNsfwImages />
