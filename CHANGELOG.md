@@ -1,3 +1,11 @@
+# 2023.10.16
+
+- Fix: Image model is forgotten when selecting SDXL and leaving create page. If you had SDXL selected, it should now remember it. Thanks to Neron on Discord and an anonymous user in feedback for reporting this issue!
+
+# 2023.10.09
+
+- ArtBot is 1 year old! Happy birthday! I should write up some stats at some point. It's been a pretty fun project.
+
 # 2023.10.06
 
 - Thansk to some AI Horde API updates, support for tiling is back! Now, you can start making those amazing wallpapers all over again.

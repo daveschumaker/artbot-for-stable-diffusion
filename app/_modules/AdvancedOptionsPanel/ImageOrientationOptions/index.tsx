@@ -85,13 +85,21 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
       if (baseline === 'stable_diffusion_xl') {
         const updatedSizes = scaleProportionally(input.height, input.width)
         setInput({
+          models: [...input.models], // Leaving this out causes the model to get overwritten.
           height: updatedSizes.newHeight,
           width: updatedSizes.newWidth
         })
         setBaselineLoaded(true)
       }
     }
-  }, [baseline, baselineLoaded, input.height, input.width, setInput])
+  }, [
+    baseline,
+    baselineLoaded,
+    input.height,
+    input.models,
+    input.width,
+    setInput
+  ])
 
   const getConstraints = () => {
     return {
