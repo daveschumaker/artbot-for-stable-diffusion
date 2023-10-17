@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react'
-import { useStore } from 'statery'
+import { useCallback, useEffect, useState } from 'react'
 import {
   IconLock,
   IconLockOpen,
@@ -8,7 +7,6 @@ import {
   IconSwitch2
 } from '@tabler/icons-react'
 
-import { MAX_DIMENSIONS_LOGGED_IN, MAX_DIMENSIONS_LOGGED_OUT } from '_constants'
 import Section from 'app/_components/Section'
 import { GetSetPromptInput } from '_types/artbot'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
@@ -18,32 +16,39 @@ import useWorkerDetails from 'app/_hooks/useWorkerDetails'
 import FlexRow from 'app/_components/FlexRow'
 import FlexCol from 'app/_components/FlexCol'
 import { ImageOrientation } from 'app/_data-models/ImageOrientation'
-import { userInfoStore } from 'app/_store/userStore'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import NumericInputSlider from 'app/_modules/AdvancedOptionsPanel/NumericInputSlider'
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import CustomDimensions from './CustomDimensions'
-import { modelStore } from 'app/_store/modelStore'
+import { useImageConstraints } from './hooks/useImageDimensions'
+import { useBaselineDetails } from './hooks/useBaselineDetails'
+import { useAspectRatio } from './hooks/useAspectRatio'
+
+const MAX_WIDTH = 1024
+const MIN_WIDTH = 64
+const STEP_LENGTH = 64
 
 const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
-  const { modelDetails } = useStore(modelStore)
+  const { imageMinSize, imageMaxSize } = useImageConstraints()
+  const { baseline, baselineLoaded, setBaselineLoaded } = useBaselineDetails(
+    input.models
+  )
+  const {
+    keepAspectRatio,
+    toggleKeepAspectRatio,
+    getAspectRatioDeviation,
+    getAspectRatioDeviationColor
+  } = useAspectRatio(input.width, input.height)
+
   const [workerDetails] = useWorkerDetails()
-  const userState = useStore(userInfoStore)
-  const { loggedIn } = userState
-  const [keepAspectRatio, setKeepAspectRatio] = useState(false)
   const [targetAspectRatio, setTargetAspectRatio] = useState(0)
   const [showOptions, setShowOptions] = useState(false)
   const [showCustomDimensions, setShowCustomDimensions] = useState(false)
 
-  const [baselineLoaded, setBaselineLoaded] = useState(false)
-
-  let baseline: string = ''
-  const { models } = input
-  const [model] = models
-
-  if (modelDetails[model]) {
-    baseline = modelDetails[model].baseline
-  }
+  const getCurrentAspectRatio = useCallback(
+    () => input.width / input.height,
+    [input.height, input.width]
+  )
 
   useEffect(() => {
     function scaleProportionally(height: number, width: number) {
@@ -66,17 +71,17 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
 
       if (aspectRatio >= 1) {
         // width is greater or equal to height
-        newWidth = 1024
+        newWidth = MAX_WIDTH
         newHeight = newWidth / aspectRatio
       } else {
         // height is greater than width
-        newHeight = 1024
+        newHeight = MAX_WIDTH
         newWidth = newHeight * aspectRatio
       }
 
       // Find the closest lower number that is divisible by 64
-      newWidth = Math.floor(newWidth / 64) * 64
-      newHeight = Math.floor(newHeight / 64) * 64
+      newWidth = Math.floor(newWidth / MIN_WIDTH) * MIN_WIDTH
+      newHeight = Math.floor(newHeight / MIN_WIDTH) * MIN_WIDTH
 
       return { newWidth, newHeight }
     }
@@ -98,16 +103,9 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
     input.height,
     input.models,
     input.width,
+    setBaselineLoaded,
     setInput
   ])
-
-  const getConstraints = () => {
-    return {
-      from: 64,
-      to:
-        loggedIn === true ? MAX_DIMENSIONS_LOGGED_IN : MAX_DIMENSIONS_LOGGED_OUT
-    }
-  }
 
   const handleOrientationSelect = (orientation: string) => {
     const details = ImageOrientation.getOrientationDetails({
@@ -119,7 +117,6 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
 
     // Automatically keep aspect ratio
     if (orientation !== 'custom') {
-      setKeepAspectRatio(true)
       setTargetAspectRatio(details.width / details.height)
     }
 
@@ -135,22 +132,12 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
     return (size / 1e6).toFixed(2)
   }
 
-  const toggleKeepAspectRatio = () => {
-    if (!keepAspectRatio) {
-      setTargetAspectRatio(input.width / input.height)
-    } else {
-      setTargetAspectRatio(0)
-    }
-    setKeepAspectRatio(!keepAspectRatio)
-  }
-
   const widthCallback = (value: number) => {
     if (keepAspectRatio) {
-      const { from, to } = getConstraints()
-
-      let nearestHeight = Math.round(value / targetAspectRatio / 64) * 64
-      nearestHeight = Math.min(nearestHeight, to)
-      nearestHeight = Math.max(nearestHeight, from)
+      let nearestHeight =
+        Math.round(value / targetAspectRatio / MIN_WIDTH) * MIN_WIDTH
+      nearestHeight = Math.min(nearestHeight, imageMaxSize)
+      nearestHeight = Math.max(nearestHeight, imageMinSize)
 
       setInput({
         height: nearestHeight,
@@ -163,11 +150,10 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
 
   const heightCallback = (value: number) => {
     if (keepAspectRatio) {
-      const { from, to } = getConstraints()
-
-      let nearestWidth = Math.round((value * targetAspectRatio) / 64) * 64
-      nearestWidth = Math.min(nearestWidth, to)
-      nearestWidth = Math.max(nearestWidth, from)
+      let nearestWidth =
+        Math.round((value * targetAspectRatio) / MIN_WIDTH) * MIN_WIDTH
+      nearestWidth = Math.min(nearestWidth, imageMaxSize)
+      nearestWidth = Math.max(nearestWidth, imageMinSize)
 
       setInput({
         height: value,
@@ -176,27 +162,6 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
     } else if (input.orientationType !== 'custom' && !keepAspectRatio) {
       setInput({ orientationType: 'custom' })
     }
-  }
-
-  const getAspectRatioDeviation = () => {
-    if (!keepAspectRatio) {
-      return 0
-    }
-
-    const { width, height } = input
-    const currentAspectRatio = width / height
-    const aspectRatioRatio =
-      Math.max(currentAspectRatio, targetAspectRatio) /
-      Math.min(currentAspectRatio, targetAspectRatio)
-
-    const deviation = Math.abs(aspectRatioRatio - 1)
-    return deviation
-  }
-
-  const getAspectRatioDeviationColor = (aspectRatioDeviation: number) => {
-    if (aspectRatioDeviation > 0.25) return 'text-red-500'
-    if (aspectRatioDeviation > 0.15) return 'text-amber-500'
-    return 'text-gray-500'
   }
 
   const orientationValue = ImageOrientation.dropdownOptions({
@@ -210,8 +175,7 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
   // Lock aspect ratio on initial run if orientation type is not custom
   useEffect(() => {
     if (input.orientationType !== 'custom') {
-      setKeepAspectRatio(true)
-      setTargetAspectRatio(input.width / input.height)
+      setTargetAspectRatio(getCurrentAspectRatio())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -324,9 +288,9 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
                 <Section style={{ paddingTop: 0 }}>
                   <NumericInputSlider
                     label="Width"
-                    from={getConstraints().from}
-                    to={getConstraints().to}
-                    step={64}
+                    from={imageMinSize}
+                    to={imageMaxSize}
+                    step={STEP_LENGTH}
                     input={input}
                     setInput={setInput}
                     fieldName="width"
@@ -339,9 +303,9 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
                 <Section style={{ paddingTop: 0 }}>
                   <NumericInputSlider
                     label="Height"
-                    from={getConstraints().from}
-                    to={getConstraints().to}
-                    step={64}
+                    from={imageMinSize}
+                    to={imageMaxSize}
+                    step={STEP_LENGTH}
                     input={input}
                     setInput={setInput}
                     fieldName="height"
@@ -352,7 +316,7 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
                 </Section>
                 <Section>
                   <div style={{ fontSize: '12px' }}>
-                    {input.height * input.width > 1024 * 1024 && (
+                    {input.height * input.width > MAX_WIDTH * MAX_WIDTH && (
                       <div
                         className="text-amber-500"
                         style={{ fontWeight: 700 }}
@@ -361,7 +325,7 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
                         request.
                       </div>
                     )}
-                    {input.height * input.width <= 1024 * 1024 && (
+                    {input.height * input.width <= MAX_WIDTH * MAX_WIDTH && (
                       <div
                         className="text-gray-400"
                         style={{ fontWeight: 700 }}
@@ -385,7 +349,7 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
                   )}
 
                   <div style={{ fontSize: '12px', marginTop: '8px' }}>
-                    Height and width must be divisible by 64.
+                    Height and width must be divisible by {STEP_LENGTH}.
                   </div>
 
                   <div style={{ fontSize: '12px' }}>
