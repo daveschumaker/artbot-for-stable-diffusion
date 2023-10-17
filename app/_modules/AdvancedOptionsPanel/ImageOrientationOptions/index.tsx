@@ -23,9 +23,10 @@ import CustomDimensions from './CustomDimensions'
 import { useImageConstraints } from './hooks/useImageDimensions'
 import { useBaselineDetails } from './hooks/useBaselineDetails'
 import { useAspectRatio } from './hooks/useAspectRatio'
+import { MIN_IMAGE_WIDTH } from '_constants'
+import AspectRatioToggler from './AspectRatioToggler'
 
 const MAX_WIDTH = 1024
-const MIN_WIDTH = 64
 const STEP_LENGTH = 64
 
 const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
@@ -80,8 +81,8 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
       }
 
       // Find the closest lower number that is divisible by 64
-      newWidth = Math.floor(newWidth / MIN_WIDTH) * MIN_WIDTH
-      newHeight = Math.floor(newHeight / MIN_WIDTH) * MIN_WIDTH
+      newWidth = Math.floor(newWidth / MIN_IMAGE_WIDTH) * MIN_IMAGE_WIDTH
+      newHeight = Math.floor(newHeight / MIN_IMAGE_WIDTH) * MIN_IMAGE_WIDTH
 
       return { newWidth, newHeight }
     }
@@ -132,37 +133,53 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
     return (size / 1e6).toFixed(2)
   }
 
-  const widthCallback = (value: number) => {
-    if (keepAspectRatio) {
-      let nearestHeight =
-        Math.round(value / targetAspectRatio / MIN_WIDTH) * MIN_WIDTH
-      nearestHeight = Math.min(nearestHeight, imageMaxSize)
-      nearestHeight = Math.max(nearestHeight, imageMinSize)
+  const widthCallback = useCallback(
+    (value: number) => {
+      if (keepAspectRatio) {
+        let nearestHeight = Math.round(value / targetAspectRatio)
+        nearestHeight = Math.round(nearestHeight / 64) * 64
 
-      setInput({
-        height: nearestHeight,
-        width: value
-      })
-    } else if (input.orientationType !== 'custom' && !keepAspectRatio) {
-      setInput({ orientationType: 'custom' })
-    }
-  }
+        setInput({
+          height: Math.max(Math.min(nearestHeight, imageMaxSize), imageMinSize),
+          width: value
+        })
+      } else if (input.orientationType !== 'custom') {
+        setInput({ orientationType: 'custom' })
+      }
+    },
+    [
+      imageMaxSize,
+      imageMinSize,
+      input.orientationType,
+      keepAspectRatio,
+      setInput,
+      targetAspectRatio
+    ]
+  )
 
-  const heightCallback = (value: number) => {
-    if (keepAspectRatio) {
-      let nearestWidth =
-        Math.round((value * targetAspectRatio) / MIN_WIDTH) * MIN_WIDTH
-      nearestWidth = Math.min(nearestWidth, imageMaxSize)
-      nearestWidth = Math.max(nearestWidth, imageMinSize)
+  const heightCallback = useCallback(
+    (value: number) => {
+      if (keepAspectRatio) {
+        let nearestWidth = Math.round(value * targetAspectRatio)
+        nearestWidth = Math.round(nearestWidth / 64) * 64
 
-      setInput({
-        height: value,
-        width: nearestWidth
-      })
-    } else if (input.orientationType !== 'custom' && !keepAspectRatio) {
-      setInput({ orientationType: 'custom' })
-    }
-  }
+        setInput({
+          height: value,
+          width: Math.max(Math.min(nearestWidth, imageMaxSize), imageMinSize)
+        })
+      } else if (input.orientationType !== 'custom') {
+        setInput({ orientationType: 'custom' })
+      }
+    },
+    [
+      imageMaxSize,
+      imageMinSize,
+      input.orientationType,
+      keepAspectRatio,
+      setInput,
+      targetAspectRatio
+    ]
+  )
 
   const orientationValue = ImageOrientation.dropdownOptions({
     baseline
@@ -174,11 +191,11 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
 
   // Lock aspect ratio on initial run if orientation type is not custom
   useEffect(() => {
-    if (input.orientationType !== 'custom') {
+    if (keepAspectRatio) {
       setTargetAspectRatio(getCurrentAspectRatio())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [keepAspectRatio])
 
   return (
     <Section
@@ -365,26 +382,11 @@ const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
                   justifyContent: 'flex-end'
                 }}
               >
-                <Button
-                  title={
-                    keepAspectRatio ? 'Free aspect ratio' : 'Lock aspect ratio'
-                  }
+                <AspectRatioToggler
                   disabled={input.orientationType === 'random'}
-                  onClick={toggleKeepAspectRatio}
-                  style={{ width: '125px' }}
-                >
-                  {keepAspectRatio ? (
-                    <>
-                      <IconLock stroke={1.5} />
-                      Unlock ratio
-                    </>
-                  ) : (
-                    <>
-                      <IconLockOpen stroke={1.5} />
-                      Lock ratio
-                    </>
-                  )}
-                </Button>
+                  keepAspectRatio={keepAspectRatio}
+                  toggleKeepAspectRatio={toggleKeepAspectRatio}
+                />
                 <Button
                   title="Swap dimensions"
                   onClick={() => {
