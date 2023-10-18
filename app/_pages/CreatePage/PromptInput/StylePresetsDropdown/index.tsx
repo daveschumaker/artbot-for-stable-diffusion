@@ -5,6 +5,8 @@ import styles from './component.module.css'
 import { IconArrowBarLeft, IconPlayerPlayFilled } from '@tabler/icons-react'
 import { Button } from 'app/_components/Button'
 import FlexRow from 'app/_components/FlexRow'
+import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
+import { HordePreset } from '_types/horde'
 
 export default function StylePresetsDropdown({
   input,
@@ -14,41 +16,39 @@ export default function StylePresetsDropdown({
   const [filter, setFilter] = useState('')
 
   const handleUsePreset = (key: string) => {
-    const presetDetails = stylePresets[key]
+    const presetDetails: HordePreset = stylePresets[key]
     let [positive, negative = ''] = presetDetails.prompt.split('###')
     positive = positive.replace('{p}', input.prompt)
     positive = positive.replace('{np}', '')
     negative = negative.replace('{np}', '')
     negative = `${negative} ${input.negative}`
 
-    const updateInput = {
+    const updateInput: Partial<DefaultPromptInput> = {
       prompt: positive,
+      hires: presetDetails.hires_fix ? presetDetails.hires_fix : input.hires,
+      karras: presetDetails.karras ? presetDetails.karras : input.karras,
       negative: negative.trim(),
-      models: stylePresets[key].model
-        ? [stylePresets[key].model]
-        : input.models,
-      sampler: stylePresets[key].sampler_name
-        ? stylePresets[key].sampler_name
+      models: presetDetails.model ? [presetDetails.model] : input.models,
+      sampler: presetDetails.sampler_name
+        ? presetDetails.sampler_name
         : input.sampler,
-      cfg_scale: stylePresets[key].cfg_scale
-        ? stylePresets[key].cfg_scale
+      cfg_scale: presetDetails.cfg_scale
+        ? presetDetails.cfg_scale
         : input.cfg_scale,
-      loras: stylePresets[key].loras ? stylePresets[key].loras : input.loras,
-      steps: stylePresets[key].steps ? stylePresets[key].steps : input.steps,
+      loras: presetDetails.loras ? presetDetails.loras : input.loras,
+      tis: presetDetails.tis ? presetDetails.tis : input.tis,
+      steps: presetDetails.steps ? presetDetails.steps : input.steps,
       orientationType: input.orientationType,
       height: input.height,
       width: input.width
     }
 
-    if (stylePresets[key].width && stylePresets[key].height) {
+    if (presetDetails.width && presetDetails.height) {
       updateInput.orientationType = 'custom'
-      // @ts-ignore
-      updateInput.height = stylePresets[key].height
-      // @ts-ignore
-      updateInput.width = stylePresets[key].width
+      updateInput.height = presetDetails.height
+      updateInput.width = presetDetails.width
     }
 
-    // @ts-ignore
     setInput({
       ...updateInput
     })
@@ -58,7 +58,7 @@ export default function StylePresetsDropdown({
   const renderStyleList = () => {
     const arr = []
 
-    const p = input.prompt ? input.prompt : '[no prompt set] '
+    const p = <strong>[user prompt]</strong>
     const np = input.negative ? input.negative : ''
 
     for (const [key, presetDetails] of Object.entries(stylePresets)) {

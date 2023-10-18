@@ -518,6 +518,37 @@ export const checkCurrentJob = async (imageDetails: any) => {
 
     if (
       'status' in imgDetailsFromApi &&
+      imgDetailsFromApi.status === 'JOB_CANCELED'
+    ) {
+      const jobTimestamp = jobDetails?.timestamp / 1000 || 0
+      const currentTimestamp = Date.now() / 1000
+
+      if (currentTimestamp - jobTimestamp > 60) {
+        updatePendingJobV2(
+          Object.assign({}, jobDetails, {
+            jobStatus: JobStatus.Error,
+            errorMessage:
+              'The worker was unable to process this request. Try again?'
+          })
+        )
+        await updatePendingJobInDexie(
+          jobDetails.id,
+          Object.assign({}, jobDetails, {
+            jobStatus: JobStatus.Error,
+            errorMessage:
+              'The worker was unable to process this request. Try again?'
+          })
+        )
+      }
+
+      return {
+        success: false,
+        status: 'NOT_FOUND'
+      }
+    }
+
+    if (
+      'status' in imgDetailsFromApi &&
       imgDetailsFromApi.status === 'WORKER_GENERATION_ERROR'
     ) {
       const jobTimestamp = jobDetails?.timestamp / 1000 || 0

@@ -83,7 +83,7 @@ export default function ImageThumbnail({
           <IconPhotoUp size={48} />
         )}
         {jobDetails.jobStatus === JobStatus.Error && (
-          <IconAlertTriangle size={48} stroke="rgb(234 179 8)" />
+          <IconAlertTriangle size={48} color="rgb(234 179 8)" stroke={1} />
         )}
       </div>
       {!isRated && !ratingSubmitted && secondaryImage && (

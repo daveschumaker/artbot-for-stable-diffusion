@@ -105,6 +105,25 @@ export interface GetFinishedImageAsyncReponse {
   waiting: number
 }
 
+export interface HordePreset {
+  cfg_scale?: number
+  height?: number
+  hires_fix?: boolean
+  karras?: boolean
+  loras?: Array<{
+    name: string
+    inject_trigger?: string
+    model?: number
+    clip?: number
+  }>
+  tis?: Array<{ name: string; inject_ti?: string }>
+  model?: string
+  prompt: string
+  sampler_name?: string
+  steps?: number
+  width?: number
+}
+
 export interface IKudosDetails {
   accumulated: number
   awarded: number

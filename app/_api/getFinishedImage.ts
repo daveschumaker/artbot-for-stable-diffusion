@@ -130,6 +130,15 @@ export const getFinishedImage = async (
           }
         }
 
+        if (image.censored) {
+          return {
+            success: false,
+            status: 'JOB_CANCELED',
+            message:
+              'The worker was unable to complete this request. Please try again.'
+          }
+        }
+
         const base64String = await fetchImageFromUrl(image.img)
 
         if (base64String) {

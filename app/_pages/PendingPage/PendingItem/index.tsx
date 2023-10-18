@@ -239,7 +239,9 @@ const PendingItem = memo(
               <strong>Stable Horde API Error:</strong> &quot;
               {jobDetails.errorMessage}&quot;
               {jobDetails.errorMessage !==
-              'Unable to create image. Please try again soon.' ? (
+                'The worker was unable to process this request. Try again?' &&
+              jobDetails.errorMessage !==
+                'Unable to create image. Please try again soon.' ? (
                 <div>
                   Not sure what this means? Please visit the{' '}
                   <Linker

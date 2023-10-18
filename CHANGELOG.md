@@ -1,3 +1,8 @@
+# 2023.10.17
+
+- Fix some annoying behavior with custom aspect ratios and the image orientation dropdown.
+- Update style presets from the AI Horde to utilize SDXL 1.0 instead of the deprecated SDXL_beta.
+
 # 2023.10.16
 
 - Fix: Image model is forgotten when selecting SDXL and leaving create page. If you had SDXL selected, it should now remember it. Thanks to Neron on Discord and an anonymous user in feedback for reporting this issue!

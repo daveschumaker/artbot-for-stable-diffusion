@@ -1,20 +1,4 @@
-interface Preset {
-  [key: string]: {
-    cfg_scale?: number
-    height?: number
-    loras?: Array<{
-      name: string
-      inject_trigger?: string
-      model?: number
-      clip?: number
-    }>
-    model?: string
-    prompt: string
-    sampler_name?: string
-    steps?: number
-    width?: number
-  }
-}
+import { HordePreset } from '_types/horde'
 
 function sortAlphabetically(obj: any) {
   const sortedKeys = Object.keys(obj).sort()
@@ -29,13 +13,13 @@ function sortAlphabetically(obj: any) {
 
 // Via: https://github.com/Haidra-Org/AI-Horde-Styles
 // TODO: Automatically import and update
-export const stableHordeStyles: Preset = {
+export const stableHordeStyles: { [key: string]: HordePreset } = {
   sdxl: {
     prompt: '{p}{np}',
-    model: 'SDXL_beta::stability.ai#6901',
+    model: 'SDXL 1.0',
+    steps: 50,
     width: 1024,
-    height: 1024,
-    steps: 50
+    height: 1024
   },
   raw: {
     prompt: '{p}{np}',
@@ -48,78 +32,157 @@ export const stableHordeStyles: Preset = {
     width: 768,
     height: 768
   },
-  rpiracy: {
+  'bd-ai': {
     prompt:
-      'Masterpiece, splash art, digital painting, a full body shot of a sexy male pirate (John Oliver:1.3) in pirate captain clothes {p}, glasses, global illumination, hot, art by artgerm and paul cadmus, and viktoria gavrilenko###{np}woman, fully dressed, blurry, bad drawing, double head, blurry, ugly, deformed, malformed, lowres, mutant, mutated, disfigured, compressed, noise, artifacts, dithering, simple, watermark, text, font, signage, collage, pixel',
-    model: 'Dreamshaper',
-    sampler_name: 'k_dpm_adaptive',
+      'An robotic (artificial intelligence:1.1) {p}, birthday theme, (the words "1 year":1.35), science fiction{np}',
+    model: 'SDXL 1.0',
+    width: 1024,
+    height: 1024,
     steps: 43,
-    cfg_scale: 8.5
+    cfg_scale: 9.5
+  },
+  'makoto birthday': {
+    prompt:
+      '{p}, (manga artwork:1.1), drawn by Makoto Shinkai, (birthday theme:1.3)###{np}, colorful,realistic, render, 3d, photographic',
+    model: 'SDXL 1.0',
+    width: 1024,
+    height: 1024,
+    steps: 43,
+    cfg_scale: 7.5
+  },
+  'artistic birthday': {
+    prompt:
+      '(Birthday-themed:1.3), {p}, art by Sophie Anderson and Guy Denning and Lisa Frank###{np}, boring, bw, loli, teen',
+    model: 'SDXL 1.0',
+    width: 1024,
+    height: 1024,
+    steps: 50,
+    cfg_scale: 7.5
+  },
+  bdcolordd: {
+    prompt: '{p}, happy birthday, colorful, in the style of t3xtn, {p}{np}',
+    model: 'Dreamshaper',
+    width: 960,
+    height: 768,
+    steps: 27,
+    hires_fix: true,
+    cfg_scale: 9,
+    loras: [
+      { name: '85479', model: 0.5 },
+      { name: '42190', model: 0.85 },
+      { name: '109775', model: 0.2 },
+      { name: '22437', model: 0.85 }
+    ]
   },
   'sdxl-vertical': {
     prompt: '{p}{np}',
-    model: 'SDXL_beta::stability.ai#6901',
-    width: 768,
-    height: 1344,
+    model: 'SDXL 1.0',
+    width: 704,
+    height: 1472,
+    steps: 50
+  },
+  'sdxl-extreme-vertical': {
+    prompt: '{p}{np}',
+    model: 'SDXL 1.0',
+    width: 640,
+    height: 1536,
     steps: 50
   },
   'sdxl-portrait': {
     prompt: '{p}{np}',
-    model: 'SDXL_beta::stability.ai#6901',
-    width: 896,
-    height: 1152,
+    model: 'SDXL 1.0',
+    width: 832,
+    height: 1216,
     steps: 50
   },
   'sdxl-photo': {
     prompt: '{p}{np}',
-    model: 'SDXL_beta::stability.ai#6901',
+    model: 'SDXL 1.0',
+    width: 896,
+    height: 1152,
+    steps: 50
+  },
+  'sdxl-photo-horizontal': {
+    prompt: '{p}{np}',
+    model: 'SDXL 1.0',
     width: 1152,
     height: 896,
     steps: 50
   },
   'sdxl-landscape': {
     prompt: '{p}{np}',
-    model: 'SDXL_beta::stability.ai#6901',
+    model: 'SDXL 1.0',
     width: 1280,
     height: 832,
     steps: 50
   },
   'sdxl-widescreen': {
     prompt: '{p}{np}',
-    model: 'SDXL_beta::stability.ai#6901',
+    model: 'SDXL 1.0',
     width: 1344,
     height: 768,
     steps: 50
   },
   'sdxl-cinematic': {
     prompt: '{p}{np}',
-    model: 'SDXL_beta::stability.ai#6901',
+    model: 'SDXL 1.0',
     width: 1536,
     height: 640,
     steps: 50
   },
+
+  graffiti: {
+    prompt:
+      'graffiti style {p}, street art, vibrant, urban, detailed, tag, mural###{np}, ugly, deformed, noisy, blurry, low contrast, realism, photorealistic',
+    model: 'SDXL 1.0',
+    sampler_name: 'k_dpmpp_2m',
+    width: 1216,
+    height: 832,
+    steps: 30,
+    cfg_scale: 7
+  },
+  retrofuturistic: {
+    prompt:
+      'retro-futuristic {p} . vintage sci-fi, 50s and 60s style, atomic age, vibrant, highly detailed###{np}, contemporary, realistic, rustic, primitive',
+    model: 'SDXL 1.0',
+    sampler_name: 'k_dpmpp_2m',
+    width: 1216,
+    height: 832,
+    steps: 35,
+    cfg_scale: 7
+  },
+  dystopian: {
+    prompt:
+      'dystopian style {p} . bleak, post-apocalyptic, somber, dramatic, highly detailed###{np},ugly, deformed, noisy, blurry, low contrast, cheerful, optimistic, vibrant, colorful',
+    model: 'SDXL 1.0',
+    sampler_name: 'k_dpmpp_2m',
+    width: 1216,
+    height: 832,
+    steps: 30,
+    cfg_scale: 7
+  },
   sdxlcatgirlportrait: {
     prompt:
       'high quality, intricate, fluffy tail, cat ears, a full-body portrait of a catgirl, {p}, photorealistic, magical realism, fantasy###{np}, (Drawing cartoon comic sketch 2d render:0.7)',
-    model: 'SDXL_beta::stability.ai#6901',
+    model: 'SDXL 1.0',
     sampler_name: 'k_dpmpp_sde',
     width: 832,
-    height: 1280,
+    height: 1216,
     steps: 50,
     cfg_scale: 8.5
   },
   neonnoir: {
     prompt:
       'neon noir {p}, cyberpunk, dark, rainy streets, neon signs, high contrast, low light, vibrant, highly detailed###bright, sunny, daytime, low contrast, black and white, sketch, watercolor, {p}',
-    model: 'SDXL_beta::stability.ai#6901',
+    model: 'SDXL 1.0',
     width: 1024,
     height: 1024,
     steps: 50
   },
   floralceramic: {
     prompt:
-      'a ceramic diorama of {p}, by Carlos Santos and Christine tennenholtz Lisa Frank, floral, glossy ceramic flowers, Rainbow prism, spectral colors, refracted light, vibrant hues, dazzling display, Picturesque, Gut Feeling, Seasoned photographer, Olympus PEN-F, blooming beauty, delicate petals, intricate 3d floral patterns###2d printed drawing sketch cgi render cartoon comic manga animation anime lineart, plain background, {np}',
-    model: 'SDXL_beta::stability.ai#6901',
+      'a ceramic diorama of {p}, by Carlos Santos and Christine tennenholtz Lisa Frank, floral, glossy ceramic flowers, Rainbow prism, spectral colors, refracted light, vibrant hues, dazzling display, Picturesque, Gut Feeling, Seasoned photographer, Olympus PEN-F, blooming beauty, delicate petals, intricate 3d floral patterns###2d printed drawing sketch cgi render cartoon comic manga animation anime lineart, plain background{np}',
+    model: 'SDXL 1.0',
     width: 1152,
     height: 832,
     steps: 50,
@@ -128,7 +191,7 @@ export const stableHordeStyles: Preset = {
   sovietpropaganda: {
     prompt:
       'USSR soviet propaganda poster, {p}###photorealistic, cute, modern,{np}',
-    model: 'SDXL_beta::stability.ai#6901',
+    model: 'SDXL 1.0',
     sampler_name: 'k_dpmpp_sde',
     width: 768,
     height: 1344,
@@ -137,8 +200,8 @@ export const stableHordeStyles: Preset = {
   },
   moderntarotcard: {
     prompt:
-      '((A modern Tarot card)), {p}###photorealistic, cute, modern, simple, anime, plain, vector, lowres, cropped, limneart, cgi, 3d, antique, {np}',
-    model: 'SDXL_beta::stability.ai#6901',
+      '((A modern Tarot card)), {p}###photorealistic, cute, modern, simple, anime, plain, vector, lowres, cropped, limneart, cgi, 3d, antique{np}',
+    model: 'SDXL 1.0',
     sampler_name: 'k_dpmpp_sde',
     width: 832,
     height: 1280,
@@ -147,8 +210,8 @@ export const stableHordeStyles: Preset = {
   },
   antiquetarotcard: {
     prompt:
-      'A hand-painted 15th century Visconti-Sforza style Trionfi Tarot card, antique painting of {p}, with name below, detailed painting###photorealistic, cute, modern, simple, anime, plain, vector, lowres, cropped, limneart, cgi, 3d, {np}',
-    model: 'SDXL_beta::stability.ai#6901',
+      'A hand-painted 15th century Visconti-Sforza style Trionfi Tarot card, antique painting of {p}, with name below, detailed painting###photorealistic, cute, modern, simple, anime, plain, vector, lowres, cropped, limneart, cgi, 3d{np}',
+    model: 'SDXL 1.0',
     sampler_name: 'k_dpmpp_sde',
     width: 832,
     height: 1280,
@@ -158,7 +221,7 @@ export const stableHordeStyles: Preset = {
   playingcard: {
     prompt:
       'A modern playing card, {p}###{np}, photorealistic, cute, lowres, cropped, cgi, 3d, pixelated',
-    model: 'SDXL_beta::stability.ai#6901',
+    model: 'SDXL 1.0',
     sampler_name: 'k_dpmpp_sde',
     width: 832,
     height: 1280,
@@ -168,7 +231,7 @@ export const stableHordeStyles: Preset = {
   mtgcard: {
     prompt:
       'A mtg magic the gathering card, painting of fantasy creature. description, {p}, mtg magic the gathering style###{np}, lowres, cropped, cgi, pixelated, photorealistic, 3d render',
-    model: 'SDXL_beta::stability.ai#6901',
+    model: 'SDXL 1.0',
     sampler_name: 'k_dpmpp_sde',
     width: 832,
     height: 1152,
@@ -178,7 +241,7 @@ export const stableHordeStyles: Preset = {
   baseballcard: {
     prompt:
       'A baseball trading card, picture of player, stats in corner, {p}###{np}, lowres, cropped, cgi, pixelated, cute',
-    model: 'SDXL_beta::stability.ai#6901',
+    model: 'SDXL 1.0',
     sampler_name: 'k_dpmpp_sde',
     width: 832,
     height: 1152,
@@ -187,7 +250,7 @@ export const stableHordeStyles: Preset = {
   },
   greetingcard: {
     prompt: 'A greeting card, {p}###{np}, lowres, cropped, cgi, pixelated',
-    model: 'SDXL_beta::stability.ai#6901',
+    model: 'SDXL 1.0',
     sampler_name: 'k_dpmpp_sde',
     width: 832,
     height: 1280,
@@ -197,7 +260,7 @@ export const stableHordeStyles: Preset = {
   postcard: {
     prompt:
       'A souvenir postcard, {p}###{np}, lowres, cropped, cgi, pixelated, padding, border',
-    model: 'SDXL_beta::stability.ai#6901',
+    model: 'SDXL 1.0',
     sampler_name: 'k_dpmpp_sde',
     width: 1280,
     height: 832,
@@ -206,8 +269,8 @@ export const stableHordeStyles: Preset = {
   },
   goldenagecomics: {
     prompt:
-      '{np}, 1940s golden age comics style screen print, cover art by CC Beck and Will Eisner, (thick lines:0.7), early CMYK lithography, halftones###3d, modern, black and white, spot color, {np}',
-    model: 'SDXL_beta::stability.ai#6901',
+      '{np}, 1940s golden age comics style screen print, cover art by CC Beck and Will Eisner, (thick lines:0.7), early CMYK lithography, halftones###3d, modern, black and white, spot color{np}',
+    model: 'SDXL 1.0',
     width: 832,
     height: 1280,
     steps: 50,
@@ -215,8 +278,8 @@ export const stableHordeStyles: Preset = {
   },
   manga: {
     prompt:
-      '(manga, heavy outlines, thick linework, monochrome, flat, black and white:1.2), {p}###(3d, color), {np}',
-    model: 'SDXL_beta::stability.ai#6901',
+      '(manga, heavy outlines, thick linework, monochrome, flat, black and white:1.2), {p}###(3d, color){np}',
+    model: 'SDXL 1.0',
     width: 896,
     height: 1152,
     steps: 50,
@@ -224,8 +287,8 @@ export const stableHordeStyles: Preset = {
   },
   sdxlanime: {
     prompt:
-      'anime artwork, {p}, dramatic, anime style, key visual, vibrant, studio anime, highly detailed###photo, deformed, black and white, realism, disfigured, low contrast, {np}, ink and paper',
-    model: 'SDXL_beta::stability.ai#6901',
+      'anime artwork, {p}, dramatic, anime style, key visual, vibrant, studio anime, highly detailed###photo, deformed, black and white, realism, disfigured, low contrast{np}, ink and paper',
+    model: 'SDXL 1.0',
     width: 1152,
     height: 896,
     steps: 50,
@@ -233,8 +296,8 @@ export const stableHordeStyles: Preset = {
   },
   portraitphoto: {
     prompt:
-      'portrait photo of {p}, photograph, highly detailed face, depth of field, moody light, style by Dan Winters, Russell James, Steve McCurry, centered, extremely detailed, Nikon D850, award winning photography###disfigured, {np}, closeup, cropped',
-    model: 'SDXL_beta::stability.ai#6901',
+      'portrait photo of {p}, photograph, highly detailed face, depth of field, moody light, style by Dan Winters, Russell James, Steve McCurry, centered, extremely detailed, Nikon D850, award winning photography###disfigured{np}, closeup, cropped',
+    model: 'SDXL 1.0',
     width: 896,
     height: 1152,
     steps: 50,
@@ -243,7 +306,7 @@ export const stableHordeStyles: Preset = {
   sdxlspace: {
     prompt:
       '{p}, by Andrew McCarthy, Navaneeth Unnikrishnan, Manuel Dietrich, photo realistic, 8 k, cinematic lighting, hd, atmospheric, hyperdetailed, trending on artstation, deviantart, photography, glow effect###{np}',
-    model: 'SDXL_beta::stability.ai#6901',
+    model: 'SDXL 1.0',
     sampler_name: 'k_dpmpp_sde',
     width: 1344,
     height: 768,
@@ -252,17 +315,18 @@ export const stableHordeStyles: Preset = {
   },
   schematic: {
     prompt:
-      '23rd century scientific schematics for {p}, blueprint, hyperdetailed vector technical documents, callouts, legend, patent registry###{np}',
-    model: 'SDXL_beta::stability.ai#6901',
+      '23rd century scientific schematics for {p}, blueprint, hyperdetailed vector technical documents, callouts, legend, patent registry, clean linework, crisp lines###{np}, blurry',
+    model: 'SDXL 1.0',
+    sampler_name: 'k_dpmpp_2m',
     width: 1152,
     height: 896,
-    steps: 50,
-    cfg_scale: 5
+    steps: 35,
+    cfg_scale: 7
   },
   futurefashion: {
     prompt:
-      'photograph of a Fashion model, {p}, full body, highly detailed and intricate, golden ratio, vibrant colors, hyper maximalist, futuristic, luxury, elite, cinematic, fashion, depth of field, colorful, glow, trending on artstation, ultra high detail, ultra realistic, cinematic lighting, focused, 8k###{np}',
-    model: 'SDXL_beta::stability.ai#6901',
+      'photograph of a Fashion model, {p}, full body, highly detailed and intricate, vibrant colors, hyper maximalist, futuristic, luxury, elite, cinematic, fashion, depth of field, colorful, glow, trending on artstation, ultra realistic, cinematic lighting, focused, 8k, (golden ratio:0.7)###{np}',
+    model: 'SDXL 1.0',
     sampler_name: 'k_dpmpp_sde',
     width: 896,
     height: 1152,
@@ -272,7 +336,7 @@ export const stableHordeStyles: Preset = {
   building: {
     prompt:
       '{p}, shot 35 mm, realism, octane render, 8k, trending on artstation, 35 mm camera, unreal engine, hyper detailed, photo - realistic maximum detail, volumetric light, realistic matte painting, hyper photorealistic, trending on artstation, ultra-detailed, realistic###{np}',
-    model: 'SDXL_beta::stability.ai#6901',
+    model: 'SDXL 1.0',
     width: 1152,
     height: 896,
     steps: 50,
@@ -281,7 +345,7 @@ export const stableHordeStyles: Preset = {
   animal: {
     prompt:
       '{p}, wildlife photography, photograph, high quality, wildlife, f 1.8, soft focus, 8k, national geographic, award-winning photograph by nick nichols###{np}',
-    model: 'SDXL_beta::stability.ai#6901',
+    model: 'SDXL 1.0',
     width: 1280,
     height: 832,
     steps: 50,
@@ -289,8 +353,8 @@ export const stableHordeStyles: Preset = {
   },
   vaporwave: {
     prompt:
-      'vaporwave synthwave style {p}, cyberpunk, neon, vibes, stunningly beautiful, crisp, detailed, sleek, ultramodern, high contrast, cinematic composition###illustration, painting, crayon, graphite, abstract, glitch, deformed, mutated, ugly, disfigured, blurry, {np}',
-    model: 'SDXL_beta::stability.ai#6901',
+      'vaporwave synthwave style {p}, cyberpunk, neon, vibes, stunningly beautiful, crisp, detailed, sleek, ultramodern, high contrast, cinematic composition###illustration, painting, crayon, graphite, abstract, glitch, deformed, mutated, ugly, disfigured, blurry{np}',
+    model: 'SDXL 1.0',
     width: 1344,
     height: 768,
     steps: 50,
@@ -298,8 +362,8 @@ export const stableHordeStyles: Preset = {
   },
   isometric: {
     prompt:
-      'isometric style {p}, vibrant, beautiful, crisp, detailed, ultra detailed, intricate###deformed, mutated, ugly, disfigured, blur, blurry, noise, noisy, realistic, photographic, {np}',
-    model: 'SDXL_beta::stability.ai#6901',
+      'isometric style {p}, vibrant, beautiful, crisp, detailed, ultra detailed, intricate###deformed, mutated, ugly, disfigured, blur, blurry, noise, noisy, realistic, photographic{np}',
+    model: 'SDXL 1.0',
     width: 1024,
     height: 1024,
     steps: 50,
@@ -307,8 +371,8 @@ export const stableHordeStyles: Preset = {
   },
   lowpoly: {
     prompt:
-      'low-poly style {p}, ambient occlusion, low-poly game art, (polygon mesh:0.8), jagged, blocky, (wireframe edges:0.8), centered composition###noisy, sloppy, messy, grainy, highly detailed, ultra textured, photo, black and white, grayscale, colorless, {np}',
-    model: 'SDXL_beta::stability.ai#6901',
+      'low-poly style {p}, ambient occlusion, low-poly game art, (polygon mesh:0.8), jagged, blocky, (wireframe edges:0.8), centered composition###noisy, sloppy, messy, grainy, highly detailed, ultra textured, photo, black and white, grayscale, colorless{np}',
+    model: 'SDXL 1.0',
     width: 1280,
     height: 832,
     steps: 50,
@@ -317,7 +381,7 @@ export const stableHordeStyles: Preset = {
   claymation: {
     prompt:
       'claymation style {p}, sculpture, clay art, centered composition, play-doh###{np}, sloppy, messy, grainy, highly detailed, ultra textured, photo, mutated',
-    model: 'SDXL_beta::stability.ai#6901',
+    model: 'SDXL 1.0',
     width: 1280,
     height: 832,
     steps: 50,
@@ -325,8 +389,8 @@ export const stableHordeStyles: Preset = {
   },
   origami: {
     prompt:
-      'origami style {p}, paper art, pleated paper, folded, origami art, pleats, cut and fold, centered composition###noisy, sloppy, messy, grainy, highly detailed, ultra textured, photo, {np}',
-    model: 'SDXL_beta::stability.ai#6901',
+      'origami style {p}, paper art, pleated paper, folded, origami art, pleats, cut and fold, centered composition###noisy, sloppy, messy, grainy, highly detailed, ultra textured, photo{np}',
+    model: 'SDXL 1.0',
     width: 1024,
     height: 1024,
     steps: 50,
@@ -335,7 +399,7 @@ export const stableHordeStyles: Preset = {
   lineart: {
     prompt:
       'line art drawing, {p}, professional, sleek, modern, minimalist, graphic, line art, vector graphics###{np}, anime, photorealistic, 35mm film, deformed, glitch, blurry, noisy, off-center, deformed, cross-eyed, closed eyes, bad anatomy, ugly, disfigured, mutated, realism, realistic, impressionism, expressionism, oil, acrylic',
-    model: 'SDXL_beta::stability.ai#6901',
+    model: 'SDXL 1.0',
     width: 1152,
     height: 896,
     steps: 50,
@@ -343,8 +407,8 @@ export const stableHordeStyles: Preset = {
   },
   pixelart: {
     prompt:
-      'pixel-art, {p}, low-res, blocky, pixel art style, 16-bit graphics###sloppy, messy, blurry, noisy, highly detailed, ultra textured, photo, realistic, {np}',
-    model: 'SDXL_beta::stability.ai#6901',
+      'pixel-art, {p}, low-res, blocky, pixel art style, 16-bit graphics###sloppy, messy, blurry, noisy, highly detailed, ultra textured, photo, realistic{np}',
+    model: 'SDXL 1.0',
     width: 1152,
     height: 896,
     steps: 50,
@@ -352,8 +416,8 @@ export const stableHordeStyles: Preset = {
   },
   embroidery: {
     prompt:
-      '(Embroidery) knitting pattern of {p}, (cross stitch)###photorealistic, {np}',
-    model: 'SDXL_beta::stability.ai#6901',
+      '(Embroidery) knitting pattern of {p}, (cross stitch)###photorealistic{np}',
+    model: 'SDXL 1.0',
     sampler_name: 'k_dpmpp_sde',
     width: 1024,
     height: 1024,
@@ -362,7 +426,7 @@ export const stableHordeStyles: Preset = {
   },
   broadsheetart: {
     prompt: 'antique broadsheet drawing, {p}, text, monotone###{np}, colorful',
-    model: 'SDXL_beta::stability.ai#6901',
+    model: 'SDXL 1.0',
     sampler_name: 'k_dpmpp_sde',
     width: 896,
     height: 1152,
@@ -371,8 +435,8 @@ export const stableHordeStyles: Preset = {
   },
   watercolorscenery: {
     prompt:
-      'watercolor painting of {p}, broad brush strokes, soft colors###photorealistic, 3d, {np}',
-    model: 'SDXL_beta::stability.ai#6901',
+      'watercolor painting of {p}, broad brush strokes, soft colors###photorealistic, 3d{np}',
+    model: 'SDXL 1.0',
     sampler_name: 'k_dpmpp_sde',
     width: 1344,
     height: 768,
@@ -381,8 +445,8 @@ export const stableHordeStyles: Preset = {
   },
   pencilscribbles: {
     prompt:
-      '`Scribbled random lines, shape of {p}, pencil scribbles sketch###solid outlines, color, fill, 3d, {np}',
-    model: 'SDXL_beta::stability.ai#6901',
+      '`Scribbled random lines, shape of {p}, pencil scribbles sketch###solid outlines, color, fill, 3d{np}',
+    model: 'SDXL 1.0',
     sampler_name: 'k_dpmpp_sde',
     width: 1024,
     height: 1024,
@@ -392,7 +456,7 @@ export const stableHordeStyles: Preset = {
   sdxlchibis: {
     prompt:
       'high quality, a chibi {p}, blindbox style, 3dcute, 3dcutecharacter, 3d, cute###{np}, (Drawing cartoon comic sketch 2d:0.6), spritesheet, multiple angles, (giant hand, minifig:0.7)',
-    model: 'SDXL_beta::stability.ai#6901',
+    model: 'SDXL 1.0',
     sampler_name: 'k_dpmpp_sde',
     width: 1024,
     height: 1024,
@@ -402,7 +466,7 @@ export const stableHordeStyles: Preset = {
   sdxlstreetfashion: {
     prompt:
       'high quality, intricate, (fashionable clothes, street fashion:1.2), a full-body portrait of a fashionable {p}, attractive, photorealistic, magical realism, fantasy###{np}, (Drawing cartoon comic sketch 2d render, sexy:0.7)',
-    model: 'SDXL_beta::stability.ai#6901',
+    model: 'SDXL 1.0',
     sampler_name: 'k_dpmpp_sde',
     width: 896,
     height: 1152,
@@ -412,7 +476,7 @@ export const stableHordeStyles: Preset = {
   sdxlhorror: {
     prompt:
       'nightmare horror trypophobia odontophobia thalassophobia disgusting nasty ugly bloody terror, {p}###{np}, attractive, sexy',
-    model: 'SDXL_beta::stability.ai#6901',
+    model: 'SDXL 1.0',
     sampler_name: 'k_dpmpp_sde',
     width: 1024,
     height: 1024,
@@ -422,7 +486,7 @@ export const stableHordeStyles: Preset = {
   animation: {
     prompt:
       '(cute), {p}, (animated by Mike Judge)###{np}, horror, ugly, 3d, photorealistic, black and white',
-    model: 'SDXL_beta::stability.ai#6901',
+    model: 'SDXL 1.0',
     sampler_name: 'k_euler',
     width: 1152,
     height: 896,
@@ -432,7 +496,7 @@ export const stableHordeStyles: Preset = {
   disney: {
     prompt:
       '(cute), {p}, (classic disney animation)###{np}, 3d, horror, ugly, photorealistic',
-    model: 'SDXL_beta::stability.ai#6901',
+    model: 'SDXL 1.0',
     sampler_name: 'k_euler',
     width: 1152,
     height: 896,
@@ -442,13 +506,34 @@ export const stableHordeStyles: Preset = {
   pixar: {
     prompt:
       '(cute), {p}, (rendered by pixar)###{np}, 2d, horror, ugly, photorealistic, black and white',
-    model: 'SDXL_beta::stability.ai#6901',
+    model: 'SDXL 1.0',
     sampler_name: 'k_euler',
     width: 1152,
     height: 896,
     steps: 50,
     cfg_scale: 7
   },
+  cyborgpunkportrait: {
+    prompt:
+      'lomography, {p}, a neon cyborg portrait by Jerry Ryan Rob Hefferan Artgerm HR Giger, hyperrealistic vaporwave HDR render###{np}, drawing, sketch',
+    model: 'SDXL 1.0',
+    sampler_name: 'k_euler',
+    width: 832,
+    height: 1216,
+    steps: 50,
+    cfg_scale: 7
+  },
+  movieposter: {
+    prompt:
+      'highly detailed movie premiere poster, {p}, professional quality, highly detailed, gloss finish###smudged, poor quality, Badly drawn hands and fingers, undetailed, unfocused',
+    model: 'SDXL 1.0',
+    sampler_name: 'k_dpmpp_2m',
+    width: 832,
+    height: 1216,
+    steps: 50,
+    cfg_scale: 7
+  },
+
   glitchart: {
     prompt:
       '{p}###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
@@ -489,6 +574,7 @@ export const stableHordeStyles: Preset = {
     height: 640,
     loras: [{ name: '104917' }]
   },
+
   gothichorrorai: {
     prompt:
       '{p}###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
@@ -568,6 +654,157 @@ export const stableHordeStyles: Preset = {
     cfg_scale: 7.5,
     loras: [{ name: '98011' }]
   },
+
+  '2023-halloween-glitch': {
+    prompt:
+      'Analog glitch horrornstyle portraitnof a {p} in the shadows, best quality, masterpiece, dark, nightmare fuel###{np}',
+    model: 'stable_diffusion',
+    karras: true,
+    steps: 25,
+    sampler_name: 'k_dpmpp_2m',
+    width: 1024,
+    height: 1024,
+    hires_fix: true,
+    cfg_scale: 9
+  },
+  '2023-halloween-gouache': {
+    prompt:
+      '{p} . spooky gouache digital art, dark, creepy, highly detailed, moody, mysterious###{np}, 3d, photo, anime, text',
+    model: 'SDXL 1.0',
+    steps: 30,
+    sampler_name: 'k_dpmpp_2m',
+    width: 1024,
+    height: 1024,
+    cfg_scale: 7
+  },
+  '2023-halloween-splash': {
+    prompt:
+      '{p} . halloween splash art, spooky, magical, dark, highly detailed###{np}, photo, anime, text, 3d, black and white',
+    model: 'SDXL 1.0',
+    steps: 30,
+    sampler_name: 'k_dpmpp_2m',
+    width: 1024,
+    height: 1024,
+    cfg_scale: 7
+  },
+  '2023-halloween-burton': {
+    prompt:
+      '{p} . nightmare by Tim Burton, monster-like, cinematic lighting, trending on artstation, creepy digital art###{np}',
+    model: 'SDXL 1.0',
+    steps: 30,
+    sampler_name: 'k_dpmpp_2m',
+    width: 1024,
+    height: 1024,
+    cfg_scale: 7
+  },
+  '2023-halloween-bmovie': {
+    prompt:
+      'a b-movie poster for the thriller film: {p}. 1990s, horror, clear art by John Bolton and Gary Pullin###anime, 3d, faded, (cars:0.1), {np}',
+    model: 'SDXL 1.0',
+    steps: 30,
+    sampler_name: 'k_dpm_adaptive',
+    width: 832,
+    height: 1280,
+    cfg_scale: 7.5
+  },
+  '2023-halloween-spooky': {
+    prompt:
+      '{p}, spooky, dark, horror aesthetics, sharp focus, Innistrad, by Keith Thompson###person, human, blurry, black and white, text, {np}',
+    model: 'SDXL 1.0',
+    steps: 25,
+    sampler_name: 'k_euler_a',
+    width: 1024,
+    height: 1024,
+    cfg_scale: 9
+  },
+  '2023-halloween-daigo': {
+    prompt:
+      'grotesque, demonic, body horror, {p}, by Dan Mumford, Volkan Baga, Hieronymus Bosch###{np}',
+    model: 'SDXL 1.0',
+    steps: 30,
+    sampler_name: 'k_dpmpp_2m',
+    width: 1024,
+    height: 1024,
+    cfg_scale: 7
+  },
+  '2023-halloween-impressionist': {
+    prompt:
+      'impressionist purple and orange comickbook illustration depicting closeup of {p}, dark shading, bold outlines, thick outlines, creepy, eerie, scary, horror###{np}',
+    model: 'SDXL 1.0',
+    steps: 20,
+    sampler_name: 'k_euler_a',
+    width: 1024,
+    height: 1024,
+    cfg_scale: 9
+  },
+  '2023-halloween-vibrant': {
+    prompt:
+      '{p}, vibrant color palette, high contrast, grim and murky snow, textured brushwork, dramatic lighting, distorted perspective, unsettling details, art by (Simon Stålenhag:0.7), (James Jean:0.2), (egon schiele:0.1), (Edward Hopper:0.3) and Zdzislaw Beksinski. liminal, masterpiece, perfect shading, soft shading, (masterpiece, intricate, beautiful:1.3)###{np}',
+    model: 'Deliberate',
+    steps: 30,
+    sampler_name: 'k_euler_a',
+    width: 512,
+    height: 512,
+    cfg_scale: 7
+  },
+  '2023-halloween-painting': {
+    prompt:
+      'a decaying painting depicting {p}, ghostly presence, wide-angle, complementary color scheme, creeping shadows, eerie atmosphere, faded features, essence of haunting###{np}',
+    model: 'SDXL 1.0',
+    steps: 20,
+    sampler_name: 'k_euler_a',
+    width: 1024,
+    height: 1024,
+    cfg_scale: 9
+  },
+  '2023-halloween-parody': {
+    prompt:
+      '{p}, spooky parody, funny, scary, gloomy, detailed background, trending, surreal###black and white, text, {np}',
+    model: 'Western Animation Diffusion',
+    steps: 25,
+    sampler_name: 'k_euler_a',
+    width: 768,
+    height: 768,
+    hires_fix: true,
+    cfg_scale: 8
+  },
+  '2023-halloween-sketchbook': {
+    prompt:
+      '{p}, black and white sketch, spooky, creepy, illustration, line drawing, monochrome###color, text, {np}',
+    model: 'Abyss OrangeMix',
+    steps: 30,
+    sampler_name: 'k_euler_a',
+    width: 512,
+    height: 512,
+    cfg_scale: 6,
+    loras: [{ name: '64940' }]
+  },
+  '2023-halloween-vhs': {
+    prompt:
+      'VHS footage of a {p}, liminal, eerie, dark and gloomy, film still from a 90s horror movie, low resolution, found footage, webcamscreenshot###{np}',
+    model: 'Deliberate',
+    steps: 30,
+    sampler_name: 'k_euler_a',
+    width: 1024,
+    height: 1024,
+    hires_fix: true,
+    cfg_scale: 9,
+    loras: [
+      { name: '24382', model: 0.5, clip: 1.0 },
+      { name: '82098', model: -0.5, clip: 1.0 }
+    ]
+  },
+  '2023-halloween-ominous': {
+    prompt:
+      'a ominous gouache painting in style of pulp art depicting a {p}, expressionism, eerie neon lighting, neon accents, a ghostly realm, ominous shadows, complimentary cookies, atmosphere of terror, paperback cover###{np}',
+    model: 'SDXL 1.0',
+    steps: 20,
+    sampler_name: 'k_euler_a',
+    width: 1024,
+    height: 1024,
+    cfg_scale: 9
+  },
+
   piratepunk: {
     prompt:
       '{p}, piratepunkai###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
@@ -976,6 +1213,7 @@ export const stableHordeStyles: Preset = {
     cfg_scale: 7.5,
     loras: [{ name: '42260' }]
   },
+
   'perfect summer': {
     prompt:
       'digital art, cg painting, (medium long shot:1.2), hyper detailed, volumetric lighting, godrays, realistic, photorealistic render, golden hour, sun-drenched panorama, lush tropical colors, subtle shading, {p}, beautiful face, wide glossy eyes, ultra detailed, masterpiece, high resolution illustration, 4k, centered composition###nsfw, lowres, text, error, cropped, out of frame, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, out of focus, censorship, ugly, black and white, monochrome, artist name, signature, multiple views, power lines{np}',
@@ -1005,6 +1243,7 @@ export const stableHordeStyles: Preset = {
       'behind the scenes footage from the set of {p}, movie set, breakdown, dramatic lighting, off centered focus, clear wide shot, dreamlikeart###blurry, distorted, ugly faces,{np}',
     model: 'Dreamlike Diffusion'
   },
+
   'generic scifi': {
     prompt:
       '{p}, science fiction artwork, epic, detailed and intricate digital concept art, by John Jude Palencar, Manchu, and Devin Elle Kurtz, 4K{np}',
@@ -1028,47 +1267,67 @@ export const stableHordeStyles: Preset = {
   'terror ink': {
     prompt:
       'a terrifying ink drawing of a {p}, by Ko Young Hoon, by Yoshitaka Amano, Charcoal Art, Ink, Oil Paint, Concept Art, Color Grading, Dramatic, Intentional camera movement, Lonely, Cracks, With Imperfections, in a symbolic and meaningful style, insanely detailed and intricate, hypermaximalist, elegant, ornate, hyper realistic, super detailed, a ghost, covered in spiderweb, eerie, feeling of dread, decay, samhain{np}',
-    model: 'stable_diffusion'
+    steps: 40,
+    width: 1024,
+    height: 1024,
+    model: 'SDXL 1.0'
   },
   nightmare: {
     prompt:
       '{p} by Aaron Horkey, by Adonna Khare, by Carrie Ann Baade, by Jeff Lemire, by Junji Ito, horror, creepy, dark, eldritch, fantasy{np}',
-    model: 'stable_diffusion'
+    steps: 40,
+    width: 1024,
+    height: 1024,
+    model: 'SDXL 1.0'
   },
   abandoned: {
     prompt:
       'Old found footage of hyper realistic {p}, abandoned, liminal space, horror, eerie, mysterious, noise and grain, dark hues, dark tones, single source of light, 35mm, Kodak Autochrome, floating particles, auto flash, auto focus###blurry, out of focus{np}',
-    model: 'stable_diffusion_2.1',
-    sampler_name: 'dpmsolver',
-    width: 768,
-    height: 768
+    steps: 40,
+    width: 1280,
+    height: 832,
+    model: 'SDXL 1.0',
+    sampler_name: 'dpmsolver'
   },
   'witch land': {
     prompt:
       'digital art of {p}, witch world, Halloween theme, scenic Halloween, highly detailed, zbrush, by artist Artgerm, by artist Stephen Hickman, by artist Carne griffiths{np}',
-    model: 'stable_diffusion'
+    steps: 40,
+    width: 1024,
+    height: 1024,
+    model: 'SDXL 1.0'
   },
   'nightmare fairytale': {
     prompt:
       'horror {p} in a dark forest, darkness, fog, very detailed, cold, Editorial illustration, gothic, evil, art by Sam Bosma, painting by H.P. Lovecraft{np}',
-    model: 'stable_diffusion'
+    steps: 40,
+    width: 1024,
+    height: 1024,
+    model: 'SDXL 1.0'
   },
   elmstreet: {
     prompt:
       'drawing of {p} by tim burton, by Aaron Horkey, by H R Giger, creepy, horror, sharp, focused, HD, detailed{np}',
-    model: 'stable_diffusion'
+    steps: 40,
+    width: 832,
+    height: 1280,
+    model: 'SDXL 1.0'
   },
   ennui: {
     prompt: '{p}, black and white, foggy, negative, eerie{np}',
-    model: 'stable_diffusion_2.1',
-    sampler_name: 'dpmsolver',
-    width: 768,
-    height: 768
+    model: 'SDXL 1.0',
+    steps: 40,
+    width: 1024,
+    height: 1024,
+    sampler_name: 'dpmsolver'
   },
   'dark fantasy': {
     prompt:
       'highly detailed digital painting of {p}, highly realistic fantasy concept art by Darek Zabrocki and Zdzisław Beksiński, paint strokes, intricate, eerie scenery, dark volumetric lighting, triadic color scheme, very coherent, sharp focus, illustration, film grain, spooky vibe{np}',
-    model: 'stable_diffusion'
+    steps: 40,
+    width: 1024,
+    height: 1024,
+    model: 'SDXL 1.0'
   },
   'frozen village': {
     prompt:
@@ -1116,7 +1375,7 @@ export const stableHordeStyles: Preset = {
   },
   'prehistoric winter': {
     prompt:
-      'epic {p} iced snow landscape battles in prehistory, vasteness, Albert Bierstadt, valleys, luminous golden hour, lifey landscape, beautiful, vibrant, abandoned overgrown mountains ###lowres, text, error, cropped, worst quality, jpeg artifacts, signature, watermark, deformed, {np}',
+      'epic {p} iced snow landscape battles in prehistory, vasteness, Albert Bierstadt, valleys, luminous golden hour, lifey landscape, beautiful, vibrant, abandoned overgrown mountains ###lowres, text, error, cropped, worst quality, jpeg artifacts, signature, watermark, deformed{np}',
     model: 'stable_diffusion_2.1',
     sampler_name: 'dpmsolver',
     width: 768,
@@ -1124,12 +1383,137 @@ export const stableHordeStyles: Preset = {
   },
   'warrior fairy': {
     prompt:
-      'beautiful warrior fairy {p}, portrait, up close, cinematic, snowy background, dramatic lighting, highly detailed, very intricate, meta, fanciful, optimistic, wide shot, volumetric lighting, bokeh blur, unreal engine, octane render ### deformed, ugly, mutated, watermark, trademark, border, nude, NSFW, {np}',
+      'beautiful warrior fairy {p}, portrait, up close, cinematic, snowy background, dramatic lighting, highly detailed, very intricate, meta, fanciful, optimistic, wide shot, volumetric lighting, bokeh blur, unreal engine, octane render ### deformed, ugly, mutated, watermark, trademark, border, nude, NSFW{np}',
     model: 'stable_diffusion'
+  },
+
+  cyberrealistic: {
+    prompt: '{p}###{np}',
+    model: 'CyberRealistic',
+    tis: [{ name: '77976', inject_ti: 'negprompt' }]
+  },
+  deliberate: {
+    prompt: '{p}###{np}',
+    model: 'Deliberate'
+  },
+  deliberate3: {
+    prompt: '{p}###{np}',
+    width: 768,
+    height: 768,
+    model: 'Deliberate 3.0'
+  },
+  'majicmix realistic': {
+    prompt: '{p}###{np}',
+    model: 'majicMIX realistic'
+  },
+  'edge of realism': {
+    prompt: '{p}###{np}',
+    model: 'Edge Of Realism'
+  },
+  'dreamlike photoreal': {
+    prompt: '{p}###{np}',
+    model: 'Dreamlike Photoreal'
+  },
+  'realistic vision': {
+    prompt: '{p}###{np}',
+    model: 'Realistic Vision'
+  },
+  neurogen: {
+    prompt: '{p}###{np}',
+    model: 'Neurogen'
+  },
+  illuminati: {
+    prompt: '{p}###{np}',
+    model: 'Illuminati Diffusion'
+  },
+  realbiter: {
+    prompt: '{p}###{np}',
+    model: 'RealBiter'
+  },
+  faetastic: {
+    prompt: '{p}###{np}',
+    model: 'FaeTastic'
+  },
+  danmumford: {
+    prompt: 'In the style of Dan Mumford, {p}###{np}',
+    model: 'Dan Mumford Style',
+    width: 768,
+    height: 960,
+    steps: 27,
+    hires_fix: true,
+    cfg_scale: 7
+  },
+  'moonmix fantasy': {
+    prompt: '{p}###{np}',
+    model: 'MoonMix Fantasy'
+  },
+  icbinp: {
+    prompt: '{p}###{np}',
+    model: "ICBINP - I Can't Believe It's Not Photography"
+  },
+  meinamix: {
+    prompt: '{p}###{np}',
+    model: 'MeinaMix'
+  },
+  'mistoon amethyst': {
+    prompt: '{p}###{np}',
+    model: 'Mistoon Amethyst'
+  },
+  'galena redux': {
+    prompt: '{p}###{np}',
+    model: 'Galena Redux'
+  },
+  'dark sushi': {
+    prompt: '{p}###{np}',
+    model: 'Dark Sushi Mix'
+  },
+  'analog madness': {
+    prompt: '{p}###{np}',
+    model: 'Analog Madness'
+  },
+  bweshmix: {
+    prompt: '{p}###{np}, embedding:16993',
+    model: 'BweshMix',
+    width: 704,
+    height: 960,
+    steps: 25,
+    hires_fix: true,
+    cfg_scale: 7.5,
+    loras: [
+      { name: '82098', model: 0.5 },
+      { name: '48139', model: 0.2 },
+      { name: '132532', model: -0.7 },
+      { name: '58390', model: 0.5 }
+    ],
+    tis: [{ name: '16993' }]
+  },
+  revanimated: {
+    prompt: '{p}###{np}',
+    model: 'Rev Animated'
+  },
+  'cetus-mix': {
+    prompt: '{p}###{np}',
+    model: 'Cetus-Mix'
+  },
+  realisian: {
+    prompt: '{p}###{np}',
+    model: 'Realisian'
+  },
+  reliberate: {
+    prompt: '{p}###{np}',
+    model: 'Reliberate'
+  },
+  toonyou: {
+    prompt: '{p}###{np}',
+    model: 'ToonYou'
+  },
+  'western animation': {
+    prompt: '{p}###{np}',
+    model: 'Western Animation Diffusion'
   },
   anything: {
     prompt:
-      '{p}, shadows, lights, outline, highly detailed###cropped, artifacts, lowres, {np}',
+      '{p}, shadows, lights, outline, highly detailed###cropped, artifacts, lowres{np}',
     model: 'Anything Diffusion'
   },
   anything_raw: {
@@ -1138,7 +1522,7 @@ export const stableHordeStyles: Preset = {
   },
   waifu: {
     prompt:
-      '{p}, shadows, lights, outline, highly detailed###cropped, artifacts, lowres, {np}',
+      '{p}, shadows, lights, outline, highly detailed###cropped, artifacts, lowres{np}',
     model: 'waifu_diffusion'
   },
   waifu_raw: {
@@ -1147,7 +1531,7 @@ export const stableHordeStyles: Preset = {
   },
   trinart: {
     prompt:
-      '{p}, shadows, lights, outline, highly detailed###cropped, artifacts, lowres, {np}',
+      '{p}, shadows, lights, outline, highly detailed###cropped, artifacts, lowres{np}',
     model: 'trinart'
   },
   trinart_raw: {
@@ -1156,7 +1540,7 @@ export const stableHordeStyles: Preset = {
   },
   hentai: {
     prompt:
-      '{p}, shadows, lights, outline, highly detailed, anime###cropped, artifacts, lowres, {np}',
+      '{p}, shadows, lights, outline, highly detailed, anime###cropped, artifacts, lowres{np}',
     model: 'Hentai Diffusion'
   },
   hentai_raw: {
@@ -1165,7 +1549,7 @@ export const stableHordeStyles: Preset = {
   },
   poison: {
     prompt:
-      '{p}, shadows, lights, outline, highly detailed, anime###cropped, artifacts, lowres, {np}',
+      '{p}, shadows, lights, outline, highly detailed, anime###cropped, artifacts, lowres{np}',
     model: 'Poison'
   },
   poison_raw: {
@@ -1174,7 +1558,7 @@ export const stableHordeStyles: Preset = {
   },
   eimis: {
     prompt:
-      '{p}, shadows, lights, outline, highly detailed, anime###cropped, artifacts, lowres, {np}',
+      '{p}, shadows, lights, outline, highly detailed, anime###cropped, artifacts, lowres{np}',
     model: 'Eimis Anime Diffusion'
   },
   eimis_raw: {
@@ -1183,7 +1567,7 @@ export const stableHordeStyles: Preset = {
   },
   acertainthing: {
     prompt:
-      '{p}, shadows, lights, outline, highly detailed, anime###cropped, artifacts, lowres, {np}',
+      '{p}, shadows, lights, outline, highly detailed, anime###cropped, artifacts, lowres{np}',
     model: 'ACertainThing'
   },
   acertainthing_raw: {
@@ -1192,12 +1576,12 @@ export const stableHordeStyles: Preset = {
   },
   scalie: {
     prompt:
-      'e621, highly detailed fullbody of a fully clothed solo scalie {p}, detailed scales, volumetric lighting, looking at viewer, by Michael & Inessa Garmash and  Ruan Jia and Ross Tran and Pino Daeni###cropped, artifacts, lowres###crosseyed, human, human skin, human head, human hands, human face, three hands, three feet, three arms, three legs, text bubble, no pupils, simple background, bad anatomy, deformed face, undefined, incomplete, uncertain, smudge, melt, smear, disproportional, disfigured, deformed, malformed, mutant, monstrous, ugly, gross, disgusting, blurry, poorly drawn, extra limbs, extra fingers, missing limbs, amputee, malformed hands, genitals, breasts, naked, dialogue, text, feral, {np}',
+      'e621, highly detailed fullbody of a fully clothed solo scalie {p}, detailed scales, volumetric lighting, looking at viewer, by Michael & Inessa Garmash and  Ruan Jia and Ross Tran and Pino Daeni###cropped, artifacts, lowres###crosseyed, human, human skin, human head, human hands, human face, three hands, three feet, three arms, three legs, text bubble, no pupils, simple background, bad anatomy, deformed face, undefined, incomplete, uncertain, smudge, melt, smear, disproportional, disfigured, deformed, malformed, mutant, monstrous, ugly, gross, disgusting, blurry, poorly drawn, extra limbs, extra fingers, missing limbs, amputee, malformed hands, genitals, breasts, naked, dialogue, text, feral{np}',
     model: 'Yiffy'
   },
   furry: {
     prompt:
-      'e621, highly detailed fullbody of a fully clothed solo anthro {p}, pants, detailed fluffy fur, fluffy tail, volumetric lighting, looking at viewer, by Michael & Inessa Garmash and  Ruan Jia and Ross Tran and Pino Daeni###cropped, artifacts, lowres###crosseyed, human, human skin, human head, human hands, human face, three hands, three feet, three arms, three legs, text bubble, no pupils, simple background, bad anatomy, deformed face, undefined, incomplete, uncertain, smudge, melt, smear, disproportional, disfigured, deformed, malformed, mutant, monstrous, ugly, gross, disgusting, blurry, poorly drawn, extra limbs, extra fingers, missing limbs, amputee, malformed hands, genitals, breasts, naked, dialogue, text, feral, {np}',
+      'e621, highly detailed fullbody of a fully clothed solo anthro {p}, pants, detailed fluffy fur, fluffy tail, volumetric lighting, looking at viewer, by Michael & Inessa Garmash and  Ruan Jia and Ross Tran and Pino Daeni###cropped, artifacts, lowres###crosseyed, human, human skin, human head, human hands, human face, three hands, three feet, three arms, three legs, text bubble, no pupils, simple background, bad anatomy, deformed face, undefined, incomplete, uncertain, smudge, melt, smear, disproportional, disfigured, deformed, malformed, mutant, monstrous, ugly, gross, disgusting, blurry, poorly drawn, extra limbs, extra fingers, missing limbs, amputee, malformed hands, genitals, breasts, naked, dialogue, text, feral{np}',
     model: 'Yiffy'
   },
   'impasto furry': {
@@ -1463,10 +1847,6 @@ export const stableHordeStyles: Preset = {
   supermarionation: {
     prompt: '{p}, supermarionation{np}',
     model: 'Supermarionation'
-  },
-  'dreamlike photoreal': {
-    prompt: '{p}{np}',
-    model: 'Dreamlike Photoreal'
   },
   portraitplus: {
     prompt: '{p}, portrait+ style{np}',
