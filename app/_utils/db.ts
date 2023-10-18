@@ -520,6 +520,18 @@ export const getPendingJobDetails = async (jobId: string) => {
   return await db.pending.where('jobId').equals(jobId).first()
 }
 
+export const updatePendingJobInDexieByJobId = async (
+  jobId: string,
+  updatedObject: any
+) => {
+  const pendingJob = await getPendingJobDetails(jobId)
+  const updated = Object.assign({}, pendingJob, updatedObject)
+
+  if (jobId) {
+    db.pending.update(pendingJob.id, updated)
+  }
+}
+
 // @ts-ignore
 export const updateCompletedJob = async (tableId: number, updatedObject) => {
   db.completed.update(tableId, updatedObject)

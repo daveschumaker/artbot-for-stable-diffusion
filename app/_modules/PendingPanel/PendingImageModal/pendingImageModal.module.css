@@ -1,0 +1,9 @@
+.contrastTextBackground {
+  background-color: rgb(30 41 59);
+  color: white;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  padding: 6px 8px 0px 8px;
+  margin-bottom: 12px;
+}

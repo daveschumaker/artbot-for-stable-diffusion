@@ -2,6 +2,7 @@
 
 - Fix some annoying behavior with custom aspect ratios and the image orientation dropdown.
 - Update style presets from the AI Horde to utilize SDXL 1.0 instead of the deprecated SDXL_beta.
+- For those of you on laptops / desktops, I've added a info modal for pending images on the right side pending images panel. This should give you a bit more insight into the status of your image, any potential errors, etc, without having to pop over to the actual pending page.
 
 # 2023.10.16
 

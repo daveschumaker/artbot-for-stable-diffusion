@@ -48,6 +48,7 @@
 
 .imageContainer {
   display: flex;
+  cursor: pointer;
   position: relative;
   align-items: center;
   justify-content: center;
@@ -61,12 +62,12 @@
   width: auto;
 }
 
-.imageContainer > div {
+.imageContainer>div {
   transition: opacity 0.3s;
   opacity: 0;
 }
 
-.imageContainer:hover > div {
+.imageContainer:hover>div {
   background-color: rgb(0, 0, 0, 0.6);
   opacity: 1;
 }

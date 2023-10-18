@@ -4,7 +4,8 @@ import styles from './pendingPanel.module.css'
 import {
   deleteCompletedImage,
   deleteImageFromDexie,
-  getImageDetails
+  getImageDetails,
+  getPendingJobDetails
 } from 'app/_utils/db'
 import { setImageDetailsModalOpen } from 'app/_store/appStore'
 import { useModal } from '@ebay/nice-modal-react'
@@ -29,6 +30,8 @@ import SpinnerV2 from 'app/_components/Spinner'
 import useSdxlModal from './useSdxlModal'
 import { useState } from 'react'
 import AbTestModal from 'app/_pages/PendingPage/PendingItem/AbTestModal'
+import PendingImageModal from './PendingImageModal'
+import AwesomeModalWrapper from '../AwesomeModal'
 
 export default function PendingPanelImageCard({
   index,
@@ -39,13 +42,13 @@ export default function PendingPanelImageCard({
 }) {
   const imageJob: any = jobs[index]
   const imagePreviewModal = useModal(ImageModal)
+  const pendingImageModal = useModal(AwesomeModalWrapper)
   const abTestModal = useModal(AbTestModal)
 
   const [isSdxlAbTest, secondaryId, secondaryImage] = useSdxlModal(imageJob)
   const [isRated, setIsRated] = useState(false)
 
   const serverHasJob =
-    imageJob.jobStatus === JobStatus.Queued ||
     imageJob.jobStatus === JobStatus.Processing ||
     imageJob.jobStatus === JobStatus.Requested
 
@@ -104,6 +107,15 @@ export default function PendingPanelImageCard({
                 imageDetails
               })
             }
+          } else {
+            const imageDetails = await getPendingJobDetails(imageJob.jobId)
+
+            pendingImageModal.show({
+              children: <PendingImageModal imageDetails={imageDetails} />,
+              label: 'Pending image',
+              handleClose: () => pendingImageModal.remove(),
+              style: { maxWidth: '768px' }
+            })
           }
         }}
       >
