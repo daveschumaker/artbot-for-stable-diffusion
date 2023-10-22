@@ -5,6 +5,7 @@
 // Horde calculations:
 // https://github.com/db0/AI-Horde/blob/main/horde/classes/stable/waiting_prompt.py#L204
 
+import { Common } from '_types'
 import AppSettings from 'app/_data-models/AppSettings'
 
 interface IKudosCostParams {
@@ -13,7 +14,7 @@ interface IKudosCostParams {
   steps: number
   samplerName: string
   hasSourceImage: boolean
-  denoisingStrength: number
+  denoisingStrength: number | Common
   postProcessors: string[]
   usesControlNet: boolean
   numImages: number
@@ -72,7 +73,7 @@ export const getAccurateSteps = (
   steps: number,
   samplerName: string,
   hasSourceImage: boolean,
-  denoisingStrength: number
+  denoisingStrength: number | Common
 ) => {
   const samplerAccurateSteps = () => {
     if (['k_dpm_adaptive'].includes(samplerName)) {

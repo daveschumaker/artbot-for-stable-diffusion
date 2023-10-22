@@ -1,7 +1,7 @@
 'use client'
 
 /* eslint-disable @next/next/no-img-element */
-import { useCallback, useEffect, useReducer, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useStore } from 'statery'
 import SelectModel from 'app/_modules/AdvancedOptionsPanel/SelectModel'
 import Uploader from 'app/_modules/Uploader'
@@ -50,11 +50,14 @@ import FlexRow from 'app/_components/FlexRow'
 import FormErrorMessage from '../CreatePage/ActionPanel/FormErrorMessage'
 import { IconTrash } from '@tabler/icons-react'
 import { createImageJob } from 'app/_utils/V2/createImageJob'
+import { useInput } from 'app/_modules/InputProvider/context'
 
 // Kind of a hacky way to persist output of image over the course of a session.
 let cachedImageDetails = {}
 
 const ControlNetPage = () => {
+  const { input, setInput } = useInput()
+
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -62,15 +65,6 @@ const ControlNetPage = () => {
   const { loggedIn } = userState
 
   const [pending, setPending] = useState(false)
-
-  const initialInput = {
-    ...new DefaultPromptInput(),
-    control_type: 'canny'
-  }
-
-  const [input, setInput] = useReducer((state: any, newState: any) => {
-    return { ...state, ...newState }
-  }, initialInput)
 
   const handleCacheInput = (params: DefaultPromptInput) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
@@ -226,7 +220,20 @@ const ControlNetPage = () => {
     if (searchParams?.get('drawing')) {
       handleImportDrawing()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams])
+
+  // Set initial input for ControlNet
+  useEffect(() => {
+    const initialInput: DefaultPromptInput = {
+      ...new DefaultPromptInput(),
+      control_type: 'canny',
+      denoising_strength: 0.75
+    }
+
+    setInput(initialInput)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const totalKudosCost = kudosCostV2({
     width: input.width,

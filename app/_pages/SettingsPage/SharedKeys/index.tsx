@@ -13,6 +13,7 @@ import { clientHeader } from 'app/_utils/appUtils'
 import { baseHost, basePath } from 'BASE_PATH'
 import { showSuccessToast } from 'app/_utils/notificationUtils'
 import InteractiveModal from 'app/_components/InteractiveModal/interactiveModal'
+import styles from './sharedKeys.module.css'
 
 const cacheKeyIds: Array<string> = []
 const cacheKeyDetails: any = {}
@@ -75,6 +76,7 @@ const SharedKeys = () => {
       })
 
       const details = await resp.json()
+      console.log(`details`, details)
 
       if (details.id) {
         cacheKeyIds.push(details.id)
@@ -180,6 +182,7 @@ const SharedKeys = () => {
     (key: string, obj: object) => {
       const updateKeys = Object.assign({}, keyDetails)
       updateKeys[key] = obj
+      console.log(`obj`, obj)
 
       setKeyDetails(updateKeys)
     },
@@ -342,7 +345,10 @@ const SharedKeys = () => {
                 className="font-mono text-xs mb-2 flex flex-row w-full items-center justify-between"
               >
                 <div className="flex flex-col">
-                  <div>{key}</div>
+                  {keyDetails[key]?.name && <div>{keyDetails[key]?.name}</div>}
+                  <div>
+                    API key: <span className={styles.SharedApiKey}>{key}</span>
+                  </div>
                   <div>Kudos: {keyDetails[key]?.kudos ?? 'N/A'}</div>
                 </div>
                 <div className="flex flex-row gap-2">

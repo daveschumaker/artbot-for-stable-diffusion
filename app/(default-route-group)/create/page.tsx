@@ -2,6 +2,7 @@ import { basePath } from 'BASE_PATH'
 import PendingPanelView from 'app/_modules/PendingPanel/PendingPanelView'
 import CreatePage from 'app/_pages/CreatePage'
 import styles from './page.module.css'
+import { InputProvider } from 'app/_modules/InputProvider/context'
 
 async function getPageData() {
   let availableModels: Array<any> = []
@@ -34,11 +35,13 @@ export default async function Page() {
   // Forward fetched data to your Client Component
   return (
     <div className={styles.CreatePageLayout}>
-      <CreatePage
-        availableModels={availableModels}
-        className={styles.CreatePanel}
-        modelDetails={modelDetails}
-      />
+      <InputProvider>
+        <CreatePage
+          availableModels={availableModels}
+          className={styles.CreatePanel}
+          modelDetails={modelDetails}
+        />
+      </InputProvider>
       <PendingPanelView />
     </div>
   )

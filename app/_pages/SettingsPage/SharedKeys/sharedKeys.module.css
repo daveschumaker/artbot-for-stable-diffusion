@@ -1,0 +1,11 @@
+.SharedApiKey {
+  /* background-color: ; */
+  border-radius: 4px;
+  padding: 4px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .SharedApiKey {
+    background-color: #7F7F7F;
+  }
+}

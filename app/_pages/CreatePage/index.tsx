@@ -1,7 +1,7 @@
 'use client'
 
 /* eslint-disable @next/next/no-img-element */
-import { useCallback, useEffect, useReducer, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 import PageTitle from 'app/_components/PageTitle'
@@ -38,10 +38,12 @@ import FormErrorMessage from './ActionPanel/FormErrorMessage'
 import { useWindowSize } from 'app/_hooks/useWindowSize'
 import InputValidationErrorDisplay from './PromptInput/InputValidationErrorDisplay'
 import { modelStore } from 'app/_store/modelStore'
+import { useInput } from 'app/_modules/InputProvider/context'
 
 const defaultState: DefaultPromptInput = new DefaultPromptInput()
 
 const CreatePage = ({ className }: any) => {
+  const { input, setInput, setPageLoaded } = useInput()
   const { modelDetails } = useStore(modelStore)
   const { width } = useWindowSize()
   const appState = useStore(appInfoStore)
@@ -57,33 +59,11 @@ const CreatePage = ({ className }: any) => {
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const [pageLoaded, setPageLoaded] = useState(false)
   const [pending, setPending] = useState(false)
 
   const [errors, setErrors] = useComponentState(
     {} as { [key: string]: boolean }
   )
-
-  const [input, setInput] = useReducer((state: any, newState: any) => {
-    const updatedInputState = { ...state, ...newState }
-
-    if (pageLoaded) {
-      // Only look for new changes to update and write to localStorage via PromptInputSettings
-      // otherwise, cloning the entire input object causes a bunch of CPU thrashing as we iterate
-      // through individual keys. If balues haven't changed, there's no need to update them.
-      PromptInputSettings.saveAllInput(newState, {
-        forceSavePrompt: true
-      })
-
-      logToConsole({
-        data: newState,
-        name: 'setInput_new_state',
-        debugKey: 'DEBUG_LOAD_INPUT'
-      })
-    }
-
-    return updatedInputState
-  }, new DefaultPromptInput())
 
   const watchBuild = useCallback(() => {
     if (!build) {
@@ -460,7 +440,7 @@ const CreatePage = ({ className }: any) => {
         </FlexRow>
       </div>
 
-      <OptionsPanel input={input} setInput={setInput} setErrors={setErrors} />
+      <OptionsPanel setErrors={setErrors} />
 
       <ActionPanel
         errors={errors}

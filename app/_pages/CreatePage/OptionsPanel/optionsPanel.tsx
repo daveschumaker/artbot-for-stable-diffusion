@@ -15,6 +15,7 @@ import Editor from 'app/_modules/Editor'
 import Panel from 'app/_components/Panel'
 import FlexRow from 'app/_components/FlexRow'
 import { IconPointFilled } from '@tabler/icons-react'
+import { useInput } from 'app/_modules/InputProvider/context'
 
 const removeImageCanvasData = {
   canvasData: null,
@@ -26,12 +27,12 @@ const removeImageCanvasData = {
 }
 
 interface Props {
-  input: any
-  setInput: any
   setErrors: any
 }
 
-const OptionsPanel = ({ input, setInput, setErrors }: Props) => {
+const OptionsPanel = ({ setErrors }: Props) => {
+  const { input, setInput } = useInput()
+
   const router = useRouter()
   const searchParams = useSearchParams()
   const panel = searchParams?.get('panel')
