@@ -18,7 +18,24 @@ const PrivacyPage = () => {
         />
       </Head>
       <PageTitle>Privacy Policy</PageTitle>
-      <div className="pb-2">Last updated: October, 23, 2023</div>
+      <div className="pb-2">
+        <img
+          src={`${basePath}/robot-towel.jpg`}
+          alt="painting of a robot painting robots"
+        />
+      </div>
+      <div className="pb-2">
+        Last updated: October, 23, 2023 (
+        <Linker
+          href="https://github.com/daveschumaker/artbot-for-stable-diffusion/commits/main/app/_pages/PrivacyPage/index.tsx"
+          target="_blank"
+          rel="noreferrer"
+        >
+          view history
+        </Linker>
+        )
+      </div>
+      <div className="pb-2 font-[700]">Overview</div>
       <div className="pb-2">
         ArtBot is a web app that interfaces with the{' '}
         <Linker href="https://aihorde.net/" target="_blank" rel="noreferrer">
@@ -33,7 +50,7 @@ const PrivacyPage = () => {
         This document represents a best effort that details what ArtBot does and
         does not do with any data you input into this service.
       </div>
-      <div className="pb-2 font-[700]">Overview</div>
+      <div className="pb-2 font-[700]">Data storage</div>
       <div className="pb-2">
         In general, ArtBot does not store or track the prompts you use for
         creating images, nor does it store the images you create, nor does it
@@ -50,7 +67,8 @@ const PrivacyPage = () => {
         <em>share</em>&apos; button on an image. This requires calling a
         specific ArtBot endpoint in order to save the data and make it available
         for others. In this case, all data used to create an image (except for
-        the API key) is stored within an ArtBot specific database.
+        the API key) is stored within an ArtBot specific database. Shared images
+        are hosted on Amazon S3.
       </div>
       <div className="pb-2">
         No one else has access to this database and usernames are not shown when
@@ -94,7 +112,7 @@ const PrivacyPage = () => {
         <Linker href="https://aihorde.net/" target="_blank" rel="noreferrer">
           Carbon ads network
         </Linker>{' '}
-        for displaying the ad. Their privacy policy is located{' '}
+        for displaying ads on our platform. Their privacy policy is located{' '}
         <Linker
           href="https://www.buysellads.com/privacy"
           target="_blank"
@@ -106,13 +124,14 @@ const PrivacyPage = () => {
       </div>
       <div className="pb-2">
         ArtBot also uses Google Analytics for tracking page views and realtime
-        usage. Longer term, we would like to move away from this.
+        usage. We are actively exploring alternatives to Google Analytics and
+        are committed to enhancing user privacy.
       </div>
       <div className="pb-2">
         Lastly, while ArtBot is an enthusiastic supporter of the AI Horde, we
         cannot guarantee how data can potentially be used once it is sent to
         this service or what volunteer worker GPUs will do with it. You can view
-        the AI Horde&apos;s privacy policy
+        the AI Horde&apos;s privacy policy{' '}
         <Linker
           href="https://aihorde.net/privacy"
           target="_blank"
@@ -124,6 +143,26 @@ const PrivacyPage = () => {
       </div>
       <div className="pb-2">
         In general, use your best judgement when generating images.
+      </div>
+      <div className="pb-2 font-[700]">Ownership</div>
+      <div className="pb-2">
+        ArtBot does not claim ownership of images created using the service.
+        Your images are yours and you can do what you want with them. In terms
+        of copyright, this is a matter that still remains to be settled. Courts
+        in the United States have generally ruled that AI generated images
+        cannot be copyrighted. However, the laws might change, and they might
+        vary by jurisdiction. Again, ArtBot does not claim ownership or
+        copyright over any images you create.
+      </div>
+      <div className="pb-2">
+        (But if you&apos;ve done something cool using the ArtBot service or made
+        some money with it, do let us know. We love to see what people are
+        creating!)
+      </div>
+      <div className="pb-2 font-[700]">Questions</div>
+      <div className="pb-2">
+        If you have additional questions or comments, please{' '}
+        <Linker href="/contact">get in touch</Linker>!
       </div>
     </>
   )
