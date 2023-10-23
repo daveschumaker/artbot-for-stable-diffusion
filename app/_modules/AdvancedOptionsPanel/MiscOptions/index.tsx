@@ -1,7 +1,6 @@
 import FlexibleRow from 'app/_components/FlexibleRow'
 import FlexibleUnit from 'app/_components/FlexibleUnit'
 import Section from 'app/_components/Section'
-import { GetSetPromptInput } from '_types'
 import HiresFix from '../HiresFix'
 import AllowNsfwImages from '../AllowNsfwImages'
 import ReplacementFilterToggle from '../ReplacementFilterToggle'
@@ -9,8 +8,11 @@ import Panel from 'app/_components/Panel'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import InputSwitchV2 from '../InputSwitchV2'
 import SlowWorkers from '../SlowWorkers'
+import { useInput } from 'app/_modules/InputProvider/context'
 
-export default function MiscOptions({ input, setInput }: GetSetPromptInput) {
+export default function MiscOptions() {
+  const { input, setInput } = useInput()
+
   return (
     <Section>
       <Panel style={{ borderWidth: '1px', padding: '8px' }}>
@@ -40,7 +42,7 @@ export default function MiscOptions({ input, setInput }: GetSetPromptInput) {
               }}
               checked={input.karras}
             />
-            <HiresFix input={input} setInput={setInput} />
+            <HiresFix />
             <SlowWorkers />
             <InputSwitchV2
               label="Tiling"

@@ -12,36 +12,36 @@ import Guidance from 'app/_modules/AdvancedOptionsPanel/Guidance'
 import Seed from 'app/_modules/AdvancedOptionsPanel/Seed'
 import Denoise from 'app/_modules/AdvancedOptionsPanel/Denoise'
 import ClipSkip from 'app/_modules/AdvancedOptionsPanel/ClipSkip'
+import { useInput } from 'app/_modules/InputProvider/context'
 
-export const LivePaintOptions = ({ input, setInput }: any) => {
-  // const userState = useStore(userInfoStore)
-  // const { loggedIn } = userState
+export const LivePaintOptions = () => {
+  const { input, setInput } = useInput()
 
   return (
     <div className="flex flex-col w-full gap-2">
-      <PromptInput input={input} setInput={setInput} />
+      <PromptInput />
 
       <FlexibleRow>
         <FlexibleUnit>
-          <SelectSampler input={input} setInput={setInput} hideOptions />
+          <SelectSampler hideOptions />
         </FlexibleUnit>
         <FlexibleUnit>
-          <Denoise input={input} setInput={setInput} hideOptions />
+          <Denoise hideOptions />
         </FlexibleUnit>
       </FlexibleRow>
 
       <FlexibleRow>
         <FlexibleUnit>
-          <Steps input={input} setInput={setInput} hideOptions />
+          <Steps hideOptions />
         </FlexibleUnit>
         <FlexibleUnit>
-          <Guidance input={input} setInput={setInput} hideOptions />
+          <Guidance hideOptions />
         </FlexibleUnit>
       </FlexibleRow>
 
       <FlexibleRow style={{ paddingTop: '8px' }}>
         <FlexibleUnit>
-          <ControlNetOptions input={input} setInput={setInput} />
+          <ControlNetOptions />
         </FlexibleUnit>
         <FlexibleUnit>
           <NumericInputSlider
@@ -57,9 +57,10 @@ export const LivePaintOptions = ({ input, setInput }: any) => {
             setInput={setInput}
             fieldName="denoising_strength"
             disabled={
-              input.models &&
-              input.models[0] &&
-              input.models[0].indexOf('_inpainting') >= 0
+              (input.models &&
+                input.models[0] &&
+                input.models[0].indexOf('_inpainting') >= 0) ||
+              false
             }
           />
         </FlexibleUnit>
@@ -67,16 +68,16 @@ export const LivePaintOptions = ({ input, setInput }: any) => {
 
       <FlexibleRow>
         <FlexibleUnit>
-          <Seed input={input} setInput={setInput} />
+          <Seed />
         </FlexibleUnit>
         <FlexibleUnit>
-          <ClipSkip input={input} setInput={setInput} hideOptions />
+          <ClipSkip hideOptions />
         </FlexibleUnit>
       </FlexibleRow>
 
       <FlexibleRow>
         <FlexibleUnit>
-          <SelectModel input={input} setInput={setInput} hideOptions />
+          <SelectModel hideOptions />
         </FlexibleUnit>
         <FlexibleUnit>
           <div></div>

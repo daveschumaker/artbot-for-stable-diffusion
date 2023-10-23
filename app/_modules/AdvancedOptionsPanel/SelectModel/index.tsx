@@ -1,5 +1,3 @@
-import { GetSetPromptInput } from '_types/artbot'
-
 import Section from 'app/_components/Section'
 import Select from 'app/_components/Select'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
@@ -19,18 +17,18 @@ import ModelsInfoModal from 'app/_modules/ModelsInfoModal'
 import { useModal } from '@ebay/nice-modal-react'
 import ShowSettingsDropDown from './ShowSettingsDropdown'
 import ImageModels from 'app/_data-models/ImageModels'
+import { useInput } from 'app/_modules/InputProvider/context'
 
-interface SelectModelProps extends GetSetPromptInput {
+interface SelectModelProps {
   disabled?: boolean
   hideOptions?: boolean
 }
 
 const SelectModel = ({
   disabled = false,
-  hideOptions = false,
-  input,
-  setInput
+  hideOptions = false
 }: SelectModelProps) => {
+  const { input, setInput } = useInput()
   const modelsInfoModal = useModal(ModelsInfoModal)
 
   const { modelDetails } = useStore(modelStore)
@@ -251,15 +249,13 @@ const SelectModel = ({
           )}
           {showSettingsDropdown && (
             <ShowSettingsDropDown
-              input={input}
-              setInput={setInput}
               setShowMultiModel={setShowMultiModel}
               setShowSettingsDropdown={setShowSettingsDropdown}
               showMultiModel={showMultiModel}
             />
           )}
           <FlexRow gap={4}>
-            <Button onClick={() => modelsInfoModal.show({ input })}>
+            <Button onClick={() => modelsInfoModal.show()}>
               <IconList stroke={1.5} />
             </Button>
           </FlexRow>

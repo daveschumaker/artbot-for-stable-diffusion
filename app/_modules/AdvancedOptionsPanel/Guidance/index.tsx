@@ -1,4 +1,3 @@
-import { GetSetPromptInput } from '_types'
 import NumericInputSlider from '../NumericInputSlider'
 import FlexRow from 'app/_components/FlexRow'
 import { Button } from 'app/_components/Button'
@@ -10,16 +9,14 @@ import Input from 'app/_components/Input'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import TextTooltipRow from 'app/_components/TextTooltipRow'
 import TooltipComponent from 'app/_components/TooltipComponent'
+import { useInput } from 'app/_modules/InputProvider/context'
 
-interface GuidanceProps extends GetSetPromptInput {
+interface GuidanceProps {
   hideOptions?: boolean
 }
 
-export default function Guidance({
-  hideOptions = false,
-  input,
-  setInput
-}: GuidanceProps) {
+export default function Guidance({ hideOptions = false }: GuidanceProps) {
+  const { input, setInput } = useInput()
   const [showDropdown, setShowDropdown] = useState(false)
 
   return (

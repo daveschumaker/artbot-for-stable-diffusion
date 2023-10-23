@@ -277,7 +277,7 @@ const LivePaint = () => {
         </div>
       </div>
       <div className="flex w-full gap-2 mt-2 max-w-[576px]">
-        <LivePaintOptions input={input} setInput={setInput} />
+        <LivePaintOptions />
       </div>
     </>
   )

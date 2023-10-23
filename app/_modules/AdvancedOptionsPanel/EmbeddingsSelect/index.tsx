@@ -13,9 +13,11 @@ import EmbeddingRecentsModal from './EmbeddingRecentsModal'
 import { InjectTi } from '_types/horde'
 import { useModal } from '@ebay/nice-modal-react'
 import AwesomeModalWrapper from 'app/_modules/AwesomeModal'
+import { useInput } from 'app/_modules/InputProvider/context'
 
 // Search / display TI / Textual Inversion Embeddings from Civitai
-export default function EmbeddingsSelect({ input, setInput }: any) {
+export default function EmbeddingsSelect() {
+  const { input, setInput } = useInput()
   const embeddingsModal = useModal(AwesomeModalWrapper)
 
   const handleAddEmbedding = (tiDetails: AiHordeEmbedding) => {
@@ -52,6 +54,7 @@ export default function EmbeddingsSelect({ input, setInput }: any) {
       }
 
       const tisToUpdate = [...input.tis]
+      // @ts-ignore
       tisToUpdate[Number(i)][key] = value
 
       setInput({ tis: [...tisToUpdate] })

@@ -5,22 +5,22 @@ import Checkbox from 'app/_components/Checkbox'
 import { useAvailableModels } from 'app/_hooks/useAvailableModels'
 import AppSettings from 'app/_data-models/AppSettings'
 import { useEffect, useState } from 'react'
-import { GetSetPromptInput } from '_types/artbot'
+import { useInput } from 'app/_modules/InputProvider/context'
 
-interface Props extends GetSetPromptInput {
+interface Props {
   setShowSettingsDropdown: (bool: boolean) => any
   setShowMultiModel: (bool: boolean) => any
   showMultiModel: boolean
 }
 
 export default function ShowSettingsDropDown({
-  input,
-  setInput,
   setShowMultiModel,
   setShowSettingsDropdown,
   showMultiModel
 }: Props) {
+  const { input, setInput } = useInput()
   const [, filteredModels] = useAvailableModels({ input })
+
   const [favoriteModelsCount, setFavoriteModelsCount] = useState(0)
   const [autoKeyword, setAutoKeyword] = useState(false)
 

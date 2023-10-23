@@ -1,11 +1,12 @@
 import FlexRow from 'app/_components/FlexRow'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
-import { GetSetPromptInput } from '_types/artbot'
 import NumberInput from 'app/_components/NumberInput'
 import { MAX_IMAGES_PER_JOB } from '_constants'
 import { useCallback, useState } from 'react'
+import { useInput } from 'app/_modules/InputProvider/context'
 
-export default function ImageCount({ input, setInput }: GetSetPromptInput) {
+export default function ImageCount() {
+  const { input, setInput } = useInput()
   const [step, setStep] = useState(1)
 
   const handleChangeStep = useCallback(() => {

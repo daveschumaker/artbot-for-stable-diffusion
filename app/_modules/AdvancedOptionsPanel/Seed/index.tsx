@@ -2,12 +2,14 @@ import { Button } from 'app/_components/Button'
 import FlexRow from 'app/_components/FlexRow'
 import Input from 'app/_components/Input'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
-import { GetSetPromptInput } from '_types/artbot'
 import { IconArrowBarLeft, IconGrain } from '@tabler/icons-react'
 import AppSettings from 'app/_data-models/AppSettings'
 import PromptInputSettings from 'app/_data-models/PromptInputSettings'
+import { useInput } from 'app/_modules/InputProvider/context'
 
-export default function Seed({ input, setInput }: GetSetPromptInput) {
+export default function Seed() {
+  const { input, setInput } = useInput()
+
   return (
     <div style={{ marginBottom: '12px' }}>
       <SubSectionTitle>

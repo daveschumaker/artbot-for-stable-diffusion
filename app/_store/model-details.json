@@ -1,1760 +1,3038 @@
 {
-  "stable_diffusion_2.0": {
-    "name": "stable_diffusion_2.0",
-    "type": "ckpt",
+  "stable_diffusion_2.1": {
     "description": "Generalist AI image generating model. The baseline for all finetuned models.",
-    "version": "2.0",
-    "style": "generalist",
+    "baseline": "stable diffusion 2",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/stable_diffusion_2.1/01_juice.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/stable_diffusion_2.1/02_gigachad.webp"
+    ],
+    "name": "stable_diffusion_2.1",
     "nsfw": false,
-    "download_all": true,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/ldm/stable-diffusion-v2/model_2_0.ckpt",
-          "md5sum": "48cb3980ec03a370b68bd0a9d8eefece"
-        },
-        {
-          "path": "configs/stable-diffusion/v2-inference-v.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "model_2_0.ckpt",
-          "file_path": "models/ldm/stable-diffusion-v2",
-          "file_url": "https://huggingface.co/stabilityai/stable-diffusion-2/resolve/main/768-v-ema.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "generalist",
+    "type": "ckpt",
+    "version": "2.1"
   },
   "stable_diffusion": {
+    "description": "Generalist AI image generating model. The baseline for all finetuned models.",
+    "baseline": "stable diffusion 1",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/stable_diffusion/01_racebannin.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/stable_diffusion/02_bigdowg.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/stable_diffusion/03_executivebees24601.webp"
+    ],
     "name": "stable_diffusion",
-    "type": "ckpt",
-    "description": "Generalist AI image generating model. The baseline for all finetuned models.",
-    "showcases": [
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/stable_diffusion/01_bigdowg.webp"
-    ],
-    "version": "1.5",
-    "style": "generalist",
     "nsfw": false,
-    "download_all": true,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/ldm/stable-diffusion-v1/model_1_5.ckpt",
-          "md5sum": "76cce9b4e4410ff4fd1ec63d44cf7111"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "model_1_5.ckpt",
-          "file_path": "models/ldm/stable-diffusion-v1",
-          "file_url": "https://{username}:{password}@huggingface.co/runwayml/stable-diffusion-v1-5/resolve/main/v1-5-pruned-emaonly.ckpt",
-          "hf_auth": true
-        }
-      ]
-    },
-    "available": false
-  },
-  "stable_diffusion_1.4": {
-    "name": "stable_diffusion_1.4",
-    "type": "ckpt",
-    "description": "Generalist AI image generating model. The baseline for all finetuned models.",
-    "showcases": [
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/stable_diffusion_1.4/01_bigdowg.webp"
-    ],
-    "version": "1.4",
     "style": "generalist",
-    "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/ldm/stable-diffusion-v1/model.ckpt",
-          "md5sum": "c01059060130b8242849d86e97212c84"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "model.ckpt",
-          "file_path": "models/ldm/stable-diffusion-v1",
-          "file_url": "https://www.googleapis.com/storage/v1/b/aai-blog-files/o/sd-v1-4.ckpt?alt=media"
-        }
-      ],
-      "alt_download": [
-        {
-          "file_name": "model.ckpt",
-          "file_path": "models/ldm/stable-diffusion-v1",
-          "file_url": "https://{username}:{password}@huggingface.co/CompVis/stable-diffusion-v-1-4-original/resolve/main/sd-v1-4.ckpt",
-          "hf_auth": true
-        }
-      ]
-    },
-    "available": false
+    "type": "ckpt",
+    "version": "1.5"
   },
   "waifu_diffusion": {
-    "name": "waifu_diffusion",
-    "type": "ckpt",
     "description": "Anime styled generations.",
+    "baseline": "stable diffusion 1",
     "showcases": [
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/waifu_diffusion/01_jakeukalane.webp"
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/waifu_diffusion/01_jakeukalane.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/waifu_diffusion/02_gigachad.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/waifu_diffusion/03_racebannin.webp"
     ],
-    "version": "1.3",
-    "style": "anime",
+    "name": "waifu_diffusion",
     "nsfw": false,
-    "download_all": true,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/waifu-diffusion.ckpt",
-          "md5sum": "dc688dc907c953532c659374e7ddf1e4"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "waifu-diffusion.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/hakurei/waifu-diffusion-v1-3/resolve/main/wd-v1-3-float32.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "anime",
+    "type": "ckpt",
+    "version": "1.3"
   },
   "Furry Epoch": {
-    "name": "Furry Epoch",
-    "type": "ckpt",
     "description": "Furry styled generations.",
-    "version": "4",
-    "style": "furry",
+    "baseline": "stable diffusion 1",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/furry_epoch/01_gigachad.webp"
+    ],
+    "name": "Furry Epoch",
     "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/furry-diffusion.ckpt",
-          "md5sum": "f8ef45a295ef4966682f6e8fc2c6830d"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "furry-diffusion.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://sexy.canine.wf/file/furry-ckpt/furry_epoch4.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "furry",
+    "type": "ckpt",
+    "version": "4"
   },
   "Yiffy": {
-    "name": "Yiffy",
-    "type": "ckpt",
     "description": "Furry styled generations.",
+    "baseline": "stable diffusion 1",
     "showcases": [
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/yiffy/01_pika.webp",
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/yiffy/02_bigdowg.webp"
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/yiffy/01_pika.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/yiffy/02_bigdowg.webp"
     ],
-    "version": "18",
-    "style": "furry",
+    "name": "Yiffy",
     "nsfw": false,
-    "download_all": true,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/yiffy.ckpt",
-          "md5sum": "dbe25794e24af183565dc45e9ec99713"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "yiffy.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://sexy.canine.wf/file/yiffy-ckpt/yiffy-e18.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "furry",
+    "type": "ckpt",
+    "version": "18"
   },
   "Zack3D": {
-    "name": "Zack3D",
-    "type": "ckpt",
     "description": "Kink/NSFW oriented furry styled generations.",
-    "version": "1",
-    "style": "furry",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/Zack3D/Zack3D_Kinky-v1",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/zack3d/01_gigachad.webp"
+    ],
+    "name": "Zack3D",
     "nsfw": true,
-    "download_all": true,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/Zack3D.ckpt",
-          "md5sum": "aa944b1ecdaac60113027a0fdcda4f1b"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "Zack3D.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://sexy.canine.wf/file/furry-ckpt/Zack3D_Kinky-v1.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "furry",
+    "type": "ckpt",
+    "version": "1"
   },
   "trinart": {
-    "name": "trinart",
-    "type": "ckpt",
     "description": "Manga styled generations.",
+    "baseline": "stable diffusion 1",
     "showcases": [
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/trinart/01_monarch.webp"
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/trinart/01_monarch.webp"
     ],
-    "version": "1",
+    "name": "trinart",
+    "nsfw": false,
     "style": "anime",
-    "nsfw": false,
-    "download_all": true,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/trinart.ckpt",
-          "md5sum": "c90995db630d8415fbf51d6b72e71e15"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "trinart.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/naclbit/trinart_stable_diffusion_v2/resolve/main/trinart2_step95000.ckpt"
-        }
-      ]
-    },
-    "available": false
-  },
-  "colorbook": {
-    "name": "colorbook",
     "type": "ckpt",
+    "version": "1"
+  },
+  "Coloring Book": {
     "description": "Minimalist coloring book style images",
-    "version": "1",
-    "style": "line art",
-    "trigger": ["in VARPJ1 Coloring Book Art Style"],
-    "homepage": "https://huggingface.co/jvkape/ColoringBookSD",
+    "baseline": "stable diffusion 2",
+    "homepage": "https://civitai.com/models/5153/coloring-book",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/Coloring_Book/01.webp"
+    ],
+    "name": "Coloring Book",
     "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/colorbook.ckpt",
-          "md5sum": "c8fe9c392f08ab8b6269394038961509"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "colorbook.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/jvkape/ColoringBookSD/resolve/main/VARPJ1.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "artistic",
+    "trigger": ["colr_001"],
+    "type": "ckpt",
+    "version": "2"
   },
   "Arcane Diffusion": {
-    "name": "Arcane Diffusion",
-    "type": "ckpt",
     "description": "Based on the Arcane TV show",
-    "showcases": [
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/arcane/01_bigdowg.jpg",
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/arcane/02_bigdowg.jpg"
-    ],
-    "version": "3",
-    "style": "cel shading",
-    "trigger": ["arcane style"],
+    "baseline": "stable diffusion 1",
     "homepage": "https://huggingface.co/nitrosocke/arcane-diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/arcane/01_bigdowg.jpg",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/arcane/02_bigdowg.jpg"
+    ],
+    "name": "Arcane Diffusion",
     "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/arcane_diffusion.ckpt",
-          "md5sum": "218055cf8b7f49559de4a6c939dec9ed"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "arcane_diffusion.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/nitrosocke/Arcane-Diffusion/resolve/main/arcane-diffusion-v3.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "artistic",
+    "trigger": ["arcane style"],
+    "type": "ckpt",
+    "version": "3"
+  },
+  "Squishmallow Diffusion": {
+    "description": "Squishmallows",
+    "baseline": "stable diffusion 1",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/squishmallow_diffusion/01_bigdawg.webp"
+    ],
+    "name": "Squishmallow Diffusion",
+    "nsfw": false,
+    "style": "other",
+    "trigger": ["Squishmallow"],
+    "type": "ckpt",
+    "version": "1"
   },
   "Spider-Verse Diffusion": {
-    "name": "Spider-Verse Diffusion",
-    "type": "ckpt",
     "description": "Based on the Into the Spider-Verse movie's animation style",
-    "showcases": [
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/spider_verse_diffusion/01_bigdowg.webp"
-    ],
-    "version": "1",
-    "style": "cgi, comic book",
-    "trigger": ["spiderverse style"],
+    "baseline": "stable diffusion 1",
     "homepage": "https://huggingface.co/nitrosocke/spider-verse-diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/spider_verse_diffusion/01_bigdowg.webp"
+    ],
+    "name": "Spider-Verse Diffusion",
     "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/spider-verse_diffusion.ckpt",
-          "md5sum": "45315570874b90caf6dba1750eeb9ec8"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "spider-verse_diffusion.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/nitrosocke/spider-verse-diffusion/resolve/main/spiderverse-v1-pruned.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "artistic",
+    "trigger": ["spiderverse style"],
+    "type": "ckpt",
+    "version": "1"
   },
   "Archer Diffusion": {
-    "name": "Archer Diffusion",
-    "type": "ckpt",
     "description": "Based on the Archer's TV show animation style",
-    "showcases": [
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/archer_diffusion/01_bigdowg.webp"
-    ],
-    "version": "1",
-    "trigger": ["archer style"],
-    "style": "comic book, 2d vector",
+    "baseline": "stable diffusion 1",
     "homepage": "https://huggingface.co/nitrosocke/archer-diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/archer_diffusion/01_bigdowg.webp"
+    ],
+    "name": "Archer Diffusion",
     "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/archer_diffusion.ckpt",
-          "md5sum": "b54b3a2a05efe39380b056008105f34c"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "archer_diffusion.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/nitrosocke/archer-diffusion/resolve/main/archer-v1.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "artistic",
+    "trigger": ["archer style"],
+    "type": "ckpt",
+    "version": "1"
   },
   "Elden Ring Diffusion": {
-    "name": "Elden Ring Diffusion",
-    "type": "ckpt",
     "description": "Based on the Elden Ring video game style",
-    "showcases": [
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/elden_ring_diffusion/01_dethinhfil.webp"
-    ],
-    "version": "2",
-    "style": "modern game engine",
-    "trigger": ["elden ring style"],
+    "baseline": "stable diffusion 1",
     "homepage": "https://huggingface.co/nitrosocke/elden-ring-diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/elden_ring_diffusion/01_dethinhfil.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/elden_ring_diffusion/02_gigachad.webp"
+    ],
+    "name": "Elden Ring Diffusion",
     "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/elden_ring_diffusion.ckpt",
-          "md5sum": "bcc5873b5278e6a383fb86665bc84468"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "elden_ring_diffusion.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/nitrosocke/elden-ring-diffusion/resolve/main/eldenRing-v3-pruned.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "artistic",
+    "trigger": ["elden ring style"],
+    "type": "ckpt",
+    "version": "2"
   },
   "Robo-Diffusion": {
-    "name": "Robo-Diffusion",
-    "type": "ckpt",
     "description": "Robot oriented drawing style",
-    "showcases": [
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/robo_diffusion/01_bigdowg.webp"
-    ],
-    "version": "1",
-    "style": "2D portrait render",
-    "trigger": ["nousr robot"],
+    "baseline": "stable diffusion 1",
     "homepage": "https://huggingface.co/nousr/robo-diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/robo_diffusion/01_bigdowg.webp"
+    ],
+    "name": "Robo-Diffusion",
     "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/robo_diffusion.ckpt",
-          "md5sum": "a43cbf2fc8a98652435c2f5a95f487ad"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "robo_diffusion.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/nousr/robo-diffusion/resolve/main/models/robo-diffusion-v1.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "artistic",
+    "trigger": ["nousr robot"],
+    "type": "ckpt",
+    "version": "1"
   },
   "mo-di-diffusion": {
-    "name": "mo-di-diffusion",
-    "type": "ckpt",
     "description": "Popular animation studio modern style generations.",
-    "showcases": [
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/mo_di_diffusion/01_bigdowg.webp"
-    ],
-    "version": "1",
-    "style": "storybook realism",
-    "trigger": ["modern disney style"],
+    "baseline": "stable diffusion 1",
     "homepage": "https://huggingface.co/nitrosocke/mo-di-diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/mo_di_diffusion/01_bigdowg.webp"
+    ],
+    "name": "mo-di-diffusion",
     "nsfw": false,
-    "download_all": true,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/mo-di-diffusion.ckpt",
-          "md5sum": "393f79603e5cab05307670d0f71a5193"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "mo-di-diffusion.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/nitrosocke/mo-di-diffusion/resolve/main/moDi-v1-pruned.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "artistic",
+    "trigger": ["modern disney style"],
+    "type": "ckpt",
+    "version": "1"
   },
   "Classic Animation Diffusion": {
-    "name": "Classic Animation Diffusion",
-    "type": "ckpt",
     "description": "Popular animation studio classic style generations.",
-    "showcases": [
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/classic_animation_diffusion/01_bigdowg.jpg"
-    ],
-    "version": "1",
-    "style": "timeless storybook",
-    "trigger": ["classic disney style"],
+    "baseline": "stable diffusion 1",
     "homepage": "https://huggingface.co/nitrosocke/classic-anim-diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/classic_animation_diffusion/01_bigdowg.jpg"
+    ],
+    "name": "Classic Animation Diffusion",
     "nsfw": false,
-    "download_all": true,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/classic-anim-diffusion.ckpt",
-          "md5sum": "ef6f168e2cceedb104ca57f6a1da27fd"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "classic-anim-diffusion.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/nitrosocke/classic-anim-diffusion/resolve/main/classicAnim-v1.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "artistic",
+    "trigger": ["classic disney style"],
+    "type": "ckpt",
+    "version": "1"
   },
   "Xynthii-Diffusion": {
-    "name": "Xynthii-Diffusion",
-    "type": "ckpt",
     "description": "Xynthii-Diffusion (cyclops monster girls)",
+    "baseline": "stable diffusion 1",
     "showcases": [
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/xynthii_diffusion/01_bigdowg.webp"
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/xynthii_diffusion/01_bigdowg.webp"
     ],
-    "version": "1",
-    "style": "neon drawing",
-    "trigger": ["xynthii"],
-    "homepage": "https://huggingface.co/hlky/xynthii-diffusion",
+    "name": "Xynthii-Diffusion",
     "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/xynthii_fp16.ckpt",
-          "md5sum": "97e5057d0901d160e76bc9032cd32852"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "xynthii_fp16.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/hlky/xynthii-diffusion/resolve/main/xynthii_epoch48_fp16.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "artistic",
+    "trigger": ["xynthii"],
+    "type": "ckpt",
+    "version": "1"
   },
   "Comic-Diffusion": {
-    "name": "Comic-Diffusion",
-    "type": "ckpt",
     "description": "Western Comic book style",
-    "version": "2",
-    "style": "comic book, 2d vector",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/ogkalu/Comic-Diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/comic_diffusion/01_gigachad.webp"
+    ],
+    "name": "Comic-Diffusion",
+    "nsfw": false,
+    "style": "artistic",
     "trigger": [
       "charliebo artstyle",
       "holliemengert artstyle",
+      "marioalberti artstyle",
       "pepelarraz artstyle",
       "andreasrocha artstyle",
       "jamesdaly artstyle"
     ],
-    "homepage": "https://huggingface.co/ogkalu/Comic-Diffusion",
-    "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/comic-diffusion-v2.ckpt",
-          "md5sum": "f5f797366a3684e56e1eefaf4ce57a0f"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "comic-diffusion-v2.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/ogkalu/Comic-Diffusion/resolve/main/comic-diffusion-V2.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "type": "ckpt",
+    "version": "2"
   },
   "Tron Legacy Diffusion": {
-    "name": "Tron Legacy Diffusion",
-    "type": "ckpt",
     "description": "Tron Legacy movie style",
-    "version": "1",
-    "style": "futuristic portrait/landscape",
-    "trigger": ["trnlgcy"],
+    "baseline": "stable diffusion 1",
     "homepage": "https://huggingface.co/dallinmackay/Tron-Legacy-diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/tron_legacy_diffusion/01_gigachad.webp"
+    ],
+    "name": "Tron Legacy Diffusion",
     "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/Tron-Legacy-Style-trnlgcy.ckpt",
-          "md5sum": "97cd368155eed1d0f71c064e3dcd8553"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "Tron-Legacy-Style-trnlgcy.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/db0/tron-legacy-copy/resolve/main/Tron-Legacy-Style-trnlgcy.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "artistic",
+    "trigger": ["trnlgcy"],
+    "type": "ckpt",
+    "version": "1"
   },
   "Microworlds": {
-    "name": "Microworlds",
-    "type": "ckpt",
-    "description": "Isometric microworlds",
+    "description": "A remake of the old microworld with cleaned up datasets that have no text or labels.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/19/microworlds",
     "showcases": [
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/microworlds/01_bigdowg.jpg"
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/microworlds/01_bigdowg.jpg",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/microworlds/02_racebannin.webp"
     ],
-    "version": "1",
-    "style": "3d render",
-    "trigger": ["microworld render style"],
-    "homepage": "https://publicprompts.art/microworlds-dreambooth-model/",
+    "name": "Microworlds",
     "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/microworld_PublicPrompts.ckpt",
-          "md5sum": "1ea601ec3be285f2dfb220fd8d2887ce"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "microworld_PublicPrompts.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/db0/microworlds/resolve/main/microworld_PublicPrompts.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "other",
+    "trigger": ["microworld"],
+    "type": "ckpt",
+    "version": "3"
   },
   "Zeipher Female Model": {
-    "name": "Zeipher Female Model",
-    "type": "ckpt",
     "description": "For creating images of nude solo women. Also known as f222",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/Reachout/F222",
     "showcases": [
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/zeipher_female_model/01_bigdowg.webp"
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/zeipher_female_model/01_bigdowg.webp"
     ],
-    "version": "222",
-    "style": "f222, boudoir photography",
-    "homepage": "https://ai.zeipher.com/",
+    "name": "Zeipher Female Model",
     "nsfw": true,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/f222.ckpt",
-          "md5sum": "900436d0801d1804fd52f269257fce9f"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "f222.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/Reachout/F222/resolve/main/f222.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "realistic",
+    "type": "ckpt",
+    "version": "222"
   },
   "Redshift Diffusion": {
-    "name": "Redshift Diffusion",
-    "type": "ckpt",
     "description": "Dreambooth model trained on high resolution 3D artworks",
-    "showcases": [
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/redshift/01_bigdowg.jpg"
-    ],
-    "version": "1",
-    "style": "cinema4D",
-    "trigger": ["redshift style"],
+    "baseline": "stable diffusion 1",
     "homepage": "https://huggingface.co/nitrosocke/redshift-diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/redshift/01_bigdowg.jpg"
+    ],
+    "name": "Redshift Diffusion",
     "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/redshift.ckpt",
-          "md5sum": "ab2ae074f9ee9460d4244fb2cb1ade65"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "redshift.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/nitrosocke/redshift-diffusion/resolve/main/redshift-diffusion-v1.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "artistic",
+    "trigger": ["redshift style"],
+    "type": "ckpt",
+    "version": "1"
   },
   "Borderlands": {
-    "name": "Borderlands",
-    "type": "ckpt",
     "description": "Based on Borderlands video game style, trained on characters and scenes",
-    "version": "1",
-    "style": "cell shading",
-    "trigger": ["borderlands"],
+    "baseline": "stable diffusion 1",
     "homepage": "https://huggingface.co/PublicPrompts/borderlands",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/borderlands/01_gigachad.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/borderlands/02_jakeukalane.webp"
+    ],
+    "name": "Borderlands",
     "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/borderlands.ckpt",
-          "md5sum": "bbea57acf5c527e47db649804e0d7a20"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "borderlands.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/PublicPrompts/borderlands/resolve/main/borderlands.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "artistic",
+    "trigger": ["borderlands"],
+    "type": "ckpt",
+    "version": "1"
   },
   "Cyberpunk Anime Diffusion": {
-    "name": "Cyberpunk Anime Diffusion",
-    "type": "ckpt",
     "description": "Cyberpunk anime characters",
-    "version": "1",
-    "style": "futuristic anime",
-    "trigger": ["dgs", "illustration style"],
+    "baseline": "stable diffusion 1",
     "homepage": "https://huggingface.co/DGSpitzer/Cyberpunk-Anime-Diffusion",
-    "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/Cyberpunk-Anime-Diffusion.ckpt",
-          "md5sum": "12151c617aaadf6ba87d30997b0b7190"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "Cyberpunk-Anime-Diffusion.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/DGSpitzer/Cyberpunk-Anime-Diffusion/resolve/main/Cyberpunk-Anime-Diffusion.ckpt"
-        }
-      ]
-    },
-    "available": false
-  },
-  "Midjourney Diffusion": {
-    "name": "Midjourney Diffusion",
-    "type": "ckpt",
-    "description": "Stable Diffusion fine tuned on Midjourney v4 images",
     "showcases": [
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/midjourney_diffusion/01_bigdowg.webp"
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/cyberpunk_anime_diffusion/01_bigdowg.webp"
     ],
-    "version": "1",
+    "name": "Cyberpunk Anime Diffusion",
+    "nsfw": false,
+    "style": "anime",
+    "trigger": ["dgs", "illustration style"],
+    "type": "ckpt",
+    "version": "1"
+  },
+  "OpenJourney Diffusion": {
+    "description": "Stable Diffusion fine tuned on Midjourney v4 images",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/prompthero/openjourney-v4",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/midjourney_diffusion/01_bigdowg.webp"
+    ],
+    "name": "OpenJourney Diffusion",
+    "nsfw": false,
     "style": "generalist",
     "trigger": ["mdjrny-v4 style"],
-    "homepage": "https://huggingface.co/prompthero/openjourney",
-    "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/mdjrny-v4.ckpt",
-          "md5sum": "241bfa51943fe0b52aa695bcaa142b3b"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "mdjrny-v4.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/prompthero/midjourney-v4-diffusion/resolve/main/mdjrny-v4.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "type": "ckpt",
+    "version": "4"
   },
   "Papercut Diffusion": {
-    "name": "Papercut Diffusion",
-    "type": "ckpt",
     "description": "Stable Diffusion fine tuned on Paper cut images",
-    "showcases": [
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/papercut/01_bigdowg.jpg"
-    ],
-    "version": "1",
-    "style": "paper cutout art",
-    "trigger": ["PaperCut"],
+    "baseline": "stable diffusion 1",
     "homepage": "https://huggingface.co/Fictiverse/Stable_Diffusion_PaperCut_Model",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/papercut/01_bigdowg.jpg"
+    ],
+    "name": "Papercut Diffusion",
     "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/PaperCut_v1.ckpt",
-          "md5sum": "353d94ec1c790b12aa01c1077a70848c"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "PaperCut_v1.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/Fictiverse/Stable_Diffusion_PaperCut_Model/resolve/main/PaperCut_v1.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "other",
+    "trigger": ["PaperCut"],
+    "type": "ckpt",
+    "version": "1"
   },
   "AIO Pixel Art": {
-    "name": "AIO Pixel Art",
-    "type": "ckpt",
     "description": "Stable Diffusion fine tuned on pixel art sprites and scenes",
-    "showcases": [
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/aio_pixel_art/01_monarch.webp"
-    ],
-    "version": "1",
-    "style": "pixel art",
-    "trigger": ["pixelsprite", "16bitscene"],
+    "baseline": "stable diffusion 1",
     "homepage": "https://huggingface.co/PublicPrompts/All-In-One-Pixel-Model",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/aio_pixel_art/01_monarch.webp"
+    ],
+    "name": "AIO Pixel Art",
     "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/AIO-Pixel-Art.ckpt",
-          "md5sum": "c00345a631cca93c5cc19fbeb59ea8fc"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "AIO-Pixel-Art.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/PublicPrompts/All-In-One-Pixel-Model/resolve/main/Public-Prompts-Pixel-Model.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "other",
+    "trigger": ["pixelsprite", "16bitscene"],
+    "type": "ckpt",
+    "version": "1"
   },
   "JWST Deep Space Diffusion": {
-    "name": "JWST Deep Space Diffusion",
-    "type": "ckpt",
     "description": "Stable Diffusion fine tuned on JWST imagery",
-    "showcases": [
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/jwst_deep_space_diffusion/01_bigdowg.webp"
-    ],
-    "version": "1",
-    "style": "space",
-    "trigger": ["jwst"],
+    "baseline": "stable diffusion 1",
     "homepage": "https://huggingface.co/dallinmackay/JWST-Deep-Space-diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/jwst_deep_space_diffusion/01_bigdowg.webp"
+    ],
+    "name": "JWST Deep Space Diffusion",
     "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/JWST-Deep-Space.ckpt",
-          "md5sum": "609109e33a48306701a463e0497a7326"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "JWST-Deep-Space.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/dallinmackay/JWST-Deep-Space-diffusion/resolve/main/JWST-Deep-Space.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "other",
+    "trigger": ["jwst"],
+    "type": "ckpt",
+    "version": "1"
   },
   "App Icon Diffusion": {
-    "name": "App Icon Diffusion",
-    "type": "ckpt",
     "description": "Dreambooth model fine tuned on mobile app icons",
-    "showcases": [
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/app_icon_diffusion/01_bigdowg.webp"
-    ],
-    "version": "1",
-    "style": "icons",
-    "trigger": ["IconsMi"],
+    "baseline": "stable diffusion 1",
     "homepage": "https://huggingface.co/jvkape/IconsMI-AppIconsModelforSD",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/app_icon_diffusion/01_bigdowg.webp"
+    ],
+    "name": "App Icon Diffusion",
     "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/app-icon-diffusion-2k.ckpt",
-          "md5sum": "93ed6d6d23be0dde878223a13d6a715e"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "app-icon-diffusion-2k.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/jvkape/IconsMI-AppIconsModelforSD/resolve/main/IconsMi_step_2000.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "other",
+    "trigger": ["IconsMi"],
+    "type": "ckpt",
+    "version": "1"
   },
   "Mega Merge Diffusion": {
-    "name": "Mega Merge Diffusion",
-    "type": "ckpt",
     "description": "SD 1.5 merged with 17 other models",
-    "version": "1",
-    "style": "generalist",
+    "baseline": "stable diffusion 1",
     "homepage": "https://huggingface.co/ShinCore/MMDv1-18",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/mega_merge_diffusion/01_gigachad.webp"
+    ],
+    "name": "Mega Merge Diffusion",
     "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/mega-merge-diffusion-a.ckpt",
-          "md5sum": "8b4d66961604d1a64ca8f8bca3797dd6"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "mega-merge-diffusion-a.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/ShinCore/MMDv1-18/resolve/main/MMD%20V1-18%20MODEL%20MERGE%20ALPHA.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "generalist",
+    "type": "ckpt",
+    "version": "1"
   },
   "Voxel Art Diffusion": {
-    "name": "Voxel Art Diffusion",
-    "type": "ckpt",
     "description": "Stable Diffusion fine-tuned on voxel art style",
-    "showcases": [
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/voxel_art_diffusion/01_dethinhfil.webp"
-    ],
-    "version": "1",
-    "style": "voxel art",
-    "trigger": ["VoxelArt"],
+    "baseline": "stable diffusion 1",
     "homepage": "https://huggingface.co/Fictiverse/Stable_Diffusion_VoxelArt_Model",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/voxel_art_diffusion/01_dethinhfil.webp"
+    ],
+    "name": "Voxel Art Diffusion",
     "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/VoxelArt_v1.ckpt",
-          "md5sum": "7c40e7f2c03a986b6037967eba8f5116"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "VoxelArt_v1.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/Fictiverse/Stable_Diffusion_VoxelArt_Model/resolve/main/VoxelArt_v1.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "other",
+    "trigger": ["VoxelArt"],
+    "type": "ckpt",
+    "version": "1"
   },
   "Van Gogh Diffusion": {
-    "name": "Van Gogh Diffusion",
-    "type": "ckpt",
     "description": "Stable Diffusion model trained on screenshots from the film Loving Vincent, best results with k_euler sampler",
-    "showcases": [
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/van_gogh_diffusion/01_bigdowg.webp"
-    ],
-    "version": "1",
-    "style": "painting",
-    "trigger": ["lvngvncnt"],
+    "baseline": "stable diffusion 1",
     "homepage": "https://huggingface.co/dallinmackay/Van-Gogh-diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/van_gogh_diffusion/01_bigdowg.webp"
+    ],
+    "name": "Van Gogh Diffusion",
     "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/Van-Gogh-Diffusion.ckpt",
-          "md5sum": "a23f0e980e921972be5f819cb33cf8fe"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "Van-Gogh-Diffusion.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/dallinmackay/Van-Gogh-diffusion/resolve/main/Van-Gogh-Style-lvngvncnt-v2.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "artistic",
+    "trigger": ["lvngvncnt"],
+    "type": "ckpt",
+    "version": "1"
   },
   "Anything Diffusion": {
-    "name": "Anything Diffusion",
-    "type": "ckpt",
     "description": "Highly detailed Anime styled generations",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/andite/anything-v4.0",
     "showcases": [
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/anything_diffusion/01.webp"
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/anything_diffusion/01.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/anything_diffusion/02_gigachad.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/anything_diffusion/03_executivebees24601.webp"
     ],
-    "version": "3",
-    "style": "anime",
-    "homepage": "https://huggingface.co/Linaqruf/anything-v3.0",
+    "name": "Anything Diffusion",
     "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/Anything-Diffusion-v3.ckpt",
-          "md5sum": "0aa33de6b36c239ba579e73edf10a026"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "Anything-Diffusion-v3.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/Linaqruf/anything-v3.0/resolve/main/Anything-V3.0-pruned.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "anime",
+    "type": "ckpt",
+    "version": "4.5"
   },
   "BubblyDubbly": {
-    "name": "BubblyDubbly",
-    "type": "ckpt",
     "description": "Dreamy sketched/painted portraits",
-    "showcases": [
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/bubblydubbly/01_bigdowg.webp",
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/bubblydubbly/02_bigdowg.webp"
-    ],
-    "version": "1",
-    "style": "painting",
-    "trigger": ["art by bubblydubbly"],
+    "baseline": "stable diffusion 1",
     "homepage": "https://huggingface.co/Marre-Barre/bubblydubbly",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/bubblydubbly/01_bigdowg.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/bubblydubbly/02_bigdowg.webp"
+    ],
+    "name": "BubblyDubbly",
     "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/bubblydubbly_7k.ckpt",
-          "md5sum": "fedc9d27158d97011c3d2ea7f1c46d9b"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "bubblydubbly_7k.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/Marre-Barre/bubblydubbly/resolve/main/bubblydubbly_7k.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "artistic",
+    "trigger": ["art by bubblydubbly"],
+    "type": "ckpt",
+    "version": "1"
   },
   "Dungeons and Diffusion": {
-    "name": "Dungeons and Diffusion",
-    "type": "ckpt",
-    "description": "Generates D&D styled characters, trained on art commissions",
-    "showcases": [
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/dungeons_and_diffusion/01_bigdowg.webp",
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/dungeons_and_diffusion/02_bigdowg.webp"
-    ],
-    "version": "1",
-    "style": "realistic fantasy render",
+    "description": "Generates D&D styled characters, trained on art commissions. *many* species and classes available, see homepage",
+    "baseline": "stable diffusion 1",
     "homepage": "https://huggingface.co/0xJustin/Dungeons-and-Diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/dungeons_and_diffusion/01_bigdowg.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/dungeons_and_diffusion/02_bigdowg.webp"
+    ],
+    "name": "Dungeons and Diffusion",
     "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/Dungeons-and-Diffusion-30k.ckpt",
-          "md5sum": "591fb04c1cfceb7bac7aeedc6be8b030"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "Dungeons-and-Diffusion-30k.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/0xJustin/Dungeons-and-Diffusion/resolve/main/model30000.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "artistic",
+    "trigger": ["D&D character"],
+    "type": "ckpt",
+    "version": "3"
   },
   "Clazy": {
-    "name": "Clazy",
-    "type": "ckpt",
     "description": "Generates clay-like figures",
-    "showcases": [
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/clazy/01_bigdowg.webp",
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/clazy/02_bigdowg.jpg"
-    ],
-    "version": "1",
-    "style": "clay",
-    "trigger": ["clazy style"],
+    "baseline": "stable diffusion 1",
     "homepage": "https://huggingface.co/Signorlimone/Clazy",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/clazy/01_bigdowg.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/clazy/02_bigdowg.jpg"
+    ],
+    "name": "Clazy",
     "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/clazy2600.ckpt",
-          "md5sum": "c1c647b006db1e4cedcf7601043fd50b"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "clazy2600.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/Signorlimone/Clazy/resolve/main/clazy2600.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "other",
+    "trigger": ["clazy style"],
+    "type": "ckpt",
+    "version": "1"
   },
   "Nitro Diffusion": {
-    "name": "Nitro Diffusion",
-    "type": "ckpt",
     "description": "Multi-Style model trained on Arcane, Archer and Mo-Di",
-    "version": "1",
-    "style": "Multi-style Portraits/Landscapes",
-    "trigger": ["archer style", "arcane style", "modern disney style"],
+    "baseline": "stable diffusion 1",
     "homepage": "https://huggingface.co/nitrosocke/Nitro-Diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/nitro_diffusion/01_gigachad.webp"
+    ],
+    "name": "Nitro Diffusion",
     "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/nitroDiffusion.ckpt",
-          "md5sum": "d6ae2998981a595062e75d89c60b34f2"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "nitroDiffusion.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/nitrosocke/Nitro-Diffusion/resolve/main/nitroDiffusion-v1.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "generalist",
+    "trigger": ["archer style", "arcane style", "modern disney style"],
+    "type": "ckpt",
+    "version": "1"
   },
   "Samdoesarts Ultmerge": {
-    "name": "Samdoesarts Ultmerge",
-    "type": "ckpt",
     "description": "Portraits in the style of Sam Yang, merged with chewtoy and orange code's models",
-    "showcases": [
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/samdoesarts_ultmerge/01_bigdowg.webp"
-    ],
-    "version": "1",
-    "style": "painted portraits",
-    "trigger": ["samdoesarts style"],
+    "baseline": "stable diffusion 1",
     "homepage": "https://civitai.com/models/68",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/samdoesarts_ultmerge/01_bigdowg.webp"
+    ],
+    "name": "Samdoesarts Ultmerge",
     "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/samdoesarts_ultmerge.ckpt",
-          "md5sum": "c35c57f88b362bcc170d086805e4a677"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "samdoesarts_ultmerge.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/jinofcoolnes/sammod/resolve/main/samdoartsultmerge.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "artistic",
+    "trigger": ["samdoesarts style"],
+    "type": "ckpt",
+    "version": "1"
   },
   "Synthwave": {
-    "name": "Synthwave",
-    "type": "ckpt",
     "description": "Stable Diffusion model to create images in Synthwave/outrun style",
-    "showcases": [
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/synthwave/01_bigdowg.webp"
-    ],
-    "version": "1",
-    "style": "neon lines, portrait/landscape",
-    "trigger": ["snthwve style"],
+    "baseline": "stable diffusion 1",
     "homepage": "https://huggingface.co/PublicPrompts/Synthwave",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/synthwave/01_bigdowg.webp"
+    ],
+    "name": "Synthwave",
     "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/synthwave.ckpt",
-          "md5sum": "99d37805cab8f98fc07c741345ab9a56"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "synthwave.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/PublicPrompts/Synthwave/resolve/main/snthwve%20style.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "artistic",
+    "trigger": ["snthwve style"],
+    "type": "ckpt",
+    "version": "1"
   },
   "vectorartz": {
-    "name": "vectorartz",
-    "type": "ckpt",
     "description": "Generate beautiful vector illustration",
-    "showcases": [
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/vectorartz/01.webp",
-      "https://raw.githubusercontent.com/Sygil-Dev/nataili-model-reference/main/showcase/vectorartz/02_bigdowg.webp"
-    ],
-    "version": "1",
-    "style": "vector art",
-    "trigger": ["vectorartz"],
+    "baseline": "stable diffusion 1",
     "homepage": "https://huggingface.co/coder119/Vectorartz_Diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/vectorartz/01.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/vectorartz/02_bigdowg.webp"
+    ],
+    "name": "vectorartz",
     "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/Vectorartz.ckpt",
-          "md5sum": "9b19bb97a2d97ed099b21260ca5de02f"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "Vectorartz.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/coder119/Vectorartz_Diffusion/resolve/main/Vectorartz.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "style": "other",
+    "trigger": ["vectorartz"],
+    "type": "ckpt",
+    "version": "1"
   },
   "Ranma Diffusion": {
-    "name": "Ranma Diffusion",
-    "type": "ckpt",
     "description": "imitates the style of late '80s early 90's anime, Anything v3 base",
-    "version": "1",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/tashachan28/ranma_diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/ranma_diffusion/01_gigachad.webp"
+    ],
+    "name": "Ranma Diffusion",
+    "nsfw": false,
     "style": "anime",
     "trigger": ["80sanimestyle"],
-    "homepage": "https://huggingface.co/tashachan28/ranma_diffusion",
-    "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/ranma_diffusion.ckpt",
-          "md5sum": "20dc21ad6ed6b75b67cfa7e9afb7d9a5"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "ranma_diffusion.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/tashachan28/ranma_diffusion/resolve/main/80s_anime_test_5_anythingmodel.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "type": "ckpt",
+    "version": "1"
   },
   "Ghibli Diffusion": {
-    "name": "Ghibli Diffusion",
-    "type": "ckpt",
     "description": "fine-tuned Stable Diffusion model trained on images from Studio Ghibli feature films",
-    "version": "1",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/nitrosocke/Ghibli-Diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/ghibli_diffusion/01_bigdowg.webp"
+    ],
+    "name": "Ghibli Diffusion",
+    "nsfw": false,
     "style": "anime",
     "trigger": ["ghibli style"],
-    "homepage": "https://huggingface.co/nitrosocke/Ghibli-Diffusion",
-    "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/ghibli-diffusion.ckpt",
-          "md5sum": "5dbed361a8f1e583207ce869f245ca4d"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "ghibli-diffusion.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/nitrosocke/Ghibli-Diffusion/resolve/main/ghibli-diffusion-v1.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "type": "ckpt",
+    "version": "1"
   },
   "Hentai Diffusion": {
-    "name": "Hentai Diffusion",
-    "type": "ckpt",
     "description": "Anime focused model with better hands, obscure poses/camera angles and consistent style",
-    "version": "17",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://github.com/Deltaadams/HentaiDiffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/hentai_diffusion/01_bigdowg.webp"
+    ],
+    "name": "Hentai Diffusion",
+    "nsfw": true,
     "style": "anime",
-    "trigger": ["1girl, anime"],
-    "homepage": "https://github.com/Delcos/Hentai-Diffusion",
-    "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/hentai-diffusion.ckpt",
-          "md5sum": "1f6277fd3793a715f242d7c347302e9c"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "hentai-diffusion.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/Deltaadams/HentaiDiffusion/resolve/main/HD-17.ckpt"
-        }
-      ]
-    },
-    "available": false
+    "trigger": ["anime", "1girl", "1boy"],
+    "type": "ckpt",
+    "version": "22"
   },
   "Guohua Diffusion": {
-    "name": "Guohua Diffusion",
-    "type": "ckpt",
     "description": "fine-tuned Stable Diffusion model trained on traditional Chinese paintings",
-    "version": "1",
-    "style": "painting",
-    "trigger": ["guohua style"],
+    "baseline": "stable diffusion 1",
     "homepage": "https://huggingface.co/Langboat/Guohua-Diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/guohua_diffusion/01_ghostdragon11.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/guohua_diffusion/02_gigachad.webp"
+    ],
+    "name": "Guohua Diffusion",
     "nsfw": false,
-    "download_all": false,
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/custom/guohua-diffusion.ckpt",
-          "md5sum": "031f1e1bb108048028c55d729d1c26d7"
-        },
-        {
-          "path": "configs/stable-diffusion/v1-inference.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "guohua-diffusion.ckpt",
-          "file_path": "models/custom",
-          "file_url": "https://huggingface.co/Langboat/Guohua-Diffusion/resolve/main/guohua.ckpt"
-        }
-      ]
-    },
-    "available": false
-  },
-  "RealESRGAN_x4plus": {
-    "name": "RealESRGAN_x4plus",
-    "type": "realesrgan",
-    "description": "Upscaler.",
-    "version": "0.1.0",
-    "style": "generalist",
-    "config": {
-      "files": [
-        {
-          "path": "models/realesrgan/RealESRGAN_x4plus.pth"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "RealESRGAN_x4plus.pth",
-          "file_path": "models/realesrgan",
-          "file_url": "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth"
-        }
-      ]
-    },
-    "available": false
-  },
-  "RealESRGAN_x4plus_anime_6B": {
-    "name": "RealESRGAN_x4plus_anime_6B",
-    "type": "realesrgan",
-    "description": "Anime focused upscaler.",
-    "version": "0.2.2.4",
-    "style": "anime",
-    "config": {
-      "files": [
-        {
-          "path": "models/realesrgan/RealESRGAN_x4plus_anime_6B.pth"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "RealESRGAN_x4plus_anime_6B.pth",
-          "file_path": "models/realesrgan",
-          "file_url": "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth"
-        }
-      ]
-    },
-    "available": false
-  },
-  "GFPGAN": {
-    "name": "GFPGAN",
-    "type": "gfpgan",
-    "description": "Face correction.",
-    "version": "1.4",
-    "style": "generalist",
-    "config": {
-      "files": [
-        {
-          "path": "models/gfpgan/GFPGANv1.4.pth"
-        },
-        {
-          "path": "gfpgan/weights/detection_Resnet50_Final.pth"
-        },
-        {
-          "path": "gfpgan/weights/parsing_parsenet.pth"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "GFPGANv1.4.pth",
-          "file_path": "models/gfpgan",
-          "file_url": "https://github.com/TencentARC/GFPGAN/releases/download/v1.3.4/GFPGANv1.4.pth"
-        },
-        {
-          "file_name": "detection_Resnet50_Final.pth",
-          "file_path": "./gfpgan/weights",
-          "file_url": "https://github.com/xinntao/facexlib/releases/download/v0.1.0/detection_Resnet50_Final.pth"
-        },
-        {
-          "file_name": "parsing_parsenet.pth",
-          "file_path": "./gfpgan/weights",
-          "file_url": "https://github.com/xinntao/facexlib/releases/download/v0.2.2/parsing_parsenet.pth"
-        }
-      ]
-    },
-    "available": false
-  },
-  "LDSR": {
-    "name": "LDSR",
+    "style": "artistic",
+    "trigger": ["guohua style"],
     "type": "ckpt",
-    "description": "Upscaler.",
-    "version": "1",
-    "style": "generalist",
+    "version": "1"
+  },
+  "Inkpunk Diffusion": {
+    "description": "inspired by Gorillaz art, FLCL and Yoji Shinkawa. Trained on images generated from Midjourney",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/Envvi/Inkpunk-Diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/inkpunk_diffusion/01_bigdowg.webp"
+    ],
+    "name": "Inkpunk Diffusion",
     "nsfw": false,
-    "download_all": true,
-    "config": {
-      "files": [
-        {
-          "path": "models/ldsr/model.ckpt"
-        },
-        {
-          "path": "models/ldsr/project.yaml"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "model.ckpt",
-          "file_path": "models/ldsr",
-          "file_url": "https://heibox.uni-heidelberg.de/f/578df07c8fc04ffbadf3/?dl=1"
-        },
-        {
-          "file_name": "project.yaml",
-          "file_path": "models/ldsr",
-          "file_url": "https://heibox.uni-heidelberg.de/f/31a76b13ea27482981b4/?dl=1"
-        }
-      ]
-    },
-    "available": false
+    "style": "artistic",
+    "trigger": ["nvinkpunk"],
+    "type": "ckpt",
+    "version": "2"
   },
-  "BLIP": {
-    "name": "BLIP",
-    "type": "blip",
-    "config": {
-      "files": [
-        {
-          "path": "models/blip/model__base_caption.pth"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "model__base_caption.pth",
-          "file_path": "models/blip",
-          "file_url": "https://storage.googleapis.com/sfr-vision-language-research/BLIP/models/model*_base_caption.pth"
-        }
-      ]
-    },
-    "available": false
+  "Fantasy Card Diffusion": {
+    "description": "fantasy trading card style art, trained on all currently available Magic: the Gathering card art",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/volrath50/fantasy-card-diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/fantasy_card_diffusion/01_gigachad.webp"
+    ],
+    "name": "Fantasy Card Diffusion",
+    "nsfw": false,
+    "style": "other",
+    "trigger": ["mtg card art"],
+    "type": "ckpt",
+    "version": "1"
   },
-  "BLIP_Large": {
-    "name": "BLIP_Large",
-    "type": "blip",
-    "config": {
-      "files": [
-        {
-          "path": "models/blip/model_large_caption.pth"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "model_large_caption.pth",
-          "file_path": "models/blip",
-          "file_url": "https://storage.googleapis.com/sfr-vision-language-research/BLIP/models/model_large_caption.pth"
-        }
-      ]
-    },
-    "available": false
+  "Knollingcase": {
+    "description": "generates a glass display case with objects inside, inspired by Sean Preston. Trained on Midjourney images",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/Aybeeceedee/knollingcase",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/knollingcase/01_gigachad.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/knollingcase/02_ghostdragon11.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/knollingcase/03_muted001.webp"
+    ],
+    "name": "Knollingcase",
+    "nsfw": false,
+    "style": "other",
+    "trigger": ["knollingcase"],
+    "type": "ckpt",
+    "version": "1"
   },
-  "ViT-L/14": {
-    "name": "ViT-L/14",
-    "type": "clip",
-    "config": {
-      "files": [
-        {
-          "path": "models/clip/ViT-L-14.pt"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "ViT-L-14.pt",
-          "file_path": "./models/clip",
-          "file_url": "https://openaipublic.azureedge.net/clip/models/b8cca3fd41ae0c99ba7e8951adf17d267cdb84cd88be6f7c2e0eca1737a03836/ViT-L-14.pt"
-        }
-      ]
-    },
-    "available": false
+  "Midjourney PaintArt": {
+    "description": "Midjourney v4 painting style",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/ShadoWxShinigamI/Midjourney-v4-PaintArt",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/midjourney_paintart/01_gigachad.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/midjourney_paintart/02_ghostdragon11.webp"
+    ],
+    "name": "Midjourney PaintArt",
+    "nsfw": false,
+    "style": "artistic",
+    "trigger": ["mdjrny-pntrt"],
+    "type": "ckpt",
+    "version": "1"
   },
-  "ViT-g-14": {
-    "name": "ViT-g-14",
-    "pretrained_name": "laion2b_s12b_b42k",
-    "type": "open_clip",
-    "config": {
-      "files": [
-        {
-          "path": "models/clip/models--laion--CLIP-ViT-g-14-laion2B-s12B-b42K/"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "main",
-          "file_path": "./models/clip/models--laion--CLIP-ViT-g-14-laion2B-s12B-b42K/refs",
-          "file_content": "b36bdd32483debcf4ed2f918bdae1d4a46ee44b8"
-        },
-        {
-          "file_name": "6aac683f899159946bc4ca15228bb7016f3cbb1a2c51f365cba0b23923f344da",
-          "file_path": "./models/clip/models--laion--CLIP-ViT-g-14-laion2B-s12B-b42K/blobs",
-          "file_url": "https://huggingface.co/laion/CLIP-ViT-g-14-laion2B-s12B-b42K/resolve/main/open_clip_pytorch_model.bin"
-        },
-        {
-          "file_name": "open_clip_pytorch_model.bin",
-          "file_path": "./models/clip/models--laion--CLIP-ViT-g-14-laion2B-s12B-b42K/snapshots/b36bdd32483debcf4ed2f918bdae1d4a46ee44b8",
-          "symlink": "./models/clip/models--laion--CLIP-ViT-g-14-laion2B-s12B-b42K/blobs/6aac683f899159946bc4ca15228bb7016f3cbb1a2c51f365cba0b23923f344da"
-        }
-      ]
-    },
-    "available": false
+  "RPG": {
+    "description": "portraits of charecters in the style of the game Baldur's Gate. check homepage for a massive prompt guide",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/Anashel/rpg",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/rpg/01_gigachad.webp"
+    ],
+    "name": "RPG",
+    "nsfw": false,
+    "style": "artistic",
+    "type": "ckpt",
+    "version": "4"
   },
-  "ViT-H-14": {
-    "name": "ViT-H-14",
-    "pretrained_name": "laion2b_s32b_b79k",
-    "type": "open_clip",
-    "config": {
-      "files": [
-        {
-          "path": "models/clip/models--laion--CLIP-ViT-H-14-laion2B-s32B-b79K/"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "main",
-          "file_path": "./models/clip/models--laion--CLIP-ViT-H-14-laion2B-s32B-b79K/refs",
-          "file_content": "58a1e03a7acfacbe6b95ebc24ae0394eda6a14fc"
-        },
-        {
-          "file_name": "9a78ef8e8c73fd0df621682e7a8e8eb36c6916cb3c16b291a082ecd52ab79cc4",
-          "file_path": "./models/clip/models--laion--CLIP-ViT-H-14-laion2B-s32B-b79K/blobs",
-          "file_url": "https://huggingface.co/laion/CLIP-ViT-H-14-laion2B-s32B-b79K/resolve/main/open_clip_pytorch_model.bin"
-        },
-        {
-          "file_name": "open_clip_pytorch_model.bin",
-          "file_path": "./models/clip/models--laion--CLIP-ViT-H-14-laion2B-s32B-b79K/snapshots/58a1e03a7acfacbe6b95ebc24ae0394eda6a14fc",
-          "symlink": "./models/clip/models--laion--CLIP-ViT-H-14-laion2B-s32B-b79K/blobs/9a78ef8e8c73fd0df621682e7a8e8eb36c6916cb3c16b291a082ecd52ab79cc4"
-        }
-      ]
-    },
-    "available": false
+  "Poison": {
+    "description": "Anything Diffusion fine-tuned to produce high-quality realistic anime styled images",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/Fansy/poison",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/poison/01_gigachad.webp"
+    ],
+    "name": "Poison",
+    "nsfw": false,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "1"
   },
-  "diffusers_stable_diffusion": {
-    "name": "diffusers_stable_diffusion",
-    "type": "diffusers",
-    "requires": ["clip-vit-large-patch14"],
-    "config": {
-      "files": [
-        {
-          "path": "models/diffusers/"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "diffusers_stable_diffusion",
-          "file_url": "https://{username}:{password}@huggingface.co/CompVis/stable-diffusion-v1-4.git",
-          "git": true,
-          "hf_auth": true,
-          "post_process": [
-            {
-              "delete": "models/diffusers/stable-diffusion-v1-4/.git"
-            }
-          ]
-        }
-      ]
-    },
-    "available": false
+  "Eimis Anime Diffusion": {
+    "description": "This model is trained with high quality and detailed anime images",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/eimiss/EimisAnimeDiffusion_1.0v",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/eimis_anime_diffusion/01_bigdawg.webp"
+    ],
+    "name": "Eimis Anime Diffusion",
+    "nsfw": false,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "1"
+  },
+  "Wavyfusion": {
+    "description": "dreambooth model trained on a very diverse dataset ranging from photographs to paintings",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/wavymulder/wavyfusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/wavyfusion/01_gigachad.webp"
+    ],
+    "name": "Wavyfusion",
+    "nsfw": false,
+    "style": "generalist",
+    "trigger": ["wa-vy style"],
+    "type": "ckpt",
+    "version": "1"
+  },
+  "Papercutcraft": {
+    "description": "Paper Cut Craft is a fine tuned Stable Diffusion model trained on Midjourney images",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/OlafII/papercutcraft-v1",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/papercutcraft/01_gigachad.webp"
+    ],
+    "name": "Papercutcraft",
+    "nsfw": false,
+    "style": "other",
+    "trigger": ["papercutcraft style"],
+    "type": "ckpt",
+    "version": "1"
+  },
+  "kurzgesagt": {
+    "description": "A DreamBooth finetune of Stable Diffusion v1.5 model trained on a bunch of stills from Kurzgesagt videos",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/questcoast/SD-Kurzgesagt-style-finetune",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/kurzgesagt/01_gigachad.webp"
+    ],
+    "name": "kurzgesagt",
+    "nsfw": false,
+    "style": "other",
+    "trigger": ["kurzgesagt style"],
+    "type": "ckpt",
+    "version": "1"
+  },
+  "ChromaV5": {
+    "description": "generates metalic/chrome looking images",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/SomaMythos/ChromaV5",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/chromav5/01_gigachad.webp"
+    ],
+    "name": "ChromaV5",
+    "nsfw": false,
+    "style": "generalist",
+    "trigger": ["ChromaV5"],
+    "type": "ckpt",
+    "version": "1.6"
+  },
+  "Dreamlike Diffusion": {
+    "description": "Dreamlike Diffusion 1.0 is SD 1.5 fine tuned on high quality art, made by dreamlike.art",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/dreamlike-art/dreamlike-diffusion-1.0",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/dreamlike_diffusion/01_gigachad.webp"
+    ],
+    "name": "Dreamlike Diffusion",
+    "nsfw": false,
+    "style": "generalist",
+    "trigger": ["dreamlikeart"],
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Analog Diffusion": {
+    "description": "A dreambooth model trained on a diverse set of analog photographs",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/wavymulder/Analog-Diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/analog_diffusion/01_gigachad.webp"
+    ],
+    "name": "Analog Diffusion",
+    "nsfw": false,
+    "style": "generalist",
+    "trigger": ["analog style"],
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Asim Simpsons": {
+    "description": "The Simpsons dreambooth model",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/PiyarSquare/sd_asim_simpsons",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/asim_simpsons/01_gigachad.webp"
+    ],
+    "name": "Asim Simpsons",
+    "nsfw": false,
+    "style": "artistic",
+    "trigger": ["asim style"],
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Funko Diffusion": {
+    "description": "Stable Diffusion fine tuned on Funko Pop, by PromptHero.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/prompthero/funko-diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/funko_diffusion/01_gigachad.webp"
+    ],
+    "name": "Funko Diffusion",
+    "nsfw": false,
+    "style": "artistic",
+    "trigger": ["funko style"],
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Double Exposure Diffusion": {
+    "description": "The Double Exposure Diffusion model, trained specifically on images of people and a few animals",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/joachimsallstrom/Double-Exposure-Diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/double_exposure_diffusion/01_gigachad.webp"
+    ],
+    "name": "Double Exposure Diffusion",
+    "nsfw": false,
+    "style": "artistic",
+    "trigger": ["dublex style, dublex"],
+    "type": "ckpt",
+    "version": "2.0"
+  },
+  "Microscopic": {
+    "description": "This is the fine-tuned Stable Diffusion model trained on microscopic images",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/Fictiverse/Stable_Diffusion_Microscopic_model",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/microscopic/01_gigachad.webp"
+    ],
+    "name": "Microscopic",
+    "nsfw": false,
+    "style": "other",
+    "trigger": ["microscopic"],
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Balloon Art": {
+    "description": "This is the fine-tuned Stable Diffusion model trained on Twisted Balloon images",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/Fictiverse/Stable_Diffusion_BalloonArt_Model",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/balloon_art/01_gigachad.webp"
+    ],
+    "name": "Balloon Art",
+    "nsfw": false,
+    "style": "other",
+    "trigger": ["BalloonArt"],
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Future Diffusion": {
+    "description": "This creates high quality 3D images with a futuristic Sci-Fi theme",
+    "baseline": "stable diffusion 2 512",
+    "homepage": "https://huggingface.co/nitrosocke/Future-Diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/future_diffusion/01_gigachad.webp"
+    ],
+    "name": "Future Diffusion",
+    "nsfw": false,
+    "style": "artistic",
+    "trigger": ["future style"],
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Seek.art MEGA": {
+    "description": "Seek.art MEGA is a general use 'anything' model that significantly improves on 1.5 across dozens of styles. Created by Coreco at seek.art",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/coreco/seek.art_MEGA",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/seek_art_mega/01_gigachad.webp"
+    ],
+    "name": "Seek.art MEGA",
+    "nsfw": false,
+    "style": "generalist",
+    "type": "ckpt",
+    "version": "2.0"
+  },
+  "Valorant Diffusion": {
+    "description": "This model was trained on the Valorant agents splash arts, and some extra arts on the official website",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/ItsJayQz/Valorant_Diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/valorant_diffusion/01_gigachad.webp"
+    ],
+    "name": "Valorant Diffusion",
+    "nsfw": false,
+    "style": "artistic",
+    "trigger": ["valorant style"],
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Hassanblend": {
+    "description": "This model was for creating people",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/hassanblend/hassanblend1.5",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/hassanblend/01_gigachad.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/hassanblend/02_bettername.webp"
+    ],
+    "name": "Hassanblend",
+    "nsfw": true,
+    "style": "realistic",
+    "type": "ckpt",
+    "version": "1.5.1.2"
+  },
+  "ACertainThing": {
+    "description": "An improved version of Anything v3 made with ACertainThing, focusing on scenes rather than characters",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/JosephusCheung/ACertainThing",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/acertainthing/01_juice.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/acertainthing/02_gigachad.webp"
+    ],
+    "name": "ACertainThing",
+    "nsfw": false,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "GTA5 Artwork Diffusion": {
+    "description": "This model was trained on the loading screens, gta storymode, and gta online DLCs artworks. Which includes characters, background, chop, and some objects. The model can do people and portrait pretty easily, as well as cars, and houses. For some reasons, the model stills automatically include in some game footage, so landscapes tend to look a bit more game-like.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/ItsJayQz/GTA5_Artwork_Diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/gta5_artwork_diffusion/01_bettername.webp"
+    ],
+    "name": "GTA5 Artwork Diffusion",
+    "nsfw": false,
+    "style": "artistic",
+    "trigger": ["gtav style"],
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Trinart Characters": {
+    "description": "Derrida (formerly TrinArt Characters v2) is a stable diffusion v1-based model that was further improved on the previous characters v1 model. While this is still a versatility and compositional variation anime/manga model like other TrinArt models, when compared to the v1 model, Derrida was focused on more anatomical stability and slightly less on variation due to further multi-epoch training and finetuning.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/naclbit/trinart_derrida_characters_v2_stable_diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/trinart_characters/01_juice.webp"
+    ],
+    "name": "Trinart Characters",
+    "nsfw": false,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "2.0"
+  },
+  "Smoke Diffusion": {
+    "description": "This is the fine-tuned Stable Diffusion model trained on images of smoke",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/guumaster/smoke-diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/smoke_diffusion/01_voodoocode.webp"
+    ],
+    "name": "Smoke Diffusion",
+    "nsfw": false,
+    "style": "other",
+    "trigger": ["ssmoky"],
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Supermarionation": {
+    "description": "This is a fine-tuned Stable Diffusion model (based on v1.5) trained on screenshots from Gerry Anderson Supermarionation stop motion animation movie, basically from Thunderbirds tv series",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/tuwonga/supermarionation",
+    "showcases": [
+      "https://huggingface.co/tuwonga/supermarionation/resolve/main/supermarionation_v2_prev1.jpg"
+    ],
+    "name": "Supermarionation",
+    "nsfw": false,
+    "style": "artistic",
+    "trigger": ["supermarionation"],
+    "type": "ckpt",
+    "version": "2.0"
+  },
+  "Dreamlike Photoreal": {
+    "description": "Dreamlike Photoreal 1.0 is a photorealistic Stable Diffusion 1.5 model fine tuned on high quality photos, made by dreamlike.art.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/dreamlike-art/dreamlike-photoreal-2.0",
+    "showcases": [
+      "https://huggingface.co/dreamlike-art/dreamlike-photoreal-2.0/resolve/main/preview1.jpg",
+      "https://huggingface.co/dreamlike-art/dreamlike-photoreal-2.0/resolve/main/preview2.jpg"
+    ],
+    "name": "Dreamlike Photoreal",
+    "nsfw": false,
+    "style": "realistic",
+    "trigger": ["photo"],
+    "type": "ckpt",
+    "version": "2.0"
+  },
+  "PortraitPlus": {
+    "description": "This is a dreambooth model trained on a diverse set of close to medium range portraits of people.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/wavymulder/portraitplus",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/portraitplus/01_gigachad.webp"
+    ],
+    "name": "PortraitPlus",
+    "nsfw": false,
+    "style": "realistic",
+    "trigger": ["portrait+ style"],
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Vintedois Diffusion": {
+    "description": "Vintedois (22h) Diffusion model trained by Predogl and piEsposito with open weights, configs and prompts (as it should be).  This model was trained on a large amount of high quality images with simple prompts to generate beautiful images without a lot of prompt engineering.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/22h/vintedois-diffusion-v0-2",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/vintedois_diffusion/01_juice.webp"
+    ],
+    "name": "Vintedois Diffusion",
+    "nsfw": false,
+    "style": "generalist",
+    "trigger": ["estilovintedois"],
+    "type": "ckpt",
+    "version": "0.2"
+  },
+  "Darkest Diffusion": {
+    "description": "A free and open source Stable Diffusion model created by AI-Characters, trained on the artstyle of the game 'Darkest Dungeon'",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/ai-characters/Darkest-Diffusion",
+    "showcases": [
+      "https://huggingface.co/ai-characters/Darkest-Diffusion/resolve/main/gandr-collage.jpg"
+    ],
+    "name": "Darkest Diffusion",
+    "nsfw": false,
+    "style": "artistic",
+    "trigger": ["in the artstyle of dd"],
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Eternos": {
+    "description": "A surrealist / Minimalist model",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/RomeroRZ/style-eternos",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/eternos/01_eternos.webp"
+    ],
+    "name": "Eternos",
+    "nsfw": false,
+    "style": "artistic",
+    "trigger": ["romerorzeternos"],
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Min Illust Background": {
+    "description": "This fine-tuned Stable Diffusion v1.5 model was trained on a selection of artistic works by Sin Jong Hun",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/ProGamerGov/Min-Illust-Background-Diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/min_illust_background/01_min.webp"
+    ],
+    "name": "Min Illust Background",
+    "nsfw": false,
+    "style": "artistic",
+    "trigger": ["sjh style"],
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Dark Victorian Diffusion": {
+    "description": "finetuned on dark, moody, victorian imagery",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/proxima/darkvictorian_artstyle",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/dark_victorian_diffusion/01_victorian.webp"
+    ],
+    "name": "Dark Victorian Diffusion",
+    "nsfw": false,
+    "style": "artistic",
+    "trigger": ["darkvictorian artstyle"],
+    "type": "ckpt",
+    "version": "2.0"
+  },
+  "DnD Item": {
+    "description": "This is a model (dnditem) for creating magic items, for the game Dungeons and Dragons! It was trained to be very similar to the official results that are available here: https://www.dndbeyond.com/magic-items",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/stale2000/sd-dnditem",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/dnd_item/01_voodoocode.webp"
+    ],
+    "name": "DnD Item",
+    "nsfw": false,
+    "style": "other",
+    "trigger": ["dnditem"],
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "ModernArt Diffusion": {
+    "description": "You can use this model to generate modernart style images",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/theintuitiveye/modernartstyle",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/modernart_diffusion/01_voodoocode.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/modernart_diffusion/02_gigachad.webp"
+    ],
+    "name": "ModernArt Diffusion",
+    "nsfw": false,
+    "style": "artistic",
+    "trigger": ["modernartst"],
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "HASDX": {
+    "description": "He merged a few checkpoints and got something buttery and amazing. Does great with things other then people too. It can do anything really. It doesn't need crazy prompts either. Keep it simple. No need for all the artist names and trending on whatever.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/BestJammer/HASDX",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/hasdx/01_gigachad.webp"
+    ],
+    "name": "HASDX",
+    "nsfw": false,
+    "style": "generalist",
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Liberty": {
+    "description": "A merge with over 23 other models with a methodical, careful and genuine approach. Freedom of prompting art or photo or both, landscapes or backgrounds or interiors, people or entities or scenes, stiff poses or movement or even mouth and facial emotions.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/5935/liberty",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/liberty/01_liberty.webp"
+    ],
+    "name": "Liberty",
+    "nsfw": true,
+    "style": "realistic",
+    "trigger": [
+      "erect penis",
+      "flaccid penis",
+      "wa-vy style",
+      "snthwve style",
+      "nvinkpunk",
+      "synthwave",
+      "sci-fi",
+      "caspian sci-fi",
+      "star atlas",
+      "star citizen",
+      "render",
+      "postapocalypse",
+      "wjqwizard",
+      "wjqknight",
+      "wjqtitan",
+      "wjqjester",
+      "wjqautoma",
+      "wjqdemon",
+      "knollingcase",
+      "elden ring style",
+      "cyborgdiffusion",
+      "cyborgdiffusion style",
+      "artificial-journey style",
+      "analog style",
+      "sks person"
+    ],
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "ProtoGen": {
+    "description": "One Step Closer to Reality",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/darkstorm2150/Protogen_v5.3_Official_Release",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/protogen/01_gigachad.webp"
+    ],
+    "name": "ProtoGen",
+    "nsfw": false,
+    "style": "generalist",
+    "trigger": ["modelshoot style"],
+    "type": "ckpt",
+    "version": "5.3"
+  },
+  "3DKX": {
+    "description": "SFW model with limited nsfw capabilities (suggestive nsfw) that is highly versatile for 3D renders.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/HavoAloe/3DKX_1.0b",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/3dkx/01_airic.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/3dkx/02_gigachad.webp"
+    ],
+    "name": "3DKX",
+    "nsfw": false,
+    "style": "artistic",
+    "type": "ckpt",
+    "version": "1.1"
+  },
+  "Moedel": {
+    "description": "Moe.del produces cute female characters. It is also a mix of Stable Diffusion 1.4/1.5 in different proportions so you can challenge it to generate for you pretty much anything using regular SD prompts (like cute dogs, cats etc.)",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/2034/moedel",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/moedel/01_moedel.webp"
+    ],
+    "name": "Moedel",
+    "nsfw": false,
+    "style": "other",
+    "trigger": ["masterpiece", "best quality", "mdjrny-v4"],
+    "type": "ckpt",
+    "version": "2"
+  },
+  "DreamLikeSamKuvshinov": {
+    "description": "A mixture of Dreamlike Diffusion 1.0, SamDoesArt V3 and Kuvshinov style models.  Created mostly for exploring different character concepts with a focus on drawings, but the mix happened to be pretty good at realistic-ish images, all thanks to wonderful models that it uses.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/1473/dreamlikesamkuvshinov",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/dreamlikesamkuvshinov/01_gigachad.webp"
+    ],
+    "name": "DreamLikeSamKuvshinov",
+    "nsfw": false,
+    "style": "artistic",
+    "trigger": ["dreamlikeart", "samdoesart", "kuvshinov"],
+    "type": "ckpt",
+    "version": "1"
+  },
+  "Sygil-Dev Diffusion": {
+    "description": "This model is a Stable Diffusion v1.5 fine-tune trained on the Imaginary Network Expanded Dataset. It is an advanced version of Stable Diffusion and can generate nearly all kinds of images, no matter humans, reflections, cities, architecture, fantasy, digital arts, landscapes, or nature views.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/Sygil/Sygil-Diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/sygildev_diffusion/01_sygil.webp"
+    ],
+    "name": "Sygil-Dev Diffusion",
+    "nsfw": false,
+    "style": "generalist",
+    "type": "ckpt",
+    "version": "0.4"
+  },
+  "MoistMix": {
+    "description": "A do (almost) anything model",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/3450/moistmix",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/moistmix/01_gigachad.webp"
+    ],
+    "name": "MoistMix",
+    "nsfw": false,
+    "style": "generalist",
+    "type": "ckpt",
+    "version": "2"
+  },
+  "Healy's Anime Blend": {
+    "description": "This is a blend of some anime models mixed with 'realistic' stuff",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/1400/healys-anime-blend",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/healys_anime_blend/01_gigachad.webp"
+    ],
+    "name": "Healy's Anime Blend",
+    "nsfw": false,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "GuFeng": {
+    "description": "This is a model of ancient Chinese style, and it also belongs to the model series with ink and water orientation",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/12903/gufeng",
+    "name": "GuFeng",
+    "nsfw": false,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "2.0"
+  },
+  "Elldreth's Lucid Mix": {
+    "description": "It's an all-around easy-to-prompt general purpose semi-realistic to realistic model that cranks out some really nice images. No trigger words required",
+    "baseline": "stable diffusion 1",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/elldreths_lucid_mix/01_gigachad.webp"
+    ],
+    "name": "Elldreth's Lucid Mix",
+    "nsfw": false,
+    "style": "generalist",
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Sci-Fi Diffusion": {
+    "description": "A Sci-Fi themed model trained on SD 1.5 with a 26K+ image dataset",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/Corruptlake/Sci-Fi-Diffusion",
+    "name": "Sci-Fi Diffusion",
+    "nsfw": false,
+    "style": "generalist",
+    "trigger": [
+      "Sci-Fi",
+      "caspian Sci-Fi",
+      "Star Citizen",
+      "Star Atlas",
+      "Spaceship",
+      "Render"
+    ],
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Ultraskin": {
+    "description": "This model will add a LOT of skin detail compared to SD 2.1. Sometimes this makes images look more realistic, sometimes less realistic!",
+    "baseline": "stable diffusion 2",
+    "homepage": "https://huggingface.co/VegaKH/Ultraskin",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/ultraskin/01_voodoocode.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/ultraskin/02_gigachad.webp"
+    ],
+    "name": "Ultraskin",
+    "nsfw": false,
+    "style": "realistic",
+    "trigger": [
+      "ultraskin",
+      "twenties",
+      "thirties",
+      "thirty year old",
+      "eighties",
+      "eighty year old",
+      "elderly",
+      "moles",
+      "freckles",
+      "scar",
+      "skin detail"
+    ],
+    "type": "ckpt",
+    "version": "0.9"
+  },
+  "Sonic Diffusion": {
+    "description": "SonicDiffusionV2.ckpt was trained on AnythingV3 for 200 epochs of 203 hand captioned Sonic images from various artists",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/Metal079/SonicDiffusionV2",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/sonic_diffusion/01_gigachad.webp"
+    ],
+    "name": "Sonic Diffusion",
+    "nsfw": false,
+    "style": "other",
+    "trigger": ["mobian"],
+    "type": "ckpt",
+    "version": "2"
+  },
+  "PPP": {
+    "description": "PPP is a realistic model merge, tested and tweaked for human females. Mostly based on NSFW models",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/1235",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/ppp/01_gigachad.webp"
+    ],
+    "name": "PPP",
+    "nsfw": true,
+    "style": "realistic",
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Anygen": {
+    "description": "A best of both worlds - merging the anime of Anything v3 with Protogens photorealism - VAE is included",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/3846/anygen-v37",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/anygen/01_gigachad.webp"
+    ],
+    "name": "Anygen",
+    "nsfw": false,
+    "style": "realistic",
+    "type": "ckpt",
+    "version": "3.7"
+  },
+  "Protogen Infinity": {
+    "description": "Protogens photorealism mixed with more science fiction, comic, and synthwave to make ultimate awesomeness",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/4398/protogen-infinity-official-release",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/protogen_infinity/01_gigachad.webp"
+    ],
+    "name": "Protogen Infinity",
+    "nsfw": false,
+    "style": "generalist",
+    "trigger": [
+      "modelshoot style",
+      "mdjrny-v4 style",
+      "nousr robot",
+      "dreamlikeart",
+      "nvinkpunk",
+      "snthwve style",
+      "charliebo artstyle",
+      "holliemengert artstyle",
+      "marioalberti artstyle",
+      "pepelarraz artstyle",
+      "andreasrocha artstyle",
+      "jamesdaly artstyle",
+      "elden ring style",
+      "postapocalypse",
+      "analog style",
+      "knollingcase",
+      "swpunk",
+      "synthwave",
+      "cyborgdiffusion"
+    ],
+    "type": "ckpt",
+    "version": "8.6"
+  },
+  "DucHaiten": {
+    "description": "DucHaiten's character generation model",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/3079?modelVersionId=50724",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/duchaiten/01_gigachad.webp"
+    ],
+    "name": "DucHaiten",
+    "nsfw": true,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "4.5.3"
+  },
+  "Dreamshaper": {
+    "description": "Merged model mix of Midnight mixer, roboEtics, f222, elldrethSLucidMix, Seek.ART Mega, rpg, hassanBlend, modelshoot and roboDiffusion",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/4384/dreamshaper",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/dreamshaper/01_gigachad.webp"
+    ],
+    "name": "Dreamshaper",
+    "nsfw": false,
+    "style": "artistic",
+    "type": "ckpt",
+    "version": "6"
+  },
+  "Zelda BOTW": {
+    "description": "based off work of great artworks from Legend of Zelda: Breath of The Wild",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/s3nh/zelda-botw-stable-diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/zelda_botw/01_gigachad.webp"
+    ],
+    "name": "Zelda BOTW",
+    "nsfw": false,
+    "style": "artistic",
+    "trigger": ["botw style"],
+    "type": "ckpt",
+    "version": "1"
+  },
+  "Marvel Diffusion": {
+    "description": "This model was trained on images from the animated Marvel Disney+ show What If, which includes characters, background, and some objects",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/ItsJayQz/Marvel_WhatIf_Diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/marvel_diffusion/01_gigachad.webp"
+    ],
+    "name": "Marvel Diffusion",
+    "nsfw": false,
+    "style": "artistic",
+    "trigger": ["whatif style"],
+    "type": "ckpt",
+    "version": "2"
+  },
+  "T-Shirt Diffusion": {
+    "description": "Generates t-shirt logos, base model is vintedois-diffusion with additional training on t-shirt logos size 640x640px",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/4694/lessmagifactorygreater-t-shirt-diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/t-shirt_diffusion/01_gigachad.webp"
+    ],
+    "name": "T-Shirt Diffusion",
+    "nsfw": false,
+    "style": "other",
+    "trigger": ["as a t-shirt logo in the style of <MAGIFACTORY> art"],
+    "type": "ckpt",
+    "version": "1"
+  },
+  "Lawlas's yiff mix": {
+    "description": "Based on yiffy-e18 and Anything, produces sfw/nsfw furry anthro artworks of different styles with consistant quality, while maintaining details on stuff like clothes, background, etc. with simpler prompts.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/12979/lawlass-yiffymix-20-furry-model",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/lawlas/01_lawlas.webp"
+    ],
+    "name": "Lawlas's yiff mix",
+    "nsfw": false,
+    "style": "furry",
+    "type": "ckpt",
+    "version": "2"
+  },
+  "DGSpitzer Art Diffusion": {
+    "description": "Dreambooth model based on Vintedois, trained on a dataset of DGSpitzer art. Styles included are outline, sketch, anime, painting and landscape",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/DGSpitzer/DGSpitzer-Art-Diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/dgspitzer_art_diffusion/01_dgs.webp"
+    ],
+    "name": "DGSpitzer Art Diffusion",
+    "nsfw": false,
+    "style": "artistic",
+    "trigger": [
+      "painting",
+      "arts, dgspitzer",
+      "outline",
+      "anime",
+      "whiteshape",
+      "sketch",
+      "landscape"
+    ],
+    "type": "ckpt",
+    "version": "1"
+  },
+  "Realistic Vision": {
+    "description": "Model for creating photorealistic humans",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/4201?modelVersionId=29460",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/realisticvision/01_realisticvision.webp"
+    ],
+    "name": "Realistic Vision",
+    "nsfw": true,
+    "style": "realistic",
+    "type": "ckpt",
+    "version": "2.0"
+  },
+  "Dan Mumford Style": {
+    "description": "Model trained with a dataset of DanMumford Style images, courtesy of Flonix",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/4567/v2-updated-flonixs-dan-mumford-style",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/dan_mumford_style/01_dan.webp"
+    ],
+    "name": "Dan Mumford Style",
+    "nsfw": false,
+    "style": "artistic",
+    "trigger": [
+      "by dan mumford",
+      "in the style of dan mumford",
+      "DanMumford Style"
+    ],
+    "type": "ckpt",
+    "version": "2"
+  },
+  "PFG": {
+    "description": "NSFW Model for realistic and Hentai images",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/1227/pfg",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/pfg/01_pfg.webp"
+    ],
+    "name": "PFG",
+    "nsfw": true,
+    "style": "realistic",
+    "type": "ckpt",
+    "version": "1.11"
+  },
+  "Epic Diffusion": {
+    "description": "Epic Diffusion is a general purpose model based on Stable Diffusion 1.x intended to replace the official SD releases as your default model. It is focused on providing high quality output in a wide range of different styles, with support for NFSW content.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/3855/epic-diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/epic_diffusion/01_epic.webp"
+    ],
+    "name": "Epic Diffusion",
+    "nsfw": false,
+    "style": "generalist",
+    "type": "ckpt",
+    "version": "1.1"
+  },
+  "Deliberate": {
+    "description": "This model provides you the ability to create anything you want. The more power of prompt knowledges you have, the better results you'll get. It basically means that you'll never get a perfect result with just a few words. You have to fill out your prompt line extremely detailed",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/4823/deliberate",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/deliberate/01_deliberate.webp"
+    ],
+    "name": "Deliberate",
+    "nsfw": true,
+    "style": "generalist",
+    "type": "ckpt",
+    "version": "2"
+  },
+  "Edge Of Realism": {
+    "description": "A spin off from Level4. Built to produce high quality photos. Sometimes photos will come out as uncanny as they are on the edge of realism.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/21813/edge-of-realism",
+    "name": "Edge Of Realism",
+    "nsfw": true,
+    "style": "realistic",
+    "type": "ckpt",
+    "version": "2"
+  },
+  "Concept Sheet": {
+    "description": "This model is just the first dreambooth iteration for concept-sheet/old-books style. Based on SD 2.1",
+    "baseline": "stable diffusion 2",
+    "homepage": "https://civitai.com/models/4897/concept-sheet",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/conceptsheet/01_concept.webp"
+    ],
+    "name": "Concept Sheet",
+    "nsfw": false,
+    "style": "artistic",
+    "trigger": ["concept-art"],
+    "type": "ckpt",
+    "version": "alpha"
+  },
+  "CharHelper": {
+    "description": "This model was trained on a digital painting style mainly with characters and portraits. The main objective is to train a model to be a tool to help with character design ideas",
+    "baseline": "stable diffusion 2",
+    "homepage": "https://huggingface.co/ManglerFTW/CharHelper",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/charhelper/01_charhelper.webp"
+    ],
+    "name": "CharHelper",
+    "nsfw": false,
+    "style": "artistic",
+    "trigger": [
+      "CHV3CZombie",
+      "CHV3CAlien",
+      "CHV3CBird",
+      "CHV3SLighthouse",
+      "CHV3SCute",
+      "CHV3SMacro"
+    ],
+    "type": "ckpt",
+    "version": "4"
+  },
+  "Pokemon3D": {
+    "description": "This model was trained on Gen 1-8 Pokemon low poly renders",
+    "baseline": "stable diffusion 2",
+    "homepage": "https://huggingface.co/Timmahw/SD2.1_Pokemon3D",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/pokemon3d/01_pokemon.webp"
+    ],
+    "name": "Pokemon3D",
+    "nsfw": false,
+    "style": "anime",
+    "trigger": ["GMAX", "Mega", "<PokemonName>"],
+    "type": "ckpt",
+    "version": "1"
+  },
+  "pix2pix": {
+    "description": "Model specifically trained for pix2pix use",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://github.com/timothybrooks/instruct-pix2pix",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/pix2pix/01_pix2pix.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/pix2pix/02_pix2pix.webp"
+    ],
+    "name": "pix2pix",
+    "nsfw": false,
+    "style": "generalist",
+    "type": "ckpt",
+    "version": "1"
+  },
+  "Vivid Watercolors": {
+    "description": "The model is trained with beautiful, artist-agnostic watercolor images using the midjourney method",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/Evel/VividWatercolors",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/vividwatercolors/01_vivid.webp"
+    ],
+    "name": "Vivid Watercolors",
+    "nsfw": false,
+    "style": "artistic",
+    "trigger": ["wtrcolor style"],
+    "type": "ckpt",
+    "version": "1"
+  },
+  "Counterfeit": {
+    "description": "Counterfeit is anime style Stable Diffusion model",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/4468/counterfeit-v30",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/counterfeit/01_counterfeit.webp"
+    ],
+    "name": "Counterfeit",
+    "nsfw": false,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "3"
+  },
+  "Openniji": {
+    "description": "The Stable Diffusion model trained on Nijijourney images",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/14479/openniji-v2",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/openniji/01_openniji.webp"
+    ],
+    "name": "Openniji",
+    "nsfw": false,
+    "style": "artistic",
+    "type": "ckpt",
+    "version": "2.0"
+  },
+  "Pastel Mix": {
+    "description": "The model is trained with beautiful, artist-agnostic watercolor images using the midjourney method",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/andite/pastel-mix",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/pastelmix/01_pastelmix.webp"
+    ],
+    "name": "Pastel Mix",
+    "nsfw": false,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "1"
+  },
+  "Pulp Vector Art": {
+    "description": "Style model for Stable Diffusion mimicking vector style. vector-art and pulp model mix",
+    "baseline": "stable diffusion 2",
+    "homepage": "https://civitai.com/models/4618/vector-art",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/pulp_vector_art/01_pulpvector.webp"
+    ],
+    "name": "Pulp Vector Art",
+    "nsfw": false,
+    "style": "other",
+    "trigger": ["vector-art", "pulp-diffusion"],
+    "type": "ckpt",
+    "version": "beta"
+  },
+  "Rainbowpatch": {
+    "description": "Rainbowpatch is a fine-tuned model specifically trained to generate high-quality stylized images, this model doesn't require complicated detailed text prompts.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/5528/rainbowpatch-12",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/rainbowpatch/01_rainbow.webp"
+    ],
+    "name": "Rainbowpatch",
+    "nsfw": false,
+    "style": "artistic",
+    "trigger": ["rainbowpatch"],
+    "type": "ckpt",
+    "version": "1.2"
+  },
+  "Vector Art": {
+    "description": "This is a style model for Stable Diffusion 2.1 mimicking vector style.",
+    "baseline": "stable diffusion 2",
+    "homepage": "https://civitai.com/models/4618/vector-art",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/vectorart/01_vectorart.webp"
+    ],
+    "name": "Vector Art",
+    "nsfw": false,
+    "style": "other",
+    "trigger": ["vector-art"],
+    "type": "ckpt",
+    "version": "beta"
+  },
+  "T-Shirt Print Designs": {
+    "description": "This is a style model for creating prints for tshirts",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/5256/t-shirt-print-designs-test-model",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/tshirt_print_designs/01_tshirt.webp"
+    ],
+    "name": "T-Shirt Print Designs",
+    "nsfw": false,
+    "style": "other",
+    "trigger": ["printdesign"],
+    "type": "ckpt",
+    "version": "0.1"
+  },
+  "GorynichMix": {
+    "description": "Model mix based on any4.5, Elysium, Dreamlike and few more models",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/4815/gorynichmix",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/gorynichmix/01_gory.webp"
+    ],
+    "name": "GorynichMix",
+    "nsfw": false,
+    "style": "artistic",
+    "type": "ckpt",
+    "version": "1.2"
+  },
+  "Laolei New Berry Protogen Mix": {
+    "description": "Awesome anime character/realism mix",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/4099/laolei-new-berry-protogen-mix",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/laolei_new_berry_protogen_mix/01_laolei.webp"
+    ],
+    "name": "Laolei New Berry Protogen Mix",
+    "nsfw": false,
+    "style": "artistic",
+    "type": "ckpt",
+    "version": "1"
+  },
+  "URPM": {
+    "description": "Model for creating photorealistic humans",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/2661/uber-realistic-porn-merge-urpm",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/urpm/01_urpm.webp"
+    ],
+    "name": "URPM",
+    "nsfw": true,
+    "style": "realistic",
+    "type": "ckpt",
+    "version": "1.3"
+  },
+  "Cheese Daddys Landscape Mix": {
+    "description": "This model is tweak and more merges mainly intended for landscapes, but works decent for people",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/5041/cheese-daddys-landscapes-mix",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/cheese_daddys_landscape_mix/01_landscape.webp"
+    ],
+    "name": "Cheese Daddys Landscape Mix",
+    "nsfw": false,
+    "style": "realistic",
+    "type": "ckpt",
+    "version": "3.5"
+  },
+  "Rachel Walker Watercolors": {
+    "description": "This checkpoint is trained on the art of Rachel Walker, a New Zealand artist who paints beautiful watercolors.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/1122/rachel-walker-style-watercolor",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/rachel_walker_watercolors/01_rachel.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/rachel_walker_watercolors/02_muted001.webp"
+    ],
+    "name": "Rachel Walker Watercolors",
+    "nsfw": false,
+    "style": "artistic",
+    "trigger": [
+      "rachelwalker style",
+      "a watercolor painting with a white background rachelwalker style [your image subject]"
+    ],
+    "type": "ckpt",
+    "version": "1.2"
+  },
+  "Project Unreal Engine 5": {
+    "description": "This checkpoint is trained to look like Unreal Engine 5 renders",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/4752/project-unreal-engine-5",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/project_unreal_engine5/01_unreal.webp"
+    ],
+    "name": "Project Unreal Engine 5",
+    "nsfw": false,
+    "style": "artistic",
+    "type": "ckpt",
+    "version": "2.0"
+  },
+  "Unstable Ink Dream": {
+    "description": "Create a variety of styles including realistic photos, realistic drawings, and animations like last three fig",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/Oosayam/UnstableSamInkDream",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/unstableinkdream/01_inkdream.webp"
+    ],
+    "name": "Unstable Ink Dream",
+    "nsfw": false,
+    "style": "artistic",
+    "trigger": [
+      "nvinkpunk",
+      "kuvshinov",
+      "dreamlikeart",
+      "samdoesart",
+      "analog style",
+      "modelshoot style"
+    ],
+    "type": "ckpt",
+    "version": "6.0"
+  },
+  "PRMJ": {
+    "description": "Custom built SD2.1 generalist model from 28k SFW images ",
+    "baseline": "stable diffusion 2",
+    "homepage": "https://civitai.com/models/6465/prmj",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/prmj/01_prmj.webp"
+    ],
+    "name": "PRMJ",
+    "nsfw": false,
+    "style": "generalist",
+    "type": "ckpt",
+    "version": "1"
+  },
+  "Elldreths Retro Mix": {
+    "description": "A retro twist on Elldreths other models",
+    "baseline": "stable diffusion 1",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/elldreths_retro_mix/01_elldreth.webp"
+    ],
+    "name": "Elldreths Retro Mix",
+    "nsfw": false,
+    "style": "generalist",
+    "trigger": ["glen orbik", "earle bergey", "robert maguire", "gil elvgren"],
+    "type": "ckpt",
+    "version": "1"
+  },
+  "VinteProtogenMix": {
+    "description": "A beautiful blend of Vintedois and an early Protogen model to create fantabulous images",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/5657/vinteprotogenmix-v10",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/vinte_protogen_mix/01_vinte.webp"
+    ],
+    "name": "VinteProtogenMix",
+    "nsfw": false,
+    "style": "generalist",
+    "type": "ckpt",
+    "version": "1"
+  },
+  "Rodent Diffusion": {
+    "description": "A model created by Youtuber 'Nerdy Rodent' for creating great images with almost any prompt",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/NerdyRodent/rodent-diffusion-1-5",
+    "name": "Rodent Diffusion",
+    "nsfw": false,
+    "style": "generalist",
+    "type": "ckpt",
+    "version": "1"
+  },
+  "Anything v3": {
+    "description": "The original horde Anything model with the VAE built in",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/Linaqruf/anything-v3.0",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/anythingv3/01_anythingv3.webp"
+    ],
+    "name": "Anything v3",
+    "nsfw": false,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "3"
+  },
+  "Woop-Woop Photo": {
+    "description": "A model trained to make detailed, anatomically-accurate (hands, faces, genitals, etc) illustrations of humans and non-humans alike",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/4041/woopwoop-photo",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/woopwoop/001_muted001.webp"
+    ],
+    "name": "Woop-Woop Photo",
+    "nsfw": false,
+    "style": "realistic",
+    "type": "ckpt",
+    "version": "1.2"
+  },
+  "Abyss OrangeMix": {
+    "description": "A model trained to create CG anime characters",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/WarriorMama777/OrangeMixs",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/abyss_orange_mix/01_abyss.webp"
+    ],
+    "name": "Abyss OrangeMix",
+    "nsfw": false,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "3"
+  },
+  "CyriousMix": {
+    "description": "Mostly NSFW, semi-realistic anime characters",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/6260/cyriousmix",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/cyrious_mix/01_cyrious.webp"
+    ],
+    "name": "CyriousMix",
+    "nsfw": false,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "1.4"
+  },
+  "Microcasing": {
+    "description": "A cross of knollingcase and microworlds, for creating tiny worlds in a case",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/8232/microcasing-merge",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/microcasing/01_microcasing.webp"
+    ],
+    "name": "Microcasing",
+    "nsfw": false,
+    "style": "other",
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "ChilloutMix": {
+    "description": "For creating images of nude solo women",
+    "baseline": "stable diffusion 1",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/chillout_mix/01_chilloutmix.webp"
+    ],
+    "name": "ChilloutMix",
+    "nsfw": true,
+    "style": "realistic",
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Microchars": {
+    "description": "A cross of Cute Rich Style and microworlds, for creating tiny 3d figurines",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/8057/microchars-merge",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/microchars/01_people.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/microchars/02_chars.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/microchars/03_classes.webp"
+    ],
+    "name": "Microchars",
+    "nsfw": false,
+    "style": "other",
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Microcritters": {
+    "description": "A cross of Jak's Creepy Critter and microworlds, for creating tiny 3d monsters",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/8026/micro-critters-merge",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/Microcritters/01.webp"
+    ],
+    "name": "Microcritters",
+    "nsfw": false,
+    "style": "other",
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "AbyssOrangeMix-AfterDark": {
+    "description": "AbyssOrangeMix trained for creating NSFW images",
+    "baseline": "stable diffusion 1",
+    "name": "AbyssOrangeMix-AfterDark",
+    "nsfw": true,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "2"
+  },
+  "Grapefruit Hentai": {
+    "description": "Grapefruit aims to be a hentai model with a bright and more softer anime style.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/2583/grapefruit-hentai-model",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/grapefruit_hentai/01_grapefruit.webp"
+    ],
+    "name": "Grapefruit Hentai",
+    "nsfw": true,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "4.1"
+  },
+  "Experience": {
+    "description": "A generalist model with a slight leaning towards science-fiction and 3d renders",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/5952/experience",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/experience/01_experience.webp"
+    ],
+    "name": "Experience",
+    "nsfw": false,
+    "style": "generalist",
+    "type": "ckpt",
+    "version": "6.5"
+  },
+  "Kenshi": {
+    "description": "An anime-style model merge that included Nixeu, WLOP, Guweiz, BoChen, and many others",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/SweetLuna/Kenshi",
+    "name": "Kenshi",
+    "nsfw": false,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "0.1.1"
+  },
+  "DucHaiten Classic Anime": {
+    "description": "DucHaiten's classic anime charecter model, similar to 80's/90's artwork",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/DucHaiten/DH_ClassicAnime",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/duchaiten_classic_anime/01_anon.webp"
+    ],
+    "name": "DucHaiten Classic Anime",
+    "nsfw": false,
+    "style": "anime",
+    "trigger": ["(80s anime style)", "(gtav style)"],
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Rev Animated": {
+    "description": "This model is mainly intended for Portraits and Full Body Anime-like pictures. Fantasy landscapes are decent.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/7371?modelVersionId=46846",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/rev_animated/001_muted.webp"
+    ],
+    "name": "Rev Animated",
+    "nsfw": true,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "1.2.2"
+  },
+  "526Mix-Animated": {
+    "description": "The goal of this model was to anchor 526Mix's whimsical and artistic personality into anime. 526Mix can do a pretty cool anime style (and other 2D styles), but it can be a bit unreliable at times. This simple mix increases the reliability, depth, and nuance in 526Mix's anime and anime-esque capabilities.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/35893/526mix-animated",
+    "name": "526Mix-Animated",
+    "nsfw": true,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "A to Zovya RPG": {
+    "description": "encompass all things RPG Fantasy Art generation related. From landscapes, ruins, castles to characters and monster concepts",
+    "baseline": "stable diffusion 2",
+    "homepage": "https://civitai.com/models/8124/a-to-zovya-rpg-artists-tools-15-and-21",
+    "name": "A to Zovya RPG",
+    "nsfw": false,
+    "style": "artistic",
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Colorful": {
+    "description": "Realistic fantasy portraits, landscapes with vibrant colors, slightly photorealistic",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/7279/colorful",
+    "name": "Colorful",
+    "nsfw": false,
+    "style": "artistic",
+    "type": "ckpt",
+    "version": "2.0"
+  },
+  "Movie Diffusion": {
+    "description": "Movie Diffusion is SD 1.5 trained on 35mm film stills from popular movies.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/8067/movie-diffusion-v12",
+    "name": "Movie Diffusion",
+    "nsfw": false,
+    "style": "realistic",
+    "type": "ckpt",
+    "version": "1.2"
+  },
+  "GuoFeng": {
+    "description": "This is a Chinese gorgeous antique style model, which can also be said to be an antique game character model with a 2.5D texture",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/10415/3-guofeng3",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/GuoFeng/01.webp"
+    ],
+    "name": "GuoFeng",
+    "nsfw": false,
+    "style": "artistic",
+    "type": "ckpt",
+    "version": "3.3"
+  },
+  "Anime Pencil Diffusion": {
+    "description": "A dreambooth finetune of stable diffusion 1.5 model that will output stuff in anime pencil concept drawing style.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/yehiaserag/anime-pencil-diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/anime_pencil_diffusion/01_anipen.webp"
+    ],
+    "name": "Anime Pencil Diffusion",
+    "nsfw": false,
+    "style": "anime",
+    "trigger": ["anime pencil concept style"],
+    "type": "ckpt",
+    "version": "5"
+  },
+  "BPModel": {
+    "description": "Anime model similar to A Certain Thing, but custom trained on 1024x1024 resolution images",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/Crosstyan/BPModel",
+    "name": "BPModel",
+    "nsfw": false,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "1024"
+  },
+  "UMI Olympus": {
+    "description": "A model that generates extremely high quality landscapes, space battles, and fantasy settings. It can also generate very high quality anime characters, though that is not its primary purpose",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/6077/umi-ai-mythology-and-babes-by-dutchalex",
+    "name": "UMI Olympus",
+    "nsfw": false,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "HRL": {
+    "description": "Hyper Realistic Looking",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/8616/hrl-hyper-realistic-looking-3",
+    "name": "HRL",
+    "nsfw": true,
+    "style": "realistic",
+    "type": "ckpt",
+    "version": "3.1"
+  },
+  "Uhmami": {
+    "description": "a blend of anime-focused models with a semi-realistic aesthetic, combining 3D digital imagery with photography. It allows the use of prompts based on booru tags, similar to the novelai model, resulting in high-quality semi-realistic images",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/8563/uhmami",
+    "name": "Uhmami",
+    "nsfw": false,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Neurogen": {
+    "description": "This model gives a very good detail of skin and textures. Great for close-up photorealistic portraits as well as various characters and models.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/21616/neurogen-v11",
+    "name": "Neurogen",
+    "nsfw": true,
+    "style": "realistic",
+    "type": "ckpt",
+    "version": "1.1"
+  },
+  "NeverEnding Dream": {
+    "description": "This is a dream that you will never want to wake up from. A NeverEnding Dream.  Similar to Dreamshaper, but able to use danbooru tags",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/10028/neverending-dream-ned",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/neverending_dream/01_anon.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/neverending_dream/02_muted001.webp"
+    ],
+    "name": "NeverEnding Dream",
+    "nsfw": false,
+    "style": "artistic",
+    "type": "ckpt",
+    "version": "1.22"
+  },
+  "Protogen Anime": {
+    "description": "A cocktail mix of a bit of everything",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/3627/protogen-v22-anime-official-release",
+    "name": "Protogen Anime",
+    "nsfw": false,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "2.2"
+  },
+  "SynthwavePunk": {
+    "description": "A mix of synthwave and inkpunk",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/1102/synthwavepunk",
+    "name": "SynthwavePunk",
+    "nsfw": false,
+    "style": "artistic",
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Graphic-Art": {
+    "description": "Style model for Stable Diffusion. Mainly focusing on graphic design.",
+    "baseline": "stable diffusion 2",
+    "homepage": "https://civitai.com/models/7884/graphic-art",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/graphic_art/01_graphicart.webp"
+    ],
+    "name": "Graphic-Art",
+    "nsfw": false,
+    "style": "other",
+    "type": "ckpt",
+    "version": "beta"
+  },
+  "Illuminati Diffusion": {
+    "description": "Illuminati Diffusion is a latent text-to-image diffusion model that has been conditioned on high aesthetic synthetic images through fine-tuning. It was trained on 82,000 images locally with a single 3090ti, taking over 100 hours.",
+    "baseline": "stable diffusion 2",
+    "homepage": "https://civitai.com/models/11193",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/illuminati/001_muted001.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/illuminati/002_blank.webp"
+    ],
+    "name": "Illuminati Diffusion",
+    "nsfw": false,
+    "style": "generalist",
+    "type": "ckpt",
+    "version": "1.1"
+  },
+  "SD-Silicon": {
+    "description": "SD-Silicon: A series of general-purpose models based off the experimental automerger, autoMBW.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/Xynon/SD-Silicon",
+    "name": "SD-Silicon",
+    "nsfw": false,
+    "style": "generalist",
+    "type": "ckpt",
+    "version": "29"
+  },
+  "FKing SciFi": {
+    "description": "Trained on 666 images, hand captioned, general, but limited sci-fi model. It has been trained on armour concepts, futuristic backgrounds, androids and robots, as well as some fantasy stuff, like werecreatures.",
+    "baseline": "stable diffusion 2",
+    "homepage": "https://civitai.com/models/2107/fkingscifiv2",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/scifi_diffusion/01_scifi.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/scifi_diffusion/02_voodoo.webp"
+    ],
+    "name": "FKing SciFi",
+    "nsfw": false,
+    "style": "artistic",
+    "trigger": ["fking_scifi_v2"],
+    "type": "ckpt",
+    "version": "2"
+  },
+  "RealBiter": {
+    "description": "This blend model aims to achieve versatility in generating images that are almost realistic but with a touch of fantasy and a polished aesthetic. It performs well with both illustrations and simulated photographs, but it particularly excels with the latter",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/16592/realbiter",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/realbiter/001_voodoocode.webp"
+    ],
+    "name": "RealBiter",
+    "nsfw": true,
+    "style": "realistic",
+    "type": "ckpt",
+    "version": "29"
+  },
+  "FaeTastic": {
+    "description": "A beautiful mixed model (22 mixes) including Noise Offset to create a wide-range of images",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/14065",
+    "name": "FaeTastic",
+    "nsfw": false,
+    "style": "generalist",
+    "type": "ckpt",
+    "version": "1"
+  },
+  "OrbAI": {
+    "description": "This model gives you the possibilty to have an orb and put awesome stuff inside of it like animals, universe, solarsystems, fractal images whatever you can think of",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/14102/orbai",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/OrbAI/01.webp"
+    ],
+    "name": "OrbAI",
+    "nsfw": false,
+    "style": "other",
+    "trigger": ["orbai"],
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Realism Engine": {
+    "description": "This new model was fine-tuned using a vast collection of public domain images, ensuring that it can generate images across a wide range of contexts. While it may not be as strong in generating abstract or highly stylized images, it excels in generating images that are true to life, visually compelling and that accurately reflect the input textual description",
+    "baseline": "stable diffusion 2",
+    "homepage": "https://civitai.com/models/17277",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/realism_engine/001_muted001.webp"
+    ],
+    "name": "Realism Engine",
+    "nsfw": false,
+    "style": "generalist",
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Jim Eidomode": {
+    "description": "I have created something amazing that creates very stylized images, especially digital art. The model is good at creating animals, women, men, fantastic landscapes and much more.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/10720/jim-eidomode",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/Jim_Eidomode/01.webp"
+    ],
+    "name": "Jim Eidomode",
+    "nsfw": false,
+    "style": "artistic",
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Dungeons n Waifus": {
+    "description": "A handpicked and curated merge of the best of the best in fantasy world, character & creature design. Should serve as a bit of a swiss army knife / multi-tool to create any and all fantasy art, character concepts, portraits, designs, locations, & even a bit of n00ds",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/11718/dungeons-n-waifus",
+    "name": "Dungeons n Waifus",
+    "nsfw": false,
+    "style": "artistic",
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "iCoMix": {
+    "description": "Comic style mix",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/16164/icomix",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/iCoMix/01.webp"
+    ],
+    "name": "iCoMix",
+    "nsfw": false,
+    "style": "artistic",
+    "type": "ckpt",
+    "version": "2"
+  },
+  "TrexMix": {
+    "description": "This is an anime-centric model. It is a massive merge (20+ models) of SD 1.4 and 1.5-based checkpoints. The intent behind this model is to provide good anatomy, realistic lighting and extremely beautiful backgrounds",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/18801/trexmix",
+    "name": "TrexMix",
+    "nsfw": false,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "1"
+  },
+  "Pretty 2.5D": {
+    "description": "Realistic anime/cartoon styled drawings",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/17579/pretty-25d-v2",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/Pretty_2.5D/01.webp"
+    ],
+    "name": "Pretty 2.5D",
+    "nsfw": false,
+    "style": "artistic",
+    "type": "ckpt",
+    "version": "2"
+  },
+  "ExpMix Line": {
+    "description": "Realistic anime styled drawings with extra emphasis on outlines",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/12865/expmixline",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/expmix/01_muted001.webp"
+    ],
+    "name": "ExpMix Line",
+    "nsfw": false,
+    "style": "artistic",
+    "type": "ckpt",
+    "version": "2"
+  },
+  "Disco Elysium": {
+    "description": "Trained on the character portraits from the game Disco Elysium. Can also do great backgrounds, able to be used without a trigger",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/nitrosocke/disco-elysium",
+    "name": "Disco Elysium",
+    "nsfw": false,
+    "style": "artistic",
+    "trigger": ["discoelysium style"],
+    "type": "ckpt",
+    "version": "1"
+  },
+  "Something": {
+    "description": "A lot of things are being discovered lately, such as a way to merge model using mbw automatically, offset noise to get much darker result, and even VAE tuning. This anime model is intended to use all of those features as the improvements",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/NoCrypt/SomethingV2_2",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/Something/01.webp"
+    ],
+    "name": "Something",
+    "nsfw": false,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "2.2"
+  },
+  "RCNZ Dumb Monkey": {
+    "description": "They let the monkey loose at the 'Merge Model' tab, and smashed models together and this awesome generalist model came out!",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/21695",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/rcnz_dumb_monkey/01.webp"
+    ],
+    "name": "RCNZ Dumb Monkey",
+    "nsfw": false,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "PIXHELL": {
+    "description": "The model recreates Pixelart style but with more modern take on the 8bit style. This model is great for side scroller environments but it works great for characters when using controlnet for 2.1 for openpose and also it's great for props and other things",
+    "baseline": "stable diffusion 2",
+    "homepage": "https://civitai.com/models/21276/pixhell",
+    "name": "PIXHELL",
+    "nsfw": false,
+    "style": "other",
+    "trigger": ["pixelart"],
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Korestyle": {
+    "description": "A model for semi-realistic comic book style sketches",
+    "baseline": "stable diffusion 1",
+    "name": "Korestyle",
+    "nsfw": false,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "PVC": {
+    "description": "This model is a latent diffusion model finetuned on Waifu Diffusion v1.5 beta 2 with PVC figure images. You can use Danbooru tags to generate images",
+    "baseline": "stable diffusion 2",
+    "homepage": "https://huggingface.co/p1atdev/pvc-v3",
+    "name": "PVC",
+    "nsfw": false,
+    "style": "other",
+    "trigger": ["pvc", "figma", "nendoroid"],
+    "type": "ckpt",
+    "version": "3"
+  },
+  "Aurora": {
+    "description": "Aurora is a Stable Diffusion model, similar to its predecessor Kenshi, with the goal of capturing my own feelings towards the anime styles I desire.The name Aurora, which means 'dawn' in Latin, represents the idea of a new beginning and a fresh start.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/40199/aurora",
+    "name": "Aurora",
+    "nsfw": false,
+    "style": "anime",
+    "trigger": ["sle", "mksks style", "detailed background"],
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Char": {
+    "description": "A 1024 res SD v1.5 trained (not merged) resolution model for various high-quality artstyles. NOTE: There are 42 different possible triggers depending on what you want to create, please see the homepage for the full list",
+    "baseline": "stable diffusion 1",
+    "name": "Char",
+    "nsfw": false,
+    "style": "generalist",
+    "type": "ckpt",
+    "version": "1"
+  },
+  "CamelliaMix 2.5D": {
+    "description": "Semi-realistic model, Camellia Mix 2.5D V2",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/44219",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/CamelliaMix_2.5D/image-grid.webp"
+    ],
+    "name": "CamelliaMix 2.5D",
+    "nsfw": false,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "2.0"
+  },
+  "Perfect World": {
+    "description": "The pursuit of perfect balance between realism and anime, a semi-realistic model aimed to achieve beautiful realistic faces with sexy hentai bodies.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/8281/perfect-world",
+    "name": "Perfect World",
+    "nsfw": true,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "2"
+  },
+  "JoMad Diffusion": {
+    "description": "SD 1.5 model trained on a sample of Joe Madureiras artwork, this model was combined with another anime style model to create the blend uploaded here.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/1223/jomad-diffusion",
+    "name": "JoMad Diffusion",
+    "nsfw": false,
+    "style": "anime",
+    "trigger": ["style of joemadureira"],
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "RCNZ Gorilla With A Brick": {
+    "description": "This time its a Gorilla at the 'Merge Model' tab, and smashed photorealism models together and this awesome generalist model came out!",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/22747/rcnz-gorilla-with-a-brick",
+    "name": "RCNZ Gorilla With A Brick",
+    "nsfw": false,
+    "style": "generalist",
+    "type": "ckpt",
+    "version": "2.0"
+  },
+  "Ether Real Mix": {
+    "description": "Ether Real Mix is a realistic to semi-realistic anime style model tuned with the flexibility for general purpose use (hopefully). It still has some shortcomings inherit to anime models such as biases in generating females and humans.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/18207?modelVersionId=23036",
+    "name": "Ether Real Mix",
+    "nsfw": false,
+    "style": "other",
+    "type": "ckpt",
+    "version": "1.1"
+  },
+  "Lyriel": {
+    "description": "This model is generally designed for portraits and full-length anime style photos. Fantastic landscapes are quite decent. And it doesn't require kilometer-long queries to get a high-quality result.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/22922/lyriel",
+    "name": "Lyriel",
+    "nsfw": true,
+    "style": "artistic",
+    "type": "ckpt",
+    "version": "1.6"
+  },
+  "DnD Map Generator": {
+    "description": "This model is trained on various D&D Battlemaps. Use the negative prompt: 'grid' to improve some maps, or use the gridless version. Try to experiment with the CFG scale, 10 can create some amazing results but to each their own.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/5012/dnd-map-generator",
+    "name": "DnD Map Generator",
+    "nsfw": false,
+    "style": "other",
+    "trigger": ["2d dnd battlemap"],
+    "type": "ckpt",
+    "version": "3.0"
+  },
+  "BRA": {
+    "description": "Trained on countless pictures of Beautiful Asian women. (some nsfw images included)",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/25494/bra",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/Beautiful_Realistic_Asians/01.webp"
+    ],
+    "name": "BRA",
+    "nsfw": true,
+    "style": "realistic",
+    "type": "ckpt",
+    "version": "5.0"
+  },
+  "MoonMix Fantasy": {
+    "description": "This model is the result of merging several checkpoint models. See homepage for details.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/43977?modelVersionId=51550",
+    "name": "MoonMix Fantasy",
+    "nsfw": true,
+    "style": "other",
+    "type": "ckpt",
+    "version": "2.0"
+  },
+  "ICBINP - I Can't Believe It's Not Photography": {
+    "description": "Following on from Gorilla With A Brick, merged in 10 more photorealistic models at various weights, and some more noise offset to create something that when prompted for photorealism will make you go 'I Can't Believe It's Not Photography'. It will happily create CGI characters and awesome landscapes as well.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/28059?modelVersionId=83527",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/icbinp-i-cant-believe-its-not-photography/image-grid.webp"
+    ],
+    "name": "ICBINP - I Can't Believe It's Not Photography",
+    "nsfw": false,
+    "style": "realistic",
+    "type": "ckpt",
+    "version": "8.0"
+  },
+  "BB95 Furry Mix": {
+    "description": "This model is a mix of various furry models.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/17649/bb95-furry-mix",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/bb95_furry_mix/image-grid.webp"
+    ],
+    "name": "BB95 Furry Mix",
+    "nsfw": true,
+    "style": "furry",
+    "type": "ckpt",
+    "version": "7.0"
+  },
+  "MeinaMix": {
+    "description": "MeinaMix objective is to be able to do good art with little prompting.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/7240/meinamix",
+    "name": "MeinaMix",
+    "nsfw": true,
+    "style": "artistic",
+    "type": "ckpt",
+    "version": "10.0"
+  },
+  "Mistoon Amethyst": {
+    "description": "It creates realistic and expressive characters with a disney twist.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/33707/mistoonamethyst",
+    "name": "Mistoon Amethyst",
+    "nsfw": true,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "2.0"
+  },
+  "Art Of Mtg": {
+    "description": "Experimenal model, based on ~5000 arts for cards from Magic: the Gathering game on top of SD1.5 model. Large variety of cards from 2014 to 2022 was used. Logos, guild/clan icons and mana symbols were not part of training set as Fan Content Policy explicitly prohibits their use.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/TopdeckingLands/ArtOfMtg_V1",
+    "name": "Art Of Mtg",
+    "nsfw": false,
+    "style": "other",
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Galena Redux": {
+    "description": "This is an NSFW prone model. It is meant to generate primarily women and NSFW scenarios. This was made with the new base model merged together, alongside several style LoRA's.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/53360/galena-redux",
+    "name": "Galena Redux",
+    "nsfw": true,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Analog Madness": {
+    "description": "A very versatile model, the more powerfull prompts you give, the better results. Capable of creating both NSFW and SFW images but also great scenery, both in landscape and portrait.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/8030?modelVersionId=56498",
+    "name": "Analog Madness",
+    "nsfw": true,
+    "style": "realistic",
+    "type": "ckpt",
+    "version": "4.0"
+  },
+  "Henmix Real": {
+    "description": "A realistic model, see homepage for details.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/20282",
+    "name": "Henmix Real",
+    "nsfw": true,
+    "style": "realistic",
+    "type": "ckpt",
+    "version": "3.0"
+  },
+  "Elysium Anime": {
+    "description": "Anime version of Elysium, detailed versatile anime style.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/8602?modelVersionId=10500",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/elysium_anime/01_anon.webp"
+    ],
+    "name": "Elysium Anime",
+    "nsfw": false,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "3.0"
+  },
+  "majicMIX realistic": {
+    "description": "A good looking model, suitable for NSFW and dark scene.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/43331/majicmix-realistic",
+    "name": "majicMIX realistic",
+    "nsfw": true,
+    "style": "realistic",
+    "type": "ckpt",
+    "version": "4.0"
+  },
+  "GhostMix": {
+    "description": "This Checkpoint works well on both SFW and NSFW",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/36520/ghostmix",
+    "name": "GhostMix",
+    "nsfw": false,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "1.2"
+  },
+  "Hassaku": {
+    "description": "Hassaku aims to be a model with a bright, clear anime style. Model focus are nsfw images, but also with a high emphasis for good looking sfw images as well.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/2583/hassaku-hentai-model",
+    "name": "Hassaku",
+    "nsfw": true,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "1.2"
+  },
+  "Dark Sushi Mix": {
+    "description": "This model has good light effects, can generate darker images, and also has good light and shadow performance on normal brightness images.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/24779/dark-sushi-mix-mix",
+    "name": "Dark Sushi Mix",
+    "nsfw": false,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "Colorful"
+  },
+  "CyberRealistic": {
+    "description": "Versatile photorealistic model - the result of a rigorous testing process that blends various models to achieve the desired output.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/15003/cyberrealistic",
+    "name": "CyberRealistic",
+    "nsfw": false,
+    "style": "realistic",
+    "type": "ckpt",
+    "version": "2.1"
+  },
+  "Realistic Vision Inpainting": {
+    "description": "The inpainting version of Realistic Vision",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/4201?modelVersionId=29460",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/realisticvision/01_realisticvision.webp"
+    ],
+    "name": "Realistic Vision Inpainting",
+    "nsfw": true,
+    "style": "realistic",
+    "type": "ckpt",
+    "version": "2.0"
+  },
+  "Deliberate Inpainting": {
+    "description": "The inpainting version of Deliberate",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/4823/deliberate",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/deliberate/01_deliberate.webp"
+    ],
+    "name": "Deliberate Inpainting",
+    "nsfw": true,
+    "style": "generalist",
+    "type": "ckpt",
+    "version": "2"
   },
   "stable_diffusion_inpainting": {
+    "description": "Generalist model specialized for modifying areas of existing images",
+    "baseline": "stable diffusion 1",
+    "showcases": [],
     "name": "stable_diffusion_inpainting",
-    "type": "diffusers",
-    "description": "Generalist model specialized for movifying areas of existing images",
-    "version": "1.5",
-    "style": "inpainting",
-    "hf_path": "runwayml/stable-diffusion-inpainting",
-    "hf_auth": true,
-    "available": false
+    "nsfw": false,
+    "style": "generalist",
+    "type": "ckpt",
+    "version": "1.5"
   },
-  "safety_checker": {
-    "name": "safety_checker",
-    "type": "safety_checker",
-    "description": "Safety checker",
-    "config": {
-      "files": [
-        {
-          "path": "models/safety_checker/pytorch_model.bin",
-          "md5sum": "dbbcb50d4df4572a720b104fae1e8187"
-        },
-        {
-          "path": "models/safety_checker/config.json"
-        },
-        {
-          "path": "models/safety_checker/preprocessor_config.json"
-        }
-      ],
-      "download": [
-        {
-          "file_name": "pytorch_model.bin",
-          "file_path": "models/safety_checker",
-          "file_url": "https://huggingface.co/CompVis/stable-diffusion-safety-checker/resolve/main/pytorch_model.bin"
-        },
-        {
-          "file_name": "config.json",
-          "file_path": "models/safety_checker",
-          "file_url": "https://huggingface.co/CompVis/stable-diffusion-safety-checker/resolve/main/config.json"
-        },
-        {
-          "file_name": "preprocessor_config.json",
-          "file_path": "models/safety_checker",
-          "file_url": "https://huggingface.co/CompVis/stable-diffusion-safety-checker/resolve/main/preprocessor_config.json"
-        }
-      ]
-    }
+  "Disney Pixar Cartoon Type A": {
+    "description": "From the creator: There's no good pixar disney looking cartoon model yet so i decided to make one. This is a merge of Pixar Style Model with my own Loras to create a generic 3d looking western cartoon. In the examples I Use hires. fix, upscale latent, denoising 0.5, hires steps 20, upscale by 2 . Clip skip 2.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/65203/disney-pixar-cartoon-type-a",
+    "name": "Disney Pixar Cartoon Type A",
+    "nsfw": false,
+    "style": "artistic",
+    "type": "ckpt",
+    "version": "1"
+  },
+  "Babes": {
+    "description": "Trained on 1600 images from a few styles(see trigger words), with an enhanced realistic style, in 4 cycles of training. Trained on 576px and 960px, 80+ hours of successful training, and countless hours of failed training. Mix ratio: 25% Realistic, 10% Spicy, 14% Stylistic, 30% Anime, 9.5% Furry, the rest is core training that was reinforced to 96% of the original training.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/2220/babes",
+    "name": "Babes",
+    "nsfw": false,
+    "style": "artistic",
+    "trigger": [
+      "verism style",
+      "samdoesart style",
+      "thepit style",
+      "owler style",
+      "cherrmous style",
+      "arosen style",
+      "uodenim style",
+      "stanleylau style",
+      "puffy lips",
+      "hoop earrings",
+      "thick eyebrows"
+    ],
+    "type": "ckpt",
+    "version": "2.0"
+  },
+  "DreamShaper Inpainting": {
+    "description": "The inpainting version of DreamShaper",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/4384?modelVersionId=51767",
+    "name": "DreamShaper Inpainting",
+    "nsfw": true,
+    "style": "artistic",
+    "type": "ckpt",
+    "version": "5"
+  },
+  "A-Zovya RPG Inpainting": {
+    "description": "The inpainting version of A-Zovya RPG",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/8124?modelVersionId=45840",
+    "name": "A-Zovya RPG Inpainting",
+    "nsfw": false,
+    "style": "artistic",
+    "type": "ckpt",
+    "version": "2"
+  },
+  "BweshMix": {
+    "description": "Should be able to do very good anime 2.5D illustration style by default. And also accepts artist and style prompts easily. So you can make more 2d or artistic styles. Please don't expect super clean anime style.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/65242/bweshmix",
+    "name": "BweshMix",
+    "nsfw": false,
+    "style": "artistic",
+    "type": "ckpt",
+    "version": "2"
+  },
+  "Cetus-Mix": {
+    "description": "A popular anime model",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/6755/cetus-mix",
+    "name": "Cetus-Mix",
+    "nsfw": false,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "4"
+  },
+  "Real Dos Mix": {
+    "description": "As it is a semi-realistic model, we do not recommend inappropriate exposure.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/6925/realdosmix",
+    "name": "Real Dos Mix",
+    "nsfw": true,
+    "style": "realistic",
+    "type": "ckpt",
+    "version": "1"
+  },
+  "Realisian": {
+    "description": "A realistic model.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/47130/realisian",
+    "name": "Realisian",
+    "nsfw": true,
+    "style": "realistic",
+    "type": "ckpt",
+    "version": "4"
+  },
+  "Epic Diffusion Inpainting": {
+    "description": "The inpainting version of Epic Diffusion",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/3855/epic-diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/epic_diffusion/01_epic.webp"
+    ],
+    "name": "Epic Diffusion Inpainting",
+    "nsfw": false,
+    "style": "generalist",
+    "type": "ckpt",
+    "version": "1.1"
+  },
+  "Anything Diffusion Inpainting": {
+    "description": "The inpainting version of Anything Diffusion",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://huggingface.co/andite/anything-v4.0",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/anything_diffusion/01.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/anything_diffusion/02_gigachad.webp",
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/anything_diffusion/03_executivebees24601.webp"
+    ],
+    "name": "Anything Diffusion Inpainting",
+    "nsfw": false,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "4.5"
+  },
+  "Fluffusion": {
+    "description": "The furry model that contains just about everything, and then some.",
+    "baseline": "stable diffusion 1",
+    "name": "Fluffusion",
+    "nsfw": false,
+    "style": "furry",
+    "type": "ckpt",
+    "version": "1"
+  },
+  "Anything v5": {
+    "description": "Anything V5, see the project homepage",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/9409?modelVersionId=30163",
+    "name": "Anything v5",
+    "nsfw": false,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "5"
+  },
+  "ToonYou": {
+    "description": "Silly, stylish, and.. kind of cute? A bit of detail with a cartoony feel.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/30240?modelVersionId=78775",
+    "name": "ToonYou",
+    "nsfw": false,
+    "style": "anime",
+    "trigger": ["flat color"],
+    "type": "ckpt",
+    "version": "Beta 3"
+  },
+  "Reliberate": {
+    "description": "Reliberate is not a new version of Deliberate. I separate both evolutions / elaborations from each other, and made Reliberate model for those who need to work with photographic style. Yes, you can still create artwork, but it will look more like real artwork than digital.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/79754/reliberate",
+    "name": "Reliberate",
+    "nsfw": true,
+    "style": "realistic",
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "SweetBoys 2D": {
+    "description": "SweetBoys 2D is a model that can make slender and cute boy characters. Fall into the very fantastic and delicate world of beautiful boys! This model tends to ignore Prompt in Clip skip 1 and draws an abstract illustrations. Clip skip 2 or higher is recommended.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/46809/sweetboys2d",
+    "name": "SweetBoys 2D",
+    "nsfw": false,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "2.0"
+  },
+  "iCoMix Inpainting": {
+    "description": "The inpainting version of iCoMix",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/16164/icomix",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/iCoMix/01.webp"
+    ],
+    "name": "iCoMix Inpainting",
+    "nsfw": false,
+    "style": "artistic",
+    "type": "ckpt",
+    "version": "2"
+  },
+  "Samaritan 3d Cartoon": {
+    "description": "A merge with loras trained on hundreds of midjourney niji expressive images with variety of emotions, doesn't look as good but it's allright. Add 'toothy expression' for more pronounced teeth but it's hard to get it right. Can only make humans and humanoids at the moment.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/81270/samaritan-3d-cartoon",
+    "name": "Samaritan 3d Cartoon",
+    "nsfw": false,
+    "style": "artistic",
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "AnyLoRA": {
+    "description": "This is good for inference (again, especially with styles) even if I made it mainly for training. It ended up being super good for generating pics and it's now my go-to anime model. It also eats very little vram.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/23900?modelVersionId=29792",
+    "name": "AnyLoRA",
+    "nsfw": false,
+    "style": "anime",
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Western Animation Diffusion": {
+    "description": "Comicbook and Western Animation Style Model",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/86546/western-animation-diffusion",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/western_animation_diffusion/01.webp"
+    ],
+    "name": "Western Animation Diffusion",
+    "nsfw": false,
+    "style": "artistic",
+    "type": "ckpt",
+    "version": "1.0"
+  },
+  "Deliberate 3.0": {
+    "description": "Based on the already popular model Deliberate, this model is a more refined version of it.",
+    "baseline": "stable diffusion 1",
+    "homepage": "https://civitai.com/models/4823/deliberate",
+    "showcases": [
+      "https://raw.githubusercontent.com/Haidra-Org/AI-Horde-image-model-reference/main/showcase/deliberate3/01_efreak.webp"
+    ],
+    "name": "Deliberate 3.0",
+    "nsfw": true,
+    "style": "generalist",
+    "type": "ckpt",
+    "version": "3.0"
+  },
+  "SDXL 1.0": {
+    "description": "The base SDXL 1.0 model.",
+    "baseline": "stable_diffusion_xl",
+    "homepage": "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0",
+    "name": "SDXL 1.0",
+    "nsfw": false,
+    "style": "generalist",
+    "type": "ckpt",
+    "version": "1.0"
   }
 }

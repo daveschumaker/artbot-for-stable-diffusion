@@ -21,8 +21,10 @@ import AwesomeModalWrapper from 'app/_modules/AwesomeModal'
 import LoraSearchModal from './modals/LoraSearchModal'
 import { handleConvertLora } from './loraUtils'
 import LoraFavRecentModal from './modals/LoraFavRecentModal'
+import { useInput } from 'app/_modules/InputProvider/context'
 
-const LoraSelect = ({ input, setInput, setErrors }: any) => {
+const LoraSelect = ({ setErrors }: any) => {
+  const { input, setInput } = useInput()
   const lorasModal = useModal(AwesomeModalWrapper)
 
   const handleSaveRecent = (loraDetails: any) => {
@@ -113,6 +115,7 @@ const LoraSelect = ({ input, setInput, setErrors }: any) => {
       }
 
       const lorasToUpdate = [...input.loras]
+      // @ts-ignore
       lorasToUpdate[Number(i)][field] = value
 
       setInput({ loras: [...lorasToUpdate] })

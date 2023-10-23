@@ -8,7 +8,6 @@ import {
 } from '@tabler/icons-react'
 
 import Section from 'app/_components/Section'
-import { GetSetPromptInput } from '_types/artbot'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import Select from 'app/_components/Select'
 import { Button } from 'app/_components/Button'
@@ -25,11 +24,14 @@ import { useBaselineDetails } from './hooks/useBaselineDetails'
 import { useAspectRatio } from './hooks/useAspectRatio'
 import { MIN_IMAGE_WIDTH } from '_constants'
 import AspectRatioToggler from './AspectRatioToggler'
+import { useInput } from 'app/_modules/InputProvider/context'
 
 const MAX_WIDTH = 1024
 const STEP_LENGTH = 64
 
-const ImageOrientationOptions = ({ input, setInput }: GetSetPromptInput) => {
+const ImageOrientationOptions = () => {
+  const { input, setInput } = useInput()
+
   const { imageMinSize, imageMaxSize } = useImageConstraints()
   const { baseline, baselineLoaded, setBaselineLoaded } = useBaselineDetails(
     input.models

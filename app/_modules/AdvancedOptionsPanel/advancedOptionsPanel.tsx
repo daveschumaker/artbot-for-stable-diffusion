@@ -57,6 +57,7 @@ import TextButton from 'app/_components/TextButton'
 import ImageSquare from '../ImageSquare'
 import TwoPanel from 'app/_components/TwoPanel'
 import SplitPanel from 'app/_components/SplitPanel'
+import { useInput } from '../InputProvider/context'
 
 interface Props {
   input: any
@@ -64,7 +65,9 @@ interface Props {
   setErrors: any
 }
 
-const AdvancedOptionsPanel = ({ input, setInput, setErrors }: Props) => {
+const AdvancedOptionsPanel = ({ setErrors }: Props) => {
+  const { input, setInput } = useInput()
+
   const handleChangeInput = (event: any) => {
     setInput({ [event.target.name]: event.target.value })
   }
@@ -144,10 +147,10 @@ const AdvancedOptionsPanel = ({ input, setInput, setErrors }: Props) => {
               <>
                 <FlexibleRow style={{ marginBottom: 0, paddingTop: '8px' }}>
                   <FlexibleUnit>
-                    <ControlNetOptions input={input} setInput={setInput} />
+                    <ControlNetOptions />
                   </FlexibleUnit>
                   <FlexibleUnit>
-                    <Denoise input={input} setInput={setInput} />
+                    <Denoise />
                   </FlexibleUnit>
                 </FlexibleRow>
                 <FlexibleRow style={{ marginBottom: 0, paddingTop: '8px' }}>
@@ -180,21 +183,10 @@ const AdvancedOptionsPanel = ({ input, setInput, setErrors }: Props) => {
       <Section>
         <FlexibleRow>
           <FlexibleUnit>
-            <SelectSampler input={input} setInput={setInput} />
+            <SelectSampler />
           </FlexibleUnit>
           <FlexibleUnit>
-            <ImageCount input={input} setInput={setInput} />
-          </FlexibleUnit>
-        </FlexibleRow>
-      </Section>
-
-      <Section>
-        <FlexibleRow>
-          <FlexibleUnit>
-            <SelectModel input={input} setInput={setInput} />
-          </FlexibleUnit>
-          <FlexibleUnit>
-            <ImageOrientationOptions input={input} setInput={setInput} />
+            <ImageCount />
           </FlexibleUnit>
         </FlexibleRow>
       </Section>
@@ -202,10 +194,10 @@ const AdvancedOptionsPanel = ({ input, setInput, setErrors }: Props) => {
       <Section>
         <FlexibleRow>
           <FlexibleUnit>
-            <Steps input={input} setInput={setInput} />
+            <SelectModel />
           </FlexibleUnit>
           <FlexibleUnit>
-            <Guidance input={input} setInput={setInput} />
+            <ImageOrientationOptions />
           </FlexibleUnit>
         </FlexibleRow>
       </Section>
@@ -213,10 +205,21 @@ const AdvancedOptionsPanel = ({ input, setInput, setErrors }: Props) => {
       <Section>
         <FlexibleRow>
           <FlexibleUnit>
-            <Seed input={input} setInput={setInput} />
+            <Steps />
           </FlexibleUnit>
           <FlexibleUnit>
-            <ClipSkip input={input} setInput={setInput} />
+            <Guidance />
+          </FlexibleUnit>
+        </FlexibleRow>
+      </Section>
+
+      <Section>
+        <FlexibleRow>
+          <FlexibleUnit>
+            <Seed />
+          </FlexibleUnit>
+          <FlexibleUnit>
+            <ClipSkip />
           </FlexibleUnit>
         </FlexibleRow>
       </Section>
@@ -356,28 +359,24 @@ const AdvancedOptionsPanel = ({ input, setInput, setErrors }: Props) => {
         />
       </div> */}
       <Section style={{ paddingBottom: '12px' }}>
-        <LoraSelect input={input} setInput={setInput} setErrors={setErrors} />
+        <LoraSelect setErrors={setErrors} />
       </Section>
 
       <Section style={{ paddingBottom: '12px' }}>
-        <EmbeddingsSelect
-          input={input}
-          setInput={setInput}
-          setErrors={setErrors}
-        />
+        <EmbeddingsSelect />
       </Section>
 
       <Section>
         <FlexibleRow>
           <FlexibleUnit>
-            <PostProcessors input={input} setInput={setInput} />
+            <PostProcessors />
           </FlexibleUnit>
           <FlexibleUnit>
-            <UpscalerOptions input={input} setInput={setInput} />
+            <UpscalerOptions />
           </FlexibleUnit>
         </FlexibleRow>
       </Section>
-      <MiscOptions input={input} setInput={setInput} />
+      <MiscOptions />
     </div>
   )
 }

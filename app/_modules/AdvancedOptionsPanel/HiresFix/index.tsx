@@ -1,7 +1,9 @@
 import PromptInputSettings from 'app/_data-models/PromptInputSettings'
 import { useEffect, useState } from 'react'
 import InputSwitchV2 from '../InputSwitchV2'
-const HiresFix = ({ input, setInput }: any) => {
+import { useInput } from 'app/_modules/InputProvider/context'
+const HiresFix = () => {
+  const { input, setInput } = useInput()
   const [error, setError] = useState('')
 
   useEffect(() => {

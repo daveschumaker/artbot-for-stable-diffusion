@@ -1,4 +1,3 @@
-import { GetSetPromptInput } from '_types'
 import FlexRow from 'app/_components/FlexRow'
 import { Button } from 'app/_components/Button'
 import { IconSettings } from '@tabler/icons-react'
@@ -13,16 +12,15 @@ import { maxSteps } from 'app/_utils/validationUtils'
 import { useStore } from 'statery'
 import { userInfoStore } from 'app/_store/userStore'
 import NumberInput from 'app/_components/NumberInput'
+import { useInput } from 'app/_modules/InputProvider/context'
 
-interface StepsOptions extends GetSetPromptInput {
+interface StepsOptions {
   hideOptions?: boolean
 }
 
-export default function Steps({
-  hideOptions = false,
-  input,
-  setInput
-}: StepsOptions) {
+export default function Steps({ hideOptions = false }: StepsOptions) {
+  const { input, setInput } = useInput()
+
   const userState = useStore(userInfoStore)
   const { loggedIn } = userState
 

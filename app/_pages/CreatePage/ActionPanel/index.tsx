@@ -8,16 +8,14 @@ import Errors from 'app/_utils/errors'
 import { useState } from 'react'
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import DryRunCalculator from '../PromptInput/DryRunCalculator'
-import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
 import DeleteConfirmModal from 'app/_modules/DeleteConfirmModal'
 import useLockedBody from 'app/_hooks/useLockedBody'
 import styles from './actionPanel.module.css'
+import { useInput } from 'app/_modules/InputProvider/context'
 
 interface Props {
   errors: { [key: string]: boolean }
-  input: DefaultPromptInput
   disableSubmit?: boolean
-  setInput: any
   resetInput: () => void
   handleSubmit: () => void
   pending: boolean
@@ -33,13 +31,13 @@ const ActionPanel = ({
   errors,
   resetInput,
   handleSubmit,
-  input,
   pending,
   totalImagesRequested,
   loggedIn = false,
   totalKudosCost,
   kudosPerImage
 }: Props) => {
+  const { input } = useInput()
   const [, setLocked] = useLockedBody(false)
   const [showResetConfirmModal, setShowResetConfirmModal] = useState(false)
   const [showDryRun, setShowDryRun] = useState(false)

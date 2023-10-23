@@ -170,7 +170,7 @@ const UpscalePage = () => {
             Advanced options
           </div>
         </div>
-        <UpscalerOptions input={input} setInput={setInput} />
+        <UpscalerOptions />
       </Section>
       <Section>
         <div className="mt-2 mb-4 w-full flex flex-col md:flex-row gap-2 justify-end items-start">

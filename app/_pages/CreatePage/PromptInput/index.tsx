@@ -13,7 +13,6 @@ import {
 } from '@tabler/icons-react'
 import styles from './promptInput.module.css'
 import { Button } from 'app/_components/Button'
-import { GetSetPromptInput } from '_types/artbot'
 import { useEffect, useState } from 'react'
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import StyleTagsDropdown from './StyleTagsDropdown'
@@ -29,8 +28,11 @@ import KeywordsDropdown from './KeywordsDropdown'
 import { hasKeywords } from './KeywordsDropdown/keywordsController'
 import AppSettings from 'app/_data-models/AppSettings'
 import TextArea from 'app/_components/TextArea'
+import { useInput } from 'app/_modules/InputProvider/context'
 
-export default function PromptInput({ input, setInput }: GetSetPromptInput) {
+export default function PromptInput() {
+  const { input, setInput } = useInput()
+
   const [negativePanelOpen, setNegativePanelOpen] = useState(false)
   const negativePromptLibraryModal = useModal(NegativePromptLibraryModal)
   const promptHistoryModal = useModal(PromptHistoryModal)

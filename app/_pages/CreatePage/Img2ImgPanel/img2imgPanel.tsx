@@ -11,17 +11,17 @@ import Section from 'app/_components/Section'
 import Uploader from 'app/_modules/Uploader'
 import { IconPhotoUp, IconTrash } from '@tabler/icons-react'
 import Samplers from 'app/_data-models/Samplers'
+import { useInput } from 'app/_modules/InputProvider/context'
 
 interface Props {
   handleChangeInput: any
   handleImageUpload: any
   handleOrientationSelect: any
-  input: any
   saveForInpaint: any
-  setInput: any
 }
 
-const Img2ImgPanel = ({ input, saveForInpaint, setInput }: Props) => {
+const Img2ImgPanel = ({ saveForInpaint }: Props) => {
+  const { input, setInput } = useInput()
   const router = useRouter()
 
   const handleSaveImage = ({

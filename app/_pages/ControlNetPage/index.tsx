@@ -323,7 +323,7 @@ const ControlNetPage = () => {
             backgroundColor: 'var(--accent-color)'
           }}
         >
-          <PromptInput input={input} setInput={setInput} />
+          <PromptInput />
         </div>
       </Section>
 
@@ -332,20 +332,20 @@ const ControlNetPage = () => {
 
         <FlexibleRow style={{ paddingTop: '8px' }}>
           <FlexibleUnit>
-            <ControlNetOptions input={input} setInput={setInput} />
+            <ControlNetOptions />
           </FlexibleUnit>
           <FlexibleUnit>
-            <Denoise input={input} setInput={setInput} />
+            <Denoise />
           </FlexibleUnit>
         </FlexibleRow>
 
         <Section>
           <FlexibleRow>
             <FlexibleUnit>
-              <SelectSampler input={input} setInput={setInput} />
+              <SelectSampler />
             </FlexibleUnit>
             <FlexibleUnit>
-              <ImageCount input={input} setInput={setInput} />
+              <ImageCount />
             </FlexibleUnit>
           </FlexibleRow>
         </Section>
@@ -353,14 +353,14 @@ const ControlNetPage = () => {
         <Section>
           <FlexibleRow>
             <FlexibleUnit>
-              <SelectModel input={input} setInput={setInput} />
+              <SelectModel />
             </FlexibleUnit>
             <FlexibleUnit>
               <Section>
-                <Steps input={input} setInput={setInput} />
-                <Guidance input={input} setInput={setInput} />
-                <Seed input={input} setInput={setInput} />
-                <ClipSkip input={input} setInput={setInput} />
+                <Steps />
+                <Guidance />
+                <Seed />
+                <ClipSkip />
               </Section>
             </FlexibleUnit>
           </FlexibleRow>
@@ -369,14 +369,14 @@ const ControlNetPage = () => {
         <Section>
           <FlexibleRow>
             <FlexibleUnit>
-              <PostProcessors input={input} setInput={setInput} />
+              <PostProcessors />
             </FlexibleUnit>
             <FlexibleUnit>
-              <UpscalerOptions input={input} setInput={setInput} />
+              <UpscalerOptions />
             </FlexibleUnit>
           </FlexibleRow>
         </Section>
-        <MiscOptions input={input} setInput={setInput} />
+        <MiscOptions />
       </Section>
       <FlexRow>
         <FormErrorMessage errors={errors} />
@@ -384,8 +384,6 @@ const ControlNetPage = () => {
       <ActionPanel
         disableSubmit={!input.source_image}
         errors={errors}
-        input={input}
-        setInput={setInput}
         resetInput={() => {
           setInput({ ...new DefaultPromptInput() })
           window.scrollTo(0, 0)

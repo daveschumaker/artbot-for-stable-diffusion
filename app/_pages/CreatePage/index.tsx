@@ -109,6 +109,7 @@ const CreatePage = ({ className }: any) => {
     if (input.source_image && input.tiling) {
       setInput({ tiling: false })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [input.source_image, input.tiling])
 
   useEffect(() => {
@@ -363,6 +364,7 @@ const CreatePage = ({ className }: any) => {
 
     // Step 9. Set pageLoaded so we can start error checking and auto saving input.
     setPageLoaded(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query, setLocked])
 
   useEffect(() => {
@@ -410,7 +412,7 @@ const CreatePage = ({ className }: any) => {
         </PageTitle>
       </div>
       <div className={clsx('mt-0')}>
-        <PromptInput input={input} setInput={setInput} />
+        <PromptInput />
         <FlexRow>
           <FormErrorMessage errors={errors} />
         </FlexRow>
@@ -426,8 +428,6 @@ const CreatePage = ({ className }: any) => {
 
           <ActionPanel
             errors={errors}
-            input={input}
-            setInput={setInput}
             resetInput={resetInput}
             handleSubmit={handleSubmit}
             pending={pending}
@@ -444,8 +444,6 @@ const CreatePage = ({ className }: any) => {
 
       <ActionPanel
         errors={errors}
-        input={input}
-        setInput={setInput}
         resetInput={resetInput}
         handleSubmit={handleSubmit}
         pending={pending}

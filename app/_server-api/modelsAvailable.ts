@@ -13,7 +13,7 @@ import { clientHeader } from 'app/_utils/appUtils'
 
 // Temporarily import a static version of available models
 // in order to get page up and running while API loads.
-import availableModels from './availableModels.json'
+import availableModels from '../_store/availableModels.json'
 import { modelDiff, loadInitChanges } from './modelUpdates'
 import { ModelDetails } from '_types/horde'
 

@@ -1,15 +1,10 @@
 import Checkbox from 'app/_components/Checkbox'
 import TextTooltipRow from 'app/_components/TextTooltipRow'
 import TooltipComponent from 'app/_components/TooltipComponent'
-import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
 import PromptInputSettings from 'app/_data-models/PromptInputSettings'
 import { useCallback } from 'react'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
-
-interface Props {
-  input: DefaultPromptInput
-  setInput: any
-}
+import { useInput } from 'app/_modules/InputProvider/context'
 
 export const UPSCALERS = [
   'RealESRGAN_x4plus',
@@ -18,7 +13,9 @@ export const UPSCALERS = [
   '4x_AnimeSharp'
 ]
 
-const UpscalerOptions = ({ input, setInput }: Props) => {
+const UpscalerOptions = () => {
+  const { input, setInput } = useInput()
+
   const getPostProcessing = useCallback(
     (value: string) => {
       return input.post_processing.indexOf(value) >= 0

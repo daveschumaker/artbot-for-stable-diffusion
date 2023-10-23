@@ -7,18 +7,17 @@ import { Button } from 'app/_components/Button'
 import Checkbox from 'app/_components/Checkbox'
 import Samplers from 'app/_data-models/Samplers'
 import { useState } from 'react'
-import { GetSetPromptInput } from '_types/artbot'
 import { SourceProcessing } from '_types/horde'
+import { useInput } from 'app/_modules/InputProvider/context'
 
-interface SelectSamplerProps extends GetSetPromptInput {
+interface SelectSamplerProps {
   hideOptions?: boolean
 }
 
 export default function SelectSampler({
-  hideOptions = false,
-  input,
-  setInput
+  hideOptions = false
 }: SelectSamplerProps) {
+  const { input, setInput } = useInput()
   const [showDropdown, setShowDropdown] = useState(false)
 
   return (

@@ -1,4 +1,5 @@
 import { baseHost, basePath } from 'BASE_PATH'
+import { InputProvider } from 'app/_modules/InputProvider/context'
 import LivePaint from 'app/_pages/LivePaintPage'
 import { Metadata } from 'next'
 
@@ -14,5 +15,9 @@ export const metadata: Metadata = {
 }
 
 export default function Page() {
-  return <LivePaint />
+  return (
+    <InputProvider>
+      <LivePaint />
+    </InputProvider>
+  )
 }
