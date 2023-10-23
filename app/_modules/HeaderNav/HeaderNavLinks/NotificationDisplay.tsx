@@ -5,35 +5,56 @@ import { useStore } from 'statery'
 import { appInfoStore } from 'app/_store/appStore'
 import { useEffect, useState } from 'react'
 import AppSettings from 'app/_data-models/AppSettings'
+import { usePathname } from 'next/navigation'
 
 export default function NotificationDisplay() {
+  const pathname = usePathname()
   const [isLoaded, setIsLoaded] = useState(false)
-  const [validTimestamp, setValidTimestamp] = useState(false)
 
   const { notification = {} } = useStore(appInfoStore)
   // @ts-ignore
-  const { title, content, timestamp } = notification
+  const { title, content, timestamp = 0 } = notification
+  const [viewed, setViewed] = useState(true)
+
+  const handleViewed = () => {
+    setViewed(true)
+  }
 
   useEffect(() => {
-    const viewed = AppSettings.get('notification-viewed') || 0
-    if (Number(viewed) < timestamp && !isLoaded) {
-      setValidTimestamp(true)
-      setIsLoaded(true)
+    const viewedTimestamp = AppSettings.get('notification-viewed') || 0
+    console.log(`viewedTimestamp`, viewedTimestamp, timestamp)
+    if (timestamp && Number(viewedTimestamp) < timestamp) {
+      setViewed(false)
+    } else if (timestamp) {
+      handleViewed()
     }
-  }, [isLoaded, timestamp])
+    setIsLoaded(true)
+  }, [timestamp])
 
   if (!title || !content) {
     return null
   }
 
-  if (!isLoaded || !validTimestamp) {
+  if (!isLoaded) {
+    return null
+  }
+
+  if (pathname === '/') {
     return null
   }
 
   return (
     <EscapedNavDropdown
-      menuIcon={<IconBellRinging2 stroke={1} size={28} />}
-      content={<NotificationDropdown />}
+      menuIcon={
+        <div>
+          <IconBellRinging2
+            color={!viewed ? 'var(--main-color)' : 'var(--input-color)'}
+            stroke={1}
+            size={28}
+          />
+        </div>
+      }
+      content={<NotificationDropdown handleViewed={handleViewed} />}
     />
   )
 }

@@ -31,6 +31,7 @@ export default function AdminPage() {
 
   const [newsTitle, setNewsTitle] = useState('')
   const [newsContent, setNewsContent] = useState('')
+  const [newsTimestamp, setNewsTimestamp] = useState('')
 
   const [userInput, setUserInput] = useState('')
   const [pwInput, setPwInput] = useState('')
@@ -50,6 +51,7 @@ export default function AdminPage() {
       const { notification = {} } = serverSettings
       setNewsTitle(notification.title || '')
       setNewsContent(notification.content || '')
+      setNewsTimestamp(notification.timestamp || '')
     } catch (err) {}
   }
 
@@ -233,6 +235,11 @@ export default function AdminPage() {
           onChange={(e: any) => setNewsContent(e.target.value)}
           value={newsContent}
         />
+        {newsTimestamp && (
+          <FlexRow gap={4} style={{ fontSize: '14px' }}>
+            Posted: {new Date(newsTimestamp).toLocaleString()}
+          </FlexRow>
+        )}
         <FlexRow gap={4} style={{ justifyContent: 'flex-end' }}>
           <Button
             theme="secondary"
