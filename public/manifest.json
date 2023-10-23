@@ -1,26 +1,53 @@
 {
   "name": "ArtBot",
   "short_name": "ArtBot",
-  "display": "standalone",
+  "lang": "en-GB",
   "scope": "/artbot",
   "start_url": "/artbot",
+  "display": "standalone",
   "orientation": "portrait-primary",
   "theme_color": "#282828",
+  "background_color": "#000000",
   "icons": [
     {
-      "src": "/artbot/apple-touch-icon-iphone-60x60.png",
-      "type": "image/png",
-      "sizes": "60x60"
+      "src": "/artbot/appicons/round-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
     },
     {
-      "src": "/artbot/apple-touch-icon-iphone-retina-120x120.png",
-      "type": "image/png",
-      "sizes": "114x114"
+      "src": "/artbot/appicons/round-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
     },
     {
-      "src": "/artbot/apple-touch-icon-ipad-retina-152x152.png",
+      "src": "/artbot/appicons/mask.png",
+      "sizes": "512x512",
       "type": "image/png",
-      "sizes": "144x144"
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Create",
+      "url": "/artbot/create",
+      "icons": [
+        {
+          "src": "/artbot/shorticons/create.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Settings",
+      "url": "/artbot/settings",
+      "icons": [
+        {
+          "src": "/artbot/shorticons/settings.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
     }
   ]
 }
