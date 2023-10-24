@@ -1,3 +1,8 @@
+# 2023.10.23
+
+- Some behind the scenes cleanup. (Creating some React providers that can better handle input and manage various error states).
+- Added a [privacy policy](/privacy).
+
 # 2023.10.17
 
 - Fix some annoying behavior with custom aspect ratios and the image orientation dropdown.

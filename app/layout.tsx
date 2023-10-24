@@ -2,7 +2,6 @@ import { ReactNode } from 'react'
 import HeaderNav from './_modules/HeaderNav'
 import AppInit from './_modules/AppInit'
 import SlidingMenu from './_modules/SlidingMenu'
-import Footer from './_components/Footer'
 import { Metadata } from 'next'
 import PollController from 'app/_modules/PollController'
 import { baseHost, basePath } from 'BASE_PATH'
@@ -11,6 +10,7 @@ import ToastContainer from './_modules/ToastContainer'
 
 import 'tailwindcss/tailwind.css'
 import 'app/_styles/globals.css'
+import FooterV2 from './_components/FooterV2'
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseHost),
@@ -68,14 +68,16 @@ export default async function RootLayout({
         // This ensures that footer is always forced to bottom of page if there is extra room.
         style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}
       >
-        <AppInit />
-        <AppAnalytics />
-        <PollController />
-        <HeaderNav />
-        <ToastContainer />
-        <SlidingMenu />
-        {children}
-        <Footer />
+        <div style={{ flex: 1 }}>
+          <AppInit />
+          <AppAnalytics />
+          <PollController />
+          <HeaderNav />
+          <ToastContainer />
+          <SlidingMenu />
+          {children}
+        </div>
+        <FooterV2 />
       </body>
     </html>
   )

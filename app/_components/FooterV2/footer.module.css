@@ -1,0 +1,77 @@
+.Footer {
+  background-color: #919191;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 32px;
+  padding-bottom: 66px;
+  width: 100%;
+}
+
+.SectionsWrapper {
+  column-gap: 32px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  row-gap: 32px;
+}
+
+.Section {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  gap: 4px;
+  margin-right: 8px;
+  overflow-wrap: break-word;
+  width: 150px;
+}
+
+.SectionTitle {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.AboutWrapper {
+  margin-top: 32px;
+  padding-bottom: 16px;
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .AboutWrapper {
+    padding-bottom: 0;
+  }
+
+  .Footer {
+    justify-content: center;
+    padding: 16px;
+    padding-bottom: 16px;
+  }
+
+  .SectionsWrapper {
+    flex-direction: row;
+    justify-content: unset;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: 800px) {
+  .Footer {
+    padding-left: 236px;
+  }
+
+  .NoPadding {
+    padding-left: 16px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .Footer {
+    background-color: #383838;
+  }
+}
