@@ -1,5 +1,6 @@
 // @ts-nocheck
 import * as exifLib from '@asc0910/exif-library'
+import { buf } from 'crc-32'
 
 export const initBlob = () => {
   if (!Blob.prototype.toPNG) {
@@ -48,8 +49,42 @@ function convertBlob(
       canvas.height = image.height
       ctx.drawImage(image, 0, 0)
       let result = dataURItoBlob(canvas.toDataURL(type, 1), exif)
-      if (callback) callback(result)
-      else resolve(result)
+      const userComment = exif.Exif[37510].replace('ASCII\0\0\0', '')
+
+      if (result.type === 'image/png') {
+        // Create the message bytes
+        const msg = `parameters\0${userComment}`
+        const msgBytes = new TextEncoder().encode(msg)
+
+        var msgWithTextTag = new TextEncoder().encode(`tEXt${msg}`)
+
+        const crc32 = buf(msgWithTextTag)
+        var msgLengthBin = new Uint8Array(4)
+        var tEXt = new Uint8Array(msgBytes.length + 12)
+        new DataView(msgLengthBin.buffer).setUint32(0, msgBytes.length, false)
+        tEXt.set(msgLengthBin, 0)
+        tEXt.set(msgWithTextTag, 4)
+        new DataView(tEXt.buffer).setUint32(msgBytes.length + 8, crc32, false)
+
+        // Create a Blob with the updated data
+        var reader = new FileReader()
+        reader.onload = function () {
+          const insertPosition = reader.result.indexOf('IHDR') + 21
+          var imgBytesBefore = result.slice(0, insertPosition)
+          var imgBytesAfter = result.slice(insertPosition)
+
+          const blob = new Blob([imgBytesBefore, tEXt, imgBytesAfter], {
+            type: result.type
+          })
+
+          if (callback) callback(blob)
+          else resolve(blob)
+        }
+        reader.readAsText(result)
+      } else {
+        if (callback) callback(result)
+        else resolve(result)
+      }
     }
   })
 }
