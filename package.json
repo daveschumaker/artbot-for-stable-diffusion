@@ -46,6 +46,7 @@
     "client-zip": "2.4.4",
     "clone-deep": "4.0.1",
     "clsx": "2.0.0",
+    "crc-32": "^1.2.2",
     "dexie": "3.2.4",
     "dexie-export-import": "4.0.7",
     "dexie-react-hooks": "1.1.6",

@@ -1,5 +1,6 @@
 // @ts-nocheck
 import * as exifLib from '@asc0910/exif-library'
+import { buf } from 'crc-32'
 
 export const initBlob = () => {
   if (!Blob.prototype.toPNG) {
@@ -126,7 +127,61 @@ async function addOrUpdateExifData(blob: Blob, userComment: string): Blob {
   let existing_exif = getExifFromDataURI(dataURI)
   let new_efix = mergeExifData(existing_exif, userComment)
   const newBlob = dataURItoBlob(dataURI, new_efix)
+
+  if (isBlobPNG(newBlob)) {
+    // Create the message bytes
+    var msgText = 'parameters\0' + userComment
+    var msgBytes = new TextEncoder().encode(msgText)
+
+    var textTag = new TextEncoder().encode('tEXt')
+    var msgWithTextTag = new Uint8Array(msgBytes.length + textTag.length)
+    msgWithTextTag.set(textTag, 0)
+    msgWithTextTag.set(msgBytes, textTag.length)
+
+    const crc32 = buf(msgWithTextTag)
+
+    var msgLengthBin = new Uint8Array(4)
+    var tEXt = new Uint8Array(msgBytes.length + 12)
+    new DataView(msgLengthBin.buffer).setUint32(0, msgBytes.length, false)
+    tEXt.set(msgLengthBin, 0)
+    tEXt.set(textTag, 4)
+    tEXt.set(msgBytes, 8)
+    new DataView(tEXt.buffer).setUint32(msgBytes.length + 8, crc32, false)
+
+    // Create a Blob with the updated data
+    console.log(newBlob)
+    const newText = await newBlob.text()
+    const insertPosition = newText.indexOf('IHDR') + 21
+    console.log(insertPosition)
+    var imgBytesBefore = newBlob.slice(0, insertPosition)
+    var imgBytesAfter = newBlob.slice(insertPosition)
+
+    const blob = new Blob([imgBytesBefore, tEXt, imgBytesAfter])
+
+    return blob
+  }
   return newBlob
+}
+
+function isBlobPNG(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+
+    reader.onload = function () {
+      const view = new DataView(reader.result)
+      const pngSignature = [137, 80, 78, 71, 13, 10, 26, 10]
+
+      resolve(
+        pngSignature.every((byte, index) => byte === view.getUint8(index))
+      )
+    }
+
+    reader.onerror = function () {
+      reject('Error reading the Blob.')
+    }
+
+    reader.readAsArrayBuffer(blob)
+  })
 }
 
 export function blobToBase64(blob: Blob): Promise<string> {
