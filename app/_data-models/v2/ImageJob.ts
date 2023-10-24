@@ -20,6 +20,7 @@ class ImageJob {
   orientationType?: string
   shortlink?: string
   showcaseRequested?: boolean
+  useXyPlot?: boolean
 
   // AI Horde image creation parameters
   cfg_scale: number
@@ -83,6 +84,7 @@ class ImageJob {
     steps,
     tiling,
     tis,
+    useXyPlot,
     width
   }: ImageJob) {
     this.jobId = uuidv4() // TODO: Index me!
@@ -95,6 +97,7 @@ class ImageJob {
     this.canvasData = canvasData
     this.maskData = maskData
     this.orientationType = orientationType
+    this.useXyPlot = useXyPlot
 
     // AI Horde image creation parameters
     this.cfg_scale = cfg_scale
@@ -175,6 +178,7 @@ class ImageJob {
       useMultiDenoise: false,
       useMultiGuidance: false,
       useMultiSteps: false,
+      useXyPlot: false,
       width: imageDetails.width
     }
 
