@@ -65,6 +65,7 @@ class CreateImageRequest {
   useMultiDenoise: boolean
   useMultiGuidance: boolean
   useMultiSteps: boolean
+  useXyPlot: boolean
   width: number
   worker_id: string
   worker_name: string
@@ -110,6 +111,7 @@ class CreateImageRequest {
     useMultiDenoise = false,
     useMultiGuidance = false,
     useMultiSteps = false,
+    useXyPlot = false,
     width = 512
   }: DefaultPromptInput) {
     this.cfg_scale = Number(cfg_scale)
@@ -217,6 +219,7 @@ class CreateImageRequest {
     this.useMultiDenoise = Boolean(useMultiDenoise)
     this.useMultiGuidance = Boolean(useMultiGuidance)
     this.useMultiSteps = Boolean(useMultiSteps)
+    this.useXyPlot = Boolean(useXyPlot)
 
     this.shareImagesExternally = AppSettings.get('shareImagesExternally')
 
@@ -366,6 +369,7 @@ class CreateImageRequest {
       useMultiDenoise: false,
       useMultiGuidance: false,
       useMultiSteps: false,
+      useXyPlot: false,
       width: imageDetails.width
     }
 

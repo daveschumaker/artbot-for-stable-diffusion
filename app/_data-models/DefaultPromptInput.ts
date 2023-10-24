@@ -44,6 +44,7 @@ class DefaultPromptInput {
   useMultiDenoise: boolean = false
   useMultiGuidance: boolean = false
   useMultiSteps: boolean = false
+  useXyPlot: boolean = false
   width: number = 512
 
   constructor(params: Partial<DefaultPromptInput> = {}) {
