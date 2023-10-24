@@ -5,18 +5,24 @@ import clsx from 'clsx'
 const Section = ({
   children,
   className,
-  style = {},
-  pb
+  mt,
+  pb,
+  style = {}
 }: {
   children?: React.ReactNode
   className?: string
-  style?: CSSProperties
+  mt?: number
   pb?: number
+  style?: CSSProperties
 }) => {
   return (
     <div
       className={clsx(styles['section'], className)}
-      style={{ paddingBottom: pb ? `${pb}px` : 0, ...style }}
+      style={{
+        marginTop: mt ? `${mt}px` : 0,
+        paddingBottom: pb ? `${pb}px` : 0,
+        ...style
+      }}
     >
       {children}
     </div>

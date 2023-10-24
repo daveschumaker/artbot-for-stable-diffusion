@@ -22,7 +22,6 @@ export default function NotificationDisplay() {
 
   useEffect(() => {
     const viewedTimestamp = AppSettings.get('notification-viewed') || 0
-    console.log(`viewedTimestamp`, viewedTimestamp, timestamp)
     if (timestamp && Number(viewedTimestamp) < timestamp) {
       setViewed(false)
     } else if (timestamp) {
