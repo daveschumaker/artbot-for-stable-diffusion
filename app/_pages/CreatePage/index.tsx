@@ -42,7 +42,7 @@ import { useInput } from 'app/_modules/InputProvider/context'
 import MaxWidth from 'app/_components/MaxWidth'
 import styles from './createPage.module.css'
 import { Button } from 'app/_components/Button'
-import { IconArrowBarToUp } from '@tabler/icons-react'
+import { IconAlertTriangle, IconArrowBarToUp } from '@tabler/icons-react'
 import TooltipComponent from 'app/_components/TooltipComponent'
 
 const defaultState: DefaultPromptInput = new DefaultPromptInput()
@@ -50,6 +50,7 @@ const defaultState: DefaultPromptInput = new DefaultPromptInput()
 const CreatePage = ({ className }: any) => {
   const [actionPanelVisible, setActionPanelVisible] = useState(true)
   const actionPanelRef = useRef<HTMLDivElement>(null)
+  const [hasError, setHasError] = useState(false)
 
   const { input, setInput, setPageLoaded } = useInput()
   const { modelDetails } = useStore(modelStore)
@@ -385,9 +386,14 @@ const CreatePage = ({ className }: any) => {
   }, [searchParams])
 
   useEffect(() => {
+    // Handle if component is not visible at top of viewport
     const observerCallback = (entries: any) => {
       const entry = entries[0]
-      setActionPanelVisible(entry.isIntersecting)
+      if (entry.boundingClientRect.top < -25) {
+        setActionPanelVisible(false)
+      } else {
+        setActionPanelVisible(true)
+      }
     }
 
     const observer = new IntersectionObserver(observerCallback, {
@@ -448,8 +454,8 @@ const CreatePage = ({ className }: any) => {
           <FormErrorMessage errors={errors} />
         </FlexRow>
         <InputValidationErrorDisplay
-          input={input}
           modelDetails={modelDetails}
+          setHasError={setHasError}
         />
         <FlexRow
           gap={4}
@@ -479,6 +485,7 @@ const CreatePage = ({ className }: any) => {
                       id="ScrollToTopBtn"
                       onClick={() => {
                         window.scrollTo(0, 0)
+                        setActionPanelVisible(true)
                       }}
                     >
                       <IconArrowBarToUp stroke={1.5} />
@@ -488,6 +495,24 @@ const CreatePage = ({ className }: any) => {
                     </TooltipComponent>
                   </div>
                   <CreatePageSettings />
+                  {hasError && (
+                    <div
+                      style={{ paddingTop: '8px' }}
+                      id="FixedActionPanelError"
+                      onClick={() => {
+                        window.scrollTo(0, 0)
+                        setActionPanelVisible(true)
+                      }}
+                    >
+                      <IconAlertTriangle color="red" size={36} stroke={1} />
+                      <TooltipComponent
+                        hideIcon
+                        tooltipId="FixedActionPanelError"
+                      >
+                        Scroll to the top to view errors
+                      </TooltipComponent>
+                    </div>
+                  )}
                 </FlexRow>
 
                 <ActionPanel

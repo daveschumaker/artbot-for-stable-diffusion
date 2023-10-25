@@ -13,6 +13,8 @@
 - Fix issue with missing "close" button on pending items page. (Thanks to Kuren on Discord for reporting this).
 - Initial work on building out X/Y plot feature (not active yet, but updating some data models to be able to support this)
 - On laptops / desktops, when scrolling down the create page, the "create button" is fixed to the top of the page. Thanks to StillLearning for the suggestion.
+- Fix: Issue with fixed create button cutting off prompt input box for really really long prompts. (Thanks to AzureDream on Discord for reporting this!)
+- Temporarily changed the ArtBot logo to a robo-pumpkin for Halloween.
 
 # 2023.10.23
 

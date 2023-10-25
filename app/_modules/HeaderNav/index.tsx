@@ -14,7 +14,7 @@ const HeaderNav = () => {
         <Link href="/" className={styles.HeaderNavWrapper}>
           <div>
             <img
-              src={`${basePath}/artbot-logo.png`}
+              src={`${basePath}/artbot-logo-pumpkin.png`}
               height={30}
               width={30}
               alt="AI ArtBot logo"

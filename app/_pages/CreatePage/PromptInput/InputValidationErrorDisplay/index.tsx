@@ -1,8 +1,7 @@
 import { MAX_IMAGE_PIXELS } from '_constants'
 import FlexCol from 'app/_components/FlexCol'
 import AppSettings from 'app/_data-models/AppSettings'
-import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useStore } from 'statery'
 import { userInfoStore } from 'app/_store/userStore'
 import {
@@ -10,6 +9,7 @@ import {
   validatePromptSafety
 } from 'app/_utils/validationUtils'
 import { IconAlertTriangle } from '@tabler/icons-react'
+import { useInput } from 'app/_modules/InputProvider/context'
 
 const RenderError = ({ msg }: { msg: string | boolean }) => {
   if (!msg) return null
@@ -32,13 +32,13 @@ const RenderError = ({ msg }: { msg: string | boolean }) => {
 }
 
 export default function InputValidationErrorDisplay({
-  input,
-  modelDetails = {}
+  modelDetails = {},
+  setHasError
 }: {
-  input: DefaultPromptInput
   modelDetails: any
+  setHasError(bool: boolean): any
 }) {
-  // const { modelDetails } = useStore(modelStore)
+  const { input } = useInput()
   const userState = useStore(userInfoStore)
   const { loggedIn } = userState
 
@@ -48,8 +48,30 @@ export default function InputValidationErrorDisplay({
   const [flaggedPromptError, setFlaggedPromptError] = useState<
     boolean | string
   >(false)
-  const [promptReplacementError, setPromptReplacementError] =
-    useState<boolean>(false)
+  const [promptReplacementError, setPromptReplacementError] = useState<
+    boolean | string
+  >(false)
+
+  const handleSetError = useCallback(() => {
+    if (
+      imageError ||
+      sdxlBetaError ||
+      sdxlError ||
+      flaggedPromptError ||
+      promptReplacementError
+    ) {
+      setHasError(true)
+    } else {
+      setHasError(false)
+    }
+  }, [
+    flaggedPromptError,
+    imageError,
+    promptReplacementError,
+    sdxlBetaError,
+    sdxlError,
+    setHasError
+  ])
 
   // Image dimensions
   useEffect(() => {
@@ -58,6 +80,7 @@ export default function InputValidationErrorDisplay({
     const pixels = input.height * input.width
     if (pixels > MAX_IMAGE_PIXELS) {
       hasError = true
+      handleSetError()
       setImageError(
         `Error: Please adjust image resolution before submitting this request. ${
           input.width
@@ -68,9 +91,10 @@ export default function InputValidationErrorDisplay({
     }
 
     if (imageError && !hasError) {
+      handleSetError()
       setImageError(false)
     }
-  }, [imageError, input.height, input.width])
+  }, [handleSetError, imageError, input.height, input.width, setHasError])
 
   // SDXL Beta
   useEffect(() => {
@@ -88,6 +112,7 @@ export default function InputValidationErrorDisplay({
 
     if (hasSdxlBeta && input.post_processing.length > 0) {
       hasError = true
+      handleSetError()
       setSdxlBetaError(
         'SDXL_beta Error: Unable to use post processors with SDXL beta workers. Please remove them in order to continue.'
       )
@@ -97,14 +122,17 @@ export default function InputValidationErrorDisplay({
       (!hasSdxlBeta && sdxlBetaError) ||
       (hasSdxlBeta && !hasError && sdxlBetaError)
     ) {
+      handleSetError()
       setSdxlBetaError(false)
     }
   }, [
+    handleSetError,
     input.models,
     input.post_processing.length,
     loggedIn,
     modelDetails,
-    sdxlBetaError
+    sdxlBetaError,
+    setHasError
   ])
 
   // SDXL
@@ -118,6 +146,7 @@ export default function InputValidationErrorDisplay({
     if (hasSdxl) {
       if (input.loras.length > 0) {
         hasError = true
+        handleSetError()
         setSdxlError(
           'SDXL Error: Currently unable to use LoRAs with SDXL image models. Please remove LoRAs in order to continue.'
         )
@@ -125,6 +154,7 @@ export default function InputValidationErrorDisplay({
 
       if (input.hires) {
         hasError = true
+        handleSetError()
         setSdxlError(
           'SDXL Error: Currently unable to use hi-res fix with SDXL image models. Please disable hi-res fix in order to continue.'
         )
@@ -132,6 +162,7 @@ export default function InputValidationErrorDisplay({
 
       if (input.control_type) {
         hasError = true
+        handleSetError()
         setSdxlError(
           'SDXL Error: Currently unable to use ControlNet with SDXL image models. Please disable ControlNet in order to continue.'
         )
@@ -139,6 +170,7 @@ export default function InputValidationErrorDisplay({
 
       if (input.source_mask) {
         hasError = true
+        handleSetError()
         setSdxlError(
           'SDXL Error: Currently unable to use inpainting with SDXL image models. Please remove the inpainting mask in order to continue.'
         )
@@ -148,6 +180,7 @@ export default function InputValidationErrorDisplay({
       // const pixels = input.height * input.width
       if (input.width < 1024 && input.height < 1024) {
         hasError = true
+        handleSetError()
         setSdxlError(
           `SDXL Error: Please adjust image resolution so that one side is at least 1024 px. Current size: ${input.width}w x ${input.height}`
         )
@@ -156,8 +189,10 @@ export default function InputValidationErrorDisplay({
 
     if ((!hasSdxl && sdxlError) || (hasSdxl && !hasError && sdxlError)) {
       setSdxlError(false)
+      handleSetError()
     }
   }, [
+    handleSetError,
     input.control_type,
     input.height,
     input.hires,
@@ -165,7 +200,8 @@ export default function InputValidationErrorDisplay({
     input.models,
     input.source_mask,
     input.width,
-    sdxlError
+    sdxlError,
+    setHasError
   ])
 
   // Flagged content
@@ -191,14 +227,23 @@ export default function InputValidationErrorDisplay({
       !flaggedPromptError &&
       hasNsfwModel.length > 0
     ) {
+      handleSetError()
       setFlaggedPromptError(
         `You are about to send a prompt that likely violates the Stable Horde terms of use and may be rejected by the API. Please edit your prompt, choose a non-NSFW model, or enable the prompt replacement filter and try again.`
       )
     }
     if ((!promptFlagged && flaggedPromptError) || hasNsfwModel.length === 0) {
+      handleSetError()
       setFlaggedPromptError(false)
     }
-  }, [flaggedPromptError, input.models, input.prompt, modelDetails])
+  }, [
+    flaggedPromptError,
+    handleSetError,
+    input.models,
+    input.prompt,
+    modelDetails,
+    setHasError
+  ])
 
   // Replacement filter
   useEffect(() => {
@@ -206,11 +251,15 @@ export default function InputValidationErrorDisplay({
       input.prompt.length >= 1000 &&
       AppSettings.get('useReplacementFilter') !== false
     ) {
-      setPromptReplacementError(true)
+      handleSetError()
+      setPromptReplacementError(
+        'Your prompt is longer than 1,000 characters. Please disable the prompt replacement filter in order to use this prompt.'
+      )
     } else if (input.prompt.length < 1000 && promptReplacementError) {
+      handleSetError()
       setPromptReplacementError(false)
     }
-  }, [input.prompt.length, promptReplacementError])
+  }, [handleSetError, input.prompt.length, promptReplacementError, setHasError])
 
   if (
     !promptReplacementError &&
