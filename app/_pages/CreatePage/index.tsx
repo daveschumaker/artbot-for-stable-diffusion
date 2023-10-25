@@ -391,14 +391,14 @@ const CreatePage = ({ className }: any) => {
       const entry = entries[0]
       if (entry.boundingClientRect.top < -25) {
         setActionPanelVisible(false)
-      } else {
+      } else if (entry.isIntersecting && entry.boundingClientRect.top >= 0) {
         setActionPanelVisible(true)
       }
     }
 
     const observer = new IntersectionObserver(observerCallback, {
-      threshold: 0,
-      rootMargin: '-48px 0px 0px 0px'
+      threshold: [0, 1], // this will ensure the callback is triggered both when the element is fully visible and fully hidden
+      rootMargin: '-25px 0px 0px 0px' // top margin of -25px
     })
 
     if (actionPanelRef.current) {

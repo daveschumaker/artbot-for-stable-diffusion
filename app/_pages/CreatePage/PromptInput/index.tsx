@@ -143,6 +143,7 @@ export default function PromptInput() {
                   setUndoPrompt('')
                   setInput({ prompt: undoPrompt })
                 } else {
+                  window.scrollTo(0, 0)
                   setUndoPrompt(input.prompt)
                   setInput({ prompt: '' })
                 }
@@ -239,6 +240,7 @@ export default function PromptInput() {
                       setUndoNegative('')
                       setInput({ negative: undoNegative })
                     } else {
+                      window.scrollTo(0, 0)
                       setUndoNegative(input.negative)
                       setInput({ negative: '' })
                     }
