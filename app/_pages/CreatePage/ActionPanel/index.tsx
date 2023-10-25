@@ -176,7 +176,7 @@ const ActionPanel = ({
                       justifyContent: 'flex-end'
                     }}
                   >
-                    Per image:{' '}
+                    {'Per image: '}
                     <Linker href="/faq#kudos" passHref>
                       <>{kudosPerImage} kudos</>
                     </Linker>

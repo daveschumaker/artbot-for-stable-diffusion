@@ -9,14 +9,16 @@ import { trackEvent, trackGaEvent } from 'app/_api/telemetry'
 import { JobStatus } from '_types'
 import { deletePendingJobFromApi } from 'app/_api/deletePendingJobFromApi'
 import { savePrompt } from 'app/_utils/promptUtils'
-import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 import Linker from 'app/_components/Linker'
 import { useStore } from 'statery'
 import { modelStore } from 'app/_store/modelStore'
 import { MODEL_LIMITED_BY_WORKERS, RATE_IMAGE_CUTOFF_SEC } from '_constants'
 import DisplayRawData from 'app/_components/DisplayRawData'
 import { copyEditPrompt } from 'app/_controllers/imageDetailsCommon'
-import { deletePendingJob } from 'app/_controllers/pendingJobsCache'
+import {
+  deletePendingJob,
+  updatePendingJobV2
+} from 'app/_controllers/pendingJobsCache'
 import styles from './pendingItem.module.css'
 import clsx from 'clsx'
 import ImageThumbnail from './ImageThumbnail'
@@ -28,8 +30,7 @@ import {
   IconTrash,
   IconX
 } from '@tabler/icons-react'
-import { uuidv4 } from 'app/_utils/appUtils'
-import { createImageJob } from 'app/_utils/V2/createImageJob'
+import { updatePendingJobInDexieByJobId } from 'app/_utils/db'
 
 const RATINGS_ENABLED = false
 
@@ -83,23 +84,13 @@ const PendingItem = memo(
         deletePendingJob(jobId)
       }
 
-      // Fixes https://github.com/daveschumaker/artbot-for-stable-diffusion/issues/23
-      jobDetails.orientationType = jobDetails.orientation
-
-      const clonedParams = new CreateImageRequest(jobDetails)
-      clonedParams.jobId = uuidv4()
-      clonedParams.useAllModels = false
-      clonedParams.useAllSamplers = false
-      clonedParams.numImages = 1
-
-      trackEvent({
-        event: 'RETRY_JOB',
-        context: '/pages/pending'
+      updatePendingJobV2(
+        Object.assign({}, jobDetails, { jobStatus: JobStatus.Waiting })
+      )
+      await updatePendingJobInDexieByJobId(jobDetails.jobId, {
+        jobStatus: JobStatus.Waiting
       })
 
-      deletePendingJob(jobId)
-      const defaultInput = CreateImageRequest.toDefaultPromptInput(clonedParams)
-      await createImageJob(defaultInput)
       window.scrollTo(0, 0)
     }
 
@@ -168,7 +159,7 @@ const PendingItem = memo(
         >
           {processDoneOrError ? (
             <div className={styles.CloseButton} onClick={handleRemovePanel}>
-              <IconX width={2} stroke="white" />
+              <IconX width={28} color="white" />
             </div>
           ) : null}
           <div className={styles.InfoPanel}>
