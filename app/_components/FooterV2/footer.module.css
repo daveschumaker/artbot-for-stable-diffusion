@@ -1,5 +1,5 @@
 .Footer {
-  background-color: #919191;
+  background-color: var(--footer-background);
   color: white;
   display: flex;
   flex-direction: column;
@@ -72,6 +72,6 @@
 
 @media (prefers-color-scheme: dark) {
   .Footer {
-    background-color: #383838;
+    background-color: var(--footer-background);
   }
 }

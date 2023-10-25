@@ -24,6 +24,8 @@
   --modal-background: white;
   --overlay-background: rgba(217, 217, 217, 0.8);
 
+  --footer-background: #919191;
+
   /* SIZES */
   --fixedSideBar-width: 220px;
   --headerNav-height: 42px;
@@ -50,6 +52,7 @@
   --input-text: #e1e1e1;
   --overlay-background: rgba(0, 0, 0, 0.8);
   --modal-background: black;
+  --footer-background: #383838;
 }
 
 html {

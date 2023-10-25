@@ -24,6 +24,7 @@ import AlertDropdown from '../AlertDropdown'
 import FlexRow from 'app/_components/FlexRow'
 import EscapedNavDropdown from '../EscapedNavDropdown'
 import NotificationDisplay from './NotificationDisplay'
+import Kudos from '../Kudos'
 
 const ListItem = ({ className, children, href, title, ...props }: any) => (
   <li>
@@ -330,6 +331,7 @@ const HeaderNavLinks = () => {
         </NavigationMenu.List>
       </NavigationMenu.Root> */}
       <NotificationDisplay />
+      <Kudos />
       <EscapedNavDropdown
         menuIcon={<IconDeviceDesktopAnalytics stroke={1} size={32} />}
         content={<HordeDropdown />}

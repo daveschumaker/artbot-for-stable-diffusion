@@ -68,7 +68,7 @@ export default async function RootLayout({
         // This ensures that footer is always forced to bottom of page if there is extra room.
         style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}
       >
-        <div style={{ flex: 1 }}>
+        <div style={{ flex: 1, minHeight: '100vh' }}>
           <AppInit />
           <AppAnalytics />
           <PollController />

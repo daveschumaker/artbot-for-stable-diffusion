@@ -1,0 +1,13 @@
+.Wrapper {
+  background-color: #C0C0C0;
+  border-radius: 4px;
+  padding: 2px 2px 2px 8px;
+  color: white;
+  margin-left: 8px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .Wrapper {
+    background-color: #383838;
+  }
+}

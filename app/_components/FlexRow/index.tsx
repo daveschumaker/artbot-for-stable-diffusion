@@ -4,6 +4,7 @@ export default function FlexRow({
   children,
   className,
   gap = 0,
+  id,
   justifyContent,
   pb = 0,
   mt = 0,
@@ -12,6 +13,7 @@ export default function FlexRow({
   children: ReactNode
   className?: string
   gap?: number
+  id?: string
   justifyContent?: string
   mt?: number
   pb?: number
@@ -31,6 +33,7 @@ export default function FlexRow({
   return (
     <div
       className={className}
+      id={id}
       style={Object.assign({}, defaultStyleObj, style)}
     >
       {children}
