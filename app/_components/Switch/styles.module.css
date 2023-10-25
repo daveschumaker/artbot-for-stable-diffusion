@@ -1,0 +1,79 @@
+.react-switch-label,
+.react-switch-label .react-switch-button {
+  --circle-size: 26px;
+  --container-height: 30px;
+  --container-width: 56px;
+}
+
+@media (min-width: 640px) {
+
+  .react-switch-label,
+  .react-switch-label .react-switch-button {
+    --circle-size: 20px;
+    --container-height: 24px;
+    --container-width: 48px;
+  }
+}
+
+.react-switch-checkbox {
+  height: 0;
+  width: 0;
+  visibility: hidden;
+}
+
+.react-switch-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  width: var(--container-width);
+  height: var(--container-height);
+  background: #C0C0C0;
+  border-radius: 100px;
+  position: relative;
+  transition: background-color .2s;
+}
+
+.react-switch-label .react-switch-button {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: var(--circle-size);
+  height: var(--circle-size);
+  border-radius: 45px;
+  transition: 0.2s;
+  background: #fff;
+  box-shadow: 0 0 2px 0 rgba(10, 10, 10, 0.29);
+}
+
+.Checked {
+  background: rgb(1, 171, 171);
+}
+
+.react-switch-checkbox:checked+.react-switch-label .react-switch-button {
+  left: calc(100% - 2px);
+  transform: translateX(-100%);
+}
+
+/* .react-switch-label:active .react-switch-button {
+  width: 40px;
+} */
+
+.DisabledLabel {
+  cursor: inherit;
+  background: #C0C0C0;
+}
+
+.DisabledLabel:active {
+  cursor: inherit;
+  background: #C0C0C0;
+}
+
+.react-switch-label .DisabledButton {
+  background: #E5E5E5;
+}
+
+.react-switch-label:active .DisabledButton {
+  width: var(--circle-size);
+}

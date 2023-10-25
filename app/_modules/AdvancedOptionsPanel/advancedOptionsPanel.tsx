@@ -1,26 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect } from 'react'
-import { useStore } from 'statery'
 // import Switch from 'react-switch'
 
 // UI component imports
-import Input from 'app/_components/Input'
 import Linker from 'app/_components/Linker'
 import Section from 'app/_components/Section'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
-import TextTooltipRow from 'app/_components/TextTooltipRow'
-import TooltipComponent from 'app/_components/TooltipComponent'
-
-// Utils imports
-import { maxSteps } from 'app/_utils/validationUtils'
 
 // Local imports
 import ControlNetOptions from './ControlNetOptions'
-import InputSwitch from './InputSwitch'
 import UpscalerOptions from './UpscalerOptions'
-
-// Store imports
-import { userInfoStore } from 'app/_store/userStore'
 
 // Hook imports
 import useComponentState from 'app/_hooks/useComponentState'
@@ -55,8 +44,6 @@ import { IconTrash } from '@tabler/icons-react'
 import EmbeddingsSelect from './EmbeddingsSelect'
 import TextButton from 'app/_components/TextButton'
 import ImageSquare from '../ImageSquare'
-import TwoPanel from 'app/_components/TwoPanel'
-import SplitPanel from 'app/_components/SplitPanel'
 import { useInput } from '../InputProvider/context'
 
 interface Props {
@@ -67,14 +54,6 @@ interface Props {
 
 const AdvancedOptionsPanel = ({ setErrors }: Props) => {
   const { input, setInput } = useInput()
-
-  const handleChangeInput = (event: any) => {
-    setInput({ [event.target.name]: event.target.value })
-  }
-
-  // const [filterNsfwModels, setFilterNsfwModels] = useState(false)
-  const userState = useStore(userInfoStore)
-  const { loggedIn } = userState
 
   const [componentState, setComponentState] = useComponentState({
     isNegativePromptLibraryPanelOpen: false,
@@ -224,115 +203,6 @@ const AdvancedOptionsPanel = ({ setErrors }: Props) => {
         </FlexibleRow>
       </Section>
 
-      <TwoPanel className="mt-4">
-        <SplitPanel>
-          {false && (
-            <Section>
-              <div className="flex flex-row items-center justify-between">
-                <div className="w-[220px] pr-2">
-                  <SubSectionTitle>
-                    <TextTooltipRow>
-                      Multi-steps
-                      <TooltipComponent tooltipId="multi-steps">
-                        Comma separated values to create a series of images
-                        using multiple steps. Example: 3,6,9,12,15
-                      </TooltipComponent>
-                    </TextTooltipRow>
-                    <div className="block w-full text-xs">
-                      (1 -{' '}
-                      {maxSteps({
-                        sampler: input.sampler,
-                        loggedIn: loggedIn === true ? true : false
-                      })}
-                      )
-                    </div>
-                  </SubSectionTitle>
-                </div>
-                <Input
-                  // @ts-ignore
-                  className="mb-2"
-                  type="text"
-                  name="multiSteps"
-                  onChange={handleChangeInput}
-                  placeholder="3,5,7,9"
-                  // onBlur={() => {
-                  //   validateSteps()
-                  // }}
-                  // @ts-ignore
-                  value={input.multiSteps}
-                  width="100%"
-                />
-              </div>
-            </Section>
-          )}
-
-          {false && (
-            <InputSwitch
-              disabled={
-                input.useMultiGuidance || input.useAllSamplers ? true : false
-              }
-              label="Use multiple steps"
-              tooltip={`Provide a list of comma separated values to create a series of images using multiple steps: &quot;3,6,9,12,15&quot;`}
-              handleSwitchToggle={() => {
-                if (!input.useMultiSteps) {
-                  setInput({
-                    useMultiSteps: true,
-                    numImages: 1,
-                    useAllModels: false,
-                    useFavoriteModels: false,
-                    useAllSamplers: false
-                  })
-
-                  PromptInputSettings.set('useMultiSteps', true)
-                  PromptInputSettings.set('numImages', 1)
-                  PromptInputSettings.set('useAllModels', false)
-                  PromptInputSettings.set('useFavoriteModels', false)
-                  PromptInputSettings.set('useAllSamplers', false)
-                } else {
-                  PromptInputSettings.set('useMultiSteps', false)
-                  setInput({ useMultiSteps: false })
-                }
-              }}
-              checked={input.useMultiSteps}
-            />
-          )}
-        </SplitPanel>
-
-        <SplitPanel>
-          {false && (
-            <InputSwitch
-              label="Use multiple guidance"
-              tooltip='Provide a list of comma separated values to create a series of images using multiple guidance: "3,6,9,12,15"'
-              disabled={
-                input.useMultiSteps || input.useAllSamplers ? true : false
-              }
-              handleSwitchToggle={() => {
-                if (!input.useMultiGuidance) {
-                  setInput({
-                    useMultiGuidance: true,
-                    useMultiSteps: false,
-                    numImages: 1,
-                    useAllModels: false,
-                    useFavoriteModels: false,
-                    useAllSamplers: false
-                  })
-
-                  PromptInputSettings.set('useMultiGuidance', true)
-                  PromptInputSettings.set('useMultiSteps', false)
-                  PromptInputSettings.set('numImages', 1)
-                  PromptInputSettings.set('useAllModels', false)
-                  PromptInputSettings.set('useFavoriteModels', false)
-                  PromptInputSettings.set('useAllSamplers', false)
-                } else {
-                  PromptInputSettings.set('useMultiGuidance', false)
-                  setInput({ useMultiGuidance: false })
-                }
-              }}
-              checked={input.useMultiGuidance}
-            />
-          )}
-        </SplitPanel>
-      </TwoPanel>
       {/* {input.source_processing !== SourceProcessing.OutPainting &&
         !input.useAllModels &&
         !componentState.showMultiModel &&

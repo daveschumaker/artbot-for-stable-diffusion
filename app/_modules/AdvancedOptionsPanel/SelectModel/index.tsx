@@ -255,7 +255,13 @@ const SelectModel = ({
             />
           )}
           <FlexRow gap={4}>
-            <Button onClick={() => modelsInfoModal.show()}>
+            <Button
+              onClick={() =>
+                modelsInfoModal.show({
+                  input
+                })
+              }
+            >
               <IconList stroke={1.5} />
             </Button>
           </FlexRow>

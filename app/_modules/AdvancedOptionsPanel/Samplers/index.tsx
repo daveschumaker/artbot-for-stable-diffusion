@@ -1,4 +1,3 @@
-import ReactSwitch from 'react-switch'
 import { trackEvent } from 'app/_api/telemetry'
 import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
 import PromptInputSettings from 'app/_data-models/PromptInputSettings'
@@ -10,6 +9,7 @@ import SubSectionTitle from 'app/_components/SubSectionTitle'
 import TextTooltipRow from 'app/_components/TextTooltipRow'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import { samplerOptions } from './samplers.controller'
+import Switch from 'app/_components/Switch'
 
 interface IProps {
   input: DefaultPromptInput
@@ -72,7 +72,7 @@ const Samplers = ({
               </TooltipComponent>
             </TextTooltipRow>
           </SubSectionTitle>
-          <ReactSwitch
+          <Switch
             disabled={
               input.useMultiGuidance || input.useMultiSteps ? true : false
             }

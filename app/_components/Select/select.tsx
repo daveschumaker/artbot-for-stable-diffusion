@@ -22,6 +22,8 @@ const SelectComponent = (props: SelectComponentProps) => {
       color: `var(--input-text)`,
       fontSize: '16px',
       width: '100%',
+      height: 'var(--input-element-h)',
+      minHeight: 'unset',
       zIndex: `var(--zIndex-default)`
     }),
     input: (provided: CSSProperties) => ({

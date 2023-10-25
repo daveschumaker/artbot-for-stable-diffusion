@@ -5,7 +5,7 @@
   color: var(--input-color);
   font-size: 16px;
   font-weight: 400;
-  height: 40px;
+  height: var(--input-element-h);
   padding: 8px;
   width: 100%;
 }

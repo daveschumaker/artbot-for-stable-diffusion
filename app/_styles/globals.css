@@ -35,11 +35,14 @@
   --zIndex-overBase: 2;
   --zIndex-navBar: 3;
   --zIndex-overNavBar: 4;
+
+  --input-element-h: 40px;
 }
 
 @media (min-width: 640px) {
   :root {
     --headerNav-height: 48px;
+    --input-element-h: 36px;
   }
 }
 

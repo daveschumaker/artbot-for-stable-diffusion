@@ -32,7 +32,7 @@ export default function Kudos() {
   return (
     <FlexRow
       className={styles.Wrapper}
-      gap={4}
+      gap={6}
       style={{ width: 'unset' }}
       id="kudos-navbar"
     >

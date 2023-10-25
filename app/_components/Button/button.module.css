@@ -9,7 +9,7 @@
   font-size: 14px;
   font-weight: 500;
   gap: 4px;
-  height: 40px;
+  height: var(--input-element-h);
   justify-content: center;
   min-width: 40px;
   padding: 2px 8px;

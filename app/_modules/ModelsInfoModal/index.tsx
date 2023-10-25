@@ -20,10 +20,10 @@ import { modelStore } from 'app/_store/modelStore'
 import DropdownOptions from '../DropdownOptions'
 import styles from './component.module.css'
 import Modal from '../Modal'
-import { useInput } from '../InputProvider/context'
+import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
 
-const ModelsInfoModal = () => {
-  const { input } = useInput()
+// Note: Cannot get input from context here due to using React nice modal provider.
+const ModelsInfoModal = ({ input }: { input: DefaultPromptInput }) => {
   const modal = useModal()
 
   const [showFilterDropdown, setShowFilterDropdown] = useState(false)
@@ -132,14 +132,18 @@ const ModelsInfoModal = () => {
   })
 
   useEffect(() => {
-    const favoriteModels = AppSettings.get('favoriteModels') || {}
-    setFavModels(favoriteModels)
+    try {
+      const favoriteModels = AppSettings.get('favoriteModels') || {}
+      setFavModels(favoriteModels)
 
-    const hidden = AppSettings.get('hiddenModels') || {}
-    setHiddenModels(hidden)
+      const hidden = AppSettings.get('hiddenModels') || {}
+      setHiddenModels(hidden)
 
-    if (input.models.length === 1) {
-      setActiveModel(input.models[0])
+      if (input.models && input.models.length === 1) {
+        setActiveModel(input.models[0])
+      }
+    } catch (err) {
+      console.log(`Error:`, err)
     }
 
     // Ignore deps, we want this to only run on initial load.
