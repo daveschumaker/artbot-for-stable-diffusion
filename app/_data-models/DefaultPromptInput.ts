@@ -19,6 +19,7 @@ class DefaultPromptInput {
   multiClip: string = ''
   multiDenoise: string = ''
   multiGuidance: string = ''
+  multiSamplers: Array<string> = []
   multiSteps: string = ''
   negative: string = ''
   numImages: number = 1
@@ -43,6 +44,7 @@ class DefaultPromptInput {
   useMultiClip: boolean = false
   useMultiDenoise: boolean = false
   useMultiGuidance: boolean = false
+  useMultiSamplers: boolean = false
   useMultiSteps: boolean = false
   useXyPlot: boolean = false
   width: number = 512

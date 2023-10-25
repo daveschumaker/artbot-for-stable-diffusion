@@ -37,6 +37,7 @@ class CreateImageRequest {
   multiClip: Array<number>
   multiDenoise: Array<number>
   multiGuidance: Array<number>
+  multiSamplers: Array<string>
   multiSteps: Array<number>
   negative: string
   numImages: number
@@ -64,6 +65,7 @@ class CreateImageRequest {
   useMultiClip: boolean
   useMultiDenoise: boolean
   useMultiGuidance: boolean
+  useMultiSamplers: boolean
   useMultiSteps: boolean
   useXyPlot: boolean
   width: number
@@ -87,6 +89,7 @@ class CreateImageRequest {
     multiClip = '',
     multiDenoise = '',
     multiGuidance = '',
+    multiSamplers = [],
     multiSteps = '',
     negative = '',
     numImages = 1,
@@ -110,6 +113,7 @@ class CreateImageRequest {
     useMultiClip = false,
     useMultiDenoise = false,
     useMultiGuidance = false,
+    useMultiSamplers = false,
     useMultiSteps = false,
     useXyPlot = false,
     width = 512
@@ -210,6 +214,7 @@ class CreateImageRequest {
     this.multiClip = []
     this.multiDenoise = []
     this.multiGuidance = []
+    this.multiSamplers = [...multiSamplers]
     this.multiSteps = []
     this.steps = Number(steps)
     this.triggers = [...triggers]
@@ -218,6 +223,7 @@ class CreateImageRequest {
     this.useMultiClip = Boolean(useMultiClip)
     this.useMultiDenoise = Boolean(useMultiDenoise)
     this.useMultiGuidance = Boolean(useMultiGuidance)
+    this.useMultiSamplers = Boolean(useMultiSamplers)
     this.useMultiSteps = Boolean(useMultiSteps)
     this.useXyPlot = Boolean(useXyPlot)
 
@@ -344,6 +350,7 @@ class CreateImageRequest {
       multiClip: '',
       multiDenoise: '',
       multiGuidance: '',
+      multiSamplers: [],
       multiSteps: '',
       negative: imageDetails.negative,
       numImages: imageDetails.numImages,
@@ -368,6 +375,7 @@ class CreateImageRequest {
       useMultiClip: false,
       useMultiDenoise: false,
       useMultiGuidance: false,
+      useMultiSamplers: false,
       useMultiSteps: false,
       useXyPlot: false,
       width: imageDetails.width
