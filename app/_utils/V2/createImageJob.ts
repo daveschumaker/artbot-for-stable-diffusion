@@ -43,7 +43,13 @@ const handleMulti = (
 const handleMultiSampler = (
   newImageRequest: DefaultPromptInput
 ): ImageRequest[] => {
-  let samplerArray: string[] = [...DEFAULT_SAMPLER_ARRAY]
+  let samplerArray: string[] = []
+
+  if (newImageRequest.useMultiSamplers) {
+    samplerArray = [...newImageRequest.multiSamplers]
+  } else {
+    samplerArray = [...DEFAULT_SAMPLER_ARRAY]
+  }
 
   if (newImageRequest.models[0] === 'stable_diffusion_2') {
     samplerArray = ['dpmsolver']
@@ -167,6 +173,14 @@ export const createImageJob = async (
   }
 
   if (newImageRequest.useAllSamplers) {
+    pendingJobArray = mergePendingJobArray(
+      pendingJobArray,
+      handleMultiSampler(newImageRequest),
+      ['sampler']
+    )
+  }
+
+  if (newImageRequest.useMultiSamplers) {
     pendingJobArray = mergePendingJobArray(
       pendingJobArray,
       handleMultiSampler(newImageRequest),

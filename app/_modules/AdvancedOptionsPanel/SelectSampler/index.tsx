@@ -9,6 +9,7 @@ import Samplers from 'app/_data-models/Samplers'
 import { useState } from 'react'
 import { SourceProcessing } from '_types/horde'
 import { useInput } from 'app/_modules/InputProvider/context'
+import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
 
 interface SelectSamplerProps {
   hideOptions?: boolean
@@ -19,6 +20,10 @@ export default function SelectSampler({
 }: SelectSamplerProps) {
   const { input, setInput } = useInput()
   const [showDropdown, setShowDropdown] = useState(false)
+
+  const multiSamplerOptions = input?.multiSamplers.map((value) => {
+    return { value, label: value }
+  })
 
   return (
     <div style={{ marginBottom: '12px' }}>
@@ -39,11 +44,21 @@ export default function SelectSampler({
                 isImg2Img: input.source_image
               })}
               onChange={(obj: { value: string; label: string }) => {
-                // PromptInputSettings.set('sampler', obj.value)
-                setInput({ sampler: obj.value })
+                if (input.useMultiSamplers) {
+                  // @ts-ignore
+                  const updateObject = obj.map((sampler) => sampler.value)
+                  setInput({ multiSamplers: updateObject })
+                } else {
+                  // PromptInputSettings.set('sampler', obj.value)
+                  setInput({ sampler: obj.value })
+                }
               }}
+              isMulti={input.useMultiSamplers}
+              // @ts-ignore
               value={
-                input.useAllSamplers
+                input.useMultiSamplers
+                  ? multiSamplerOptions
+                  : input.useAllSamplers
                   ? { label: 'Use all samplers', value: '' }
                   : Samplers.dropdownValue(input.sampler)
               }
@@ -56,10 +71,35 @@ export default function SelectSampler({
               >
                 <div style={{ padding: '8px 0' }}>
                   <Checkbox
+                    label="Use multiple samplers?"
+                    checked={input.useMultiSamplers}
+                    onChange={(bool: boolean) => {
+                      const updateObject: Partial<DefaultPromptInput> = {
+                        useMultiSamplers: bool
+                      }
+
+                      if (bool) {
+                        updateObject.useAllSamplers = false
+                      }
+
+                      setInput(updateObject)
+                    }}
+                  />
+                </div>
+                <div style={{ padding: '8px 0' }}>
+                  <Checkbox
                     label="Use all samplers?"
                     checked={input.useAllSamplers}
                     onChange={(bool: boolean) => {
-                      setInput({ useAllSamplers: bool })
+                      const updateObject: Partial<DefaultPromptInput> = {
+                        useAllSamplers: bool
+                      }
+
+                      if (bool) {
+                        updateObject.useMultiSamplers = false
+                      }
+
+                      setInput(updateObject)
                     }}
                   />
                 </div>

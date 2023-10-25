@@ -153,6 +153,7 @@ class ImageJob {
       multiClip: '',
       multiDenoise: '',
       multiGuidance: '',
+      multiSamplers: [],
       multiSteps: '',
       negative: imageDetails.negative,
       numImages: imageDetails.numImages,
@@ -177,6 +178,7 @@ class ImageJob {
       useMultiClip: false,
       useMultiDenoise: false,
       useMultiGuidance: false,
+      useMultiSamplers: false,
       useMultiSteps: false,
       useXyPlot: false,
       width: imageDetails.width

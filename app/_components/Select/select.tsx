@@ -22,7 +22,6 @@ const SelectComponent = (props: SelectComponentProps) => {
       color: `var(--input-text)`,
       fontSize: '16px',
       width: '100%',
-      height: 'var(--input-element-h)',
       minHeight: 'unset',
       zIndex: `var(--zIndex-default)`
     }),
@@ -39,9 +38,14 @@ const SelectComponent = (props: SelectComponentProps) => {
       ...provided,
       color: '#9299a6'
     }),
+    clearIndicator: (provided: CSSProperties) => ({
+      ...provided,
+      height: 'calc(var(--input-element-h) - 2px)'
+    }),
     dropdownIndicator: (provided: CSSProperties) => ({
       ...provided,
-      color: `var(--input-text)`
+      color: `var(--input-text)`,
+      height: 'calc(var(--input-element-h) - 2px)'
     }),
     singleValue: (provided: CSSProperties) => ({
       ...provided,
@@ -59,7 +63,8 @@ const SelectComponent = (props: SelectComponentProps) => {
       zIndex: `var(--zIndex-overBase)`
     }),
     indicatorsContainer: (provided: CSSProperties) => ({
-      ...provided
+      ...provided,
+      height: 'calc(var(--input-element-h) - 2px)'
       // backgroundColor: theme.inputBackground
     })
   }

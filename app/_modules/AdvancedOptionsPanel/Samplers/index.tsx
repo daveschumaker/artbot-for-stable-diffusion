@@ -1,4 +1,3 @@
-import { trackEvent } from 'app/_api/telemetry'
 import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
 import PromptInputSettings from 'app/_data-models/PromptInputSettings'
 import { SourceProcessing } from 'app/_utils/promptUtils'
@@ -78,10 +77,6 @@ const Samplers = ({
             }
             onChange={() => {
               if (!input.useAllSamplers) {
-                trackEvent({
-                  event: 'USE_ALL_SAMPLERS_CLICK',
-                  context: '/pages/index'
-                })
                 setInput({
                   numImages: 1,
                   useAllSamplers: true,

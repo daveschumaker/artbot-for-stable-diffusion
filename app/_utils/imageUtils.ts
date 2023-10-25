@@ -710,6 +710,7 @@ export const downloadFile = async (image: any) => {
 interface ICountImages {
   numImages: number
   source_image?: string
+  multiSamplers?: string[]
   multiSteps?: string
   multiClip?: string
   multiDenoise?: string
@@ -719,6 +720,7 @@ interface ICountImages {
   useAllSamplers?: boolean
   useMultiClip?: boolean
   useMultiDenoise?: boolean
+  useMultiSamplers?: boolean
   useMultiSteps?: boolean
   useMultiGuidance?: boolean
   prompt?: string
@@ -743,12 +745,14 @@ export const countImagesToGenerate = (imageParams: ICountImages) => {
     multiClip = '',
     multiDenoise = '',
     multiGuidance = '',
+    multiSamplers = [],
     useAllModels = false,
     useFavoriteModels = false,
     useAllSamplers = false,
     useMultiClip = false,
     useMultiDenoise = false,
     useMultiGuidance = false,
+    useMultiSamplers = false,
     useMultiSteps = false,
     models = [],
     prompt = '',
@@ -782,6 +786,14 @@ export const countImagesToGenerate = (imageParams: ICountImages) => {
         splitCount++
       }
     })
+
+    if (splitCount > 0) {
+      imageCount = imageCount * splitCount
+    }
+  }
+
+  if (useMultiSamplers) {
+    let splitCount = multiSamplers.length
 
     if (splitCount > 0) {
       imageCount = imageCount * splitCount
@@ -836,7 +848,7 @@ export const countImagesToGenerate = (imageParams: ICountImages) => {
 
   if (useAllModels) {
     const filteredModels = ImageModels.getValidModels({
-      input: imageParams as DefaultPromptInput
+      input: imageParams as unknown as DefaultPromptInput
     })
     const modelsArray = filteredModels.map((obj) => obj.name)
     imageCount = imageCount * modelsArray.length
