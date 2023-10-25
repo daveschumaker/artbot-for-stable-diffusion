@@ -10,7 +10,6 @@ import {
 } from 'app/_store/appStore'
 import styles from './mobileFooter.module.css'
 import clsx from 'clsx'
-import { basePath } from 'BASE_PATH'
 import {
   IconEdit,
   IconHourglass,
@@ -26,7 +25,7 @@ export default function MobileFooter() {
   const { newImageReady } = appState
 
   const isActive = (path = '') => {
-    return `${basePath}${path}` === pathname
+    return path === pathname
   }
 
   const handleForceReload = () => {
@@ -39,22 +38,14 @@ export default function MobileFooter() {
     <div className={styles['footer-wrapper']}>
       <div className={styles['nav-icons-wrapper']}>
         <Link href="/create">
-          <div
-            className={clsx(
-              styles['nav-icon'],
-              isActive('/create') && styles['nav-icon-active']
-            )}
-          >
+          <div className={clsx('relative', styles['nav-icon'])}>
+            {isActive('/create') && <div className={styles.NavIconActive} />}
             <IconEdit className={clsx(styles['svg'])} size={32} stroke={1} />
           </div>
         </Link>
         <Link href="/pending">
-          <div
-            className={clsx(
-              styles['nav-icon'],
-              isActive('/pending') && styles['nav-icon-active']
-            )}
-          >
+          <div className={clsx('relative', styles['nav-icon'])}>
+            {isActive('/pending') && <div className={styles.NavIconActive} />}
             <IconHourglass
               className={clsx(styles['svg'])}
               size={32}
@@ -71,12 +62,8 @@ export default function MobileFooter() {
             setNewImageReady('')
           }}
         >
-          <div
-            className={clsx(
-              styles['nav-icon'],
-              isActive('/images') && styles['nav-icon-active']
-            )}
-          >
+          <div className={clsx('relative', styles['nav-icon'])}>
+            {isActive('/images') && <div className={styles.NavIconActive} />}
             {newImageReady && (
               <span
                 className="opacity-1 inline-block w-3 h-3 mr-1 bg-red-600 rounded-full"
@@ -87,22 +74,14 @@ export default function MobileFooter() {
           </div>
         </Link>
         <Link href="/rate">
-          <div
-            className={clsx(
-              styles['nav-icon'],
-              isActive('/rate') && styles['nav-icon-active']
-            )}
-          >
+          <div className={clsx('relative', styles['nav-icon'])}>
+            {isActive('/rate') && <div className={styles.NavIconActive} />}
             <IconStars className={clsx(styles['svg'])} size={32} stroke={1} />
           </div>
         </Link>
         <Link href="/settings">
-          <div
-            className={clsx(
-              styles['nav-icon'],
-              isActive('/settings') && styles['nav-icon-active']
-            )}
-          >
+          <div className={clsx('relative', styles['nav-icon'])}>
+            {isActive('/settings') && <div className={styles.NavIconActive} />}
             <IconSettings
               className={clsx(styles['svg'])}
               size={32}

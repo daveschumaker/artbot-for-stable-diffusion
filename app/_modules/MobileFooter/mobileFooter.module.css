@@ -20,7 +20,7 @@
 
 .nav-icon {
   align-items: center;
-  border-top: 4px solid transparent;
+  /* border-top: 4px solid transparent; */
   color: black;
   display: flex;
   justify-content: center;
@@ -28,15 +28,20 @@
   width: 40px;
 }
 
-.nav-icon-active {
-  border-top: 4px solid #14b8a6;
+.NavIconActive {
+  background-color: #14b8a6;
+  height: 4px;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 .svg {
   stroke: var(--footer-color);
 }
 
-.nav-icon-active > svg {
+.nav-icon-active>svg {
   stroke: #14b8a6;
 }
 
