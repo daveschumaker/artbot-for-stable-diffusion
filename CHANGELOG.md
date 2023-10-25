@@ -1,6 +1,22 @@
+# 2023.10.24
+
+- Created a [contributors page](https://tinybots.net/artbot/contributors) to give a special shout out and thanks to those who have helped to improve ArtBot. Thanks so much!
+- Fixed a few broken links in the new universal footer.
+- Fixed an issue with the footer displaying behind content on the pending items page.
+- Merged pull request from Sparkz that adds support for png tEXt encoding metadata (thank you!)
+- Show kudos in header nav for users logged in with an AI Horde API key (thanks to StillLearning on Discord for the suggestion).
+- Update Switch component to better handle style updates and sizing issues. Removes previous "react-switch" package.
+- Remove some zombie code (various components leftover from previous refactors)
+- Fixed "active" marker for the mobile footer nav.
+- Added support for multi-sampler select. Previously, you could choose "use all samplers". (thanks to StillLearning on Discord for the suggestion).
+- Fix issue with retry button on pending page. (Thanks to EFreak on Discord for reporting this.)
+- Fix issue with missing "close" button on pending items page. (Thanks to Kuren on Discord for reporting this).
+- Initial work on building out X/Y plot feature (not active yet, but updating some data models to be able to support this)
+
 # 2023.10.23
 
 - Some behind the scenes cleanup. (Creating some React providers that can better handle input and manage various error states).
+- Add shorticons and adaptive app icons for PWA. (Thanks to Sparkz on Discord for submitting [their first pull request](https://github.com/daveschumaker/artbot-for-stable-diffusion/pull/195)!)
 - Added a [privacy policy](/privacy).
 
 # 2023.10.17

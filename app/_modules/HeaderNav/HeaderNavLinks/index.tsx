@@ -213,6 +213,10 @@ const HeaderNavLinks = () => {
                 >
                   A list of your favorite models.
                 </ListItem>
+                <ListItem href="/profile" title="User Profile">
+                  Information about images you&apos;ve requested and / or
+                  generated on the Stable Horde.
+                </ListItem>
                 <ListItem href="/info/workers" title="Worker Details">
                   Information about various GPU workers provided by volunteers
                   of the Stable Horde.
@@ -236,10 +240,6 @@ const HeaderNavLinks = () => {
             </NavigationMenu.Trigger>
             <NavigationMenu.Content className={styles.NavigationMenuContent}>
               <ul className={clsx(styles.List, styles.one)}>
-                <ListItem href="/profile" title="User Profile">
-                  Information about images you&apos;ve requested and / or
-                  generated on the Stable Horde.
-                </ListItem>
                 <ListItem href="/settings" title="AI Horde Settings">
                   Settings specifically related to your AI Horde account.
                 </ListItem>
