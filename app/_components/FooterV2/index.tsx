@@ -31,22 +31,37 @@ export default function FooterV2() {
             Creation Tools
           </div>
           <div>
-            <Link href="/create">Create new image</Link>
+            <Link className={styles.LinkWrapper} href="/create">
+              Create new image
+            </Link>
           </div>
           <div>
-            <Link href="/controlnet">ControlNet</Link>
+            <Link className={styles.LinkWrapper} href="/controlnet">
+              ControlNet
+            </Link>
           </div>
           <div>
-            <Link href="/draw">Draw</Link>
+            <Link className={styles.LinkWrapper} href="/draw">
+              Draw
+            </Link>
           </div>
           <div>
-            <Link href="/create?panel=img2img">Image-to-image</Link>
+            <Link className={styles.LinkWrapper} href="/create?panel=img2img">
+              Image-to-image
+            </Link>
           </div>
           <div>
-            <Link href="/create?panel=inpainting">Inpainting</Link>
+            <Link
+              className={styles.LinkWrapper}
+              href="/create?panel=inpainting"
+            >
+              Inpainting
+            </Link>
           </div>
           <div>
-            <Link href="/live-paint">Live paint</Link>
+            <Link className={styles.LinkWrapper} href="/live-paint">
+              Live paint
+            </Link>
           </div>
         </div>
         <div className={styles.Section}>
@@ -55,10 +70,14 @@ export default function FooterV2() {
             Image gallery
           </div>
           <div>
-            <Link href="/pending">Pending images</Link>
+            <Link className={styles.LinkWrapper} href="/pending">
+              Pending images
+            </Link>
           </div>
           <div>
-            <Link href="/images">View image gallery</Link>
+            <Link className={styles.LinkWrapper} href="/images">
+              View image gallery
+            </Link>
           </div>
         </div>
         <div className={styles.Section}>
@@ -67,13 +86,19 @@ export default function FooterV2() {
             General info
           </div>
           <div>
-            <Link href="/info/models">Model details</Link>
+            <Link className={styles.LinkWrapper} href="/info/models">
+              Model details
+            </Link>
           </div>
           <div>
-            <Link href="/info/models/updates">Model updates</Link>
+            <Link className={styles.LinkWrapper} href="/info/models/updates">
+              Model updates
+            </Link>
           </div>
           <div>
-            <Link href="/info/workers">Worker details</Link>
+            <Link className={styles.LinkWrapper} href="/info/workers">
+              Worker details
+            </Link>
           </div>
         </div>
         <div className={styles.Section}>
@@ -82,19 +107,32 @@ export default function FooterV2() {
             Utilities
           </div>
           <div>
-            <Link href="/settings?panel=import-export">Export images</Link>
+            <Link
+              className={styles.LinkWrapper}
+              href="/settings?panel=import-export"
+            >
+              Export images
+            </Link>
           </div>
           <div>
-            <Link href="/interrogate">Interrogate image</Link>
+            <Link className={styles.LinkWrapper} href="/interrogate">
+              Interrogate image
+            </Link>
           </div>
           <div>
-            <Link href="/settings?panel=worker">Manage workers</Link>
+            <Link className={styles.LinkWrapper} href="/settings?panel=worker">
+              Manage workers
+            </Link>
           </div>
           <div>
-            <Link href="/rate">Rate images</Link>
+            <Link className={styles.LinkWrapper} href="/rate">
+              Rate images
+            </Link>
           </div>
           <div>
-            <Link href="/profile">User profile</Link>
+            <Link className={styles.LinkWrapper} href="/profile">
+              User profile
+            </Link>
           </div>
         </div>
         <div className={styles.Section}>
@@ -112,7 +150,9 @@ export default function FooterV2() {
             </FlexRow>
           </Link>
           <div>
-            <Link href="/showcase">Image showcase</Link>
+            <Link className={styles.LinkWrapper} href="/showcase">
+              Image showcase
+            </Link>
           </div>
         </div>
         <div className={styles.Section}>
@@ -121,7 +161,9 @@ export default function FooterV2() {
             Resources
           </div>
           <div>
-            <Link href="/faq">FAQ</Link>
+            <Link className={styles.LinkWrapper} href="/faq">
+              FAQ
+            </Link>
           </div>
         </div>
         <div className={styles.Section}>
@@ -164,7 +206,9 @@ export default function FooterV2() {
             </Link>
           </div>
           <div>
-            <Link href="/contact">Send message</Link>
+            <Link className={styles.LinkWrapper} href="/contact">
+              Send message
+            </Link>
           </div>
         </div>
         <div className={styles.Section}>
@@ -173,13 +217,19 @@ export default function FooterV2() {
             ArtBot
           </div>
           <div>
-            <Link href="/about">About</Link>
+            <Link className={styles.LinkWrapper} href="/about">
+              About
+            </Link>
           </div>
           <div>
-            <Link href="/changelog">Changelog</Link>
+            <Link className={styles.LinkWrapper} href="/changelog">
+              Changelog
+            </Link>
           </div>
           <div>
-            <Link href="/contributors">Contributors</Link>
+            <Link className={styles.LinkWrapper} href="/contributors">
+              Contributors
+            </Link>
           </div>
           <div>
             <Link
@@ -194,13 +244,19 @@ export default function FooterV2() {
             </Link>
           </div>
           <div>
-            <Link href="/settings?panel=prefs">Preferences</Link>
+            <Link className={styles.LinkWrapper} href="/settings?panel=prefs">
+              Preferences
+            </Link>
           </div>
           <div>
-            <Link href="/privacy">Privacy policy</Link>
+            <Link className={styles.LinkWrapper} href="/privacy">
+              Privacy policy
+            </Link>
           </div>
           <div>
-            <Link href="/settings">Settings</Link>
+            <Link className={styles.LinkWrapper} href="/settings">
+              Settings
+            </Link>
           </div>
         </div>
       </div>

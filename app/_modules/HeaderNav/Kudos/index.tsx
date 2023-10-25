@@ -39,7 +39,17 @@ export default function Kudos() {
       <IconCoins stroke={1} size={20} />
       {formatKudos(kudos)}
       <TooltipComponent hideIcon tooltipId="kudos-navbar">
-        Currently available kudos associated with your AI Horde account.
+        <p>Currently available kudos associated with your AI Horde account.</p>
+        <p>
+          Total: <strong>{kudos.toLocaleString()}</strong> kudos
+        </p>
+        <p>
+          <span style={{ fontSize: '10px' }}>
+            <em>
+              Due to server caching, data may be a few minutes out of date.
+            </em>
+          </span>
+        </p>
       </TooltipComponent>
     </FlexRow>
   )

@@ -1,0 +1,49 @@
+.ActionPanelFixedRow {
+  display: none;
+}
+
+.ActionPanelFixedWrapper {
+  background-color: var(--body-color);
+  display: flex;
+  flex-direction: row;
+  margin: 0 auto;
+  /* padding: 0 8px; */
+
+  /* Mobile only? */
+  width: 100%;
+  margin-right: 24px;
+}
+
+@media (min-width: 640px) {
+  .ActionPanelFixedRow {
+    align-items: flex-start;
+    display: block;
+    position: fixed;
+    top: 48px;
+    width: 100%;
+    z-index: var(--zIndex-overBase);
+  }
+}
+
+@media (min-width: 800px) {
+  .ActionPanelFixedRow {
+    width: calc(100% - 212px) !important;
+    background-color: var(--body-color);
+  }
+
+  .ActionPanelFixedWrapper {
+    padding-right: 16px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .ActionPanelFixedRow {
+    max-width: 704px;
+    width: calc(100% - 572px) !important;
+  }
+
+  .ActionPanelFixedWrapper {
+    margin-right: 0;
+    padding-right: 0;
+  }
+}

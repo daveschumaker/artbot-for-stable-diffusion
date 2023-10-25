@@ -1,4 +1,4 @@
-# 2023.10.24
+# 2023.10.25
 
 - Created a [contributors page](https://tinybots.net/artbot/contributors) to give a special shout out and thanks to those who have helped to improve ArtBot. Thanks so much!
 - Fixed a few broken links in the new universal footer.
@@ -12,6 +12,7 @@
 - Fix issue with retry button on pending page. (Thanks to EFreak on Discord for reporting this.)
 - Fix issue with missing "close" button on pending items page. (Thanks to Kuren on Discord for reporting this).
 - Initial work on building out X/Y plot feature (not active yet, but updating some data models to be able to support this)
+- On laptops / desktops, when scrolling down the create page, the "create button" is fixed to the top of the page. Thanks to StillLearning for the suggestion.
 
 # 2023.10.23
 

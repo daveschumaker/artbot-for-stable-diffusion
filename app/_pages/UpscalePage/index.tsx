@@ -183,7 +183,7 @@ const UpscalePage = () => {
               <span>
                 <IconTrash />
               </span>
-              <span>Reset all?</span>
+              <span>Reset</span>
             </Button>
             <Button
               title="Create new image"

@@ -1,13 +1,16 @@
 import { CSSProperties, ReactNode } from 'react'
 import styles from './maxWidth.module.css'
+import clsx from 'clsx'
 
 const MaxWidth = ({
+  className,
   children,
   justify,
   margin,
   max,
   style
 }: {
+  className?: string
   children: ReactNode
   margin?: string
   max?: string
@@ -29,7 +32,7 @@ const MaxWidth = ({
   }
 
   return (
-    <div className={styles.MaxWidth} style={stylesObj}>
+    <div className={clsx(className, styles.MaxWidth)} style={stylesObj}>
       {children}
     </div>
   )

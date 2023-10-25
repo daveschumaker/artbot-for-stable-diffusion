@@ -1,7 +1,7 @@
 'use client'
 
 /* eslint-disable @next/next/no-img-element */
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 import PageTitle from 'app/_components/PageTitle'
@@ -39,10 +39,18 @@ import { useWindowSize } from 'app/_hooks/useWindowSize'
 import InputValidationErrorDisplay from './PromptInput/InputValidationErrorDisplay'
 import { modelStore } from 'app/_store/modelStore'
 import { useInput } from 'app/_modules/InputProvider/context'
+import MaxWidth from 'app/_components/MaxWidth'
+import styles from './createPage.module.css'
+import { Button } from 'app/_components/Button'
+import { IconArrowBarToUp } from '@tabler/icons-react'
+import TooltipComponent from 'app/_components/TooltipComponent'
 
 const defaultState: DefaultPromptInput = new DefaultPromptInput()
 
 const CreatePage = ({ className }: any) => {
+  const [actionPanelVisible, setActionPanelVisible] = useState(true)
+  const actionPanelRef = useRef<HTMLDivElement>(null)
+
   const { input, setInput, setPageLoaded } = useInput()
   const { modelDetails } = useStore(modelStore)
   const { width } = useWindowSize()
@@ -376,6 +384,29 @@ const CreatePage = ({ className }: any) => {
     })
   }, [searchParams])
 
+  useEffect(() => {
+    const observerCallback = (entries: any) => {
+      const entry = entries[0]
+      setActionPanelVisible(entry.isIntersecting)
+    }
+
+    const observer = new IntersectionObserver(observerCallback, {
+      threshold: 0,
+      rootMargin: '-48px 0px 0px 0px'
+    })
+
+    if (actionPanelRef.current) {
+      observer.observe(actionPanelRef.current)
+    }
+
+    // Cleanup
+    return () => {
+      if (actionPanelRef.current) {
+        observer.unobserve(actionPanelRef.current)
+      }
+    }
+  }, [])
+
   const totalImagesRequested = countImagesToGenerate(input)
 
   const totalKudosCost = kudosCostV2({
@@ -427,6 +458,7 @@ const CreatePage = ({ className }: any) => {
           <CreatePageSettings />
 
           <ActionPanel
+            ref={actionPanelRef}
             errors={errors}
             resetInput={resetInput}
             handleSubmit={handleSubmit}
@@ -437,6 +469,41 @@ const CreatePage = ({ className }: any) => {
             kudosPerImage={kudosPerImage}
             showStylesDropdown
           />
+
+          {!actionPanelVisible && (
+            <FlexRow className={styles.ActionPanelFixedRow} gap={4}>
+              <MaxWidth className={styles.ActionPanelFixedWrapper}>
+                <FlexRow gap={4} style={{ alignItems: 'flex-start' }}>
+                  <div style={{ paddingTop: '8px' }}>
+                    <Button
+                      id="ScrollToTopBtn"
+                      onClick={() => {
+                        window.scrollTo(0, 0)
+                      }}
+                    >
+                      <IconArrowBarToUp stroke={1.5} />
+                    </Button>
+                    <TooltipComponent hideIcon tooltipId="ScrollToTopBtn">
+                      Scroll to the top of the page
+                    </TooltipComponent>
+                  </div>
+                  <CreatePageSettings />
+                </FlexRow>
+
+                <ActionPanel
+                  errors={errors}
+                  resetInput={resetInput}
+                  handleSubmit={handleSubmit}
+                  pending={pending}
+                  totalImagesRequested={totalImagesRequested}
+                  loggedIn={loggedIn}
+                  totalKudosCost={totalKudosCost}
+                  kudosPerImage={kudosPerImage}
+                  showStylesDropdown
+                />
+              </MaxWidth>
+            </FlexRow>
+          )}
         </FlexRow>
       </div>
 

@@ -41,6 +41,10 @@
   text-align: center;
 }
 
+.LinkWrapper:hover {
+  color: var(--link-active);
+}
+
 @media (min-width: 640px) {
   .AboutWrapper {
     padding-bottom: 0;

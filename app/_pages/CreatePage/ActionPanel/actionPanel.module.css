@@ -8,6 +8,15 @@
   width: 100%;
 }
 
+.FixedPanel {
+  background-color: var(--body-color);
+  left: 0;
+  right: 0;
+  top: 48px;
+  width: 100%;
+  position: fixed;
+}
+
 /* @media (min-width: 640px) {
   .CreateImageActionPanel {
     width: 100%;
