@@ -72,6 +72,16 @@
   opacity: 1;
 }
 
+.ImageStatus {
+  background-color: unset !important;
+  bottom: 4px;
+  color: white;
+  font-size: 12px;
+  opacity: 1 !important;
+  position: absolute;
+  z-index: var(--zIndex-default);
+}
+
 .favorited {
   /* background-color: unset !important; */
   opacity: 1 !important;

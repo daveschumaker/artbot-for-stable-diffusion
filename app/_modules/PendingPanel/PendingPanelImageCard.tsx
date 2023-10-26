@@ -189,6 +189,21 @@ export default function PendingPanelImageCard({
             style={{ borderRadius: '4px', cursor: 'pointer' }}
           />
         )}
+        {imageJob.jobStatus !== JobStatus.Done && (
+          <div className={styles.ImageStatus}>
+            {imageJob.jobStatus === JobStatus.Waiting && <>Sending job...</>}
+            {imageJob.jobStatus === JobStatus.Requested && (
+              <>Job requested...</>
+            )}
+            {imageJob.jobStatus === JobStatus.Queued && (
+              <>Job queued... (~{Number(imageJob.wait_time) || 1}s)</>
+            )}
+            {imageJob.jobStatus === JobStatus.Processing && (
+              <>Processing... (~{Number(imageJob.wait_time) || 1}s)</>
+            )}
+            {imageJob.jobStatus === JobStatus.Error && <>Error</>}
+          </div>
+        )}
       </div>
     </div>
   )

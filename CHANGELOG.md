@@ -2,6 +2,7 @@
 
 - Potentially fix issue with header nav bar disappearing on create page while scrolling on a mobile device. This was likely due to an issue with the fixed action bar for... desktop devices. (Thanks to Sparkz for reporting this on Discord!)
 - Fix [live paint page](https://tinybots.net/artbot/live-paint) not sending job to AI Horde. (Thanks to Openmindedness on Discord for reporting this!)
+- Better visibility into image status when viewing the pending image panel on the create page -- this happens on desktop devices. (Thanks to StillLearning for the suggestion)
 
 # 2023.10.25
 
