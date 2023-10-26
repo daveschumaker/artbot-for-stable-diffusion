@@ -49,6 +49,7 @@ export default function PendingPanelImageCard({
   const [isRated, setIsRated] = useState(false)
 
   const serverHasJob =
+    imageJob.jobStatus === JobStatus.Queued ||
     imageJob.jobStatus === JobStatus.Processing ||
     imageJob.jobStatus === JobStatus.Requested
 

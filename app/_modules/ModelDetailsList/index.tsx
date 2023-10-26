@@ -201,7 +201,7 @@ const ModelDetailsList = () => {
               mega-pixelsteps
             </div> */}
             <div>
-              <strong>Queued jobs:</strong> {modelStats[0]?.jobs || '...'}
+              <strong>Queued jobs:</strong> {modelStats[0]?.jobs || 0}
             </div>
             <div>
               <strong>Queued work:</strong>{' '}

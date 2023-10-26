@@ -134,7 +134,8 @@ const ImageDetails = ({
               alt={imageDetails.prompt}
               style={{
                 ...imgStyle,
-                maxHeight: `${windowHeight - 64}px`
+                maxHeight: `${windowHeight - 64}px`,
+                maxWidth: 'unset'
               }}
             />
             <img
@@ -144,13 +145,15 @@ const ImageDetails = ({
               )};base64,${imageDetails.source_image}`}
               alt={imageDetails.prompt}
               style={{
-                ...imgStyle,
+                // ...imgStyle,
                 display: showSource ? 'block' : 'none',
                 position: 'absolute',
                 top: 0,
                 left: 0,
-                height: `${imageDetails.height}px`,
-                width: `${imageDetails.width}px`
+                // height: `${imageDetails.height}px`,
+                // width: `${imageDetails.width}px`
+
+                width: '100%'
               }}
             />
           </div>

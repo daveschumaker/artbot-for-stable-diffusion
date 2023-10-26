@@ -234,7 +234,7 @@ const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
           <SharedKeys />
         </Section>
       )}
-      <Section pb={12}>
+      {/* <Section pb={12}>
         <InputSwitchV2
           label={<strong>Share images with LAION?</strong>}
           disabled={!componentState.apiKey}
@@ -266,7 +266,7 @@ const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
             API key.
           </strong>
         </div>
-      </Section>
+      </Section> */}
       <Section pb={12}>
         <InputSwitchV2
           label={<strong>Allow NSFW images?</strong>}

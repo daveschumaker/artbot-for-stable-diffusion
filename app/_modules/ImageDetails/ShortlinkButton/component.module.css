@@ -7,11 +7,11 @@
 }
 
 .button-icon:hover {
-  background-color: gray;
+  background-color: #C0C0C0;
 }
 
 .buttonLoading {
-  background-color: gray;
+  background-color: #C0C0C0;
   cursor: default;
 }
 

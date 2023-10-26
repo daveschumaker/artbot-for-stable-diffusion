@@ -88,7 +88,8 @@ export default function PendingImageModal({
           )}
         </FlexCol>
       )}
-      {pendingJob.jobStatus === JobStatus.Requested && (
+      {(pendingJob.jobStatus === JobStatus.Requested ||
+        pendingJob.jobStatus === JobStatus.Queued) && (
         <FlexCol className={styles.contrastTextBackground}>
           <FlexRow gap={8} pb={8}>
             <IconStackPush size={32} stroke={1.5} /> <strong>Status:</strong>{' '}
@@ -104,8 +105,7 @@ export default function PendingImageModal({
           )}
         </FlexCol>
       )}
-      {(pendingJob.jobStatus === JobStatus.Waiting ||
-        pendingJob.jobStatus === JobStatus.Queued) && (
+      {pendingJob.jobStatus === JobStatus.Waiting && (
         <FlexCol className={styles.contrastTextBackground}>
           <FlexRow gap={8} pb={8}>
             <IconPhotoUp size={32} stroke={1.5} /> <strong>Status:</strong>{' '}

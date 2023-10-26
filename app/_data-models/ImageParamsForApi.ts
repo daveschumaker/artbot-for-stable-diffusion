@@ -88,7 +88,8 @@ class ImageParamsForApi {
         ? true
         : AppSettings.get('useTrusted')
     const allowNsfw = AppSettings.get('allowNsfwImages') || false
-    const shareImage = AppSettings.get('shareImagesExternally') || false
+    // const shareImage = AppSettings.get('shareImagesExternally') || false
+    const shareImage = false
     const useWorkerId = AppSettings.get('useWorkerId') || ''
     const useBlocklist = AppSettings.get('blockedWorkers')
 

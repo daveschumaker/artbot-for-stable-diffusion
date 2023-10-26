@@ -44,7 +44,9 @@ export const getPendingJobsFromCache = () => [...pendingJobs]
 export const fetchPendingImageJobs = async () => {
   const timestamp = getPendingJobsTimestamp()
   if (pendingJobsUpdatedTimestamp !== timestamp) {
-    pendingJobsUpdatedTimestamp = timestamp
+    if (getAllPendingJobs().length !== 0) {
+      pendingJobsUpdatedTimestamp = timestamp
+    }
     pendingJobs = [...getAllPendingJobs()]
   }
 }
