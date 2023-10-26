@@ -278,7 +278,7 @@ const ControlNetPage = () => {
         </div>
         <div className="flex flex-row justify-end w-1/2 items-start h-[38px] relative gap-2"></div>
       </div>
-      <Section>
+      <Section mb={8}>
         <SubSectionTitle>Step 1. Upload an image</SubSectionTitle>
         <div>
           {!input.source_image && (
@@ -314,7 +314,7 @@ const ControlNetPage = () => {
           )}
         </div>
       </Section>
-      <Section>
+      <Section mb={8}>
         <SubSectionTitle>Step 2. Prompts</SubSectionTitle>
         <div
           className="flex flex-col w-full gap-2 rounded"
@@ -326,7 +326,6 @@ const ControlNetPage = () => {
           <PromptInput />
         </div>
       </Section>
-
       <Section>
         <SubSectionTitle>Step 3. Advanced settings</SubSectionTitle>
 

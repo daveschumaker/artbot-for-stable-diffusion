@@ -37,10 +37,9 @@ const Uploader = ({ handleSaveImage, type = 'img2img' }: Props) => {
       <SubSectionTitle>
         Upload an image from your device or import from URL
       </SubSectionTitle>
-      <FlexRow pb={8}>
-        <span style={{ lineHeight: '40px', marginRight: '16px' }}>URL:</span>
+      <FlexRow pb={8} gap={4}>
+        <span style={{ lineHeight: '40px', marginRight: '8px' }}>URL:</span>
         <Input
-          className="mb-2"
           type="text"
           name="img-url"
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
