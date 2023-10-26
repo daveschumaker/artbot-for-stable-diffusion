@@ -138,6 +138,8 @@ const ModelDetailsList = () => {
         return obj.name === name
       })
 
+      console.log(`modelStats`, modelStats)
+
       if (name === 'stable_diffusion_1.4') {
         return
       }
@@ -198,6 +200,9 @@ const ModelDetailsList = () => {
               {modelStats[0]?.performance?.toLocaleString() || 'N/A'}{' '}
               mega-pixelsteps
             </div> */}
+            <div>
+              <strong>Queued jobs:</strong> {modelStats[0]?.jobs || '...'}
+            </div>
             <div>
               <strong>Queued work:</strong>{' '}
               {modelStats[0]?.queued?.toLocaleString() || 'N/A'} mega-pixelsteps

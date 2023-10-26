@@ -15,6 +15,8 @@
 - On laptops / desktops, when scrolling down the create page, the "create button" is fixed to the top of the page. Thanks to StillLearning for the suggestion.
 - Fix: Issue with fixed create button cutting off prompt input box for really really long prompts. (Thanks to AzureDream on Discord for reporting this!)
 - Temporarily changed the ArtBot logo to a robo-pumpkin for Halloween.
+- Fix incorrect link on contributor's page. (Thanks for reporting this, Cubox!)
+- Add number of queued jobs to model details page.
 
 # 2023.10.23
 

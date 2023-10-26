@@ -57,7 +57,11 @@ const ContributorsPage = () => {
         Are you interested in helping improve ArtBot? Feel free to open a
         feature request or start slinging some code. Contributions are always
         welcome. Check out{' '}
-        <Linker href="https://aihorde.net/" target="_blank" rel="noreferrer">
+        <Linker
+          href="https://github.com/daveschumaker/artbot-for-stable-diffusion"
+          target="_blank"
+          rel="noreferrer"
+        >
           ArtBot on Github
         </Linker>
         .
