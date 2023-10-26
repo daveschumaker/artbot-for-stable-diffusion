@@ -3,7 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 import Editor from 'app/_modules/Editor'
 import PageTitle from 'app/_components/PageTitle'
-import { useCallback, useEffect, useReducer, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
 import { useFetchImage } from 'app/_hooks/useFetchImage'
 import SpinnerV2 from 'app/_components/Spinner'
@@ -24,6 +24,7 @@ import {
   IconPhoto,
   IconPoint
 } from '@tabler/icons-react'
+import { useInput } from 'app/_modules/InputProvider/context'
 const TWO_COLUMN_SIZE = 789
 
 const removeImageCanvasData = {
@@ -36,12 +37,6 @@ const removeImageCanvasData = {
 }
 
 const LivePaint = () => {
-  const initInput: DefaultPromptInput = {
-    ...new DefaultPromptInput(),
-    source_processing: SourceProcessing.Img2Img,
-    sampler: 'k_dpm_2'
-  }
-
   const userState = useStore(userInfoStore)
   const { loggedIn } = userState
 
@@ -50,11 +45,7 @@ const LivePaint = () => {
   const [showResult, setShowResult] = useState(false)
   const [isSinglePanel, setIsSinglePanel] = useState(false)
 
-  const [input, setInput] = useReducer((state: any, newState: any) => {
-    const updatedInputState = { ...state, ...newState }
-
-    return updatedInputState
-  }, initInput)
+  const { input, setInput } = useInput()
 
   let [imageResult, pending, jobStatus, waitTime] = useFetchImage(input)
 
@@ -83,7 +74,7 @@ const LivePaint = () => {
         height: getCanvasSize()
       })
     }
-  }, [getCanvasSize, pageWidth])
+  }, [getCanvasSize, pageWidth, setInput])
 
   useEffect(() => {
     if (imageResult) {
@@ -92,7 +83,14 @@ const LivePaint = () => {
   }, [imageResult])
 
   useEffectOnce(() => {
-    setInput({ seed: String(Math.abs((Math.random() * 2 ** 32) | 0)) })
+    const initInput: DefaultPromptInput = {
+      ...new DefaultPromptInput(),
+      source_processing: SourceProcessing.Img2Img,
+      sampler: 'k_dpm_2',
+      seed: String(Math.abs((Math.random() * 2 ** 32) | 0))
+    }
+
+    setInput(initInput)
 
     const container = document.getElementById('live-paint-container')
     const width = container?.offsetWidth
@@ -126,8 +124,7 @@ const LivePaint = () => {
         className="flex flex-row justify-center w-full"
         id="live-paint-container"
         style={{
-          columnGap: isSinglePanel ? '0' : '8px',
-          paddingTop: '60px'
+          columnGap: isSinglePanel ? '0' : '8px'
         }}
       >
         <div
@@ -214,7 +211,7 @@ const LivePaint = () => {
             ''
           )}
         </div>
-        <div className="flex flex-row justify-end gap-2">
+        <div className="flex flex-row justify-end gap-2 mb-2">
           <Button
             disabled={!input.prompt || !input.source_image || !imageResult}
             onClick={async () => {
@@ -276,7 +273,7 @@ const LivePaint = () => {
           )}
         </div>
       </div>
-      <div className="flex w-full gap-2 mt-2 max-w-[576px]">
+      <div style={{ width: '100%', margin: '0 auto', maxWidth: '704px' }}>
         <LivePaintOptions />
       </div>
     </>
