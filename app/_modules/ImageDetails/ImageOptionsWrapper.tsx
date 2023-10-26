@@ -35,6 +35,7 @@ import ShortlinkButton from './ShortlinkButton'
 import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 import ConfirmationModal from '../ConfirmationModal'
 import {
+  IconArrowsDiff,
   IconCopy,
   IconDotsVertical,
   IconDownload,
@@ -52,6 +53,7 @@ const ImageOptionsWrapper = ({
   imageDetails,
   isModal,
   showTiles,
+  setShowSource,
   setShowTiles,
   handleFullScreen
 }: {
@@ -61,16 +63,12 @@ const ImageOptionsWrapper = ({
   imageDetails: CreateImageRequest
   isModal: boolean
   showTiles: boolean
+  setShowSource(): void
   setShowTiles: (bool: boolean) => any
   handleFullScreen: () => any
 }) => {
   const router = useRouter()
   const confirmationModal = useModal(ConfirmationModal)
-  // TODO: FIXME: Blarg!
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  // const modal = {
-  //   remove: () => false
-  // }
 
   const [favorited, setFavorited] = useState<boolean>(imageDetails.favorited)
   const [pendingReroll, setPendingReroll] = useState(false)
@@ -264,6 +262,12 @@ const ImageOptionsWrapper = ({
     fetchParentJobDetails()
   }, [fetchParentJobDetails, imageDetails.parentJobId])
 
+  console.log(`imageDetails`, imageDetails)
+  const isControlNet =
+    imageDetails.control_type &&
+    imageDetails.base64String &&
+    imageDetails.source_image
+
   return (
     <>
       {showTiles && (
@@ -289,7 +293,7 @@ const ImageOptionsWrapper = ({
       >
         <div
           id="image-options-buttons"
-          className="w-full flex flex-row items-center justify-between tablet:justify-end max-w-[768px] md:gap-4"
+          className="w-full flex flex-row items-center justify-between tablet:justify-end max-w-[768px] gap-2 md:gap-4"
           style={{
             justifyContent: 'flex-end'
           }}
@@ -476,6 +480,11 @@ const ImageOptionsWrapper = ({
           {!isiOS() && (
             <div className={styles['button-icon']} onClick={handleFullScreen}>
               <IconResize strokeWidth={1.25} />
+            </div>
+          )}
+          {isControlNet && (
+            <div className={styles['button-icon']} onClick={setShowSource}>
+              <IconArrowsDiff strokeWidth={1.25} />
             </div>
           )}
           <div

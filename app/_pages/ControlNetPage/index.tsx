@@ -51,6 +51,7 @@ import FormErrorMessage from '../CreatePage/ActionPanel/FormErrorMessage'
 import { IconTrash } from '@tabler/icons-react'
 import { createImageJob } from 'app/_utils/V2/createImageJob'
 import { useInput } from 'app/_modules/InputProvider/context'
+import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 
 // Kind of a hacky way to persist output of image over the course of a session.
 let cachedImageDetails = {}
@@ -174,7 +175,9 @@ const ControlNetPage = () => {
     }
 
     const inputToSubmit = { ...input }
-    await createImageJob(inputToSubmit)
+
+    // @ts-ignore
+    await createImageJob(new CreateImageRequest(inputToSubmit))
 
     if (!AppSettings.get('stayOnCreate')) {
       router.push('/pending')

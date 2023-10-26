@@ -22,6 +22,7 @@ import {
   IconPlaylistX
 } from '@tabler/icons-react'
 import ImageSquare from '../ImageSquare'
+import { inferMimeTypeFromBase64 } from 'app/_utils/imageUtils'
 
 interface Props {
   imageDetails: CreateImageRequest
@@ -47,6 +48,7 @@ const ImageDetails = ({
   const [fullscreen, setFullscreen] = useState(false)
   const [showImg2ImgModal, setShowImg2ImgModal] = useState(false)
   const [showTiles, setShowTiles] = useState(false)
+  const [showSource, setShowSource] = useState(false)
 
   if (!imageDetails || !imageDetails.base64String) {
     logError({
@@ -74,6 +76,10 @@ const ImageDetails = ({
     objectFit: 'contain',
     width: '100%'
   }
+
+  const base64 = showSource
+    ? imageDetails.source_image
+    : imageDetails.base64String
 
   return (
     <>
@@ -123,9 +129,12 @@ const ImageDetails = ({
         >
           <img
             className={clsx(styles.img)}
-            src={'data:image/webp;base64,' + imageDetails.base64String}
+            src={`data:${inferMimeTypeFromBase64(base64)};base64,` + base64}
             alt={imageDetails.prompt}
-            style={{ ...imgStyle, maxHeight: `${windowHeight - 64}px` }}
+            style={{
+              ...imgStyle,
+              maxHeight: `${windowHeight - 64}px`
+            }}
           />
         </div>
       </div>
@@ -136,6 +145,9 @@ const ImageDetails = ({
         handleReloadImageData={handleReloadImageData}
         imageDetails={imageDetails}
         showTiles={showTiles}
+        setShowSource={() => {
+          setShowSource(!showSource)
+        }}
         setShowTiles={handleOnTilingClick}
         handleFullScreen={handleFullScreen}
       />
