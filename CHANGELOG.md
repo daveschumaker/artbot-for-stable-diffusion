@@ -1,3 +1,7 @@
+# 2023.10.26
+
+- Potentially fix issue with header nav bar disappearing on create page while scrolling on a mobile device. This was likely due to an issue with the fixed action bar for... desktop devices. (Thanks to Sparkz for reporting this on Discord!)
+
 # 2023.10.25
 
 - Created a [contributors page](https://tinybots.net/artbot/contributors) to give a special shout out and thanks to those who have helped to improve ArtBot. Thanks so much!

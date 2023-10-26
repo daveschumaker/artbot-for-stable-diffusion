@@ -386,6 +386,10 @@ const CreatePage = ({ className }: any) => {
   }, [searchParams])
 
   useEffect(() => {
+    if (typeof width !== 'undefined' && width < 640) {
+      return
+    }
+
     // Handle if component is not visible at top of viewport
     const observerCallback = (entries: any) => {
       const entry = entries[0]
@@ -411,7 +415,7 @@ const CreatePage = ({ className }: any) => {
         observer.unobserve(actionPanelRef.current)
       }
     }
-  }, [])
+  }, [width])
 
   const totalImagesRequested = countImagesToGenerate(input)
 
