@@ -40,6 +40,7 @@ const Img2ImgPanel = ({ saveForInpaint }: Props) => {
     }
 
     setInput({
+      denoising_strength: input.denoising_strength ?? 0.75,
       img2img: true,
       imageType,
       height,

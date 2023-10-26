@@ -77,10 +77,6 @@ const ImageDetails = ({
     width: '100%'
   }
 
-  const base64 = showSource
-    ? imageDetails.source_image
-    : imageDetails.base64String
-
   return (
     <>
       <FullScreen
@@ -127,15 +123,37 @@ const ImageDetails = ({
             margin: '0 auto'
           }}
         >
-          <img
-            className={clsx(styles.img)}
-            src={`data:${inferMimeTypeFromBase64(base64)};base64,` + base64}
-            alt={imageDetails.prompt}
-            style={{
-              ...imgStyle,
-              maxHeight: `${windowHeight - 64}px`
-            }}
-          />
+          <div style={{ position: 'relative', display: 'inline-block' }}>
+            <img
+              className={clsx(styles.img)}
+              src={
+                `data:${inferMimeTypeFromBase64(
+                  imageDetails.base64String
+                )};base64,` + imageDetails.base64String
+              }
+              alt={imageDetails.prompt}
+              style={{
+                ...imgStyle,
+                maxHeight: `${windowHeight - 64}px`
+              }}
+            />
+            <img
+              className={clsx(styles.img)}
+              src={`data:${inferMimeTypeFromBase64(
+                imageDetails.source_image
+              )};base64,${imageDetails.source_image}`}
+              alt={imageDetails.prompt}
+              style={{
+                ...imgStyle,
+                display: showSource ? 'block' : 'none',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                height: `${imageDetails.height}px`,
+                width: `${imageDetails.width}px`
+              }}
+            />
+          </div>
         </div>
       </div>
       <ImageOptionsWrapper
@@ -144,6 +162,7 @@ const ImageDetails = ({
         handleDeleteImageClick={handleDeleteImageClick}
         handleReloadImageData={handleReloadImageData}
         imageDetails={imageDetails}
+        showSource={showSource}
         showTiles={showTiles}
         setShowSource={() => {
           setShowSource(!showSource)

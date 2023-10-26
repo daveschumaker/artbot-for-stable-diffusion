@@ -11,9 +11,9 @@ import {
 import { IconPlus } from '@tabler/icons-react'
 
 const imgConfig = {
-  quality: 0.9,
-  maxWidth: 1024,
-  maxHeight: 1024
+  quality: 0.95,
+  maxWidth: 3072,
+  maxHeight: 3072
 }
 
 interface UploaderProps {

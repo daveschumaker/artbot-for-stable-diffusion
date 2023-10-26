@@ -52,6 +52,7 @@ const ImageOptionsWrapper = ({
   handleReloadImageData = () => {},
   imageDetails,
   isModal,
+  showSource,
   showTiles,
   setShowSource,
   setShowTiles,
@@ -62,6 +63,7 @@ const ImageOptionsWrapper = ({
   handleReloadImageData?: () => any
   imageDetails: CreateImageRequest
   isModal: boolean
+  showSource: boolean
   showTiles: boolean
   setShowSource(): void
   setShowTiles: (bool: boolean) => any
@@ -262,11 +264,7 @@ const ImageOptionsWrapper = ({
     fetchParentJobDetails()
   }, [fetchParentJobDetails, imageDetails.parentJobId])
 
-  console.log(`imageDetails`, imageDetails)
-  const isControlNet =
-    imageDetails.control_type &&
-    imageDetails.base64String &&
-    imageDetails.source_image
+  const hasSource = imageDetails.source_image
 
   return (
     <>
@@ -482,8 +480,14 @@ const ImageOptionsWrapper = ({
               <IconResize strokeWidth={1.25} />
             </div>
           )}
-          {isControlNet && (
-            <div className={styles['button-icon']} onClick={setShowSource}>
+          {hasSource && (
+            <div
+              className={styles['button-icon']}
+              onClick={setShowSource}
+              style={{
+                color: showSource ? 'var(--main-color' : 'var(--active-color)'
+              }}
+            >
               <IconArrowsDiff strokeWidth={1.25} />
             </div>
           )}

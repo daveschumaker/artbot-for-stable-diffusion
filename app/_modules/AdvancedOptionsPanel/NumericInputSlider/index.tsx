@@ -34,7 +34,6 @@ const NumericInputSlider = ({
   setInput,
   fieldName,
   disabled = false,
-  fullWidth = false,
   enforceStepValue = false,
   callback = () => {}
 }: Props) => {
@@ -101,7 +100,7 @@ const NumericInputSlider = ({
   }, [inputField])
 
   return (
-    <div className={clsx('mb-4 w-full', !fullWidth && 'md:w-1/2')}>
+    <div className={clsx('mb-4 w-full')}>
       <Section style={{ paddingTop: 0 }}>
         <SubSectionTitle>
           <TextTooltipRow>

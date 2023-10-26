@@ -52,11 +52,13 @@ import { IconTrash } from '@tabler/icons-react'
 import { createImageJob } from 'app/_utils/V2/createImageJob'
 import { useInput } from 'app/_modules/InputProvider/context'
 import CreateImageRequest from 'app/_data-models/CreateImageRequest'
+import useWindowHeight from 'app/_hooks/useWindowHeight'
 
 // Kind of a hacky way to persist output of image over the course of a session.
 let cachedImageDetails = {}
 
 const ControlNetPage = () => {
+  const windowHeight = useWindowHeight()
   const { input, setInput } = useInput()
 
   const router = useRouter()
@@ -295,9 +297,9 @@ const ControlNetPage = () => {
                 style={{
                   boxShadow: '2px 2px 4px 1px rgba(0, 0, 0, 0.75)',
                   margin: '0 auto',
-                  maxWidth: `1024px`,
-                  maxHeight: `100%`,
-                  width: '100%'
+                  // maxWidth: `1024px`,
+                  maxHeight: `${windowHeight - 64}px`,
+                  objectFit: 'contain'
                 }}
               />
               <div className="flex flex-row justify-end w-full mt-2">

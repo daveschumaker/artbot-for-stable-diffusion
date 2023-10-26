@@ -17,6 +17,8 @@
 - Temporarily changed the ArtBot logo to a robo-pumpkin for Halloween.
 - Fix incorrect link on contributor's page. (Thanks for reporting this, Cubox!)
 - Add number of queued jobs to model details page.
+- Fix: A number of issues with the [ControlNet page](https://tinybots.net/artbot/controlnet). It just wasn't working after some recent model updates. Things should be back in business now.
+- Feature: Restored the ability to overlay any source image over the final image on the image details view -- pretty neat to see how something like control net changes an image!
 
 # 2023.10.23
 

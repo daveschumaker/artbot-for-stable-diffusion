@@ -247,6 +247,13 @@ export default function ImageSettingsDisplay({
                 )}
                 <li>&zwnj;</li>
                 <li>
+                  <strong>Height:</strong> {imageDetails.height}px
+                </li>
+                <li>
+                  <strong>Width:</strong> {imageDetails.width}px
+                </li>
+                <li>&zwnj;</li>
+                <li>
                   <strong>Karras:</strong>{' '}
                   {imageDetails.karras ? 'true' : 'false'}
                 </li>
