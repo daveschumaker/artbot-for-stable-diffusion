@@ -24,6 +24,52 @@ interface ImageOrientation {
   width: number
 }
 
+export const cropToNearest64 = (base64str: string) => {
+  return new Promise((resolve, reject) => {
+    base64str = `data:${inferMimeTypeFromBase64(base64str)};base64,${base64str}`
+
+    // Create a new image element
+    const img = new Image()
+    img.onload = function () {
+      // Create a canvas element
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+
+      // Calculate the new dimensions divisible by 64
+      const newWidth = img.width - (img.width % 64)
+      const newHeight = img.height - (img.height % 64)
+
+      // Calculate the starting position to keep the image centered
+      const startX = (img.width - newWidth) / 2
+      const startY = (img.height - newHeight) / 2
+
+      // Set the canvas dimensions and draw the cropped image
+      canvas.width = newWidth
+      canvas.height = newHeight
+      ctx?.drawImage(
+        img,
+        startX,
+        startY,
+        newWidth,
+        newHeight,
+        0,
+        0,
+        newWidth,
+        newHeight
+      )
+
+      // Convert the canvas back to base64 string
+      const croppedBase64 = canvas.toDataURL()
+      const [, imgBase64String] = croppedBase64.split(';base64,')
+
+      // Return the cropped base64 string, new width, and new height via callback
+      resolve({ croppedBase64: imgBase64String, newWidth, newHeight })
+    }
+    img.onerror = reject
+    img.src = base64str
+  })
+}
+
 export const uploadImageConfig = {
   quality: 0.9,
   maxWidth: 1024,

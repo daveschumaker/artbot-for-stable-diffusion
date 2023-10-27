@@ -4,8 +4,8 @@ import { useDropzone } from 'react-dropzone'
 import styles from './component.module.css'
 
 import {
+  cropToNearest64,
   getBase64,
-  imageDimensions,
   nearestWholeMultiple
 } from 'app/_utils/imageUtils'
 import { IconPlus } from '@tabler/icons-react'
@@ -47,20 +47,27 @@ export default function Dropzone(props: UploaderProps) {
         }
 
         // @ts-ignore
-        const imageDetails = await imageDimensions(fullDataString)
-
-        // @ts-ignore
         const [fileType, imgBase64String] = fullDataString.split(';base64,')
         const [, imageType] = fileType.split('data:')
 
-        handleUpload({
-          imageType,
-          source_image: imgBase64String,
-          //@ts-ignore
-          height: nearestWholeMultiple(imageDetails?.height),
-          //@ts-ignore
-          width: nearestWholeMultiple(imageDetails?.width)
-        })
+        try {
+          const {
+            croppedBase64,
+            newWidth: croppedWidth,
+            newHeight: croppedHeight
+          }: any = await cropToNearest64(imgBase64String)
+
+          handleUpload({
+            imageType,
+            source_image: croppedBase64,
+            //@ts-ignore
+            height: nearestWholeMultiple(croppedHeight),
+            //@ts-ignore
+            width: nearestWholeMultiple(croppedWidth)
+          })
+        } catch (error) {
+          console.error('Error cropping the image:', error)
+        }
       }
 
       try {

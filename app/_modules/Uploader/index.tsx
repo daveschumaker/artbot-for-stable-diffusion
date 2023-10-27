@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { getImageFromUrl } from 'app/_utils/imageUtils'
+import { cropToNearest64, getImageFromUrl } from 'app/_utils/imageUtils'
 import { Button } from 'app/_components/Button'
 import FlexRow from 'app/_components/FlexRow'
 import Input from 'app/_components/Input'
@@ -21,7 +21,7 @@ const Uploader = ({ handleSaveImage, type = 'img2img' }: Props) => {
     }
 
     const data = await getImageFromUrl(imgUrl)
-    const { success, message, imageType, imgBase64String, height, width } = data
+    const { success, message, imageType, imgBase64String } = data
 
     if (!success) {
       setImgUrlError(message || '')
@@ -29,7 +29,23 @@ const Uploader = ({ handleSaveImage, type = 'img2img' }: Props) => {
     }
 
     setImgUrlError('')
-    handleSaveImage({ imageType, source_image: imgBase64String, height, width })
+
+    try {
+      const {
+        croppedBase64,
+        newWidth: croppedWidth,
+        newHeight: croppedHeight
+      }: any = await cropToNearest64(imgBase64String)
+
+      handleSaveImage({
+        imageType,
+        source_image: croppedBase64,
+        height: croppedHeight,
+        width: croppedWidth
+      })
+    } catch (error) {
+      console.error('Error cropping the image:', error)
+    }
   }
 
   return (

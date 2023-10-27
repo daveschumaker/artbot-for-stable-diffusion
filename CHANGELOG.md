@@ -3,6 +3,7 @@
 - Potentially fix issue with header nav bar disappearing on create page while scrolling on a mobile device. This was likely due to an issue with the fixed action bar for... desktop devices. (Thanks to Sparkz for reporting this on Discord!)
 - Fix [live paint page](https://tinybots.net/artbot/live-paint) not sending job to AI Horde. (Thanks to Openmindedness on Discord for reporting this!)
 - Better visibility into image status when viewing the pending image panel on the create page -- this happens on desktop devices. (Thanks to StillLearning for the suggestion)
+- When importing an image for img-to-img or ControlNet, ArtBot will now center crop the image so that each side is divisible by 64 pixels. (Worst case, you lose ~32 pixels from the sides of an image). This better aligns images with Stable Diffusion's rule of multiples of 64 for image dimensions.
 
 # 2023.10.25
 
