@@ -9,8 +9,11 @@ export const useAspectRatio = (initialWidth: number, initialHeight: number) => {
     [initialWidth, initialHeight]
   )
 
-  const toggleKeepAspectRatio = () => {
-    if (!keepAspectRatio) {
+  const toggleKeepAspectRatio = (value?: boolean) => {
+    if (value === true || value === false) {
+      if (value) setTargetAspectRatio(getCurrentAspectRatio())
+      setKeepAspectRatio(value)
+    } else if (!keepAspectRatio) {
       setTargetAspectRatio(getCurrentAspectRatio())
     } else {
       setTargetAspectRatio(0)

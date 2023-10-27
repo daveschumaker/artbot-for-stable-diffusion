@@ -73,22 +73,34 @@ export const dbExport = async (progressCallback?: () => any) => {
 
 export const addImageToDexie = async ({
   base64String,
-  hordeImageId,
+  hordeImageId = '',
   jobId,
-  type
+  type,
+  force
 }: {
   base64String: string
   hordeImageId: string
   jobId: string
   type?: string
+  force?: boolean
 }) => {
-  await db.images.add({
-    jobId,
-    base64String,
-    hordeImageId,
-    type,
-    timestamp: Date.now()
-  })
+  if (force) {
+    await db.images.put({
+      jobId,
+      base64String,
+      hordeImageId,
+      type,
+      timestamp: Date.now()
+    })
+  } else {
+    await db.images.add({
+      jobId,
+      base64String,
+      hordeImageId,
+      type,
+      timestamp: Date.now()
+    })
+  }
 }
 
 export const deleteImageFromDexie = async (jobId: string) => {

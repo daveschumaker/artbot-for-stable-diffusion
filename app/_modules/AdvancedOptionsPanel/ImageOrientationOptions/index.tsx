@@ -199,6 +199,16 @@ const ImageOrientationOptions = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keepAspectRatio])
 
+  // When this component first mounts, keep aspect ratio locked
+  // if source image is present.
+  useEffect(() => {
+    if (input.source_image) {
+      toggleKeepAspectRatio(true)
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <Section
       style={{

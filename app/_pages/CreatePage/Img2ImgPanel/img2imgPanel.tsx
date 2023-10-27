@@ -6,7 +6,7 @@ import Image from 'app/_modules/Image'
 import { SourceProcessing } from 'app/_utils/promptUtils'
 import Head from 'next/head'
 import PromptInputSettings from 'app/_data-models/PromptInputSettings'
-import { setI2iUploaded } from 'app/_store/canvasStore'
+import { clearI2IString, setI2iUploaded } from 'app/_store/canvasStore'
 import Section from 'app/_components/Section'
 import Uploader from 'app/_modules/Uploader'
 import { IconPhotoUp, IconTrash } from '@tabler/icons-react'
@@ -93,12 +93,11 @@ const Img2ImgPanel = ({ saveForInpaint }: Props) => {
                   setInput({
                     img2img: false,
                     imageType: '',
-                    height: 512,
-                    width: 512,
                     source_image: '',
                     source_processing: SourceProcessing.Prompt
                   })
                   localStorage.removeItem('img2img_base64')
+                  clearI2IString()
                 }}
               >
                 <IconTrash />
