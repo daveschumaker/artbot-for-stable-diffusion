@@ -18,6 +18,11 @@ export const MAX_IMAGE_PIXELS = 4194304 // Maximum supported resolution for imag
 export const MIN_IMAGE_WIDTH = 64
 export const POLL_COMPLETED_JOBS_INTERVAL = 1500 // ms
 
+export enum DEXIE_JOB_ID {
+  SourceImage = '0',
+  SourceMask = '1'
+}
+
 // TODO: Move into Samplers model file and add better ways to sort based on input type (txt2img vs img2img)
 export const DEFAULT_SAMPLER_ARRAY = [
   'k_dpm_2_a',
