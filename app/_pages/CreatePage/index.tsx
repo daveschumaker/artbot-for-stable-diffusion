@@ -11,7 +11,11 @@ import {
   getBase64FromDraw,
   getI2IString
 } from 'app/_store/canvasStore'
-import { getDefaultPrompt } from 'app/_utils/db'
+import {
+  deleteImageFromDexie,
+  getDefaultPrompt,
+  getJobImagesFromDexie
+} from 'app/_utils/db'
 import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 import ShareLinkDetails from 'app/_data-models/ShareableLink'
 import { useStore } from 'statery'
@@ -27,7 +31,6 @@ import { CreatePageMode } from 'app/_utils/loadInputCache'
 import ActionPanel from 'app/_pages/CreatePage/ActionPanel'
 import useComponentState from 'app/_hooks/useComponentState'
 import { uploadInpaint } from 'app/_controllers/imageDetailsCommon'
-import useLockedBody from 'app/_hooks/useLockedBody'
 import { handleCreateClick } from './createPage.controller'
 import PromptInput from 'app/_pages/CreatePage/PromptInput'
 import { CreatePageQueryParams } from '_types/artbot'
@@ -44,6 +47,7 @@ import styles from './createPage.module.css'
 import { Button } from 'app/_components/Button'
 import { IconAlertTriangle, IconArrowBarToUp } from '@tabler/icons-react'
 import TooltipComponent from 'app/_components/TooltipComponent'
+import { DEXIE_JOB_ID } from '_constants'
 
 const defaultState: DefaultPromptInput = new DefaultPromptInput()
 
@@ -62,7 +66,6 @@ const CreatePage = ({ className }: any) => {
   const { loggedIn } = userInfo
 
   const [build, setBuild] = useState(buildId)
-  const [, setLocked] = useLockedBody(false)
   const [query, setQuery] = useState<CreatePageQueryParams>({})
 
   const router = useRouter()
@@ -109,8 +112,8 @@ const CreatePage = ({ className }: any) => {
     })
 
     clearCanvasStore()
-    localStorage.removeItem('img2img_base64')
     setInput(newDefaultState)
+    deleteImageFromDexie(DEXIE_JOB_ID.SourceImage)
   }
 
   // Various input validation stuff.
@@ -150,43 +153,21 @@ const CreatePage = ({ className }: any) => {
     watchBuild()
   }, [watchBuild])
 
-  // DO NOT SET INPUT STUFF until after useEffect runs! Let this function be the sole source of input truth.
-  // Check various load states and modes for CreatePage and set preferences based on that here.
-  // Thoughts: if we handle all initial input state here, we shouldn't need to track various modes.
-  // e.g., anywhere else on the site uses the "savePrompt" method. This simply loads it.
-  useEffect(() => {
+  const handleInitLoad = useCallback(async () => {
     // Set initial state here as default. Will act as fallback in case none of the other options work.
     let initialState: DefaultPromptInput | null = new DefaultPromptInput()
 
     // Step 2. Load user prompt settings, if available
-    if (PromptInputSettings.load()) {
-      initialState = null
-      initialState = { ...PromptInputSettings.load() }
+    const promptInput = await PromptInputSettings.load()
+    initialState = { ...promptInput } as DefaultPromptInput
 
-      if (initialState && initialState.source_image) {
-        uploadInpaint(initialState, {
-          clone: true,
-          useSourceImg: true,
-          useSourceMask: true
-        })
-      }
+    console.log(`initialState`, initialState)
 
-      logToConsole({
-        data: initialState,
-        name: 'LoadInput_Step_2',
-        debugKey: 'DEBUG_LOAD_INPUT'
-      })
-    }
-
-    // Step 2a. Otherwise, load standard default prompt settings
-    if (!PromptInputSettings.load()) {
-      initialState = null
-      initialState = { ...new DefaultPromptInput() }
-
-      logToConsole({
-        data: initialState,
-        name: 'LoadInput_Step_2a',
-        debugKey: 'DEBUG_LOAD_INPUT'
+    if (initialState && initialState.source_image) {
+      uploadInpaint(initialState, {
+        clone: true,
+        useSourceImg: true,
+        useSourceMask: true
       })
     }
 
@@ -344,12 +325,13 @@ const CreatePage = ({ className }: any) => {
     }
 
     // Step 6. Load in img2img if not already exists
+    const hasImg2Img = await getJobImagesFromDexie(DEXIE_JOB_ID.SourceImage)
     if (
       initialState &&
       initialState.source_processing === SourceProcessing.Img2Img &&
-      localStorage.getItem('img2img_base64')
+      hasImg2Img
     ) {
-      initialState.source_image = localStorage.getItem('img2img_base64') || ''
+      initialState.source_image = hasImg2Img || ''
 
       logToConsole({
         data: initialState,
@@ -359,9 +341,7 @@ const CreatePage = ({ className }: any) => {
     }
 
     // Step 7. Store entirety of modified initial state here
-    PromptInputSettings.saveAllInput(initialState as DefaultPromptInput, {
-      forceSavePrompt: true
-    })
+    PromptInputSettings.saveAllInput(initialState as DefaultPromptInput)
 
     // Step 8. Set input
     setInput({ ...(initialState as DefaultPromptInput) })
@@ -373,8 +353,16 @@ const CreatePage = ({ className }: any) => {
 
     // Step 9. Set pageLoaded so we can start error checking and auto saving input.
     setPageLoaded(true)
+  }, [query, setInput, setPageLoaded])
+
+  // DO NOT SET INPUT STUFF until after useEffect runs! Let this function be the sole source of input truth.
+  // Check various load states and modes for CreatePage and set preferences based on that here.
+  // Thoughts: if we handle all initial input state here, we shouldn't need to track various modes.
+  // e.g., anywhere else on the site uses the "savePrompt" method. This simply loads it.
+  useEffect(() => {
+    handleInitLoad()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query, setLocked])
+  }, [])
 
   useEffect(() => {
     setQuery({
@@ -395,14 +383,14 @@ const CreatePage = ({ className }: any) => {
       const entry = entries[0]
       if (entry.boundingClientRect.top < -25) {
         setActionPanelVisible(false)
-      } else if (entry.isIntersecting && entry.boundingClientRect.top >= 0) {
+      } else if (entry.isIntersecting && entry.boundingClientRect.top >= 48) {
         setActionPanelVisible(true)
       }
     }
 
     const observer = new IntersectionObserver(observerCallback, {
       threshold: [0, 1], // this will ensure the callback is triggered both when the element is fully visible and fully hidden
-      rootMargin: '-25px 0px 0px 0px' // top margin of -25px
+      rootMargin: '-48px 0px 0px 0px' // top margin of -25px
     })
 
     if (actionPanelRef.current) {

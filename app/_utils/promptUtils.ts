@@ -2,9 +2,9 @@ import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 import PromptInputSettings from 'app/_data-models/PromptInputSettings'
 import { setInputCache } from 'app/_store/inputCache'
 import { PromptTypes } from '_types'
-import { db } from './db'
 import { logDataForDebugging } from './debugTools'
 import { validSampler } from './validationUtils'
+import { db } from 'app/_db/dexie'
 
 export enum SourceProcessing {
   Prompt = 'prompt',

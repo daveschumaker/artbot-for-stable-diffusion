@@ -5,9 +5,10 @@ import { uuidv4 } from 'app/_utils/appUtils'
 import DefaultPromptInput from '../DefaultPromptInput'
 
 class ImageJob {
-  // Job Status Settings
+  // Job specific status settings
   jobId: string
   parentJobId?: string
+  batchId?: string // Helps group images for a particular job
   timestamp_created: number
   timestamp_updated: number
   status: JobStatus
@@ -89,6 +90,7 @@ class ImageJob {
   }: ImageJob) {
     this.jobId = uuidv4() // TODO: Index me!
     this.parentJobId = parentJobId // TODO: Index me!
+    this.batchId = uuidv4() // TODO Index me!
     this.timestamp_created = Date.now()
     this.timestamp_updated = Date.now()
     this.status = JobStatus.Waiting // TODO: Index me!

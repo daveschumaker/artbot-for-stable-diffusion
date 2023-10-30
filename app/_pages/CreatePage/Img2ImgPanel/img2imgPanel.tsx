@@ -1,17 +1,22 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { Button } from 'app/_components/Button'
 import Image from 'app/_modules/Image'
 import { SourceProcessing } from 'app/_utils/promptUtils'
 import Head from 'next/head'
-import PromptInputSettings from 'app/_data-models/PromptInputSettings'
 import { clearI2IString, setI2iUploaded } from 'app/_store/canvasStore'
 import Section from 'app/_components/Section'
 import Uploader from 'app/_modules/Uploader'
 import { IconPhotoUp, IconTrash } from '@tabler/icons-react'
 import Samplers from 'app/_data-models/Samplers'
 import { useInput } from 'app/_modules/InputProvider/context'
+import {
+  addImageToDexie,
+  deleteImageFromDexie,
+  getJobImagesFromDexie
+} from 'app/_utils/db'
+import { DEXIE_JOB_ID } from '_constants'
 
 interface Props {
   handleChangeInput: any
@@ -30,10 +35,6 @@ const Img2ImgPanel = ({ saveForInpaint }: Props) => {
     height = 512,
     width = 512
   }) => {
-    PromptInputSettings.set('orientationType', 'custom')
-    PromptInputSettings.set('height', height)
-    PromptInputSettings.set('width', width)
-
     let sampler = input.sampler
     if (!Samplers.validSamplersForImg2Img().includes(sampler)) {
       sampler = 'k_dpm_2'
@@ -51,13 +52,20 @@ const Img2ImgPanel = ({ saveForInpaint }: Props) => {
       source_processing: SourceProcessing.Img2Img
     })
 
-    // Attempt to store image between sessions.
-    localStorage.setItem('img2img_base64', source_image)
-
     setI2iUploaded({
       base64String: source_image,
       height,
       width
+    })
+
+    // Attempt to store image between sessions.
+    // localStorage.setItem('img2img_base64', source_image)
+    addImageToDexie({
+      jobId: DEXIE_JOB_ID.SourceImage,
+      base64String: source_image,
+      hordeImageId: '',
+      type: 'source-image',
+      force: true
     })
   }
 
@@ -66,10 +74,32 @@ const Img2ImgPanel = ({ saveForInpaint }: Props) => {
       ...input
     })
 
-    localStorage.removeItem('img2img_base64')
+    deleteImageFromDexie(DEXIE_JOB_ID.SourceImage)
     router.push('?panel=inpainting')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [input])
+
+  const handleInitLoad = async () => {
+    const hasImg2Img = await getJobImagesFromDexie(DEXIE_JOB_ID.SourceImage)
+    if (hasImg2Img) {
+      setInput({
+        denoising_strength: input.denoising_strength ?? 0.75,
+        img2img: true,
+        // imageType,
+        // height,
+        // width,
+        orientationType: 'custom',
+        // sampler,
+        source_image: hasImg2Img,
+        source_processing: SourceProcessing.Img2Img
+      })
+    }
+  }
+
+  useEffect(() => {
+    handleInitLoad()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <div>
@@ -96,8 +126,8 @@ const Img2ImgPanel = ({ saveForInpaint }: Props) => {
                     source_image: '',
                     source_processing: SourceProcessing.Prompt
                   })
-                  localStorage.removeItem('img2img_base64')
                   clearI2IString()
+                  deleteImageFromDexie(DEXIE_JOB_ID.SourceImage)
                 }}
               >
                 <IconTrash />
