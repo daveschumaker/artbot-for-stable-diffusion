@@ -14,12 +14,6 @@ export default function EscapedNavDropdown({
   const [, setLocked] = useLockedBody(false)
   const [isActive, setIsActive] = useState(false)
 
-  // Handler for mouse over event
-  const handleMouseOver = () => {
-    setIsActive(true)
-    setLocked(true)
-  }
-
   // Handler for click event
   const handleClick = useCallback(() => {
     if (isActive) {
@@ -56,7 +50,6 @@ export default function EscapedNavDropdown({
         />
       )}
       <div
-        onMouseOver={handleMouseOver}
         style={{
           display: 'flex',
           flexDirection: 'row',

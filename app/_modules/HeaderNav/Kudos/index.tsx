@@ -33,12 +33,15 @@ export default function Kudos() {
     <FlexRow
       className={styles.Wrapper}
       gap={6}
-      style={{ width: 'unset' }}
+      style={{
+        cursor: 'pointer',
+        width: 'unset'
+      }}
       id="kudos-navbar"
     >
       <IconCoins stroke={1} size={20} />
       {formatKudos(kudos)}
-      <TooltipComponent hideIcon tooltipId="kudos-navbar">
+      <TooltipComponent hideIcon openOnClick tooltipId="kudos-navbar">
         <p>Currently available kudos associated with your AI Horde account.</p>
         <p>
           Total: <strong>{kudos.toLocaleString()}</strong> kudos

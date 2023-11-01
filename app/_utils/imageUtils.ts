@@ -985,6 +985,12 @@ export const generateBase64Thumbnail = async (
 }
 
 export const inferMimeTypeFromBase64 = (base64: string) => {
+  let [data = ''] = base64?.split(',') || ['']
+  data.replace('data:', '')
+  data.replace(';base64', '')
+
+  if (data) return data
+
   // Convert base64 string to array of integers
   const byteCharacters = atob(base64)
   const byteNumbers = new Array(byteCharacters.length)
