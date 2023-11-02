@@ -1,11 +1,11 @@
 import { AiHordeEmbedding, Common, SavedLora } from '_types/artbot'
-import { SourceProcessing } from '_types/horde'
+import { CONTROL_TYPES, SourceProcessing } from '_types/horde'
 
 class DefaultPromptInput {
   canvasData?: any | null = ''
   cfg_scale: number = 9
   clipskip: number = 1
-  control_type: string = ''
+  control_type: CONTROL_TYPES = '' as CONTROL_TYPES
   denoising_strength: number | Common.Empty = 0.75
   facefixer_strength: number = 0.75
   height: number = 512

@@ -67,6 +67,16 @@ const AdvancedOptionsPanel = ({ setErrors }: Props) => {
     setComponentState({ favoriteModelsCount })
   }, [componentState.showMultiModel, setComponentState])
 
+  let title = 'img2img options'
+
+  if (input.control_type) {
+    title = 'ControlNet options'
+  }
+
+  if (input.source_mask) {
+    title = 'inpainting options'
+  }
+
   return (
     <div>
       {input.parentJobId && (
@@ -108,7 +118,7 @@ const AdvancedOptionsPanel = ({ setErrors }: Props) => {
               title={
                 <FlexRow style={{ justifyContent: 'space-between' }}>
                   <SubSectionTitle style={{ paddingBottom: '0' }}>
-                    img2img options
+                    {title}
                   </SubSectionTitle>
                   <div>
                     <ImageSquare
@@ -142,6 +152,7 @@ const AdvancedOptionsPanel = ({ setErrors }: Props) => {
                           img2img: false,
                           imageType: '',
                           source_image: '',
+                          source_mask: '',
                           source_processing: SourceProcessing.Prompt
                         })
                         localStorage.removeItem('img2img_base64')

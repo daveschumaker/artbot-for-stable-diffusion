@@ -4,7 +4,7 @@ import { CONTROL_TYPE_ARRAY } from '../../../../_constants'
 import FlexRow from 'app/_components/FlexRow'
 import { Button } from 'app/_components/Button'
 import { IconSettings } from '@tabler/icons-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import Checkbox from 'app/_components/Checkbox'
 import TooltipComponent from 'app/_components/TooltipComponent'
@@ -13,16 +13,7 @@ import { useInput } from 'app/_modules/InputProvider/context'
 const ControlNetOptions = () => {
   const { input, setInput } = useInput()
   const [showDropdown, setShowDropdown] = useState(false)
-  let controlTypeValue = { value: '', label: 'none' }
-
-  if (CONTROL_TYPE_ARRAY.indexOf(input.control_type) >= 0) {
-    if (input.control_type) {
-      controlTypeValue = {
-        value: input.control_type,
-        label: input.control_type
-      }
-    }
-  }
+  const [controlType, setControlType] = useState({ value: '', label: 'none' })
 
   const handleControlMapSelect = (option: string) => {
     if (option === 'image_is_control' && input.image_is_control) {
@@ -41,6 +32,17 @@ const ControlNetOptions = () => {
       return
     }
   }
+
+  useEffect(() => {
+    if (input.control_type) {
+      setControlType({
+        value: input.control_type,
+        label: input.control_type
+      })
+    } else if (input.control_type === '') {
+      setControlType({ value: '', label: 'none' })
+    }
+  }, [input.control_type])
 
   return (
     <div>
@@ -62,9 +64,7 @@ const ControlNetOptions = () => {
             }
           }}
           isSearchable={false}
-          value={
-            controlTypeValue ? controlTypeValue : { value: '', label: 'none' }
-          }
+          value={controlType}
         />
         {showDropdown && (
           <DropdownOptions
