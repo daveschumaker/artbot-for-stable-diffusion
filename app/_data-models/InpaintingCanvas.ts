@@ -7,6 +7,7 @@ interface Point {
   y: number
 }
 
+import { SourceProcessing } from '_types/horde'
 import DefaultPromptInput from './DefaultPromptInput'
 import { inferMimeTypeFromBase64 } from 'app/_utils/imageUtils'
 
@@ -183,7 +184,8 @@ class InpaintingCanvas {
 
       const base64string = this.exportMaskToBase64()
       this.setInput({
-        source_mask: base64string
+        source_mask: base64string,
+        source_processing: SourceProcessing.InPainting
       })
     }
 
@@ -570,6 +572,10 @@ class InpaintingCanvas {
         this.maskCtx.drawImage(img, 0, 0, width, height)
       }
       img.src = fullDataString
+
+      this.setInput({
+        source_processing: SourceProcessing.InPainting
+      })
     } catch (e) {
       console.log(`Error:`, e)
     }
