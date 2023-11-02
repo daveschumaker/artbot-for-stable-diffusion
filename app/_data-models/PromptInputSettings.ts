@@ -1,19 +1,13 @@
 import { debounce } from 'app/_utils/debounce'
-import LocalStorageController from 'app/_controllers/LocalStorageController'
-import AppSettings from './AppSettings'
+import {
+  SettingName,
+  getSettingFromDexie,
+  updateSetting
+} from 'app/_db/settings'
+import DefaultPromptInput from './DefaultPromptInput'
 
-interface IOptions {
-  forceSavePrompt?: boolean
-}
-
-class PromptInputSettingsClass extends LocalStorageController {
-  constructor({ name, version }: { name: string; version: number }) {
-    super({ name, version })
-  }
-
-  saveAllInput = debounce((input: object = {}, options: IOptions = {}) => {
-    const { forceSavePrompt = false } = options
-
+class PromptInputSettingsClass {
+  updateSavedInput_NON_DEBOUNCED = async (input: object = {}) => {
     const clonedInput = Object.assign({}, input)
 
     // Clone to prompt input settings
@@ -21,51 +15,47 @@ class PromptInputSettingsClass extends LocalStorageController {
       'canvasStore', // DEPRECATED
       // 'canvasData',
       // 'copyPrompt',
-      // 'maskData',
       'parentJobId'
       // 'source_image',
       // 'source_mask'
     ]
 
-    interface IKeyValue {
-      [key: string]: string
+    const filteredObject = Object.keys(clonedInput)
+      .filter((key) => !keysToExclude.includes(key))
+      .reduce((acc, key) => {
+        // @ts-ignore
+        acc[key] = clonedInput[key]
+        return acc
+      }, {})
+
+    try {
+      await updateSetting(SettingName.PromptInput, filteredObject)
+    } catch (e) {
+      console.log(`updateSavedInput Error:`, e)
     }
+  }
 
-    const keysToRemap: IKeyValue = {
-      orientation: 'orientationType'
+  saveAllInput = debounce(this.updateSavedInput_NON_DEBOUNCED, 350)
+
+  delete = async (name: string) => {
+    console.log(`NOT_WORKING delete?`, name)
+  }
+
+  get = async (name: string) => {
+    console.log(`NOT_WORKING get?`, name)
+  }
+
+  load = async () => {
+    try {
+      const res = (await getSettingFromDexie(SettingName.PromptInput)) || []
+      const { setting = {} } = res
+      return new DefaultPromptInput(setting)
+    } catch (e) {
+      console.log(`PromptInputSettingsClass load() Error:`, e)
+      return new DefaultPromptInput()
     }
-
-    for (let [key, value] of Object.entries(clonedInput)) {
-      if (keysToExclude.includes(key)) {
-        continue
-      }
-
-      if (
-        key === 'prompt' &&
-        !AppSettings.get('savePromptOnCreate') &&
-        !forceSavePrompt
-      ) {
-        continue
-      }
-
-      if (key === 'seed' && !AppSettings.get('saveSeedOnCreate')) {
-        continue
-      }
-
-      if (keysToRemap[key]) {
-        key = keysToRemap[key]
-      }
-
-      this.set(key, value)
-    }
-  }, 350)
+  }
 }
 
-const PromptInputSettings = new PromptInputSettingsClass({
-  name: 'PromptInputSettings',
-  version: 1
-})
-
-PromptInputSettings.init()
-
+const PromptInputSettings = new PromptInputSettingsClass()
 export default PromptInputSettings

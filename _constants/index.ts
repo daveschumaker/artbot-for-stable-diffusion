@@ -18,6 +18,15 @@ export const MAX_IMAGE_PIXELS = 4194304 // Maximum supported resolution for imag
 export const MIN_IMAGE_WIDTH = 64
 export const POLL_COMPLETED_JOBS_INTERVAL = 1500 // ms
 
+export const CREATE_PAGE_PARAM = {
+  Edit: 'edit',
+  LoadDrawing: 'drawing',
+  LoadModel: 'model',
+  Prompt: 'prompt',
+  Share: 'share',
+  Shortlink: 'i'
+}
+
 export enum DEXIE_JOB_ID {
   SourceImage = '0',
   SourceMask = '1'
