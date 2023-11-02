@@ -14,8 +14,6 @@ import {
 import { blobToClipboard, downloadFile } from 'app/_utils/imageUtils'
 
 import styles from './imageDetails.module.css'
-import AppSettings from 'app/_data-models/AppSettings'
-import PromptInputSettings from 'app/_data-models/PromptInputSettings'
 import {
   copyEditPrompt,
   interrogateImage,
@@ -91,12 +89,8 @@ const ImageOptionsWrapper = ({
     }
   }, [imageDetails.jobId, imageDetails.parentJobId])
 
-  const handleCopyPromptClick = () => {
-    if (AppSettings.get('savePromptOnCreate')) {
-      PromptInputSettings.set('prompt', imageDetails.prompt)
-    }
-
-    copyEditPrompt(imageDetails)
+  const handleCopyPromptClick = async () => {
+    await copyEditPrompt(imageDetails)
     router.push(`/create?edit=true`)
     handleClose()
   }

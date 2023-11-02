@@ -630,7 +630,7 @@ export const checkCurrentJob = async (imageDetails: any) => {
             `, Size: ${job.width}x${job.height}, model: ${job.models}`
           let oldBlob
           try {
-            oldBlob = await base64toBlob(image.base64String, `image/webp`)
+            oldBlob = await base64toBlob(image.base64String)
           } catch (err) {
             console.log(
               `Error: Something unfortunate happened when attempting to convert base64string to file blob`
