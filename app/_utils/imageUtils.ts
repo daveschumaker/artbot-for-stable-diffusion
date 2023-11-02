@@ -986,11 +986,12 @@ export const generateBase64Thumbnail = async (
 }
 
 export const inferMimeTypeFromBase64 = (base64: string) => {
-  let [data = ''] = base64?.split(',') || ['']
-  data.replace('data:', '')
-  data.replace(';base64', '')
-
-  if (data) return data
+  if (base64.indexOf('data:') === 0) {
+    let [data] = base64?.split(',') || ['']
+    data = data.replace('data:', '')
+    data = data.replace(';base64', '')
+    return data
+  }
 
   // Convert base64 string to array of integers
   const byteCharacters = atob(base64)
@@ -1039,7 +1040,6 @@ export const inferMimeTypeFromBase64 = (base64: string) => {
   ) {
     return 'image/webp'
   }
-  // Add more formats as needed
 
   return 'unknown'
 }
