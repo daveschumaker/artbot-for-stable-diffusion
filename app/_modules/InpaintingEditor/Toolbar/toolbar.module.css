@@ -1,0 +1,59 @@
+/* TOOLBAR ITSELF */
+
+.toolbar {
+  align-items: center;
+  background-color: white;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  padding: 4px;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.toolbarAbsolute {
+  position: absolute;
+}
+
+/* TOOLBAR DROPDOWN MENU AND BUTTONS */
+.border {
+  border: 1px solid;
+}
+
+.borderWhite {
+  border-color: #ffffff;
+}
+
+.p4 {
+  padding: 4px;
+}
+
+.rounded4 {
+  border-radius: 4px;
+}
+
+.activeBorder {
+  border: 1px solid;
+}
+
+.selectNone {
+  user-select: none;
+}
+
+.bgActive {
+  background-color: #6ab7c6;
+}
+
+.activeBg {
+  background-color: #8fc9d4;
+}
+
+.bgSecondaryHover:hover {
+  background-color: #fce9e9;
+}
+
+.bgDefaultHover:hover {
+  background-color: #f3f3f3;
+}

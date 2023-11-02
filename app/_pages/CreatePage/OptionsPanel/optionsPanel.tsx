@@ -5,17 +5,21 @@ import Img2ImgPanel from '../Img2ImgPanel'
 import Uploader from 'app/_modules/Uploader'
 import { clearCanvasStore, setI2iUploaded } from 'app/_store/canvasStore'
 import { SourceProcessing } from 'app/_utils/promptUtils'
-import { nearestWholeMultiple } from 'app/_utils/imageUtils'
+import {
+  inferMimeTypeFromBase64,
+  nearestWholeMultiple
+} from 'app/_utils/imageUtils'
 import Head from 'next/head'
 import styles from './component.module.css'
 import clsx from 'clsx'
 import AdvancedOptionsPanel from 'app/_modules/AdvancedOptionsPanel'
 import WarningPanel from 'app/_modules/WarningPanel'
-import Editor from 'app/_modules/Editor'
 import Panel from 'app/_components/Panel'
 import FlexRow from 'app/_components/FlexRow'
 import { IconPointFilled } from '@tabler/icons-react'
 import { useInput } from 'app/_modules/InputProvider/context'
+import PromptInputSettings from 'app/_data-models/PromptInputSettings'
+import InpaintingEditor from 'app/_modules/InpaintingEditor'
 
 const removeImageCanvasData = {
   canvasData: null,
@@ -51,9 +55,11 @@ const OptionsPanel = ({ setErrors }: Props) => {
     }
   }, [panel])
 
-  const handleSaveAction = async (data: any) => {
+  const handleSaveImage = async (data: any) => {
     clearCanvasStore() // Handle bug where previous canvas may show up.
-    const newBase64String = `data:${data.imageType};base64,${data.source_image}`
+    const newBase64String = `data:${inferMimeTypeFromBase64(
+      data.source_image
+    )};base64,${data.source_image}`
 
     setI2iUploaded({
       base64String: newBase64String,
@@ -61,7 +67,7 @@ const OptionsPanel = ({ setErrors }: Props) => {
       width: data.width
     })
 
-    setInput({
+    const inpaintingInput = {
       height: nearestWholeMultiple(data.height),
       width: nearestWholeMultiple(data.width),
       orientationType: 'custom',
@@ -69,7 +75,10 @@ const OptionsPanel = ({ setErrors }: Props) => {
       source_image: data.source_image,
       source_mask: '',
       source_processing: 'inpainting'
-    })
+    }
+
+    PromptInputSettings.updateSavedInput_NON_DEBOUNCED(inpaintingInput)
+    setInput(inpaintingInput)
   }
 
   return (
@@ -82,7 +91,7 @@ const OptionsPanel = ({ setErrors }: Props) => {
           )}
           onClick={() => {
             setActiveNav('advanced')
-            router.push(`/create`)
+            router.push(`/create`, { scroll: false })
           }}
         >
           Options
@@ -94,7 +103,7 @@ const OptionsPanel = ({ setErrors }: Props) => {
             activeNav === 'img2img' && styles['NavItem-Active']
           )}
           onClick={() => {
-            router.push(`/create?panel=img2img`)
+            router.push(`/create?panel=img2img`, { scroll: false })
             setActiveNav('img2img')
           }}
         >
@@ -104,7 +113,7 @@ const OptionsPanel = ({ setErrors }: Props) => {
         {/* <NavItem
           active={activeNav === 'draw'}
           onClick={() => {
-            router.push(`/create?panel=draw`)
+            router.push(`/create?panel=draw`, { scroll: false })
             setActiveNav('draw')
           }}
         >
@@ -116,7 +125,7 @@ const OptionsPanel = ({ setErrors }: Props) => {
             activeNav === 'inpainting' && styles['NavItem-Active']
           )}
           onClick={() => {
-            router.push(`/create?panel=inpainting`)
+            router.push(`/create?panel=inpainting`, { scroll: false })
             setActiveNav('inpainting')
           }}
         >
@@ -146,7 +155,7 @@ const OptionsPanel = ({ setErrors }: Props) => {
           <Img2ImgPanel
             input={input}
             setInput={setInput}
-            saveForInpaint={handleSaveAction}
+            saveForInpaint={handleSaveImage}
           />
         )}
 
@@ -159,29 +168,7 @@ const OptionsPanel = ({ setErrors }: Props) => {
               <title>Inpainting - ArtBot for Stable Diffusion</title>
               <meta name="twitter:title" content="ArtBot - Inpainting" />
             </Head>
-            <div className="text-sm mb-2">
-              Want to try outpainting? A few quick tips:
-              <ul>
-                <li>- Upload an image</li>
-                <li>- Resize and move image around canvas</li>
-                <li>
-                  - Paint over checkerboard to include all areas you want to
-                  outpaint.
-                </li>
-              </ul>
-            </div>
-            <Editor
-              canvasId="inpainting-canvas"
-              canvasType="inpainting"
-              setInput={setInput}
-              source_image={input.source_image}
-              handleRemoveClick={() => {
-                clearCanvasStore()
-                setInput({
-                  ...removeImageCanvasData
-                })
-              }}
-            />
+            <InpaintingEditor />
           </>
         )}
 
@@ -192,7 +179,7 @@ const OptionsPanel = ({ setErrors }: Props) => {
             <Head>
               <title>Inpainting - ArtBot for Stable Diffusion</title>
             </Head>
-            <Uploader handleSaveImage={handleSaveAction} type="inpainting" />
+            <Uploader handleSaveImage={handleSaveImage} type="inpainting" />
           </>
         )}
 
