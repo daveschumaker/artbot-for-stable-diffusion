@@ -28,9 +28,6 @@ class PromptInputSettingsClass {
         return acc
       }, {})
 
-    // debugger
-    console.log(`saveALl?`, filteredObject)
-
     try {
       await updateSetting(SettingName.PromptInput, filteredObject)
     } catch (e) {

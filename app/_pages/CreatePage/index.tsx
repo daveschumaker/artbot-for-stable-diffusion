@@ -152,8 +152,6 @@ const CreatePage = ({ className }: any) => {
     // Step 1. Load user prompt settings, if available
     const promptInput = await PromptInputSettings.load()
 
-    console.log(`handleInitLoad promptInputSettings`, promptInput)
-
     initialState = { ...promptInput } as DefaultPromptInput
 
     if (initialState && initialState.source_image) {
@@ -291,8 +289,6 @@ const CreatePage = ({ className }: any) => {
 
     // Step 5. Set input
     setInput({ ...(initialState as DefaultPromptInput) })
-
-    console.log(`what is init state?`, initialState)
 
     logToConsole({
       data: initialState,
