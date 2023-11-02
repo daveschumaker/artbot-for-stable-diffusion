@@ -17,6 +17,27 @@
   position: absolute;
 }
 
+.toolbarMenuWrapper {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  width: 100%;
+}
+
+.toolbarMenuItem {
+  border-radius: 4px;
+  cursor: default;
+  font-size: 14px;
+  letter-spacing: 0em;
+  padding: 4px 8px;
+  user-select: none;
+}
+
+.toolbarMenuItem:hover {
+  background-color: #6ab7c6;
+  color: white;
+}
+
 /* TOOLBAR DROPDOWN MENU AND BUTTONS */
 .border {
   border: 1px solid;

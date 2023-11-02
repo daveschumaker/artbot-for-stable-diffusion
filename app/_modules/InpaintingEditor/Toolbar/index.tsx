@@ -2,8 +2,6 @@ import clsx from 'clsx'
 import { useCallback, useState } from 'react'
 
 import DeleteConfirmModal from 'app/_modules/DeleteConfirmModal'
-import DropDown from './DropDown'
-import { Button } from 'app/_components/Button'
 import useLockedBody from 'app/_hooks/useLockedBody'
 import styles from './toolbar.module.css'
 import {
@@ -14,18 +12,18 @@ import {
   IconArrowLeft,
   IconArrowRight,
   IconArrowUp,
-  IconDownload,
   IconEraser,
-  IconMaskOff,
+  IconHelpCircle,
   IconMinusVertical,
   IconPencil,
+  IconSettings,
   IconTrash
 } from '@tabler/icons-react'
 import InpaintingCanvas from 'app/_data-models/InpaintingCanvas'
 import { useInput } from 'app/_modules/InputProvider/context'
 import { SourceProcessing } from '_types/horde'
-
-const DEBUG_MODE = true
+import AdjustmentMenu from './AdjustmentMenu'
+import SettingMenu from './SettingsMenu'
 
 const removeImageCanvasData = {
   canvasData: null,
@@ -77,6 +75,9 @@ const ToolBar = ({ canvas }: { canvas: InpaintingCanvas }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [brushSize, setBrushSize] = useState(20)
 
+  const [showSettingMenu, setShowSettingMenu] = useState(false)
+  const [showOutpaintToolbar, setShowOutpaintToolbar] = useState(true)
+
   const handleRemoveClick = () => {
     setInput({ ...removeImageCanvasData })
   }
@@ -104,156 +105,164 @@ const ToolBar = ({ canvas }: { canvas: InpaintingCanvas }) => {
   }
 
   return (
-    <div className={clsx(styles.toolbar)}>
-      <div className="flex flex-row items-center gap-1">
-        <ToolBarButton
-          active={activeBrush === 'paint'}
-          onClick={() => {
-            setActiveBrush('paint')
-            canvas?.toggleErase(false)
-          }}
-        >
-          <IconPencil stroke="black" />
-        </ToolBarButton>
-        <ToolBarButton
-          active={activeBrush === 'erase'}
-          onClick={() => {
-            setActiveBrush('erase')
-            canvas?.toggleErase(true)
-          }}
-        >
-          <IconEraser stroke="black" />
-        </ToolBarButton>
-        <IconMinusVertical stroke="#949494" />
-        <ToolBarButton onClick={canvas?.undo}>
-          <IconArrowBackUp stroke="black" />
-        </ToolBarButton>
-        <ToolBarButton onClick={canvas?.redo}>
-          <IconArrowForwardUp stroke="black" />
-        </ToolBarButton>
-        <IconMinusVertical stroke="#949494" />
-        <ToolBarButton
-          onClick={() => {
-            canvas?.expandCanvas('bottom', 64)
-            handleAdjustCanvasSize('bottom', 64)
-          }}
-        >
-          <IconArrowDown stroke="black" />
-        </ToolBarButton>
-        <ToolBarButton
-          onClick={() => {
-            canvas?.expandCanvas('top', 64)
-            handleAdjustCanvasSize('top', 64)
-          }}
-        >
-          <IconArrowUp stroke="black" />
-        </ToolBarButton>
-        <ToolBarButton
-          onClick={() => {
-            canvas?.expandCanvas('right', 64)
-            handleAdjustCanvasSize('right', 64)
-          }}
-        >
-          {/* <IconArrowUp stroke="black" /> */}
-          <IconArrowRight stroke="black" />
-        </ToolBarButton>
-        <ToolBarButton
-          onClick={() => {
-            canvas?.expandCanvas('left', 64)
-            handleAdjustCanvasSize('left', 64)
-          }}
-        >
-          <IconArrowLeft stroke="black" />
-        </ToolBarButton>
-        <ToolBarButton
-          active={showAdjustmentMenu}
-          onClick={() => {
-            if (showAdjustmentMenu) {
-              setShowAdjustmentMenu(false)
-            } else {
-              setShowAdjustmentMenu(true)
-            }
-          }}
-        >
-          <IconAdjustments stroke="black" />
-        </ToolBarButton>
-        {DEBUG_MODE && (
-          <Button onClick={canvas?.saveToDisk}>
-            <IconDownload />
-          </Button>
+    <>
+      <div className={clsx(styles.toolbar)}>
+        <div className="flex flex-row items-center gap-1">
+          <ToolBarButton
+            active={showSettingMenu}
+            onClick={() => {
+              if (showSettingMenu) {
+                setShowSettingMenu(false)
+              } else {
+                setShowSettingMenu(true)
+              }
+            }}
+          >
+            <IconSettings stroke="black" />
+          </ToolBarButton>
+          <ToolBarButton
+            active={showAdjustmentMenu}
+            onClick={() => {
+              if (showAdjustmentMenu) {
+                setShowAdjustmentMenu(false)
+              } else {
+                setShowAdjustmentMenu(true)
+              }
+            }}
+          >
+            <IconAdjustments stroke="black" />
+          </ToolBarButton>
+          <IconMinusVertical stroke="#949494" />
+
+          <ToolBarButton
+            active={activeBrush === 'paint'}
+            onClick={() => {
+              setActiveBrush('paint')
+              canvas?.toggleErase(false)
+            }}
+          >
+            <IconPencil stroke="black" />
+          </ToolBarButton>
+          <ToolBarButton
+            active={activeBrush === 'erase'}
+            onClick={() => {
+              setActiveBrush('erase')
+              canvas?.toggleErase(true)
+            }}
+          >
+            <IconEraser stroke="black" />
+          </ToolBarButton>
+          <IconMinusVertical stroke="#949494" />
+          <ToolBarButton onClick={canvas?.undo}>
+            <IconArrowBackUp stroke="black" />
+          </ToolBarButton>
+          <ToolBarButton onClick={canvas?.redo}>
+            <IconArrowForwardUp stroke="black" />
+          </ToolBarButton>
+        </div>
+        <div>
+          <ToolBarButton
+            theme="secondary"
+            onClick={() => {
+              setLocked(true)
+              setShowDeleteModal(true)
+            }}
+          >
+            <IconTrash stroke="black" />
+          </ToolBarButton>
+        </div>
+        {showSettingMenu && (
+          <SettingMenu
+            handleClearMask={canvas?.clearMaskCanvas}
+            handleDownloadClick={canvas?.saveToDisk}
+            setShowOutpaintToolbar={setShowOutpaintToolbar}
+            setShowSettingMenu={setShowSettingMenu}
+            showOutpaintToolbar={showOutpaintToolbar}
+          />
+        )}
+        {showAdjustmentMenu && (
+          <AdjustmentMenu
+            setShowAdjustmentMenu={setShowAdjustmentMenu}
+            brushSize={brushSize}
+            handleWidth={handleWidth}
+          />
+        )}
+        {showDeleteModal && (
+          <DeleteConfirmModal
+            onConfirmClick={() => {
+              setLocked(false)
+              handleRemoveClick()
+              setShowDeleteModal(false)
+            }}
+            closeModal={() => {
+              setLocked(false)
+              setShowDeleteModal(false)
+            }}
+          >
+            <h3
+              className="text-lg font-medium leading-6 text-gray-900"
+              id="modal-title"
+            >
+              Remove image and mask?
+            </h3>
+            <div className="mt-2">
+              <p className="text-sm text-gray-500">
+                Are you sure you want to remove this image and mask? They will
+                be erased. This action cannot be undone.
+              </p>
+            </div>
+          </DeleteConfirmModal>
         )}
       </div>
-      <div>
-        <ToolBarButton
-          theme="secondary"
-          onClick={() => {
-            canvas?.clearMaskCanvas()
-          }}
-        >
-          <IconMaskOff stroke="black" />
-        </ToolBarButton>
-      </div>
-      <div>
-        <ToolBarButton
-          theme="secondary"
-          onClick={() => {
-            setLocked(true)
-            setShowDeleteModal(true)
-          }}
-        >
-          <IconTrash stroke="black" />
-        </ToolBarButton>
-      </div>
-      {showAdjustmentMenu && (
-        <DropDown handleClose={() => setShowAdjustmentMenu(false)}>
-          <div className="flex flex-col w-full">
-            <div className="w-full mb-2">
-              <div className="text-gray-900">
-                <small>
-                  <strong>Brush size ({brushSize} px)</strong>
-                </small>
-              </div>
-              <div className="w-full">
-                <input
-                  className="w-full"
-                  type="range"
-                  min={2}
-                  max="120"
-                  onChange={handleWidth}
-                  value={brushSize}
-                />
-              </div>
+      {showOutpaintToolbar && (
+        <>
+          <div style={{ paddingTop: '2px', fontWeight: 700, fontSize: 14 }}>
+            Outpainting Utils
+          </div>
+          <div className={clsx(styles.toolbar)}>
+            <div className="flex flex-row items-center gap-1">
+              <ToolBarButton onClick={() => {}}>
+                <IconHelpCircle stroke="black" />
+              </ToolBarButton>
+              <IconMinusVertical stroke="#949494" />
+              <ToolBarButton
+                onClick={() => {
+                  canvas?.expandCanvas('bottom', 64)
+                  handleAdjustCanvasSize('bottom', 64)
+                }}
+              >
+                <IconArrowDown stroke="black" />
+              </ToolBarButton>
+              <ToolBarButton
+                onClick={() => {
+                  canvas?.expandCanvas('top', 64)
+                  handleAdjustCanvasSize('top', 64)
+                }}
+              >
+                <IconArrowUp stroke="black" />
+              </ToolBarButton>
+              <ToolBarButton
+                onClick={() => {
+                  canvas?.expandCanvas('right', 64)
+                  handleAdjustCanvasSize('right', 64)
+                }}
+              >
+                {/* <IconArrowUp stroke="black" /> */}
+                <IconArrowRight stroke="black" />
+              </ToolBarButton>
+              <ToolBarButton
+                onClick={() => {
+                  canvas?.expandCanvas('left', 64)
+                  handleAdjustCanvasSize('left', 64)
+                }}
+              >
+                <IconArrowLeft stroke="black" />
+              </ToolBarButton>
             </div>
           </div>
-        </DropDown>
+        </>
       )}
-      {showDeleteModal && (
-        <DeleteConfirmModal
-          onConfirmClick={() => {
-            setLocked(false)
-            handleRemoveClick()
-            setShowDeleteModal(false)
-          }}
-          closeModal={() => {
-            setLocked(false)
-            setShowDeleteModal(false)
-          }}
-        >
-          <h3
-            className="text-lg font-medium leading-6 text-gray-900"
-            id="modal-title"
-          >
-            Remove image and mask?
-          </h3>
-          <div className="mt-2">
-            <p className="text-sm text-gray-500">
-              Are you sure you want to remove this image and mask? They will be
-              erased. This action cannot be undone.
-            </p>
-          </div>
-        </DeleteConfirmModal>
-      )}
-    </div>
+    </>
   )
 }
 

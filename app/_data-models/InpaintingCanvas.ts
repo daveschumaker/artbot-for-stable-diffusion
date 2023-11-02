@@ -123,7 +123,7 @@ class InpaintingCanvas {
     })
   }
 
-  clearMaskCanvas(): void {
+  clearMaskCanvas = (): void => {
     // Get the context of the maskCanvas
     const maskCtx = this.maskCanvas.getContext('2d')
 
@@ -132,7 +132,7 @@ class InpaintingCanvas {
     }
 
     // Clear the entire maskCanvas by setting its pixels to be transparent
-    maskCtx.clearRect(0, 0, this.maskCanvas.width, this.maskCanvas.height)
+    maskCtx?.clearRect(0, 0, this.maskCanvas.width, this.maskCanvas.height)
 
     this.setInput({
       source_mask: ''
