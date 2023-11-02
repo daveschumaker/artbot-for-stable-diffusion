@@ -318,11 +318,12 @@ export const getBase64 = (file: Blob) => {
   })
 }
 
-export const base64toBlob = async (base64Data: string, contentType: string) => {
+export const base64toBlob = async (base64Data: string) => {
   try {
-    const base64Response = await fetch(
-      `data:${contentType};base64,${base64Data}`
-    )
+    const base64str = `data:${inferMimeTypeFromBase64(
+      base64Data
+    )};base64,${base64Data}`
+    const base64Response = await fetch(base64str)
     const blob = await base64Response.blob()
 
     return blob
@@ -565,7 +566,7 @@ export const blobToClipboard = async (base64String: string) => {
     }
   } else {
     // Only PNGs can be copied to the clipboard
-    const image: any = await base64toBlob(base64String, `image/png`)
+    const image: any = await base64toBlob(base64String)
     const newBlob = await image.toPNG()
 
     navigator.clipboard.write([new ClipboardItem({ 'image/png': newBlob })])
@@ -636,7 +637,7 @@ export const downloadImages = async ({
 
     let input
     try {
-      input = await base64toBlob(image.base64String, `image/${fileType}`)
+      input = await base64toBlob(image.base64String)
     } catch (err) {
       console.log(
         `Error: Something unfortunate happened when attempting to convert base64string to file blob`
@@ -718,7 +719,7 @@ export const downloadImages = async ({
 export const downloadFile = async (image: any) => {
   initBlob()
   const fileType = AppSettings.get('imageDownloadFormat') || 'jpg'
-  const input = await base64toBlob(image.base64String, `image/${fileType}`)
+  const input = await base64toBlob(image.base64String)
   const { saveAs } = (await import('file-saver')).default
 
   const filename =

@@ -33,7 +33,7 @@ class ImageModels {
       input.source_image ||
       input.source_processing === SourceProcessing.Img2Img ||
       input.source_processing === SourceProcessing.InPainting
-    const isInpainting = input.source_mask ? true : false
+    const isInpainting = input.source_image || input.source_mask ? true : false
 
     // When the app initially loads, the initial model availability fetch does not populate the store in time to display
     // data on the select model drop down. So, "availableModels" ends up being empty. This HACK checks for this an

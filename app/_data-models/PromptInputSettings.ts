@@ -28,21 +28,24 @@ class PromptInputSettingsClass {
         return acc
       }, {})
 
+    // debugger
+    console.log(`saveALl?`, filteredObject)
+
     try {
       await updateSetting(SettingName.PromptInput, filteredObject)
     } catch (e) {
-      console.log(`updateSavedInput Error:`, e)
+      console.log(`Error:`, e)
     }
   }
 
   saveAllInput = debounce(this.updateSavedInput_NON_DEBOUNCED, 350)
 
   delete = async (name: string) => {
-    console.log(`NOT_WORKING delete?`, name)
+    console.log(`delete?`, name)
   }
 
   get = async (name: string) => {
-    console.log(`NOT_WORKING get?`, name)
+    console.log(`get?`, name)
   }
 
   load = async () => {
@@ -51,7 +54,7 @@ class PromptInputSettingsClass {
       const { setting = {} } = res
       return new DefaultPromptInput(setting)
     } catch (e) {
-      console.log(`PromptInputSettingsClass load() Error:`, e)
+      console.log(`Error:`, e)
       return new DefaultPromptInput()
     }
   }

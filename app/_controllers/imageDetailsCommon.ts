@@ -1,4 +1,3 @@
-import PromptInputSettings from 'app/_data-models/PromptInputSettings'
 import UpscaleImageRequest from 'app/_data-models/UpscaleImageRequest'
 import {
   clearCanvasStore,
@@ -23,9 +22,8 @@ export const interrogateImage = (imageDetails: any) => {
   setImageForInterrogation(imageDetails)
 }
 
-export const copyEditPrompt = (imageDetails: any) => {
-  PromptInputSettings.clear()
-  savePromptV2(imageDetails)
+export const copyEditPrompt = async (imageDetails: any) => {
+  await savePromptV2(imageDetails)
 }
 
 /**
@@ -74,7 +72,6 @@ export const uploadInpaint = async (imageDetails: any, options: any = {}) => {
     sampler = 'k_dpm_2'
   }
 
-  PromptInputSettings.clear()
   savePrompt({
     imageType: imageDetails.imageType,
     prompt: imageDetails.prompt,

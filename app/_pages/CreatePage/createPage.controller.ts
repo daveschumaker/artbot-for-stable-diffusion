@@ -2,7 +2,6 @@ import { trackEvent, trackGaEvent } from 'app/_api/telemetry'
 import AppSettings from 'app/_data-models/AppSettings'
 import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
-import PromptInputSettings from 'app/_data-models/PromptInputSettings'
 import { Dispatch } from 'react'
 import {
   clearCanvasStore,
@@ -106,7 +105,7 @@ export const handleCreateClick = async ({
   savePromptHistory(input.prompt)
 
   if (!AppSettings.get('savePromptOnCreate')) {
-    PromptInputSettings.set('prompt', '')
+    setInput({ prompt: '' })
   }
 
   clearSavedInputCache()

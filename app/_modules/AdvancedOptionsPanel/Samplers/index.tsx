@@ -1,5 +1,4 @@
 import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
-import PromptInputSettings from 'app/_data-models/PromptInputSettings'
 import { SourceProcessing } from 'app/_utils/promptUtils'
 import MaxWidth from 'app/_components/MaxWidth'
 import Section from 'app/_components/Section'
@@ -52,7 +51,6 @@ const Samplers = ({
               <Select
                 options={samplerOptions(input)}
                 onChange={(obj: { value: string; label: string }) => {
-                  PromptInputSettings.set('sampler', obj.value)
                   setInput({ sampler: obj.value })
                 }}
                 value={samplerValue}
@@ -84,14 +82,7 @@ const Samplers = ({
                   useFavoriteModels: false,
                   useMultiSteps: false
                 })
-
-                PromptInputSettings.set('numImages', 1)
-                PromptInputSettings.set('useAllSamplers', true)
-                PromptInputSettings.set('useAllModels', false)
-                PromptInputSettings.set('useFavoriteModels', false)
-                PromptInputSettings.set('useMultiSteps', false)
               } else {
-                PromptInputSettings.set('useAllSamplers', false)
                 setInput({ useAllSamplers: false })
               }
             }}

@@ -49,7 +49,6 @@ export default function SelectSampler({
                   const updateObject = obj.map((sampler) => sampler.value)
                   setInput({ multiSamplers: updateObject })
                 } else {
-                  // PromptInputSettings.set('sampler', obj.value)
                   setInput({ sampler: obj.value })
                 }
               }}

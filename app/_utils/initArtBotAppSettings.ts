@@ -9,7 +9,6 @@ import { fetchHordePerformance } from 'app/_api/fetchHordePerformance'
 import fetchMyWorkers from 'app/_api/fetchMyWorkers'
 import { fetchUserDetails, setUserId } from 'app/_api/userInfo'
 import AppSettings from 'app/_data-models/AppSettings'
-import PromptInputSettings from 'app/_data-models/PromptInputSettings'
 
 // @ts-ignore
 import { trackNewSession } from './analytics'
@@ -75,10 +74,6 @@ export const updateAppConfig = () => {
   localStorage.removeItem('preserveCreateSettings')
   localStorage.removeItem('runBackground')
   localStorage.removeItem('useBeta')
-
-  if (PromptInputSettings.get('control_type') === 'none') {
-    PromptInputSettings.set('control_type', '')
-  }
 }
 
 // Track time of last visit so we can potentially clean up pending items database.
@@ -112,15 +107,7 @@ export const appLastActive = async () => {
 
 // Use to fix any issues related to local storage values
 // due to bad decisions on my part.
-export const fixLocalStorage = () => {
-  if (PromptInputSettings.get('control_type') === 'none') {
-    PromptInputSettings.set('control_type', '')
-  }
-
-  if (PromptInputSettings.get('parentJobId')) {
-    PromptInputSettings.delete('parentJobId')
-  }
-}
+export const fixLocalStorage = () => {}
 
 export const initAppSettings = async () => {
   if (typeof window === 'undefined') {

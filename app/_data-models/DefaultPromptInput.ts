@@ -2,7 +2,7 @@ import { AiHordeEmbedding, Common, SavedLora } from '_types/artbot'
 import { SourceProcessing } from '_types/horde'
 
 class DefaultPromptInput {
-  canvasData: any | null = ''
+  canvasData?: any | null = ''
   cfg_scale: number = 9
   clipskip: number = 1
   control_type: string = ''
