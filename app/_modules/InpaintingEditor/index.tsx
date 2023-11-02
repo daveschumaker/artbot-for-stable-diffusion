@@ -1,7 +1,6 @@
-import React, { useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useInput } from '../InputProvider/context'
 import InpaintingCanvas from 'app/_data-models/InpaintingCanvas'
-import { useEffectOnce } from 'app/_hooks/useEffectOnce'
 import ToolBar from './Toolbar'
 import styles from './inpaintingEditor.module.css'
 import { getMaxValidCanvasWidth } from 'app/_utils/fabricUtils'
@@ -9,37 +8,45 @@ import { getMaxValidCanvasWidth } from 'app/_utils/fabricUtils'
 function InpaintingEditor() {
   const { input, setInput } = useInput()
   const canvas = useRef<HTMLCanvasElement | null>(null)
+  const [myCanvas, setMyCanvas] = useState<any>(null)
   const [ref, setRef] = useState<any>()
 
-  const initCanvas = () => {
-    const myCanvas = new InpaintingCanvas({
-      setInput,
-      source_image: input.source_image
+  const initCanvas = useCallback(async () => {
+    const canvas = new InpaintingCanvas({
+      setInput
     })
 
-    if (input.source_mask) {
-      myCanvas.importMask(input.source_mask)
+    if (input.source_image) {
+      canvas.importImage(input.source_image)
     }
 
-    myCanvas.enableDrawing()
-    setRef(myCanvas)
+    if (input.source_mask) {
+      canvas.importMask(input.source_mask)
+    }
 
-    return myCanvas
-  }
+    canvas.enableDrawing()
 
-  useEffectOnce(() => {
-    const myCanvas = initCanvas()
+    setRef(canvas)
+    setMyCanvas(canvas)
+  }, [input.source_image, input.source_mask, setInput])
+
+  useEffect(() => {
+    if (!myCanvas) {
+      initCanvas()
+    }
 
     return () => {
-      if (!canvas.current) {
-        return
+      if (myCanvas) {
+        myCanvas?.unload()
       }
 
-      myCanvas?.unload()
-      ;(canvas.current as any)?.dispose()
-      canvas.current = null
+      if (canvas.current) {
+        ;(canvas.current as any)?.dispose()
+        canvas.current = null
+        return
+      }
     }
-  })
+  }, [initCanvas, myCanvas])
 
   const maxCanvasWidth = getMaxValidCanvasWidth()
 

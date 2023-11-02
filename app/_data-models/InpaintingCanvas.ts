@@ -1,7 +1,5 @@
 interface InpaintingCanvasOptions {
   setInput: (data: Partial<DefaultPromptInput>) => void
-  source_image: string
-  source_mask?: string
 }
 
 interface Point {
@@ -9,7 +7,6 @@ interface Point {
   y: number
 }
 
-import { getMaxValidCanvasWidth } from 'app/_utils/fabricUtils'
 import DefaultPromptInput from './DefaultPromptInput'
 import { inferMimeTypeFromBase64 } from 'app/_utils/imageUtils'
 
@@ -17,8 +14,6 @@ class InpaintingCanvas {
   private eventListeners: Map<string, any> = new Map()
 
   setInput: (data: Partial<DefaultPromptInput>) => void
-  private source_image: string
-
   private undoStack: string[] = []
   private redoStack: string[] = []
 
@@ -34,8 +29,6 @@ class InpaintingCanvas {
   private originalHeight: number
 
   constructor(options: InpaintingCanvasOptions) {
-    this.source_image = options.source_image
-
     // Create the image and mask canvases
     this.imageCanvas = document.getElementById('canvas_v2') as HTMLCanvasElement
     if (!this.imageCanvas) {
@@ -63,12 +56,6 @@ class InpaintingCanvas {
     this.maskCanvas.style.opacity = '0.7'
 
     this.setInput = options.setInput
-
-    if (options.source_mask) {
-      this.importMask(options.source_mask)
-    }
-
-    this.importImage()
   }
 
   private captureCanvasState(): string {
@@ -240,65 +227,48 @@ class InpaintingCanvas {
     }
 
     // Mouse events
-    const mouseDownHandler = () => {
+    this.maskCanvas.addEventListener('mousedown', () => {
       startDrawing()
-    }
+    })
 
-    const mouseOutHandler = () => {
+    this.maskCanvas.addEventListener('mouseout', () => {
       stopDrawing()
-    }
+    })
 
-    const mouseUpHandler = () => {
+    this.maskCanvas.addEventListener('mouseup', () => {
       stopDrawing()
-    }
+    })
 
-    const mouseMoveHandler = (event: MouseEvent) => {
+    this.maskCanvas.addEventListener('mousemove', (event: MouseEvent) => {
       draw(event.clientX, event.clientY)
-    }
-
-    this.maskCanvas.addEventListener('mousedown', mouseDownHandler)
-    this.maskCanvas.addEventListener('mouseout', mouseOutHandler)
-    this.maskCanvas.addEventListener('mouseup', mouseUpHandler)
-    this.maskCanvas.addEventListener('mousemove', mouseMoveHandler)
+    })
 
     // Touch events
-    const touchStartHandler = (event: TouchEvent) => {
+    this.maskCanvas.addEventListener('touchstart', (event: TouchEvent) => {
       event.preventDefault()
       startDrawing()
-    }
+    })
 
-    const touchEndHandler = (event: TouchEvent) => {
+    this.maskCanvas.addEventListener('touchend', (event: TouchEvent) => {
       event.preventDefault()
       stopDrawing()
-    }
+    })
 
-    const touchLeaveHandler = (event: TouchEvent) => {
-      event.preventDefault()
-      stopDrawing()
-    }
+    this.maskCanvas.addEventListener(
+      'touchleave' as any,
+      (event: TouchEvent) => {
+        event.preventDefault()
+        stopDrawing()
+      }
+    )
 
-    const touchMoveHandler = (event: TouchEvent) => {
+    this.maskCanvas.addEventListener('touchmove', (event: TouchEvent) => {
       event.preventDefault()
       if (isDrawing) {
         const touch = event.touches[0]
         draw(touch.clientX, touch.clientY)
       }
-    }
-
-    this.maskCanvas.addEventListener('touchstart', touchStartHandler)
-    this.maskCanvas.addEventListener('touchend', touchEndHandler)
-    this.maskCanvas.addEventListener('touchleave' as any, touchLeaveHandler)
-    this.maskCanvas.addEventListener('touchmove', touchMoveHandler)
-
-    // Store references to the event handlers for later removal
-    this.eventListeners.set('mousedown', mouseDownHandler)
-    this.eventListeners.set('mouseout', mouseOutHandler)
-    this.eventListeners.set('mouseup', mouseUpHandler)
-    this.eventListeners.set('mousemove', mouseMoveHandler)
-    this.eventListeners.set('touchstart', touchStartHandler)
-    this.eventListeners.set('touchend', touchEndHandler)
-    this.eventListeners.set('touchleave', touchLeaveHandler)
-    this.eventListeners.set('touchmove', touchMoveHandler)
+    })
   }
 
   expandCanvas(
@@ -531,13 +501,11 @@ class InpaintingCanvas {
     return `rgb(${colors[0]},${colors[1]},${colors[2]})`
   }
 
-  // Import the image using a base64 string
-  async importImage(): Promise<void> {
-    const base64String = this.source_image
+  async importImage(source_image: string): Promise<void> {
     try {
       const fullDataString = `data:${inferMimeTypeFromBase64(
-        base64String
-      )};base64,${base64String}`
+        source_image
+      )};base64,${source_image}`
 
       const img = new Image()
       img.onload = async () => {
@@ -545,11 +513,16 @@ class InpaintingCanvas {
         this.originalWidth = img.width
         this.originalHeight = img.height
 
-        // Get the maximum valid canvas width
-        const maxWidth = getMaxValidCanvasWidth()
-        const scale = maxWidth / img.width
-        const width = maxWidth
-        const height = img.height * scale
+        let width = img.width
+        let height = img.height
+
+        // Check if the image width is greater than 2048px
+        if (width > 2048) {
+          // Calculate the new height proportionally
+          const ratio = height / width
+          width = 2048
+          height = width * ratio
+        }
 
         // Resize and draw on both canvases
         this.imageCanvas.width = width
@@ -575,18 +548,25 @@ class InpaintingCanvas {
       )};base64,${base64String}`
 
       const img = new Image()
-      img.onload = () => {
-        // Use already computed original dimensions
-        const scale = this.originalWidth
-          ? getMaxValidCanvasWidth() / this.originalWidth
-          : 1
-        const width = this.originalWidth ? getMaxValidCanvasWidth() : img.width
-        const height = this.originalHeight
-          ? this.originalHeight * scale
-          : img.height
+      img.onload = async () => {
+        // Store original dimensions
+        this.originalWidth = img.width
+        this.originalHeight = img.height
+
+        let width = img.width
+        let height = img.height
+
+        // Check if the image width is greater than 2048px
+        if (width > 2048) {
+          // Calculate the new height proportionally
+          const ratio = height / width
+          width = 2048
+          height = width * ratio
+        }
 
         this.maskCanvas.width = width
         this.maskCanvas.height = height
+
         this.maskCtx.drawImage(img, 0, 0, width, height)
       }
       img.src = fullDataString
@@ -651,12 +631,13 @@ class InpaintingCanvas {
 
   saveToDisk = async () => {
     try {
-      const mask = await InpaintingCanvas.outputMask(
-        this.maskCanvas.toDataURL()
-      )
+      // const mask = await InpaintingCanvas.outputMask(
+      //   this.maskCanvas.toDataURL()
+      // )
 
+      // this.download(mask, '_mask')
       this.download(this.imageCanvas.toDataURL(), '_img')
-      this.download(mask, '_mask')
+      this.download(this.maskCanvas.toDataURL(), '_mask')
     } catch (err) {
       console.log(`err`, err)
     }
