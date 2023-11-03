@@ -1,4 +1,3 @@
-import { trackEvent, trackGaEvent } from 'app/_api/telemetry'
 import AppSettings from 'app/_data-models/AppSettings'
 import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
@@ -52,37 +51,39 @@ export const handleCreateClick = async ({
     imageJobData.canvasData = { ...getCanvasStore() }
   }
 
+  const inputToSubmit = { ...input }
+
   // Handle weird error that's been cropping up where canvas is empty but inpainting is true:
   if (
     !input.source_mask &&
+    !input.source_image &&
     input.source_processing === SourceProcessing.InPainting
   ) {
-    setInput({
-      source_processing: SourceProcessing.Prompt
+    inputToSubmit.source_processing = SourceProcessing.Prompt
+    await PromptInputSettings.updateSavedInput_NON_DEBOUNCED({
+      ...inputToSubmit
     })
   }
 
-  trackEvent({
-    event: 'NEW_IMAGE_REQUEST',
-    context: '/pages/index',
-    data: {
-      orientation: input.orientationType,
-      sampler: input.sampler,
-      steps: input.steps,
-      numImages: input.numImages,
-      model: input.models,
-      source: input.source_processing,
-      post_processing: input.post_processing
-    }
-  })
-  trackGaEvent({
-    action: 'new_img_request',
-    params: {
-      type: input.source_processing ? 'img2img' : 'prompt2img'
-    }
-  })
+  if (
+    !input.source_mask &&
+    input.source_image &&
+    input.source_processing === SourceProcessing.InPainting
+  ) {
+    inputToSubmit.source_processing = SourceProcessing.Img2Img
+    await PromptInputSettings.updateSavedInput_NON_DEBOUNCED({
+      ...inputToSubmit
+    })
+  }
 
-  const inputToSubmit = { ...input }
+  if (input.source_mask && !input.source_image) {
+    inputToSubmit.source_processing = SourceProcessing.Prompt
+    inputToSubmit.source_mask = ''
+
+    await PromptInputSettings.updateSavedInput_NON_DEBOUNCED({
+      ...inputToSubmit
+    })
+  }
 
   if (input.useFavoriteModels) {
     const favModels = AppSettings.get('favoriteModels') || {}
@@ -91,7 +92,7 @@ export const handleCreateClick = async ({
       Object.keys(favModels).length > 0
         ? (inputToSubmit.models = [...Object.keys(favModels)])
         : ['stable_diffusion']
-    input.models = [...modelsArray]
+    inputToSubmit.models = [...modelsArray]
   }
 
   savePromptHistory(input.prompt)
@@ -106,9 +107,6 @@ export const handleCreateClick = async ({
     // @ts-ignore
     data: new CreateImageRequest(inputToSubmit)
   })
-
-  console.log(`New Job:`)
-  console.log(inputToSubmit)
 
   // @ts-ignore
   await createImageJob(new CreateImageRequest(inputToSubmit))
