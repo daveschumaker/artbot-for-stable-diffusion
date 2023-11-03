@@ -230,14 +230,6 @@ class InpaintingCanvas {
       startDrawing()
     })
 
-    this.maskCanvas.addEventListener('mouseout', () => {
-      stopDrawing()
-    })
-
-    this.maskCanvas.addEventListener('mouseup', () => {
-      stopDrawing()
-    })
-
     this.maskCanvas.addEventListener('mousemove', (event: MouseEvent) => {
       draw(event.clientX, event.clientY)
     })
@@ -248,25 +240,32 @@ class InpaintingCanvas {
       startDrawing()
     })
 
-    this.maskCanvas.addEventListener('touchend', (event: TouchEvent) => {
-      event.preventDefault()
-      stopDrawing()
-    })
-
-    this.maskCanvas.addEventListener(
-      'touchleave' as any,
-      (event: TouchEvent) => {
-        event.preventDefault()
-        stopDrawing()
-      }
-    )
-
     this.maskCanvas.addEventListener('touchmove', (event: TouchEvent) => {
       event.preventDefault()
       if (isDrawing) {
         const touch = event.touches[0]
         draw(touch.clientX, touch.clientY)
       }
+    })
+
+    // End events
+    // Attach global events to window
+    window.addEventListener('mouseup', () => {
+      stopDrawing()
+    })
+
+    window.addEventListener('touchend', () => {
+      stopDrawing()
+    })
+    window.addEventListener('touchleave' as any, () => {
+      stopDrawing()
+    })
+
+    window.addEventListener('mouseleave', () => {
+      stopDrawing()
+    })
+    window.addEventListener('touchcancel', () => {
+      stopDrawing()
     })
   }
 
@@ -634,10 +633,10 @@ class InpaintingCanvas {
       // )
 
       // this.download(mask, '_mask')
-      this.download(this.imageCanvas.toDataURL(), '_img')
-      this.download(this.maskCanvas.toDataURL(), '_mask')
+      this.download(this.imageCanvas.toDataURL(), 'inpainting_img')
+      this.download(this.maskCanvas.toDataURL(), 'inpainting_mask')
     } catch (err) {
-      console.log(`err`, err)
+      console.log(`Error downloading image and mask:`, err)
     }
   }
 

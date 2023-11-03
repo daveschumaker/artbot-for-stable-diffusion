@@ -24,7 +24,7 @@ const DropDown = ({
     zIndex: 30,
     top: '42px',
     left: 0,
-    minWidth: '200px'
+    minWidth: '300px'
   }
 
   return (

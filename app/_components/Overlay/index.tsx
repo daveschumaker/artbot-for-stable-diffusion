@@ -7,6 +7,7 @@ export interface IOverlayProps {
   blurBackground?: boolean
   disableBackground?: boolean
   handleClose?: () => void
+  style?: CSSProperties
   zIndex?: number
 }
 
@@ -16,15 +17,17 @@ const Overlay = (props: IOverlayProps) => {
     blurBackground = false,
     disableBackground = false,
     handleClose = () => {},
+    style = {},
     zIndex = 'var(--zIndex-overNavBar)'
   } = props
 
-  const style: CSSProperties = {
-    zIndex
+  const styleProps: CSSProperties = {
+    zIndex,
+    ...style
   }
 
   if (disableBackground) {
-    style.backgroundColor = 'unset'
+    styleProps.backgroundColor = 'unset'
   }
 
   return (
@@ -35,7 +38,7 @@ const Overlay = (props: IOverlayProps) => {
         className
       )}
       onClick={handleClose}
-      style={{ ...style }}
+      style={{ ...styleProps }}
     />
   )
 }

@@ -30,7 +30,7 @@ export function Button(props: ButtonProps) {
     ...rest
   } = props
 
-  const s = { ...style }
+  const s = { ...style, touchAction: 'manipulation' }
 
   if (width) {
     // @ts-ignore
@@ -46,7 +46,8 @@ export function Button(props: ButtonProps) {
         [styles['styled-button-small']]: size === 'small',
         [styles['styled-button-disabled']]: disabled
       })}
-      onClick={() => {
+      onClick={(e) => {
+        if (e) e.preventDefault()
         if (disabled) return
         onClick()
       }}

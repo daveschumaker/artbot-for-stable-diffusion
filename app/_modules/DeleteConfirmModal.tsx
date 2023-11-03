@@ -33,12 +33,13 @@ const DeleteConfirmModal = ({
 
   return (
     <>
-      <Overlay handleClose={closeModal} />
+      <Overlay handleClose={closeModal} style={{ zIndex: 31 }} />
       <div
         className="z-30 fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2"
         aria-labelledby="modal-title"
         role="dialog"
         aria-modal="true"
+        style={{ zIndex: 31 }}
       >
         <div className="border-[1px] border-[#a1a1a1] mx-auto mt-4 w-[320px] md:w-[480px] relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
           <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">

@@ -65,7 +65,7 @@ const ToolBarButton = ({ active, btnType, onClick, children }: any) => {
     <button
       className={clsx(classes)}
       onClick={onClick}
-      style={{ color: 'black' }}
+      style={{ color: 'black', touchAction: 'manipulation' }}
     >
       {children}
     </button>
@@ -243,10 +243,16 @@ const ToolBar = ({ canvas }: { canvas: InpaintingCanvas }) => {
               Outpainting tips
             </h3>
             <div className="mt-2">
-              <p className="text-sm text-gray-500 pb-2">
+              <p
+                className="text-sm text-gray-500 pb-2"
+                style={{ textAlign: 'left' }}
+              >
                 General tips to help improve your outpainting results.
               </p>
-              <p className="text-sm text-gray-500">
+              <div
+                className="text-sm text-gray-500"
+                style={{ textAlign: 'left' }}
+              >
                 <ul>
                   <li>
                     • ArtBot will automatically mask expanded areas and fill
@@ -258,7 +264,7 @@ const ToolBar = ({ canvas }: { canvas: InpaintingCanvas }) => {
                   <li>• Denoise slider to max (1.0)</li>
                   <li>• Low guidance (2 - 8)</li>
                 </ul>
-              </p>
+              </div>
             </div>
           </HelpfulTipModal>
         )}
