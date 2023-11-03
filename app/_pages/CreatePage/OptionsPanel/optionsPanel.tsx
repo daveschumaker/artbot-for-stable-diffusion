@@ -16,15 +16,7 @@ import { IconPointFilled } from '@tabler/icons-react'
 import { useInput } from 'app/_modules/InputProvider/context'
 import PromptInputSettings from 'app/_data-models/PromptInputSettings'
 import InpaintingEditor from 'app/_modules/InpaintingEditor'
-
-const removeImageCanvasData = {
-  canvasData: null,
-  maskData: null,
-  imageType: '',
-  source_image: '',
-  source_mask: '',
-  source_processing: SourceProcessing.Prompt
-}
+import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
 
 interface Props {
   setErrors: any
@@ -62,7 +54,9 @@ const OptionsPanel = ({ setErrors }: Props) => {
       source_processing: 'inpainting'
     }
 
-    PromptInputSettings.updateSavedInput_NON_DEBOUNCED(inpaintingInput)
+    PromptInputSettings.updateSavedInput_NON_DEBOUNCED(
+      inpaintingInput as DefaultPromptInput
+    )
     setInput(inpaintingInput)
   }
 
@@ -128,8 +122,17 @@ const OptionsPanel = ({ setErrors }: Props) => {
         input.source_processing === SourceProcessing.InPainting && (
           <WarningPanel
             panelType="inpainting"
-            handleRemoveClick={() => {
-              setInput({ ...removeImageCanvasData })
+            handleRemoveClick={async () => {
+              PromptInputSettings.updateSavedInput_NON_DEBOUNCED({
+                ...input,
+                source_mask: '',
+                source_processing: SourceProcessing.Img2Img
+              })
+
+              setInput({
+                source_mask: '',
+                source_processing: SourceProcessing.Img2Img
+              })
             }}
           />
         )}
@@ -143,18 +146,15 @@ const OptionsPanel = ({ setErrors }: Props) => {
           />
         )}
 
-      {activeNav === 'inpainting' &&
-        input.source_image &&
-        (input.source_processing === SourceProcessing.InPainting ||
-          input.source_mask) && (
-          <>
-            <Head>
-              <title>Inpainting - ArtBot for Stable Diffusion</title>
-              <meta name="twitter:title" content="ArtBot - Inpainting" />
-            </Head>
-            <InpaintingEditor />
-          </>
-        )}
+      {activeNav === 'inpainting' && input.source_image && (
+        <>
+          <Head>
+            <title>Inpainting - ArtBot for Stable Diffusion</title>
+            <meta name="twitter:title" content="ArtBot - Inpainting" />
+          </Head>
+          <InpaintingEditor />
+        </>
+      )}
 
       {activeNav === 'inpainting' &&
         !input.source_image &&
@@ -164,24 +164,6 @@ const OptionsPanel = ({ setErrors }: Props) => {
               <title>Inpainting - ArtBot for Stable Diffusion</title>
             </Head>
             <Uploader handleSaveImage={handleSaveImage} type="inpainting" />
-          </>
-        )}
-
-      {activeNav === 'inpainting' &&
-        input.source_image &&
-        input.source_processing === SourceProcessing.Img2Img && (
-          <>
-            <Head>
-              <title>Inpainting - ArtBot for Stable Diffusion</title>
-            </Head>
-            <WarningPanel
-              panelType="img2img"
-              handleRemoveClick={() => {
-                setInput({
-                  ...removeImageCanvasData
-                })
-              }}
-            />
           </>
         )}
     </Panel>
