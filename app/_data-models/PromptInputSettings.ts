@@ -5,7 +5,6 @@ import {
   updateSetting
 } from 'app/_db/settings'
 import DefaultPromptInput from './DefaultPromptInput'
-import { Default } from 'react-toastify/dist/utils'
 
 class PromptInputSettingsClass {
   updateSavedInput_NON_DEBOUNCED = async (

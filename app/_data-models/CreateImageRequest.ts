@@ -6,6 +6,7 @@ import { getModelVersion, validModelsArray } from 'app/_utils/modelUtils'
 import { SourceProcessing } from 'app/_utils/promptUtils'
 import AppSettings from './AppSettings'
 import DefaultPromptInput from './DefaultPromptInput'
+import { CONTROL_TYPES } from '_types/horde'
 
 interface IRandomSampler {
   source_processing: string
@@ -17,7 +18,7 @@ class CreateImageRequest {
   canvasData: any
   cfg_scale: number
   clipskip: number
-  control_type: string
+  control_type: CONTROL_TYPES
   denoising_strength: number | Common.Empty
   facefixer_strength?: number
   favorited: false
@@ -76,7 +77,7 @@ class CreateImageRequest {
     canvasData = null,
     cfg_scale = 7,
     clipskip = 1,
-    control_type = '',
+    control_type = '' as CONTROL_TYPES,
     denoising_strength = 0.75,
     facefixer_strength = 0.75,
     height = 512,
@@ -203,12 +204,12 @@ class CreateImageRequest {
       this.denoising_strength = Common.Empty
     }
 
-    this.control_type = String(control_type)
+    this.control_type = control_type
     this.image_is_control = Boolean(image_is_control)
     this.return_control_map = Boolean(return_control_map)
 
     if (!source_image || source_mask) {
-      this.control_type = ''
+      this.control_type = '' as CONTROL_TYPES
     }
 
     this.multiClip = []

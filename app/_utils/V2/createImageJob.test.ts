@@ -6,7 +6,7 @@ jest.mock('../pendingUtils', () => ({
 import { Common } from '_types'
 import { createImageJob } from './createImageJob'
 import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
-import { SourceProcessing } from '_types/horde'
+import { CONTROL_TYPES, SourceProcessing } from '_types/horde'
 
 const createBaseImageRequest = (): Partial<DefaultPromptInput> => ({
   cfg_scale: 8,
@@ -29,7 +29,7 @@ const createBaseImageRequest = (): Partial<DefaultPromptInput> => ({
   source_processing: SourceProcessing.Prompt,
   loras: [],
   denoising_strength: Common.Empty,
-  control_type: '',
+  control_type: '' as CONTROL_TYPES,
   image_is_control: false,
   return_control_map: false,
   steps: 22,

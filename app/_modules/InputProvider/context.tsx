@@ -1,6 +1,5 @@
 'use client'
 
-import AppSettings from 'app/_data-models/AppSettings'
 import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
 import PromptInputSettings from 'app/_data-models/PromptInputSettings'
 import React, { createContext, useContext, useReducer, useState } from 'react'

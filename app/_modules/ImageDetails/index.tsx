@@ -243,8 +243,12 @@ const ImageDetails = ({
                 Source image
               </div>
               <div
-                className="cursor-pointer"
-                onClick={() => setShowImg2ImgModal(true)}
+                // className="cursor-pointer"
+                onClick={() => {
+                  // TODO: FIXME:
+                  // Temporarily disabled while I work on some fixes due to inpainting improvements.
+                  // setShowImg2ImgModal(true)
+                }}
               >
                 <ImageSquare
                   imageDetails={{
