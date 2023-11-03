@@ -655,9 +655,20 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     loras: [{ name: '98011' }]
   },
 
-  '2023-halloween-glitch': {
+  'vibrant halloween': {
     prompt:
-      'Analog glitch horrornstyle portraitnof a {p} in the shadows, best quality, masterpiece, dark, nightmare fuel###{np}',
+      'a Halloween themed vibrant pulp art by JC leyendecker and norman rockwell featuring {p}. horror vibe, dark atmospthere, depth of field, campy, spooky. purple, orange and green color palette.###{np}',
+    model: 'SDXL 1.0',
+    karras: true,
+    steps: 25,
+    sampler_name: 'k_dpmpp_2m',
+    width: 1024,
+    height: 1024,
+    cfg_scale: 7
+  },
+  'glitch horror': {
+    prompt:
+      'Analog glitch horror style portrait of a {p} in the shadows, best quality, masterpiece, dark, nightmare fuel###{np}',
     model: 'stable_diffusion',
     karras: true,
     steps: 25,
@@ -667,27 +678,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     hires_fix: true,
     cfg_scale: 9
   },
-  '2023-halloween-gouache': {
-    prompt:
-      '{p} . spooky gouache digital art, dark, creepy, highly detailed, moody, mysterious###{np}, 3d, photo, anime, text',
-    model: 'SDXL 1.0',
-    steps: 30,
-    sampler_name: 'k_dpmpp_2m',
-    width: 1024,
-    height: 1024,
-    cfg_scale: 7
-  },
-  '2023-halloween-splash': {
-    prompt:
-      '{p} . halloween splash art, spooky, magical, dark, highly detailed###{np}, photo, anime, text, 3d, black and white',
-    model: 'SDXL 1.0',
-    steps: 30,
-    sampler_name: 'k_dpmpp_2m',
-    width: 1024,
-    height: 1024,
-    cfg_scale: 7
-  },
-  '2023-halloween-burton': {
+  'monstrous burton': {
     prompt:
       '{p} . nightmare by Tim Burton, monster-like, cinematic lighting, trending on artstation, creepy digital art###{np}',
     model: 'SDXL 1.0',
@@ -697,17 +688,17 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     height: 1024,
     cfg_scale: 7
   },
-  '2023-halloween-bmovie': {
+  'spooky gouache': {
     prompt:
-      'a b-movie poster for the thriller film: {p}. 1990s, horror, clear art by John Bolton and Gary Pullin###anime, 3d, faded, (cars:0.1), {np}',
+      '{p} . spooky gouache digital art, dark, creepy, highly detailed, moody, mysterious###{np}, 3d, photo, anime, text',
     model: 'SDXL 1.0',
     steps: 30,
-    sampler_name: 'k_dpm_adaptive',
-    width: 832,
-    height: 1280,
-    cfg_scale: 7.5
+    sampler_name: 'k_dpmpp_2m',
+    width: 1024,
+    height: 1024,
+    cfg_scale: 7
   },
-  '2023-halloween-spooky': {
+  'spooky horror': {
     prompt:
       '{p}, spooky, dark, horror aesthetics, sharp focus, Innistrad, by Keith Thompson###person, human, blurry, black and white, text, {np}',
     model: 'SDXL 1.0',
@@ -717,86 +708,20 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     height: 1024,
     cfg_scale: 9
   },
-  '2023-halloween-daigo': {
+  'crungus revenge': {
     prompt:
-      'grotesque, demonic, body horror, {p}, by Dan Mumford, Volkan Baga, Hieronymus Bosch###{np}',
+      'Crungus, halloween, spooky, ink painting manga illustration, bloody disgusting, limited palette, chiaroscuro, {p}, by kentaro miura, junji ito, Yusuke Murata',
     model: 'SDXL 1.0',
-    steps: 30,
+    karras: true,
+    steps: 20,
     sampler_name: 'k_dpmpp_2m',
-    width: 1024,
-    height: 1024,
-    cfg_scale: 7
+    width: 1280,
+    height: 960,
+    cfg_scale: 8.5
   },
-  '2023-halloween-impressionist': {
+  'impressionist horror comic': {
     prompt:
       'impressionist purple and orange comickbook illustration depicting closeup of {p}, dark shading, bold outlines, thick outlines, creepy, eerie, scary, horror###{np}',
-    model: 'SDXL 1.0',
-    steps: 20,
-    sampler_name: 'k_euler_a',
-    width: 1024,
-    height: 1024,
-    cfg_scale: 9
-  },
-  '2023-halloween-vibrant': {
-    prompt:
-      '{p}, vibrant color palette, high contrast, grim and murky snow, textured brushwork, dramatic lighting, distorted perspective, unsettling details, art by (Simon Stålenhag:0.7), (James Jean:0.2), (egon schiele:0.1), (Edward Hopper:0.3) and Zdzislaw Beksinski. liminal, masterpiece, perfect shading, soft shading, (masterpiece, intricate, beautiful:1.3)###{np}',
-    model: 'Deliberate',
-    steps: 30,
-    sampler_name: 'k_euler_a',
-    width: 512,
-    height: 512,
-    cfg_scale: 7
-  },
-  '2023-halloween-painting': {
-    prompt:
-      'a decaying painting depicting {p}, ghostly presence, wide-angle, complementary color scheme, creeping shadows, eerie atmosphere, faded features, essence of haunting###{np}',
-    model: 'SDXL 1.0',
-    steps: 20,
-    sampler_name: 'k_euler_a',
-    width: 1024,
-    height: 1024,
-    cfg_scale: 9
-  },
-  '2023-halloween-parody': {
-    prompt:
-      '{p}, spooky parody, funny, scary, gloomy, detailed background, trending, surreal###black and white, text, {np}',
-    model: 'Western Animation Diffusion',
-    steps: 25,
-    sampler_name: 'k_euler_a',
-    width: 768,
-    height: 768,
-    hires_fix: true,
-    cfg_scale: 8
-  },
-  '2023-halloween-sketchbook': {
-    prompt:
-      '{p}, black and white sketch, spooky, creepy, illustration, line drawing, monochrome###color, text, {np}',
-    model: 'Abyss OrangeMix',
-    steps: 30,
-    sampler_name: 'k_euler_a',
-    width: 512,
-    height: 512,
-    cfg_scale: 6,
-    loras: [{ name: '64940' }]
-  },
-  '2023-halloween-vhs': {
-    prompt:
-      'VHS footage of a {p}, liminal, eerie, dark and gloomy, film still from a 90s horror movie, low resolution, found footage, webcamscreenshot###{np}',
-    model: 'Deliberate',
-    steps: 30,
-    sampler_name: 'k_euler_a',
-    width: 1024,
-    height: 1024,
-    hires_fix: true,
-    cfg_scale: 9,
-    loras: [
-      { name: '24382', model: 0.5, clip: 1.0 },
-      { name: '82098', model: -0.5, clip: 1.0 }
-    ]
-  },
-  '2023-halloween-ominous': {
-    prompt:
-      'a ominous gouache painting in style of pulp art depicting a {p}, expressionism, eerie neon lighting, neon accents, a ghostly realm, ominous shadows, complimentary cookies, atmosphere of terror, paperback cover###{np}',
     model: 'SDXL 1.0',
     steps: 20,
     sampler_name: 'k_euler_a',

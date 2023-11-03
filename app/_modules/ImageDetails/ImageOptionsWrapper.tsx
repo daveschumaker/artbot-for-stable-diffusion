@@ -18,8 +18,6 @@ import {
   copyEditPrompt,
   interrogateImage,
   rerollImage,
-  uploadImg2Img,
-  uploadInpaint,
   upscaleImage
 } from 'app/_controllers/imageDetailsCommon'
 import { useRouter } from 'next/navigation'
@@ -43,6 +41,8 @@ import {
   IconTrash,
   IconWall
 } from '@tabler/icons-react'
+import PromptInputSettings from 'app/_data-models/PromptInputSettings'
+import { CONTROL_TYPES } from '_types/horde'
 
 const ImageOptionsWrapper = ({
   handleClose,
@@ -339,8 +339,45 @@ const ImageOptionsWrapper = ({
               <MenuDivider />
               <MenuItem
                 className="text-sm"
-                onClick={() => {
-                  uploadImg2Img(imageDetails)
+                onClick={async () => {
+                  const transformJob = CreateImageRequest.toDefaultPromptInput(
+                    Object.assign({}, imageDetails, {
+                      numImages: 1,
+                      seed: ''
+                    })
+                  )
+
+                  transformJob.source_mask = ''
+                  transformJob.source_processing = SourceProcessing.Img2Img
+                  transformJob.control_type = CONTROL_TYPES.canny
+                  transformJob.source_image = imageDetails.base64String
+                  await PromptInputSettings.updateSavedInput_NON_DEBOUNCED(
+                    transformJob
+                  )
+
+                  router.push(`/create?panel=img2img&edit=true`)
+                  handleClose()
+                }}
+              >
+                Use for ControlNet
+              </MenuItem>
+              <MenuItem
+                className="text-sm"
+                onClick={async () => {
+                  const transformJob = CreateImageRequest.toDefaultPromptInput(
+                    Object.assign({}, imageDetails, {
+                      control_type: '',
+                      numImages: 1,
+                      seed: '',
+                      source_image: imageDetails.base64String,
+                      source_mask: '',
+                      source_processing: SourceProcessing.Img2Img
+                    })
+                  )
+                  await PromptInputSettings.updateSavedInput_NON_DEBOUNCED(
+                    transformJob
+                  )
+
                   router.push(`/create?panel=img2img&edit=true`)
                   handleClose()
                 }}
@@ -349,8 +386,21 @@ const ImageOptionsWrapper = ({
               </MenuItem>
               <MenuItem
                 className="text-sm"
-                onClick={() => {
-                  uploadInpaint(imageDetails)
+                onClick={async () => {
+                  const transformJob = CreateImageRequest.toDefaultPromptInput(
+                    Object.assign({}, imageDetails, {
+                      control_type: '',
+                      numImages: 1,
+                      seed: '',
+                      source_image: imageDetails.base64String,
+                      source_mask: '',
+                      source_processing: SourceProcessing.InPainting
+                    })
+                  )
+                  await PromptInputSettings.updateSavedInput_NON_DEBOUNCED(
+                    transformJob
+                  )
+
                   router.push(`/create?panel=inpainting&edit=true`)
                   handleClose()
                 }}

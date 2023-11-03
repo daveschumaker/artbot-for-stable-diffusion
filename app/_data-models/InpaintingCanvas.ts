@@ -505,11 +505,11 @@ class InpaintingCanvas {
           let width = img.width
           let height = img.height
 
-          // Check if the image width is greater than 2048px
-          if (width > 2048) {
+          // Check if the image width is greater than 3072px
+          if (width > 3072) {
             // Calculate the new height proportionally
             const ratio = height / width
-            width = 2048
+            width = 3072
             height = width * ratio
           }
 
@@ -545,11 +545,11 @@ class InpaintingCanvas {
         let width = this.imageCanvas.width
         let height = this.imageCanvas.height
 
-        // Check if the image width is greater than 2048px
-        if (width > 2048) {
+        // Check if the image width is greater than 3072px
+        if (width > 3072) {
           // Calculate the new height proportionally
           const ratio = height / width
-          width = 2048
+          width = 3072
           height = width * ratio
         }
 
@@ -570,7 +570,7 @@ class InpaintingCanvas {
 
   setBrushSize(size: number): void {
     if (size < 2) size = 2
-    if (size > 120) size = 120
+    if (size > 200) size = 200
 
     this.brushSize = size
   }

@@ -80,7 +80,7 @@ const AdvancedOptionsPanel = ({ setErrors }: Props) => {
   return (
     <div>
       {input.parentJobId && (
-        <Section>
+        <Section mb={4}>
           <div className="flex flex-row w-full gap-2">
             <ParentImage parentJobId={input.parentJobId} />
             <div className="flex flex-col gap-2">

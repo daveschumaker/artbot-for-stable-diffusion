@@ -8,6 +8,7 @@ import TextTooltipRow from 'app/_components/TextTooltipRow'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import { samplerOptions } from './samplers.controller'
 import Switch from 'app/_components/Switch'
+import { CONTROL_TYPES } from '_types/horde'
 
 interface IProps {
   input: DefaultPromptInput
@@ -41,7 +42,8 @@ const Samplers = ({
           <SubSectionTitle>Sampler</SubSectionTitle>
           {(input.source_processing === SourceProcessing.InPainting &&
             input.models[0] === 'stable_diffusion_inpainting') ||
-          (input.source_image && input.control_type !== '') ? (
+          (input.source_image &&
+            input.control_type !== ('' as CONTROL_TYPES)) ? (
             <div className="mt-[-6px] text-sm text-slate-500 dark:text-slate-400 font-[600]">
               Note: Sampler disabled when controlnet or inpainting model is
               used.

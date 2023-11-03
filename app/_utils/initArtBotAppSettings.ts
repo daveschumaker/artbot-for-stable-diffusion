@@ -107,7 +107,7 @@ export const appLastActive = async () => {
 
 // Use to fix any issues related to local storage values
 // due to bad decisions on my part.
-export const fixLocalStorage = () => {}
+export const fixLocalStorage = async () => {}
 
 export const initAppSettings = async () => {
   if (typeof window === 'undefined') {

@@ -1,6 +1,6 @@
 import { Common, JobStatus } from '_types'
 import { AiHordeEmbedding, SavedLora } from '_types/artbot'
-import { SourceProcessing } from '_types/horde'
+import { CONTROL_TYPES, SourceProcessing } from '_types/horde'
 import { uuidv4 } from 'app/_utils/appUtils'
 import DefaultPromptInput from '../DefaultPromptInput'
 
@@ -26,7 +26,7 @@ class ImageJob {
   // AI Horde image creation parameters
   cfg_scale: number
   clipskip: number
-  control_type: string
+  control_type: CONTROL_TYPES
   denoising_strength: number | Common.Empty
   facefixer_strength?: number
   height: number

@@ -144,7 +144,36 @@ const CreatePage = ({ className }: any) => {
     watchBuild()
   }, [watchBuild])
 
+  const updateLocalStorate = async () => {
+    const data = localStorage.getItem('PromptInputSettings')
+
+    if (data) {
+      try {
+        const json = JSON.parse(data)
+        delete json.canvasData
+        delete json.canvasStore
+        delete json.maskData
+
+        const input = new DefaultPromptInput()
+
+        for (const key in json) {
+          if (json.hasOwnProperty(key) && input.hasOwnProperty(key)) {
+            // @ts-ignore
+            input[key] = json[key]
+          }
+        }
+
+        await PromptInputSettings.updateSavedInput_NON_DEBOUNCED(input)
+        localStorage.removeItem('PromptInputSettings')
+      } catch (err) {
+        console.log(`Error occurred while migrating PromptInputSettings`, err)
+      }
+    }
+  }
+
   const handleInitLoad = useCallback(async () => {
+    await updateLocalStorate()
+
     // Set initial state here as default. Will act as fallback in case none of the other options work.
     let initialState: DefaultPromptInput | null = new DefaultPromptInput()
 
