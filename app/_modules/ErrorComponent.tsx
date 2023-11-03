@@ -4,8 +4,8 @@ import styled from 'styled-components'
 import { userInfoStore } from 'app/_store/userStore'
 import { logError } from 'app/_utils/appUtils'
 import PageTitle from 'app/_components/PageTitle'
-import { db } from 'app/_utils/db'
 import { basePath } from 'BASE_PATH'
+import { db } from 'app/_db/dexie'
 
 const StyledLink = styled.a`
   color: ${(props) => props.theme.link};

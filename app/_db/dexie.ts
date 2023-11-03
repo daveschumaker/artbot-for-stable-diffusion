@@ -2,8 +2,10 @@ import Dexie from 'dexie'
 
 export class MySubClassedDexie extends Dexie {
   completed: any
+  images: any
   pending: any
   prompts: any
+  settings: any
 
   constructor() {
     super('imageHorde')
@@ -40,6 +42,18 @@ export class MySubClassedDexie extends Dexie {
       pending: '++id, jobId, timestamp, parentJobId, jobStatus',
       projects: '++id, name, type',
       prompts: '++id, timestamp, promptType',
+      tags: '++id, name'
+    })
+
+    this.version(6).stores({
+      completed: '++id, jobId, timestamp, parentJobId',
+      images: '++id, imageType, parentJobId, jobId, type',
+      imageProjects: '++id, projectId, imageId',
+      imageTags: '++id, tagId, imageId',
+      pending: '++id, jobId, timestamp, parentJobId, jobStatus',
+      projects: '++id, name, type',
+      prompts: '++id, timestamp, promptType',
+      settings: '++id, name',
       tags: '++id, name'
     })
   }

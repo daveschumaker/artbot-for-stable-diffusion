@@ -1,4 +1,3 @@
-import PromptInputSettings from 'app/_data-models/PromptInputSettings'
 import { useEffect, useState } from 'react'
 import InputSwitchV2 from '../InputSwitchV2'
 import { useInput } from 'app/_modules/InputProvider/context'
@@ -33,10 +32,8 @@ const HiresFix = () => {
       disabled={input.source_image || error ? true : false}
       handleSwitchToggle={() => {
         if (!input.hires) {
-          PromptInputSettings.set('hires', true)
           setInput({ hires: true })
         } else {
-          PromptInputSettings.set('hires', false)
           setInput({ hires: false })
         }
       }}

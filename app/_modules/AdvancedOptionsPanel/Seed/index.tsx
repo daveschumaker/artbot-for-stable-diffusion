@@ -3,8 +3,6 @@ import FlexRow from 'app/_components/FlexRow'
 import Input from 'app/_components/Input'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { IconArrowBarLeft, IconGrain } from '@tabler/icons-react'
-import AppSettings from 'app/_data-models/AppSettings'
-import PromptInputSettings from 'app/_data-models/PromptInputSettings'
 import { useInput } from 'app/_modules/InputProvider/context'
 
 export default function Seed() {
@@ -29,9 +27,6 @@ export default function Seed() {
             const value = Math.abs(
               (Math.random() * 2 ** 32) | 0
             ) as unknown as string
-            if (AppSettings.get('saveSeedOnCreate')) {
-              PromptInputSettings.set('seed', value)
-            }
             setInput({ seed: value })
           }}
         >
@@ -41,7 +36,6 @@ export default function Seed() {
           theme="secondary"
           title="Clear"
           onClick={() => {
-            PromptInputSettings.set('seed', '')
             setInput({ seed: '' })
           }}
         >

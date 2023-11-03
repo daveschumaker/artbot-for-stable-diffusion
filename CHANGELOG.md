@@ -1,3 +1,10 @@
+# 2023.11.03
+
+- Happy November! Been working on a large update this week that just totally rewrites all the inpainting logic (courtesy of ChatGPT -- I am in awe). ArtBot should behave much better when it comes to inpainting (i.e., no more downsampling images unless they are over 3072 pixels on a side).
+- Fixed a number of bugs around switching between inpainting tab and advanced options tabs
+- Also, outpainting is back! Check it out! (Hit the gear button from the "inpainting" toolbar and select "outpainting options" to expand the canvas.)
+- Updated style presets based on latest changes from Efreak
+
 # 2023.10.26
 
 - Potentially fix issue with header nav bar disappearing on create page while scrolling on a mobile device. This was likely due to an issue with the fixed action bar for... desktop devices. (Thanks to Sparkz for reporting this on Discord!)

@@ -1,10 +1,10 @@
 import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 import PromptInputSettings from 'app/_data-models/PromptInputSettings'
-import { setInputCache } from 'app/_store/inputCache'
 import { PromptTypes } from '_types'
-import { db } from './db'
 import { logDataForDebugging } from './debugTools'
 import { validSampler } from './validationUtils'
+import { db } from 'app/_db/dexie'
+import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
 
 export enum SourceProcessing {
   Prompt = 'prompt',
@@ -85,11 +85,14 @@ let initPromptDetails: SavePrompt = {
 
 let promptDetails: SavePrompt = Object.assign({}, initPromptDetails)
 
-export const savePromptV2 = (imageDetails: any) => {
+export const savePromptV2 = async (imageDetails: any) => {
   const transformJob = CreateImageRequest.toDefaultPromptInput(
     Object.assign({}, imageDetails, { numImages: 1 })
   )
-  localStorage.setItem('PromptInputSettings', JSON.stringify(transformJob))
+
+  // Need to use non-debounced method here, otherwise prompt input will be overwritten
+  // when loading create page.
+  await PromptInputSettings.updateSavedInput_NON_DEBOUNCED(transformJob)
 }
 
 // TODO: Restore other parameters relate to image
@@ -170,17 +173,17 @@ export const savePrompt = ({
     'numImages'
   ]
 
-  let cacheObj: any = {}
-  for (const [key, value] of Object.entries(promptDetails)) {
-    if (keysToExclude.indexOf(key) >= 0) {
-      continue
-    }
+  // @ts-ignore
+  const filteredObject = Object.keys(promptDetails)
+    .filter((key) => !keysToExclude.includes(key))
+    .reduce((acc, key) => {
+      // @ts-ignore
+      acc[key] = promptDetails[key]
+      return acc
+    }, {} as DefaultPromptInput)
 
-    cacheObj[key] = value
-    PromptInputSettings.set(key, value)
-  }
-
-  setInputCache({ ...cacheObj, numImages: 1 })
+  filteredObject.numImages = 1
+  PromptInputSettings.saveAllInput(filteredObject)
 }
 
 export const loadEditPrompt = () => {

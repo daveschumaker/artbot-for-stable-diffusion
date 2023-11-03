@@ -1,7 +1,6 @@
 import Checkbox from 'app/_components/Checkbox'
 import TextTooltipRow from 'app/_components/TextTooltipRow'
 import TooltipComponent from 'app/_components/TooltipComponent'
-import PromptInputSettings from 'app/_data-models/PromptInputSettings'
 import { useCallback } from 'react'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { useInput } from 'app/_modules/InputProvider/context'
@@ -39,7 +38,6 @@ const UpscalerOptions = () => {
         newPost.push(value)
       }
 
-      PromptInputSettings.set('post_processing', newPost)
       setInput({ post_processing: newPost })
     },
     [input.post_processing, setInput]

@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styles from './component.module.css'
 import Overlay from 'app/_components/Overlay'
 import useLockedBody from 'app/_hooks/useLockedBody'
@@ -13,12 +13,6 @@ export default function EscapedNavDropdown({
   const hasEnteredContent = useRef(false) // Ref to track if mouse has entered the content
   const [, setLocked] = useLockedBody(false)
   const [isActive, setIsActive] = useState(false)
-
-  // Handler for mouse over event
-  const handleMouseOver = () => {
-    setIsActive(true)
-    setLocked(true)
-  }
 
   // Handler for click event
   const handleClick = useCallback(() => {
@@ -38,11 +32,22 @@ export default function EscapedNavDropdown({
   const handleContentMouseOut = () => {
     // Check if mouse has entered the content before deactivating
     if (hasEnteredContent.current) {
-      setIsActive(false)
+      // setIsActive(false)
       setLocked(false)
       hasEnteredContent.current = false // Reset the ref for next interaction
     }
   }
+
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsActive(false)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+    return () => window.removeEventListener('keydown', handleKeyPress)
+  }, [])
 
   return (
     <>
@@ -56,7 +61,6 @@ export default function EscapedNavDropdown({
         />
       )}
       <div
-        onMouseOver={handleMouseOver}
         style={{
           display: 'flex',
           flexDirection: 'row',

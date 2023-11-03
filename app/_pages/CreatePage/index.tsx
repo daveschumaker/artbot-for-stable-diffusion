@@ -6,11 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 
 import PageTitle from 'app/_components/PageTitle'
 import { loadEditPrompt, SourceProcessing } from 'app/_utils/promptUtils'
-import {
-  clearCanvasStore,
-  getBase64FromDraw,
-  getI2IString
-} from 'app/_store/canvasStore'
+import { getBase64FromDraw } from 'app/_store/canvasStore'
 import { getDefaultPrompt } from 'app/_utils/db'
 import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 import ShareLinkDetails from 'app/_data-models/ShareableLink'
@@ -27,7 +23,6 @@ import { CreatePageMode } from 'app/_utils/loadInputCache'
 import ActionPanel from 'app/_pages/CreatePage/ActionPanel'
 import useComponentState from 'app/_hooks/useComponentState'
 import { uploadInpaint } from 'app/_controllers/imageDetailsCommon'
-import useLockedBody from 'app/_hooks/useLockedBody'
 import { handleCreateClick } from './createPage.controller'
 import PromptInput from 'app/_pages/CreatePage/PromptInput'
 import { CreatePageQueryParams } from '_types/artbot'
@@ -44,6 +39,7 @@ import styles from './createPage.module.css'
 import { Button } from 'app/_components/Button'
 import { IconAlertTriangle, IconArrowBarToUp } from '@tabler/icons-react'
 import TooltipComponent from 'app/_components/TooltipComponent'
+import { CREATE_PAGE_PARAM } from '_constants'
 
 const defaultState: DefaultPromptInput = new DefaultPromptInput()
 
@@ -62,7 +58,6 @@ const CreatePage = ({ className }: any) => {
   const { loggedIn } = userInfo
 
   const [build, setBuild] = useState(buildId)
-  const [, setLocked] = useLockedBody(false)
   const [query, setQuery] = useState<CreatePageQueryParams>({})
 
   const router = useRouter()
@@ -108,7 +103,6 @@ const CreatePage = ({ className }: any) => {
       negative: defaultPrompt.prompt || ''
     })
 
-    clearCanvasStore()
     localStorage.removeItem('img2img_base64')
     setInput(newDefaultState)
   }
@@ -150,50 +144,56 @@ const CreatePage = ({ className }: any) => {
     watchBuild()
   }, [watchBuild])
 
-  // DO NOT SET INPUT STUFF until after useEffect runs! Let this function be the sole source of input truth.
-  // Check various load states and modes for CreatePage and set preferences based on that here.
-  // Thoughts: if we handle all initial input state here, we shouldn't need to track various modes.
-  // e.g., anywhere else on the site uses the "savePrompt" method. This simply loads it.
-  useEffect(() => {
+  const updateLocalStorate = async () => {
+    const data = localStorage.getItem('PromptInputSettings')
+
+    if (data) {
+      try {
+        const json = JSON.parse(data)
+        delete json.canvasData
+        delete json.canvasStore
+        delete json.maskData
+
+        const input = new DefaultPromptInput()
+
+        for (const key in json) {
+          if (json.hasOwnProperty(key) && input.hasOwnProperty(key)) {
+            // @ts-ignore
+            input[key] = json[key]
+          }
+        }
+
+        await PromptInputSettings.updateSavedInput_NON_DEBOUNCED(input)
+        localStorage.removeItem('PromptInputSettings')
+      } catch (err) {
+        console.log(`Error occurred while migrating PromptInputSettings`, err)
+      }
+    }
+  }
+
+  const handleInitLoad = useCallback(async () => {
+    await updateLocalStorate()
+
     // Set initial state here as default. Will act as fallback in case none of the other options work.
     let initialState: DefaultPromptInput | null = new DefaultPromptInput()
 
-    // Step 2. Load user prompt settings, if available
-    if (PromptInputSettings.load()) {
-      initialState = null
-      initialState = { ...PromptInputSettings.load() }
+    // Step 1. Load user prompt settings, if available
+    const promptInput = await PromptInputSettings.load()
 
-      if (initialState && initialState.source_image) {
-        uploadInpaint(initialState, {
-          clone: true,
-          useSourceImg: true,
-          useSourceMask: true
-        })
-      }
+    initialState = { ...promptInput } as DefaultPromptInput
 
-      logToConsole({
-        data: initialState,
-        name: 'LoadInput_Step_2',
-        debugKey: 'DEBUG_LOAD_INPUT'
+    if (initialState && initialState.source_image) {
+      uploadInpaint(initialState, {
+        clone: true,
+        useSourceImg: true,
+        useSourceMask: true
       })
     }
 
-    // Step 2a. Otherwise, load standard default prompt settings
-    if (!PromptInputSettings.load()) {
-      initialState = null
-      initialState = { ...new DefaultPromptInput() }
-
-      logToConsole({
-        data: initialState,
-        name: 'LoadInput_Step_2a',
-        debugKey: 'DEBUG_LOAD_INPUT'
-      })
-    }
-
-    // Step 3. Check if drawing mode
-    // if (query[CreatePageMode.LOAD_DRAWING] || loadEditPrompt().source_image) {
+    // Step 2. Check if drawing mode
     if (query[CreatePageMode.LOAD_DRAWING]) {
       initialState = null
+      // @ts-ignore
       initialState = {
         ...new DefaultPromptInput(),
         source_image: getBase64FromDraw().base64,
@@ -209,10 +209,10 @@ const CreatePage = ({ className }: any) => {
       })
     }
 
-    // Step 4. Validate various prompt parameters (e.g., correct model vs. source_processing type)
+    // Step 3. Validate various prompt parameters (e.g., correct model vs. source_processing type)
     // TODO: Move into subfolder / function?
 
-    // Step 4a.
+    // Step 3a.
     if (
       initialState &&
       initialState.models &&
@@ -227,7 +227,7 @@ const CreatePage = ({ className }: any) => {
       })
     }
 
-    // Step 4b.
+    // Step 3b.
     if (
       initialState &&
       initialState.models &&
@@ -241,7 +241,7 @@ const CreatePage = ({ className }: any) => {
       })
     }
 
-    // Step 4c.
+    // Step 3c.
     if (initialState && !initialState.sampler) {
       initialState.sampler = 'k_euler'
 
@@ -252,7 +252,7 @@ const CreatePage = ({ className }: any) => {
       })
     }
 
-    // Step 4d.
+    // Step 3d.
     if (
       (initialState &&
         initialState.numImages &&
@@ -268,7 +268,7 @@ const CreatePage = ({ className }: any) => {
       })
     }
 
-    // Step 4e.
+    // Step 3e.
     // Handle state where tiling is incorrectly set in case of img2img or inpainting
     const hasSourceImageOrMask =
       (initialState && initialState.source_image) ||
@@ -290,38 +290,12 @@ const CreatePage = ({ className }: any) => {
       })
     }
 
-    // Step 4f. Check if we're restoring an img2img request.
-    if (
-      initialState?.source_processing === SourceProcessing.Img2Img &&
-      getI2IString().base64String
-    ) {
-      initialState.source_image = getI2IString().base64String
-      initialState.height = getI2IString().height
-      initialState.width = getI2IString().width
-
-      logToConsole({
-        data: initialState,
-        name: 'LoadInput_Step_4f',
-        debugKey: 'DEBUG_LOAD_INPUT'
-      })
-    }
-
-    // Step 4g. Check if we're restoring an img2img or inpainting job
-    if (
-      (initialState && initialState.source_image && initialState.source_mask) ||
-      (initialState &&
-        initialState.source_image &&
-        initialState.source_processing === SourceProcessing.InPainting)
-    ) {
-      initialState.source_processing = SourceProcessing.InPainting
-    } else if (initialState && initialState.source_image) {
-      initialState.source_processing = SourceProcessing.Img2Img
-    }
-
-    // Step 5. Check for other query param states.
-    // Step 5a. If query param is for loading a model, set model:
-    if (initialState && query[CreatePageMode.LOAD_MODEL]) {
-      initialState.models = [query[CreatePageMode.LOAD_MODEL] as string]
+    // Step 4. Check for other query param states.
+    // Step 4a. If query param is for loading a model, set model:
+    // @ts-ignore
+    if (initialState && query[CREATE_PAGE_PARAM.LoadModel]) {
+      // @ts-ignore
+      initialState.models = [query[CREATE_PAGE_PARAM.LoadModel] as string]
 
       logToConsole({
         data: initialState,
@@ -330,11 +304,10 @@ const CreatePage = ({ className }: any) => {
       })
     }
 
-    // Step 5b. If query param is a prompt, set prompt:
-    if (initialState && query[CreatePageMode.PROMPT]) {
-      initialState.prompt = decodeURIComponent(
-        query[CreatePageMode.PROMPT] as string
-      )
+    // Step 4b. If query param is a prompt, set prompt:
+    // @ts-ignore
+    if (initialState && query[CREATE_PAGE_PARAM.Prompt]) {
+      initialState.prompt = query[CreatePageMode.PROMPT] as string
 
       logToConsole({
         data: initialState,
@@ -343,38 +316,37 @@ const CreatePage = ({ className }: any) => {
       })
     }
 
-    // Step 6. Load in img2img if not already exists
-    if (
-      initialState &&
-      initialState.source_processing === SourceProcessing.Img2Img &&
-      localStorage.getItem('img2img_base64')
-    ) {
-      initialState.source_image = localStorage.getItem('img2img_base64') || ''
-
-      logToConsole({
-        data: initialState,
-        name: 'LoadInput_Step_6',
-        debugKey: 'DEBUG_LOAD_INPUT'
-      })
+    // Step 5. Validate if inpainting or img2img
+    if (initialState?.source_mask && initialState?.source_image) {
+      initialState.source_processing = SourceProcessing.InPainting
+    } else if (initialState?.source_image) {
+      initialState.source_processing = SourceProcessing.Img2Img
+    } else if (initialState?.source_mask && !initialState?.source_image) {
+      initialState.source_mask = ''
+      initialState.source_processing = SourceProcessing.Prompt
     }
 
-    // Step 7. Store entirety of modified initial state here
-    PromptInputSettings.saveAllInput(initialState as DefaultPromptInput, {
-      forceSavePrompt: true
-    })
-
-    // Step 8. Set input
+    // Step 6. Set input
     setInput({ ...(initialState as DefaultPromptInput) })
+
     logToConsole({
       data: initialState,
       name: 'LoadInput_Step_8',
       debugKey: 'DEBUG_LOAD_INPUT'
     })
 
-    // Step 9. Set pageLoaded so we can start error checking and auto saving input.
+    // Step 7. Set pageLoaded so we can start error checking and auto saving input.
     setPageLoaded(true)
+  }, [query, setInput, setPageLoaded])
+
+  // DO NOT SET INPUT STUFF until after useEffect runs! Let this function be the sole source of input truth.
+  // Check various load states and modes for CreatePage and set preferences based on that here.
+  // Thoughts: if we handle all initial input state here, we shouldn't need to track various modes.
+  // e.g., anywhere else on the site uses the "savePrompt" method. This simply loads it.
+  useEffect(() => {
+    handleInitLoad()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query, setLocked])
+  }, [query])
 
   useEffect(() => {
     setQuery({

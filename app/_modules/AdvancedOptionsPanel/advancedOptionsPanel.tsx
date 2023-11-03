@@ -67,10 +67,20 @@ const AdvancedOptionsPanel = ({ setErrors }: Props) => {
     setComponentState({ favoriteModelsCount })
   }, [componentState.showMultiModel, setComponentState])
 
+  let title = 'img2img options'
+
+  if (input.control_type) {
+    title = 'ControlNet options'
+  }
+
+  if (input.source_mask) {
+    title = 'inpainting options'
+  }
+
   return (
     <div>
       {input.parentJobId && (
-        <Section>
+        <Section mb={4}>
           <div className="flex flex-row w-full gap-2">
             <ParentImage parentJobId={input.parentJobId} />
             <div className="flex flex-col gap-2">
@@ -100,7 +110,8 @@ const AdvancedOptionsPanel = ({ setErrors }: Props) => {
           style={{
             borderWidth: '1px',
             marginBottom: '12px',
-            overflow: 'unset'
+            overflow: 'unset',
+            padding: '8px'
           }}
         >
           <Accordion>
@@ -108,7 +119,7 @@ const AdvancedOptionsPanel = ({ setErrors }: Props) => {
               title={
                 <FlexRow style={{ justifyContent: 'space-between' }}>
                   <SubSectionTitle style={{ paddingBottom: '0' }}>
-                    img2img options
+                    {title}
                   </SubSectionTitle>
                   <div>
                     <ImageSquare
@@ -142,6 +153,7 @@ const AdvancedOptionsPanel = ({ setErrors }: Props) => {
                           img2img: false,
                           imageType: '',
                           source_image: '',
+                          source_mask: '',
                           source_processing: SourceProcessing.Prompt
                         })
                         localStorage.removeItem('img2img_base64')

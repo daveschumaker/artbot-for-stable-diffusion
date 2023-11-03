@@ -160,7 +160,7 @@ export default function InputValidationErrorDisplay({
         )
       }
 
-      if (input.control_type) {
+      if (input.control_type && input.source_image) {
         hasError = true
         handleSetError()
         setSdxlError(

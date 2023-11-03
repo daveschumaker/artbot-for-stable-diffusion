@@ -5,7 +5,6 @@ import SubSectionTitle from 'app/_components/SubSectionTitle'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import Checkbox from 'app/_components/Checkbox'
 import FlexCol from 'app/_components/FlexCol'
-import PromptInputSettings from 'app/_data-models/PromptInputSettings'
 import TextTooltipRow from 'app/_components/TextTooltipRow'
 import { useInput } from 'app/_modules/InputProvider/context'
 
@@ -30,7 +29,6 @@ const PostProcessors = () => {
         newPost.push(value)
       }
 
-      PromptInputSettings.set('post_processing', newPost)
       setInput({ post_processing: newPost })
     },
     [input.post_processing, setInput]

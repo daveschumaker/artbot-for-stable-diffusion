@@ -42,12 +42,7 @@ export const InputProvider: React.FC<InputProviderProps> = ({ children }) => {
     const updatedInputState = { ...state, ...newState }
 
     if (pageLoaded) {
-      // Only look for new changes to update and write to localStorage via PromptInputSettings
-      // otherwise, cloning the entire input object causes a bunch of CPU thrashing as we iterate
-      // through individual keys. If balues haven't changed, there's no need to update them.
-      PromptInputSettings.saveAllInput(newState, {
-        forceSavePrompt: true
-      })
+      PromptInputSettings.saveAllInput(updatedInputState)
     }
 
     return updatedInputState

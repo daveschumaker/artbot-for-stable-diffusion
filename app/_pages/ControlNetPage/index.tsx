@@ -53,6 +53,7 @@ import { createImageJob } from 'app/_utils/V2/createImageJob'
 import { useInput } from 'app/_modules/InputProvider/context'
 import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 import useWindowHeight from 'app/_hooks/useWindowHeight'
+import { CONTROL_TYPES } from '_types/horde'
 
 // Kind of a hacky way to persist output of image over the course of a session.
 let cachedImageDetails = {}
@@ -232,7 +233,7 @@ const ControlNetPage = () => {
   useEffect(() => {
     const initialInput: DefaultPromptInput = {
       ...new DefaultPromptInput(),
-      control_type: 'canny',
+      control_type: CONTROL_TYPES.canny,
       denoising_strength: 0.75
     }
 

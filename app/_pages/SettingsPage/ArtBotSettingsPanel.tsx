@@ -8,12 +8,13 @@ import Select from 'app/_components/Select'
 import Linker from 'app/_components/Linker'
 import { useState } from 'react'
 import { Button } from 'app/_components/Button'
-import { db, generateThumbnails } from 'app/_utils/db'
+import { generateThumbnails } from 'app/_utils/db'
 import { deletePendingJobs } from 'app/_controllers/pendingJobsCache'
 import { basePath } from 'BASE_PATH'
 import InputSwitchV2 from 'app/_modules/AdvancedOptionsPanel/InputSwitchV2'
 import FlexCol from 'app/_components/FlexCol'
 import { updateTheme } from 'app/_modules/AppTheme/controller'
+import { db } from 'app/_db/dexie'
 
 const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
   const [processType, setProcessType] = useState<string | null>(null)

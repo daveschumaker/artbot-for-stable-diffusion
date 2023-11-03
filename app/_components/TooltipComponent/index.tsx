@@ -9,6 +9,7 @@ interface TooltipProps {
   children: React.ReactNode
   disabled?: boolean
   hideIcon?: boolean
+  openOnClick?: boolean
   tooltipId: string
 }
 
@@ -16,6 +17,7 @@ export default function TooltipComponent({
   children,
   disabled,
   hideIcon = false,
+  openOnClick = false,
   tooltipId
 }: TooltipProps) {
   if (disabled) return null
@@ -30,6 +32,7 @@ export default function TooltipComponent({
       <Tooltip
         anchorSelect={`#${tooltipId}`}
         className={styles['tooltip-wrapper']}
+        openOnClick={openOnClick}
         place="bottom"
       >
         <div className={styles.tooltip}>{children}</div>

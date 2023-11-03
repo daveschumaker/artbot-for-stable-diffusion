@@ -2,20 +2,18 @@
 import clsx from 'clsx'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef } from 'react'
-import {
-  uploadImg2Img,
-  uploadInpaint
-} from 'app/_controllers/imageDetailsCommon'
+import { uploadInpaint } from 'app/_controllers/imageDetailsCommon'
 import useComponentState from 'app/_hooks/useComponentState'
 import { useWindowSize } from 'app/_hooks/useWindowSize'
-import { setBase64FromDraw } from 'app/_store/canvasStore'
-import { setInputCache } from 'app/_store/inputCache'
 import { SourceProcessing } from 'app/_utils/promptUtils'
 import { Button } from 'app/_components/Button'
 import PageTitle from 'app/_components/PageTitle'
 import styles from './img2imgModal.module.css'
 import InteractiveModal from 'app/_components/InteractiveModal/interactiveModal'
 import { IconEye } from '@tabler/icons-react'
+import CreateImageRequest from 'app/_data-models/CreateImageRequest'
+import PromptInputSettings from 'app/_data-models/PromptInputSettings'
+import { CONTROL_TYPES } from '_types/horde'
 
 const Img2ImgModal = ({
   handleClose,
@@ -102,27 +100,40 @@ const Img2ImgModal = ({
             </Button>
           )}
           <Button
-            onClick={() => {
+            onClick={async () => {
+              const transformJob = CreateImageRequest.toDefaultPromptInput(
+                Object.assign({}, imageDetails, { numImages: 1 })
+              )
+
+              transformJob.control_type =
+                transformJob.control_type ?? CONTROL_TYPES.canny
+              transformJob.source_processing = SourceProcessing.Img2Img
+              transformJob.source_mask = ''
+
+              await PromptInputSettings.updateSavedInput_NON_DEBOUNCED(
+                transformJob
+              )
+
               // Kinda hacky since it's using the load drawing method.
-              setBase64FromDraw({
-                base64: imageDetails.source_image,
-                height: imageDetails.height,
-                width: imageDetails.width
-              })
+              // setBase64FromDraw({
+              //   base64: imageDetails.source_image,
+              //   height: imageDetails.height,
+              //   width: imageDetails.width
+              // })
 
-              const inputToSave = {
-                loadInputForControlNet: true,
-                prompt: imageDetails.prompt,
-                negative: imageDetails.negative,
-                models: imageDetails.models,
-                steps: imageDetails.steps,
-                cfg_scale: imageDetails.cfg_scale,
-                control_type: imageDetails.control_type
-              }
+              // const inputToSave = {
+              //   loadInputForControlNet: true,
+              //   prompt: imageDetails.prompt,
+              //   negative: imageDetails.negative,
+              //   models: imageDetails.models,
+              //   steps: imageDetails.steps,
+              //   cfg_scale: imageDetails.cfg_scale,
+              //   control_type: imageDetails.control_type
+              // }
 
-              setInputCache(inputToSave)
+              // setInputCache(inputToSave)
 
-              router.push(`/controlnet?drawing=true`)
+              router.push(`/create`)
             }}
             size="small"
             width={isMobile ? '100%' : ''}
@@ -130,8 +141,18 @@ const Img2ImgModal = ({
             Use for ControlNet
           </Button>
           <Button
-            onClick={() => {
-              uploadImg2Img(imageDetails, { useSourceImg: true })
+            onClick={async () => {
+              const transformJob = CreateImageRequest.toDefaultPromptInput(
+                Object.assign({}, imageDetails, { numImages: 1 })
+              )
+              transformJob.source_processing = SourceProcessing.Img2Img
+              transformJob.source_mask = ''
+
+              await PromptInputSettings.updateSavedInput_NON_DEBOUNCED(
+                transformJob
+              )
+
+              // uploadImg2Img(imageDetails, { useSourceImg: true })
               router.push(`/create?panel=img2img&edit=true`)
             }}
             size="small"
@@ -141,8 +162,14 @@ const Img2ImgModal = ({
           </Button>
           <Button
             onClick={() => {
-              uploadInpaint(imageDetails, { clone: false, useSourceImg: true })
-              router.push(`/create?panel=inpainting&edit=true`)
+              const transformJob = CreateImageRequest.toDefaultPromptInput(
+                Object.assign({}, imageDetails, { numImages: 1 })
+              )
+
+              console.log(`transformJob`, transformJob)
+
+              // uploadInpaint(imageDetails, { clone: false, useSourceImg: true })
+              // router.push(`/create?panel=inpainting&edit=true`)
             }}
             size="small"
             width={isMobile ? '100%' : ''}

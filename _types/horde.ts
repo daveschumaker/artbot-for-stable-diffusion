@@ -9,6 +9,18 @@ export interface CreateImageResponse {
   jobId: string
 }
 
+export enum CONTROL_TYPES {
+  canny = 'canny',
+  hed = 'hed',
+  depth = 'depth',
+  normal = 'normal',
+  openpose = 'openpose',
+  seg = 'seg',
+  scribble = 'scribble',
+  fakescribbles = 'fakescribbles',
+  hough = 'hough'
+}
+
 export interface CreateImageResponseFromApi {
   id: string
   message?: string

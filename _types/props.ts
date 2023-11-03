@@ -1,3 +1,4 @@
+import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
 import { Dispatch } from 'react'
 
 export interface EditorProps {
@@ -5,6 +6,7 @@ export interface EditorProps {
   canvasType?: string
   handleRemoveClick: () => void
   hideCanvas?: boolean
+  input?: DefaultPromptInput
   setInput?: Dispatch<any>
   source_image?: string
   source_image_height?: number
