@@ -29,7 +29,7 @@ const AboutPage = () => {
   useEffect(() => {
     const interval = setInterval(async () => {
       fetchImageCount()
-    }, 5000)
+    }, 2000)
     return () => clearInterval(interval)
   }, [])
 
