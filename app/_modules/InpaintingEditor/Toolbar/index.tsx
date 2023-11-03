@@ -62,7 +62,11 @@ const ToolBarButton = ({ active, btnType, onClick, children }: any) => {
   }
 
   return (
-    <button className={clsx(classes)} onClick={onClick}>
+    <button
+      className={clsx(classes)}
+      onClick={onClick}
+      style={{ color: 'black' }}
+    >
       {children}
     </button>
   )

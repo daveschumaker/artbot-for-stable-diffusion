@@ -26,6 +26,7 @@
 
 .toolbarMenuItem {
   border-radius: 4px;
+  color: black;
   cursor: default;
   font-size: 14px;
   letter-spacing: 0em;

@@ -27,7 +27,7 @@ export default function AdjustmentMenu({
               className="w-full"
               type="range"
               min={2}
-              max="120"
+              max="200"
               onChange={handleWidth}
               value={brushSize}
             />
