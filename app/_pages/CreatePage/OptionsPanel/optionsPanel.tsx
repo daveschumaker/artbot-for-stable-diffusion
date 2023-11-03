@@ -54,9 +54,10 @@ const OptionsPanel = ({ setErrors }: Props) => {
       source_processing: 'inpainting'
     }
 
-    PromptInputSettings.updateSavedInput_NON_DEBOUNCED(
-      inpaintingInput as DefaultPromptInput
-    )
+    await PromptInputSettings.updateSavedInput_NON_DEBOUNCED({
+      ...input,
+      ...(inpaintingInput as DefaultPromptInput)
+    })
     setInput(inpaintingInput)
   }
 
@@ -123,7 +124,7 @@ const OptionsPanel = ({ setErrors }: Props) => {
           <WarningPanel
             panelType="inpainting"
             handleRemoveClick={async () => {
-              PromptInputSettings.updateSavedInput_NON_DEBOUNCED({
+              await PromptInputSettings.updateSavedInput_NON_DEBOUNCED({
                 ...input,
                 source_mask: '',
                 source_processing: SourceProcessing.Img2Img

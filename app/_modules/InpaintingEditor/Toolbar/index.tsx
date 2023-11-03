@@ -25,6 +25,7 @@ import { SourceProcessing } from '_types/horde'
 import AdjustmentMenu from './AdjustmentMenu'
 import SettingMenu from './SettingsMenu'
 import HelpfulTipModal from 'app/_modules/HelpfulTipModal'
+import PromptInputSettings from 'app/_data-models/PromptInputSettings'
 
 const removeImageCanvasData = {
   canvasData: null,
@@ -80,7 +81,11 @@ const ToolBar = ({ canvas }: { canvas: InpaintingCanvas }) => {
   const [showSettingMenu, setShowSettingMenu] = useState(false)
   const [showOutpaintToolbar, setShowOutpaintToolbar] = useState(false)
 
-  const handleRemoveClick = () => {
+  const handleRemoveClick = async () => {
+    await PromptInputSettings.updateSavedInput_NON_DEBOUNCED({
+      ...input,
+      ...removeImageCanvasData
+    })
     setInput({ ...removeImageCanvasData })
   }
 
