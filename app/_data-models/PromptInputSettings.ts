@@ -5,9 +5,12 @@ import {
   updateSetting
 } from 'app/_db/settings'
 import DefaultPromptInput from './DefaultPromptInput'
+import { Default } from 'react-toastify/dist/utils'
 
 class PromptInputSettingsClass {
-  updateSavedInput_NON_DEBOUNCED = async (input: object = {}) => {
+  updateSavedInput_NON_DEBOUNCED = async (
+    input: DefaultPromptInput = {} as DefaultPromptInput
+  ) => {
     const clonedInput = Object.assign({}, input)
 
     // Clone to prompt input settings
@@ -38,14 +41,16 @@ class PromptInputSettingsClass {
   saveAllInput = debounce(this.updateSavedInput_NON_DEBOUNCED, 350)
 
   delete = async (name: string) => {
-    console.log(`delete?`, name)
+    const data: { [key: string]: any } = await this.load()
+    delete data[name]
+    this.updateSavedInput_NON_DEBOUNCED(data as DefaultPromptInput)
   }
 
   get = async (name: string) => {
     console.log(`get?`, name)
   }
 
-  load = async () => {
+  load = async (): Promise<DefaultPromptInput> => {
     try {
       const res = (await getSettingFromDexie(SettingName.PromptInput)) || []
       const { setting = {} } = res

@@ -3,12 +3,8 @@ import { useRouter, useSearchParams } from 'next/navigation'
 
 import Img2ImgPanel from '../Img2ImgPanel'
 import Uploader from 'app/_modules/Uploader'
-import { clearCanvasStore, setI2iUploaded } from 'app/_store/canvasStore'
 import { SourceProcessing } from 'app/_utils/promptUtils'
-import {
-  inferMimeTypeFromBase64,
-  nearestWholeMultiple
-} from 'app/_utils/imageUtils'
+import { nearestWholeMultiple } from 'app/_utils/imageUtils'
 import Head from 'next/head'
 import styles from './component.module.css'
 import clsx from 'clsx'
@@ -56,17 +52,6 @@ const OptionsPanel = ({ setErrors }: Props) => {
   }, [panel])
 
   const handleSaveImage = async (data: any) => {
-    clearCanvasStore() // Handle bug where previous canvas may show up.
-    const newBase64String = `data:${inferMimeTypeFromBase64(
-      data.source_image
-    )};base64,${data.source_image}`
-
-    setI2iUploaded({
-      base64String: newBase64String,
-      height: data.height,
-      width: data.width
-    })
-
     const inpaintingInput = {
       height: nearestWholeMultiple(data.height),
       width: nearestWholeMultiple(data.width),
@@ -144,7 +129,6 @@ const OptionsPanel = ({ setErrors }: Props) => {
           <WarningPanel
             panelType="inpainting"
             handleRemoveClick={() => {
-              clearCanvasStore()
               setInput({ ...removeImageCanvasData })
             }}
           />
@@ -193,7 +177,6 @@ const OptionsPanel = ({ setErrors }: Props) => {
             <WarningPanel
               panelType="img2img"
               handleRemoveClick={() => {
-                clearCanvasStore()
                 setInput({
                   ...removeImageCanvasData
                 })

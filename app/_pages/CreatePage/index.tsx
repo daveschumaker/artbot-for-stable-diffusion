@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 
 import PageTitle from 'app/_components/PageTitle'
 import { loadEditPrompt, SourceProcessing } from 'app/_utils/promptUtils'
-import { clearCanvasStore, getBase64FromDraw } from 'app/_store/canvasStore'
+import { getBase64FromDraw } from 'app/_store/canvasStore'
 import { getDefaultPrompt } from 'app/_utils/db'
 import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 import ShareLinkDetails from 'app/_data-models/ShareableLink'
@@ -103,7 +103,6 @@ const CreatePage = ({ className }: any) => {
       negative: defaultPrompt.prompt || ''
     })
 
-    clearCanvasStore()
     localStorage.removeItem('img2img_base64')
     setInput(newDefaultState)
   }
@@ -165,6 +164,7 @@ const CreatePage = ({ className }: any) => {
     // Step 2. Check if drawing mode
     if (query[CreatePageMode.LOAD_DRAWING]) {
       initialState = null
+      // @ts-ignore
       initialState = {
         ...new DefaultPromptInput(),
         source_image: getBase64FromDraw().base64,
@@ -287,7 +287,14 @@ const CreatePage = ({ className }: any) => {
       })
     }
 
-    // Step 5. Set input
+    // Step 5. Validate if inpainting or img2img
+    if (initialState?.source_mask && initialState?.source_image) {
+      initialState.source_processing = SourceProcessing.InPainting
+    } else if (initialState?.source_image) {
+      initialState.source_processing = SourceProcessing.Img2Img
+    }
+
+    // Step 6. Set input
     setInput({ ...(initialState as DefaultPromptInput) })
 
     logToConsole({
@@ -296,7 +303,7 @@ const CreatePage = ({ className }: any) => {
       debugKey: 'DEBUG_LOAD_INPUT'
     })
 
-    // Step 6. Set pageLoaded so we can start error checking and auto saving input.
+    // Step 7. Set pageLoaded so we can start error checking and auto saving input.
     setPageLoaded(true)
   }, [query, setInput, setPageLoaded])
 

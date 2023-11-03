@@ -1,6 +1,5 @@
 import UpscaleImageRequest from 'app/_data-models/UpscaleImageRequest'
 import {
-  clearCanvasStore,
   clearI2IString,
   cloneFromImage,
   setI2iUploaded,
@@ -107,7 +106,6 @@ export const uploadInpaint = async (imageDetails: any, options: any = {}) => {
 }
 
 export const uploadImg2Img = (imageDetails: any, options: any = {}) => {
-  clearCanvasStore()
   clearI2IString()
   const { useSourceImg = false } = options
 

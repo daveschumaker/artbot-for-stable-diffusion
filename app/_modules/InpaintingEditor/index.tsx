@@ -4,6 +4,7 @@ import InpaintingCanvas from 'app/_data-models/InpaintingCanvas'
 import ToolBar from './Toolbar'
 import styles from './inpaintingEditor.module.css'
 import { getMaxValidCanvasWidth } from 'app/_utils/fabricUtils'
+import { getImageDimensions } from 'app/_utils/imageUtils'
 
 function InpaintingEditor() {
   const { input, setInput } = useInput()
@@ -17,10 +18,12 @@ function InpaintingEditor() {
     })
 
     if (input.source_image) {
-      canvas.importImage(input.source_image)
+      getImageDimensions('source', input.source_image)
+      await canvas.importImage(input.source_image)
     }
 
     if (input.source_mask) {
+      getImageDimensions('mask', input.source_mask)
       canvas.importMask(input.source_mask)
     }
 

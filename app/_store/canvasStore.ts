@@ -52,20 +52,6 @@ export const cloneFromImage = (canvasObj: ICanvas) => {
   clonedCanvasObj = canvasObj
 }
 
-export const clearCanvasStore = () => {
-  i2iCanvas = {
-    cached: false,
-    canvasRef: null,
-    drawLayer: null,
-    maskLayer: null,
-    visibleCanvas: null,
-    height: null,
-    width: null
-  }
-
-  clonedCanvasObj = null
-}
-
 //// SIMPLE SAVE STATE SOLUTION
 interface ISavedHistory {
   undo: Array<any>

@@ -3,21 +3,13 @@ import AppSettings from 'app/_data-models/AppSettings'
 import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
 import { Dispatch } from 'react'
-import {
-  clearCanvasStore,
-  getCanvasStore,
-  resetSavedDrawingState
-} from 'app/_store/canvasStore'
-import { clearInputCache, setInputCache } from 'app/_store/inputCache'
+import { getCanvasStore, resetSavedDrawingState } from 'app/_store/canvasStore'
 import { SetInput } from '_types'
 import { logDataForDebugging } from 'app/_utils/debugTools'
 import { showSuccessToast } from 'app/_utils/notificationUtils'
-import {
-  SourceProcessing,
-  clearSavedInputCache,
-  savePromptHistory
-} from 'app/_utils/promptUtils'
+import { SourceProcessing, savePromptHistory } from 'app/_utils/promptUtils'
 import { createImageJob } from 'app/_utils/V2/createImageJob'
+import PromptInputSettings from 'app/_data-models/PromptInputSettings'
 
 interface CreateClick {
   pending: boolean
@@ -62,7 +54,7 @@ export const handleCreateClick = async ({
 
   // Handle weird error that's been cropping up where canvas is empty but inpainting is true:
   if (
-    !getCanvasStore().canvasRef &&
+    !input.source_mask &&
     input.source_processing === SourceProcessing.InPainting
   ) {
     setInput({
@@ -108,7 +100,6 @@ export const handleCreateClick = async ({
     setInput({ prompt: '' })
   }
 
-  clearSavedInputCache()
   logDataForDebugging({
     name: 'index#handle_submit.CreateImageRequest',
 
@@ -116,37 +107,24 @@ export const handleCreateClick = async ({
     data: new CreateImageRequest(inputToSubmit)
   })
 
+  console.log(`New Job:`)
+  console.log(inputToSubmit)
+
   // @ts-ignore
   await createImageJob(new CreateImageRequest(inputToSubmit))
-
-  // Store parameters for potentially restoring inpainting data if needed
-  let inpaintCache = {
-    orientationType: input.orientationType,
-    height: input.height,
-    width: input.width,
-    source_processing: input.source_processing,
-    source_image: input.source_image,
-    source_mask: input.source_mask
-  }
 
   if (!AppSettings.get('stayOnCreate') && !disableRedirect) {
     if (!AppSettings.get('saveInputOnCreate')) {
       resetSavedDrawingState()
-      clearInputCache()
     }
 
     if (!AppSettings.get('saveCanvasOnCreate')) {
-      clearCanvasStore()
-    } else {
-      setInputCache({ ...inpaintCache })
+      await PromptInputSettings.delete('source_image')
+      await PromptInputSettings.delete('source_mask')
     }
 
     router.push('/pending')
   } else {
-    if (AppSettings.get('saveCanvasOnCreate')) {
-      setInput({ ...inpaintCache })
-    }
-
     showSuccessToast({ message: 'Image requested!' })
     setPending(false)
   }

@@ -9,7 +9,10 @@ interface Point {
 
 import { SourceProcessing } from '_types/horde'
 import DefaultPromptInput from './DefaultPromptInput'
-import { inferMimeTypeFromBase64 } from 'app/_utils/imageUtils'
+import {
+  getImageDimensions,
+  inferMimeTypeFromBase64
+} from 'app/_utils/imageUtils'
 
 class InpaintingCanvas {
   private eventListeners: Map<string, any> = new Map()
@@ -503,44 +506,49 @@ class InpaintingCanvas {
     return `rgb(${colors[0]},${colors[1]},${colors[2]})`
   }
 
-  async importImage(source_image: string): Promise<void> {
-    try {
-      const fullDataString = `data:${inferMimeTypeFromBase64(
-        source_image
-      )};base64,${source_image}`
+  importImage(source_image: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      try {
+        const fullDataString = `data:${inferMimeTypeFromBase64(
+          source_image
+        )};base64,${source_image}`
 
-      const img = new Image()
-      img.onload = async () => {
-        // Store original dimensions
-        this.originalWidth = img.width
-        this.originalHeight = img.height
+        const img = new Image()
+        img.onload = () => {
+          // Store original dimensions
+          this.originalWidth = img.width
+          this.originalHeight = img.height
 
-        let width = img.width
-        let height = img.height
+          let width = img.width
+          let height = img.height
 
-        // Check if the image width is greater than 2048px
-        if (width > 2048) {
-          // Calculate the new height proportionally
-          const ratio = height / width
-          width = 2048
-          height = width * ratio
+          // Check if the image width is greater than 2048px
+          if (width > 2048) {
+            // Calculate the new height proportionally
+            const ratio = height / width
+            width = 2048
+            height = width * ratio
+          }
+
+          // Resize and draw on both canvases
+          this.imageCanvas.width = width
+          this.imageCanvas.height = height
+
+          this.maskCanvas.width = width
+          this.maskCanvas.height = height
+
+          this.imageCtx.drawImage(img, 0, 0, width, height)
+
+          // Once everything is done, resolve the promise
+          resolve()
         }
-
-        // Resize and draw on both canvases
-        this.imageCanvas.width = width
-        this.imageCanvas.height = height
-
-        this.maskCanvas.width = width
-        this.maskCanvas.height = height
-
-        // await this.setCheckerboardBackground() // Wait for the background to be drawn
-
-        this.imageCtx.drawImage(img, 0, 0, width, height)
+        img.onerror = reject // Reject the promise on an error
+        img.src = fullDataString
+      } catch (e) {
+        console.log(`Error:`, e)
+        reject(e) // Reject the promise if an exception occurs
       }
-      img.src = fullDataString
-    } catch (e) {
-      console.log(`Error:`, e)
-    }
+    })
   }
 
   importMask(base64String: string): void {

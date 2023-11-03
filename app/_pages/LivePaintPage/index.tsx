@@ -16,7 +16,6 @@ import { trackEvent } from 'app/_api/telemetry'
 import { useStore } from 'statery'
 import { userInfoStore } from 'app/_store/userStore'
 import Linker from 'app/_components/Linker'
-import { clearCanvasStore } from 'app/_store/canvasStore'
 import styles from './livePaint.module.css'
 import {
   IconBrush,
@@ -138,7 +137,6 @@ const LivePaint = () => {
               canvasId="drawing-canvas"
               canvasType="drawing"
               handleRemoveClick={() => {
-                clearCanvasStore()
                 setInput({
                   ...removeImageCanvasData
                 })

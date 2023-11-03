@@ -190,6 +190,41 @@ export const orientationDetails = (
   }
 }
 
+export const getImageDimensions = (name: string = '', base64String: string) => {
+  let fullString = base64String
+
+  if (base64String.indexOf('data:') !== 0) {
+    fullString = `data:${inferMimeTypeFromBase64(
+      base64String
+    )};base64,${base64String}`
+  }
+
+  return new Promise((resolve, reject) => {
+    // Create a new Image object
+    const image = new Image()
+
+    // Set up the onload function, which fires after the image has been loaded
+    image.onload = function () {
+      console.log(`${name} dimensions:`)
+      // @ts-ignore
+      console.log(`image w x h:`, this.width, this.height)
+
+      // Resolve the promise with an object containing the width and height
+      // @ts-ignore
+      resolve({ width: this.width, height: this.height })
+    }
+
+    // Set up the onerror function, which fires if there's an error loading the image
+    image.onerror = function () {
+      // Reject the promise if there's an error
+      reject(new Error('Could not load image'))
+    }
+
+    // Set the source of the image to the base64 string
+    image.src = fullString
+  })
+}
+
 export const createNewImage = async (imageParams: CreateImageJob) => {
   const clonedParams = Object.assign({}, imageParams)
   /**
