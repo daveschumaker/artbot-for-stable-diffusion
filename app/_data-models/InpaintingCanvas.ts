@@ -166,8 +166,8 @@ class InpaintingCanvas {
       }
     }
 
-    const startDrawing = (event: MouseEvent | TouchEvent) => {
-      event.preventDefault() // This may be needed to prevent default behaviors like scrolling or panning on touch devices.
+    const startDrawing = (event?: MouseEvent | TouchEvent) => {
+      if (event) event.preventDefault() // This may be needed to prevent default behaviors like scrolling or panning on touch devices.
       this.undoStack.push(this.captureCanvasState())
       this.maskCtx.beginPath()
       isDrawing = true
@@ -232,8 +232,8 @@ class InpaintingCanvas {
 
     // Attach touch events to the canvas
     this.maskCanvas.addEventListener('touchstart', (event: TouchEvent) => {
-      const touch = event.touches[0] as unknown as TouchEvent
-      startDrawing(touch)
+      if (event) event.preventDefault()
+      startDrawing(event)
     })
 
     // Attach the 'mousemove' event to the canvas
@@ -243,19 +243,27 @@ class InpaintingCanvas {
 
     // Attach the 'touchmove' event to the canvas
     this.maskCanvas.addEventListener('touchmove', (event: TouchEvent) => {
+      if (event) event.preventDefault()
       const touch = event.touches[0]
       draw(touch.clientX, touch.clientY)
     })
 
     // Attach the 'mouseup' and 'touchend' event to the window to detect them anywhere
     window.addEventListener('mouseup', stopDrawing)
-    window.addEventListener('touchend', stopDrawing)
 
     // You may also want to add a 'mouseleave' event to handle the mouse leaving the window
     window.addEventListener('mouseleave', stopDrawing)
 
     // For touch devices, you should also listen for 'touchcancel' events
-    window.addEventListener('touchcancel', stopDrawing)
+    window.addEventListener('touchend', (event: TouchEvent) => {
+      if (event) event.preventDefault()
+      stopDrawing(event)
+    })
+
+    window.addEventListener('touchcancel', (event: TouchEvent) => {
+      if (event) event.preventDefault()
+      stopDrawing(event)
+    })
   }
 
   expandCanvas(
