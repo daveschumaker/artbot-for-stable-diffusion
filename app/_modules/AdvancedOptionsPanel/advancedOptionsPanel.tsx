@@ -110,7 +110,8 @@ const AdvancedOptionsPanel = ({ setErrors }: Props) => {
           style={{
             borderWidth: '1px',
             marginBottom: '12px',
-            overflow: 'unset'
+            overflow: 'unset',
+            padding: '8px'
           }}
         >
           <Accordion>
