@@ -9,10 +9,7 @@ interface Point {
 
 import { SourceProcessing } from '_types/horde'
 import DefaultPromptInput from './DefaultPromptInput'
-import {
-  getImageDimensions,
-  inferMimeTypeFromBase64
-} from 'app/_utils/imageUtils'
+import { inferMimeTypeFromBase64 } from 'app/_utils/imageUtils'
 
 class InpaintingCanvas {
   private eventListeners: Map<string, any> = new Map()
@@ -559,12 +556,8 @@ class InpaintingCanvas {
 
       const img = new Image()
       img.onload = async () => {
-        // Store original dimensions
-        this.originalWidth = img.width
-        this.originalHeight = img.height
-
-        let width = img.width
-        let height = img.height
+        let width = this.imageCanvas.width
+        let height = this.imageCanvas.height
 
         // Check if the image width is greater than 2048px
         if (width > 2048) {
