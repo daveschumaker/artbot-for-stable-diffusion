@@ -12,8 +12,6 @@ import DefaultPromptInput from './DefaultPromptInput'
 import { inferMimeTypeFromBase64 } from 'app/_utils/imageUtils'
 
 class InpaintingCanvas {
-  private eventListeners: Map<string, any> = new Map()
-
   setInput: (data: Partial<DefaultPromptInput>) => void
   private undoStack: string[] = []
   private redoStack: string[] = []
@@ -330,7 +328,8 @@ class InpaintingCanvas {
 
     this.setInput({
       source_image: this.exportImageCanvasToBase64(),
-      source_mask: this.exportMaskCanvasToBase64()
+      source_mask: this.exportMaskCanvasToBase64(),
+      source_processing: SourceProcessing.InPainting
     })
   }
 
@@ -616,13 +615,6 @@ class InpaintingCanvas {
     img.src = nextState!
   }
 
-  removeEventListeners(): void {
-    for (const [eventName, eventHandler] of this.eventListeners.entries()) {
-      this.maskCanvas.removeEventListener(eventName, eventHandler)
-    }
-    this.eventListeners.clear()
-  }
-
   saveToDisk = async () => {
     try {
       // const mask = await InpaintingCanvas.outputMask(
@@ -665,7 +657,7 @@ class InpaintingCanvas {
   }
 
   unload() {
-    this.removeEventListeners()
+    // this.disableDrawing()
   }
 }
 

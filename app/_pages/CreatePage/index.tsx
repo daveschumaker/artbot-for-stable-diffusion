@@ -292,6 +292,9 @@ const CreatePage = ({ className }: any) => {
       initialState.source_processing = SourceProcessing.InPainting
     } else if (initialState?.source_image) {
       initialState.source_processing = SourceProcessing.Img2Img
+    } else if (initialState?.source_mask && !initialState?.source_image) {
+      initialState.source_mask = ''
+      initialState.source_processing = SourceProcessing.Prompt
     }
 
     // Step 6. Set input

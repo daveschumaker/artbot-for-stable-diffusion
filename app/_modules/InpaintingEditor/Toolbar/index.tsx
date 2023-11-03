@@ -24,6 +24,7 @@ import { useInput } from 'app/_modules/InputProvider/context'
 import { SourceProcessing } from '_types/horde'
 import AdjustmentMenu from './AdjustmentMenu'
 import SettingMenu from './SettingsMenu'
+import HelpfulTipModal from 'app/_modules/HelpfulTipModal'
 
 const removeImageCanvasData = {
   canvasData: null,
@@ -75,8 +76,9 @@ const ToolBar = ({ canvas }: { canvas: InpaintingCanvas }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [brushSize, setBrushSize] = useState(20)
 
+  const [showTipsModal, setShowTipsModal] = useState(false)
   const [showSettingMenu, setShowSettingMenu] = useState(false)
-  const [showOutpaintToolbar, setShowOutpaintToolbar] = useState(true)
+  const [showOutpaintToolbar, setShowOutpaintToolbar] = useState(false)
 
   const handleRemoveClick = () => {
     setInput({ ...removeImageCanvasData })
@@ -213,6 +215,44 @@ const ToolBar = ({ canvas }: { canvas: InpaintingCanvas }) => {
             </div>
           </DeleteConfirmModal>
         )}
+        {showTipsModal && (
+          <HelpfulTipModal
+            onConfirmClick={() => {
+              setLocked(false)
+              handleRemoveClick()
+              setShowTipsModal(false)
+            }}
+            closeModal={() => {
+              setLocked(false)
+              setShowTipsModal(false)
+            }}
+          >
+            <h3
+              className="text-lg font-medium leading-6 text-gray-900"
+              id="modal-title"
+            >
+              Outpainting tips
+            </h3>
+            <div className="mt-2">
+              <p className="text-sm text-gray-500 pb-2">
+                General tips to help improve your outpainting results.
+              </p>
+              <p className="text-sm text-gray-500">
+                <ul>
+                  <li>
+                    • ArtBot will automatically mask expanded areas and fill
+                    with average color of image.
+                  </li>
+                  <li>• Outpaint in a single direction</li>
+                  <li>• Use a high step count (50 - 75)</li>
+                  <li>• Prompt matches source image</li>
+                  <li>• Denoise slider to max (1.0)</li>
+                  <li>• Low guidance (2 - 8)</li>
+                </ul>
+              </p>
+            </div>
+          </HelpfulTipModal>
+        )}
       </div>
       {showOutpaintToolbar && (
         <>
@@ -221,7 +261,11 @@ const ToolBar = ({ canvas }: { canvas: InpaintingCanvas }) => {
           </div>
           <div className={clsx(styles.toolbar)}>
             <div className="flex flex-row items-center gap-1">
-              <ToolBarButton onClick={() => {}}>
+              <ToolBarButton
+                onClick={() => {
+                  setShowTipsModal(true)
+                }}
+              >
                 <IconHelpCircle stroke="black" />
               </ToolBarButton>
               <IconMinusVertical stroke="#949494" />
