@@ -168,18 +168,19 @@ class InpaintingCanvas {
       }
     }
 
-    const startDrawing = () => {
+    const startDrawing = (event: MouseEvent | TouchEvent) => {
+      event.preventDefault() // This may be needed to prevent default behaviors like scrolling or panning on touch devices.
       this.undoStack.push(this.captureCanvasState())
       this.maskCtx.beginPath()
       isDrawing = true
       lastPoint = null
     }
 
-    const stopDrawing = () => {
+    const stopDrawing = (event?: MouseEvent | TouchEvent) => {
+      if (event) event.preventDefault() // This may be needed to prevent default behaviors like scrolling or panning on touch devices.
       isDrawing = false
       this.maskCtx.closePath()
       lastPoint = null
-
       this.redoStack = []
 
       const base64string = this.exportMaskToBase64()
@@ -228,49 +229,35 @@ class InpaintingCanvas {
       }
     }
 
-    // Mouse events
-    this.maskCanvas.addEventListener('mousedown', () => {
-      startDrawing()
+    // Attach mouse events to the canvas
+    this.maskCanvas.addEventListener('mousedown', startDrawing)
+
+    // Attach touch events to the canvas
+    this.maskCanvas.addEventListener('touchstart', (event: TouchEvent) => {
+      const touch = event.touches[0] as unknown as TouchEvent
+      startDrawing(touch)
     })
 
-    this.maskCanvas.addEventListener('mouseout', () => {
-      stopDrawing()
-    })
-
-    this.maskCanvas.addEventListener('mouseup', () => {
-      stopDrawing()
-    })
-
+    // Attach the 'mousemove' event to the canvas
     this.maskCanvas.addEventListener('mousemove', (event: MouseEvent) => {
       draw(event.clientX, event.clientY)
     })
 
-    // Touch events
-    this.maskCanvas.addEventListener('touchstart', (event: TouchEvent) => {
-      event.preventDefault()
-      startDrawing()
-    })
-
-    this.maskCanvas.addEventListener('touchend', (event: TouchEvent) => {
-      event.preventDefault()
-      stopDrawing()
-    })
-
-    this.maskCanvas.addEventListener(
-      'touchleave' as any,
-      (event: TouchEvent) => {
-        event.preventDefault()
-        stopDrawing()
-      }
-    )
-
+    // Attach the 'touchmove' event to the canvas
     this.maskCanvas.addEventListener('touchmove', (event: TouchEvent) => {
-      event.preventDefault()
-      if (isDrawing) {
-        const touch = event.touches[0]
-        draw(touch.clientX, touch.clientY)
-      }
+      const touch = event.touches[0]
+      draw(touch.clientX, touch.clientY)
     })
+
+    // Attach the 'mouseup' and 'touchend' event to the window to detect them anywhere
+    window.addEventListener('mouseup', stopDrawing)
+    window.addEventListener('touchend', stopDrawing)
+
+    // You may also want to add a 'mouseleave' event to handle the mouse leaving the window
+    window.addEventListener('mouseleave', stopDrawing)
+
+    // For touch devices, you should also listen for 'touchcancel' events
+    window.addEventListener('touchcancel', stopDrawing)
   }
 
   expandCanvas(
