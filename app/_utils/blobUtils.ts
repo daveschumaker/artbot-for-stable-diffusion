@@ -1,28 +1,28 @@
 // @ts-nocheck
 import * as exifLib from '@asc0910/exif-library'
-import { buf } from 'crc-32'
+import { writeJPGMarker, writePNGtext, writeXMP } from 'image-metadata-editor'
 
 export const initBlob = () => {
   if (!Blob.prototype.toPNG) {
     Blob.prototype.toPNG = async function (callback: any) {
       // Converting through canvas will remove exif data
-      // So extract exif first, and then add it back when ceating new blob
+      // So extract exif first, and then add it back when creating new blob
       const exif = await getExifFromBlob(this)
-      return convertBlob(this, 'image/png', callback, exif)
+      return await convertBlob(this, 'image/png', callback, exif)
     }
   }
 
   if (!Blob.prototype.toWebP) {
     Blob.prototype.toWebP = async function (callback: any) {
       const exif = await getExifFromBlob(this)
-      return convertBlob(this, 'image/webp', callback, exif)
+      return await convertBlob(this, 'image/webp', callback, exif)
     }
   }
 
   if (!Blob.prototype.toJPEG) {
     Blob.prototype.toJPEG = async function (callback: any) {
       const exif = await getExifFromBlob(this)
-      return convertBlob(this, 'image/jpeg', callback, exif)
+      return await convertBlob(this, 'image/jpeg', callback, exif)
     }
   }
 
@@ -33,60 +33,59 @@ export const initBlob = () => {
   }
 }
 
-function convertBlob(
+function loadImage(src: string) {
+  return new Promise((resolve, reject) => {
+    const image = new Image()
+
+    image.onload = () => {
+      resolve(image)
+    }
+
+    image.onerror = (error) => {
+      reject(error)
+    }
+
+    image.src = src
+  })
+}
+
+async function writeMetadata(imageBlob: Blob, userComment: string): Blob {
+  let imageUint8Arr = await writeXMP(
+    imageBlob,
+    `<x:xmpmeta xmlns:x="adobe:ns:meta/">${userComment}</x:xmpmeta>`
+  )
+  if (imageBlob.type === 'image/png') {
+    imageUint8Arr = await writePNGtext(imageUint8Arr, 'parameters', userComment)
+  }
+  if (imageBlob.type === 'image/jpeg') {
+    imageUint8Arr = await writeJPGMarker(imageUint8Arr, userComment)
+  }
+
+  return new Blob([imageUint8Arr])
+}
+
+async function convertBlob(
   blob: Blob | MediaSource,
   type: string,
   callback: (arg0: Blob) => void,
   exif: any = {}
 ) {
-  return new Promise((resolve) => {
-    let canvas = <HTMLCanvasElement>createTempCanvas()
-    let ctx = canvas.getContext('2d')
-    let image = new Image()
-    image.src = URL.createObjectURL(blob)
-    image.onload = function () {
-      canvas.width = image.width
-      canvas.height = image.height
-      ctx.drawImage(image, 0, 0)
-      let result = dataURItoBlob(canvas.toDataURL(type, 1), exif)
-      const userComment = exif.Exif[37510].replace('ASCII\0\0\0', '')
+  const image = await loadImage(URL.createObjectURL(blob))
+  const canvas = <HTMLCanvasElement>createTempCanvas()
+  const ctx = canvas.getContext('2d')
 
-      if (result.type === 'image/png') {
-        // Create the message bytes
-        const msg = `parameters\0${userComment}`
-        const msgBytes = new TextEncoder().encode(msg)
+  canvas.width = image.width
+  canvas.height = image.height
+  ctx.drawImage(image, 0, 0)
+  let imageBlob = dataURItoBlob(canvas.toDataURL(type, 1), exif)
+  const userComment = exif.Exif[37510].replace('ASCII\0\0\0', '')
+  const result = writeMetadata(imageBlob, userComment)
 
-        var msgWithTextTag = new TextEncoder().encode(`tEXt${msg}`)
-
-        const crc32 = buf(msgWithTextTag)
-        var msgLengthBin = new Uint8Array(4)
-        var tEXt = new Uint8Array(msgBytes.length + 12)
-        new DataView(msgLengthBin.buffer).setUint32(0, msgBytes.length, false)
-        tEXt.set(msgLengthBin, 0)
-        tEXt.set(msgWithTextTag, 4)
-        new DataView(tEXt.buffer).setUint32(msgBytes.length + 8, crc32, false)
-
-        // Create a Blob with the updated data
-        var reader = new FileReader()
-        reader.onload = function () {
-          const insertPosition = reader.result.indexOf('IHDR') + 21
-          var imgBytesBefore = result.slice(0, insertPosition)
-          var imgBytesAfter = result.slice(insertPosition)
-
-          const blob = new Blob([imgBytesBefore, tEXt, imgBytesAfter], {
-            type: result.type
-          })
-
-          if (callback) callback(blob)
-          else resolve(blob)
-        }
-        reader.readAsText(result)
-      } else {
-        if (callback) callback(result)
-        else resolve(result)
-      }
-    }
-  })
+  if (callback) {
+    callback(result)
+  } else {
+    return result
+  }
 }
 
 function createTempCanvas() {
