@@ -5,27 +5,38 @@ module.exports = {
     './components/**/*.{js,ts,jsx,tsx}',
     './pages/**/*.{js,ts,jsx,tsx}'
   ],
+  daisyui: {
+    themes: ['emerald', 'synthwave'],
+    darkTheme: 'synthwave'
+  },
   theme: {
     extend: {
       colors: {
-        'text-main': '#14b8a6',
-        'text-dark': '#f3f3ef',
-        'text-light': '#344c50'
-      },
-      keyframes: {
-        fill: {
-          '0%': { width: `0%` },
-          '100%': { width: '100%' }
-        }
-      },
-      screens: {
-        adCol: '900px',
-        tablet: '640px',
-        '2xl': '1440px',
-        '3xl': '1536px',
-        '4xl': '1920px'
+        main: '#14b8a6'
       }
     }
   },
-  plugins: []
+  // theme: {
+  //   extend: {
+  //     colors: {
+  //       'text-main': '#14b8a6',
+  //       'text-dark': '#f3f3ef',
+  //       'text-light': '#344c50'
+  //     },
+  //     keyframes: {
+  //       fill: {
+  //         '0%': { width: `0%` },
+  //         '100%': { width: '100%' }
+  //       }
+  //     },
+  //     screens: {
+  //       adCol: '900px',
+  //       tablet: '640px',
+  //       '2xl': '1440px',
+  //       '3xl': '1536px',
+  //       '4xl': '1920px'
+  //     }
+  //   }
+  // },
+  plugins: [require('@tailwindcss/typography'), require('daisyui')]
 }

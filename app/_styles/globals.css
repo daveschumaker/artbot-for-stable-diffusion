@@ -46,7 +46,7 @@
   }
 }
 
-[data-theme='dark'] {
+/* [data-theme='dark'] {
   --body-color: #222222;
   --carbon-bg: #323232;
   --footer-color: #f3f3ef;
@@ -56,14 +56,14 @@
   --overlay-background: rgba(0, 0, 0, 0.8);
   --modal-background: black;
   --footer-background: #383838;
-}
+} */
 
 html {
   min-height: calc(100% + env(safe-area-inset-top));
   padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
-body,
+/* body,
 html {
   background-color: var(--body-color);
   color: var(--input-color);
@@ -77,7 +77,7 @@ body {
   min-height: calc(100% + env(safe-area-inset-top));
   padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
   width: 100%;
-}
+} */
 
 #__next {
   display: flex;
