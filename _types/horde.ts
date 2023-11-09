@@ -122,13 +122,15 @@ export interface HordePreset {
   height?: number
   hires_fix?: boolean
   karras?: boolean
+  sampler?: string
+  clip_skip?: boolean
   loras?: Array<{
     name: string
     inject_trigger?: string
     model?: number
     clip?: number
   }>
-  tis?: Array<{ name: string; inject_ti?: string }>
+  tis?: Array<{ name: string; inject_ti?: string; strength?: number }>
   model?: string
   prompt: string
   sampler_name?: string

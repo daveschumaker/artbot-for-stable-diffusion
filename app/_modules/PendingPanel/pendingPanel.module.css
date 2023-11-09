@@ -62,12 +62,12 @@
   width: auto;
 }
 
-.imageContainer>div {
+.imageContainer > div {
   transition: opacity 0.3s;
   opacity: 0;
 }
 
-.imageContainer:hover>div {
+.imageContainer:hover > div {
   background-color: rgb(0, 0, 0, 0.6);
   opacity: 1;
 }
@@ -79,6 +79,7 @@
   font-size: 12px;
   opacity: 1 !important;
   position: absolute;
+  text-align: center;
   z-index: var(--zIndex-default);
 }
 

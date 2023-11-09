@@ -88,12 +88,24 @@ export default function PendingImageModal({
           )}
         </FlexCol>
       )}
+      {pendingJob.is_possible === false && (
+        <FlexCol className={styles.contrastTextBackground}>
+          <FlexRow gap={8} pb={8}>
+            <span>
+              ⚠️ <strong>Warning:</strong> There are currently no workers
+              available to process this image. You can continue to wait a few
+              minutes for a worker to come online, or adjust your image settings
+              (e.g., model, dimensions or post processors) and try again.
+            </span>
+          </FlexRow>
+        </FlexCol>
+      )}
       {(pendingJob.jobStatus === JobStatus.Requested ||
         pendingJob.jobStatus === JobStatus.Queued) && (
         <FlexCol className={styles.contrastTextBackground}>
           <FlexRow gap={8} pb={8}>
-            <IconStackPush size={32} stroke={1.5} /> <strong>Status:</strong>{' '}
-            Image request submitted to AI Horde
+            <IconStackPush size={32} stroke={1.5} />
+            <strong>Status:</strong> Image request submitted to AI Horde
           </FlexRow>
           {pendingJob.queue_position >= 0 && (
             <FlexRow pb={8}>

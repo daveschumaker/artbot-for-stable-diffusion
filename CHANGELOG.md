@@ -1,3 +1,13 @@
+# 2023.11.09
+
+- On the create page, cmd + enter or ctrl + enter will now send an image request (really helpful if you're testing out some different prompts).
+- On create page, we now show a warning if there are no workers available for a given job's parameters.
+- Updated style presets.
+
+# 2023.11.07
+
+- MILESTONE: 🎉🎉🎉 ‼️‼️‼️ **12,000,000 images** have been created with ArtBot!‼️‼️‼️ 🎉🎉🎉
+
 # 2023.11.03
 
 - Happy November! Been working on a large update this week that just totally rewrites all the inpainting logic (courtesy of ChatGPT -- I am in awe). ArtBot should behave much better when it comes to inpainting (i.e., no more downsampling images unless they are over 3072 pixels on a side).

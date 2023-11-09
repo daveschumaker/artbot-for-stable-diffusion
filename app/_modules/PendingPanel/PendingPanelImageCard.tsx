@@ -32,6 +32,7 @@ import { useState } from 'react'
 import AbTestModal from 'app/_pages/PendingPage/PendingItem/AbTestModal'
 import PendingImageModal from './PendingImageModal'
 import AwesomeModalWrapper from '../AwesomeModal'
+import FlexRow from 'app/_components/FlexRow'
 
 export default function PendingPanelImageCard({
   index,
@@ -202,6 +203,10 @@ export default function PendingPanelImageCard({
               <>Processing... (~{Number(imageJob.wait_time) || 1}s)</>
             )}
             {imageJob.jobStatus === JobStatus.Error && <>Error</>}
+            {(imageJob.jobStatus === JobStatus.Queued &&
+              imageJob.is_possible) === false && (
+              <FlexRow gap={2}>⚠️ No workers for this job</FlexRow>
+            )}
           </div>
         )}
       </div>

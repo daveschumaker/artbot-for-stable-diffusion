@@ -83,7 +83,7 @@ const CreatePage = ({ className }: any) => {
     }
   }, [build, buildId, input])
 
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     handleCreateClick({
       input,
       pending,
@@ -93,7 +93,18 @@ const CreatePage = ({ className }: any) => {
       setPending,
       disableRedirect: width && width > 1100
     })
-  }
+  }, [input, pending, router, setErrors, setInput, width])
+
+  const handleEnterKeyPress = useCallback(
+    (event: KeyboardEvent) => {
+      // Check if Enter is pressed along with CMD (metaKey) or CTRL
+      if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+        event.preventDefault()
+        handleSubmit()
+      }
+    },
+    [handleSubmit]
+  )
 
   const resetInput = async () => {
     const defaultPromptResult = (await getDefaultPrompt()) || []
@@ -106,6 +117,17 @@ const CreatePage = ({ className }: any) => {
     localStorage.removeItem('img2img_base64')
     setInput(newDefaultState)
   }
+
+  useEffect(() => {
+    const keyDownListener = (event: KeyboardEvent) => handleEnterKeyPress(event)
+    document.addEventListener('keydown', keyDownListener)
+
+    return () => {
+      document.removeEventListener('keydown', keyDownListener)
+    }
+    // Input needs to be here to properly capture changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [input])
 
   // Various input validation stuff.
   useEffect(() => {
