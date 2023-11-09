@@ -203,10 +203,10 @@ export default function PendingPanelImageCard({
               <>Processing... (~{Number(imageJob.wait_time) || 1}s)</>
             )}
             {imageJob.jobStatus === JobStatus.Error && <>Error</>}
-            {(imageJob.jobStatus === JobStatus.Queued &&
-              imageJob.is_possible) === false && (
-              <FlexRow gap={2}>⚠️ No workers for this job</FlexRow>
-            )}
+            {imageJob.jobStatus === JobStatus.Queued &&
+              imageJob.is_possible === false && (
+                <FlexRow gap={2}>⚠️ No workers for this job</FlexRow>
+              )}
           </div>
         )}
       </div>
