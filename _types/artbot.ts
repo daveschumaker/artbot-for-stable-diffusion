@@ -1,6 +1,6 @@
 import React, { CSSProperties, Dispatch, ReactNode } from 'react'
 import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
-import { IKudosDetails, InjectTi, WorkerDetails } from './horde'
+import { HordeWorkerDetails, IKudosDetails, InjectTi } from './horde'
 import { Embedding } from './civitai'
 
 declare global {
@@ -26,7 +26,7 @@ export interface AiHordeEmbedding extends Embedding {
 export interface AppSettingsParams {
   allowNsfwImages: boolean
   apiKey: string
-  blockedWorkers: WorkerDetails[]
+  blockedWorkers: HordeWorkerDetails[]
   shareImagesExternally: boolean
   slow_workers: boolean
   useReplacementFilter: boolean
