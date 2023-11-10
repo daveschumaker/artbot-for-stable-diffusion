@@ -12,6 +12,7 @@ import 'tailwindcss/tailwind.css'
 import 'app/_styles/globals.css'
 import FooterV2 from './_components/FooterV2'
 import { HeaderNav } from './_componentsV2/HeaderNav'
+import ModalProvider from './_modules/ModalProvider'
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseHost),
@@ -70,14 +71,16 @@ export default async function RootLayout({
         style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}
       >
         <div style={{ flex: 1, minHeight: '100vh' }}>
-          <AppInit />
-          <AppAnalytics />
-          <PollController />
-          {/* <HeaderNav /> */}
-          <HeaderNav />
-          <ToastContainer />
-          <SlidingMenu />
-          {children}
+          <ModalProvider>
+            <AppInit />
+            <AppAnalytics />
+            <PollController />
+            {/* <HeaderNav /> */}
+            <HeaderNav />
+            <ToastContainer />
+            <SlidingMenu />
+            {children}
+          </ModalProvider>
         </div>
         <FooterV2 />
       </body>

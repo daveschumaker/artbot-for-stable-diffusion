@@ -187,6 +187,15 @@ export interface TextualInversion {
   strength?: number
 }
 
-export interface WorkerDetails {
+export interface HordeWorkerDetails {
   id: string
+  loading?: boolean
+  name: string
+  team: {
+    id: string
+  }
+  maintenance_mode: boolean
+  online: boolean
+  requests_fulfilled: number
+  performance: string
 }

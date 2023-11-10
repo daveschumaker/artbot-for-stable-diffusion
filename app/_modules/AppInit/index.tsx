@@ -1,6 +1,8 @@
 'use client'
 
+import NiceModal from '@ebay/nice-modal-react'
 import { useSearchParams } from 'next/navigation'
+
 import { initPendingJobService } from 'app/_controllers/pendingJobsController'
 import { useEffectOnce } from 'app/_hooks/useEffectOnce'
 import { initAppSettings } from 'app/_utils/initArtBotAppSettings'
@@ -11,6 +13,9 @@ import AppSettings from 'app/_data-models/AppSettings'
 import { setLockedToWorker, setPauseJobQueue } from 'app/_store/appStore'
 import { handleApiKeyLogin } from 'app/_utils/hordeUtils'
 import { showSuccessToast } from 'app/_utils/notificationUtils'
+import Modal from 'app/_componentsV2/Modal'
+
+NiceModal.register('tooltip-modal', Modal)
 
 export default function AppInit() {
   const searchParams = useSearchParams()

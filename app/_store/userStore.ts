@@ -35,7 +35,7 @@ interface UserStore {
   loggedIn: boolean | null
   sharedKey: boolean
   trusted: boolean
-  worker_ids: Array<string> | null
+  worker_ids: Array<string>
   workers: IWorkers
   sharedkey_ids: Array<string>
 }
@@ -55,7 +55,7 @@ interface UserInfo {
   records: any
   sharedKey: boolean
   trusted: boolean
-  worker_ids: Array<string> | null
+  worker_ids: Array<string>
   sharedkey_ids: Array<string>
 }
 
@@ -72,7 +72,7 @@ export const userInfoStore = makeStore<UserStore>({
   },
   jwt: null,
   role: 'user',
-  worker_ids: null,
+  worker_ids: [],
   trusted: false,
   loggedIn: false,
   sharedKey: false,
@@ -104,7 +104,7 @@ export const unsetUserInfo = () => {
   userInfoStore.set(() => ({
     username: '',
     kudos: 0,
-    worker_ids: null,
+    worker_ids: [],
     trusted: false,
     loggedIn: false,
     sharedKey: false,
@@ -138,7 +138,7 @@ export const setUserInfo = ({
   kudos_details,
   records,
   trusted,
-  worker_ids = null,
+  worker_ids = [],
   sharedKey = false,
   sharedkey_ids = []
 }: UserInfo) => {
