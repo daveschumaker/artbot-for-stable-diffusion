@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useId, useRef } from 'react'
 interface ModalProps {
   content: React.ReactNode | string
   title?: React.ReactNode | string
-  handleClose: () => void
+  handleClose?: () => void
   buttons?: React.ReactNode | null
 }
 

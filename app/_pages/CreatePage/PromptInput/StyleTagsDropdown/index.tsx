@@ -39,7 +39,7 @@ export default function StyleTagsDropdown({
   }, [input.prompt])
 
   return (
-    <div className={styles['style-tags-wrapper']}>
+    <div>
       {usedTags.length > 0 && (
         <div className="mb-2 px-2">
           <h2 className="font-[700] mb-2">Used tags</h2>

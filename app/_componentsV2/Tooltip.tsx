@@ -24,7 +24,7 @@ export function Tooltip({ className, title, text }: TooltipProps) {
       buttons: (
         <div className="flex flex-row justify-end gap-4">
           <button
-            className="btn"
+            className="btn btn-outline"
             onClick={() => {
               handleHideTooltipModal()
             }}
@@ -39,13 +39,13 @@ export function Tooltip({ className, title, text }: TooltipProps) {
   return (
     <>
       <div
-        className={clsx('cursor-pointer', className)}
+        className={clsx('text-secondary cursor-pointer', className)}
         data-tip={text}
         onClick={() => {
           handleShowTooltipModal()
         }}
       >
-        <IconInfoCircle size={22} />
+        <IconInfoCircle size={20} stroke={1.5} />
       </div>
       {/* {modalOpen && (
         <Modal
