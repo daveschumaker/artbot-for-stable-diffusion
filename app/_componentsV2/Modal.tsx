@@ -1,17 +1,20 @@
 import NiceModal, { useModal } from '@ebay/nice-modal-react'
+import clsx from 'clsx'
 import React, { useCallback, useEffect, useId, useRef } from 'react'
 
 interface ModalProps {
-  content: React.ReactNode | string
-  title?: React.ReactNode | string
-  handleClose?: () => void
   buttons?: React.ReactNode | null
+  content: React.ReactNode | string
+  handleClose?: () => void
+  maxWidth?: string
+  title?: React.ReactNode | string
 }
 
 function Modal({
   buttons = null,
   content,
   handleClose = () => {},
+  maxWidth,
   title
 }: ModalProps) {
   const modal = useModal()
@@ -50,7 +53,7 @@ function Modal({
       ref={modalRef}
       tabIndex={-1}
     >
-      <div className="modal-box">
+      <div className={clsx('modal-box', maxWidth ? maxWidth : 'max-w-5xl')}>
         <form method="dialog">
           <button
             className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"

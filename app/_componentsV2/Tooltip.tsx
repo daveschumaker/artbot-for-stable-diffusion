@@ -18,9 +18,6 @@ export function Tooltip({ className, title, text }: TooltipProps) {
 
   const handleShowTooltipModal = () => {
     NiceModal.show('tooltip-modal', {
-      handleClose: handleHideTooltipModal,
-      title,
-      content: text,
       buttons: (
         <div className="flex flex-row justify-end gap-4">
           <button
@@ -32,7 +29,11 @@ export function Tooltip({ className, title, text }: TooltipProps) {
             OK
           </button>
         </div>
-      )
+      ),
+      content: text,
+      handleClose: handleHideTooltipModal,
+      maxWidth: 'max-w-2xl',
+      title
     })
   }
 
