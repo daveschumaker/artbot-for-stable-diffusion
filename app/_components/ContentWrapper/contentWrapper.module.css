@@ -1,16 +1,16 @@
 .ContentWrapper {
-  margin-top: var(--headerNav-height);
-  margin-bottom: 68px;
+  /* margin-top: var(--headerNav-height); */
+  /* margin-bottom: 68px; */
   padding: 8px 16px;
   position: relative;
 }
 
-@media (min-width: 640px) {
+/* @media (min-width: 640px) {
   .ContentWrapper {
     margin-bottom: 0;
     min-height: calc(100vh - 128px);
   }
-}
+} */
 
 /*
  * Fun fact: If you  want to adjust this, you'll need to also adjust
@@ -18,9 +18,9 @@
  * ./app/_modules/FixedMenu/fixedMenu.module.css
  * ./app/_modules/HeaderNav/MenuButton/menuButton.module.css
  */
-@media (min-width: 800px) {
+/* @media (min-width: 800px) {
   .ContentWrapper {
     margin-left: var(--fixedSideBar-width);
     padding: 8px 16px;
   }
-}
+} */

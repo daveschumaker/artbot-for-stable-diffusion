@@ -34,22 +34,24 @@ export default function UserKudos() {
       <div className="flex flex-col gap-2">
         <div className="stats">
           <div className="stat">
-            <div className="stat-figure text-secondary">
-              <IconCoins />
-            </div>
             <div className="stat-title">Total Available Kudos</div>
-            <div className="stat-value">{kudos.toLocaleString()}</div>
+            <div className="stat-value flex flex-row gap-2 items-center">
+              {kudos.toLocaleString()}
+              <div className=" text-secondary">
+                <IconCoins />
+              </div>
+            </div>
           </div>
         </div>
         {records.request && (
           <div className="stats">
             <div className="stat">
-              <div className="stat-figure text-secondary">
-                <IconStack />
-              </div>
               <div className="stat-title">Images requested</div>
-              <div className="stat-value">
+              <div className="stat-value flex flex-row gap-2 items-center">
                 {records.request.image.toLocaleString()}
+                <div className=" text-secondary">
+                  <IconStack />
+                </div>
               </div>
             </div>
           </div>

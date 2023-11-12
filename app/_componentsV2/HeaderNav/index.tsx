@@ -50,7 +50,7 @@ export function HeaderNav() {
   }
 
   return (
-    <div className="navbar bg-base-100 sticky top-0 z-10">
+    <div className="navbar bg-base-100 sticky top-0 z-10 py-0 min-h-[48px]">
       <div className="flex-none">
         <button className="btn btn-sm btn-square btn-ghost">
           <IconMenu />

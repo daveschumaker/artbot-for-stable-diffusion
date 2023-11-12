@@ -1,7 +1,6 @@
 import { ReactNode } from 'react'
 // import HeaderNav from './_modules/HeaderNav'
 import AppInit from './_modules/AppInit'
-import SlidingMenu from './_modules/SlidingMenu'
 import { Metadata } from 'next'
 import PollController from 'app/_modules/PollController'
 import { baseHost, basePath } from 'BASE_PATH'
@@ -78,7 +77,6 @@ export default async function RootLayout({
             {/* <HeaderNav /> */}
             <HeaderNav />
             <ToastContainer />
-            <SlidingMenu />
             {children}
           </ModalProvider>
         </div>
