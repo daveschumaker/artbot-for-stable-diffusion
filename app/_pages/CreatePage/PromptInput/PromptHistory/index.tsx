@@ -27,11 +27,11 @@ const TITLE_INPUT_HEIGHT = 120
  */
 
 export default function PromptHistory({
-  handleClose,
+  handleClose = () => {},
   modalId,
   setInput
 }: {
-  handleClose: () => void
+  handleClose?: () => void
   modalId?: string
   setInput: SetInput
 }) {
@@ -144,7 +144,7 @@ export default function PromptHistory({
             </FlexRow>
           )}
         {filteredPrompts.length > 0 && (
-          <div className={styles.PromptsList} ref={containerRef}>
+          <div ref={containerRef}>
             <ul style={{ paddingLeft: '16px' }}>
               {filteredPrompts.map((prompt: PromptHistoryDetails) => {
                 return (

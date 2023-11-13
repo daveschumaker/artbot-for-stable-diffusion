@@ -6,8 +6,8 @@ module.exports = {
     './pages/**/*.{js,ts,jsx,tsx}'
   ],
   daisyui: {
-    themes: ['emerald', 'synthwave'],
-    darkTheme: 'synthwave'
+    themes: ['emerald', 'dracula'],
+    darkTheme: 'dracula'
   },
   theme: {
     extend: {

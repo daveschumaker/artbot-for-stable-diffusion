@@ -7,7 +7,7 @@ export default async function Page() {
     <InputProvider>
       <div className="w-full flex flex-row gap-2">
         <div className="w-full">
-          <PageTitle>Create</PageTitle>
+          <PageTitle>Create new image</PageTitle>
           <PromptInputCard />
         </div>
         <div></div>

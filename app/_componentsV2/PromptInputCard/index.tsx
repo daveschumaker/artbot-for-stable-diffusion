@@ -20,6 +20,9 @@ import Modal from '../Modal'
 import StyleTagsDropdown from 'app/_pages/CreatePage/PromptInput/StyleTagsDropdown'
 import { useInput } from 'app/_modules/InputProvider/context'
 import { useState } from 'react'
+import StylePresetsDropdown from 'app/_pages/CreatePage/PromptInput/StylePresetsDropdown'
+import PromptHistory from 'app/_pages/CreatePage/PromptInput/PromptHistory'
+import StylePresets from '../StylePresets'
 
 export default function PromptInputCard() {
   const { input, setInput } = useInput()
@@ -42,10 +45,19 @@ export default function PromptInputCard() {
                     <div>
                       A description of the image that you would like. e.g.,{' '}
                       <InlineCode>
-                        A cool cat shreding on an electric guitar.
+                        A cool cat shredding on an electric guitar.
                       </InlineCode>{' '}
+                    </div>
+                    <div>
                       Some image models work better with more detailed
-                      descriptions.
+                      descriptions that include stylistic cues featuring artist
+                      names, styles, communities. For example:{' '}
+                      <InlineCode>
+                        A cool cat shredding on an electric guitar, realistic,
+                        photograph, detailed, HD, well lit, high quality,
+                        artstation, 8k, HD render, depth of field, by Syd Mead,
+                        Mariusz Lewandowski
+                      </InlineCode>
                     </div>
                     <div>
                       You can emphasize particular words using image weights by
@@ -73,7 +85,7 @@ export default function PromptInputCard() {
           }
         />
         <textarea
-          className="textarea textarea-primary text-black dark:text-white"
+          className="textarea textarea-primary text-black dark:text-white text-base"
           placeholder="Describe your desired image"
           onChange={(e: any) => {
             if (e.target.value) {
@@ -87,10 +99,17 @@ export default function PromptInputCard() {
         <div className="flex flex-row w-full justify-between">
           <div className="flex flex-row w-full gap-1">
             <button className="btn btn-sm btn-square btn-primary">
-              <IconCodePlus stroke={1.5} />
+              <IconCodePlus />
             </button>
-            <button className="btn btn-sm btn-primary gap-1 normal-case">
-              <IconBook stroke={1.5} />
+            <button
+              className="btn btn-sm btn-primary gap-1 normal-case"
+              onClick={() => {
+                modal.show({
+                  content: <PromptHistory setInput={setInput} />
+                })
+              }}
+            >
+              <IconBook />
               <span className="hidden sm:block">Prompts</span>
             </button>
             <button
@@ -103,12 +122,20 @@ export default function PromptInputCard() {
                 })
               }}
             >
-              <IconTags stroke={1.5} />{' '}
-              <span className="hidden sm:block">Tags</span>
+              <IconTags /> <span className="hidden sm:block">Tags</span>
             </button>
-            <button className="btn btn-sm btn-primary gap-1 normal-case">
-              <IconCamera stroke={1.5} />{' '}
-              <span className="hidden sm:block">Presets</span>
+            <button
+              className="btn btn-sm btn-primary gap-1 normal-case"
+              onClick={() => {
+                modal.show({
+                  content: (
+                    <StylePresetsDropdown input={input} setInput={setInput} />
+                  ),
+                  title: 'Style presets'
+                })
+              }}
+            >
+              <IconCamera /> <span className="hidden sm:block">Presets</span>
             </button>
           </div>
           <button
@@ -127,11 +154,11 @@ export default function PromptInputCard() {
           >
             {undoPrompt ? (
               <>
-                <IconArrowBackUp stroke={1.5} /> <span>Undo</span>{' '}
+                <IconArrowBackUp /> <span>Undo</span>{' '}
               </>
             ) : (
               <>
-                <IconArrowBarLeft stroke={1.5} /> <span>Clear</span>
+                <IconArrowBarLeft /> <span>Clear</span>
               </>
             )}
           </button>
@@ -147,7 +174,7 @@ export default function PromptInputCard() {
           </summary>
           <div className="mt-2 collapse-content p-0 w-full">
             <textarea
-              className="textarea textarea-primary text-black dark:text-white w-full"
+              className="textarea textarea-primary text-black dark:text-white w-full text-base"
               placeholder="Words to de-emphasize from the image"
               onChange={(e: any) => {
                 if (e.target.value) {
@@ -161,10 +188,10 @@ export default function PromptInputCard() {
             <div className="flex flex-row w-full justify-between">
               <div className="flex flex-row w-full gap-1">
                 <button className="btn btn-sm btn-primary gap-1 normal-case">
-                  <IconDeviceFloppy stroke={1.5} /> Save
+                  <IconDeviceFloppy /> Save
                 </button>
                 <button className="btn btn-sm btn-primary gap-1 normal-case">
-                  <IconFolder stroke={1.5} /> Load
+                  <IconFolder /> Load
                 </button>
               </div>
               <button
@@ -183,11 +210,11 @@ export default function PromptInputCard() {
               >
                 {undoNegative ? (
                   <>
-                    <IconArrowBackUp stroke={1.5} /> <span>Undo</span>{' '}
+                    <IconArrowBackUp /> <span>Undo</span>{' '}
                   </>
                 ) : (
                   <>
-                    <IconArrowBarLeft stroke={1.5} /> <span>Clear</span>
+                    <IconArrowBarLeft /> <span>Clear</span>
                   </>
                 )}
               </button>

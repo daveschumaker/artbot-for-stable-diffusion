@@ -70,7 +70,8 @@ export default function UserKudos() {
           className="btn btn-sm btn-ghost normal-case"
           onClick={() => {
             userKudosModal.show({
-              content: <UserDetails />
+              content: <UserDetails />,
+              maxWidth: 'max-w-[480px]'
               // title: 'AI Horde Performance'
             })
           }}

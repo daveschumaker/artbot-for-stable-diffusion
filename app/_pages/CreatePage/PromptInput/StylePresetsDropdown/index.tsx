@@ -82,7 +82,7 @@ export default function StylePresetsDropdown({
       }
 
       arr.push(
-        <div className={styles['preset-wrapper']} key={`style_${key}`}>
+        <div key={`style_${key}`}>
           <div>
             <strong>{key}</strong>
             {` / `}
@@ -121,9 +121,8 @@ export default function StylePresetsDropdown({
   }
 
   return (
-    <div>
-      {' '}
-      <div className={styles['filter-preset']}>
+    <>
+      <div className="sticky flex flex-row w-full">
         <Input
           type="text"
           name="filterPrompt"
@@ -138,7 +137,7 @@ export default function StylePresetsDropdown({
           <IconArrowBarLeft />
         </Button>
       </div>
-      <div className={styles['style-presets-wrapper']}>{renderStyleList()}</div>
-    </div>
+      <div>{renderStyleList()}</div>
+    </>
   )
 }

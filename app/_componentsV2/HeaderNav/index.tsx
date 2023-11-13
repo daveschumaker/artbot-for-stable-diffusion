@@ -74,6 +74,7 @@ export function HeaderNav() {
       <div className="flex-none hidden sm:flex">
         <div
           className="dropdown dropdown-open"
+          onClick={closeDropdown}
           onMouseEnter={() => openDropdown('createDropdown')}
           onMouseLeave={closeDropdown}
         >
@@ -125,6 +126,7 @@ export function HeaderNav() {
         </button>
         <div
           className="dropdown dropdown-open dropdown-end"
+          onClick={closeDropdown}
           onMouseEnter={() => openDropdown('infoDropdown')}
           onMouseLeave={closeDropdown}
         >
@@ -177,6 +179,7 @@ export function HeaderNav() {
         </div>
         <div
           className="dropdown dropdown-open dropdown-end"
+          onClick={closeDropdown}
           onMouseEnter={() => openDropdown('settingsDropdown')}
           onMouseLeave={closeDropdown}
         >
