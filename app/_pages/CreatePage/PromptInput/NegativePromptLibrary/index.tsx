@@ -1,4 +1,3 @@
-import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { deletePromptFromHistory, getPrompts } from 'app/_db/prompts'
 import { PromptHistoryDetails, PromptTypes, SetInput } from '_types/artbot'
 import { useModal } from '@ebay/nice-modal-react'
@@ -51,9 +50,6 @@ export default function NegativePromptLibrary({
 
   return (
     <div>
-      <SubSectionTitle style={{ paddingBottom: '8px' }}>
-        Negative Prompt Library
-      </SubSectionTitle>
       <div>
         {prompts.length === 0 && (
           <div className="row">
@@ -61,7 +57,7 @@ export default function NegativePromptLibrary({
           </div>
         )}
         {prompts.length > 0 && (
-          <div className={styles.PromptsList} ref={containerRef}>
+          <div ref={containerRef}>
             <ul style={{ paddingLeft: '16px' }}>
               {prompts.map((prompt: PromptHistoryDetails) => {
                 return (

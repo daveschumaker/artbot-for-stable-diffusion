@@ -1,4 +1,3 @@
-import Input from 'app/_components/Input'
 import { stylePresets } from './presets'
 import styles from './component.module.css'
 import { IconArrowBarLeft, IconPlayerPlayFilled } from '@tabler/icons-react'
@@ -121,23 +120,32 @@ export default function StylePresetsDropdown({
   return <div>{renderStyleList()}</div>
 }
 
-export const InputPresetFilter = ({ filter, setFilter }) => {
+export const InputPresetFilter = ({
+  filter,
+  setFilter
+}: {
+  filter: string
+  setFilter: (value: string) => void
+}) => {
   return (
-    <div className="flex flex-row">
-      <Input
-        type="text"
-        name="filterPrompt"
-        placeholder="Search and filter all presets"
-        onChange={(e: any) => {
-          console.log(`oi?`)
-          setFilter(e.target.value)
-        }}
-        value={filter}
-        width="100%"
-      />
-      <Button onClick={() => setFilter('')} theme="secondary">
-        <IconArrowBarLeft />
-      </Button>
+    <div className="flex flex-row items-center">
+      <div className="join w-full">
+        <input
+          type="text"
+          className="input input-bordered input-primary w-full join-item"
+          onChange={(e: any) => {
+            setFilter(e.target.value)
+          }}
+          placeholder="Search and filter all presets"
+          value={filter}
+        />
+        <button
+          className="btn btn-square btn-primary join-item"
+          onClick={() => setFilter('')}
+        >
+          <IconArrowBarLeft />
+        </button>
+      </div>
     </div>
   )
 }

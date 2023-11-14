@@ -5,6 +5,7 @@ import {
   IconArrowBarLeft,
   IconBook,
   IconCamera,
+  IconCircleCheckFilled,
   IconCodePlus,
   IconDeviceFloppy,
   IconFolder,
@@ -24,6 +25,8 @@ import StylePresetsDropdown, {
   InputPresetFilter
 } from 'app/_pages/CreatePage/PromptInput/StylePresetsDropdown'
 import PromptHistory from 'app/_pages/CreatePage/PromptInput/PromptHistory'
+import { saveNegativePrompt } from 'app/_db/prompts'
+import NegativePromptLibrary from 'app/_pages/CreatePage/PromptInput/NegativePromptLibrary'
 
 export default function PromptInputCard() {
   const { input, setInput } = useInput()
@@ -37,6 +40,14 @@ export default function PromptInputCard() {
     <>
       <Modal id="tags-modal" title="Stylistic keywords">
         <StyleTagsDropdown input={input} setInput={setInput} />
+      </Modal>
+      <Modal id="negative-lib-modal" title="Negative prompt library">
+        <NegativePromptLibrary
+          handleClose={() => {
+            NiceModal.remove('negative-lib-modal')
+          }}
+          setInput={setInput}
+        />
       </Modal>
       <Modal
         id="presets-modal"
@@ -178,7 +189,12 @@ export default function PromptInputCard() {
           </div>
           <details className="collapse bg-base-200 collapse-arrow">
             <summary className="collapse-title text-xl font-medium p-0 min-h-0">
-              <div className="flex flex-row gap-1 items-center text-left text-sm font-[600] w-full">
+              <div className="flex flex-row gap-1 items-center text-left text-sm font-[600] w-full select-none">
+                {input.negative && (
+                  <div className="text-secondary">
+                    <IconCircleCheckFilled size={20} />
+                  </div>
+                )}
                 <IconPlaylistX /> Negative Prompt{' '}
                 <span style={{ fontSize: '10px', fontWeight: 'normal' }}>
                   (optional)
@@ -200,10 +216,23 @@ export default function PromptInputCard() {
               ></textarea>
               <div className="flex flex-row w-full justify-between">
                 <div className="flex flex-row w-full gap-1">
-                  <button className="btn btn-sm btn-primary gap-1 normal-case">
+                  <button
+                    className="btn btn-sm btn-primary gap-1 normal-case"
+                    onClick={() => {
+                      if (!input.negative || input.negative.trim().length === 0)
+                        return
+
+                      saveNegativePrompt(input.negative)
+                    }}
+                  >
                     <IconDeviceFloppy /> Save
                   </button>
-                  <button className="btn btn-sm btn-primary gap-1 normal-case">
+                  <button
+                    className="btn btn-sm btn-primary gap-1 normal-case"
+                    onClick={() => {
+                      NiceModal.show('negative-lib-modal')
+                    }}
+                  >
                     <IconFolder /> Load
                   </button>
                 </div>

@@ -48,27 +48,6 @@ export function Tooltip({ className, title, text }: TooltipProps) {
       >
         <IconInfoCircle size={20} stroke={1.5} />
       </div>
-      {/* {modalOpen && (
-        <Modal
-          handleClose={() => {
-            setModalOpen(false)
-          }}
-          title={title}
-          content={text}
-          buttons={
-            <div className="flex flex-row justify-end gap-4">
-              <button
-                className="btn"
-                onClick={() => {
-                  setModalOpen(false)
-                }}
-              >
-                OK
-              </button>
-            </div>
-          }
-        />
-      )} */}
     </>
   )
 }
