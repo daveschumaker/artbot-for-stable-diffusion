@@ -4,7 +4,9 @@ import React, { useCallback, useEffect, useId, useRef } from 'react'
 
 interface ModalProps {
   buttons?: React.ReactNode | null
-  content: React.ReactNode | string
+  children: React.ReactNode
+  content?: React.ReactNode | string
+  fixedContent?: React.ReactNode
   handleClose?: () => void
   maxWidth?: string
   title?: React.ReactNode | string
@@ -12,7 +14,9 @@ interface ModalProps {
 
 function Modal({
   buttons = null,
+  children,
   content,
+  fixedContent,
   handleClose = () => {},
   maxWidth,
   title
@@ -45,6 +49,18 @@ function Modal({
   useEffect(() => {
     modalRef.current?.focus()
   }, [])
+
+  let fixedHeightOffset = 24
+
+  if (title) {
+    fixedHeightOffset += 38
+  }
+
+  let contentOffset = fixedHeightOffset
+
+  if (fixedContent) {
+    contentOffset += 44
+  }
 
   return (
     <dialog
@@ -81,14 +97,28 @@ function Modal({
               {title}
             </h3>
           )}
+          {fixedContent && (
+            <div
+              className="bg-inherit"
+              style={{
+                left: 0,
+                right: 0,
+                padding: '0 24px 8px 24px',
+                position: 'absolute',
+                top: `${fixedHeightOffset}px`
+              }}
+            >
+              {fixedContent}
+            </div>
+          )}
         </div>
         <div
-          className={clsx(
-            'p-[24px] font-normal relative',
-            title ? 'pt-[66px]' : 'pt-[24px]'
-          )}
+          className={clsx('font-normal relative')}
+          style={{
+            padding: `${contentOffset + 12}px 24px 24px 24px`
+          }}
         >
-          {content}
+          {content || children}
         </div>
         {buttons && <div className="p-[24px]">{buttons}</div>}
       </div>

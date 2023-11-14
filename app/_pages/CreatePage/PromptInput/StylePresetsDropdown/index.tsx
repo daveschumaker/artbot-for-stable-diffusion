@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import Input from 'app/_components/Input'
 import { stylePresets } from './presets'
 import styles from './component.module.css'
@@ -9,12 +8,11 @@ import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
 import { HordePreset } from '_types/horde'
 
 export default function StylePresetsDropdown({
+  filter,
+  handleClose,
   input,
-  setInput,
-  handleClose
+  setInput
 }: any) {
-  const [filter, setFilter] = useState('')
-
   const handleUsePreset = (key: string) => {
     const presetDetails: HordePreset = stylePresets[key]
     let [positive, negative = ''] = presetDetails.prompt.split('###')
@@ -58,7 +56,7 @@ export default function StylePresetsDropdown({
   const renderStyleList = () => {
     const arr = []
 
-    const p = <strong>[user prompt]</strong>
+    const p = '[user prompt]'
     const np = input.negative ? input.negative : ''
 
     for (const [key, presetDetails] of Object.entries(stylePresets)) {
@@ -120,24 +118,26 @@ export default function StylePresetsDropdown({
     return arr
   }
 
+  return <div>{renderStyleList()}</div>
+}
+
+export const InputPresetFilter = ({ filter, setFilter }) => {
   return (
-    <>
-      <div className="sticky flex flex-row w-full">
-        <Input
-          type="text"
-          name="filterPrompt"
-          placeholder="Search and filter all presets"
-          onChange={(e: any) => {
-            setFilter(e.target.value)
-          }}
-          value={filter}
-          width="100%"
-        />
-        <Button onClick={() => setFilter('')} theme="secondary">
-          <IconArrowBarLeft />
-        </Button>
-      </div>
-      <div>{renderStyleList()}</div>
-    </>
+    <div className="flex flex-row">
+      <Input
+        type="text"
+        name="filterPrompt"
+        placeholder="Search and filter all presets"
+        onChange={(e: any) => {
+          console.log(`oi?`)
+          setFilter(e.target.value)
+        }}
+        value={filter}
+        width="100%"
+      />
+      <Button onClick={() => setFilter('')} theme="secondary">
+        <IconArrowBarLeft />
+      </Button>
+    </div>
   )
 }
