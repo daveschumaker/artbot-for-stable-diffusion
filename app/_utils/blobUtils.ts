@@ -50,18 +50,41 @@ function loadImage(src: string) {
 }
 
 async function writeMetadata(imageBlob: Blob, userComment: string): Blob {
-  let imageUint8Arr = await writeXMP(
-    imageBlob,
-    `<x:xmpmeta xmlns:x="adobe:ns:meta/">${userComment}</x:xmpmeta>`
-  )
-  if (imageBlob.type === 'image/png') {
-    imageUint8Arr = await writePNGtext(imageUint8Arr, 'parameters', userComment)
-  }
-  if (imageBlob.type === 'image/jpeg') {
-    imageUint8Arr = await writeJPGMarker(imageUint8Arr, userComment)
-  }
+  // Write XMP and Additional markers
+  if (imageBlob.type === 'image/png' || imageBlob.type === 'image/jpeg') {
+    const xmp = `<x:xmpmeta xmlns:x="adobe:ns:meta/"><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:exif="http://ns.adobe.com/exif/1.0/"><dc:title><rdf:Alt><rdf:li xml:lang="x-default">${userComment}</rdf:li></rdf:Alt></dc:title><exif:UserComment><![CDATA[${userComment}]]></exif:UserComment></rdf:Description></rdf:RDF></x:xmpmeta>
+	`
+    let imageUint8Arr = await writeXMP(imageBlob, xmp)
+    if (imageBlob.type === 'image/png') {
+      imageUint8Arr = await writePNGtext(
+        imageUint8Arr,
+        'parameters',
+        userComment
+      )
+    }
+    if (imageBlob.type === 'image/jpeg') {
+      imageUint8Arr = await writeJPGMarker(imageUint8Arr, userComment)
+    }
 
-  return new Blob([imageUint8Arr])
+    return new Blob([imageUint8Arr], { type: imageBlob.type })
+  }
+  return imageBlob
+}
+
+/**
+ *
+ * @param elem {any}
+ * @param types {any[]}
+ */
+export function typeCheck(elem: any, types: any[]) {
+  for (const _type of types) {
+    if (typeof elem === _type) {
+      return
+    } else if (elem instanceof _type) {
+      return
+    }
+  }
+  throw new TypeError(`This type is not supported :(: ${typeof elem}`)
 }
 
 async function convertBlob(
@@ -69,7 +92,7 @@ async function convertBlob(
   type: string,
   callback: (arg0: Blob) => void,
   exif: any = {}
-) {
+): Blob {
   const image = await loadImage(URL.createObjectURL(blob))
   const canvas = <HTMLCanvasElement>createTempCanvas()
   const ctx = canvas.getContext('2d')
@@ -77,9 +100,10 @@ async function convertBlob(
   canvas.width = image.width
   canvas.height = image.height
   ctx.drawImage(image, 0, 0)
-  let imageBlob = dataURItoBlob(canvas.toDataURL(type, 1), exif)
+  // Add the exif data
+  const imageBlob = dataURItoBlob(canvas.toDataURL(type, 1), exif)
   const userComment = exif.Exif[37510].replace('ASCII\0\0\0', '')
-  const result = writeMetadata(imageBlob, userComment)
+  const result = await writeMetadata(imageBlob, userComment)
 
   if (callback) {
     callback(result)
@@ -95,18 +119,17 @@ function createTempCanvas() {
 }
 
 function dataURItoBlob(dataURI: string, exif: any) {
-  var byteString = atob(dataURI.split(',')[1])
-  var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
-  byteString = byteStringWithExifData(dataURI, byteString, exif) // insert exif data
+  const imageInBytes = atob(dataURI.split(',')[1])
+  const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+  const imageOutBytes = byteStringWithExifData(imageInBytes, exif) // insert exif data
 
-  var ab = new ArrayBuffer(byteString.length)
+  var ab = new ArrayBuffer(imageOutBytes.length)
   var ia = new Uint8Array(ab)
-  for (var i = 0; i < byteString.length; i++) {
-    ia[i] = byteString.charCodeAt(i)
+  for (var i = 0; i < imageOutBytes.length; i++) {
+    ia[i] = imageOutBytes.charCodeAt(i)
   }
 
-  var blob = new Blob([ab], { type: mimeString })
-  return blob
+  return new Blob([ia], { type: mimeString })
 }
 
 function getExifFromDataURI(dataURI: string): any {
@@ -122,7 +145,7 @@ async function getExifFromBlob(blob: Blob) {
   return getExifFromDataURI(dataURI)
 }
 
-function mergeExifData(existing_exif: any, userComment: string): any {
+function mergeExifData(existing_exif: object, userComment: string): object {
   // 0th IFD
   const zeroth = {
     [exifLib.TagNumbers.ImageIFD.Software]:
@@ -145,22 +168,16 @@ function mergeExifData(existing_exif: any, userComment: string): any {
   return exifObj
 }
 
-function byteStringWithExifData(
-  dataURI: string,
-  byteString: string,
-  exif: any
-): string {
+function byteStringWithExifData(imageBytes: string, exif: any): string {
   const exifbytes = exifLib.dump(exif)
-  byteString = exifLib.insert(exifbytes, byteString)
-  return byteString
+  const result = exifLib.insert(exifbytes, imageBytes)
+  return result
 }
 
 async function addOrUpdateExifData(blob: Blob, userComment: string): Blob {
   const dataURI = await blobToBase64(blob)
-  let existing_exif = getExifFromDataURI(dataURI)
-  let new_efix = mergeExifData(existing_exif, userComment)
-  const newBlob = dataURItoBlob(dataURI, new_efix)
-  return newBlob
+  const new_exif = mergeExifData(getExifFromDataURI(dataURI), userComment)
+  return dataURItoBlob(dataURI, new_exif)
 }
 
 export function blobToBase64(blob: Blob): Promise<string> {
