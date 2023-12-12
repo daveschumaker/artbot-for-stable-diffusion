@@ -228,7 +228,7 @@ export function HeaderNav() {
             })
           }}
         >
-          <IconDeviceDesktopAnalytics />
+          <IconDeviceDesktopAnalytics stroke={1} />
         </button>
       </div>
       {/* {showHordeInfo && (

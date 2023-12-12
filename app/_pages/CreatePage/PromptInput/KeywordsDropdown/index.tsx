@@ -106,7 +106,7 @@ export default function KeywordsDropdown({
   }, [input.prompt, loraKeywords, modelKeywords, validLoras, validModels])
 
   return (
-    <div className={styles['style-tags-wrapper']}>
+    <div>
       <div id="content-height-wrapper" ref={ref}>
         {usedKeywords.length > 0 && (
           <div className="mb-2 px-2">

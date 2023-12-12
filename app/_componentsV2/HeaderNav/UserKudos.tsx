@@ -37,7 +37,7 @@ export default function UserKudos() {
             <div className="stat-title">Total Available Kudos</div>
             <div className="stat-value flex flex-row gap-2 items-center">
               {kudos.toLocaleString()}
-              <div className=" text-secondary">
+              <div className="text-secondary">
                 <IconCoins />
               </div>
             </div>

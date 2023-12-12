@@ -20,25 +20,37 @@ import NiceModal, { useModal } from '@ebay/nice-modal-react'
 import Modal from '../Modal'
 import StyleTagsDropdown from 'app/_pages/CreatePage/PromptInput/StyleTagsDropdown'
 import { useInput } from 'app/_modules/InputProvider/context'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import StylePresetsDropdown, {
   InputPresetFilter
 } from 'app/_pages/CreatePage/PromptInput/StylePresetsDropdown'
 import PromptHistory from 'app/_pages/CreatePage/PromptInput/PromptHistory'
 import { saveNegativePrompt } from 'app/_db/prompts'
 import NegativePromptLibrary from 'app/_pages/CreatePage/PromptInput/NegativePromptLibrary'
+import KeywordsDropdown from 'app/_pages/CreatePage/PromptInput/KeywordsDropdown'
+import { hasKeywords } from 'app/_pages/CreatePage/PromptInput/KeywordsDropdown/keywordsController'
+import AppSettings from 'app/_data-models/AppSettings'
 
 export default function PromptInputCard() {
   const { input, setInput } = useInput()
   const modal = useModal(Modal)
 
   const [filter, setFilter] = useState('')
+  const [negativePanelOpen, setNegativePanelOpen] = useState(false)
   const [undoPrompt, setUndoPrompt] = useState('')
   const [undoNegative, setUndoNegative] = useState('')
 
+  useEffect(() => {
+    const negOpen = AppSettings.get('negativePanelOpen') || false
+    setNegativePanelOpen(negOpen)
+  }, [])
+
   return (
     <>
-      <Modal id="tags-modal" title="Stylistic keywords">
+      <Modal id="keywords-modal" title="Model keywords">
+        <KeywordsDropdown input={input} setInput={setInput} />
+      </Modal>
+      <Modal id="tags-modal" title="Stylistic tags">
         <StyleTagsDropdown input={input} setInput={setInput} />
       </Modal>
       <Modal id="negative-lib-modal" title="Negative prompt library">
@@ -65,7 +77,7 @@ export default function PromptInputCard() {
           setInput={setInput}
         />
       </Modal>
-      <div className="card bg-base-200 text-primary-content shadow-xl dark:text-white w-full">
+      <div className="card bg-base-200 text-primary-content shadow-xl dark:text-white w-full mb-6">
         <div className="card-body p-2">
           <Label
             text={
@@ -131,8 +143,14 @@ export default function PromptInputCard() {
           ></textarea>
           <div className="flex flex-row w-full justify-between">
             <div className="flex flex-row w-full gap-1">
-              <button className="btn btn-sm btn-square btn-primary">
-                <IconCodePlus />
+              <button
+                disabled={!hasKeywords(input)}
+                className="btn btn-sm btn-square btn-primary"
+                onClick={() => {
+                  NiceModal.show('keywords-modal')
+                }}
+              >
+                <IconCodePlus stroke={1.5} />
               </button>
               <button
                 className="btn btn-sm btn-primary gap-1 normal-case"
@@ -142,7 +160,7 @@ export default function PromptInputCard() {
                   })
                 }}
               >
-                <IconBook />
+                <IconBook stroke={1.5} />
                 <span className="hidden sm:block">Prompts</span>
               </button>
               <button
@@ -151,7 +169,8 @@ export default function PromptInputCard() {
                   NiceModal.show('tags-modal')
                 }}
               >
-                <IconTags /> <span className="hidden sm:block">Tags</span>
+                <IconTags stroke={1.5} />{' '}
+                <span className="hidden sm:block">Tags</span>
               </button>
               <button
                 className="btn btn-sm btn-primary gap-1 normal-case"
@@ -159,7 +178,8 @@ export default function PromptInputCard() {
                   NiceModal.show('presets-modal')
                 }}
               >
-                <IconCamera /> <span className="hidden sm:block">Presets</span>
+                <IconCamera stroke={1.5} />{' '}
+                <span className="hidden sm:block">Presets</span>
               </button>
             </div>
             <button
@@ -187,7 +207,10 @@ export default function PromptInputCard() {
               )}
             </button>
           </div>
-          <details className="collapse bg-base-200 collapse-arrow">
+          <details
+            className="collapse bg-base-200 collapse-arrow"
+            open={negativePanelOpen}
+          >
             <summary className="collapse-title text-xl font-medium p-0 min-h-0">
               <div className="flex flex-row gap-1 items-center text-left text-sm font-[600] w-full select-none">
                 {input.negative && (
@@ -201,7 +224,7 @@ export default function PromptInputCard() {
                 </span>
               </div>
             </summary>
-            <div className="mt-2 collapse-content p-0 w-full">
+            <div className={'collapse-content mt-2 p-0 w-full'}>
               <textarea
                 className="textarea textarea-primary text-black dark:text-white w-full text-base"
                 placeholder="Words to de-emphasize from the image"
@@ -225,7 +248,7 @@ export default function PromptInputCard() {
                       saveNegativePrompt(input.negative)
                     }}
                   >
-                    <IconDeviceFloppy /> Save
+                    <IconDeviceFloppy stroke={1.5} /> Save
                   </button>
                   <button
                     className="btn btn-sm btn-primary gap-1 normal-case"
@@ -233,7 +256,7 @@ export default function PromptInputCard() {
                       NiceModal.show('negative-lib-modal')
                     }}
                   >
-                    <IconFolder /> Load
+                    <IconFolder stroke={1.5} /> Load
                   </button>
                 </div>
                 <button
