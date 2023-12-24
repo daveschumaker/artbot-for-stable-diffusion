@@ -1,4 +1,4 @@
-import * as DOMPurify from 'dompurify'
+import { sanitize } from 'isomorphic-dompurify'
 
 export const handleConvertLora = (rawLoraDetails: any) => {
   const { modelVersions = [] } = rawLoraDetails
@@ -7,7 +7,7 @@ export const handleConvertLora = (rawLoraDetails: any) => {
   return {
     name: rawLoraDetails.id,
     label: rawLoraDetails.name,
-    description: DOMPurify.sanitize(rawLoraDetails.description || ''),
+    description: sanitize(rawLoraDetails.description || ''),
     baseModel: modelVersions[0].baseModel,
     trainedWords: modelVersions[0].trainedWords,
     image: images[0] && images[0].url ? images[0].url : '',

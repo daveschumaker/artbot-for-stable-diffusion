@@ -12,7 +12,7 @@ import FlexRow from 'app/_components/FlexRow'
 import Panel from 'app/_components/Panel'
 import { Button } from 'app/_components/Button'
 import Linker from 'app/_components/Linker'
-import DOMPurify from 'dompurify'
+import { sanitize } from 'isomorphic-dompurify'
 import { useState } from 'react'
 import { Embedding } from '_types/civitai'
 import { handleSaveRecentEmbedding } from './saveRecentEmbeddings'
@@ -154,7 +154,7 @@ export default function EmbeddingDetailsCard({
               >
                 <div
                   dangerouslySetInnerHTML={{
-                    __html: DOMPurify.sanitize(embedding.description)
+                    __html: sanitize(embedding.description)
                   }}
                   style={{
                     backgroundColor: '#ababab',
