@@ -17,7 +17,7 @@ export default function PromptInputActions() {
         <PromptInputSettings />
         {/* <KeywordsDropdown input={input} setInput={setInput} /> */}
       </Modal>
-      <div className="flex justify-between">
+      <div className="flex justify-between mb-4">
         <div>
           <button
             className="btn btn-sm btn-primary btn-square gap-1 normal-case"
