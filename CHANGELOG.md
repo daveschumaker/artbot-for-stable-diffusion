@@ -1,11 +1,12 @@
 # 2023.12.24
 
 - 🎅🏻 Merry Christmas! (If you do that that sort of thing)
+- Merge PR from StuckState with additional EXIF support for images. Amazing! Thank you for doing this.
 - Updated NextJS to v14
 - Fixed an issue with a sanitize library (used when displaying data from external sources such as CivitAI)
 - I've gotten a number of reports where LoRA and embedding search from CivitAI is either super slow or just not working. Their site stability has always been a bit temperamental. I'm thinking of ways to possibly mitigate this (e.g., cache popular LoRA data on ArtBot server itself?)
 - I've also been (slowly) working on a new UI update using an actual UI framework this time (instead of writing all my own hacky components). I'm trying to incorporate some feedback from Discord. Not sure when this will go live as there's still quite a bit of work to do!
-- A post about ArtBot briefly made the front page of Hacker News last week, as well!
+- A post about ArtBot briefly made the front page of Hacker News last week!
 
 # 2023.12.14
 
