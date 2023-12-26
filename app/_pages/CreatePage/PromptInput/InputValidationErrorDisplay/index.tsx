@@ -144,14 +144,6 @@ export default function InputValidationErrorDisplay({
     let hasError = false
 
     if (hasSdxl) {
-      if (input.loras.length > 0) {
-        hasError = true
-        handleSetError()
-        setSdxlError(
-          'SDXL Error: Currently unable to use LoRAs with SDXL image models. Please remove LoRAs in order to continue.'
-        )
-      }
-
       if (input.hires) {
         hasError = true
         handleSetError()

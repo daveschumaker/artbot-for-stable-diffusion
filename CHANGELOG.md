@@ -1,7 +1,14 @@
+# 2023.12.26
+
+- New SDXL image model available on the Horde! Check out AlbedoBaseXL.
+- Fix: Issue downloading JPGs due to metadata encoding issues. (Thanks to Buford for reporting, thanks to Sparkz for the fix).
+- Fix: ArtBot caching issue when loading available models from Horde API
+- Fix: Remove warning about using LoRAs with SDXL image models
+
 # 2023.12.24
 
 - 🎅🏻 Merry Christmas! (If you do that that sort of thing)
-- Merge PR from StuckState with additional EXIF support for images. Amazing! Thank you for doing this.
+- Merge PR from Sparkz with additional EXIF support for images. Amazing! Thank you for doing this.
 - Updated NextJS to v14
 - Fixed an issue with a sanitize library (used when displaying data from external sources such as CivitAI)
 - I've gotten a number of reports where LoRA and embedding search from CivitAI is either super slow or just not working. Their site stability has always been a bit temperamental. I'm thinking of ways to possibly mitigate this (e.g., cache popular LoRA data on ArtBot server itself?)
