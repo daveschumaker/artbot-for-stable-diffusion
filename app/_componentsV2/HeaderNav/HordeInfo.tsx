@@ -6,6 +6,7 @@ import { userInfoStore } from 'app/_store/userStore'
 import { clientHeader, getApiHostServer } from 'app/_utils/appUtils'
 import { sleep } from 'app/_utils/sleep'
 import {
+  IconEye,
   IconMinusVertical,
   IconPlayerPause,
   IconPlayerPlay,
@@ -13,6 +14,7 @@ import {
 } from '@tabler/icons-react'
 import Link from 'next/link'
 import { HordeWorkerDetails } from '_types/horde'
+import NiceModal from '@ebay/nice-modal-react'
 
 export default function HordeInfo({
   handleClose = () => {}
@@ -185,24 +187,59 @@ export default function HordeInfo({
     return (
       <div className="bg-[#6A4B88] font-mono p-2 rounded-lg text-white">
         <div className="flex flex-row gap-2 items-center mb-2">
-          <button
-            disabled={workerState === 'offline'}
-            className="btn btn-sm btn-square btn-primary cursor-pointer"
-            onClick={() => {
-              if (worker.loading || workerState === 'offline') {
-                return
-              }
+          <div className="flex flex-row gap-2">
+            <button
+              disabled={workerState === 'offline'}
+              className="btn btn-sm btn-square btn-primary cursor-pointer"
+              onClick={() => {
+                if (worker.loading || workerState === 'offline') {
+                  return
+                }
 
-              handleWorkerChange({ workerId: id })
-            }}
-          >
-            {worker.loading && (
-              <span className="loading loading-spinner loading-sm"></span>
-            )}
-            {!worker.loading && workerState === 'active' && <IconPlayerPause />}
-            {!worker.loading && workerState === 'paused' && <IconPlayerPlay />}
-            {!worker.loading && workerState === 'offline' && <IconPlayerPlay />}
-          </button>
+                handleWorkerChange({ workerId: id })
+              }}
+            >
+              {worker.loading && (
+                <span className="loading loading-spinner loading-sm"></span>
+              )}
+              {!worker.loading && workerState === 'active' && (
+                <IconPlayerPause />
+              )}
+              {!worker.loading && workerState === 'paused' && (
+                <IconPlayerPlay />
+              )}
+              {!worker.loading && workerState === 'offline' && (
+                <IconPlayerPlay />
+              )}
+            </button>
+            <button
+              className="btn btn-sm btn-square btn-primary cursor-pointer"
+              onClick={() => {
+                NiceModal.show('workerDetails-modal', {
+                  buttons: (
+                    <div className="flex flex-row justify-end gap-4">
+                      <button
+                        className="btn btn-outline"
+                        onClick={() => {
+                          NiceModal.remove('workerDetails-modal')
+                          // handleHideTooltipModal()
+                        }}
+                      >
+                        OK
+                      </button>
+                    </div>
+                  ),
+                  // content: text,
+                  // handleClose: handleHideTooltipModal,
+                  // maxWidth: 'max-w-2xl'
+                  title: 'Worker Details'
+                })
+              }}
+            >
+              <IconEye />
+            </button>
+          </div>
+
           <IconPoint stroke="white" fill={workerBadgeColor} />
           {worker.name}
         </div>
