@@ -11,6 +11,11 @@ import AppSettings from 'app/_data-models/AppSettings'
 import { setLockedToWorker, setPauseJobQueue } from 'app/_store/appStore'
 import { handleApiKeyLogin } from 'app/_utils/hordeUtils'
 import { showSuccessToast } from 'app/_utils/notificationUtils'
+import NiceModal from '@ebay/nice-modal-react'
+import Modal from 'app/_componentsV2/Modal'
+
+NiceModal.register('tooltip-modal', Modal)
+NiceModal.register('workerDetails-modal', Modal)
 
 export default function AppInit() {
   const searchParams = useSearchParams()
