@@ -138,6 +138,22 @@ export interface HordePreset {
   width?: number
 }
 
+export interface HordeWorkerDetails {
+  id: string
+  kudos_details: { generated: number; uptime: number }
+  kudos_rewards: number
+  loading?: boolean
+  name: string
+  maintenance_mode: boolean
+  online: boolean
+  performance: string
+  requests_fulfilled: number
+  team: {
+    id: string
+  }
+  uptime: number
+}
+
 export interface IKudosDetails {
   accumulated: number
   awarded: number

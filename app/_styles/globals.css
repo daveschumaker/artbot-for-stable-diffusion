@@ -41,7 +41,7 @@
 
 @media (min-width: 640px) {
   :root {
-    --headerNav-height: 48px;
+    /* --headerNav-height: 48px; */
     --input-element-h: 36px;
   }
 }

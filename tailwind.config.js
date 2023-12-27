@@ -5,10 +5,25 @@ module.exports = {
     './components/**/*.{js,ts,jsx,tsx}',
     './pages/**/*.{js,ts,jsx,tsx}'
   ],
+  daisyui: {
+    themes: [
+      {
+        light: {
+          'background-color': '#f2f2f2'
+        },
+        dark: {
+          'background-color': '#222222'
+        }
+      }
+    ],
+    darkTheme: 'dark'
+  },
   theme: {
     extend: {
       colors: {
-        'text-main': '#14b8a6',
+        'body-color': 'var(--body-color)',
+        'input-color': 'var(--input-text)',
+        main: 'var(--main-color)',
         'text-dark': '#f3f3ef',
         'text-light': '#344c50'
       },

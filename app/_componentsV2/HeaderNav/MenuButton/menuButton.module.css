@@ -1,0 +1,22 @@
+.MenuButton {
+  align-items: center;
+  display: flex;
+  cursor: pointer;
+  /* margin-right: 12px; */
+}
+
+.MenuButton:hover {
+  color: rgb(20, 184, 166);
+}
+
+/*
+ * Fun fact: If you  want to adjust this, you'll need to also adjust
+ * corresponding value in:
+ * ./app/_components/ContentWrapper/contentWrapper.module.css
+ * ./app/_modules/FixedMenu/fixedMenu.module.css
+ */
+@media (min-width: 800px) {
+  .MenuButton {
+    display: none;
+  }
+}
