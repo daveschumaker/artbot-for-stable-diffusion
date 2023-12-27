@@ -25,7 +25,7 @@ function ListItem({
   onClose: () => void
 }) {
   return (
-    <li className="hover:bg-[#C0C0C0] dark:hover:bg-[#464646] rounded-md cursor-pointer">
+    <li className="hover:bg-highlight rounded-md cursor-pointer">
       <Link
         className="flex flex-col items-start gap-[0px]"
         href={href}
@@ -95,7 +95,7 @@ export function HeaderNav() {
           {visibleDropdown === 'createDropdown' && (
             <ul
               tabIndex={0}
-              className="menu dropdown-content z-[1] p-2 shadow rounded-box w-80 bg-white dark:bg-black"
+              className="menu dropdown-content z-[1] p-2 shadow rounded-box w-80 bg-body-solid-color"
             >
               <ListItem
                 href="/create"
@@ -154,7 +154,7 @@ export function HeaderNav() {
           {visibleDropdown === 'infoDropdown' && (
             <ul
               tabIndex={0}
-              className="menu dropdown-content z-[1] p-2 shadow rounded-box w-80 bg-white dark:bg-black"
+              className="menu dropdown-content z-[1] p-2 shadow rounded-box w-80 bg-body-solid-color"
             >
               <ListItem
                 href="/info/models"
@@ -210,7 +210,7 @@ export function HeaderNav() {
           {visibleDropdown === 'settingsDropdown' && (
             <ul
               tabIndex={0}
-              className="menu dropdown-content z-[1] p-2 shadow rounded-box w-80 bg-white dark:bg-black"
+              className="menu dropdown-content z-[1] p-2 shadow rounded-box w-80 bg-body-solid-color"
             >
               <ListItem
                 href="/settings"

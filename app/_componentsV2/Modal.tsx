@@ -53,7 +53,7 @@ function Modal({
   let fixedHeightOffset = 24
 
   if (title) {
-    fixedHeightOffset += 38
+    fixedHeightOffset += 24
   }
 
   let contentOffset = fixedHeightOffset
@@ -88,17 +88,17 @@ function Modal({
             ✕
           </button>
           {title && (
-            <h3
-              className="font-bold bg-inherit text-lg absolute"
+            <h6
+              className="font-bold bg-inherit text-[14px] absolute"
               style={{
-                padding: '30px 24px 8px 24px',
+                padding: '24px 24px 8px 24px',
                 top: '0px',
                 left: 0,
                 right: 0
               }}
             >
               {title}
-            </h3>
+            </h6>
           )}
           {fixedContent && (
             <div

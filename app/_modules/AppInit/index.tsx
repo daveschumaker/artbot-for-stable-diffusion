@@ -14,6 +14,7 @@ import { showSuccessToast } from 'app/_utils/notificationUtils'
 import NiceModal from '@ebay/nice-modal-react'
 import Modal from 'app/_componentsV2/Modal'
 
+NiceModal.register('confirmation-modal', Modal)
 NiceModal.register('tooltip-modal', Modal)
 NiceModal.register('workerDetails-modal', Modal)
 

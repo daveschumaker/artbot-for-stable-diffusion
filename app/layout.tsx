@@ -1,8 +1,10 @@
 import { ReactNode } from 'react'
+import { Metadata } from 'next'
+import { cookies } from 'next/headers'
+
 // import HeaderNav from './_modules/HeaderNav'
 import AppInit from './_modules/AppInit'
 import SlidingMenu from './_modules/SlidingMenu'
-import { Metadata } from 'next'
 import PollController from 'app/_modules/PollController'
 import { baseHost, basePath } from 'BASE_PATH'
 import AppAnalytics from './_modules/AppAnalytics'
@@ -49,22 +51,29 @@ export default async function RootLayout({
 }: {
   children: ReactNode
 }) {
+  const cookieStore = cookies()
+  const theme = cookieStore.get('theme')
+
+  console.log(`theme?`, theme)
+
   return (
     <html lang="en">
       <head>
-        {/* <script
+        <script
           dangerouslySetInnerHTML={{
             __html: `
-            (function() {
-              if (window.localStorage.getItem('theme') === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                document.documentElement.setAttribute('data-theme', 'dark');
-              } else {
-                document.documentElement.setAttribute('data-theme', 'light');
-              }
-            }());
-          `
+              try {
+                if (localStorage.theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                  document.documentElement.setAttribute('data-theme', 'dark');
+                } else if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                  document.documentElement.setAttribute('data-theme', 'dark');
+                } else {
+                  document.documentElement.setAttribute('data-theme', 'light');
+                }
+              } catch (_) {}
+            `
           }}
-        ></script> */}
+        />
       </head>
       <body
         // This ensures that footer is always forced to bottom of page if there is extra room.

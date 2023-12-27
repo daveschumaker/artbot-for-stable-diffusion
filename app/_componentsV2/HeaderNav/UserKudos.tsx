@@ -31,8 +31,8 @@ export default function UserKudos() {
 
   const UserDetails = () => {
     return (
-      <div className="flex flex-col gap-2">
-        <div className="stats bg-white dark:bg-black">
+      <div className="flex flex-col gap-2 text-black">
+        <div className="stats bg-body-solid-color">
           <div className="stat">
             <div className="stat-title">Total Available Kudos</div>
             <div className="stat-value flex flex-row gap-2 items-center">
@@ -44,7 +44,7 @@ export default function UserKudos() {
           </div>
         </div>
         {records.request && (
-          <div className="stats bg-white dark:bg-black">
+          <div className="stats bg-body-solid-color">
             <div className="stat">
               <div className="stat-title">Images requested</div>
               <div className="stat-value flex flex-row gap-2 items-center">
@@ -67,7 +67,7 @@ export default function UserKudos() {
     <>
       <div className="flex-none">
         <button
-          className="btn btn-sm btn-ghost normal-case bg-[#C0C0C0] hover:bg-[#C0C0C0] dark:bg-[#464646] dark:hover:bg-[#464646] h-[30px] px-[4px] sm:text-xs"
+          className="btn btn-sm btn-ghost normal-case ] bg-highlight h-[30px] px-[4px] sm:text-xs"
           onClick={() => {
             userKudosModal.show({
               content: <UserDetails />,

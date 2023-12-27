@@ -154,7 +154,7 @@ const WorkerInfo = ({
             id: {worker.id}
           </WorkerId>
           {worker.info && (
-            <div className="mt-2 text-sm italic">{worker.info}</div>
+            <div className="pt-2 text-sm italic">{worker.info}</div>
           )}
           <WorkerStatus>
             <div>

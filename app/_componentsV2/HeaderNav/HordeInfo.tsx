@@ -6,8 +6,8 @@ import { userInfoStore } from 'app/_store/userStore'
 import { clientHeader, getApiHostServer } from 'app/_utils/appUtils'
 import { sleep } from 'app/_utils/sleep'
 import {
-  IconEye,
   IconMinusVertical,
+  IconPencil,
   IconPlayerPause,
   IconPlayerPlay,
   IconPoint
@@ -15,6 +15,7 @@ import {
 import Link from 'next/link'
 import { HordeWorkerDetails } from '_types/horde'
 import NiceModal from '@ebay/nice-modal-react'
+import WorkerDetailsCard from '../WorkerDetailsCard'
 
 export default function HordeInfo({
   handleClose = () => {}
@@ -45,9 +46,29 @@ export default function HordeInfo({
   }
 
   const fetchWorkerDetails = async (workerId: string) => {
-    const res = await fetch(`${getApiHostServer()}/api/v2/workers/${workerId}`)
-    const workerDetails = await res.json()
-    return workerDetails
+    try {
+      const res = await fetch(
+        `${getApiHostServer()}/api/v2/workers/${workerId}`,
+        {
+          cache: 'no-store'
+        }
+      )
+      const workerDetails = await res.json()
+
+      if (res.status === 404) {
+        return {
+          notFound: true
+        }
+      }
+
+      return workerDetails
+    } catch (err) {
+      console.log(`Error: Unable to fetch worker details`)
+      console.log(err)
+      return {
+        notFound: true
+      }
+    }
   }
 
   const fetchAllWorkersDetails = useCallback(async () => {
@@ -59,6 +80,7 @@ export default function HordeInfo({
 
       // Use Promise.all to wait for all fetches to complete
       let results = await Promise.all(fetchPromises)
+      results = results.filter((result) => !result.notFound)
 
       // Sort the results first by online status and then by requests_fulfilled
       results = results.sort((a, b) => {
@@ -189,7 +211,7 @@ export default function HordeInfo({
         <div className="flex flex-row gap-2 items-center mb-2">
           <div className="flex flex-row gap-2">
             <button
-              disabled={workerState === 'offline'}
+              disabled={workerState === 'offline' || workerState === 'loading'}
               className="btn btn-sm btn-square btn-primary cursor-pointer"
               onClick={() => {
                 if (worker.loading || workerState === 'offline') {
@@ -213,7 +235,7 @@ export default function HordeInfo({
               )}
             </button>
             <button
-              className="btn btn-sm btn-square btn-primary cursor-pointer"
+              className="btn btn-sm btn-square btn-primary btn-outline cursor-pointer"
               onClick={() => {
                 NiceModal.show('workerDetails-modal', {
                   buttons: (
@@ -222,21 +244,21 @@ export default function HordeInfo({
                         className="btn btn-outline"
                         onClick={() => {
                           NiceModal.remove('workerDetails-modal')
-                          // handleHideTooltipModal()
+                          fetchAllWorkersDetails()
                         }}
                       >
                         OK
                       </button>
                     </div>
                   ),
-                  // content: text,
-                  // handleClose: handleHideTooltipModal,
+                  content: <WorkerDetailsCard edit id={worker.id} />,
+                  handleClose: fetchAllWorkersDetails,
                   // maxWidth: 'max-w-2xl'
                   title: 'Worker Details'
                 })
               }}
             >
-              <IconEye />
+              <IconPencil stroke={1.5} />
             </button>
           </div>
 
