@@ -31,11 +31,13 @@ export default function UserKudos() {
 
   const UserDetails = () => {
     return (
-      <div className="flex flex-col gap-2 text-black">
+      <div className="flex flex-col gap-2">
         <div className="stats bg-body-solid-color">
           <div className="stat">
-            <div className="stat-title">Total Available Kudos</div>
-            <div className="stat-value flex flex-row gap-2 items-center">
+            <div className="stat-title text-input-color">
+              Total Available Kudos
+            </div>
+            <div className="stat-value flex flex-row gap-2 items-center text-input-color">
               {kudos.toLocaleString()}
               <div className="text-secondary">
                 <IconCoins />
@@ -46,8 +48,10 @@ export default function UserKudos() {
         {records.request && (
           <div className="stats bg-body-solid-color">
             <div className="stat">
-              <div className="stat-title">Images requested</div>
-              <div className="stat-value flex flex-row gap-2 items-center">
+              <div className="stat-title text-input-color">
+                Images requested
+              </div>
+              <div className="stat-value flex flex-row gap-2 items-center text-input-color">
                 {records.request.image.toLocaleString()}
                 <div className=" text-secondary">
                   <IconStack />

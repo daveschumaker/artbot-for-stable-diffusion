@@ -1,12 +1,14 @@
 import NiceModal from '@ebay/nice-modal-react'
-import { IconCopy, IconPencil, IconPoint, IconTrash } from '@tabler/icons-react'
+import { IconCopy, IconPoint, IconTrash } from '@tabler/icons-react'
 import { HordeWorkerDetails } from '_types/horde'
+import Input from 'app/_components/Input'
 import Linker from 'app/_components/Linker'
+import Select from 'app/_components/Select'
 import AppSettings from 'app/_data-models/AppSettings'
 import { clientHeader, getApiHostServer } from 'app/_utils/appUtils'
 import { formatSeconds } from 'app/_utils/helperUtils'
 import { showSuccessToast } from 'app/_utils/notificationUtils'
-import { useCallback, useEffect, useState } from 'react'
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react'
 
 export default function WorkerDetailsCard({
   edit = false,
@@ -18,10 +20,53 @@ export default function WorkerDetailsCard({
   id: string
   // worker: HordeWorkerDetails
 }) {
+  const containerRef = useRef<HTMLDivElement | null>(null)
+  const [teams, setTeams] = useState<Array<{ label: string; value: string }>>(
+    []
+  )
   const [notFound, setNotFound] = useState(false)
   const [worker, setWorker] = useState<HordeWorkerDetails>()
   const [workerInfo, setWorkerInfo] = useState('')
-  const [editMode, setEditMode] = useState(false)
+  const [workerName, setWorkerName] = useState('')
+  const [workerTeam, setWorkerTeam] = useState<Array<string | null>>([
+    null,
+    'None'
+  ])
+  const [editMode, setEditMode] = useState<string | boolean>(false)
+
+  const fetchTeams = async () => {
+    const res = await fetch(`${getApiHostServer()}/api/v2/teams`, {
+      cache: 'no-store'
+    })
+    const details = await res.json()
+
+    if (Array.isArray(details)) {
+      const formatTeams = details.map((team) => {
+        return {
+          label: team.name,
+          value: team.id
+        }
+      })
+
+      // @ts-ignore
+      formatTeams.sort((a, b) => {
+        // Sort by online status first (true values first)
+        if (a.label < b.label) {
+          return -1
+        }
+        if (a.label > b.label) {
+          return 1
+        }
+      })
+
+      formatTeams.unshift({
+        label: 'None',
+        value: null
+      })
+
+      setTeams(formatTeams)
+    }
+  }
 
   const fetchWorkerDetails = async (workerId: string) => {
     const res = await fetch(
@@ -38,11 +83,17 @@ export default function WorkerDetailsCard({
 
     setWorker(details)
     setWorkerInfo(details.info)
+    setWorkerName(details.name)
+    setWorkerTeam([details.team.id, details.team.name])
   }
 
   useEffect(() => {
     fetchWorkerDetails(id)
-  }, [id])
+
+    if (edit) {
+      fetchTeams()
+    }
+  }, [edit, id])
 
   const deleteWorker = async () => {
     await fetch(`${getApiHostServer()}/api/v2/workers/${id}`, {
@@ -59,7 +110,9 @@ export default function WorkerDetailsCard({
   const updateWorkerDescription = async () => {
     await fetch(`${getApiHostServer()}/api/v2/workers/${id}`, {
       body: JSON.stringify({
-        info: workerInfo
+        info: workerInfo,
+        name: workerName,
+        team: workerTeam[0]
       }),
       // @ts-ignore
       headers: {
@@ -136,10 +189,10 @@ export default function WorkerDetailsCard({
     : false
 
   return (
-    <div>
+    <div ref={containerRef}>
       <div className="flex flex-row gap-2">
         <IconPoint stroke="white" fill={workerBadgeColor} />
-        {worker.name}
+        {workerName}
       </div>
       <div
         className="flex flex-row gap-2 text-xs items-center pl-2 cursor-pointer font-mono"
@@ -152,45 +205,7 @@ export default function WorkerDetailsCard({
         <IconCopy stroke={1} size={16} />
         id: {worker.id}
       </div>
-      {workerInfo && !edit && (
-        <div className="mt-2 text-sm italic">{workerInfo}</div>
-      )}
-      {edit && !editMode && (
-        <div className="mt-2 text-sm italic flex flex-row gap-2">
-          <div className="cursor-pointer" onClick={() => setEditMode(true)}>
-            <IconPencil stroke={1} size={18} />
-          </div>
-          {workerInfo || 'No description set'}
-        </div>
-      )}
-      {editMode && (
-        <div className="pt-2 flex flex-col gap-2">
-          <input
-            type="text"
-            placeholder="Enter description for your worker"
-            className="input input-bordered w-full max-w-xs"
-            onChange={(e) => setWorkerInfo(e.target.value)}
-            value={workerInfo}
-          />
-          <div className="flex flex-row gap-2">
-            <button
-              className="btn btn-secondary btn-sm btn-outline"
-              onClick={() => setEditMode(false)}
-            >
-              Cancel
-            </button>
-            <button
-              className="btn btn-primary btn-sm"
-              onClick={async () => {
-                await updateWorkerDescription()
-                setEditMode(false)
-              }}
-            >
-              Save
-            </button>
-          </div>
-        </div>
-      )}
+      {workerInfo && <div className="mt-2 text-sm italic">{workerInfo}</div>}
       <div className="text-sm pt-2">
         Status:{' '}
         <strong>
@@ -200,6 +215,7 @@ export default function WorkerDetailsCard({
         </strong>
       </div>
       <div className="text-sm">
+        {workerTeam[0] && <div>Worker team: {workerTeam[1]}</div>}
         Total uptime: <strong>{formatSeconds(worker.uptime)}</strong>
       </div>
       <div className="text-sm pt-2">
@@ -298,86 +314,215 @@ export default function WorkerDetailsCard({
         </details>
       </div>
       {edit && (
-        <div className="pt-4 text-sm">
-          <button
-            className="btn btn-error btn-sm"
-            onClick={() => {
-              NiceModal.show('confirmation-modal', {
-                buttons: (
-                  <div className="flex flex-row justify-end gap-2">
-                    <div className="flex flex-row justify-end gap-4">
-                      <button
-                        className="btn btn-secondary btn-outline"
-                        onClick={() => {
-                          NiceModal.remove('confirmation-modal')
-                        }}
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                    <div className="flex flex-row justify-end gap-4">
-                      <button
-                        className="btn btn-error"
-                        onClick={async () => {
-                          await deleteWorker()
-                          NiceModal.remove('confirmation-modal')
-                          NiceModal.remove('workerDetails-modal')
-                        }}
-                      >
-                        DELETE
-                      </button>
-                    </div>
+        <div className="pt-2 text-sm">
+          <details className="collapse collapse-arrow">
+            <summary className="collapse-title text-xl font-medium p-0 min-h-0">
+              <div className="flex flex-row gap-1 items-center text-left text-sm font-[600] w-full select-none">
+                Advanced options
+              </div>
+            </summary>
+            <div className="collapse-content mt-2 p-0 w-full flex flex-col gap-2 items-start">
+              <button
+                className="btn btn-error btn-sm btn-link px-0"
+                onClick={() => setEditMode('name')}
+              >
+                Rename worker?
+              </button>
+              {editMode === 'name' && (
+                <div className="flex flex-col gap-2 p-2">
+                  <Input
+                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                      setWorkerName(e?.target?.value)
+                    }
+                    value={workerName}
+                  />
+                  <div className="flex flex-row gap-2">
+                    <button
+                      className="btn btn-secondary btn-sm btn-outline"
+                      onClick={() => {
+                        setWorkerName(worker.name)
+                        setEditMode(false)
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className="btn btn-primary btn-sm"
+                      onClick={async () => {
+                        if (workerName.trim() === '') {
+                          setWorkerName(worker.name)
+                        }
+
+                        await updateWorkerDescription()
+                        setEditMode(false)
+                      }}
+                    >
+                      Update name
+                    </button>
                   </div>
-                ),
-                content: (
-                  <div className="">
-                    <div className="flex flex-row gap-2 items-center justify-start">
-                      <div className="flex h-8 w-8 justify-center items-center rounded-full bg-red-100">
-                        <svg
-                          className="h-6 w-6 text-red-600"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth="1.5"
-                          stroke="currentColor"
-                          aria-hidden="true"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M12 10.5v3.75m-9.303 3.376C1.83 19.126 2.914 21 4.645 21h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 4.88c-.866-1.501-3.032-1.501-3.898 0L2.697 17.626zM12 17.25h.007v.008H12v-.008z"
-                          />
-                        </svg>
-                      </div>
-                      <h3 className="text-lg font-medium" id="modal-title">
-                        Delete this worker?
-                      </h3>
-                    </div>
-                    <div className="text-center sm:mt-0 sm:ml-4 sm:text-left">
-                      <div className="mt-2">
-                        <p className="text-sm">
-                          Are you sure you want to delete{' '}
-                          <strong>{worker.name}</strong>? This action will
-                          delete the worker and all statistics associated with
-                          it. It will not affect the amount of kudos generated
-                          by this worker for your account.
-                          <br />
-                          <p className="pt-2">
-                            <strong>This action cannot be undone.</strong>
-                          </p>
-                        </p>
-                      </div>
-                    </div>
+                </div>
+              )}
+              <button
+                className="btn btn-error btn-sm btn-link px-0"
+                onClick={() => setEditMode('description')}
+              >
+                Update description?
+              </button>
+              {editMode === 'description' && (
+                <div className="flex flex-col gap-2 p-2">
+                  <Input
+                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                      setWorkerInfo(e?.target?.value)
+                    }
+                    value={workerInfo}
+                  />
+                  <div className="flex flex-row gap-2">
+                    <button
+                      className="btn btn-secondary btn-sm btn-outline"
+                      onClick={() => {
+                        setWorkerInfo(worker.info)
+                        setEditMode(false)
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className="btn btn-primary btn-sm"
+                      onClick={async () => {
+                        await updateWorkerDescription()
+                        setEditMode(false)
+                      }}
+                    >
+                      Update description
+                    </button>
                   </div>
-                ),
-                maxWidth: 'max-w-[480px]',
-                title: 'Confirm delete worker'
-              })
-            }}
-          >
-            <IconTrash />
-            Delete worker?
-          </button>
+                </div>
+              )}
+              <button
+                className="btn btn-error btn-sm btn-link px-0"
+                onClick={() => setEditMode('team')}
+              >
+                Update team?
+              </button>
+              {editMode === 'team' && (
+                <div className="flex flex-col gap-2 p-2">
+                  <Select
+                    options={teams}
+                    isSearchable={false}
+                    menuPortalTarget={containerRef.current}
+                    onChange={(obj: any) => {
+                      setWorkerTeam([obj.value, obj.label])
+                    }}
+                    style={{ zIndex: 99 }}
+                    value={{
+                      // @ts-ignore
+                      value: (workerTeam[0] as string | boolean) || null,
+                      label: (workerTeam[1] as string) || 'None'
+                    }}
+                  />
+                  <div className="flex flex-row gap-2">
+                    <button
+                      className="btn btn-secondary btn-sm btn-outline"
+                      onClick={() => {
+                        setWorkerTeam([worker.team.id, worker.team.name])
+                        setEditMode(false)
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className="btn btn-primary btn-sm"
+                      onClick={async () => {
+                        await updateWorkerDescription()
+                        setEditMode(false)
+                      }}
+                    >
+                      Update team
+                    </button>
+                  </div>
+                </div>
+              )}
+              <button
+                className="btn btn-error btn-sm btn-link px-0 text-error"
+                onClick={() => {
+                  NiceModal.show('confirmation-modal', {
+                    buttons: (
+                      <div className="flex flex-row justify-end gap-2">
+                        <div className="flex flex-row justify-end gap-4">
+                          <button
+                            className="btn btn-secondary btn-outline"
+                            onClick={() => {
+                              NiceModal.remove('confirmation-modal')
+                            }}
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                        <div className="flex flex-row justify-end gap-4">
+                          <button
+                            className="btn btn-error"
+                            onClick={async () => {
+                              await deleteWorker()
+                              NiceModal.remove('confirmation-modal')
+                              NiceModal.remove('workerDetails-modal')
+                            }}
+                          >
+                            DELETE
+                          </button>
+                        </div>
+                      </div>
+                    ),
+                    content: (
+                      <div className="">
+                        <div className="flex flex-row gap-2 items-center justify-start">
+                          <div className="flex h-8 w-8 justify-center items-center rounded-full bg-red-100">
+                            <svg
+                              className="h-6 w-6 text-red-600"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth="1.5"
+                              stroke="currentColor"
+                              aria-hidden="true"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M12 10.5v3.75m-9.303 3.376C1.83 19.126 2.914 21 4.645 21h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 4.88c-.866-1.501-3.032-1.501-3.898 0L2.697 17.626zM12 17.25h.007v.008H12v-.008z"
+                              />
+                            </svg>
+                          </div>
+                          <h3 className="text-lg font-medium" id="modal-title">
+                            Delete this worker?
+                          </h3>
+                        </div>
+                        <div className="text-center sm:mt-0 sm:ml-4 sm:text-left">
+                          <div className="mt-2">
+                            <p className="text-sm">
+                              Are you sure you want to delete{' '}
+                              <strong>{worker.name}</strong>? This action will
+                              delete the worker and all statistics associated
+                              with it. It will not affect the amount of kudos
+                              generated by this worker for your account.
+                              <br />
+                              <p className="pt-2">
+                                <strong>This action cannot be undone.</strong>
+                              </p>
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ),
+                    maxWidth: 'max-w-[480px]',
+                    title: 'Confirm delete worker'
+                  })
+                }}
+              >
+                <IconTrash />
+                Delete worker?
+              </button>
+            </div>
+          </details>
         </div>
       )}
     </div>

@@ -206,8 +206,10 @@ export default function HordeInfo({
       ? Math.floor(worker.kudos_rewards / (worker.uptime / 3600))
       : false
 
+    // fun color: bg-[#6A4B88]
+
     return (
-      <div className="bg-[#6A4B88] font-mono p-2 rounded-lg text-white">
+      <div className="bg-zinc-500 font-mono p-2 rounded-lg text-white">
         <div className="flex flex-row gap-2 items-center mb-2">
           <div className="flex flex-row gap-2">
             <button
