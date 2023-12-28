@@ -110,13 +110,13 @@ export default function InputValidationErrorDisplay({
     const hasSdxlBeta = filteredBetaModels.length > 0
     let hasError = false
 
-    if (hasSdxlBeta && input.post_processing.length > 0) {
-      hasError = true
-      handleSetError()
-      setSdxlBetaError(
-        'SDXL_beta Error: Unable to use post processors with SDXL beta workers. Please remove them in order to continue.'
-      )
-    }
+    // if (hasSdxlBeta && input.post_processing.length > 0) {
+    //   hasError = true
+    //   handleSetError()
+    //   setSdxlBetaError(
+    //     'SDXL_beta Error: Unable to use post processors with SDXL beta workers. Please remove them in order to continue.'
+    //   )
+    // }
 
     if (
       (!hasSdxlBeta && sdxlBetaError) ||
@@ -190,6 +190,7 @@ export default function InputValidationErrorDisplay({
     input.hires,
     input.loras.length,
     input.models,
+    input.source_image,
     input.source_mask,
     input.width,
     sdxlError,

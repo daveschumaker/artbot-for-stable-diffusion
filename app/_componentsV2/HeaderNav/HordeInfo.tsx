@@ -1,5 +1,9 @@
+'use client'
+
 import { useCallback, useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useStore } from 'statery'
+
 import AppSettings from 'app/_data-models/AppSettings'
 import { appInfoStore } from 'app/_store/appStore'
 import { userInfoStore } from 'app/_store/userStore'
@@ -12,16 +16,17 @@ import {
   IconPlayerPlay,
   IconPoint
 } from '@tabler/icons-react'
-import Link from 'next/link'
 import { HordeWorkerDetails } from '_types/horde'
 import NiceModal from '@ebay/nice-modal-react'
 import WorkerDetailsCard from '../WorkerDetailsCard'
+import { Button } from 'app/_components/Button'
 
 export default function HordeInfo({
   handleClose = () => {}
 }: {
   handleClose: () => void
 }) {
+  const router = useRouter()
   const appStore = useStore(appInfoStore)
   const userStore = useStore(userInfoStore) || {}
   const { worker_ids = [] } = userStore
@@ -209,12 +214,11 @@ export default function HordeInfo({
     // fun color: bg-[#6A4B88]
 
     return (
-      <div className="bg-zinc-500 font-mono p-2 rounded-lg text-white">
+      <div className="font-mono p-2 rounded-lg text-white bg-[#b3b3b3]">
         <div className="flex flex-row gap-2 items-center mb-2">
           <div className="flex flex-row gap-2">
-            <button
+            <Button
               disabled={workerState === 'offline' || workerState === 'loading'}
-              className="btn btn-sm btn-square btn-primary cursor-pointer"
               onClick={() => {
                 if (worker.loading || workerState === 'offline') {
                   return
@@ -222,6 +226,7 @@ export default function HordeInfo({
 
                 handleWorkerChange({ workerId: id })
               }}
+              size="square"
             >
               {worker.loading && (
                 <span className="loading loading-spinner loading-sm"></span>
@@ -235,15 +240,16 @@ export default function HordeInfo({
               {!worker.loading && workerState === 'offline' && (
                 <IconPlayerPlay />
               )}
-            </button>
-            <button
-              className="btn btn-sm btn-square btn-primary btn-outline cursor-pointer"
+            </Button>
+            <Button
+              // className="btn btn-sm btn-square btn-primary cursor-pointer"
+              size="square"
               onClick={() => {
                 NiceModal.show('workerDetails-modal', {
                   buttons: (
                     <div className="flex flex-row justify-end gap-4">
                       <button
-                        className="btn btn-outline"
+                        className="btn"
                         onClick={() => {
                           NiceModal.remove('workerDetails-modal')
                           fetchAllWorkersDetails()
@@ -261,11 +267,12 @@ export default function HordeInfo({
               }}
             >
               <IconPencil stroke={1.5} />
-            </button>
+            </Button>
           </div>
-
-          <IconPoint stroke="white" fill={workerBadgeColor} />
-          {worker.name}
+          <div className="flex flex-row gap-0" title={workerState}>
+            <IconPoint stroke="white" fill={workerBadgeColor} />
+            {worker.name}
+          </div>
         </div>
         <div className="flex flex-row gap-2 text-xs sm:text-sm">
           <div>{worker.requests_fulfilled.toLocaleString()} images</div>
@@ -377,13 +384,15 @@ export default function HordeInfo({
           <div className="text-xs italic">
             Due to server caching, data may be a few minutes out of date.
           </div>
-          <Link
+          <Button
             className="btn btn-primary"
-            href="/settings?panel=workers"
-            onClick={handleClose}
+            onClick={() => {
+              router.push('/settings?panel=workers')
+              handleClose()
+            }}
           >
             Manage workers
-          </Link>
+          </Button>
         </div>
       )}
     </div>

@@ -71,7 +71,7 @@ export default function UserKudos() {
     <>
       <div className="flex-none">
         <button
-          className="btn btn-sm btn-ghost normal-case ] bg-highlight h-[30px] px-[4px] sm:text-xs"
+          className="btn btn-sm btn-ghost normal-case bg-[#c7c7c7] h-[30px] px-[4px] sm:text-xs"
           onClick={() => {
             userKudosModal.show({
               content: <UserDetails />,

@@ -44,6 +44,7 @@ export function Button(props: ButtonProps) {
       className={clsx(styles['styled-button'], className, {
         [styles['styled-button-secondary']]: theme === 'secondary',
         [styles['styled-button-small']]: size === 'small',
+        [styles['styled-button-square']]: size === 'square',
         [styles['styled-button-disabled']]: disabled
       })}
       onClick={(e) => {

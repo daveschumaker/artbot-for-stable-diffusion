@@ -102,7 +102,7 @@ export default function PendingPanel() {
           <ClearJobs filter={'all'} pendingImages={jobs} size="small" />
         </FlexRow>
         <FlexRow gap={4} style={{ justifyContent: 'flex-end' }}>
-          <Button onClick={() => setShowFilterDropdown(true)} size="small">
+          <Button onClick={() => setShowFilterDropdown(true)} size="square">
             <IconFilter stroke={1.5} />
           </Button>
           <Button
@@ -113,12 +113,12 @@ export default function PendingPanel() {
                 setSort('old')
               }
             }}
-            size="small"
+            size="square"
           >
             {sort === 'old' && <IconSortDescending stroke={1.5} />}
             {sort === 'new' && <IconSortAscending stroke={1.5} />}
           </Button>
-          <Button onClick={() => setShowSettingsDropdown(true)} size="small">
+          <Button onClick={() => setShowSettingsDropdown(true)} size="square">
             <IconSettings stroke={1.5} />
           </Button>
         </FlexRow>

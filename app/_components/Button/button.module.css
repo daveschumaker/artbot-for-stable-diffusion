@@ -40,6 +40,13 @@
   padding: 2px 6px;
 }
 
+.styled-button-square {
+  padding: 0;
+  height: 34px;
+  min-width: 34px;
+  width: 34px;
+}
+
 .styled-button-disabled {
   background-color: #bdbdbd;
 }
