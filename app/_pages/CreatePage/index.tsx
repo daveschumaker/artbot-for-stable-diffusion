@@ -481,6 +481,7 @@ const CreatePage = ({ className }: any) => {
                   <div style={{ paddingTop: '8px' }}>
                     <Button
                       id="ScrollToTopBtn"
+                      size="square"
                       onClick={() => {
                         window.scrollTo(0, 0)
                         setActionPanelVisible(true)

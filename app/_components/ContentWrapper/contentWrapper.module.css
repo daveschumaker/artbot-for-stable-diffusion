@@ -1,5 +1,5 @@
 .ContentWrapper {
-  /* margin-top: var(--headerNav-height); */
+  margin-top: var(--headerNav-height);
   margin-bottom: 68px;
   padding: 8px 16px;
   position: relative;

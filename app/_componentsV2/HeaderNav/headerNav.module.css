@@ -1,0 +1,14 @@
+.HeaderNav {
+  align-items: center;
+  background-color: var(--body-color);
+  display: flex;
+  flex-direction: row;
+  height: var(--headerNav-height);
+  left: 0;
+  padding: env(safe-area-inset-top) 8px 0 8px;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 100%;
+  z-index: var(--zIndex-navBar);
+}

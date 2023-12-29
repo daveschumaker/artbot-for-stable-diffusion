@@ -110,6 +110,7 @@ const ActionPanel = forwardRef<HTMLDivElement, Props>(
               >
                 <Button
                   title="Clear current input"
+                  size="small"
                   theme="secondary"
                   onClick={() => {
                     setShowResetConfirmModal(true)
@@ -127,6 +128,7 @@ const ActionPanel = forwardRef<HTMLDivElement, Props>(
                   disabled={
                     disableSubmit || pending || areThereCriticalErrors()
                   }
+                  size="small"
                   width="100px"
                 >
                   <span>{pending ? '' : <IconSquarePlus stroke={1.5} />}</span>
@@ -136,6 +138,7 @@ const ActionPanel = forwardRef<HTMLDivElement, Props>(
                   <Button
                     disabled={!input.prompt}
                     onClick={() => setShowDryRun(true)}
+                    size="square"
                   >
                     <IconCalculator stroke={1.5} />
                   </Button>

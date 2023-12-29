@@ -12,6 +12,7 @@ import HordeInfo from './HordeInfo'
 import { useModal } from '@ebay/nice-modal-react'
 import UserKudos from './UserKudos'
 import MenuButton from './MenuButton'
+import styles from './headerNav.module.css'
 
 function ListItem({
   href,
@@ -54,7 +55,10 @@ export function HeaderNav() {
   }
 
   return (
-    <div className="navbar sticky top-0 z-10 py-0 min-h-[48px] bg-body-color">
+    <header
+      className={styles.HeaderNav}
+      // className="navbar sticky top-0 z-10 py-0 min-h-[48px] bg-body-color"
+    >
       <MenuButton />
       {/* <div className="flex-none">
         <button className="btn btn-sm btn-square btn-ghost">
@@ -258,6 +262,6 @@ export function HeaderNav() {
           title={'AI Horde Performance'}
         />
       )} */}
-    </div>
+    </header>
   )
 }
