@@ -137,7 +137,7 @@ export default function AllowWorkers() {
               <div className="flex flex-row gap-2">
                 <Button
                   onClick={() => removeWorkerFromList(worker)}
-                  size="small"
+                  size="square"
                   theme="secondary"
                 >
                   <IconTrash stroke={1.5} />
@@ -162,7 +162,7 @@ export default function AllowWorkers() {
             value={selectedWorker}
           />
           <Button
-            disabled={allowedWorkers.length >= 5}
+            disabled={allowedWorkers.length >= 5 || !selectedWorker.value}
             onClick={() => {
               if (selectedWorker.value) {
                 handleAddWorker(selectedWorker)
@@ -172,6 +172,7 @@ export default function AllowWorkers() {
                 })
               }
             }}
+            size="square"
           >
             <IconPlus />
           </Button>
