@@ -7,10 +7,10 @@ import useComponentState from 'app/_hooks/useComponentState'
 import { useEffectOnce } from 'app/_hooks/useEffectOnce'
 import SpinnerV2 from 'app/_components/Spinner'
 import styles from './workers.module.css'
-import { basePath } from 'BASE_PATH'
 import Row from 'app/_modules/Row'
 import InfoPageMenuButton from '../Menu'
 import WorkerInfo from 'app/_modules/WorkerInfo'
+import { fetchWorkers } from 'app/_api/fetchWorkers'
 
 const WorkerInfoPage = () => {
   const [componentState, setComponentState] = useComponentState({
@@ -21,20 +21,14 @@ const WorkerInfoPage = () => {
     workers: []
   })
 
-  const fetchWorkers = async () => {
-    const resp = await fetch(`${basePath}/api/worker-details`)
-    const data = (await resp.json()) || {}
-    const { workers = [] } = data
+  const fetchWorkersFromApi = async () => {
+    const workers = await fetchWorkers()
 
-    const filteredWorkers = workers.filter((worker: any) => {
-      return worker.type === 'image'
-    })
-
-    setComponentState({ workers: filteredWorkers, isLoading: false })
+    setComponentState({ workers, isLoading: false })
   }
 
   useEffectOnce(() => {
-    fetchWorkers()
+    fetchWorkersFromApi()
   })
 
   const sortedWorkers = componentState.workers.sort((a: any, b: any) => {

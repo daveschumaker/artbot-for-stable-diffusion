@@ -262,6 +262,11 @@ export interface SelectModelDetailsProps {
   multiModels: boolean
 }
 
+export interface SelectOption {
+  label: string
+  value: string | null
+}
+
 export type SetInput = Dispatch<Partial<DefaultPromptInput>>
 
 export interface SliderComponentProps {
