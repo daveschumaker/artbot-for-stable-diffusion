@@ -67,7 +67,7 @@ export function HeaderNav() {
       </div> */}
       <div className="flex-1">
         <Link
-          className="btn btn-sm btn-ghost normal-case text-xl font-bold text-main"
+          className="flex flex-row gap-2 normal-case text-xl font-bold text-main"
           href="/"
         >
           <img

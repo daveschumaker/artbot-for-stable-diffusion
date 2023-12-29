@@ -60,7 +60,7 @@ export default function CreatePageSettings() {
         </DropdownOptions>
       )}
       <div style={{ paddingTop: '8px', position: 'relative' }}>
-        <Button onClick={() => setShowDropdown(true)} size="square">
+        <Button onClick={() => setShowDropdown(true)} size="square-small">
           <IconSettings stroke={1.5} />
         </Button>
       </div>

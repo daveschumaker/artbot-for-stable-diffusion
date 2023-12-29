@@ -226,7 +226,7 @@ export default function HordeInfo({
 
                 handleWorkerChange({ workerId: id })
               }}
-              size="square"
+              size="square-small"
             >
               {worker.loading && (
                 <span className="loading loading-spinner loading-sm"></span>
@@ -243,7 +243,7 @@ export default function HordeInfo({
             </Button>
             <Button
               // className="btn btn-sm btn-square btn-primary cursor-pointer"
-              size="square"
+              size="square-small"
               onClick={() => {
                 NiceModal.show('workerDetails-modal', {
                   buttons: (

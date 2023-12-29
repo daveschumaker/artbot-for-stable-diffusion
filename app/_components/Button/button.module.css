@@ -41,9 +41,18 @@
 }
 
 .styled-button-square {
+  cursor: pointer;
+  height: 36px;
+  min-width: 36px;
   padding: 0;
+  width: 36px;
+}
+
+.styled-button-square-small {
+  cursor: pointer;
   height: 34px;
   min-width: 34px;
+  padding: 0;
   width: 34px;
 }
 

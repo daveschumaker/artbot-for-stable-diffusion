@@ -45,6 +45,7 @@ export function Button(props: ButtonProps) {
         [styles['styled-button-secondary']]: theme === 'secondary',
         [styles['styled-button-small']]: size === 'small',
         [styles['styled-button-square']]: size === 'square',
+        [styles['styled-button-square-small']]: size === 'square-small',
         [styles['styled-button-disabled']]: disabled
       })}
       onClick={(e) => {

@@ -138,7 +138,7 @@ const ActionPanel = forwardRef<HTMLDivElement, Props>(
                   <Button
                     disabled={!input.prompt}
                     onClick={() => setShowDryRun(true)}
-                    size="square"
+                    size="square-small"
                   >
                     <IconCalculator stroke={1.5} />
                   </Button>

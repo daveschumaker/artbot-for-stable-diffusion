@@ -2,7 +2,8 @@ import { IconCoins, IconStack } from '@tabler/icons-react'
 import { userInfoStore } from 'app/_store/userStore'
 import { useStore } from 'statery'
 import { useModal } from '@ebay/nice-modal-react'
-import Modal from '../Modal'
+import Modal from '../../Modal'
+import styles from './userKudos.module.css'
 
 export default function UserKudos() {
   const userKudosModal = useModal(Modal)
@@ -71,7 +72,8 @@ export default function UserKudos() {
     <>
       <div className="flex-none">
         <button
-          className="btn btn-sm btn-ghost normal-case bg-[#c7c7c7] h-[30px] px-[4px] sm:text-xs"
+          // className={`btn btn-sm btn-ghost normal-case h-[30px] px-[4px] sm:text-xs`}
+          className={styles.UserKudos}
           onClick={() => {
             userKudosModal.show({
               content: <UserDetails />,
