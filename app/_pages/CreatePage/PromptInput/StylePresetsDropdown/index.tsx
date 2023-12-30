@@ -58,8 +58,8 @@ export default function StylePresetsDropdown({
   const renderStyleList = () => {
     const arr = []
 
-    const p = <strong>[user prompt]</strong>
-    const np = input.negative ? input.negative : ''
+    const p = `[user prompt]`
+    const np = input.negative ? `[negative user prompt]` : ''
 
     for (const [key, presetDetails] of Object.entries(stylePresets)) {
       if (filter) {
