@@ -40,6 +40,7 @@ import { Button } from 'app/_components/Button'
 import { IconAlertTriangle, IconArrowBarToUp } from '@tabler/icons-react'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import { CREATE_PAGE_PARAM } from '_constants'
+import { handleUsePreset } from './PromptInput/StylePresetsDropdown/presetController'
 
 const defaultState: DefaultPromptInput = new DefaultPromptInput()
 
@@ -348,6 +349,17 @@ const CreatePage = ({ className }: any) => {
       initialState.source_processing = SourceProcessing.Prompt
     }
 
+    // Step 6. Handle preset query param
+    if (query[CreatePageMode.PRESET]) {
+      const presetInput = handleUsePreset({
+        key: query[CreatePageMode.PRESET],
+        input: initialState as DefaultPromptInput
+      })
+
+      // @ts-ignore
+      initialState = { ...initialState, ...presetInput }
+    }
+
     // Step 6. Set input
     setInput({ ...(initialState as DefaultPromptInput) })
 
@@ -375,6 +387,7 @@ const CreatePage = ({ className }: any) => {
       drawing: searchParams?.get('drawing'),
       i: searchParams?.get('i'),
       model: searchParams?.get('model'),
+      preset: searchParams?.get('preset'),
       prompt: searchParams?.get('prompt')
     })
   }, [searchParams])

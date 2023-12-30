@@ -1,3 +1,14 @@
+# 2023.12.30
+
+- Happy almost New Year!
+- A whole bunch of misc refactors, fixes, and improvements
+- Rewrote HeaderNav to take advantage of some improvements from new UI library I've started to integrate (DaisyUI).
+- Better management for your GPU workers (you can now update name, team, delete work)
+- You can now target multiple preferred workers for the worker allow list. (Thanks to Sidorok for the suggestion and reminder)
+- Worker allow and blocklists now utilize a dropdown search (no more copy and pasting pesky worker UUIDs)
+- Added support for LCM sampler when using SDXL image requests (note: you should be using this with specific LoRAs -- I will have to write some better warning and tips for this in the future).
+- Speaking of which: I added a new query parameter for quickly accessing style presets. For example, [here's how you can get started with SDXL Turbo](https://tinybots.net/artbot/create?preset=turbo) (just type in a prompt and hit create).
+
 # 2023.12.26
 
 - New SDXL image model available on the Horde! Check out AlbedoBaseXL.

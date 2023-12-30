@@ -53,6 +53,7 @@ export interface CreatePageQueryParams {
   drawing?: string | null
   i?: string | null
   model?: string | null
+  preset?: string | null
   prompt?: string | null
 }
 
