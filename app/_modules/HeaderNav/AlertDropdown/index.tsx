@@ -3,7 +3,7 @@ import { appInfoStore } from 'app/_store/appStore'
 import styles from './alertDropdown.module.css'
 
 const AlertDropdown = () => {
-  const { lockedToWorker, pauseJobQueue } = useStore(appInfoStore)
+  const { pauseJobQueue } = useStore(appInfoStore)
 
   return (
     <div className={styles.AlertDropdown}>
@@ -12,25 +12,6 @@ const AlertDropdown = () => {
         className="font-mono text-[12px] pl-[8px]"
         style={{ display: 'flex', flexDirection: 'column', rowGap: '12px' }}
       >
-        {lockedToWorker && (
-          <div
-            className="text-amber-400 font-semibold rounded border border-amber-400"
-            style={{
-              border: '1px solid rgb(251 191 36)',
-              fontWeight: 400,
-              margin: '8px 0',
-              padding: '8px'
-            }}
-          >
-            <strong>Single Worker:</strong>
-            <br />
-            <br />
-            You are currently sending jobs to only one worker. Jobs may not
-            complete if worker is not available or under heavy load, or certain
-            request parameters aren&apos;t available (i.e., model, image
-            resolution, post-processors).
-          </div>
-        )}
         {pauseJobQueue && (
           <div
             className="text-amber-400 font-semibold rounded border border-amber-400"
