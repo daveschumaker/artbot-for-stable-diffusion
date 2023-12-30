@@ -106,15 +106,7 @@ const ImageDetails = ({
           />
         </div>
       )}
-      <div
-        id="image-src"
-        className={clsx(
-          {
-            loading: styles['img-loading']
-          },
-          'w-full flex justify-center'
-        )}
-      >
+      <div id="image-src" className={clsx('w-full flex justify-center')}>
         <div
           className={'max-w-[1400px] flex flex-row' + styles['img-container']}
           style={{
