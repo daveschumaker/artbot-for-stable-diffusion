@@ -93,7 +93,7 @@ export default function AllowWorkers() {
   return (
     <Section pb={12}>
       <SubSectionTitle>
-        <strong>Worker Blocklist</strong>
+        <strong>Worker Blocklist ({blockedWorkers.length}/5)</strong>
         <div className="block w-full mt-2 mb-2 text-xs">
           Add worker IDs here to prevent sending image requests to that machine.
           Useful in instances where a worker is out of date, serving incorrect

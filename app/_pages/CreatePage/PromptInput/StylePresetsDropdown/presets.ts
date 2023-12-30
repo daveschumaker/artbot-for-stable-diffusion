@@ -21,6 +21,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     width: 1024,
     height: 1024
   },
+  albedo: {
+    prompt: '{p}{np}',
+    model: 'AlbedoBase XL (SDXL)',
+    steps: 40,
+    width: 1024,
+    height: 1024
+  },
   raw: {
     prompt: '{p}{np}',
     model: 'stable_diffusion'
@@ -32,10 +39,55 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     width: 768,
     height: 768
   },
+  turbo: {
+    prompt: '{p}###nsfw,loli,{np}',
+    model: 'AlbedoBase XL (SDXL)',
+    sampler_name: 'lcm',
+    steps: 8,
+    width: 1024,
+    height: 1024,
+    cfg_scale: 2,
+    loras: [
+      {
+        name: '216190',
+        model: 1
+      }
+    ]
+  },
+  'turbo-landscape': {
+    prompt: '{p}###nsfw,loli,{np}',
+    model: 'AlbedoBase XL (SDXL)',
+    sampler_name: 'lcm',
+    steps: 8,
+    width: 1280,
+    height: 832,
+    cfg_scale: 2,
+    loras: [
+      {
+        name: '216190',
+        model: 1
+      }
+    ]
+  },
+  'turbo-portrait': {
+    prompt: '{p}###nsfw,loli,{np}',
+    model: 'AlbedoBase XL (SDXL)',
+    sampler_name: 'lcm',
+    steps: 8,
+    width: 832,
+    height: 1216,
+    cfg_scale: 2,
+    loras: [
+      {
+        name: '216190',
+        model: 1
+      }
+    ]
+  },
   'bd-ai': {
     prompt:
       'An robotic (artificial intelligence:1.1) {p}, birthday theme, (the words "1 year":1.35), science fiction{np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     width: 1024,
     height: 1024,
     steps: 43,
@@ -44,7 +96,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   'makoto birthday': {
     prompt:
       '{p}, (manga artwork:1.1), drawn by Makoto Shinkai, (birthday theme:1.3)###{np}, colorful,realistic, render, 3d, photographic',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     width: 1024,
     height: 1024,
     steps: 43,
@@ -53,7 +105,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   'artistic birthday': {
     prompt:
       '(Birthday-themed:1.3), {p}, art by Sophie Anderson and Guy Denning and Lisa Frank###{np}, boring, bw, loli, teen',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     width: 1024,
     height: 1024,
     steps: 50,
@@ -88,56 +140,56 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   },
   'sdxl-vertical': {
     prompt: '{p}{np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     width: 704,
     height: 1472,
     steps: 50
   },
   'sdxl-extreme-vertical': {
     prompt: '{p}{np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     width: 640,
     height: 1536,
     steps: 50
   },
   'sdxl-portrait': {
     prompt: '{p}{np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     width: 832,
     height: 1216,
     steps: 50
   },
   'sdxl-photo': {
     prompt: '{p}{np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     width: 896,
     height: 1152,
     steps: 50
   },
   'sdxl-photo-horizontal': {
     prompt: '{p}{np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     width: 1152,
     height: 896,
     steps: 50
   },
   'sdxl-landscape': {
     prompt: '{p}{np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     width: 1280,
     height: 832,
     steps: 50
   },
   'sdxl-widescreen': {
     prompt: '{p}{np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     width: 1344,
     height: 768,
     steps: 50
   },
   'sdxl-cinematic': {
     prompt: '{p}{np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     width: 1536,
     height: 640,
     steps: 50
@@ -187,7 +239,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   graffiti: {
     prompt:
       'graffiti style {p}, street art, vibrant, urban, detailed, tag, mural###{np}, ugly, deformed, noisy, blurry, low contrast, realism, photorealistic',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     sampler_name: 'k_dpmpp_2m',
     width: 1216,
     height: 832,
@@ -197,7 +249,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   retrofuturistic: {
     prompt:
       'retro-futuristic {p} . vintage sci-fi, 50s and 60s style, atomic age, vibrant, highly detailed###{np}, contemporary, realistic, rustic, primitive',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     sampler_name: 'k_dpmpp_2m',
     width: 1216,
     height: 832,
@@ -207,7 +259,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   dystopian: {
     prompt:
       'dystopian style {p} . bleak, post-apocalyptic, somber, dramatic, highly detailed###{np},ugly, deformed, noisy, blurry, low contrast, cheerful, optimistic, vibrant, colorful',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     sampler_name: 'k_dpmpp_2m',
     width: 1216,
     height: 832,
@@ -217,7 +269,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   sdxlcatgirlportrait: {
     prompt:
       'high quality, intricate, fluffy tail, cat ears, a full-body portrait of a catgirl, {p}, photorealistic, magical realism, fantasy###{np}, (Drawing cartoon comic sketch 2d render:0.7)',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     sampler_name: 'k_dpmpp_sde',
     width: 832,
     height: 1216,
@@ -227,7 +279,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   neonnoir: {
     prompt:
       'neon noir {p}, cyberpunk, dark, rainy streets, neon signs, high contrast, low light, vibrant, highly detailed###bright, sunny, daytime, low contrast, black and white, sketch, watercolor, {p}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     width: 1024,
     height: 1024,
     steps: 50
@@ -235,7 +287,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   floralceramic: {
     prompt:
       'a ceramic diorama of {p}, by Carlos Santos and Christine tennenholtz Lisa Frank, floral, glossy ceramic flowers, Rainbow prism, spectral colors, refracted light, vibrant hues, dazzling display, Picturesque, Gut Feeling, Seasoned photographer, Olympus PEN-F, blooming beauty, delicate petals, intricate 3d floral patterns###2d printed drawing sketch cgi render cartoon comic manga animation anime lineart, plain background{np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     width: 1152,
     height: 832,
     steps: 50,
@@ -244,7 +296,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   sovietpropaganda: {
     prompt:
       'USSR soviet propaganda poster, {p}###photorealistic, cute, modern,{np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     sampler_name: 'k_dpmpp_sde',
     width: 768,
     height: 1344,
@@ -254,7 +306,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   moderntarotcard: {
     prompt:
       '((A modern Tarot card)), {p}###photorealistic, cute, modern, simple, anime, plain, vector, lowres, cropped, limneart, cgi, 3d, antique{np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     sampler_name: 'k_dpmpp_sde',
     width: 832,
     height: 1280,
@@ -264,7 +316,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   antiquetarotcard: {
     prompt:
       'A hand-painted 15th century Visconti-Sforza style Trionfi Tarot card, antique painting of {p}, with name below, detailed painting###photorealistic, cute, modern, simple, anime, plain, vector, lowres, cropped, limneart, cgi, 3d{np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     sampler_name: 'k_dpmpp_sde',
     width: 832,
     height: 1280,
@@ -274,7 +326,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   playingcard: {
     prompt:
       'A modern playing card, {p}###{np}, photorealistic, cute, lowres, cropped, cgi, 3d, pixelated',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     sampler_name: 'k_dpmpp_sde',
     width: 832,
     height: 1280,
@@ -284,7 +336,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   mtgcard: {
     prompt:
       'A mtg magic the gathering card, painting of fantasy creature. description, {p}, mtg magic the gathering style###{np}, lowres, cropped, cgi, pixelated, photorealistic, 3d render',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     sampler_name: 'k_dpmpp_sde',
     width: 832,
     height: 1152,
@@ -294,7 +346,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   baseballcard: {
     prompt:
       'A baseball trading card, picture of player, stats in corner, {p}###{np}, lowres, cropped, cgi, pixelated, cute',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     sampler_name: 'k_dpmpp_sde',
     width: 832,
     height: 1152,
@@ -303,7 +355,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   },
   greetingcard: {
     prompt: 'A greeting card, {p}###{np}, lowres, cropped, cgi, pixelated',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     sampler_name: 'k_dpmpp_sde',
     width: 832,
     height: 1280,
@@ -313,7 +365,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   postcard: {
     prompt:
       'A souvenir postcard, {p}###{np}, lowres, cropped, cgi, pixelated, padding, border',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     sampler_name: 'k_dpmpp_sde',
     width: 1280,
     height: 832,
@@ -323,7 +375,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   goldenagecomics: {
     prompt:
       '{p}, 1940s golden age comics style screen print, cover art by CC Beck and Will Eisner, (thick lines:0.7), early CMYK lithography, halftones###3d, modern, black and white, spot color{np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     width: 832,
     height: 1280,
     steps: 50,
@@ -332,7 +384,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   manga: {
     prompt:
       '(manga, heavy outlines, thick linework, monochrome, flat, black and white:1.2), {p}###(3d, color){np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     width: 896,
     height: 1152,
     steps: 50,
@@ -341,7 +393,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   sdxlanime: {
     prompt:
       'anime artwork, {p}, dramatic, anime style, key visual, vibrant, studio anime, highly detailed###photo, deformed, black and white, realism, disfigured, low contrast{np}, ink and paper',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     width: 1152,
     height: 896,
     steps: 50,
@@ -350,7 +402,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   portraitphoto: {
     prompt:
       'portrait photo of {p}, photograph, highly detailed face, depth of field, moody light, style by Dan Winters, Russell James, Steve McCurry, centered, extremely detailed, Nikon D850, award winning photography###disfigured{np}, closeup, cropped',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     width: 896,
     height: 1152,
     steps: 50,
@@ -359,7 +411,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   sdxlspace: {
     prompt:
       '{p}, by Andrew McCarthy, Navaneeth Unnikrishnan, Manuel Dietrich, photo realistic, 8 k, cinematic lighting, hd, atmospheric, hyperdetailed, trending on artstation, deviantart, photography, glow effect###{np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     sampler_name: 'k_dpmpp_sde',
     width: 1344,
     height: 768,
@@ -369,7 +421,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   schematic: {
     prompt:
       '23rd century scientific schematics for {p}, blueprint, hyperdetailed vector technical documents, callouts, legend, patent registry, clean linework, crisp lines###{np}, blurry',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     sampler_name: 'k_dpmpp_2m',
     width: 1152,
     height: 896,
@@ -379,7 +431,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   futurefashion: {
     prompt:
       'photograph of a Fashion model, {p}, full body, highly detailed and intricate, vibrant colors, hyper maximalist, futuristic, luxury, elite, cinematic, fashion, depth of field, colorful, glow, trending on artstation, ultra realistic, cinematic lighting, focused, 8k, (golden ratio:0.7)###{np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     sampler_name: 'k_dpmpp_sde',
     width: 896,
     height: 1152,
@@ -389,7 +441,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   building: {
     prompt:
       '{p}, shot 35 mm, realism, octane render, 8k, trending on artstation, 35 mm camera, unreal engine, hyper detailed, photo - realistic maximum detail, volumetric light, realistic matte painting, hyper photorealistic, trending on artstation, ultra-detailed, realistic###{np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     width: 1152,
     height: 896,
     steps: 50,
@@ -398,7 +450,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   animal: {
     prompt:
       '{p}, wildlife photography, photograph, high quality, wildlife, f 1.8, soft focus, 8k, national geographic, award-winning photograph by nick nichols###{np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     width: 1280,
     height: 832,
     steps: 50,
@@ -407,7 +459,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   vaporwave: {
     prompt:
       'vaporwave synthwave style {p}, cyberpunk, neon, vibes, stunningly beautiful, crisp, detailed, sleek, ultramodern, high contrast, cinematic composition###illustration, painting, crayon, graphite, abstract, glitch, deformed, mutated, ugly, disfigured, blurry{np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     width: 1344,
     height: 768,
     steps: 50,
@@ -416,7 +468,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   isometric: {
     prompt:
       'isometric style {p}, vibrant, beautiful, crisp, detailed, ultra detailed, intricate###deformed, mutated, ugly, disfigured, blur, blurry, noise, noisy, realistic, photographic{np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     width: 1024,
     height: 1024,
     steps: 50,
@@ -425,7 +477,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   lowpoly: {
     prompt:
       'low-poly style {p}, ambient occlusion, low-poly game art, (polygon mesh:0.8), jagged, blocky, (wireframe edges:0.8), centered composition###noisy, sloppy, messy, grainy, highly detailed, ultra textured, photo, black and white, grayscale, colorless{np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     width: 1280,
     height: 832,
     steps: 50,
@@ -434,7 +486,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   claymation: {
     prompt:
       'claymation style {p}, sculpture, clay art, centered composition, play-doh###{np}, sloppy, messy, grainy, highly detailed, ultra textured, photo, mutated',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     width: 1280,
     height: 832,
     steps: 50,
@@ -443,7 +495,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   origami: {
     prompt:
       'origami style {p}, paper art, pleated paper, folded, origami art, pleats, cut and fold, centered composition###noisy, sloppy, messy, grainy, highly detailed, ultra textured, photo{np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     width: 1024,
     height: 1024,
     steps: 50,
@@ -452,7 +504,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   lineart: {
     prompt:
       'line art drawing, {p}, professional, sleek, modern, minimalist, graphic, line art, vector graphics###{np}, anime, photorealistic, 35mm film, deformed, glitch, blurry, noisy, off-center, deformed, cross-eyed, closed eyes, bad anatomy, ugly, disfigured, mutated, realism, realistic, impressionism, expressionism, oil, acrylic',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     width: 1152,
     height: 896,
     steps: 50,
@@ -461,7 +513,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   pixelart: {
     prompt:
       'pixel-art, {p}, low-res, blocky, pixel art style, 16-bit graphics###sloppy, messy, blurry, noisy, highly detailed, ultra textured, photo, realistic{np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     width: 1152,
     height: 896,
     steps: 50,
@@ -470,7 +522,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   embroidery: {
     prompt:
       '(Embroidery) knitting pattern of {p}, (cross stitch)###photorealistic{np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     sampler_name: 'k_dpmpp_sde',
     width: 1024,
     height: 1024,
@@ -479,7 +531,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   },
   broadsheetart: {
     prompt: 'antique broadsheet drawing, {p}, text, monotone###{np}, colorful',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     sampler_name: 'k_dpmpp_sde',
     width: 896,
     height: 1152,
@@ -489,7 +541,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   watercolorscenery: {
     prompt:
       'watercolor painting of {p}, broad brush strokes, soft colors###photorealistic, 3d{np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     sampler_name: 'k_dpmpp_sde',
     width: 1344,
     height: 768,
@@ -499,7 +551,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   pencilscribbles: {
     prompt:
       '`Scribbled random lines, shape of {p}, pencil scribbles sketch###solid outlines, color, fill, 3d{np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     sampler_name: 'k_dpmpp_sde',
     width: 1024,
     height: 1024,
@@ -509,7 +561,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   sdxlchibis: {
     prompt:
       'high quality, a chibi {p}, blindbox style, 3dcute, 3dcutecharacter, 3d, cute###{np}, (Drawing cartoon comic sketch 2d:0.6), spritesheet, multiple angles, (giant hand, minifig:0.7)',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     sampler_name: 'k_dpmpp_sde',
     width: 1024,
     height: 1024,
@@ -519,7 +571,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   sdxlstreetfashion: {
     prompt:
       'high quality, intricate, (fashionable clothes, street fashion:1.2), a full-body portrait of a fashionable {p}, attractive, photorealistic, magical realism, fantasy###{np}, (Drawing cartoon comic sketch 2d render, sexy:0.7)',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     sampler_name: 'k_dpmpp_sde',
     width: 896,
     height: 1152,
@@ -529,7 +581,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   sdxlhorror: {
     prompt:
       'nightmare horror trypophobia odontophobia thalassophobia disgusting nasty ugly bloody terror, {p}###{np}, attractive, sexy',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     sampler_name: 'k_dpmpp_sde',
     width: 1024,
     height: 1024,
@@ -539,7 +591,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   animation: {
     prompt:
       '(cute), {p}, (animated by Mike Judge)###{np}, horror, ugly, 3d, photorealistic, black and white',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     sampler_name: 'k_euler',
     width: 1152,
     height: 896,
@@ -549,7 +601,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   disney: {
     prompt:
       '(cute), {p}, (classic disney animation)###{np}, 3d, horror, ugly, photorealistic',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     sampler_name: 'k_euler',
     width: 1152,
     height: 896,
@@ -559,7 +611,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   pixar: {
     prompt:
       '(cute), {p}, (rendered by pixar)###{np}, 2d, horror, ugly, photorealistic, black and white',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     sampler_name: 'k_euler',
     width: 1152,
     height: 896,
@@ -569,7 +621,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   cyborgpunkportrait: {
     prompt:
       'lomography, {p}, a neon cyborg portrait by Jerry Ryan Rob Hefferan Artgerm HR Giger, hyperrealistic vaporwave HDR render###{np}, drawing, sketch',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     sampler_name: 'k_euler',
     width: 832,
     height: 1216,
@@ -579,7 +631,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   movieposter: {
     prompt:
       'highly detailed movie premiere poster, {p}, professional quality, highly detailed, gloss finish###smudged, poor quality, Badly drawn hands and fingers, undetailed, unfocused',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     sampler_name: 'k_dpmpp_2m',
     width: 832,
     height: 1216,
@@ -757,7 +809,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   'vibrant halloween': {
     prompt:
       'a Halloween themed vibrant pulp art by JC leyendecker and norman rockwell featuring {p}. horror vibe, dark atmospthere, depth of field, campy, spooky. purple, orange and green color palette.###{np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     karras: true,
     steps: 25,
     sampler_name: 'k_dpmpp_2m',
@@ -780,7 +832,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   'monstrous burton': {
     prompt:
       '{p} . nightmare by Tim Burton, monster-like, cinematic lighting, trending on artstation, creepy digital art###{np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     steps: 30,
     sampler_name: 'k_dpmpp_2m',
     width: 1024,
@@ -790,7 +842,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   'spooky gouache': {
     prompt:
       '{p} . spooky gouache digital art, dark, creepy, highly detailed, moody, mysterious###{np}, 3d, photo, anime, text',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     steps: 30,
     sampler_name: 'k_dpmpp_2m',
     width: 1024,
@@ -800,7 +852,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   'spooky horror': {
     prompt:
       '{p}, spooky, dark, horror aesthetics, sharp focus, Innistrad, by Keith Thompson###person, human, blurry, black and white, text, {np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     steps: 25,
     sampler_name: 'k_euler_a',
     width: 1024,
@@ -810,7 +862,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   'crungus revenge': {
     prompt:
       'Crungus, halloween, spooky, ink painting manga illustration, bloody disgusting, limited palette, chiaroscuro, {p}, by kentaro miura, junji ito, Yusuke Murata',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     karras: true,
     steps: 20,
     sampler_name: 'k_dpmpp_2m',
@@ -821,7 +873,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   'impressionist horror comic': {
     prompt:
       'impressionist purple and orange comickbook illustration depicting closeup of {p}, dark shading, bold outlines, thick outlines, creepy, eerie, scary, horror###{np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     steps: 20,
     sampler_name: 'k_euler_a',
     width: 1024,
@@ -1505,7 +1557,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 40,
     width: 1024,
     height: 1024,
-    model: 'SDXL 1.0'
+    model: 'AlbedoBase XL (SDXL)'
   },
   nightmare: {
     prompt:
@@ -1513,7 +1565,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 40,
     width: 1024,
     height: 1024,
-    model: 'SDXL 1.0'
+    model: 'AlbedoBase XL (SDXL)'
   },
   abandoned: {
     prompt:
@@ -1521,7 +1573,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 40,
     width: 1280,
     height: 832,
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     sampler_name: 'dpmsolver'
   },
   'witch land': {
@@ -1530,7 +1582,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 40,
     width: 1024,
     height: 1024,
-    model: 'SDXL 1.0'
+    model: 'AlbedoBase XL (SDXL)'
   },
   'nightmare fairytale': {
     prompt:
@@ -1538,7 +1590,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 40,
     width: 1024,
     height: 1024,
-    model: 'SDXL 1.0'
+    model: 'AlbedoBase XL (SDXL)'
   },
   elmstreet: {
     prompt:
@@ -1546,11 +1598,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 40,
     width: 832,
     height: 1280,
-    model: 'SDXL 1.0'
+    model: 'AlbedoBase XL (SDXL)'
   },
   ennui: {
     prompt: '{p}, black and white, foggy, negative, eerie{np}',
-    model: 'SDXL 1.0',
+    model: 'AlbedoBase XL (SDXL)',
     steps: 40,
     width: 1024,
     height: 1024,
@@ -1562,7 +1614,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 40,
     width: 1024,
     height: 1024,
-    model: 'SDXL 1.0'
+    model: 'AlbedoBase XL (SDXL)'
   },
   'frozen village': {
     prompt:

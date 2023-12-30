@@ -88,10 +88,15 @@ class ImageParamsForApi {
         ? true
         : AppSettings.get('useTrusted')
     const allowNsfw = AppSettings.get('allowNsfwImages') || false
+
+    // Temporarily (?) disabled as rating of user generated AI images is no longer supported by the AI Horde
     // const shareImage = AppSettings.get('shareImagesExternally') || false
     const shareImage = false
-    const useWorkerId = AppSettings.get('useWorkerId') || ''
-    const useBlocklist = AppSettings.get('blockedWorkers')
+
+    const useAllowedWorkers = AppSettings.get('useAllowedWorkers') || false
+    const useBlockedWorkers = AppSettings.get('useBlockedWorkers') || false
+    const allowedWorkers = AppSettings.get('allowedWorkers') || []
+    const blockedWorkers = AppSettings.get('blockedWorkers') || []
 
     const {
       prompt,
@@ -160,16 +165,19 @@ class ImageParamsForApi {
       dry_run
     }
 
-    if (useBlocklist) {
-      const blocked = useBlocklist.map((worker: { id: string }) => worker.id)
+    if (useBlockedWorkers && blockedWorkers.length > 0) {
+      const blocked = blockedWorkers.map(
+        (worker: { value: string }) => worker.value
+      )
       apiParams.workers = [...blocked]
       apiParams.worker_blacklist = true
-    } else {
-      delete apiParams.worker_blacklist
     }
 
-    if (!useBlocklist && useWorkerId) {
-      apiParams.workers = [useWorkerId]
+    if (!useBlockedWorkers && useAllowedWorkers && allowedWorkers.length > 0) {
+      const allowed = allowedWorkers.map(
+        (worker: { value: string }) => worker.value
+      )
+      apiParams.workers = [...allowed]
 
       // Potential ArtBot / AI Horde API interface issue.
       // If we're explicitly choosing a worker, we probably don't care, delete them.
@@ -177,8 +185,14 @@ class ImageParamsForApi {
       delete apiParams.worker_blacklist
       delete apiParams.slow_workers
       delete apiParams.replacement_filter
+
       apiParams.shared = false
       apiParams.trusted_workers = false
+    }
+
+    if (!useAllowedWorkers && !useBlockedWorkers) {
+      delete apiParams.worker_blacklist
+      delete apiParams.workers
     }
 
     if (source_processing === SourceProcessing.Img2Img) {

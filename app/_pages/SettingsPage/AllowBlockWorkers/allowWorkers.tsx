@@ -94,7 +94,7 @@ export default function AllowWorkers() {
   return (
     <Section pb={12}>
       <SubSectionTitle>
-        <strong>Use Specific Workers</strong>
+        <strong>Use Specific Workers ({allowedWorkers.length}/5)</strong>
         <div className="block w-full mt-2 mb-2 text-xs">
           Add workers to send all image requests only to specific workers.
           Useful for debugging purposes or testing features available on
