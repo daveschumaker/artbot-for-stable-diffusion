@@ -28,7 +28,9 @@ export const handleUsePreset = ({
     cfg_scale: presetDetails.cfg_scale
       ? presetDetails.cfg_scale
       : input.cfg_scale,
+    // @ts-ignore
     loras: presetDetails.loras ? presetDetails.loras : input.loras,
+    // @ts-ignore
     tis: presetDetails.tis ? presetDetails.tis : input.tis,
     steps: presetDetails.steps ? presetDetails.steps : input.steps,
     orientationType: input.orientationType,
