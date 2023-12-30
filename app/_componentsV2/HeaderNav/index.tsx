@@ -13,6 +13,7 @@ import { useModal } from '@ebay/nice-modal-react'
 import UserKudos from './UserKudos'
 import MenuButton from './MenuButton'
 import styles from './headerNav.module.css'
+import UserWarning from './UserWarning'
 
 function ListItem({
   href,
@@ -241,6 +242,7 @@ export function HeaderNav() {
       </div>
       <div className="flex gap-2 align-middle h-[32px]">
         <UserKudos />
+        <UserWarning />
         <div className="flex-none h-[32px]">
           <button
             className="btn btn-sm btn-ghost normal-case px-[4px]"

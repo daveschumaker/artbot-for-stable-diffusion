@@ -20,6 +20,7 @@ import { HordeWorkerDetails } from '_types/horde'
 import NiceModal from '@ebay/nice-modal-react'
 import WorkerDetailsCard from '../WorkerDetailsCard'
 import { Button } from 'app/_components/Button'
+import styles from './headerNav.module.css'
 
 export default function HordeInfo({
   handleClose = () => {}
@@ -211,10 +212,11 @@ export default function HordeInfo({
       ? Math.floor(worker.kudos_rewards / (worker.uptime / 3600))
       : false
 
-    // fun color: bg-[#6A4B88]
-
     return (
-      <div className="font-mono p-2 rounded-lg text-white bg-[#b3b3b3]">
+      <div
+        className={styles.WorkerDetails}
+        // className="font-mono p-2 rounded-lg text-white bg-[#b3b3b3]"
+      >
         <div className="flex flex-row gap-2 items-center mb-2">
           <div className="flex flex-row gap-2">
             <Button

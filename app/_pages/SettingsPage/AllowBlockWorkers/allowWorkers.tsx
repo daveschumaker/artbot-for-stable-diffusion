@@ -93,6 +93,7 @@ export default function AllowWorkers() {
 
   return (
     <Section pb={12}>
+      <a id="use-specific-workers" />
       <SubSectionTitle>
         <strong>Use Specific Workers ({allowedWorkers.length}/5)</strong>
         <div className="block w-full mt-2 mb-2 text-xs">

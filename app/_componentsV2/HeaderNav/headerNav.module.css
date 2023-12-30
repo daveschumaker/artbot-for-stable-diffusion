@@ -12,3 +12,18 @@
   width: 100%;
   z-index: var(--zIndex-navBar);
 }
+
+.WorkerDetails {
+  background-color: #7d7d7d;
+  border-radius: 8px;
+  color: white;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 600;
+  padding: 8px;
+}
+
+/* @media (prefers-color-scheme: dark) {
+  .WorkerDetails {
+    background-color: #7d7d7d;
+  }
+} */
