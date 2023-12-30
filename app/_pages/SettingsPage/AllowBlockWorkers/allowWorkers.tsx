@@ -2,6 +2,7 @@ import { IconPlus, IconTrash } from '@tabler/icons-react'
 import { SelectOption } from '_types/artbot'
 import { fetchWorkers } from 'app/_api/fetchWorkers'
 import { Button } from 'app/_components/Button'
+import Linker from 'app/_components/Linker'
 import MaxWidth from 'app/_components/MaxWidth'
 import Section from 'app/_components/Section'
 import Select from 'app/_components/Select'
@@ -18,7 +19,7 @@ import { useStore } from 'statery'
 
 export default function AllowWorkers() {
   const appStore = useStore(appInfoStore)
-  const [blockedWorkers, setBlockedWorkers] = useState<any[]>([])
+  const [allowedWorkers, setAllowedWorkers] = useState<any[]>([])
   const [selectedWorker, setSelectedWorker] = useState<SelectOption>({
     label: 'None',
     value: null
@@ -48,7 +49,7 @@ export default function AllowWorkers() {
   }
 
   const handleAddWorker = (workerObj: SelectOption) => {
-    const updatedWorkers = [...blockedWorkers]
+    const updatedWorkers = [...allowedWorkers]
     const exists = updatedWorkers.filter((obj) => obj.value === workerObj.value)
 
     if (!exists || exists.length === 0) {
@@ -58,70 +59,73 @@ export default function AllowWorkers() {
         timestamp: new Date().toLocaleString()
       })
 
-      AppSettings.save('blockedWorkers', updatedWorkers)
-      setBlockedWorkers(updatedWorkers)
+      AppSettings.save('allowedWorkers', updatedWorkers)
+      setAllowedWorkers(updatedWorkers)
     }
   }
 
   const removeWorkerFromList = (worker: SelectOption) => {
-    const updatedWorkers = blockedWorkers.filter(
+    const updatedWorkers = allowedWorkers.filter(
       (obj) => obj.value !== worker.value
     )
 
     if (updatedWorkers.length === 0) {
-      setUseBlockedWorkers(false)
-      AppSettings.set('useBlockedWorkers', false)
+      setUseAllowedWorkers(false)
+      AppSettings.set('useAllowedWorkers', false)
     }
 
     AppSettings.save(
-      'blockedWorkers',
+      'allowedWorkers',
       updatedWorkers.length === 0 ? '' : updatedWorkers
     )
-    setBlockedWorkers(updatedWorkers)
+    setAllowedWorkers(updatedWorkers)
   }
 
   useEffect(() => {
     fetchWorkersFromApi()
 
-    const blockedList = AppSettings.get('blockedWorkers') || []
-    setBlockedWorkers(blockedList)
+    const allowedList = AppSettings.get('allowedWorkers') || []
+    setAllowedWorkers(allowedList)
 
-    const forceUse = AppSettings.get('useBlockedWorkers') || false
-    setUseBlockedWorkers(forceUse)
+    const forceUse = AppSettings.get('useAllowedWorkers') || false
+    setUseAllowedWorkers(forceUse)
   }, [])
 
   return (
     <Section pb={12}>
+      <a id="use-specific-workers" />
       <SubSectionTitle>
-        <strong>Worker Blocklist ({blockedWorkers.length}/5)</strong>
+        <strong>Use Specific Workers ({allowedWorkers.length}/5)</strong>
         <div className="block w-full mt-2 mb-2 text-xs">
-          Add worker IDs here to prevent sending image requests to that machine.
-          Useful in instances where a worker is out of date, serving incorrect
-          models, or a troll. Adding workers here will increase kudos costs by
-          10% due to unoptimal use of Horde resources. Max of 5.
+          Add workers to send all image requests only to specific workers.
+          Useful for debugging purposes or testing features available on
+          particular workers. Maximum of 5 workers.{' '}
+          <Linker href="/info/workers" passHref>
+            View all available workers
+          </Linker>
         </div>
       </SubSectionTitle>
       <div className="mb-4">
         <InputSwitchV2
-          label="Enable? (block jobs from these workers)"
-          tooltip="If enabled, you will block requests to these workers."
-          disabled={blockedWorkers.length === 0}
+          label="Enable? (only send jobs to these workers)"
+          tooltip="If enabled, you will only send requests to these workers."
+          disabled={allowedWorkers.length === 0}
           handleSwitchToggle={() => {
-            if (!appStore.useBlockedWorkers) {
-              setUseAllowedWorkers(false)
-              setUseBlockedWorkers(true)
-              AppSettings.set('useAllowedWorkers', false)
-              AppSettings.set('useBlockedWorkers', true)
-            } else {
+            if (!appStore.useAllowedWorkers) {
+              setUseAllowedWorkers(true)
               setUseBlockedWorkers(false)
+              AppSettings.set('useAllowedWorkers', true)
               AppSettings.set('useBlockedWorkers', false)
+            } else {
+              setUseAllowedWorkers(false)
+              AppSettings.set('useAllowedWorkers', false)
             }
           }}
-          checked={appStore.useBlockedWorkers}
+          checked={appStore.useAllowedWorkers}
         />
       </div>
-      {blockedWorkers.length > 0 &&
-        blockedWorkers.map((worker) => {
+      {allowedWorkers.length > 0 &&
+        allowedWorkers.map((worker) => {
           return (
             <div
               key={worker.id}
@@ -159,7 +163,7 @@ export default function AllowWorkers() {
             value={selectedWorker}
           />
           <Button
-            disabled={blockedWorkers.length >= 5 || !selectedWorker.value}
+            disabled={allowedWorkers.length >= 5 || !selectedWorker.value}
             onClick={() => {
               if (selectedWorker.value) {
                 handleAddWorker(selectedWorker)

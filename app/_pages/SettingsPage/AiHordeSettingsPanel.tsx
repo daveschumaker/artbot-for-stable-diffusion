@@ -11,16 +11,15 @@ import TooltipComponent from 'app/_components/TooltipComponent'
 import MaxWidth from 'app/_components/MaxWidth'
 import Input from 'app/_components/Input'
 import { Button } from 'app/_components/Button'
-import Linker from 'app/_components/Linker'
 import Select from 'app/_components/Select'
 import AppSettings from 'app/_data-models/AppSettings'
 import React from 'react'
 import SharedKeys from './SharedKeys'
 import WorkerBlocklist from './WorkerBlocklist'
 import InputSwitchV2 from 'app/_modules/AdvancedOptionsPanel/InputSwitchV2'
-import { setLockedToWorker } from 'app/_store/appStore'
 import { handleApiKeyLogin } from 'app/_utils/hordeUtils'
 import { IconEye } from '@tabler/icons-react'
+import AllowWorkers from './AllowBlockWorkers/allowWorkers'
 
 const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
   const userStore = useStore(userInfoStore)
@@ -64,17 +63,6 @@ const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
     const { value } = obj
     AppSettings.save(key, value)
     setComponentState({ [key]: value })
-  }
-
-  const handleSetWorkerId = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const workerId = e.target.value || ''
-
-    if (workerId) {
-      setLockedToWorker(true)
-    }
-
-    AppSettings.save('useWorkerId', workerId.trim())
-    setComponentState({ useWorkerId: e.target.value })
   }
 
   return (
@@ -369,45 +357,7 @@ const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
       <Section pb={12}>
         <WorkerBlocklist />
       </Section>
-      <Section pb={12}>
-        <SubSectionTitle>
-          <strong>Use a specific worker ID</strong>
-          <div className="block w-full mt-2 mb-2 text-xs">
-            Enter worker ID to send all of your image requests to a specific
-            worker. Useful for debugging purposes or testing features available
-            on particular workers.{' '}
-            <Linker href="/info/workers" passHref>
-              View all available workers
-            </Linker>
-          </div>
-        </SubSectionTitle>
-        <MaxWidth
-          // @ts-ignore
-          width="480px"
-        >
-          <Input
-            type="text"
-            name="steps"
-            onChange={handleSetWorkerId}
-            value={componentState.useWorkerId}
-            placeholder="Worker ID"
-          />
-          <div className="flex justify-start gap-2 mt-2">
-            <Button
-              theme="secondary"
-              onClick={() => {
-                unsetUserInfo()
-                setComponentState({ useWorkerId: '' })
-                setLockedToWorker(false)
-                AppSettings.save('useWorkerId', '')
-              }}
-            >
-              Clear
-            </Button>
-            <Button onClick={() => {}}>Save</Button>
-          </div>
-        </MaxWidth>
-      </Section>
+      <AllowWorkers />
     </>
   )
 }

@@ -19,7 +19,7 @@
     align-items: flex-start;
     display: block;
     position: fixed;
-    top: 48px;
+    top: 42px;
     width: 100%;
     z-index: var(--zIndex-overBase);
   }

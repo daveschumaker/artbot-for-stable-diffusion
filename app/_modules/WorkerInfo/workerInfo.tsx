@@ -11,18 +11,14 @@ import Row from '../Row'
 import { Button } from 'app/_components/Button'
 import ModelsModal from './ModelsModal'
 import styles from './workerInfo.module.css'
-import { useForceUpdate } from 'app/_hooks/useForceUpdate'
-import { setLockedToWorker } from 'app/_store/appStore'
 import { showSuccessToast } from 'app/_utils/notificationUtils'
 import {
-  IconCheckbox,
   IconChevronDown,
   IconChevronRight,
   IconCopy,
   IconPlayerPause,
   IconPlayerPlay,
-  IconPoint,
-  IconSquare
+  IconPoint
 } from '@tabler/icons-react'
 
 const WorkerTitle = styled.div`
@@ -67,7 +63,6 @@ const WorkerInfo = ({
   worker,
   workers
 }: any) => {
-  const forceUpdate = useForceUpdate()
   const [showModels, setShowModels] = useState(false)
 
   let statusColor = 'green'
@@ -154,7 +149,7 @@ const WorkerInfo = ({
             id: {worker.id}
           </WorkerId>
           {worker.info && (
-            <div className="mt-2 text-sm italic">{worker.info}</div>
+            <div className="pt-2 text-sm italic">{worker.info}</div>
           )}
           <WorkerStatus>
             <div>
@@ -239,7 +234,7 @@ const WorkerInfo = ({
           </WorkerStatus>
         </div>
 
-        <div
+        {/* <div
           className={clsx(
             styles['use-worker-row'],
             showModels && styles['worker-row-padding']
@@ -269,7 +264,7 @@ const WorkerInfo = ({
               Use this worker for all jobs
             </Button>
           )}
-        </div>
+        </div> */}
         {editable !== false && worker.online && (
           <div className="mt-4">
             {worker.online && !worker.maintenance_mode && (

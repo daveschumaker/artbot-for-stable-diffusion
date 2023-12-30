@@ -78,6 +78,12 @@ class Samplers {
         supportsImg2Img: false,
         maxSteps: loggedIn ? MAX_STEPS_LOGGED_IN : 50,
         modelValidation: (model: string) => model !== 'stable_diffusion_2.0'
+      },
+      lcm: {
+        supportsImg2Img: false,
+        maxSteps: loggedIn ? MAX_STEPS_LOGGED_IN : 50,
+        modelValidation: (model: string) =>
+          model.toLowerCase().indexOf('sdxl') >= 0
       }
     }
 
@@ -95,6 +101,13 @@ class Samplers {
 
     for (const [key, value] of Object.entries(Samplers.samplerDetails())) {
       if (isImg2Img && value.supportsImg2Img === false) {
+        continue
+      }
+
+      const validateModel =
+        Samplers.samplerDetails()[key].modelValidation(model)
+
+      if (!validateModel) {
         continue
       }
 

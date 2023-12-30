@@ -26,7 +26,8 @@ interface AppStore {
   stableHordeApiOnline: boolean
   storageQuotaLimit: boolean
   unsupportedBrowser: boolean
-  lockedToWorker: boolean
+  useAllowedWorkers: boolean
+  useBlockedWorkers: boolean
   pauseJobQueue: boolean
 }
 
@@ -56,8 +57,9 @@ export const appInfoStore = makeStore<AppStore>({
   stableHordeApiOnline: true,
   storageQuotaLimit: false,
   unsupportedBrowser: false,
-  pauseJobQueue: false,
-  lockedToWorker: false
+  useAllowedWorkers: false,
+  useBlockedWorkers: false,
+  pauseJobQueue: false
 })
 
 export const setPauseJobQueue = (val: boolean) => {
@@ -66,9 +68,15 @@ export const setPauseJobQueue = (val: boolean) => {
   }))
 }
 
-export const setLockedToWorker = (val: boolean) => {
+export const setUseAllowedWorkers = (val: boolean) => {
   appInfoStore.set(() => ({
-    lockedToWorker: val
+    useAllowedWorkers: val
+  }))
+}
+
+export const setUseBlockedWorkers = (val: boolean) => {
+  appInfoStore.set(() => ({
+    useBlockedWorkers: val
   }))
 }
 

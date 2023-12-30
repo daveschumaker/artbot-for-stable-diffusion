@@ -8,9 +8,20 @@ import { initDb } from 'app/_utils/db'
 import { initializePrimaryWindowOnLoad } from 'app/_utils/primaryWindow'
 import AppTheme from '../AppTheme'
 import AppSettings from 'app/_data-models/AppSettings'
-import { setLockedToWorker, setPauseJobQueue } from 'app/_store/appStore'
+import {
+  setPauseJobQueue,
+  setUseAllowedWorkers,
+  setUseBlockedWorkers
+} from 'app/_store/appStore'
 import { handleApiKeyLogin } from 'app/_utils/hordeUtils'
 import { showSuccessToast } from 'app/_utils/notificationUtils'
+import NiceModal from '@ebay/nice-modal-react'
+import Modal from 'app/_componentsV2/Modal'
+
+NiceModal.register('confirmation-modal', Modal)
+NiceModal.register('lockedToWorker-modal', Modal)
+NiceModal.register('tooltip-modal', Modal)
+NiceModal.register('workerDetails-modal', Modal)
 
 export default function AppInit() {
   const searchParams = useSearchParams()
@@ -36,13 +47,17 @@ export default function AppInit() {
     initPendingJobService()
     initializePrimaryWindowOnLoad()
 
-    const pauseQueue = AppSettings.get('pauseJobQueue')
-    const workerId = AppSettings.get('useWorkerId')
-
-    if (workerId) {
-      setLockedToWorker(true)
+    const useAllowedWorkers = AppSettings.get('useAllowedWorkers') || false
+    const useBlockedWorkers = AppSettings.get('useBlockedWorkers') || false
+    const allowedWorkers = AppSettings.get('allowedWorkers') || []
+    const blockedWorkers = AppSettings.get('blockedWorkers') || []
+    if (useAllowedWorkers && allowedWorkers.length > 0) {
+      setUseAllowedWorkers(true)
+    } else if (useBlockedWorkers && blockedWorkers.length > 0) {
+      setUseBlockedWorkers(true)
     }
 
+    const pauseQueue = AppSettings.get('pauseJobQueue')
     if (pauseQueue) {
       setPauseJobQueue(true)
     }

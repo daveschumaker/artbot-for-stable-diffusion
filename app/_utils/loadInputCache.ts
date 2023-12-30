@@ -4,6 +4,7 @@ export enum CreatePageMode {
   LOAD_MODEL = 'model',
   SHARE = 'share',
   SHORTLINK = 'i',
+  PRESET = 'preset',
   PROMPT = 'prompt'
 }
 

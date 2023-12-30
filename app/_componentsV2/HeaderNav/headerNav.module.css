@@ -1,0 +1,29 @@
+.HeaderNav {
+  align-items: center;
+  background-color: var(--body-color);
+  display: flex;
+  flex-direction: row;
+  height: var(--headerNav-height);
+  left: 0;
+  padding: env(safe-area-inset-top) 8px 0 8px;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 100%;
+  z-index: var(--zIndex-navBar);
+}
+
+.WorkerDetails {
+  background-color: #7d7d7d;
+  border-radius: 8px;
+  color: white;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 600;
+  padding: 8px;
+}
+
+/* @media (prefers-color-scheme: dark) {
+  .WorkerDetails {
+    background-color: #7d7d7d;
+  }
+} */

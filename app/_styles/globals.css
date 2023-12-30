@@ -6,6 +6,7 @@
   /* COLORS */
   --accent-color: #8e6f7e;
   --body-color: #f2f2f2;
+  --body-solid-color: white;
   --border-color: #7e5a6c;
   --btn-primary: #6ab7c6;
   --btn-primary-hover: #8fc9d4;
@@ -14,6 +15,7 @@
   --carbon-bg: #dadada;
   --card-background: #7e5a6c;
   --footer-color: #344c50;
+  --highlight: #C0C0C0;
   --input-background: #ffffff;
   --input-color: #282828;
   --light-shade: #efedef;
@@ -41,15 +43,17 @@
 
 @media (min-width: 640px) {
   :root {
-    --headerNav-height: 48px;
+    /* --headerNav-height: 48px; */
     --input-element-h: 36px;
   }
 }
 
 [data-theme='dark'] {
   --body-color: #222222;
+  --body-solid-color: black;
   --carbon-bg: #323232;
   --footer-color: #f3f3ef;
+  --highlight: #464646;
   --input-background: rgb(42, 48, 60);
   --input-color: #e1e1e1;
   --input-text: #e1e1e1;

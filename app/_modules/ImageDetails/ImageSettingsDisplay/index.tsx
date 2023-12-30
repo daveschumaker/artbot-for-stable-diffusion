@@ -196,7 +196,7 @@ export default function ImageSettingsDisplay({
                               className="text-cyan-500"
                             >
                               <FlexRow gap={8}>
-                                {lora.label}
+                                {lora.label || `(CivitAI ID: ${lora.name})`}
                                 <IconExternalLink stroke={1.5} size={16} />
                               </FlexRow>
                             </Linker>

@@ -1,7 +1,6 @@
 import { ReactNode } from 'react'
 import ContentWrapper from 'app/_components/ContentWrapper'
 import FixedMenu from 'app/_modules/FixedMenu'
-import ModalProvider from 'app/_modules/ModalProvider'
 import MaxWidth from 'app/_components/MaxWidth'
 import MobileFooter from 'app/_modules/MobileFooter'
 import AppUpdate from 'app/_modules/AppUpdate'
@@ -16,12 +15,10 @@ export default function RootLayout({
   return (
     <>
       <FixedMenu />
-      <ModalProvider>
-        <ContentWrapper>
-          <AppUpdate />
-          <MaxWidth margin="0 auto">{children}</MaxWidth>
-        </ContentWrapper>
-      </ModalProvider>
+      <ContentWrapper>
+        <AppUpdate />
+        <MaxWidth margin="0 auto">{children}</MaxWidth>
+      </ContentWrapper>
       <MobileFooter />
     </>
   )

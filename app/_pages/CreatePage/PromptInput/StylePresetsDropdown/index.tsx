@@ -5,8 +5,7 @@ import styles from './component.module.css'
 import { IconArrowBarLeft, IconPlayerPlayFilled } from '@tabler/icons-react'
 import { Button } from 'app/_components/Button'
 import FlexRow from 'app/_components/FlexRow'
-import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
-import { HordePreset } from '_types/horde'
+import { handleUsePreset } from './presetController'
 
 export default function StylePresetsDropdown({
   input,
@@ -15,51 +14,21 @@ export default function StylePresetsDropdown({
 }: any) {
   const [filter, setFilter] = useState('')
 
-  const handleUsePreset = (key: string) => {
-    const presetDetails: HordePreset = stylePresets[key]
-    let [positive, negative = ''] = presetDetails.prompt.split('###')
-    positive = positive.replace('{p}', input.prompt)
-    positive = positive.replace('{np}', '')
-    negative = negative.replace('{np}', '')
-    negative = `${negative} ${input.negative}`
-
-    const updateInput: Partial<DefaultPromptInput> = {
-      prompt: positive,
-      hires: presetDetails.hires_fix ? presetDetails.hires_fix : input.hires,
-      karras: presetDetails.karras ? presetDetails.karras : input.karras,
-      negative: negative.trim(),
-      models: presetDetails.model ? [presetDetails.model] : input.models,
-      sampler: presetDetails.sampler_name
-        ? presetDetails.sampler_name
-        : input.sampler,
-      cfg_scale: presetDetails.cfg_scale
-        ? presetDetails.cfg_scale
-        : input.cfg_scale,
-      loras: presetDetails.loras ? presetDetails.loras : input.loras,
-      tis: presetDetails.tis ? presetDetails.tis : input.tis,
-      steps: presetDetails.steps ? presetDetails.steps : input.steps,
-      orientationType: input.orientationType,
-      height: input.height,
-      width: input.width
-    }
-
-    if (presetDetails.width && presetDetails.height) {
-      updateInput.orientationType = 'custom'
-      updateInput.height = presetDetails.height
-      updateInput.width = presetDetails.width
-    }
-
-    setInput({
-      ...updateInput
+  const handlePresetSelect = (key: string) => {
+    const updatedInput = handleUsePreset({
+      key,
+      input
     })
+
+    setInput({ ...updatedInput })
     handleClose()
   }
 
   const renderStyleList = () => {
     const arr = []
 
-    const p = <strong>[user prompt]</strong>
-    const np = input.negative ? input.negative : ''
+    const p = `[user prompt]`
+    const np = input.negative ? `[negative user prompt]` : ''
 
     for (const [key, presetDetails] of Object.entries(stylePresets)) {
       if (filter) {
@@ -105,7 +74,7 @@ export default function StylePresetsDropdown({
             >
               <Button
                 size="small"
-                onClick={() => handleUsePreset(key)}
+                onClick={() => handlePresetSelect(key)}
                 width="72px"
               >
                 Use

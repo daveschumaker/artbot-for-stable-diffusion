@@ -53,6 +53,7 @@ export interface CreatePageQueryParams {
   drawing?: string | null
   i?: string | null
   model?: string | null
+  preset?: string | null
   prompt?: string | null
 }
 
@@ -260,6 +261,11 @@ export interface SelectComponentProps {
 export interface SelectModelDetailsProps {
   models: Array<string>
   multiModels: boolean
+}
+
+export interface SelectOption {
+  label: string
+  value: string | null
 }
 
 export type SetInput = Dispatch<Partial<DefaultPromptInput>>

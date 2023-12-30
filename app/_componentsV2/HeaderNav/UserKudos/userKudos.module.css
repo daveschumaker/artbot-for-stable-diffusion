@@ -1,0 +1,32 @@
+.UserKudos {
+  align-items: center;
+  background-color: #c7c7c7;
+  border-radius: 8px;
+  column-gap: 4px;
+  display: flex;
+  flex-direction: row;
+  font-size: 12px;
+  font-weight: 600;
+  height: 32px;
+  line-height: 16px;
+  padding: 0 6px;
+}
+
+.UserKudos:active {
+  transform: scale(0.96);
+}
+
+.UserKudos:hover {
+  background-color: #d8d8d8;
+}
+
+@media (prefers-color-scheme: dark) {
+  .UserKudos {
+    background-color: #454444;
+  }
+
+  /* 30% lighter shade */
+  .UserKudos:hover {
+    background-color: #7d7c7c;
+  }
+}
