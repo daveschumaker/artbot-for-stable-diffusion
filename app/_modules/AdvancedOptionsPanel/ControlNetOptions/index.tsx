@@ -58,10 +58,6 @@ const ControlNetOptions = () => {
           })}
           onChange={(obj: { value: string; label: string }) => {
             setInput({ control_type: obj.value })
-
-            if (obj.value !== '') {
-              setInput({ karras: false, hires: false })
-            }
           }}
           isSearchable={false}
           value={controlType}

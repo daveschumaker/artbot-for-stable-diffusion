@@ -271,30 +271,11 @@ class ImageParamsForApi {
     }
 
     if (control_type && control_type !== '' && source_image) {
-      // Things to remove
+      // Fields removed before sending request to API.
       delete apiParams.params.sampler_name
-      apiParams.params.karras = false
-      apiParams.params.hires_fix = false
-    }
-
-    if (source_image) {
-      apiParams.params.hires_fix = false
     }
 
     if (loras && loras.length === 0) {
-      delete apiParams.params.loras
-    }
-
-    // SDXL_beta validation options for Stability.ai beta workers
-    const filteredBetaModels = models.filter((model) =>
-      model.toLowerCase().includes('sdxl_beta')
-    )
-    const hasSdxlBeta = filteredBetaModels.length > 0
-
-    if (hasSdxlBeta) {
-      apiParams.params.karras = false
-      apiParams.params.hires_fix = false
-      apiParams.params.post_processing = []
       delete apiParams.params.loras
     }
 

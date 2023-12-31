@@ -22,17 +22,6 @@ export default function MiscOptions() {
             <InputSwitchV2
               label="Karras"
               tooltip="Denoising magic. Dramatically improves image generation using fewer steps."
-              // @ts-ignore
-              moreInfoLink={
-                input.source_image &&
-                input.control_type && (
-                  <div className="mt-[-4px] text-xs text-slate-500 dark:text-slate-400 font-[600]">
-                    <strong>Note:</strong> Cannot be used for ControlNet
-                    requests
-                  </div>
-                )
-              }
-              disabled={input.source_image && input.control_type ? true : false}
               handleSwitchToggle={() => {
                 if (!input.karras) {
                   setInput({ karras: true })
