@@ -249,7 +249,8 @@ export function HeaderNav() {
             onClick={() => {
               hordeInfoModal.show({
                 content: <HordeInfo handleClose={hordeInfoModal.remove} />,
-                title: 'AI Horde Performance'
+                title: 'AI Horde Performance',
+                maxWidth: 'max-w-[640px]'
               })
             }}
           >

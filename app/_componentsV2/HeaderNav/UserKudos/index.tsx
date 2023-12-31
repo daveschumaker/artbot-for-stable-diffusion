@@ -33,7 +33,7 @@ export default function UserKudos() {
   const UserDetails = () => {
     return (
       <div className="flex flex-col gap-2">
-        <div className="stats bg-body-solid-color">
+        <div className="stats bg-body-color">
           <div className="stat">
             <div className="stat-title text-input-color">
               Total Available Kudos
@@ -47,7 +47,7 @@ export default function UserKudos() {
           </div>
         </div>
         {records.request && (
-          <div className="stats bg-body-solid-color">
+          <div className="stats bg-body-color">
             <div className="stat">
               <div className="stat-title text-input-color">
                 Images requested

@@ -71,7 +71,7 @@ function Modal({
     >
       <div
         className={clsx('modal-box p-0', maxWidth ? maxWidth : 'max-w-5xl')}
-        style={{ backgroundColor: 'var(--modal-background)' }}
+        style={{ backgroundColor: 'var(--body-color)' }}
       >
         <div
           className="sticky bg-inherit"

@@ -263,7 +263,7 @@ export default function HordeInfo({
                   ),
                   content: <WorkerDetailsCard edit id={worker.id} />,
                   handleClose: fetchAllWorkersDetails,
-                  // maxWidth: 'max-w-2xl'
+                  maxWidth: 'max-w-[480px]',
                   title: 'Worker Details'
                 })
               }}
