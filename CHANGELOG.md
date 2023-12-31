@@ -1,7 +1,8 @@
 # 2023.12.31
 
 - Happy New Year's Eve!
-- Fix: Issue with ArtBot not properly logging in some users when they first load the page.
+- Fix: Hopefully fixed issue with ArtBot [not properly logging in some users when they first load the page](https://github.com/daveschumaker/artbot-for-stable-diffusion/issues/205). If you had this issue before, let me know if this still happens.
+- Fix: Karras and Hires fix work for ControlNet and img2img requests. (Thanks to Sidorok for reporting this)
 
 # 2023.12.30
 
@@ -13,7 +14,6 @@
 - Worker allow and blocklists now utilize a dropdown search (no more copy and pasting pesky worker UUIDs)
 - Added support for LCM sampler when using SDXL image requests (note: you should be using this with specific LoRAs -- I will have to write some better warning and tips for this in the future).
 - Speaking of which: I added a new query parameter for quickly accessing style presets. For example, [here's how you can get started with SDXL Turbo](https://tinybots.net/artbot/create?preset=turbo) (just type in a prompt and hit create).
-- Fix: Karras and Hires fix work for ControlNet and img2img requests. (Thanks to Sidorok for reporting this)
 
 # 2023.12.26
 
