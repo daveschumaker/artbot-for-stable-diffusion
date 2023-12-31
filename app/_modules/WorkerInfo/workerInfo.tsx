@@ -1,7 +1,6 @@
 import clsx from 'clsx'
 import { useState } from 'react'
 import styled from 'styled-components'
-import { fetchUserDetails } from 'app/_api/userInfo'
 import AppSettings from 'app/_data-models/AppSettings'
 import { setWorker } from 'app/_store/userStore'
 import { clientHeader, getApiHostServer } from 'app/_utils/appUtils'
@@ -20,6 +19,7 @@ import {
   IconPlayerPlay,
   IconPoint
 } from '@tabler/icons-react'
+import { fetchUserDetailsV2 } from 'app/_api/fetchUserDetailsV2'
 
 const WorkerTitle = styled.div`
   align-items: center;
@@ -110,7 +110,7 @@ const WorkerInfo = ({
 
     await sleep(1000)
 
-    await fetchUserDetails(AppSettings.get('apiKey'))
+    await fetchUserDetailsV2(AppSettings.get('apiKey'))
 
     loadingWorkerStatus[id] = false
     setComponentState({ loadingWorkerStatus: { ...updateWorkerLoadingState } })

@@ -1,3 +1,8 @@
+# 2023.12.31
+
+- Happy New Year's Eve!
+- Fix: Issue with ArtBot not properly logging in some users when they first load the page.
+
 # 2023.12.30
 
 - Happy almost New Year!

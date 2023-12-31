@@ -7,7 +7,7 @@ import { JobStatus } from '_types'
 import { buildModelAvailability } from 'app/_api/fetchAvailableModels'
 import { fetchHordePerformance } from 'app/_api/fetchHordePerformance'
 import fetchMyWorkers from 'app/_api/fetchMyWorkers'
-import { fetchUserDetails, setUserId } from 'app/_api/userInfo'
+import { setUserId } from 'app/_api/userInfo'
 import AppSettings from 'app/_data-models/AppSettings'
 
 // @ts-ignore
@@ -21,6 +21,7 @@ import {
 } from './db'
 import { initWindowLogger } from './debugTools'
 import { loadAuthToken } from './authUtils'
+import { fetchUserDetailsV2 } from 'app/_api/fetchUserDetailsV2'
 
 export const updateShowGrid = () => {
   if (localStorage.getItem('showGrid') === 'true') {
@@ -137,7 +138,8 @@ export const initAppSettings = async () => {
   initWindowLogger()
   fixLocalStorage()
   fetchHordePerformance()
-  fetchUserDetails(apikey)
+  fetchUserDetailsV2(apikey)
+  // fetchUserDetails(apikey)
   setUserId()
   buildModelAvailability()
   fetchMyWorkers()
@@ -157,7 +159,7 @@ export const initAppSettings = async () => {
       return
     }
 
-    await fetchUserDetails(apikey)
+    await fetchUserDetailsV2(apikey)
     await fetchMyWorkers()
   }, 60000)
 }

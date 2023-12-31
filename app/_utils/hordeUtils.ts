@@ -1,18 +1,17 @@
-import { fetchUserDetails } from 'app/_api/userInfo'
 import AppSettings from 'app/_data-models/AppSettings'
 import { setLoggedInState } from 'app/_store/userStore'
 import { AiHordeEmbedding } from '_types/artbot'
 import { TextualInversion } from '_types/horde'
+import { fetchUserDetailsV2 } from 'app/_api/fetchUserDetailsV2'
 
 export const handleApiKeyLogin = async (apikey: string) => {
   if (!apikey) {
     return { success: false }
   }
   try {
-    const data = await fetchUserDetails(apikey)
-    const { success } = data
+    const data = await fetchUserDetailsV2(apikey)
 
-    if (success) {
+    if (data && data.username) {
       AppSettings.save('apiKey', apikey)
       setLoggedInState(true)
       return { success: true }

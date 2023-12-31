@@ -1,5 +1,4 @@
 import { IconCopy, IconPencil, IconTrash } from '@tabler/icons-react'
-import { fetchUserDetails } from 'app/_api/userInfo'
 import DeleteConfirmModal from 'app/_modules/DeleteConfirmModal'
 import { Button } from 'app/_components/Button'
 import Input from 'app/_components/Input'
@@ -14,6 +13,7 @@ import { baseHost, basePath } from 'BASE_PATH'
 import { showSuccessToast } from 'app/_utils/notificationUtils'
 import InteractiveModal from 'app/_components/InteractiveModal/interactiveModal'
 import styles from './sharedKeys.module.css'
+import { fetchUserDetailsV2 } from 'app/_api/fetchUserDetailsV2'
 
 const cacheKeyIds: Array<string> = []
 const cacheKeyDetails: any = {}
@@ -93,7 +93,7 @@ const SharedKeys = () => {
         handleCopyKeyClick(details.id)
       }
 
-      await fetchUserDetails(AppSettings.get('apiKey'))
+      await fetchUserDetailsV2(AppSettings.get('apiKey'))
       setShowCreateModal(false)
     } catch (err) {
       setShowCreateModal(false)
