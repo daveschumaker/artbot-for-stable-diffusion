@@ -1,6 +1,6 @@
 import { MAX_IMAGES_PER_JOB } from '_constants'
-import CreateImageRequest from 'app/_data-models/CreateImageRequest'
-import { logError, uuidv4 } from './appUtils'
+import CreateImageRequestV2 from 'app/_data-models/v2/CreateImageRequestV2'
+import { logError } from './appUtils'
 import { getModelVersion, validModelsArray } from './modelUtils'
 import { modelStore } from 'app/_store/modelStore'
 import { SourceProcessing } from './promptUtils'
@@ -12,19 +12,24 @@ import {
   setPendingJob
 } from 'app/_controllers/pendingJobsCache'
 import AppSettings from 'app/_data-models/AppSettings'
-import { addPendingJobToDexie } from './db'
+import { addPendingJobToDexieV2, fetchImageDetails } from 'app/_db/pending'
+import ShortUniqueId from 'short-unique-id'
+
+const uid = new ShortUniqueId({ length: 8 })
 
 export const addPendingJobToDexieDb = async (
-  imageParams: CreateImageRequest
+  imageParams: CreateImageRequestV2
 ) => {
   // Create a temporary uuid for easier lookups.
   // Will be replaced later when job is accepted
   // by API
-  imageParams.jobId = uuidv4()
+  imageParams.jobId = uid.rnd()
 
   try {
-    const imageId = await addPendingJobToDexie(imageParams)
-    setPendingJob(Object.assign({}, imageParams, { id: imageId }))
+    await addPendingJobToDexieV2(imageParams)
+    await fetchImageDetails()
+
+    // setPendingJob(Object.assign({}, imageParams, { id: imageId }))
     return {
       success: true
     }
@@ -38,7 +43,7 @@ export const addPendingJobToDexieDb = async (
   }
 }
 
-const cloneImageParams = async (imageParams: CreateImageRequest) => {
+const cloneImageParams = async (imageParams: CreateImageRequestV2) => {
   const clonedParams = Object.assign({}, imageParams)
 
   clonedParams.timestamp = Date.now()
@@ -73,7 +78,7 @@ const cloneImageParams = async (imageParams: CreateImageRequest) => {
 }
 
 export const createPendingRerollJob = async (
-  imageParams: CreateImageRequest
+  imageParams: CreateImageRequestV2
 ) => {
   const clonedParams = await cloneImageParams(imageParams)
   return await addPendingJobToDexieDb(clonedParams)
@@ -183,7 +188,7 @@ export const addPendingJobToDb = async ({
   }
 }
 
-export const createPendingJob = async (imageParams: CreateImageRequest) => {
+export const createPendingJob = async (imageParams: CreateImageRequestV2) => {
   const { prompt } = imageParams
   let { numImages = 1 } = imageParams
 
@@ -224,7 +229,7 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
         for (let i = 0; i < numImages; i++) {
           if (clonedParams.models[0] === 'random') {
             clonedParams.models = [
-              CreateImageRequest.getRandomModel({ imageParams: clonedParams })
+              CreateImageRequestV2.getRandomModel({ imageParams: clonedParams })
             ]
           }
           clonedParams.modelVersion = getModelVersion(clonedParams.models[0])
@@ -239,12 +244,12 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
           if (clonedParams.orientation === 'random') {
             clonedParams = {
               ...clonedParams,
-              ...CreateImageRequest.getRandomOrientation()
+              ...CreateImageRequestV2.getRandomOrientation()
             }
           }
 
           if (clonedParams.sampler === 'random') {
-            clonedParams.sampler = CreateImageRequest.getRandomSampler({
+            clonedParams.sampler = CreateImageRequestV2.getRandomSampler({
               steps: clonedParams.steps,
               source_processing: clonedParams.source_processing
             })
@@ -284,7 +289,7 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
 
       if (clonedParams.models[0] === 'random') {
         clonedParams.models = [
-          CreateImageRequest.getRandomModel({ imageParams: clonedParams })
+          CreateImageRequestV2.getRandomModel({ imageParams: clonedParams })
         ]
       }
       clonedParams.modelVersion = getModelVersion(clonedParams.models[0])
@@ -299,12 +304,12 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
       if (clonedParams.orientation === 'random') {
         clonedParams = {
           ...clonedParams,
-          ...CreateImageRequest.getRandomOrientation()
+          ...CreateImageRequestV2.getRandomOrientation()
         }
       }
 
       if (clonedParams.sampler === 'random') {
-        clonedParams.sampler = CreateImageRequest.getRandomSampler({
+        clonedParams.sampler = CreateImageRequestV2.getRandomSampler({
           steps: clonedParams.steps,
           source_processing: clonedParams.source_processing
         })
@@ -327,12 +332,12 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
       if (clonedParams.orientation === 'random') {
         clonedParams = {
           ...clonedParams,
-          ...CreateImageRequest.getRandomOrientation()
+          ...CreateImageRequestV2.getRandomOrientation()
         }
       }
 
       if (clonedParams.sampler === 'random') {
-        clonedParams.sampler = CreateImageRequest.getRandomSampler({
+        clonedParams.sampler = CreateImageRequestV2.getRandomSampler({
           steps: clonedParams.steps,
           source_processing: clonedParams.source_processing
         })

@@ -2,9 +2,9 @@ import { createPendingJob } from '../pendingUtils'
 import { sleep } from '../sleep'
 import { hasPromptMatrix, promptMatrix } from '../promptUtils'
 import { DEFAULT_SAMPLER_ARRAY } from '_constants'
-import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
+import DefaultPromptInputV2 from 'app/_data-models/v2/DefaultPromptInputV2'
 
-interface ImageRequest extends DefaultPromptInput {
+interface ImageRequest extends DefaultPromptInputV2 {
   // additional fields if any
 }
 
@@ -24,8 +24,8 @@ const cleanMultiInputString = (multiString: string) => {
 }
 
 const handleMulti = (
-  newImageRequest: DefaultPromptInput,
-  field: keyof DefaultPromptInput,
+  newImageRequest: DefaultPromptInputV2,
+  field: keyof DefaultPromptInputV2,
   fieldName: string
 ): ImageRequest[] => {
   const tempArray = []
@@ -41,7 +41,7 @@ const handleMulti = (
 }
 
 const handleMultiSampler = (
-  newImageRequest: DefaultPromptInput
+  newImageRequest: DefaultPromptInputV2
 ): ImageRequest[] => {
   let samplerArray: string[] = []
 
@@ -61,7 +61,7 @@ const handleMultiSampler = (
 }
 
 const handlePromptMatrix = (
-  newImageRequest: DefaultPromptInput
+  newImageRequest: DefaultPromptInputV2
 ): ImageRequest[] => {
   const matrixPrompts = [...promptMatrix(newImageRequest.prompt)]
   const matrixNegative = [...promptMatrix(newImageRequest.negative)]
@@ -92,9 +92,9 @@ const handlePromptMatrix = (
 }
 
 const isValidMulti = (
-  newImageRequest: DefaultPromptInput,
-  useMultiField: keyof DefaultPromptInput,
-  fieldName: keyof DefaultPromptInput
+  newImageRequest: DefaultPromptInputV2,
+  useMultiField: keyof DefaultPromptInputV2,
+  fieldName: keyof DefaultPromptInputV2
 ): boolean => {
   return (
     newImageRequest[useMultiField] &&
@@ -129,7 +129,7 @@ const mergePendingJobArray = (
 }
 
 export const createImageJob = async (
-  newImageRequest: DefaultPromptInput
+  newImageRequest: DefaultPromptInputV2
 ): Promise<{
   status?: string
   success: boolean

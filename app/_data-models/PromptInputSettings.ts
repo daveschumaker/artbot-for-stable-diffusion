@@ -4,11 +4,11 @@ import {
   getSettingFromDexie,
   updateSetting
 } from 'app/_db/settings'
-import DefaultPromptInput from './DefaultPromptInput'
+import DefaultPromptInputV2 from './v2/DefaultPromptInputV2'
 
 class PromptInputSettingsClass {
   updateSavedInput_NON_DEBOUNCED = async (
-    input: DefaultPromptInput = {} as DefaultPromptInput
+    input: DefaultPromptInputV2 = {} as DefaultPromptInputV2
   ) => {
     const clonedInput = Object.assign({}, input)
 
@@ -42,21 +42,21 @@ class PromptInputSettingsClass {
   delete = async (name: string) => {
     const data: { [key: string]: any } = await this.load()
     delete data[name]
-    this.updateSavedInput_NON_DEBOUNCED(data as DefaultPromptInput)
+    this.updateSavedInput_NON_DEBOUNCED(data as DefaultPromptInputV2)
   }
 
   get = async (name: string) => {
     console.log(`get?`, name)
   }
 
-  load = async (): Promise<DefaultPromptInput> => {
+  load = async (): Promise<DefaultPromptInputV2> => {
     try {
       const res = (await getSettingFromDexie(SettingName.PromptInput)) || []
       const { setting = {} } = res
-      return new DefaultPromptInput(setting)
+      return new DefaultPromptInputV2(setting)
     } catch (e) {
       console.log(`Error:`, e)
-      return new DefaultPromptInput()
+      return new DefaultPromptInputV2()
     }
   }
 }

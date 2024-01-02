@@ -1,13 +1,13 @@
 import { HordePreset } from '_types/horde'
-import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
 import { stylePresets } from './presets'
+import DefaultPromptInputV2 from 'app/_data-models/v2/DefaultPromptInputV2'
 
 export const handleUsePreset = ({
   key,
   input
 }: {
   key: string
-  input: DefaultPromptInput
+  input: DefaultPromptInputV2
 }) => {
   const presetDetails: HordePreset = stylePresets[key]
   let [positive, negative = ''] = presetDetails.prompt.split('###')
@@ -16,7 +16,7 @@ export const handleUsePreset = ({
   negative = negative.replace('{np}', '')
   negative = `${negative} ${input.negative}`
 
-  const updateInput: Partial<DefaultPromptInput> = {
+  const updateInput: Partial<DefaultPromptInputV2> = {
     prompt: positive,
     hires: presetDetails.hires_fix ? presetDetails.hires_fix : input.hires,
     karras: presetDetails.karras ? presetDetails.karras : input.karras,

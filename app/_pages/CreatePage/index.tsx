@@ -1,48 +1,48 @@
 'use client'
 
 /* eslint-disable @next/next/no-img-element */
+import clsx from 'clsx'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { useStore } from 'statery'
 
-import PageTitle from 'app/_components/PageTitle'
-import { loadEditPrompt, SourceProcessing } from 'app/_utils/promptUtils'
+import { appInfoStore } from 'app/_store/appStore'
+import { Button } from 'app/_components/Button'
+import { countImagesToGenerate } from 'app/_utils/imageUtils'
+import { CREATE_PAGE_PARAM } from '_constants'
+import { CreatePageMode } from 'app/_utils/loadInputCache'
+import { CreatePageQueryParams } from '_types/artbot'
 import { getBase64FromDraw } from 'app/_store/canvasStore'
 import { getDefaultPrompt } from 'app/_utils/db'
-import CreateImageRequest from 'app/_data-models/CreateImageRequest'
-import ShareLinkDetails from 'app/_data-models/ShareableLink'
-import { useStore } from 'statery'
-import { appInfoStore } from 'app/_store/appStore'
-import { countImagesToGenerate } from 'app/_utils/imageUtils'
-import PromptInputSettings from 'app/_data-models/PromptInputSettings'
-import { userInfoStore } from 'app/_store/userStore'
-import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
-import { logToConsole } from 'app/_utils/debugTools'
-import clsx from 'clsx'
-import { kudosCostV2 } from 'app/_utils/kudosCost'
-import { CreatePageMode } from 'app/_utils/loadInputCache'
-import ActionPanel from 'app/_pages/CreatePage/ActionPanel'
-import useComponentState from 'app/_hooks/useComponentState'
-import { uploadInpaint } from 'app/_controllers/imageDetailsCommon'
 import { handleCreateClick } from './createPage.controller'
-import PromptInput from 'app/_pages/CreatePage/PromptInput'
-import { CreatePageQueryParams } from '_types/artbot'
-import OptionsPanel from 'app/_pages/CreatePage/OptionsPanel'
-import FlexRow from 'app/_components/FlexRow'
-import CreatePageSettings from './Settings'
-import FormErrorMessage from './ActionPanel/FormErrorMessage'
-import { useWindowSize } from 'app/_hooks/useWindowSize'
-import InputValidationErrorDisplay from './PromptInput/InputValidationErrorDisplay'
-import { modelStore } from 'app/_store/modelStore'
-import { useInput } from 'app/_modules/InputProvider/context'
-import MaxWidth from 'app/_components/MaxWidth'
-import styles from './createPage.module.css'
-import { Button } from 'app/_components/Button'
-import { IconAlertTriangle, IconArrowBarToUp } from '@tabler/icons-react'
-import TooltipComponent from 'app/_components/TooltipComponent'
-import { CREATE_PAGE_PARAM } from '_constants'
 import { handleUsePreset } from './PromptInput/StylePresetsDropdown/presetController'
+import { IconAlertTriangle, IconArrowBarToUp } from '@tabler/icons-react'
+import { kudosCostV2 } from 'app/_utils/kudosCost'
+import { loadEditPrompt, SourceProcessing } from 'app/_utils/promptUtils'
+import { logToConsole } from 'app/_utils/debugTools'
+import { modelStore } from 'app/_store/modelStore'
+import { uploadInpaint } from 'app/_controllers/imageDetailsCommon'
+import { useInput } from 'app/_modules/InputProvider/context'
+import { userInfoStore } from 'app/_store/userStore'
+import { useWindowSize } from 'app/_hooks/useWindowSize'
+import ActionPanel from 'app/_pages/CreatePage/ActionPanel'
+import CreateImageRequestV2 from 'app/_data-models/v2/CreateImageRequestV2'
+import CreatePageSettings from './Settings'
+import DefaultPromptInputV2 from 'app/_data-models/v2/DefaultPromptInputV2'
+import FlexRow from 'app/_components/FlexRow'
+import FormErrorMessage from './ActionPanel/FormErrorMessage'
+import InputValidationErrorDisplay from './PromptInput/InputValidationErrorDisplay'
+import MaxWidth from 'app/_components/MaxWidth'
+import OptionsPanel from 'app/_pages/CreatePage/OptionsPanel'
+import PageTitle from 'app/_components/PageTitle'
+import PromptInput from 'app/_pages/CreatePage/PromptInput'
+import PromptInputSettings from 'app/_data-models/PromptInputSettings'
+import ShareLinkDetails from 'app/_data-models/ShareableLink'
+import TooltipComponent from 'app/_components/TooltipComponent'
+import useComponentState from 'app/_hooks/useComponentState'
+import styles from './createPage.module.css'
 
-const defaultState: DefaultPromptInput = new DefaultPromptInput()
+const defaultState: DefaultPromptInputV2 = new DefaultPromptInputV2()
 
 const CreatePage = ({ className }: any) => {
   const [actionPanelVisible, setActionPanelVisible] = useState(true)
@@ -77,7 +77,7 @@ const CreatePage = ({ className }: any) => {
     }
 
     if (buildId !== build) {
-      const imageParams = new CreateImageRequest(input)
+      const imageParams = new CreateImageRequestV2(input)
       // @ts-ignore
       const shareLinkDetails = ShareLinkDetails.encode(imageParams)
       localStorage.setItem('reloadPrompt', shareLinkDetails)
@@ -177,7 +177,7 @@ const CreatePage = ({ className }: any) => {
         delete json.canvasStore
         delete json.maskData
 
-        const input = new DefaultPromptInput()
+        const input = new DefaultPromptInputV2()
 
         for (const key in json) {
           if (json.hasOwnProperty(key) && input.hasOwnProperty(key)) {
@@ -198,12 +198,12 @@ const CreatePage = ({ className }: any) => {
     await updateLocalStorate()
 
     // Set initial state here as default. Will act as fallback in case none of the other options work.
-    let initialState: DefaultPromptInput | null = new DefaultPromptInput()
+    let initialState: DefaultPromptInputV2 | null = new DefaultPromptInputV2()
 
     // Step 1. Load user prompt settings, if available
     const promptInput = await PromptInputSettings.load()
 
-    initialState = { ...promptInput } as DefaultPromptInput
+    initialState = { ...promptInput } as DefaultPromptInputV2
 
     if (initialState && initialState.source_image) {
       uploadInpaint(initialState, {
@@ -218,7 +218,7 @@ const CreatePage = ({ className }: any) => {
       initialState = null
       // @ts-ignore
       initialState = {
-        ...new DefaultPromptInput(),
+        ...new DefaultPromptInputV2(),
         source_image: getBase64FromDraw().base64,
         source_processing: SourceProcessing.Img2Img,
         ...(loadEditPrompt() || {}),
@@ -353,7 +353,7 @@ const CreatePage = ({ className }: any) => {
     if (query[CreatePageMode.PRESET]) {
       const presetInput = handleUsePreset({
         key: query[CreatePageMode.PRESET],
-        input: initialState as DefaultPromptInput
+        input: initialState as DefaultPromptInputV2
       })
 
       // @ts-ignore
@@ -361,7 +361,7 @@ const CreatePage = ({ className }: any) => {
     }
 
     // Step 6. Set input
-    setInput({ ...(initialState as DefaultPromptInput) })
+    setInput({ ...(initialState as DefaultPromptInputV2) })
 
     logToConsole({
       data: initialState,

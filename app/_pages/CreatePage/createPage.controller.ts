@@ -1,18 +1,18 @@
-import AppSettings from 'app/_data-models/AppSettings'
-import CreateImageRequest from 'app/_data-models/CreateImageRequest'
-import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
+import { createImageJob } from 'app/_utils/V2/createImageJob'
 import { Dispatch } from 'react'
 import { getCanvasStore, resetSavedDrawingState } from 'app/_store/canvasStore'
-import { SetInput } from '_types'
 import { logDataForDebugging } from 'app/_utils/debugTools'
+import { SetInput } from '_types'
 import { showSuccessToast } from 'app/_utils/notificationUtils'
 import { SourceProcessing, savePromptHistory } from 'app/_utils/promptUtils'
-import { createImageJob } from 'app/_utils/V2/createImageJob'
+import AppSettings from 'app/_data-models/AppSettings'
+import CreateImageRequestV2 from 'app/_data-models/v2/CreateImageRequestV2'
+import DefaultPromptInputV2 from 'app/_data-models/v2/DefaultPromptInputV2'
 import PromptInputSettings from 'app/_data-models/PromptInputSettings'
 
 interface CreateClick {
   pending: boolean
-  input: DefaultPromptInput
+  input: DefaultPromptInputV2
   setPending: Dispatch<boolean>
   setErrors: Dispatch<any>
   setInput: SetInput
@@ -105,11 +105,11 @@ export const handleCreateClick = async ({
     name: 'index#handle_submit.CreateImageRequest',
 
     // @ts-ignore
-    data: new CreateImageRequest(inputToSubmit)
+    data: new CreateImageRequestV2(inputToSubmit)
   })
 
   // @ts-ignore
-  await createImageJob(new CreateImageRequest(inputToSubmit))
+  await createImageJob(new CreateImageRequestV2(inputToSubmit))
 
   if (!AppSettings.get('stayOnCreate') && !disableRedirect) {
     if (!AppSettings.get('saveInputOnCreate')) {
