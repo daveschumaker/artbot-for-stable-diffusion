@@ -1,6 +1,7 @@
 # 2024.01.02
 
-- Completely rewrote the pending image request / management logic. Hopefully this fixes issues with hanging jobs, disappearing jobs, etc. Let me know if you still have issues (or if things have gotten better!)
+- Completely rewrote the pending image request / management logic. Hopefully this fixes issues with hanging jobs, disappearing jobs, etc. The previous implementation on ArtBot was really hacky and slapped together over the last year. It turns out, I can greatly simplify things. ([Check out the PR on Github](https://github.com/daveschumaker/artbot-for-stable-diffusion/pull/211) - 464 lines added, 1,595 removed!).
+- Let me know if you still have issues (or if things have gotten better)
 
 # 2023.12.31
 
