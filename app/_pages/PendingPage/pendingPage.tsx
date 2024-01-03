@@ -20,8 +20,7 @@ import { appInfoStore } from 'app/_store/appStore'
 import {
   deletePendingJob,
   deletePendingJobs,
-  getAllPendingJobs,
-  getPendingJobsTimestamp
+  getAllPendingJobs
 } from 'app/_controllers/pendingJobsCache'
 import FlexRow from 'app/_components/FlexRow'
 import { IconFilter, IconInfoTriangle, IconSettings } from '@tabler/icons-react'
@@ -46,7 +45,7 @@ const PendingPage = () => {
   const [showSettingsDropdown, setShowSettingsDropdown] = useState(false)
 
   const [pendingImages, setPendingImages] = useState([])
-  const [pendingJobUpdateTimestamp, setPendingJobUpdateTimestamp] = useState(0)
+  const [pendingJobUpdateTimestamp] = useState(0)
   const [initLoad, setInitLoad] = useState(true)
 
   const initPageLoad = async () => {
@@ -57,19 +56,16 @@ const PendingPage = () => {
   }
 
   useEffect(() => {
-    if (!initLoad && getPendingJobsTimestamp() === 0) {
+    if (!initLoad) {
       setInitLoad(false)
     }
   }, [initLoad])
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (pendingJobUpdateTimestamp !== getPendingJobsTimestamp()) {
-        setPendingJobUpdateTimestamp(getPendingJobsTimestamp())
-        // @ts-ignore
-        setPendingImages(getAllPendingJobs())
-        setInitLoad(false)
-      }
+      // @ts-ignore
+      setPendingImages(getAllPendingJobs())
+      setInitLoad(false)
     }, 250)
 
     return () => {

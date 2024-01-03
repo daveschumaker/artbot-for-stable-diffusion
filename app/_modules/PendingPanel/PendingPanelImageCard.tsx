@@ -27,22 +27,17 @@ import {
   IconX
 } from '@tabler/icons-react'
 import SpinnerV2 from 'app/_components/Spinner'
-import useSdxlModal from './useSdxlModal'
-import { useCallback, useEffect, useState } from 'react'
-import AbTestModal from 'app/_pages/PendingPage/PendingItem/AbTestModal'
+import React, { useCallback, useEffect, useState } from 'react'
 import PendingImageModal from './PendingImageModal'
 import AwesomeModalWrapper from '../AwesomeModal'
 import FlexRow from 'app/_components/FlexRow'
 import { base64toBlobUrl } from 'app/_utils/imageUtils'
 
-export default function PendingPanelImageCard({ imageJob }: { imageJob: any }) {
+const PendingPanelImageCard = React.memo(({ imageJob }: { imageJob: any }) => {
   const imagePreviewModal = useModal(ImageModal)
   const pendingImageModal = useModal(AwesomeModalWrapper)
-  const abTestModal = useModal(AbTestModal)
 
   const [imageSrc, setImageSrc] = useState<string | undefined>()
-  const [isSdxlAbTest, secondaryId, secondaryImage] = useSdxlModal(imageJob)
-  const [isRated, setIsRated] = useState(false)
 
   const serverHasJob =
     imageJob.jobStatus === JobStatus.Queued ||
@@ -80,22 +75,27 @@ export default function PendingPanelImageCard({ imageJob }: { imageJob: any }) {
   }
 
   const loadImage = useCallback(async () => {
-    const img = await base64toBlobUrl(
-      imageJob.thumbnail || imageJob.base64String
-    )
-    if (img) {
-      setImageSrc(img)
+    if (imageJob.thumbnail || imageJob.base64String) {
+      const img = await base64toBlobUrl(
+        imageJob.thumbnail || imageJob.base64String
+      )
+      if (img) {
+        setImageSrc(img)
+      }
     }
   }, [imageJob.base64String, imageJob.thumbnail])
 
   useEffect(() => {
-    loadImage()
+    const hasImage = imageJob.base64String || imageJob.thumbnail
+    if (!imageSrc && hasImage) {
+      loadImage()
+    }
 
     // Clean up Blob URL when the component unmounts
     return () => {
       if (imageSrc) URL.revokeObjectURL(imageSrc)
     }
-  }, [imageSrc, loadImage])
+  }, [imageJob.base64String, imageJob.thumbnail, imageSrc, loadImage])
 
   return (
     <div className={styles.PendingJobCard} key={imageJob.jobId}>
@@ -106,22 +106,10 @@ export default function PendingPanelImageCard({ imageJob }: { imageJob: any }) {
             const imageDetails = await getImageDetails(imageJob.jobId)
             setImageDetailsModalOpen(true)
 
-            if (isSdxlAbTest && !isRated) {
-              abTestModal.show({
-                jobDetails: imageDetails,
-                // @ts-ignore
-                secondaryId,
-                // @ts-ignore
-                secondaryImage,
-                setIsRated
-              })
-              return
-            } else {
-              imagePreviewModal.show({
-                handleClose: () => imagePreviewModal.remove(),
-                imageDetails
-              })
-            }
+            imagePreviewModal.show({
+              handleClose: () => imagePreviewModal.remove(),
+              imageDetails
+            })
           } else {
             const imageDetails = await getPendingJobDetails(imageJob.jobId)
 
@@ -195,7 +183,7 @@ export default function PendingPanelImageCard({ imageJob }: { imageJob: any }) {
         {imageJob.jobStatus === JobStatus.Done && (
           <img
             alt="Completed image"
-            src={imageSrc}
+            src={imageSrc || placeholderImage.src}
             height={imageJob.height}
             width={imageJob.width}
             style={{ borderRadius: '4px', cursor: 'pointer' }}
@@ -203,17 +191,38 @@ export default function PendingPanelImageCard({ imageJob }: { imageJob: any }) {
         )}
         {imageJob.jobStatus !== JobStatus.Done && (
           <div className={styles.ImageStatus}>
-            {imageJob.jobStatus === JobStatus.Waiting && <>Sending job...</>}
+            {imageJob.jobStatus === JobStatus.Waiting && (
+              <div>Preparing image request...</div>
+            )}
             {imageJob.jobStatus === JobStatus.Requested && (
               <>Job requested...</>
             )}
             {imageJob.jobStatus === JobStatus.Queued && (
-              <>Job queued... (~{Number(imageJob.wait_time) || 1}s)</>
+              <>
+                <div>
+                  Job queued...{' '}
+                  {imageJob.wait_time
+                    ? `(~${Number(imageJob.wait_time)}s)`
+                    : ''}
+                </div>
+                {!imageJob.wait_time && <div>(Estimating time remaining)</div>}
+                {Number(imageJob.queue_position) > 0 && (
+                  <div>Queue position: {Number(imageJob.queue_position)}</div>
+                )}
+              </>
             )}
             {imageJob.jobStatus === JobStatus.Processing && (
-              <>Processing... (~{Number(imageJob.wait_time) || 1}s)</>
+              <>
+                Processing...{' '}
+                {imageJob.wait_time ? `(~${Number(imageJob.wait_time)}s)` : ''}
+              </>
             )}
-            {imageJob.jobStatus === JobStatus.Error && <>Error</>}
+            {imageJob.jobStatus === JobStatus.Error && (
+              <>
+                <div className="font-[700]">Error</div>
+                <div className="px-2 text-xs">{imageJob.errorMessage}</div>
+              </>
+            )}
             {imageJob.jobStatus === JobStatus.Queued &&
               imageJob.is_possible === false && (
                 <FlexRow gap={2}>⚠️ No workers for this job</FlexRow>
@@ -223,4 +232,7 @@ export default function PendingPanelImageCard({ imageJob }: { imageJob: any }) {
       </div>
     </div>
   )
-}
+})
+
+PendingPanelImageCard.displayName = 'PendingPanelImageCard'
+export default PendingPanelImageCard

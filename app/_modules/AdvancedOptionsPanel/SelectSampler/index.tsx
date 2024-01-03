@@ -40,8 +40,7 @@ export default function SelectSampler({
             <Select
               isDisabled={input.useAllSamplers}
               options={Samplers.dropdownOptions({
-                model: input.models[0],
-                isImg2Img: input.source_image
+                model: input.models[0]
               })}
               onChange={(obj: { value: string; label: string }) => {
                 if (input.useMultiSamplers) {
@@ -58,8 +57,8 @@ export default function SelectSampler({
                 input.useMultiSamplers
                   ? multiSamplerOptions
                   : input.useAllSamplers
-                  ? { label: 'Use all samplers', value: '' }
-                  : Samplers.dropdownValue(input.sampler)
+                    ? { label: 'Use all samplers', value: '' }
+                    : Samplers.dropdownValue(input.sampler)
               }
             />
             {showDropdown && (

@@ -627,6 +627,7 @@ export const pendingCount = async () => {
 }
 
 export const initDb = () => {
+  // This does nothing other than to ensure this module is loaded and ready.
   // console.log(`Database loaded`)
 }
 

@@ -1,13 +1,8 @@
-import {
-  getAllPendingJobs,
-  getPendingJobsTimestamp
-} from 'app/_controllers/pendingJobsCache'
+import { getAllPendingJobs } from 'app/_controllers/pendingJobsCache'
 import { useEffect, useState } from 'react'
 import { JobStatus } from '_types'
 
 export default function usePendingJobs() {
-  const [pendingJobUpdateTimestamp, setPendingJobUpdateTimestamp] = useState(0)
-
   // Job Buckets
   const [done, setDone] = useState<any[]>([])
   const [processing, setProcessing] = useState<any[]>([])
@@ -88,16 +83,13 @@ export default function usePendingJobs() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (pendingJobUpdateTimestamp !== getPendingJobsTimestamp()) {
-        setPendingJobUpdateTimestamp(getPendingJobsTimestamp())
-        processPending(getAllPendingJobs())
-      }
+      processPending(getAllPendingJobs())
     }, 250)
 
     return () => {
       clearInterval(interval)
     }
-  }, [pendingJobUpdateTimestamp])
+  }, [])
 
   return [done, processing, queued, waiting, error]
 }

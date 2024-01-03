@@ -17,6 +17,7 @@ import { handleApiKeyLogin } from 'app/_utils/hordeUtils'
 import { showSuccessToast } from 'app/_utils/notificationUtils'
 import NiceModal from '@ebay/nice-modal-react'
 import Modal from 'app/_componentsV2/Modal'
+import { initLoadPendingJobsFromDb } from 'app/_controllers/pendingJobsCache'
 
 NiceModal.register('confirmation-modal', Modal)
 NiceModal.register('lockedToWorker-modal', Modal)
@@ -44,6 +45,7 @@ export default function AppInit() {
 
     initAppSettings()
     initDb()
+    initLoadPendingJobsFromDb()
     initPendingJobService()
     initializePrimaryWindowOnLoad()
 

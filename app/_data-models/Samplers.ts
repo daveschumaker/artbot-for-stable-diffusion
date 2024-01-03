@@ -55,27 +55,27 @@ class Samplers {
         modelValidation: (model: string) => model !== 'stable_diffusion_2.0'
       },
       k_dpm_fast: {
-        supportsImg2Img: false,
+        supportsImg2Img: true,
         maxSteps: loggedIn ? MAX_STEPS_LOGGED_IN : 50,
         modelValidation: (model: string) => model !== 'stable_diffusion_2.0'
       },
       k_dpm_adaptive: {
-        supportsImg2Img: false,
+        supportsImg2Img: true,
         maxSteps: loggedIn ? MAX_STEPS_LOGGED_IN : 50,
         modelValidation: (model: string) => model !== 'stable_diffusion_2.0'
       },
       k_dpmpp_2m: {
-        supportsImg2Img: false,
+        supportsImg2Img: true,
         maxSteps: loggedIn ? MAX_STEPS_LOGGED_IN : 50,
         modelValidation: (model: string) => model !== 'stable_diffusion_2.0'
       },
       k_dpmpp_2s_a: {
-        supportsImg2Img: false,
+        supportsImg2Img: true,
         maxSteps: loggedIn ? MAX_STEPS_LOGGED_IN : 50,
         modelValidation: (model: string) => model !== 'stable_diffusion_2.0'
       },
       k_dpmpp_sde: {
-        supportsImg2Img: false,
+        supportsImg2Img: true,
         maxSteps: loggedIn ? MAX_STEPS_LOGGED_IN : 50,
         modelValidation: (model: string) => model !== 'stable_diffusion_2.0'
       },
@@ -146,7 +146,7 @@ class Samplers {
   }
 
   // TODO: Improve this
-  static random = (isImg2Img = false, steps = 20) => {
+  static random = (steps = 20) => {
     // const loggedIn = userStore.state.loggedIn
     const loggedIn = false
 
@@ -159,20 +159,17 @@ class Samplers {
       'k_lms'
     ]
 
-    // Temporarily hide options due to issues with Stable Horde backend.
-    if (!isImg2Img) {
-      //   samplerArray.push('DDIM')
-      //   samplerArray.push('PLMS')
-      samplerArray.push('k_dpm_fast')
-      samplerArray.push('k_dpm_adaptive')
-      samplerArray.push('k_dpmpp_2m')
-      samplerArray.push('k_dpmpp_2s_a')
-      samplerArray.push('k_dpmpp_sde')
-    }
+    //   samplerArray.push('DDIM')
+    //   samplerArray.push('PLMS')
+    samplerArray.push('k_dpm_fast')
+    samplerArray.push('k_dpm_adaptive')
+    samplerArray.push('k_dpmpp_2m')
+    samplerArray.push('k_dpmpp_2s_a')
+    samplerArray.push('k_dpmpp_sde')
 
     if (loggedIn || steps <= 25) {
       return samplerArray[Math.floor(Math.random() * samplerArray.length)]
-    } else if (!isImg2Img) {
+    } else {
       const limitedArray = [
         'k_euler_a',
         'k_euler',
@@ -180,9 +177,6 @@ class Samplers {
         'k_dpm_adaptive',
         'k_dpmpp_2m'
       ]
-      return limitedArray[Math.floor(Math.random() * limitedArray.length)]
-    } else {
-      const limitedArray = ['k_euler_a', 'k_euler']
       return limitedArray[Math.floor(Math.random() * limitedArray.length)]
     }
   }

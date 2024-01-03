@@ -135,7 +135,7 @@ export const getFinishedImage = async (
             success: false,
             status: 'JOB_CANCELED',
             message:
-              'The worker was unable to complete this request. Please try again.'
+              'The worker was unable to generate an image for this request. Please try again. (ERROR CODE: X)'
           }
         }
 
