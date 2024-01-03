@@ -10,7 +10,7 @@ import {
 } from 'app/_utils/db'
 import { setImageDetailsModalOpen } from 'app/_store/appStore'
 import { useModal } from '@ebay/nice-modal-react'
-import placeholderImage from '../../../public/placeholder.gif'
+// import placeholderImage from '../../../public/placeholder.gif'
 
 import ImageModal from '../ImageModal'
 import clsx from 'clsx'
@@ -24,20 +24,30 @@ import {
 } from '@tabler/icons-react'
 import SpinnerV2 from 'app/_components/Spinner'
 import useSdxlModal from './useSdxlModal'
-import { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AbTestModal from 'app/_pages/PendingPage/PendingItem/AbTestModal'
 import PendingImageModal from './PendingImageModal'
 import AwesomeModalWrapper from '../AwesomeModal'
 import FlexRow from 'app/_components/FlexRow'
+import { inferMimeTypeFromBase64 } from 'app/_utils/imageUtils'
 
-export default function PendingPanelImageCard({
-  index,
-  jobs
-}: {
-  index: number
-  jobs: any[]
-}) {
-  const imageJob: any = jobs[index]
+// Function to convert base64 to a Blob URL
+const convertBase64ToBlobURL = (base64str: string) => {
+  const base64 = `data:${inferMimeTypeFromBase64(
+    base64str
+  )};base64,${base64str}`
+  const byteString = atob(base64.split(',')[1])
+  const mimeString = base64.split(',')[0].split(':')[1].split(';')[0]
+  const ab = new ArrayBuffer(byteString.length)
+  const ia = new Uint8Array(ab)
+  for (let i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i)
+  }
+  const blob = new Blob([ab], { type: mimeString })
+  return URL.createObjectURL(blob)
+}
+
+const PendingPanelImageCard = React.memo(({ imageJob }: { imageJob: any }) => {
   const imagePreviewModal = useModal(ImageModal)
   const pendingImageModal = useModal(AwesomeModalWrapper)
   const abTestModal = useModal(AbTestModal)
@@ -76,6 +86,15 @@ export default function PendingPanelImageCard({
 
     deletePendingJobFromDb(jobId)
   }
+
+  const imageSrc = convertBase64ToBlobURL(imageJob.base64String)
+
+  useEffect(() => {
+    // Clean up Blob URL when the component unmounts
+    return () => {
+      URL.revokeObjectURL(imageSrc)
+    }
+  }, [imageSrc])
 
   return (
     <div className={styles.PendingJobCard} key={imageJob.jobId}>
@@ -149,7 +168,7 @@ export default function PendingPanelImageCard({
         {imageJob.jobStatus !== JobStatus.Done && (
           <img
             alt="Pending image"
-            src={placeholderImage.src}
+            src={imageSrc}
             height={imageJob.height}
             width={imageJob.width}
             style={{ borderRadius: '4px' }}
@@ -227,4 +246,7 @@ export default function PendingPanelImageCard({
       </div>
     </div>
   )
-}
+})
+
+PendingPanelImageCard.displayName = 'PendingPanelImageCard'
+export default PendingPanelImageCard

@@ -46,7 +46,7 @@
     "client-zip": "2.4.4",
     "clone-deep": "4.0.1",
     "clsx": "2.0.0",
-    "dexie": "3.2.4",
+    "dexie": "4.0.1-beta.6",
     "dexie-export-import": "4.0.7",
     "dexie-react-hooks": "1.1.7",
     "dompurify": "3.0.6",
@@ -85,7 +85,7 @@
     "react-textarea-autosize": "8.5.3",
     "react-toastify": "9.1.3",
     "react-tooltip": "5.21.5",
-    "react-virtuoso": "4.6.1",
+    "react-virtuoso": "4.6.2",
     "sharp": "0.32.6",
     "statery": "0.7.1",
     "styled-components": "6.1.3"

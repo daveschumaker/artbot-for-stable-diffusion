@@ -50,8 +50,9 @@ export const pendingJobCheckInterval = async () => {
 }
 
 const checkNewJobs = async () => {
-  const queued = (await allPendingJobs(JobStatus.Queued)) || []
-  const processing = (await allPendingJobs(JobStatus.Processing)) || []
+  let queued: any[] | null = (await allPendingJobs(JobStatus.Queued)) || []
+  let processing: any[] | null =
+    (await allPendingJobs(JobStatus.Processing)) || []
 
   const pendingJobs = [...queued, ...processing]
 
@@ -59,7 +60,8 @@ const checkNewJobs = async () => {
     return
   }
 
-  const waitingJobs = (await allPendingJobs(JobStatus.Waiting)) || []
+  let waitingJobs: any[] | null =
+    (await allPendingJobs(JobStatus.Waiting)) || []
   const [jobOne, jobTwo] = waitingJobs
 
   if (jobOne) {
@@ -69,6 +71,12 @@ const checkNewJobs = async () => {
   if (jobTwo) {
     await createJob(jobTwo)
   }
+
+  // Garbage collections
+  // @ts-ignore
+  waitingJobs = null
+  queued = null
+  processing = null
 }
 
 const createJob = async (job: any) => {
@@ -87,8 +95,9 @@ const createJob = async (job: any) => {
 }
 
 export const checkJobsOnHorde = async () => {
-  const queued = (await allPendingJobs(JobStatus.Queued)) || []
-  const processing = (await allPendingJobs(JobStatus.Processing)) || []
+  let queued: any[] | null = (await allPendingJobs(JobStatus.Queued)) || []
+  let processing: any[] | null =
+    (await allPendingJobs(JobStatus.Processing)) || []
 
   const pendingJobs: any[] = [...queued, ...processing]
 
@@ -99,7 +108,7 @@ export const checkJobsOnHorde = async () => {
       )
 
       // Wait for all the API calls to resolve
-      const results = await Promise.allSettled(checkStatusPromises)
+      let results = await Promise.allSettled(checkStatusPromises)
 
       for (const [i, result] of results.entries()) {
         const { value } = result as ResolvedPromise
@@ -143,6 +152,12 @@ export const checkJobsOnHorde = async () => {
           )
         }
       }
+
+      // Garbage collections
+      // @ts-ignore
+      results = null
+      queued = null
+      processing = null
     } catch (err) {}
   }
 }

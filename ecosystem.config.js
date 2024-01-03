@@ -11,13 +11,14 @@ module.exports = {
       }
     },
     {
-      name: 'horde-js-staging',
+      name: 'artbot-beta',
       script: 'npm',
       args: 'start',
       restart_delay: 5000,
       env: {
+        BASE_PATH: '/arbot-beta',
         NODE_ENV: 'production',
-        PORT: 3001
+        PORT: 49996
       }
     }
   ]

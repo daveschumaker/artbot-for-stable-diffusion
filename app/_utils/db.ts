@@ -183,21 +183,39 @@ export const clearPendingJobsTable = async () => {
   return await db.pending.clear()
 }
 
-export const allPendingJobs = async (status?: JobStatus) => {
+export const allPendingJobs = async (
+  status?: JobStatus,
+  start: number | null = null,
+  end: number | null = null
+) => {
   try {
     let waitingDetails: any[] = []
 
-    if (!status) {
+    if (status === ('all' as JobStatus) || !status) {
       await db.transaction('r', db.pending, async () => {
-        waitingDetails = await db.pending.toArray()
+        if (start !== null && end !== null) {
+          waitingDetails = await db.pending
+            .offset(start)
+            .limit(end - start)
+            .toArray()
+        } else {
+          waitingDetails = await db.pending.toArray()
+        }
       })
 
       return waitingDetails
     }
 
-    // Start a transaction for reading from both tables
     await db.transaction('r', db.pending, async () => {
-      waitingDetails = await db.pending.where({ jobStatus: status }).toArray()
+      if (start !== null && end !== null) {
+        waitingDetails = await db.pending
+          .where({ jobStatus: status })
+          .offset(start)
+          .limit(end - start)
+          .toArray()
+      } else {
+        waitingDetails = await db.pending.where({ jobStatus: status }).toArray()
+      }
     })
 
     return waitingDetails
@@ -215,6 +233,40 @@ export const allPendingJobs = async (status?: JobStatus) => {
     }
 
     return []
+  }
+}
+
+export const countAllPendingJobs = async (status?: JobStatus) => {
+  try {
+    let waitingDetails: number = 0
+
+    if (status === ('all' as JobStatus) || !status) {
+      await db.transaction('r', db.pending, async () => {
+        waitingDetails = await db.pending.count()
+      })
+
+      return waitingDetails || 0
+    }
+
+    await db.transaction('r', db.pending, async () => {
+      waitingDetails = await db.pending.where({ jobStatus: status }).count()
+    })
+
+    return waitingDetails || 0
+  } catch (err: any) {
+    if (
+      err.message.indexOf(
+        'A mutation operation was attempted on a database that did not allow mutations'
+      ) >= 0
+    ) {
+      setUnsupportedBrowser(true)
+    } else if (err instanceof Error) {
+      console.error('Failed to fetch waiting image details:', err.stack)
+    } else {
+      console.error('An unexpected error occurred:', err)
+    }
+
+    return 0
   }
 }
 
@@ -663,17 +715,21 @@ export const deletePendingJobFromDb = async (
   deleteCompleted = false
 ) => {
   try {
-    await db.transaction('rw', db.pending, db.completed, async () => {
-      await db.pending.where({ jobId }).delete()
+    await db.pending.where('jobId').equals(jobId).delete()
+    if (deleteCompleted) {
+      await db.completed.where({ jobId }).delete()
+    }
+    // await db.transaction('rw', db.pending, db.completed, async () => {
+    //   await db.pending.where({ jobId }).delete()
 
-      if (deleteCompleted) {
-        await db.completed.where({ jobId }).delete()
-      }
+    //   if (deleteCompleted) {
+    //     await db.completed.where({ jobId }).delete()
+    //   }
 
-      console.log(
-        `All entries with request_id ${jobId} have been successfully deleted.`
-      )
-    })
+    //   console.log(
+    //     `All entries with request_id ${jobId} have been successfully deleted.`
+    //   )
+    // })
   } catch (err) {
     console.error('Failed to delete image and related entries:', err)
   }

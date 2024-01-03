@@ -5,13 +5,12 @@ export default function FilterOptions({
   filter,
   setFilter,
   jobs,
-  jobCount,
   setShowFilterDropdown
 }: any) {
   const [done = [], processing = [], queued = [], waiting = [], error = []] =
     jobs
 
-  const jobsInProgress = processing.length + queued.length
+  const jobsInProgress = processing + queued
 
   return (
     <DropdownOptions
@@ -30,7 +29,7 @@ export default function FilterOptions({
         }}
       >
         <Checkbox
-          label={`All (${jobCount})`}
+          label={`All (${done + processing + queued + waiting + error})`}
           checked={filter === 'all'}
           onChange={() => {
             filter === 'all' ? setFilter('all') : setFilter('all')
@@ -38,7 +37,7 @@ export default function FilterOptions({
           }}
         />
         <Checkbox
-          label={`Waiting (${waiting.length})`}
+          label={`Waiting (${waiting})`}
           checked={filter === 'waiting'}
           onChange={() => {
             filter === 'waiting' ? setFilter('all') : setFilter('waiting')
@@ -54,7 +53,7 @@ export default function FilterOptions({
           }}
         />
         <Checkbox
-          label={`Done (${done.length})`}
+          label={`Done (${done})`}
           checked={filter === 'done'}
           onChange={() => {
             filter === 'done' ? setFilter('all') : setFilter('done')
@@ -62,7 +61,7 @@ export default function FilterOptions({
           }}
         />
         <Checkbox
-          label={`Error (${error.length})`}
+          label={`Error (${error})`}
           checked={filter === 'error'}
           onChange={() => {
             filter === 'error' ? setFilter('all') : setFilter('error')

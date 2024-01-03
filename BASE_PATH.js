@@ -1,6 +1,6 @@
 // const baseHost = 'http://staging.tinybots.net'
 const baseHost = 'https://tinybots.net'
-const basePath = '/artbot'
+const basePath = process.env.BASE_PATH || '/artbot'
 
 module.exports = {
   baseHost,
