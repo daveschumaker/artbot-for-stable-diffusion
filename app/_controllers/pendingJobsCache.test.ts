@@ -9,12 +9,10 @@ import {
   updatePendingJobV2,
   updatePendingJobProperties,
   updatePendingJobId,
-  updateAllPendingJobsV2,
-  getPendingJobsTimestamp
+  updateAllPendingJobsV2
 } from './pendingJobsCache'
 import { allPendingJobs, deletePendingJobFromDb } from 'app/_utils/db'
 import { JobStatus } from '_types'
-import { sleep } from 'app/_utils/sleep'
 
 jest.mock('app/_utils/db', () => ({
   allPendingJobs: jest.fn(),
@@ -89,13 +87,5 @@ describe('Pending Jobs Tests', () => {
     })
     expect(getPendingJob('123')?.jobStatus).toBe(JobStatus.Processing)
     expect(getPendingJob('123')?.errorMessage).toBe('Error occurred')
-  })
-
-  it('tracks the timestamp of the last update', async () => {
-    const beforeTimestamp = getPendingJobsTimestamp()
-    await sleep(100)
-    setPendingJob(mockJob)
-    const afterTimestamp = getPendingJobsTimestamp()
-    expect(beforeTimestamp).not.toBe(afterTimestamp)
   })
 })

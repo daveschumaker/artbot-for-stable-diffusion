@@ -20,15 +20,6 @@ interface IPendingJobs {
 }
 
 let pendingJobs: IPendingJobs = {}
-let lastUpdated = Date.now()
-
-const updateTimestamp = () => {
-  lastUpdated = Date.now()
-}
-
-export const getPendingJobsTimestamp = () => {
-  return lastUpdated
-}
 
 const logDebug = (message: string, obj?: any) => {
   if (typeof window !== 'undefined' && window.DEBUG_PENDING_JOBS) {
@@ -90,13 +81,11 @@ export const deletePendingJobs = async (status?: any) => {
   } else {
     pendingJobs = {}
   }
-  updateTimestamp()
 }
 
 export const deletePendingJob = async (jobId: string) => {
   delete pendingJobs[jobId]
   deletePendingJobFromDb(jobId)
-  updateTimestamp()
 }
 
 export const getPendingJob = (jobId: string) => {
@@ -121,7 +110,6 @@ export const setPendingJob = (pendingJob: IPendingJob) => {
   logDebug('setPendingJob', pendingJob)
   const { jobId } = pendingJob
   pendingJobs[jobId] = cloneDeep(pendingJob)
-  updateTimestamp()
 }
 
 export const updatePendingJobV2 = (pendingJob: IPendingJob) => {
@@ -134,7 +122,6 @@ export const updatePendingJobV2 = (pendingJob: IPendingJob) => {
 
   if (pendingJobs[jobId]) {
     pendingJobs[jobId] = cloneDeep(pendingJob)
-    updateTimestamp()
   }
 }
 
@@ -145,7 +132,6 @@ export const updatePendingJobProperties = (
   if (pendingJobs[jobId]) {
     const updated = { ...pendingJobs[jobId], ...updateObject }
     pendingJobs[jobId] = cloneDeep(updated)
-    updateTimestamp()
   }
 }
 
@@ -154,7 +140,6 @@ export const updatePendingJobId = (oldId: string = '', newId: string) => {
     pendingJobs[newId] = cloneDeep(pendingJobs[oldId])
     pendingJobs[newId].jobId = newId
     delete pendingJobs[oldId]
-    updateTimestamp()
   }
 }
 
@@ -178,8 +163,6 @@ export const updateAllPendingJobsV2 = async (
   } else {
     pendingJobs = {}
   }
-
-  updateTimestamp()
 }
 
 const initWindow = () => {

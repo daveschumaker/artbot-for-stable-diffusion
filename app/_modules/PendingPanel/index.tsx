@@ -164,7 +164,12 @@ export default function PendingPanel() {
               }
             }}
             itemContent={(index) => {
-              return <PendingPanelImageCard imageJob={filteredJobs[index]} />
+              return (
+                <PendingPanelImageCard
+                  key={`pendingPanel_img_${filteredJobs[index].jobId}`}
+                  imageJob={filteredJobs[index]}
+                />
+              )
             }}
           />
         )}

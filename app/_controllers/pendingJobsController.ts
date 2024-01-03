@@ -8,7 +8,7 @@ import {
   MAX_CONCURRENT_JOBS_USER,
   POLL_COMPLETED_JOBS_INTERVAL
 } from '_constants'
-import { getAllPendingJobs, getPendingJobsTimestamp } from './pendingJobsCache'
+import { getAllPendingJobs } from './pendingJobsCache'
 import AppSettings from 'app/_data-models/AppSettings'
 import { userInfoStore } from 'app/_store/userStore'
 
@@ -17,7 +17,6 @@ const MAX_JOBS = userInfoStore.state.loggedIn
   : MAX_CONCURRENT_JOBS_ANON
 
 let pendingJobs: any = []
-let pendingJobsUpdatedTimestamp = 0
 let enableDebugLogs = false
 
 let isAppCurrentlyActive = isAppActive()
@@ -42,13 +41,7 @@ const getProcessingOrQueuedJobs = (jobs: any[]): any[] => {
 export const getPendingJobsFromCache = () => [...pendingJobs]
 
 export const fetchPendingImageJobs = async () => {
-  const timestamp = getPendingJobsTimestamp()
-  if (pendingJobsUpdatedTimestamp !== timestamp) {
-    if (getAllPendingJobs().length !== 0) {
-      pendingJobsUpdatedTimestamp = timestamp
-    }
-    pendingJobs = [...getAllPendingJobs()]
-  }
+  pendingJobs = [...getAllPendingJobs()]
 }
 
 export const checkMultiPendingJobs = async () => {
@@ -93,16 +86,19 @@ export const createImageJobs = async () => {
   logDebug(`createImageJobs / processingOrQueued:`, processingOrQueued)
 
   if (processingOrQueued.length < MAX_JOBS) {
-    const nextJobParams = pendingJobs.find(
+    const [jobOne, jobTwo] = pendingJobs.filter(
       (job: any) => job.jobStatus === JobStatus.Waiting
     )
 
-    logDebug(`nextJobParams:`, nextJobParams)
-
-    if (nextJobParams) {
-      await sendJobToApi(nextJobParams)
-      await fetchPendingImageJobs()
+    if (jobOne) {
+      await sendJobToApi(jobOne)
     }
+
+    if (jobTwo) {
+      await sendJobToApi(jobTwo)
+    }
+
+    await fetchPendingImageJobs()
   }
 }
 
@@ -118,11 +114,12 @@ export const updatePendingJobs = async () => {
 export const createPendingJobInterval = async () => {
   await fetchPendingImageJobs()
   createImageJobs()
-  await sleep(25)
+  await sleep(1100)
+
   while (true) {
     await fetchPendingImageJobs()
     createImageJobs()
-    await sleep(25)
+    await sleep(1100)
   }
 }
 

@@ -1,7 +1,4 @@
-import {
-  deletePendingJobs,
-  initLoadPendingJobsFromDb
-} from 'app/_controllers/pendingJobsCache'
+import { deletePendingJobs } from 'app/_controllers/pendingJobsCache'
 import { setLoggedInState } from 'app/_store/userStore'
 import { JobStatus } from '_types'
 import { buildModelAvailability } from 'app/_api/fetchAvailableModels'
@@ -122,8 +119,6 @@ export const initAppSettings = async () => {
   // app settings from local storage
   updateShowGrid()
   loadAuthToken()
-
-  initLoadPendingJobsFromDb()
 
   await trackNewSession()
 
