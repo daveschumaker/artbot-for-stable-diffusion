@@ -28,24 +28,19 @@ import {
 } from '@tabler/icons-react'
 import SpinnerV2 from 'app/_components/Spinner'
 import useSdxlModal from './useSdxlModal'
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import AbTestModal from 'app/_pages/PendingPage/PendingItem/AbTestModal'
 import PendingImageModal from './PendingImageModal'
 import AwesomeModalWrapper from '../AwesomeModal'
 import FlexRow from 'app/_components/FlexRow'
+import { base64toBlobUrl } from 'app/_utils/imageUtils'
 
-export default function PendingPanelImageCard({
-  index,
-  jobs
-}: {
-  index: number
-  jobs: any[]
-}) {
-  const imageJob: any = jobs[index]
+export default function PendingPanelImageCard({ imageJob }: { imageJob: any }) {
   const imagePreviewModal = useModal(ImageModal)
   const pendingImageModal = useModal(AwesomeModalWrapper)
   const abTestModal = useModal(AbTestModal)
 
+  const [imageSrc, setImageSrc] = useState<string | undefined>()
   const [isSdxlAbTest, secondaryId, secondaryImage] = useSdxlModal(imageJob)
   const [isRated, setIsRated] = useState(false)
 
@@ -83,6 +78,24 @@ export default function PendingPanelImageCard({
 
     deletePendingJob(jobId)
   }
+
+  const loadImage = useCallback(async () => {
+    const img = await base64toBlobUrl(
+      imageJob.thumbnail || imageJob.base64String
+    )
+    if (img) {
+      setImageSrc(img)
+    }
+  }, [imageJob.base64String, imageJob.thumbnail])
+
+  useEffect(() => {
+    loadImage()
+
+    // Clean up Blob URL when the component unmounts
+    return () => {
+      if (imageSrc) URL.revokeObjectURL(imageSrc)
+    }
+  }, [imageSrc, loadImage])
 
   return (
     <div className={styles.PendingJobCard} key={imageJob.jobId}>
@@ -182,9 +195,7 @@ export default function PendingPanelImageCard({
         {imageJob.jobStatus === JobStatus.Done && (
           <img
             alt="Completed image"
-            src={`data:image/webp;base64,${
-              imageJob.thumbnail || imageJob.base64String
-            }`}
+            src={imageSrc}
             height={imageJob.height}
             width={imageJob.width}
             style={{ borderRadius: '4px', cursor: 'pointer' }}

@@ -353,6 +353,20 @@ export const getBase64 = (file: Blob) => {
   })
 }
 
+export const base64toBlobUrl = async (base64Data: string) => {
+  const contentType = inferMimeTypeFromBase64(base64Data)
+  const base64 = `data:${contentType};base64,${base64Data}`
+
+  try {
+    const response = await fetch(base64)
+    const blob = await response.blob()
+    return URL.createObjectURL(blob)
+  } catch (error) {
+    console.error('Error converting base64 to Blob URL:', error)
+    return null
+  }
+}
+
 export const base64toBlob = async (base64Data: string) => {
   try {
     const base64str = `data:${inferMimeTypeFromBase64(

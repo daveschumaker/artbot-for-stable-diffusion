@@ -163,9 +163,9 @@ export default function PendingPanel() {
                 )
               }
             }}
-            itemContent={(index) => (
-              <PendingPanelImageCard index={index} jobs={filteredJobs} />
-            )}
+            itemContent={(index) => {
+              return <PendingPanelImageCard imageJob={filteredJobs[index]} />
+            }}
           />
         )}
       </div>
