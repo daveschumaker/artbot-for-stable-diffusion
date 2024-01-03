@@ -1,3 +1,7 @@
+# 2024.01.02
+
+- Completely rewrote the pending image request / management logic. Hopefully this fixes issues with hanging jobs, disappearing jobs, etc. Let me know if you still have issues (or if things have gotten better!)
+
 # 2023.12.31
 
 - Happy New Year's Eve!

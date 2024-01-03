@@ -9,7 +9,6 @@ import Linker from 'app/_components/Linker'
 import { useState } from 'react'
 import { Button } from 'app/_components/Button'
 import { generateThumbnails } from 'app/_utils/db'
-import { deletePendingJobs } from 'app/_controllers/pendingJobsCache'
 import { basePath } from 'BASE_PATH'
 import InputSwitchV2 from 'app/_modules/AdvancedOptionsPanel/InputSwitchV2'
 import FlexCol from 'app/_components/FlexCol'
@@ -376,7 +375,6 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
             theme="secondary"
             onClick={async () => {
               await db.pending.clear()
-              deletePendingJobs()
               window.location.assign(
                 `${window.location.origin}${basePath}/pending`
               )

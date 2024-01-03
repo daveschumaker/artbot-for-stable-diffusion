@@ -2,10 +2,11 @@
 import { JobStatus } from '_types'
 import styles from './pendingPanel.module.css'
 import {
-  deleteCompletedImage,
-  deleteImageFromDexie,
+  deletePendingJobFromDb,
   getImageDetails,
-  getPendingJobDetails
+  getImageDetailsByJobId,
+  getPendingJobDetails,
+  updatePendingAndCompletedJobInDexie
 } from 'app/_utils/db'
 import { setImageDetailsModalOpen } from 'app/_store/appStore'
 import { useModal } from '@ebay/nice-modal-react'
@@ -13,11 +14,6 @@ import placeholderImage from '../../../public/placeholder.gif'
 
 import ImageModal from '../ImageModal'
 import clsx from 'clsx'
-import {
-  deletePendingJob,
-  getPendingJob,
-  updatePendingJobV2
-} from 'app/_controllers/pendingJobsCache'
 import { deletePendingJobFromApi } from 'app/_api/deletePendingJobFromApi'
 import {
   IconAlertTriangle,
@@ -57,18 +53,15 @@ export default function PendingPanelImageCard({
   const handleDeleteImage = async (jobId: string, e: any) => {
     e.stopPropagation()
 
-    await deleteImageFromDexie(jobId)
-    await deleteCompletedImage(jobId)
-    deletePendingJob(jobId)
+    await deletePendingJobFromDb(jobId, true)
   }
 
-  const handleFavClick = (jobId: string, e: any) => {
+  const handleFavClick = async (jobId: string, e: any) => {
     e.stopPropagation()
-    const job = getPendingJob(jobId)
-
-    // @ts-ignore
+    const job = await getImageDetailsByJobId(jobId)
     job.favorited = job.favorited ? false : true
-    updatePendingJobV2(job)
+
+    await updatePendingAndCompletedJobInDexie(job)
   }
 
   const hideFromPending = (jobId: string, jobStatus: JobStatus, e: any) => {
@@ -81,7 +74,7 @@ export default function PendingPanelImageCard({
       deletePendingJobFromApi(jobId)
     }
 
-    deletePendingJob(jobId)
+    deletePendingJobFromDb(jobId)
   }
 
   return (
@@ -192,17 +185,39 @@ export default function PendingPanelImageCard({
         )}
         {imageJob.jobStatus !== JobStatus.Done && (
           <div className={styles.ImageStatus}>
-            {imageJob.jobStatus === JobStatus.Waiting && <>Sending job...</>}
+            {imageJob.jobStatus === JobStatus.Waiting && (
+              <>
+                <div>Preparing image request...</div>
+              </>
+            )}
             {imageJob.jobStatus === JobStatus.Requested && (
               <>Job requested...</>
             )}
             {imageJob.jobStatus === JobStatus.Queued && (
-              <>Job queued... (~{Number(imageJob.wait_time) || 1}s)</>
+              <>
+                <div>
+                  Job queued...{' '}
+                  {imageJob.wait_time
+                    ? `(~${Number(imageJob.wait_time)}s)`
+                    : ''}
+                </div>
+                <div>
+                  Queue position: {Number(imageJob.queue_position) || 1}
+                </div>
+              </>
             )}
             {imageJob.jobStatus === JobStatus.Processing && (
-              <>Processing... (~{Number(imageJob.wait_time) || 1}s)</>
+              <>
+                Processing...{' '}
+                {imageJob.wait_time ? `(~${Number(imageJob.wait_time)}s)` : ''}
+              </>
             )}
-            {imageJob.jobStatus === JobStatus.Error && <>Error</>}
+            {imageJob.jobStatus === JobStatus.Error && (
+              <>
+                <div className="font-[700]">Error</div>
+                <div className="px-2 text-xs">{imageJob.errorMessage}</div>
+              </>
+            )}
             {imageJob.jobStatus === JobStatus.Queued &&
               imageJob.is_possible === false && (
                 <FlexRow gap={2}>⚠️ No workers for this job</FlexRow>

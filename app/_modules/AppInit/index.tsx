@@ -1,7 +1,6 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import { initPendingJobService } from 'app/_controllers/pendingJobsController'
 import { useEffectOnce } from 'app/_hooks/useEffectOnce'
 import { initAppSettings } from 'app/_utils/initArtBotAppSettings'
 import { initDb } from 'app/_utils/db'
@@ -17,6 +16,7 @@ import { handleApiKeyLogin } from 'app/_utils/hordeUtils'
 import { showSuccessToast } from 'app/_utils/notificationUtils'
 import NiceModal from '@ebay/nice-modal-react'
 import Modal from 'app/_componentsV2/Modal'
+import { initPendingJobService } from 'app/_controllers/pendingJobsController'
 
 NiceModal.register('confirmation-modal', Modal)
 NiceModal.register('lockedToWorker-modal', Modal)

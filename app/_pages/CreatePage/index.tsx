@@ -419,6 +419,7 @@ const CreatePage = ({ className }: any) => {
     // Cleanup
     return () => {
       if (actionPanelRef.current) {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         observer.unobserve(actionPanelRef.current)
       }
     }

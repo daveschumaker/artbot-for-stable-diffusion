@@ -1,13 +1,11 @@
 import { IconClearAll } from '@tabler/icons-react'
 import { Button } from 'app/_components/Button'
 import { useState } from 'react'
-import { JobStatus } from '_types/artbot'
 import {
   deleteAllPendingErrors,
   deleteAllPendingJobs,
   deleteDoneFromPending
 } from 'app/_utils/db'
-import { deletePendingJobs } from 'app/_controllers/pendingJobsCache'
 import DropdownOptions from 'app/_modules/DropdownOptions'
 
 export default function ClearJobs({ filter, size }: any) {
@@ -15,14 +13,10 @@ export default function ClearJobs({ filter, size }: any) {
 
   const handleClear = async (filter: string) => {
     if (filter === 'done') {
-      deletePendingJobs(JobStatus.Done)
       await deleteDoneFromPending()
     } else if (filter === 'pending') {
       await deleteAllPendingJobs()
-      deletePendingJobs(JobStatus.Waiting)
-      deletePendingJobs(JobStatus.Queued)
     } else if (filter === 'error') {
-      deletePendingJobs(JobStatus.Error)
       await deleteAllPendingErrors()
     }
 

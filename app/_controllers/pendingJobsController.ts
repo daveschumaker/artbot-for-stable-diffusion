@@ -1,162 +1,221 @@
-import { appInfoStore } from 'app/_store/appStore'
 import { JobStatus } from '_types'
-import { isAppActive } from 'app/_utils/appUtils'
-import { checkCurrentJob, sendJobToApi } from 'app/_utils/imageCache'
 import { sleep } from 'app/_utils/sleep'
-import {
-  MAX_CONCURRENT_JOBS_ANON,
-  MAX_CONCURRENT_JOBS_USER,
-  POLL_COMPLETED_JOBS_INTERVAL
-} from '_constants'
-import { getAllPendingJobs, getPendingJobsTimestamp } from './pendingJobsCache'
-import AppSettings from 'app/_data-models/AppSettings'
+import { MAX_CONCURRENT_JOBS_ANON, MAX_CONCURRENT_JOBS_USER } from '_constants'
 import { userInfoStore } from 'app/_store/userStore'
+import {
+  addCompletedJobToDexie,
+  allPendingJobs,
+  getPendingJobDetails,
+  updatePendingJobInDexieByJobId
+} from 'app/_utils/db'
+import { createImage } from 'app/_api/createImage'
+import { checkImageStatus } from 'app/_api/checkImageStatus'
+import { getFinishedImage } from 'app/_api/getFinishedImage'
+import { blobToBase64, initBlob } from 'app/_utils/blobUtils'
+import { base64toBlob } from 'app/_utils/imageUtils'
+import { isAppActive } from 'app/_utils/appUtils'
+import { setNewImageReady } from 'app/_store/appStore'
 
-const MAX_JOBS = userInfoStore.state.loggedIn
+interface ResolvedPromise {
+  value: any
+}
+
+let MAX_JOBS = userInfoStore.state.loggedIn
   ? MAX_CONCURRENT_JOBS_USER
   : MAX_CONCURRENT_JOBS_ANON
 
-let pendingJobs: any = []
-let pendingJobsUpdatedTimestamp = 0
-let enableDebugLogs = false
-
 let isAppCurrentlyActive = isAppActive()
 
-const logDebug = (message: string, obj?: any) => {
-  if (enableDebugLogs) {
-    if (obj) {
-      console.log(`pendingJobsController: ${message}`)
-      console.log(obj)
-    } else {
-      console.log(`pendingJobsController: ${message}`)
-    }
-  }
+export const initPendingJobService = () => {
+  newJobCheckInterval()
+  pendingJobCheckInterval()
 }
 
-const getProcessingOrQueuedJobs = (jobs: any[]): any[] => {
-  return jobs.filter((job: any) =>
-    [JobStatus.Queued, JobStatus.Processing].includes(job.jobStatus)
-  )
-}
-
-export const getPendingJobsFromCache = () => [...pendingJobs]
-
-export const fetchPendingImageJobs = async () => {
-  const timestamp = getPendingJobsTimestamp()
-  if (pendingJobsUpdatedTimestamp !== timestamp) {
-    if (getAllPendingJobs().length !== 0) {
-      pendingJobsUpdatedTimestamp = timestamp
-    }
-    pendingJobs = [...getAllPendingJobs()]
-  }
-}
-
-export const checkMultiPendingJobs = async () => {
-  if (
-    typeof window === 'undefined' ||
-    pendingJobs.length === 0 ||
-    !isAppCurrentlyActive
-  ) {
-    return
-  }
-
-  const processingOrQueued = getProcessingOrQueuedJobs(pendingJobs)
-  const limitCheck = processingOrQueued.slice(-MAX_JOBS)
-
-  for (const jobDetails of limitCheck) {
-    await checkCurrentJob(jobDetails)
-    await sleep(300)
-  }
-}
-
-export const createImageJobs = async () => {
-  if (typeof window === 'undefined' || pendingJobs.length === 0) {
-    return
-  }
-
-  if (appInfoStore.state.storageQuotaLimit) {
-    logDebug(`Unable to request image. Storage Quota limit is full.`)
-    return
-  }
-
-  if (!isAppCurrentlyActive) {
-    logDebug(`App is not active`)
-    return
-  }
-
-  if (AppSettings.get('pauseJobQueue')) {
-    logDebug(`job queue paused`)
-    return
-  }
-
-  const processingOrQueued = getProcessingOrQueuedJobs(pendingJobs)
-  logDebug(`createImageJobs / processingOrQueued:`, processingOrQueued)
-
-  if (processingOrQueued.length < MAX_JOBS) {
-    const nextJobParams = pendingJobs.find(
-      (job: any) => job.jobStatus === JobStatus.Waiting
-    )
-
-    logDebug(`nextJobParams:`, nextJobParams)
-
-    if (nextJobParams) {
-      await sendJobToApi(nextJobParams)
-      await fetchPendingImageJobs()
-    }
-  }
-}
-
-export const updatePendingJobs = async () => {
-  await fetchPendingImageJobs()
-  await sleep(100)
+export const newJobCheckInterval = async () => {
   while (true) {
-    await fetchPendingImageJobs()
-    await sleep(100)
-  }
-}
+    if (!isAppCurrentlyActive) return
 
-export const createPendingJobInterval = async () => {
-  await fetchPendingImageJobs()
-  createImageJobs()
-  await sleep(25)
-  while (true) {
-    await fetchPendingImageJobs()
-    createImageJobs()
-    await sleep(25)
+    await checkNewJobs()
+    await sleep(1050)
   }
 }
 
 export const pendingJobCheckInterval = async () => {
   while (true) {
-    await checkMultiPendingJobs()
-    await sleep(POLL_COMPLETED_JOBS_INTERVAL)
+    if (!isAppCurrentlyActive) return
+
+    await checkJobsOnHorde()
+    await sleep(1000)
   }
 }
 
-export const initPendingJobService = () => {
-  updatePendingJobs()
-  pendingJobCheckInterval()
-  createPendingJobInterval()
+const checkNewJobs = async () => {
+  const queued = (await allPendingJobs(JobStatus.Queued)) || []
+  const processing = (await allPendingJobs(JobStatus.Processing)) || []
+
+  const pendingJobs = [...queued, ...processing]
+
+  if (pendingJobs.length >= MAX_JOBS) {
+    return
+  }
+
+  const waitingJobs = (await allPendingJobs(JobStatus.Waiting)) || []
+  const [jobOne, jobTwo] = waitingJobs
+
+  if (jobOne) {
+    await createJob(jobOne)
+  }
+
+  if (jobTwo) {
+    await createJob(jobTwo)
+  }
 }
 
-const toggleLogs = () => {
-  enableDebugLogs = !enableDebugLogs
-}
+const createJob = async (job: any) => {
+  await updatePendingJobInDexieByJobId(job.jobId, {
+    jobStatus: JobStatus.Requested
+  })
 
-const initWindow = () => {
-  if (typeof window !== 'undefined') {
-    if (!window._artbot) window._artbot = {}
-    window._artbot.getAllPendingJobsFromController = getAllPendingJobs
-    window._artbot.togglePendingJobsControllerLogs = toggleLogs
+  const data = await createImage(job as any)
 
-    window.addEventListener('focus', function () {
-      isAppCurrentlyActive = true
+  if (data.success) {
+    await updatePendingJobInDexieByJobId(job.jobId, {
+      jobId: data.jobId,
+      jobStatus: JobStatus.Queued
     })
-
-    setInterval(() => {
-      isAppCurrentlyActive = isAppActive()
-    }, 10000)
   }
 }
 
-initWindow()
+export const checkJobsOnHorde = async () => {
+  const queued = (await allPendingJobs(JobStatus.Queued)) || []
+  const processing = (await allPendingJobs(JobStatus.Processing)) || []
+
+  const pendingJobs: any[] = [...queued, ...processing]
+
+  if (pendingJobs.length > 0) {
+    try {
+      const checkStatusPromises = pendingJobs.map((job) =>
+        checkImageStatus(job.jobId)
+      )
+
+      // Wait for all the API calls to resolve
+      const results = await Promise.allSettled(checkStatusPromises)
+
+      for (const [i, result] of results.entries()) {
+        const { value } = result as ResolvedPromise
+        const {
+          finished,
+          message,
+          processing,
+          queue_position,
+          success,
+          wait_time,
+          waiting
+        } = value
+
+        try {
+          if (!success) {
+            await updatePendingJobInDexieByJobId(pendingJobs[i].jobId, {
+              jobStatus: JobStatus.Error,
+              errorMessage: message
+            })
+            return
+          } else if (waiting === 1) {
+            await updatePendingJobInDexieByJobId(pendingJobs[i].jobId, {
+              jobStatus: JobStatus.Queued,
+              wait_time,
+              queue_position
+            })
+          } else if (processing === 1) {
+            await updatePendingJobInDexieByJobId(pendingJobs[i].jobId, {
+              jobStatus: JobStatus.Processing,
+              wait_time,
+              queue_position
+            })
+          } else if (finished === 1) {
+            await handleFinishedJob(pendingJobs[i].jobId)
+          }
+        } catch (error) {
+          console.error(
+            'Error updating image status for',
+            pendingJobs[i].jobId,
+            error
+          )
+        }
+      }
+    } catch (err) {}
+  }
+}
+
+const handleFinishedJob = async (jobId: string) => {
+  try {
+    const imgDetailsFromApi = await getFinishedImage(jobId)
+    const success =
+      imgDetailsFromApi &&
+      imgDetailsFromApi.success &&
+      'generations' in imgDetailsFromApi
+
+    if (!success) {
+      await updatePendingJobInDexieByJobId(jobId, {
+        jobStatus: JobStatus.Error,
+        // @ts-ignore
+        errorMessage: imgDetailsFromApi.message
+      })
+    } else if (success) {
+      const imageDetails = await getPendingJobDetails(jobId)
+      const updateObject = {
+        done: true,
+        jobStatus: JobStatus.Done,
+        kudos: imgDetailsFromApi.kudos,
+        timestamp: Date.now()
+      }
+
+      for (const idx in imgDetailsFromApi.generations) {
+        const image = imgDetailsFromApi.generations[idx]
+        if ('base64String' in image && image.base64String) {
+          initBlob()
+
+          // Insert exif information in the image
+          const metaData: string =
+            `${imageDetails.prompt}\n` +
+            (imageDetails.negative
+              ? `Negative prompt: ${imageDetails.negative}\n`
+              : ``) +
+            `Steps: ${imageDetails.steps}, Sampler: ${imageDetails.sampler}, CFG scale: ${imageDetails.cfg_scale}, Seed: ${image.seed}` +
+            `, Size: ${imageDetails.width}x${imageDetails.height}, model: ${imageDetails.models}`
+          let oldBlob
+          try {
+            oldBlob = await base64toBlob(image.base64String)
+          } catch (err) {
+            console.log(
+              `Error: Something unfortunate happened when attempting to convert base64string to file blob`
+            )
+            console.log(err)
+            continue
+          }
+          // @ts-ignore
+          let newBlob = await oldBlob?.addOrUpdateExifData(metaData)
+          image.base64String = (await blobToBase64(newBlob)).split(',')[1]
+
+          const jobWithImageDetails = {
+            ...imageDetails,
+            ...updateObject,
+            ...image
+          }
+
+          await addCompletedJobToDexie({
+            ...jobWithImageDetails
+          })
+          setNewImageReady(jobId)
+        }
+      }
+    } else {
+      console.log(`\n\n---`)
+      console.log(`Error encountered???`)
+      console.log(`imgDetailsFromApi`, imgDetailsFromApi)
+      throw new Error('Something unfortunate happened.')
+    }
+  } catch (err) {
+    console.log(`Error:`, err)
+  }
+}

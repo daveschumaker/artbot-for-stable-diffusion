@@ -1,9 +1,4 @@
-import {
-  deletePendingJobs,
-  initLoadPendingJobsFromDb
-} from 'app/_controllers/pendingJobsCache'
 import { setLoggedInState } from 'app/_store/userStore'
-import { JobStatus } from '_types'
 import { buildModelAvailability } from 'app/_api/fetchAvailableModels'
 import { fetchHordePerformance } from 'app/_api/fetchHordePerformance'
 import fetchMyWorkers from 'app/_api/fetchMyWorkers'
@@ -15,7 +10,6 @@ import { trackNewSession } from './analytics'
 import { isAppActive } from './appUtils'
 import {
   deleteDoneFromPending,
-  deleteInvalidPendingJobs,
   deleteQueuedFromPending,
   deleteRequestedFromPending
 } from './db'
@@ -83,18 +77,12 @@ export const appLastActive = async () => {
   const WAIT_TIME_SEC = 1800 // 30 minutes.
   const lastActiveTime = localStorage.getItem('ArtBotLastActive')
 
-  await deleteInvalidPendingJobs()
-
   let currentTime = Math.floor(Date.now() / 1000)
   if (lastActiveTime && currentTime - Number(lastActiveTime) > WAIT_TIME_SEC) {
     try {
       await deleteDoneFromPending()
       await deleteQueuedFromPending()
-      await deleteInvalidPendingJobs()
       await deleteRequestedFromPending()
-      deletePendingJobs(JobStatus.Done)
-      deletePendingJobs(JobStatus.Queued)
-      deletePendingJobs(JobStatus.Requested)
     } catch (err) {
       console.log(`An error occurred while clearing out stale pending items.`)
     }
@@ -122,8 +110,6 @@ export const initAppSettings = async () => {
   // app settings from local storage
   updateShowGrid()
   loadAuthToken()
-
-  initLoadPendingJobsFromDb()
 
   await trackNewSession()
 

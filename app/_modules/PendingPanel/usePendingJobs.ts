@@ -1,13 +1,8 @@
-import {
-  getAllPendingJobs,
-  getPendingJobsTimestamp
-} from 'app/_controllers/pendingJobsCache'
 import { useEffect, useState } from 'react'
 import { JobStatus } from '_types'
+import { allPendingJobs } from 'app/_utils/db'
 
 export default function usePendingJobs() {
-  const [pendingJobUpdateTimestamp, setPendingJobUpdateTimestamp] = useState(0)
-
   // Job Buckets
   const [done, setDone] = useState<any[]>([])
   const [processing, setProcessing] = useState<any[]>([])
@@ -15,14 +10,16 @@ export default function usePendingJobs() {
   const [waiting, setWaiting] = useState<any[]>([])
   const [error, setError] = useState<any[]>([])
 
-  const processPending = (pendingImages: any[] = []) => {
+  const processPending = async () => {
+    const pendingJobs = await allPendingJobs()
+
     const pending_done: any = []
     const pending_processing: any = []
     const pending_queued: any = []
     const pending_waiting: any = []
     const pending_error: any = []
 
-    pendingImages.forEach((job: any) => {
+    pendingJobs.forEach((job: any) => {
       if (job.jobStatus === JobStatus.Done) {
         pending_done.push(job)
       }
@@ -88,16 +85,13 @@ export default function usePendingJobs() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (pendingJobUpdateTimestamp !== getPendingJobsTimestamp()) {
-        setPendingJobUpdateTimestamp(getPendingJobsTimestamp())
-        processPending(getAllPendingJobs())
-      }
+      processPending()
     }, 250)
 
     return () => {
       clearInterval(interval)
     }
-  }, [pendingJobUpdateTimestamp])
+  }, [])
 
   return [done, processing, queued, waiting, error]
 }

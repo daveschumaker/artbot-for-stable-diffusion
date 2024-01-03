@@ -7,10 +7,6 @@ import { SourceProcessing } from './promptUtils'
 import { userInfoStore } from 'app/_store/userStore'
 import { toast, ToastOptions } from 'react-toastify'
 import { logToConsole } from './debugTools'
-import {
-  deletePendingJob,
-  setPendingJob
-} from 'app/_controllers/pendingJobsCache'
 import AppSettings from 'app/_data-models/AppSettings'
 import { addPendingJobToDexie } from './db'
 
@@ -23,8 +19,7 @@ export const addPendingJobToDexieDb = async (
   imageParams.jobId = uuidv4()
 
   try {
-    const imageId = await addPendingJobToDexie(imageParams)
-    setPendingJob(Object.assign({}, imageParams, { id: imageId }))
+    await addPendingJobToDexie(imageParams)
     return {
       success: true
     }
@@ -164,8 +159,6 @@ export const addPendingJobToDb = async ({
         errorType: 'client-side',
         username: userInfoStore.state.username
       })
-
-      deletePendingJob(clonedParams.jobId)
     } else {
       logError({
         path: window.location.href,
@@ -177,8 +170,6 @@ export const addPendingJobToDb = async ({
         errorType: 'client-side',
         username: userInfoStore.state.username
       })
-
-      deletePendingJob(clonedParams.jobId)
     }
   }
 }

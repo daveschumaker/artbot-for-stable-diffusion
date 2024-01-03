@@ -12,10 +12,6 @@ import {
   updateCompletedJob,
   updatePendingJobInDexie
 } from 'app/_utils/db'
-import {
-  deletePendingJob,
-  updatePendingJobProperties
-} from 'app/_controllers/pendingJobsCache'
 import NiceModal, { useModal } from '@ebay/nice-modal-react'
 import Overlay from 'app/_components/Overlay'
 import {
@@ -89,14 +85,6 @@ function AbTestModal({
 
     const imageDetailsFromCompleted = await getImageDetails(jobDetails.jobId)
 
-    updatePendingJobProperties(jobDetails.jobId, {
-      base64String:
-        selectedImg === 0 ? jobDetails.base64String : secondaryImage,
-      jobId: selectedImg === 0 ? jobDetails.jobId : jobDetails.sdxlCompanionJob,
-      ratingSubmitted: true,
-      thumbnail: null
-    })
-
     await updatePendingJobInDexie(jobDetails.id, {
       base64String:
         selectedImg === 0 ? jobDetails.base64String : secondaryImage,
@@ -119,7 +107,6 @@ function AbTestModal({
     jobDetails.base64String,
     jobDetails.id,
     jobDetails.jobId,
-    jobDetails.sdxlCompanionJob,
     secondaryImage,
     selectedImg,
     setIsRated
@@ -129,13 +116,6 @@ function AbTestModal({
     await handleRateImage()
 
     const imageDetailsFromCompleted = await getImageDetails(jobDetails.jobId)
-
-    updatePendingJobProperties(jobDetails.jobId, {
-      base64String:
-        selectedImg === 0 ? jobDetails.base64String : secondaryImage,
-      ratingSubmitted: true,
-      thumbnail: null
-    })
 
     await updatePendingJobInDexie(jobDetails.id, {
       base64String:
@@ -174,7 +154,6 @@ function AbTestModal({
 
     await deleteCompletedImage(jobDetails.jobId)
     await deleteCompletedImage(jobDetails.sdxlCompanionJob)
-    deletePendingJob(jobDetails.jobId)
 
     setIsRated(true)
     handleClose()

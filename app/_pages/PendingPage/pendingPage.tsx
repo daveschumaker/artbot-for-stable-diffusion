@@ -1,15 +1,10 @@
 'use client'
 
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 
-import { useEffectOnce } from 'app/_hooks/useEffectOnce'
 import AppSettings from 'app/_data-models/AppSettings'
 import { JobStatus } from '_types'
-import {
-  deleteDoneFromPending,
-  deletePendingJobFromDb,
-  getImageDetails
-} from 'app/_utils/db'
+import { deleteDoneFromPending } from 'app/_utils/db'
 
 import AdContainer from 'app/_components/AdContainer'
 import Linker from 'app/_components/Linker'
@@ -17,12 +12,6 @@ import PageTitle from 'app/_components/PageTitle'
 import styles from './pendingPage.module.css'
 import { useStore } from 'statery'
 import { appInfoStore } from 'app/_store/appStore'
-import {
-  deletePendingJob,
-  deletePendingJobs,
-  getAllPendingJobs,
-  getPendingJobsTimestamp
-} from 'app/_controllers/pendingJobsCache'
 import FlexRow from 'app/_components/FlexRow'
 import { IconFilter, IconInfoTriangle, IconSettings } from '@tabler/icons-react'
 import { Button } from 'app/_components/Button'
@@ -35,90 +24,28 @@ import ClearJobs from './ClearJobs'
 import clsx from 'clsx'
 import VirtualListContainer from './VirtualListContainer'
 import TextButton from 'app/_components/TextButton'
+import usePendingJobs from 'app/_modules/PendingPanel/usePendingJobs'
 
 const PendingPage = () => {
+  const [done, processing, queued, waiting, error] = usePendingJobs()
+
   const [filter, setFilter] = useState('all')
-  const [validatePending, setValidatePending] = useState(false)
   const appState = useStore(appInfoStore)
   const { imageDetailsModalOpen } = appState
 
   const [showFilterDropdown, setShowFilterDropdown] = useState(false)
   const [showSettingsDropdown, setShowSettingsDropdown] = useState(false)
 
-  const [pendingImages, setPendingImages] = useState([])
-  const [pendingJobUpdateTimestamp, setPendingJobUpdateTimestamp] = useState(0)
-  const [initLoad, setInitLoad] = useState(true)
+  const jobs = [...done, ...processing, ...queued, ...waiting, ...error]
 
-  const initPageLoad = async () => {
-    // @ts-ignore
-    if (typeof window !== 'undefined' && window.DEBUG_PENDING_JOBS) {
-      console.log(`pendingPage#initPageLoad`)
-    }
-  }
-
-  useEffect(() => {
-    if (!initLoad && getPendingJobsTimestamp() === 0) {
-      setInitLoad(false)
-    }
-  }, [initLoad])
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (pendingJobUpdateTimestamp !== getPendingJobsTimestamp()) {
-        setPendingJobUpdateTimestamp(getPendingJobsTimestamp())
-        // @ts-ignore
-        setPendingImages(getAllPendingJobs())
-        setInitLoad(false)
-      }
-    }, 250)
-
-    return () => {
-      clearInterval(interval)
-    }
-  }, [pendingJobUpdateTimestamp])
-
-  const processPending = useCallback(() => {
-    const done: any = []
-    const processing: any = []
-    const queued: any = []
-    const waiting: any = []
-    const error: any = []
-
-    pendingImages.forEach((job: any) => {
-      if (job.jobStatus === JobStatus.Done) {
-        done.push(job)
-      }
-
-      if (job.jobStatus === JobStatus.Processing) {
-        processing.push(job)
-      }
-
-      if (
-        job.jobStatus === JobStatus.Queued ||
-        job.jobStatus === JobStatus.Requested
-      ) {
-        queued.push(job)
-      }
-
-      if (job.jobStatus === JobStatus.Waiting) {
-        waiting.push(job)
-      }
-
-      if (job.jobStatus === JobStatus.Error) {
-        error.push(job)
-      }
-    })
-
-    return [done, processing, queued, waiting, error]
-  }, [pendingImages])
-
-  const [done = [], processing = [], queued = [], waiting = [], error = []] =
-    processPending()
-
-  const inProgress = [].concat(processing, queued, waiting)
-
-  let sorted = [...done, ...processing, ...queued, ...waiting, ...error].filter(
-    (job) => {
+  const filterJobs = useCallback(() => {
+    let filterJobs = [
+      ...done,
+      ...processing,
+      ...queued,
+      ...waiting,
+      ...error
+    ].filter((job) => {
       if (filter === 'all') {
         return true
       }
@@ -141,80 +68,17 @@ const PendingPage = () => {
       if (filter === 'error') {
         return job.jobStatus === JobStatus.Error
       }
-    }
-  )
+    })
 
-  sorted = sorted.sort((a: any = {}, b: any = {}) => {
-    if (a.id < b.id) {
-      return -1
-    }
+    return filterJobs
+  }, [done, error, filter, processing, queued, waiting])
 
-    if (a.id > b.id) {
-      return 1
-    }
+  let filteredJobs = filterJobs()
 
-    return 0
-  })
-
-  const jobsInProgress = processing.length + queued.length
-
-  useEffectOnce(() => {
-    initPageLoad()
-
-    return () => {
-      if (AppSettings.get('autoClearPending')) {
-        deletePendingJobs(JobStatus.Done)
-        deleteDoneFromPending()
-      }
-    }
-  })
-
-  /**
-   * Handle a potential race condition where images are somehow deleted from completed items table
-   * but never removed from pending items table, resulting in all sorts of errors.
-   */
-  const verifyImagesExist = useCallback(async () => {
-    // @ts-ignore
-    if (typeof window !== 'undefined' && window.DEBUG_PENDING_JOBS) {
-      console.log(`pendingPage#verifyImagesExist`)
-    }
-
-    if (done.length === 0) {
-      await deleteDoneFromPending()
-      return
-    }
-
-    for (const idx in done) {
-      getImageDetails.delete(done[idx].jobId) // Bust memo cache
-      const exists = (await getImageDetails(done[idx].jobId)) || {}
-
-      if (!exists.id) {
-        await deletePendingJobFromDb(done[idx].jobId)
-        deletePendingJob(done[idx].jobId)
-      }
-    }
-
-    setValidatePending(true)
-  }, [done])
-
-  useEffect(() => {
-    if (!validatePending) {
-      verifyImagesExist()
-    }
-  }, [validatePending, verifyImagesExist])
-
-  // let listHeight = 500
-
-  // if (isInstalledPwa() && size.height) {
-  //   listHeight = size.height - 276
-  // } else if (size.height) {
-  //   listHeight = size.height - 240
-  // }
-
-  let titleDescript = `All images (${pendingImages.length})`
+  let titleDescript = `All images (${jobs.length})`
 
   if (filter === 'processing') {
-    titleDescript = `Processing (${jobsInProgress})`
+    titleDescript = `Processing (${queued.length + processing.length})`
   }
 
   if (filter === 'done') {
@@ -257,8 +121,8 @@ const PendingPage = () => {
           <FilterOptions
             filter={filter}
             setFilter={setFilter}
-            jobs={processPending()}
-            jobCount={pendingImages.length}
+            jobs={jobs}
+            jobCount={jobs.length}
             setShowFilterDropdown={setShowFilterDropdown}
           />
         )}
@@ -266,7 +130,7 @@ const PendingPage = () => {
           <PendingSettings setShowSettingsDropdown={setShowSettingsDropdown} />
         )}
         <FlexRow>
-          <ClearJobs filter={filter} pendingImages={pendingImages} />
+          <ClearJobs filter={filter} pendingImages={jobs} />
         </FlexRow>
         <FlexRow gap={4} style={{ justifyContent: 'flex-end' }}>
           <Button onClick={() => setShowFilterDropdown(true)}>
@@ -317,18 +181,18 @@ const PendingPage = () => {
       >
         <VirtualListContainer
           completedJobs={done}
-          items={sorted}
-          jobsInProgress={inProgress.length > 0}
+          items={filteredJobs}
+          jobsInProgress={(queued.length | processing.length) > 0}
         />
 
-        {(pendingImages.length === 0 || sorted.length === 0) && (
+        {(jobs.length === 0 || filteredJobs.length === 0) && (
           <div
             className={clsx(
               styles.ListWrapper,
-              pendingImages.length > 0 && styles.ListWrapperHasItems
+              jobs.length > 0 && styles.ListWrapperHasItems
             )}
           >
-            {pendingImages.length === 0 && (
+            {jobs.length === 0 && (
               <div style={{ padding: '16px 16px 12px 0' }}>
                 No images pending.{' '}
                 <Linker href="/" style={{ color: 'rgb(34 211 238)' }}>
@@ -337,13 +201,12 @@ const PendingPage = () => {
               </div>
             )}
 
-            {pendingImages.length === 0 && done.length > 0 && (
+            {jobs.length === 0 && done.length > 0 && (
               <>
                 <PageTitle as="h2">Recently completed images</PageTitle>
                 <div className="mb-2">
                   <TextButton
                     onClick={() => {
-                      deletePendingJobs(JobStatus.Done)
                       deleteDoneFromPending()
                     }}
                   >
@@ -353,7 +216,7 @@ const PendingPage = () => {
               </>
             )}
 
-            {sorted.length === 0 && !imageDetailsModalOpen && !initLoad && (
+            {filteredJobs.length === 0 && !imageDetailsModalOpen && (
               <div className={styles.MobileAd}>
                 <AdContainer style={{ margin: '0 auto', maxWidth: '480px' }} />
               </div>

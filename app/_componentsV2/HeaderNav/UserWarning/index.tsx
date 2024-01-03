@@ -13,16 +13,42 @@ import Linker from 'app/_components/Linker'
 
 const UserWarningModal = () => {
   const appState = useStore(appInfoStore)
+  const [showQuotaExceeded, setShowQuotaExceeded] = useState(false)
   const [showLockedWorkerWarning, setShowLockedWorkerWarning] = useState(false)
 
   useEffect(() => {
     if (appState.useAllowedWorkers) {
       setShowLockedWorkerWarning(true)
     }
-  }, [appState.useAllowedWorkers])
+
+    if (appState.storageQuotaLimit) {
+      setShowQuotaExceeded(true)
+    }
+  }, [appState.storageQuotaLimit, appState.useAllowedWorkers])
 
   return (
     <div className="flex flex-col gap-2">
+      {showQuotaExceeded && (
+        <>
+          <div>
+            <strong>Browser storage quota exceeded</strong>
+          </div>
+          <div className="text-sm">
+            Your browser has reported that the storage quota alloted to ArtBot
+            is full, which prevents this web app from writing data to your
+            cache. Please remove some images and try again.{' '}
+            <Linker
+              href="/faq#storage-exceeded"
+              passHref
+              onClick={() => {
+                NiceModal.remove('lockedToWorker-modal')
+              }}
+            >
+              Why am I getting this error?
+            </Linker>
+          </div>
+        </>
+      )}
       {showLockedWorkerWarning && (
         <>
           <div>
@@ -68,8 +94,9 @@ const UserWarningModal = () => {
 
 export default function UserWarning() {
   const appState = useStore(appInfoStore)
+  const { storageQuotaLimit } = appState
 
-  if (!appState.useAllowedWorkers) {
+  if (!appState.useAllowedWorkers && !storageQuotaLimit) {
     return null
   }
 
@@ -86,7 +113,13 @@ export default function UserWarning() {
             })
           }}
         >
-          <IconAlertTriangleFilled stroke={1} />
+          {storageQuotaLimit ? (
+            <div style={{ color: 'red' }}>
+              <IconAlertTriangleFilled stroke={1} />
+            </div>
+          ) : (
+            <IconAlertTriangleFilled stroke={1} />
+          )}
         </button>
       </div>
     </>

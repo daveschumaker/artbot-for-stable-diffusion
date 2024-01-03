@@ -92,7 +92,7 @@ export const getFinishedImage = async (
         success: false,
         status: 'NOT_FOUND',
         message:
-          'Job has gone stale and has been removed from the Stable Horde backend. Retry?',
+          'Job has gone stale and was removed from the AI Horde backend. Retry?',
         jobId
       }
     }
@@ -135,7 +135,7 @@ export const getFinishedImage = async (
             success: false,
             status: 'JOB_CANCELED',
             message:
-              'The worker was unable to complete this request. Please try again.'
+              'The worker encountered an issue completing this request. Please try again.'
           }
         }
 

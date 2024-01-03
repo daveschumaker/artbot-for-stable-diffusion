@@ -15,10 +15,6 @@ import { modelStore } from 'app/_store/modelStore'
 import { MODEL_LIMITED_BY_WORKERS, RATE_IMAGE_CUTOFF_SEC } from '_constants'
 import DisplayRawData from 'app/_components/DisplayRawData'
 import { copyEditPrompt } from 'app/_controllers/imageDetailsCommon'
-import {
-  deletePendingJob,
-  updatePendingJobV2
-} from 'app/_controllers/pendingJobsCache'
 import styles from './pendingItem.module.css'
 import clsx from 'clsx'
 import ImageThumbnail from './ImageThumbnail'
@@ -30,7 +26,10 @@ import {
   IconTrash,
   IconX
 } from '@tabler/icons-react'
-import { updatePendingJobInDexieByJobId } from 'app/_utils/db'
+import {
+  deletePendingJobFromDb,
+  updatePendingJobInDexieByJobId
+} from 'app/_utils/db'
 
 const RATINGS_ENABLED = false
 
@@ -69,24 +68,15 @@ const PendingItem = memo(
         event: 'DELETE_PENDING_JOB',
         context: '/pages/pending'
       })
-
-      deletePendingJob(jobId)
     }
 
     const handleEditClick = async () => {
       savePrompt({ ...jobDetails })
-      deletePendingJob(jobId)
+      await deletePendingJobFromDb(jobId)
       router.push(`/create?edit=true`)
     }
 
     const handleRetryJob = async () => {
-      if (serverHasJob) {
-        deletePendingJob(jobId)
-      }
-
-      updatePendingJobV2(
-        Object.assign({}, jobDetails, { jobStatus: JobStatus.Waiting })
-      )
       await updatePendingJobInDexieByJobId(jobDetails.jobId, {
         jobStatus: JobStatus.Waiting
       })
@@ -99,8 +89,8 @@ const PendingItem = memo(
       setNewImageReady('')
     }
 
-    const handleRemovePanel = () => {
-      deletePendingJob(jobId)
+    const handleRemovePanel = async () => {
+      await deletePendingJobFromDb(jobId)
       handleCloseClick(jobId)
     }
 

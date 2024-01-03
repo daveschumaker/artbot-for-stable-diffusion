@@ -23,7 +23,6 @@ import {
 import { useRouter } from 'next/navigation'
 import { isiOS, uuidv4 } from 'app/_utils/appUtils'
 import { SourceProcessing } from 'app/_utils/promptUtils'
-import { deletePendingJob } from 'app/_controllers/pendingJobsCache'
 import { getRelatedImages } from 'app/_pages/ImagePage/image.controller'
 import { useModal } from '@ebay/nice-modal-react'
 import { showErrorToast, showSuccessToast } from 'app/_utils/notificationUtils'
@@ -99,7 +98,6 @@ const ImageOptionsWrapper = ({
     handleDeleteImageClick()
     await deletePendingJobFromDb(imageDetails.jobId as string)
     await deleteCompletedImage(imageDetails.jobId as string)
-    deletePendingJob(imageDetails.jobId as string)
     getImageDetails.delete(imageDetails.jobId as string) // bust memoization cache
     confirmationModal.remove()
     handleClose()

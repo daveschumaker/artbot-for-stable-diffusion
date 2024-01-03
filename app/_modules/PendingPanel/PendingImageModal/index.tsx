@@ -16,11 +16,6 @@ import clsx from 'clsx'
 import styles from './pendingImageModal.module.css'
 import { Button } from 'app/_components/Button'
 import { deletePendingJobFromApi } from 'app/_api/deletePendingJobFromApi'
-import {
-  deletePendingJob,
-  getPendingJob,
-  updatePendingJobV2
-} from 'app/_controllers/pendingJobsCache'
 import { useState } from 'react'
 import { updatePendingJobInDexieByJobId } from 'app/_utils/db'
 
@@ -45,16 +40,21 @@ export default function PendingImageModal({
   handleClose?: () => any
   imageDetails: any
 }) {
-  const [pendingJob] = useState<any>(getPendingJob(imageDetails.jobId))
+  const [pendingJob] = useState<any>(imageDetails)
+
+  // const getDetails = async() => {
+
+  // }
+
+  // useEffect(() => {
+
+  // }, [])
 
   const serverHasJob =
     imageDetails?.jobStatus === JobStatus.Queued ||
     imageDetails?.jobStatus === JobStatus.Processing
 
   const handleRetryJob = async () => {
-    updatePendingJobV2(
-      Object.assign({}, imageDetails, { jobStatus: JobStatus.Waiting })
-    )
     await updatePendingJobInDexieByJobId(imageDetails.jobId, {
       jobStatus: JobStatus.Waiting
     })
@@ -66,7 +66,6 @@ export default function PendingImageModal({
       deletePendingJobFromApi(imageDetails.jobId)
     }
 
-    deletePendingJob(imageDetails.jobId)
     handleClose()
   }
 
@@ -225,82 +224,6 @@ export default function PendingImageModal({
             <li>
               <strong>Guidance / cfg scale:</strong> {imageDetails.cfg_scale}
             </li>
-            {/* {isImg2Img && imageDetails.denoising_strength && (
-              <li>
-                <strong>Denoise:</strong>{' '}
-                {Number(imageDetails.denoising_strength).toFixed(2)}
-              </li>
-            )} */}
-            {/* {arrayHasValue(imageDetails.loras) && (
-              <>
-                <li>&zwnj;</li>
-                <li>
-                  <strong>LoRAs:</strong>
-                  {imageDetails.loras.map((lora, i: number) => {
-                    return (
-                      <div
-                        key={`ts_${i}`}
-                        style={{ paddingTop: i > 0 ? '4px' : 'unset' }}
-                      >
-                        {'- '}
-                        <Linker
-                          inline
-                          href={`https://civitai.com/models/${lora.name}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          passHref
-                          className="text-cyan-500"
-                        >
-                          <FlexRow gap={8}>
-                            {lora.label}
-                            <IconExternalLink stroke={1.5} size={16} />
-                          </FlexRow>
-                        </Linker>
-                        <div>&nbsp;&nbsp;Strength: {lora.model}</div>
-                        <div>&nbsp;&nbsp;CLIP: {lora.clip}</div>
-                      </div>
-                    )
-                  })}
-                </li>
-              </>
-            )}
-            {arrayHasValue(imageDetails.tis) && (
-              <>
-                <li>&zwnj;</li>
-                <li>
-                  <strong>Embeddings:</strong>
-                  {imageDetails.tis.map((ti, i: number) => {
-                    return (
-                      <div
-                        key={`ts_${i}`}
-                        style={{ paddingTop: i > 0 ? '4px' : 'unset' }}
-                      >
-                        {'- '}
-                        <Linker
-                          inline
-                          href={`https://civitai.com/models/${ti.id}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          passHref
-                          className="text-cyan-500"
-                        >
-                          <FlexRow gap={8}>
-                            {ti.name}
-                            <IconExternalLink stroke={1.5} size={16} />
-                          </FlexRow>
-                        </Linker>
-                        <div>
-                          &nbsp;&nbsp;Strength: {ti.strength}{' '}
-                          {ti.inject_ti === InjectTi.NegPrompt
-                            ? '(negative prompt)'
-                            : ''}
-                        </div>
-                      </div>
-                    )
-                  })}
-                </li>
-              </>
-            )} */}
             <li>&zwnj;</li>
             <li>
               <strong>Height:</strong> {imageDetails.height}px

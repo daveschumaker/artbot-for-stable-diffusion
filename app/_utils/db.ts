@@ -8,7 +8,6 @@ import {
 import { JobStatus } from '_types'
 import { generateBase64Thumbnail } from './imageUtils'
 import { SourceProcessing } from './promptUtils'
-import { deletePendingJobs } from 'app/_controllers/pendingJobsCache'
 import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 
 export const dbImport = async (blob: Blob) => {
@@ -184,17 +183,24 @@ export const clearPendingJobsTable = async () => {
   return await db.pending.clear()
 }
 
-export const allPendingJobs = async (status?: string) => {
+export const allPendingJobs = async (status?: JobStatus) => {
   try {
-    if (status) {
-      return await db?.pending
-        ?.where('jobStatus')
-        ?.equals(status)
-        ?.orderBy('id')
-        .toArray()
-    } else {
-      return await db?.pending?.orderBy('id')?.toArray()
+    let waitingDetails: any[] = []
+
+    if (!status) {
+      await db.transaction('r', db.pending, async () => {
+        waitingDetails = await db.pending.toArray()
+      })
+
+      return waitingDetails
     }
+
+    // Start a transaction for reading from both tables
+    await db.transaction('r', db.pending, async () => {
+      waitingDetails = await db.pending.where({ jobStatus: status }).toArray()
+    })
+
+    return waitingDetails
   } catch (err: any) {
     if (
       err.message.indexOf(
@@ -202,7 +208,12 @@ export const allPendingJobs = async (status?: string) => {
       ) >= 0
     ) {
       setUnsupportedBrowser(true)
+    } else if (err instanceof Error) {
+      console.error('Failed to fetch waiting image details:', err.stack)
+    } else {
+      console.error('An unexpected error occurred:', err)
     }
+
     return []
   }
 }
@@ -221,43 +232,33 @@ export const allCompletedJobs = memoize(_allCompletedJobs, {
 })
 
 export const deleteDoneFromPending = async () => {
-  const pendingJobs = (await allPendingJobs()) || []
-  const done = pendingJobs.filter((job: { jobStatus: JobStatus }) => {
-    return job.jobStatus === JobStatus.Done
-  })
-
-  const ids = done.map((job: any) => job.id)
-  await db.pending.bulkDelete(ids)
+  try {
+    await db.transaction('rw', db.pending, async () => {
+      await db.pending.where({ jobStatus: JobStatus.Done }).delete()
+    })
+  } catch (err) {
+    console.error('Failed to delete finished jobs from pending table:', err)
+  }
 }
 
 export const deleteQueuedFromPending = async () => {
-  const pendingJobs = (await allPendingJobs()) || []
-  const done = pendingJobs.filter((job: { jobStatus: JobStatus }) => {
-    return job.jobStatus === JobStatus.Queued
-  })
-
-  const ids = done.map((job: any) => job.id)
-  await db.pending.bulkDelete(ids)
+  try {
+    await db.transaction('rw', db.pending, async () => {
+      await db.pending.where({ jobStatus: JobStatus.Queued }).delete()
+    })
+  } catch (err) {
+    console.error('Failed to delete queued jobs from pending table:', err)
+  }
 }
 
 export const deleteRequestedFromPending = async () => {
-  const pendingJobs = (await allPendingJobs()) || []
-  const done = pendingJobs.filter((job: { jobStatus: JobStatus }) => {
-    return job.jobStatus === JobStatus.Requested
-  })
-
-  const ids = done.map((job: any) => job.id)
-  await db.pending.bulkDelete(ids)
-}
-
-export const deleteInvalidPendingJobs = async () => {
-  const pendingJobs = (await allPendingJobs()) || []
-  const done = pendingJobs.filter((job: { jobStatus: JobStatus }) => {
-    return typeof job.jobStatus === 'undefined' || !job.jobStatus
-  })
-
-  const ids = done.map((job: any) => job.id)
-  await db.pending.bulkDelete(ids)
+  try {
+    await db.transaction('rw', db.pending, async () => {
+      await db.pending.where({ jobStatus: JobStatus.Requested }).delete()
+    })
+  } catch (err) {
+    console.error('Failed to delete requested jobs from pending table:', err)
+  }
 }
 
 export const bulkDeleteImages = async (images: Array<string>) => {
@@ -492,7 +493,13 @@ export const updatePendingJobInDexieByJobId = async (
   const updated = Object.assign({}, pendingJob, updatedObject)
 
   if (jobId) {
-    db.pending.update(pendingJob.id, updated)
+    await db
+      .transaction('rw', db.pending, async () => {
+        await db.pending.update(pendingJob.id, updated)
+      })
+      .catch((err) => {
+        console.error(err.stack || err)
+      })
   }
 }
 
@@ -501,32 +508,70 @@ export const updateCompletedJob = async (tableId: number, updatedObject) => {
   db.completed.update(tableId, updatedObject)
 }
 
-export const addCompletedJobToDexie = async (imageDetails = {}) => {
-  try {
-    await db.completed.put(Object.assign({}, imageDetails))
-  } catch (err: any) {
-    console.log(`Uh oh! An error occurred!`)
-    console.log(err.message)
-
-    if (err.message.includes('QuotaExceededError')) {
-      setStorageQuotaLimit(true)
-    }
+export const addCompletedJobToDexie = async (imageDetails = {} as any) => {
+  if (!imageDetails.jobId) {
+    console.log(`Error: No jobId??`, imageDetails)
+    return false
   }
+
+  db.transaction('rw', db.pending, db.completed, async () => {
+    await db.pending
+      .where({ jobId: imageDetails.jobId })
+      .modify({ ...imageDetails })
+    const info = await db.completed.add(imageDetails)
+    return info
+  }).catch((err) => {
+    if (err.message && err.message.includes('QuotaExceededError')) {
+      setStorageQuotaLimit(true)
+    } else {
+      console.log(`Error: Unable to add completed job to browser database.`)
+      console.error(err.stack || err)
+    }
+  })
+}
+
+export const updatePendingAndCompletedJobInDexie = async (
+  imageDetails = {} as any
+) => {
+  if (!imageDetails.jobId) {
+    return false
+  }
+
+  db.transaction('rw', db.pending, db.completed, async () => {
+    await db.pending
+      .where({ jobId: imageDetails.jobId })
+      .modify({ ...imageDetails })
+    const info = await db.completed
+      .where({ jobId: imageDetails.jobId })
+      .modify({ ...imageDetails })
+    return info
+  }).catch((err) => {
+    if (err.message && err.message.includes('QuotaExceededError')) {
+      setStorageQuotaLimit(true)
+    } else {
+      console.log(`Error: Unable to add completed job to browser database.`)
+      console.error(err.stack || err)
+    }
+  })
 }
 
 export const addPendingJobToDexie = async (jobDetails: CreateImageRequest) => {
-  const jobExists = await getPendingJobDetails(jobDetails.jobId)
+  // @ts-ignore
+  delete jobDetails.id
 
-  if (!jobExists) {
-    // @ts-ignore
-    delete jobDetails.id
+  db.transaction('rw', db.pending, async () => {
+    // TODO: Handle source image and source mask.
 
     const info = await db.pending.add(jobDetails)
     return info
-  } else {
-    const info = await db.pending.put({ ...jobDetails })
-    return info
-  }
+  }).catch((err) => {
+    if (err.message && err.message.includes('QuotaExceededError')) {
+      setStorageQuotaLimit(true)
+    } else {
+      console.log(`Error: Unable to add pending job to browser database.`)
+      console.error(err.stack || err)
+    }
+  })
 }
 
 // @ts-ignore
@@ -563,8 +608,6 @@ export const deleteAllPendingErrors = async () => {
       }
     })
     .delete()
-
-  deletePendingJobs(JobStatus.Error)
 }
 
 export const deleteAllPendingJobs = async () => {
@@ -576,13 +619,14 @@ export const deleteAllPendingJobs = async () => {
       )
     })
     .delete()
-
-  deletePendingJobs(JobStatus.Queued)
-  deletePendingJobs(JobStatus.Waiting)
 }
 
 export const getImageDetailsById = async (id: number) => {
   return await db.completed.where('id').equals(id).first()
+}
+
+export const getImageDetailsByJobId = async (jobId: string) => {
+  return await db.completed.where('jobId').equals(jobId).first()
 }
 
 export const _getImageDetails = async (jobId: string) => {
@@ -614,8 +658,25 @@ export const deleteCompletedImageById = async (id: number) => {
   await db.completed.where('id').equals(id).delete()
 }
 
-export const deletePendingJobFromDb = async (jobId: string) => {
-  await db.pending.where('jobId').equals(jobId).delete()
+export const deletePendingJobFromDb = async (
+  jobId: string,
+  deleteCompleted = false
+) => {
+  try {
+    await db.transaction('rw', db.pending, db.completed, async () => {
+      await db.pending.where({ jobId }).delete()
+
+      if (deleteCompleted) {
+        await db.completed.where({ jobId }).delete()
+      }
+
+      console.log(
+        `All entries with request_id ${jobId} have been successfully deleted.`
+      )
+    })
+  } catch (err) {
+    console.error('Failed to delete image and related entries:', err)
+  }
 }
 
 export const imageCount = async () => {
