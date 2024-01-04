@@ -13,6 +13,8 @@
     "lint": "next lint",
     "pm2:start-prod": "pm2 start ecosystem.config.js --only horde-js",
     "pm2:stop-prod": "pm2 delete ecosystem.config.js --only horde-js",
+    "pm2:start-beta": "pm2 start ecosystem.config.js --only artbot-beta",
+    "pm2:stop-beta": "pm2 delete ecosystem.config.js --only artbot-beta",
     "pm2:start-staging": "pm2 start ecosystem.config.js --only horde-js-staging",
     "pm2:stop-staging": "pm2 delete ecosystem.config.js --only horde-js-staging",
     "start": "NODE_ENV=production next start",

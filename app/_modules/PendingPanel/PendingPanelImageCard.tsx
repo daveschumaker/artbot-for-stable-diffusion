@@ -213,8 +213,13 @@ const PendingPanelImageCard = React.memo(({ imageJob }: { imageJob: any }) => {
             )}
             {imageJob.jobStatus === JobStatus.Processing && (
               <>
-                Processing...{' '}
-                {imageJob.wait_time ? `(~${Number(imageJob.wait_time)}s)` : ''}
+                <div>
+                  Processing...{' '}
+                  {imageJob.wait_time
+                    ? `(~${Number(imageJob.wait_time)}s)`
+                    : ''}
+                </div>
+                {!imageJob.wait_time && <div>(Finishing up generation)</div>}
               </>
             )}
             {imageJob.jobStatus === JobStatus.Error && (

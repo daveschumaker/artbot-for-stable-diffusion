@@ -1,6 +1,7 @@
 # 2024.01.03
 
 - Lots and lots of reports over stalled / failed jobs and I think it has to do with a bunch of hacky logic I've written. This is my second attempt at fixing these stalled image issues. (I had a previous attempt yesterday that I ended up rolling back due to a number of issues). Let's see if this improves things!
+- Another fix for stalled jobs (I believe it was related to an error with certain prompts: "The string to be encoded contains characters outside of the Latin1 range.")
 
 # 2023.12.31
 

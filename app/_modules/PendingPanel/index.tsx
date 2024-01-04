@@ -163,6 +163,7 @@ export default function PendingPanel() {
                 )
               }
             }}
+            overscan={5}
             itemContent={(index) => {
               return (
                 <PendingPanelImageCard

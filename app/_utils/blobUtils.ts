@@ -145,7 +145,25 @@ async function getExifFromBlob(blob: Blob): object {
   return existing_exif
 }
 
+function str_to_utf8(str) {
+  // Firstly, encode the string as UTF-8
+  const utf8Encoded = encodeURIComponent(str)
+
+  // Secondly, replace any URI special characters with their UTF-8 equivalents
+  const utf8Bytes = utf8Encoded.replace(
+    /%([0-9A-F]{2})/g,
+    function (match, p1) {
+      return String.fromCharCode('0x' + p1)
+    }
+  )
+
+  // Finally, encode the UTF-8 byte sequence to Base64
+  return utf8Bytes
+}
+
 function mergeExifData(existingExif: object, userComment: string): object {
+  userComment = str_to_utf8(userComment)
+
   // 0th IFD
   const zeroth = {
     [exifLib.TagNumbers.ImageIFD.Software]: SOFTWARE
