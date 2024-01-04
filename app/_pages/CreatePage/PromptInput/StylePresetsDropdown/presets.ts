@@ -79,7 +79,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     loras: [{ name: '268475', model: 1, is_version: true }]
   },
   bdcolordd: {
-    prompt: '{p}, happy birthday, colorful, in the style of t3xtn, {p}{np}',
+    prompt: '{p}, happy birthday, colorful, in the style of t3xtn{np}',
     model: 'Dreamshaper',
     width: 960,
     height: 768,
