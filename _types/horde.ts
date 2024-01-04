@@ -129,6 +129,7 @@ export interface HordePreset {
     inject_trigger?: string
     model?: number
     clip?: number
+    is_version?: boolean
   }>
   tis?: Array<{ name: string; inject_ti?: string; strength?: number }>
   model?: string

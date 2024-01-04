@@ -129,11 +129,12 @@ export default function AllowWorkers() {
           return (
             <div
               key={worker.id}
-              className="font-mono text-xs mb-2 flex flex-row w-full items-center justify-between"
+              className="font-mono text-sm mb-2 flex flex-row w-full items-center justify-between"
             >
               <div className="flex flex-col">
-                <div>{worker.label}</div>
-                <div>{worker.timestamp}</div>
+                <div style={{ fontWeight: 700 }}>{worker.label}</div>
+                <div style={{ fontSize: '12px' }}>{worker.value}</div>
+                <div style={{ fontSize: '12px' }}>{worker.timestamp}</div>
               </div>
               <div className="flex flex-row gap-2">
                 <Button
@@ -151,8 +152,17 @@ export default function AllowWorkers() {
         // @ts-ignore
         width="480px"
       >
+        <div className="text-sm font-bold pb-2">
+          Search by worker name or worker ID:
+        </div>
         <div className="flex flex-row gap-2 items-center">
           <Select
+            formatOptionLabel={(option: SelectOption) => (
+              <>
+                <div style={{ fontWeight: 700 }}>{option.label}</div>
+                <div style={{ fontSize: '12px' }}>{option.value}</div>
+              </>
+            )}
             onChange={(obj: SelectOption) => {
               if (obj.value) {
                 setSelectedWorker(obj)

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Input from 'app/_components/Input'
 import { stylePresets } from './presets'
 import styles from './component.module.css'
@@ -7,12 +7,29 @@ import { Button } from 'app/_components/Button'
 import FlexRow from 'app/_components/FlexRow'
 import { handleUsePreset } from './presetController'
 
+function useDebounce(value: string, delay: number) {
+  const [debouncedValue, setDebouncedValue] = useState(value)
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value)
+    }, delay)
+
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [value, delay]) // Only re-call effect if value or delay changes
+
+  return debouncedValue
+}
+
 export default function StylePresetsDropdown({
   input,
   setInput,
   handleClose
 }: any) {
   const [filter, setFilter] = useState('')
+  const debouncedFilter = useDebounce(filter, 150)
 
   const handlePresetSelect = (key: string) => {
     const updatedInput = handleUsePreset({
@@ -31,11 +48,12 @@ export default function StylePresetsDropdown({
     const np = input.negative ? `[negative user prompt]` : ''
 
     for (const [key, presetDetails] of Object.entries(stylePresets)) {
-      if (filter) {
+      if (debouncedFilter) {
+        const filterLowercase = debouncedFilter.toLowerCase()
         if (
-          !key.toLowerCase().includes(filter) &&
+          !key.toLowerCase().includes(filterLowercase) &&
           // @ts-ignore
-          !presetDetails.model.toLowerCase().includes(filter)
+          !presetDetails.model.toLowerCase().includes(filterLowercase)
         ) {
           continue
         }

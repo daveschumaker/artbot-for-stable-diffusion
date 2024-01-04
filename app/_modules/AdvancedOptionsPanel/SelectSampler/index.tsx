@@ -7,7 +7,7 @@ import { Button } from 'app/_components/Button'
 import Checkbox from 'app/_components/Checkbox'
 import Samplers from 'app/_data-models/Samplers'
 import { useState } from 'react'
-import { CONTROL_TYPES, SourceProcessing } from '_types/horde'
+import { SourceProcessing } from '_types/horde'
 import { useInput } from 'app/_modules/InputProvider/context'
 import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
 
@@ -28,11 +28,10 @@ export default function SelectSampler({
   return (
     <div style={{ marginBottom: '12px' }}>
       <SubSectionTitle>Sampler</SubSectionTitle>
-      {(input.source_processing === SourceProcessing.InPainting &&
-        input.models[0] === 'stable_diffusion_inpainting') ||
-      (input.source_image && input.control_type !== ('' as CONTROL_TYPES)) ? (
+      {input.source_processing === SourceProcessing.InPainting &&
+      input.models[0] === 'stable_diffusion_inpainting' ? (
         <div className="mt-[-6px] text-sm text-slate-500 dark:text-slate-400 font-[600]">
-          Note: Sampler disabled when controlnet or inpainting model is used.
+          Note: Sampler disabled when inpainting model is used.
         </div>
       ) : (
         <>
@@ -40,7 +39,8 @@ export default function SelectSampler({
             <Select
               isDisabled={input.useAllSamplers}
               options={Samplers.dropdownOptions({
-                model: input.models[0]
+                model: input.models[0],
+                isImg2Img: input.source_image
               })}
               onChange={(obj: { value: string; label: string }) => {
                 if (input.useMultiSamplers) {
