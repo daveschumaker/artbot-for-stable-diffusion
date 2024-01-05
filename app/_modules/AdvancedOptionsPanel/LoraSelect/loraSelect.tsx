@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react'
 import Section from 'app/_components/Section'
-import SubSectionTitle from 'app/_components/SubSectionTitle'
 import styles from './loraSelect.module.css'
 import { Button } from 'app/_components/Button'
 import {
@@ -14,7 +13,6 @@ import NumberInput from 'app/_components/NumberInput'
 import Linker from 'app/_components/Linker'
 import FlexRow from 'app/_components/FlexRow'
 import { modelStore } from 'app/_store/modelStore'
-import MaxWidth from 'app/_components/MaxWidth'
 import Slider from 'app/_components/Slider'
 import { useModal } from '@ebay/nice-modal-react'
 import AwesomeModalWrapper from 'app/_modules/AwesomeModal'
@@ -22,6 +20,7 @@ import LoraSearchModal from './modals/LoraSearchModal'
 import { handleConvertLora } from './loraUtils'
 import LoraFavRecentModal from './modals/LoraFavRecentModal'
 import { useInput } from 'app/_modules/InputProvider/context'
+import clsx from 'clsx'
 
 const LoraSelect = ({ setErrors }: any) => {
   const { input, setInput } = useInput()
@@ -144,25 +143,28 @@ const LoraSelect = ({ setErrors }: any) => {
         >
           <div className={styles['lora-name']}>
             <div className="flex flex-col">
-              {displayName}
-              <div
-                className="flex flex-row gap-2 items-center"
-                style={{
-                  fontSize: '12px'
-                }}
-              >
+              <div className="font-bold text-[14px]">
                 <Linker
                   href={`https://civitai.com/models/${lora.name}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  [ View on Civitai]
+                  <div
+                    style={{
+                      alignItems: 'center',
+                      display: 'flex',
+                      flexDirection: 'row',
+                      columnGap: '4px'
+                    }}
+                  >
+                    {displayName}
+                    <IconExternalLink size={18} />
+                  </div>
                 </Linker>
-                <IconExternalLink size={18} />
               </div>
             </div>
             <Button
-              size="small"
+              className={styles['lora-btn']}
               theme="secondary"
               onClick={() => handleDeleteLora(i)}
             >
@@ -172,17 +174,29 @@ const LoraSelect = ({ setErrors }: any) => {
           <div className="w-full">
             <Section>
               <div className="flex flex-row items-center justify-between">
-                <SubSectionTitle>
-                  LoRA strength
-                  <div
-                    className="block text-xs w-full"
-                    style={{ fontWeight: 400 }}
-                  >
-                    Range: {-5.0} to {5.0}
+                <div
+                  style={{
+                    fontWeight: 700,
+                    fontSize: '14px',
+                    width: 'var(--options-label-width)'
+                  }}
+                >
+                  Weight
+                </div>
+                <FlexRow gap={4} justifyContent="space-between">
+                  <div className={styles['slider-wrapper']}>
+                    <Slider
+                      value={lora.model}
+                      min={-5.0}
+                      max={5.0}
+                      step={0.05}
+                      onChange={(e: any) => {
+                        handleUpdate(i, 'model', Number(e.target.value))
+                      }}
+                    />
                   </div>
-                </SubSectionTitle>
-                <MaxWidth max={'160px'} style={{ margin: 0 }}>
                   <NumberInput
+                    className={styles['input-width']}
                     min={-5.0}
                     max={5.0}
                     onMinusClick={() => {
@@ -208,31 +222,34 @@ const LoraSelect = ({ setErrors }: any) => {
                     value={lora.model}
                     width="100%"
                   />
-                </MaxWidth>
+                </FlexRow>
               </div>
-              <Slider
-                value={lora.model}
-                min={-5.0}
-                max={5.0}
-                step={0.05}
-                onChange={(e: any) => {
-                  handleUpdate(i, 'model', Number(e.target.value))
-                }}
-              />
             </Section>
             <Section style={{ marginTop: '8px' }}>
               <div className="flex flex-row items-center justify-between">
-                <SubSectionTitle>
-                  CLIP strength
-                  <div
-                    className="block text-xs w-full"
-                    style={{ fontWeight: 400 }}
-                  >
-                    Range: {-5.0} to {5.0}
+                <div
+                  style={{
+                    fontWeight: 700,
+                    fontSize: '14px',
+                    width: 'var(--options-label-width)'
+                  }}
+                >
+                  CLIP
+                </div>
+                <FlexRow gap={4} justifyContent="space-between">
+                  <div className={styles['slider-wrapper']}>
+                    <Slider
+                      value={lora.clip}
+                      min={-5.0}
+                      max={5.0}
+                      step={0.05}
+                      onChange={(e: any) => {
+                        handleUpdate(i, 'clip', Number(e.target.value))
+                      }}
+                    />
                   </div>
-                </SubSectionTitle>
-                <MaxWidth max={'160px'} style={{ margin: 0 }}>
                   <NumberInput
+                    className={styles['input-width']}
                     min={-5.0}
                     max={5.0}
                     onMinusClick={() => {
@@ -258,58 +275,85 @@ const LoraSelect = ({ setErrors }: any) => {
                     value={lora.clip}
                     width="100%"
                   />
-                </MaxWidth>
+                </FlexRow>
               </div>
-              <Slider
-                value={lora.clip}
-                min={-5.0}
-                max={5.0}
-                step={0.05}
-                onChange={(e: any) => {
-                  handleUpdate(i, 'clip', Number(e.target.value))
-                }}
-              />
             </Section>
-            <div className="w-full">
-              <Section>
-                <div className="flex flex-col justify-between">
-                  <SubSectionTitle>
-                    Trigger words
-                    {!hasWords && (
-                      <div style={{ fontWeight: 400, fontSize: '12px' }}>
-                        (This LoRA does not utilize any trained words)
-                      </div>
-                    )}
-                    {hasWords && (
-                      <div style={{ fontWeight: 400, fontSize: '12px' }}>
-                        (Don&apos;t forget to add one of these to your prompt)
-                      </div>
-                    )}
-                    <div
-                      className="flex flex-row flex-wrap font-[400] cursor-pointer"
-                      style={{
-                        columnGap: '8px',
-                        color: '#17cfbb'
-                      }}
-                    >
-                      {// @ts-ignore
-                      lora?.trainedWords?.map((word: string, i: number) => {
-                        return (
-                          <div
-                            key={lora.name + '_' + i}
-                            onClick={() => {
-                              setInput({ prompt: input.prompt + ' ' + word })
-                            }}
-                          >
-                            {word}
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </SubSectionTitle>
+            {hasWords && (
+              <Section style={{ marginTop: '8px' }}>
+                <div
+                  style={{
+                    alignItems: 'center',
+                    display: 'flex',
+                    columnGap: '8px'
+                  }}
+                >
+                  <div
+                    style={{
+                      fontWeight: 700,
+                      fontSize: '14px',
+                      width: 'var(--options-label-width)'
+                    }}
+                  >
+                    Keywords
+                  </div>
+                  <FlexRow gap={4}>
+                    {// @ts-ignore
+                    lora?.trainedWords?.map((word: string, i: number) => {
+                      // Split the word by comma and filter out any empty strings
+                      const parts = word
+                        .split(',')
+                        .filter((part) => part.trim() !== '')
+                      return parts.map((part, partIndex) => {
+                        // Check if the part is not an empty string
+                        if (part.trim() !== '') {
+                          return (
+                            <div
+                              className={clsx(
+                                styles['keyword-tag'],
+                                input.prompt.includes(part.trim()) &&
+                                  styles['remove-keyword']
+                              )}
+                              // Unique key using both the original index and the part index
+                              key={lora.name + '_' + i + '_' + partIndex}
+                              onClick={() => {
+                                // Trim and prepare the part to be added or removed
+                                const trimmedPart = part.trim()
+
+                                // Check if the part already exists in the input prompt
+                                if (input.prompt.includes(trimmedPart)) {
+                                  // If it exists, remove the part and the preceding comma
+                                  // Use regex to replace the first occurrence of ', part' or 'part, '
+                                  const updatedPrompt = input.prompt.replace(
+                                    new RegExp(`,? *${trimmedPart}`),
+                                    ''
+                                  )
+
+                                  // Update the input prompt, trimming any leading or trailing whitespace
+                                  setInput({ prompt: updatedPrompt.trim() })
+                                } else {
+                                  // If it doesn't exist, add the part with a preceding comma
+                                  const updatedPrompt = `${input.prompt}, ${trimmedPart}`
+
+                                  // Update the input prompt
+                                  setInput({ prompt: updatedPrompt.trim() })
+                                }
+                              }}
+                            >
+                              {input.prompt.includes(part.trim()) && (
+                                <IconTrash stroke={1.5} size={18} />
+                              )}
+                              {part}
+                            </div>
+                          )
+                        }
+                        return null // Return null for empty strings, so nothing is rendered
+                      })
+                    })}
+                    <div></div>
+                  </FlexRow>
                 </div>
               </Section>
-            </div>
+            )}
           </div>
         </div>
       )
@@ -330,101 +374,97 @@ const LoraSelect = ({ setErrors }: any) => {
   // }, [fetchLoras, input.loras.length, loadedLoras])
 
   return (
-    <Section>
-      <div
-        style={{
-          border: '1px solid rgb(126, 90, 108)',
-          padding: '8px 16px',
-          borderRadius: '4px'
-        }}
-      >
-        <SubSectionTitle>
-          <FlexRow
+    <div style={{ marginBottom: '8px' }}>
+      <div>
+        <FlexRow
+          style={{
+            columnGap: '8px',
+            justifyContent: 'space-between',
+            marginBottom: '8px',
+            position: 'relative',
+            width: '100%'
+          }}
+        >
+          <div
             style={{
-              columnGap: '8px',
-              justifyContent: 'space-between',
-              position: 'relative',
-              width: '100%'
+              alignItems: 'center',
+              display: 'flex',
+              flexDirection: 'row',
+              columnGap: '2px',
+              fontWeight: 700,
+              fontSize: '14px',
+              width: 'var(--options-label-width)'
             }}
           >
-            <div>
-              Select LoRAs
-              <div style={{ fontWeight: 400, fontSize: '12px' }}>
-                (Maximum of 5 LoRAs)
-              </div>
-            </div>
-            <div
-              className="mb-2 relative"
-              style={{
-                marginBottom: '12px'
+            LoRAs
+            <span style={{ fontSize: '12px', fontWeight: 400 }}>
+              &nbsp;({input.loras.length} / 5)
+            </span>
+          </div>
+          <FlexRow
+            gap={4}
+            style={{ justifyContent: 'flex-end', width: 'auto' }}
+          >
+            <Button
+              className={styles['lora-btn']}
+              onClick={() => {
+                lorasModal.show({
+                  children: (
+                    <LoraSearchModal
+                      handleAddLora={(lora) => {
+                        const loraDetails = handleConvertLora(lora)
+                        handleAddLora(loraDetails)
+                      }}
+                    />
+                  ),
+                  label: 'Search LORAs'
+                })
               }}
+              disabled={input.loras.length >= 5}
             >
-              <FlexRow
-                gap={4}
-                style={{ justifyContent: 'flex-end', width: 'auto' }}
-              >
-                <Button
-                  size="small"
-                  onClick={() => {
-                    lorasModal.show({
-                      children: (
-                        <LoraSearchModal
-                          handleAddLora={(lora) => {
-                            const loraDetails = handleConvertLora(lora)
-                            handleAddLora(loraDetails)
-                          }}
-                        />
-                      ),
-                      label: 'Search LORAs'
-                    })
-                  }}
-                  disabled={input.loras.length >= 5}
-                >
-                  <IconPlus stroke={1.5} />
-                </Button>
-                <Button
-                  size="small"
-                  onClick={() => {
-                    lorasModal.show({
-                      children: (
-                        <LoraFavRecentModal
-                          filterType="favorites"
-                          handleAddLora={handleAddLora}
-                          handleSaveRecent={handleSaveRecent}
-                        />
-                      ),
-                      label: 'Favorite LORAs'
-                    })
-                  }}
-                  disabled={input.loras.length >= 5}
-                >
-                  <IconHeart stroke={1.5} />
-                </Button>
-                <Button
-                  size="small"
-                  onClick={() => {
-                    lorasModal.show({
-                      children: (
-                        <LoraFavRecentModal
-                          filterType="recents"
-                          handleAddLora={handleAddLora}
-                          handleSaveRecent={handleSaveRecent}
-                        />
-                      ),
-                      label: 'Recently Used LORAs'
-                    })
-                  }}
-                  disabled={input.loras.length >= 5}
-                >
-                  <IconHistory stroke={1.5} />
-                </Button>
-              </FlexRow>
-            </div>
+              <IconPlus stroke={1.5} />
+            </Button>
+            <Button
+              className={styles['lora-btn']}
+              onClick={() => {
+                lorasModal.show({
+                  children: (
+                    <LoraFavRecentModal
+                      filterType="favorites"
+                      handleAddLora={handleAddLora}
+                      handleSaveRecent={handleSaveRecent}
+                    />
+                  ),
+                  label: 'Favorite LORAs'
+                })
+              }}
+              disabled={input.loras.length >= 5}
+            >
+              <IconHeart stroke={1.5} />
+            </Button>
+            <Button
+              className={styles['lora-btn']}
+              onClick={() => {
+                lorasModal.show({
+                  children: (
+                    <LoraFavRecentModal
+                      filterType="recents"
+                      handleAddLora={handleAddLora}
+                      handleSaveRecent={handleSaveRecent}
+                    />
+                  ),
+                  label: 'Recently Used LORAs'
+                })
+              }}
+              disabled={input.loras.length >= 5}
+            >
+              <IconHistory stroke={1.5} />
+            </Button>
           </FlexRow>
-        </SubSectionTitle>
+        </FlexRow>
         {renderLoras()}
       </div>
-    </Section>
+    </div>
   )
 }
 

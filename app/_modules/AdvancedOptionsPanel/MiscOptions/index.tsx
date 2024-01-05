@@ -1,11 +1,9 @@
 import FlexibleRow from 'app/_components/FlexibleRow'
 import FlexibleUnit from 'app/_components/FlexibleUnit'
-import Section from 'app/_components/Section'
 import HiresFix from '../HiresFix'
 import AllowNsfwImages from '../AllowNsfwImages'
 import ReplacementFilterToggle from '../ReplacementFilterToggle'
 import Panel from 'app/_components/Panel'
-import SubSectionTitle from 'app/_components/SubSectionTitle'
 import InputSwitchV2 from '../InputSwitchV2'
 import SlowWorkers from '../SlowWorkers'
 import { useInput } from 'app/_modules/InputProvider/context'
@@ -14,9 +12,22 @@ export default function MiscOptions() {
   const { input, setInput } = useInput()
 
   return (
-    <Section>
+    <div>
       <Panel style={{ borderWidth: '1px', padding: '8px' }}>
-        <SubSectionTitle>Additional Options</SubSectionTitle>
+        <div
+          style={{
+            alignItems: 'center',
+            display: 'flex',
+            flexDirection: 'row',
+            columnGap: '2px',
+            fontWeight: 700,
+            fontSize: '14px',
+            width: 'var(--options-label-width)',
+            marginBottom: '8px'
+          }}
+        >
+          Additional Options
+        </div>
         <FlexibleRow>
           <FlexibleUnit style={{ rowGap: '8px' }}>
             <InputSwitchV2
@@ -60,6 +71,6 @@ export default function MiscOptions() {
           </FlexibleUnit>
         </FlexibleRow>
       </Panel>
-    </Section>
+    </div>
   )
 }

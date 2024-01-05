@@ -13,13 +13,16 @@ import { useStore } from 'statery'
 import { userInfoStore } from 'app/_store/userStore'
 import NumberInput from 'app/_components/NumberInput'
 import { useInput } from 'app/_modules/InputProvider/context'
-
+import styles from './steps.module.css'
+import Slider from 'app/_components/Slider'
+import { useWindowSize } from 'app/_hooks/useWindowSize'
 interface StepsOptions {
   hideOptions?: boolean
 }
 
 export default function Steps({ hideOptions = false }: StepsOptions) {
   const { input, setInput } = useInput()
+  const { width } = useWindowSize()
 
   const userState = useStore(userInfoStore)
   const { loggedIn } = userState
@@ -84,23 +87,51 @@ export default function Steps({ hideOptions = false }: StepsOptions) {
         </div>
       )}
       {!input.useMultiSteps && (
-        <div style={{ width: '100%' }}>
-          <SubSectionTitle>
-            <TextTooltipRow>
-              Steps
-              <span style={{ fontSize: '12px', fontWeight: '400' }}>
-                &nbsp;(1 - {MAX_STEPS})
-              </span>
-              <TooltipComponent tooltipId="steps-tooltip">
-                Fewer steps generally result in quicker image generations. Many
-                models achieve full coherence after a certain number of finite
-                steps (60 - 90). Keep your initial queries in the 30 - 50 range
-                for best results.
-              </TooltipComponent>
-            </TextTooltipRow>
-          </SubSectionTitle>
-          <FlexRow gap={4}>
+        <div
+          style={{
+            alignItems: 'center',
+            display: 'flex',
+            columnGap: '8px',
+            marginBottom: '12px',
+            width: '100%'
+          }}
+        >
+          <div
+            style={{
+              alignItems: 'center',
+              display: 'flex',
+              flexDirection: 'row',
+              columnGap: '2px',
+              fontWeight: 700,
+              fontSize: '14px',
+              width: 'var(--options-label-width)'
+            }}
+          >
+            Steps
+            <span style={{ fontSize: '12px', fontWeight: '400' }}>
+              &nbsp;(1 - {MAX_STEPS})
+            </span>
+            <TooltipComponent tooltipId="steps-tooltip">
+              Fewer steps generally result in quicker image generations. Many
+              models achieve full coherence after a certain number of finite
+              steps (60 - 90). Keep your initial queries in the 30 - 50 range
+              for best results.
+            </TooltipComponent>
+          </div>
+          <FlexRow gap={4} justifyContent="space-between">
+            <div className={styles['slider-wrapper']}>
+              <Slider
+                value={input.steps}
+                min={1}
+                max={MAX_STEPS}
+                step={1}
+                onChange={(e: any) => {
+                  setInput({ steps: e.target.value })
+                }}
+              />
+            </div>
             <NumberInput
+              className={styles['input-width']}
               min={1}
               max={MAX_STEPS}
               // disabled={disabled}
@@ -121,42 +152,39 @@ export default function Steps({ hideOptions = false }: StepsOptions) {
 
                 setInput({ steps: input.steps + step })
               }}
-              onChangeStep={handleChangeStep}
+              onChangeStep={width && width < 800 ? handleChangeStep : undefined}
               step={step}
               value={input.steps}
               width="100%"
             />
+            {!hideOptions && (
+              <Button
+                className={styles['steps-btn']}
+                onClick={() => setShowDropdown(true)}
+              >
+                <IconSettings stroke={1.5} />
+              </Button>
+            )}
+            {showDropdown && (
+              <DropdownOptions
+                handleClose={() => setShowDropdown(false)}
+                title="Step options"
+                top="80px"
+              >
+                <div style={{ padding: '8px 0' }}>
+                  <Checkbox
+                    label="Use multi steps?"
+                    checked={input.useMultiSteps}
+                    onChange={(bool: boolean) => {
+                      setInput({ useMultiSteps: bool })
+                    }}
+                  />
+                </div>
+              </DropdownOptions>
+            )}
           </FlexRow>
         </div>
       )}
-      <div>
-        <div
-          className="label_padding"
-          style={{ height: '16px', width: '1px' }}
-        />
-        {showDropdown && (
-          <DropdownOptions
-            handleClose={() => setShowDropdown(false)}
-            title="Step options"
-            top="80px"
-          >
-            <div style={{ padding: '8px 0' }}>
-              <Checkbox
-                label="Use multi steps?"
-                checked={input.useMultiSteps}
-                onChange={(bool: boolean) => {
-                  setInput({ useMultiSteps: bool })
-                }}
-              />
-            </div>
-          </DropdownOptions>
-        )}
-        {!hideOptions && (
-          <Button onClick={() => setShowDropdown(true)}>
-            <IconSettings stroke={1.5} />
-          </Button>
-        )}
-      </div>
     </FlexRow>
   )
 }

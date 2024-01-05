@@ -1,11 +1,8 @@
 import { useCallback } from 'react'
 import NumericInputSlider from '../NumericInputSlider'
-import Section from 'app/_components/Section'
-import SubSectionTitle from 'app/_components/SubSectionTitle'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import Checkbox from 'app/_components/Checkbox'
 import FlexCol from 'app/_components/FlexCol'
-import TextTooltipRow from 'app/_components/TextTooltipRow'
 import { useInput } from 'app/_modules/InputProvider/context'
 
 const PostProcessors = () => {
@@ -35,16 +32,24 @@ const PostProcessors = () => {
   )
 
   return (
-    <Section style={{ paddingTop: 0 }}>
-      <SubSectionTitle pb={8}>
-        <TextTooltipRow>
-          Post-processing
-          <TooltipComponent tooltipId={'post-processing-tooltip'}>
-            Post-processing options such as face improvement and image
-            upscaling.
-          </TooltipComponent>
-        </TextTooltipRow>
-      </SubSectionTitle>
+    <div className="flex flex-col gap-2 items-start">
+      <div
+        style={{
+          alignItems: 'center',
+          display: 'flex',
+          flexDirection: 'row',
+          columnGap: '2px',
+          fontWeight: 700,
+          fontSize: '14px',
+          width: 'var(--options-label-width)',
+          marginBottom: '8px'
+        }}
+      >
+        Post-processing
+        <TooltipComponent tooltipId={'post-processing-tooltip'}>
+          Post-processing options such as face improvement and image upscaling.
+        </TooltipComponent>
+      </div>
       <FlexCol className="items-start gap-2">
         <Checkbox
           label={`GFPGAN (improves faces)`}
@@ -75,7 +80,7 @@ const PostProcessors = () => {
           onChange={() => handlePostProcessing(`strip_background`)}
         />
       </FlexCol>
-    </Section>
+    </div>
   )
 }
 

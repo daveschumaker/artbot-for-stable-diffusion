@@ -41,6 +41,7 @@ import { IconAlertTriangle, IconArrowBarToUp } from '@tabler/icons-react'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import { CREATE_PAGE_PARAM } from '_constants'
 import { handleUsePreset } from './PromptInput/StylePresetsDropdown/presetController'
+import AdvancedOptionsPanelV2 from 'app/_modules/AdvancedOptionsPanelV2'
 
 const defaultState: DefaultPromptInput = new DefaultPromptInput()
 
@@ -543,6 +544,8 @@ const CreatePage = ({ className }: any) => {
           )}
         </FlexRow>
       </div>
+
+      <AdvancedOptionsPanelV2 />
 
       <OptionsPanel setErrors={setErrors} />
 

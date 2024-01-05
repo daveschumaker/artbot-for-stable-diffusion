@@ -1,6 +1,4 @@
-import Section from 'app/_components/Section'
 import Select from 'app/_components/Select'
-import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { useState } from 'react'
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import FlexRow from 'app/_components/FlexRow'
@@ -12,12 +10,12 @@ import AppSettings from 'app/_data-models/AppSettings'
 import { useStore } from 'statery'
 import { modelStore } from 'app/_store/modelStore'
 import TooltipComponent from 'app/_components/TooltipComponent'
-import TextTooltipRow from 'app/_components/TextTooltipRow'
 import ModelsInfoModal from 'app/_modules/ModelsInfoModal'
 import { useModal } from '@ebay/nice-modal-react'
 import ShowSettingsDropDown from './ShowSettingsDropdown'
 import ImageModels from 'app/_data-models/ImageModels'
 import { useInput } from 'app/_modules/InputProvider/context'
+import styles from './component.module.css'
 
 interface SelectModelProps {
   disabled?: boolean
@@ -77,22 +75,22 @@ const SelectModel = ({
 
   const modelTitle = () => {
     if (filterMode === 'nsfw') {
-      return 'NSFW Models'
+      return 'NSFW Model'
     }
 
     if (filterMode === 'sfw') {
-      return 'SFW Models'
+      return 'SFW Model'
     }
 
     if (filterMode === 'inpainting') {
-      return 'Inpainting Models'
+      return 'Inpainting Model'
     }
 
     if (filterMode === 'favorites') {
-      return 'Favorite Models'
+      return 'Favoritef Model'
     }
 
-    return 'Image Models'
+    return 'Image Model'
   }
 
   const filteredModels = () => {
@@ -148,27 +146,32 @@ const SelectModel = ({
   }
 
   return (
-    <Section
-      style={{ display: 'flex', flexDirection: 'column', marginBottom: 0 }}
+    <div
+      style={{
+        alignItems: 'center',
+        display: 'flex',
+        columnGap: '8px',
+        marginBottom: '12px'
+      }}
     >
-      <SubSectionTitle>
-        <TextTooltipRow>
-          {modelTitle()}
-          <TooltipComponent tooltipId={`select-models-tooltip`}>
-            Models currently available within the horde. Numbers in parentheses
-            indicate number of works. Generally, these models will generate
-            images quicker.
-          </TooltipComponent>
-        </TextTooltipRow>
-      </SubSectionTitle>
       <div
         style={{
-          columnGap: '4px',
-          marginBottom: '4px',
-          position: 'relative',
-          width: '100% !important'
+          display: 'flex',
+          flexDirection: 'row',
+          columnGap: '2px',
+          fontWeight: 700,
+          fontSize: '14px',
+          width: 'var(--options-label-width)'
         }}
       >
+        {modelTitle()}
+        <TooltipComponent tooltipId={`select-models-tooltip`}>
+          Models currently available within the horde. Numbers in parentheses
+          indicate number of works. Generally, these models will generate images
+          quicker.
+        </TooltipComponent>
+      </div>
+      <FlexRow gap={4} style={{ position: 'relative' }}>
         <Select
           isDisabled={selectDisabled}
           isMulti={showMultiModel}
@@ -183,101 +186,92 @@ const SelectModel = ({
           }}
           value={selectValue}
         />
-      </div>
-      <FlexRow
-        style={{
-          columnGap: '4px',
-          justifyContent: 'space-between',
-          marginBottom: '4px',
-          position: 'relative',
-          width: '100%'
-        }}
-      >
-        <>
-          {showFilter && (
-            <DropdownOptions
-              handleClose={() => setShowFilter(false)}
-              title="Filter models"
-              top="46px"
+        <Button
+          className={styles['options-btn']}
+          onClick={() =>
+            modelsInfoModal.show({
+              input
+            })
+          }
+        >
+          <IconList stroke={1.5} />
+        </Button>
+        <Button
+          className={styles['options-btn']}
+          onClick={() => setShowFilter(true)}
+        >
+          <IconFilter stroke={1.5} />
+        </Button>
+        {!hideOptions && (
+          <Button
+            className={styles['options-btn']}
+            onClick={() => setShowSettingsDropdown(true)}
+          >
+            <IconSettings stroke={1.5} />
+          </Button>
+        )}
+        {showFilter && (
+          <DropdownOptions
+            handleClose={() => setShowFilter(false)}
+            title="Filter models"
+            top="46px"
+          >
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                rowGap: '8px',
+                padding: '8px 0'
+              }}
             >
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  rowGap: '8px',
-                  padding: '8px 0'
-                }}
-              >
-                <Checkbox
-                  label={`Show favorite models`}
-                  checked={filterMode === 'favorites'}
-                  onChange={() =>
-                    filterMode === 'favorites'
-                      ? setFilterMode('all')
-                      : setFilterMode('favorites')
-                  }
-                />
-                <Checkbox
-                  label={`Show SFW only`}
-                  checked={filterMode === 'sfw'}
-                  onChange={() =>
-                    filterMode === 'sfw'
-                      ? setFilterMode('all')
-                      : setFilterMode('sfw')
-                  }
-                />
-                <Checkbox
-                  label={`Show NSFW only`}
-                  checked={filterMode === 'nsfw'}
-                  onChange={() =>
-                    filterMode === 'nsfw'
-                      ? setFilterMode('all')
-                      : setFilterMode('nsfw')
-                  }
-                />
-                <Checkbox
-                  label={`Show inpainting`}
-                  checked={filterMode === 'inpainting'}
-                  onChange={() =>
-                    filterMode === 'inpainting'
-                      ? setFilterMode('all')
-                      : setFilterMode('inpainting')
-                  }
-                />
-              </div>
-            </DropdownOptions>
-          )}
-          {showSettingsDropdown && (
-            <ShowSettingsDropDown
-              setShowMultiModel={setShowMultiModel}
-              setShowSettingsDropdown={setShowSettingsDropdown}
-              showMultiModel={showMultiModel}
-            />
-          )}
-          <FlexRow gap={4}>
-            <Button
-              onClick={() =>
-                modelsInfoModal.show({
-                  input
-                })
-              }
-            >
-              <IconList stroke={1.5} />
-            </Button>
-          </FlexRow>
-          <FlexRow gap={4} style={{ justifyContent: 'flex-end' }}>
-            <Button onClick={() => setShowFilter(true)}>
-              <IconFilter stroke={1.5} />
-            </Button>
-            {!hideOptions && (
-              <Button onClick={() => setShowSettingsDropdown(true)}>
-                <IconSettings stroke={1.5} />
-              </Button>
-            )}
-          </FlexRow>
-        </>
+              <Checkbox
+                label={`Show favorite models`}
+                checked={filterMode === 'favorites'}
+                onChange={() =>
+                  filterMode === 'favorites'
+                    ? setFilterMode('all')
+                    : setFilterMode('favorites')
+                }
+              />
+              <Checkbox
+                label={`Show SFW only`}
+                checked={filterMode === 'sfw'}
+                onChange={() =>
+                  filterMode === 'sfw'
+                    ? setFilterMode('all')
+                    : setFilterMode('sfw')
+                }
+              />
+              <Checkbox
+                label={`Show NSFW only`}
+                checked={filterMode === 'nsfw'}
+                onChange={() =>
+                  filterMode === 'nsfw'
+                    ? setFilterMode('all')
+                    : setFilterMode('nsfw')
+                }
+              />
+              <Checkbox
+                label={`Show inpainting`}
+                checked={filterMode === 'inpainting'}
+                onChange={() =>
+                  filterMode === 'inpainting'
+                    ? setFilterMode('all')
+                    : setFilterMode('inpainting')
+                }
+              />
+            </div>
+          </DropdownOptions>
+        )}
+        {showSettingsDropdown && (
+          <ShowSettingsDropDown
+            setShowMultiModel={setShowMultiModel}
+            setShowSettingsDropdown={setShowSettingsDropdown}
+            showMultiModel={showMultiModel}
+          />
+        )}
       </FlexRow>
-    </Section>
+    </div>
   )
 }
 

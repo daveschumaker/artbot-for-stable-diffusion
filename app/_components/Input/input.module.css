@@ -10,6 +10,14 @@
   width: 100%;
 }
 
+@media (min-width: 800px) {
+  .styled-input {
+    font-size: 14px;
+    height: 30px;
+    line-height: 28px;
+  }
+}
+
 .error {
   border: 1px solid red;
 }

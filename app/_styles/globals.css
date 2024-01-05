@@ -39,6 +39,7 @@
   --zIndex-overNavBar: 4;
 
   --input-element-h: 40px;
+  --options-label-width: 180px;
 }
 
 @media (min-width: 640px) {
@@ -246,14 +247,14 @@ a {
     -webkit-appearance: none;
     /* Override default look */
     appearance: none;
-    margin-top: -6px;
+    margin-top: -2px;
     /* Centers thumb on the track */
 
     /*custom styles*/
     background-color: #14b8a6;
     border-radius: 50%;
-    height: 20px;
-    width: 20px;
+    height: 12px;
+    width: 12px;
   }
 
   input[type='range']:disabled::-webkit-slider-thumb {

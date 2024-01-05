@@ -1,7 +1,6 @@
 import { IconSettings } from '@tabler/icons-react'
 import FlexRow from 'app/_components/FlexRow'
 import Select from 'app/_components/Select'
-import SubSectionTitle from 'app/_components/SubSectionTitle'
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import { Button } from 'app/_components/Button'
 import Checkbox from 'app/_components/Checkbox'
@@ -10,6 +9,7 @@ import { useState } from 'react'
 import { SourceProcessing } from '_types/horde'
 import { useInput } from 'app/_modules/InputProvider/context'
 import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
+import styles from './selectSampler.module.css'
 
 interface SelectSamplerProps {
   hideOptions?: boolean
@@ -26,8 +26,23 @@ export default function SelectSampler({
   })
 
   return (
-    <div style={{ marginBottom: '12px' }}>
-      <SubSectionTitle>Sampler</SubSectionTitle>
+    <div
+      style={{
+        alignItems: 'center',
+        display: 'flex',
+        columnGap: '8px',
+        marginBottom: '12px'
+      }}
+    >
+      <div
+        style={{
+          fontWeight: 700,
+          fontSize: '14px',
+          width: 'var(--options-label-width)'
+        }}
+      >
+        Sampler
+      </div>
       {input.source_processing === SourceProcessing.InPainting &&
       input.models[0] === 'stable_diffusion_inpainting' ? (
         <div className="mt-[-6px] text-sm text-slate-500 dark:text-slate-400 font-[600]">
@@ -104,7 +119,10 @@ export default function SelectSampler({
               </DropdownOptions>
             )}
             {!hideOptions && (
-              <Button onClick={() => setShowDropdown(true)}>
+              <Button
+                className={styles['settings-btn']}
+                onClick={() => setShowDropdown(true)}
+              >
                 <IconSettings stroke={1.5} />
               </Button>
             )}

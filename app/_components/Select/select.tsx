@@ -23,49 +23,98 @@ const SelectComponent = (props: SelectComponentProps) => {
       fontSize: '16px',
       width: '100%',
       minHeight: 'unset',
-      zIndex: `var(--zIndex-default)`
+      zIndex: `var(--zIndex-default)`,
+      height: '40px',
+      '@media (min-width: 800px)': {
+        fontSize: '14px',
+        height: '30px',
+        lineHeight: '28px'
+      }
     }),
-    input: (provided: CSSProperties) => ({
-      ...provided,
-      color: `var(--input-text)`
+    input: () => ({
+      color: `var(--input-text)`,
+      height: '40px',
+      lineHeight: '40px',
+      margin: 0,
+      position: 'absolute',
+      top: 0,
+      left: '8px',
+      right: '8px',
+      bottom: 0,
+      '@media (min-width: 800px)': {
+        fontSize: '14px',
+        height: '28px',
+        lineHeight: '28px'
+      }
     }),
     option: (provided: CSSProperties, state: OptionProps) => ({
-      ...provided,
       backgroundColor: state.isFocused ? '#7e5a6c' : `var(--input-background)`,
-      color: `var(--input-text)`
+      color: `var(--input-text)`,
+      borderRadius: '4px',
+      padding: '0 4px',
+      cursor: 'pointer',
+      marginBottom: '4px'
     }),
-    placeholder: (provided: CSSProperties) => ({
-      ...provided,
+    placeholder: () => ({
       color: '#9299a6'
     }),
-    clearIndicator: (provided: CSSProperties) => ({
-      ...provided,
-      height: 'calc(var(--input-element-h) - 2px)'
+    clearIndicator: () => ({
+      height: 'calc(var(--input-element-h) - 2px)',
+      '@media (min-width: 800px)': {
+        height: '30px',
+        lineHeight: '28px'
+      }
     }),
-    dropdownIndicator: (provided: CSSProperties) => ({
-      ...provided,
+    dropdownIndicator: () => ({
       color: `var(--input-text)`,
-      height: 'calc(var(--input-element-h) - 2px)'
+      height: 'calc(var(--input-element-h) - 2px)',
+      '@media (min-width: 800px)': {
+        height: '30px',
+        lineHeight: '28px'
+      }
     }),
-    singleValue: (provided: CSSProperties) => ({
-      ...provided,
-      color: `var(--input-text)`
+    singleValue: () => ({
+      color: `var(--input-text)`,
+      height: '38px',
+      lineHeight: '38px',
+      '@media (min-width: 800px)': {
+        fontSize: '14px',
+        height: '28px',
+        lineHeight: '28px'
+      }
     }),
-    valueContainer: (provided: CSSProperties) => ({
-      ...provided,
-      color: `var(--input-text)`
+    valueContainer: () => ({
+      color: `var(--input-text)`,
+      height: '40px',
+      padding: '0 8px',
+      '@media (min-width: 800px)': {
+        fontSize: '14px',
+        height: '28px',
+        position: 'absolute',
+        lineHeight: '28px',
+        right: '24px',
+        left: 0,
+        top: 0,
+        bottom: 0
+      }
     }),
     menu: (provided: CSSProperties) => ({
       ...provided,
       backgroundColor: `var(--input-background)`,
       color: `var(--input-text)`,
       marginBottom: '16px',
-      zIndex: `var(--zIndex-overBase)`
+      zIndex: `var(--zIndex-overBase)`,
+      padding: '0 4px'
     }),
-    indicatorsContainer: (provided: CSSProperties) => ({
-      ...provided,
-      height: 'calc(var(--input-element-h) - 2px)'
-      // backgroundColor: theme.inputBackground
+    indicatorsContainer: () => ({
+      position: 'absolute',
+      right: '0px',
+      height: '40px',
+      lineHeight: '36px',
+      '@media (min-width: 800px)': {
+        height: '30px',
+        lineHeight: '28px'
+      }
     })
   }
 
@@ -79,7 +128,6 @@ const SelectComponent = (props: SelectComponentProps) => {
       //@ts-ignore
       styles={customStyles}
       placeholder="Select..."
-      // menuIsOpen
     />
   )
 }

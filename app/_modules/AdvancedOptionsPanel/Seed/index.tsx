@@ -1,27 +1,44 @@
 import { Button } from 'app/_components/Button'
 import FlexRow from 'app/_components/FlexRow'
 import Input from 'app/_components/Input'
-import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { IconArrowBarLeft, IconGrain } from '@tabler/icons-react'
 import { useInput } from 'app/_modules/InputProvider/context'
+import styles from './seed.module.css'
 
 export default function Seed() {
   const { input, setInput } = useInput()
 
   return (
-    <div style={{ marginBottom: '12px' }}>
-      <SubSectionTitle>
+    <div
+      style={{
+        alignItems: 'center',
+        display: 'flex',
+        columnGap: '8px',
+        marginBottom: '12px',
+        width: '100%'
+      }}
+    >
+      <div
+        style={{
+          alignItems: 'center',
+          display: 'flex',
+          flexDirection: 'row',
+          columnGap: '2px',
+          fontWeight: 700,
+          fontSize: '14px',
+          width: 'var(--options-label-width)'
+        }}
+      >
         Seed
-        <span style={{ fontSize: '12px', fontWeight: '400' }}>
-          &nbsp;(optional)
-        </span>
-      </SubSectionTitle>
+      </div>
       <FlexRow gap={4}>
         <Input
+          placeholder="Optional"
           onChange={(e: any) => setInput({ seed: e.target.value })}
           value={input.seed}
         />
         <Button
+          className={styles['seed-btn']}
           title="Insert random seed"
           onClick={() => {
             const value = Math.abs(
@@ -33,6 +50,7 @@ export default function Seed() {
           <IconGrain />
         </Button>
         <Button
+          className={styles['seed-btn']}
           theme="secondary"
           title="Clear"
           onClick={() => {
