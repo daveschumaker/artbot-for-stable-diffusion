@@ -83,8 +83,23 @@ const SelectComponent = (props: SelectComponentProps) => {
         lineHeight: '28px'
       }
     }),
-    valueContainer: () => ({
+    // multiValueContainer: () => ({
+    //   backgroundColor: 'red',
+    //   color: `var(--input-text)`,
+    //   height: '38px',
+    //   lineHeight: '38px',
+    //   '@media (min-width: 800px)': {
+    //     fontSize: '14px',
+    //     height: '28px',
+    //     lineHeight: '28px'
+    //   }
+    // }),
+    valueContainer: (provided: CSSProperties) => ({
+      ...provided,
       color: `var(--input-text)`,
+      columnGap: '4px',
+      display: 'flex',
+      flexDirection: 'row',
       height: '40px',
       padding: '0 8px',
       '@media (min-width: 800px)': {

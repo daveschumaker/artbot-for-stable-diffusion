@@ -1,3 +1,37 @@
+.ti-details-box {
+  background-color: var(--accent-color);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+  padding: 8px;
+  width: 100%;
+  flex-grow: 1;
+}
+
+.ti-name {
+  align-items: center;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.slider-wrapper {
+  display: block;
+  flex-grow: 1;
+  margin-right: 12px;
+}
+
+@media (min-width: 800px) {
+  .input-width {
+    justify-content: flex-end;
+    max-width: 120px;
+  }
+}
+
 .Dropdown {
   max-width: unset;
   overflow: hidden;

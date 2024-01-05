@@ -143,21 +143,14 @@ const LoraSelect = ({ setErrors }: any) => {
         >
           <div className={styles['lora-name']}>
             <div className="flex flex-col">
-              <div className="font-bold text-[14px]">
+              <div className="font-bold text-[14px] flex flex-row gap-2 items-center">
+                {displayName}
                 <Linker
                   href={`https://civitai.com/models/${lora.name}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <div
-                    style={{
-                      alignItems: 'center',
-                      display: 'flex',
-                      flexDirection: 'row',
-                      columnGap: '4px'
-                    }}
-                  >
-                    {displayName}
+                  <div title="View LORA on CivitAI">
                     <IconExternalLink size={18} />
                   </div>
                 </Linker>
@@ -176,12 +169,13 @@ const LoraSelect = ({ setErrors }: any) => {
               <div className="flex flex-row items-center justify-between">
                 <div
                   style={{
+                    color: 'white',
                     fontWeight: 700,
                     fontSize: '14px',
                     width: 'var(--options-label-width)'
                   }}
                 >
-                  Weight
+                  Strength
                 </div>
                 <FlexRow gap={4} justifyContent="space-between">
                   <div className={styles['slider-wrapper']}>
@@ -229,6 +223,7 @@ const LoraSelect = ({ setErrors }: any) => {
               <div className="flex flex-row items-center justify-between">
                 <div
                   style={{
+                    color: 'white',
                     fontWeight: 700,
                     fontSize: '14px',
                     width: 'var(--options-label-width)'
@@ -289,6 +284,7 @@ const LoraSelect = ({ setErrors }: any) => {
                 >
                   <div
                     style={{
+                      color: 'white',
                       fontWeight: 700,
                       fontSize: '14px',
                       width: 'var(--options-label-width)'

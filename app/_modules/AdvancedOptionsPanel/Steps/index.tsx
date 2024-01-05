@@ -55,17 +55,6 @@ export default function Steps({ hideOptions = false }: StepsOptions) {
           <SubSectionTitle>
             <TextTooltipRow>
               Steps
-              <span
-                className="text-xs w-full font-[400]"
-                style={{ paddingRight: '4px', width: 'auto' }}
-              >
-                &nbsp;(1 -{' '}
-                {maxSteps({
-                  sampler: input.sampler,
-                  loggedIn: loggedIn === true ? true : false
-                })}
-                )
-              </span>
               <TooltipComponent tooltipId="multi-steps-tooltip">
                 Comma separated values to create a series of images using
                 multiple steps. Example: 16, 20, 25, 40
@@ -108,9 +97,6 @@ export default function Steps({ hideOptions = false }: StepsOptions) {
             }}
           >
             Steps
-            <span style={{ fontSize: '12px', fontWeight: '400' }}>
-              &nbsp;(1 - {MAX_STEPS})
-            </span>
             <TooltipComponent tooltipId="steps-tooltip">
               Fewer steps generally result in quicker image generations. Many
               models achieve full coherence after a certain number of finite

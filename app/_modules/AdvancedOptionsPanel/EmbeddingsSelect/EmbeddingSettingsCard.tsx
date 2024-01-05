@@ -1,17 +1,14 @@
 import { IconExternalLink, IconTrash } from '@tabler/icons-react'
-import FlexCol from 'app/_components/FlexCol'
-import FlexRow from 'app/_components/FlexRow'
-import MaxWidth from 'app/_components/MaxWidth'
 import NumberInput from 'app/_components/NumberInput'
-import Panel from 'app/_components/Panel'
 import Section from 'app/_components/Section'
-import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { Button } from 'app/_components/Button'
 import Linker from 'app/_components/Linker'
 import { AiHordeEmbedding } from '_types/artbot'
 import InputSwitchV2 from '../InputSwitchV2'
 import { InjectTi } from '_types/horde'
 import Slider from 'app/_components/Slider'
+import styles from './component.module.css'
+import FlexRow from 'app/_components/FlexRow'
 
 export default function EmbeddingSettingsCard({
   embedding,
@@ -23,53 +20,58 @@ export default function EmbeddingSettingsCard({
   handleUpdate: (key: string, value: number | string) => any
 }) {
   return (
-    <Panel style={{ borderWidth: '1px', padding: '8px' }}>
-      <FlexRow
-        style={{
-          alignItems: 'flex-start',
-          columnGap: '8px',
-          justifyContent: 'space-between',
-          position: 'relative',
-          width: '100%'
-        }}
-      >
-        <FlexCol>
-          <div style={{ fontWeight: 700 }}>{embedding.name}</div>
-          <div
-            className="flex flex-row gap-1 items-center"
-            style={{
-              fontSize: '12px'
-              // marginTop: '-10px'
-            }}
-          >
+    <div className={styles['ti-details-box']}>
+      <div className={styles['ti-name']}>
+        <div className="flex flex-col">
+          <div className="font-bold text-[14px] flex flex-row gap-2 items-center">
+            {embedding.name}
             <Linker
               href={`https://civitai.com/models/${embedding.id}`}
               target="_blank"
               rel="noopener noreferrer"
             >
-              [ View on Civitai]
+              <div title="View embedding on CivitAI">
+                <IconExternalLink size={18} />
+              </div>
             </Linker>
-            <IconExternalLink size={18} stroke={1.5} />
           </div>
-        </FlexCol>
-        <Button theme="secondary" onClick={handleDelete}>
+        </div>
+
+        <Button
+          className={styles['embedding-btn']}
+          theme="secondary"
+          onClick={handleDelete}
+        >
           <IconTrash stroke={1.5} />
         </Button>
-      </FlexRow>
+      </div>
       <div className="w-full">
         <Section>
-          <div
-            className="flex flex-row items-center justify-between"
-            style={{ justifyContent: 'space-between' }}
-          >
-            <SubSectionTitle>
+          <div className="flex flex-row items-center justify-between">
+            <div
+              style={{
+                color: 'white',
+                fontWeight: 700,
+                fontSize: '14px',
+                width: 'var(--options-label-width)'
+              }}
+            >
               Strength
-              <div className="block text-xs w-full" style={{ fontWeight: 400 }}>
-                Range: {0.05} to {1}
+            </div>
+            <FlexRow gap={4} justifyContent="space-between">
+              <div className={styles['slider-wrapper']}>
+                <Slider
+                  value={embedding.strength}
+                  min={0.05}
+                  max={1}
+                  step={0.05}
+                  onChange={(e: any) => {
+                    handleUpdate('strength', Number(e.target.value))
+                  }}
+                />
               </div>
-            </SubSectionTitle>
-            <MaxWidth max={'160px'} style={{ margin: 0 }}>
               <NumberInput
+                className={styles['input-width']}
                 min={0.05}
                 max={1}
                 onMinusClick={() => {
@@ -93,31 +95,36 @@ export default function EmbeddingSettingsCard({
                 value={embedding.strength}
                 width="auto"
               />
-            </MaxWidth>
+            </FlexRow>
           </div>
-          <Slider
-            value={embedding.strength}
-            min={0.05}
-            max={1}
-            step={0.05}
-            onChange={(e: any) => {
-              handleUpdate('strength', Number(e.target.value))
-            }}
-          />
-          <InputSwitchV2
-            label="Apply to negative prompt?"
-            tooltip="When enabled, this will automatically apply to the negative prompt, instead of the positive prompt."
-            checked={embedding.inject_ti === InjectTi.NegPrompt}
-            handleSwitchToggle={() => {
-              if (embedding.inject_ti === InjectTi.NegPrompt) {
-                handleUpdate('inject_ti', InjectTi.Prompt)
-              } else {
-                handleUpdate('inject_ti', InjectTi.NegPrompt)
-              }
-            }}
-          />
+          <div className="flex flex-row items-center justify-between">
+            <div
+              style={{
+                color: 'white',
+                fontWeight: 700,
+                fontSize: '14px',
+                width: 'var(--options-label-width)'
+              }}
+            >
+              Is negative prompt?
+            </div>
+            <FlexRow gap={4} justifyContent="flex-start">
+              <InputSwitchV2
+                label=""
+                tooltip="When enabled, this will automatically apply to the negative prompt, instead of the positive prompt."
+                checked={embedding.inject_ti === InjectTi.NegPrompt}
+                handleSwitchToggle={() => {
+                  if (embedding.inject_ti === InjectTi.NegPrompt) {
+                    handleUpdate('inject_ti', InjectTi.Prompt)
+                  } else {
+                    handleUpdate('inject_ti', InjectTi.NegPrompt)
+                  }
+                }}
+              />
+            </FlexRow>
+          </div>
         </Section>
       </div>
-    </Panel>
+    </div>
   )
 }
