@@ -14,14 +14,25 @@ import SelectSampler from '../AdvancedOptionsPanel/SelectSampler'
 import Steps from '../AdvancedOptionsPanel/Steps'
 import styles from './advancedOptionsPanel.module.css'
 import UpscalerOptions from '../AdvancedOptionsPanel/UpscalerOptions'
+import { useInput } from '../InputProvider/context'
+import ControlNetOptions from '../AdvancedOptionsPanel/ControlNetOptions'
+import Denoise from '../AdvancedOptionsPanel/Denoise'
 
 export default function AdvancedOptionsPanelV2() {
+  const { input } = useInput()
+
   return (
     <div className={styles.AdvancedOptionsPanel}>
       <ImageCount />
       <SelectSampler />
       <SelectModel />
       <ImageOrientationOptions />
+      {input.source_image && (
+        <>
+          <ControlNetOptions />
+          <Denoise />
+        </>
+      )}
       <Steps />
       <Guidance />
       <ClipSkip />

@@ -17,3 +17,9 @@
     background-color: black;
   }
 }
+
+@media (min-width: 800px) {
+  .styled-textarea {
+    font-size: 14px;
+  }
+}

@@ -1,5 +1,4 @@
 import Select from 'app/_components/Select'
-import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { CONTROL_TYPE_ARRAY } from '../../../../_constants'
 import FlexRow from 'app/_components/FlexRow'
 import { Button } from 'app/_components/Button'
@@ -9,6 +8,7 @@ import DropdownOptions from 'app/_modules/DropdownOptions'
 import Checkbox from 'app/_components/Checkbox'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import { useInput } from 'app/_modules/InputProvider/context'
+import styles from './controlNetOptions.module.css'
 
 const ControlNetOptions = () => {
   const { input, setInput } = useInput()
@@ -45,8 +45,29 @@ const ControlNetOptions = () => {
   }, [input.control_type])
 
   return (
-    <div>
-      <SubSectionTitle>Control Type</SubSectionTitle>
+    <div
+      style={{
+        alignItems: 'center',
+        display: 'flex',
+        columnGap: '8px',
+        marginBottom: '12px',
+        width: '100%'
+      }}
+    >
+      <div
+        style={{
+          alignItems: 'center',
+          display: 'flex',
+          flexDirection: 'row',
+          columnGap: '2px',
+          fontWeight: 700,
+          fontSize: '14px',
+          minWidth: 'var(--options-label-width)',
+          width: 'var(--options-label-width)'
+        }}
+      >
+        ControlNet Type
+      </div>
       <FlexRow gap={4} style={{ position: 'relative' }}>
         <Select
           options={CONTROL_TYPE_ARRAY.map((value) => {
@@ -109,7 +130,10 @@ const ControlNetOptions = () => {
             </div>
           </DropdownOptions>
         )}
-        <Button onClick={() => setShowDropdown(true)}>
+        <Button
+          className={styles['options-btn']}
+          onClick={() => setShowDropdown(true)}
+        >
           <IconSettings stroke={1.5} />
         </Button>
       </FlexRow>

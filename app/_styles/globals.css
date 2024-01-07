@@ -39,7 +39,7 @@
   --zIndex-overNavBar: 4;
 
   --input-element-h: 40px;
-  --options-label-width: 180px;
+  --options-label-width: 140px;
 }
 
 @media (min-width: 640px) {

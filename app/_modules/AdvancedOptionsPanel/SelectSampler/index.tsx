@@ -38,6 +38,7 @@ export default function SelectSampler({
         style={{
           fontWeight: 700,
           fontSize: '14px',
+          minWidth: 'var(--options-label-width)',
           width: 'var(--options-label-width)'
         }}
       >
@@ -118,21 +119,16 @@ export default function SelectSampler({
                 </div>
               </DropdownOptions>
             )}
-            {!hideOptions && (
-              <Button
-                className={styles['settings-btn']}
-                onClick={() => setShowDropdown(true)}
-              >
-                <IconSettings stroke={1.5} />
-              </Button>
-            )}
           </FlexRow>
-          {input.useAllSamplers && (
-            <div style={{ fontSize: '12px', paddingTop: '4px' }}>
-              Note: Disabled when &quot;use all samplers&quot; is selected
-            </div>
-          )}
         </>
+      )}
+      {!hideOptions && (
+        <Button
+          className={styles['settings-btn']}
+          onClick={() => setShowDropdown(true)}
+        >
+          <IconSettings stroke={1.5} />
+        </Button>
       )}
     </div>
   )

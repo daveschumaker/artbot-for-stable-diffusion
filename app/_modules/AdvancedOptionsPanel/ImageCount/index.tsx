@@ -35,6 +35,7 @@ export default function ImageCount() {
         style={{
           fontWeight: 700,
           fontSize: '14px',
+          minWidth: 'var(--options-label-width)',
           width: 'var(--options-label-width)'
         }}
       >

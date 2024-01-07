@@ -97,8 +97,8 @@ export default function NumberInput(props: NumberInputProps) {
         {...rest}
         selectAll
         style={{
-          borderColor: 'var(--input-color)',
-          borderLeftColor: buttonsAtEnd ? 'var(--input-color)' : '#e1e1e1',
+          borderColor: 'rgb(204, 204, 204)',
+          borderLeftColor: buttonsAtEnd ? 'rgb(204, 204, 204)' : '#e1e1e1',
           borderRight: 0,
           borderRadius: 0,
           borderTopLeftRadius: buttonsAtEnd ? '4px' : 0,

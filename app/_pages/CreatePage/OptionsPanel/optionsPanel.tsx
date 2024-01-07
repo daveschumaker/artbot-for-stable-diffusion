@@ -29,7 +29,7 @@ const OptionsPanel = ({ setErrors }: Props) => {
   const searchParams = useSearchParams()
   const panel = searchParams?.get('panel')
 
-  const [activeNav, setActiveNav] = useState('advanced')
+  const [activeNav, setActiveNav] = useState('img2img')
 
   useEffect(() => {
     if (panel === 'inpainting') {
@@ -39,7 +39,7 @@ const OptionsPanel = ({ setErrors }: Props) => {
     } else if (panel === 'img2img') {
       setActiveNav('img2img')
     } else {
-      setActiveNav('advanced')
+      setActiveNav('img2img')
     }
   }, [panel])
 
@@ -62,21 +62,8 @@ const OptionsPanel = ({ setErrors }: Props) => {
   }
 
   return (
-    <Panel style={{ overflow: 'unset' }}>
+    <Panel style={{ marginTop: '8px', overflow: 'unset', borderWidth: '1px' }}>
       <FlexRow gap={8} pb={12} style={{ justifyContent: 'flex-end' }}>
-        <div
-          className={clsx(
-            styles.NavItem,
-            activeNav === 'advanced' && styles['NavItem-Active']
-          )}
-          onClick={() => {
-            setActiveNav('advanced')
-            router.push(`/create`, { scroll: false })
-          }}
-        >
-          Options
-        </div>
-        <IconPointFilled size={16} />
         <div
           className={clsx(
             styles.NavItem,

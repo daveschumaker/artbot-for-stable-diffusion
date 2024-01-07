@@ -228,6 +228,7 @@ const ImageOrientationOptions = () => {
           columnGap: '2px',
           fontWeight: 700,
           fontSize: '14px',
+          minWidth: 'var(--options-label-width)',
           width: 'var(--options-label-width)'
         }}
       >

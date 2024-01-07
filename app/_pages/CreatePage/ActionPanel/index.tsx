@@ -115,6 +115,7 @@ const ActionPanel = forwardRef<HTMLDivElement, Props>(
                   onClick={() => {
                     setShowResetConfirmModal(true)
                   }}
+                  style={{ paddingRight: '6px' }}
                 >
                   <span>
                     <IconTrash stroke={1.5} />

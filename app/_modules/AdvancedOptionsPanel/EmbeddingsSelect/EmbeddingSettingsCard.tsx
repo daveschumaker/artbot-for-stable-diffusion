@@ -53,6 +53,7 @@ export default function EmbeddingSettingsCard({
                 color: 'white',
                 fontWeight: 700,
                 fontSize: '14px',
+                minWidth: 'var(--options-label-width)',
                 width: 'var(--options-label-width)'
               }}
             >
@@ -103,6 +104,7 @@ export default function EmbeddingSettingsCard({
                 color: 'white',
                 fontWeight: 700,
                 fontSize: '14px',
+                minWidth: 'var(--options-label-width)',
                 width: 'var(--options-label-width)'
               }}
             >

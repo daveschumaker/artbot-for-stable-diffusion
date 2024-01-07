@@ -5,8 +5,6 @@ import { useCallback, useState } from 'react'
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import Checkbox from 'app/_components/Checkbox'
 import Input from 'app/_components/Input'
-import SubSectionTitle from 'app/_components/SubSectionTitle'
-import TextTooltipRow from 'app/_components/TextTooltipRow'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import { maxSteps } from 'app/_utils/validationUtils'
 import { useStore } from 'statery'
@@ -47,64 +45,52 @@ export default function Steps({ hideOptions = false }: StepsOptions) {
   })
 
   return (
-    <FlexRow
-      style={{ alignItems: 'flex-end', columnGap: '4px', position: 'relative' }}
+    <div
+      style={{
+        alignItems: 'center',
+        display: 'flex',
+        columnGap: '8px',
+        marginBottom: '8px',
+        position: 'relative',
+        width: '100%'
+      }}
     >
+      <div
+        style={{
+          alignItems: 'center',
+          display: 'flex',
+          flexDirection: 'row',
+          columnGap: '2px',
+          fontWeight: 700,
+          fontSize: '14px',
+          minWidth: 'var(--options-label-width)',
+          width: 'var(--options-label-width)'
+        }}
+      >
+        Steps
+        <TooltipComponent tooltipId="steps-tooltip">
+          Fewer steps generally result in quicker image generations. Many models
+          achieve full coherence after a certain number of finite steps (60 -
+          90). Keep your initial queries in the 30 - 50 range for best results.
+        </TooltipComponent>
+      </div>
       {input.useMultiSteps && (
-        <div className="w-full">
-          <SubSectionTitle>
-            <TextTooltipRow>
-              Steps
-              <TooltipComponent tooltipId="multi-steps-tooltip">
-                Comma separated values to create a series of images using
-                multiple steps. Example: 16, 20, 25, 40
-              </TooltipComponent>
-            </TextTooltipRow>
-          </SubSectionTitle>
-          <Input
-            // @ts-ignore
-            type="text"
-            name="multiSteps"
-            onChange={(e: any) => {
-              setInput({ multiSteps: e.target.value })
-            }}
-            placeholder="16, 20, 25, 40"
-            // @ts-ignore
-            value={input.multiSteps}
-            width="100%"
-          />
-        </div>
+        <Input
+          // @ts-ignore
+          type="text"
+          name="multiSteps"
+          onChange={(e: any) => {
+            setInput({ multiSteps: e.target.value })
+          }}
+          placeholder="16, 20, 25, 40"
+          // @ts-ignore
+          value={input.multiSteps}
+          width="100%"
+        />
       )}
       {!input.useMultiSteps && (
-        <div
-          style={{
-            alignItems: 'center',
-            display: 'flex',
-            columnGap: '8px',
-            marginBottom: '12px',
-            width: '100%'
-          }}
-        >
-          <div
-            style={{
-              alignItems: 'center',
-              display: 'flex',
-              flexDirection: 'row',
-              columnGap: '2px',
-              fontWeight: 700,
-              fontSize: '14px',
-              width: 'var(--options-label-width)'
-            }}
-          >
-            Steps
-            <TooltipComponent tooltipId="steps-tooltip">
-              Fewer steps generally result in quicker image generations. Many
-              models achieve full coherence after a certain number of finite
-              steps (60 - 90). Keep your initial queries in the 30 - 50 range
-              for best results.
-            </TooltipComponent>
-          </div>
-          <FlexRow gap={4} justifyContent="space-between">
+        <>
+          <FlexRow justifyContent="space-between">
             <div className={styles['slider-wrapper']}>
               <Slider
                 value={input.steps}
@@ -122,7 +108,7 @@ export default function Steps({ hideOptions = false }: StepsOptions) {
               max={MAX_STEPS}
               // disabled={disabled}
               onInputChange={(e) => {
-                setInput({ steps: Number(e.target.value) })
+                setInput({ denoising_strength: e.target.value })
               }}
               onMinusClick={() => {
                 if (input.steps - step < 1) {
@@ -143,34 +129,34 @@ export default function Steps({ hideOptions = false }: StepsOptions) {
               value={input.steps}
               width="100%"
             />
-            {!hideOptions && (
-              <Button
-                className={styles['steps-btn']}
-                onClick={() => setShowDropdown(true)}
-              >
-                <IconSettings stroke={1.5} />
-              </Button>
-            )}
-            {showDropdown && (
-              <DropdownOptions
-                handleClose={() => setShowDropdown(false)}
-                title="Step options"
-                top="80px"
-              >
-                <div style={{ padding: '8px 0' }}>
-                  <Checkbox
-                    label="Use multi steps?"
-                    checked={input.useMultiSteps}
-                    onChange={(bool: boolean) => {
-                      setInput({ useMultiSteps: bool })
-                    }}
-                  />
-                </div>
-              </DropdownOptions>
-            )}
           </FlexRow>
-        </div>
+        </>
       )}
-    </FlexRow>
+      {!hideOptions && (
+        <Button
+          className={styles['steps-btn']}
+          onClick={() => setShowDropdown(true)}
+        >
+          <IconSettings stroke={1.5} />
+        </Button>
+      )}
+      {showDropdown && (
+        <DropdownOptions
+          handleClose={() => setShowDropdown(false)}
+          title="Step options"
+          top="40px"
+        >
+          <div style={{ padding: '8px 0' }}>
+            <Checkbox
+              label="Use multi steps?"
+              checked={input.useMultiSteps}
+              onChange={(bool: boolean) => {
+                setInput({ useMultiSteps: bool })
+              }}
+            />
+          </div>
+        </DropdownOptions>
+      )}
+    </div>
   )
 }

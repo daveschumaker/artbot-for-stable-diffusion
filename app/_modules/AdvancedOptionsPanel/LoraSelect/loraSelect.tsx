@@ -172,6 +172,7 @@ const LoraSelect = ({ setErrors }: any) => {
                     color: 'white',
                     fontWeight: 700,
                     fontSize: '14px',
+                    minWidth: 'var(--options-label-width)',
                     width: 'var(--options-label-width)'
                   }}
                 >
@@ -226,6 +227,7 @@ const LoraSelect = ({ setErrors }: any) => {
                     color: 'white',
                     fontWeight: 700,
                     fontSize: '14px',
+                    minWidth: 'var(--options-label-width)',
                     width: 'var(--options-label-width)'
                   }}
                 >
@@ -287,6 +289,7 @@ const LoraSelect = ({ setErrors }: any) => {
                       color: 'white',
                       fontWeight: 700,
                       fontSize: '14px',
+                      minWidth: 'var(--options-label-width)',
                       width: 'var(--options-label-width)'
                     }}
                   >
@@ -389,6 +392,7 @@ const LoraSelect = ({ setErrors }: any) => {
               columnGap: '2px',
               fontWeight: 700,
               fontSize: '14px',
+              minWidth: 'var(--options-label-width)',
               width: 'var(--options-label-width)'
             }}
           >
