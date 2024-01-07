@@ -96,20 +96,26 @@ async function writeMetadata(imageBlob: Blob, exif: object): Blob {
 }
 
 async function convertBlob(
-  blob: Blob | MediaSource,
+  blob: Blob,
   mimeType: string,
   callback: (arg0: Blob) => void,
   exif: any = {}
 ): Blob {
-  const image = await loadImage(URL.createObjectURL(blob))
-  const canvas = <HTMLCanvasElement>createTempCanvas()
-  const ctx = canvas.getContext('2d')
-  canvas.width = image.width
-  canvas.height = image.height
-  ctx.drawImage(image, 0, 0)
+  let convertedBlob: Blob
+  if (blob.type !== mimeType) {
+    const image = await loadImage(URL.createObjectURL(blob))
+    const canvas = <HTMLCanvasElement>createTempCanvas()
+    const ctx = canvas.getContext('2d')
+    canvas.width = image.width
+    canvas.height = image.height
+    ctx.drawImage(image, 0, 0)
 
-  const transform = URI2Blob(canvas.toDataURL(mimeType, 1), mimeType)
-  const result = await writeMetadata(transform, exif)
+    convertedBlob = URI2Blob(canvas.toDataURL(mimeType, 1), mimeType)
+  } else {
+    convertedBlob = blob
+  }
+
+  const result = await writeMetadata(convertedBlob, exif)
 
   if (callback) {
     callback(result)
