@@ -242,7 +242,15 @@ const ImageOrientationOptions = () => {
           </FlexRow>
         )
       }
-      <FlexRow gap={4} style={{ position: 'relative' }}>
+      <FlexRow
+        gap={4}
+        style={{
+          position: 'relative',
+          flexWrap: 'wrap',
+          rowGap: '8px',
+          justifyContent: 'flex-end'
+        }}
+      >
         <Select
           options={ImageOrientation.dropdownOptions({ baseline })}
           onChange={(obj: { value: string; label: string }) => {
@@ -251,34 +259,36 @@ const ImageOrientationOptions = () => {
           value={orientationValue}
           isSearchable={false}
         />
-        <div style={{ fontSize: '12px', margin: '0 8px' }}>
+        <div style={{ fontSize: '12px' }}>
           {input.width}&nbsp;w&nbsp;x&nbsp;{input.height}&nbsp;h
         </div>
-        <Button
-          className={styles['options-btn']}
-          title="Swap dimensions"
-          onClick={() => {
-            setInput({
-              height: input.width,
-              orientationType: 'custom',
-              width: input.height
-            })
-          }}
-        >
-          <IconSwitch2 stroke={1.5} />
-        </Button>
-        <Button
-          className={styles['options-btn']}
-          onClick={() => setShowCustomDimensions(true)}
-        >
-          <IconRuler stroke={1.5} />
-        </Button>
-        <Button
-          className={styles['options-btn']}
-          onClick={() => setShowOptions(true)}
-        >
-          <IconSettings stroke={1.5} />
-        </Button>
+        <div className="flex flew-row items-center gap-[8px]">
+          <Button
+            className={styles['options-btn']}
+            title="Swap dimensions"
+            onClick={() => {
+              setInput({
+                height: input.width,
+                orientationType: 'custom',
+                width: input.height
+              })
+            }}
+          >
+            <IconSwitch2 stroke={1.5} />
+          </Button>
+          <Button
+            className={styles['options-btn']}
+            onClick={() => setShowCustomDimensions(true)}
+          >
+            <IconRuler stroke={1.5} />
+          </Button>
+          <Button
+            className={styles['options-btn']}
+            onClick={() => setShowOptions(true)}
+          >
+            <IconSettings stroke={1.5} />
+          </Button>
+        </div>
         {showCustomDimensions && (
           <CustomDimensions
             setInput={setInput}

@@ -63,7 +63,9 @@ const SlidingMenu = () => {
         <div className={styles.CloseWrapper} onClick={handleClose}>
           <IconX size={32} stroke={1.5} />
         </div>
-        <MenuOptions navigateToLink={navigateToLink} />
+        <div style={{ marginTop: '64px' }}>
+          <MenuOptions navigateToLink={navigateToLink} />
+        </div>
       </div>
     </>
   )

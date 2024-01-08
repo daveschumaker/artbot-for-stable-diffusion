@@ -12,15 +12,8 @@
   }
 }
 
-/*
- * Fun fact: If you  want to adjust this, you'll need to also adjust
- * corresponding values in:
- * ./app/_modules/FixedMenu/fixedMenu.module.css
- * ./app/_modules/HeaderNav/MenuButton/menuButton.module.css
- */
 @media (min-width: 800px) {
   .ContentWrapper {
-    margin-left: var(--fixedSideBar-width);
     padding: 8px 16px;
   }
 }

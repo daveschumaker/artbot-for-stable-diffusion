@@ -12,7 +12,7 @@
   scrollbar-width: none;
 }
 
-.MenuOptions > * {
+.MenuOptions>* {
   -ms-overflow-style: none;
 }
 
@@ -23,8 +23,9 @@
 @media (min-width: 800px) {
   .MenuOptions {
     position: absolute;
-    top: 0;
+    top: 64px;
     bottom: 0;
+    left: 16px;
   }
 }
 
@@ -52,6 +53,7 @@
 }
 
 .SubOption {
+  align-items: center;
   cursor: pointer;
   display: flex;
   flex-direction: row;

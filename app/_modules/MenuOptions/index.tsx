@@ -5,7 +5,6 @@ import {
   IconHelp,
   IconHourglass,
   IconInfoCircle,
-  IconPoint,
   IconNotes,
   IconPencil,
   IconPhoto,
@@ -14,7 +13,8 @@ import {
   IconSettings,
   IconStars,
   IconZoomQuestion,
-  IconLayoutDashboard
+  IconLayoutDashboard,
+  IconPointFilled
 } from '@tabler/icons-react'
 import styles from './menu.module.css'
 import { CSSProperties } from 'react'
@@ -49,7 +49,7 @@ const MenuOptions = ({
             navigateToLink('/controlnet')
           }}
         >
-          <IconPoint stroke={1.5} />
+          <IconPointFilled size={12} stroke={1.5} />
           ControlNet
         </div>
         <div
@@ -58,7 +58,7 @@ const MenuOptions = ({
             navigateToLink('/create?panel=img2img')
           }}
         >
-          <IconPoint stroke={1.5} />
+          <IconPointFilled size={12} stroke={1.5} />
           img2img
         </div>
         <div
@@ -67,7 +67,7 @@ const MenuOptions = ({
             navigateToLink('/create?panel=inpainting')
           }}
         >
-          <IconPoint stroke={1.5} />
+          <IconPointFilled size={12} stroke={1.5} />
           Inpainting
         </div>
         <div
@@ -76,7 +76,7 @@ const MenuOptions = ({
             navigateToLink('/live-paint')
           }}
         >
-          <IconPoint stroke={1.5} />
+          <IconPointFilled size={12} stroke={1.5} />
           Live Paint
         </div>
       </div>
@@ -150,7 +150,7 @@ const MenuOptions = ({
             navigateToLink('/info/models')
           }}
         >
-          <IconPoint stroke={1.5} />
+          <IconPointFilled size={12} stroke={1.5} />
           Model Details
         </div>
         <div
@@ -159,7 +159,7 @@ const MenuOptions = ({
             navigateToLink('/info/models/updates')
           }}
         >
-          <IconPoint stroke={1.5} />
+          <IconPointFilled size={12} stroke={1.5} />
           Model Updates
         </div>
         <div
@@ -168,7 +168,7 @@ const MenuOptions = ({
             navigateToLink('/info/models?show=favorite-models')
           }}
         >
-          <IconPoint stroke={1.5} />
+          <IconPointFilled size={12} stroke={1.5} />
           Favorite Models
         </div>
         <div
@@ -177,7 +177,7 @@ const MenuOptions = ({
             navigateToLink('/info/workers')
           }}
         >
-          <IconPoint stroke={1.5} />
+          <IconPointFilled size={12} stroke={1.5} />
           Worker details
         </div>
       </div>
@@ -215,7 +215,7 @@ const MenuOptions = ({
             navigateToLink('/settings')
           }}
         >
-          <IconPoint stroke={1.5} />
+          <IconPointFilled size={12} stroke={1.5} />
           AI Horde Settings
         </div>
         <div
@@ -224,7 +224,7 @@ const MenuOptions = ({
             navigateToLink('/settings?panel=workers')
           }}
         >
-          <IconPoint stroke={1.5} />
+          <IconPointFilled size={12} stroke={1.5} />
           Manage Workers
         </div>
         <div
@@ -233,7 +233,7 @@ const MenuOptions = ({
             navigateToLink('/settings?panel=prefs')
           }}
         >
-          <IconPoint stroke={1.5} />
+          <IconPointFilled size={12} stroke={1.5} />
           ArtBot Prefs
         </div>
         <div
@@ -242,7 +242,7 @@ const MenuOptions = ({
             navigateToLink('/settings?panel=import-export')
           }}
         >
-          <IconPoint stroke={1.5} />
+          <IconPointFilled size={12} stroke={1.5} />
           Import / Export
         </div>
       </div>
@@ -271,7 +271,7 @@ const MenuOptions = ({
             navigateToLink('/contact')
           }}
         >
-          <IconPoint stroke={1.5} />
+          <IconPointFilled size={12} stroke={1.5} />
           Contact
         </div>
       </div>

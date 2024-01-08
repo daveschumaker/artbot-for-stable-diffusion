@@ -31,7 +31,7 @@ export default function Seed() {
       >
         Seed
       </div>
-      <FlexRow gap={4}>
+      <FlexRow gap={8}>
         <Input
           placeholder="Optional"
           onChange={(e: any) => setInput({ seed: e.target.value })}

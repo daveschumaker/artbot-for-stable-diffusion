@@ -22,6 +22,17 @@ import LoraFavRecentModal from './modals/LoraFavRecentModal'
 import { useInput } from 'app/_modules/InputProvider/context'
 import clsx from 'clsx'
 
+// Temporary hard code for common LCM Lora:
+const getLoraName = (label: string = '', name: string = '') => {
+  if (label) return label
+
+  if (name === '216190') {
+    return 'LCM & TurboMix LoRA'
+  }
+
+  return 'LoRA'
+}
+
 const LoraSelect = ({ setErrors }: any) => {
   const { input, setInput } = useInput()
   const lorasModal = useModal(AwesomeModalWrapper)
@@ -134,7 +145,7 @@ const LoraSelect = ({ setErrors }: any) => {
       // @ts-ignore
       const hasWords = lora?.trainedWords?.length > 0
       // @ts-ignore
-      const displayName = lora?.label
+      const displayName = getLoraName(lora?.label, lora?.name)
 
       arr.push(
         <div
@@ -295,7 +306,13 @@ const LoraSelect = ({ setErrors }: any) => {
                   >
                     Keywords
                   </div>
-                  <FlexRow gap={4}>
+                  <FlexRow
+                    gap={4}
+                    style={{
+                      flexWrap: 'wrap',
+                      rowGap: '8px'
+                    }}
+                  >
                     {// @ts-ignore
                     lora?.trainedWords?.map((word: string, i: number) => {
                       // Split the word by comma and filter out any empty strings
@@ -373,13 +390,12 @@ const LoraSelect = ({ setErrors }: any) => {
   // }, [fetchLoras, input.loras.length, loadedLoras])
 
   return (
-    <div style={{ marginBottom: '8px' }}>
+    <div>
       <div>
         <FlexRow
           style={{
             columnGap: '8px',
             justifyContent: 'space-between',
-            marginBottom: '8px',
             position: 'relative',
             width: '100%'
           }}
@@ -402,7 +418,7 @@ const LoraSelect = ({ setErrors }: any) => {
             </span>
           </div>
           <FlexRow
-            gap={4}
+            gap={8}
             style={{ justifyContent: 'flex-end', width: 'auto' }}
           >
             <Button

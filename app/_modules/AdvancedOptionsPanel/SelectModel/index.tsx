@@ -171,7 +171,15 @@ const SelectModel = ({
           quicker.
         </TooltipComponent>
       </div>
-      <FlexRow gap={4} style={{ position: 'relative' }}>
+      <FlexRow
+        gap={4}
+        style={{
+          position: 'relative',
+          flexWrap: 'wrap',
+          rowGap: '8px',
+          justifyContent: 'flex-end'
+        }}
+      >
         <Select
           isDisabled={selectDisabled}
           isMulti={showMultiModel}
@@ -186,30 +194,32 @@ const SelectModel = ({
           }}
           value={selectValue}
         />
-        <Button
-          className={styles['options-btn']}
-          onClick={() =>
-            modelsInfoModal.show({
-              input
-            })
-          }
-        >
-          <IconList stroke={1.5} />
-        </Button>
-        <Button
-          className={styles['options-btn']}
-          onClick={() => setShowFilter(true)}
-        >
-          <IconFilter stroke={1.5} />
-        </Button>
-        {!hideOptions && (
+        <div className="flex flew-row gap-[8px]">
           <Button
             className={styles['options-btn']}
-            onClick={() => setShowSettingsDropdown(true)}
+            onClick={() =>
+              modelsInfoModal.show({
+                input
+              })
+            }
           >
-            <IconSettings stroke={1.5} />
+            <IconList stroke={1.5} />
           </Button>
-        )}
+          <Button
+            className={styles['options-btn']}
+            onClick={() => setShowFilter(true)}
+          >
+            <IconFilter stroke={1.5} />
+          </Button>
+          {!hideOptions && (
+            <Button
+              className={styles['options-btn']}
+              onClick={() => setShowSettingsDropdown(true)}
+            >
+              <IconSettings stroke={1.5} />
+            </Button>
+          )}
+        </div>
         {showFilter && (
           <DropdownOptions
             handleClose={() => setShowFilter(false)}

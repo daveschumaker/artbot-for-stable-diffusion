@@ -3,6 +3,12 @@
   border-radius: 4px;
   display: flex;
   flex-direction: column;
-  row-gap: 8px;
   padding: 8px;
+  row-gap: 12px;
+}
+
+@media (min-width: 800px) {
+  .AdvancedOptionsPanel {
+    row-gap: 8px;
+  }
 }

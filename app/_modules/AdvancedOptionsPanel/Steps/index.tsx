@@ -1,7 +1,7 @@
 import FlexRow from 'app/_components/FlexRow'
 import { Button } from 'app/_components/Button'
 import { IconSettings } from '@tabler/icons-react'
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import Checkbox from 'app/_components/Checkbox'
 import Input from 'app/_components/Input'
@@ -13,30 +13,18 @@ import NumberInput from 'app/_components/NumberInput'
 import { useInput } from 'app/_modules/InputProvider/context'
 import styles from './steps.module.css'
 import Slider from 'app/_components/Slider'
-import { useWindowSize } from 'app/_hooks/useWindowSize'
 interface StepsOptions {
   hideOptions?: boolean
 }
 
 export default function Steps({ hideOptions = false }: StepsOptions) {
   const { input, setInput } = useInput()
-  const { width } = useWindowSize()
 
   const userState = useStore(userInfoStore)
   const { loggedIn } = userState
 
   const [showDropdown, setShowDropdown] = useState(false)
-  const [step, setStep] = useState(1)
-
-  const handleChangeStep = useCallback(() => {
-    if (step === 1) {
-      setStep(5)
-    } else if (step === 5) {
-      setStep(10)
-    } else {
-      setStep(1)
-    }
-  }, [step])
+  const [step] = useState(1)
 
   const MAX_STEPS = maxSteps({
     sampler: input.sampler,
@@ -123,7 +111,7 @@ export default function Steps({ hideOptions = false }: StepsOptions) {
 
                 setInput({ steps: input.steps + step })
               }}
-              onChangeStep={width && width < 800 ? handleChangeStep : undefined}
+              // onChangeStep={width && width < 800 ? handleChangeStep : undefined}
               step={step}
               value={input.steps}
               width="100%"

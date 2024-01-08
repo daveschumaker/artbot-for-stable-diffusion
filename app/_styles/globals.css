@@ -175,16 +175,16 @@ a {
   color: var(--carbon-text-color);
 }
 
-#carbonads .carbon-wrap {
+/* #carbonads .carbon-wrap {
   display: flex;
-  gap: 1.5ex;
-}
+  row-gap: 8px;
+} */
 
-@media (min-width: 800px) {
+/* @media (min-width: 800px) {
   #carbonads .carbon-wrap {
     flex-wrap: wrap;
   }
-}
+} */
 
 #carbonads .carbon-img {
   flex: 0 0 130px;
@@ -192,6 +192,7 @@ a {
 
 #carbonads .carbon-img img {
   display: block;
+  margin-bottom: 8px;
 }
 
 #carbonads .carbon-text {

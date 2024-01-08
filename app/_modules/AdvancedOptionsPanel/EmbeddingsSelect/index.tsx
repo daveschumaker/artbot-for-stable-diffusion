@@ -114,7 +114,7 @@ export default function EmbeddingsSelect() {
             Textual Inversions
           </div>
           <FlexRow
-            gap={4}
+            gap={8}
             style={{ justifyContent: 'flex-end', width: 'auto' }}
           >
             <Button

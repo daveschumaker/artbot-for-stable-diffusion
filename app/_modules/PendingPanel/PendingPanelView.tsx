@@ -12,7 +12,7 @@ import PendingPanel from '.'
 export default function PendingPanelView() {
   const { width } = useWindowSize()
 
-  if (!width || width < 1100) {
+  if (!width || width < 890) {
     return null
   }
 

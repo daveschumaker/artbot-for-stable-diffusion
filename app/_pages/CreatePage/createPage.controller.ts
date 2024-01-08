@@ -9,6 +9,7 @@ import { showSuccessToast } from 'app/_utils/notificationUtils'
 import { SourceProcessing, savePromptHistory } from 'app/_utils/promptUtils'
 import { createImageJob } from 'app/_utils/V2/createImageJob'
 import PromptInputSettings from 'app/_data-models/PromptInputSettings'
+import { updateAdEventTimestamp } from 'app/_store/appStore'
 
 interface CreateClick {
   pending: boolean
@@ -41,6 +42,7 @@ export const handleCreateClick = async ({
     return
   }
 
+  updateAdEventTimestamp()
   setPending(true)
 
   const imageJobData = {
