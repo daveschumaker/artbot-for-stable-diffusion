@@ -69,6 +69,9 @@ const ActionPanel = forwardRef<HTMLDivElement, Props>(
       )
     }
 
+    let showWarningButton = inputErrors && !blockJobs
+    let showErrorsButton = inputErrors && blockJobs
+
     return (
       <>
         {showResetConfirmModal && (
@@ -150,7 +153,24 @@ const ActionPanel = forwardRef<HTMLDivElement, Props>(
                   <span>{pending ? '' : <IconSquarePlus stroke={1.5} />}</span>
                   {pending ? 'Creating...' : 'Create'}
                 </Button>
-                {inputErrors && blockJobs && (
+                {showWarningButton && (
+                  <Button
+                    className={styles['error-btn']}
+                    onClick={() => {
+                      errorsModal.show({
+                        content: <ErrorsPanel inputErrors={inputErrors} />,
+                        title: 'Validation Errors',
+                        maxWidth: 'max-w-[640px]'
+                      })
+                    }}
+                  >
+                    <div style={{ color: '#fabc11' }}>
+                      <IconAlertTriangle stroke={1.5} />
+                    </div>
+                    Warnings
+                  </Button>
+                )}
+                {showErrorsButton && (
                   <Button
                     className={styles['error-btn']}
                     onClick={() => {

@@ -260,10 +260,6 @@ const ControlNetPage = () => {
       ? 'N/A'
       : Number(totalKudosCost / totalImagesRequested).toFixed(2)
 
-  useEffect(() => {
-    setErrors({ FIXED_SEED: Boolean(totalImagesRequested > 1 && input.seed) })
-  }, [totalImagesRequested, input.seed, setErrors])
-
   return (
     <div>
       <Head>

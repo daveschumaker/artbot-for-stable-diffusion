@@ -10,9 +10,12 @@ import {
 import { modelStore } from 'app/_store/modelStore'
 import { useStore } from 'statery'
 import AppSettings from 'app/_data-models/AppSettings'
+import { countImagesToGenerate } from 'app/_utils/imageUtils'
 
 interface InputErrors {
+  fixedSeed?: string
   flaggedPrompt?: string
+  inpaintingNoSource?: string
   maxPixels?: string
   promptReplacementLength?: string
   sdxlControlNet?: string
@@ -96,8 +99,6 @@ export const InputErrorsProvider: React.FC<InputErrorsProviderProps> = ({
           'SDXL Error: Currently unable to use inpainting with SDXL image models. Please remove the inpainting mask in order to continue.'
       }
 
-      // const minPixels = 983040
-      // const pixels = input.height * input.width
       if (input.width < 1024 && input.height < 1024) {
         updateBlockJobs = true
         updateErrors.sdxlMinDimensions = `SDXL Error: Please adjust image resolution so that one side is at least 1024 px. Current size: ${input.width}w x ${input.height}`
@@ -125,7 +126,22 @@ export const InputErrorsProvider: React.FC<InputErrorsProviderProps> = ({
 
     if (input.prompt.length >= 1000 && promptReplacement) {
       updateErrors.promptReplacementLength =
-        'Your prompt is longer than 1,000 characters. Please disable the prompt replacement filter in order to use this prompt.'
+        'Prompt length: Your prompt is longer than 1,000 characters. Please disable the prompt replacement filter in order to use this prompt.'
+    }
+
+    const totalImagesRequested = countImagesToGenerate(input)
+    if (Boolean(totalImagesRequested > 1 && input.seed)) {
+      updateErrors.fixedSeed = `Fixed seed: You are using a fixed seed with multiple images. If this is intended, ignore this warning. (You can still continue).`
+    }
+
+    const hasInpaintingModels = input.models.filter(
+      (model: string = '') => model && model.indexOf('_inpainting') >= 0
+    ).length
+    const hasSourceMask = input.source_mask
+
+    if (hasInpaintingModels > 0 && !hasSourceMask) {
+      updateBlockJobs = true
+      updateErrors.inpaintingNoSource = `You've selected inpainting model, but did not provide source image and/or mask. Please upload an image and add paint an area you'd like to change, or change your model to non-inpainting one.`
     }
 
     setInputErrors(updateErrors)

@@ -137,31 +137,6 @@ const CreatePage = ({ className }: any) => {
   }, [input.source_image, input.tiling])
 
   useEffect(() => {
-    const hasInpaintingModels = input.models.filter(
-      (model: string = '') => model && model.indexOf('_inpainting') >= 0
-    ).length
-    const hasSourceMask = input.source_mask
-
-    if (
-      hasInpaintingModels > 0 &&
-      !hasSourceMask &&
-      !errors.INPAINT_MISSING_SOURCE_MASK
-    ) {
-      setErrors({ INPAINT_MISSING_SOURCE_MASK: true })
-    } else if (
-      (hasInpaintingModels == 0 || hasSourceMask) &&
-      errors.INPAINT_MISSING_SOURCE_MASK
-    ) {
-      setErrors({ INPAINT_MISSING_SOURCE_MASK: false })
-    }
-  }, [
-    errors.INPAINT_MISSING_SOURCE_MASK,
-    input.models,
-    input.source_mask,
-    setErrors
-  ])
-
-  useEffect(() => {
     watchBuild()
   }, [watchBuild])
 
@@ -442,10 +417,6 @@ const CreatePage = ({ className }: any) => {
     isNaN(totalImagesRequested)
       ? 'N/A'
       : Number(totalKudosCost / totalImagesRequested).toFixed(2)
-
-  useEffect(() => {
-    setErrors({ FIXED_SEED: Boolean(totalImagesRequested > 1 && input.seed) })
-  }, [totalImagesRequested, input.seed, setErrors])
 
   return (
     <main className={className}>
