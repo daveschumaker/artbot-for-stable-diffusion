@@ -31,8 +31,6 @@ import FlexRow from 'app/_components/FlexRow'
 import CreatePageSettings from './Settings'
 import FormErrorMessage from './ActionPanel/FormErrorMessage'
 import { useWindowSize } from 'app/_hooks/useWindowSize'
-import InputValidationErrorDisplay from './PromptInput/InputValidationErrorDisplay'
-import { modelStore } from 'app/_store/modelStore'
 import { useInput } from 'app/_modules/InputProvider/context'
 import MaxWidth from 'app/_components/MaxWidth'
 import styles from './createPage.module.css'
@@ -48,10 +46,9 @@ const defaultState: DefaultPromptInput = new DefaultPromptInput()
 const CreatePage = ({ className }: any) => {
   const [actionPanelVisible, setActionPanelVisible] = useState(true)
   const actionPanelRef = useRef<HTMLDivElement>(null)
-  const [hasError, setHasError] = useState(false)
+  const [hasError] = useState(false)
 
   const { input, setInput, setPageLoaded } = useInput()
-  const { modelDetails } = useStore(modelStore)
   const { width } = useWindowSize()
   const appState = useStore(appInfoStore)
   const userInfo = useStore(userInfoStore)
@@ -465,10 +462,6 @@ const CreatePage = ({ className }: any) => {
         <FlexRow>
           <FormErrorMessage errors={errors} />
         </FlexRow>
-        <InputValidationErrorDisplay
-          modelDetails={modelDetails}
-          setHasError={setHasError}
-        />
         <FlexRow
           gap={4}
           style={{ alignItems: 'flex-start', position: 'relative' }}

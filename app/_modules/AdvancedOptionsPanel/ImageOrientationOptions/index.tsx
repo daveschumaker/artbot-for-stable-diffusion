@@ -242,7 +242,7 @@ const ImageOrientationOptions = () => {
           </FlexRow>
         )
       }
-      <FlexRow gap={4} style={{ marginBottom: '4px', position: 'relative' }}>
+      <FlexRow gap={4} style={{ position: 'relative' }}>
         <Select
           options={ImageOrientation.dropdownOptions({ baseline })}
           onChange={(obj: { value: string; label: string }) => {

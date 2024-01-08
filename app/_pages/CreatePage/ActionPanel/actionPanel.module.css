@@ -24,3 +24,9 @@
     margin: 4px 0 8px 0;
   }
 } */
+
+.error-btn {
+  background-color: var(--body-color);
+  border-color: rgb(204, 204, 204);
+  color: var(--main-color);
+}
