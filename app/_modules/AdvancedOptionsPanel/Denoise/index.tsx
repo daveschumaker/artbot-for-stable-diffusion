@@ -24,7 +24,6 @@ export default function Denoise({ hideOptions = false }: DenoiseOptions) {
         alignItems: 'center',
         display: 'flex',
         columnGap: '6px',
-        marginBottom: '8px',
         position: 'relative',
         width: '100%'
       }}

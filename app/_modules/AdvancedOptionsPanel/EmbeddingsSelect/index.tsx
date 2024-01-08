@@ -95,7 +95,6 @@ export default function EmbeddingsSelect() {
           style={{
             columnGap: '8px',
             justifyContent: 'space-between',
-            marginBottom: '8px',
             position: 'relative',
             width: '100%'
           }}

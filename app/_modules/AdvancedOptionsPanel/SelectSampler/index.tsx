@@ -30,8 +30,7 @@ export default function SelectSampler({
       style={{
         alignItems: 'center',
         display: 'flex',
-        columnGap: '8px',
-        marginBottom: '12px'
+        columnGap: '8px'
       }}
     >
       <div

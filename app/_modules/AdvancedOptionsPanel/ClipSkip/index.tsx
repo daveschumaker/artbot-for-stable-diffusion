@@ -25,7 +25,6 @@ export default function ClipSkip({ hideOptions = false }: ClipSkipOptions) {
         alignItems: 'center',
         display: 'flex',
         columnGap: '8px',
-        marginBottom: '8px',
         position: 'relative',
         width: '100%'
       }}

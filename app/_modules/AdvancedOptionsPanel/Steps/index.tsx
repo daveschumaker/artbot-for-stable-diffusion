@@ -50,7 +50,6 @@ export default function Steps({ hideOptions = false }: StepsOptions) {
         alignItems: 'center',
         display: 'flex',
         columnGap: '8px',
-        marginBottom: '8px',
         position: 'relative',
         width: '100%'
       }}

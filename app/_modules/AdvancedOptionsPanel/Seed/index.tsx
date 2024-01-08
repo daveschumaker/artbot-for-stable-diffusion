@@ -14,7 +14,6 @@ export default function Seed() {
         alignItems: 'center',
         display: 'flex',
         columnGap: '8px',
-        marginBottom: '12px',
         width: '100%'
       }}
     >

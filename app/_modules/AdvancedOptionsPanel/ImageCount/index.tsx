@@ -27,8 +27,7 @@ export default function ImageCount() {
       style={{
         alignItems: 'center',
         display: 'flex',
-        columnGap: '8px',
-        marginBottom: '12px'
+        columnGap: '8px'
       }}
     >
       <div

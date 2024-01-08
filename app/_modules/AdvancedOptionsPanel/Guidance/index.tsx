@@ -27,7 +27,6 @@ export default function Guidance({ hideOptions = false }: GuidanceProps) {
         alignItems: 'center',
         display: 'flex',
         columnGap: '8px',
-        marginBottom: '8px',
         position: 'relative',
         width: '100%'
       }}
