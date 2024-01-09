@@ -4,8 +4,8 @@
   color: var(--light-shade);
   display: flex;
   flex-direction: column;
-  padding: 8px 16px;
-  row-gap: 12px;
+  padding: 8px;
+  row-gap: 8px;
 }
 
 .textArea {

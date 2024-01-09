@@ -9,9 +9,5 @@ export const metadata: Metadata = {
 }
 
 export default function Page() {
-  return (
-    <div>
-      <PendingPage />
-    </div>
-  )
+  return <PendingPage />
 }

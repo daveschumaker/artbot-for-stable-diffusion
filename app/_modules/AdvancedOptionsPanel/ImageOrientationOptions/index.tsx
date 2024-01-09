@@ -262,7 +262,7 @@ const ImageOrientationOptions = () => {
         <div style={{ fontSize: '12px' }}>
           {input.width}&nbsp;w&nbsp;x&nbsp;{input.height}&nbsp;h
         </div>
-        <div className="flex flew-row items-center gap-[8px]">
+        <div className="flex flew-row items-center gap-[8px] ml-[4px]">
           <Button
             className={styles['options-btn']}
             title="Swap dimensions"
