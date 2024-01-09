@@ -12,7 +12,6 @@ import {
 import NumberInput from 'app/_components/NumberInput'
 import Linker from 'app/_components/Linker'
 import FlexRow from 'app/_components/FlexRow'
-import { modelStore } from 'app/_store/modelStore'
 import Slider from 'app/_components/Slider'
 import { useModal } from '@ebay/nice-modal-react'
 import AwesomeModalWrapper from 'app/_modules/AwesomeModal'
@@ -33,7 +32,7 @@ const getLoraName = (label: string = '', name: string = '') => {
   return 'LoRA'
 }
 
-const LoraSelect = ({ setErrors }: any) => {
+const LoraSelect = () => {
   const { input, setInput } = useInput()
   const lorasModal = useModal(AwesomeModalWrapper)
 
@@ -73,7 +72,6 @@ const LoraSelect = ({ setErrors }: any) => {
   }
 
   const handleAddLora = (loraDetails: any) => {
-    const modelDetails = modelStore.state.modelDetails[input.models[0]]
     const lorasToUpdate = [...input.loras]
 
     const exists = lorasToUpdate.filter(
@@ -82,22 +80,6 @@ const LoraSelect = ({ setErrors }: any) => {
 
     if (exists.length > 0) {
       return
-    }
-
-    if (
-      loraDetails.baseModel === 'SD 1.5' &&
-      modelDetails.baseline === 'stable diffusion 1'
-    ) {
-      // do nothing, things are cool
-      handleSaveRecent(loraDetails)
-    } else if (
-      loraDetails.baseModel.includes('SDXL') &&
-      input.models[0].includes('SDXL')
-    ) {
-      // do nothing, things are cool
-      handleSaveRecent(loraDetails)
-    } else {
-      setErrors({ UNCOMPATIBLE_LORA: true })
     }
 
     lorasToUpdate.push(

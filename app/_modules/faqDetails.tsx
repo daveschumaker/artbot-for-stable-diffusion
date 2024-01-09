@@ -171,6 +171,111 @@ export const FaqEstimatedTime = () => {
   )
 }
 
+export const FaqApiKey = () => {
+  return (
+    <div>
+      <Question>
+        <Linker
+          href={`/faq#get-apikey`}
+          onClick={() => {
+            navigator?.clipboard
+              ?.writeText(`${baseHost}${basePath}/faq/#get-apikey`)
+              ?.then(() => showToast())
+          }}
+        >
+          <IconLink className="cursor-pointer mt-1" />
+        </Linker>
+        Why should I get an AI Horde API key and what is it?
+      </Question>
+      <div className="flex flex-col gap-4">
+        <p>
+          An API key allows you to interact with the AI Horde through the
+          numerous tools that have been created in order to interact with the
+          service (web apps, mobile apps, CLI utilities, Discord bots, Mastodon
+          bots, etc).
+        </p>
+        <p>
+          Another benefit of an API key is that it allows you to skip ahead of
+          anonymous users in the queue, allowing you to significantly speed up
+          your image generations without have to do anything else.
+        </p>
+        <p>
+          You can register for an API key on the{' '}
+          <Linker
+            href="https://aihorde.net/register"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            official AI Horde website.
+          </Linker>
+        </p>
+      </div>
+    </div>
+  )
+}
+
+export const FaqRunWorker = () => {
+  return (
+    <div>
+      <Question>
+        <Linker
+          href={`/faq#run-worker`}
+          onClick={() => {
+            navigator?.clipboard
+              ?.writeText(`${baseHost}${basePath}/faq/#run-worker`)
+              ?.then(() => showToast())
+          }}
+        >
+          <IconLink className="cursor-pointer mt-1" />
+        </Linker>
+        How can I run my own GPU worker and contribute to the AI Horde?
+      </Question>
+      <div className="flex flex-col gap-4">
+        <p>
+          There are two ways that you can run a GPU worker and contribute to the
+          Horde. You can{' '}
+          <Linker
+            href="https://github.com/Haidra-Org/AI-Horde-Worker#readme"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            install a Horde worker on your local machine
+          </Linker>
+          .
+        </p>
+        <p>
+          On Discord, AI Horde volunteer Sidorok has put together two helpful
+          cloud workers, allowing you to run a Horde worker using either{' '}
+          <Linker
+            href="https://discord.com/channels/781145214752129095/1181754606770982922/1181754610289999975"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Google Colab
+          </Linker>{' '}
+          or{' '}
+          <Linker
+            href="https://discord.com/channels/781145214752129095/1181748773920178246/1181748778085138524"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Kaggle
+          </Linker>
+        </p>
+        <p>
+          What are some of the benefits of running a worker for the AI Horde?
+          You earn kudos (meaning faster image generations across the service
+          for you), priority image generations with your own worker, the ability
+          to help foster a community of fellow open-source generative AI
+          enthusiasts, and a desire to see numbers go up (your kudos, the number
+          of images created across the service, the number of GPU workers
+          available at any given time).
+        </p>
+      </div>
+    </div>
+  )
+}
+
 export const FaqMissingRequests = () => {
   return (
     <div>

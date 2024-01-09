@@ -16,6 +16,7 @@ interface InputErrors {
   fixedSeed?: string
   flaggedPrompt?: string
   inpaintingNoSource?: string
+  loraModelMismatch?: string
   maxPixels?: string
   promptReplacementLength?: string
   sdxlControlNet?: string
@@ -143,6 +144,27 @@ export const InputErrorsProvider: React.FC<InputErrorsProviderProps> = ({
       updateBlockJobs = true
       updateErrors.inpaintingNoSource = `You've selected inpainting model, but did not provide source image and/or mask. Please upload an image and add paint an area you'd like to change, or change your model to non-inpainting one.`
     }
+
+    // TODO: Need a better way to iterate through all possible models that may be in models array.
+    input.loras.forEach((lora) => {
+      if (!lora) return
+
+      if (
+        lora.baseModel === 'SD 1.5' &&
+        modelDetails[input.models[0]] &&
+        modelDetails[input.models[0]].baseline !== 'stable diffusion 1'
+      ) {
+        updateErrors.loraModelMismatch = `Baseline model for a LoRA and image model do not appear to match. The ${lora.label} LoRA may not work. (You can still continue)`
+      }
+
+      if (
+        lora.baseModel.includes('SDXL') &&
+        modelDetails[input.models[0]] &&
+        modelDetails[input.models[0]].baseline !== 'stable_diffusion_xl'
+      ) {
+        updateErrors.loraModelMismatch = `Baseline model for a LoRA and image model do not appear to match. The ${lora.label} LoRA may not work. (You can still continue)`
+      }
+    })
 
     setInputErrors(updateErrors)
     setBlockJobs(updateBlockJobs)
