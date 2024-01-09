@@ -15,6 +15,10 @@ const tips = [
         group of awesome volunteers.`,
     linkTitle: `Learn more`,
     linkUrl: `/faq#run-worker`
+  },
+  {
+    id: 'promoteHorde',
+    content: `Share the love! Help spread the word about the AI Horde and ArtBot by sharing images you've generated on Reddit, Mastodon or wherever you consume your favorite internet content.`
   }
 ]
 

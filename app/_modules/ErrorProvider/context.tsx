@@ -150,6 +150,7 @@ export const InputErrorsProvider: React.FC<InputErrorsProviderProps> = ({
       if (!lora) return
 
       if (
+        lora.baseModel &&
         lora.baseModel === 'SD 1.5' &&
         modelDetails[input.models[0]] &&
         modelDetails[input.models[0]].baseline !== 'stable diffusion 1'
@@ -158,6 +159,7 @@ export const InputErrorsProvider: React.FC<InputErrorsProviderProps> = ({
       }
 
       if (
+        lora.baseModel &&
         lora.baseModel.includes('SDXL') &&
         modelDetails[input.models[0]] &&
         modelDetails[input.models[0]].baseline !== 'stable_diffusion_xl'
