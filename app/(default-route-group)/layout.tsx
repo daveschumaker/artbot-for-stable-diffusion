@@ -15,7 +15,7 @@ export default function RootLayout({
     <>
       <ContentWrapper>
         <div className="flex flex-row w-full gap-4">
-          <div className="flex flex-1">
+          <div className="w-full">
             <AppUpdate />
             {children}
           </div>

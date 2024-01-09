@@ -478,7 +478,7 @@ const LoraSelect = ({ setErrors }: any) => {
             </Button>
           </FlexRow>
         </FlexRow>
-        {renderLoras()}
+        {input.loras.length >= 1 && <div className="mt-2">{renderLoras()}</div>}
       </div>
     </div>
   )

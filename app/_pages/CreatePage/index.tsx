@@ -32,7 +32,6 @@ import CreatePageSettings from './Settings'
 import FormErrorMessage from './ActionPanel/FormErrorMessage'
 import { useWindowSize } from 'app/_hooks/useWindowSize'
 import { useInput } from 'app/_modules/InputProvider/context'
-import MaxWidth from 'app/_components/MaxWidth'
 import styles from './createPage.module.css'
 import { Button } from 'app/_components/Button'
 import { IconAlertTriangle, IconArrowBarToUp } from '@tabler/icons-react'
@@ -453,57 +452,65 @@ const CreatePage = ({ className }: any) => {
           />
 
           {!actionPanelVisible && (
-            <FlexRow className={styles.ActionPanelFixedRow} gap={4}>
-              <MaxWidth className={styles.ActionPanelFixedWrapper}>
-                <FlexRow gap={4} style={{ alignItems: 'flex-start' }}>
-                  <div style={{ paddingTop: '8px' }}>
-                    <Button
-                      id="ScrollToTopBtn"
-                      size="square-small"
-                      onClick={() => {
-                        window.scrollTo(0, 0)
-                        setActionPanelVisible(true)
-                      }}
+            <FlexRow
+              className={styles.ActionPanelFixedRow}
+              gap={4}
+              style={{ alignItems: 'flex-start' }}
+            >
+              <FlexRow
+                gap={4}
+                style={{
+                  alignItems: 'flex-start',
+                  justifyContent: 'flex-start'
+                }}
+              >
+                <div style={{ paddingTop: '8px' }}>
+                  <Button
+                    id="ScrollToTopBtn"
+                    size="square-small"
+                    onClick={() => {
+                      window.scrollTo(0, 0)
+                      setActionPanelVisible(true)
+                    }}
+                  >
+                    <IconArrowBarToUp stroke={1.5} />
+                  </Button>
+                  <TooltipComponent hideIcon tooltipId="ScrollToTopBtn">
+                    Scroll to the top of the page
+                  </TooltipComponent>
+                </div>
+                <CreatePageSettings />
+                {hasError && (
+                  <div
+                    style={{ paddingTop: '8px' }}
+                    id="FixedActionPanelError"
+                    onClick={() => {
+                      window.scrollTo(0, 0)
+                      setActionPanelVisible(true)
+                    }}
+                  >
+                    <IconAlertTriangle color="red" size={36} stroke={1} />
+                    <TooltipComponent
+                      hideIcon
+                      tooltipId="FixedActionPanelError"
                     >
-                      <IconArrowBarToUp stroke={1.5} />
-                    </Button>
-                    <TooltipComponent hideIcon tooltipId="ScrollToTopBtn">
-                      Scroll to the top of the page
+                      Scroll to the top to view errors
                     </TooltipComponent>
                   </div>
-                  <CreatePageSettings />
-                  {hasError && (
-                    <div
-                      style={{ paddingTop: '8px' }}
-                      id="FixedActionPanelError"
-                      onClick={() => {
-                        window.scrollTo(0, 0)
-                        setActionPanelVisible(true)
-                      }}
-                    >
-                      <IconAlertTriangle color="red" size={36} stroke={1} />
-                      <TooltipComponent
-                        hideIcon
-                        tooltipId="FixedActionPanelError"
-                      >
-                        Scroll to the top to view errors
-                      </TooltipComponent>
-                    </div>
-                  )}
-                </FlexRow>
+                )}
+              </FlexRow>
 
-                <ActionPanel
-                  errors={errors}
-                  resetInput={resetInput}
-                  handleSubmit={handleSubmit}
-                  pending={pending}
-                  totalImagesRequested={totalImagesRequested}
-                  loggedIn={loggedIn}
-                  totalKudosCost={totalKudosCost}
-                  kudosPerImage={kudosPerImage}
-                  showStylesDropdown
-                />
-              </MaxWidth>
+              <ActionPanel
+                errors={errors}
+                resetInput={resetInput}
+                handleSubmit={handleSubmit}
+                pending={pending}
+                totalImagesRequested={totalImagesRequested}
+                loggedIn={loggedIn}
+                totalKudosCost={totalKudosCost}
+                kudosPerImage={kudosPerImage}
+                showStylesDropdown
+              />
             </FlexRow>
           )}
         </FlexRow>

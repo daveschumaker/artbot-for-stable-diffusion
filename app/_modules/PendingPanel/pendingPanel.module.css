@@ -1,11 +1,17 @@
 .PendingPanelWrapper {
-  display: inline-block;
+  display: none;
   max-width: 240px;
   padding: 16px 0 16px 16px;
   position: sticky;
   top: 56px;
   vertical-align: top;
   width: 100%;
+}
+
+@media (min-width: 890px) {
+  .PendingPanelWrapper {
+    display: inline-block;
+  }
 }
 
 @media (min-width: 1024px) {

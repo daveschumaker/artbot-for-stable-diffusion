@@ -1,5 +1,5 @@
 import { basePath } from 'BASE_PATH'
-import PendingPanelView from 'app/_modules/PendingPanel/PendingPanelView'
+import PendingPanel from 'app/_modules/PendingPanel'
 import CreatePage from 'app/_pages/CreatePage'
 import styles from './page.module.css'
 import { InputProvider } from 'app/_modules/InputProvider/context'
@@ -45,7 +45,7 @@ export default async function Page() {
           />
         </InputErrorsProvider>
       </InputProvider>
-      <PendingPanelView />
+      <PendingPanel />
     </div>
   )
 }
