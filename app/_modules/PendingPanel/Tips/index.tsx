@@ -1,11 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 import { basePath } from 'BASE_PATH'
 import { getRandomTip } from './tipsController'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Linker from 'app/_components/Linker'
 
 const PendingTips = React.memo(() => {
-  const tip = getRandomTip()
+  const [tip, setTip] = useState()
+
+  useEffect(() => {
+    setTip(getRandomTip() as any)
+  }, [])
 
   if (!tip) return null
 
@@ -21,7 +25,7 @@ const PendingTips = React.memo(() => {
         />
         ArtBot tip:
       </div>
-      <div className="text-xs">{tip.content}</div>
+      <div className="text-xs">{tip.content()}</div>
       {tip.linkTitle && (
         <div className="text-xs mt-2">
           <Linker href={tip.linkUrl}>{tip.linkTitle}</Linker>

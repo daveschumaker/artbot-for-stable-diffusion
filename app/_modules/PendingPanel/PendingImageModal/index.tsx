@@ -92,10 +92,10 @@ export default function PendingImageModal({
         <FlexCol className={styles.contrastTextBackground}>
           <FlexRow gap={8} pb={8}>
             <span>
-              ⚠️ <strong>Warning:</strong> There are currently no workers
-              available to process this image. You can continue to wait a few
-              minutes for a worker to come online, or adjust your image settings
-              (e.g., model, dimensions or post processors) and try again.
+              <strong>Warning:</strong> There are currently no workers available
+              to process this image. You can continue to wait a few minutes for
+              a worker to come online, or adjust your image settings (e.g.,
+              model, dimensions or post processors) and try again.
             </span>
           </FlexRow>
         </FlexCol>
@@ -127,10 +127,36 @@ export default function PendingImageModal({
       )}
       {imageDetails.jobStatus === JobStatus.Error && (
         <FlexCol className={styles.contrastTextBackground}>
-          <FlexRow gap={8} pb={8}>
-            <IconAlertTriangle size={32} stroke={1.5} color="rgb(234 179 8)" />{' '}
-            <strong>Error:</strong> {imageDetails.errorMessage}
-          </FlexRow>
+          {imageDetails.errorStatus !== 'JOB_CANCELED_CENSORED' && (
+            <FlexRow gap={8} pb={8}>
+              <IconAlertTriangle
+                size={32}
+                stroke={1.5}
+                color="rgb(234 179 8)"
+              />{' '}
+              <strong>Error:</strong> {imageDetails.errorMessage}
+            </FlexRow>
+          )}
+          {imageDetails.errorStatus === 'JOB_CANCELED_CENSORED' && (
+            <FlexRow
+              gap={8}
+              pb={8}
+              style={{ alignItems: 'flex-start', flexWrap: 'wrap' }}
+            >
+              <IconAlertTriangle
+                size={32}
+                stroke={1.5}
+                color="rgb(234 179 8)"
+              />
+              <div style={{ fontSize: '14px' }}>
+                <strong>Error:</strong> The GPU worker returned a safety check
+                warning and was unable to generate the image as requested.
+                Sometimes, this error is a false positive and you can try
+                submitting your request again. If this continues to happen,
+                please modify your prompt or seed and try again.
+              </div>
+            </FlexRow>
+          )}
           {showDiscordBlurb(imageDetails.errorMessage) && (
             <FlexRow pb={8}>
               <div style={{ fontSize: '14px' }}>

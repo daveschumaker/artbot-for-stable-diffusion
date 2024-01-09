@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import styles from './component.module.css'
 import { CSSProperties } from 'react'
+import styles from './component.module.css'
 
 const Linker = (props: any) => {
   const {
@@ -32,7 +32,10 @@ const Linker = (props: any) => {
       className={styles.Linker}
       {...rest}
       onClick={handleClick}
-      style={style}
+      style={{
+        cursor: 'pointer',
+        ...style
+      }}
     />
   )
 }
