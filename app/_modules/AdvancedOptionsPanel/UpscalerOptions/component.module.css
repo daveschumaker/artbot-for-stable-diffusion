@@ -1,0 +1,15 @@
+.label {
+  align-items: center;
+  display: flex;
+  column-gap: 2px;
+  flex-direction: row;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+@media (min-width: 800px) {
+  .label {
+    font-size: 14px;
+    font-weight: 700;
+  }
+}

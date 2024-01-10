@@ -4,33 +4,15 @@ import Input from 'app/_components/Input'
 import { IconArrowBarLeft, IconGrain } from '@tabler/icons-react'
 import { useInput } from 'app/_modules/InputProvider/context'
 import styles from './seed.module.css'
+import OptionsRow from 'app/_modules/AdvancedOptionsPanelV2/OptionsRow'
+import OptionsRowLabel from 'app/_modules/AdvancedOptionsPanelV2/OptionsRowLabel'
 
 export default function Seed() {
   const { input, setInput } = useInput()
 
   return (
-    <div
-      style={{
-        alignItems: 'center',
-        display: 'flex',
-        columnGap: '8px',
-        width: '100%'
-      }}
-    >
-      <div
-        style={{
-          alignItems: 'center',
-          display: 'flex',
-          flexDirection: 'row',
-          columnGap: '2px',
-          fontWeight: 700,
-          fontSize: '14px',
-          minWidth: 'var(--options-label-width)',
-          width: 'var(--options-label-width)'
-        }}
-      >
-        Seed
-      </div>
+    <OptionsRow>
+      <OptionsRowLabel>Seed</OptionsRowLabel>
       <FlexRow gap={8}>
         <Input
           placeholder="Optional"
@@ -60,6 +42,6 @@ export default function Seed() {
           <IconArrowBarLeft />
         </Button>
       </FlexRow>
-    </div>
+    </OptionsRow>
   )
 }

@@ -7,6 +7,7 @@ import Panel from 'app/_components/Panel'
 import InputSwitchV2 from '../InputSwitchV2'
 import SlowWorkers from '../SlowWorkers'
 import { useInput } from 'app/_modules/InputProvider/context'
+import styles from './component.module.css'
 
 export default function MiscOptions() {
   const { input, setInput } = useInput()
@@ -15,15 +16,8 @@ export default function MiscOptions() {
     <div>
       <Panel style={{ borderWidth: '1px', padding: '8px' }}>
         <div
+          className={styles.label}
           style={{
-            alignItems: 'center',
-            display: 'flex',
-            flexDirection: 'row',
-            columnGap: '2px',
-            fontWeight: 700,
-            fontSize: '14px',
-            minWidth: 'var(--options-label-width)',
-            width: 'var(--options-label-width)',
             marginBottom: '8px'
           }}
         >

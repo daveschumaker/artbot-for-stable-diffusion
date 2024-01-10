@@ -4,6 +4,7 @@ import TooltipComponent from 'app/_components/TooltipComponent'
 import Checkbox from 'app/_components/Checkbox'
 import FlexCol from 'app/_components/FlexCol'
 import { useInput } from 'app/_modules/InputProvider/context'
+import styles from './component.module.css'
 
 const PostProcessors = () => {
   const { input, setInput } = useInput()
@@ -34,13 +35,8 @@ const PostProcessors = () => {
   return (
     <div className="flex flex-col gap-2 items-start">
       <div
+        className={styles.label}
         style={{
-          alignItems: 'center',
-          display: 'flex',
-          flexDirection: 'row',
-          columnGap: '2px',
-          fontWeight: 700,
-          fontSize: '14px',
           marginBottom: '8px'
         }}
       >

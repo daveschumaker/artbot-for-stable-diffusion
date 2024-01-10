@@ -3,6 +3,7 @@ import TooltipComponent from 'app/_components/TooltipComponent'
 import { useCallback } from 'react'
 import { useInput } from 'app/_modules/InputProvider/context'
 import FlexCol from 'app/_components/FlexCol'
+import styles from './component.module.css'
 
 export const UPSCALERS = [
   'RealESRGAN_x4plus',
@@ -45,15 +46,8 @@ const UpscalerOptions = () => {
   return (
     <div className="flex flex-col gap-2 items-start">
       <div
+        className={styles.label}
         style={{
-          alignItems: 'center',
-          display: 'flex',
-          flexDirection: 'row',
-          columnGap: '2px',
-          fontWeight: 700,
-          fontSize: '14px',
-          minWidth: 'var(--options-label-width)',
-          width: 'var(--options-label-width)',
           marginBottom: '8px'
         }}
       >

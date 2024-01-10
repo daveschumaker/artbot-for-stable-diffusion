@@ -1,0 +1,18 @@
+.OptionsRowLabel {
+  align-items: center;
+  display: flex;
+  column-gap: 2px;
+  flex-direction: row;
+  font-size: 12px;
+  font-weight: 600;
+  width: 100%;
+}
+
+@media (min-width: 800px) {
+  .OptionsRowLabel {
+    font-size: 14px;
+    font-weight: 700;
+    min-width: var(--options-label-width);
+    width: var(--options-label-width);
+  }
+}

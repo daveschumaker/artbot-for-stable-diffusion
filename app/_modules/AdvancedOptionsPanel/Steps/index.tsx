@@ -13,6 +13,8 @@ import NumberInput from 'app/_components/NumberInput'
 import { useInput } from 'app/_modules/InputProvider/context'
 import styles from './steps.module.css'
 import Slider from 'app/_components/Slider'
+import OptionsRow from 'app/_modules/AdvancedOptionsPanelV2/OptionsRow'
+import OptionsRowLabel from 'app/_modules/AdvancedOptionsPanelV2/OptionsRowLabel'
 interface StepsOptions {
   hideOptions?: boolean
 }
@@ -33,51 +35,36 @@ export default function Steps({ hideOptions = false }: StepsOptions) {
   })
 
   return (
-    <div
-      style={{
-        alignItems: 'center',
-        display: 'flex',
-        columnGap: '8px',
-        position: 'relative',
-        width: '100%'
-      }}
-    >
-      <div
-        style={{
-          alignItems: 'center',
-          display: 'flex',
-          flexDirection: 'row',
-          columnGap: '2px',
-          fontWeight: 700,
-          fontSize: '14px',
-          minWidth: 'var(--options-label-width)',
-          width: 'var(--options-label-width)'
-        }}
-      >
+    <OptionsRow>
+      <OptionsRowLabel>
         Steps
         <TooltipComponent tooltipId="steps-tooltip">
           Fewer steps generally result in quicker image generations. Many models
           achieve full coherence after a certain number of finite steps (60 -
           90). Keep your initial queries in the 30 - 50 range for best results.
         </TooltipComponent>
-      </div>
-      {input.useMultiSteps && (
-        <Input
-          // @ts-ignore
-          type="text"
-          name="multiSteps"
-          onChange={(e: any) => {
-            setInput({ multiSteps: e.target.value })
-          }}
-          placeholder="16, 20, 25, 40"
-          // @ts-ignore
-          value={input.multiSteps}
-          width="100%"
-        />
-      )}
-      {!input.useMultiSteps && (
-        <>
-          <FlexRow justifyContent="space-between">
+      </OptionsRowLabel>
+      <FlexRow
+        justifyContent="space-between"
+        gap={8}
+        style={{ position: 'relative' }}
+      >
+        {input.useMultiSteps && (
+          <Input
+            // @ts-ignore
+            type="text"
+            name="multiSteps"
+            onChange={(e: any) => {
+              setInput({ multiSteps: e.target.value })
+            }}
+            placeholder="16, 20, 25, 40"
+            // @ts-ignore
+            value={input.multiSteps}
+            width="100%"
+          />
+        )}
+        {!input.useMultiSteps && (
+          <>
             <div className={styles['slider-wrapper']}>
               <Slider
                 value={input.steps}
@@ -116,34 +103,34 @@ export default function Steps({ hideOptions = false }: StepsOptions) {
               value={input.steps}
               width="100%"
             />
-          </FlexRow>
-        </>
-      )}
-      {!hideOptions && (
-        <Button
-          className={styles['steps-btn']}
-          onClick={() => setShowDropdown(true)}
-        >
-          <IconSettings stroke={1.5} />
-        </Button>
-      )}
-      {showDropdown && (
-        <DropdownOptions
-          handleClose={() => setShowDropdown(false)}
-          title="Step options"
-          top="40px"
-        >
-          <div style={{ padding: '8px 0' }}>
-            <Checkbox
-              label="Use multi steps?"
-              checked={input.useMultiSteps}
-              onChange={(bool: boolean) => {
-                setInput({ useMultiSteps: bool })
-              }}
-            />
-          </div>
-        </DropdownOptions>
-      )}
-    </div>
+          </>
+        )}
+        {!hideOptions && (
+          <Button
+            className={styles['steps-btn']}
+            onClick={() => setShowDropdown(true)}
+          >
+            <IconSettings stroke={1.5} />
+          </Button>
+        )}
+        {showDropdown && (
+          <DropdownOptions
+            handleClose={() => setShowDropdown(false)}
+            title="Step options"
+            top="40px"
+          >
+            <div style={{ padding: '8px 0' }}>
+              <Checkbox
+                label="Use multi steps?"
+                checked={input.useMultiSteps}
+                onChange={(bool: boolean) => {
+                  setInput({ useMultiSteps: bool })
+                }}
+              />
+            </div>
+          </DropdownOptions>
+        )}
+      </FlexRow>
+    </OptionsRow>
   )
 }

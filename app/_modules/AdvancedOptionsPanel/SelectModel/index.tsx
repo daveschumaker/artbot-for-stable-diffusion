@@ -16,6 +16,8 @@ import ShowSettingsDropDown from './ShowSettingsDropdown'
 import ImageModels from 'app/_data-models/ImageModels'
 import { useInput } from 'app/_modules/InputProvider/context'
 import styles from './component.module.css'
+import OptionsRow from 'app/_modules/AdvancedOptionsPanelV2/OptionsRow'
+import OptionsRowLabel from 'app/_modules/AdvancedOptionsPanelV2/OptionsRowLabel'
 
 interface SelectModelProps {
   disabled?: boolean
@@ -146,37 +148,21 @@ const SelectModel = ({
   }
 
   return (
-    <div
-      style={{
-        alignItems: 'center',
-        display: 'flex',
-        columnGap: '8px'
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          columnGap: '2px',
-          fontWeight: 700,
-          fontSize: '14px',
-          minWidth: 'var(--options-label-width)',
-          width: 'var(--options-label-width)'
-        }}
-      >
+    <OptionsRow>
+      <OptionsRowLabel>
         {modelTitle()}
         <TooltipComponent tooltipId={`select-models-tooltip`}>
           Models currently available within the horde. Numbers in parentheses
           indicate number of works. Generally, these models will generate images
           quicker.
         </TooltipComponent>
-      </div>
+      </OptionsRowLabel>
       <FlexRow
         gap={4}
         style={{
           position: 'relative',
           flexWrap: 'wrap',
-          rowGap: '8px',
+          rowGap: '4px',
           justifyContent: 'flex-end'
         }}
       >
@@ -281,7 +267,7 @@ const SelectModel = ({
           />
         )}
       </FlexRow>
-    </div>
+    </OptionsRow>
   )
 }
 

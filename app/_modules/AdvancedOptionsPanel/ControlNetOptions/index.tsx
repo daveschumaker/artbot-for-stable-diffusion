@@ -9,6 +9,8 @@ import Checkbox from 'app/_components/Checkbox'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import { useInput } from 'app/_modules/InputProvider/context'
 import styles from './controlNetOptions.module.css'
+import OptionsRow from 'app/_modules/AdvancedOptionsPanelV2/OptionsRow'
+import OptionsRowLabel from 'app/_modules/AdvancedOptionsPanelV2/OptionsRowLabel'
 
 const ControlNetOptions = () => {
   const { input, setInput } = useInput()
@@ -45,29 +47,9 @@ const ControlNetOptions = () => {
   }, [input.control_type])
 
   return (
-    <div
-      style={{
-        alignItems: 'center',
-        display: 'flex',
-        columnGap: '8px',
-        width: '100%'
-      }}
-    >
-      <div
-        style={{
-          alignItems: 'center',
-          display: 'flex',
-          flexDirection: 'row',
-          columnGap: '2px',
-          fontWeight: 700,
-          fontSize: '14px',
-          minWidth: 'var(--options-label-width)',
-          width: 'var(--options-label-width)'
-        }}
-      >
-        ControlNet Type
-      </div>
-      <FlexRow gap={4} style={{ position: 'relative' }}>
+    <OptionsRow>
+      <OptionsRowLabel>ControlNet Type</OptionsRowLabel>
+      <FlexRow style={{ columnGap: '7px', position: 'relative' }}>
         <Select
           options={CONTROL_TYPE_ARRAY.map((value) => {
             if (value === '') {
@@ -136,7 +118,7 @@ const ControlNetOptions = () => {
           <IconSettings stroke={1.5} />
         </Button>
       </FlexRow>
-    </div>
+    </OptionsRow>
   )
 }
 

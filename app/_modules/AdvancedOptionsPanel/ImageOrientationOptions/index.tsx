@@ -26,6 +26,8 @@ import { MIN_IMAGE_WIDTH } from '_constants'
 import AspectRatioToggler from './AspectRatioToggler'
 import { useInput } from 'app/_modules/InputProvider/context'
 import styles from './imageOrientation.module.css'
+import OptionsRow from 'app/_modules/AdvancedOptionsPanelV2/OptionsRow'
+import OptionsRowLabel from 'app/_modules/AdvancedOptionsPanelV2/OptionsRowLabel'
 
 const MAX_WIDTH = 1024
 const STEP_LENGTH = 64
@@ -211,28 +213,8 @@ const ImageOrientationOptions = () => {
   }, [])
 
   return (
-    <div
-      style={{
-        alignItems: 'center',
-        display: 'flex',
-        columnGap: '8px',
-        width: '100%'
-      }}
-    >
-      <div
-        style={{
-          alignItems: 'center',
-          display: 'flex',
-          flexDirection: 'row',
-          columnGap: '2px',
-          fontWeight: 700,
-          fontSize: '14px',
-          minWidth: 'var(--options-label-width)',
-          width: 'var(--options-label-width)'
-        }}
-      >
-        Image orientation
-      </div>
+    <OptionsRow>
+      <OptionsRowLabel>Image orientation</OptionsRowLabel>
       {
         // @ts-ignore
         workerDetails && totalPixels > workerDetails.max_pixels && (
@@ -247,7 +229,7 @@ const ImageOrientationOptions = () => {
         style={{
           position: 'relative',
           flexWrap: 'wrap',
-          rowGap: '8px',
+          rowGap: '4px',
           justifyContent: 'flex-end'
         }}
       >
@@ -441,7 +423,7 @@ const ImageOrientationOptions = () => {
           </DropdownOptions>
         )}
       </FlexRow>
-    </div>
+    </OptionsRow>
   )
 }
 

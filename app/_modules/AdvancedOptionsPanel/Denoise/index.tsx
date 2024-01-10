@@ -10,6 +10,8 @@ import { useInput } from 'app/_modules/InputProvider/context'
 import Slider from 'app/_components/Slider'
 import styles from './denoise.module.css'
 import NumberInput from 'app/_components/NumberInput'
+import OptionsRow from 'app/_modules/AdvancedOptionsPanelV2/OptionsRow'
+import OptionsRowLabel from 'app/_modules/AdvancedOptionsPanelV2/OptionsRowLabel'
 interface DenoiseOptions {
   hideOptions?: boolean
 }
@@ -19,27 +21,12 @@ export default function Denoise({ hideOptions = false }: DenoiseOptions) {
   const [showDropdown, setShowDropdown] = useState(false)
 
   return (
-    <div
+    <OptionsRow
       style={{
-        alignItems: 'center',
-        display: 'flex',
-        columnGap: '6px',
-        position: 'relative',
-        width: '100%'
+        position: 'relative'
       }}
     >
-      <div
-        style={{
-          alignItems: 'center',
-          display: 'flex',
-          flexDirection: 'row',
-          columnGap: '2px',
-          fontWeight: 700,
-          fontSize: '14px',
-          minWidth: 'var(--options-label-width)',
-          width: 'var(--options-label-width)'
-        }}
-      >
+      <OptionsRowLabel>
         Denoise
         <TooltipComponent tooltipId="multi-denoise-tooltip">
           {input.useMultiDenoise && (
@@ -56,13 +43,13 @@ export default function Denoise({ hideOptions = false }: DenoiseOptions) {
             </div>
           )}
         </TooltipComponent>
-      </div>
+      </OptionsRowLabel>
       <FlexRow
         style={{
           alignItems: 'center',
-          columnGap: '2px',
           position: 'relative'
         }}
+        gap={3}
       >
         {input.useMultiDenoise && (
           <Input
@@ -138,32 +125,32 @@ export default function Denoise({ hideOptions = false }: DenoiseOptions) {
           className="label_padding"
           style={{ height: '16px', width: '1px' }}
         />
+        {!hideOptions && (
+          <Button
+            className={styles['options-btn']}
+            onClick={() => setShowDropdown(true)}
+          >
+            <IconSettings stroke={1.5} />
+          </Button>
+        )}
+        {showDropdown && (
+          <DropdownOptions
+            handleClose={() => setShowDropdown(false)}
+            title="Denoise options"
+            top="40px"
+          >
+            <div style={{ padding: '8px 0' }}>
+              <Checkbox
+                label="Use multi denoise?"
+                checked={input.useMultiDenoise}
+                onChange={(bool: boolean) => {
+                  setInput({ useMultiDenoise: bool })
+                }}
+              />
+            </div>
+          </DropdownOptions>
+        )}
       </FlexRow>
-      {!hideOptions && (
-        <Button
-          className={styles['options-btn']}
-          onClick={() => setShowDropdown(true)}
-        >
-          <IconSettings stroke={1.5} />
-        </Button>
-      )}
-      {showDropdown && (
-        <DropdownOptions
-          handleClose={() => setShowDropdown(false)}
-          title="Denoise options"
-          top="40px"
-        >
-          <div style={{ padding: '8px 0' }}>
-            <Checkbox
-              label="Use multi denoise?"
-              checked={input.useMultiDenoise}
-              onChange={(bool: boolean) => {
-                setInput({ useMultiDenoise: bool })
-              }}
-            />
-          </div>
-        </DropdownOptions>
-      )}
-    </div>
+    </OptionsRow>
   )
 }

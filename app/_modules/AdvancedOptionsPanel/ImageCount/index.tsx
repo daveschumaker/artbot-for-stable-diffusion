@@ -6,6 +6,8 @@ import { useInput } from 'app/_modules/InputProvider/context'
 import Slider from 'app/_components/Slider'
 import styles from './imageCount.module.css'
 import { useWindowSize } from 'app/_hooks/useWindowSize'
+import OptionsRow from 'app/_modules/AdvancedOptionsPanelV2/OptionsRow'
+import OptionsRowLabel from 'app/_modules/AdvancedOptionsPanelV2/OptionsRowLabel'
 
 export default function ImageCount() {
   const { width } = useWindowSize()
@@ -23,23 +25,8 @@ export default function ImageCount() {
   }, [step])
 
   return (
-    <div
-      style={{
-        alignItems: 'center',
-        display: 'flex',
-        columnGap: '8px'
-      }}
-    >
-      <div
-        style={{
-          fontWeight: 700,
-          fontSize: '14px',
-          minWidth: 'var(--options-label-width)',
-          width: 'var(--options-label-width)'
-        }}
-      >
-        Images
-      </div>
+    <OptionsRow>
+      <OptionsRowLabel>Images</OptionsRowLabel>
       <FlexRow gap={4} justifyContent="space-between">
         <div className={styles['slider-wrapper']}>
           <Slider
@@ -80,6 +67,6 @@ export default function ImageCount() {
           width="100%"
         />
       </FlexRow>
-    </div>
+    </OptionsRow>
   )
 }

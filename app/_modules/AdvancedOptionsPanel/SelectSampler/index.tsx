@@ -10,6 +10,8 @@ import { SourceProcessing } from '_types/horde'
 import { useInput } from 'app/_modules/InputProvider/context'
 import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
 import styles from './selectSampler.module.css'
+import OptionsRow from 'app/_modules/AdvancedOptionsPanelV2/OptionsRow'
+import OptionsRowLabel from 'app/_modules/AdvancedOptionsPanelV2/OptionsRowLabel'
 
 interface SelectSamplerProps {
   hideOptions?: boolean
@@ -26,31 +28,16 @@ export default function SelectSampler({
   })
 
   return (
-    <div
-      style={{
-        alignItems: 'center',
-        display: 'flex',
-        columnGap: '8px'
-      }}
-    >
-      <div
-        style={{
-          fontWeight: 700,
-          fontSize: '14px',
-          minWidth: 'var(--options-label-width)',
-          width: 'var(--options-label-width)'
-        }}
-      >
-        Sampler
-      </div>
-      {input.source_processing === SourceProcessing.InPainting &&
-      input.models[0] === 'stable_diffusion_inpainting' ? (
-        <div className="mt-[-6px] text-sm text-slate-500 dark:text-slate-400 font-[600]">
-          Note: Sampler disabled when inpainting model is used.
-        </div>
-      ) : (
-        <>
-          <FlexRow gap={4} style={{ position: 'relative' }}>
+    <OptionsRow>
+      <OptionsRowLabel>Sampler</OptionsRowLabel>
+      <FlexRow gap={4} style={{ position: 'relative' }}>
+        {input.source_processing === SourceProcessing.InPainting &&
+        input.models[0] === 'stable_diffusion_inpainting' ? (
+          <div className="mt-[-6px] text-sm text-slate-500 dark:text-slate-400 font-[600]">
+            Note: Sampler disabled when inpainting model is used.
+          </div>
+        ) : (
+          <>
             <Select
               isDisabled={input.useAllSamplers}
               options={Samplers.dropdownOptions({
@@ -118,17 +105,17 @@ export default function SelectSampler({
                 </div>
               </DropdownOptions>
             )}
-          </FlexRow>
-        </>
-      )}
-      {!hideOptions && (
-        <Button
-          className={styles['settings-btn']}
-          onClick={() => setShowDropdown(true)}
-        >
-          <IconSettings stroke={1.5} />
-        </Button>
-      )}
-    </div>
+          </>
+        )}
+        {!hideOptions && (
+          <Button
+            className={styles['settings-btn']}
+            onClick={() => setShowDropdown(true)}
+          >
+            <IconSettings stroke={1.5} />
+          </Button>
+        )}
+      </FlexRow>
+    </OptionsRow>
   )
 }
