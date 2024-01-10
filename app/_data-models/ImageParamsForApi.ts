@@ -235,12 +235,6 @@ class ImageParamsForApi {
       apiParams.params.return_control_map = return_control_map
     }
 
-    // SDXL Beta!
-    // Need to require two image: https://dbzer0.com/blog/stable-diffusion-xl-beta-on-the-ai-horde/
-    if (apiParams.models[0].includes('SDXL_beta')) {
-      apiParams.params.n = 2
-    }
-
     if (control_type === 'none') {
       // Handle a very poor decision on my part
       apiParams.params.control_type = ''

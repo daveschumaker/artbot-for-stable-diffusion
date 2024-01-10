@@ -58,7 +58,7 @@ export class MySubClassedDexie extends Dexie {
     })
 
     // This is just to fail the build due to silliness on my part
-    // const blah: number = 'fail me'
+    const blah: number = 'fail me'
     this.version(7).stores({
       completed: '++id, jobId, timestamp, parentJobId',
       images: '++id, imageType, parentJobId, jobId, type',

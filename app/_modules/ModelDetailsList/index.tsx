@@ -126,6 +126,7 @@ const ModelDetailsList = () => {
       const {
         description,
         homepage = '',
+        baseline,
         name,
         nsfw,
         trigger,
@@ -143,6 +144,8 @@ const ModelDetailsList = () => {
       if (name === 'stable_diffusion_1.4') {
         return
       }
+
+      console.log(`modelDetailsArray`, sortModels())
 
       modelDetailsArray.push(
         <div key={`${name}_panel_${idx}`}>
@@ -210,6 +213,9 @@ const ModelDetailsList = () => {
             <div className="mb-2">
               <strong>Estimated queue time:</strong> ~{modelStats[0]?.eta || 0}{' '}
               seconds
+            </div>
+            <div>
+              <strong>Model baseline:</strong> {baseline}
             </div>
             <div>
               <strong>Version:</strong> {version}

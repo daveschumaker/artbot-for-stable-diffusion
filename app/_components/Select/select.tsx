@@ -18,6 +18,7 @@ const SelectComponent = (props: SelectComponentProps) => {
     control: (provided: CSSProperties) => ({
       ...provided,
       backgroundColor: props.isDisabled ? '#adadad' : `var(--input-background)`,
+      cursor: 'pointer',
       // borderColor: `var(--input-text)`,
       // color: `var(--input-text)`,
       // fontSize: '16px',
@@ -54,11 +55,17 @@ const SelectComponent = (props: SelectComponentProps) => {
     }),
     option: (provided: CSSProperties, state: OptionProps) => ({
       ...provided,
-      backgroundColor: state.isFocused ? '#7e5a6c' : `var(--input-background)`
-      // color: `var(--input-text)`,
+      backgroundColor: state.isFocused
+        ? '#7e5a6c'
+        : state.isSelected
+          ? '#a48996'
+          : `var(--input-background)`,
+
+      color:
+        state.isFocused || state.isSelected ? 'white' : `var(--input-text)`,
       // borderRadius: '4px',
       // padding: '0 4px',
-      // cursor: 'pointer',
+      cursor: 'pointer'
       // marginBottom: '4px'
     }),
     placeholder: (provided: CSSProperties) => ({
