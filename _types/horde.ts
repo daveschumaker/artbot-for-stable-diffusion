@@ -146,6 +146,7 @@ export interface HordeWorkerDetails {
   kudos_rewards: number
   loading?: boolean
   lora: boolean
+  img2img: boolean
   maintenance_mode: boolean
   max_pixels: number
   models: string[]
@@ -164,6 +165,8 @@ export interface HordeWorkerDetails {
   trusted: boolean
   uptime: number
 }
+
+export type HordeWorkerKeys = keyof HordeWorkerDetails
 
 export interface IKudosDetails {
   accumulated: number

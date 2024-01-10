@@ -11,13 +11,20 @@ import {
   IconSquareRoundedX
 } from '@tabler/icons-react'
 import Linker from 'app/_components/Linker'
+import { HordeWorkerDetails } from '_types/horde'
+
+interface HordeWorkerKeysForTable {
+  kph: number
+}
+type ExtendedHordeWorkerKeys =
+  | keyof HordeWorkerDetails
+  | keyof HordeWorkerKeysForTable
 
 export default function SortableTable() {
-  const [sortBy, setSortBy] = useState('kph')
-  const [sortOrder, setSortOrder] = useState('dsc')
   // const [loading, setLoading] = useState(true)
-
-  const [workers, setWorkers] = useState([])
+  const [sortOrder, setSortOrder] = useState('dsc')
+  const [sortBy, setSortBy] = useState<ExtendedHordeWorkerKeys>('kph')
+  const [workers, setWorkers] = useState<HordeWorkerDetails[]>([])
 
   const fetchWorkersFromApi = async () => {
     const data = await fetchWorkers()
@@ -32,7 +39,7 @@ export default function SortableTable() {
 
   console.log(`workers`, workers)
 
-  const badgeColor = (worker) => {
+  const badgeColor = (worker: HordeWorkerDetails) => {
     if (worker.maintenance_mode) {
       return 'orange'
     }
@@ -47,7 +54,7 @@ export default function SortableTable() {
   }
 
   const handleHeaderClick = useCallback(
-    (key: string) => {
+    (key: ExtendedHordeWorkerKeys) => {
       if (sortBy !== key) {
         setSortBy(key)
         setSortOrder('asc')
@@ -74,18 +81,29 @@ export default function SortableTable() {
   )
 
   const sortWorkers = useCallback(() => {
+    // @ts-ignore
     return workers.sort((a, b) => {
-      let aValue = a[sortBy]
-      let bValue = b[sortBy]
+      let aValue: number
+      let bValue: number
 
       if (sortBy === 'models') {
         aValue = a.models.length
         bValue = b.models.length
-      }
-
-      if (sortBy === 'kph') {
+      } else if (sortBy === 'kph') {
         aValue = a.uptime ? Math.floor(a.kudos_rewards / (a.uptime / 3600)) : 0
         bValue = b.uptime ? Math.floor(b.kudos_rewards / (b.uptime / 3600)) : 0
+      } else {
+        // @ts-ignore
+
+        aValue =
+          typeof a[sortBy as keyof HordeWorkerDetails] === 'number'
+            ? a[sortBy as keyof HordeWorkerDetails]
+            : 0
+        // @ts-ignore
+        bValue =
+          typeof b[sortBy as keyof HordeWorkerDetails] === 'number'
+            ? b[sortBy as keyof HordeWorkerDetails]
+            : 0
       }
 
       if (aValue < bValue) {
