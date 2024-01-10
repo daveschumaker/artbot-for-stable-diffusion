@@ -1,4 +1,4 @@
-import { IconAlertTriangleFilled } from '@tabler/icons-react'
+import { IconAlertTriangleFilled, IconTrash } from '@tabler/icons-react'
 import { useStore } from 'statery'
 import NiceModal from '@ebay/nice-modal-react'
 import {
@@ -41,11 +41,13 @@ const UserWarningModal = () => {
           </div>
           <div>
             <Button
+              theme="secondary"
               onClick={() => {
                 sessionStorage.setItem('forceSelectedWorker', '')
                 setForceSelectedWorker(false)
               }}
             >
+              <IconTrash stroke={1.5} />
               Clear worker
             </Button>
           </div>

@@ -10,6 +10,13 @@ const tips = [
     linkUrl: `/faq#get-apikey`
   },
   {
+    id: 'changelog',
+    content: () =>
+      `Curious to see what's changed lately on ArtBot? Take a peep at the most recent updates.`,
+    linkTitle: `View changelog`,
+    linkUrl: `/changelog`
+  },
+  {
     id: 'contact-form',
     content: () =>
       `Found a bug or have a feature suggestion? Don't hesitate to hit the contact form and send a message!`,

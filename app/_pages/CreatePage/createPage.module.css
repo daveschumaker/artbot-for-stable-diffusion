@@ -28,7 +28,7 @@
 
 @media (min-width: 640px) {
   .ActionPanelFixedRow {
-    width: calc(100% - 194px) !important;
+    width: calc(100% - 202px) !important;
     background-color: var(--body-color);
   }
 
@@ -43,10 +43,16 @@
   }
 }
 
-@media (min-width: 1100px) {
+@media (min-width: 1024px) {
   .ActionPanelFixedRow {
     width: calc(100% - 522px) !important;
   }
+}
+
+@media (min-width: 1100px) {
+  /* .ActionPanelFixedRow {
+    width: calc(100% - 522px) !important;
+  } */
 
   .ActionPanelFixedWrapper {
     margin-right: 0;

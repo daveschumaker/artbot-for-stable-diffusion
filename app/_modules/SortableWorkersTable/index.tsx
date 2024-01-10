@@ -226,6 +226,9 @@ export default function SortableTable() {
                     Max Dimensions (1:1)
                   </div>
                 </th>
+                <th style={{ paddingLeft: 0 }}>
+                  <div className="flex flex-row items-center">Team</div>
+                </th>
                 <th
                   className="cursor-pointer"
                   onClick={() => handleHeaderClick('uptime')}
@@ -361,6 +364,13 @@ export default function SortableTable() {
                     <td>
                       {Math.floor(Math.sqrt(row.max_pixels))} x{' '}
                       {Math.floor(Math.sqrt(row.max_pixels))}
+                    </td>
+                    <td
+                      style={{
+                        color: row.team?.id ? 'green' : 'red'
+                      }}
+                    >
+                      {row.team?.id ? <IconCheck size={18} /> : ''}
                     </td>
                     <td>{formatSeconds(row.uptime)}</td>
                     <td>{row.kudos_rewards.toLocaleString()}</td>

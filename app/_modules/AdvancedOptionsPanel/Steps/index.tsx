@@ -82,7 +82,7 @@ export default function Steps({ hideOptions = false }: StepsOptions) {
               max={MAX_STEPS}
               // disabled={disabled}
               onInputChange={(e) => {
-                setInput({ denoising_strength: e.target.value })
+                setInput({ steps: e.target.value })
               }}
               onMinusClick={() => {
                 if (input.steps - step < 1) {
