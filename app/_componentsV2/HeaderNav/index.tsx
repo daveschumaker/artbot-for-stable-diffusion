@@ -36,7 +36,7 @@ function ListItem({
         }}
       >
         <div className="font-bold">{title}</div>
-        <div>{description}</div>
+        <div className="text-xs">{description}</div>
       </Link>
     </li>
   )
@@ -165,6 +165,12 @@ export function HeaderNav() {
                 tabIndex={0}
                 className="menu dropdown-content z-[1] p-2 shadow rounded-box w-80 bg-body-solid-color"
               >
+                <ListItem
+                  href="/faq"
+                  title="FAQ"
+                  description="Find answers to common questions and maybe even learn a thing or two."
+                  onClose={closeDropdown}
+                />
                 <ListItem
                   href="/info/models"
                   title="Model details"

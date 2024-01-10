@@ -170,6 +170,15 @@ const SelectModel = ({
           isDisabled={selectDisabled}
           isMulti={showMultiModel}
           isSearchable={true}
+          // @ts-ignore
+          formatOptionLabel={(option) => (
+            <>
+              <div>{option.label}</div>
+              <div style={{ fontSize: '10px' }}>
+                Baseline: {modelDetails[option.value]?.baseline}
+              </div>
+            </>
+          )}
           options={filteredModels()}
           onChange={(obj: any) => {
             if (showMultiModel) {
