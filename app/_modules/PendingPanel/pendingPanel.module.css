@@ -49,6 +49,16 @@
   overflow-y: hidden;
   padding: 8px;
   position: relative;
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.PendingImagesContainer::-webkit-scrollbar {
+  display: none;
 }
 
 .PendingJobCard {
@@ -134,4 +144,17 @@
   right: 0;
   bottom: 0;
   user-select: none;
+}
+
+.virtual-list {
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.virtual-list::-webkit-scrollbar {
+  display: none;
 }

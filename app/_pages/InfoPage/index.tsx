@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import Linker from 'app/_components/Linker'
 import PageTitle from 'app/_components/PageTitle'
 import Row from 'app/_modules/Row'
+import SortableTable from 'app/_modules/SortableWorkersTable'
 
 interface IPerfStats {
   queued_requests: number
@@ -38,7 +39,7 @@ const InfoPage = () => {
   }
 
   return (
-    <div className="mb-4">
+    <div>
       <Head>
         <title>General Information - ArtBot</title>
       </Head>
@@ -90,6 +91,8 @@ const InfoPage = () => {
           </li>
         </ul>
       </div>
+
+      <SortableTable />
     </div>
   )
 }
