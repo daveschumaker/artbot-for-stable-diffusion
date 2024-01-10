@@ -142,6 +142,7 @@ export interface HordePreset {
 export interface HordeWorkerDetails {
   id: string
   info: string
+  bridge_agent: string
   kudos_details: { generated: number; uptime: number }
   kudos_rewards: number
   loading?: boolean

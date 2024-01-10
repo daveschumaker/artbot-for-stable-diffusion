@@ -12,6 +12,8 @@ import {
 } from '@tabler/icons-react'
 import Linker from 'app/_components/Linker'
 import { HordeWorkerDetails } from '_types/horde'
+import NiceModal from '@ebay/nice-modal-react'
+import WorkerDetailsCard from 'app/_componentsV2/WorkerDetailsCard'
 
 interface HordeWorkerKeysForTable {
   kph: number
@@ -74,7 +76,7 @@ export default function SortableTable() {
       } else if (sortBy === key && sortOrder === 'dsc') {
         return <IconArrowNarrowDown stroke={1.5} size={16} />
       } else {
-        return null
+        return <div style={{ minWidth: '16px' }}></div>
       }
     },
     [sortBy, sortOrder]
@@ -94,16 +96,10 @@ export default function SortableTable() {
         bValue = b.uptime ? Math.floor(b.kudos_rewards / (b.uptime / 3600)) : 0
       } else {
         // @ts-ignore
+        aValue = a[sortBy as keyof HordeWorkerDetails]
 
-        aValue =
-          typeof a[sortBy as keyof HordeWorkerDetails] === 'number'
-            ? a[sortBy as keyof HordeWorkerDetails]
-            : 0
         // @ts-ignore
-        bValue =
-          typeof b[sortBy as keyof HordeWorkerDetails] === 'number'
-            ? b[sortBy as keyof HordeWorkerDetails]
-            : 0
+        bValue = b[sortBy as keyof HordeWorkerDetails]
       }
 
       if (aValue < bValue) {
@@ -121,105 +117,139 @@ export default function SortableTable() {
     <>
       <div className="relative h-[600px] bg-body-color">
         <div className={styles.TableWrapper}>
-          <table className="table table-sm md:table-xs table-pin-rows w-[1400px] no-scrollbar">
+          <table
+            className="table table-sm md:table-xs table-pin-rowsno-scrollbar"
+            style={{ tableLayout: 'auto', width: '1700px', maxWidth: '1700px' }}
+          >
             <thead>
-              <tr className="text-black bg-body-color dark:text-white">
+              <tr
+                className="text-black bg-body-color dark:text-white select-none"
+                style={{ lineHeight: '28px' }}
+              >
                 <th></th>
                 <th
                   className="cursor-pointer"
                   onClick={() => handleHeaderClick('name')}
+                  style={{ paddingLeft: 0 }}
                 >
-                  <div className="flex flex-row">{showArrow('name')}Name</div>
+                  <div className="flex flex-row items-center">
+                    {showArrow('name')}Name
+                  </div>
+                </th>
+                <th
+                  className="cursor-pointer"
+                  onClick={() => handleHeaderClick('bridge_agent')}
+                  style={{ paddingLeft: 0 }}
+                >
+                  <div className="flex flex-row items-center">
+                    {showArrow('bridge_agent')}Version
+                  </div>
                 </th>
                 <th
                   className="cursor-pointer"
                   onClick={() => handleHeaderClick('trusted')}
+                  style={{ paddingLeft: 0 }}
                 >
-                  <div className="flex flex-row">
+                  <div className="flex flex-row items-center">
                     {showArrow('trusted')}Trusted
                   </div>
                 </th>
                 <th
                   className="cursor-pointer"
                   onClick={() => handleHeaderClick('models')}
+                  style={{ paddingLeft: 0 }}
                 >
-                  <div className="flex flex-row">
+                  <div className="flex flex-row items-center">
                     {showArrow('models')}Models
                   </div>
                 </th>
                 <th
                   className="cursor-pointer"
                   onClick={() => handleHeaderClick('img2img')}
+                  style={{ paddingLeft: 0 }}
                 >
-                  <div className="flex flex-row">
+                  <div className="flex flex-row items-center">
                     {showArrow('img2img')}Img2Img
                   </div>
                 </th>
                 <th
                   className="cursor-pointer"
                   onClick={() => handleHeaderClick('painting')}
+                  style={{ paddingLeft: 0 }}
                 >
-                  <div className="flex flex-row">
+                  <div className="flex flex-row items-center">
                     {showArrow('painting')}Inpainting
                   </div>
                 </th>
                 <th
                   className="cursor-pointer"
                   onClick={() => handleHeaderClick('lora')}
+                  style={{ paddingLeft: 0 }}
                 >
-                  <div className="flex flex-row">{showArrow('lora')}LoRAs</div>
+                  <div className="flex flex-row items-center">
+                    {showArrow('lora')}LoRAs
+                  </div>
                 </th>
                 <th
                   className="cursor-pointer"
                   onClick={() => handleHeaderClick('post-processing')}
+                  style={{ paddingLeft: 0 }}
                 >
-                  <div className="flex flex-row">
+                  <div className="flex flex-row items-center">
                     {showArrow('post-processing')}Post-Proc
                   </div>
                 </th>
                 <th
                   className="cursor-pointer"
                   onClick={() => handleHeaderClick('threads')}
+                  style={{ paddingLeft: 0 }}
                 >
-                  <div className="flex flex-row">
+                  <div className="flex flex-row items-center">
                     {showArrow('threads')}Threads
                   </div>
                 </th>
                 <th
                   className="cursor-pointer"
                   onClick={() => handleHeaderClick('max_pixels')}
+                  style={{ paddingLeft: 0 }}
                 >
-                  <div className="flex flex-row">
+                  <div className="flex flex-row items-center">
                     {showArrow('max_pixels')}Max Power
                   </div>
                 </th>
                 <th
                   className="cursor-pointer"
                   onClick={() => handleHeaderClick('max_pixels')}
+                  style={{ paddingLeft: 0 }}
                 >
-                  <div className="flex flex-row">Max Dimensions (1:1)</div>
+                  <div className="flex flex-row items-center">
+                    Max Dimensions (1:1)
+                  </div>
                 </th>
                 <th
                   className="cursor-pointer"
                   onClick={() => handleHeaderClick('uptime')}
+                  style={{ paddingLeft: 0 }}
                 >
-                  <div className="flex flex-row">
+                  <div className="flex flex-row items-center">
                     {showArrow('uptime')}Uptime
                   </div>
                 </th>
                 <th
                   className="cursor-pointer"
                   onClick={() => handleHeaderClick('kudos_rewards')}
+                  style={{ paddingLeft: 0 }}
                 >
-                  <div className="flex flex-row">
+                  <div className="flex flex-row items-center">
                     {showArrow('kudos_rewards')}Kudos
                   </div>
                 </th>
                 <th
                   className="cursor-pointer"
                   onClick={() => handleHeaderClick('kph')}
+                  style={{ paddingLeft: 0 }}
                 >
-                  <div className="flex flex-row">
+                  <div className="flex flex-row items-center">
                     {showArrow('kph')}Kudos / hour
                   </div>
                 </th>
@@ -234,16 +264,56 @@ export default function SortableTable() {
                   : false
 
                 return (
-                  <tr className="hover:bg-[#dbdbdb] hover:text-black" key={i}>
+                  <tr
+                    className="hover:bg-[#dbdbdb] hover:text-black"
+                    key={i}
+                    style={{ lineHeight: '28px' }}
+                  >
                     <td>{i + 1}</td>
-                    <td>
-                      <div className="flex flex-row items-center">
-                        <IconPoint
-                          stroke="white"
-                          fill={badgeColor(row)}
-                          size={14}
-                        />
+                    <td
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        columnGap: '4px'
+                      }}
+                    >
+                      <IconPoint
+                        stroke="white"
+                        fill={badgeColor(row)}
+                        size={14}
+                      />
+                      <div
+                        className="cursor-pointer"
+                        onClick={() => {
+                          NiceModal.show('workerDetails-modal', {
+                            content: <WorkerDetailsCard id={row.id} />,
+                            maxWidth: 'max-w-[480px]',
+                            title: 'Worker Details'
+                          })
+                        }}
+                        style={{
+                          display: 'inline-block',
+                          overflow: 'hidden',
+                          maxWidth: '180px',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap'
+                        }}
+                      >
                         {row.name}
+                      </div>
+                    </td>
+                    <td>
+                      <div
+                        className="flex flex-row items-center"
+                        style={{
+                          display: 'block',
+                          overflow: 'hidden',
+                          maxWidth: '80px',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap'
+                        }}
+                      >
+                        v{row.bridge_agent.split(':')[1]}
                       </div>
                     </td>
                     <td

@@ -15,3 +15,46 @@
 .TableWrapper::-webkit-scrollbar {
   display: none;
 }
+
+/* Custom scrollbar for screen width 640px and above */
+@media screen and (min-width: 640px) {
+  .TableWrapper::-webkit-scrollbar {
+    cursor: pointer;
+    display: block;
+    width: 8px;
+    /* Adjust width for vertical scrollbar */
+    height: 8px;
+    /* Adjust height for horizontal scrollbar */
+  }
+
+  .TableWrapper::-webkit-scrollbar-thumb {
+    background: var(--main-color);
+    /* Scrollbar color */
+    border-radius: 3px;
+    /* Rounded corners for scrollbar */
+  }
+
+  .TableWrapper::-webkit-scrollbar-track {
+    background: transparent;
+    /* Scrollbar track color */
+  }
+
+  /* For Firefox */
+  .TableWrapper {
+    scrollbar-color: var(--main-color) transparent;
+    /* Scrollbar and track colors */
+    scrollbar-width: thin;
+    /* Adjust scrollbar width */
+  }
+
+  /* For IE and Edge */
+  .TableWrapper {
+    -ms-overflow-style: auto;
+  }
+
+  /* Adjust vertical scrollbar specifically */
+  .TableWrapper::-webkit-scrollbar-vertical {
+    width: 8px;
+    /* Adjust width for vertical scrollbar */
+  }
+}
