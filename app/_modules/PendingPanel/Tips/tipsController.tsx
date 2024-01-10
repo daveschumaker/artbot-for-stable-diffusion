@@ -10,13 +10,32 @@ const tips = [
     linkUrl: `/faq#get-apikey`
   },
   {
-    id: 'worker',
-    content:
-      () => `Run a worker! Earn kudos (for faster image generations), help grow the AI
-        Horde community, and learn about distributed computing concepts with a
-        group of awesome volunteers.`,
-    linkTitle: `Learn more`,
-    linkUrl: `/faq#run-worker`
+    id: 'contact-form',
+    content: () =>
+      `Found a bug or have a feature suggestion? Don't hesitate to hit the contact form and send a message!`,
+    linkTitle: `View page`,
+    linkUrl: `/contact`
+  },
+  {
+    id: 'discord-link',
+    content: () =>
+      `Join the AI Horde community on Discord. Chat about AI, generative art, software development and more. It's a fun community. Come check it out!`,
+    linkTitle: `View on Discord`,
+    linkUrl: `https://discord.gg/3DxrhksKzn`
+  },
+  {
+    id: 'github-artbot-link',
+    content: () =>
+      `Interested in free and open-source software or Next.JS and TypeScript? Check out ArtBot on Github! Feel free to make bug reports, suggest improvements, contribute code, or even just give it a ⭐️.`,
+    linkTitle: `View on Github`,
+    linkUrl: `https://github.com/daveschumaker/artbot-for-stable-diffusion`
+  },
+  {
+    id: 'github-haidra-link',
+    content: () =>
+      `Want to get involved? Haidra is the community organization behind the AI Horde. Learn more about various Haidra projects and initiatives on their Github page.`,
+    linkTitle: `View on Github`,
+    linkUrl: `https://github.com/Haidra-Org`
   },
   {
     id: 'promoteHorde',
@@ -33,6 +52,15 @@ const tips = [
     ),
     linkTitle: `View the showcase`,
     linkUrl: `/showcase`
+  },
+  {
+    id: 'worker',
+    content:
+      () => `Run a worker! Earn kudos (for faster image generations), help grow the AI
+        Horde community, and learn about distributed computing concepts with a
+        group of awesome volunteers.`,
+    linkTitle: `Learn more`,
+    linkUrl: `/faq#run-worker`
   }
 ]
 

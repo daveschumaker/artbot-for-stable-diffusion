@@ -19,12 +19,6 @@
   margin-bottom: 8px;
 }
 
-.slider-wrapper {
-  display: block;
-  flex-grow: 1;
-  margin-right: 12px;
-}
-
 @media (min-width: 800px) {
   .input-width {
     justify-content: flex-end;
@@ -97,11 +91,21 @@
   font-weight: 600;
 }
 
+.slider-wrapper {
+  display: none;
+}
+
 @media (min-width: 800px) {
   .embedding-select-label {
     font-size: 14px;
     font-weight: 700;
     min-width: var(--options-label-width);
     width: var(--options-label-width);
+  }
+
+  .slider-wrapper {
+    display: block;
+    flex-grow: 1;
+    margin-right: 12px;
   }
 }

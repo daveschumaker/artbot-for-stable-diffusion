@@ -11,10 +11,12 @@ import { modelStore } from 'app/_store/modelStore'
 import { useStore } from 'statery'
 import AppSettings from 'app/_data-models/AppSettings'
 import { countImagesToGenerate } from 'app/_utils/imageUtils'
+import { appInfoStore } from 'app/_store/appStore'
 
 interface InputErrors {
   fixedSeed?: string
   flaggedPrompt?: string
+  forceSelectedWorker?: string
   inpaintingNoSource?: string
   loraModelMismatch?: string
   maxPixels?: string
@@ -58,6 +60,7 @@ export const InputErrorsProvider: React.FC<InputErrorsProviderProps> = ({
 }) => {
   const { input } = useInput()
   const { modelDetails } = useStore(modelStore)
+  const { forceSelectedWorker } = useStore(appInfoStore)
 
   const [blockJobs, setBlockJobs] = useState(false)
   const [inputErrors, setInputErrors] = useState({})
@@ -170,7 +173,11 @@ export const InputErrorsProvider: React.FC<InputErrorsProviderProps> = ({
 
     setInputErrors(updateErrors)
     setBlockJobs(updateBlockJobs)
-  }, [input, modelDetails])
+
+    if (forceSelectedWorker) {
+      updateErrors.forceSelectedWorker = `Your jobs are targeting one specific worker.`
+    }
+  }, [forceSelectedWorker, input, modelDetails])
 
   return (
     <InputErrorsContext.Provider

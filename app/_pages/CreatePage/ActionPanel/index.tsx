@@ -135,7 +135,7 @@ const ActionPanel = forwardRef<HTMLDivElement, Props>(
                   <span>
                     <IconTrash stroke={1.5} />
                   </span>
-                  <span>Reset</span>
+                  <span className="hidden md:flex">Reset</span>
                 </Button>
                 <Button
                   title="Create new image"
@@ -164,7 +164,7 @@ const ActionPanel = forwardRef<HTMLDivElement, Props>(
                       })
                     }}
                   >
-                    <div style={{ color: '#fabc11' }}>
+                    <div style={{ color: 'orange' }}>
                       <IconAlertTriangle stroke={1.5} />
                     </div>
                     Warnings

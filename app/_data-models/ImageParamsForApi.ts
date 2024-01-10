@@ -195,6 +195,20 @@ class ImageParamsForApi {
       delete apiParams.workers
     }
 
+    // If user has enabled forceSelectedWorker, override any other worker preference setting.
+    const worker = sessionStorage.getItem('forceSelectedWorker')
+    console.log(`stuck worker state?`, worker)
+    if (worker) {
+      const workerId = JSON.parse(worker).value
+      console.log(`we get here??`, workerId)
+      apiParams.workers = [workerId]
+      delete apiParams.worker_blacklist
+      delete apiParams.slow_workers
+
+      apiParams.shared = false
+      apiParams.trusted_workers = false
+    }
+
     if (source_processing === SourceProcessing.Img2Img) {
       apiParams.params.denoising_strength = Number(denoising_strength) || 0.75
       apiParams.source_image = source_image

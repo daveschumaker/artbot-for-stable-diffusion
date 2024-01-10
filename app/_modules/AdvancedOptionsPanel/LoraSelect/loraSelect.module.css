@@ -34,22 +34,27 @@
   z-index: 31;
 }
 
+.slider-wrapper {
+  display: none;
+}
+
 @media (min-width: 640px) {
   .lora-select-modal {
     width: 500px;
   }
 }
 
-.slider-wrapper {
-  display: block;
-  flex-grow: 1;
-  margin-right: 12px;
-}
 
 @media (min-width: 800px) {
   .input-width {
     justify-content: flex-end;
     max-width: 120px;
+  }
+
+  .slider-wrapper {
+    display: block;
+    flex-grow: 1;
+    margin-right: 12px;
   }
 }
 

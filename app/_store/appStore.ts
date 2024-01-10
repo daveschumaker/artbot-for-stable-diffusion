@@ -7,6 +7,7 @@ interface AppStore {
   clusterSettings: {
     forceReloadOnServerUpdate: boolean
   }
+  forceSelectedWorker: boolean
   hordePerformance: object
   indexDbSupport: boolean
   imageDetailsModalOpen: boolean
@@ -39,6 +40,7 @@ export const appInfoStore = makeStore<AppStore>({
   clusterSettings: {
     forceReloadOnServerUpdate: true
   },
+  forceSelectedWorker: false,
   hordePerformance: {},
   indexDbSupport: true,
   imageDetailsModalOpen: false,
@@ -85,6 +87,12 @@ export const setUseBlockedWorkers = (val: boolean) => {
 export const setAdHidden = (val: boolean) => {
   appInfoStore.set(() => ({
     adHidden: val
+  }))
+}
+
+export const setForceSelectedWorker = (val: boolean) => {
+  appInfoStore.set(() => ({
+    forceSelectedWorker: val
   }))
 }
 

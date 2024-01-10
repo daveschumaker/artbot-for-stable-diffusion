@@ -147,6 +147,18 @@ const SelectModel = ({
     selectValue = { label: 'Use favorite models', value: '' }
   }
 
+  const formatBaseline = (baseline: string) => {
+    if (baseline === 'stable diffusion 1') {
+      return `SD 1.5`
+    } else if (baseline === 'stable diffusion 2') {
+      return 'SD 2.0'
+    } else if (baseline === 'stable_diffusion_xl') {
+      return 'SDXL'
+    } else {
+      return baseline
+    }
+  }
+
   return (
     <OptionsRow>
       <OptionsRowLabel>
@@ -175,7 +187,7 @@ const SelectModel = ({
             <>
               <div>{option.label}</div>
               <div style={{ fontSize: '10px' }}>
-                Baseline: {modelDetails[option.value]?.baseline}
+                Baseline: {formatBaseline(modelDetails[option.value]?.baseline)}
               </div>
             </>
           )}

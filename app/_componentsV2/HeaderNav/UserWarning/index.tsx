@@ -3,6 +3,7 @@ import { useStore } from 'statery'
 import NiceModal from '@ebay/nice-modal-react'
 import {
   appInfoStore,
+  setForceSelectedWorker,
   setUseAllowedWorkers,
   setUseBlockedWorkers
 } from 'app/_store/appStore'
@@ -10,19 +11,46 @@ import InputSwitchV2 from 'app/_modules/AdvancedOptionsPanel/InputSwitchV2'
 import AppSettings from 'app/_data-models/AppSettings'
 import { useEffect, useState } from 'react'
 import Linker from 'app/_components/Linker'
+import { Button } from 'app/_components/Button'
 
 const UserWarningModal = () => {
   const appState = useStore(appInfoStore)
   const [showLockedWorkerWarning, setShowLockedWorkerWarning] = useState(false)
+  const [showForceSelectedWorkerWarning, setShowForceSelectedWorkerWarning] =
+    useState(false)
 
   useEffect(() => {
-    if (appState.useAllowedWorkers) {
+    if (appState.forceSelectedWorker) {
+      setShowForceSelectedWorkerWarning(true)
+    } else if (appState.useAllowedWorkers) {
       setShowLockedWorkerWarning(true)
     }
-  }, [appState.useAllowedWorkers])
+  }, [appState.forceSelectedWorker, appState.useAllowedWorkers])
 
   return (
     <div className="flex flex-col gap-2">
+      {showForceSelectedWorkerWarning && (
+        <>
+          <div>
+            <strong>Your requests are locked to one specific worker</strong>
+          </div>
+          <div className="text-sm">
+            You have locked your image requests to one specific worker on the
+            Create Image page. If you wish to remove this preference, you can do
+            so below.
+          </div>
+          <div>
+            <Button
+              onClick={() => {
+                sessionStorage.setItem('forceSelectedWorker', '')
+                setForceSelectedWorker(false)
+              }}
+            >
+              Clear worker
+            </Button>
+          </div>
+        </>
+      )}
       {showLockedWorkerWarning && (
         <>
           <div>
@@ -69,7 +97,7 @@ const UserWarningModal = () => {
 export default function UserWarning() {
   const appState = useStore(appInfoStore)
 
-  if (!appState.useAllowedWorkers) {
+  if (!appState.useAllowedWorkers && !appState.forceSelectedWorker) {
     return null
   }
 
@@ -86,7 +114,9 @@ export default function UserWarning() {
             })
           }}
         >
-          <IconAlertTriangleFilled stroke={1} />
+          <div style={{ color: 'orange' }}>
+            <IconAlertTriangleFilled stroke={1} />
+          </div>
         </button>
       </div>
     </>

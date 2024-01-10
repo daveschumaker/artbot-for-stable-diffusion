@@ -27,9 +27,20 @@ const Linker = (props: any) => {
     style.display = 'inline-block'
   }
 
+  let target = ''
+
+  if (
+    props.href &&
+    props.href.indexOf('https://') === 0 &&
+    props.href.indexOf('https://tinybots.net') !== 0
+  ) {
+    target = '_blank'
+  }
+
   return (
     <Link
       className={styles.Linker}
+      target={target}
       {...rest}
       onClick={handleClick}
       style={{

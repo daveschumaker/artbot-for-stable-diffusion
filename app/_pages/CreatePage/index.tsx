@@ -39,6 +39,7 @@ import TooltipComponent from 'app/_components/TooltipComponent'
 import { CREATE_PAGE_PARAM } from '_constants'
 import { handleUsePreset } from './PromptInput/StylePresetsDropdown/presetController'
 import AdvancedOptionsPanelV2 from 'app/_modules/AdvancedOptionsPanelV2'
+import TargetWorker from './TargetWorker'
 
 const defaultState: DefaultPromptInput = new DefaultPromptInput()
 
@@ -437,6 +438,7 @@ const CreatePage = ({ className }: any) => {
           style={{ alignItems: 'flex-start', position: 'relative' }}
         >
           <CreatePageSettings />
+          <TargetWorker />
 
           <ActionPanel
             ref={actionPanelRef}
