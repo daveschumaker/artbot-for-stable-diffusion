@@ -19,7 +19,10 @@ export const metadata: Metadata = {
   title: 'ArtBot - Create images with Stable Diffusion, utilizing the AI Horde',
   description:
     'Generate AI-created images and photos with Stable Diffusion using a distributed computing cluster powered by the AI Horde. No login required and free to use.',
-  icons: `${basePath}/favicon.ico`,
+  icons: {
+    icon: `${basePath}/favicon.ico`,
+    apple: `${basePath}/appicons/square-180.png`
+  },
   manifest: `${basePath}/manifest.json`,
   openGraph: {
     type: 'website',
@@ -40,6 +43,10 @@ export const metadata: Metadata = {
     creator: '@davely',
     images: `${baseHost}${basePath}/painting_bot.png`
   }
+}
+
+export const viewport = {
+  themeColor: '#222222'
 }
 
 export default async function RootLayout({
