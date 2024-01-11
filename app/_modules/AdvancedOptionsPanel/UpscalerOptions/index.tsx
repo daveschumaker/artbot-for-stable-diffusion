@@ -6,6 +6,7 @@ import FlexCol from 'app/_components/FlexCol'
 import styles from './component.module.css'
 
 export const UPSCALERS = [
+  'RealESRGAN_x2plus',
   'RealESRGAN_x4plus',
   'RealESRGAN_x4plus_anime_6B',
   'NMKD_Siax',
@@ -53,8 +54,8 @@ const UpscalerOptions = () => {
       >
         Upscalers
         <TooltipComponent tooltipId={'upscalers-tooltip'}>
-          Upscales your image up to 4x. Some upscalers are tuned to specific
-          styles. Only 1 can be selected at a time.
+          Upscales your image by a set amount. Some upscalers are tuned to
+          specific styles. Only 1 can be selected at a time.
         </TooltipComponent>
       </div>
       <FlexCol className="items-start gap-2">

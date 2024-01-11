@@ -7,6 +7,7 @@
 - Added ability to select a specific worker from the Create Image page. (See button with the computer on it)
 - Updated info page to show worker info in a table format.
 - Added a new "ArtBot tips" module that will randomly pop up with various hints, tips and community related info.
+- Add RealESRGAN_x2plus upscaler
 
 # 2024.01.03
 
