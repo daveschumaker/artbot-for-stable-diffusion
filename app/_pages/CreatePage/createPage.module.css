@@ -17,7 +17,8 @@
 @media (min-width: 640px) {
   .ActionPanelFixedRow {
     align-items: flex-start;
-    display: block;
+    display: flex;
+    justify-content: flex-start;
     position: fixed;
     top: 42px;
     width: 100%;
@@ -25,9 +26,9 @@
   }
 }
 
-@media (min-width: 800px) {
+@media (min-width: 640px) {
   .ActionPanelFixedRow {
-    width: calc(100% - 212px) !important;
+    width: calc(100% - 202px) !important;
     background-color: var(--body-color);
   }
 
@@ -36,11 +37,22 @@
   }
 }
 
-@media (min-width: 1100px) {
+@media (min-width: 890px) {
   .ActionPanelFixedRow {
-    max-width: 704px;
-    width: calc(100% - 572px) !important;
+    width: calc(100% - 442px) !important;
   }
+}
+
+@media (min-width: 1024px) {
+  .ActionPanelFixedRow {
+    width: calc(100% - 522px) !important;
+  }
+}
+
+@media (min-width: 1100px) {
+  /* .ActionPanelFixedRow {
+    width: calc(100% - 522px) !important;
+  } */
 
   .ActionPanelFixedWrapper {
     margin-right: 0;

@@ -20,6 +20,7 @@ import ClearJobs from 'app/_pages/PendingPage/ClearJobs'
 import { Button } from 'app/_components/Button'
 import { Virtuoso } from 'react-virtuoso'
 import PendingPanelImageCard from './PendingPanelImageCard'
+import PendingTips from './Tips'
 
 export default function PendingPanel() {
   const [done, processing, queued, waiting, error] = usePendingJobs()
@@ -130,6 +131,7 @@ export default function PendingPanel() {
         </FlexRow>
       </FlexRow>
       <div className={styles.PendingImagesContainer} style={{}}>
+        {filteredJobs.length === 0 && <PendingTips />}
         {filteredJobs.length === 0 && (
           <div className={styles.NoRequests}>
             <IconPhotoOff size={36} stroke={1} />

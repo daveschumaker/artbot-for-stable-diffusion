@@ -1,0 +1,28 @@
+.input-width {
+  display: flex;
+  flex-direction: row;
+}
+
+.slider-wrapper {
+  display: none;
+}
+
+@media (min-width: 800px) {
+  .clip-btn {
+    height: 30px;
+    min-width: unset;
+    padding: 4px;
+    width: 30px;
+  }
+
+  .input-width {
+    justify-content: flex-end;
+    max-width: 120px;
+  }
+
+  .slider-wrapper {
+    display: block;
+    flex-grow: 1;
+    margin-right: 12px;
+  }
+}

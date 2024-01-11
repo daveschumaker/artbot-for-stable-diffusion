@@ -31,26 +31,24 @@ import FlexRow from 'app/_components/FlexRow'
 import CreatePageSettings from './Settings'
 import FormErrorMessage from './ActionPanel/FormErrorMessage'
 import { useWindowSize } from 'app/_hooks/useWindowSize'
-import InputValidationErrorDisplay from './PromptInput/InputValidationErrorDisplay'
-import { modelStore } from 'app/_store/modelStore'
 import { useInput } from 'app/_modules/InputProvider/context'
-import MaxWidth from 'app/_components/MaxWidth'
 import styles from './createPage.module.css'
 import { Button } from 'app/_components/Button'
 import { IconAlertTriangle, IconArrowBarToUp } from '@tabler/icons-react'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import { CREATE_PAGE_PARAM } from '_constants'
 import { handleUsePreset } from './PromptInput/StylePresetsDropdown/presetController'
+import AdvancedOptionsPanelV2 from 'app/_modules/AdvancedOptionsPanelV2'
+import TargetWorker from './TargetWorker'
 
 const defaultState: DefaultPromptInput = new DefaultPromptInput()
 
 const CreatePage = ({ className }: any) => {
   const [actionPanelVisible, setActionPanelVisible] = useState(true)
   const actionPanelRef = useRef<HTMLDivElement>(null)
-  const [hasError, setHasError] = useState(false)
+  const [hasError] = useState(false)
 
   const { input, setInput, setPageLoaded } = useInput()
-  const { modelDetails } = useStore(modelStore)
   const { width } = useWindowSize()
   const appState = useStore(appInfoStore)
   const userInfo = useStore(userInfoStore)
@@ -137,31 +135,6 @@ const CreatePage = ({ className }: any) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [input.source_image, input.tiling])
-
-  useEffect(() => {
-    const hasInpaintingModels = input.models.filter(
-      (model: string = '') => model && model.indexOf('_inpainting') >= 0
-    ).length
-    const hasSourceMask = input.source_mask
-
-    if (
-      hasInpaintingModels > 0 &&
-      !hasSourceMask &&
-      !errors.INPAINT_MISSING_SOURCE_MASK
-    ) {
-      setErrors({ INPAINT_MISSING_SOURCE_MASK: true })
-    } else if (
-      (hasInpaintingModels == 0 || hasSourceMask) &&
-      errors.INPAINT_MISSING_SOURCE_MASK
-    ) {
-      setErrors({ INPAINT_MISSING_SOURCE_MASK: false })
-    }
-  }, [
-    errors.INPAINT_MISSING_SOURCE_MASK,
-    input.models,
-    input.source_mask,
-    setErrors
-  ])
 
   useEffect(() => {
     watchBuild()
@@ -445,10 +418,6 @@ const CreatePage = ({ className }: any) => {
       ? 'N/A'
       : Number(totalKudosCost / totalImagesRequested).toFixed(2)
 
-  useEffect(() => {
-    setErrors({ FIXED_SEED: Boolean(totalImagesRequested > 1 && input.seed) })
-  }, [totalImagesRequested, input.seed, setErrors])
-
   return (
     <main className={className}>
       <div className="flex flex-row items-center w-full">
@@ -464,15 +433,12 @@ const CreatePage = ({ className }: any) => {
         <FlexRow>
           <FormErrorMessage errors={errors} />
         </FlexRow>
-        <InputValidationErrorDisplay
-          modelDetails={modelDetails}
-          setHasError={setHasError}
-        />
         <FlexRow
           gap={4}
           style={{ alignItems: 'flex-start', position: 'relative' }}
         >
           <CreatePageSettings />
+          <TargetWorker />
 
           <ActionPanel
             ref={actionPanelRef}
@@ -488,61 +454,71 @@ const CreatePage = ({ className }: any) => {
           />
 
           {!actionPanelVisible && (
-            <FlexRow className={styles.ActionPanelFixedRow} gap={4}>
-              <MaxWidth className={styles.ActionPanelFixedWrapper}>
-                <FlexRow gap={4} style={{ alignItems: 'flex-start' }}>
-                  <div style={{ paddingTop: '8px' }}>
-                    <Button
-                      id="ScrollToTopBtn"
-                      size="square-small"
-                      onClick={() => {
-                        window.scrollTo(0, 0)
-                        setActionPanelVisible(true)
-                      }}
+            <FlexRow
+              className={styles.ActionPanelFixedRow}
+              gap={4}
+              style={{ alignItems: 'flex-start' }}
+            >
+              <FlexRow
+                gap={4}
+                style={{
+                  alignItems: 'flex-start',
+                  justifyContent: 'flex-start'
+                }}
+              >
+                <div style={{ paddingTop: '8px' }}>
+                  <Button
+                    id="ScrollToTopBtn"
+                    size="square-small"
+                    onClick={() => {
+                      window.scrollTo(0, 0)
+                      setActionPanelVisible(true)
+                    }}
+                  >
+                    <IconArrowBarToUp stroke={1.5} />
+                  </Button>
+                  <TooltipComponent hideIcon tooltipId="ScrollToTopBtn">
+                    Scroll to the top of the page
+                  </TooltipComponent>
+                </div>
+                <CreatePageSettings />
+                {hasError && (
+                  <div
+                    style={{ paddingTop: '8px' }}
+                    id="FixedActionPanelError"
+                    onClick={() => {
+                      window.scrollTo(0, 0)
+                      setActionPanelVisible(true)
+                    }}
+                  >
+                    <IconAlertTriangle color="red" size={36} stroke={1} />
+                    <TooltipComponent
+                      hideIcon
+                      tooltipId="FixedActionPanelError"
                     >
-                      <IconArrowBarToUp stroke={1.5} />
-                    </Button>
-                    <TooltipComponent hideIcon tooltipId="ScrollToTopBtn">
-                      Scroll to the top of the page
+                      Scroll to the top to view errors
                     </TooltipComponent>
                   </div>
-                  <CreatePageSettings />
-                  {hasError && (
-                    <div
-                      style={{ paddingTop: '8px' }}
-                      id="FixedActionPanelError"
-                      onClick={() => {
-                        window.scrollTo(0, 0)
-                        setActionPanelVisible(true)
-                      }}
-                    >
-                      <IconAlertTriangle color="red" size={36} stroke={1} />
-                      <TooltipComponent
-                        hideIcon
-                        tooltipId="FixedActionPanelError"
-                      >
-                        Scroll to the top to view errors
-                      </TooltipComponent>
-                    </div>
-                  )}
-                </FlexRow>
+                )}
+              </FlexRow>
 
-                <ActionPanel
-                  errors={errors}
-                  resetInput={resetInput}
-                  handleSubmit={handleSubmit}
-                  pending={pending}
-                  totalImagesRequested={totalImagesRequested}
-                  loggedIn={loggedIn}
-                  totalKudosCost={totalKudosCost}
-                  kudosPerImage={kudosPerImage}
-                  showStylesDropdown
-                />
-              </MaxWidth>
+              <ActionPanel
+                errors={errors}
+                resetInput={resetInput}
+                handleSubmit={handleSubmit}
+                pending={pending}
+                totalImagesRequested={totalImagesRequested}
+                loggedIn={loggedIn}
+                totalKudosCost={totalKudosCost}
+                kudosPerImage={kudosPerImage}
+                showStylesDropdown
+              />
             </FlexRow>
           )}
         </FlexRow>
       </div>
+
+      <AdvancedOptionsPanelV2 />
 
       <OptionsPanel setErrors={setErrors} />
 

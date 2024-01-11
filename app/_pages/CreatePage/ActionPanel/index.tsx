@@ -1,6 +1,11 @@
 'use client'
 
-import { IconCalculator, IconSquarePlus, IconTrash } from '@tabler/icons-react'
+import {
+  IconAlertTriangle,
+  IconCalculator,
+  IconSquarePlus,
+  IconTrash
+} from '@tabler/icons-react'
 
 import { Button } from 'app/_components/Button'
 import Linker from 'app/_components/Linker'
@@ -13,6 +18,10 @@ import useLockedBody from 'app/_hooks/useLockedBody'
 import styles from './actionPanel.module.css'
 import { useInput } from 'app/_modules/InputProvider/context'
 import clsx from 'clsx'
+import { useInputErrors } from 'app/_modules/ErrorProvider/context'
+import { useModal } from '@ebay/nice-modal-react'
+import Modal from 'app/_componentsV2/Modal'
+import ErrorsPanel from './ErrorsPanel'
 
 interface Props {
   errors: { [key: string]: boolean }
@@ -45,6 +54,9 @@ const ActionPanel = forwardRef<HTMLDivElement, Props>(
     ref
   ) => {
     const { input } = useInput()
+    const { blockJobs, inputErrors } = useInputErrors()
+    const errorsModal = useModal(Modal)
+
     const [, setLocked] = useLockedBody(false)
     const [showResetConfirmModal, setShowResetConfirmModal] = useState(false)
     const [showDryRun, setShowDryRun] = useState(false)
@@ -56,6 +68,9 @@ const ActionPanel = forwardRef<HTMLDivElement, Props>(
         ).length > 0
       )
     }
+
+    let showWarningButton = inputErrors && !blockJobs
+    let showErrorsButton = inputErrors && blockJobs
 
     return (
       <>
@@ -115,18 +130,22 @@ const ActionPanel = forwardRef<HTMLDivElement, Props>(
                   onClick={() => {
                     setShowResetConfirmModal(true)
                   }}
+                  style={{ paddingRight: '6px' }}
                 >
                   <span>
                     <IconTrash stroke={1.5} />
                   </span>
-                  <span>Reset</span>
+                  <span className="hidden md:flex">Reset</span>
                 </Button>
                 <Button
                   title="Create new image"
                   onClick={handleSubmit}
                   // @ts-ignore
                   disabled={
-                    disableSubmit || pending || areThereCriticalErrors()
+                    disableSubmit ||
+                    pending ||
+                    areThereCriticalErrors() ||
+                    blockJobs
                   }
                   size="small"
                   width="100px"
@@ -134,6 +153,40 @@ const ActionPanel = forwardRef<HTMLDivElement, Props>(
                   <span>{pending ? '' : <IconSquarePlus stroke={1.5} />}</span>
                   {pending ? 'Creating...' : 'Create'}
                 </Button>
+                {showWarningButton && (
+                  <Button
+                    className={styles['error-btn']}
+                    onClick={() => {
+                      errorsModal.show({
+                        content: <ErrorsPanel inputErrors={inputErrors} />,
+                        title: 'Validation Errors',
+                        maxWidth: 'max-w-[640px]'
+                      })
+                    }}
+                  >
+                    <div style={{ color: 'orange' }}>
+                      <IconAlertTriangle stroke={1.5} />
+                    </div>
+                    Warnings
+                  </Button>
+                )}
+                {showErrorsButton && (
+                  <Button
+                    className={styles['error-btn']}
+                    onClick={() => {
+                      errorsModal.show({
+                        content: <ErrorsPanel inputErrors={inputErrors} />,
+                        title: 'Validation Errors',
+                        maxWidth: 'max-w-[640px]'
+                      })
+                    }}
+                  >
+                    <div style={{ color: 'red' }}>
+                      <IconAlertTriangle stroke={1.5} />
+                    </div>
+                    Errors
+                  </Button>
+                )}
                 {loggedIn && (
                   <Button
                     disabled={!input.prompt}

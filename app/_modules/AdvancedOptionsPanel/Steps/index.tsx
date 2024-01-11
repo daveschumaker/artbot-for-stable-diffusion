@@ -1,19 +1,20 @@
 import FlexRow from 'app/_components/FlexRow'
 import { Button } from 'app/_components/Button'
 import { IconSettings } from '@tabler/icons-react'
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import Checkbox from 'app/_components/Checkbox'
 import Input from 'app/_components/Input'
-import SubSectionTitle from 'app/_components/SubSectionTitle'
-import TextTooltipRow from 'app/_components/TextTooltipRow'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import { maxSteps } from 'app/_utils/validationUtils'
 import { useStore } from 'statery'
 import { userInfoStore } from 'app/_store/userStore'
 import NumberInput from 'app/_components/NumberInput'
 import { useInput } from 'app/_modules/InputProvider/context'
-
+import styles from './steps.module.css'
+import Slider from 'app/_components/Slider'
+import OptionsRow from 'app/_modules/AdvancedOptionsPanelV2/OptionsRow'
+import OptionsRowLabel from 'app/_modules/AdvancedOptionsPanelV2/OptionsRowLabel'
 interface StepsOptions {
   hideOptions?: boolean
 }
@@ -25,17 +26,7 @@ export default function Steps({ hideOptions = false }: StepsOptions) {
   const { loggedIn } = userState
 
   const [showDropdown, setShowDropdown] = useState(false)
-  const [step, setStep] = useState(1)
-
-  const handleChangeStep = useCallback(() => {
-    if (step === 1) {
-      setStep(5)
-    } else if (step === 5) {
-      setStep(10)
-    } else {
-      setStep(1)
-    }
-  }, [step])
+  const [step] = useState(1)
 
   const MAX_STEPS = maxSteps({
     sampler: input.sampler,
@@ -44,31 +35,21 @@ export default function Steps({ hideOptions = false }: StepsOptions) {
   })
 
   return (
-    <FlexRow
-      style={{ alignItems: 'flex-end', columnGap: '4px', position: 'relative' }}
-    >
-      {input.useMultiSteps && (
-        <div className="w-full">
-          <SubSectionTitle>
-            <TextTooltipRow>
-              Steps
-              <span
-                className="text-xs w-full font-[400]"
-                style={{ paddingRight: '4px', width: 'auto' }}
-              >
-                &nbsp;(1 -{' '}
-                {maxSteps({
-                  sampler: input.sampler,
-                  loggedIn: loggedIn === true ? true : false
-                })}
-                )
-              </span>
-              <TooltipComponent tooltipId="multi-steps-tooltip">
-                Comma separated values to create a series of images using
-                multiple steps. Example: 16, 20, 25, 40
-              </TooltipComponent>
-            </TextTooltipRow>
-          </SubSectionTitle>
+    <OptionsRow>
+      <OptionsRowLabel>
+        Steps
+        <TooltipComponent tooltipId="steps-tooltip">
+          Fewer steps generally result in quicker image generations. Many models
+          achieve full coherence after a certain number of finite steps (60 -
+          90). Keep your initial queries in the 30 - 50 range for best results.
+        </TooltipComponent>
+      </OptionsRowLabel>
+      <FlexRow
+        justifyContent="space-between"
+        gap={8}
+        style={{ position: 'relative' }}
+      >
+        {input.useMultiSteps && (
           <Input
             // @ts-ignore
             type="text"
@@ -81,64 +62,72 @@ export default function Steps({ hideOptions = false }: StepsOptions) {
             value={input.multiSteps}
             width="100%"
           />
-        </div>
-      )}
-      {!input.useMultiSteps && (
-        <div style={{ width: '100%' }}>
-          <SubSectionTitle>
-            <TextTooltipRow>
-              Steps
-              <span style={{ fontSize: '12px', fontWeight: '400' }}>
-                &nbsp;(1 - {MAX_STEPS})
-              </span>
-              <TooltipComponent tooltipId="steps-tooltip">
-                Fewer steps generally result in quicker image generations. Many
-                models achieve full coherence after a certain number of finite
-                steps (60 - 90). Keep your initial queries in the 30 - 50 range
-                for best results.
-              </TooltipComponent>
-            </TextTooltipRow>
-          </SubSectionTitle>
-          <FlexRow gap={4}>
+        )}
+        {!input.useMultiSteps && (
+          <>
+            <div className={styles['slider-wrapper']}>
+              <Slider
+                value={input.steps}
+                min={1}
+                max={MAX_STEPS}
+                step={1}
+                onChange={(e: any) => {
+                  setInput({ steps: e.target.value })
+                }}
+              />
+            </div>
             <NumberInput
+              className={styles['input-width']}
               min={1}
               max={MAX_STEPS}
               // disabled={disabled}
+              onBlur={() => {
+                setInput({ steps: Number(input.steps) })
+              }}
               onInputChange={(e) => {
                 setInput({ steps: Number(e.target.value) })
               }}
               onMinusClick={() => {
-                if (input.steps - step < 1) {
+                if (Number(input.steps) - step < 1) {
                   return
                 }
 
-                setInput({ steps: input.steps - step })
+                setInput({ steps: Number(input.steps) - step })
               }}
               onPlusClick={() => {
-                if (input.steps + step > MAX_STEPS) {
+                if (Number(input.steps) + step > MAX_STEPS) {
                   return
                 }
 
-                setInput({ steps: input.steps + step })
+                console.log(
+                  `WTFFFF`,
+                  typeof input.steps,
+                  input.steps,
+                  Number(input.steps)
+                )
+
+                setInput({ steps: Number(input.steps) + step })
               }}
-              onChangeStep={handleChangeStep}
+              // onChangeStep={width && width < 800 ? handleChangeStep : undefined}
               step={step}
               value={input.steps}
               width="100%"
             />
-          </FlexRow>
-        </div>
-      )}
-      <div>
-        <div
-          className="label_padding"
-          style={{ height: '16px', width: '1px' }}
-        />
+          </>
+        )}
+        {!hideOptions && (
+          <Button
+            className={styles['steps-btn']}
+            onClick={() => setShowDropdown(true)}
+          >
+            <IconSettings stroke={1.5} />
+          </Button>
+        )}
         {showDropdown && (
           <DropdownOptions
             handleClose={() => setShowDropdown(false)}
             title="Step options"
-            top="80px"
+            top="40px"
           >
             <div style={{ padding: '8px 0' }}>
               <Checkbox
@@ -151,12 +140,7 @@ export default function Steps({ hideOptions = false }: StepsOptions) {
             </div>
           </DropdownOptions>
         )}
-        {!hideOptions && (
-          <Button onClick={() => setShowDropdown(true)}>
-            <IconSettings stroke={1.5} />
-          </Button>
-        )}
-      </div>
-    </FlexRow>
+      </FlexRow>
+    </OptionsRow>
   )
 }

@@ -1,13 +1,21 @@
 .styled-input {
   background-color: var(--input-background);
   border-radius: 4px;
-  border: 1px solid var(--input-color);
+  border: 1px solid rgb(204, 204, 204);
   color: var(--input-color);
   font-size: 16px;
   font-weight: 400;
   height: var(--input-element-h);
   padding: 8px;
   width: 100%;
+}
+
+@media (min-width: 800px) {
+  .styled-input {
+    font-size: 14px;
+    height: 30px;
+    line-height: 28px;
+  }
 }
 
 .error {

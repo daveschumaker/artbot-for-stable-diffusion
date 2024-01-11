@@ -8,7 +8,7 @@ const TextArea = (props: any) => {
     <TextareaAutosize
       className={styles['styled-textarea']}
       {...props}
-      minRows={3}
+      minRows={2}
     />
   )
 }

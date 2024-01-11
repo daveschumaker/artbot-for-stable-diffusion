@@ -1076,12 +1076,12 @@ const ImagesPage = () => {
         )}
       {
         //@ts-ignore
-        size && size.width < 890 && !imageDetailsModalOpen && !adHidden && (
+        size && size.width < 640 && !imageDetailsModalOpen && !adHidden && (
           <div
             style={{
-              margin: '0 auto 12px 0',
-              maxWidth: '520px',
-              backgroundColor: 'var(--carbon-bg)'
+              margin: '0 auto 12px auto',
+              maxWidth: '520px'
+              // backgroundColor: 'var(--carbon-bg)'
             }}
           >
             <AdContainer key={window.location.href} />

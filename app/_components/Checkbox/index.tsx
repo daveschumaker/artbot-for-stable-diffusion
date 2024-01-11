@@ -14,24 +14,24 @@ export default function Checkbox({ label, checked, onChange }: CheckboxProps) {
   return (
     <div className="flex items-center">
       <RadixCheckbox.Root
-        className="flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-[4px] outline-none"
+        className="flex h-[20px] w-[20px] appearance-none items-center justify-center rounded-[4px] outline-none"
         checked={checked}
         id={id}
         onCheckedChange={onChange}
         style={{
           backgroundColor: 'rgb(1, 171, 171)',
           borderRadius: '4px',
-          height: '25px',
+          height: '20px',
           marginRight: '4px',
-          width: '25px',
-          minWidth: '25px'
+          width: '20px',
+          minWidth: '20px'
         }}
       >
         <RadixCheckbox.Indicator className="text-white">
           <IconCheck />
         </RadixCheckbox.Indicator>
       </RadixCheckbox.Root>
-      <label className="pl-[8px] text-[15px] leading-none" htmlFor={id}>
+      <label className="pl-[8px] text-[12px] leading-none" htmlFor={id}>
         {label}
       </label>
     </div>

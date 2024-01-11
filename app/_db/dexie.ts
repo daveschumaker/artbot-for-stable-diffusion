@@ -56,6 +56,20 @@ export class MySubClassedDexie extends Dexie {
       settings: '++id, name',
       tags: '++id, name'
     })
+
+    // This is just to fail the build due to silliness on my part
+    // const blah: number = 'fail me'
+    // this.version(7).stores({
+    //   completed: '++id, jobId, timestamp, parentJobId',
+    //   images: '++id, imageType, parentJobId, jobId, type',
+    //   imageProjects: '++id, projectId, imageId',
+    //   imageTags: '++id, tagId, imageId',
+    //   pending: '++id, jobId, timestamp, parentJobId, jobStatus',
+    //   projects: '++id, name, type',
+    //   prompts: '++id, timestamp, promptType',
+    //   settings: '++id, name',
+    //   tags: '++id, name'
+    // })
   }
 }
 

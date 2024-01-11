@@ -44,6 +44,7 @@ const searchRequest = async ({
 }) => {
   try {
     if (pendingRequest) return false
+    if (!input?.trim()) return false
 
     pendingRequest = true
 
@@ -52,7 +53,6 @@ const searchRequest = async ({
 
     const query = input ? `&query=${input}` : ''
     const searchKey = `limit=${LIMIT}${query}&page=${page}&nsfw=${nsfw}`
-
     if (cache.get(searchKey)) {
       const data = cache.get(searchKey)
 
@@ -251,6 +251,7 @@ const EmbeddingSearchModal = ({
               overflow: 'auto'
             }}
           >
+            {!input && <div>Enter a search term to begin...</div>}
             {!hasError && (
               <div style={{ fontWeight: 400, marginTop: '8px' }}>
                 {hasError}
@@ -268,7 +269,7 @@ const EmbeddingSearchModal = ({
                 Page {currentPage} of {totalPages} ({totalItems} results)
               </div>
             )}
-            {(loading || !Array.isArray(searchResult)) && (
+            {(loading || (input && !Array.isArray(searchResult))) && (
               <FlexCol
                 gap={12}
                 style={{

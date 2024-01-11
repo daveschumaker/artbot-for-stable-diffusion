@@ -195,6 +195,18 @@ class ImageParamsForApi {
       delete apiParams.workers
     }
 
+    // If user has enabled forceSelectedWorker, override any other worker preference setting.
+    const worker = sessionStorage.getItem('forceSelectedWorker')
+    if (worker) {
+      const workerId = JSON.parse(worker).value
+      apiParams.workers = [workerId]
+      delete apiParams.worker_blacklist
+      delete apiParams.slow_workers
+
+      apiParams.shared = false
+      apiParams.trusted_workers = false
+    }
+
     if (source_processing === SourceProcessing.Img2Img) {
       apiParams.params.denoising_strength = Number(denoising_strength) || 0.75
       apiParams.source_image = source_image
@@ -233,12 +245,6 @@ class ImageParamsForApi {
       apiParams.params.control_type = control_type
       apiParams.params.image_is_control = image_is_control
       apiParams.params.return_control_map = return_control_map
-    }
-
-    // SDXL Beta!
-    // Need to require two image: https://dbzer0.com/blog/stable-diffusion-xl-beta-on-the-ai-horde/
-    if (apiParams.models[0].includes('SDXL_beta')) {
-      apiParams.params.n = 2
     }
 
     if (control_type === 'none') {

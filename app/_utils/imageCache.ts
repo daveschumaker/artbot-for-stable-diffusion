@@ -518,7 +518,7 @@ export const checkCurrentJob = async (imageDetails: any) => {
 
     if (
       'status' in imgDetailsFromApi &&
-      imgDetailsFromApi.status === 'JOB_CANCELED'
+      imgDetailsFromApi.status === 'JOB_CANCELED_CENSORED'
     ) {
       const jobTimestamp = jobDetails?.timestamp / 1000 || 0
       const currentTimestamp = Date.now() / 1000
@@ -527,16 +527,18 @@ export const checkCurrentJob = async (imageDetails: any) => {
         updatePendingJobV2(
           Object.assign({}, jobDetails, {
             jobStatus: JobStatus.Error,
+            errorStatus: imgDetailsFromApi.status,
             errorMessage:
-              'The worker was unable to process this request. Try again?'
+              'The GPU worker was unable to complete this request. Try again? (Error code: X)'
           })
         )
         await updatePendingJobInDexie(
           jobDetails.id,
           Object.assign({}, jobDetails, {
             jobStatus: JobStatus.Error,
+            errorStatus: imgDetailsFromApi.status,
             errorMessage:
-              'The worker was unable to process this request. Try again?'
+              'The GPU worker was unable to complete this request. Try again? (Error code: X)'
           })
         )
       }

@@ -9,7 +9,6 @@ import SubSectionTitle from 'app/_components/SubSectionTitle'
 
 // Local imports
 import ControlNetOptions from './ControlNetOptions'
-import UpscalerOptions from './UpscalerOptions'
 
 // Hook imports
 import useComponentState from 'app/_hooks/useComponentState'
@@ -20,39 +19,21 @@ import PromptInputSettings from 'app/_data-models/PromptInputSettings'
 
 // Other imports
 import ParentImage from 'app/_components/ParentImage'
-import LoraSelect from './LoraSelect'
 import FlexibleRow from 'app/_components/FlexibleRow'
 import FlexibleUnit from 'app/_components/FlexibleUnit'
-import SelectModel from 'app/_modules/AdvancedOptionsPanel/SelectModel'
-import ImageOrientationOptions from 'app/_modules/AdvancedOptionsPanel/ImageOrientationOptions'
-import Seed from './Seed'
-import SelectSampler from './SelectSampler'
-import ImageCount from './ImageCount'
-import PostProcessors from './PostProcessors'
-import Guidance from './Guidance'
-import Steps from './Steps'
-import MiscOptions from './MiscOptions'
 import Accordion from 'app/_components/Accordion'
 import AccordionItem from 'app/_components/AccordionItem'
 import Panel from 'app/_components/Panel'
-import ClipSkip from './ClipSkip'
 import Denoise from './Denoise'
 import FlexRow from 'app/_components/FlexRow'
 import { Button } from 'app/_components/Button'
 import { SourceProcessing } from '_types/horde'
 import { IconTrash } from '@tabler/icons-react'
-import EmbeddingsSelect from './EmbeddingsSelect'
 import TextButton from 'app/_components/TextButton'
 import ImageSquare from '../ImageSquare'
 import { useInput } from '../InputProvider/context'
 
-interface Props {
-  input: any
-  setInput: any
-  setErrors: any
-}
-
-const AdvancedOptionsPanel = ({ setErrors }: Props) => {
+const AdvancedOptionsPanel = () => {
   const { input, setInput } = useInput()
 
   const [componentState, setComponentState] = useComponentState({
@@ -171,50 +152,6 @@ const AdvancedOptionsPanel = ({ setErrors }: Props) => {
         </Panel>
       )}
 
-      <Section>
-        <FlexibleRow>
-          <FlexibleUnit>
-            <SelectSampler />
-          </FlexibleUnit>
-          <FlexibleUnit>
-            <ImageCount />
-          </FlexibleUnit>
-        </FlexibleRow>
-      </Section>
-
-      <Section>
-        <FlexibleRow>
-          <FlexibleUnit>
-            <SelectModel />
-          </FlexibleUnit>
-          <FlexibleUnit>
-            <ImageOrientationOptions />
-          </FlexibleUnit>
-        </FlexibleRow>
-      </Section>
-
-      <Section>
-        <FlexibleRow>
-          <FlexibleUnit>
-            <Steps />
-          </FlexibleUnit>
-          <FlexibleUnit>
-            <Guidance />
-          </FlexibleUnit>
-        </FlexibleRow>
-      </Section>
-
-      <Section>
-        <FlexibleRow>
-          <FlexibleUnit>
-            <Seed />
-          </FlexibleUnit>
-          <FlexibleUnit>
-            <ClipSkip />
-          </FlexibleUnit>
-        </FlexibleRow>
-      </Section>
-
       {/* {input.source_processing !== SourceProcessing.OutPainting &&
         !input.useAllModels &&
         !componentState.showMultiModel &&
@@ -240,25 +177,6 @@ const AdvancedOptionsPanel = ({ setErrors }: Props) => {
           }}
         />
       </div> */}
-      <Section style={{ paddingBottom: '12px' }}>
-        <LoraSelect setErrors={setErrors} />
-      </Section>
-
-      <Section style={{ paddingBottom: '12px' }}>
-        <EmbeddingsSelect />
-      </Section>
-
-      <Section>
-        <FlexibleRow>
-          <FlexibleUnit>
-            <PostProcessors />
-          </FlexibleUnit>
-          <FlexibleUnit>
-            <UpscalerOptions />
-          </FlexibleUnit>
-        </FlexibleRow>
-      </Section>
-      <MiscOptions />
     </div>
   )
 }

@@ -1,5 +1,11 @@
 import NiceModal from '@ebay/nice-modal-react'
-import { IconCopy, IconPoint, IconTrash } from '@tabler/icons-react'
+import {
+  IconCopy,
+  IconPoint,
+  IconSquareRoundedCheck,
+  IconSquareRoundedX,
+  IconTrash
+} from '@tabler/icons-react'
 import { HordeWorkerDetails } from '_types/horde'
 import Input from 'app/_components/Input'
 import Linker from 'app/_components/Linker'
@@ -214,8 +220,19 @@ export default function WorkerDetailsCard({
           {!worker.online && 'Offline'}
         </strong>
       </div>
+      <div className="text-sm pt-2 flex flex-row gap-2 items-center flex-wrap">
+        Bridge:
+        <div className="text-xs font-mono">
+          {worker.bridge_agent.split(':').slice(0, 2).join(':')}
+        </div>
+      </div>
       <div className="text-sm">
-        {workerTeam[0] && <div>Worker team: {workerTeam[1]}</div>}
+        {workerTeam[0] && (
+          <div>
+            Worker team:{' '}
+            <span className="font-mono text-xs">{workerTeam[1]}</span>
+          </div>
+        )}
         Total uptime: <strong>{formatSeconds(worker.uptime)}</strong>
       </div>
       <div className="text-sm pt-2">
@@ -263,29 +280,87 @@ export default function WorkerDetailsCard({
         <table>
           <tbody>
             <tr>
+              <td>Trusted:&nbsp;&nbsp;</td>
+              <td>
+                <strong>
+                  {worker.trusted ? (
+                    <div style={{ color: 'green' }}>
+                      <IconSquareRoundedCheck />
+                    </div>
+                  ) : (
+                    <div style={{ color: 'red' }}>
+                      <IconSquareRoundedX />
+                    </div>
+                  )}
+                </strong>
+              </td>
+            </tr>
+            <tr>
               <td>Inpainting:&nbsp;&nbsp;</td>
-              <td>{<strong>{worker?.painting ? '✅' : '❌'}</strong>}</td>
+              <td>
+                {
+                  <strong>
+                    {worker?.painting ? (
+                      <div style={{ color: 'green' }}>
+                        <IconSquareRoundedCheck />
+                      </div>
+                    ) : (
+                      <div style={{ color: 'red' }}>
+                        <IconSquareRoundedX />
+                      </div>
+                    )}
+                  </strong>
+                }
+              </td>
             </tr>
             <tr>
               <td>NSFW:&nbsp;&nbsp;</td>
-              <td>{<strong>{worker?.nsfw ? '✅' : '❌'}</strong>}</td>
+              <td>
+                {
+                  <strong>
+                    {worker?.nsfw ? (
+                      <div style={{ color: 'green' }}>
+                        <IconSquareRoundedCheck />
+                      </div>
+                    ) : (
+                      <div style={{ color: 'red' }}>
+                        <IconSquareRoundedX />
+                      </div>
+                    )}
+                  </strong>
+                }
+              </td>
             </tr>
             <tr>
               <td>Post-processing:&nbsp;&nbsp;</td>
               <td>
-                <strong>{worker['post-processing'] ? '✅' : '❌'}</strong>
+                <strong>
+                  {worker['post-processing'] ? (
+                    <div style={{ color: 'green' }}>
+                      <IconSquareRoundedCheck />
+                    </div>
+                  ) : (
+                    <div style={{ color: 'red' }}>
+                      <IconSquareRoundedX />
+                    </div>
+                  )}
+                </strong>
               </td>
             </tr>
             <tr>
               <td>LORA:&nbsp;&nbsp;</td>
               <td>
-                <strong>{worker.lora ? '✅' : '❌'}</strong>
-              </td>
-            </tr>
-            <tr>
-              <td>Trusted:&nbsp;&nbsp;</td>
-              <td>
-                <strong>{worker.trusted ? '✅' : '❌'}</strong>
+                <strong>
+                  {worker.lora ? (
+                    <div style={{ color: 'green' }}>
+                      <IconSquareRoundedCheck />
+                    </div>
+                  ) : (
+                    <div style={{ color: 'green' }}>
+                      <IconSquareRoundedX />
+                    </div>
+                  )}
+                </strong>
               </td>
             </tr>
           </tbody>

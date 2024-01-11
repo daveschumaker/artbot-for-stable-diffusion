@@ -1,3 +1,31 @@
+.ti-details-box {
+  background-color: var(--accent-color);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+  padding: 8px;
+  width: 100%;
+  flex-grow: 1;
+}
+
+.ti-name {
+  align-items: center;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+@media (min-width: 800px) {
+  .input-width {
+    justify-content: flex-end;
+    max-width: 120px;
+  }
+}
+
 .Dropdown {
   max-width: unset;
   overflow: hidden;
@@ -13,6 +41,15 @@
     right: 0;
     left: unset;
     width: 100%;
+  }
+}
+
+@media (min-width: 800px) {
+  .embedding-btn {
+    height: 30px;
+    width: 30px;
+    min-width: unset;
+    padding: 4px;
   }
 }
 
@@ -43,4 +80,32 @@
 .Next {
   position: absolute;
   right: 8px;
+}
+
+.embedding-select-label {
+  align-items: center;
+  display: flex;
+  column-gap: 2px;
+  flex-direction: row;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.slider-wrapper {
+  display: none;
+}
+
+@media (min-width: 800px) {
+  .embedding-select-label {
+    font-size: 14px;
+    font-weight: 700;
+    min-width: var(--options-label-width);
+    width: var(--options-label-width);
+  }
+
+  .slider-wrapper {
+    display: block;
+    flex-grow: 1;
+    margin-right: 12px;
+  }
 }

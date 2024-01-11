@@ -39,6 +39,7 @@
   --zIndex-overNavBar: 4;
 
   --input-element-h: 40px;
+  --options-label-width: 140px;
 }
 
 @media (min-width: 640px) {
@@ -157,13 +158,16 @@ a {
   flex-direction: column;
   min-inline-size: 130px;
   /* max-inline-size: calc(130px + var(--carbon-max-char) + 8ch); */
-  padding: var(--carbon-padding);
-  gap: var(--carbon-padding);
+  /* padding: var(--carbon-padding); */
+  padding: 8px;
+  /* gap: var(--carbon-padding); */
   background-color: var(--carbon-bg-primary);
   box-shadow: 0 0 1px hsl(0deg 0% 0% / 0.085), 0 0 2px hsl(0deg 0% 0% / 0.085),
     0 0 4px hsl(0deg 0% 0% / 0.085), 0 0 8px hsl(0deg 0% 0% / 0.085);
   width: 100%;
 }
+
+/* @media (min-width: 800px) {} */
 
 #carbonads a {
   color: var(--carbon-text-color);
@@ -176,12 +180,16 @@ a {
 
 #carbonads .carbon-wrap {
   display: flex;
-  gap: 1.5ex;
+  flex-direction: row;
+  column-gap: 8px;
 }
 
-@media (min-width: 800px) {
+@media (min-width: 640px) {
   #carbonads .carbon-wrap {
     flex-wrap: wrap;
+    justify-content: center;
+    /* flex-direction: column; */
+    row-gap: 8px;
   }
 }
 
@@ -191,6 +199,7 @@ a {
 
 #carbonads .carbon-img img {
   display: block;
+  margin-bottom: 8px;
 }
 
 #carbonads .carbon-text {
@@ -201,7 +210,7 @@ a {
 }
 
 #carbonads .carbon-poweredby {
-  padding: 6px 8px;
+  /* padding: 6px 8px; */
   background: var(--carbon-bg-secondary);
   color: var(--carbon-text-color);
   font-weight: 600;
@@ -210,6 +219,12 @@ a {
   letter-spacing: 0.2ch;
   text-align: center;
   text-transform: uppercase;
+}
+
+@media (min-width: 640px) {
+  #carbonads .carbon-poweredby {
+    padding-top: 16px;
+  }
 }
 
 @layer base {
@@ -246,14 +261,14 @@ a {
     -webkit-appearance: none;
     /* Override default look */
     appearance: none;
-    margin-top: -6px;
+    margin-top: -2px;
     /* Centers thumb on the track */
 
     /*custom styles*/
     background-color: #14b8a6;
     border-radius: 50%;
-    height: 20px;
-    width: 20px;
+    height: 12px;
+    width: 12px;
   }
 
   input[type='range']:disabled::-webkit-slider-thumb {
@@ -313,5 +328,18 @@ a {
 
   .pb-safe {
     padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
   }
 }

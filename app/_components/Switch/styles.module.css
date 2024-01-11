@@ -15,6 +15,16 @@
   }
 }
 
+@media (min-width: 800px) {
+
+  .react-switch-label,
+  .react-switch-label .react-switch-button {
+    --circle-size: 16px;
+    --container-height: 20px;
+    --container-width: 40px;
+  }
+}
+
 .react-switch-checkbox {
   height: 0;
   width: 0;

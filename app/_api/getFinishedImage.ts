@@ -130,12 +130,14 @@ export const getFinishedImage = async (
           }
         }
 
+        // If GPU worker triggers content safety warning and censors image,
+        // use this to display a more helpful image instead.
         if (image.censored) {
           return {
             success: false,
-            status: 'JOB_CANCELED',
+            status: 'JOB_CANCELED_CENSORED',
             message:
-              'The worker was unable to generate an image for this request. Please try again. (ERROR CODE: X)'
+              'The worker was unable to generate an image for this request. Please try again.'
           }
         }
 

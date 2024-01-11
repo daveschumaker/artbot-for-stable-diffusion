@@ -8,6 +8,7 @@ interface ModalProps {
   content?: React.ReactNode | string
   fixedContent?: React.ReactNode
   handleClose?: () => void
+  id?: string
   maxWidth?: string
   title?: React.ReactNode | string
 }
@@ -18,6 +19,7 @@ function Modal({
   content,
   fixedContent,
   handleClose = () => {},
+  id,
   maxWidth,
   title
 }: ModalProps) {
@@ -65,7 +67,7 @@ function Modal({
   return (
     <dialog
       className="modal modal-open text-left"
-      id={modalId}
+      id={id || modalId}
       ref={modalRef}
       tabIndex={-1}
     >

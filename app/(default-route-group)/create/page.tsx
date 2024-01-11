@@ -1,8 +1,9 @@
 import { basePath } from 'BASE_PATH'
-import PendingPanelView from 'app/_modules/PendingPanel/PendingPanelView'
+import PendingPanel from 'app/_modules/PendingPanel'
 import CreatePage from 'app/_pages/CreatePage'
 import styles from './page.module.css'
 import { InputProvider } from 'app/_modules/InputProvider/context'
+import { InputErrorsProvider } from 'app/_modules/ErrorProvider/context'
 
 async function getPageData() {
   let availableModels: Array<any> = []
@@ -36,13 +37,15 @@ export default async function Page() {
   return (
     <div className={styles.CreatePageLayout}>
       <InputProvider>
-        <CreatePage
-          availableModels={availableModels}
-          className={styles.CreatePanel}
-          modelDetails={modelDetails}
-        />
+        <InputErrorsProvider>
+          <CreatePage
+            availableModels={availableModels}
+            className={styles.CreatePanel}
+            modelDetails={modelDetails}
+          />
+        </InputErrorsProvider>
       </InputProvider>
-      <PendingPanelView />
+      <PendingPanel />
     </div>
   )
 }

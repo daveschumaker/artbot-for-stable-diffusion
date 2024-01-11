@@ -25,6 +25,9 @@ import { useAspectRatio } from './hooks/useAspectRatio'
 import { MIN_IMAGE_WIDTH } from '_constants'
 import AspectRatioToggler from './AspectRatioToggler'
 import { useInput } from 'app/_modules/InputProvider/context'
+import styles from './imageOrientation.module.css'
+import OptionsRow from 'app/_modules/AdvancedOptionsPanelV2/OptionsRow'
+import OptionsRowLabel from 'app/_modules/AdvancedOptionsPanelV2/OptionsRowLabel'
 
 const MAX_WIDTH = 1024
 const STEP_LENGTH = 64
@@ -210,16 +213,8 @@ const ImageOrientationOptions = () => {
   }, [])
 
   return (
-    <Section
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        flexGrow: 1,
-        marginBottom: 0,
-        position: 'relative'
-      }}
-    >
-      <SubSectionTitle>Image orientation</SubSectionTitle>
+    <OptionsRow>
+      <OptionsRowLabel>Image orientation</OptionsRowLabel>
       {
         // @ts-ignore
         workerDetails && totalPixels > workerDetails.max_pixels && (
@@ -229,7 +224,15 @@ const ImageOrientationOptions = () => {
           </FlexRow>
         )
       }
-      <FlexRow style={{ marginBottom: '4px' }}>
+      <FlexRow
+        gap={4}
+        style={{
+          position: 'relative',
+          flexWrap: 'wrap',
+          rowGap: '4px',
+          justifyContent: 'flex-end'
+        }}
+      >
         <Select
           options={ImageOrientation.dropdownOptions({ baseline })}
           onChange={(obj: { value: string; label: string }) => {
@@ -238,19 +241,12 @@ const ImageOrientationOptions = () => {
           value={orientationValue}
           isSearchable={false}
         />
-      </FlexRow>
-      <FlexRow
-        style={{
-          justifyContent: 'space-between',
-          marginBottom: '4px',
-          position: 'relative'
-        }}
-      >
-        <FlexRow style={{ fontSize: '12px', paddingLeft: '2px' }}>
-          {input.width} w x {input.height} h
-        </FlexRow>
-        <FlexRow gap={4} style={{ justifyContent: 'flex-end' }}>
+        <div style={{ fontSize: '12px' }}>
+          {input.width}&nbsp;w&nbsp;x&nbsp;{input.height}&nbsp;h
+        </div>
+        <div className="flex flew-row items-center gap-[8px] ml-[4px]">
           <Button
+            className={styles['options-btn']}
             title="Swap dimensions"
             onClick={() => {
               setInput({
@@ -262,13 +258,19 @@ const ImageOrientationOptions = () => {
           >
             <IconSwitch2 stroke={1.5} />
           </Button>
-          <Button onClick={() => setShowCustomDimensions(true)}>
+          <Button
+            className={styles['options-btn']}
+            onClick={() => setShowCustomDimensions(true)}
+          >
             <IconRuler stroke={1.5} />
           </Button>
-          <Button onClick={() => setShowOptions(true)}>
+          <Button
+            className={styles['options-btn']}
+            onClick={() => setShowOptions(true)}
+          >
             <IconSettings stroke={1.5} />
           </Button>
-        </FlexRow>
+        </div>
         {showCustomDimensions && (
           <CustomDimensions
             setInput={setInput}
@@ -421,7 +423,7 @@ const ImageOrientationOptions = () => {
           </DropdownOptions>
         )}
       </FlexRow>
-    </Section>
+    </OptionsRow>
   )
 }
 

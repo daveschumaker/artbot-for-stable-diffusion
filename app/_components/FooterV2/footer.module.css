@@ -66,11 +66,7 @@
 
 @media (min-width: 800px) {
   .Footer {
-    padding-left: 236px;
-  }
-
-  .NoPadding {
-    padding-left: 16px;
+    padding: 32px;
   }
 }
 

@@ -174,7 +174,8 @@ export default function PromptInput() {
               pb={4}
               style={{
                 fontSize: '14px',
-                fontWeight: 700
+                fontWeight: 700,
+                paddingBottom: 0
               }}
             >
               <IconPlaylistX /> Negative prompt{' '}
@@ -189,6 +190,7 @@ export default function PromptInput() {
             style={{
               display: 'flex',
               flexDirection: 'column',
+              paddingTop: '8px',
               paddingBottom: '16px'
             }}
           >

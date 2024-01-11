@@ -1,4 +1,5 @@
 import { baseHost, basePath } from 'BASE_PATH'
+import { InputErrorsProvider } from 'app/_modules/ErrorProvider/context'
 import { InputProvider } from 'app/_modules/InputProvider/context'
 import ControlNet from 'app/_pages/ControlNetPage'
 import { Metadata } from 'next'
@@ -27,7 +28,9 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <InputProvider>
-      <ControlNet />
+      <InputErrorsProvider>
+        <ControlNet />
+      </InputErrorsProvider>
     </InputProvider>
   )
 }

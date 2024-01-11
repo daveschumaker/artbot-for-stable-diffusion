@@ -37,7 +37,7 @@ const InputSwitchV2 = ({
           disabled={disabled}
           onChange={handleSwitchToggle}
         />
-        <div style={{ fontSize: '14px' }}>
+        <div style={{ fontSize: '12px' }}>
           <TextTooltipRow>
             {label}
             {tooltip && tooltipId && (

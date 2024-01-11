@@ -142,10 +142,12 @@ export interface HordePreset {
 export interface HordeWorkerDetails {
   id: string
   info: string
+  bridge_agent: string
   kudos_details: { generated: number; uptime: number }
   kudos_rewards: number
   loading?: boolean
   lora: boolean
+  img2img: boolean
   maintenance_mode: boolean
   max_pixels: number
   models: string[]
@@ -164,6 +166,8 @@ export interface HordeWorkerDetails {
   trusted: boolean
   uptime: number
 }
+
+export type HordeWorkerKeys = keyof HordeWorkerDetails
 
 export interface IKudosDetails {
   accumulated: number

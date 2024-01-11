@@ -1,7 +1,5 @@
 import { IconHeart, IconHistory, IconPlus } from '@tabler/icons-react'
 import FlexRow from 'app/_components/FlexRow'
-import Section from 'app/_components/Section'
-import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { Button } from 'app/_components/Button'
 import { useCallback } from 'react'
 import EmbeddingSearchModal from './EmbeddingSearchModal'
@@ -14,6 +12,7 @@ import { InjectTi } from '_types/horde'
 import { useModal } from '@ebay/nice-modal-react'
 import AwesomeModalWrapper from 'app/_modules/AwesomeModal'
 import { useInput } from 'app/_modules/InputProvider/context'
+import styles from './component.module.css'
 
 // Search / display TI / Textual Inversion Embeddings from Civitai
 export default function EmbeddingsSelect() {
@@ -90,85 +89,77 @@ export default function EmbeddingsSelect() {
   }, [handleDeleteTi, handleUpdate, input.tis])
 
   return (
-    <Section>
-      <div
-        style={{
-          border: '1px solid rgb(126, 90, 108)',
-          padding: '8px 16px',
-          borderRadius: '4px'
-        }}
-      >
-        <SubSectionTitle pb={0}>
+    <div>
+      <div>
+        <FlexRow
+          style={{
+            columnGap: '8px',
+            justifyContent: 'space-between',
+            position: 'relative',
+            width: '100%'
+          }}
+        >
+          <div className={styles['embedding-select-label']}>
+            Textual Inversions
+          </div>
           <FlexRow
-            style={{
-              columnGap: '8px',
-              justifyContent: 'space-between',
-              position: 'relative',
-              width: 'auto'
-            }}
+            gap={8}
+            style={{ justifyContent: 'flex-end', width: 'auto' }}
           >
-            <div>Textual Inversions</div>
-            <FlexRow
-              gap={4}
-              style={{ justifyContent: 'flex-end', width: 'auto' }}
+            <Button
+              className={styles['embedding-btn']}
+              onClick={() => {
+                embeddingsModal.show({
+                  children: (
+                    <EmbeddingSearchModal
+                      handleAddEmbedding={handleAddEmbedding}
+                    />
+                  ),
+                  label: 'Search Embeddings'
+                })
+              }}
+              // disabled={input.loras.length >= 5}
             >
-              <Button
-                size="small"
-                onClick={() => {
-                  embeddingsModal.show({
-                    children: (
-                      <EmbeddingSearchModal
-                        handleAddEmbedding={handleAddEmbedding}
-                      />
-                    ),
-                    label: 'Search Embeddings'
-                  })
-                }}
-                // disabled={input.loras.length >= 5}
-              >
-                <IconPlus stroke={1.5} />
-              </Button>
-              <Button
-                size="small"
-                onClick={() => {
-                  embeddingsModal.show({
-                    children: (
-                      <EmbeddingFavoritesModal
-                        handleAddEmbedding={handleAddEmbedding}
-                      />
-                    ),
-                    label: 'Favorite Embeddings'
-                  })
-                }}
-                // disabled={input.loras.length >= 5}
-              >
-                <IconHeart stroke={1.5} />
-              </Button>
-              <Button
-                size="small"
-                onClick={() => {
-                  embeddingsModal.show({
-                    children: (
-                      <EmbeddingRecentsModal
-                        handleAddEmbedding={handleAddEmbedding}
-                      />
-                    ),
-                    label: 'Recently Used Embeddings'
-                  })
-                }}
-                // disabled={input.loras.length >= 5}
-              >
-                <IconHistory stroke={1.5} />
-              </Button>
-            </FlexRow>
+              <IconPlus stroke={1.5} />
+            </Button>
+            <Button
+              className={styles['embedding-btn']}
+              onClick={() => {
+                embeddingsModal.show({
+                  children: (
+                    <EmbeddingFavoritesModal
+                      handleAddEmbedding={handleAddEmbedding}
+                    />
+                  ),
+                  label: 'Favorite Embeddings'
+                })
+              }}
+            >
+              <IconHeart stroke={1.5} />
+            </Button>
+            <Button
+              className={styles['embedding-btn']}
+              onClick={() => {
+                embeddingsModal.show({
+                  children: (
+                    <EmbeddingRecentsModal
+                      handleAddEmbedding={handleAddEmbedding}
+                    />
+                  ),
+                  label: 'Recently Used Embeddings'
+                })
+              }}
+            >
+              <IconHistory stroke={1.5} />
+            </Button>
           </FlexRow>
-        </SubSectionTitle>
+        </FlexRow>
         {Array.isArray(input.tis) && input.tis.length > 0 && (
           <FlexCol gap={8} mb={0} mt={8}>
             {renderTis()}
           </FlexCol>
         )}
       </div>
-    </Section>
+    </div>
   )
 }

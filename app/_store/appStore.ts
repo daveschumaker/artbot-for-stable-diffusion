@@ -1,11 +1,13 @@
 import { makeStore } from 'statery'
 
 interface AppStore {
+  adEventTimestamp: number
   adHidden: boolean
   buildId: string
   clusterSettings: {
     forceReloadOnServerUpdate: boolean
   }
+  forceSelectedWorker: boolean
   hordePerformance: object
   indexDbSupport: boolean
   imageDetailsModalOpen: boolean
@@ -32,11 +34,13 @@ interface AppStore {
 }
 
 export const appInfoStore = makeStore<AppStore>({
+  adEventTimestamp: 0,
   adHidden: false,
   buildId: '',
   clusterSettings: {
     forceReloadOnServerUpdate: true
   },
+  forceSelectedWorker: false,
   hordePerformance: {},
   indexDbSupport: true,
   imageDetailsModalOpen: false,
@@ -83,6 +87,18 @@ export const setUseBlockedWorkers = (val: boolean) => {
 export const setAdHidden = (val: boolean) => {
   appInfoStore.set(() => ({
     adHidden: val
+  }))
+}
+
+export const setForceSelectedWorker = (val: boolean) => {
+  appInfoStore.set(() => ({
+    forceSelectedWorker: val
+  }))
+}
+
+export const updateAdEventTimestamp = () => {
+  appInfoStore.set(() => ({
+    adEventTimestamp: Date.now()
   }))
 }
 

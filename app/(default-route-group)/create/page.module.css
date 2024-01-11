@@ -8,7 +8,18 @@
   width: 100%;
 }
 
-@media (min-width: 1100px) {
+@media (min-width: 890px) {
+  .CreatePageLayout {
+    display: block;
+  }
+
+  .CreatePanel {
+    display: inline-block;
+    width: calc(100% - 240px);
+  }
+}
+
+@media (min-width: 1024px) {
   .CreatePageLayout {
     display: block;
   }
@@ -18,3 +29,14 @@
     width: calc(100% - 320px);
   }
 }
+
+/* @media (min-width: 1100px) {
+  .CreatePageLayout {
+    display: block;
+  }
+
+  .CreatePanel {
+    display: inline-block;
+    width: calc(100% - 320px);
+  }
+} */

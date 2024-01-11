@@ -1,9 +1,9 @@
 import Checkbox from 'app/_components/Checkbox'
-import TextTooltipRow from 'app/_components/TextTooltipRow'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import { useCallback } from 'react'
-import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { useInput } from 'app/_modules/InputProvider/context'
+import FlexCol from 'app/_components/FlexCol'
+import styles from './component.module.css'
 
 export const UPSCALERS = [
   'RealESRGAN_x4plus',
@@ -45,25 +45,30 @@ const UpscalerOptions = () => {
 
   return (
     <div className="flex flex-col gap-2 items-start">
-      <SubSectionTitle>
-        <TextTooltipRow>
-          Upscalers
-          <TooltipComponent tooltipId={'upscalers-tooltip'}>
-            Upscales your image up to 4x. Some upscalers are tuned to specific
-            styles. Only 1 can be selected at a time.
-          </TooltipComponent>
-        </TextTooltipRow>
-      </SubSectionTitle>
-      {UPSCALERS.map((upscalerName) => {
-        return (
-          <Checkbox
-            key={upscalerName}
-            label={upscalerName}
-            checked={getPostProcessing(upscalerName)}
-            onChange={() => handlePostProcessing(upscalerName)}
-          />
-        )
-      })}
+      <div
+        className={styles.label}
+        style={{
+          marginBottom: '8px'
+        }}
+      >
+        Upscalers
+        <TooltipComponent tooltipId={'upscalers-tooltip'}>
+          Upscales your image up to 4x. Some upscalers are tuned to specific
+          styles. Only 1 can be selected at a time.
+        </TooltipComponent>
+      </div>
+      <FlexCol className="items-start gap-2">
+        {UPSCALERS.map((upscalerName) => {
+          return (
+            <Checkbox
+              key={upscalerName}
+              label={upscalerName}
+              checked={getPostProcessing(upscalerName)}
+              onChange={() => handlePostProcessing(upscalerName)}
+            />
+          )
+        })}
+      </FlexCol>
     </div>
   )
 }

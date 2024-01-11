@@ -1,4 +1,3 @@
-import NumericInputSlider from '../NumericInputSlider'
 import FlexRow from 'app/_components/FlexRow'
 import { Button } from 'app/_components/Button'
 import { IconSettings } from '@tabler/icons-react'
@@ -6,11 +5,13 @@ import { useState } from 'react'
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import Checkbox from 'app/_components/Checkbox'
 import Input from 'app/_components/Input'
-import SubSectionTitle from 'app/_components/SubSectionTitle'
-import TextTooltipRow from 'app/_components/TextTooltipRow'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import { useInput } from 'app/_modules/InputProvider/context'
-
+import Slider from 'app/_components/Slider'
+import styles from './denoise.module.css'
+import NumberInput from 'app/_components/NumberInput'
+import OptionsRow from 'app/_modules/AdvancedOptionsPanelV2/OptionsRow'
+import OptionsRowLabel from 'app/_modules/AdvancedOptionsPanelV2/OptionsRowLabel'
 interface DenoiseOptions {
   hideOptions?: boolean
 }
@@ -20,24 +21,37 @@ export default function Denoise({ hideOptions = false }: DenoiseOptions) {
   const [showDropdown, setShowDropdown] = useState(false)
 
   return (
-    <FlexRow gap={4} style={{ position: 'relative' }}>
-      {input.useMultiDenoise && (
-        <div className="mb-4 w-full">
-          <SubSectionTitle>
-            <TextTooltipRow>
-              Denoise
-              <span
-                className="text-xs w-full font-[400]"
-                style={{ paddingRight: '4px', width: 'auto' }}
-              >
-                &nbsp;(0 - 1)
-              </span>
-              <TooltipComponent tooltipId="multi-denoise-tooltip">
-                Comma separated values to create a series of images using
-                multiple denoise settings. Example: 0.2, 0.25, 0.3
-              </TooltipComponent>
-            </TextTooltipRow>
-          </SubSectionTitle>
+    <OptionsRow
+      style={{
+        position: 'relative'
+      }}
+    >
+      <OptionsRowLabel>
+        Denoise
+        <TooltipComponent tooltipId="multi-denoise-tooltip">
+          {input.useMultiDenoise && (
+            <div>
+              Comma separated values to create a series of images using multiple
+              denoise settings. Example: 0.2, 0.25, 0.3
+            </div>
+          )}
+          {!input.useMultiDenoise && (
+            <div>
+              Amount of noise added to input image. Values that approach 1.0
+              allow for lots of variations but will also produce images that are
+              not semantically consistent with the input.
+            </div>
+          )}
+        </TooltipComponent>
+      </OptionsRowLabel>
+      <FlexRow
+        style={{
+          alignItems: 'center',
+          position: 'relative'
+        }}
+        gap={3}
+      >
+        {input.useMultiDenoise && (
           <Input
             // @ts-ignore
             type="text"
@@ -50,33 +64,80 @@ export default function Denoise({ hideOptions = false }: DenoiseOptions) {
             value={input.multiDenoise}
             width="100%"
           />
-        </div>
-      )}
-      {!input.useMultiDenoise && (
-        <NumericInputSlider
-          label="Denoise"
-          tooltip="Amount of noise added to input image. Values that
-                  approach 1.0 allow for lots of variations but will
-                  also produce images that are not semantically
-                  consistent with the input. Only available for img2img."
-          from={0.0}
-          to={1.0}
-          step={0.05}
-          input={input}
-          setInput={setInput}
-          fieldName="denoising_strength"
-        />
-      )}
-      <div>
+        )}
+        {!input.useMultiDenoise && (
+          <>
+            <div className={styles['slider-wrapper']}>
+              <Slider
+                value={input.denoising_strength}
+                min={0.0}
+                max={1.0}
+                step={0.05}
+                onChange={(e: any) => {
+                  setInput({ denoising_strength: e.target.value })
+                }}
+              />
+            </div>
+            <NumberInput
+              className={styles['input-width']}
+              min={0.0}
+              max={1.0}
+              // disabled={disabled}
+              onBlur={() => {
+                // Ensure the input is a number and limit it to 2 decimal places
+                const formattedValue = Number(input.denoising_strength).toFixed(
+                  2
+                )
+
+                // Update the state with the formatted value
+                setInput({ denoising_strength: formattedValue })
+              }}
+              onInputChange={(e) => {
+                setInput({
+                  denoising_strength: e.target.value
+                })
+              }}
+              onMinusClick={() => {
+                const newValue = Number(input.denoising_strength) - 0.05
+                if (newValue < 0.0) {
+                  return
+                }
+                setInput({
+                  denoising_strength: newValue.toFixed(2)
+                })
+              }}
+              onPlusClick={() => {
+                const newValue = Number(input.denoising_strength) + 0.05
+                if (newValue > 1.0) {
+                  return
+                }
+                setInput({
+                  denoising_strength: newValue.toFixed(2)
+                })
+              }}
+              step={0.05}
+              value={input.denoising_strength as number}
+              width="100%"
+            />
+          </>
+        )}
         <div
           className="label_padding"
           style={{ height: '16px', width: '1px' }}
         />
+        {!hideOptions && (
+          <Button
+            className={styles['options-btn']}
+            onClick={() => setShowDropdown(true)}
+          >
+            <IconSettings stroke={1.5} />
+          </Button>
+        )}
         {showDropdown && (
           <DropdownOptions
             handleClose={() => setShowDropdown(false)}
             title="Denoise options"
-            top="80px"
+            top="40px"
           >
             <div style={{ padding: '8px 0' }}>
               <Checkbox
@@ -89,12 +150,7 @@ export default function Denoise({ hideOptions = false }: DenoiseOptions) {
             </div>
           </DropdownOptions>
         )}
-        {!hideOptions && (
-          <Button onClick={() => setShowDropdown(true)}>
-            <IconSettings stroke={1.5} />
-          </Button>
-        )}
-      </div>
-    </FlexRow>
+      </FlexRow>
+    </OptionsRow>
   )
 }

@@ -1,0 +1,9 @@
+.desktopAdUnit {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .desktopAdUnit {
+    display: flex;
+  }
+}

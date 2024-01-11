@@ -2,7 +2,7 @@
   align-items: center;
   background-color: var(--btn-primary);
   border-radius: 4px;
-  border: 1px solid white;
+  border: 1px solid rgb(204, 204, 204);
   color: white;
   display: flex;
   flex-direction: row;
@@ -62,4 +62,12 @@
 
 .styled-button-disabled:hover {
   background-color: #bdbdbd;
+}
+
+@media (min-width: 800px) {
+  .styled-button {
+    height: 30px;
+    min-width: unset;
+    padding: 4px;
+  }
 }

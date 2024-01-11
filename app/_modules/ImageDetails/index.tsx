@@ -2,16 +2,12 @@
 import clsx from 'clsx'
 import React, { useState } from 'react'
 import { FullScreen, useFullScreenHandle } from 'react-full-screen'
-import AdContainer from 'app/_components/AdContainer'
 
 import styles from './imageDetails.module.css'
 import ImageOptionsWrapper from './ImageOptionsWrapper'
 import ParentImage from 'app/_components/ParentImage'
 import { logError } from 'app/_utils/appUtils'
 import { userInfoStore } from 'app/_store/userStore'
-import { useWindowSize } from 'app/_hooks/useWindowSize'
-import { useStore } from 'statery'
-import { appInfoStore } from 'app/_store/appStore'
 import useWindowHeight from 'app/_hooks/useWindowHeight'
 import ImageSettingsDisplay from './ImageSettingsDisplay'
 import CreateImageRequest from 'app/_data-models/CreateImageRequest'
@@ -41,9 +37,7 @@ const ImageDetails = ({
   handleReloadImageData = () => {},
   handleTiling = () => {}
 }: Props) => {
-  const size = useWindowSize()
   const windowHeight = useWindowHeight()
-  const { imageDetailsModalOpen } = useStore(appInfoStore)
   const showFullScreen = useFullScreenHandle()
   const [fullscreen, setFullscreen] = useState(false)
   const [showImg2ImgModal, setShowImg2ImgModal] = useState(false)
@@ -195,25 +189,6 @@ const ImageDetails = ({
           </div>
         </div>
       )}
-      {
-        // @ts-ignore
-        (size.width < 800 || imageDetailsModalOpen) && (
-          <div className="flex flex-row justify-center w-full mt-3">
-            <div
-              style={{
-                maxWidth: '704px',
-                minHeight: '164px',
-                // maxWidth: '768px',
-                width: '100%',
-                margin: '0 auto',
-                marginTop: '8px'
-              }}
-            >
-              <AdContainer shouldRefresh={imageDetails.id} />
-            </div>
-          </div>
-        )
-      }
 
       <ImageSettingsDisplay imageDetails={imageDetails} />
 

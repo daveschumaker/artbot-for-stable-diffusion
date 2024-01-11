@@ -3,6 +3,8 @@
 import React, { CSSProperties, useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { debounce } from 'app/_utils/debounce'
+import { useStore } from 'statery'
+import { appInfoStore } from 'app/_store/appStore'
 
 let minHeight: string | undefined = undefined
 
@@ -56,6 +58,7 @@ const CarbonAds = ({
   style?: CSSProperties
 }) => {
   const pathname = usePathname()
+  const { adEventTimestamp } = useStore(appInfoStore)
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -96,13 +99,20 @@ const CarbonAds = ({
       // eslint-disable-next-line no-undef
       _carbonads?.refresh()
     }
-  }, [shouldRefresh])
+  }, [adEventTimestamp, pathname, shouldRefresh])
+
+  const defaultStyle: React.CSSProperties = {
+    display: 'flex',
+    flexDirection: 'row',
+    columnGap: '4px',
+    rowGap: '8px'
+  }
 
   return (
     <div
       id="carbon-container"
       className={className}
-      style={{ minHeight, ...style }}
+      style={{ ...defaultStyle, minHeight, ...style }}
     ></div>
   )
 }

@@ -1,11 +1,23 @@
 .PendingPanelWrapper {
-  display: inline-block;
-  max-width: 320px;
-  padding: 16px;
+  display: none;
+  max-width: 240px;
+  padding: 16px 0 16px 16px;
   position: sticky;
   top: 56px;
   vertical-align: top;
   width: 100%;
+}
+
+@media (min-width: 890px) {
+  .PendingPanelWrapper {
+    display: inline-block;
+  }
+}
+
+@media (min-width: 1024px) {
+  .PendingPanelWrapper {
+    max-width: 320px;
+  }
 }
 
 .NoRequests {
@@ -37,6 +49,16 @@
   overflow-y: hidden;
   padding: 8px;
   position: relative;
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.PendingImagesContainer::-webkit-scrollbar {
+  display: none;
 }
 
 .PendingJobCard {
@@ -62,12 +84,12 @@
   width: auto;
 }
 
-.imageContainer > div {
+.imageContainer>div {
   transition: opacity 0.3s;
   opacity: 0;
 }
 
-.imageContainer:hover > div {
+.imageContainer:hover>div {
   background-color: rgb(0, 0, 0, 0.6);
   opacity: 1;
 }
@@ -122,4 +144,17 @@
   right: 0;
   bottom: 0;
   user-select: none;
+}
+
+.virtual-list {
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.virtual-list::-webkit-scrollbar {
+  display: none;
 }

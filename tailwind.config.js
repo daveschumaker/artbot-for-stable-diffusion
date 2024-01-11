@@ -11,7 +11,7 @@ module.exports = {
         light: {
           'background-color': '#f2f2f2',
           accent: '#7e5a6c',
-          'base-100': '#2b1c27',
+          'base-100': 'white',
           error: '#D14D3D',
           info: '#00c9ff',
           neutral: '#0c0700',
@@ -23,7 +23,7 @@ module.exports = {
         dark: {
           'background-color': '#222222',
           accent: '#7e5a6c',
-          'base-100': '#2b1c27',
+          'base-100': 'white',
           error: '#D14D3D',
           info: '#00c9ff',
           neutral: '#0c0700',

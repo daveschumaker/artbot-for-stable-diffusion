@@ -1,0 +1,14 @@
+.AdvancedOptionsPanel {
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  row-gap: 12px;
+}
+
+@media (min-width: 800px) {
+  .AdvancedOptionsPanel {
+    row-gap: 8px;
+  }
+}

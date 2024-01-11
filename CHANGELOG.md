@@ -1,3 +1,13 @@
+# 2024.01.10
+
+- Hello! Here is a gigantic update for you.
+- On tablet / desktop devices, I've gotten rid of the permanently fixed menu sidebar. You can either click the menu button in the top left, or scroll down to the footer of the page to see all the various links.
+- Refactored the UI on the create page! This was a lot of work. A lot. For desktop and tablet devices, things are a bit more compact (so you can see more options at once).
+- Added a new "warning / issues" button next to the "create" button, that will appear if anything amiss comes up. This should fix previous behavior where a new error message would cause the whole UI to shift.
+- Added ability to select a specific worker from the Create Image page. (See button with the computer on it)
+- Updated info page to show worker info in a table format.
+- Added a new "ArtBot tips" module that will randomly pop up with various hints, tips and community related info.
+
 # 2024.01.03
 
 - Lots and lots of reports over stalled / failed jobs and I think it has to do with a bunch of hacky logic I've written. This is my second attempt at fixing these stalled image issues. (I had a previous attempt yesterday that I ended up rolling back due to a number of issues). Let's see if this improves things!

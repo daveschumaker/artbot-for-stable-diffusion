@@ -6,6 +6,7 @@ import { Button } from 'app/_components/Button'
 import FlexRow from '../FlexRow'
 
 interface NumberInputProps {
+  className?: string
   buttonsAtEnd?: boolean
   disabled?: boolean
   inputMode?: string
@@ -25,6 +26,7 @@ export default function NumberInput(props: NumberInputProps) {
   const { value, max, min } = props
   let { buttonsAtEnd = true } = props
   const {
+    className,
     onChangeStep,
     onInputChange,
     onMinusClick,
@@ -75,7 +77,7 @@ export default function NumberInput(props: NumberInputProps) {
 
   return (
     <div
-      className={styles['number-input-wrapper']}
+      className={clsx(styles['number-input-wrapper'], className)}
       style={{ width: width ? width : '160px' }}
     >
       {!buttonsAtEnd && (
@@ -95,8 +97,8 @@ export default function NumberInput(props: NumberInputProps) {
         {...rest}
         selectAll
         style={{
-          borderColor: 'var(--input-color)',
-          borderLeftColor: buttonsAtEnd ? 'var(--input-color)' : '#e1e1e1',
+          borderColor: 'rgb(204, 204, 204)',
+          borderLeftColor: buttonsAtEnd ? 'rgb(204, 204, 204)' : '#e1e1e1',
           borderRight: 0,
           borderRadius: 0,
           borderTopLeftRadius: buttonsAtEnd ? '4px' : 0,
@@ -134,7 +136,9 @@ export default function NumberInput(props: NumberInputProps) {
           }}
         >
           <IconPlusMinus stroke={1.5} size={18} />
-          <Button onClick={onChangeStep}>{step}</Button>
+          <Button className={styles['step-btn']} onClick={onChangeStep}>
+            {step}
+          </Button>
         </FlexRow>
       )}
     </div>

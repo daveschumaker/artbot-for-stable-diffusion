@@ -3,10 +3,12 @@
 import Head from 'next/head'
 import { trackEvent } from 'app/_api/telemetry'
 import {
+  FaqApiKey,
   FaqBlackImage,
   FaqEstimatedTime,
   FaqKudos,
   FaqMissingRequests,
+  FaqRunWorker,
   FaqStorageExceeded,
   FaqSyntax
 } from 'app/_modules/faqDetails'
@@ -30,28 +32,36 @@ const FaqPage = () => {
       </Head>
       <PageTitle>FAQ</PageTitle>
       <div className="text-md flex flex-col gap-4">
-        <Panel>
-          <a id="kudos" />
+        <a id="kudos" />
+        <Panel style={{ borderWidth: '1px' }}>
           <FaqKudos />
         </Panel>
-        <Panel>
-          <a id="syntax" />
+        <a id="get-apikey" />
+        <Panel style={{ borderWidth: '1px' }}>
+          <FaqApiKey />
+        </Panel>
+        <a id="syntax" />
+        <Panel style={{ borderWidth: '1px' }}>
           <FaqSyntax />
         </Panel>
-        <Panel>
-          <a id="generation-time" />
+        <a id="run-worker" />
+        <Panel style={{ borderWidth: '1px' }}>
+          <FaqRunWorker />
+        </Panel>
+        <a id="generation-time" />
+        <Panel style={{ borderWidth: '1px' }}>
           <FaqEstimatedTime />
         </Panel>
-        <Panel>
-          <a id="requests-missing" />
+        <a id="requests-missing" />
+        <Panel style={{ borderWidth: '1px' }}>
           <FaqMissingRequests />
         </Panel>
-        <Panel>
-          <a id="black-image" />
+        <a id="black-image" />
+        <Panel style={{ borderWidth: '1px' }}>
           <FaqBlackImage />
         </Panel>
-        <Panel>
-          <a id="storage-exceeded" />
+        <a id="storage-exceeded" />
+        <Panel style={{ borderWidth: '1px' }}>
           <FaqStorageExceeded />
         </Panel>
       </div>

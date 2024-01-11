@@ -4,7 +4,7 @@
 }
 
 .number-input-minus-btn {
-  border-color: var(--input-color);
+  border-color: rgb(204, 204, 204);
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
   border-right: 0;
@@ -12,7 +12,7 @@
 }
 
 .number-input-plus-btn {
-  border-color: var(--input-color);
+  border-color: rgb(204, 204, 204);
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   border-left: 0;
@@ -20,7 +20,19 @@
 }
 
 .ButtonsOnEnd {
-  border-right: 1px solid var(--input-color);
+  border-right: 1px solid rgb(204, 204, 204);
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
+}
+
+@media (min-width: 800px) {
+
+  .number-input-minus-btn,
+  .number-input-plus-btn,
+  .step-btn {
+    height: 30px;
+    width: 30px;
+    min-width: unset;
+    padding: 4px;
+  }
 }

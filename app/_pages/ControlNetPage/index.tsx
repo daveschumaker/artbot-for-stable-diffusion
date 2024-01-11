@@ -46,14 +46,15 @@ import Denoise from 'app/_modules/AdvancedOptionsPanel/Denoise'
 import ClipSkip from 'app/_modules/AdvancedOptionsPanel/ClipSkip'
 import { baseHost, basePath } from 'BASE_PATH'
 import { showSuccessToast } from 'app/_utils/notificationUtils'
-import FlexRow from 'app/_components/FlexRow'
-import FormErrorMessage from '../CreatePage/ActionPanel/FormErrorMessage'
 import { IconTrash } from '@tabler/icons-react'
 import { createImageJob } from 'app/_utils/V2/createImageJob'
 import { useInput } from 'app/_modules/InputProvider/context'
 import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 import useWindowHeight from 'app/_hooks/useWindowHeight'
 import { CONTROL_TYPES } from '_types/horde'
+import LoraSelect from 'app/_modules/AdvancedOptionsPanel/LoraSelect'
+import EmbeddingsSelect from 'app/_modules/AdvancedOptionsPanel/EmbeddingsSelect'
+import styles from './component.module.css'
 
 // Kind of a hacky way to persist output of image over the course of a session.
 let cachedImageDetails = {}
@@ -260,10 +261,6 @@ const ControlNetPage = () => {
       ? 'N/A'
       : Number(totalKudosCost / totalImagesRequested).toFixed(2)
 
-  useEffect(() => {
-    setErrors({ FIXED_SEED: Boolean(totalImagesRequested > 1 && input.seed) })
-  }, [totalImagesRequested, input.seed, setErrors])
-
   return (
     <div>
       <Head>
@@ -332,46 +329,23 @@ const ControlNetPage = () => {
           <PromptInput />
         </div>
       </Section>
-      <Section>
+      <Section className={styles.AdvancedOptionsPanel}>
         <SubSectionTitle>Step 3. Advanced settings</SubSectionTitle>
+        <ImageCount />
+        <ControlNetOptions />
+        <Denoise />
 
-        <FlexibleRow style={{ paddingTop: '8px' }}>
-          <FlexibleUnit>
-            <ControlNetOptions />
-          </FlexibleUnit>
-          <FlexibleUnit>
-            <Denoise />
-          </FlexibleUnit>
-        </FlexibleRow>
+        <SelectSampler />
+        <SelectModel />
 
-        <Section>
-          <FlexibleRow>
-            <FlexibleUnit>
-              <SelectSampler />
-            </FlexibleUnit>
-            <FlexibleUnit>
-              <ImageCount />
-            </FlexibleUnit>
-          </FlexibleRow>
-        </Section>
+        <Steps />
+        <Guidance />
+        <ClipSkip />
+        <Seed />
 
-        <Section>
-          <FlexibleRow>
-            <FlexibleUnit>
-              <SelectModel />
-            </FlexibleUnit>
-            <FlexibleUnit>
-              <Section>
-                <Steps />
-                <Guidance />
-                <Seed />
-                <ClipSkip />
-              </Section>
-            </FlexibleUnit>
-          </FlexibleRow>
-        </Section>
-
-        <Section>
+        <LoraSelect />
+        <EmbeddingsSelect />
+        <div>
           <FlexibleRow>
             <FlexibleUnit>
               <PostProcessors />
@@ -380,12 +354,10 @@ const ControlNetPage = () => {
               <UpscalerOptions />
             </FlexibleUnit>
           </FlexibleRow>
-        </Section>
+        </div>
         <MiscOptions />
       </Section>
-      <FlexRow>
-        <FormErrorMessage errors={errors} />
-      </FlexRow>
+
       <ActionPanel
         disableSubmit={!input.source_image}
         errors={errors}
