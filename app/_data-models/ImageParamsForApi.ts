@@ -197,10 +197,8 @@ class ImageParamsForApi {
 
     // If user has enabled forceSelectedWorker, override any other worker preference setting.
     const worker = sessionStorage.getItem('forceSelectedWorker')
-    console.log(`stuck worker state?`, worker)
     if (worker) {
       const workerId = JSON.parse(worker).value
-      console.log(`we get here??`, workerId)
       apiParams.workers = [workerId]
       delete apiParams.worker_blacklist
       delete apiParams.slow_workers

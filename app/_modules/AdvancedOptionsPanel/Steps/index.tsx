@@ -81,22 +81,32 @@ export default function Steps({ hideOptions = false }: StepsOptions) {
               min={1}
               max={MAX_STEPS}
               // disabled={disabled}
+              onBlur={() => {
+                setInput({ steps: Number(input.steps) })
+              }}
               onInputChange={(e) => {
-                setInput({ steps: e.target.value })
+                setInput({ steps: Number(e.target.value) })
               }}
               onMinusClick={() => {
-                if (input.steps - step < 1) {
+                if (Number(input.steps) - step < 1) {
                   return
                 }
 
-                setInput({ steps: input.steps - step })
+                setInput({ steps: Number(input.steps) - step })
               }}
               onPlusClick={() => {
-                if (input.steps + step > MAX_STEPS) {
+                if (Number(input.steps) + step > MAX_STEPS) {
                   return
                 }
 
-                setInput({ steps: input.steps + step })
+                console.log(
+                  `WTFFFF`,
+                  typeof input.steps,
+                  input.steps,
+                  Number(input.steps)
+                )
+
+                setInput({ steps: Number(input.steps) + step })
               }}
               // onChangeStep={width && width < 800 ? handleChangeStep : undefined}
               step={step}

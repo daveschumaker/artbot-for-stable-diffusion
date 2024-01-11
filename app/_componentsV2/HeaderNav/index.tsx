@@ -94,7 +94,7 @@ export function HeaderNav() {
           >
             <label
               tabIndex={0}
-              className="btn btn-sm btn-ghost rounded-btn normal-case flex-row gap-[2px] px-[6px] sm:text-xs"
+              className="btn btn-sm btn-ghost rounded-btn normal-case flex-row gap-[2px] px-[6px] sm:text-xs hover:bg-[#d8d8d8] dark:hover:bg-[#7d7c7c]"
             >
               <Link className="hover:text-main" href="/create">
                 Create
@@ -135,12 +135,12 @@ export function HeaderNav() {
               </ul>
             )}
           </div>
-          <button className="btn btn-sm btn-ghost normal-case px-[6px] sm:text-xs">
+          <button className="btn btn-sm btn-ghost normal-case px-[6px] sm:text-xs hover:bg-[#d8d8d8] dark:hover:bg-[#7d7c7c]">
             <Link className="hover:text-main" href="/pending">
               Pending
             </Link>
           </button>
-          <button className="btn btn-sm btn-ghost normal-case px-[6px] sm:text-xs">
+          <button className="btn btn-sm btn-ghost normal-case px-[6px] sm:text-xs hover:bg-[#d8d8d8] dark:hover:bg-[#7d7c7c]">
             <Link className="hover:text-main" href="/images">
               Images
             </Link>
@@ -153,7 +153,7 @@ export function HeaderNav() {
           >
             <label
               tabIndex={0}
-              className="btn btn-sm btn-ghost rounded-btn normal-case flex-row gap-[2px] px-[6px] sm:text-xs"
+              className="btn btn-sm btn-ghost rounded-btn normal-case flex-row gap-[2px] px-[6px] sm:text-xs hover:bg-[#d8d8d8] dark:hover:bg-[#7d7c7c]"
             >
               <Link className="hover:text-main" href="/info">
                 Info
@@ -215,7 +215,7 @@ export function HeaderNav() {
           >
             <label
               tabIndex={0}
-              className="btn btn-sm btn-ghost rounded-btn normal-case flex-row gap-[2px] px-[6px] sm:text-xs"
+              className="btn btn-sm btn-ghost rounded-btn normal-case flex-row gap-[2px] px-[6px] sm:text-xs hover:bg-[#d8d8d8] dark:hover:bg-[#7d7c7c]"
             >
               <Link className="hover:text-main" href="/settings">
                 Settings
