@@ -4,8 +4,14 @@ import { getRandomTip } from './tipsController'
 import React, { useEffect, useState } from 'react'
 import Linker from 'app/_components/Linker'
 
+interface Tip {
+  id: string
+  content: React.ReactNode | string | null | undefined
+  linkTitle: string
+  linkUrl: string
+}
 const PendingTips = React.memo(() => {
-  const [tip, setTip] = useState()
+  const [tip, setTip] = useState<Tip>()
 
   useEffect(() => {
     setTip(getRandomTip() as any)
@@ -25,7 +31,12 @@ const PendingTips = React.memo(() => {
         />
         ArtBot tip:
       </div>
-      <div className="text-xs">{tip.content()}</div>
+      <div className="text-xs">
+        {
+          // @ts-ignore
+          tip.content()
+        }
+      </div>
       {tip.linkTitle && (
         <div className="text-xs mt-2">
           <Linker href={tip.linkUrl}>{tip.linkTitle}</Linker>
