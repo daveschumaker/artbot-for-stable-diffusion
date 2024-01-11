@@ -30,9 +30,9 @@ const SelectModel = ({
 }: SelectModelProps) => {
   const { input, setInput } = useInput()
   const modelsInfoModal = useModal(ModelsInfoModal)
+  const [modelsOptions] = useAvailableModels({ input })
 
   const { modelDetails } = useStore(modelStore)
-  const [modelsOptions] = useAvailableModels({ input })
   const [showSettingsDropdown, setShowSettingsDropdown] = useState(false)
   const [showMultiModel, setShowMultiModel] = useState(false)
   const [showFilter, setShowFilter] = useState(false)

@@ -2,8 +2,6 @@ import { SourceProcessing } from '_types/horde'
 import { modelStore } from 'app/_store/modelStore'
 import AppSettings from './AppSettings'
 import DefaultPromptInput from './DefaultPromptInput'
-import { objIsEmpty } from 'app/_utils/helperUtils'
-import availableModelsJson from '../_store/availableModels.json'
 
 class ImageModels {
   static getModelVersion = (modelName: string) => {
@@ -34,17 +32,6 @@ class ImageModels {
       input.source_processing === SourceProcessing.Img2Img ||
       input.source_processing === SourceProcessing.InPainting
     const isInpainting = input.source_image || input.source_mask ? true : false
-
-    // When the app initially loads, the initial model availability fetch does not populate the store in time to display
-    // data on the select model drop down. So, "availableModels" ends up being empty. This HACK checks for this an
-    // loads a cached version of the model details.
-    if (objIsEmpty(availableModels)) {
-      availableModels = availableModelsJson.reduce((acc, curr, index) => {
-        // @ts-ignore
-        acc[index + 1] = curr
-        return acc
-      }, {})
-    }
 
     for (const [key] of Object.entries(availableModels)) {
       const modelName = availableModels[key].name

@@ -1,7 +1,7 @@
 import { deletePendingJobs } from 'app/_controllers/pendingJobsCache'
 import { setLoggedInState } from 'app/_store/userStore'
 import { JobStatus } from '_types'
-import { buildModelAvailability } from 'app/_api/fetchAvailableModels'
+// import { buildModelAvailability } from 'app/_api/fetchAvailableModels'
 import { fetchHordePerformance } from 'app/_api/fetchHordePerformance'
 import fetchMyWorkers from 'app/_api/fetchMyWorkers'
 import { setUserId } from 'app/_api/userInfo'
@@ -19,6 +19,8 @@ import {
 import { initWindowLogger } from './debugTools'
 import { loadAuthToken } from './authUtils'
 import { fetchUserDetailsV2 } from 'app/_api/fetchUserDetailsV2'
+import { client_fetchModelDetailsV2 } from 'app/_api/client_fetchModelDetailsV2'
+import { client_fetchModelsAvailableV2 } from 'app/_api/client_fetchModelsAvailableV2'
 
 export const updateShowGrid = () => {
   if (localStorage.getItem('showGrid') === 'true') {
@@ -135,8 +137,12 @@ export const initAppSettings = async () => {
   fetchHordePerformance()
   fetchUserDetailsV2(apikey)
   // fetchUserDetails(apikey)
+
+  // buildModelAvailability()
+  client_fetchModelDetailsV2()
+  client_fetchModelsAvailableV2()
+
   setUserId()
-  buildModelAvailability()
   fetchMyWorkers()
   appLastActive()
 
@@ -145,7 +151,10 @@ export const initAppSettings = async () => {
       return
     }
 
-    buildModelAvailability()
+    // buildModelAvailability()
+    client_fetchModelDetailsV2()
+    client_fetchModelsAvailableV2()
+
     fetchHordePerformance()
   }, 60000)
 

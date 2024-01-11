@@ -1,7 +1,4 @@
-import {
-  getModelDetails,
-  initModelAvailabilityFetch
-} from 'app/_server-api/modelsAvailable'
+import { server_fetchModelDetails } from 'app/_server-api/server_fetchModelDetailsV2'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 type Data = {
@@ -19,13 +16,11 @@ export default async function handler(
   }
 
   try {
-    await initModelAvailabilityFetch()
-    const { models, timestamp } = await getModelDetails()
+    const data = await server_fetchModelDetails()
 
     return res.send({
       success: true,
-      models: models,
-      timestamp
+      models: data
     })
   } catch (err) {
     return res.send({
