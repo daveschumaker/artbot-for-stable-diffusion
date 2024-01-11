@@ -1,3 +1,8 @@
+# 2024.01.11
+
+- Add RealESRGAN_x2plus upscaler (Thanks to Sidorok for letting me know this was available)
+- Silently handle [hires_fix issue](https://github.com/daveschumaker/artbot-for-stable-diffusion/issues/217) is enabled when making image requests with SDXL based models. (Thanks to R3H, Neron, and Efreak for the suggestion)
+
 # 2024.01.10
 
 - Hello! Here is a gigantic update for you.
@@ -7,7 +12,6 @@
 - Added ability to select a specific worker from the Create Image page. (See button with the computer on it)
 - Updated info page to show worker info in a table format.
 - Added a new "ArtBot tips" module that will randomly pop up with various hints, tips and community related info.
-- Add RealESRGAN_x2plus upscaler
 
 # 2024.01.03
 

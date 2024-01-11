@@ -85,12 +85,6 @@ export const InputErrorsProvider: React.FC<InputErrorsProviderProps> = ({
     const hasSdxl = filteredSdxlModels.length > 0
 
     if (hasSdxl) {
-      if (input.hires) {
-        updateBlockJobs = true
-        updateErrors.sdxlHires =
-          'SDXL Error: Currently unable to use hi-res fix with SDXL image models. Please disable hi-res fix in order to continue.'
-      }
-
       if (input.control_type && input.source_image) {
         updateBlockJobs = true
         updateErrors.sdxlControlNet =

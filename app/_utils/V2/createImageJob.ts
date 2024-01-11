@@ -137,6 +137,8 @@ export const createImageJob = async (
 }> => {
   let pendingJobArray: ImageRequest[] = []
 
+  // Handle all multi-job requests first and split them apart
+  // into individual pending requests that can be handled as needed.
   if (newImageRequest.useMultiClip && newImageRequest.multiClip.length > 0) {
     pendingJobArray = mergePendingJobArray(
       pendingJobArray,
@@ -199,6 +201,8 @@ export const createImageJob = async (
     )
   }
 
+  // Now start processing pending job requests
+  // an casting data to proper type
   try {
     if (pendingJobArray.length === 0) {
       // @ts-ignore

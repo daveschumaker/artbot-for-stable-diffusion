@@ -1,4 +1,3 @@
-import { basePath } from 'BASE_PATH'
 import StableDiffusionModel from 'app/_data-models/StableDiffusionModel'
 import { modelStore, setAvailableModels } from 'app/_store/modelStore'
 import { clientHeader, isAppActive } from 'app/_utils/appUtils'
@@ -17,13 +16,18 @@ export const fetchAvailableModels = async () => {
   ]
 
   try {
-    const res = await fetch(`${basePath}/api/models/available`, {
-      cache: 'no-store',
-      headers: {
-        'Content-Type': 'application/json',
-        'Client-Agent': clientHeader()
+    // TODO: Fix caching issue
+    //${basePath}/api/models/available
+    const res = await fetch(
+      `https://raw.githubusercontent.com/db0/AI-Horde-image-model-reference/main/stable_diffusion.json`,
+      {
+        cache: 'no-store',
+        headers: {
+          'Content-Type': 'application/json',
+          'Client-Agent': clientHeader()
+        }
       }
-    })
+    )
     const data = await res.json()
 
     if (Array.isArray(data)) {
