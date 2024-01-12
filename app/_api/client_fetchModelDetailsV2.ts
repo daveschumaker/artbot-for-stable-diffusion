@@ -61,8 +61,9 @@ export const client_fetchModelDetailsV2 = async () => {
       }
 
       // availableModelsMap[name] = new StableDiffusionModel({ name, count: 0 })
+      lastFetchTime = currentTime
       setModelDetails(modelDetails)
-      modelsCache = modelDetails
+      modelsCache = { ...modelDetails }
 
       return modelDetails
     } else if (modelsCache) {

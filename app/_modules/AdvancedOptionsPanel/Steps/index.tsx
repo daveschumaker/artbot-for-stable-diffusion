@@ -99,13 +99,6 @@ export default function Steps({ hideOptions = false }: StepsOptions) {
                   return
                 }
 
-                console.log(
-                  `WTFFFF`,
-                  typeof input.steps,
-                  input.steps,
-                  Number(input.steps)
-                )
-
                 setInput({ steps: Number(input.steps) + step })
               }}
               // onChangeStep={width && width < 800 ? handleChangeStep : undefined}

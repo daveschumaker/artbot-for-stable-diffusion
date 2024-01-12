@@ -28,6 +28,7 @@ export const client_fetchModelsAvailableV2 = async () => {
     const { success, models } = data
 
     if (success) {
+      lastFetchTime = currentTime
       setAvailableModels(models)
       modelsCache = models
 

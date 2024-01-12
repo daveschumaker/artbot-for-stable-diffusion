@@ -2,6 +2,9 @@
 
 - Add RealESRGAN_x2plus upscaler (Thanks to Sidorok for letting me know this was available)
 - Silently handle [hires_fix issue](https://github.com/daveschumaker/artbot-for-stable-diffusion/issues/217) is enabled when making image requests with SDXL based models. (Thanks to R3H, Neron, and Efreak for the suggestion)
+- Fix longstanding issue with models cache showing incorrect data on first load.
+- Check out two new SDXL image models made by ResidentChiefNZ (welcome back!): [ICBINP XL](https://tinybots.net/artbot/create?model=ICBINP%20XL) and [Fustercluck](https://tinybots.net/artbot/create?model=Fustercluck)
+- Fix: clientside fetch model methods were not storing time data was cached.
 
 # 2024.01.10
 
