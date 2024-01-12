@@ -183,14 +183,21 @@ const SelectModel = ({
           isMulti={showMultiModel}
           isSearchable={true}
           // @ts-ignore
-          formatOptionLabel={(option) => (
-            <>
-              <div>{option.label}</div>
-              <div style={{ fontSize: '10px' }}>
-                Baseline: {formatBaseline(modelDetails[option.value]?.baseline)}
-              </div>
-            </>
-          )}
+          formatOptionLabel={(option, { context }) => {
+            if (context === 'menu') {
+              return (
+                <>
+                  <div>{option.label}</div>
+                  <div style={{ fontSize: '10px' }}>
+                    Baseline:{' '}
+                    {formatBaseline(modelDetails[option.value]?.baseline)}
+                  </div>
+                </>
+              )
+            } else {
+              return <div>{option.label}</div>
+            }
+          }}
           options={filteredModels()}
           onChange={(obj: any) => {
             if (showMultiModel) {

@@ -1,7 +1,9 @@
 import { MAX_STEPS_LOGGED_IN } from '_constants'
+import { modelStore } from 'app/_store/modelStore'
 
 class Samplers {
   static samplerDetails = () => {
+    const { modelDetails } = modelStore.state
     // TODO: FIXME:
     // const loggedIn = userStore.state.loggedIn
     const loggedIn = false
@@ -18,72 +20,86 @@ class Samplers {
       DDIM: {
         supportsImg2Img: true,
         maxSteps: loggedIn ? MAX_STEPS_LOGGED_IN : 50,
-        modelValidation: (model: string) => model !== 'stable_diffusion_2.0'
+        modelValidation: (model: string = '') =>
+          model !== 'stable_diffusion_2.0'
       },
       dpmsolver: {
         maxSteps: loggedIn ? MAX_STEPS_LOGGED_IN : 50,
-        modelValidation: (model: string) => model === 'stable_diffusion_2.0'
+        modelValidation: (model: string = '') =>
+          model === 'stable_diffusion_2.0'
       },
       k_dpm_2_a: {
         supportsImg2Img: true,
         maxSteps: loggedIn ? MAX_STEPS_LOGGED_IN : 25,
-        modelValidation: (model: string) => model !== 'stable_diffusion_2.0'
+        modelValidation: (model: string = '') =>
+          model !== 'stable_diffusion_2.0'
       },
       k_dpm_2: {
         supportsImg2Img: true,
         maxSteps: loggedIn ? MAX_STEPS_LOGGED_IN : 25,
-        modelValidation: (model: string) => model !== 'stable_diffusion_2.0'
+        modelValidation: (model: string = '') =>
+          model !== 'stable_diffusion_2.0'
       },
       k_euler_a: {
         supportsImg2Img: true,
         maxSteps: loggedIn ? MAX_STEPS_LOGGED_IN : 50,
-        modelValidation: (model: string) => model !== 'stable_diffusion_2.0'
+        modelValidation: (model: string = '') =>
+          model !== 'stable_diffusion_2.0'
       },
       k_euler: {
         supportsImg2Img: true,
         maxSteps: loggedIn ? MAX_STEPS_LOGGED_IN : 50,
-        modelValidation: (model: string) => model !== 'stable_diffusion_2.0'
+        modelValidation: (model: string = '') =>
+          model !== 'stable_diffusion_2.0'
       },
       k_heun: {
         supportsImg2Img: true,
         maxSteps: loggedIn ? MAX_STEPS_LOGGED_IN : 25,
-        modelValidation: (model: string) => model !== 'stable_diffusion_2.0'
+        modelValidation: (model: string = '') =>
+          model !== 'stable_diffusion_2.0'
       },
       k_lms: {
         supportsImg2Img: true,
         maxSteps: loggedIn ? MAX_STEPS_LOGGED_IN : 50,
-        modelValidation: (model: string) => model !== 'stable_diffusion_2.0'
+        modelValidation: (model: string = '') =>
+          model !== 'stable_diffusion_2.0'
       },
       k_dpm_fast: {
         supportsImg2Img: true,
         maxSteps: loggedIn ? MAX_STEPS_LOGGED_IN : 50,
-        modelValidation: (model: string) => model !== 'stable_diffusion_2.0'
+        modelValidation: (model: string = '') =>
+          model !== 'stable_diffusion_2.0'
       },
       k_dpm_adaptive: {
         supportsImg2Img: true,
         maxSteps: loggedIn ? MAX_STEPS_LOGGED_IN : 50,
-        modelValidation: (model: string) => model !== 'stable_diffusion_2.0'
+        modelValidation: (model: string = '') =>
+          model !== 'stable_diffusion_2.0'
       },
       k_dpmpp_2m: {
         supportsImg2Img: true,
         maxSteps: loggedIn ? MAX_STEPS_LOGGED_IN : 50,
-        modelValidation: (model: string) => model !== 'stable_diffusion_2.0'
+        modelValidation: (model: string = '') =>
+          model !== 'stable_diffusion_2.0'
       },
       k_dpmpp_2s_a: {
         supportsImg2Img: true,
         maxSteps: loggedIn ? MAX_STEPS_LOGGED_IN : 50,
-        modelValidation: (model: string) => model !== 'stable_diffusion_2.0'
+        modelValidation: (model: string = '') =>
+          model !== 'stable_diffusion_2.0'
       },
       k_dpmpp_sde: {
         supportsImg2Img: true,
         maxSteps: loggedIn ? MAX_STEPS_LOGGED_IN : 50,
-        modelValidation: (model: string) => model !== 'stable_diffusion_2.0'
+        modelValidation: (model: string = '') =>
+          model !== 'stable_diffusion_2.0'
       },
       lcm: {
         supportsImg2Img: false,
         maxSteps: loggedIn ? MAX_STEPS_LOGGED_IN : 50,
-        modelValidation: (model: string) =>
-          model.toLowerCase().indexOf('sdxl') >= 0
+        modelValidation: (model: string = '') =>
+          modelDetails[model] &&
+          modelDetails[model].baseline === 'stable_diffusion_xl'
       }
     }
 

@@ -156,14 +156,15 @@ class ImageModels {
   }: {
     filteredModels: Array<any>
   }) => {
-    filteredModels.push({
-      name: 'random',
-      value: 'random',
-      label: 'Random!',
-      count: 1
-    })
-
-    return filteredModels
+    return [
+      ...filteredModels,
+      {
+        name: 'random',
+        value: 'random',
+        label: 'Random!',
+        count: 1
+      }
+    ]
   }
 
   static dropdownValue = (input: DefaultPromptInput) => {

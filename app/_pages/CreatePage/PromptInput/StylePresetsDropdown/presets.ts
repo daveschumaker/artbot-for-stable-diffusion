@@ -17,22 +17,22 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   sdxl: {
     prompt: '{p}{np}',
     model: 'SDXL 1.0',
-    steps: 5,
+    steps: 8,
     width: 1024,
     height: 1024,
     cfg_scale: 2,
-    sampler_name: 'lcm',
-    loras: [{ name: '268475', model: 1, is_version: true }]
+    sampler_name: 'k_dpmpp_sde',
+    loras: [{ name: '247778', model: 1, is_version: true }]
   },
   albedo: {
     prompt: '{p}{np}',
     model: 'AlbedoBase XL (SDXL)',
-    steps: 5,
+    steps: 8,
     width: 1024,
     height: 1024,
     cfg_scale: 2,
-    sampler_name: 'lcm',
-    loras: [{ name: '268475', model: 1, is_version: true }]
+    sampler_name: 'k_dpmpp_sde',
+    loras: [{ name: '247778', model: 1, is_version: true }]
   },
   raw: {
     prompt: '{p}{np}',
@@ -51,10 +51,10 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 1024,
     height: 1024,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
-    sampler_name: 'lcm',
-    loras: [{ name: '268475', model: 1, is_version: true }]
+    sampler_name: 'k_dpmpp_sde',
+    loras: [{ name: '247778', model: 1, is_version: true }]
   },
   'makoto birthday': {
     prompt:
@@ -62,10 +62,10 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 1024,
     height: 1024,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
-    sampler_name: 'lcm',
-    loras: [{ name: '268475', model: 1, is_version: true }]
+    sampler_name: 'k_dpmpp_sde',
+    loras: [{ name: '247778', model: 1, is_version: true }]
   },
   'artistic birthday': {
     prompt:
@@ -73,10 +73,10 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 1024,
     height: 1024,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
-    sampler_name: 'lcm',
-    loras: [{ name: '268475', model: 1, is_version: true }]
+    sampler_name: 'k_dpmpp_sde',
+    loras: [{ name: '247778', model: 1, is_version: true }]
   },
   bdcolordd: {
     prompt: '{p}, happy birthday, colorful, in the style of t3xtn{np}',
@@ -84,9 +84,9 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     width: 960,
     height: 768,
     hires_fix: true,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
-    sampler_name: 'lcm',
+    sampler_name: 'k_dpmpp_sde',
     loras: [
       { name: '268475', model: 1, is_version: true },
       { name: '85479', model: 0.5 },
@@ -100,80 +100,80 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 704,
     height: 1472,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
-    sampler_name: 'lcm',
-    loras: [{ name: '268475', model: 1, is_version: true }]
+    sampler_name: 'k_dpmpp_sde',
+    loras: [{ name: '247778', model: 1, is_version: true }]
   },
   'sdxl-extreme-vertical': {
     prompt: '{p}{np}',
     model: 'AlbedoBase XL (SDXL)',
     width: 640,
     height: 1536,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
-    sampler_name: 'lcm',
-    loras: [{ name: '268475', model: 1, is_version: true }]
+    sampler_name: 'k_dpmpp_sde',
+    loras: [{ name: '247778', model: 1, is_version: true }]
   },
   'sdxl-portrait': {
     prompt: '{p}{np}',
     model: 'AlbedoBase XL (SDXL)',
     width: 832,
     height: 1216,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
-    sampler_name: 'lcm',
-    loras: [{ name: '268475', model: 1, is_version: true }]
+    sampler_name: 'k_dpmpp_sde',
+    loras: [{ name: '247778', model: 1, is_version: true }]
   },
   'sdxl-photo': {
     prompt: '{p}{np}',
     model: 'AlbedoBase XL (SDXL)',
     width: 896,
     height: 1152,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
-    sampler_name: 'lcm',
-    loras: [{ name: '268475', model: 1, is_version: true }]
+    sampler_name: 'k_dpmpp_sde',
+    loras: [{ name: '247778', model: 1, is_version: true }]
   },
   'sdxl-photo-horizontal': {
     prompt: '{p}{np}',
     model: 'AlbedoBase XL (SDXL)',
     width: 1152,
     height: 896,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
-    sampler_name: 'lcm',
-    loras: [{ name: '268475', model: 1, is_version: true }]
+    sampler_name: 'k_dpmpp_sde',
+    loras: [{ name: '247778', model: 1, is_version: true }]
   },
   'sdxl-landscape': {
     prompt: '{p}{np}',
     model: 'AlbedoBase XL (SDXL)',
     width: 1280,
     height: 832,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
-    sampler_name: 'lcm',
-    loras: [{ name: '268475', model: 1, is_version: true }]
+    sampler_name: 'k_dpmpp_sde',
+    loras: [{ name: '247778', model: 1, is_version: true }]
   },
   'sdxl-widescreen': {
     prompt: '{p}{np}',
     model: 'AlbedoBase XL (SDXL)',
     width: 1344,
     height: 768,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
-    sampler_name: 'lcm',
-    loras: [{ name: '268475', model: 1, is_version: true }]
+    sampler_name: 'k_dpmpp_sde',
+    loras: [{ name: '247778', model: 1, is_version: true }]
   },
   'sdxl-cinematic': {
     prompt: '{p}{np}',
     model: 'AlbedoBase XL (SDXL)',
     width: 1536,
     height: 640,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
-    sampler_name: 'lcm',
-    loras: [{ name: '268475', model: 1, is_version: true }]
+    sampler_name: 'k_dpmpp_sde',
+    loras: [{ name: '247778', model: 1, is_version: true }]
   },
 
   'hamunaptra party': {
@@ -209,7 +209,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 1216,
     height: 832,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -220,7 +220,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 1216,
     height: 832,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -231,7 +231,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 1216,
     height: 832,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -242,18 +242,18 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 832,
     height: 1216,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
   },
   neonnoir: {
     prompt:
-      'neon noir {p}, cyberpunk, dark, rainy streets, neon signs, high contrast, low light, vibrant, highly detailed###bright, sunny, daytime, low contrast, black and white, sketch, watercolor, {p}',
+      'neon noir {p}, cyberpunk, dark, rainy streets, neon signs, high contrast, low light, vibrant, highly detailed###bright, sunny, daytime, low contrast, black and white, sketch, watercolor, {np}',
     model: 'AlbedoBase XL (SDXL)',
     width: 1024,
     height: 1024,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -264,7 +264,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 1152,
     height: 832,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -275,7 +275,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 768,
     height: 1344,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -286,7 +286,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 832,
     height: 1280,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -297,7 +297,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 832,
     height: 1280,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -308,7 +308,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 832,
     height: 1280,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -319,7 +319,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 832,
     height: 1152,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -330,7 +330,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 832,
     height: 1152,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -340,7 +340,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 832,
     height: 1280,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -351,7 +351,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 1280,
     height: 832,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -362,7 +362,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 832,
     height: 1280,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -373,7 +373,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 896,
     height: 1152,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -384,7 +384,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 1152,
     height: 896,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -395,7 +395,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 896,
     height: 1152,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -406,7 +406,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 1344,
     height: 768,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -417,7 +417,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 1152,
     height: 896,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -428,7 +428,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 896,
     height: 1152,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -439,7 +439,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 1152,
     height: 896,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -450,7 +450,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 1280,
     height: 832,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -461,7 +461,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 1344,
     height: 768,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -472,7 +472,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 1024,
     height: 1024,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -483,7 +483,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 1280,
     height: 832,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -494,7 +494,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 1280,
     height: 832,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -505,7 +505,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 1024,
     height: 1024,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -516,7 +516,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 1152,
     height: 896,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -527,7 +527,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 1152,
     height: 896,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -538,7 +538,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 1024,
     height: 1024,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -548,7 +548,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 896,
     height: 1152,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -559,7 +559,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 1344,
     height: 768,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -570,7 +570,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 1024,
     height: 1024,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -581,7 +581,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 1024,
     height: 1024,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -592,7 +592,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 896,
     height: 1152,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -603,7 +603,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 1024,
     height: 1024,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -614,7 +614,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 1152,
     height: 896,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -625,7 +625,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 1152,
     height: 896,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -636,7 +636,7 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 1152,
     height: 896,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -647,18 +647,18 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'AlbedoBase XL (SDXL)',
     width: 832,
     height: 1216,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
   },
   movieposter: {
     prompt:
-      'highly detailed movie premiere poster, {p}, professional quality, highly detailed, gloss finish###smudged, poor quality, Badly drawn hands and fingers, undetailed, unfocused',
+      'highly detailed movie premiere poster, {p}, professional quality, highly detailed, gloss finish###smudged, poor quality, Badly drawn hands and fingers, undetailed, unfocused, {np}',
     model: 'AlbedoBase XL (SDXL)',
     width: 832,
     height: 1216,
-    steps: 5,
+    steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [{ name: '247778', model: 1, is_version: true }]
@@ -859,7 +859,53 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     height: 1024,
     cfg_scale: 9
   },
-
+  'impressionist oil painting': {
+    prompt:
+      'A beautiful oil painting of {p}, with thick messy brush strokes ### blurry, out of focus{np}',
+    model: 'AlbedoBase XL (SDXL)',
+    karras: true,
+    steps: 8,
+    sampler_name: 'k_dpm_fast',
+    width: 1280,
+    height: 832,
+    cfg_scale: 2
+  },
+  'flat simple cartoon': {
+    prompt: '{p}, wikihow cartoon illustration###3d, photo, text, {np}',
+    model: 'AlbedoBase XL (SDXL)',
+    width: 1024,
+    height: 1024,
+    steps: 8,
+    cfg_scale: 2,
+    sampler_name: 'k_dpmpp_sde',
+    loras: [{ name: '247778', model: 1, is_version: true }]
+  },
+  'color splash': {
+    prompt: '{p}, painted world, colorful splashes###{np}',
+    model: 'AlbedoBase XL (SDXL)',
+    width: 1024,
+    height: 1024,
+    steps: 8,
+    cfg_scale: 2,
+    sampler_name: 'k_dpmpp_sde',
+    loras: [
+      { name: '247778', model: 1, is_version: true },
+      { name: '273924', model: 0.75, is_version: true }
+    ]
+  },
+  parchment: {
+    prompt: 'on parchment, ink illustration, {p}###{np}',
+    model: 'AlbedoBase XL (SDXL)',
+    width: 1024,
+    height: 1024,
+    steps: 8,
+    cfg_scale: 2,
+    sampler_name: 'k_dpmpp_sde',
+    loras: [
+      { name: '247778', model: 1, is_version: true },
+      { name: '285737', model: 1.0, is_version: true }
+    ]
+  },
   piratepunk: {
     prompt:
       '{p}, piratepunkai###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
@@ -1506,6 +1552,26 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     prompt: '{p}###{np}',
     model: "ICBINP - I Can't Believe It's Not Photography"
   },
+  'icbinp xl': {
+    prompt: '{p}###{np}',
+    width: 832,
+    height: 1216,
+    steps: 10,
+    cfg_scale: 3.5,
+    model: 'ICBINP XL',
+    sampler_name: 'k_euler_a',
+    loras: [{ name: '246747', model: 1, is_version: true }]
+  },
+  fustercluck: {
+    prompt: '{p}###{np}',
+    width: 832,
+    height: 1216,
+    steps: 10,
+    cfg_scale: 1,
+    model: 'Fustercluck',
+    sampler_name: 'k_euler_a',
+    loras: [{ name: '246747', model: 1, is_version: true }]
+  },
   meinamix: {
     prompt: '{p}###{np}',
     model: 'MeinaMix'
@@ -1584,15 +1650,6 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     prompt: '{p}{np}',
     model: 'waifu_diffusion'
   },
-  trinart: {
-    prompt:
-      '{p}, shadows, lights, outline, highly detailed###cropped, artifacts, lowres{np}',
-    model: 'trinart'
-  },
-  trinart_raw: {
-    prompt: '{p}{np}',
-    model: 'trinart'
-  },
   hentai: {
     prompt:
       '{p}, shadows, lights, outline, highly detailed, anime###cropped, artifacts, lowres{np}',
@@ -1660,37 +1717,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     prompt: '{p}{np}',
     model: 'RPG'
   },
-  arcane: {
-    prompt: '{p}, arcane style{np}',
-    model: 'Nitro Diffusion'
-  },
-  'spider verse': {
-    prompt: '{p}, spiderverse style{np}',
-    model: 'Spider-Verse Diffusion'
-  },
-  archer: {
-    prompt: '{p}, archer style{np}',
-    model: 'Nitro Diffusion'
-  },
-  'elden ring': {
-    prompt: '{p}, elden ring style{np}',
-    model: 'Elden Ring Diffusion'
-  },
   robo: {
     prompt: '{p}, nousr robot{np}',
     model: 'Robo-Diffusion'
   },
-  'modern animation': {
-    prompt: '{p}, modern disney style{np}',
-    model: 'Nitro Diffusion'
-  },
   'classic animation': {
     prompt: '{p}, classic disney style{np}',
     model: 'Classic Animation Diffusion'
-  },
-  xynthii: {
-    prompt: '{p}, xynthii{np}',
-    model: 'Xynthii-Diffusion'
   },
   'comic mashup': {
     prompt:
@@ -1725,22 +1758,6 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     prompt: '{p}, microworld render style{np}',
     model: 'Microworlds'
   },
-  redshift: {
-    prompt: '{p}, redshift style{np}',
-    model: 'Redshift Diffusion'
-  },
-  borderlands: {
-    prompt: '{p}, borderlands{np}',
-    model: 'Borderlands'
-  },
-  'cyberpunk edgerunners': {
-    prompt: '{p}, dgs{np}',
-    model: 'Cyberpunk Anime Diffusion'
-  },
-  'cyberpunk anime': {
-    prompt: '{p}, illustration style{np}',
-    model: 'Cyberpunk Anime Diffusion'
-  },
   midjourney: {
     prompt: '{p}, midjrny-v4 style{np}',
     model: 'Midjourney Diffusion'
@@ -1753,30 +1770,6 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     prompt: '{p}, 16bitscene{np}',
     model: 'AIO Pixel Art'
   },
-  voxel: {
-    prompt: '{p}, VoxelArt{np}',
-    model: 'Voxel Art Diffusion'
-  },
-  'van gogh': {
-    prompt: '{p}, lvngvncnt{np}',
-    model: 'Van Gogh Diffusion'
-  },
-  bubblydubbly: {
-    prompt: '{p}, art by bubblydubbly{np}',
-    model: 'BubblyDubbly'
-  },
-  clazy: {
-    prompt: '{p}, clazy style{np}',
-    model: 'Clazy'
-  },
-  samdoesarts: {
-    prompt: '{p}, samdoesarts style{np}',
-    model: 'Samdoesarts Ultmerge'
-  },
-  synthwave: {
-    prompt: '{p}, snthwve style{np}',
-    model: 'Synthwave'
-  },
   vectorartz: {
     prompt: '{p}, vectorartz{np}',
     model: 'vectorartz'
@@ -1784,10 +1777,6 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   ranma: {
     prompt: '{p}, 80sanimestyle{np}',
     model: 'Ranma Diffusion'
-  },
-  guohua: {
-    prompt: '{p}, guohua style{np}',
-    model: 'Guohua Diffusion'
   },
   inkpunk: {
     prompt: '{p}, nvinkpunk{np}',
@@ -1802,10 +1791,6 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     prompt: '{p}, mtg card art{np}',
     model: 'Fantasy Card Diffusion'
   },
-  knollingcase: {
-    prompt: '{p}, knollingcase{np}',
-    model: 'Knollingcase'
-  },
   paintart: {
     prompt: '{p}, mdjrny-pntrt{np}',
     model: 'Midjourney PaintArt'
@@ -1813,14 +1798,6 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   ghibli: {
     prompt: '{p}, ghibli style{np}',
     model: 'Ghibli Diffusion'
-  },
-  wavyfusion: {
-    prompt: '{p}, wa-vy style{np}',
-    model: 'Wavyfusion'
-  },
-  papercutcraft: {
-    prompt: '{p}, papercutcraft style{np}',
-    model: 'Papercutcraft'
   },
   papercut: {
     prompt: '{p}, PaperCut{np}',
@@ -1831,14 +1808,6 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
       '{p}, ChromaV5 award winning photography, extremely detailed, artstation, 8 k, incredible art{np}',
     model: 'ChromaV5'
   },
-  kurzgesagt: {
-    prompt: '{p}, kurzgesagt style{np}',
-    model: 'kurzgesagt'
-  },
-  squishmallow: {
-    prompt: '{p}, Squishmallow{np}',
-    model: 'Squishmallow Diffusion'
-  },
   dreamlike: {
     prompt: '{p}, dreamlikeart{np}',
     model: 'Dreamlike Diffusion'
@@ -1847,25 +1816,9 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     prompt: '{p}, analog style{np}',
     model: 'Analog Diffusion'
   },
-  simpsons: {
-    prompt: '{p}, asim style{np}',
-    model: 'Asim Simpsons'
-  },
-  funko: {
-    prompt: '{p}, funko style{np}',
-    model: 'Funko Diffusion'
-  },
   dublex: {
     prompt: '{p}, dublex{np}',
     model: 'Double Exposure Diffusion'
-  },
-  balloon: {
-    prompt: '{p}, BalloonArt{np}',
-    model: 'Balloon Art'
-  },
-  future: {
-    prompt: '{p}, future style{np}',
-    model: 'Future Diffusion'
   },
   valorant: {
     prompt: '{p}, valorant style{np}',
@@ -1887,21 +1840,9 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     prompt: '{p}{np}',
     model: 'Dungeons and Diffusion'
   },
-  microscopic: {
-    prompt: '{p}, microscopic{np}',
-    model: 'Microscopic'
-  },
   trinart_character_raw: {
     prompt: '{p}{np}',
     model: 'Trinart Characters'
-  },
-  smoke: {
-    prompt: '{p}, ssmoky{np}',
-    model: 'Smoke Diffusion'
-  },
-  supermarionation: {
-    prompt: '{p}, supermarionation{np}',
-    model: 'Supermarionation'
   },
   portraitplus: {
     prompt: '{p}, portrait+ style{np}',
@@ -1911,17 +1852,9 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     prompt: '{p}, estilovintedois{np}',
     model: 'Vintedois Diffusion'
   },
-  darkest: {
-    prompt: '{p}, in the artstyle of dd{np}',
-    model: 'Darkest Diffusion'
-  },
   eternos: {
     prompt: '{p}, romerorzeternos{np}',
     model: 'Eternos'
-  },
-  'background illustration': {
-    prompt: '{p}, sjh style{np}',
-    model: 'Min Illust Background'
   },
   'dark victorian': {
     prompt: '{p}, darkvictorian artstyle{np}',
@@ -1963,10 +1896,6 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     prompt: '{p}, dreamlikeart{np}',
     model: 'DreamLikeSamKuvshinov'
   },
-  'sygil-dev': {
-    prompt: '{p}{np}',
-    model: 'Sygil-Dev Diffusion'
-  },
   moistmix: {
     prompt: '{p}{np}',
     model: 'MoistMix'
@@ -1986,10 +1915,6 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
   ultraskin: {
     prompt: '{p}, ultraskin{np}',
     model: 'Ultraskin'
-  },
-  sonic: {
-    prompt: '{p}, mobian{np}',
-    model: 'Sonic Diffusion'
   },
   ppp: {
     prompt: '{p}{np}',
@@ -2011,17 +1936,9 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     prompt: '{p}{np}',
     model: 'Dreamshaper'
   },
-  'zelda botw': {
-    prompt: '{p}, botw style{np}',
-    model: 'Zelda BOTW'
-  },
   marvel: {
     prompt: '{p}, whatif style{np}',
     model: 'Marvel Diffusion'
-  },
-  't-shirt': {
-    prompt: '{p}, as a t-shirt logo in the style of <MAGIFACTORY> art{np}',
-    model: 'T-Shirt Diffusion'
   }
 }
 
