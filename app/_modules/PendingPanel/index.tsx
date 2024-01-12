@@ -73,7 +73,7 @@ export default function PendingPanel() {
   }, [done, error, filter, processing, queued, waiting])
 
   let filteredJobs = filterJobs()
-
+  console.log(`now, `, Date.now())
   return (
     <div className={styles.PendingPanelWrapper}>
       <FlexRow gap={4} pb={8}>

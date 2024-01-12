@@ -2,8 +2,31 @@ import { getAllPendingJobs } from 'app/_controllers/pendingJobsCache'
 import { useEffect, useState } from 'react'
 import { JobStatus } from '_types'
 
+function haveRelevantFieldsChanged(
+  oldArray: any[],
+  newArray: any[],
+  fields: string[]
+) {
+  if (oldArray.length !== newArray.length) {
+    return true
+  }
+
+  for (let i = 0; i < oldArray.length; i++) {
+    for (let field of fields) {
+      if (oldArray[i][field] !== newArray[i][field]) {
+        console.log(`this changed?`, field)
+        console.log(oldArray[i][field], ` | `, newArray[i][field])
+        return true
+      }
+    }
+  }
+
+  return false
+}
+
 export default function usePendingJobs() {
   // Job Buckets
+  const [pendingJobs, setPendingJobs] = useState<any[]>([])
   const [done, setDone] = useState<any[]>([])
   const [processing, setProcessing] = useState<any[]>([])
   const [queued, setQueued] = useState<any[]>([])
@@ -81,15 +104,25 @@ export default function usePendingJobs() {
     setError(sortById(pending_error))
   }
 
+  // Prevent race condition that causes pending items panel
+  // list to be janky due to a bunch of unnecessary re-renders.
+  // Only update state if a field has actually changed.
   useEffect(() => {
     const interval = setInterval(() => {
-      processPending(getAllPendingJobs())
+      const newJobs = getAllPendingJobs()
+
+      const fieldsToCheck = ['jobId', 'jobStatus', 'wait_time']
+
+      if (haveRelevantFieldsChanged(pendingJobs, newJobs, fieldsToCheck)) {
+        setPendingJobs(newJobs)
+        processPending(newJobs)
+      }
     }, 250)
 
     return () => {
       clearInterval(interval)
     }
-  }, [])
+  }, [pendingJobs])
 
   return [done, processing, queued, waiting, error]
 }
