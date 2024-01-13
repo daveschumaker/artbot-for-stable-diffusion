@@ -1,4 +1,6 @@
 export interface ModelVersion {
+  id: number | string
+  name: string
   baseModel: string
   downloadUrl: string
   images: Array<{

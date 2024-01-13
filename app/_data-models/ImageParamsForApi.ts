@@ -219,11 +219,17 @@ class ImageParamsForApi {
 
     if (loras && Array.isArray(loras) && loras.length > 0) {
       apiParams.params.loras = loras.map((lora) => {
-        return {
+        const loraObj: Lora = {
           name: String(lora.name),
           model: lora.model,
           clip: lora.clip
         }
+
+        if (lora?.is_version) {
+          loraObj.is_version = true
+        }
+
+        return loraObj
       })
     }
 

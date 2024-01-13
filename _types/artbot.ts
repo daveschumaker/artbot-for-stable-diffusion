@@ -240,6 +240,7 @@ export interface SavedLora {
   label: string
   model: number
   clip: number
+  is_version?: boolean
   trainedWords: string[]
 }
 
