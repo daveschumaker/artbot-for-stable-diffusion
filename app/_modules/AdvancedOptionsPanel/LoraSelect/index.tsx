@@ -84,6 +84,7 @@ const LoraSelect = () => {
       return
     }
 
+    handleSaveRecent(loraDetails)
     lorasToUpdate.push(
       Object.assign({}, loraDetails, {
         model: 1,

@@ -1,12 +1,19 @@
 export interface ModelVersion {
   id: number | string
+  modelId: number // For linking to parentId page.
   name: string
   baseModel: string
+  description: string
   downloadUrl: string
-  images: Array<{
-    url: string
-    nsfw: boolean
+  files: Array<{
+    sizeKB: number
   }>
+  images: Array<{
+    nsfw: boolean
+    type: string
+    url: string
+  }>
+  trainedWords: string[]
 }
 
 export interface Embedding {
