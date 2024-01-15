@@ -17,7 +17,6 @@ import { useCallback, useState } from 'react'
 import { Embedding, ModelVersion } from '_types/civitai'
 import { handleConvertLora } from '../loraUtils'
 import Select from 'app/_components/Select'
-// import { handleSaveRecentEmbedding } from './saveRecentEmbeddings'
 
 const isFavorite = (tiId: string) => {
   let existingArray = localStorage.getItem('favoriteEmbeddings')
@@ -39,11 +38,11 @@ const isFavorite = (tiId: string) => {
 export default function LoraSearchDetailsCard({
   embedding,
   handleClose = () => {},
-  handleAddEmbedding = (value: any) => value
+  handleAddLora = (value: any) => value
 }: {
   embedding: Embedding
   handleClose: () => any
-  handleAddEmbedding: (value: any) => any
+  handleAddLora: (value: any) => any
 }) {
   const [version, setVersion] = useState(embedding.modelVersions[0])
   const [favorited, setFavorited] = useState(isFavorite(embedding.id as string))
@@ -151,13 +150,15 @@ export default function LoraSearchDetailsCard({
     return image
   }, [embedding, version])
 
+  console.log(embedding)
+
   return (
     <Panel padding="8px" style={{ position: 'relative' }}>
       <FlexRow gap={12} style={{ alignItems: 'flex-start' }}>
         {getImage()}
         <FlexCol style={{ flex: 1 }}>
           <FlexCol style={{ flex: 1 }}>
-            <div style={{ fontSize: '14px' }}>{version.name}</div>
+            <div style={{ fontSize: '14px' }}>{embedding.name}</div>
             <div
               className="flex flex-row gap-2 items-center"
               style={{
@@ -177,16 +178,13 @@ export default function LoraSearchDetailsCard({
               </Linker>
               <IconExternalLink size={18} stroke={1.5} />
             </div>
-            <div style={{ fontSize: '14px', fontWeight: 400 }}>
-              Base model: {version.baseModel}
-            </div>
           </FlexCol>
           {embedding.modelVersions.length > 1 && (
             <FlexCol
               id={`model-version-${version.id}`}
               style={{ maxWidth: '280px' }}
             >
-              <div className="text-xs mb-[4px]">Version:</div>
+              <div className="text-xs mb-[4px] mt-[8px]">Version:</div>
               <div>
                 <Select
                   maxMenuHeight={'120px'}
@@ -221,6 +219,9 @@ export default function LoraSearchDetailsCard({
               </div>
             </FlexCol>
           )}
+          <div className="text-xs mt-[4px] mb-[8px]">
+            Base model: {version.baseModel}
+          </div>
           <FlexRow gap={4} style={{ marginBottom: '8px', marginTop: '4px' }}>
             <Button size="small" onClick={() => handleFavorite(version)}>
               {favorited ? (
@@ -231,7 +232,7 @@ export default function LoraSearchDetailsCard({
             </Button>
             <Button
               onClick={() => {
-                handleAddEmbedding(version)
+                handleAddLora(version)
                 handleClose()
               }}
               size="small"
