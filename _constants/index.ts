@@ -18,6 +18,9 @@ export const MAX_IMAGE_PIXELS = 4194304 // Maximum supported resolution for imag
 export const MIN_IMAGE_WIDTH = 64
 export const POLL_COMPLETED_JOBS_INTERVAL = 1500 // ms
 
+export const MAX_LORA_CACHE = 100
+export const MAX_TI_CACHE = 100
+
 export const CREATE_PAGE_PARAM = {
   Edit: 'edit',
   LoadDrawing: 'drawing',

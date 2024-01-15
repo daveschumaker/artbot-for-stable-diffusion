@@ -38,18 +38,19 @@ const isFavorite = (tiId: string) => {
 export default function LoraSearchDetailsCard({
   embedding,
   handleClose = () => {},
-  handleAddLora = (value: any) => value
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  handleAddLora = (lora: Embedding, version: ModelVersion) => {}
 }: {
   embedding: Embedding
   handleClose: () => any
-  handleAddLora: (value: any) => any
+  handleAddLora: (lora: Embedding, version: ModelVersion) => any
 }) {
   const [version, setVersion] = useState(embedding.modelVersions[0])
   const [favorited, setFavorited] = useState(isFavorite(embedding.id as string))
 
-  const handleFavorite = (loraDetails: any) => {
+  const handleFavorite = (lora: Embedding, loraVersion: ModelVersion) => {
     // Need to cast data from default CivitAI shape to the silly shape I decided to use... for some reason.
-    loraDetails = handleConvertLora(loraDetails)
+    const loraDetails = handleConvertLora(embedding, loraVersion)
 
     // Check if the local storage already has an array stored
     let existingArray = localStorage.getItem('favoriteLoras')
@@ -150,8 +151,6 @@ export default function LoraSearchDetailsCard({
     return image
   }, [embedding, version])
 
-  console.log(embedding)
-
   return (
     <Panel padding="8px" style={{ position: 'relative' }}>
       <FlexRow gap={12} style={{ alignItems: 'flex-start' }}>
@@ -223,7 +222,10 @@ export default function LoraSearchDetailsCard({
             Base model: {version.baseModel}
           </div>
           <FlexRow gap={4} style={{ marginBottom: '8px', marginTop: '4px' }}>
-            <Button size="small" onClick={() => handleFavorite(version)}>
+            <Button
+              size="small"
+              onClick={() => handleFavorite(embedding, version)}
+            >
               {favorited ? (
                 <IconHeartFilled stroke={1.5} />
               ) : (
@@ -232,7 +234,7 @@ export default function LoraSearchDetailsCard({
             </Button>
             <Button
               onClick={() => {
-                handleAddLora(version)
+                handleAddLora(embedding, version)
                 handleClose()
               }}
               size="small"

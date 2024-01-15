@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import React, { useCallback, useEffect, useState } from 'react'
-import { Embedding } from '_types/civitai'
+import { Embedding, ModelVersion } from '_types/civitai'
 import FlexCol from 'app/_components/FlexCol'
 import Input from 'app/_components/Input'
 import { Button } from 'app/_components/Button'
@@ -94,7 +94,8 @@ const debouncedSearchRequest = debounce(searchRequest, 500)
 
 const LoraSearchModal = ({
   handleClose = () => {},
-  handleAddLora = (value: any) => value
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  handleAddLora = (lora: Embedding, version: ModelVersion) => {}
 }) => {
   const [hasError, setHasError] = useState<string | boolean>(false)
   const [showOptionsMenu, setShowOptionsMenu] = useState(false)
@@ -288,7 +289,7 @@ const LoraSearchModal = ({
                   <LoraSearchDetailsCard
                     key={`ti_${item.id}`}
                     embedding={item}
-                    handleAddEmbedding={handleAddLora}
+                    handleAddLora={handleAddLora}
                     handleClose={handleClose}
                   />
                 )

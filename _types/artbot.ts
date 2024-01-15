@@ -234,15 +234,19 @@ export interface RandomSamplerParams {
 }
 
 export interface SavedLora {
-  name: string
-  modelId: number // Parent model
-  baseModel: string
-  image: string
+  parentModelId: number
+  name: string | number
   label: string
-  model: number
-  clip: number
-  is_version?: boolean
+  versionLabel: string
+  description: string
+  baseModel: string
   trainedWords: string[]
+  image: string
+  sizeKb: number
+
+  model: number // Strength
+  clip: number
+  is_version: boolean
 }
 
 export interface SelectComponentProps {

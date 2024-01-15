@@ -22,6 +22,8 @@ import { handleConvertLora } from './loraUtils'
 import LoraFavRecentModal from './modals/LoraFavRecentModal'
 import { useInput } from 'app/_modules/InputProvider/context'
 import clsx from 'clsx'
+import { SavedLora } from '_types/artbot'
+import { MAX_LORA_CACHE } from '_constants'
 
 // Temporary hard code for common LCM Lora:
 const getLoraName = (label: string = '', name: string = '') => {
@@ -60,9 +62,8 @@ const LoraSelect = () => {
       // Add the object to the front of the array
       newArray.unshift(loraDetails)
 
-      // Limit the array to 25 elements
-      if (newArray.length > 25) {
-        newArray = newArray.slice(0, 25)
+      if (newArray.length > MAX_LORA_CACHE) {
+        newArray = newArray.slice(0, MAX_LORA_CACHE)
       }
     } else {
       // Create a new array with the object
@@ -73,7 +74,7 @@ const LoraSelect = () => {
     localStorage.setItem('recentLoras', JSON.stringify(newArray))
   }
 
-  const handleAddLora = (loraDetails: any) => {
+  const handleAddLora = (loraDetails: SavedLora) => {
     const lorasToUpdate = [...input.loras]
 
     const exists = lorasToUpdate.filter(
@@ -88,7 +89,8 @@ const LoraSelect = () => {
 
     lorasToUpdate.push(
       Object.assign({}, loraDetails, {
-        is_version: true,
+        is_version:
+          loraDetails.parentModelId !== loraDetails.name ? true : false,
         model: 1,
         clip: 1
       })
@@ -126,7 +128,7 @@ const LoraSelect = () => {
       return null
     }
 
-    input.loras.forEach((lora: any, i: number) => {
+    input.loras.forEach((lora: SavedLora, i: number) => {
       // Need to cast input to correct type
       // @ts-ignore
       const hasWords = lora?.trainedWords?.length > 0
@@ -143,7 +145,11 @@ const LoraSelect = () => {
               <div className="font-bold text-[14px] flex flex-row gap-2 items-center">
                 {displayName}
                 <Linker
-                  href={`https://civitai.com/models/${lora.name}`}
+                  href={`https://civitai.com/models/${
+                    lora.name !== lora.parentModelId
+                      ? `${lora.parentModelId}?modelVersionId=${lora.name}`
+                      : `${lora.parentModelId}`
+                  }`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -162,6 +168,26 @@ const LoraSelect = () => {
             </Button>
           </div>
           <div className="w-full">
+            {lora.versionLabel && (
+              <Section>
+                <div className="flex flex-row items-center">
+                  <div
+                    style={{
+                      color: 'white',
+                      fontWeight: 700,
+                      fontSize: '14px',
+                      minWidth: 'var(--options-label-width)',
+                      width: 'var(--options-label-width)'
+                    }}
+                  >
+                    Version
+                  </div>
+                  <div style={{ color: 'white', fontSize: '14px' }}>
+                    {lora.versionLabel}
+                  </div>
+                </div>
+              </Section>
+            )}
             <Section>
               <div className="flex flex-row items-center justify-between">
                 <div
@@ -402,8 +428,8 @@ const LoraSelect = () => {
                 lorasModal.show({
                   children: (
                     <LoraSearchModal
-                      handleAddLora={(lora) => {
-                        const loraDetails = handleConvertLora(lora)
+                      handleAddLora={(lora, version) => {
+                        const loraDetails = handleConvertLora(lora, version)
                         handleAddLora(loraDetails)
                       }}
                     />

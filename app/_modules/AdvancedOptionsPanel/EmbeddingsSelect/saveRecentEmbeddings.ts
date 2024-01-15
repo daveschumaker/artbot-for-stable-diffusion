@@ -1,3 +1,4 @@
+import { MAX_TI_CACHE } from '_constants'
 import { Embedding } from '_types/civitai'
 
 export const handleSaveRecentEmbedding = (embedding: Embedding) => {
@@ -22,9 +23,8 @@ export const handleSaveRecentEmbedding = (embedding: Embedding) => {
     // Add the object to the front of the array
     newArray.unshift(embedding)
 
-    // Limit the array to 25 elements
-    if (newArray.length > 25) {
-      newArray = newArray.slice(0, 25)
+    if (newArray.length > MAX_TI_CACHE) {
+      newArray = newArray.slice(0, MAX_TI_CACHE)
     }
   } else {
     // Create a new array with the object
