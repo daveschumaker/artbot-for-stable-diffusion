@@ -85,13 +85,14 @@ const LoraSelect = () => {
     }
 
     handleSaveRecent(loraDetails)
+
     lorasToUpdate.push(
       Object.assign({}, loraDetails, {
+        is_version: true,
         model: 1,
         clip: 1
       })
     )
-
     setInput({ loras: [...lorasToUpdate] })
   }
 

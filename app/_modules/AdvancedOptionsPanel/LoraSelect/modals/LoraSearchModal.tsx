@@ -79,8 +79,6 @@ const searchRequest = async ({
     const data = await response.json()
     cache.set(searchKey, data)
 
-    console.log(`Search key:`, searchKey)
-
     const { items = [], metadata = {} } = data
     pendingRequest = false
     return { items, metadata }
@@ -170,7 +168,7 @@ const LoraSearchModal = ({
   }, [currentPage, input, showNsfw])
 
   return (
-    <>
+    <div id="lora-search-modal">
       <FlexCol mt={-1}>
         <FlexCol>
           <div
@@ -308,7 +306,7 @@ const LoraSearchModal = ({
           />
         </div>
       )}
-    </>
+    </div>
   )
 }
 

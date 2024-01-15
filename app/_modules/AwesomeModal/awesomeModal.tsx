@@ -121,6 +121,7 @@ function AwesomeModal({
       />
       <div
         className={clsx(styles.ModalWrapper, className)}
+        id="awesome-modal-wrapper"
         style={{
           maxHeight: `${maxHeight}px`,
           minHeight: `${minHeight}px`,

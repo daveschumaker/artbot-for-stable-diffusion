@@ -45,7 +45,6 @@ export default function LoraSearchDetailsCard({
   handleClose: () => any
   handleAddEmbedding: (value: any) => any
 }) {
-  console.log(`embedding?`, embedding)
   const [version, setVersion] = useState(embedding.modelVersions[0])
   const [favorited, setFavorited] = useState(isFavorite(embedding.id as string))
 
@@ -152,10 +151,8 @@ export default function LoraSearchDetailsCard({
     return image
   }, [embedding, version])
 
-  console.log(`version`, version)
-
   return (
-    <Panel padding="8px">
+    <Panel padding="8px" style={{ position: 'relative' }}>
       <FlexRow gap={12} style={{ alignItems: 'flex-start' }}>
         {getImage()}
         <FlexCol style={{ flex: 1 }}>
@@ -185,16 +182,23 @@ export default function LoraSearchDetailsCard({
             </div>
           </FlexCol>
           {embedding.modelVersions.length > 1 && (
-            <FlexCol style={{ maxWidth: '280px' }}>
+            <FlexCol
+              id={`model-version-${version.id}`}
+              style={{ maxWidth: '280px' }}
+            >
               <div className="text-xs mb-[4px]">Version:</div>
               <div>
                 <Select
-                  // @ts-ignore
-                  formatOptionLabel={(option, { context }) => {
+                  maxMenuHeight={'120px'}
+                  menuPlacement={'bottom'}
+                  formatOptionLabel={(
+                    option: any,
+                    { context }: { context: any }
+                  ) => {
                     if (context === 'menu') {
                       return (
                         <>
-                          <div>{option.label}</div>
+                          <div style={{ fontSize: '14px' }}>{option.label}</div>
                           <div style={{ fontSize: '10px' }}>
                             Baseline: {formatBaseline(version?.baseModel)}
                           </div>

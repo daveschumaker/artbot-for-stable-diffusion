@@ -2,7 +2,6 @@ import { ModelVersion } from '_types/civitai'
 import { sanitize } from 'isomorphic-dompurify'
 
 export const handleConvertLora = (rawLoraDetails: ModelVersion) => {
-  console.log(`rawLoraDetails`, rawLoraDetails)
   const { files = [], images = [] } = rawLoraDetails
 
   return {

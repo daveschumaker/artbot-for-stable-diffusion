@@ -79,8 +79,6 @@ const searchRequest = async ({
     const data = await response.json()
     cache.set(searchKey, data)
 
-    console.log(`Search key:`, searchKey)
-
     const { items = [], metadata = {} } = data
     pendingRequest = false
     return { items, metadata }
