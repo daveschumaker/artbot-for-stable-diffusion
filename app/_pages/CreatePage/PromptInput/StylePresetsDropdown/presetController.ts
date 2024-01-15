@@ -109,7 +109,5 @@ export const handleUsePreset = ({
     updateInput.width = presetDetails.width
   }
 
-  console.log(`updateInput?`, updateInput)
-
   return updateInput
 }

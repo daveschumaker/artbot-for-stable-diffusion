@@ -13,9 +13,10 @@ import Panel from 'app/_components/Panel'
 import { Button } from 'app/_components/Button'
 import Linker from 'app/_components/Linker'
 import { sanitize } from 'isomorphic-dompurify'
-import { useState } from 'react'
-import { Embedding } from '_types/civitai'
+import { useCallback, useState } from 'react'
+import { Embedding, ModelVersion } from '_types/civitai'
 import { handleConvertLora } from '../loraUtils'
+import Select from 'app/_components/Select'
 // import { handleSaveRecentEmbedding } from './saveRecentEmbeddings'
 
 const isFavorite = (tiId: string) => {
@@ -44,8 +45,8 @@ export default function LoraSearchDetailsCard({
   handleClose: () => any
   handleAddEmbedding: (value: any) => any
 }) {
+  const [version, setVersion] = useState(embedding.modelVersions[0])
   const [favorited, setFavorited] = useState(isFavorite(embedding.id as string))
-  const hasImage = embedding.modelVersions[0].images.length > 0
 
   const handleFavorite = (loraDetails: any) => {
     // Need to cast data from default CivitAI shape to the silly shape I decided to use... for some reason.
@@ -83,28 +84,80 @@ export default function LoraSearchDetailsCard({
     localStorage.setItem('favoriteLoras', JSON.stringify(newArray))
   }
 
+  const versionOptions = embedding.modelVersions.map((model, idx) => {
+    return {
+      idx,
+      label: model.name,
+      value: model.id
+    }
+  })
+
+  const formatBaseline = (baseline: string) => {
+    if (baseline === 'stable diffusion 1') {
+      return `SD 1.5`
+    } else if (baseline === 'stable diffusion 2') {
+      return 'SD 2.0'
+    } else if (baseline === 'stable_diffusion_xl') {
+      return 'SDXL'
+    } else {
+      return baseline
+    }
+  }
+
+  const getImage = useCallback(() => {
+    let image = null
+    const { modelVersions = [] } = embedding
+    if (!version || !version.images || version.images.length === 0) {
+      image = (
+        <div
+          style={{
+            height: '140px',
+            width: '140px',
+            backgroundColor: 'gray'
+          }}
+        ></div>
+      )
+    } else if (version.images[0].url && version.images[0].type === 'image') {
+      image = (
+        <img
+          alt="Example of LORA"
+          src={version.images[0].url}
+          style={{ maxHeight: '300px', maxWidth: '140px' }}
+        />
+      )
+    } else if (
+      modelVersions[0].images[0].url &&
+      modelVersions[0].images[0].type === 'image'
+    ) {
+      image = (
+        <img
+          alt="Example of LORA"
+          src={modelVersions[0].images[0].url}
+          style={{ maxHeight: '300px', maxWidth: '140px' }}
+        />
+      )
+    } else {
+      image = (
+        <div
+          style={{
+            height: '140px',
+            width: '140px',
+            backgroundColor: 'gray'
+          }}
+        ></div>
+      )
+    }
+
+    return image
+  }, [embedding, version])
+
   return (
-    <Panel padding="8px">
+    <Panel padding="8px" style={{ position: 'relative' }}>
       <FlexRow gap={12} style={{ alignItems: 'flex-start' }}>
-        {!hasImage && (
-          <div
-            style={{
-              height: '140px',
-              width: '140px',
-              backgroundColor: 'gray'
-            }}
-          ></div>
-        )}
-        {hasImage && (
-          <img
-            alt="Example of LORA"
-            src={embedding.modelVersions[0].images[0].url}
-            style={{ maxHeight: '300px', maxWidth: '140px' }}
-          />
-        )}
+        {getImage()}
         <FlexCol style={{ flex: 1 }}>
           <FlexCol style={{ flex: 1 }}>
-            <div style={{ fontSize: '14px' }}>{embedding.name}</div>
+            <div style={{ fontSize: '14px' }}>{version.name}</div>
             <div
               className="flex flex-row gap-2 items-center"
               style={{
@@ -112,7 +165,11 @@ export default function LoraSearchDetailsCard({
               }}
             >
               <Linker
-                href={`https://civitai.com/models/${embedding.id}`}
+                href={`https://civitai.com/models/${
+                  version.id !== embedding.id
+                    ? `${embedding.id}?modelVersionId=${version.id}`
+                    : `${embedding.id}`
+                }`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -121,11 +178,51 @@ export default function LoraSearchDetailsCard({
               <IconExternalLink size={18} stroke={1.5} />
             </div>
             <div style={{ fontSize: '14px', fontWeight: 400 }}>
-              Base model: {embedding.modelVersions[0].baseModel}
+              Base model: {version.baseModel}
             </div>
           </FlexCol>
+          {embedding.modelVersions.length > 1 && (
+            <FlexCol
+              id={`model-version-${version.id}`}
+              style={{ maxWidth: '280px' }}
+            >
+              <div className="text-xs mb-[4px]">Version:</div>
+              <div>
+                <Select
+                  maxMenuHeight={'120px'}
+                  menuPlacement={'bottom'}
+                  formatOptionLabel={(
+                    option: any,
+                    { context }: { context: any }
+                  ) => {
+                    if (context === 'menu') {
+                      return (
+                        <>
+                          <div style={{ fontSize: '14px' }}>{option.label}</div>
+                          <div style={{ fontSize: '10px' }}>
+                            Baseline: {formatBaseline(version?.baseModel)}
+                          </div>
+                        </>
+                      )
+                    } else {
+                      return <div>{option.label}</div>
+                    }
+                  }}
+                  options={versionOptions}
+                  onChange={(selectedModel: ModelVersion) => {
+                    // @ts-ignore
+                    setVersion(embedding.modelVersions[selectedModel.idx])
+                  }}
+                  value={{
+                    label: version.name,
+                    value: version.id as any
+                  }}
+                />
+              </div>
+            </FlexCol>
+          )}
           <FlexRow gap={4} style={{ marginBottom: '8px', marginTop: '4px' }}>
-            <Button size="small" onClick={() => handleFavorite(embedding)}>
+            <Button size="small" onClick={() => handleFavorite(version)}>
               {favorited ? (
                 <IconHeartFilled stroke={1.5} />
               ) : (
@@ -134,8 +231,7 @@ export default function LoraSearchDetailsCard({
             </Button>
             <Button
               onClick={() => {
-                handleAddEmbedding(embedding)
-                // handleSaveRecentEmbedding(embedding)
+                handleAddEmbedding(version)
                 handleClose()
               }}
               size="small"

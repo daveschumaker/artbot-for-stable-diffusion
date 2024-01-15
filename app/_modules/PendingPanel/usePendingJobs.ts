@@ -14,8 +14,6 @@ function haveRelevantFieldsChanged(
   for (let i = 0; i < oldArray.length; i++) {
     for (let field of fields) {
       if (oldArray[i][field] !== newArray[i][field]) {
-        console.log(`this changed?`, field)
-        console.log(oldArray[i][field], ` | `, newArray[i][field])
         return true
       }
     }

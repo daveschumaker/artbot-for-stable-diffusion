@@ -138,12 +138,15 @@ export interface DiffusionModel {
 
 export interface SelectPropsComponent {
   className?: string
+  formatOptionLabel?: (option: any, { context }: { context: any }) => any
   inputMode?: string
   isDisabled?: boolean
   isMulti?: boolean
   hideSelectedOptions?: boolean
   isSearchable?: boolean
+  maxMenuHeight?: string
   menuPlacement?: string
+  menuPortalTarget?: Element | null
   name?: string
   onChange: any
   options: Array<any>

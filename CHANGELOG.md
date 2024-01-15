@@ -1,3 +1,7 @@
+# 2024.01.14
+
+- Add support for recently added AI Horde feature for displaying and picking from multiple LoRA versions. (I fully recognize, the LoRA search interface needs to be significantly improved. It's definitely on my mind!)
+
 # 2024.01.11
 
 - Add RealESRGAN_x2plus upscaler (Thanks to Sidorok for letting me know this was available)

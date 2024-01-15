@@ -4,6 +4,7 @@ export default function FlexCol({
   children,
   className,
   gap = 0,
+  id,
   mb = 0,
   mt = 0,
   pb = 0,
@@ -12,6 +13,7 @@ export default function FlexCol({
   children: ReactNode
   className?: string
   gap?: number
+  id?: string
   mb?: number
   mt?: number
   pb?: number
@@ -30,6 +32,7 @@ export default function FlexCol({
   return (
     <div
       className={className}
+      id={id}
       style={Object.assign({}, defaultStyleObj, style)}
     >
       {children}

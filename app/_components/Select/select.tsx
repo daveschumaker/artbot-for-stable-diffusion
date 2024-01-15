@@ -177,6 +177,7 @@ const SelectComponent = (props: SelectComponentProps) => {
       instanceId={id}
       classNamePrefix="select"
       closeMenuOnSelect={props.isMulti ? false : true}
+      menuPlacement={'auto' as any}
       {...rest}
       //@ts-ignore
       styles={customStyles}

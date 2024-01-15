@@ -160,7 +160,6 @@ const LoraFavRecentModal = ({
               </div>
             )}
             {filtered.map((loraDetails: any) => {
-              console.log(`lora deetz`, loraDetails)
               return (
                 <LoraDetails
                   key={loraDetails.name}

@@ -183,9 +183,16 @@ export enum InjectTi {
 }
 
 export interface Lora {
+  /** "label" is specifically added by ArtBot in order to store a
+   * "nice" name to display on the front-end, or with shared image
+   * settings. It should be stripped out when passing an image
+   * request to the Horde API.
+   */
+  label?: string
   name: string
   model: number
   clip: number
+  is_version?: boolean
 }
 
 export interface ModelDetails {
