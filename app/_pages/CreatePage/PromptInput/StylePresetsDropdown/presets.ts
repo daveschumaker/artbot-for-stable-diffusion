@@ -22,7 +22,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     height: 1024,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   albedo: {
     prompt: '{p}{np}',
@@ -32,7 +38,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     height: 1024,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   raw: {
     prompt: '{p}{np}',
@@ -54,7 +66,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   'makoto birthday': {
     prompt:
@@ -65,7 +83,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   'artistic birthday': {
     prompt:
@@ -76,7 +100,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   bdcolordd: {
     prompt: '{p}, happy birthday, colorful, in the style of t3xtn{np}',
@@ -88,11 +118,27 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [
-      { name: '268475', model: 1, is_version: true },
-      { name: '85479', model: 0.5 },
-      { name: '42190', model: 0.85 },
-      { name: '109775', model: 0.2 },
-      { name: '22437', model: 0.85 }
+      {
+        name: '268475',
+        model: 1,
+        is_version: true
+      },
+      {
+        name: '85479',
+        model: 0.5
+      },
+      {
+        name: '42190',
+        model: 0.85
+      },
+      {
+        name: '109775',
+        model: 0.2
+      },
+      {
+        name: '22437',
+        model: 0.85
+      }
     ]
   },
   'sdxl-vertical': {
@@ -103,7 +149,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   'sdxl-extreme-vertical': {
     prompt: '{p}{np}',
@@ -113,7 +165,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   'sdxl-portrait': {
     prompt: '{p}{np}',
@@ -123,7 +181,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   'sdxl-photo': {
     prompt: '{p}{np}',
@@ -133,7 +197,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   'sdxl-photo-horizontal': {
     prompt: '{p}{np}',
@@ -143,7 +213,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   'sdxl-landscape': {
     prompt: '{p}{np}',
@@ -153,7 +229,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   'sdxl-widescreen': {
     prompt: '{p}{np}',
@@ -163,7 +245,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   'sdxl-cinematic': {
     prompt: '{p}{np}',
@@ -173,36 +261,14 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
-
-  'hamunaptra party': {
-    prompt: '{p}###{np}',
-    model: 'Dreamshaper',
-    sampler_name: 'k_dpmpp_2m',
-    steps: 27,
-    cfg_scale: 7.5,
-    width: 768,
-    height: 960,
-    hires_fix: true,
-    tis: [{ name: '4157' }]
-  },
-  bootybash: {
-    prompt:
-      '{p}###{np}, low quality, blurry, no pupils, missing digits, extra limbs, monochrome, watermark, signature, artist name, bad face, bad hand, worst quality, writing,',
-    model: 'Anything Diffusion',
-    sampler_name: 'k_euler',
-    karras: true,
-    steps: 30,
-    cfg_scale: 7,
-    width: 768,
-    height: 1024,
-    clip_skip: true,
-    hires_fix: true,
-    loras: [{ name: '58390', model: 0.55, clip: 1 }],
-    tis: [{ name: '7808', inject_ti: 'negprompt', strength: 0.7 }]
-  },
-
   graffiti: {
     prompt:
       'graffiti style {p}, street art, vibrant, urban, detailed, tag, mural###{np}, ugly, deformed, noisy, blurry, low contrast, realism, photorealistic',
@@ -212,7 +278,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   retrofuturistic: {
     prompt:
@@ -223,7 +295,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   dystopian: {
     prompt:
@@ -234,7 +312,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   sdxlcatgirlportrait: {
     prompt:
@@ -245,7 +329,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   neonnoir: {
     prompt:
@@ -256,7 +346,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   floralceramic: {
     prompt:
@@ -267,7 +363,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   sovietpropaganda: {
     prompt:
@@ -278,7 +380,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   moderntarotcard: {
     prompt:
@@ -289,7 +397,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   antiquetarotcard: {
     prompt:
@@ -300,7 +414,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   playingcard: {
     prompt:
@@ -311,7 +431,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   mtgcard: {
     prompt:
@@ -322,7 +448,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   baseballcard: {
     prompt:
@@ -333,7 +465,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   greetingcard: {
     prompt: 'A greeting card, {p}###{np}, lowres, cropped, cgi, pixelated',
@@ -343,7 +481,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   postcard: {
     prompt:
@@ -354,7 +498,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   goldenagecomics: {
     prompt:
@@ -365,7 +515,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   manga: {
     prompt:
@@ -376,7 +532,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   sdxlanime: {
     prompt:
@@ -387,18 +549,30 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   portraitphoto: {
     prompt:
       'portrait photo of {p}, photograph, highly detailed face, depth of field, moody light, style by Dan Winters, Russell James, Steve McCurry, centered, extremely detailed, Nikon D850, award winning photography###disfigured{np}, closeup, cropped',
-    model: 'AlbedoBase XL (SDXL)',
+    model: 'ICBINP XL',
     width: 896,
     height: 1152,
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   sdxlspace: {
     prompt:
@@ -409,18 +583,23 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   schematic: {
     prompt:
       '23rd century scientific schematics for {p}, blueprint, hyperdetailed vector technical documents, callouts, legend, patent registry, clean linework, crisp lines###{np}, blurry',
-    model: 'AlbedoBase XL (SDXL)',
+    model: 'SDXL 1.0',
     width: 1152,
     height: 896,
-    steps: 8,
-    cfg_scale: 2,
-    sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    steps: 22,
+    cfg_scale: 6,
+    sampler_name: 'k_dpmpp_2m'
   },
   futurefashion: {
     prompt:
@@ -431,7 +610,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   building: {
     prompt:
@@ -442,7 +627,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   animal: {
     prompt:
@@ -453,7 +644,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   vaporwave: {
     prompt:
@@ -464,7 +661,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   isometric: {
     prompt:
@@ -475,7 +678,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   lowpoly: {
     prompt:
@@ -486,7 +695,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   claymation: {
     prompt:
@@ -497,7 +712,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   origami: {
     prompt:
@@ -508,7 +729,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   lineart: {
     prompt:
@@ -519,7 +746,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   pixelart: {
     prompt:
@@ -530,7 +763,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   embroidery: {
     prompt:
@@ -541,7 +780,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   broadsheetart: {
     prompt: 'antique broadsheet drawing, {p}, text, monotone###{np}, colorful',
@@ -551,7 +796,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   watercolorscenery: {
     prompt:
@@ -562,7 +813,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   pencilscribbles: {
     prompt:
@@ -573,7 +830,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   sdxlchibis: {
     prompt:
@@ -584,7 +847,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   sdxlstreetfashion: {
     prompt:
@@ -595,7 +864,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   sdxlhorror: {
     prompt:
@@ -606,7 +881,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   animation: {
     prompt:
@@ -617,7 +898,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   disney: {
     prompt:
@@ -628,7 +915,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   pixar: {
     prompt:
@@ -639,7 +932,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   cyborgpunkportrait: {
     prompt:
@@ -650,7 +949,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   movieposter: {
     prompt:
@@ -661,9 +966,14 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
-
   glitchart: {
     prompt:
       '{p}###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
@@ -672,7 +982,12 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     cfg_scale: 7.5,
     width: 512,
     height: 640,
-    loras: [{ name: '71125', inject_trigger: 'any' }]
+    loras: [
+      {
+        name: '71125',
+        inject_trigger: 'any'
+      }
+    ]
   },
   oldvhs: {
     prompt:
@@ -682,7 +997,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     cfg_scale: 7.5,
     width: 512,
     height: 640,
-    loras: [{ name: '103667' }]
+    loras: [
+      {
+        name: '103667'
+      }
+    ]
   },
   pixelsorting: {
     prompt:
@@ -692,7 +1011,12 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     cfg_scale: 7.5,
     width: 512,
     height: 640,
-    loras: [{ name: '57963', inject_trigger: 'any' }]
+    loras: [
+      {
+        name: '57963',
+        inject_trigger: 'any'
+      }
+    ]
   },
   analogdistortion: {
     prompt:
@@ -702,16 +1026,24 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     cfg_scale: 7.5,
     width: 512,
     height: 640,
-    loras: [{ name: '104917' }]
+    loras: [
+      {
+        name: '104917'
+      }
+    ]
   },
-
   gothichorrorai: {
     prompt:
       '{p}###{np}, worst quality, low quality:1.4), EasyNegative, bad anatomy, bad hands, cropped, missing fingers, missing toes, too many toes, too many fingers, missing arms, long neck, Humpbacked, deformed, disfigured, poorly drawn face, distorted face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, malformed hands, out of focus, long body, monochrome, symbol, text, logo, door frame, window frame, mirror frame',
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '39760', inject_trigger: 'any' }]
+    loras: [
+      {
+        name: '39760',
+        inject_trigger: 'any'
+      }
+    ]
   },
   tentaclehorrorai: {
     prompt:
@@ -719,7 +1051,12 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '42468', inject_trigger: 'any' }]
+    loras: [
+      {
+        name: '42468',
+        inject_trigger: 'any'
+      }
+    ]
   },
   reelhorror: {
     prompt:
@@ -727,7 +1064,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '67666' }]
+    loras: [
+      {
+        name: '67666'
+      }
+    ]
   },
   bodyhorror: {
     prompt:
@@ -757,7 +1098,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
         clip: 1,
         inject_trigger: 'body horror, mutation, blood'
       },
-      { name: '67666', model: 0.7, clip: 1 }
+      {
+        name: '67666',
+        model: 0.7,
+        clip: 1
+      }
     ]
   },
   ivorygoldai: {
@@ -766,7 +1111,12 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '62700', inject_trigger: 'any' }]
+    loras: [
+      {
+        name: '62700',
+        inject_trigger: 'any'
+      }
+    ]
   },
   arielphorror: {
     prompt:
@@ -774,7 +1124,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Lyriel',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '39760' }]
+    loras: [
+      {
+        name: '39760'
+      }
+    ]
   },
   dreadhorror: {
     prompt:
@@ -782,9 +1136,12 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Deliberate',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '98011' }]
+    loras: [
+      {
+        name: '98011'
+      }
+    ]
   },
-
   'vibrant halloween': {
     prompt:
       'a Halloween themed vibrant pulp art by JC leyendecker and norman rockwell featuring {p}. horror vibe, dark atmospthere, depth of field, campy, spooky. purple, orange and green color palette.###{np}',
@@ -878,7 +1235,13 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     steps: 8,
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
-    loras: [{ name: '247778', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   'color splash': {
     prompt: '{p}, painted world, colorful splashes###{np}',
@@ -889,8 +1252,16 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [
-      { name: '247778', model: 1, is_version: true },
-      { name: '273924', model: 0.75, is_version: true }
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      },
+      {
+        name: '273924',
+        model: 0.75,
+        is_version: true
+      }
     ]
   },
   parchment: {
@@ -902,8 +1273,84 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     cfg_scale: 2,
     sampler_name: 'k_dpmpp_sde',
     loras: [
-      { name: '247778', model: 1, is_version: true },
-      { name: '285737', model: 1.0, is_version: true }
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      },
+      {
+        name: '285737',
+        model: 1,
+        is_version: true
+      }
+    ]
+  },
+  'emoji 3d': {
+    prompt:
+      '{p} . cgi emoji centered icon, cute, solid white background###nsfw, flat, 2d, photo, anime, {np}',
+    model: 'Fustercluck',
+    width: 1024,
+    height: 1024,
+    steps: 8,
+    cfg_scale: 2,
+    sampler_name: 'k_dpmpp_sde',
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
+  },
+  'emoji 2d': {
+    prompt:
+      '{p} . flat 2d emoji icon, cute, crisp outlined icon art, colorful, centered, on a solid white background###nsfw, 3d, octane render, photo, anime, {np}',
+    model: 'AlbedoBase XL (SDXL)',
+    width: 1024,
+    height: 1024,
+    steps: 8,
+    cfg_scale: 2,
+    sampler_name: 'k_dpmpp_sde',
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
+  },
+  'fustercluck 3d': {
+    prompt:
+      '{p} . cgi render, volumetric lighting###nsfw, anime, 2d, flat, photo, {np}',
+    model: 'Fustercluck',
+    width: 1024,
+    height: 1024,
+    steps: 8,
+    cfg_scale: 2,
+    sampler_name: 'k_dpmpp_sde',
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
+  },
+  'vector illustration': {
+    prompt:
+      '{p} . digital vector art, svg, adobe illustrator, made in procreate###nsfw, text, 3d, photo, anime, {np}',
+    model: 'AlbedoBase XL (SDXL)',
+    width: 1024,
+    height: 1024,
+    steps: 8,
+    cfg_scale: 2,
+    sampler_name: 'k_dpmpp_sde',
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
     ]
   },
   piratepunk: {
@@ -912,7 +1359,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '45892' }]
+    loras: [
+      {
+        name: '45892'
+      }
+    ]
   },
   lunarpunk: {
     prompt:
@@ -920,7 +1371,12 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '97136', inject_trigger: 'any' }]
+    loras: [
+      {
+        name: '97136',
+        inject_trigger: 'any'
+      }
+    ]
   },
   celtpunk: {
     prompt:
@@ -928,7 +1384,12 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '92008', inject_trigger: 'any' }]
+    loras: [
+      {
+        name: '92008',
+        inject_trigger: 'any'
+      }
+    ]
   },
   toxicpunk: {
     prompt:
@@ -936,7 +1397,12 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '95802', inject_trigger: 'any' }]
+    loras: [
+      {
+        name: '95802',
+        inject_trigger: 'any'
+      }
+    ]
   },
   mongolpunk: {
     prompt:
@@ -944,7 +1410,12 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '85109', inject_trigger: 'any' }]
+    loras: [
+      {
+        name: '85109',
+        inject_trigger: 'any'
+      }
+    ]
   },
   musketpunk: {
     prompt:
@@ -952,7 +1423,12 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '90543', inject_trigger: 'any' }]
+    loras: [
+      {
+        name: '90543',
+        inject_trigger: 'any'
+      }
+    ]
   },
   absinthepunk: {
     prompt:
@@ -960,7 +1436,12 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '89183', inject_trigger: 'any' }]
+    loras: [
+      {
+        name: '89183',
+        inject_trigger: 'any'
+      }
+    ]
   },
   cattlepunk: {
     prompt:
@@ -968,7 +1449,12 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '95828', inject_trigger: 'any' }]
+    loras: [
+      {
+        name: '95828',
+        inject_trigger: 'any'
+      }
+    ]
   },
   circuspunk: {
     prompt:
@@ -976,7 +1462,12 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '87884', inject_trigger: 'any' }]
+    loras: [
+      {
+        name: '87884',
+        inject_trigger: 'any'
+      }
+    ]
   },
   aetherpunk: {
     prompt:
@@ -984,7 +1475,12 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '85036', inject_trigger: 'any' }]
+    loras: [
+      {
+        name: '85036',
+        inject_trigger: 'any'
+      }
+    ]
   },
   potatopunk: {
     prompt:
@@ -992,7 +1488,12 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '72231', inject_trigger: 'any' }]
+    loras: [
+      {
+        name: '72231',
+        inject_trigger: 'any'
+      }
+    ]
   },
   coalpunk: {
     prompt:
@@ -1000,7 +1501,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '84753' }]
+    loras: [
+      {
+        name: '84753'
+      }
+    ]
   },
   alchemypunk: {
     prompt:
@@ -1008,7 +1513,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '78766' }]
+    loras: [
+      {
+        name: '78766'
+      }
+    ]
   },
   gothicpunk: {
     prompt:
@@ -1016,7 +1525,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '78695' }]
+    loras: [
+      {
+        name: '78695'
+      }
+    ]
   },
   witchpunk: {
     prompt:
@@ -1024,7 +1537,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '78280' }]
+    loras: [
+      {
+        name: '78280'
+      }
+    ]
   },
   colorpunk: {
     prompt:
@@ -1032,7 +1549,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '78060' }]
+    loras: [
+      {
+        name: '78060'
+      }
+    ]
   },
   bronzepunk: {
     prompt:
@@ -1040,7 +1561,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '77293' }]
+    loras: [
+      {
+        name: '77293'
+      }
+    ]
   },
   neonpunk: {
     prompt:
@@ -1048,7 +1573,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '77121' }]
+    loras: [
+      {
+        name: '77121'
+      }
+    ]
   },
   kazakpunk: {
     prompt:
@@ -1056,7 +1585,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '76737' }]
+    loras: [
+      {
+        name: '76737'
+      }
+    ]
   },
   grecopunk: {
     prompt:
@@ -1064,7 +1597,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '76190' }]
+    loras: [
+      {
+        name: '76190'
+      }
+    ]
   },
   romanpunk: {
     prompt:
@@ -1072,7 +1609,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '76190' }]
+    loras: [
+      {
+        name: '76190'
+      }
+    ]
   },
   sovietpunk: {
     prompt:
@@ -1080,7 +1621,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '75709' }]
+    loras: [
+      {
+        name: '75709'
+      }
+    ]
   },
   arabiannightspunk: {
     prompt:
@@ -1088,7 +1633,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '69315' }]
+    loras: [
+      {
+        name: '69315'
+      }
+    ]
   },
   steampunk: {
     prompt:
@@ -1096,7 +1645,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '59338' }]
+    loras: [
+      {
+        name: '59338'
+      }
+    ]
   },
   cogpunk: {
     prompt:
@@ -1104,7 +1657,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '59338' }]
+    loras: [
+      {
+        name: '59338'
+      }
+    ]
   },
   victorianpunk: {
     prompt:
@@ -1112,7 +1669,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '84250' }]
+    loras: [
+      {
+        name: '84250'
+      }
+    ]
   },
   biopunk: {
     prompt:
@@ -1120,7 +1681,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '80375' }]
+    loras: [
+      {
+        name: '80375'
+      }
+    ]
   },
   mahabharatapunk: {
     prompt:
@@ -1128,7 +1693,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '71478' }]
+    loras: [
+      {
+        name: '71478'
+      }
+    ]
   },
   javapunk: {
     prompt:
@@ -1136,7 +1705,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '72415' }]
+    loras: [
+      {
+        name: '72415'
+      }
+    ]
   },
   balipunk: {
     prompt:
@@ -1144,7 +1717,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '72347' }]
+    loras: [
+      {
+        name: '72347'
+      }
+    ]
   },
   dieselpunk: {
     prompt:
@@ -1152,7 +1729,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '64676' }]
+    loras: [
+      {
+        name: '64676'
+      }
+    ]
   },
   totempunk: {
     prompt:
@@ -1160,7 +1741,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '71819' }]
+    loras: [
+      {
+        name: '71819'
+      }
+    ]
   },
   samuraipunk: {
     prompt:
@@ -1168,7 +1753,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '69108' }]
+    loras: [
+      {
+        name: '69108'
+      }
+    ]
   },
   zulupunk: {
     prompt:
@@ -1176,7 +1765,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '65725' }]
+    loras: [
+      {
+        name: '65725'
+      }
+    ]
   },
   teslapunk: {
     prompt:
@@ -1184,7 +1777,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '64955' }]
+    loras: [
+      {
+        name: '64955'
+      }
+    ]
   },
   valvepunk: {
     prompt:
@@ -1192,7 +1789,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '64955' }]
+    loras: [
+      {
+        name: '64955'
+      }
+    ]
   },
   infernalpunk: {
     prompt:
@@ -1200,7 +1801,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '62585' }]
+    loras: [
+      {
+        name: '62585'
+      }
+    ]
   },
   solarpunk: {
     prompt:
@@ -1208,7 +1813,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '43944' }]
+    loras: [
+      {
+        name: '43944'
+      }
+    ]
   },
   stonepunk: {
     prompt:
@@ -1216,7 +1825,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '51539' }]
+    loras: [
+      {
+        name: '51539'
+      }
+    ]
   },
   gempunk: {
     prompt:
@@ -1224,7 +1837,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '49374' }]
+    loras: [
+      {
+        name: '49374'
+      }
+    ]
   },
   horrorpunk: {
     prompt:
@@ -1232,7 +1849,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '47489' }]
+    loras: [
+      {
+        name: '47489'
+      }
+    ]
   },
   bonepunk: {
     prompt:
@@ -1240,7 +1861,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '48356' }]
+    loras: [
+      {
+        name: '48356'
+      }
+    ]
   },
   oldegyptpunk: {
     prompt:
@@ -1248,7 +1873,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '43229' }]
+    loras: [
+      {
+        name: '43229'
+      }
+    ]
   },
   vikingpunk: {
     prompt:
@@ -1256,7 +1885,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '41364' }]
+    loras: [
+      {
+        name: '41364'
+      }
+    ]
   },
   gaslamppunk: {
     prompt:
@@ -1264,7 +1897,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '71335' }]
+    loras: [
+      {
+        name: '71335'
+      }
+    ]
   },
   atompunk: {
     prompt:
@@ -1272,7 +1909,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '64235' }]
+    loras: [
+      {
+        name: '64235'
+      }
+    ]
   },
   gothpunk: {
     prompt:
@@ -1280,7 +1921,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '75265' }]
+    loras: [
+      {
+        name: '75265'
+      }
+    ]
   },
   circuitpunk: {
     prompt:
@@ -1288,7 +1933,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '58410' }]
+    loras: [
+      {
+        name: '58410'
+      }
+    ]
   },
   nightmarepunk: {
     prompt:
@@ -1296,7 +1945,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '56336' }]
+    loras: [
+      {
+        name: '56336'
+      }
+    ]
   },
   crystalpunk: {
     prompt:
@@ -1304,7 +1957,11 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '48859' }]
+    loras: [
+      {
+        name: '48859'
+      }
+    ]
   },
   fantasypunk: {
     prompt:
@@ -1312,9 +1969,12 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     model: 'Dreamshaper',
     steps: 40,
     cfg_scale: 7.5,
-    loras: [{ name: '42260' }]
+    loras: [
+      {
+        name: '42260'
+      }
+    ]
   },
-
   'perfect summer': {
     prompt:
       'digital art, cg painting, (medium long shot:1.2), hyper detailed, volumetric lighting, godrays, realistic, photorealistic render, golden hour, sun-drenched panorama, lush tropical colors, subtle shading, {p}, beautiful face, wide glossy eyes, ultra detailed, masterpiece, high resolution illustration, 4k, centered composition###nsfw, lowres, text, error, cropped, out of frame, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, out of focus, censorship, ugly, black and white, monochrome, artist name, signature, multiple views, power lines{np}',
@@ -1344,7 +2004,6 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
       'behind the scenes footage from the set of {p}, movie set, breakdown, dramatic lighting, off centered focus, clear wide shot, dreamlikeart###blurry, distorted, ugly faces,{np}',
     model: 'Dreamlike Diffusion'
   },
-
   'generic scifi': {
     prompt:
       '{p}, science fiction artwork, epic, detailed and intricate digital concept art, by John Jude Palencar, Manchu, and Devin Elle Kurtz, 4K{np}',
@@ -1487,11 +2146,15 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
       'beautiful warrior fairy {p}, portrait, up close, cinematic, snowy background, dramatic lighting, highly detailed, very intricate, meta, fanciful, optimistic, wide shot, volumetric lighting, bokeh blur, unreal engine, octane render ### deformed, ugly, mutated, watermark, trademark, border, nude, NSFW{np}',
     model: 'stable_diffusion'
   },
-
   cyberrealistic: {
     prompt: '{p}###{np}',
     model: 'CyberRealistic',
-    tis: [{ name: '77976', inject_ti: 'negprompt' }]
+    tis: [
+      {
+        name: '77976',
+        inject_ti: 'negprompt'
+      }
+    ]
   },
   deliberate: {
     prompt: '{p}###{np}',
@@ -1560,17 +2223,29 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     cfg_scale: 3.5,
     model: 'ICBINP XL',
     sampler_name: 'k_euler_a',
-    loras: [{ name: '246747', model: 1, is_version: true }]
+    loras: [
+      {
+        name: '246747',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   fustercluck: {
     prompt: '{p}###{np}',
     width: 832,
     height: 1216,
     steps: 10,
-    cfg_scale: 1,
+    cfg_scale: 2.5,
     model: 'Fustercluck',
-    sampler_name: 'k_euler_a',
-    loras: [{ name: '246747', model: 1, is_version: true }]
+    sampler_name: 'k_dpmpp_sde',
+    loras: [
+      {
+        name: '247778',
+        model: 1,
+        is_version: true
+      }
+    ]
   },
   meinamix: {
     prompt: '{p}###{np}',
@@ -1601,12 +2276,28 @@ export const stableHordeStyles: { [key: string]: HordePreset } = {
     hires_fix: true,
     cfg_scale: 7.5,
     loras: [
-      { name: '82098', model: 0.5 },
-      { name: '48139', model: 0.2 },
-      { name: '132532', model: -0.7 },
-      { name: '58390', model: 0.5 }
+      {
+        name: '82098',
+        model: 0.5
+      },
+      {
+        name: '48139',
+        model: 0.2
+      },
+      {
+        name: '132532',
+        model: -0.7
+      },
+      {
+        name: '58390',
+        model: 0.5
+      }
     ],
-    tis: [{ name: '16993' }]
+    tis: [
+      {
+        name: '16993'
+      }
+    ]
   },
   revanimated: {
     prompt: '{p}###{np}',
