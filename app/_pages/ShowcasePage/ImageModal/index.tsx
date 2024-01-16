@@ -8,6 +8,7 @@ import styles from './component.module.css'
 import {
   IconCopy,
   IconDotsVertical,
+  IconExternalLink,
   IconEyeOff,
   IconPlaylistAdd,
   IconPlaylistX,
@@ -32,6 +33,9 @@ import { userInfoStore } from 'app/_store/userStore'
 import { publishToShowcase } from 'app/_modules/SharedImageView/controller'
 import { IconWall } from '@tabler/icons-react'
 import { useEffect, useState } from 'react'
+import { arrayHasValue } from 'app/_utils/validationUtils'
+import Linker from 'app/_components/Linker'
+import { fetchModelVersion } from 'app/_api/civitai/modelversion'
 
 interface SharedImageDetails {
   image_params: any
@@ -46,6 +50,7 @@ export default function ImageModal({
   imageDetails: SharedImageDetails
 }) {
   const router = useRouter()
+  const [loraDetails, setLoraDetails] = useState<any>({})
 
   const [showTiles, setShowTiles] = useState(false)
   const [tileSize, setTileSize] = useState('256px')
@@ -102,6 +107,25 @@ export default function ImageModal({
       window.history.pushState(null, '', `?${queryParams.toString()}`)
     }
   }, [showTiles])
+
+  useEffect(() => {
+    // Function to fetch details
+    const fetchDetails = async () => {
+      const details: any = {}
+      for (const lora of params.loras) {
+        if (lora.is_version) {
+          const detail = await fetchModelVersion(lora.name)
+          details[lora.name] = detail
+        }
+      }
+      setLoraDetails(details)
+    }
+
+    // Call the function
+    if (params.loras) {
+      fetchDetails()
+    }
+  }, [params.loras])
 
   return (
     <>
@@ -355,6 +379,64 @@ export default function ImageModal({
                 <strong>Width:</strong> {params.width} px
               </li>
               <li>&zwnj;</li>
+              {arrayHasValue(params.loras) && (
+                <>
+                  <li>
+                    <strong>LoRAs:</strong>
+                    {params.loras.map((lora: any, i: number) => {
+                      if (
+                        lora.is_version &&
+                        !loraDetails[lora.name] &&
+                        loraDetails[lora.name] !== false
+                      ) {
+                        return <div key={lora.name}>Loading...</div>
+                      } else if (
+                        lora.is_version &&
+                        loraDetails[lora.name] === false
+                      ) {
+                        return (
+                          <div key={lora.name}>Unable to load LoRA details</div>
+                        )
+                      }
+
+                      return (
+                        <div
+                          key={`ts_${i}`}
+                          style={{ paddingTop: i > 0 ? '4px' : 'unset' }}
+                        >
+                          {'- '}
+                          <Linker
+                            inline
+                            href={`https://civitai.com/models/${
+                              lora.is_version
+                                ? `${
+                                    loraDetails[lora.name].modelId
+                                  }?modelVersionId=${lora.name}`
+                                : `${lora.name}`
+                            }`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            passHref
+                            className="text-cyan-500"
+                          >
+                            <FlexRow gap={8}>
+                              {lora.is_version
+                                ? loraDetails[lora.name].model.name
+                                : lora.name}
+                              <IconExternalLink stroke={1.5} size={16} />
+                            </FlexRow>
+                          </Linker>
+                          <div>&nbsp;&nbsp;Strength: {lora.model}</div>
+                          <div>
+                            &nbsp;&nbsp;CLIP: {isNaN(lora.clip) ? 1 : lora.clip}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </li>
+                  <li>&zwnj;</li>
+                </>
+              )}
               <li>
                 <strong>Hi-res fix:</strong>{' '}
                 {params.hires_fix ? 'true' : 'false'}

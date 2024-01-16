@@ -1,3 +1,8 @@
+# 2024.01.15
+
+- Fix issue with incorrectly requesting versioned LoRA for previously used / favorites LoRAs in your list (that is, for any LoRAs favorited or in your recents list before 2024.01.14). (Thanks to Sidorok for reporting this)
+- Add lora details to shared images
+
 # 2024.01.14
 
 - Add support for recently added AI Horde feature for displaying and picking from multiple LoRA versions. (I fully recognize, the LoRA search interface needs to be significantly improved. It's definitely on my mind!)

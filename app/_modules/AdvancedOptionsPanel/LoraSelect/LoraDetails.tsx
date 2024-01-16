@@ -6,6 +6,7 @@ import Panel from 'app/_components/Panel'
 import { useState } from 'react'
 import Accordion from 'app/_components/Accordion'
 import AccordionItem from 'app/_components/AccordionItem'
+import { SavedLora } from '_types/artbot'
 
 const isFavorite = (loraName: string) => {
   let existingArray = localStorage.getItem('favoriteLoras')
@@ -30,8 +31,16 @@ const LoraDetails = ({
   handleAddLora = (lora: any) => lora,
   handleClose = () => {},
   handleSaveRecent = (lora: any) => lora
-}: any) => {
-  const [favorited, setFavorited] = useState(isFavorite(loraDetails.name))
+}: {
+  fullHeight?: boolean
+  loraDetails: SavedLora
+  handleAddLora: (lora: any) => void
+  handleClose: () => void
+  handleSaveRecent: (lora: any) => void
+}) => {
+  const [favorited, setFavorited] = useState(
+    isFavorite(loraDetails.name as string)
+  )
   const handleFavorite = (loraDetails: any) => {
     // Check if the local storage already has an array stored
     let existingArray = localStorage.getItem('favoriteLoras')
@@ -68,24 +77,7 @@ const LoraDetails = ({
   return (
     <Panel padding="8px">
       <div className="flex flex-col gap-2">
-        <div className="flex flex-row gap-2 items-center">
-          <Button size="small" onClick={() => handleFavorite(loraDetails)}>
-            {favorited ? <IconHeartFilled /> : <IconHeart />}
-          </Button>
-          <Button
-            size="small"
-            onClick={() => {
-              handleSaveRecent(loraDetails)
-              handleAddLora(loraDetails)
-              handleClose()
-            }}
-            width="100px"
-          >
-            <IconDownload />
-            Use
-          </Button>
-          <strong>{loraDetails.label}</strong>
-        </div>
+        <strong>{loraDetails.label}</strong>
         <div className="flex flex-row gap-4 w-full">
           {loraDetails.image && (
             <img
@@ -106,25 +98,38 @@ const LoraDetails = ({
               position: 'relative'
             }}
           >
+            <div className="flex flex-row gap-2 items-center">
+              <Button size="small" onClick={() => handleFavorite(loraDetails)}>
+                {favorited ? <IconHeartFilled /> : <IconHeart />}
+              </Button>
+              <Button
+                size="small"
+                onClick={() => {
+                  handleSaveRecent(loraDetails)
+                  handleAddLora(loraDetails)
+                  handleClose()
+                }}
+                width="100px"
+              >
+                <IconDownload />
+                Use
+              </Button>
+            </div>
             <div
               style={{
                 height: '100%',
                 overflowY: 'auto'
               }}
             >
-              {loraDetails.description && (
-                <Accordion>
-                  <AccordionItem title={<strong>Description</strong>}>
-                    <div className="flex flex-col gap-0 mb-2">
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html: sanitize(loraDetails.description)
-                        }}
-                        style={{ fontSize: '14px' }}
-                      />
-                    </div>
-                  </AccordionItem>
-                </Accordion>
+              {loraDetails.versionLabel && (
+                <div className="flex flex-col gap-0">
+                  <div>
+                    <strong>Version:</strong>
+                  </div>
+                  <div style={{ fontSize: '14px' }}>
+                    {loraDetails.versionLabel}
+                  </div>
+                </div>
               )}
               {loraDetails.baseModel && (
                 <div className="flex flex-col gap-0">
@@ -145,6 +150,20 @@ const LoraDetails = ({
                     {loraDetails.trainedWords.join(', ')}
                   </div>
                 </div>
+              )}
+              {loraDetails.description && (
+                <Accordion>
+                  <AccordionItem title={<strong>Description</strong>}>
+                    <div className="flex flex-col gap-0 mb-2">
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: sanitize(loraDetails.description)
+                        }}
+                        style={{ fontSize: '14px' }}
+                      />
+                    </div>
+                  </AccordionItem>
+                </Accordion>
               )}
             </div>
           </div>

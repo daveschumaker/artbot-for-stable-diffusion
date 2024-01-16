@@ -2,7 +2,6 @@
 import ContentWrapper from 'app/_components/ContentWrapper'
 import MaxWidth from 'app/_components/MaxWidth'
 import PageTitle from 'app/_components/PageTitle'
-import FixedMenu from 'app/_modules/FixedMenu'
 import 'app/_styles/globals.css'
 import HeaderNav from 'app/_modules/HeaderNav'
 import SlidingMenu from 'app/_modules/SlidingMenu'
@@ -13,7 +12,6 @@ export default function NotFoundPage() {
     <div style={{ width: '100%' }}>
       <HeaderNav />
       <SlidingMenu />
-      <FixedMenu />
       <ContentWrapper>
         <MaxWidth>
           <div>

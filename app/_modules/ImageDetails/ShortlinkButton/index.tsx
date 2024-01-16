@@ -28,7 +28,11 @@ export default function ShortlinkButton({
         ? 'http://localhost:3000'
         : baseHost
 
-    console.log(`New shortlink: ${hostname}${basePath}?i=${_shortlink} `)
+    console.log(
+      `New shortlink: ${window.location.protocol}//${window.location.hostname}${
+        window.location.port ? ':' + window.location.port : ''
+      }${basePath}?i=${_shortlink} `
+    )
 
     navigator?.clipboard
       ?.writeText(`${hostname}${basePath}?i=${_shortlink}`)
@@ -41,6 +45,10 @@ export default function ShortlinkButton({
     const updatedImageDetails = await getImageDetails(imageDetails.jobId)
 
     if (updatedImageDetails.shortlink) {
+      if (window?.location?.hostname !== 'tinybots.net') {
+        console.log(`Shortlink exists. Copied:`, updatedImageDetails.shortlink)
+      }
+
       copyShortlink(updatedImageDetails.shortlink)
       return
     }
@@ -76,6 +84,10 @@ export default function ShortlinkButton({
           shortlink
         })
       )
+
+      if (window?.location?.hostname !== 'tinybots.net') {
+        console.log(`Shortlink copied:`, shortlink)
+      }
 
       copyShortlink(shortlink)
     }

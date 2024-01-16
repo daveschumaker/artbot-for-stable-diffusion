@@ -218,15 +218,19 @@ class ImageParamsForApi {
     }
 
     if (loras && Array.isArray(loras) && loras.length > 0) {
-      apiParams.params.loras = loras.map((lora) => {
+      apiParams.params.loras = loras.map((lora: SavedLora) => {
+        console.log(`lora?`, lora)
+
         const loraObj: Lora = {
           name: String(lora.name),
           model: lora.model,
           clip: lora.clip
         }
 
-        if (lora?.is_version) {
+        if (lora.parentModelId && lora.parentModelId !== lora.name) {
           loraObj.is_version = true
+        } else {
+          delete loraObj.is_version
         }
 
         return loraObj

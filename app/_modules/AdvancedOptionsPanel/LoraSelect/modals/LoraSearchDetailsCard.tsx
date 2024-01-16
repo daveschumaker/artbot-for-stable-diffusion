@@ -17,7 +17,6 @@ import { useCallback, useState } from 'react'
 import { Embedding, ModelVersion } from '_types/civitai'
 import { handleConvertLora } from '../loraUtils'
 import Select from 'app/_components/Select'
-// import { handleSaveRecentEmbedding } from './saveRecentEmbeddings'
 
 const isFavorite = (tiId: string) => {
   let existingArray = localStorage.getItem('favoriteEmbeddings')
@@ -39,18 +38,19 @@ const isFavorite = (tiId: string) => {
 export default function LoraSearchDetailsCard({
   embedding,
   handleClose = () => {},
-  handleAddEmbedding = (value: any) => value
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  handleAddLora = (lora: Embedding, version: ModelVersion) => {}
 }: {
   embedding: Embedding
   handleClose: () => any
-  handleAddEmbedding: (value: any) => any
+  handleAddLora: (lora: Embedding, version: ModelVersion) => any
 }) {
   const [version, setVersion] = useState(embedding.modelVersions[0])
   const [favorited, setFavorited] = useState(isFavorite(embedding.id as string))
 
-  const handleFavorite = (loraDetails: any) => {
+  const handleFavorite = (lora: Embedding, loraVersion: ModelVersion) => {
     // Need to cast data from default CivitAI shape to the silly shape I decided to use... for some reason.
-    loraDetails = handleConvertLora(loraDetails)
+    const loraDetails = handleConvertLora(embedding, loraVersion)
 
     // Check if the local storage already has an array stored
     let existingArray = localStorage.getItem('favoriteLoras')
@@ -157,7 +157,7 @@ export default function LoraSearchDetailsCard({
         {getImage()}
         <FlexCol style={{ flex: 1 }}>
           <FlexCol style={{ flex: 1 }}>
-            <div style={{ fontSize: '14px' }}>{version.name}</div>
+            <div style={{ fontSize: '14px' }}>{embedding.name}</div>
             <div
               className="flex flex-row gap-2 items-center"
               style={{
@@ -177,16 +177,13 @@ export default function LoraSearchDetailsCard({
               </Linker>
               <IconExternalLink size={18} stroke={1.5} />
             </div>
-            <div style={{ fontSize: '14px', fontWeight: 400 }}>
-              Base model: {version.baseModel}
-            </div>
           </FlexCol>
           {embedding.modelVersions.length > 1 && (
             <FlexCol
               id={`model-version-${version.id}`}
               style={{ maxWidth: '280px' }}
             >
-              <div className="text-xs mb-[4px]">Version:</div>
+              <div className="text-xs mb-[4px] mt-[8px]">Version:</div>
               <div>
                 <Select
                   maxMenuHeight={'120px'}
@@ -221,8 +218,14 @@ export default function LoraSearchDetailsCard({
               </div>
             </FlexCol>
           )}
+          <div className="text-xs mt-[4px] mb-[8px]">
+            Base model: {version.baseModel}
+          </div>
           <FlexRow gap={4} style={{ marginBottom: '8px', marginTop: '4px' }}>
-            <Button size="small" onClick={() => handleFavorite(version)}>
+            <Button
+              size="small"
+              onClick={() => handleFavorite(embedding, version)}
+            >
               {favorited ? (
                 <IconHeartFilled stroke={1.5} />
               ) : (
@@ -231,7 +234,7 @@ export default function LoraSearchDetailsCard({
             </Button>
             <Button
               onClick={() => {
-                handleAddEmbedding(version)
+                handleAddLora(embedding, version)
                 handleClose()
               }}
               size="small"
