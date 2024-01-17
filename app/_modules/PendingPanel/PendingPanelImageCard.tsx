@@ -5,9 +5,13 @@ import {
   deleteCompletedImage,
   deleteImageFromDexie,
   getImageDetails,
-  getPendingJobDetails
+  getPendingJobDetails,
+  updateCompletedJobByJobId
 } from 'app/_utils/db'
-import { setImageDetailsModalOpen } from 'app/_store/appStore'
+import {
+  setImageDetailsModalOpen,
+  updateAdEventTimestamp
+} from 'app/_store/appStore'
 import { useModal } from '@ebay/nice-modal-react'
 import placeholderImage from '../../../public/placeholder.gif'
 
@@ -34,6 +38,8 @@ import FlexRow from 'app/_components/FlexRow'
 import { base64toBlobUrl } from 'app/_utils/imageUtils'
 
 const PendingPanelImageCard = React.memo(({ imageJob }: { imageJob: any }) => {
+  const [favorited, setFavorited] = useState(imageJob.favorited)
+
   const imagePreviewModal = useModal(ImageModal)
   const pendingImageModal = useModal(AwesomeModalWrapper)
 
@@ -53,12 +59,17 @@ const PendingPanelImageCard = React.memo(({ imageJob }: { imageJob: any }) => {
   }
 
   const handleFavClick = (jobId: string, e: any) => {
+    const updateFavorite = !favorited
     e.stopPropagation()
     const job = getPendingJob(jobId)
 
     // @ts-ignore
-    job.favorited = job.favorited ? false : true
+    job.favorited = updateFavorite
+    setFavorited(updateFavorite)
     updatePendingJobV2(job)
+    updateCompletedJobByJobId(job.jobId, {
+      favorited: updateFavorite
+    })
   }
 
   const hideFromPending = (jobId: string, jobStatus: JobStatus, e: any) => {
@@ -107,7 +118,10 @@ const PendingPanelImageCard = React.memo(({ imageJob }: { imageJob: any }) => {
             setImageDetailsModalOpen(true)
 
             imagePreviewModal.show({
-              handleClose: () => imagePreviewModal.remove(),
+              handleClose: () => {
+                updateAdEventTimestamp()
+                imagePreviewModal.remove()
+              },
               imageDetails
             })
           } else {
@@ -116,7 +130,10 @@ const PendingPanelImageCard = React.memo(({ imageJob }: { imageJob: any }) => {
             pendingImageModal.show({
               children: <PendingImageModal imageDetails={imageDetails} />,
               label: 'Pending image',
-              handleClose: () => pendingImageModal.remove(),
+              handleClose: () => {
+                updateAdEventTimestamp()
+                pendingImageModal.remove()
+              },
               style: { maxWidth: '768px' }
             })
           }
@@ -131,7 +148,7 @@ const PendingPanelImageCard = React.memo(({ imageJob }: { imageJob: any }) => {
             onClick={(e) => handleFavClick(imageJob.jobId, e)}
           >
             <IconHeart
-              fill={imageJob.favorited ? 'red' : 'rgb(0,0,0,0)'}
+              fill={favorited ? 'red' : 'rgb(0,0,0,0)'}
               color="white"
               size={26}
               stroke={1}

@@ -12,7 +12,11 @@
 
 import cloneDeep from 'clone-deep'
 import { JobStatus } from '_types'
-import { allPendingJobs, deletePendingJobFromDb } from 'app/_utils/db'
+import {
+  allPendingJobs,
+  deletePendingJobFromDb,
+  updatePendingJobInDexie
+} from 'app/_utils/db'
 
 declare global {
   interface Window {
@@ -124,6 +128,7 @@ export const setPendingJob = (pendingJob: IPendingJob) => {
   pendingJobs[jobId] = cloneDeep(pendingJob)
 }
 
+// Handles updating jobId in both database and in-memory cache.
 export const updatePendingJobV2 = (pendingJob: IPendingJob) => {
   if (!pendingJob || !pendingJob.jobId) {
     return
@@ -134,6 +139,8 @@ export const updatePendingJobV2 = (pendingJob: IPendingJob) => {
 
   if (pendingJobs[jobId]) {
     pendingJobs[jobId] = cloneDeep(pendingJob)
+
+    updatePendingJobInDexie(pendingJob.id, Object.assign({}, pendingJob))
   }
 }
 

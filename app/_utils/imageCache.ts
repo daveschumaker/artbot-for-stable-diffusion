@@ -159,12 +159,7 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
       imageParams.timestamp = Date.now()
       imageParams.jobStatus = JobStatus.Queued
 
-      // Need both these here to handle updating jobId in both database and in-memory cache.
       updatePendingJobV2(imageParams)
-      await updatePendingJobInDexie(
-        imageParams.id,
-        Object.assign({}, imageParams)
-      )
 
       const jobDetailsFromApi = (await checkImageJob(jobId)) || {}
 
@@ -172,10 +167,6 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
         imageParams.jobStatus = JobStatus.Waiting
         imageParams.is_possible = jobDetailsFromApi.is_possible
 
-        await updatePendingJobInDexie(
-          imageParams.id,
-          Object.assign({}, imageParams)
-        )
         updatePendingJobV2(imageParams)
         return {
           success: false,
@@ -216,14 +207,6 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
         message
       }
     } else {
-      await updatePendingJobInDexie(
-        imageParams.id,
-        Object.assign({}, imageParams, {
-          jobStatus: JobStatus.Error,
-          errorMessage: message
-        })
-      )
-
       updatePendingJobV2(
         Object.assign({}, imageParams, {
           jobStatus: JobStatus.Error,
@@ -271,14 +254,6 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
       }
     }
   } catch (err) {
-    await updatePendingJobInDexie(
-      imageParams.id,
-      Object.assign({}, imageParams, {
-        jobStatus: JobStatus.Error,
-        errorMessage: 'An unknown error occurred...'
-      })
-    )
-
     updatePendingJobV2(
       Object.assign({}, imageParams, {
         jobStatus: JobStatus.Error,
@@ -437,14 +412,6 @@ export const checkCurrentJob = async (imageDetails: any) => {
           'Your browser has informed ArtBot that its storage quota has been exceeded. Please remove some older images and try again shortly.'
       })
     )
-    await updatePendingJobInDexie(
-      imageDetails.id,
-      Object.assign({}, jobDetails, {
-        jobStatus: JobStatus.Error,
-        errorMessage:
-          'Your browser has informed ArtBot that its storage quota has been exceeded. Please remove some older images and try again shortly.'
-      })
-    )
     return { success: false }
   }
 
@@ -488,14 +455,6 @@ export const checkCurrentJob = async (imageDetails: any) => {
             'Job has gone stale and has been removed from the Stable Horde backend. Retry?'
         })
       )
-      await updatePendingJobInDexie(
-        imageDetails.id,
-        Object.assign({}, jobDetails, {
-          jobStatus: JobStatus.Error,
-          errorMessage:
-            'Job has gone stale and has been removed from the Stable Horde backend. Retry?'
-        })
-      )
 
       return {
         success: false,
@@ -528,15 +487,6 @@ export const checkCurrentJob = async (imageDetails: any) => {
               'The GPU worker was unable to complete this request. Try again? (Error code: X)'
           })
         )
-        await updatePendingJobInDexie(
-          jobDetails.id,
-          Object.assign({}, jobDetails, {
-            jobStatus: JobStatus.Error,
-            errorStatus: imgDetailsFromApi.status,
-            errorMessage:
-              'The GPU worker was unable to complete this request. Try again? (Error code: X)'
-          })
-        )
       }
 
       return {
@@ -560,14 +510,6 @@ export const checkCurrentJob = async (imageDetails: any) => {
               'The worker GPU processing this request encountered an error. Retry?'
           })
         )
-        await updatePendingJobInDexie(
-          jobDetails.id,
-          Object.assign({}, jobDetails, {
-            jobStatus: JobStatus.Error,
-            errorMessage:
-              'The worker GPU processing this request encountered an error. Retry?'
-          })
-        )
       }
 
       return {
@@ -581,13 +523,6 @@ export const checkCurrentJob = async (imageDetails: any) => {
       imgDetailsFromApi.status === 'INVALID_IMAGE_FROM_API'
     ) {
       updatePendingJobV2(
-        Object.assign({}, imageDetails, {
-          jobStatus: JobStatus.Error,
-          errorMessage: imgDetailsFromApi.message
-        })
-      )
-      await updatePendingJobInDexie(
-        imageDetails.id,
         Object.assign({}, imageDetails, {
           jobStatus: JobStatus.Error,
           errorMessage: imgDetailsFromApi.message
@@ -677,14 +612,6 @@ export const checkCurrentJob = async (imageDetails: any) => {
 
           if (result.success) {
             updatePendingJobV2(
-              Object.assign({}, jobWithImageDetails, {
-                timestamp: Date.now(),
-                jobStatus: JobStatus.Done
-              })
-            )
-
-            await updatePendingJobInDexie(
-              imageDetails.id,
               Object.assign({}, jobWithImageDetails, {
                 timestamp: Date.now(),
                 jobStatus: JobStatus.Done

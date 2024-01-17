@@ -87,9 +87,6 @@ const PendingItem = memo(
       updatePendingJobV2(
         Object.assign({}, jobDetails, { jobStatus: JobStatus.Waiting })
       )
-      await updatePendingJobInDexieByJobId(jobDetails.jobId, {
-        jobStatus: JobStatus.Waiting
-      })
 
       window.scrollTo(0, 0)
     }

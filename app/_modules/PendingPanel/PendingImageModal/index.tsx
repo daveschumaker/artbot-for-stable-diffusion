@@ -22,7 +22,6 @@ import {
   updatePendingJobV2
 } from 'app/_controllers/pendingJobsCache'
 import { useState } from 'react'
-import { updatePendingJobInDexieByJobId } from 'app/_utils/db'
 
 const showDiscordBlurb = (errorMessage: string) => {
   if (
@@ -55,9 +54,6 @@ export default function PendingImageModal({
     updatePendingJobV2(
       Object.assign({}, imageDetails, { jobStatus: JobStatus.Waiting })
     )
-    await updatePendingJobInDexieByJobId(imageDetails.jobId, {
-      jobStatus: JobStatus.Waiting
-    })
     handleClose()
   }
 
