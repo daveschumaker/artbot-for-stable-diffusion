@@ -25,12 +25,25 @@ import clsx from 'clsx'
 import { SavedLora } from '_types/artbot'
 import { MAX_LORA_CACHE } from '_constants'
 
-// Temporary hard code for common LCM Lora:
+// Temporary hard code names for common Loras
+// (mostly used in style presets):
 const getLoraName = (label: string = '', name: string = '') => {
   if (label) return label
 
-  if (name === '216190') {
+  if (name === '216190' || name === '247778') {
     return 'LCM & TurboMix LoRA'
+  }
+
+  if (name === '71125') {
+    return 'WormtoxinMix'
+  }
+
+  if (name === '273924') {
+    return `Painted World SDXL`
+  }
+
+  if (name === '285737') {
+    return `ParchartXL`
   }
 
   return 'LoRA'
@@ -273,18 +286,20 @@ const LoraSelect = () => {
                     min={-5.0}
                     max={5.0}
                     onMinusClick={() => {
-                      handleUpdate(
-                        i,
-                        'clip',
-                        Number((lora.clip - 0.05).toFixed(2))
-                      )
+                      let _clip = lora.clip
+                      if (isNaN(_clip)) {
+                        _clip = 1
+                      }
+
+                      handleUpdate(i, 'clip', Number((_clip - 0.05).toFixed(2)))
                     }}
                     onPlusClick={() => {
-                      handleUpdate(
-                        i,
-                        'clip',
-                        Number((lora.clip + 0.05).toFixed(2))
-                      )
+                      let _clip = lora.clip
+                      if (isNaN(_clip)) {
+                        _clip = 1
+                      }
+
+                      handleUpdate(i, 'clip', Number((_clip + 0.05).toFixed(2)))
                     }}
                     onInputChange={(e: any) => {
                       handleUpdate(i, 'clip', Number(e.target.value))
@@ -292,7 +307,7 @@ const LoraSelect = () => {
                     onBlur={(e: any) => {
                       handleUpdate(i, 'clip', Number(e.target.value))
                     }}
-                    value={lora.clip}
+                    value={isNaN(lora.clip) ? 1 : lora.clip}
                     width="100%"
                   />
                 </FlexRow>

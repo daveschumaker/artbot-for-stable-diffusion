@@ -139,13 +139,9 @@ const ModelDetailsList = () => {
         return obj.name === name
       })
 
-      console.log(`modelStats`, modelStats)
-
       if (name === 'stable_diffusion_1.4') {
         return
       }
-
-      console.log(`modelDetailsArray`, sortModels())
 
       modelDetailsArray.push(
         <div key={`${name}_panel_${idx}`}>

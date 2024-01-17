@@ -67,6 +67,11 @@ export default function ClipSkip({ hideOptions = false }: ClipSkipOptions) {
                 setInput({ clipskip: Number(e.target.value) })
               }}
               onMinusClick={() => {
+                if (isNaN(input.clipskip)) {
+                  setInput({ clipskip: 1 })
+                  return
+                }
+
                 if (input.clipskip - 1 < 1) {
                   return
                 }
@@ -74,6 +79,11 @@ export default function ClipSkip({ hideOptions = false }: ClipSkipOptions) {
                 setInput({ clipskip: input.clipskip - 1 })
               }}
               onPlusClick={() => {
+                if (isNaN(input.clipskip)) {
+                  setInput({ clipskip: 1 })
+                  return
+                }
+
                 if (input.clipskip + 1 > 12) {
                   return
                 }
@@ -81,7 +91,7 @@ export default function ClipSkip({ hideOptions = false }: ClipSkipOptions) {
                 setInput({ clipskip: input.clipskip + 1 })
               }}
               step={1}
-              value={input.clipskip}
+              value={isNaN(input.clipskip) ? 1 : input.clipskip}
               width="100%"
             />
           </>

@@ -219,8 +219,6 @@ class ImageParamsForApi {
 
     if (loras && Array.isArray(loras) && loras.length > 0) {
       apiParams.params.loras = loras.map((lora: SavedLora) => {
-        console.log(`lora?`, lora)
-
         const loraObj: Lora = {
           name: String(lora.name),
           model: lora.model,
