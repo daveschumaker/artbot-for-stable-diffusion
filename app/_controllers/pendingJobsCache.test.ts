@@ -16,7 +16,8 @@ import { JobStatus } from '_types'
 
 jest.mock('app/_utils/db', () => ({
   allPendingJobs: jest.fn(),
-  deletePendingJobFromDb: jest.fn()
+  deletePendingJobFromDb: jest.fn(),
+  updatePendingJobInDexie: jest.fn()
 }))
 
 const mockJob = {

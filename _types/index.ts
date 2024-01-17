@@ -48,7 +48,7 @@ export interface CreateImageJob {
   img2img?: boolean
   initWaitTime?: number
   is_possible?: boolean
-  jobId?: string
+  jobId: string
   jobStatus: JobStatus
   jobTimestamp?: number
   karras: boolean

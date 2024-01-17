@@ -122,7 +122,6 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
   try {
     imageParams.jobStatus = JobStatus.Requested
     updatePendingJobV2(imageParams)
-    // await updatePendingJobInDexie(imageParams.id, Object.assign({}, imageParams))
 
     const data = await createNewImage(imageParams)
     // @ts-ignore
@@ -137,7 +136,6 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
       FETCH_INTERVAL_SEC += 1000
       imageParams.jobStatus = JobStatus.Waiting
       updatePendingJobV2(imageParams)
-      // await updatePendingJobInDexie(imageParams.id, Object.assign({}, imageParams))
       return
     }
 
@@ -146,7 +144,6 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
     if (!success && !jobId && !status) {
       imageParams.jobStatus = JobStatus.Waiting
       updatePendingJobV2(imageParams)
-      // await updatePendingJobInDexie(imageParams.id, Object.assign({}, imageParams))
       return
     }
 
@@ -476,7 +473,6 @@ export const checkCurrentJob = async (imageDetails: any) => {
   jobDetails.is_possible = checkJobResult.is_possible
 
   updatePendingJobV2(Object.assign({}, jobDetails))
-  // await updatePendingJobInDexie(jobDetails.id, Object.assign({}, jobDetails))
 
   let imgDetailsFromApi: FinishedImageResponse | FinishedImageResponseError
   if ('status' in checkJobResult && checkJobResult.status === 'NOT_FOUND') {

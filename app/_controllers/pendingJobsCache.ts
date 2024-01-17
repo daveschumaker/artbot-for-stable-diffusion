@@ -1,3 +1,15 @@
+/**
+ * pendingJobsCache
+ *
+ * The purpose of this cache is to do an initial fetch of pending jobs data
+ * from IndexedDb and then store all subsequent changes in browser memory
+ * for quicker look ups and access.
+ *
+ * Otherwise, having components such as the PendingItems page and panels
+ * fetch pending data from IndexedDb becomes very slow and eventually
+ * causes the page to crash due to OOM errors.
+ */
+
 import cloneDeep from 'clone-deep'
 import { JobStatus } from '_types'
 import { allPendingJobs, deletePendingJobFromDb } from 'app/_utils/db'

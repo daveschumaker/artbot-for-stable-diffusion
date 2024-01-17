@@ -554,6 +554,22 @@ export const updateAllPendingJobs = async (
     })
 }
 
+export const updateCompletedJobByJobId = async (
+  jobId: string = '',
+  updateFields: any
+) => {
+  if (!jobId) return
+
+  await db.completed
+    .where('jobId')
+    .equals(jobId)
+    .modify((job: any) => {
+      for (const [key, value] of Object.entries(updateFields)) {
+        job[key] = value
+      }
+    })
+}
+
 export const deleteAllPendingErrors = async () => {
   await db.pending
     .filter(function (job: { jobStatus: string }) {
