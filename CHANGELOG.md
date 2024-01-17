@@ -3,6 +3,7 @@
 - Bug fixes and performance improvements. (Doh!)
 - Really, just refactoring a few functions behind the scenes as I work on some implementing initial support for the AI Horde's new batching improvements.
 - It'll be awhile before this is live, but there are some code optimizations I'd like to backport as I go along.
+- Remove some console.log statements
 - Improved photo gallery display on wider screens (more columns!)
 - Photo gallery images now load as image blob, rather than long base64 strings which could contribute to browser out-of-memory errors.
 

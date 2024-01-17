@@ -30,7 +30,6 @@ import {
   IconTrash,
   IconX
 } from '@tabler/icons-react'
-import { updatePendingJobInDexieByJobId } from 'app/_utils/db'
 
 const RATINGS_ENABLED = false
 
