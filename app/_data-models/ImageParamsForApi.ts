@@ -112,7 +112,7 @@ class ImageParamsForApi {
       karras = false,
       loras = [],
       models,
-      numImages = 1,
+      // numImages = 1,
       post_processing = [],
       prompt,
       return_control_map,
@@ -153,7 +153,7 @@ class ImageParamsForApi {
         karras,
         hires_fix: hires,
         clip_skip: clipskip,
-        n: numImages
+        n: 1
       },
       nsfw: allowNsfw, // Use workers that allow NSFW images
       censor_nsfw: !allowNsfw, // Show user NSFW images if created

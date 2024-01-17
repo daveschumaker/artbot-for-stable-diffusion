@@ -1,3 +1,11 @@
+# 2024.01.16
+
+- Bug fixes and performance improvements. (Doh!)
+- Really, just refactoring a few functions behind the scenes as I work on some implementing initial support for the AI Horde's new batching improvements.
+- It'll be awhile before this is live, but there are some code optimizations I'd like to backport as I go along.
+- Improved photo gallery display on wider screens (more columns!)
+- Photo gallery images now load as image blob, rather than long base64 strings which could contribute to browser out-of-memory errors.
+
 # 2024.01.15
 
 - Fix issue with incorrectly requesting versioned LoRA for previously used / favorites LoRAs in your list (that is, for any LoRAs favorited or in your recents list before 2024.01.14). (Thanks to Sidorok for reporting this)

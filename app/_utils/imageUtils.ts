@@ -260,6 +260,7 @@ export const createNewImage = async (imageParams: CreateImageJob) => {
   }
 
   try {
+    // @ts-ignore
     const data = await createImage(clonedParams)
     const { jobId, success, message, status } = data
 

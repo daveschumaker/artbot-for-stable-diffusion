@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useModal } from '@ebay/nice-modal-react'
 import ImageModal from 'app/_modules/ImageModal'
-import { setImageDetailsModalOpen } from 'app/_store/appStore'
+import {
+  setImageDetailsModalOpen,
+  updateAdEventTimestamp
+} from 'app/_store/appStore'
 
 const useGalleryImageModal = ({ fetchImages }: { fetchImages: any }) => {
   const imagePreviewModal = useModal(ImageModal)
@@ -11,6 +14,7 @@ const useGalleryImageModal = ({ fetchImages }: { fetchImages: any }) => {
 
   const handleClose = useCallback(async () => {
     await fetchImages()
+    updateAdEventTimestamp()
     setImageIdx(0)
     setImagesList([])
     setImageDetails(null)

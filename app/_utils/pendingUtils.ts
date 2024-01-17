@@ -320,7 +320,6 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
         })
       }
 
-      console.log(`324??`, clonedParams)
       await addPendingJobToDexieDb(clonedParams)
     }
 
@@ -328,26 +327,29 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
       success: true
     }
   } else {
-    // Should properly send a batched image request if n > 1
-    clonedParams = await cloneImageParams(imageParams)
-    clonedParams.modelVersion = getModelVersion(clonedParams.models[0])
+    const count = Array(Number(numImages)).fill(0)
 
-    if (clonedParams.orientation === 'random') {
-      clonedParams = {
-        ...clonedParams,
-        ...CreateImageRequest.getRandomOrientation()
+    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+    for (const _num of count) {
+      clonedParams = await cloneImageParams(imageParams)
+      clonedParams.modelVersion = getModelVersion(clonedParams.models[0])
+
+      if (clonedParams.orientation === 'random') {
+        clonedParams = {
+          ...clonedParams,
+          ...CreateImageRequest.getRandomOrientation()
+        }
       }
-    }
 
-    if (clonedParams.sampler === 'random') {
-      clonedParams.sampler = CreateImageRequest.getRandomSampler({
-        steps: clonedParams.steps,
-        source_processing: clonedParams.source_processing
-      })
-    }
+      if (clonedParams.sampler === 'random') {
+        clonedParams.sampler = CreateImageRequest.getRandomSampler({
+          steps: clonedParams.steps,
+          source_processing: clonedParams.source_processing
+        })
+      }
 
-    console.log(`350??`, clonedParams)
-    await addPendingJobToDexieDb(clonedParams)
+      await addPendingJobToDexieDb(clonedParams)
+    }
 
     return {
       success: true

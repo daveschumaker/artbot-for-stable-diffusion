@@ -7,6 +7,7 @@ import { Common } from '_types'
 import { createImageJob } from './createImageJob'
 import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
 import { CONTROL_TYPES, SourceProcessing } from '_types/horde'
+import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 
 const createBaseImageRequest = (): Partial<DefaultPromptInput> => ({
   cfg_scale: 8,
@@ -52,7 +53,9 @@ describe('createImageJob', () => {
 
   it('should create 1 job without any modifications', async () => {
     const newImageRequest = createBaseImageRequest()
-    const result = await createImageJob(newImageRequest as DefaultPromptInput)
+    const result = await createImageJob(
+      newImageRequest as unknown as CreateImageRequest
+    )
 
     expect(result.success).toBe(true)
     expect(createPendingJobMock).toHaveBeenCalledTimes(1)
@@ -64,7 +67,9 @@ describe('createImageJob', () => {
       useMultiClip: true,
       multiClip: '1, 2, 3, 4'
     }
-    const result = await createImageJob(newImageRequest as DefaultPromptInput)
+    const result = await createImageJob(
+      newImageRequest as unknown as CreateImageRequest
+    )
 
     expect(result.success).toBe(true)
     expect(createPendingJobMock).toHaveBeenCalledTimes(4)
@@ -76,7 +81,9 @@ describe('createImageJob', () => {
       useMultiGuidance: true,
       multiGuidance: '1, 2'
     }
-    const result = await createImageJob(newImageRequest as DefaultPromptInput)
+    const result = await createImageJob(
+      newImageRequest as unknown as CreateImageRequest
+    )
 
     expect(result.success).toBe(true)
     expect(createPendingJobMock).toHaveBeenCalledTimes(2)
@@ -89,7 +96,9 @@ describe('createImageJob', () => {
       multiDenoise: '1, 2, 3',
       source_image: true as unknown as string
     }
-    const result = await createImageJob(newImageRequest as DefaultPromptInput)
+    const result = await createImageJob(
+      newImageRequest as unknown as CreateImageRequest
+    )
 
     expect(result.success).toBe(true)
     expect(createPendingJobMock).toHaveBeenCalledTimes(3)
@@ -105,7 +114,9 @@ describe('createImageJob', () => {
       source_image: true as unknown as string
     }
 
-    const result = await createImageJob(newImageRequest as DefaultPromptInput)
+    const result = await createImageJob(
+      newImageRequest as unknown as CreateImageRequest
+    )
 
     expect(result.success).toBe(true)
     expect(createPendingJobMock).toHaveBeenCalledTimes(9)
@@ -116,7 +127,9 @@ describe('createImageJob', () => {
       ...createBaseImageRequest(),
       useAllSamplers: true
     }
-    const result = await createImageJob(newImageRequest as DefaultPromptInput)
+    const result = await createImageJob(
+      newImageRequest as unknown as CreateImageRequest
+    )
 
     expect(result.success).toBe(true)
 
@@ -129,7 +142,9 @@ describe('createImageJob', () => {
       ...createBaseImageRequest(),
       prompt: 'Test {1|2|3}'
     }
-    const result = await createImageJob(newImageRequest as DefaultPromptInput)
+    const result = await createImageJob(
+      newImageRequest as unknown as CreateImageRequest
+    )
 
     expect(result.success).toBe(true)
     expect(createPendingJobMock).toHaveBeenCalledTimes(3)
@@ -141,7 +156,9 @@ describe('createImageJob', () => {
       negative: 'Test {1|2|3}'
     }
     newImageRequest.negative = 'Test {1|2|3|4}'
-    const result = await createImageJob(newImageRequest as DefaultPromptInput)
+    const result = await createImageJob(
+      newImageRequest as unknown as CreateImageRequest
+    )
 
     expect(result.success).toBe(true)
     expect(createPendingJobMock).toHaveBeenCalledTimes(4)
@@ -153,7 +170,9 @@ describe('createImageJob', () => {
       prompt: 'Test {1|2}',
       negative: 'Test {1|2|3}'
     }
-    const result = await createImageJob(newImageRequest as DefaultPromptInput)
+    const result = await createImageJob(
+      newImageRequest as unknown as CreateImageRequest
+    )
 
     expect(result.success).toBe(true)
     expect(createPendingJobMock).toHaveBeenCalledTimes(6)
@@ -165,7 +184,9 @@ describe('createImageJob', () => {
       prompt: 'Test {1|2}',
       negative: 'Test {1|2|3}'
     }
-    const result = await createImageJob(newImageRequest as DefaultPromptInput)
+    const result = await createImageJob(
+      newImageRequest as unknown as CreateImageRequest
+    )
 
     expect(result.success).toBe(true)
     expect(result.pendingJobArray).toHaveLength(6)
@@ -179,7 +200,9 @@ describe('createImageJob', () => {
   it('should handle errors gracefully', async () => {
     createPendingJobMock.mockRejectedValueOnce(new Error('Mock Error')) // Simulate an error
     const newImageRequest = createBaseImageRequest()
-    const result = await createImageJob(newImageRequest as DefaultPromptInput)
+    const result = await createImageJob(
+      newImageRequest as unknown as CreateImageRequest
+    )
 
     expect(result.success).toBe(false)
     expect(result.status).toBe('error')
