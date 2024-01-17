@@ -92,7 +92,7 @@ export const getPendingJob = (jobId: string) => {
   return cloneDeep(pendingJobs[jobId])
 }
 
-export const getAllPendingJobs = (status?: any): Array<any> => {
+export const getAllPendingJobs = (status?: JobStatus): Array<any> => {
   const jobsArray = Object.values(pendingJobs).map((job) => cloneDeep(job))
 
   if (status) {
