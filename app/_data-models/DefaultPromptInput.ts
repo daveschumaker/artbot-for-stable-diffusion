@@ -25,6 +25,7 @@ class DefaultPromptInput {
   numImages: number = 1
   orientationType: string = 'square'
   parentJobId: string = ''
+  preset: string[] = []
   post_processing: Array<string> = []
   prompt: string = ''
   return_control_map: boolean = false

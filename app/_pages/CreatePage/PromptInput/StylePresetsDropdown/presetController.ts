@@ -95,6 +95,7 @@ export const handleUsePreset = ({
       : new DefaultPromptInput().loras,
     // @ts-ignore
     tis: presetDetails.tis ? presetDetails.tis : new DefaultPromptInput().tis,
+    seed: input.seed,
     steps: presetDetails.steps
       ? presetDetails.steps
       : new DefaultPromptInput().steps,

@@ -159,6 +159,11 @@ export default function ImageSettingsDisplay({
                   </li>
                 )}
                 <li>&zwnj;</li>
+                {imageDetails.preset && imageDetails.preset.length > 0 && (
+                  <li>
+                    <strong>Style preset:</strong> {imageDetails.preset[0]}
+                  </li>
+                )}
                 <li>
                   <strong>Seed:</strong> {imageDetails.seed}
                 </li>

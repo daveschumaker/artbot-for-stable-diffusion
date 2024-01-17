@@ -52,6 +52,7 @@ import TextButton from 'app/_components/TextButton'
 import MasonryLayout from 'app/_modules/MasonryLayout'
 import ImageSquare from 'app/_modules/ImageSquare'
 import Pagination from 'app/_components/Pagination'
+import Image from './Image'
 
 const MenuSeparator = styled.div`
   width: 100%;
@@ -1155,12 +1156,9 @@ const ImagesPage = () => {
                               </div>
                             </TooltipComponent>
                           )}
-                          <img
+                          <Image
                             id={'image_' + image.id}
-                            src={
-                              'data:image/webp;base64,' +
-                              (image.thumbnail || image.base64String)
-                            }
+                            imageJob={image}
                             style={{
                               borderRadius: '4px',
                               display: 'block',

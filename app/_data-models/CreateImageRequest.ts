@@ -45,6 +45,7 @@ class CreateImageRequest {
   orientation: string
   parentJobId: string
   post_processing: Array<string>
+  preset: string[]
   prompt: string
   return_control_map: boolean
   sampler: string
@@ -97,6 +98,7 @@ class CreateImageRequest {
     orientationType = 'square',
     parentJobId = '',
     post_processing = [],
+    preset = [],
     prompt = '',
     return_control_map = false,
     sampler = 'k_euler',
@@ -178,6 +180,7 @@ class CreateImageRequest {
     this.numImages = Number(numImages)
     this.parentJobId = String(parentJobId) || uuidv4()
     this.post_processing = [...post_processing]
+    this.preset = [...preset]
     this.prompt = prompt ? String(prompt).trim() : ''
     this.sampler = String(sampler)
     this.seed = String(seed)
@@ -358,6 +361,7 @@ class CreateImageRequest {
       orientationType: imageDetails.orientation,
       parentJobId: imageDetails.parentJobId,
       post_processing: imageDetails.post_processing,
+      preset: imageDetails.preset,
       prompt: imageDetails.prompt,
       return_control_map: imageDetails.return_control_map,
       sampler: imageDetails.sampler,
