@@ -13,6 +13,7 @@ import Link from 'next/link'
 import { Button } from 'app/_components/Button'
 import FlexRow from 'app/_components/FlexRow'
 import SpinnerV2 from 'app/_components/Spinner'
+import { updateAdEventTimestamp } from 'app/_store/appStore'
 
 export default function ShowcasePage() {
   const imageModal = useModal(AwesomeModalWrapper)
@@ -93,6 +94,7 @@ export default function ShowcasePage() {
                 <Link
                   href={`/?i=${image.shortlink}`}
                   onClick={(e) => {
+                    updateAdEventTimestamp()
                     e.preventDefault()
                     e.stopPropagation()
                     handleImageClick(image)
