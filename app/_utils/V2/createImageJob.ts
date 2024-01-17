@@ -2,11 +2,7 @@ import { createPendingJob } from '../pendingUtils'
 import { sleep } from '../sleep'
 import { hasPromptMatrix, promptMatrix } from '../promptUtils'
 import { DEFAULT_SAMPLER_ARRAY } from '_constants'
-import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
-
-interface ImageRequest extends DefaultPromptInput {
-  // additional fields if any
-}
+import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 
 const cleanMultiInputString = (multiString: string) => {
   if (Array.isArray(multiString)) {
@@ -24,14 +20,14 @@ const cleanMultiInputString = (multiString: string) => {
 }
 
 const handleMulti = (
-  newImageRequest: DefaultPromptInput,
-  field: keyof DefaultPromptInput,
+  newImageRequest: CreateImageRequest,
+  field: keyof CreateImageRequest,
   fieldName: string
-): ImageRequest[] => {
+): CreateImageRequest[] => {
   const tempArray = []
   const multiValues = cleanMultiInputString(newImageRequest[field])
   for (const value of multiValues) {
-    const imageRequest: ImageRequest = {
+    const imageRequest: CreateImageRequest = {
       ...newImageRequest,
       [fieldName]: value
     }
@@ -41,8 +37,8 @@ const handleMulti = (
 }
 
 const handleMultiSampler = (
-  newImageRequest: DefaultPromptInput
-): ImageRequest[] => {
+  newImageRequest: CreateImageRequest
+): CreateImageRequest[] => {
   let samplerArray: string[] = []
 
   if (newImageRequest.useMultiSamplers) {
@@ -61,12 +57,12 @@ const handleMultiSampler = (
 }
 
 const handlePromptMatrix = (
-  newImageRequest: DefaultPromptInput
-): ImageRequest[] => {
+  newImageRequest: CreateImageRequest
+): CreateImageRequest[] => {
   const matrixPrompts = [...promptMatrix(newImageRequest.prompt)]
   const matrixNegative = [...promptMatrix(newImageRequest.negative)]
 
-  const tempArray: ImageRequest[] = []
+  const tempArray: CreateImageRequest[] = []
 
   if (matrixPrompts.length >= 1 && matrixNegative.length === 0) {
     for (const prompt of matrixPrompts) {
@@ -92,9 +88,9 @@ const handlePromptMatrix = (
 }
 
 const isValidMulti = (
-  newImageRequest: DefaultPromptInput,
-  useMultiField: keyof DefaultPromptInput,
-  fieldName: keyof DefaultPromptInput
+  newImageRequest: CreateImageRequest,
+  useMultiField: keyof CreateImageRequest,
+  fieldName: keyof CreateImageRequest
 ): boolean => {
   return (
     newImageRequest[useMultiField] &&
@@ -104,10 +100,10 @@ const isValidMulti = (
 }
 
 const mergePendingJobArray = (
-  existingArray: ImageRequest[],
-  newItems: ImageRequest[],
+  existingArray: CreateImageRequest[],
+  newItems: CreateImageRequest[],
   fieldsToOverwrite: string[]
-): ImageRequest[] => {
+): CreateImageRequest[] => {
   const newArray = []
   if (existingArray.length > 0) {
     for (const existingItem of existingArray) {
@@ -129,13 +125,13 @@ const mergePendingJobArray = (
 }
 
 export const createImageJob = async (
-  newImageRequest: DefaultPromptInput
+  newImageRequest: CreateImageRequest
 ): Promise<{
   status?: string
   success: boolean
-  pendingJobArray: ImageRequest[]
+  pendingJobArray: CreateImageRequest[]
 }> => {
-  let pendingJobArray: ImageRequest[] = []
+  let pendingJobArray: CreateImageRequest[] = []
 
   // Handle all multi-job requests first and split them apart
   // into individual pending requests that can be handled as needed.
@@ -206,11 +202,11 @@ export const createImageJob = async (
   try {
     if (pendingJobArray.length === 0) {
       // @ts-ignore
-      await createPendingJob(newImageRequest as ImageRequest)
+      await createPendingJob(newImageRequest)
     } else {
       const jobs = pendingJobArray.map((job) =>
         // @ts-ignore
-        createPendingJob(job as ImageRequest)
+        createPendingJob(job)
       )
       await Promise.all(jobs)
       await sleep(100) // Assuming a delay is still needed between job creations

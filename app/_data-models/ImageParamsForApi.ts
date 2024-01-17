@@ -25,34 +25,35 @@ export interface IApiParams {
 }
 
 export interface IArtBotImageDetails {
-  img2img?: boolean
-  prompt: string
-  negative: string
-  sampler: string
   cfg_scale: number
-  height: number
-  width: number
-  seed: string
-  steps: number
-  karras: boolean
-  hires: boolean
   clipskip: number
-  models: Array<string>
-  triggers?: Array<string>
-  tiling: boolean
-  source_image?: string
-  source_processing?: string
-  stylePreset: string
-  post_processing: Array<string>
-  facefixer_strength?: number
-  source_mask?: string
-  denoising_strength?: number
   control_type?: string
-  image_is_control?: boolean
-  return_control_map?: boolean
-  loras: SavedLora[]
-  tis: TextualInversion[]
+  denoising_strength?: number
   dry_run?: boolean
+  facefixer_strength?: number
+  height: number
+  hires: boolean
+  image_is_control?: boolean
+  img2img?: boolean
+  karras: boolean
+  loras: SavedLora[]
+  models: Array<string>
+  negative: string
+  numImages: number
+  post_processing: Array<string>
+  prompt: string
+  return_control_map?: boolean
+  sampler: string
+  seed: string
+  source_image?: string
+  source_mask?: string
+  source_processing?: string
+  steps: number
+  stylePreset: string
+  tiling: boolean
+  tis: TextualInversion[]
+  triggers?: Array<string>
+  width: number
 }
 
 interface ParamsObject {
@@ -99,31 +100,32 @@ class ImageParamsForApi {
     const blockedWorkers = AppSettings.get('blockedWorkers') || []
 
     const {
-      prompt,
-      sampler,
       cfg_scale,
-      height,
-      width,
-      seed = '',
-      steps,
-      models,
-      karras = false,
-      hires = false,
       clipskip = 1,
-      tiling = false,
-      source_image,
-      source_processing,
-      stylePreset,
-      post_processing = [],
-      facefixer_strength,
-      source_mask,
-      denoising_strength,
       control_type,
+      denoising_strength,
+      dry_run = false,
+      facefixer_strength,
+      height,
+      hires = false,
       image_is_control,
-      return_control_map,
+      karras = false,
       loras = [],
+      models,
+      numImages = 1,
+      post_processing = [],
+      prompt,
+      return_control_map,
+      sampler,
+      seed = '',
+      source_image,
+      source_mask,
+      source_processing,
+      steps,
+      stylePreset,
+      tiling = false,
       tis = [],
-      dry_run = false
+      width
     } = imageDetails
     let negative = imageDetails.negative || ''
 
@@ -151,7 +153,7 @@ class ImageParamsForApi {
         karras,
         hires_fix: hires,
         clip_skip: clipskip,
-        n: 1
+        n: numImages
       },
       nsfw: allowNsfw, // Use workers that allow NSFW images
       censor_nsfw: !allowNsfw, // Show user NSFW images if created
