@@ -20,8 +20,7 @@ import {
   addImageToDexie,
   deletePendingJobFromDb,
   getImageDetails,
-  updateAllPendingJobs,
-  updatePendingJobInDexie
+  updateAllPendingJobs
 } from './db'
 import { createNewImage } from './imageUtils'
 import {
