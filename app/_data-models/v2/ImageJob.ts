@@ -19,6 +19,7 @@ class ImageJob {
   maskData?: any
   modelVersion?: string
   orientationType?: string
+  preset: string[]
   shortlink?: string
   showcaseRequested?: boolean
   useXyPlot?: boolean
@@ -74,6 +75,7 @@ class ImageJob {
     orientationType,
     parentJobId,
     post_processing,
+    preset,
     prompt,
     return_control_map,
     sampler,
@@ -99,6 +101,7 @@ class ImageJob {
     this.canvasData = canvasData
     this.maskData = maskData
     this.orientationType = orientationType
+    this.preset = preset
     this.useXyPlot = useXyPlot
 
     // AI Horde image creation parameters
@@ -162,6 +165,7 @@ class ImageJob {
       orientationType: imageDetails.orientationType ?? '',
       parentJobId: imageDetails.parentJobId ?? '',
       post_processing: imageDetails.post_processing,
+      preset: imageDetails.preset,
       prompt: imageDetails.prompt,
       return_control_map: imageDetails.return_control_map,
       sampler: imageDetails.sampler,
