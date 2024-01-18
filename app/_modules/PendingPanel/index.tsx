@@ -73,6 +73,8 @@ export default function PendingPanel() {
   }, [done, error, filter, processing, queued, waiting])
 
   let filteredJobs = filterJobs()
+
+  console.log(`filtered`, filteredJobs)
   return (
     <div className={styles.PendingPanelWrapper}>
       <FlexRow gap={4} pb={8}>
