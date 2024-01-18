@@ -1,7 +1,7 @@
 import { appInfoStore } from 'app/_store/appStore'
 import { JobStatus } from '_types'
 import { isAppActive } from 'app/_utils/appUtils'
-import { checkCurrentJob, sendJobToApi } from 'app/_utils/imageCache'
+import { checkCurrentJob } from 'app/_utils/imageCache'
 import { sleep } from 'app/_utils/sleep'
 import {
   MAX_CONCURRENT_JOBS_ANON,
@@ -11,6 +11,7 @@ import {
 import { getAllPendingJobs, getJobsInProgress } from './pendingJobsCache'
 import AppSettings from 'app/_data-models/AppSettings'
 import { userInfoStore } from 'app/_store/userStore'
+import { createImageJob } from './V2/createImageJobController'
 
 const MAX_JOBS = userInfoStore.state.loggedIn
   ? MAX_CONCURRENT_JOBS_USER
@@ -69,11 +70,11 @@ export const createImageJobs = async () => {
     )
 
     if (jobOne) {
-      await sendJobToApi(jobOne)
+      await createImageJob(jobOne)
     }
 
     if (jobTwo) {
-      await sendJobToApi(jobTwo)
+      await createImageJob(jobTwo)
     }
 
     await fetchPendingImageJobs()

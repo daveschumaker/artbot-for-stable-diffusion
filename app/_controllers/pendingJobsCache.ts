@@ -160,11 +160,18 @@ export const updatePendingJobProperties = (
   }
 }
 
-export const updatePendingJobId = (oldId: string = '', newId: string) => {
+export const updatePendingJobId = async (oldId: string = '', newId: string) => {
   if (oldId && newId && pendingJobs[oldId]) {
     pendingJobs[newId] = cloneDeep(pendingJobs[oldId])
     pendingJobs[newId].jobId = newId
     delete pendingJobs[oldId]
+
+    await updatePendingJobInDexie(
+      pendingJobs[newId].id,
+      Object.assign({}, pendingJobs[newId])
+    )
+
+    return cloneDeep(pendingJobs[newId])
   }
 }
 
