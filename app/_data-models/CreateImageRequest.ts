@@ -75,6 +75,19 @@ class CreateImageRequest {
   worker_id: string
   worker_name: string
 
+  // Fields related to AI Horde Job Status
+  initWaitTime: number | null
+  errorMessage: string
+  done: boolean
+  faulted: boolean
+  finished: number
+  is_possible: boolean
+  processing: number
+  queue_position: number
+  restarted: number
+  wait_time: number
+  waiting: number
+
   constructor({
     canvasData = null,
     cfg_scale = 7,
@@ -126,6 +139,20 @@ class CreateImageRequest {
     this.cfg_scale = Number(cfg_scale)
     this.jobStatus = JobStatus.Waiting
     this.jobTimestamp = Date.now()
+
+    // AI Horde Job Progress
+    this.errorMessage = ''
+    this.initWaitTime = null
+    this.done = false
+    this.faulted = false
+    this.finished = 0
+    this.is_possible = false
+    this.kudos = 0
+    this.processing = 0
+    this.queue_position = 0
+    this.restarted = 0
+    this.wait_time = 0
+    this.waiting = 0
 
     // Orientation settings
     if (orientationType === 'random') {
