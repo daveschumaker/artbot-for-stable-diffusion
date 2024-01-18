@@ -7,6 +7,7 @@ class DefaultPromptInput {
   clipskip: number = 1
   control_type: CONTROL_TYPES = '' as CONTROL_TYPES
   denoising_strength: number | Common.Empty = 0.75
+  dry_run: boolean = false
   facefixer_strength: number = 0.75
   height: number = 1024
   hires: boolean = false

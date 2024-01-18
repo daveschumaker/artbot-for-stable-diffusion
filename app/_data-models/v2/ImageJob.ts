@@ -10,7 +10,9 @@ class ImageJob {
   parentJobId?: string
   batchId?: string // Helps group images for a particular job
   timestamp_created: number
+  timestamp_started: number
   timestamp_updated: number
+  timestamp_finished: number
   status: JobStatus
 
   // ArtBot specific parameters
@@ -94,7 +96,9 @@ class ImageJob {
     this.parentJobId = parentJobId // TODO: Index me!
     this.batchId = uuidv4() // TODO Index me!
     this.timestamp_created = Date.now()
+    this.timestamp_started = Date.now()
     this.timestamp_updated = Date.now()
+    this.timestamp_finished = Date.now()
     this.status = JobStatus.Waiting // TODO: Index me!
 
     // ArtBot specific parameters
@@ -152,7 +156,7 @@ class ImageJob {
       image_is_control: imageDetails.image_is_control,
       imageType: '',
       karras: imageDetails.karras,
-      loras: imageDetails.loras,
+      loras: imageDetails.loras ?? [],
       maskData: imageDetails.maskData,
       models: imageDetails.models,
       multiClip: '',
@@ -165,7 +169,7 @@ class ImageJob {
       orientationType: imageDetails.orientationType ?? '',
       parentJobId: imageDetails.parentJobId ?? '',
       post_processing: imageDetails.post_processing,
-      preset: imageDetails.preset,
+      preset: imageDetails.preset ?? [],
       prompt: imageDetails.prompt,
       return_control_map: imageDetails.return_control_map,
       sampler: imageDetails.sampler,
@@ -175,7 +179,7 @@ class ImageJob {
       source_processing: imageDetails.source_processing,
       steps: imageDetails.steps,
       tiling: imageDetails.tiling,
-      tis: imageDetails.tis,
+      tis: imageDetails.tis ?? [],
       triggers: [],
       upscaled: false,
       useAllModels: false,
