@@ -1,7 +1,7 @@
 import { userInfoStore } from 'app/_store/userStore'
 import { checkImageStatus } from 'app/_api/checkImageStatus'
 import { getFinishedImage } from 'app/_api/getFinishedImage'
-import { trackEvent, trackGaEvent } from 'app/_api/telemetry'
+import { trackGaEvent } from 'app/_api/telemetry'
 import {
   appInfoStore,
   setNewImageReady,
@@ -10,7 +10,6 @@ import {
 } from 'app/_store/appStore'
 import {
   CheckImage,
-  CreateImageJob,
   FinishedImageResponse,
   FinishedImageResponseError,
   JobStatus
@@ -19,36 +18,18 @@ import {
   addCompletedJobToDexie,
   addImageToDexie,
   deletePendingJobFromDb,
-  getImageDetails,
-  updateAllPendingJobs
+  getImageDetails
 } from './db'
-import { createNewImage } from './imageUtils'
-import {
-  CREATE_NEW_JOB_INTERVAL,
-  MAX_CONCURRENT_JOBS_ANON,
-  MAX_CONCURRENT_JOBS_USER
-} from '_constants'
 import { isAppActive, logError, uuidv4 } from './appUtils'
 import { logToConsole } from './debugTools'
 import {
   deletePendingJob,
-  getAllPendingJobs,
-  updateAllPendingJobsV2,
-  updatePendingJobId,
   updatePendingJobV2
 } from 'app/_controllers/pendingJobsCache'
 import { base64toBlob } from './imageUtils'
 import { initBlob, blobToBase64 } from './blobUtils'
 
 export const initIndexedDb = () => {}
-
-// Dynamically change fetch interval
-// (e.g., in cases where there are too many parallel requests)
-let FETCH_INTERVAL_SEC = CREATE_NEW_JOB_INTERVAL
-
-// Limit max jobs for anon users. If user is logged in,
-// let them run more jobs at once.
-let MAX_JOBS = MAX_CONCURRENT_JOBS_ANON
 
 export const checkImageJob = async (jobId: string): Promise<CheckImage> => {
   if (!jobId || !jobId?.trim()) {
@@ -84,220 +65,6 @@ export const checkImageJob = async (jobId: string): Promise<CheckImage> => {
     return {
       success: false,
       status: 'SOME_ERROR'
-    }
-  }
-}
-
-export const createMultiImageJob = async () => {
-  if (typeof window === 'undefined') {
-    return
-  }
-
-  if (!isAppActive()) {
-    return
-  }
-
-  if (userInfoStore.state.loggedIn) {
-    MAX_JOBS = MAX_CONCURRENT_JOBS_USER
-  }
-
-  const queuedCount = (await getAllPendingJobs(JobStatus.Processing)) || []
-
-  if (queuedCount.length < MAX_JOBS) {
-    const pendingJobs = (await getAllPendingJobs(JobStatus.Waiting)) || []
-    const [nextJobParams] = pendingJobs
-
-    if (nextJobParams) {
-      await sendJobToApi(nextJobParams)
-    }
-  }
-}
-
-export const sendJobToApi = async (imageParams: CreateImageJob) => {
-  if (!imageParams) {
-    return
-  }
-
-  try {
-    imageParams.jobStatus = JobStatus.Requested
-    updatePendingJobV2(imageParams)
-
-    const data = await createNewImage(imageParams)
-    // @ts-ignore
-    const { success, jobId, status, message = '' } = data || {}
-
-    // Skip for now and try again soon...
-    if (
-      !success &&
-      status === 'MAX_REQUEST_LIMIT' &&
-      FETCH_INTERVAL_SEC < 15000
-    ) {
-      FETCH_INTERVAL_SEC += 1000
-      imageParams.jobStatus = JobStatus.Waiting
-      updatePendingJobV2(imageParams)
-      return
-    }
-
-    // Handle condition where API ignores request.
-    // Probably rate limited?
-    if (!success && !jobId && !status) {
-      imageParams.jobStatus = JobStatus.Waiting
-      updatePendingJobV2(imageParams)
-      return
-    }
-
-    // Success! jobId has changed.
-    if (success && jobId) {
-      FETCH_INTERVAL_SEC = CREATE_NEW_JOB_INTERVAL
-
-      // This replaces ArtBot generated jobId with jobId from API.
-      updatePendingJobId(imageParams.jobId, jobId)
-
-      // Overwrite params on success.
-      imageParams.jobId = jobId
-      imageParams.timestamp = Date.now()
-      imageParams.jobStatus = JobStatus.Queued
-
-      updatePendingJobV2(imageParams)
-
-      const jobDetailsFromApi = (await checkImageJob(jobId)) || {}
-
-      if (typeof jobDetailsFromApi?.success === 'undefined') {
-        imageParams.jobStatus = JobStatus.Waiting
-        imageParams.is_possible = jobDetailsFromApi.is_possible
-
-        updatePendingJobV2(imageParams)
-        return {
-          success: false,
-          message: 'Unable to send request...'
-        }
-      }
-
-      const {
-        success: detailsSuccess,
-        wait_time = 0,
-        queue_position,
-        message
-      } = jobDetailsFromApi
-
-      if (detailsSuccess) {
-        //@ts-ignore
-        if (!imageParams.initWaitTime) {
-          imageParams.initWaitTime = wait_time
-          //@ts-ignore
-        } else if (wait_time > imageParams.initWaitTime) {
-          imageParams.initWaitTime = wait_time
-        }
-
-        imageParams.timestamp = Date.now()
-        imageParams.wait_time = wait_time
-        imageParams.queue_position = queue_position
-      }
-
-      updatePendingJobV2(
-        Object.assign({}, imageParams, {
-          queue_position: imageParams.queue_position,
-          wait_time: imageParams.wait_time || 0
-        })
-      )
-
-      return {
-        success: true,
-        message
-      }
-    } else {
-      updatePendingJobV2(
-        Object.assign({}, imageParams, {
-          jobStatus: JobStatus.Error,
-          errorMessage: message
-        })
-      )
-
-      const skipSetErrorOnAll =
-        status === 'UNKNOWN_ERROR' ||
-        status === 'QUESTIONABLE_PROMPT_ERROR' ||
-        status === 'INVALID_IMAGE_FROM_API'
-      if (imageParams.parentJobId && !skipSetErrorOnAll) {
-        await updateAllPendingJobs(imageParams.parentJobId, {
-          jobStatus: JobStatus.Error,
-          errorMessage: message
-        })
-
-        updateAllPendingJobsV2(JobStatus.Error, {
-          errorMessage: message
-        })
-      }
-
-      if (imageParams.source_image) {
-        // @ts-ignore
-        imageParams.has_source_image = true
-      }
-
-      delete imageParams.base64String
-      delete imageParams.source_image
-      delete imageParams.canvasStore
-      trackEvent({
-        event: 'ERROR',
-        action: 'UNABLE_TO_SEND_IMAGE_REQUEST',
-        data: {
-          status,
-          imageParams: { ...imageParams },
-          messageFromApi: message
-        }
-      })
-
-      return {
-        success: false,
-        status: status || 'UNABLE_TO_SEND_IMAGE_REQUEST',
-        message
-      }
-    }
-  } catch (err) {
-    updatePendingJobV2(
-      Object.assign({}, imageParams, {
-        jobStatus: JobStatus.Error,
-        errorMessage: 'An unknown error occurred...'
-      })
-    )
-
-    if (imageParams.parentJobId) {
-      await updateAllPendingJobs(imageParams.parentJobId, {
-        jobStatus: JobStatus.Error,
-        errorMessage: 'An unknown error occurred...'
-      })
-      updateAllPendingJobsV2(JobStatus.Error, {
-        errorMessage: 'An unknown error occurred...'
-      })
-    }
-
-    console.log(`Error: Unable to send job to API`)
-    console.log(err)
-
-    if (imageParams.source_image) {
-      imageParams.has_source_image = true
-    }
-
-    if (imageParams.source_mask) {
-      imageParams.has_source_mask = true
-    }
-
-    delete imageParams.base64String
-    delete imageParams.source_image
-    delete imageParams.source_mask
-    delete imageParams.canvasStore
-    trackEvent({
-      event: 'ERROR',
-      action: 'SEND_TO_API_ERROR',
-      data: {
-        imageParams: { ...imageParams },
-        // @ts-ignore
-        errMessage: err?.message || ''
-      }
-    })
-
-    return {
-      success: false,
-      status: 'UNABLE_TO_SEND_IMAGE_REQUEST'
     }
   }
 }
