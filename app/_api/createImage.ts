@@ -1,10 +1,9 @@
 import AppSettings from 'app/_data-models/AppSettings'
-import ImageParamsForApi, {
-  IArtBotImageDetails
-} from 'app/_data-models/ImageParamsForApi'
+import ImageParamsForApi from 'app/_data-models/ImageParamsForApi'
 import { GenerateResponse } from '_types'
 import { clientHeader, getApiHostServer } from 'app/_utils/appUtils'
 import { trackEvent } from './telemetry'
+import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 
 interface CreateImageResponse {
   statusCode?: number
@@ -18,7 +17,7 @@ interface CreateImageResponse {
 let isPending = false
 
 export const createImage = async (
-  imageDetails: IArtBotImageDetails
+  imageDetails: CreateImageRequest
 ): Promise<CreateImageResponse> => {
   const apikey = AppSettings.get('apiKey')?.trim() || '0000000000'
 

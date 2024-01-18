@@ -10,6 +10,8 @@ export interface CreateImageResponse {
 }
 
 export enum CONTROL_TYPES {
+  empty = '', // ArtBot specific enum
+  none = 'none', // ArtBot specific enum
   canny = 'canny',
   hed = 'hed',
   depth = 'depth',

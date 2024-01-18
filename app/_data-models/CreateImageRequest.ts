@@ -20,6 +20,7 @@ class CreateImageRequest {
   clipskip: number
   control_type: CONTROL_TYPES
   denoising_strength: number | Common.Empty
+  dry_run: boolean
   facefixer_strength?: number
   favorited: false
   height: number
@@ -80,6 +81,7 @@ class CreateImageRequest {
     clipskip = 1,
     control_type = '' as CONTROL_TYPES,
     denoising_strength = 0.75,
+    dry_run = false,
     facefixer_strength = 0.75,
     height = 512,
     hires = false,
@@ -176,6 +178,7 @@ class CreateImageRequest {
       this.sampler = 'k_euler_a'
     }
 
+    this.dry_run = dry_run
     this.negative = String(negative)
     this.numImages = Number(numImages)
     this.parentJobId = String(parentJobId) || uuidv4()
@@ -342,6 +345,7 @@ class CreateImageRequest {
       clipskip: imageDetails.clipskip,
       control_type: imageDetails.control_type,
       denoising_strength: imageDetails.denoising_strength,
+      dry_run: imageDetails.dry_run ?? false,
       facefixer_strength: imageDetails.facefixer_strength ?? 0.75,
       height: imageDetails.height,
       hires: imageDetails.hires,

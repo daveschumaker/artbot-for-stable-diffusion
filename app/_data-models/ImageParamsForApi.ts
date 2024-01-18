@@ -1,9 +1,9 @@
 import { SavedLora } from '_types/artbot'
-import { modifyPromptForStylePreset } from 'app/_utils/imageUtils'
 import { SourceProcessing } from 'app/_utils/promptUtils'
 import AppSettings from './AppSettings'
-import { Lora, TextualInversion } from '_types/horde'
+import { CONTROL_TYPES, Lora, TextualInversion } from '_types/horde'
 import { castTiInject } from 'app/_utils/hordeUtils'
+import CreateImageRequest from './CreateImageRequest'
 
 export interface IApiParams {
   prompt: string
@@ -22,38 +22,6 @@ export interface IApiParams {
   slow_workers?: boolean
   worker_blacklist?: boolean
   dry_run?: boolean
-}
-
-export interface IArtBotImageDetails {
-  cfg_scale: number
-  clipskip: number
-  control_type?: string
-  denoising_strength?: number
-  dry_run?: boolean
-  facefixer_strength?: number
-  height: number
-  hires: boolean
-  image_is_control?: boolean
-  img2img?: boolean
-  karras: boolean
-  loras: SavedLora[]
-  models: Array<string>
-  negative: string
-  numImages: number
-  post_processing: Array<string>
-  prompt: string
-  return_control_map?: boolean
-  sampler: string
-  seed: string
-  source_image?: string
-  source_mask?: string
-  source_processing?: string
-  steps: number
-  stylePreset: string
-  tiling: boolean
-  tis: TextualInversion[]
-  triggers?: Array<string>
-  width: number
 }
 
 interface ParamsObject {
@@ -83,7 +51,7 @@ interface IOptions {
 }
 
 class ImageParamsForApi {
-  constructor(imageDetails: IArtBotImageDetails, options: IOptions = {}) {
+  constructor(imageDetails: CreateImageRequest, options: IOptions = {}) {
     const useTrusted =
       typeof AppSettings.get('useTrusted') === 'undefined'
         ? true
@@ -112,7 +80,8 @@ class ImageParamsForApi {
       karras = false,
       loras = [],
       models,
-      // numImages = 1,
+      negative,
+      numImages = 1,
       post_processing = [],
       prompt,
       return_control_map,
@@ -122,12 +91,10 @@ class ImageParamsForApi {
       source_mask,
       source_processing,
       steps,
-      stylePreset,
       tiling = false,
       tis = [],
       width
     } = imageDetails
-    let negative = imageDetails.negative || ''
 
     const { hasError = false } = options
 
@@ -140,7 +107,7 @@ class ImageParamsForApi {
     }
 
     const apiParams: IApiParams = {
-      prompt,
+      prompt: negative ? `${prompt} ### ${negative}` : prompt,
       params: {
         cfg_scale: Number(cfg_scale),
         seed: String(seed),
@@ -153,7 +120,7 @@ class ImageParamsForApi {
         karras,
         hires_fix: hires,
         clip_skip: clipskip,
-        n: 1
+        n: numImages
       },
       nsfw: allowNsfw, // Use workers that allow NSFW images
       censor_nsfw: !allowNsfw, // Show user NSFW images if created
@@ -251,25 +218,18 @@ class ImageParamsForApi {
       apiParams.source_mask = source_mask
     }
 
-    if (control_type && control_type !== '' && source_image) {
+    if (control_type !== CONTROL_TYPES.empty && source_image) {
       apiParams.params.control_type = control_type
       apiParams.params.image_is_control = image_is_control
       apiParams.params.return_control_map = return_control_map
     }
 
-    if (control_type === 'none') {
+    if (control_type === CONTROL_TYPES.none) {
       // Handle a very poor decision on my part
       apiParams.params.control_type = ''
       delete apiParams.params.image_is_control
       delete apiParams.params.return_control_map
     }
-
-    // Handle style presets, as well as adding any negative prompts to input prompt string
-    apiParams.prompt = modifyPromptForStylePreset({
-      prompt,
-      negative,
-      stylePreset
-    })
 
     // Strip source_image and _source mask from object if we want to show request details if error occurred.
     if (hasError === true) {
@@ -286,7 +246,7 @@ class ImageParamsForApi {
       apiParams.params.facefixer_strength = facefixer_strength
     }
 
-    if (control_type && control_type !== '' && source_image) {
+    if (control_type !== CONTROL_TYPES.empty && source_image) {
       // Fields removed before sending request to API.
       delete apiParams.params.sampler_name
     }

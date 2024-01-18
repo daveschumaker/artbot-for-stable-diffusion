@@ -104,14 +104,14 @@ export const deletePendingJob = async (jobId: string) => {
   deletePendingJobFromDb(jobId)
 }
 
-export const getPendingJob = (jobId: string) => {
-  return cloneDeep(pendingJobs[jobId])
-}
-
 export const getJobsInProgress = () => {
   return Object.values(pendingJobs).filter((job) =>
     [JobStatus.Queued, JobStatus.Processing].includes(job.jobStatus)
   )
+}
+
+export const getPendingJob = (jobId: string) => {
+  return cloneDeep(pendingJobs[jobId])
 }
 
 export const getAllPendingJobs = (status?: JobStatus): Array<any> => {
