@@ -108,6 +108,12 @@ export const getPendingJob = (jobId: string) => {
   return cloneDeep(pendingJobs[jobId])
 }
 
+export const getJobsInProgress = () => {
+  return Object.values(pendingJobs).filter((job) =>
+    [JobStatus.Queued, JobStatus.Processing].includes(job.jobStatus)
+  )
+}
+
 export const getAllPendingJobs = (status?: JobStatus): Array<any> => {
   const jobsArray = Object.values(pendingJobs).map((job) => cloneDeep(job))
 
@@ -129,7 +135,7 @@ export const setPendingJob = (pendingJob: IPendingJob) => {
 }
 
 // Handles updating jobId in both database and in-memory cache.
-export const updatePendingJobV2 = (pendingJob: IPendingJob) => {
+export const updatePendingJobV2 = async (pendingJob: IPendingJob) => {
   if (!pendingJob || !pendingJob.jobId) {
     return
   }
@@ -140,7 +146,7 @@ export const updatePendingJobV2 = (pendingJob: IPendingJob) => {
   if (pendingJobs[jobId]) {
     pendingJobs[jobId] = cloneDeep(pendingJob)
 
-    updatePendingJobInDexie(pendingJob.id, Object.assign({}, pendingJob))
+    await updatePendingJobInDexie(pendingJob.id, Object.assign({}, pendingJob))
   }
 }
 

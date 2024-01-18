@@ -8,7 +8,7 @@ import {
   MAX_CONCURRENT_JOBS_USER,
   POLL_COMPLETED_JOBS_INTERVAL
 } from '_constants'
-import { getAllPendingJobs } from './pendingJobsCache'
+import { getAllPendingJobs, getJobsInProgress } from './pendingJobsCache'
 import AppSettings from 'app/_data-models/AppSettings'
 import { userInfoStore } from 'app/_store/userStore'
 
@@ -17,26 +17,8 @@ const MAX_JOBS = userInfoStore.state.loggedIn
   : MAX_CONCURRENT_JOBS_ANON
 
 let pendingJobs: any = []
-let enableDebugLogs = false
 
 let isAppCurrentlyActive = isAppActive()
-
-const logDebug = (message: string, obj?: any) => {
-  if (enableDebugLogs) {
-    if (obj) {
-      console.log(`pendingJobsController: ${message}`)
-      console.log(obj)
-    } else {
-      console.log(`pendingJobsController: ${message}`)
-    }
-  }
-}
-
-const getProcessingOrQueuedJobs = (jobs: any[]): any[] => {
-  return jobs.filter((job: any) =>
-    [JobStatus.Queued, JobStatus.Processing].includes(job.jobStatus)
-  )
-}
 
 export const getPendingJobsFromCache = () => [...pendingJobs]
 
@@ -53,7 +35,7 @@ export const checkMultiPendingJobs = async () => {
     return
   }
 
-  const processingOrQueued = getProcessingOrQueuedJobs(pendingJobs)
+  const processingOrQueued = getJobsInProgress()
   const limitCheck = processingOrQueued.slice(-MAX_JOBS)
 
   for (const jobDetails of limitCheck) {
@@ -68,22 +50,18 @@ export const createImageJobs = async () => {
   }
 
   if (appInfoStore.state.storageQuotaLimit) {
-    logDebug(`Unable to request image. Storage Quota limit is full.`)
     return
   }
 
   if (!isAppCurrentlyActive) {
-    logDebug(`App is not active`)
     return
   }
 
   if (AppSettings.get('pauseJobQueue')) {
-    logDebug(`job queue paused`)
     return
   }
 
-  const processingOrQueued = getProcessingOrQueuedJobs(pendingJobs)
-  logDebug(`createImageJobs / processingOrQueued:`, processingOrQueued)
+  const processingOrQueued = getJobsInProgress()
 
   if (processingOrQueued.length < MAX_JOBS) {
     const [jobOne, jobTwo] = pendingJobs.filter(
@@ -136,15 +114,10 @@ export const initPendingJobService = () => {
   createPendingJobInterval()
 }
 
-const toggleLogs = () => {
-  enableDebugLogs = !enableDebugLogs
-}
-
 const initWindow = () => {
   if (typeof window !== 'undefined') {
     if (!window._artbot) window._artbot = {}
     window._artbot.getAllPendingJobsFromController = getAllPendingJobs
-    window._artbot.togglePendingJobsControllerLogs = toggleLogs
 
     window.addEventListener('focus', function () {
       isAppCurrentlyActive = true
