@@ -54,7 +54,7 @@ const retryFetch = async <T>(
 }
 
 export const fetchUserDetailsV2 = async (
-  apiKey: string,
+  apiKey: string = '',
   maxRetries: number = MAX_RETRIES
 ): Promise<UserCacheType | null> => {
   const currentTime: number = new Date().getTime()
