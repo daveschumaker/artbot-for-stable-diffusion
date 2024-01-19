@@ -150,6 +150,7 @@ class ImageJob {
       clipskip: imageDetails.clipskip,
       control_type: imageDetails.control_type,
       denoising_strength: imageDetails.denoising_strength,
+      dry_run: false,
       facefixer_strength: imageDetails.facefixer_strength ?? 0.75,
       height: imageDetails.height,
       hires: imageDetails.hires,

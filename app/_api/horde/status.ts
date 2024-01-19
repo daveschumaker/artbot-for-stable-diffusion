@@ -1,38 +1,57 @@
 import { clientHeader, getApiHostServer } from 'app/_utils/appUtils'
 
+interface HordeGeneration {
+  img: string
+  seed: string
+  id: string
+  censored: boolean
+  gen_metadata: Array<{
+    type: string
+    value: string
+    ref?: string
+  }>
+  worker_id: string
+  worker_name: string
+  model: string
+  state: string
+}
+
 interface HordeSuccessResponse {
+  generations: HordeGeneration[]
+  shared: boolean
+  finished: number
+  processing: number
+  restarted: number
+  waiting: number
   done: boolean
   faulted: boolean
-  finished: number
-  is_possible: boolean
-  kudos: number
-  processing: number
-  queue_position: number
-  restarted: number
   wait_time: number
-  waiting: number
+  queue_position: number
+  kudos: number
+  is_possible: boolean
 }
 
 interface HordeErrorResponse {
   message: string
 }
 
-export interface CheckSuccessResponse extends HordeSuccessResponse {
+export interface StatusSuccessResponse extends HordeSuccessResponse {
   success: boolean
 }
 
-export interface CheckErrorResponse extends HordeErrorResponse {
+export interface StatusErrorResponse extends HordeErrorResponse {
   success: boolean
   statusCode: number
 }
 
-export default async function check(
+export default async function status(
   jobId: string
-): Promise<CheckSuccessResponse | CheckErrorResponse> {
+): Promise<StatusSuccessResponse | StatusErrorResponse> {
   let statusCode
+
   try {
     const res = await fetch(
-      `${getApiHostServer()}/api/v2/generate/check/${jobId}`,
+      `${getApiHostServer()}/api/v2/generate/status/${jobId}`,
       {
         cache: 'no-store',
         headers: {
@@ -45,7 +64,7 @@ export default async function check(
     statusCode = res.status
     const data: HordeSuccessResponse | HordeErrorResponse = await res.json()
 
-    if ('done' in data && 'is_possible' in data) {
+    if ('done' in data) {
       return {
         success: true,
         ...data
@@ -53,12 +72,12 @@ export default async function check(
     } else {
       return {
         success: false,
-        message: data.message,
-        statusCode
+        statusCode,
+        ...data
       }
     }
   } catch (err) {
-    console.log(`Error: Unable to check status for jobId: ${jobId}`)
+    console.log(`Error: Unable to download images for jobId: ${jobId}`)
     console.log(err)
 
     return {

@@ -17,6 +17,7 @@ import {
   deletePendingJobFromDb,
   updatePendingJobInDexie
 } from 'app/_utils/db'
+import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 
 declare global {
   interface Window {
@@ -24,15 +25,8 @@ declare global {
   }
 }
 
-interface IPendingJob {
-  id: number
-  jobId?: string | undefined
-  errorMessage?: string
-  jobStatus: JobStatus
-}
-
 interface IPendingJobs {
-  [key: string]: IPendingJob
+  [key: string]: CreateImageRequest
 }
 
 let pendingJobs: IPendingJobs = {}
@@ -124,7 +118,7 @@ export const getAllPendingJobs = (status?: JobStatus): Array<any> => {
   return jobsArray
 }
 
-export const setPendingJob = (pendingJob: IPendingJob) => {
+export const setPendingJob = (pendingJob: CreateImageRequest) => {
   if (!pendingJob || !pendingJob.jobId) {
     return
   }
@@ -135,7 +129,7 @@ export const setPendingJob = (pendingJob: IPendingJob) => {
 }
 
 // Handles updating jobId in both database and in-memory cache.
-export const updatePendingJobV2 = async (pendingJob: IPendingJob) => {
+export const updatePendingJobV2 = async (pendingJob: CreateImageRequest) => {
   if (!pendingJob || !pendingJob.jobId) {
     return
   }

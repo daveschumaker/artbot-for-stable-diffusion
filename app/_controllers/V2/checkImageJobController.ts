@@ -1,9 +1,12 @@
-import check, {
-  CheckErrorResponse,
-  CheckSuccessResponse
-} from 'app/_api/horde/check'
+import check, { CheckSuccessResponse } from 'app/_api/horde/check'
 import { getPendingJob, updatePendingJobV2 } from '../pendingJobsCache'
 import { JobStatus } from '_types'
+
+// TODO: Consideration.
+// Say a user is in the middle of an image generation and they are able to download a few images.
+// Then they close their browser and come back. What happens? Job will be stale and give an error.
+// We should check if the job 404s or has some sort of error, but if we already have images saved
+// in IndexedDb, we just alert them to that, and their generations are saved.
 
 // There were a number of issues around the AI Horde getting too many 404s
 // from ArtBot. Something is happening where jobs aren't being removed
@@ -17,7 +20,7 @@ export const checkImageJob = async (jobId: string) => {
     return false
   }
 
-  const data: CheckSuccessResponse | CheckErrorResponse = await check(jobId)
+  const data = await check(jobId)
 
   if (data.success) {
     const successData = data as CheckSuccessResponse
