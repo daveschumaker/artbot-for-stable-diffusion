@@ -21,6 +21,8 @@
   min-width: 0;
   padding-left: var(--slide-spacing);
   position: relative;
+  display: flex;
+  justify-content: center;
 }
 
 .embla__slide__img {
@@ -74,22 +76,26 @@
   margin: 0;
 }
 
-.embla__buttons__left {
+.embla__buttons__left,
+.embla__buttons__right {
   display: flex;
+  cursor: pointer;
   align-items: center;
+  justify-content: center;
+  /* Add this for horizontal centering if needed */
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  left: 1.6rem;
+  top: 0;
+  bottom: 0;
+  /* Stretch the container from top to bottom */
+  z-index: 1;
+}
+
+.embla__buttons__left {
+  left: 0;
 }
 
 .embla__buttons__right {
-  display: flex;
-  align-items: center;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  right: 1.6rem;
+  right: 0;
 }
 
 .embla__button {
@@ -136,14 +142,14 @@
 }
 
 .embla__dot {
+  cursor: pointer;
   width: 20px;
   height: 20px;
   /* width: 2.4rem;
   height: 2.4rem; */
   display: flex;
   align-items: center;
-  margin-right: 0.5rem;
-  margin-left: 0.5rem;
+  justify-content: center;
 }
 
 .embla__dot:after {

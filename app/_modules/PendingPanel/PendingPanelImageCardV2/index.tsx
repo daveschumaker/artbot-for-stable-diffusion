@@ -38,7 +38,7 @@ import FlexRow from 'app/_components/FlexRow'
 import { getAllImagesByJobId, getImageByJobId } from 'app/_db/image_files'
 import CreateImageRequestV2 from 'app/_data-models/v2/CreateImageRequestV2'
 import styles from './component.module.css'
-import ImageModel from 'app/_data-models/v2/ImageModel'
+import ImageModel, { ImageStatus } from 'app/_data-models/v2/ImageModel'
 import Modal from 'app/_componentsV2/Modal'
 import ImageModalV2 from '../ImageModalV2'
 
@@ -60,6 +60,7 @@ const PendingPanelImageCardV2 = React.memo(
     const imagePreviewModal = useModal(ImageModal)
     const pendingImageModal = useModal(AwesomeModalWrapper)
 
+    const [censoredJob, setCensoredJob] = useState(false)
     const [isVisible, setIsVisible] = useState(
       imageJob.jobStatus === JobStatus.Done
     )
@@ -107,17 +108,28 @@ const PendingPanelImageCardV2 = React.memo(
     }
 
     const loadImage = useCallback(async () => {
-      if (imageJob.version === 2) {
-        const srcs: string[] = []
-        const data = await getAllImagesByJobId(imageJob.jobId)
-        data.forEach((image: ImageModel) => {
-          if (image.blob) {
-            srcs.push(URL.createObjectURL(image.blob))
-          }
-        })
+      const srcs: string[] = []
+      const data = await getAllImagesByJobId(imageJob.jobId)
 
-        setImageSrcs(srcs)
+      // Hackey check to determine if all images are censored.
+      // The moment we find that something isn't, set to false.
+      let allCensored = true
+
+      data.forEach((image: ImageModel) => {
+        if (image.status !== ImageStatus.CENSORED) {
+          allCensored = false
+        }
+
+        if (image.blob) {
+          srcs.push(URL.createObjectURL(image.blob))
+        }
+      })
+
+      if (allCensored) {
+        setCensoredJob(true)
       }
+
+      setImageSrcs(srcs)
     }, [imageJob.jobId, imageJob.version])
 
     useEffect(() => {
@@ -125,7 +137,6 @@ const PendingPanelImageCardV2 = React.memo(
         loadImage()
       }
 
-      // Clean up Blob URL when the component unmounts
       return () => {
         if (imageSrcs[0]) URL.revokeObjectURL(imageSrcs[0])
       }
@@ -226,7 +237,7 @@ const PendingPanelImageCardV2 = React.memo(
           )} */}
           {serverHasJob && (
             <div className={styles.CenteredElement}>
-              <SpinnerV2 size={20} />
+              <SpinnerV2 size={24} />
             </div>
           )}
           {imageJob.jobStatus === JobStatus.Waiting && (
@@ -249,7 +260,7 @@ const PendingPanelImageCardV2 = React.memo(
               />
             </div>
           )}
-          {imageJob.jobStatus === JobStatus.Done && (
+          {imageJob.jobStatus === JobStatus.Done && imageSrcs[0] && (
             <img
               alt="Completed image"
               className={clsx(
@@ -258,10 +269,28 @@ const PendingPanelImageCardV2 = React.memo(
               )}
               height={imageJob.height}
               onLoad={() => setIsVisible(true)}
-              src={imageSrcs[0] || placeholderImage.src}
+              src={imageSrcs[0]}
               style={{ borderRadius: '4px', cursor: 'pointer' }}
               width={imageJob.width}
             />
+          )}
+          {censoredJob && (
+            <div className={styles.CenteredElement}>
+              <IconAlertTriangle
+                color="rgb(234 179 8)"
+                stroke={1.5}
+                size={36}
+                style={{ position: 'absolute' }}
+              />
+            </div>
+          )}
+          {censoredJob && (
+            <div className={styles.ImageStatus}>
+              <div className="px-2 text-xs">
+                The GPU worker was unable to complete this request. Try again?
+                (Error code: X)
+              </div>
+            </div>
           )}
           {imageJob.jobStatus !== JobStatus.Done && (
             <div className={styles.ImageStatus}>
@@ -311,11 +340,11 @@ const PendingPanelImageCardV2 = React.memo(
             </div>
           )}
         </div>
-        {imageSrcs.length > 1 && (
+        {/* {imageSrcs.length > 1 && (
           <div className={clsx(styles.imageContainer, styles.imageContainer2)}>
             &nbsp;
           </div>
-        )}
+        )} */}
         {/* {imageSrcs.length > 2 && (
           <div className={clsx(styles.imageContainer, styles.imageContainer3)}>
             &nbsp;
