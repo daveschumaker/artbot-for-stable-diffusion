@@ -20,6 +20,14 @@ export const checkImageJob = async (jobId: string) => {
     return false
   }
 
+  // The only thing that can set JobState.Done is the
+  // completedImageJobController. So, if that has happened,
+  // this no longer needs to do anything and can skip it.
+  if (job.jobStatus === JobStatus.Done) {
+    hacky404JobCheck[jobId] = true
+    return false
+  }
+
   const data = await check(jobId)
 
   if (data.success) {

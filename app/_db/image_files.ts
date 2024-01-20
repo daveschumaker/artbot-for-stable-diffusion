@@ -28,7 +28,7 @@ interface GetAllImagesOptions {
 
 export const getAllImagesByJobId = async (
   jobId: string,
-  options: GetAllImagesOptions
+  options: GetAllImagesOptions = {}
 ) => {
   if ('imageIdsOnly' in options) {
     return await db.image_files
@@ -37,8 +37,9 @@ export const getAllImagesByJobId = async (
       .map((image: ImageModel) => {
         return image.hordeId
       })
+      .toArray()
   } else {
-    return await db.image_files.where('jobId').equals(jobId)
+    return await db.image_files.where('jobId').equals(jobId).toArray()
   }
 }
 
