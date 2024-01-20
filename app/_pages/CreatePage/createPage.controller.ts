@@ -1,5 +1,4 @@
 import AppSettings from 'app/_data-models/AppSettings'
-import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
 import { Dispatch } from 'react'
 import { getCanvasStore, resetSavedDrawingState } from 'app/_store/canvasStore'
@@ -10,6 +9,7 @@ import { SourceProcessing, savePromptHistory } from 'app/_utils/promptUtils'
 import { createImageJob } from 'app/_utils/V2/createImageJob'
 import PromptInputSettings from 'app/_data-models/PromptInputSettings'
 import { updateAdEventTimestamp } from 'app/_store/appStore'
+import CreateImageRequestV2 from 'app/_data-models/v2/CreateImageRequestV2'
 
 interface CreateClick {
   pending: boolean
@@ -107,11 +107,11 @@ export const handleCreateClick = async ({
     name: 'index#handle_submit.CreateImageRequest',
 
     // @ts-ignore
-    data: new CreateImageRequest(inputToSubmit)
+    data: new CreateImageRequestV2(inputToSubmit)
   })
 
   // @ts-ignore
-  await createImageJob(new CreateImageRequest(inputToSubmit))
+  await createImageJob(new CreateImageRequestV2(inputToSubmit))
 
   if (!AppSettings.get('stayOnCreate') && !disableRedirect) {
     if (!AppSettings.get('saveInputOnCreate')) {
