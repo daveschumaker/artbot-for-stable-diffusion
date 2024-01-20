@@ -23,38 +23,6 @@ export const dbExport = async (progressCallback?: () => any) => {
   return blob
 }
 
-export const addImageToDexie = async ({
-  base64String,
-  hordeImageId = '',
-  jobId,
-  type,
-  force
-}: {
-  base64String: string
-  hordeImageId: string
-  jobId: string
-  type?: string
-  force?: boolean
-}) => {
-  if (force) {
-    await db.images.put({
-      jobId,
-      base64String,
-      hordeImageId,
-      type,
-      timestamp: Date.now()
-    })
-  } else {
-    await db.images.add({
-      jobId,
-      base64String,
-      hordeImageId,
-      type,
-      timestamp: Date.now()
-    })
-  }
-}
-
 export const deleteImageFromDexie = async (jobId: string) => {
   await db.images.where('jobId').equals(jobId).delete()
 }
@@ -501,7 +469,9 @@ export const updateCompletedJob = async (tableId: number, updatedObject) => {
   db.completed.update(tableId, updatedObject)
 }
 
-export const addCompletedJobToDexie = async (imageDetails = {}) => {
+export const addCompletedJobToDexie = async (
+  imageDetails: CreateImageRequest
+) => {
   try {
     await db.completed.put(Object.assign({}, imageDetails))
   } catch (err: any) {
