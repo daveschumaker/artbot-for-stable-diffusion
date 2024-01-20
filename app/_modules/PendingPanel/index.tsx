@@ -19,7 +19,6 @@ import PendingSettings from 'app/_pages/PendingPage/PendingSettings'
 import ClearJobs from 'app/_pages/PendingPage/ClearJobs'
 import { Button } from 'app/_components/Button'
 import { Virtuoso } from 'react-virtuoso'
-import PendingPanelImageCard from './PendingPanelImageCard'
 import PendingTips from './Tips'
 import PendingPanelImageCardV2 from './PendingPanelImageCardV2'
 

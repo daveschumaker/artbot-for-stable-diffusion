@@ -24,6 +24,7 @@ import {
 import { deletePendingJobFromApi } from 'app/_api/deletePendingJobFromApi'
 import {
   IconAlertTriangle,
+  IconCheck,
   IconHeart,
   IconPhotoUp,
   IconTrash,
@@ -38,16 +39,30 @@ import { getAllImagesByJobId, getImageByJobId } from 'app/_db/image_files'
 import CreateImageRequestV2 from 'app/_data-models/v2/CreateImageRequestV2'
 import styles from './component.module.css'
 import ImageModel from 'app/_data-models/v2/ImageModel'
+import Modal from 'app/_componentsV2/Modal'
+import ImageModalV2 from '../ImageModalV2'
+
+/**
+ * TODO:
+ * - Only show icons / info stuff on mouse hover.
+ * - Show confirmation modal for deleting images.
+ * - Say you will delete X number of images.
+ * - Show status if there is an error or all images are censored.
+ * - Click to open modal with all images generated in job (or a carousel?)
+ */
 
 const PendingPanelImageCardV2 = React.memo(
   ({ imageJob }: { imageJob: CreateImageRequestV2 }) => {
+    const imageModal = useModal(Modal)
+
     // const [favorited, setFavorited] = useState<boolean>(imageJob.favorited)
 
     const imagePreviewModal = useModal(ImageModal)
     const pendingImageModal = useModal(AwesomeModalWrapper)
 
-    const [isVisible, setIsVisible] = useState(true) // This resets the fade in any time the list changes. Blah.
-    const [imageSrc, setImageSrc] = useState<string | undefined>()
+    const [isVisible, setIsVisible] = useState(
+      imageJob.jobStatus === JobStatus.Done
+    )
     const [imageSrcs, setImageSrcs] = useState<string[]>([])
 
     // imageJob.jobStatus = JobStatus.Processing
@@ -96,7 +111,6 @@ const PendingPanelImageCardV2 = React.memo(
         const srcs: string[] = []
         const data = await getAllImagesByJobId(imageJob.jobId)
         data.forEach((image: ImageModel) => {
-          console.log(`image??`, image)
           if (image.blob) {
             srcs.push(URL.createObjectURL(image.blob))
           }
@@ -125,16 +139,21 @@ const PendingPanelImageCardV2 = React.memo(
           className={styles.imageContainer}
           onClick={async () => {
             if (imageJob.jobStatus === JobStatus.Done) {
-              const imageDetails = await getImageDetails(imageJob.jobId)
-              setImageDetailsModalOpen(true)
-
-              imagePreviewModal.show({
-                handleClose: () => {
-                  updateAdEventTimestamp()
-                  imagePreviewModal.remove()
-                },
-                imageDetails
+              imageModal.show({
+                content: <ImageModalV2 imageDetails={imageJob} />,
+                maxWidth: 'max-w-[2000px]'
               })
+
+              // const imageDetails = await getImageDetails(imageJob.jobId)
+              // setImageDetailsModalOpen(true)
+
+              // imagePreviewModal.show({
+              //   handleClose: () => {
+              //     updateAdEventTimestamp()
+              //     imagePreviewModal.remove()
+              //   },
+              //   imageDetails
+              // })
             } else {
               const imageDetails = await getPendingJobDetails(imageJob.jobId)
 
@@ -170,6 +189,11 @@ const PendingPanelImageCardV2 = React.memo(
             </div>
           )} */}
           <div className={styles.ImagesComplete}>
+            {imageJob.jobStatus === JobStatus.Done && (
+              <div style={{ color: 'green' }}>
+                <IconCheck size={18} />
+              </div>
+            )}
             ({imageJob.finished} / {imageJob.numImages})
           </div>
           <div

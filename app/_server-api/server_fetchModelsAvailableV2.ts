@@ -35,8 +35,16 @@ export const server_fetchModelsAvailableV2 = async () => {
     } else if (modelAvailabilityCache) {
       return modelAvailabilityCache
     } else {
+      if ('message' in data) {
+        if (data.message === '90 per 1 minute') {
+          return modelAvailabilityCache || []
+        }
+      }
+
+      console.log(`server_fetchModelsAvailableV2 Error:`)
+      console.log(data)
       throw new Error(
-        'JSON does not match expected minimum number of keys (5).'
+        'server_fetchModelsAvailableV2: JSON does not match expected minimum number of keys (5).'
       )
     }
   } catch (err) {
