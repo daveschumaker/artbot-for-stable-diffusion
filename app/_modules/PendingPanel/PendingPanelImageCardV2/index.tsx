@@ -1,21 +1,20 @@
 /* eslint-disable @next/next/no-img-element */
 import { JobStatus } from '_types'
-import styles from './pendingPanel.module.css'
 import {
   deleteCompletedImage,
   deleteImageFromDexie,
   getImageDetails,
-  getPendingJobDetails,
-  updateCompletedJobByJobId
+  getPendingJobDetails
+  // updateCompletedJobByJobId
 } from 'app/_utils/db'
 import {
   setImageDetailsModalOpen,
   updateAdEventTimestamp
 } from 'app/_store/appStore'
 import { useModal } from '@ebay/nice-modal-react'
-import placeholderImage from '../../../public/placeholder.gif'
+import placeholderImage from '../../../../public/placeholder.gif'
 
-import ImageModal from '../ImageModal'
+import ImageModal from '../../ImageModal'
 import clsx from 'clsx'
 import {
   deletePendingJob,
@@ -32,22 +31,26 @@ import {
 } from '@tabler/icons-react'
 import SpinnerV2 from 'app/_components/Spinner'
 import React, { useCallback, useEffect, useState } from 'react'
-import PendingImageModal from './PendingImageModal'
-import AwesomeModalWrapper from '../AwesomeModal'
+import PendingImageModal from '../PendingImageModal'
+import AwesomeModalWrapper from '../../AwesomeModal'
 import FlexRow from 'app/_components/FlexRow'
-import { base64toBlobUrl } from 'app/_utils/imageUtils'
-import CreateImageRequest from 'app/_data-models/CreateImageRequest'
-import { getImageByJobId } from 'app/_db/image_files'
+import { getAllImagesByJobId, getImageByJobId } from 'app/_db/image_files'
+import CreateImageRequestV2 from 'app/_data-models/v2/CreateImageRequestV2'
+import styles from './component.module.css'
+import ImageModel from 'app/_data-models/v2/ImageModel'
 
-const PendingPanelImageCard = React.memo(
-  ({ imageJob }: { imageJob: CreateImageRequest }) => {
-    const [favorited, setFavorited] = useState<boolean>(imageJob.favorited)
+const PendingPanelImageCardV2 = React.memo(
+  ({ imageJob }: { imageJob: CreateImageRequestV2 }) => {
+    // const [favorited, setFavorited] = useState<boolean>(imageJob.favorited)
 
     const imagePreviewModal = useModal(ImageModal)
     const pendingImageModal = useModal(AwesomeModalWrapper)
 
+    const [isVisible, setIsVisible] = useState(true) // This resets the fade in any time the list changes. Blah.
     const [imageSrc, setImageSrc] = useState<string | undefined>()
+    const [imageSrcs, setImageSrcs] = useState<string[]>([])
 
+    // imageJob.jobStatus = JobStatus.Processing
     const serverHasJob =
       imageJob.jobStatus === JobStatus.Queued ||
       imageJob.jobStatus === JobStatus.Processing ||
@@ -61,19 +64,19 @@ const PendingPanelImageCard = React.memo(
       deletePendingJob(jobId)
     }
 
-    const handleFavClick = (jobId: string, e: any) => {
-      const updateFavorite = !favorited
-      e.stopPropagation()
-      const job = getPendingJob(jobId)
+    // const handleFavClick = (jobId: string, e: any) => {
+    //   const updateFavorite = !favorited
+    //   e.stopPropagation()
+    //   const job = getPendingJob(jobId)
 
-      // @ts-ignore
-      job.favorited = updateFavorite
-      setFavorited(updateFavorite)
-      updatePendingJobV2(job)
-      updateCompletedJobByJobId(job.jobId, {
-        favorited: updateFavorite
-      })
-    }
+    //   // @ts-ignore
+    //   job.favorited = updateFavorite
+    //   setFavorited(updateFavorite)
+    //   updatePendingJobV2(job)
+    //   updateCompletedJobByJobId(job.jobId, {
+    //     favorited: updateFavorite
+    //   })
+    // }
 
     const hideFromPending = (jobId: string, jobStatus: JobStatus, e: any) => {
       e.stopPropagation()
@@ -90,44 +93,34 @@ const PendingPanelImageCard = React.memo(
 
     const loadImage = useCallback(async () => {
       if (imageJob.version === 2) {
-        const data = await getImageByJobId(imageJob.jobId)
-
-        if (data.blob) {
-          setImageSrc(URL.createObjectURL(data.blob))
-        }
-        console.log(`data??`, data)
-      } else {
-        if (imageJob.thumbnail || imageJob.base64String) {
-          const img = await base64toBlobUrl(
-            imageJob.thumbnail || imageJob.base64String
-          )
-          if (img) {
-            setImageSrc(img)
+        const srcs: string[] = []
+        const data = await getAllImagesByJobId(imageJob.jobId)
+        data.forEach((image: ImageModel) => {
+          console.log(`image??`, image)
+          if (image.blob) {
+            srcs.push(URL.createObjectURL(image.blob))
           }
-        }
+        })
+
+        setImageSrcs(srcs)
       }
-    }, [
-      imageJob.base64String,
-      imageJob.jobId,
-      imageJob.thumbnail,
-      imageJob.version
-    ])
+    }, [imageJob.jobId, imageJob.version])
 
     useEffect(() => {
-      if (!imageSrc) {
+      if (!imageSrcs[0] && imageJob.jobStatus === JobStatus.Done) {
         loadImage()
       }
 
       // Clean up Blob URL when the component unmounts
       return () => {
-        if (imageSrc) URL.revokeObjectURL(imageSrc)
+        if (imageSrcs[0]) URL.revokeObjectURL(imageSrcs[0])
       }
-    }, [imageJob.base64String, imageSrc, loadImage])
+    }, [imageSrcs, loadImage, imageJob.jobStatus])
 
-    console.log(`hi??`, imageJob)
+    let aspectRatio = (imageJob.height / imageJob.width) * 100 // This equals 66.67%
 
     return (
-      <div className={styles.PendingJobCard} key={imageJob.jobId}>
+      <div className={clsx(styles.PendingJobCard)} key={imageJob.jobId}>
         <div
           className={styles.imageContainer}
           onClick={async () => {
@@ -156,8 +149,11 @@ const PendingPanelImageCard = React.memo(
               })
             }
           }}
+          style={{
+            paddingTop: `${aspectRatio}%`
+          }}
         >
-          {imageJob.jobStatus === JobStatus.Done && (
+          {/* {imageJob.jobStatus === JobStatus.Done && (
             <div
               className={clsx(
                 styles.FavButton,
@@ -172,7 +168,10 @@ const PendingPanelImageCard = React.memo(
                 stroke={1}
               />
             </div>
-          )}
+          )} */}
+          <div className={styles.ImagesComplete}>
+            ({imageJob.finished} / {imageJob.numImages})
+          </div>
           <div
             className={styles.CloseButton}
             onClick={(e) =>
@@ -189,39 +188,55 @@ const PendingPanelImageCard = React.memo(
               <IconTrash color="white" stroke={1} />
             </div>
           )}
-          {imageJob.jobStatus !== JobStatus.Done && (
+          {/* {imageJob.jobStatus !== JobStatus.Done && (
             <img
               alt="Pending image"
               src={placeholderImage.src}
-              height={imageJob.height}
-              width={imageJob.width}
-              style={{ borderRadius: '4px' }}
+              style={{
+                borderRadius: '4px',
+                maxWidth: '320px',
+                height: `${imageJob.height}px`,
+                width: `${imageJob.width}px`
+              }}
             />
+          )} */}
+          {serverHasJob && (
+            <div className={styles.CenteredElement}>
+              <SpinnerV2 size={20} />
+            </div>
           )}
-          {serverHasJob && <SpinnerV2 style={{ position: 'absolute' }} />}
           {imageJob.jobStatus === JobStatus.Waiting && (
-            <IconPhotoUp
-              color="white"
-              stroke={1.5}
-              size={36}
-              style={{ position: 'absolute' }}
-            />
+            <div className={styles.CenteredElement}>
+              <IconPhotoUp
+                color="white"
+                stroke={1.5}
+                size={36}
+                style={{ position: 'absolute' }}
+              />
+            </div>
           )}
           {imageJob.jobStatus === JobStatus.Error && (
-            <IconAlertTriangle
-              color="rgb(234 179 8)"
-              size={36}
-              stroke={1}
-              style={{ position: 'absolute' }}
-            />
+            <div className={styles.CenteredElement}>
+              <IconAlertTriangle
+                color="rgb(234 179 8)"
+                size={36}
+                stroke={1}
+                style={{ position: 'absolute' }}
+              />
+            </div>
           )}
           {imageJob.jobStatus === JobStatus.Done && (
             <img
               alt="Completed image"
-              src={imageSrc || placeholderImage.src}
+              className={clsx(
+                styles.InitImageState,
+                isVisible && styles.ImageVisible
+              )}
               height={imageJob.height}
-              width={imageJob.width}
+              onLoad={() => setIsVisible(true)}
+              src={imageSrcs[0] || placeholderImage.src}
               style={{ borderRadius: '4px', cursor: 'pointer' }}
+              width={imageJob.width}
             />
           )}
           {imageJob.jobStatus !== JobStatus.Done && (
@@ -272,10 +287,20 @@ const PendingPanelImageCard = React.memo(
             </div>
           )}
         </div>
+        {imageSrcs.length > 1 && (
+          <div className={clsx(styles.imageContainer, styles.imageContainer2)}>
+            &nbsp;
+          </div>
+        )}
+        {/* {imageSrcs.length > 2 && (
+          <div className={clsx(styles.imageContainer, styles.imageContainer3)}>
+            &nbsp;
+          </div>
+        )} */}
       </div>
     )
   }
 )
 
-PendingPanelImageCard.displayName = 'PendingPanelImageCard'
-export default PendingPanelImageCard
+PendingPanelImageCardV2.displayName = 'PendingPanelImageCard'
+export default PendingPanelImageCardV2

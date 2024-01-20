@@ -15,6 +15,7 @@ interface IRandomSampler {
 
 class CreateImageRequest {
   base64String: string
+  thumbnail: string
   canvasData: any
   cfg_scale: number
   clipskip: number
@@ -138,7 +139,7 @@ class CreateImageRequest {
     width = 512
   }: DefaultPromptInput) {
     // Differentiate old image requests from newer image requests.
-    this.version = 2
+    this.version = 1
 
     this.cfg_scale = Number(cfg_scale)
     this.jobStatus = JobStatus.Waiting
@@ -333,6 +334,7 @@ class CreateImageRequest {
 
     this.id = 0
     this.base64String = ''
+    this.thumbnail = ''
     this.favorited = false
     this.jobId = ''
     this.worker_id = ''
