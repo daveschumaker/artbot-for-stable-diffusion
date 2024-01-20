@@ -1,7 +1,6 @@
 import { appInfoStore } from 'app/_store/appStore'
 import { JobStatus } from '_types'
 import { isAppActive } from 'app/_utils/appUtils'
-import { checkCurrentJob } from 'app/_utils/imageCache'
 import { sleep } from 'app/_utils/sleep'
 import {
   MAX_CONCURRENT_JOBS_ANON,
@@ -12,6 +11,8 @@ import { getAllPendingJobs, getJobsInProgress } from './pendingJobsCache'
 import AppSettings from 'app/_data-models/AppSettings'
 import { userInfoStore } from 'app/_store/userStore'
 import { createImageJob } from './V2/createImageJobController'
+import { checkImageJob } from './V2/checkImageJobController'
+import { completedImageJob } from './V2/completedImageJobController'
 
 const MAX_JOBS = userInfoStore.state.loggedIn
   ? MAX_CONCURRENT_JOBS_USER
@@ -40,8 +41,24 @@ export const checkMultiPendingJobs = async () => {
   const limitCheck = processingOrQueued.slice(-MAX_JOBS)
 
   for (const jobDetails of limitCheck) {
-    await checkCurrentJob(jobDetails)
+    await checkImageJob(jobDetails.jobId)
+
+    // Out with the old...
+    // await checkCurrentJob(jobDetails)
     await sleep(300)
+
+    // TODO: Use a Promise.all function to check all jobs at the same time.
+  }
+}
+
+export const checkFinishedImages = async () => {
+  const processingOrQueued = getJobsInProgress()
+  const limitCheck = processingOrQueued.slice(-MAX_JOBS)
+
+  for (const jobDetails of limitCheck) {
+    if (jobDetails.finished > 0) {
+      await completedImageJob(jobDetails.jobId)
+    }
   }
 }
 
@@ -102,6 +119,13 @@ export const createPendingJobInterval = async () => {
   }
 }
 
+export const checkFinishedImageInterval = async () => {
+  while (true) {
+    await checkFinishedImages()
+    await sleep(8000)
+  }
+}
+
 export const pendingJobCheckInterval = async () => {
   while (true) {
     await checkMultiPendingJobs()
@@ -112,6 +136,7 @@ export const pendingJobCheckInterval = async () => {
 export const initPendingJobService = () => {
   updatePendingJobs()
   pendingJobCheckInterval()
+  checkFinishedImageInterval()
   createPendingJobInterval()
 }
 

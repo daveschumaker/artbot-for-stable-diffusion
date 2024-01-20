@@ -1,0 +1,135 @@
+.PendingJobCard {
+  border-radius: 4px;
+  padding: 4px;
+  position: relative;
+  width: 100%;
+}
+
+.imageContainer {
+  margin: 0;
+  padding: 0;
+  /* box-shadow: inset black 0px 0px 60px -12px; */
+  border-radius: 4px;
+  display: flex;
+  cursor: pointer;
+  /* position: relative; */
+  align-items: flex-end;
+  justify-content: center;
+  /* max-width: 320px; */
+  overflow: hidden;
+  z-index: 3;
+
+  /* Aspect ratio stuff... */
+  width: 100%;
+  max-width: 320px;
+  height: 0;
+  /* padding-top: 66.67%; */
+  background-color: rgb(51, 51, 51);
+  position: relative;
+}
+
+.CenteredElement {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  /* margin: 0;
+  padding: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); */
+  /* Optional: set a specific size for the spinner */
+  /* Example width */
+  /* Example height */
+}
+
+.CloseButton {
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 8px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  user-select: none;
+}
+
+.TrashButton {
+  background-color: rgba(195, 47, 47, 0.6) !important;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 8px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.ImageStatus {
+  background-color: unset !important;
+  bottom: 4px;
+  color: white;
+  font-size: 12px;
+  opacity: 1 !important;
+  position: absolute;
+  text-align: center;
+  z-index: var(--zIndex-default);
+}
+
+.ImagesComplete {
+  /* background-color: ; */
+  color: white;
+  font-family: monospace;
+  font-size: 10px;
+  padding: 8px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.imageContainer2 {
+  border: 1px solid black;
+  background-color: #5F5F5F;
+  position: absolute;
+  /* transform: translateY(5%) scale(.95); */
+  max-width: 320px;
+  top: -8px;
+  z-index: 2;
+  border-radius: 4px;
+  height: 8px;
+  left: 15px;
+  width: calc(100% - 30px);
+}
+
+.imageContainer3 {
+  border: 1px solid black;
+  background-color: #5F5F5F;
+  position: absolute;
+  /* transform: translateY(5%) scale(.90); */
+  max-width: 320px;
+  top: -10px;
+  z-index: 1;
+  border-radius: 4px;
+  height: 8px;
+}
+
+.InitImageState {
+  opacity: 0;
+  /* Initial state */
+  transition: opacity 0.5s ease-in-out;
+}
+
+.ImageVisible {
+  opacity: 1;
+}
+
+@media (prefers-color-scheme: dark) {
+  .imageContainer2 {
+    border: 1px solid white;
+  }
+}

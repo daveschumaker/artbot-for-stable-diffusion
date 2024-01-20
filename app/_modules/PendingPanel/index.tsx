@@ -21,6 +21,7 @@ import { Button } from 'app/_components/Button'
 import { Virtuoso } from 'react-virtuoso'
 import PendingPanelImageCard from './PendingPanelImageCard'
 import PendingTips from './Tips'
+import PendingPanelImageCardV2 from './PendingPanelImageCardV2'
 
 export default function PendingPanel() {
   const [done, processing, queued, waiting, error] = usePendingJobs()
@@ -142,6 +143,7 @@ export default function PendingPanel() {
           <Virtuoso
             className={styles['virtual-list']}
             totalCount={filteredJobs.length}
+            // totalCount={2}
             style={{
               overflowY: 'auto',
               position: 'absolute',
@@ -168,7 +170,7 @@ export default function PendingPanel() {
             overscan={5}
             itemContent={(index) => {
               return (
-                <PendingPanelImageCard
+                <PendingPanelImageCardV2
                   key={`pendingPanel_img_${filteredJobs[index].jobId}`}
                   imageJob={filteredJobs[index]}
                 />
