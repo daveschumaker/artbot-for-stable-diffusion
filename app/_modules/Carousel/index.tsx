@@ -14,8 +14,13 @@ type PropType = {
 }
 
 const Carousel: React.FC<PropType> = (props) => {
-  const { images, options = { loop: true } } = props
+  const {
+    images,
+    options = { loop: true, watchDrag: images.length > 1 },
+    width
+  } = props
   const [emblaRef, emblaApi] = useEmblaCarousel(options)
+  const [emblaHeight, setEmblaHeight] = useState('auto')
   const [prevBtnDisabled, setPrevBtnDisabled] = useState(true)
   const [nextBtnDisabled, setNextBtnDisabled] = useState(true)
   const [selectedIndex, setSelectedIndex] = useState(0)
@@ -77,10 +82,42 @@ const Carousel: React.FC<PropType> = (props) => {
     emblaApi.on('select', onSelect)
   }, [emblaApi, onInit, onSelect])
 
+  const updateHeight = () => {
+    const img = document.getElementsByClassName('embla__slide__img')[0]
+
+    if (img?.clientHeight) {
+      setEmblaHeight(`${img.clientHeight}px`)
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('resize', updateHeight)
+    // Call it initially in case the image is already loaded
+    updateHeight()
+
+    return () => {
+      window.removeEventListener('resize', updateHeight)
+    }
+  }, [images])
+
   return (
     <>
-      <div className="embla">
-        <div className="embla__viewport" ref={emblaRef}>
+      <div className="embla mb-2" style={{ height: emblaHeight }}>
+        {images.length > 1 && (
+          <>
+            <div className="embla__buttons__left">
+              <PrevButton onClick={scrollPrev} disabled={prevBtnDisabled} />
+            </div>
+            <div className="embla__buttons__right">
+              <NextButton onClick={scrollNext} disabled={nextBtnDisabled} />
+            </div>
+          </>
+        )}
+        <div
+          className="embla__viewport"
+          ref={emblaRef}
+          style={{ height: emblaHeight }}
+        >
           <div className="embla__container">
             {images.map((src: string, idx: number) => (
               <div className="embla__slide" key={idx}>
@@ -98,30 +135,21 @@ const Carousel: React.FC<PropType> = (props) => {
                   //   maxHeight: `calc(100% - 30px)`
                   // }}
                   style={{
-                    maxWidth: '100%',
+                    maxWidth: width ? `${width}px` : '100%',
                     maxHeight: 'calc(100% - 30px)',
                     height: 'auto', // or width: 'auto', depending on which dimension you want to control
                     objectFit: 'contain' // This ensures the image is scaled to maintain its aspect ratio
                   }}
+                  onLoad={updateHeight}
                 />
               </div>
             ))}
           </div>
         </div>
-        {images.length > 1 && (
-          <>
-            <div className="embla__buttons__left">
-              <PrevButton onClick={scrollPrev} disabled={prevBtnDisabled} />
-            </div>
-            <div className="embla__buttons__right">
-              <NextButton onClick={scrollNext} disabled={nextBtnDisabled} />
-            </div>
-          </>
-        )}
       </div>
 
       {images.length > 1 && (
-        <div className="embla__dots">
+        <div className="embla__dots mb-2">
           {scrollSnaps.map((_, index) => (
             <DotButton
               key={index}

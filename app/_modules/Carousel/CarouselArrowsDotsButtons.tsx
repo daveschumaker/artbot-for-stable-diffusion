@@ -27,7 +27,11 @@ export const PrevButton: React.FC<PropType> = (props) => {
       type="button"
       {...restProps}
     >
-      <svg className="embla__button__svg" viewBox="0 0 532 532">
+      <svg
+        className="embla__button__svg"
+        viewBox="0 0 532 532"
+        style={{ width: '24px', height: '24px' }}
+      >
         <path
           fill="white"
           stroke="black"
@@ -49,7 +53,11 @@ export const NextButton: React.FC<PropType> = (props) => {
       type="button"
       {...restProps}
     >
-      <svg className="embla__button__svg" viewBox="0 0 532 532">
+      <svg
+        className="embla__button__svg"
+        viewBox="0 0 532 532"
+        style={{ width: '24px', height: '24px' }}
+      >
         <path
           fill="white"
           stroke="black"
