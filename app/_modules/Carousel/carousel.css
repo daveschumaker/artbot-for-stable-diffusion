@@ -91,11 +91,11 @@
 }
 
 .embla__buttons__left {
-  left: 0;
+  left: 8px;
 }
 
 .embla__buttons__right {
-  right: 0;
+  right: 8px;
 }
 
 .embla__button {

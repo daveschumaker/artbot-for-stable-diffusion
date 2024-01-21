@@ -57,7 +57,7 @@ const PendingPanelImageCardV2 = React.memo(
 
     // const [favorited, setFavorited] = useState<boolean>(imageJob.favorited)
 
-    const imagePreviewModal = useModal(ImageModal)
+    // const imagePreviewModal = useModal(ImageModal)
     const pendingImageModal = useModal(AwesomeModalWrapper)
 
     const [censoredJob, setCensoredJob] = useState(false)
