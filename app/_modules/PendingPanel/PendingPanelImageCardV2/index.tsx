@@ -41,6 +41,8 @@ import styles from './component.module.css'
 import ImageModel, { ImageStatus } from 'app/_data-models/v2/ImageModel'
 import Modal from 'app/_componentsV2/Modal'
 import ImageModalV2 from '../ImageModalV2'
+import { deleteJobIdFromCompleted } from 'app/_db/transactions'
+import PendingModal from '../PendingModal'
 
 /**
  * TODO:
@@ -75,8 +77,9 @@ const PendingPanelImageCardV2 = React.memo(
     const handleDeleteImage = async (jobId: string, e: any) => {
       e.stopPropagation()
 
-      await deleteImageFromDexie(jobId)
-      await deleteCompletedImage(jobId)
+      // await deleteImageFromDexie(jobId)
+      // await deleteCompletedImage(jobId)
+      await deleteJobIdFromCompleted(jobId)
       deletePendingJob(jobId)
     }
 
@@ -149,35 +152,10 @@ const PendingPanelImageCardV2 = React.memo(
         <div
           className={styles.imageContainer}
           onClick={async () => {
-            if (imageJob.jobStatus === JobStatus.Done) {
-              imageModal.show({
-                content: <ImageModalV2 imageDetails={imageJob} />,
-                maxWidth: 'max-w-[2000px]'
-              })
-
-              // const imageDetails = await getImageDetails(imageJob.jobId)
-              // setImageDetailsModalOpen(true)
-
-              // imagePreviewModal.show({
-              //   handleClose: () => {
-              //     updateAdEventTimestamp()
-              //     imagePreviewModal.remove()
-              //   },
-              //   imageDetails
-              // })
-            } else {
-              const imageDetails = await getPendingJobDetails(imageJob.jobId)
-
-              pendingImageModal.show({
-                children: <PendingImageModal imageDetails={imageDetails} />,
-                label: 'Pending image',
-                handleClose: () => {
-                  updateAdEventTimestamp()
-                  pendingImageModal.remove()
-                },
-                style: { maxWidth: '768px' }
-              })
-            }
+            imageModal.show({
+              content: <PendingModal imageDetails={imageJob} />,
+              maxWidth: 'max-w-[2000px]'
+            })
           }}
           style={{
             paddingTop: `${aspectRatio}%`
