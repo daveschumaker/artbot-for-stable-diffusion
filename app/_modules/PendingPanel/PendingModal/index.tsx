@@ -17,12 +17,13 @@ export default function PendingModal({
   const inProgressNoImages = !isDone && imageDetails.finished === 0
 
   console.log(imageDetails)
+  console.log('inProgressHasImages', inProgressHasImages)
   return (
-    <div>
+    <div className="mt-4">
+      {isPendingOrProcessing && <ImageJobStatus imageDetails={imageDetails} />}
       {(isDone || inProgressHasImages) && (
         <ImageDisplay imageDetails={imageDetails} />
       )}
-      {isPendingOrProcessing && <ImageJobStatus imageDetails={imageDetails} />}
       <ImageDetails imageDetails={imageDetails} />
     </div>
   )

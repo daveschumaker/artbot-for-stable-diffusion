@@ -133,10 +133,14 @@ const PendingPanelImageCardV2 = React.memo(
       }
 
       setImageSrcs(srcs)
-    }, [imageJob.jobId, imageJob.version])
+    }, [imageJob.jobId])
 
     useEffect(() => {
-      if (!imageSrcs[0] && imageJob.jobStatus === JobStatus.Done) {
+      // if (!imageSrcs[0] && imageJob.jobStatus === JobStatus.Done) {
+      //   loadImage()
+      // }
+
+      if (!imageSrcs[0]) {
         loadImage()
       }
 
@@ -181,6 +185,11 @@ const PendingPanelImageCardV2 = React.memo(
             {imageJob.jobStatus === JobStatus.Done && (
               <div style={{ color: 'green' }}>
                 <IconCheck size={18} />
+              </div>
+            )}
+            {imageJob.jobStatus === JobStatus.Error && (
+              <div style={{ color: 'green' }}>
+                <IconAlertTriangle size={18} color="rgb(234 179 8)" />
               </div>
             )}
             ({imageJob.finished} / {imageJob.numImages})
@@ -244,6 +253,21 @@ const PendingPanelImageCardV2 = React.memo(
               className={clsx(
                 styles.InitImageState,
                 isVisible && styles.ImageVisible
+              )}
+              height={imageJob.height}
+              onLoad={() => setIsVisible(true)}
+              src={imageSrcs[0]}
+              style={{ borderRadius: '4px', cursor: 'pointer' }}
+              width={imageJob.width}
+            />
+          )}
+          {imageSrcs[0] && (
+            <img
+              alt="Completed image"
+              className={clsx(
+                styles.InitImageState,
+                isVisible && styles.ImageVisible,
+                styles['darken-img']
               )}
               height={imageJob.height}
               onLoad={() => setIsVisible(true)}

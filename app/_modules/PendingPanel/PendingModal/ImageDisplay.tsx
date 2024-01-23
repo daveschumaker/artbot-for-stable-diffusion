@@ -22,12 +22,14 @@ export default function ImageDisplay({
         }
       })
 
+      console.log(`img srcs??`, srcs)
+
       setImageSrcs(srcs)
     }
   }, [imageDetails.jobId, imageDetails.version])
 
   useEffect(() => {
-    if (!imageSrcs[0] && imageDetails.jobStatus === JobStatus.Done) {
+    if (!imageSrcs[0]) {
       loadImage()
     }
 
@@ -36,6 +38,8 @@ export default function ImageDisplay({
       if (imageSrcs[0]) URL.revokeObjectURL(imageSrcs[0])
     }
   }, [imageSrcs, loadImage, imageDetails.jobStatus])
+
+  console.log(`HI!`)
 
   return (
     <div className="mb-2">

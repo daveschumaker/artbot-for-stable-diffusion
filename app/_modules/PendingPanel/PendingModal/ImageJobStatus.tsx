@@ -17,14 +17,14 @@ export default function ImageJobStatus({
         {imageDetails.jobStatus === JobStatus.Processing && (
           <>
             <FlexRow gap={8} pb={2}>
-              <IconLoader size={32} stroke={1.5} /> <strong>Status:</strong>{' '}
-              Image processing
+              <IconLoader size={28} stroke={1.5} /> <strong>Status:</strong>{' '}
+              Image{imageDetails.numImages > 1 ? 's' : ''} processing
             </FlexRow>
-            {imageDetails.queue_position >= 0 && (
+            {imageDetails.queue_position >= 0 && imageDetails.numImages > 1 && (
               <FlexRow pb={8}>
                 <div style={{ fontSize: '14px' }}>
-                  Queue position: {imageDetails.queue_position} <br /> Est.
-                  wait: {imageDetails.wait_time} s
+                  Images completed: {imageDetails.finished} of{' '}
+                  {imageDetails.numImages}
                 </div>
               </FlexRow>
             )}

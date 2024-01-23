@@ -92,7 +92,7 @@ const PendingPanelImageCard = React.memo(
       if (imageJob.version === 2) {
         const data = await getImageByJobId(imageJob.jobId)
 
-        if (data.blob) {
+        if (data && data.blob) {
           setImageSrc(URL.createObjectURL(data.blob))
         }
         console.log(`data??`, data)
