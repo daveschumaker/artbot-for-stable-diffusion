@@ -24,6 +24,7 @@ export default function PendingModal({
       {(isDone || inProgressHasImages) && (
         <ImageDisplay imageDetails={imageDetails} />
       )}
+      {/* Add image options wrapper here when photo(s) are live. */}
       <ImageDetails imageDetails={imageDetails} />
     </div>
   )

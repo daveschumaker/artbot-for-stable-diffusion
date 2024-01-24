@@ -1,48 +1,28 @@
 /* eslint-disable @next/next/no-img-element */
 import { JobStatus } from '_types'
-import {
-  deleteCompletedImage,
-  deleteImageFromDexie,
-  getImageDetails,
-  getPendingJobDetails
-  // updateCompletedJobByJobId
-} from 'app/_utils/db'
-import {
-  setImageDetailsModalOpen,
-  updateAdEventTimestamp
-} from 'app/_store/appStore'
 import { useModal } from '@ebay/nice-modal-react'
-import placeholderImage from '../../../../public/placeholder.gif'
 
-import ImageModal from '../../ImageModal'
 import clsx from 'clsx'
-import {
-  deletePendingJob,
-  getPendingJob,
-  updatePendingJobV2
-} from 'app/_controllers/pendingJobsCache'
+import { deletePendingJob } from 'app/_controllers/pendingJobsCache'
 import { deletePendingJobFromApi } from 'app/_api/deletePendingJobFromApi'
 import {
   IconAlertTriangle,
   IconCheck,
-  IconHeart,
   IconPhotoUp,
   IconTrash,
   IconX
 } from '@tabler/icons-react'
 import SpinnerV2 from 'app/_components/Spinner'
 import React, { useCallback, useEffect, useState } from 'react'
-import PendingImageModal from '../PendingImageModal'
-import AwesomeModalWrapper from '../../AwesomeModal'
 import FlexRow from 'app/_components/FlexRow'
-import { getAllImagesByJobId, getImageByJobId } from 'app/_db/image_files'
+import { getAllImagesByJobId } from 'app/_db/image_files'
 import CreateImageRequestV2 from 'app/_data-models/v2/CreateImageRequestV2'
 import styles from './component.module.css'
 import ImageModel, { ImageStatus } from 'app/_data-models/v2/ImageModel'
 import Modal from 'app/_componentsV2/Modal'
-import ImageModalV2 from '../ImageModalV2'
 import { deleteJobIdFromCompleted } from 'app/_db/transactions'
 import PendingModal from '../PendingModal'
+import { arraysEqual } from 'app/_utils/helperUtils'
 
 /**
  * TODO:
@@ -56,11 +36,6 @@ import PendingModal from '../PendingModal'
 const PendingPanelImageCardV2 = React.memo(
   ({ imageJob }: { imageJob: CreateImageRequestV2 }) => {
     const imageModal = useModal(Modal)
-
-    // const [favorited, setFavorited] = useState<boolean>(imageJob.favorited)
-
-    // const imagePreviewModal = useModal(ImageModal)
-    const pendingImageModal = useModal(AwesomeModalWrapper)
 
     const [censoredJob, setCensoredJob] = useState(false)
     const [isVisible, setIsVisible] = useState(
@@ -123,17 +98,21 @@ const PendingPanelImageCardV2 = React.memo(
           allCensored = false
         }
 
+        console.log(image)
+
         if (image.blob) {
           srcs.push(URL.createObjectURL(image.blob))
         }
       })
 
-      if (allCensored) {
+      if (allCensored && imageJob.finished > 0) {
         setCensoredJob(true)
       }
 
-      setImageSrcs(srcs)
-    }, [imageJob.jobId])
+      if (!arraysEqual(srcs, imageSrcs)) {
+        setImageSrcs(srcs)
+      }
+    }, [imageJob.finished, imageJob.jobId, imageSrcs])
 
     useEffect(() => {
       // if (!imageSrcs[0] && imageJob.jobStatus === JobStatus.Done) {
@@ -150,6 +129,8 @@ const PendingPanelImageCardV2 = React.memo(
     }, [imageSrcs, loadImage, imageJob.jobStatus])
 
     let aspectRatio = (imageJob.height / imageJob.width) * 100 // This equals 66.67%
+
+    console.log(`imageJob`, imageJob)
 
     return (
       <div className={clsx(styles.PendingJobCard)} key={imageJob.jobId}>
@@ -199,6 +180,7 @@ const PendingPanelImageCardV2 = React.memo(
             onClick={(e) =>
               hideFromPending(imageJob.jobId, imageJob.jobStatus, e)
             }
+            style={{ zIndex: 2 }}
           >
             <IconX color="white" stroke={1} />
           </div>
@@ -206,6 +188,7 @@ const PendingPanelImageCardV2 = React.memo(
             <div
               className={styles.TrashButton}
               onClick={(e) => handleDeleteImage(imageJob.jobId, e)}
+              style={{ zIndex: 2 }}
             >
               <IconTrash color="white" stroke={1} />
             </div>
@@ -261,7 +244,7 @@ const PendingPanelImageCardV2 = React.memo(
               width={imageJob.width}
             />
           )}
-          {imageSrcs[0] && (
+          {imageSrcs[0] && imageJob.jobStatus !== JobStatus.Done && (
             <img
               alt="Completed image"
               className={clsx(
