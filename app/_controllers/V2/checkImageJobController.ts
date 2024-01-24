@@ -52,7 +52,7 @@ export const checkImageJob = async (jobId: string) => {
     if (successData.faulted) {
       job.jobStatus = JobStatus.Error
       job.errorMessage =
-        'An unknown error occurred while checking pending image job.'
+        'An unknown error occurred and the AI Horde worker was unable to complete this job.'
     }
 
     await updatePendingJobV2(Object.assign({}, job))
