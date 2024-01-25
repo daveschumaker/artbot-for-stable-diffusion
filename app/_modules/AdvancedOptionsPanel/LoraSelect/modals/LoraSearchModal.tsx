@@ -60,10 +60,22 @@ const searchRequest = async ({
     // what about Turbo and LCM? 2.0 and 2.1? I'm just assuming 2.0 and 2.1 can be mixed, and 1.4 and 1.5 can be mixed, and lcm/turbo/not can be mixed. leave the rest to the user, maybe display that baseline somewhere.
     // I dont think civitai lets you filter by model size, maybe you want to put that filter in the display code (allow 220mb loras only)
     //  - except some workers have modified this. the colab worker has the limit removed, and my runpod is set to 750mb...
-    var baseModelfilter = sdxl ? [ "0.9", "1.0", "1.0 LCM", "TURBO"].map(e=>"&baseModels=SDXL " + e).join("") : '';
-    baseModelfilter += sd15 ? [ "1.4", "1.5", "1.5 LCM"].map(e=>"&baseModels=SD " + e).join("") : '';
-    baseModelfilter += sd21 ? [ "2.0", "2.0 768", "2.1", "2.1 768", "2.1 Unclip" ].map(e=>"&baseModels=SDXL " + e).join("") : '';
-    baseModelFilter = baseModelFilter.replace(/ /g,'%20')
+    var baseModelFilter = sdxl
+      ? ['0.9', '1.0', '1.0 LCM', 'TURBO']
+          .map((e) => '&baseModels=SDXL ' + e)
+          .join('')
+      : ''
+    baseModelFilter += sd15
+      ? ['1.4', '1.5', '1.5 LCM'].map((e) => '&baseModels=SD ' + e).join('')
+      : ''
+    baseModelFilter += sd21
+      ? ['2.0', '2.0 768', '2.1', '2.1 768', '2.1 Unclip']
+          .map((e) => '&baseModels=SDXL ' + e)
+          .join('')
+      : ''
+    baseModelFilter = baseModelFilter.replace(/ /g, '%20')
+
+    console.log(`baseModelFilter`, baseModelFilter)
 
     const query = input ? `&query=${input}` : ''
     const searchKey = `limit=${LIMIT}${query}&page=${page}&nsfw=${nsfw}${baseModelFilter}`
@@ -147,7 +159,7 @@ const LoraSearchModal = ({
       setHasError('Unable to load data from CivitAI, please try again shortly.')
     }
     setLoading(false)
-  }, [currentPage, input, /showNsfw, showSDXL, showSD15, showSD21])
+  }, [currentPage, input, showNsfw, showSDXL, showSD15, showSD21])
 
   const fetchModels = useCallback(async () => {
     setLoading(true)
