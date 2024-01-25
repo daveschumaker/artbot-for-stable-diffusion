@@ -1,3 +1,11 @@
+# 2024.01.25
+
+- I've been doing a bunch of work behind the scenes, getting ArtBot ready to support batched image jobs. Man, it is such a chore (and all my fault)!
+- In the meantime, here are some helpful community improvements.
+- [PR from Sparkz](https://github.com/daveschumaker/artbot-for-stable-diffusion/pull/214) that only converts an image blob if the mimetype has changed. 🎉
+- [PR from Sparkz](https://github.com/daveschumaker/artbot-for-stable-diffusion/pull/215) to add an Apple touch icon and color theme to make this thing a better looking PWA! 🎉
+- [PR from Efreak](https://github.com/daveschumaker/artbot-for-stable-diffusion/pull/223) that adds support for filtering LoRAs and TIs by basemodel. 🎉
+
 # 2024.01.16
 
 - Bug fixes and performance improvements. (Doh!)
