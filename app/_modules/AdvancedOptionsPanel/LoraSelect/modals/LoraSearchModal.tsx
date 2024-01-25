@@ -36,11 +36,17 @@ let pendingRequest = false
 const searchRequest = async ({
   input,
   page = 1,
-  nsfw = false
+  nsfw = false,
+  sdxl = true,
+  sd15 = true,
+  sd21 = true
 }: {
   input?: string
   page?: number
   nsfw?: boolean
+  sdxl?: boolean
+  sd15?: boolean
+  sd21?: boolean
 }) => {
   try {
     if (pendingRequest) return false
@@ -50,8 +56,17 @@ const searchRequest = async ({
     const controller = new AbortController()
     const signal = controller.signal
 
+    // do sd14 loras/tis work on sd15 models? sd0.9 stuff works with sd1.0 models...
+    // what about Turbo and LCM? 2.0 and 2.1? I'm just assuming 2.0 and 2.1 can be mixed, and 1.4 and 1.5 can be mixed, and lcm/turbo/not can be mixed. leave the rest to the user, maybe display that baseline somewhere.
+    // I dont think civitai lets you filter by model size, maybe you want to put that filter in the display code (allow 220mb loras only)
+    //  - except some workers have modified this. the colab worker has the limit removed, and my runpod is set to 750mb...
+    var baseModelfilter = sdxl ? [ "0.9", "1.0", "1.0 LCM", "TURBO"].map(e=>"&baseModels=SDXL " + e).join("") : '';
+    baseModelfilter += sd15 ? [ "1.4", "1.5", "1.5 LCM"].map(e=>"&baseModels=SD " + e).join("") : '';
+    baseModelfilter += sd21 ? [ "2.0", "2.0 768", "2.1", "2.1 768", "2.1 Unclip" ].map(e=>"&baseModels=SDXL " + e).join("") : '';
+    baseModelFilter = baseModelFilter.replace(/ /g,'%20')
+
     const query = input ? `&query=${input}` : ''
-    const searchKey = `limit=${LIMIT}${query}&page=${page}&nsfw=${nsfw}`
+    const searchKey = `limit=${LIMIT}${query}&page=${page}&nsfw=${nsfw}${baseModelFilter}`
 
     if (cache.get(searchKey)) {
       const data = cache.get(searchKey)
@@ -100,6 +115,9 @@ const LoraSearchModal = ({
   const [hasError, setHasError] = useState<string | boolean>(false)
   const [showOptionsMenu, setShowOptionsMenu] = useState(false)
   const [showNsfw, setShowNsfw] = useState(AppSettings.get('civitaiShowNsfw'))
+  const [showSDXL, setShowSDXL] = useState(AppSettings.get('civitaiShowSDXL'))
+  const [showSD15, setShowSD15] = useState(AppSettings.get('civitaiShowSD15'))
+  const [showSD21, setShowSD21] = useState(AppSettings.get('civitaiShowSD21'))
   const [currentPage, setCurrentPage] = useState(1)
   const [totalItems, setTotalItems] = useState(-1) // Setting 0 here causes brief flash between loading finished and totalItems populated
   const [totalPages, setTotalPages] = useState(0)
@@ -113,6 +131,9 @@ const LoraSearchModal = ({
     const result = await debouncedSearchRequest({
       input,
       nsfw: showNsfw,
+      sdxl: showSDXL,
+      sd15: showSD15,
+      sd21: showSD21,
       page: currentPage
     })
 
@@ -126,14 +147,17 @@ const LoraSearchModal = ({
       setHasError('Unable to load data from CivitAI, please try again shortly.')
     }
     setLoading(false)
-  }, [currentPage, input, showNsfw])
+  }, [currentPage, input, /showNsfw, showSDXL, showSD15, showSD21])
 
   const fetchModels = useCallback(async () => {
     setLoading(true)
     const result = await searchRequest({
       input,
       page: 1,
-      nsfw: showNsfw
+      nsfw: showNsfw,
+      sdxl: showSDXL,
+      sd15: showSD15,
+      sd21: showSD21
     })
 
     // Happens due to _dev_ environment firing calls twice
@@ -145,7 +169,7 @@ const LoraSearchModal = ({
     setTotalPages(metadata.totalPages)
 
     setLoading(false)
-  }, [input, showNsfw])
+  }, [input, showNsfw, showSDXL, showSD15, showSD21])
 
   const handleInputChange = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -166,7 +190,7 @@ const LoraSearchModal = ({
   useEffect(() => {
     debouncedFetchModels()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, input, showNsfw])
+  }, [currentPage, input, showNsfw, showSDXL, showSD15, showSD21])
 
   return (
     <div id="lora-search-modal">
@@ -224,6 +248,36 @@ const LoraSearchModal = ({
                     onChange={(bool: boolean) => {
                       AppSettings.set('civitaiShowNsfw', bool)
                       setShowNsfw(bool)
+                    }}
+                  />
+                </div>
+                <div style={{ padding: '8px 0' }}>
+                  <Checkbox
+                    label="Show SDXL LORAS?"
+                    checked={showNsfw}
+                    onChange={(bool: boolean) => {
+                      AppSettings.set('civitaiShowSDXL', bool)
+                      setShowSDXL(bool)
+                    }}
+                  />
+                </div>
+                <div style={{ padding: '8px 0' }}>
+                  <Checkbox
+                    label="Show SD15 LORAS?"
+                    checked={showNsfw}
+                    onChange={(bool: boolean) => {
+                      AppSettings.set('civitaiShowSD15', bool)
+                      setShowSD15(bool)
+                    }}
+                  />
+                </div>
+                <div style={{ padding: '8px 0' }}>
+                  <Checkbox
+                    label="Show SD21 LORAS?"
+                    checked={showNsfw}
+                    onChange={(bool: boolean) => {
+                      AppSettings.set('civitaiShowSD21', bool)
+                      setShowSD21(bool)
                     }}
                   />
                 </div>
