@@ -37,9 +37,9 @@ const searchRequest = async ({
   input,
   page = 1,
   nsfw = false,
-  sdxl = true,
-  sd15 = true,
-  sd21 = true
+  sdxl = false,
+  sd15 = false,
+  sd21 = false
 }: {
   input?: string
   page?: number
@@ -60,8 +60,15 @@ const searchRequest = async ({
     // what about Turbo and LCM? 2.0 and 2.1? I'm just assuming 2.0 and 2.1 can be mixed, and 1.4 and 1.5 can be mixed, and lcm/turbo/not can be mixed. leave the rest to the user, maybe display that baseline somewhere.
     // I dont think civitai lets you filter by model size, maybe you want to put that filter in the display code (allow 220mb loras only)
     //  - except some workers have modified this. the colab worker has the limit removed, and my runpod is set to 750mb...
-    var baseModelFilter = sdxl
-      ? ['0.9', '1.0', '1.0 LCM', 'TURBO']
+
+    // Per this discussion on GitHub, this is an undocumented feature:
+    // https://github.com/orgs/civitai/discussions/733
+    // API response gives me the following valid values:
+    //  "'SD 1.4' | 'SD 1.5' | 'SD 1.5 LCM' | 'SD 2.0' | 'SD 2.0 768' | 'SD 2.1' | 'SD 2.1 768' | 'SD 2.1 Unclip' | 'SDXL 0.9' | 'SDXL 1.0' | 'SDXL 1.0 LCM' | 'SDXL Distilled' | 'SDXL Turbo' | 'SVD' | 'SVD XT' | 'Playground v2' | 'PixArt a' | 'Other'"
+    let baseModelFilter
+
+    baseModelFilter = sdxl
+      ? ['0.9', '1.0', '1.0 LCM', 'Turbo']
           .map((e) => '&baseModels=SDXL ' + e)
           .join('')
       : ''
@@ -70,21 +77,16 @@ const searchRequest = async ({
       : ''
     baseModelFilter += sd21
       ? ['2.0', '2.0 768', '2.1', '2.1 768', '2.1 Unclip']
-          .map((e) => '&baseModels=SDXL ' + e)
+          .map((e) => '&baseModels=SD ' + e)
           .join('')
       : ''
     baseModelFilter = baseModelFilter.replace(/ /g, '%20')
-
-    console.log(`baseModelFilter`, baseModelFilter)
 
     const query = input ? `&query=${input}` : ''
     const searchKey = `limit=${LIMIT}${query}&page=${page}&nsfw=${nsfw}${baseModelFilter}`
 
     if (cache.get(searchKey)) {
       const data = cache.get(searchKey)
-
-      console.log(`Cached search key?`, searchKey)
-      console.log(data)
 
       const { items = [], metadata = {} } = data
       pendingRequest = false
@@ -244,7 +246,7 @@ const LoraSearchModal = ({
             {showOptionsMenu && (
               <DropdownOptions
                 handleClose={() => setShowOptionsMenu(false)}
-                title="Embedding Search Options"
+                title="Filter LoRAs"
                 top="12px"
                 maxWidth="280px"
                 style={{
@@ -266,7 +268,7 @@ const LoraSearchModal = ({
                 <div style={{ padding: '8px 0' }}>
                   <Checkbox
                     label="Show SDXL LORAS?"
-                    checked={showNsfw}
+                    checked={showSDXL}
                     onChange={(bool: boolean) => {
                       AppSettings.set('civitaiShowSDXL', bool)
                       setShowSDXL(bool)
@@ -276,7 +278,7 @@ const LoraSearchModal = ({
                 <div style={{ padding: '8px 0' }}>
                   <Checkbox
                     label="Show SD15 LORAS?"
-                    checked={showNsfw}
+                    checked={showSD15}
                     onChange={(bool: boolean) => {
                       AppSettings.set('civitaiShowSD15', bool)
                       setShowSD15(bool)
@@ -286,7 +288,7 @@ const LoraSearchModal = ({
                 <div style={{ padding: '8px 0' }}>
                   <Checkbox
                     label="Show SD21 LORAS?"
-                    checked={showNsfw}
+                    checked={showSD21}
                     onChange={(bool: boolean) => {
                       AppSettings.set('civitaiShowSD21', bool)
                       setShowSD21(bool)
