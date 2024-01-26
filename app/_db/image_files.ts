@@ -30,16 +30,24 @@ export const getAllImagesByJobId = async (
   jobId: string,
   options: GetAllImagesOptions = {}
 ) => {
+  const images = await db.image_files.where('jobId').equals(jobId).toArray()
+  images.sort((a, b) => {
+    // Check if both have blobs or neither have blobs
+    if ((a.blob === null) === (b.blob === null)) {
+      // If both have blobs or neither have blobs, sort by id
+      // @ts-ignore
+      return a.id - b.id
+    }
+    // If only one has a blob, it should come first
+    return a.blob === null ? 1 : -1
+  })
+
   if ('imageIdsOnly' in options) {
-    return await db.image_files
-      .where('jobId')
-      .equals(jobId)
-      .map((image: ImageModel) => {
-        return image.hordeId
-      })
-      .toArray()
+    return images.map((image: ImageModel) => {
+      return image.hordeId
+    })
   } else {
-    return await db.image_files.where('jobId').equals(jobId).toArray()
+    return images
   }
 }
 
