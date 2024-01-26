@@ -10,6 +10,7 @@ import { generateBase64Thumbnail } from './imageUtils'
 import { SourceProcessing } from './promptUtils'
 import { deletePendingJobs } from 'app/_controllers/pendingJobsCache'
 import CreateImageRequest from 'app/_data-models/CreateImageRequest'
+import CreateImageRequestV2 from 'app/_data-models/v2/CreateImageRequestV2'
 
 export const dbImport = async (blob: Blob) => {
   const { importDB } = await import('dexie-export-import')
@@ -470,7 +471,7 @@ export const updateCompletedJob = async (tableId: number, updatedObject) => {
 }
 
 export const addCompletedJobToDexie = async (
-  imageDetails: CreateImageRequest
+  imageDetails: CreateImageRequestV2
 ) => {
   try {
     await db.completed.put(Object.assign({}, imageDetails))

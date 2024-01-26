@@ -18,6 +18,7 @@ import {
   updatePendingJobInDexie
 } from 'app/_utils/db'
 import CreateImageRequest from 'app/_data-models/CreateImageRequest'
+import CreateImageRequestV2 from 'app/_data-models/v2/CreateImageRequestV2'
 
 declare global {
   interface Window {
@@ -129,7 +130,7 @@ export const setPendingJob = (pendingJob: CreateImageRequest) => {
 }
 
 // Handles updating jobId in both database and in-memory cache.
-export const updatePendingJobV2 = async (pendingJob: CreateImageRequest) => {
+export const updatePendingJobV2 = async (pendingJob: CreateImageRequestV2) => {
   if (!pendingJob || !pendingJob.jobId) {
     return
   }

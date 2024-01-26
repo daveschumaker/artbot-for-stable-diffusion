@@ -13,7 +13,7 @@ export default function PendingModal({
 }) {
   const [currentImageId, setCurrentImageId] = useState('')
   const hasError = imageDetails.jobStatus === JobStatus.Error
-  const isCensored = false
+  const isCensored = imageDetails.images_censored > 0
   const isDone = imageDetails.jobStatus === JobStatus.Done
   const inProgressHasImages = !isDone && imageDetails.finished > 0
   const isPendingOrProcessing = !isDone && !hasError

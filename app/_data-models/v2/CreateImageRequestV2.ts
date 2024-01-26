@@ -85,6 +85,10 @@ class CreateImageRequestV2 {
   wait_time: number | null
   waiting: number
 
+  // completedImageJobController will update these after job is finished.
+  images_censored: number
+  images_errored: number
+
   constructor({
     canvasData = null,
     cfg_scale = 7,
@@ -153,6 +157,8 @@ class CreateImageRequestV2 {
     this.restarted = 0
     this.wait_time = null
     this.waiting = 0
+    this.images_censored = 0
+    this.images_errored = 0
 
     // Orientation settings
     if (orientationType === 'random') {

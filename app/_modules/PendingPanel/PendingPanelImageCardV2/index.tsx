@@ -18,7 +18,7 @@ import FlexRow from 'app/_components/FlexRow'
 import { getAllImagesByJobId } from 'app/_db/image_files'
 import CreateImageRequestV2 from 'app/_data-models/v2/CreateImageRequestV2'
 import styles from './component.module.css'
-import ImageModel, { ImageStatus } from 'app/_data-models/v2/ImageModel'
+import ImageModel from 'app/_data-models/v2/ImageModel'
 import Modal from 'app/_componentsV2/Modal'
 import { deleteJobIdFromCompleted } from 'app/_db/transactions'
 import PendingModal from '../PendingModal'
@@ -95,22 +95,10 @@ const PendingPanelImageCardV2 = React.memo(
 
     const loadImage = useCallback(async () => {
       const srcs: string[] = []
-      const data = await getAllImagesByJobId(imageJob.jobId)
-
-      // Hackey check to determine if all images are censored.
-      // The moment we find that something isn't, set to false.
-      let allCensored: boolean | null = null
+      const data = (await getAllImagesByJobId(imageJob.jobId)) as ImageModel[]
 
       data.forEach((image: ImageModel) => {
         if (!image) return
-
-        if (allCensored === null) {
-          allCensored = true
-        }
-
-        if (image.status !== ImageStatus.CENSORED) {
-          allCensored = false
-        }
 
         console.log(image)
 
@@ -119,14 +107,19 @@ const PendingPanelImageCardV2 = React.memo(
         }
       })
 
-      if (allCensored !== null && imageJob.finished === imageJob.numImages) {
-        setCensoredJob(allCensored)
+      if (imageJob.numImages === imageJob.images_censored) {
+        setCensoredJob(true)
       }
 
       if (!arraysEqual(srcs, imageSrcs)) {
         setImageSrcs(srcs)
       }
-    }, [imageJob.finished, imageJob.jobId, imageJob.numImages, imageSrcs])
+    }, [
+      imageJob.images_censored,
+      imageJob.jobId,
+      imageJob.numImages,
+      imageSrcs
+    ])
 
     useEffect(() => {
       // if (!imageSrcs[0] && imageJob.jobStatus === JobStatus.Done) {
@@ -148,7 +141,8 @@ const PendingPanelImageCardV2 = React.memo(
     const jobDone = imageJob.jobStatus === JobStatus.Done
     const jobDoneHasImages = jobDone && imageSrcs[0]
     const jobPendingHasImages = imageJob.jobStatus !== JobStatus.Done
-    const jobHasError = imageJob.jobStatus === JobStatus.Error || censoredJob
+    const jobHasError =
+      imageJob.jobStatus === JobStatus.Error || imageJob.images_censored > 0
 
     console.log(
       `jobPendingHasImages`,
@@ -188,17 +182,19 @@ const PendingPanelImageCardV2 = React.memo(
             </div>
           )} */}
           <div className={styles.ImagesComplete}>
-            {imageJob.jobStatus === JobStatus.Done && (
+            {imageJob.jobStatus === JobStatus.Done && !jobHasError && (
               <div style={{ color: 'green' }}>
                 <IconCheck size={18} />
               </div>
             )}
-            {imageJob.jobStatus === JobStatus.Error && (
-              <div style={{ color: 'green' }}>
+            {(imageJob.jobStatus === JobStatus.Error ||
+              imageJob.images_censored > 0) && (
+              <div>
                 <IconAlertTriangle size={18} color="rgb(234 179 8)" />
               </div>
             )}
-            ({imageJob.finished} / {imageJob.numImages})
+            ({imageJob.finished - imageJob.images_censored} /{' '}
+            {imageJob.numImages})
           </div>
           <div
             className={styles.CloseButton}

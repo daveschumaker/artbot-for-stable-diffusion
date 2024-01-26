@@ -19,6 +19,35 @@ export default function ImageJobStatus({
   return (
     <div className="mb-2">
       <FlexCol className={styles.contrastTextBackground}>
+        {imageDetails.jobStatus === JobStatus.Done &&
+          imageDetails.images_censored > 0 && (
+            <>
+              <FlexRow gap={8} pb={2}>
+                <IconAlertTriangle
+                  size={28}
+                  stroke={1.5}
+                  color="rgb(234 179 8)"
+                />{' '}
+                Encountered issue processing images. The worker GPU was unable
+                to complete this request. Try again?
+              </FlexRow>
+              {imageDetails.queue_position >= 0 &&
+                imageDetails.numImages > 1 && (
+                  <FlexCol pb={8}>
+                    <div style={{ fontSize: '14px' }}>
+                      Images completed:{' '}
+                      {imageDetails.finished - imageDetails.images_censored} of{' '}
+                      {imageDetails.numImages}
+                    </div>
+                    {imageDetails.images_censored > 0 && (
+                      <div style={{ fontSize: '14px' }}>
+                        Images failed: {imageDetails.images_censored}
+                      </div>
+                    )}
+                  </FlexCol>
+                )}
+            </>
+          )}
         {imageDetails.jobStatus === JobStatus.Processing && (
           <>
             <FlexRow gap={8} pb={2}>
@@ -26,12 +55,18 @@ export default function ImageJobStatus({
               Image{imageDetails.numImages > 1 ? 's' : ''} processing
             </FlexRow>
             {imageDetails.queue_position >= 0 && imageDetails.numImages > 1 && (
-              <FlexRow pb={8}>
+              <FlexCol pb={8}>
                 <div style={{ fontSize: '14px' }}>
-                  Images completed: {imageDetails.finished} of{' '}
+                  Images completed:{' '}
+                  {imageDetails.finished - imageDetails.images_censored} of{' '}
                   {imageDetails.numImages}
                 </div>
-              </FlexRow>
+                {imageDetails.images_censored > 0 && (
+                  <div style={{ fontSize: '14px' }}>
+                    Images failed: {imageDetails.images_censored}
+                  </div>
+                )}
+              </FlexCol>
             )}
           </>
         )}

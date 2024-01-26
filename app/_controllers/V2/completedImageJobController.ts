@@ -8,6 +8,7 @@ import ImageModel, { ImageStatus } from 'app/_data-models/v2/ImageModel'
 import { getPendingJob, updatePendingJobV2 } from '../pendingJobsCache'
 import { JobStatus } from '_types'
 import { addCompletedJobToDexie } from 'app/_utils/db'
+import CreateImageRequestV2 from 'app/_data-models/v2/CreateImageRequestV2'
 
 export const completedImageJob = async (jobId: string) => {
   const job = getPendingJob(jobId)
@@ -30,19 +31,6 @@ export const completedImageJob = async (jobId: string) => {
       }
 
       if (img.censored) {
-        const imageData = new ImageModel({
-          jobId,
-          hordeId: img.id,
-          status: ImageStatus.CENSORED,
-          message:
-            'The GPU worker was unable to complete this request. Try again? (Error code: X)',
-          model: img.model,
-          worker_id: img.worker_id,
-          worker_name: img.worker_name
-        })
-
-        await addImageToDexie(imageData)
-
         return { status: 'fulfilled', value: 'image censored' }
       }
 
@@ -101,19 +89,16 @@ export const completedImageJob = async (jobId: string) => {
     await Promise.allSettled(downloadPromises)
 
     if (successData.done === true) {
-      await updatePendingJobV2(
-        Object.assign({}, job, {
-          finished: job.numImages,
-          jobStatus: JobStatus.Done
-        })
-      )
+      const censored = successData.generations.filter((image) => image.censored)
 
-      await addCompletedJobToDexie(
-        Object.assign({}, job, {
-          finished: job.numImages,
-          jobStatus: JobStatus.Done
-        })
-      )
+      const updateObject = Object.assign({}, job, {
+        finished: job.numImages,
+        images_censored: censored.length,
+        jobStatus: JobStatus.Done
+      }) as unknown as CreateImageRequestV2
+
+      await updatePendingJobV2(updateObject)
+      await addCompletedJobToDexie(updateObject)
     }
   }
 }
