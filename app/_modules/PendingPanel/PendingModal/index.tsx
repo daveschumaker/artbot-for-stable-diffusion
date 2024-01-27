@@ -6,18 +6,31 @@ import ImageDisplay from './ImageDisplay'
 import ImageJobStatus from './ImageJobStatus'
 import ImageOptions from './ImageOptions'
 
+/**
+ *
+ * TODO:
+ * - Add check for isPending modal (vs normal image gallery modal)
+ * - Image Options should handle imageId specific stuff
+ * - On delete, check if there are no images. If not, delete entire job
+ * - For failed pending job, add options to retry / edit modal
+ *
+ */
+
 export default function PendingModal({
   imageDetails
 }: {
   imageDetails: CreateImageRequestV2
 }) {
   const [currentImageId, setCurrentImageId] = useState('')
+
   const hasError = imageDetails.jobStatus === JobStatus.Error
   const isCensored = imageDetails.images_censored > 0
   const isDone = imageDetails.jobStatus === JobStatus.Done
   const inProgressHasImages = !isDone && imageDetails.finished > 0
   const isPendingOrProcessing = !isDone && !hasError
   const inProgressNoImages = !isDone && imageDetails.finished === 0
+
+  const censoredJob = imageDetails.numImages === imageDetails.images_censored
 
   // console.log(imageDetails)
   // console.log('inProgressHasImages', inProgressHasImages)
@@ -34,9 +47,9 @@ export default function PendingModal({
             imageDetails={imageDetails}
             setCurrentImageId={setCurrentImageId}
           />
-          <ImageOptions imageDetails={imageDetails} />
         </>
       )}
+      {currentImageId && <ImageOptions imageDetails={imageDetails} />}
       <ImageDetails imageDetails={imageDetails} />
     </div>
   )

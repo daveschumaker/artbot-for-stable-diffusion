@@ -43,7 +43,6 @@ const PendingPanelImageCardV2 = React.memo(
     )
     const [imageSrcs, setImageSrcs] = useState<string[]>([])
 
-    // imageJob.jobStatus = JobStatus.Processing
     const serverHasJob =
       imageJob.jobStatus === JobStatus.Queued ||
       imageJob.jobStatus === JobStatus.Processing ||
@@ -137,19 +136,23 @@ const PendingPanelImageCardV2 = React.memo(
 
     let aspectRatio = (imageJob.height / imageJob.width) * 100 // This equals 66.67%
 
-    console.log(`imageJob`, imageJob)
-    const jobDone = imageJob.jobStatus === JobStatus.Done
-    const jobDoneHasImages = jobDone && imageSrcs[0]
-    const jobPendingHasImages = imageJob.jobStatus !== JobStatus.Done
-    const jobHasError =
-      imageJob.jobStatus === JobStatus.Error || imageJob.images_censored > 0
+    const [jobDone, setJobDone] = useState(false)
+    const [jobDoneHasImages, setJobDoneHasImages] = useState(false)
+    const [jobPendingHasImages, setJobPendingHasImages] = useState(false)
+    const [jobHasError, setJobHasError] = useState(false)
 
-    console.log(
-      `jobPendingHasImages`,
-      jobPendingHasImages,
-      imageSrcs[0],
-      imageJob.jobStatus !== JobStatus.Done
-    )
+    useEffect(() => {
+      const isJobDone = imageJob.jobStatus === JobStatus.Done
+      const isJobDoneHasImages = isJobDone && imageSrcs[0]
+      const isJobPendingHasImages = !isJobDone && imageSrcs[0]
+      const isJobHasError =
+        imageJob.jobStatus === JobStatus.Error || imageJob.images_censored > 0
+
+      setJobDone(isJobDone)
+      setJobDoneHasImages(isJobDoneHasImages ? true : false)
+      setJobPendingHasImages(isJobPendingHasImages ? true : false)
+      setJobHasError(isJobHasError)
+    }, [imageJob.images_censored, imageJob.jobStatus, imageSrcs])
 
     return (
       <div className={clsx(styles.PendingJobCard)} key={imageJob.jobId}>
@@ -182,13 +185,12 @@ const PendingPanelImageCardV2 = React.memo(
             </div>
           )} */}
           <div className={styles.ImagesComplete}>
-            {imageJob.jobStatus === JobStatus.Done && !jobHasError && (
+            {jobDone && !jobHasError && (
               <div style={{ color: 'green' }}>
                 <IconCheck size={18} />
               </div>
             )}
-            {(imageJob.jobStatus === JobStatus.Error ||
-              imageJob.images_censored > 0) && (
+            {jobHasError && (
               <div>
                 <IconAlertTriangle size={18} color="rgb(234 179 8)" />
               </div>
@@ -205,7 +207,7 @@ const PendingPanelImageCardV2 = React.memo(
           >
             <IconX color="white" stroke={1} />
           </div>
-          {imageJob.jobStatus === JobStatus.Done && !censoredJob && (
+          {jobDone && !censoredJob && (
             <div
               className={styles.TrashButton}
               onClick={(e) => handleDeleteImage(imageJob.jobId, e)}
@@ -265,8 +267,8 @@ const PendingPanelImageCardV2 = React.memo(
               width={imageJob.width}
             />
           )}
-          {((serverHasJob && imageSrcs[0]) ||
-            (jobHasError && imageSrcs[0])) && (
+          {((!jobDone && serverHasJob && imageSrcs[0]) ||
+            (!jobDone && jobHasError && imageSrcs[0])) && (
             <img
               alt="Images in progress image"
               className={clsx(

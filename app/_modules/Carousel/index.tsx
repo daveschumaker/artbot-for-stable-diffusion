@@ -10,7 +10,7 @@ type PropType = {
   images: string[]
   options?: EmblaOptionsType
   height: number
-  updateImageIndex?: (i: number) => void
+  updateImageId: (i: number) => void
   width: number
 }
 
@@ -18,7 +18,7 @@ const Carousel: React.FC<PropType> = (props) => {
   const {
     images,
     options = { loop: true, watchDrag: images.length > 1 },
-    updateImageIndex = () => {},
+    updateImageId = () => {},
     width
   } = props
   const [emblaRef, emblaApi] = useEmblaCarousel(options)
@@ -31,25 +31,29 @@ const Carousel: React.FC<PropType> = (props) => {
   const scrollPrev = useCallback(() => {
     if (emblaApi) {
       emblaApi.scrollPrev()
-      updateImageIndex(emblaApi.slidesInView()[0])
     }
-  }, [emblaApi, updateImageIndex])
+  }, [emblaApi])
 
   const scrollNext = useCallback(() => {
     if (emblaApi) {
       emblaApi.scrollNext()
-      updateImageIndex(emblaApi.slidesInView()[0])
     }
-  }, [emblaApi, updateImageIndex])
+  }, [emblaApi])
 
   const scrollTo = useCallback(
     (index: number) => {
       if (emblaApi) {
         emblaApi.scrollTo(index)
-        updateImageIndex(emblaApi.slidesInView()[0])
       }
     },
-    [emblaApi, updateImageIndex]
+    [emblaApi]
+  )
+
+  const onStupidSettle = useCallback(
+    (emblaApi: EmblaCarouselType) => {
+      updateImageId(emblaApi.slidesInView()[0])
+    },
+    [updateImageId]
   )
 
   const onInit = useCallback((emblaApi: EmblaCarouselType) => {
@@ -93,7 +97,8 @@ const Carousel: React.FC<PropType> = (props) => {
     emblaApi.on('reInit', onInit)
     emblaApi.on('reInit', onSelect)
     emblaApi.on('select', onSelect)
-  }, [emblaApi, onInit, onSelect])
+    emblaApi.on('settle', onStupidSettle)
+  }, [emblaApi, onInit, onSelect, onStupidSettle, images])
 
   const updateHeight = () => {
     const img = document.getElementsByClassName('embla__slide__img')[0]

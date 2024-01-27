@@ -9,6 +9,9 @@ interface ImageSrc {
   url: string
 }
 
+// Hacky fix to get around some race condition where Carousel doesn't recognize images array.
+let stupidCache: ImageSrc[] = []
+
 export default function ImageDisplay({
   imageDetails,
   setCurrentImageId = () => {}
@@ -18,16 +21,33 @@ export default function ImageDisplay({
 }) {
   const [imageSrcs, setImageSrcs] = useState<ImageSrc[]>([])
 
+  // Update stupidCache each time component renders
+  // so stupid onSettle function can reference
+  // the correct stupid data.
+  stupidCache = [...imageSrcs]
+
+  const updateImageId = useCallback(
+    (i: number) => {
+      setCurrentImageId(stupidCache[i].id)
+    },
+    [setCurrentImageId]
+  )
+
   const loadImage = useCallback(async () => {
     if (imageDetails.version === 2) {
       const srcs: ImageSrc[] = []
       const data = await getAllImagesByJobId(imageDetails.jobId)
-      data.forEach((image: ImageModel) => {
-        if (image.blob) {
-          srcs.push({
-            id: image.hordeId,
-            url: URL.createObjectURL(image.blob)
-          })
+
+      data.forEach((image: {}) => {
+        if ('blob' in image) {
+          const typedImage = image as ImageModel
+
+          if (typedImage.blob) {
+            srcs.push({
+              id: typedImage.hordeId,
+              url: URL.createObjectURL(typedImage.blob)
+            })
+          }
         }
       })
 
@@ -53,7 +73,7 @@ export default function ImageDisplay({
   return (
     <div className="mb-2">
       <Carousel
-        updateImageIndex={(i: number) => setCurrentImageId(imageSrcs[i].id)}
+        updateImageId={updateImageId}
         images={imageSrcs.map((image) => image.url)}
         height={imageDetails.height}
         width={imageDetails.width}

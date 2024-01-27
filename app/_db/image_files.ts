@@ -29,8 +29,11 @@ interface GetAllImagesOptions {
 export const getAllImagesByJobId = async (
   jobId: string,
   options: GetAllImagesOptions = {}
-) => {
-  const images = await db.image_files.where('jobId').equals(jobId).toArray()
+): Promise<ImageModel[] | string[]> => {
+  const images: ImageModel[] = await db.image_files
+    .where('jobId')
+    .equals(jobId)
+    .toArray()
   images.sort((a, b) => {
     // Check if both have blobs or neither have blobs
     if ((a.blob === null) === (b.blob === null)) {
