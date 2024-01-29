@@ -97,6 +97,7 @@ const PendingPanelImageCardV2 = React.memo(
       const data = (await getAllImagesByJobId(imageJob.jobId)) as ImageModel[]
 
       data.forEach((image: ImageModel) => {
+        console.log(`errr image??`, image)
         if (!image) return
 
         console.log(image)
@@ -110,14 +111,19 @@ const PendingPanelImageCardV2 = React.memo(
         setCensoredJob(true)
       }
 
+      console.log(`HELLO 3333!!!!`, srcs)
       if (!arraysEqual(srcs, imageSrcs)) {
+        console.log(`HELLO 4444!!!!`)
         setImageSrcs(srcs)
       }
+      // Need to listen to changes in imageJob.finished in order for the finished
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
       imageJob.images_censored,
       imageJob.jobId,
       imageJob.numImages,
-      imageSrcs
+      imageSrcs,
+      imageJob.finished
     ])
 
     useEffect(() => {
@@ -132,7 +138,7 @@ const PendingPanelImageCardV2 = React.memo(
       return () => {
         if (imageSrcs[0]) URL.revokeObjectURL(imageSrcs[0])
       }
-    }, [imageSrcs, loadImage, imageJob.jobStatus])
+    }, [imageSrcs, loadImage, imageJob.jobStatus, imageJob.finished])
 
     let aspectRatio = (imageJob.height / imageJob.width) * 100 // This equals 66.67%
 
@@ -153,6 +159,15 @@ const PendingPanelImageCardV2 = React.memo(
       setJobPendingHasImages(isJobPendingHasImages ? true : false)
       setJobHasError(isJobHasError)
     }, [imageJob.images_censored, imageJob.jobStatus, imageSrcs])
+
+    console.log(
+      `!jobDone && serverHasJob && imageSrcs[0]`,
+      !jobDone && serverHasJob && imageSrcs[0]
+    )
+
+    console.log(`!jobDone`, !jobDone)
+    console.log(`serverHasJob`, serverHasJob)
+    console.log(`imageSrcs[0]`, imageSrcs[0])
 
     return (
       <div className={clsx(styles.PendingJobCard)} key={imageJob.jobId}>
