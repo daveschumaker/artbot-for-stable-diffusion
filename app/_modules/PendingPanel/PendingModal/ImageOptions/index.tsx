@@ -288,7 +288,7 @@ const ImageOptions = ({
           id="image-options-buttons"
           className="w-full flex flex-row items-center justify-between tablet:justify-end max-w-[768px] gap-2 md:gap-4"
           style={{
-            justifyContent: 'flex-end'
+            justifyContent: 'center'
           }}
         >
           <div className={styles['button-icon']}>

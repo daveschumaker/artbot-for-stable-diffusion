@@ -18,11 +18,13 @@ const Carousel: React.FC<PropType> = (props) => {
   const {
     images,
     options = { loop: true, watchDrag: images.length > 1 },
-    updateImageId = () => {},
-    width
+    updateImageId = () => {}
   } = props
+  const modal = document.getElementsByClassName('modal-box')[0]
+  const modalHeight = modal?.clientHeight ?? 'auto'
+
   const [emblaRef, emblaApi] = useEmblaCarousel(options)
-  const [emblaHeight, setEmblaHeight] = useState('auto')
+  let [emblaHeight, setEmblaHeight] = useState(modalHeight)
   const [prevBtnDisabled, setPrevBtnDisabled] = useState(true)
   const [nextBtnDisabled, setNextBtnDisabled] = useState(true)
   const [selectedIndex, setSelectedIndex] = useState(0)
@@ -100,13 +102,24 @@ const Carousel: React.FC<PropType> = (props) => {
     emblaApi.on('settle', onStupidSettle)
   }, [emblaApi, onInit, onSelect, onStupidSettle, images])
 
-  const updateHeight = () => {
+  const updateHeight = useCallback(() => {
     const img = document.getElementsByClassName('embla__slide__img')[0]
+    const modal = document.getElementsByClassName('modal-box')[0]
 
-    if (img?.clientHeight) {
-      setEmblaHeight(`${img.clientHeight}px`)
+    const modalHeight = modal.clientHeight
+
+    console.log(`img?.clientHeight`, img?.clientHeight)
+    console.log(`modalHeight`, modalHeight)
+
+    // @ts-ignore
+    if (emblaHeight !== 'auto') return
+
+    if (img?.clientHeight && img.clientHeight >= modalHeight) {
+      setEmblaHeight(modalHeight)
+    } else if (img?.clientHeight) {
+      setEmblaHeight(img.clientHeight)
     }
-  }
+  }, [emblaHeight])
 
   useEffect(() => {
     window.addEventListener('resize', updateHeight)
@@ -116,11 +129,19 @@ const Carousel: React.FC<PropType> = (props) => {
     return () => {
       window.removeEventListener('resize', updateHeight)
     }
-  }, [images])
+  }, [images, updateHeight])
+
+  const imgStyle: React.CSSProperties = {
+    maxWidth: '1024px',
+    objectFit: 'contain',
+    width: '100%'
+  }
+
+  const adjustedHeight = emblaHeight ? `${emblaHeight - 96}px` : 'auto'
 
   return (
     <>
-      <div className="embla mb-2" style={{ height: emblaHeight }}>
+      <div className="embla mb-2" style={{ height: adjustedHeight }}>
         {images.length > 1 && (
           <>
             <div className="embla__buttons__left">
@@ -134,7 +155,7 @@ const Carousel: React.FC<PropType> = (props) => {
         <div
           className="embla__viewport"
           ref={emblaRef}
-          style={{ height: emblaHeight }}
+          style={{ height: adjustedHeight }}
         >
           <div className="embla__container">
             {images.map((src: string, idx: number) => (
@@ -147,16 +168,10 @@ const Carousel: React.FC<PropType> = (props) => {
                   className="embla__slide__img"
                   src={src}
                   alt="Your alt text"
-                  // style={{
-                  //   height: `${height}px`,
-                  //   width: `${width}px`,
-                  //   maxHeight: `calc(100% - 30px)`
-                  // }}
                   style={{
-                    maxWidth: width ? `${width}px` : '100%',
-                    maxHeight: 'calc(100% - 30px)',
-                    height: 'auto', // or width: 'auto', depending on which dimension you want to control
-                    objectFit: 'contain' // This ensures the image is scaled to maintain its aspect ratio
+                    ...imgStyle,
+                    maxHeight: adjustedHeight,
+                    maxWidth: 'unset !important'
                   }}
                   onLoad={updateHeight}
                 />
