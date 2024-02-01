@@ -105,11 +105,7 @@ const Carousel: React.FC<PropType> = (props) => {
   const updateHeight = useCallback(() => {
     const img = document.getElementsByClassName('embla__slide__img')[0]
     const modal = document.getElementsByClassName('modal-box')[0]
-
     const modalHeight = modal.clientHeight
-
-    console.log(`img?.clientHeight`, img?.clientHeight)
-    console.log(`modalHeight`, modalHeight)
 
     // @ts-ignore
     if (emblaHeight !== 'auto') return

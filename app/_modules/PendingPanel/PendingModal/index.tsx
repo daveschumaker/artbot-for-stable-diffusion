@@ -49,7 +49,9 @@ export default function PendingModal({
           />
         </>
       )}
-      {currentImageId && <ImageOptions imageDetails={imageDetails} />}
+      {currentImageId && (
+        <ImageOptions imageDetails={imageDetails} imageId={currentImageId} />
+      )}
       <ImageDetails imageDetails={imageDetails} />
     </div>
   )
