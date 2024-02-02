@@ -31,10 +31,6 @@ export default function PendingModal({
   const inProgressNoImages = !isDone && imageDetails.finished === 0
 
   const censoredJob = imageDetails.numImages === imageDetails.images_censored
-
-  // console.log(imageDetails)
-  // console.log('inProgressHasImages', inProgressHasImages)
-  console.log(`currentImageId?`, currentImageId)
   return (
     <div className="mt-4">
       {(isPendingOrProcessing ||
@@ -50,7 +46,11 @@ export default function PendingModal({
         </>
       )}
       {currentImageId && (
-        <ImageOptions imageDetails={imageDetails} imageId={currentImageId} />
+        <ImageOptions
+          imageDetails={imageDetails}
+          imageId={currentImageId}
+          jobId={imageDetails.jobId}
+        />
       )}
       <ImageDetails imageDetails={imageDetails} />
     </div>

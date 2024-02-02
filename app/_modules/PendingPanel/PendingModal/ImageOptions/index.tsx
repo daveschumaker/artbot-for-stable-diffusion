@@ -44,13 +44,16 @@ import { CONTROL_TYPES } from '_types/horde'
 import ConfirmationModal from 'app/_modules/ConfirmationModal'
 import ShortlinkButton from 'app/_modules/ImageDetails/ShortlinkButton'
 import CreateImageRequestV2 from 'app/_data-models/v2/CreateImageRequestV2'
+import { getFavoriteFromDexie, toggleFavorite } from 'app/_db/favorites'
 
 const ImageOptions = ({
   handleClose,
   handleDeleteImageClick = () => {},
   handleReloadImageData = () => {},
   imageDetails,
+  imageId,
   isModal,
+  jobId,
   showSource,
   showTiles,
   setShowSource,
@@ -61,7 +64,9 @@ const ImageOptions = ({
   handleDeleteImageClick?: () => any
   handleReloadImageData?: () => any
   imageDetails: CreateImageRequestV2
+  imageId: string
   isModal: boolean
+  jobId: string
   showSource: boolean
   showTiles: boolean
   setShowSource(): void
@@ -71,7 +76,7 @@ const ImageOptions = ({
   const router = useRouter()
   const confirmationModal = useModal(ConfirmationModal)
 
-  const [favorited, setFavorited] = useState<boolean>(imageDetails.favorited)
+  const [favorited, setFavorited] = useState<boolean>(false)
   const [pendingReroll, setPendingReroll] = useState(false)
   const [pendingUpscale, setPendingUpscale] = useState(false)
   const [hasParentJob, setHasParentJob] = useState(false)
@@ -168,17 +173,34 @@ const ImageOptions = ({
   const onFavoriteClick = useCallback(async () => {
     const updateFavorited = !favorited
     setFavorited(updateFavorited)
+    await toggleFavorite({
+      jobId,
+      imageId
+    })
+    // await updateCompletedJob(
+    //   imageDetails.id,
+    //   Object.assign({}, imageDetails, {
+    //     favorited: updateFavorited
+    //   })
+    // )
 
-    await updateCompletedJob(
-      imageDetails.id,
-      Object.assign({}, imageDetails, {
-        favorited: updateFavorited
-      })
-    )
+    // // Bust memoization cache
+    // getImageDetails.delete(imageDetails.jobId as string)
+  }, [favorited, imageId, jobId])
 
-    // Bust memoization cache
-    getImageDetails.delete(imageDetails.jobId as string)
-  }, [favorited, imageDetails])
+  const getFavorite = useCallback(async () => {
+    const [hasFav] = await getFavoriteFromDexie(imageId)
+
+    if (hasFav) {
+      setFavorited(true)
+    } else {
+      setFavorited(false)
+    }
+  }, [imageId])
+
+  useEffect(() => {
+    getFavorite()
+  }, [getFavorite, imageId])
 
   const checkFavorite = useCallback(async () => {
     const details = await getImageDetails(imageDetails.jobId as string)

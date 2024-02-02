@@ -2,7 +2,6 @@ import ImageModel from 'app/_data-models/v2/ImageModel'
 import Dexie from 'dexie'
 
 class Favorite {
-  id!: number
   jobId!: string
   imageId!: string
 }
