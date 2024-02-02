@@ -12,6 +12,10 @@ export const addImageToDexie = async (image: ImageModel) => {
   }
 }
 
+export const deleteImageFromDexie = async (hordeId: string) => {
+  await db.image_files.where('hordeId').equals(hordeId).delete()
+}
+
 export const getImageByHordeId = async (hordeId: string) => {
   return await db.image_files.where('hordeId').equals(hordeId).first()
 }

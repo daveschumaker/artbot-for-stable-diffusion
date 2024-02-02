@@ -3,7 +3,7 @@ import { Menu, MenuItem, MenuButton, MenuDivider } from '@szhsin/react-menu'
 import '@szhsin/react-menu/dist/index.css'
 import '@szhsin/react-menu/dist/transitions/slide.css'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import {
   deleteCompletedImage,
   deletePendingJobFromDb,
@@ -43,17 +43,15 @@ import PromptInputSettings from 'app/_data-models/PromptInputSettings'
 import { CONTROL_TYPES } from '_types/horde'
 import ConfirmationModal from 'app/_modules/ConfirmationModal'
 import ShortlinkButton from 'app/_modules/ImageDetails/ShortlinkButton'
-import CreateImageRequestV2 from 'app/_data-models/v2/CreateImageRequestV2'
-import { getFavoriteFromDexie, toggleFavorite } from 'app/_db/favorites'
+import useFavorite from '../hooks/useFavorite'
+import useDelete from '../hooks/useDelete'
+import { ImageDetailsContext } from '../ImageDetailsProvider'
 
 const ImageOptions = ({
   handleClose,
   handleDeleteImageClick = () => {},
   handleReloadImageData = () => {},
-  imageDetails,
-  imageId,
   isModal,
-  jobId,
   showSource,
   showTiles,
   setShowSource,
@@ -63,8 +61,6 @@ const ImageOptions = ({
   handleClose: () => any
   handleDeleteImageClick?: () => any
   handleReloadImageData?: () => any
-  imageDetails: CreateImageRequestV2
-  imageId: string
   isModal: boolean
   jobId: string
   showSource: boolean
@@ -73,10 +69,19 @@ const ImageOptions = ({
   setShowTiles: (bool: boolean) => any
   handleFullScreen: () => any
 }) => {
+  const context = useContext(ImageDetailsContext)
+  const { currentImageId, imageDetails } = context
+  const { jobId } = imageDetails
+  const imageId = currentImageId
+
   const router = useRouter()
   const confirmationModal = useModal(ConfirmationModal)
+  const [favorited, onFavoriteClick] = useFavorite({
+    imageId,
+    jobId
+  })
+  const [onDeleteImageClick] = useDelete({ imageId })
 
-  const [favorited, setFavorited] = useState<boolean>(false)
   const [pendingReroll, setPendingReroll] = useState(false)
   const [pendingUpscale, setPendingUpscale] = useState(false)
   const [hasParentJob, setHasParentJob] = useState(false)
@@ -170,43 +175,6 @@ const ImageOptions = ({
     handleReloadImageData()
   }, [handleReloadImageData, imageDetails])
 
-  const onFavoriteClick = useCallback(async () => {
-    const updateFavorited = !favorited
-    setFavorited(updateFavorited)
-    await toggleFavorite({
-      jobId,
-      imageId
-    })
-    // await updateCompletedJob(
-    //   imageDetails.id,
-    //   Object.assign({}, imageDetails, {
-    //     favorited: updateFavorited
-    //   })
-    // )
-
-    // // Bust memoization cache
-    // getImageDetails.delete(imageDetails.jobId as string)
-  }, [favorited, imageId, jobId])
-
-  const getFavorite = useCallback(async () => {
-    const [hasFav] = await getFavoriteFromDexie(imageId)
-
-    if (hasFav) {
-      setFavorited(true)
-    } else {
-      setFavorited(false)
-    }
-  }, [imageId])
-
-  useEffect(() => {
-    getFavorite()
-  }, [getFavorite, imageId])
-
-  const checkFavorite = useCallback(async () => {
-    const details = await getImageDetails(imageDetails.jobId as string)
-    setFavorited(details.favorited)
-  }, [imageDetails.jobId])
-
   const fetchRelatedImages = useCallback(async () => {
     const result = await getRelatedImages(imageDetails.parentJobId as string)
 
@@ -220,11 +188,7 @@ const ImageOptions = ({
   }, [fetchRelatedImages, imageDetails.parentJobId])
 
   useEffect(() => {
-    checkFavorite()
-  }, [checkFavorite, imageDetails.jobId])
-
-  useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
+    const handleKeyPress = async (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         if (showTiles) {
           e.stopImmediatePropagation()
@@ -280,6 +244,8 @@ const ImageOptions = ({
   useEffect(() => {
     fetchParentJobDetails()
   }, [fetchParentJobDetails, imageDetails.parentJobId])
+
+  if (!currentImageId) return null
 
   const hasSource = imageDetails.source_image
 
@@ -581,13 +547,7 @@ const ImageOptions = ({
           </div>
           <div
             className={clsx(styles['button-icon'])}
-            onClick={() => {
-              confirmationModal.show({
-                onConfirmClick: () => {
-                  handleDeleteImageConfirm()
-                }
-              })
-            }}
+            onClick={onDeleteImageClick}
           >
             <IconTrash stroke={1.5} />
           </div>

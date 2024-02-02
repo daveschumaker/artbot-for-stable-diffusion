@@ -1,4 +1,3 @@
-import CreateImageRequestV2 from 'app/_data-models/v2/CreateImageRequestV2'
 import FlexCol from 'app/_components/FlexCol'
 import styles from './pendingModal.module.css'
 import { JobStatus } from '_types/artbot'
@@ -9,13 +8,24 @@ import {
   IconPhotoUp,
   IconStackPush
 } from '@tabler/icons-react'
+import { useContext } from 'react'
+import { ImageDetailsContext } from './ImageDetailsProvider'
 
-export default function ImageJobStatus({
-  imageDetails
-}: {
-  imageDetails: CreateImageRequestV2
-}) {
-  console.log(`imageDetails ImageJobStatus`, imageDetails)
+export default function ImageJobStatus() {
+  const context = useContext(ImageDetailsContext)
+  const {
+    imageDetails,
+    isPendingOrProcessing,
+    inProgressNoImages,
+    hasError,
+    isCensored
+  } = context
+
+  const showComponent =
+    isPendingOrProcessing || inProgressNoImages || hasError || isCensored
+
+  if (!showComponent) return null
+
   return (
     <div className="mb-2">
       <FlexCol className={styles.contrastTextBackground}>
