@@ -53,7 +53,7 @@ const Carousel: React.FC<PropType> = (props) => {
 
   const onStupidSettle = useCallback(
     (emblaApi: EmblaCarouselType) => {
-      updateImageId(emblaApi.slidesInView()[0])
+      updateImageId(emblaApi.selectedScrollSnap())
     },
     [updateImageId]
   )
@@ -99,7 +99,7 @@ const Carousel: React.FC<PropType> = (props) => {
     emblaApi.on('reInit', onInit)
     emblaApi.on('reInit', onSelect)
     emblaApi.on('select', onSelect)
-    emblaApi.on('settle', onStupidSettle)
+    emblaApi.on('select', onStupidSettle)
   }, [emblaApi, onInit, onSelect, onStupidSettle, images])
 
   const updateHeight = useCallback(() => {
