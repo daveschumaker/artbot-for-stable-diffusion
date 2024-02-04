@@ -52,47 +52,58 @@ function loadImage(src: string) {
 }
 
 async function writeMetadata(imageBlob: Blob, exif: object): Blob {
-  const userComment = exif.Exif[37510].replace('ASCII\0\0\0', '')
+  try {
+    // Safely access the userComment, defaulting to an empty string if not found
+    const userComment = exif?.Exif?.[37510]?.replace('ASCII\0\0\0', '') ?? ''
 
-  // Write Exif
-  const imageExifBlob = await addOrUpdateExifData(imageBlob, userComment)
+    // Write Exif
+    const imageExifBlob = await addOrUpdateExifData(imageBlob, userComment)
 
-  // Write XMP and Additional markers
-  if (
-    imageExifBlob.type === 'image/png' ||
-    imageExifBlob.type === 'image/jpeg'
-  ) {
-    const xmp = `<x:xmpmeta xmlns:x="adobe:ns:meta/"><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:exif="http://ns.adobe.com/exif/1.0/"><dc:title><rdf:Alt><rdf:li xml:lang="x-default"><![CDATA[${userComment}]]></rdf:li></rdf:Alt></dc:title><exif:UserComment><![CDATA[${userComment}]]></exif:UserComment></rdf:Description></rdf:RDF></x:xmpmeta>
+    // Write XMP and Additional markers
+    if (
+      imageExifBlob.type === 'image/png' ||
+      imageExifBlob.type === 'image/jpeg'
+    ) {
+      const xmp = `<x:xmpmeta xmlns:x="adobe:ns:meta/"><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:exif="http://ns.adobe.com/exif/1.0/"><dc:title><rdf:Alt><rdf:li xml:lang="x-default"><![CDATA[${userComment}]]></rdf:li></rdf:Alt></dc:title><exif:UserComment><![CDATA[${userComment}]]></exif:UserComment></rdf:Description></rdf:RDF></x:xmpmeta>
 	`
-    let imageUint8Arr = await writeXMP(imageExifBlob, xmp)
-    if (imageExifBlob.type === 'image/png') {
-      // https://exiftool.org/TagNames/PNG.html#TextualData
-      imageUint8Arr = await writePNGtext(
-        imageUint8Arr,
-        'parameters',
-        userComment
-      )
-      imageUint8Arr = await writePNGtext(imageUint8Arr, 'Comment', userComment)
-      imageUint8Arr = await writePNGtext(
-        imageUint8Arr,
-        'Description',
-        userComment
-      )
-      imageUint8Arr = await writePNGtext(imageUint8Arr, 'Software', SOFTWARE)
+      let imageUint8Arr = await writeXMP(imageExifBlob, xmp)
+      if (imageExifBlob.type === 'image/png') {
+        // https://exiftool.org/TagNames/PNG.html#TextualData
+        imageUint8Arr = await writePNGtext(
+          imageUint8Arr,
+          'parameters',
+          userComment
+        )
+        imageUint8Arr = await writePNGtext(
+          imageUint8Arr,
+          'Comment',
+          userComment
+        )
+        imageUint8Arr = await writePNGtext(
+          imageUint8Arr,
+          'Description',
+          userComment
+        )
+        imageUint8Arr = await writePNGtext(imageUint8Arr, 'Software', SOFTWARE)
 
-      var exifBytes = exifLib.dump(exif)
-      const EXIF_CODE = 'Exif\x00\x00'
-      if (exifBytes.startsWith(EXIF_CODE)) {
-        exifBytes = exifBytes.slice(6)
+        var exifBytes = exifLib.dump(exif)
+        const EXIF_CODE = 'Exif\x00\x00'
+        if (exifBytes.startsWith(EXIF_CODE)) {
+          exifBytes = exifBytes.slice(6)
+        }
       }
-    }
-    if (imageExifBlob.type === 'image/jpeg') {
-      imageUint8Arr = await writeJPGMarker(imageUint8Arr, userComment)
-    }
+      if (imageExifBlob.type === 'image/jpeg') {
+        imageUint8Arr = await writeJPGMarker(imageUint8Arr, userComment)
+      }
 
-    return new Blob([imageUint8Arr], { type: imageExifBlob.type })
+      return new Blob([imageUint8Arr], { type: imageExifBlob.type })
+    }
+    return imageExifBlob
+  } catch (err) {
+    console.log(`Error: Unable to write exif data`)
+    console.log(err)
+    return imageBlob
   }
-  return imageExifBlob
 }
 
 async function convertBlob(

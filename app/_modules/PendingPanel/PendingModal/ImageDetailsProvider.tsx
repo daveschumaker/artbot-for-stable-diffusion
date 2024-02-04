@@ -2,6 +2,7 @@ import { JobStatus } from '_types/artbot'
 import CreateImageRequestV2 from 'app/_data-models/v2/CreateImageRequestV2'
 import React, { createContext, useState } from 'react'
 import useImageArray from './hooks/useImageArray'
+import { getImageDetails } from 'app/_utils/db'
 
 interface ImageSrc {
   id: string
@@ -20,6 +21,7 @@ interface ImageDetailsContextType {
   currentImageId: string
   imageSrcs: ImageSrc[]
   setCurrentImageId: (imageId: string) => void
+  refreshImageDetails: (jobId: string) => void
 }
 
 const defaultContext = {
@@ -33,7 +35,8 @@ const defaultContext = {
   censoredJob: false,
   currentImageId: '',
   imageSrcs: [],
-  setCurrentImageId: () => {}
+  setCurrentImageId: () => {},
+  refreshImageDetails: () => {}
 }
 
 export const ImageDetailsContext =
@@ -46,10 +49,20 @@ interface ImageDetailsProviderProps {
 
 export const ImageDetailsProvider: React.FC<ImageDetailsProviderProps> = ({
   children,
-  imageDetails
+  imageDetails: initialImageDetails
 }) => {
+  const [imageDetails, setImageDetails] = useState(initialImageDetails)
   const [currentImageId, setCurrentImageId] = useState('')
   const [imageSrcs] = useImageArray({ imageDetails, setCurrentImageId })
+
+  const refreshImageDetails = async () => {
+    try {
+      const updatedDetails = await getImageDetails(imageDetails.jobId)
+      setImageDetails(updatedDetails)
+    } catch (error) {
+      console.error('Failed to refresh image details:', error)
+    }
+  }
 
   const hasError = imageDetails.jobStatus === JobStatus.Error
   const isCensored = imageDetails.images_censored > 0
@@ -74,7 +87,8 @@ export const ImageDetailsProvider: React.FC<ImageDetailsProviderProps> = ({
         censoredJob,
         currentImageId,
         setCurrentImageId,
-        imageSrcs
+        imageSrcs,
+        refreshImageDetails
       }}
     >
       {children}

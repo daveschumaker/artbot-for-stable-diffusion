@@ -5,8 +5,6 @@ import '@szhsin/react-menu/dist/transitions/slide.css'
 
 import { useCallback, useContext, useEffect, useState } from 'react'
 import {
-  deleteCompletedImage,
-  deletePendingJobFromDb,
   getImageDetails,
   getParentJobDetails,
   updateCompletedJob
@@ -17,13 +15,11 @@ import styles from './imageDetails.module.css'
 import {
   copyEditPrompt,
   interrogateImage,
-  rerollImage,
   upscaleImage
 } from 'app/_controllers/imageDetailsCommon'
 import { useRouter } from 'next/navigation'
 import { isiOS, uuidv4 } from 'app/_utils/appUtils'
 import { SourceProcessing } from 'app/_utils/promptUtils'
-import { deletePendingJob } from 'app/_controllers/pendingJobsCache'
 import { getRelatedImages } from 'app/_pages/ImagePage/image.controller'
 import { useModal } from '@ebay/nice-modal-react'
 import { showErrorToast, showSuccessToast } from 'app/_utils/notificationUtils'
@@ -46,20 +42,21 @@ import ShortlinkButton from 'app/_modules/ImageDetails/ShortlinkButton'
 import useFavorite from '../hooks/useFavorite'
 import useDelete from '../hooks/useDelete'
 import { ImageDetailsContext } from '../ImageDetailsProvider'
+import useReroll from '../hooks/useReroll'
+import useDownload from '../hooks/useDownload'
+import FullscreenView from './FullscreenView'
+import { useFullScreenHandle } from 'react-full-screen'
 
 const ImageOptions = ({
   handleClose,
-  handleDeleteImageClick = () => {},
   handleReloadImageData = () => {},
   isModal,
   showSource,
   showTiles,
   setShowSource,
-  setShowTiles,
-  handleFullScreen
+  setShowTiles
 }: {
   handleClose: () => any
-  handleDeleteImageClick?: () => any
   handleReloadImageData?: () => any
   isModal: boolean
   jobId: string
@@ -67,8 +64,8 @@ const ImageOptions = ({
   showTiles: boolean
   setShowSource(): void
   setShowTiles: (bool: boolean) => any
-  handleFullScreen: () => any
 }) => {
+  const showFullScreen = useFullScreenHandle()
   const context = useContext(ImageDetailsContext)
   const { currentImageId, imageDetails } = context
   const { jobId } = imageDetails
@@ -81,8 +78,10 @@ const ImageOptions = ({
     jobId
   })
   const [onDeleteImageClick] = useDelete({ imageId })
+  const [onDownloadClick] = useDownload()
+  const [, onRerollClick] = useReroll()
 
-  const [pendingReroll, setPendingReroll] = useState(false)
+  const [fullscreen, setFullscreen] = useState(false)
   const [pendingUpscale, setPendingUpscale] = useState(false)
   const [hasParentJob, setHasParentJob] = useState(false)
   const [hasRelatedImages, setHasRelatedImages] = useState(false)
@@ -105,44 +104,6 @@ const ImageOptions = ({
     router.push(`/create?edit=true`)
     handleClose()
   }
-
-  const handleDeleteImageConfirm = useCallback(async () => {
-    handleDeleteImageClick()
-    await deletePendingJobFromDb(imageDetails.jobId as string)
-    await deleteCompletedImage(imageDetails.jobId as string)
-    deletePendingJob(imageDetails.jobId as string)
-    getImageDetails.delete(imageDetails.jobId as string) // bust memoization cache
-    confirmationModal.remove()
-    handleClose()
-  }, [
-    confirmationModal,
-    handleClose,
-    handleDeleteImageClick,
-    imageDetails.jobId
-  ])
-
-  const handleRerollClick = useCallback(
-    async (imageDetails: any) => {
-      if (pendingReroll) {
-        return
-      }
-
-      setPendingReroll(true)
-
-      const reRollStatus = await rerollImage(imageDetails)
-
-      const { success } = reRollStatus
-
-      if (success) {
-        setPendingReroll(false)
-        // router.push('/pending')
-        // handleClose()
-
-        showSuccessToast({ message: 'Re-rolling and requesting new image' })
-      }
-    },
-    [pendingReroll]
-  )
 
   const handleTileClick = (size: string) => {
     setTileSize(size)
@@ -198,21 +159,11 @@ const ImageOptions = ({
       }
 
       if (e.key === 'Backspace') {
-        confirmationModal.show({
-          onConfirmClick: () => {
-            // setShowDeleteModal(false)
-            handleDeleteImageConfirm()
-          }
-        })
+        onDeleteImageClick()
       }
 
       if (e.key === 'Delete') {
-        confirmationModal.show({
-          onConfirmClick: () => {
-            // setShowDeleteModal(false)
-            handleDeleteImageConfirm()
-          }
-        })
+        onDeleteImageClick()
       }
 
       if (e.key === 'f' && !e.ctrlKey && !e.metaKey) {
@@ -224,7 +175,7 @@ const ImageOptions = ({
       }
 
       if (e.key === 'r' && !e.ctrlKey && !e.metaKey) {
-        handleRerollClick(imageDetails)
+        onRerollClick()
       }
     }
 
@@ -233,9 +184,9 @@ const ImageOptions = ({
   }, [
     confirmationModal,
     handleClose,
-    handleDeleteImageConfirm,
-    handleRerollClick,
+    onRerollClick,
     imageDetails,
+    onDeleteImageClick,
     onFavoriteClick,
     setShowTiles,
     showTiles
@@ -245,12 +196,18 @@ const ImageOptions = ({
     fetchParentJobDetails()
   }, [fetchParentJobDetails, imageDetails.parentJobId])
 
+  const handleFullScreen = () => {
+    setFullscreen(true)
+    showFullScreen.enter()
+  }
+
   if (!currentImageId) return null
 
   const hasSource = imageDetails.source_image
 
   return (
     <>
+      <FullscreenView fullscreen={fullscreen} setFullscreen={setFullscreen} />
       {showTiles && (
         <div
           className="z-[102] fixed top-0 left-0 right-0 bottom-0 bg-repeat"
@@ -526,14 +483,12 @@ const ImageOptions = ({
           )}
           <div
             className={clsx(styles['button-icon'], styles['mobile-hide'])}
-            onClick={() => downloadFile(imageDetails)}
+            onClick={onDownloadClick}
+            // onClick={() => downloadFile(imageDetails)}
           >
             <IconDownload stroke={1.5} />
           </div>
-          <div
-            className={clsx(styles['button-icon'])}
-            onClick={() => handleRerollClick(imageDetails)}
-          >
+          <div className={clsx(styles['button-icon'])} onClick={onRerollClick}>
             <IconRefresh stroke={1.5} />
           </div>
           <div className={styles['button-icon']} onClick={onFavoriteClick}>

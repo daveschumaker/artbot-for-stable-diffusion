@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useContext } from 'react'
 import ConfirmationModal from 'app/_modules/ConfirmationModal'
 import NiceModal, { useModal } from '@ebay/nice-modal-react'
 import {
@@ -6,15 +6,19 @@ import {
   DeleteContent
 } from 'app/_modules/PendingPanel/PendingModal/ImageOptions/DeleteConfirmationModal'
 import { deleteImageFromDexie } from 'app/_db/image_files'
+import { ImageDetailsContext } from '../ImageDetailsProvider'
 
 export default function useDelete({ imageId }: { imageId: string }) {
+  const context = useContext(ImageDetailsContext)
+  const { imageDetails, refreshImageDetails } = context
+
   const confirmationModal = useModal(ConfirmationModal)
 
   const handleDeleteImageConfirm = useCallback(async () => {
     await deleteImageFromDexie(imageId)
-    console.log(`It worked!`)
+    await refreshImageDetails(imageDetails.jobId)
     confirmationModal.remove()
-  }, [confirmationModal, imageId])
+  }, [confirmationModal, imageDetails.jobId, imageId, refreshImageDetails])
 
   const onDeleteImageClick = useCallback(async () => {
     NiceModal.show('confirmation-modal', {

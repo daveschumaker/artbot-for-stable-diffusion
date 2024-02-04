@@ -804,6 +804,44 @@ export const downloadFile = async (image: any) => {
   }
 }
 
+export const downloadBlob = async (blob: Blob, prompt: string) => {
+  initBlob()
+  const fileType = AppSettings.get('imageDownloadFormat') || 'jpg'
+  const type = blob.type.split('/')[1]
+  const { saveAs } = (await import('file-saver')).default
+
+  const filename =
+    prompt
+      .replace(/[^a-z0-9]/gi, '_')
+      .toLowerCase()
+      .slice(0, 124) + `.${fileType}`
+
+  // don't convert files that are already in the right format..........☹
+  if (fileType === type) {
+    saveAs(blob, filename)
+  } else {
+    // otherwise we'll convert if necessary
+    let newBlob
+
+    if (fileType === 'png') {
+      // @ts-ignore
+      newBlob = await blob?.toPNG(null)
+    }
+
+    if (fileType === 'jpg') {
+      // @ts-ignore
+      newBlob = await blob?.toJPEG(null)
+    }
+
+    if (fileType === 'webp') {
+      // @ts-ignore
+      newBlob = await blob?.toWebP(null)
+    }
+
+    saveAs(newBlob, filename)
+  }
+}
+
 interface ICountImages {
   numImages: number
   source_image?: string

@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { JobStatus } from '_types'
-import { useModal } from '@ebay/nice-modal-react'
+import NiceModal, { useModal } from '@ebay/nice-modal-react'
 
 import clsx from 'clsx'
 import { deletePendingJob } from 'app/_controllers/pendingJobsCache'
@@ -19,7 +19,6 @@ import { getAllImagesByJobId } from 'app/_db/image_files'
 import CreateImageRequestV2 from 'app/_data-models/v2/CreateImageRequestV2'
 import styles from './component.module.css'
 import ImageModel from 'app/_data-models/v2/ImageModel'
-import Modal from 'app/_componentsV2/Modal'
 import { deleteJobIdFromCompleted } from 'app/_db/transactions'
 import PendingModal from '../PendingModal'
 import { arraysEqual } from 'app/_utils/helperUtils'
@@ -35,8 +34,6 @@ import { arraysEqual } from 'app/_utils/helperUtils'
 
 const PendingPanelImageCardV2 = React.memo(
   ({ imageJob }: { imageJob: CreateImageRequestV2 }) => {
-    const imageModal = useModal(Modal)
-
     const [censoredJob, setCensoredJob] = useState(false)
     const [isVisible, setIsVisible] = useState(
       imageJob.jobStatus === JobStatus.Done
@@ -155,12 +152,16 @@ const PendingPanelImageCardV2 = React.memo(
       setJobHasError(isJobHasError)
     }, [imageJob.images_censored, imageJob.jobStatus, imageSrcs])
 
+    const imagesCompleted = isNaN(imageJob.finished - imageJob.images_censored)
+      ? 0
+      : imageJob.finished - imageJob.images_censored
+
     return (
       <div className={clsx(styles.PendingJobCard)} key={imageJob.jobId}>
         <div
           className={styles.imageContainer}
           onClick={async () => {
-            imageModal.show({
+            NiceModal.show('image-modal', {
               content: <PendingModal imageDetails={imageJob} />,
               maxWidth: 'max-w-[2000px]'
             })
@@ -196,8 +197,7 @@ const PendingPanelImageCardV2 = React.memo(
                 <IconAlertTriangle size={18} color="rgb(234 179 8)" />
               </div>
             )}
-            ({imageJob.finished - imageJob.images_censored} /{' '}
-            {imageJob.numImages})
+            ({imagesCompleted} / {imageJob.numImages})
           </div>
           <div
             className={styles.CloseButton}
