@@ -104,6 +104,22 @@ export default function LoraSearchDetailsCard({
     }
   }
 
+  const formatSize = (size: number) => {
+    // Regular workers are limited to 220mb, but some workers have relaxed requirements.
+    // Eventually, there should be a warning in UI for this.
+    var pow=0
+    var out=size;
+    while (out > 1024) {
+      out = out / 1024
+      pow += 1
+    }
+    if (size > 220 * 1024 * 1024) {
+      return "<span style='color:red'>" + out.toFixed(2) + ["k","m","g"][pow] + "b</span>"
+    } else {
+      return out.toFixed(2) + ["k","m","g"][pow] + "b"
+    }
+  }
+
   const getImage = useCallback(() => {
     let image = null
     const { modelVersions = [] } = embedding
@@ -197,12 +213,19 @@ export default function LoraSearchDetailsCard({
                         <>
                           <div style={{ fontSize: '14px' }}>{option.label}</div>
                           <div style={{ fontSize: '10px' }}>
-                            Baseline: {formatBaseline(version?.baseModel)}
+                            Baseline: {formatBaseline(version?.baseModel)}<br/>
+                            Size: {formatSize(version?.sizeKb)}
                           </div>
                         </>
                       )
                     } else {
-                      return <div>{option.label}</div>
+                      return (
+                        <div>
+                          {option.label}<br/>
+                          Size: {formatSize(version?.sizeKb)}<br/>
+                          NSFW: {embedding.nsfw ? "<span style='color:red'>True</span>" : "False")}
+                        </div>
+                      )
                     }
                   }}
                   options={versionOptions}
