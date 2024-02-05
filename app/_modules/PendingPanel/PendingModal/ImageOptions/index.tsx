@@ -38,12 +38,12 @@ import {
 import PromptInputSettings from 'app/_data-models/PromptInputSettings'
 import { CONTROL_TYPES } from '_types/horde'
 import ConfirmationModal from 'app/_modules/ConfirmationModal'
-import ShortlinkButton from 'app/_modules/ImageDetails/ShortlinkButton'
 import useFavorite from '../hooks/useFavorite'
 import useDelete from '../hooks/useDelete'
 import { ImageDetailsContext } from '../ImageDetailsProvider'
 import useReroll from '../hooks/useReroll'
 import useDownload from '../hooks/useDownload'
+import ShortlinkButton from './ShortlinkButtonV2'
 
 const ImageOptions = ({
   handleClose,
@@ -78,7 +78,6 @@ const ImageOptions = ({
   const [onDownloadClick] = useDownload()
   const [, onRerollClick] = useReroll()
 
-  const [fullscreen, setFullscreen] = useState(false)
   const [pendingUpscale, setPendingUpscale] = useState(false)
   const [hasParentJob, setHasParentJob] = useState(false)
   const [hasRelatedImages, setHasRelatedImages] = useState(false)
