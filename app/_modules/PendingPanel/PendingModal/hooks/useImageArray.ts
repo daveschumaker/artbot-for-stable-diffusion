@@ -1,12 +1,8 @@
+import { ImageSrc } from '_types/artbot'
 import CreateImageRequestV2 from 'app/_data-models/v2/CreateImageRequestV2'
 import ImageModel from 'app/_data-models/v2/ImageModel'
 import { getAllImagesByJobId } from 'app/_db/image_files'
 import { useCallback, useEffect, useState } from 'react'
-
-interface ImageSrc {
-  id: string
-  url: string
-}
 
 export default function useImageArray({
   imageDetails,

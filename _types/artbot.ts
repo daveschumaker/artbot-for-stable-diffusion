@@ -111,6 +111,11 @@ export interface ImageSize {
   width: number
 }
 
+export interface ImageSrc {
+  id: string
+  url: string
+}
+
 export interface ITeam {
   name: string | null
   id: string | null

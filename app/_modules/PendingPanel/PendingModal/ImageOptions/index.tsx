@@ -18,10 +18,10 @@ import {
   upscaleImage
 } from 'app/_controllers/imageDetailsCommon'
 import { useRouter } from 'next/navigation'
-import { isiOS, uuidv4 } from 'app/_utils/appUtils'
+import { uuidv4 } from 'app/_utils/appUtils'
 import { SourceProcessing } from 'app/_utils/promptUtils'
 import { getRelatedImages } from 'app/_pages/ImagePage/image.controller'
-import { useModal } from '@ebay/nice-modal-react'
+import NiceModal, { useModal } from '@ebay/nice-modal-react'
 import { showErrorToast, showSuccessToast } from 'app/_utils/notificationUtils'
 import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 import {
@@ -44,8 +44,6 @@ import useDelete from '../hooks/useDelete'
 import { ImageDetailsContext } from '../ImageDetailsProvider'
 import useReroll from '../hooks/useReroll'
 import useDownload from '../hooks/useDownload'
-import FullscreenView from './FullscreenView'
-import { useFullScreenHandle } from 'react-full-screen'
 
 const ImageOptions = ({
   handleClose,
@@ -65,9 +63,8 @@ const ImageOptions = ({
   setShowSource(): void
   setShowTiles: (bool: boolean) => any
 }) => {
-  const showFullScreen = useFullScreenHandle()
   const context = useContext(ImageDetailsContext)
-  const { currentImageId, imageDetails } = context
+  const { currentImageId, imageDetails, imageSrcs } = context
   const { jobId } = imageDetails
   const imageId = currentImageId
 
@@ -196,19 +193,13 @@ const ImageOptions = ({
     fetchParentJobDetails()
   }, [fetchParentJobDetails, imageDetails.parentJobId])
 
-  const handleFullScreen = () => {
-    setFullscreen(true)
-    showFullScreen.enter()
-  }
-
   if (!currentImageId) return null
 
   const hasSource = imageDetails.source_image
 
   return (
     <>
-      <FullscreenView fullscreen={fullscreen} setFullscreen={setFullscreen} />
-      {showTiles && (
+      {/* {showTiles && (
         <div
           className="z-[102] fixed top-0 left-0 right-0 bottom-0 bg-repeat"
           onClick={() => setShowTiles(false)}
@@ -217,7 +208,7 @@ const ImageOptions = ({
             backgroundSize: tileSize
           }}
         ></div>
-      )}
+      )} */}
       <div
         id="image-options-wrapper"
         className="flex flex-row w-full mt-3"
@@ -465,11 +456,19 @@ const ImageOptions = ({
               </Menu>
             </div>
           )}
-          {!isiOS() && (
-            <div className={styles['button-icon']} onClick={handleFullScreen}>
-              <IconResize strokeWidth={1.25} />
-            </div>
-          )}
+          <div
+            className={styles['button-icon']}
+            onClick={() => {
+              NiceModal.show('fullscreen-view', {
+                handleClose: () => NiceModal.remove('fullscreen-view'),
+                imageSrc: imageSrcs.filter(
+                  (img) => img.id === currentImageId
+                )[0]
+              })
+            }}
+          >
+            <IconResize strokeWidth={1.25} />
+          </div>
           {hasSource && (
             <div
               className={styles['button-icon']}

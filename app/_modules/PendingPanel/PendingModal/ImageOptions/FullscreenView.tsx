@@ -1,34 +1,48 @@
 /* eslint-disable @next/next/no-img-element */
-import { Dispatch } from 'react'
-import { FullScreen, useFullScreenHandle } from 'react-full-screen'
+import NiceModal from '@ebay/nice-modal-react'
+import { ImageSrc } from '_types/artbot'
+import { useEffect } from 'react'
 
-export default function FullscreenView({
-  imageSrc,
-  fullscreen,
-  setFullscreen
+function FullscreenView({
+  handleClose = () => {},
+  imageSrc
 }: {
-  imageSrc: Blob
-  fullscreen: boolean
-  setFullscreen: Dispatch<boolean>
+  handleClose: () => void
+  imageSrc: ImageSrc
 }) {
-  const showFullScreen = useFullScreenHandle()
+  useEffect(() => {
+    // @ts-ignore
+    const handleKeyPress = (e) => {
+      if (e.key === 'Escape') {
+        handleClose()
+      }
+    }
+    window.addEventListener('keydown', handleKeyPress)
+    return () => window.removeEventListener('keydown', handleKeyPress)
 
-  if (!fullscreen) return null
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
-    <FullScreen
-      handle={showFullScreen}
-      onChange={(isFullscreen) => setFullscreen(isFullscreen)}
+    <div
+      onClick={handleClose}
+      style={{
+        position: 'fixed',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        zIndex: 999,
+        backgroundColor: 'black'
+      }}
     >
       <div
+        id="fullscreen-img"
         className="flex flex-row items-center justify-center w-full h-screen"
-        onClick={() => {
-          showFullScreen.exit()
-        }}
       >
         <img
           className="max-h-screen max-w-full"
-          src={URL.createObjectURL(imageSrc)}
+          src={imageSrc.url}
           alt="Fullscreen image"
           style={{
             borderRadius: '4px',
@@ -37,6 +51,8 @@ export default function FullscreenView({
           }}
         />
       </div>
-    </FullScreen>
+    </div>
   )
 }
+
+export default NiceModal.create(FullscreenView)
