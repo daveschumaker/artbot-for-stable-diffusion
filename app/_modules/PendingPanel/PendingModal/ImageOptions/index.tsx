@@ -9,11 +9,10 @@ import {
   getParentJobDetails,
   updateCompletedJob
 } from 'app/_utils/db'
-import { blobToClipboard, downloadFile } from 'app/_utils/imageUtils'
+import { downloadFile } from 'app/_utils/imageUtils'
 
 import styles from './imageDetails.module.css'
 import {
-  copyEditPrompt,
   interrogateImage,
   upscaleImage
 } from 'app/_controllers/imageDetailsCommon'
@@ -22,7 +21,6 @@ import { uuidv4 } from 'app/_utils/appUtils'
 import { SourceProcessing } from 'app/_utils/promptUtils'
 import { getRelatedImages } from 'app/_pages/ImagePage/image.controller'
 import NiceModal, { useModal } from '@ebay/nice-modal-react'
-import { showErrorToast, showSuccessToast } from 'app/_utils/notificationUtils'
 import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 import {
   IconArrowsDiff,
@@ -44,6 +42,7 @@ import { ImageDetailsContext } from '../ImageDetailsProvider'
 import useReroll from '../hooks/useReroll'
 import useDownload from '../hooks/useDownload'
 import ShortlinkButton from './ShortlinkButtonV2'
+import useCopy from '../hooks/useCopy'
 
 const ImageOptions = ({
   handleClose,
@@ -74,6 +73,8 @@ const ImageOptions = ({
     imageId,
     jobId
   })
+  const [onCopyPromptClick, onCopyImageDetailsClick, onCopyImageClick] =
+    useCopy()
   const [onDeleteImageClick] = useDelete({ imageId })
   const [onDownloadClick] = useDownload()
   const [, onRerollClick] = useReroll()
@@ -94,12 +95,6 @@ const ImageOptions = ({
       setHasParentJob(true)
     }
   }, [imageDetails.jobId, imageDetails.parentJobId])
-
-  const handleCopyPromptClick = async () => {
-    await copyEditPrompt(imageDetails)
-    router.push(`/create?edit=true`)
-    handleClose()
-  }
 
   const handleTileClick = (size: string) => {
     setTileSize(size)
@@ -369,41 +364,14 @@ const ImageOptions = ({
               transition
               menuClassName={styles['menu']}
             >
-              <MenuItem
-                className="text-sm"
-                onClick={() => {
-                  router.push(
-                    `/create?prompt=${encodeURIComponent(imageDetails.prompt)}`
-                  )
-                  handleClose()
-                }}
-              >
+              <MenuItem className="text-sm" onClick={onCopyPromptClick}>
                 Use the prompt from this image
               </MenuItem>
-              <MenuItem className="text-sm" onClick={handleCopyPromptClick}>
+              <MenuItem className="text-sm" onClick={onCopyImageDetailsClick}>
                 Use all settings from this image
               </MenuItem>
               <MenuDivider />
-              <MenuItem
-                className="text-sm"
-                onClick={async () => {
-                  if (!imageDetails || !imageDetails.base64String) return
-
-                  const success = await blobToClipboard(
-                    imageDetails.base64String
-                  )
-
-                  if (success) {
-                    showSuccessToast({
-                      message: 'Image copied to your clipboard!'
-                    })
-                  } else {
-                    showErrorToast({
-                      message: 'Unable to copy image to clipboard.'
-                    })
-                  }
-                }}
-              >
+              <MenuItem className="text-sm" onClick={onCopyImageClick}>
                 Copy image to clipboard
               </MenuItem>
             </Menu>

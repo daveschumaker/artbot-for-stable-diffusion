@@ -5,6 +5,12 @@ import { writeJPGMarker, writePNGtext, writeXMP } from 'image-metadata-editor'
 const SOFTWARE =
   'ArtBot - Create images with Stable Diffusion, utilizing the AI Horde'
 
+export interface ArtBotBlobType extends Blob {
+  toPNG: (callback?: any) => Promise<Blob>
+  toWebP: (callback?: any) => Promise<Blob>
+  toJPEG: (callback?: any) => Promise<Blob>
+}
+
 export const initBlob = () => {
   if (!Blob.prototype.toPNG) {
     Blob.prototype.toPNG = async function (callback: any) {
