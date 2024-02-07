@@ -12,10 +12,7 @@ import {
 import { downloadFile } from 'app/_utils/imageUtils'
 
 import styles from './imageDetails.module.css'
-import {
-  interrogateImage,
-  upscaleImage
-} from 'app/_controllers/imageDetailsCommon'
+import { interrogateImage } from 'app/_controllers/imageDetailsCommon'
 import { useRouter } from 'next/navigation'
 import { uuidv4 } from 'app/_utils/appUtils'
 import { SourceProcessing } from 'app/_utils/promptUtils'
@@ -33,8 +30,6 @@ import {
   IconTrash,
   IconWall
 } from '@tabler/icons-react'
-import PromptInputSettings from 'app/_data-models/PromptInputSettings'
-import { CONTROL_TYPES } from '_types/horde'
 import ConfirmationModal from 'app/_modules/ConfirmationModal'
 import useFavorite from '../hooks/useFavorite'
 import useDelete from '../hooks/useDelete'
@@ -43,6 +38,7 @@ import useReroll from '../hooks/useReroll'
 import useDownload from '../hooks/useDownload'
 import ShortlinkButton from './ShortlinkButtonV2'
 import useCopy from '../hooks/useCopy'
+import useSourceImage from '../hooks/useSourceImage'
 
 const ImageOptions = ({
   handleClose,
@@ -78,8 +74,9 @@ const ImageOptions = ({
   const [onDeleteImageClick] = useDelete({ imageId })
   const [onDownloadClick] = useDownload()
   const [, onRerollClick] = useReroll()
+  const [onUseControlNetClick, onUseImg2ImgClick, onUseInpaintingClick] =
+    useSourceImage()
 
-  const [pendingUpscale, setPendingUpscale] = useState(false)
   const [hasParentJob, setHasParentJob] = useState(false)
   const [hasRelatedImages, setHasRelatedImages] = useState(false)
   const [tileSize, setTileSize] = useState('128px')
@@ -100,18 +97,6 @@ const ImageOptions = ({
     setTileSize(size)
     setShowTiles(true)
   }
-
-  const handleUpscaleClick = useCallback(async () => {
-    if (pendingUpscale) {
-      return
-    }
-
-    setPendingUpscale(true)
-
-    await upscaleImage(imageDetails)
-    router.push('/pending')
-    handleClose()
-  }, [handleClose, imageDetails, pendingUpscale, router])
 
   const onDetachParent = useCallback(async () => {
     await updateCompletedJob(
@@ -264,78 +249,14 @@ const ImageOptions = ({
               >
                 Interrogate (img2text)
               </MenuItem>
-              <MenuItem className="text-sm" onClick={handleUpscaleClick}>
-                Upscale image {pendingUpscale && ' (processing...)'}
-              </MenuItem>
               <MenuDivider />
-              <MenuItem
-                className="text-sm"
-                onClick={async () => {
-                  const transformJob = CreateImageRequest.toDefaultPromptInput(
-                    Object.assign({}, imageDetails, {
-                      numImages: 1,
-                      seed: ''
-                    })
-                  )
-
-                  transformJob.source_mask = ''
-                  transformJob.source_processing = SourceProcessing.Img2Img
-                  transformJob.control_type = CONTROL_TYPES.canny
-                  transformJob.source_image = imageDetails.base64String
-                  await PromptInputSettings.updateSavedInput_NON_DEBOUNCED(
-                    transformJob
-                  )
-
-                  router.push(`/create?panel=img2img&edit=true`)
-                  handleClose()
-                }}
-              >
+              <MenuItem className="text-sm" onClick={onUseControlNetClick}>
                 Use for ControlNet
               </MenuItem>
-              <MenuItem
-                className="text-sm"
-                onClick={async () => {
-                  const transformJob = CreateImageRequest.toDefaultPromptInput(
-                    Object.assign({}, imageDetails, {
-                      control_type: '',
-                      numImages: 1,
-                      seed: '',
-                      source_image: imageDetails.base64String,
-                      source_mask: '',
-                      source_processing: SourceProcessing.Img2Img
-                    })
-                  )
-                  await PromptInputSettings.updateSavedInput_NON_DEBOUNCED(
-                    transformJob
-                  )
-
-                  router.push(`/create?panel=img2img&edit=true`)
-                  handleClose()
-                }}
-              >
+              <MenuItem className="text-sm" onClick={onUseImg2ImgClick}>
                 Use for img2img
               </MenuItem>
-              <MenuItem
-                className="text-sm"
-                onClick={async () => {
-                  const transformJob = CreateImageRequest.toDefaultPromptInput(
-                    Object.assign({}, imageDetails, {
-                      control_type: '',
-                      numImages: 1,
-                      seed: '',
-                      source_image: imageDetails.base64String,
-                      source_mask: '',
-                      source_processing: SourceProcessing.InPainting
-                    })
-                  )
-                  await PromptInputSettings.updateSavedInput_NON_DEBOUNCED(
-                    transformJob
-                  )
-
-                  router.push(`/create?panel=inpainting&edit=true`)
-                  handleClose()
-                }}
-              >
+              <MenuItem className="text-sm" onClick={onUseInpaintingClick}>
                 Use for inpainting
               </MenuItem>
               {hasRelatedImages && (
