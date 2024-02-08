@@ -41,25 +41,20 @@ import useCopy from '../hooks/useCopy'
 import useSourceImage from '../hooks/useSourceImage'
 
 const ImageOptions = ({
-  handleClose,
-  handleReloadImageData = () => {},
   isModal,
   showSource,
   showTiles,
-  setShowSource,
-  setShowTiles
+  setShowSource
 }: {
-  handleClose: () => any
-  handleReloadImageData?: () => any
   isModal: boolean
   jobId: string
   showSource: boolean
   showTiles: boolean
   setShowSource(): void
-  setShowTiles: (bool: boolean) => any
 }) => {
   const context = useContext(ImageDetailsContext)
-  const { currentImageId, imageDetails, imageSrcs } = context
+  const { currentImageId, imageDetails, imageSrcs, refreshImageDetails } =
+    context
   const { jobId } = imageDetails
   const imageId = currentImageId
 
@@ -79,7 +74,6 @@ const ImageOptions = ({
 
   const [hasParentJob, setHasParentJob] = useState(false)
   const [hasRelatedImages, setHasRelatedImages] = useState(false)
-  const [tileSize, setTileSize] = useState('128px')
 
   const fetchParentJobDetails = useCallback(async () => {
     const details: CreateImageRequest = await getParentJobDetails(
@@ -94,8 +88,11 @@ const ImageOptions = ({
   }, [imageDetails.jobId, imageDetails.parentJobId])
 
   const handleTileClick = (size: string) => {
-    setTileSize(size)
-    setShowTiles(true)
+    NiceModal.show('tile-view', {
+      handleClose: () => NiceModal.remove('tile-view'),
+      imageSrc: imageSrcs.filter((img) => img.id === currentImageId)[0],
+      tileSize: size
+    })
   }
 
   const onDetachParent = useCallback(async () => {
@@ -109,8 +106,8 @@ const ImageOptions = ({
     // Bust memoization cache
     getImageDetails.delete(imageDetails.jobId as string)
 
-    handleReloadImageData()
-  }, [handleReloadImageData, imageDetails])
+    refreshImageDetails(imageDetails.jobId)
+  }, [refreshImageDetails, imageDetails])
 
   const fetchRelatedImages = useCallback(async () => {
     const result = await getRelatedImages(imageDetails.parentJobId as string)
@@ -126,14 +123,6 @@ const ImageOptions = ({
 
   useEffect(() => {
     const handleKeyPress = async (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        if (showTiles) {
-          e.stopImmediatePropagation()
-          e.preventDefault()
-          setShowTiles(false)
-        }
-      }
-
       if (e.key === 'Backspace') {
         onDeleteImageClick()
       }
@@ -159,12 +148,10 @@ const ImageOptions = ({
     return () => window.removeEventListener('keydown', handleKeyPress)
   }, [
     confirmationModal,
-    handleClose,
     onRerollClick,
     imageDetails,
     onDeleteImageClick,
     onFavoriteClick,
-    setShowTiles,
     showTiles
   ])
 
@@ -221,7 +208,7 @@ const ImageOptions = ({
                   className="text-sm"
                   onClick={() => {
                     router.push(`/image/${imageDetails.jobId}`)
-                    handleClose()
+                    NiceModal.remove('image-modal')
                   }}
                 >
                   View image details page
@@ -244,7 +231,7 @@ const ImageOptions = ({
                 onClick={() => {
                   interrogateImage(imageDetails)
                   router.push(`/interrogate?user-share=true`)
-                  handleClose()
+                  NiceModal.remove('image-modal')
                 }}
               >
                 Interrogate (img2text)
@@ -266,7 +253,7 @@ const ImageOptions = ({
                     className="text-sm"
                     onClick={() => {
                       router.push(`/image/${imageDetails.jobId}#related-images`)
-                      handleClose()
+                      NiceModal.remove('image-modal')
                     }}
                   >
                     View related images
