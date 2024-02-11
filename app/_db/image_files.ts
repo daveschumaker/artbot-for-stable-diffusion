@@ -58,5 +58,35 @@ export const getAllImagesByJobId = async (
   }
 }
 
+// TODO: In order to sort by "unique jobIds", I'll need to query the
+// "completed" table instead of the "image_files" table. Then somehow,
+// map the jobId to the first available image for that job.
+// Additionally, I should return number of images for each job.
+
+export const getAllImages = async (
+  options: GetAllImagesOptions = {}
+): Promise<ImageModel[] | string[]> => {
+  const images: ImageModel[] = await db.image_files.toArray()
+
+  images.sort((a, b) => {
+    // Check if both have blobs or neither have blobs
+    if ((a.blob === null) === (b.blob === null)) {
+      // If both have blobs or neither have blobs, sort by id in descending order
+      // @ts-ignore
+      return b.id - a.id // Change made here to sort by most recent first
+    }
+    // If only one has a blob, it should come first
+    return a.blob === null ? 1 : -1
+  })
+
+  if ('imageIdsOnly' in options) {
+    return images.map((image: ImageModel) => {
+      return image.hordeId
+    })
+  } else {
+    return images
+  }
+}
+
 // TODO: Lookup uniqueKeys for a sort of "Select Distinct" when viewing list of images:
 // https://dexie.org/docs/Collection/Collection.uniqueKeys()
