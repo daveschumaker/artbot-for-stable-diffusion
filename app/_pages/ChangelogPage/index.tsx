@@ -7,12 +7,8 @@ import Linker from 'app/_components/Linker'
 import FeedbackForm from 'app/_modules/FeedbackForm'
 import { useEffectOnce } from 'app/_hooks/useEffectOnce'
 import { trackEvent } from 'app/_api/telemetry'
-import AdContainer from 'app/_components/AdContainer'
 import Section from 'app/_components/Section'
 import styles from './changelog.module.css'
-import { useWindowSize } from 'app/_hooks/useWindowSize'
-import { appInfoStore } from 'app/_store/appStore'
-import { useStore } from 'statery'
 
 import ReactMarkdown from 'react-markdown'
 import CHANGELOG from '../../../CHANGELOG.md'
@@ -95,10 +91,6 @@ const LinkButton = ({
 */
 
 const ChangelogPage = () => {
-  const size = useWindowSize()
-  const appState = useStore(appInfoStore)
-  const { imageDetailsModalOpen } = appState
-
   const [showFeedback, setShowFeedback] = useState(false)
 
   useEffectOnce(() => {
@@ -130,13 +122,6 @@ const ChangelogPage = () => {
           Contact me!
         </LinkButton>
       </div>
-      {!imageDetailsModalOpen &&
-        //@ts-ignore
-        size.width < 890 && (
-          <div className="w-full">
-            <AdContainer />
-          </div>
-        )}
       {/* <Panel>
         <SubSectionTitle>Ongoing issues:</SubSectionTitle>
         <StyledUl>

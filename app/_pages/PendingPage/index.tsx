@@ -11,13 +11,9 @@ import {
   getImageDetails
 } from 'app/_utils/db'
 
-import AdContainer from 'app/_components/AdContainer'
 import Linker from 'app/_components/Linker'
 import PageTitle from 'app/_components/PageTitle'
-import { useWindowSize } from 'app/_hooks/useWindowSize'
 import styles from './pendingPage.module.css'
-import { useStore } from 'statery'
-import { appInfoStore } from 'app/_store/appStore'
 import {
   deletePendingJob,
   deletePendingJobs,
@@ -37,11 +33,8 @@ import VirtualListContainer from './VirtualListContainer'
 import TextButton from 'app/_components/TextButton'
 
 const PendingPage = () => {
-  const { width } = useWindowSize()
   const [filter, setFilter] = useState('all')
   const [validatePending, setValidatePending] = useState(false)
-  const appState = useStore(appInfoStore)
-  const { imageDetailsModalOpen } = appState
 
   const [showFilterDropdown, setShowFilterDropdown] = useState(false)
   const [showSettingsDropdown, setShowSettingsDropdown] = useState(false)
@@ -341,18 +334,6 @@ const PendingPage = () => {
                 </div>
               </>
             )}
-
-            {width &&
-              width < 640 &&
-              sorted.length === 0 &&
-              !imageDetailsModalOpen &&
-              !initLoad && (
-                <div className={styles.MobileAd}>
-                  <AdContainer
-                    style={{ margin: '0 auto', maxWidth: '480px' }}
-                  />
-                </div>
-              )}
           </div>
         )}
       </MaxWidth>

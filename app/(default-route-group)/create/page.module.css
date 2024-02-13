@@ -8,7 +8,7 @@
   width: 100%;
 }
 
-@media (min-width: 890px) {
+@media (min-width: 756px) {
   .CreatePageLayout {
     display: block;
   }

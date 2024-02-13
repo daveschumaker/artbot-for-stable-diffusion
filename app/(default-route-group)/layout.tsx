@@ -2,7 +2,6 @@ import { ReactNode } from 'react'
 import ContentWrapper from 'app/_components/ContentWrapper'
 import MobileFooter from 'app/_modules/MobileFooter'
 import AppUpdate from 'app/_modules/AppUpdate'
-import DesktopAdUnit from 'app/_components/DesktopAdUnit'
 
 export default function RootLayout({
   // Layouts must accept a children prop.
@@ -19,7 +18,6 @@ export default function RootLayout({
             <AppUpdate />
             {children}
           </div>
-          <DesktopAdUnit />
         </div>
       </ContentWrapper>
       <MobileFooter />

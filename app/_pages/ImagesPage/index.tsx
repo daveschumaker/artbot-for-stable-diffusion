@@ -27,7 +27,6 @@ import useComponentState from 'app/_hooks/useComponentState'
 import { downloadImages } from 'app/_utils/imageUtils'
 import { useEffectOnce } from 'app/_hooks/useEffectOnce'
 import AppSettings from 'app/_data-models/AppSettings'
-import AdContainer from 'app/_components/AdContainer'
 import { setFilteredItemsArray } from 'app/_store/filteredImagesCache'
 import { useStore } from 'statery'
 import { appInfoStore, setImageDetailsModalOpen } from 'app/_store/appStore'
@@ -101,7 +100,6 @@ const ButtonContainer = styled.div`
 `
 
 const ImagesPage = () => {
-  const { adHidden } = useStore(appInfoStore)
   const confirmationModal = useModal(ConfirmationModal)
   const LIMIT = AppSettings.get('imagesPerPage') || 50
 
@@ -1075,20 +1073,6 @@ const ImagesPage = () => {
             </Link>
           </div>
         )}
-      {
-        //@ts-ignore
-        size && size.width < 640 && !imageDetailsModalOpen && !adHidden && (
-          <div
-            style={{
-              margin: '0 auto 12px auto',
-              maxWidth: '520px'
-              // backgroundColor: 'var(--carbon-bg)'
-            }}
-          >
-            <AdContainer key={window.location.href} />
-          </div>
-        )
-      }
 
       {componentState.isLoading && (
         <div style={{ height: '100vh' }}>

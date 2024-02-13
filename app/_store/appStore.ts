@@ -2,7 +2,6 @@ import { makeStore } from 'statery'
 
 interface AppStore {
   adEventTimestamp: number
-  adHidden: boolean
   buildId: string
   clusterSettings: {
     forceReloadOnServerUpdate: boolean
@@ -35,7 +34,6 @@ interface AppStore {
 
 export const appInfoStore = makeStore<AppStore>({
   adEventTimestamp: 0,
-  adHidden: false,
   buildId: '',
   clusterSettings: {
     forceReloadOnServerUpdate: true
@@ -81,12 +79,6 @@ export const setUseAllowedWorkers = (val: boolean) => {
 export const setUseBlockedWorkers = (val: boolean) => {
   appInfoStore.set(() => ({
     useBlockedWorkers: val
-  }))
-}
-
-export const setAdHidden = (val: boolean) => {
-  appInfoStore.set(() => ({
-    adHidden: val
   }))
 }
 

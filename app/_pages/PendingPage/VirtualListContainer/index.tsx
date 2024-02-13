@@ -2,13 +2,11 @@ import { useEffect, useState } from 'react'
 import styles from './virtualList.module.css'
 import { Virtuoso } from 'react-virtuoso'
 import Linker from 'app/_components/Linker'
-import { useWindowSize } from 'app/_hooks/useWindowSize'
 import PendingItem from 'app/_pages/PendingPage/PendingItem'
 import usePendingImageModal from '../usePendingImageModal'
 import { deletePendingJobFromDb } from 'app/_utils/db'
 import { deletePendingJob } from 'app/_controllers/pendingJobsCache'
 import { fetchPendingImageJobs } from 'app/_controllers/pendingJobsController'
-import AdContainer from 'app/_components/AdContainer'
 
 const FOOTER_HEIGHT_PX = 66
 const MOBILE_FOOTER_PX = 66
@@ -23,7 +21,6 @@ export default function VirtualListContainer({
   jobsInProgress: boolean
 }) {
   const [showImageModal] = usePendingImageModal()
-  const size = useWindowSize()
   const [listHeight, setListHeight] = useState(0)
 
   const onClosePanel = async (jobId: string) => {
@@ -47,15 +44,6 @@ export default function VirtualListContainer({
             kudos) while you wait?
           </div>
         )}
-        {index === 0 &&
-          // !imageDetailsModalOpen &&
-          // !adHidden &&
-          // @ts-ignore
-          size?.width < 800 && (
-            <div className={styles.AdUnit}>
-              <AdContainer />
-            </div>
-          )}
         <PendingItem
           handleCloseClick={() => {
             onClosePanel(job.jobId)
