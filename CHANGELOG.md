@@ -1,3 +1,12 @@
+# 2023.02.13
+
+- Life has been busy, leaving little time for side projects. That said, still slowly working on batch image support behind the scenes.
+- Remove advertising unit as that relationship has run its course.
+
+# 2023.01.27
+
+- MILESTONE: 🎉🎉🎉 ‼️‼️‼️ **14,000,000 images** have been created with ArtBot!‼️‼️‼️ 🎉🎉🎉
+
 # 2024.01.25
 
 - I've been doing a bunch of work behind the scenes, getting ArtBot ready to support batched image jobs. Man, it is such a chore (and all my fault)!

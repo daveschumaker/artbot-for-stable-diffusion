@@ -25,7 +25,7 @@ const PrivacyPage = () => {
         />
       </div>
       <div className="pb-2">
-        Last updated: October, 23, 2023 (
+        Last updated: February, 13, 2024 (
         <Linker
           href="https://github.com/daveschumaker/artbot-for-stable-diffusion/commits/main/app/_pages/PrivacyPage/index.tsx"
           target="_blank"
@@ -105,23 +105,6 @@ const PrivacyPage = () => {
         not mapped to AI Horde API keys, usernames, or IP addresses.
       </div>
       <div className="pb-2 font-[700]">Third-party services</div>
-      <div className="pb-2">
-        Currently, ArtBot uses tools from a few third-party services and is
-        unable to control what data those services may collect. This includes
-        the{' '}
-        <Linker href="https://aihorde.net/" target="_blank" rel="noreferrer">
-          Carbon ads network
-        </Linker>{' '}
-        for displaying ads on our platform. Their privacy policy is located{' '}
-        <Linker
-          href="https://www.buysellads.com/privacy"
-          target="_blank"
-          rel="noreferrer"
-        >
-          here
-        </Linker>
-        .
-      </div>
       <div className="pb-2">
         ArtBot also uses Google Analytics for tracking page views and realtime
         usage. We are actively exploring alternatives to Google Analytics and
