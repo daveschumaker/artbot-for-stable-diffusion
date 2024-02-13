@@ -37,15 +37,15 @@
   }
 }
 
-@media (min-width: 890px) {
+@media (min-width: 756px) {
   .ActionPanelFixedRow {
-    width: calc(100% - 442px) !important;
+    width: calc(100% - 272px) !important;
   }
 }
 
 @media (min-width: 1024px) {
   .ActionPanelFixedRow {
-    width: calc(100% - 522px) !important;
+    width: calc(100% - 352px) !important;
   }
 }
 
