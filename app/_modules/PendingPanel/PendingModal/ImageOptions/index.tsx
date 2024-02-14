@@ -43,13 +43,10 @@ import useSourceImage from '../hooks/useSourceImage'
 const ImageOptions = ({
   isModal,
   showSource,
-  showTiles,
   setShowSource
 }: {
-  isModal: boolean
-  jobId: string
+  isModal?: boolean
   showSource: boolean
-  showTiles: boolean
   setShowSource(): void
 }) => {
   const context = useContext(ImageDetailsContext)
@@ -151,8 +148,7 @@ const ImageOptions = ({
     onRerollClick,
     imageDetails,
     onDeleteImageClick,
-    onFavoriteClick,
-    showTiles
+    onFavoriteClick
   ])
 
   useEffect(() => {

@@ -10,6 +10,9 @@ import {
 } from '@tabler/icons-react'
 import { useContext } from 'react'
 import { ImageDetailsContext } from './ImageDetailsProvider'
+import { Button } from 'app/_components/Button'
+import { updatePendingJobV2 } from 'app/_controllers/pendingJobsCache'
+import NiceModal from '@ebay/nice-modal-react'
 
 export default function ImageJobStatus() {
   const context = useContext(ImageDetailsContext)
@@ -21,6 +24,9 @@ export default function ImageJobStatus() {
     isCensored
   } = context
 
+  const jobHasError =
+    imageDetails.numImages === imageDetails.images_censored ||
+    imageDetails.jobStatus === JobStatus.Error
   const showComponent =
     isPendingOrProcessing || inProgressNoImages || hasError || isCensored
 
@@ -136,6 +142,25 @@ export default function ImageJobStatus() {
           </>
         )}
         {/* TODO: Handle Error state and censored status */}
+        {jobHasError && (
+          <div className="flex flex-row justify-end gap-2 w-full mb-4">
+            <Button
+              onClick={async () => {
+                await updatePendingJobV2(
+                  Object.assign({}, imageDetails, {
+                    errorMessage: '',
+                    errorStatus: '',
+                    jobStatus: JobStatus.Waiting,
+                    images_censored: 0
+                  })
+                )
+                NiceModal.remove('image-modal')
+              }}
+            >
+              Retry?
+            </Button>
+          </div>
+        )}
       </FlexCol>
     </div>
   )

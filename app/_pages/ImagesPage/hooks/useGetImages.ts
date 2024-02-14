@@ -1,7 +1,13 @@
-import { getAllImages } from 'app/_db/image_files'
+import { getAllImages, getFirstImagePerJobID } from 'app/_db/image_files'
 import { useEffect, useState } from 'react'
 
-export default function useGetImages() {
+interface UseGetImagesProps {
+  groupByJobId?: boolean
+}
+
+export default function useGetImages({
+  groupByJobId = false
+}: UseGetImagesProps = {}) {
   const [images, setImages] = useState([])
 
   const getImages = async () => {
@@ -9,9 +15,18 @@ export default function useGetImages() {
     setImages(data)
   }
 
+  const getImagesGroupedByJobId = async () => {
+    const data = await getFirstImagePerJobID()
+    setImages(data)
+  }
+
   useEffect(() => {
-    getImages()
-  }, [])
+    if (groupByJobId) {
+      getImagesGroupedByJobId()
+    } else {
+      getImages()
+    }
+  }, [groupByJobId])
 
   return [images]
 }
