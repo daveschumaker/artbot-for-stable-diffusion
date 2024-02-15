@@ -46,8 +46,8 @@ const ImageOptions = ({
   setShowSource
 }: {
   isModal?: boolean
-  showSource: boolean
-  setShowSource(): void
+  showSource?: boolean
+  setShowSource?: () => void
 }) => {
   const context = useContext(ImageDetailsContext)
   const { currentImageId, imageDetails, imageSrcs, refreshImageDetails } =

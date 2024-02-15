@@ -6,14 +6,13 @@ import {
 import FlexCol from 'app/_components/FlexCol'
 import FlexRow from 'app/_components/FlexRow'
 import Linker from 'app/_components/Linker'
-import CreateImageRequestV2 from 'app/_data-models/v2/CreateImageRequestV2'
 import clsx from 'clsx'
+import { useContext } from 'react'
+import { ImageDetailsContext } from './ImageDetailsProvider'
 
-export default function ImageDetails({
-  imageDetails
-}: {
-  imageDetails: CreateImageRequestV2
-}) {
+export default function ImageDetails() {
+  const context = useContext(ImageDetailsContext)
+  const { imageDetails } = context
   return (
     <div>
       <FlexCol style={{ marginBottom: '8px' }}>

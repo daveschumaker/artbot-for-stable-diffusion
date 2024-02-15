@@ -4,10 +4,7 @@ import ImageDetails from './ImageDetails'
 import ImageDisplay from './ImageDisplay'
 import ImageJobStatus from './ImageJobStatus'
 import ImageOptions from './ImageOptions'
-import {
-  ImageDetailsContext,
-  ImageDetailsProvider
-} from './ImageDetailsProvider'
+import { ImageDetailsProvider } from './ImageDetailsProvider'
 
 /**
  *
@@ -16,7 +13,6 @@ import {
  * - Image Options should handle imageId specific stuff
  * - On delete, check if there are no images. If not, delete entire job
  * - For failed pending job, add options to retry / edit modal
- *
  */
 
 export default function PendingModal({
@@ -30,7 +26,7 @@ export default function PendingModal({
         <ImageJobStatus />
         <ImageDisplay />
         <ImageOptions />
-        <ImageDetails imageDetails={imageDetails} />
+        <ImageDetails />
       </div>
     </ImageDetailsProvider>
   )
