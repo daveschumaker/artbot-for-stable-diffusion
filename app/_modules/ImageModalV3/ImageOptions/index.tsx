@@ -73,6 +73,10 @@ const ImageOptions = ({
   const [hasRelatedImages, setHasRelatedImages] = useState(false)
 
   const fetchParentJobDetails = useCallback(async () => {
+    if (!imageDetails || !imageDetails.jobId) {
+      return
+    }
+
     const details: CreateImageRequest = await getParentJobDetails(
       imageDetails.parentJobId as string
     )

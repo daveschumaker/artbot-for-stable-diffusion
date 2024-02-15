@@ -5,6 +5,8 @@ import Head from 'next/head'
 import useGetImages from './hooks/useGetImages'
 import useGetColumns from './hooks/useGetColumns'
 import MasonryLayout from 'app/_modules/MasonryLayout'
+import NiceModal from '@ebay/nice-modal-react'
+import ImageModalV3 from 'app/_modules/ImageModalV3'
 
 export default function ImagePage() {
   const [images] = useGetImages()
@@ -21,17 +23,25 @@ export default function ImagePage() {
         <MasonryLayout columns={columns} gap={8}>
           {images.length > 0 &&
             images.map((image) => {
-              console.log(`img`, image)
+              console.log(`img--`, image)
               if (!image.blob) {
                 return (
-                  <div key={`id_${image.id}`}>
+                  <div key={`id_${image.hordeId}`}>
                     <img src="" />
                   </div>
                 )
               }
 
               return (
-                <div key={`id_${image.id}`}>
+                <div
+                  key={`id_${image.hordeId}`}
+                  onClick={() => {
+                    NiceModal.show('image-modal', {
+                      content: <ImageModalV3 jobId={image.jobId} />,
+                      maxWidth: 'max-w-[2000px]'
+                    })
+                  }}
+                >
                   <img src={URL.createObjectURL(image.blob)} />
                 </div>
               )

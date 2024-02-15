@@ -18,8 +18,8 @@ import { showSuccessToast } from 'app/_utils/notificationUtils'
 import NiceModal from '@ebay/nice-modal-react'
 import Modal from 'app/_componentsV2/Modal'
 import { initLoadPendingJobsFromDb } from 'app/_controllers/pendingJobsCache'
-import FullscreenView from '../PendingPanel/PendingModal/ImageOptions/FullscreenView'
-import TileView from '../PendingPanel/PendingModal/ImageOptions/TileView'
+import FullscreenView from '../ImageModalV3/ImageOptions/FullscreenView'
+import TileView from '../ImageModalV3/ImageOptions/TileView'
 
 NiceModal.register('fullscreen-view', FullscreenView)
 NiceModal.register('tile-view', TileView)

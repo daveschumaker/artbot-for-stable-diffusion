@@ -1,6 +1,6 @@
 import { JobStatus } from '_types/artbot'
 import CreateImageRequestV2 from 'app/_data-models/v2/CreateImageRequestV2'
-import React, { createContext, useState } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
 import useImageArray from './hooks/useImageArray'
 import { getImageDetails } from 'app/_utils/db'
 
@@ -45,13 +45,15 @@ export const ImageDetailsContext =
 interface ImageDetailsProviderProps {
   children: React.ReactNode
   imageDetails: CreateImageRequestV2
+  jobId?: string
 }
 
 export const ImageDetailsProvider: React.FC<ImageDetailsProviderProps> = ({
   children,
-  imageDetails: initialImageDetails
+  imageDetails: initialImageDetails,
+  jobId
 }) => {
-  const [imageDetails, setImageDetails] = useState(initialImageDetails)
+  const [imageDetails, setImageDetails] = useState(initialImageDetails || [])
   const [currentImageId, setCurrentImageId] = useState('')
   const [imageSrcs] = useImageArray({ imageDetails, setCurrentImageId })
 
@@ -63,6 +65,21 @@ export const ImageDetailsProvider: React.FC<ImageDetailsProviderProps> = ({
       console.error('Failed to refresh image details:', error)
     }
   }
+
+  const fetchImageDetails = async (jobId: string) => {
+    try {
+      const updatedDetails = await getImageDetails(jobId)
+      setImageDetails(updatedDetails)
+    } catch (error) {
+      console.error('Failed to fetch image details:', error)
+    }
+  }
+
+  useEffect(() => {
+    if (jobId) {
+      fetchImageDetails(jobId)
+    }
+  }, [jobId])
 
   const hasError = imageDetails.jobStatus === JobStatus.Error
   const isCensored = imageDetails.images_censored > 0

@@ -1,3 +1,4 @@
+import ImageModel from 'app/_data-models/v2/ImageModel'
 import { getAllImages, getFirstImagePerJobID } from 'app/_db/image_files'
 import { useEffect, useState } from 'react'
 
@@ -8,16 +9,16 @@ interface UseGetImagesProps {
 export default function useGetImages({
   groupByJobId = false
 }: UseGetImagesProps = {}) {
-  const [images, setImages] = useState([])
+  const [images, setImages] = useState<ImageModel[]>([])
 
   const getImages = async () => {
     const data = await getAllImages()
-    setImages(data)
+    setImages(data as ImageModel[])
   }
 
   const getImagesGroupedByJobId = async () => {
     const data = await getFirstImagePerJobID()
-    setImages(data)
+    setImages(data as ImageModel[])
   }
 
   useEffect(() => {

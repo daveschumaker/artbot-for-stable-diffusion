@@ -3,7 +3,6 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { EmblaCarouselType, EmblaOptionsType } from 'embla-carousel'
 import useEmblaCarousel from 'embla-carousel-react'
 import { DotButton, PrevButton, NextButton } from './CarouselArrowsDotsButtons'
-// import imageByIndex from './imageByIndex'
 import './carousel.css'
 
 type PropType = {

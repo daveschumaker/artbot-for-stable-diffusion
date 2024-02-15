@@ -20,8 +20,8 @@ import CreateImageRequestV2 from 'app/_data-models/v2/CreateImageRequestV2'
 import styles from './component.module.css'
 import ImageModel from 'app/_data-models/v2/ImageModel'
 import { deleteJobIdFromCompleted } from 'app/_db/transactions'
-import PendingModal from '../PendingModal'
 import { arraysEqual } from 'app/_utils/helperUtils'
+import ImageModalV3 from 'app/_modules/ImageModalV3'
 
 /**
  * TODO:
@@ -162,7 +162,7 @@ const PendingPanelImageCardV2 = React.memo(
           className={styles.imageContainer}
           onClick={async () => {
             NiceModal.show('image-modal', {
-              content: <PendingModal imageDetails={imageJob} />,
+              content: <ImageModalV3 imageDetails={imageJob} />,
               maxWidth: 'max-w-[2000px]'
             })
           }}

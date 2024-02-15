@@ -67,7 +67,7 @@ export default function ImageDetails() {
           <li>
             <strong>Sampler:</strong> {imageDetails.sampler}
           </li>
-          <li>
+          {/* <li>
             <strong>Model:</strong>{' '}
             <Linker
               href={`/images?model=${imageDetails.models[0]}`}
@@ -76,7 +76,7 @@ export default function ImageDetails() {
             >
               {imageDetails.models[0]}
             </Linker>
-          </li>
+          </li> */}
           <li>&zwnj;</li>
           <li>
             <strong>Seed:</strong>{' '}

@@ -1,5 +1,5 @@
 import FlexCol from 'app/_components/FlexCol'
-import styles from './pendingModal.module.css'
+import styles from './imageModal.module.css'
 import { JobStatus } from '_types/artbot'
 import FlexRow from 'app/_components/FlexRow'
 import {

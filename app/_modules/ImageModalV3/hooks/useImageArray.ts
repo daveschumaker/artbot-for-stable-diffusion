@@ -15,6 +15,11 @@ export default function useImageArray({
 
   const loadImage = useCallback(async () => {
     const srcs: ImageSrc[] = []
+
+    if (!imageDetails.jobId) {
+      return
+    }
+
     const data = await getAllImagesByJobId(imageDetails.jobId)
 
     data.forEach((image: {}) => {
