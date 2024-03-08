@@ -1,10 +1,8 @@
-import ImageModel from 'app/_data-models/v2/ImageModel'
+import { FavoriteImage } from 'app/_data-models/dexie/FavoriteImage'
+import { HordeJob } from 'app/_data-models/dexie/HordeJob'
+import { ImageFile } from 'app/_data-models/dexie/ImageFile'
+import { JobRequestDetails } from 'app/_data-models/dexie/JobRequestDetails'
 import Dexie from 'dexie'
-
-class Favorite {
-  jobId!: string
-  imageId!: string
-}
 
 export class MySubClassedDexie extends Dexie {
   completed: any
@@ -13,8 +11,11 @@ export class MySubClassedDexie extends Dexie {
   prompts: any
   settings: any
 
-  favorites!: Dexie.Table<Favorite, number>
-  image_files!: Dexie.Table<ImageModel, number>
+  ///////////// NEW TABLE WORK:
+  favoriteImages!: Dexie.Table<FavoriteImage, number>
+  hordeJobs!: Dexie.Table<HordeJob, number>
+  imageFiles!: Dexie.Table<ImageFile, number>
+  jobRequestDetails!: Dexie.Table<JobRequestDetails, number>
 
   constructor() {
     super('imageHorde')
@@ -77,18 +78,25 @@ export class MySubClassedDexie extends Dexie {
       settings: '++id, name',
       tags: '++id, name',
 
-      // Tables that are READY
-      image_files: '++id, jobId, hordeId, model, type', // Stores blob
-
       // New v2 tables:
-      favorites: '++id, jobId, imageId', // Keep track of favorites. 1 favorite per imageId
+      completed_v2: '++id, jobId, timestamp, parentJobId', // Create new table as we don't want to overwrite existing data until we can migrate.
       image_details: '++id, jobId, generationId',
       image_status: '++id, jobId, status', // Pending, completed, error, 1 per jobId
-      image_type: '++id, jobId, type' // text2img, img2img, controlNet?
+      image_type: '++id, jobId, type', // text2img, img2img, controlNet?
+      job_relationships: '++id, jobId, relatedJobId, relationship', // Keep track of related jobs (e.g., parent jobs, related jobs, etc).
+
+      /////////// V2 STUFF
+      favoriteImages: '++id, jobId, imageId',
+      hordeJobs: '++id, jobId, timestamp, jobType, jobStatus, promptSearch',
+      imageFiles: '++id, jobId, imageId, imageType, imageStatus, model',
+      jobRequestDetails: '++id, jobId'
     })
 
-    this.favorites.mapToClass(Favorite)
-    this.image_files.mapToClass(ImageModel)
+    /////////// V2 STUFF
+    this.favoriteImages.mapToClass(FavoriteImage)
+    this.hordeJobs.mapToClass(HordeJob)
+    this.imageFiles.mapToClass(ImageFile)
+    this.jobRequestDetails.mapToClass(JobRequestDetails)
   }
 }
 
