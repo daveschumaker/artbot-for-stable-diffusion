@@ -44,7 +44,10 @@ export default function EmbeddingDetailsCard({
   handleAddEmbedding: (value: any) => any
 }) {
   const [favorited, setFavorited] = useState(isFavorite(embedding.id as string))
-  const hasImage = embedding.modelVersions[0].images.length > 0
+  const hasImage =
+    embedding.modelVersions &&
+    embedding.modelVersions[0] &&
+    embedding.modelVersions[0].images.length > 0
 
   const handleFavorite = (ti: any) => {
     // Check if the local storage already has an array stored
@@ -116,9 +119,11 @@ export default function EmbeddingDetailsCard({
               </Linker>
               <IconExternalLink size={18} stroke={1.5} />
             </div>
-            <div style={{ fontSize: '14px', fontWeight: 400 }}>
-              Base model: {embedding.modelVersions[0].baseModel}
-            </div>
+            {embedding.modelVersions.length >= 1 && (
+              <div style={{ fontSize: '14px', fontWeight: 400 }}>
+                Base model: {embedding.modelVersions[0].baseModel}
+              </div>
+            )}
           </FlexCol>
           <FlexRow gap={4} style={{ marginBottom: '8px', marginTop: '4px' }}>
             <Button size="small" onClick={() => handleFavorite(embedding)}>

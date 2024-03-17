@@ -151,6 +151,11 @@ export default function LoraSearchDetailsCard({
     return image
   }, [embedding, version])
 
+  let modelUrl = `https://civitai.com/models/${embedding.id}`
+  if (version && version.id) {
+    modelUrl = `https://civitai.com/models/${embedding.id}?modelVersionId=${version.id}`
+  }
+
   return (
     <Panel padding="8px" style={{ position: 'relative' }}>
       <FlexRow gap={12} style={{ alignItems: 'flex-start' }}>
@@ -164,15 +169,7 @@ export default function LoraSearchDetailsCard({
                 fontSize: '12px'
               }}
             >
-              <Linker
-                href={`https://civitai.com/models/${
-                  version.id !== embedding.id
-                    ? `${embedding.id}?modelVersionId=${version.id}`
-                    : `${embedding.id}`
-                }`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <Linker href={modelUrl} target="_blank" rel="noopener noreferrer">
                 [ View on Civitai]
               </Linker>
               <IconExternalLink size={18} stroke={1.5} />
@@ -218,9 +215,11 @@ export default function LoraSearchDetailsCard({
               </div>
             </FlexCol>
           )}
-          <div className="text-xs mt-[4px] mb-[8px]">
-            Base model: {version.baseModel}
-          </div>
+          {embedding.modelVersions.length > 1 && (
+            <div className="text-xs mt-[4px] mb-[8px]">
+              Base model: {version.baseModel}
+            </div>
+          )}
           <FlexRow gap={4} style={{ marginBottom: '8px', marginTop: '4px' }}>
             <Button
               size="small"
