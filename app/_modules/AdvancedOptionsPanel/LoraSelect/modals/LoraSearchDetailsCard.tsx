@@ -175,7 +175,7 @@ export default function LoraSearchDetailsCard({
               <IconExternalLink size={18} stroke={1.5} />
             </div>
           </FlexCol>
-          {embedding.modelVersions.length > 1 && (
+          {embedding.modelVersions.length >= 1 && (
             <FlexCol
               id={`model-version-${version.id}`}
               style={{ maxWidth: '280px' }}
@@ -215,7 +215,7 @@ export default function LoraSearchDetailsCard({
               </div>
             </FlexCol>
           )}
-          {embedding.modelVersions.length > 1 && (
+          {embedding.modelVersions.length >= 1 && (
             <div className="text-xs mt-[4px] mb-[8px]">
               Base model: {version.baseModel}
             </div>

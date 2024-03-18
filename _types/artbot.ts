@@ -234,6 +234,7 @@ export interface RandomSamplerParams {
 }
 
 export interface SavedLora {
+  baseModelId: number
   parentModelId: number
   name: string | number
   label: string

@@ -9,6 +9,7 @@ export const handleConvertLora = (
   const { files = [], images = [] } = version
 
   return {
+    baseModelId: lora.id as number,
     parentModelId: version.modelId,
     name: version.id,
     label: lora.name,

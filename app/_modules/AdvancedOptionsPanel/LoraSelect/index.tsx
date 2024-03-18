@@ -24,6 +24,7 @@ import { useInput } from 'app/_modules/InputProvider/context'
 import clsx from 'clsx'
 import { SavedLora } from '_types/artbot'
 import { MAX_LORA_CACHE } from '_constants'
+import { Embedding, ModelVersion } from '_types/civitai'
 
 // Temporary hard code names for common Loras
 // (mostly used in style presets):
@@ -87,7 +88,14 @@ const LoraSelect = () => {
     localStorage.setItem('recentLoras', JSON.stringify(newArray))
   }
 
-  const handleAddLora = (loraDetails: SavedLora) => {
+  const handleAddLora = (loraDetails: SavedLora, version?: ModelVersion) => {
+    if (version) {
+      loraDetails = handleConvertLora(
+        loraDetails as unknown as Embedding,
+        version
+      ) as SavedLora
+    }
+
     const lorasToUpdate = [...input.loras]
 
     const exists = lorasToUpdate.filter(
@@ -159,9 +167,9 @@ const LoraSelect = () => {
                 {displayName}
                 <Linker
                   href={`https://civitai.com/models/${
-                    lora.name !== lora.parentModelId
-                      ? `${lora.parentModelId}?modelVersionId=${lora.name}`
-                      : `${lora.parentModelId}`
+                    lora.baseModelId && lora.name !== lora.baseModelId
+                      ? `${lora.baseModelId}?modelVersionId=${lora.name}`
+                      : `${lora.baseModelId || lora.name}`
                   }`}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -443,10 +451,8 @@ const LoraSelect = () => {
                 lorasModal.show({
                   children: (
                     <LoraSearchModal
-                      handleAddLora={(lora, version) => {
-                        const loraDetails = handleConvertLora(lora, version)
-                        handleAddLora(loraDetails)
-                      }}
+                      // @ts-ignore
+                      handleAddLora={handleAddLora}
                     />
                   ),
                   label: 'Search LORAs'
