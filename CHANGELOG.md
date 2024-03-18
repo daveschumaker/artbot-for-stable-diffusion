@@ -1,18 +1,18 @@
-# 2023.03.17
+# 2024.03.17
 
 - Sorry for the crickets lately! Been busy with Real Life™️ and slowly (glacially, you might say) working on a larger refactor related to recent Horde developments and to just clean up things in general. Still no timeline for this, but work is ongoing.
 - Fix: Issue where ArtBot crashes when searching for certain LoRAs and embeddings on CivitAI. Let me know if you still encounter this. Thanks to everyone for reportins this and helping to track it down. (Literally, tons of people reached out, thank you!)
 
-# 2023.03.05
+# 2024.03.05
 
 - MILESTONE: 🎉🎉🎉 ‼️‼️‼️ **15,000,000 images** have been created with ArtBot!‼️‼️‼️ 🎉🎉🎉
 
-# 2023.02.13
+# 2024.02.13
 
 - Life has been busy, leaving little time for side projects. That said, still slowly working on batch image support behind the scenes.
 - Remove advertising unit as that relationship has run its course.
 
-# 2023.01.27
+# 2024.01.27
 
 - MILESTONE: 🎉🎉🎉 ‼️‼️‼️ **14,000,000 images** have been created with ArtBot!‼️‼️‼️ 🎉🎉🎉
 
