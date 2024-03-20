@@ -1,3 +1,8 @@
+# 2024.03.20
+
+- Fix: Wrong dates on this here changelog. (Was writing 2023 instead of 2024)
+- Fix (hopefully): LORAs were not sending to correct version in many cases.
+
 # 2024.03.17
 
 - Sorry for the crickets lately! Been busy with Real Life™️ and slowly (glacially, you might say) working on a larger refactor related to recent Horde developments and to just clean up things in general. Still no timeline for this, but work is ongoing.
