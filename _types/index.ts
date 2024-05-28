@@ -75,6 +75,11 @@ export interface CreateImageJob {
   useTrusted?: boolean
   wait_time?: number
   width: number
+  workflow?: 'qr_code' | ''
+  extra_texts?: Array<{
+    text: string
+    reference: string
+  }>
 }
 
 export interface NewRating {

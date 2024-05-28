@@ -17,6 +17,7 @@ import UpscalerOptions from '../AdvancedOptionsPanel/UpscalerOptions'
 import { useInput } from '../InputProvider/context'
 import ControlNetOptions from '../AdvancedOptionsPanel/ControlNetOptions'
 import Denoise from '../AdvancedOptionsPanel/Denoise'
+import WorkflowOptions from '../AdvancedOptionsPanel/Workflows'
 
 export default function AdvancedOptionsPanelV2() {
   const { input } = useInput()
@@ -39,6 +40,7 @@ export default function AdvancedOptionsPanelV2() {
       <Seed />
       <LoraSelect />
       <EmbeddingsSelect />
+      <WorkflowOptions />
       <div>
         <FlexibleRow>
           <FlexibleUnit>
