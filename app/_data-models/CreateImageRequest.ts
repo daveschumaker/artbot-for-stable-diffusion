@@ -73,6 +73,11 @@ class CreateImageRequest {
   width: number
   worker_id: string
   worker_name: string
+  workflow?: 'qr_code' | ''
+  extra_texts?: Array<{
+    text: string
+    reference: string
+  }> | null
 
   constructor({
     canvasData = null,
@@ -119,7 +124,9 @@ class CreateImageRequest {
     useMultiSamplers = false,
     useMultiSteps = false,
     useXyPlot = false,
-    width = 512
+    width = 512,
+    workflow = '',
+    extra_texts = null
   }: DefaultPromptInput) {
     this.cfg_scale = Number(cfg_scale)
     this.jobStatus = JobStatus.Waiting
@@ -190,6 +197,8 @@ class CreateImageRequest {
     this.loras = [...loras]
     this.tis = [...tis]
     this.upscaled = upscaled || false
+    this.workflow = workflow
+    this.extra_texts = extra_texts
 
     if (
       this.post_processing.includes('GFPGAN') ||
@@ -383,7 +392,12 @@ class CreateImageRequest {
       useMultiSamplers: false,
       useMultiSteps: false,
       useXyPlot: false,
-      width: imageDetails.width
+      width: imageDetails.width,
+
+      // @ts-ignore
+      workflow: imageDetails.workflow,
+      // @ts-ignore
+      extra_texts: imageDetails.extra_texts
     }
 
     return promptInput

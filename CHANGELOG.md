@@ -1,3 +1,16 @@
+# 2024.05.27
+
+- Add support for [embedded QR codes on the AI Horde](https://dbzer0.com/blog/embedded-qr-codes-via-the-ai-horde/).
+- Been a bit burnt out lately, so haven't been as diligent with coding as I'd like. Still around and still poking at my newer codebase, though! I feel like GRRM trying to finish the final book of the ASOIAF series.
+
+# 2024.05.17
+
+- MILESTONE: 🎉🎉🎉 ‼️‼️‼️ **17,000,000 images** have been created with ArtBot!‼️‼️‼️ 🎉🎉🎉
+
+# 2024.04.08
+
+- MILESTONE: 🎉🎉🎉 ‼️‼️‼️ **16,000,000 images** have been created with ArtBot!‼️‼️‼️ 🎉🎉🎉
+
 # 2024.03.20
 
 - Fix: Wrong dates on this here changelog. (Was writing 2023 instead of 2024)

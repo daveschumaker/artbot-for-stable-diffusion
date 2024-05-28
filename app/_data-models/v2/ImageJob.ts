@@ -56,6 +56,11 @@ class ImageJob {
   kudos: number
   worker_id?: string
   worker_name?: string
+  workflow?: 'qr_code' | ''
+  extra_texts?: Array<{
+    text: string
+    reference: string
+  }>
 
   constructor({
     canvasData,
@@ -88,7 +93,9 @@ class ImageJob {
     tiling,
     tis,
     useXyPlot,
-    width
+    width,
+    workflow = '',
+    extra_texts
   }: ImageJob) {
     this.jobId = uuidv4() // TODO: Index me!
     this.parentJobId = parentJobId // TODO: Index me!
@@ -130,6 +137,8 @@ class ImageJob {
     this.tiling = tiling
     this.tis = tis
     this.width = width
+    this.workflow = workflow
+    this.extra_texts = extra_texts
 
     // AI Horde image completed parameters
     this.kudos = 0 // TODO: Will be updated once job is completed.
@@ -187,7 +196,12 @@ class ImageJob {
       useMultiSamplers: false,
       useMultiSteps: false,
       useXyPlot: false,
-      width: imageDetails.width
+      width: imageDetails.width,
+
+      //@ts-ignore
+      workflow: imageDetails.workflow,
+      // @ts-ignore
+      extra_texts: imageDetails.extra_texts
     }
 
     return promptInput

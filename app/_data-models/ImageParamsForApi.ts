@@ -54,6 +54,11 @@ export interface IArtBotImageDetails {
   tis: TextualInversion[]
   triggers?: Array<string>
   width: number
+  workflow?: 'qr_code'
+  extra_texts?: Array<{
+    text: string
+    reference: string
+  }>
 }
 
 interface ParamsObject {
@@ -76,6 +81,11 @@ interface ParamsObject {
   n: number
   loras?: Lora[]
   tis?: TextualInversion[]
+  workflow?: 'qr_code'
+  extra_texts?: Array<{
+    text: string
+    reference: string
+  }>
 }
 
 interface IOptions {
@@ -125,7 +135,9 @@ class ImageParamsForApi {
       stylePreset,
       tiling = false,
       tis = [],
-      width
+      width,
+      workflow = '',
+      extra_texts = null
     } = imageDetails
     let negative = imageDetails.negative || ''
 
@@ -207,6 +219,14 @@ class ImageParamsForApi {
 
       apiParams.shared = false
       apiParams.trusted_workers = false
+    }
+
+    if (workflow) {
+      apiParams.params.workflow = workflow
+    }
+
+    if (extra_texts) {
+      apiParams.params.extra_texts = [...extra_texts]
     }
 
     if (source_processing === SourceProcessing.Img2Img) {

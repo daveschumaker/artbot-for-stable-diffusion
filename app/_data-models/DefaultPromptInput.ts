@@ -49,6 +49,8 @@ class DefaultPromptInput {
   useMultiSteps: boolean = false
   useXyPlot: boolean = false
   width: number = 1024
+  workflow: 'qr_code' | '' = ''
+  extra_texts: Array<{ text: string; reference: string }> | null = null
 
   constructor(params: Partial<DefaultPromptInput> = {}) {
     Object.assign(this, params)
