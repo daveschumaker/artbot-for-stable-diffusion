@@ -38,6 +38,7 @@ const searchRequest = async ({
   page = 1,
   nsfw = false,
   sdxl = false,
+  pony = false,
   sd15 = false,
   sd21 = false
 }: {
@@ -45,6 +46,7 @@ const searchRequest = async ({
   page?: number
   nsfw?: boolean
   sdxl?: boolean
+  pony?: boolean
   sd15?: boolean
   sd21?: boolean
 }) => {
@@ -65,7 +67,7 @@ const searchRequest = async ({
     // Per this discussion on GitHub, this is an undocumented feature:
     // https://github.com/orgs/civitai/discussions/733
     // API response gives me the following valid values:
-    //  "'SD 1.4' | 'SD 1.5' | 'SD 1.5 LCM' | 'SD 2.0' | 'SD 2.0 768' | 'SD 2.1' | 'SD 2.1 768' | 'SD 2.1 Unclip' | 'SDXL 0.9' | 'SDXL 1.0' | 'SDXL 1.0 LCM' | 'SDXL Distilled' | 'SDXL Turbo' | 'SVD' | 'SVD XT' | 'Playground v2' | 'PixArt a' | 'Other'"
+    //  "'SD 1.4' | 'SD 1.5' | 'SD 1.5 LCM' | 'SD 2.0' | 'SD 2.0 768' | 'SD 2.1' | 'SD 2.1 768' | 'SD 2.1 Unclip' | 'SDXL 0.9' | 'SDXL 1.0' | 'Pony' | 'SDXL 1.0 LCM' | 'SDXL Distilled' | 'SDXL Turbo' | 'SDXL Lightning' | 'Stable Cascade' | 'SVD' | 'SVD XT' | 'Playground v2' | 'PixArt a' | 'Other'"
     let baseModelFilter
 
     baseModelFilter = sdxl
@@ -73,6 +75,7 @@ const searchRequest = async ({
           .map((e) => '&baseModels=SDXL ' + e)
           .join('')
       : ''
+    baseModelFilter += pony ? '&baseModels=Pony' : ''
     baseModelFilter += sd15
       ? ['1.4', '1.5', '1.5 LCM'].map((e) => '&baseModels=SD ' + e).join('')
       : ''
@@ -130,6 +133,7 @@ const EmbeddingSearchModal = ({
   const [showOptionsMenu, setShowOptionsMenu] = useState(false)
   const [showNsfw, setShowNsfw] = useState(AppSettings.get('civitaiShowNsfw'))
   const [showSDXL, setShowSDXL] = useState(AppSettings.get('civitaiShowSDXL'))
+  const [showPony, setShowPony] = useState(AppSettings.get('civitaiShowPony'))
   const [showSD15, setShowSD15] = useState(AppSettings.get('civitaiShowSD15'))
   const [showSD21, setShowSD21] = useState(AppSettings.get('civitaiShowSD21'))
   const [currentPage, setCurrentPage] = useState(1)
@@ -146,6 +150,7 @@ const EmbeddingSearchModal = ({
       input,
       nsfw: showNsfw,
       sdxl: showSDXL,
+      pony: showPony,
       sd15: showSD15,
       sd21: showSD21,
       page: currentPage
@@ -161,7 +166,7 @@ const EmbeddingSearchModal = ({
       setHasError('Unable to load data from CivitAI, please try again shortly.')
     }
     setLoading(false)
-  }, [currentPage, input, showNsfw, showSDXL, showSD15, showSD21])
+  }, [currentPage, input, showNsfw, showSDXL, showPony, showSD15, showSD21])
 
   const fetchModels = useCallback(async () => {
     setLoading(true)
@@ -170,6 +175,7 @@ const EmbeddingSearchModal = ({
       page: 1,
       nsfw: showNsfw,
       sdxl: showSDXL,
+      pony: showPony,
       sd15: showSD15,
       sd21: showSD21
     })
@@ -183,7 +189,7 @@ const EmbeddingSearchModal = ({
     setTotalPages(metadata.totalPages)
 
     setLoading(false)
-  }, [input, showNsfw, showSDXL, showSD15, showSD21])
+  }, [input, showNsfw, showSDXL, showPony, showSD15, showSD21])
 
   const handleInputChange = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -204,7 +210,7 @@ const EmbeddingSearchModal = ({
   useEffect(() => {
     debouncedFetchModels()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, input, showNsfw, showSDXL, showSD15, showSD21])
+  }, [currentPage, input, showNsfw, showSDXL, showPony, showSD15, showSD21])
 
   return (
     <>
@@ -272,6 +278,16 @@ const EmbeddingSearchModal = ({
                     onChange={(bool: boolean) => {
                       AppSettings.set('civitaiShowSDXL', bool)
                       setShowSDXL(bool)
+                    }}
+                  />
+                </div>
+                <div style={{ padding: '8px 0' }}>
+                  <Checkbox
+                    label="Show PonyDiffusion XL embeddings? (May not work properly with models on Horde)"
+                    checked={showPony}
+                    onChange={(bool: boolean) => {
+                      AppSettings.set('civitaiShowPony', bool)
+                      setShowPony(bool)
                     }}
                   />
                 </div>
