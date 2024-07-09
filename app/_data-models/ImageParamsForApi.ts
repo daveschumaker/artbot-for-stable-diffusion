@@ -265,6 +265,17 @@ class ImageParamsForApi {
           loraObj.is_version = true
         }
 
+        // Handle legacy saved / favorited lora logic from when search was totally borked
+        if (
+          !lora.versionId &&
+          !lora.parentModelId &&
+          lora.baseModelId &&
+          lora.baseModelId !== lora.name
+        ) {
+          loraObj.name = String(lora.name)
+          loraObj.is_version = true
+        }
+
         return loraObj
       })
     }
