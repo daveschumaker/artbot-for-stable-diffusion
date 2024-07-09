@@ -239,6 +239,7 @@ export interface SavedLora {
   name: string | number
   label: string
   versionLabel: string
+  versionId: number
   description: string
   baseModel: string
   trainedWords: string[]

@@ -247,8 +247,11 @@ class ImageParamsForApi {
           clip: lora.clip
         }
 
-        if (lora.parentModelId && lora.parentModelId !== lora.name) {
+        if (lora.versionId) {
+          loraObj.name = String(lora.versionId)
           loraObj.is_version = true
+          // } else if (lora.parentModelId && lora.parentModelId !== lora.name) {
+          //   loraObj.is_version = true
         } else {
           delete loraObj.is_version
         }

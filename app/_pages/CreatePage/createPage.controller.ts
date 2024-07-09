@@ -87,6 +87,14 @@ export const handleCreateClick = async ({
     })
   }
 
+  // Silently update PonyXL CLIP if too low:
+  if (
+    input.models?.[0].toLowerCase().indexOf('pony') !== -1 &&
+    inputToSubmit.clipskip === 1
+  ) {
+    inputToSubmit.clipskip = 2
+  }
+
   if (input.useFavoriteModels) {
     const favModels = AppSettings.get('favoriteModels') || {}
 

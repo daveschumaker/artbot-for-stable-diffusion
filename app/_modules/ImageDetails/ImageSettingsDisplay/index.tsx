@@ -194,7 +194,7 @@ export default function ImageSettingsDisplay({
                             {'- '}
                             <Linker
                               inline
-                              href={`https://civitai.com/models/${lora.name}`}
+                              href={`https://civitai.com/models/${lora.baseModelId}`}
                               target="_blank"
                               rel="noopener noreferrer"
                               passHref

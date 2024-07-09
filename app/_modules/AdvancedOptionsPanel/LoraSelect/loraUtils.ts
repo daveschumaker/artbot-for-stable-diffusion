@@ -14,6 +14,7 @@ export const handleConvertLora = (
     name: version.id,
     label: lora.name,
     versionLabel: version.name,
+    versionId: version.id as number,
     description: sanitize(version.description || lora.description || ''),
     baseModel: version.baseModel,
     trainedWords: version.trainedWords,
