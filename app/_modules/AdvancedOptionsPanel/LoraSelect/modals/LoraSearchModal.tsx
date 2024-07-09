@@ -39,7 +39,8 @@ const searchRequest = async ({
   nsfw = false,
   sdxl = false,
   sd15 = false,
-  sd21 = false
+  sd21 = false,
+  pony = false
 }: {
   input?: string
   page?: number
@@ -47,6 +48,7 @@ const searchRequest = async ({
   sdxl?: boolean
   sd15?: boolean
   sd21?: boolean
+  pony?: boolean
 }) => {
   try {
     if (pendingRequest) return false
@@ -80,6 +82,7 @@ const searchRequest = async ({
           .map((e) => '&baseModels=SD ' + e)
           .join('')
       : ''
+    baseModelFilter += pony ? '&baseModels=Pony' : ''
     baseModelFilter = baseModelFilter.replace(/ /g, '%20')
 
     const query = input ? `&query=${input}` : ''
@@ -132,6 +135,7 @@ const LoraSearchModal = ({
   const [showSDXL, setShowSDXL] = useState(AppSettings.get('civitaiShowSDXL'))
   const [showSD15, setShowSD15] = useState(AppSettings.get('civitaiShowSD15'))
   const [showSD21, setShowSD21] = useState(AppSettings.get('civitaiShowSD21'))
+  const [showPony, setShowPony] = useState(AppSettings.get('civitaiShowPony'))
   const [currentPage, setCurrentPage] = useState(1)
   const [totalItems, setTotalItems] = useState(-1) // Setting 0 here causes brief flash between loading finished and totalItems populated
   const [totalPages, setTotalPages] = useState(0)
@@ -148,6 +152,7 @@ const LoraSearchModal = ({
       sdxl: showSDXL,
       sd15: showSD15,
       sd21: showSD21,
+      pony: showPony,
       page: currentPage
     })
 
@@ -161,7 +166,7 @@ const LoraSearchModal = ({
       setHasError('Unable to load data from CivitAI, please try again shortly.')
     }
     setLoading(false)
-  }, [currentPage, input, showNsfw, showSDXL, showSD15, showSD21])
+  }, [input, showNsfw, showSDXL, showSD15, showSD21, showPony, currentPage])
 
   const fetchModels = useCallback(async () => {
     setLoading(true)
@@ -171,7 +176,8 @@ const LoraSearchModal = ({
       nsfw: showNsfw,
       sdxl: showSDXL,
       sd15: showSD15,
-      sd21: showSD21
+      sd21: showSD21,
+      pony: showPony
     })
 
     // Happens due to _dev_ environment firing calls twice
@@ -183,7 +189,7 @@ const LoraSearchModal = ({
     setTotalPages(metadata.totalPages)
 
     setLoading(false)
-  }, [input, showNsfw, showSDXL, showSD15, showSD21])
+  }, [input, showNsfw, showSDXL, showSD15, showSD21, showPony])
 
   const handleInputChange = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -204,7 +210,7 @@ const LoraSearchModal = ({
   useEffect(() => {
     debouncedFetchModels()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, input, showNsfw, showSDXL, showSD15, showSD21])
+  }, [currentPage, input, showNsfw, showSDXL, showSD15, showSD21, showPony])
 
   return (
     <div id="lora-search-modal">
@@ -292,6 +298,16 @@ const LoraSearchModal = ({
                     onChange={(bool: boolean) => {
                       AppSettings.set('civitaiShowSD21', bool)
                       setShowSD21(bool)
+                    }}
+                  />
+                </div>
+                <div style={{ padding: '8px 0' }}>
+                  <Checkbox
+                    label="Show PonyXL LORAS?"
+                    checked={showSD21}
+                    onChange={(bool: boolean) => {
+                      AppSettings.set('civitaiShowPony', bool)
+                      setShowPony(bool)
                     }}
                   />
                 </div>
