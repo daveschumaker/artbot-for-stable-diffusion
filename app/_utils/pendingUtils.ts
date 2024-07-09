@@ -40,8 +40,6 @@ export const addPendingJobToDexieDb = async (
 
 const cloneImageParams = async (imageParams: CreateImageRequest) => {
   const clonedParams = Object.assign({}, imageParams)
-  const { modelDetails } = modelStore.state
-
   clonedParams.timestamp = Date.now()
 
   const hasImg2ImgMask =
@@ -53,15 +51,6 @@ const cloneImageParams = async (imageParams: CreateImageRequest) => {
     clonedParams.models &&
     clonedParams.models[0] &&
     clonedParams.models[0].indexOf('_inpainting') === -1
-
-  // Handle SDXL specific requests
-  // For hires fix, see: https://github.com/daveschumaker/artbot-for-stable-diffusion/issues/217
-  if (
-    modelDetails[clonedParams.models[0]] &&
-    modelDetails[clonedParams.models[0]].baseline === 'stable_diffusion_xl'
-  ) {
-    clonedParams.hires = false
-  }
 
   // I believe this is deprecated as of ComfyUI worker upgrades?
   if (hasImg2ImgMask || needsImg2ImgMask) {
