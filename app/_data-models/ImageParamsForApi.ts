@@ -247,13 +247,22 @@ class ImageParamsForApi {
           clip: lora.clip
         }
 
+        delete loraObj.is_version
+
+        // Handle newly fixed lora version logic (2024.07.08)
         if (lora.versionId) {
           loraObj.name = String(lora.versionId)
           loraObj.is_version = true
-          // } else if (lora.parentModelId && lora.parentModelId !== lora.name) {
-          //   loraObj.is_version = true
-        } else {
-          delete loraObj.is_version
+        }
+
+        // Handle legacy saved / favorited lora logic
+        if (
+          !lora.versionId &&
+          lora.parentModelId &&
+          lora.parentModelId !== lora.name
+        ) {
+          loraObj.name = String(lora.name)
+          loraObj.is_version = true
         }
 
         return loraObj

@@ -5,6 +5,7 @@
 - Enhancement: PonyXL models generally require a CLIP of at least 2, otherwise things look like a mess. ArtBot now detects if you're using a CLIP that's too small with a PonyXL model and automatically adjusts it on submit.
 - Speaking of PonyXL: You chould now be able to search PonyXL LoRAs in the Lora Search panel.
 - Speaking of LoRAs: You should now be able to correctly use specific versions of LoRAs with ArtBot.
+- Fix: Issue using specific versions of previously saved LoRAs (prior to anything saved before the previous bullet point). Thanks to Sidorok for helping debug this.
 
 # 2024.07.05
 
