@@ -1,3 +1,15 @@
+# 2024.07.08
+
+- I have been deep, deep in the weeds of the ArtBot v2 rewrite. Come visit the [ArtBot Discord channel](https://discord.com/channels/781145214752129095/1107628882783391744) on the AI Horde server -- I've been putting up some developer preview builds for feedback and help debugging!
+- Fix: Hi-res fix now works with SDXL baseline models.
+- Enhancement: PonyXL models generally require a CLIP of at least 2, otherwise things look like a mess. ArtBot now detects if you're using a CLIP that's too small with a PonyXL model and automatically adjusts it on submit.
+- Speaking of PonyXL: You chould now be able to search PonyXL LoRAs in the Lora Search panel.
+- Speaking of LoRAs: You should now be able to correctly use specific versions of LoRAs with ArtBot.
+
+# 2024.07.05
+
+- MILESTONE: 🎉🎉🎉 ‼️‼️‼️ **18,000,000 images** have been created with ArtBot!‼️‼️‼️ 🎉🎉🎉
+
 # 2024.05.27
 
 - Add support for [embedded QR codes on the AI Horde](https://dbzer0.com/blog/embedded-qr-codes-via-the-ai-horde/).
