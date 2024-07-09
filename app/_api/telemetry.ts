@@ -1,7 +1,6 @@
 import { basePath } from 'BASE_PATH'
 import AppSettings from 'app/_data-models/AppSettings'
 import { logToConsole } from 'app/_utils/debugTools'
-import serverFetchWithTimeout from 'app/_utils/serverFetchWithTimeout'
 
 interface Params {
   action: string
@@ -23,6 +22,10 @@ export const trackGaEvent = ({ action, params }: Params) => {
 export const trackEvent = async (obj: any = {}) => {
   const useBeta = AppSettings.get('useBeta')
 
+  if (typeof window === 'undefined') {
+    return
+  }
+
   if (useBeta || useBeta === 'userTrue') {
     if (!obj.data) {
       obj.data = {}
@@ -35,13 +38,13 @@ export const trackEvent = async (obj: any = {}) => {
   obj.data = { ...obj.data, artbot_uuid: AppSettings.get('artbot_uuid') }
   logToConsole({ data: obj, name: 'Telemetry', debugKey: 'DEBUG_TELEMETRY' })
 
-  if (
-    obj.event !== 'IMAGE_RECEIVED_FROM_API' &&
-    typeof window !== 'undefined' &&
-    window.location.host.indexOf('localhost') >= 0
-  ) {
-    return
-  }
+  // if (
+  //   obj.event !== 'IMAGE_RECEIVED_FROM_API' &&
+  //   typeof window !== 'undefined' &&
+  //   window.location.host.indexOf('localhost') >= 0
+  // ) {
+  //   return
+  // }
 
   // @ts-ignore
   // const { event } = obj
@@ -53,20 +56,25 @@ export const trackEvent = async (obj: any = {}) => {
   //   }
   // }
 
-  try {
-    serverFetchWithTimeout(`${basePath}/api/telemetry`, {
-      method: 'POST',
-      body: JSON.stringify(obj),
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      timeout: 1500
-    })
-  } catch (err) {
-    // If nothing happens, it's fine to ignore this.
-  } finally {
-    return {
-      success: true
+  // Only track new image counts
+  if (
+    obj.event === 'IMAGE_RECEIVED_FROM_API' ||
+    obj.event === 'FEEDBACK_FORM'
+  ) {
+    try {
+      await fetch(`${basePath}/api/telemetry`, {
+        method: 'POST',
+        body: JSON.stringify(obj),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    } catch (err) {
+      // If nothing happens, it's fine to ignore this.
+    } finally {
+      return {
+        success: true
+      }
     }
   }
 }

@@ -37,10 +37,6 @@ export const initLoadImageCount = () => {
     const [totalImages] = data.split('#')
 
     cache.totalImages = Number(totalImages)
-
-    setInterval(() => {
-      saveCache()
-    }, 30000)
   } else {
     fs.writeFile(filePath, String(cache.totalImages), function (err) {
       if (err) return console.log(err)
@@ -77,3 +73,7 @@ const logCountTotal = async () => {
     }
   }
 }
+
+setInterval(() => {
+  saveCache()
+}, 30000)

@@ -19,29 +19,9 @@ export default async function handler(
 
   if (data.event === 'FEEDBACK_FORM') {
     try {
-      fetch(`http://localhost:4001/api/v1/artbot/feedback`, {
+      await fetch(`http://localhost:4001/api/v1/artbot/feedback`, {
         method: 'POST',
         body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      return res.send({
-        status: 'ok'
-      })
-    } catch (err) {
-      // eh, it's okay if nothing happens.
-      return res.send({
-        status: 'ok'
-      })
-    }
-  }
-
-  if (process.env.TELEMETRY_API) {
-    try {
-      fetch(process.env.TELEMETRY_API, {
-        method: 'POST',
-        body: JSON.stringify(req.body),
         headers: {
           'Content-Type': 'application/json'
         }
@@ -60,6 +40,27 @@ export default async function handler(
   if (data.event === 'IMAGE_RECEIVED_FROM_API') {
     try {
       updateImageCount()
+      return res.send({
+        status: 'ok'
+      })
+    } catch (err) {
+      // eh, it's okay if nothing happens.
+      return res.send({
+        status: 'ok'
+      })
+    }
+  }
+
+  // This should be last
+  if (process.env.TELEMETRY_API) {
+    try {
+      await fetch(process.env.TELEMETRY_API, {
+        method: 'POST',
+        body: JSON.stringify(req.body),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
       return res.send({
         status: 'ok'
       })
