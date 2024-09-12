@@ -10,6 +10,7 @@ const cache: any = {
 }
 
 const isProd = process.env.NODE_ENV === 'production'
+const statusApi = process.env.STATUS_API
 const homeDirectory = isProd ? os.homedir() : appRoot + '/__local_db'
 const filePath = homeDirectory + '/ArtBot_ImageCount.txt'
 
@@ -25,6 +26,22 @@ export const getImageCount = () => {
 
 export const updateImageCount = () => {
   cache.totalImages += 1
+
+  // Send POST request to statusApi
+  if (statusApi) {
+    fetch(`${statusApi}/status`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        type: 'image',
+        service: 'ArtBot_v1'
+      })
+    }).catch(() => {
+      // Ignore any errors
+    })
+  }
 }
 
 export const initLoadImageCount = () => {

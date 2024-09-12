@@ -98,7 +98,7 @@ const searchRequest = async ({
       controller.abort()
       pendingRequest = false
       console.error('Request timed out')
-    }, 5000) // Change the timeout duration as needed
+    }, 15000) // Change the timeout duration as needed
 
     const response = await fetch(
       `https://civitai.com/api/v1/models?types=TextualInversion&sort=Highest Rated&${searchKey}`,
