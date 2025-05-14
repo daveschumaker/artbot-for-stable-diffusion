@@ -322,7 +322,7 @@ const LoraSearchModal = ({
                 <div style={{ padding: '8px 0' }}>
                   <Checkbox
                     label="Show PonyXL LORAS?"
-                    checked={showSD21}
+                    checked={showPony}
                     onChange={(bool: boolean) => {
                       AppSettings.set('civitaiShowPony', bool)
                       setShowPony(bool)
