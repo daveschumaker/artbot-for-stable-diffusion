@@ -40,6 +40,9 @@ const searchRequest = async ({
   sdxl = false,
   sd15 = false,
   sd21 = false,
+  illu = false,
+  noob = false,
+  flux = false,
   pony = false
 }: {
   input?: string
@@ -48,6 +51,9 @@ const searchRequest = async ({
   sdxl?: boolean
   sd15?: boolean
   sd21?: boolean
+  illu?: boolean
+  noob?: boolean
+  flux?: boolean
   pony?: boolean
 }) => {
   try {
@@ -83,6 +89,9 @@ const searchRequest = async ({
           .join('')
       : ''
     baseModelFilter += pony ? '&baseModels=Pony' : ''
+    baseModelFilter += noob ? '&baseModels=NoobAI' : ''
+    baseModelFilter += illu ? '&baseModels=Illustrious' : ''
+    baseModelFilter += flux ? '&baseModels=Flux.1 S&baseModels=Flux.1 D' : ''
     baseModelFilter = baseModelFilter.replace(/ /g, '%20')
 
     const query = input ? `&query=${input}` : ''
@@ -136,6 +145,9 @@ const LoraSearchModal = ({
   const [showSD15, setShowSD15] = useState(AppSettings.get('civitaiShowSD15'))
   const [showSD21, setShowSD21] = useState(AppSettings.get('civitaiShowSD21'))
   const [showPony, setShowPony] = useState(AppSettings.get('civitaiShowPony'))
+  const [showFlux, setShowFlux] = useState(AppSettings.get('civitaiShowFlux'))
+  const [showNoob, setShowNoob] = useState(AppSettings.get('civitaiShowNoob'))
+  const [showIllu, setShowIllu] = useState(AppSettings.get('civitaiShowIllu'))
   const [currentPage, setCurrentPage] = useState(1)
   const [totalItems, setTotalItems] = useState(-1) // Setting 0 here causes brief flash between loading finished and totalItems populated
   const [totalPages, setTotalPages] = useState(0)
@@ -153,6 +165,9 @@ const LoraSearchModal = ({
       sd15: showSD15,
       sd21: showSD21,
       pony: showPony,
+      noob: showNoob,
+      illu: showIllu,
+      flux: showFlux,
       page: currentPage
     })
 
@@ -166,7 +181,7 @@ const LoraSearchModal = ({
       setHasError('Unable to load data from CivitAI, please try again shortly.')
     }
     setLoading(false)
-  }, [input, showNsfw, showSDXL, showSD15, showSD21, showPony, currentPage])
+  }, [input, showNsfw, showSDXL, showSD15, showSD21, showPony, showNoob, showIllu, showFlux, currentPage])
 
   const fetchModels = useCallback(async () => {
     setLoading(true)
@@ -177,7 +192,10 @@ const LoraSearchModal = ({
       sdxl: showSDXL,
       sd15: showSD15,
       sd21: showSD21,
-      pony: showPony
+      pony: showPony,
+      noob: showNoob,
+      illu: showIllu,
+      flux: showFlux
     })
 
     // Happens due to _dev_ environment firing calls twice
@@ -189,7 +207,7 @@ const LoraSearchModal = ({
     setTotalPages(metadata.totalPages)
 
     setLoading(false)
-  }, [input, showNsfw, showSDXL, showSD15, showSD21, showPony])
+  }, [input, showNsfw, showSDXL, showSD15, showSD21, showPony, showNoob, showIllu, showFlux])
 
   const handleInputChange = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -210,7 +228,7 @@ const LoraSearchModal = ({
   useEffect(() => {
     debouncedFetchModels()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, input, showNsfw, showSDXL, showSD15, showSD21, showPony])
+  }, [currentPage, input, showNsfw, showSDXL, showSD15, showSD21, showPony, showNoob, showIllu, showFlux])
 
   return (
     <div id="lora-search-modal">
@@ -308,6 +326,36 @@ const LoraSearchModal = ({
                     onChange={(bool: boolean) => {
                       AppSettings.set('civitaiShowPony', bool)
                       setShowPony(bool)
+                    }}
+                  />
+                </div>
+                <div style={{ padding: '8px 0' }}>
+                  <Checkbox
+                    label="Show NoobAI LORAS?"
+                    checked={showNoob}
+                    onChange={(bool: boolean) => {
+                      AppSettings.set('civitaiShowNoob', bool)
+                      setShowNoob(bool)
+                    }}
+                  />
+                </div>
+                <div style={{ padding: '8px 0' }}>
+                  <Checkbox
+                    label="Show Illustrious LORAS?"
+                    checked={showIllu}
+                    onChange={(bool: boolean) => {
+                      AppSettings.set('civitaiShowIllu', bool)
+                      setShowIllu(bool)
+                    }}
+                  />
+                </div>
+                <div style={{ padding: '8px 0' }}>
+                  <Checkbox
+                    label="Show Flux.1 LORAS?"
+                    checked={showFlux}
+                    onChange={(bool: boolean) => {
+                      AppSettings.set('civitaiShowFlux', bool)
+                      setShowFlux(bool)
                     }}
                   />
                 </div>
