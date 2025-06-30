@@ -77,25 +77,27 @@ const searchRequest = async ({
 
     baseModelFilter = sdxl
       ? ['0.9', '1.0', '1.0 LCM', 'Turbo']
-          .map((e) => '&baseModels=SDXL ' + e)
+          .map((e) => '&baseModel=SDXL ' + e)
           .join('')
       : ''
     baseModelFilter += sd15
-      ? ['1.4', '1.5', '1.5 LCM'].map((e) => '&baseModels=SD ' + e).join('')
+      ? ['1.4', '1.5', '1.5 LCM'].map((e) => '&baseModel=SD ' + e).join('')
       : ''
     baseModelFilter += sd21
       ? ['2.0', '2.0 768', '2.1', '2.1 768', '2.1 Unclip']
-          .map((e) => '&baseModels=SD ' + e)
+          .map((e) => '&baseModel=SD ' + e)
           .join('')
       : ''
-    baseModelFilter += pony ? '&baseModels=Pony' : ''
-    baseModelFilter += noob ? '&baseModels=NoobAI' : ''
-    baseModelFilter += illu ? '&baseModels=Illustrious' : ''
-    baseModelFilter += flux ? '&baseModels=Flux.1 S&baseModels=Flux.1 D' : ''
+    baseModelFilter += pony ? '&baseModel=Pony' : ''
+    baseModelFilter += noob ? '&baseModel=NoobAI' : ''
+    baseModelFilter += illu ? '&baseModel=Illustrious' : ''
+    baseModelFilter += flux ? '&baseModel=Flux.1 S&baseModel=Flux.1 D' : ''
     baseModelFilter = baseModelFilter.replace(/ /g, '%20')
 
     const query = input ? `&query=${input}` : ''
-    const searchKey = `limit=${LIMIT}${query}&page=${page}&nsfw=${nsfw}${baseModelFilter}`
+    // Don't include page parameter when there's a query search
+    const paginationParam = input ? '' : `&page=${page}`
+    const searchKey = `limit=${LIMIT}${query}${paginationParam}&nsfw=${nsfw}${baseModelFilter}`
 
     if (cache.get(searchKey)) {
       const data = cache.get(searchKey)
@@ -181,7 +183,18 @@ const LoraSearchModal = ({
       setHasError('Unable to load data from CivitAI, please try again shortly.')
     }
     setLoading(false)
-  }, [input, showNsfw, showSDXL, showSD15, showSD21, showPony, showNoob, showIllu, showFlux, currentPage])
+  }, [
+    input,
+    showNsfw,
+    showSDXL,
+    showSD15,
+    showSD21,
+    showPony,
+    showNoob,
+    showIllu,
+    showFlux,
+    currentPage
+  ])
 
   const fetchModels = useCallback(async () => {
     setLoading(true)
@@ -207,7 +220,17 @@ const LoraSearchModal = ({
     setTotalPages(metadata.totalPages)
 
     setLoading(false)
-  }, [input, showNsfw, showSDXL, showSD15, showSD21, showPony, showNoob, showIllu, showFlux])
+  }, [
+    input,
+    showNsfw,
+    showSDXL,
+    showSD15,
+    showSD21,
+    showPony,
+    showNoob,
+    showIllu,
+    showFlux
+  ])
 
   const handleInputChange = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -228,7 +251,18 @@ const LoraSearchModal = ({
   useEffect(() => {
     debouncedFetchModels()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, input, showNsfw, showSDXL, showSD15, showSD21, showPony, showNoob, showIllu, showFlux])
+  }, [
+    currentPage,
+    input,
+    showNsfw,
+    showSDXL,
+    showSD15,
+    showSD21,
+    showPony,
+    showNoob,
+    showIllu,
+    showFlux
+  ])
 
   return (
     <div id="lora-search-modal">

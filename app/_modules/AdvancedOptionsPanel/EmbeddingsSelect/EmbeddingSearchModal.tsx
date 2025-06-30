@@ -78,27 +78,29 @@ const searchRequest = async ({
 
     baseModelFilter = sdxl
       ? ['0.9', '1.0', '1.0 LCM', 'Turbo']
-          .map((e) => '&baseModels=SDXL ' + e)
+          .map((e) => '&baseModel=SDXL ' + e)
           .join('')
       : ''
     baseModelFilter += sd15
-      ? ['1.4', '1.5', '1.5 LCM'].map((e) => '&baseModels=SD ' + e).join('')
+      ? ['1.4', '1.5', '1.5 LCM'].map((e) => '&baseModel=SD ' + e).join('')
       : ''
     baseModelFilter += sd21
       ? ['2.0', '2.0 768', '2.1', '2.1 768', '2.1 Unclip']
-          .map((e) => '&baseModels=SD ' + e)
+          .map((e) => '&baseModel=SD ' + e)
           .join('')
       : ''
-    baseModelFilter += pony ? '&baseModels=Pony' : ''
+    baseModelFilter += pony ? '&baseModel=Pony' : ''
     baseModelFilter += flux
-      ? ['Flux.1 S', 'Flux.1 D'].map((e) => '&baseModels=' + e).join('')
+      ? ['Flux.1 S', 'Flux.1 D'].map((e) => '&baseModel=' + e).join('')
       : ''
-    baseModelFilter += noobai ? '&baseModels=NoobAI' : ''
-    baseModelFilter += illustrious ? '&baseModels=Illustrious' : ''
+    baseModelFilter += noobai ? '&baseModel=NoobAI' : ''
+    baseModelFilter += illustrious ? '&baseModel=Illustrious' : ''
     baseModelFilter = baseModelFilter.replace(/ /g, '%20')
 
     const query = input ? `&query=${input}` : ''
-    const searchKey = `limit=${LIMIT}${query}&page=${page}&nsfw=${nsfw}${baseModelFilter}`
+    // Don't include page parameter when there's a query search
+    const paginationParam = input ? '' : `&page=${page}`
+    const searchKey = `limit=${LIMIT}${query}${paginationParam}&nsfw=${nsfw}${baseModelFilter}`
 
     if (cache.get(searchKey)) {
       const data = cache.get(searchKey)
