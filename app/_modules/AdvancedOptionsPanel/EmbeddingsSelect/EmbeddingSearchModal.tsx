@@ -39,7 +39,11 @@ const searchRequest = async ({
   nsfw = false,
   sdxl = false,
   sd15 = false,
-  sd21 = false
+  sd21 = false,
+  pony = false,
+  noobai = false,
+  illustrious = false,
+  flux = false
 }: {
   input?: string
   page?: number
@@ -47,6 +51,10 @@ const searchRequest = async ({
   sdxl?: boolean
   sd15?: boolean
   sd21?: boolean
+  pony?: boolean
+  noobai?: boolean
+  illustrious?: boolean
+  flux?: boolean
 }) => {
   try {
     if (pendingRequest) return false
@@ -81,6 +89,12 @@ const searchRequest = async ({
           .map((e) => '&baseModels=SD ' + e)
           .join('')
       : ''
+    baseModelFilter += pony ? '&baseModels=Pony' : ''
+    baseModelFilter += flux
+      ? ['Flux.1 S', 'Flux.1 D'].map((e) => '&baseModels=' + e).join('')
+      : ''
+    baseModelFilter += noobai ? '&baseModels=NoobAI' : ''
+    baseModelFilter += illustrious ? '&baseModels=Illustrious' : ''
     baseModelFilter = baseModelFilter.replace(/ /g, '%20')
 
     const query = input ? `&query=${input}` : ''
@@ -132,6 +146,14 @@ const EmbeddingSearchModal = ({
   const [showSDXL, setShowSDXL] = useState(AppSettings.get('civitaiShowSDXL'))
   const [showSD15, setShowSD15] = useState(AppSettings.get('civitaiShowSD15'))
   const [showSD21, setShowSD21] = useState(AppSettings.get('civitaiShowSD21'))
+  const [showPony, setShowPony] = useState(AppSettings.get('civitaiShowPony'))
+  const [showNoobAI, setShowNoobAI] = useState(
+    AppSettings.get('civitaiShowNoobAI')
+  )
+  const [showIllustrious, setShowIllustrious] = useState(
+    AppSettings.get('civitaiShowIllustrious')
+  )
+  const [showFlux, setShowFlux] = useState(AppSettings.get('civitaiShowFlux'))
   const [currentPage, setCurrentPage] = useState(1)
   const [totalItems, setTotalItems] = useState(-1) // Setting 0 here causes brief flash between loading finished and totalItems populated
   const [totalPages, setTotalPages] = useState(0)
@@ -148,6 +170,10 @@ const EmbeddingSearchModal = ({
       sdxl: showSDXL,
       sd15: showSD15,
       sd21: showSD21,
+      pony: showPony,
+      noobai: showNoobAI,
+      illustrious: showIllustrious,
+      flux: showFlux,
       page: currentPage
     })
 
@@ -161,7 +187,18 @@ const EmbeddingSearchModal = ({
       setHasError('Unable to load data from CivitAI, please try again shortly.')
     }
     setLoading(false)
-  }, [currentPage, input, showNsfw, showSDXL, showSD15, showSD21])
+  }, [
+    currentPage,
+    input,
+    showNsfw,
+    showSDXL,
+    showSD15,
+    showSD21,
+    showPony,
+    showNoobAI,
+    showIllustrious,
+    showFlux
+  ])
 
   const fetchModels = useCallback(async () => {
     setLoading(true)
@@ -171,7 +208,11 @@ const EmbeddingSearchModal = ({
       nsfw: showNsfw,
       sdxl: showSDXL,
       sd15: showSD15,
-      sd21: showSD21
+      sd21: showSD21,
+      pony: showPony,
+      noobai: showNoobAI,
+      illustrious: showIllustrious,
+      flux: showFlux
     })
 
     // Happens due to _dev_ environment firing calls twice
@@ -183,7 +224,17 @@ const EmbeddingSearchModal = ({
     setTotalPages(metadata.totalPages)
 
     setLoading(false)
-  }, [input, showNsfw, showSDXL, showSD15, showSD21])
+  }, [
+    input,
+    showNsfw,
+    showSDXL,
+    showSD15,
+    showSD21,
+    showPony,
+    showNoobAI,
+    showIllustrious,
+    showFlux
+  ])
 
   const handleInputChange = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -204,7 +255,18 @@ const EmbeddingSearchModal = ({
   useEffect(() => {
     debouncedFetchModels()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, input, showNsfw, showSDXL, showSD15, showSD21])
+  }, [
+    currentPage,
+    input,
+    showNsfw,
+    showSDXL,
+    showSD15,
+    showSD21,
+    showPony,
+    showNoobAI,
+    showIllustrious,
+    showFlux
+  ])
 
   return (
     <>
@@ -292,6 +354,46 @@ const EmbeddingSearchModal = ({
                     onChange={(bool: boolean) => {
                       AppSettings.set('civitaiShowSD21', bool)
                       setShowSD21(bool)
+                    }}
+                  />
+                </div>
+                <div style={{ padding: '8px 0' }}>
+                  <Checkbox
+                    label="Show Pony embeddings?"
+                    checked={showPony}
+                    onChange={(bool: boolean) => {
+                      AppSettings.set('civitaiShowPony', bool)
+                      setShowPony(bool)
+                    }}
+                  />
+                </div>
+                <div style={{ padding: '8px 0' }}>
+                  <Checkbox
+                    label="Show Flux embeddings?"
+                    checked={showFlux}
+                    onChange={(bool: boolean) => {
+                      AppSettings.set('civitaiShowFlux', bool)
+                      setShowFlux(bool)
+                    }}
+                  />
+                </div>
+                <div style={{ padding: '8px 0' }}>
+                  <Checkbox
+                    label="Show NoobAI embeddings?"
+                    checked={showNoobAI}
+                    onChange={(bool: boolean) => {
+                      AppSettings.set('civitaiShowNoobAI', bool)
+                      setShowNoobAI(bool)
+                    }}
+                  />
+                </div>
+                <div style={{ padding: '8px 0' }}>
+                  <Checkbox
+                    label="Show Illustrious embeddings?"
+                    checked={showIllustrious}
+                    onChange={(bool: boolean) => {
+                      AppSettings.set('civitaiShowIllustrious', bool)
+                      setShowIllustrious(bool)
                     }}
                   />
                 </div>

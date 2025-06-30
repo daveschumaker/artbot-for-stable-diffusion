@@ -34,6 +34,109 @@ const isFavorite = (tiId: string) => {
   return false
 }
 
+const formatBaseline = (baseline: string) => {
+  if (!baseline) return 'Unknown'
+
+  // Handle lowercase variations
+  const lowerBaseline = baseline.toLowerCase()
+
+  // SD 1.x variants
+  if (lowerBaseline.includes('sd 1.4') || lowerBaseline.includes('sd1.4')) {
+    return 'SD 1.4'
+  } else if (
+    lowerBaseline.includes('sd 1.5') ||
+    lowerBaseline.includes('sd1.5') ||
+    lowerBaseline === 'stable diffusion 1'
+  ) {
+    return 'SD 1.5'
+  } else if (lowerBaseline.includes('sd 1.5 lcm')) {
+    return 'SD 1.5 LCM'
+  }
+
+  // SD 2.x variants
+  else if (
+    lowerBaseline.includes('sd 2.0') ||
+    lowerBaseline.includes('sd2.0') ||
+    lowerBaseline === 'stable diffusion 2'
+  ) {
+    return 'SD 2.0'
+  } else if (lowerBaseline.includes('sd 2.0 768')) {
+    return 'SD 2.0 768'
+  } else if (
+    lowerBaseline.includes('sd 2.1') ||
+    lowerBaseline.includes('sd2.1')
+  ) {
+    return 'SD 2.1'
+  } else if (lowerBaseline.includes('sd 2.1 768')) {
+    return 'SD 2.1 768'
+  } else if (lowerBaseline.includes('sd 2.1 unclip')) {
+    return 'SD 2.1 Unclip'
+  }
+
+  // SDXL variants
+  else if (lowerBaseline.includes('sdxl 0.9')) {
+    return 'SDXL 0.9'
+  } else if (lowerBaseline.includes('sdxl 1.0 lcm')) {
+    return 'SDXL 1.0 LCM'
+  } else if (
+    lowerBaseline.includes('sdxl 1.0') ||
+    lowerBaseline === 'stable_diffusion_xl' ||
+    lowerBaseline === 'sdxl'
+  ) {
+    return 'SDXL 1.0'
+  } else if (lowerBaseline.includes('sdxl turbo')) {
+    return 'SDXL Turbo'
+  } else if (lowerBaseline.includes('sdxl distilled')) {
+    return 'SDXL Distilled'
+  }
+
+  // Pony
+  else if (lowerBaseline.includes('pony')) {
+    return 'Pony'
+  }
+
+  // Flux variants
+  else if (
+    lowerBaseline.includes('flux.1 s') ||
+    lowerBaseline.includes('flux 1 s')
+  ) {
+    return 'Flux.1 S'
+  } else if (
+    lowerBaseline.includes('flux.1 d') ||
+    lowerBaseline.includes('flux 1 d')
+  ) {
+    return 'Flux.1 D'
+  } else if (lowerBaseline.includes('flux')) {
+    return 'Flux'
+  }
+
+  // NoobAI
+  else if (lowerBaseline.includes('noobai')) {
+    return 'NoobAI'
+  }
+
+  // Illustrious
+  else if (lowerBaseline.includes('illustrious')) {
+    return 'Illustrious'
+  }
+
+  // Other known formats
+  else if (lowerBaseline.includes('playground v2')) {
+    return 'Playground v2'
+  } else if (lowerBaseline.includes('pixart')) {
+    return 'PixArt α'
+  } else if (lowerBaseline.includes('svd xt')) {
+    return 'SVD XT'
+  } else if (lowerBaseline.includes('svd')) {
+    return 'SVD'
+  }
+
+  // Default: return original if no match
+  else {
+    return baseline
+  }
+}
+
 export default function EmbeddingDetailsCard({
   embedding,
   handleClose = () => {},
@@ -121,7 +224,8 @@ export default function EmbeddingDetailsCard({
             </div>
             {embedding.modelVersions.length >= 1 && (
               <div style={{ fontSize: '14px', fontWeight: 400 }}>
-                Base model: {embedding.modelVersions[0].baseModel}
+                Base model:{' '}
+                {formatBaseline(embedding.modelVersions[0].baseModel)}
               </div>
             )}
           </FlexCol>
