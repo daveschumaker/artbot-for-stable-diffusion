@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './TextButton.module.css' // Import the CSS module
+import styles from './textButton.module.css' // Import the CSS module
 
 interface Props {
   color?: string
