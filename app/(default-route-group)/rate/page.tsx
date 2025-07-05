@@ -1,5 +1,5 @@
 import { baseHost, basePath } from 'BASE_PATH'
-import RatePage from 'app/_pages/RatePage'
+import DisabledRatePage from 'app/_pages/RatePage/disabledRatePage'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -16,5 +16,5 @@ export const metadata: Metadata = {
 }
 
 export default function Page() {
-  return <RatePage />
+  return <DisabledRatePage />
 }
