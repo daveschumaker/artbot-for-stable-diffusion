@@ -13,6 +13,7 @@ import AppSettings from 'app/_data-models/AppSettings'
 import SpinnerV2 from 'app/_components/Spinner'
 import Pagination from 'app/_components/Pagination'
 import CacheController from 'app/_data-models/CacheController'
+import { buildCivitaiQuery, buildCivitaiCacheKey } from '../loraUtils'
 
 const debounce = (func: (str: string) => Promise<any>, delay: number) => {
   let timerId: any
@@ -64,43 +65,24 @@ const searchRequest = async ({
     const controller = new AbortController()
     const signal = controller.signal
 
-    // do sd14 loras/tis work on sd15 models? sd0.9 stuff works with sd1.0 models...
-    // what about Turbo and LCM? 2.0 and 2.1? I'm just assuming 2.0 and 2.1 can be mixed, and 1.4 and 1.5 can be mixed, and lcm/turbo/not can be mixed. leave the rest to the user, maybe display that baseline somewhere.
-    // I dont think civitai lets you filter by model size, maybe you want to put that filter in the display code (allow 220mb loras only)
-    //  - except some workers have modified this. the colab worker has the limit removed, and my runpod is set to 750mb...
+    const searchParams = {
+      input,
+      page,
+      nsfw,
+      sdxl,
+      sd15,
+      sd21,
+      illu,
+      noob,
+      flux,
+      pony
+    }
 
-    // Per this discussion on GitHub, this is an undocumented feature:
-    // https://github.com/orgs/civitai/discussions/733
-    // API response gives me the following valid values:
-    //  "'SD 1.4' | 'SD 1.5' | 'SD 1.5 LCM' | 'SD 2.0' | 'SD 2.0 768' | 'SD 2.1' | 'SD 2.1 768' | 'SD 2.1 Unclip' | 'SDXL 0.9' | 'SDXL 1.0' | 'SDXL 1.0 LCM' | 'SDXL Distilled' | 'SDXL Turbo' | 'SVD' | 'SVD XT' | 'Playground v2' | 'PixArt a' | 'Other'"
-    let baseModelFilter
+    const searchKey = buildCivitaiQuery(searchParams)
+    const cacheKey = buildCivitaiCacheKey(searchParams)
 
-    baseModelFilter = sdxl
-      ? ['0.9', '1.0', '1.0 LCM', 'Turbo']
-          .map((e) => '&baseModel=SDXL ' + e)
-          .join('')
-      : ''
-    baseModelFilter += sd15
-      ? ['1.4', '1.5', '1.5 LCM'].map((e) => '&baseModel=SD ' + e).join('')
-      : ''
-    baseModelFilter += sd21
-      ? ['2.0', '2.0 768', '2.1', '2.1 768', '2.1 Unclip']
-          .map((e) => '&baseModel=SD ' + e)
-          .join('')
-      : ''
-    baseModelFilter += pony ? '&baseModel=Pony' : ''
-    baseModelFilter += noob ? '&baseModel=NoobAI' : ''
-    baseModelFilter += illu ? '&baseModel=Illustrious' : ''
-    baseModelFilter += flux ? '&baseModel=Flux.1 S&baseModel=Flux.1 D' : ''
-    baseModelFilter = baseModelFilter.replace(/ /g, '%20')
-
-    const query = input ? `&query=${input}` : ''
-    // Don't include page parameter when there's a query search
-    const paginationParam = input ? '' : `&page=${page}`
-    const searchKey = `limit=${LIMIT}${query}${paginationParam}&nsfw=${nsfw}${baseModelFilter}`
-
-    if (cache.get(searchKey)) {
-      const data = cache.get(searchKey)
+    if (cache.get(cacheKey)) {
+      const data = cache.get(cacheKey)
 
       const { items = [], metadata = {} } = data
       pendingRequest = false
@@ -114,13 +96,13 @@ const searchRequest = async ({
     }, 15000) // Change the timeout duration as needed
 
     const response = await fetch(
-      `https://civitai.com/api/v1/models?types=LORA&types=LoCon&sort=Highest Rated&${searchKey}`,
+      `https://civitai.com/api/v1/models?types=LORA&types=LoCon&sort=Highest%20Rated&${searchKey}`,
       { signal }
     )
     clearTimeout(timeout)
 
     const data = await response.json()
-    cache.set(searchKey, data)
+    cache.set(cacheKey, data)
 
     const { items = [], metadata = {} } = data
     pendingRequest = false
@@ -320,6 +302,7 @@ const LoraSearchModal = ({
                     onChange={(bool: boolean) => {
                       AppSettings.set('civitaiShowNsfw', bool)
                       setShowNsfw(bool)
+                      setCurrentPage(1) // Reset to page 1 when filter changes
                     }}
                   />
                 </div>
@@ -330,6 +313,7 @@ const LoraSearchModal = ({
                     onChange={(bool: boolean) => {
                       AppSettings.set('civitaiShowSDXL', bool)
                       setShowSDXL(bool)
+                      setCurrentPage(1) // Reset to page 1 when filter changes
                     }}
                   />
                 </div>
@@ -340,6 +324,7 @@ const LoraSearchModal = ({
                     onChange={(bool: boolean) => {
                       AppSettings.set('civitaiShowSD15', bool)
                       setShowSD15(bool)
+                      setCurrentPage(1) // Reset to page 1 when filter changes
                     }}
                   />
                 </div>
@@ -350,6 +335,7 @@ const LoraSearchModal = ({
                     onChange={(bool: boolean) => {
                       AppSettings.set('civitaiShowSD21', bool)
                       setShowSD21(bool)
+                      setCurrentPage(1) // Reset to page 1 when filter changes
                     }}
                   />
                 </div>
@@ -360,6 +346,7 @@ const LoraSearchModal = ({
                     onChange={(bool: boolean) => {
                       AppSettings.set('civitaiShowPony', bool)
                       setShowPony(bool)
+                      setCurrentPage(1) // Reset to page 1 when filter changes
                     }}
                   />
                 </div>
@@ -370,6 +357,7 @@ const LoraSearchModal = ({
                     onChange={(bool: boolean) => {
                       AppSettings.set('civitaiShowNoob', bool)
                       setShowNoob(bool)
+                      setCurrentPage(1) // Reset to page 1 when filter changes
                     }}
                   />
                 </div>
@@ -380,6 +368,7 @@ const LoraSearchModal = ({
                     onChange={(bool: boolean) => {
                       AppSettings.set('civitaiShowIllu', bool)
                       setShowIllu(bool)
+                      setCurrentPage(1) // Reset to page 1 when filter changes
                     }}
                   />
                 </div>
@@ -390,6 +379,7 @@ const LoraSearchModal = ({
                     onChange={(bool: boolean) => {
                       AppSettings.set('civitaiShowFlux', bool)
                       setShowFlux(bool)
+                      setCurrentPage(1) // Reset to page 1 when filter changes
                     }}
                   />
                 </div>
