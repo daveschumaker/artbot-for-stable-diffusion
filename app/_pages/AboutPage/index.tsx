@@ -19,10 +19,10 @@ const AboutPage = () => {
   const [showFeedback, setShowFeedback] = useState(false)
 
   const fetchImageCount = async () => {
-    const res = await fetch(`${basePath}/api/image-count`)
+    const res = await fetch(`${basePath}/api/status/counter/images`)
     const data = await res.json()
-    if (data.totalImages) {
-      setTotalImages(Number(data.totalImages))
+    if (data.totalCount) {
+      setTotalImages(Number(data.totalCount))
     }
   }
 
