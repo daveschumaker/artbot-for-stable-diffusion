@@ -2,6 +2,7 @@
   padding: 16px 32px;
   margin: 0 auto;
   margin-top: var(--headerNav-height);
+  max-width: 1400px;
 }
 
 @media (min-width: 640px) {

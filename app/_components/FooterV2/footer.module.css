@@ -3,7 +3,7 @@
   color: white;
   display: flex;
   flex-direction: column;
-  padding: 16px 32px;
+  padding: 16px 0;
   padding-bottom: 66px;
   width: 100%;
 }
@@ -15,6 +15,9 @@
   flex-wrap: wrap;
   justify-content: space-between;
   row-gap: 32px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 16px;
 }
 
 .Section {
@@ -37,8 +40,11 @@
 
 .AboutWrapper {
   margin-top: 32px;
-  padding-bottom: 16px;
+  padding: 0 16px 16px 16px;
   text-align: center;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .LinkWrapper:hover {
@@ -52,21 +58,19 @@
 
   .Footer {
     justify-content: center;
-    padding: 16px;
+    padding: 16px 0;
     padding-bottom: 16px;
   }
 
   .SectionsWrapper {
     flex-direction: row;
     justify-content: unset;
-    max-width: 1400px;
-    margin: 0 auto;
   }
 }
 
 @media (min-width: 800px) {
   .Footer {
-    padding: 32px;
+    padding: 32px 0;
   }
 }
 

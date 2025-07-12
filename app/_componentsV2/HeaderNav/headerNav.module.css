@@ -4,14 +4,25 @@
   display: flex;
   flex-direction: row;
   height: var(--headerNav-height);
-  justify-content: space-between;
+  justify-content: center;
   left: 0;
-  padding: env(safe-area-inset-top) 8px 0 8px;
+  padding: env(safe-area-inset-top) 0 0 0;
   position: fixed;
   right: 0;
   top: 0;
   width: 100%;
   z-index: var(--zIndex-navBar);
+}
+
+.HeaderNavContainer {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 16px;
 }
 
 .WorkerDetails {
