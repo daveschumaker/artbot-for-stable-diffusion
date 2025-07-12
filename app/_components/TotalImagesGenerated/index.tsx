@@ -38,19 +38,8 @@ export default function TotalImagesGenerated() {
   }
 
   return (
-    <div
-      style={{
-        textAlign: 'center',
-        marginTop: '16px',
-        fontSize: '14px',
-        color: 'var(--text-color-secondary)'
-      }}
-    >
-      ArtBot has been used to generate{' '}
-      <strong style={{ color: 'var(--main-color)' }}>
-        {totalImages.toLocaleString()}
-      </strong>{' '}
-      images.
+    <div className="mb-4 text-lg font-bold">
+      Total images generated: {totalImages.toLocaleString()}
     </div>
   )
 }

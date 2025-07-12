@@ -1,31 +1,21 @@
-import { getImageCount, initLoadImageCount } from 'app/_server-api/counters'
 import type { NextApiRequest, NextApiResponse } from 'next'
-
-initLoadImageCount()
 
 type Data = {
   success: boolean
-  totalImages?: number
+  message?: string
 }
 
+/**
+ * @deprecated This endpoint is deprecated. Use /api/status/counter/images instead.
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  if (req.method !== 'GET') {
-    return res.status(400).json({ success: false })
-  }
-
-  try {
-    const totalImages = getImageCount()
-
-    return res.send({
-      success: true,
-      totalImages
-    })
-  } catch (err) {
-    return res.send({
-      success: true
-    })
-  }
+  // Return 301 redirect to new endpoint
+  res.setHeader('Location', '/api/status/counter/images')
+  res.status(301).json({
+    success: false,
+    message: 'This endpoint has been moved to /api/status/counter/images'
+  })
 }

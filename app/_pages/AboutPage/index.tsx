@@ -2,10 +2,11 @@
 
 /* eslint-disable @next/next/no-img-element */
 import Head from 'next/head'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { trackEvent } from 'app/_api/telemetry'
 import FeedbackForm from 'app/_modules/FeedbackForm'
 import Linker from 'app/_components/Linker'
+import TotalImagesGenerated from 'app/_components/TotalImagesGenerated'
 
 import PageTitle from 'app/_components/PageTitle'
 import { useEffectOnce } from 'app/_hooks/useEffectOnce'
@@ -15,26 +16,9 @@ import Modal from 'app/_modules/Modal'
 import Text from 'app/_components/Text'
 
 const AboutPage = () => {
-  const [totalImages, setTotalImages] = useState(0)
   const [showFeedback, setShowFeedback] = useState(false)
 
-  const fetchImageCount = async () => {
-    const res = await fetch(`${basePath}/api/status/counter/images`)
-    const data = await res.json()
-    if (data.totalCount) {
-      setTotalImages(Number(data.totalCount))
-    }
-  }
-
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      fetchImageCount()
-    }, 2000)
-    return () => clearInterval(interval)
-  }, [])
-
   useEffectOnce(() => {
-    fetchImageCount()
     trackEvent({
       event: 'PAGE_VIEW',
       context: '/pages/about'
@@ -57,11 +41,7 @@ const AboutPage = () => {
         <meta name="twitter:title" content="ArtBot - About" />
       </Head>
       <PageTitle>About ArtBot</PageTitle>
-      {totalImages ? (
-        <div className="mb-4 text-lg font-bold">
-          Total images generated: {totalImages.toLocaleString()}
-        </div>
-      ) : null}
+      <TotalImagesGenerated />
       <div className="mt-2">
         <img
           className={styles.HeroImage}
