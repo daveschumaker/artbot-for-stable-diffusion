@@ -19,6 +19,9 @@ const nextConfig = {
   },
   productionBrowserSourceMaps: false,
   reactStrictMode: false,
+  env: {
+    ARTBOT_STATUS_API: process.env.ARTBOT_STATUS_API
+  },
   async redirects() {
     return [
       {

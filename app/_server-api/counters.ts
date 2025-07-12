@@ -10,7 +10,8 @@ const cache: any = {
 }
 
 const isProd = process.env.NODE_ENV === 'production'
-const statusApi = process.env.STATUS_API
+// Prioritize ARTBOT_STATUS_API if available, fall back to STATUS_API
+const statusApi = process.env.ARTBOT_STATUS_API || process.env.STATUS_API
 const homeDirectory = isProd ? os.homedir() : appRoot + '/__local_db'
 const filePath = homeDirectory + '/ArtBot_ImageCount.txt'
 
