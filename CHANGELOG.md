@@ -1,6 +1,7 @@
-# 2025.07.05
+# 2025.08.18
 
 - Woooooow. It's been nearly a year since I've posted a meaningful update to ArtBot. I'm sorry! That said, it's good to see it's alive and kicking. Over 30 million images have been generated with it so far!
+- Most development work these days has been focused on ArtBot v2, which is an official client of the AI Horde! Check it out: [https://artbot.site](https://artbot.site)
 - Disabled rating images functionality due to backend changes to the Horde API. Added a message explaining the situation.
 - Refactor: Improved CivitAI query building and caching for LORA searches. Added proper URL encoding for spaces in base model filters and implemented cache key generation that includes filter states.
 

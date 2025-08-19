@@ -6,12 +6,22 @@
   flex-direction: row;
   height: var(--headerNav-height);
   left: 0;
-  padding: env(safe-area-inset-top) 16px 0 16px;
+  padding: env(safe-area-inset-top) 0 0 0;
   position: fixed;
   right: 0;
   top: 0;
   width: 100%;
   z-index: var(--zIndex-navBar);
+}
+
+.HeaderNavContainer {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 16px;
 }
 
 .HeaderNavWrapper {
@@ -44,6 +54,6 @@
 
 @media (min-width: 1024px) {
   .HeaderNav {
-    padding: env(safe-area-inset-top) 16px 0 16px;
+    padding: env(safe-area-inset-top) 0 0 0;
   }
 }
