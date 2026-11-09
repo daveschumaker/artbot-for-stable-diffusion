@@ -21,6 +21,7 @@
     "update:build-id": "node ./x-build-scripts/updateBuildId.js",
     "test": "jest",
     "test:e2e": "playwright test",
+    "test:generate-library": "npx next build && node e2e/fixtures/generateLibrary.mjs",
     "prepare": "husky install"
   },
   "engines": {
