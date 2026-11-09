@@ -39,37 +39,23 @@ marker is removed, so remove it in the same change.
       hook in `app/_db/dexie.ts` that fills in `models` and `source_image`.
 - [x] **B2. High: one malformed job blocked the queue until reload.** Fixed in
       `app/_api/createImage.ts`. The job is now marked as failed.
-- [ ] **B3. Medium: an undecodable image reports success.**
-  - The error is nested in `generations`, so the check at
-    `app/_utils/imageCache.ts:522` never sees it. Nothing is saved and the job
-    is never marked failed.
-  - Pinned: `app/_controllers/jobLifecycle.test.ts`
-- [ ] **B4. Medium: outpainting requests leave out the source image.**
-  - `=== (InPainting || OutPainting)` at
-    `app/_data-models/ImageParamsForApi.ts:289` only ever compares `InPainting`.
-  - Pinned: `app/_data-models/ImageParamsForApi.contract.test.ts`
+- [x] **B3. Medium: an undecodable image reported success.** The job is now
+      marked as failed.
+- [x] **B4. Medium: outpainting requests left out the source image.** Fixed in
+      `app/_data-models/ImageParamsForApi.ts`.
 - [x] **B5. Low: a non-image URL threw in `/api/img-from-url`.** Fixed with S2.
-- [ ] **B6. Low: `/api/admin/update-settings` reports success on bad auth.**
-  - `pages/api/admin/update-settings.ts:27`. Nothing is written.
-  - Pinned: `app/_server-api/apiRoutes.test.ts`
-- [ ] **B7. Low: `/api/admin/showcase-publish` hangs on bad auth.**
-  - `pages/api/admin/showcase-publish.ts:24` has no response for that path.
-  - Pinned: `app/_server-api/apiRoutes.test.ts`
-- [ ] **B8. Low: `allPendingJobs(status)` always returns nothing.**
-  - `app/_utils/db.ts:193` calls `orderBy` on a collection. Nothing passes a
-    status today.
-  - Pinned: `app/_utils/db.test.ts`
-- [ ] **B9. Medium: the text2img gallery filter shows every image.**
-  - Saved rows have no `img2img` field, so `!entry.img2img` at
-    `app/_utils/db.ts:298` and `:380` is always true. Both the count and the
-    list are affected.
-  - Pinned: `app/_utils/db.library.test.ts`
+- [x] **B6. Low: `/api/admin/update-settings` reported success on bad auth.**
+      It now returns 401.
+- [x] **B7. Low: `/api/admin/showcase-publish` hung on bad auth.** It now
+      returns 401.
+- [x] **B8. Low: `allPendingJobs(status)` always returned nothing.** Fixed in
+      `app/_utils/db.ts`.
+- [x] **B9. Medium: the text2img gallery filter showed every image.** Fixed in
+      `app/_utils/db.ts`.
 - [x] **B10. High: "Upscale image" did nothing.** Fixed in
       `app/_controllers/imageDetailsCommon.ts`.
-- [ ] **B11. Medium: `/upscale` shows the changelog.**
-  - `app/(default-route-group)/upscale/page.tsx` renders `ChangelogPage`.
-  - `app/_pages/UpscalePage/index.tsx` isn't finished: it sends upscalers as
-    interrogation forms and only logs the result. Finish it or remove it.
+- [x] **B11. Medium: `/upscale` showed the changelog.** Removed the route and the
+      unfinished page. "Upscale image" in the image menu still works.
 
 ## Upgrades
 
@@ -90,6 +76,10 @@ marker is removed, so remove it in the same change.
     must change first. A test in `jobLifecycle.test.ts` documents it.
   - `origin/feat-batch` is unfinished work from March 2024. Use it for ideas.
 - [ ] **F2. Match the v2 interface.**
+- [ ] **F3. Upscale any uploaded image.**
+  - Neither v1 nor v2 can do this today. Send upscalers as Horde alchemy forms
+    through `/api/v2/interrogate/async`, then poll for the result and show or
+    save the output.
 
 ## Test gaps
 
@@ -97,7 +87,8 @@ marker is removed, so remove it in the same change.
 - [ ] The schema upgrade tests still use hand-built rows. Real rows from
       `e2e/fixtures/library.json` cover queries and the browser, but older rows
       there are derived from new ones. Add a real export from an old library.
-- [ ] Add outpainting to the library and UI tests once B4 is fixed.
+- [ ] Nothing in the UI sets outpainting yet, so it can only be tested at the
+      request level. Add library and UI tests if it gets an entry point.
 - [ ] Add a real upscale of an existing image once B10 is fixed.
 - [ ] Run the new CI workflow on GitHub. It's unverified on Linux.
 - [ ] Refresh `test-utils/hordeApiSchema.json` when the Horde API changes.
