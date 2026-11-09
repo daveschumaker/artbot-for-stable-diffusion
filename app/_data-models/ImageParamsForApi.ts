@@ -285,8 +285,8 @@ class ImageParamsForApi {
     }
 
     if (
-      source_processing ===
-      (SourceProcessing.InPainting || SourceProcessing.OutPainting)
+      source_processing === SourceProcessing.InPainting ||
+      source_processing === SourceProcessing.OutPainting
     ) {
       apiParams.params.denoising_strength = Number(denoising_strength) || 0.75
       apiParams.source_image = source_image

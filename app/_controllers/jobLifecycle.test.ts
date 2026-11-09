@@ -585,10 +585,7 @@ describe('image job lifecycle', () => {
       )
     })
 
-    // Known bug: the error is nested in `generations`, so the top-level
-    // INVALID_IMAGE_FROM_API branch in checkCurrentJob can't see it. The job
-    // reports a new image, saves nothing and is never marked as failed.
-    it.failing('fails a job whose image cannot be decoded', async () => {
+    it('fails a job whose image cannot be decoded', async () => {
       await submitJob()
       horde.finishJob()
       mockImages.isValid = false

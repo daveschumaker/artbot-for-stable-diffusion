@@ -91,9 +91,7 @@ it('finds img2img images', async () => {
   )
 })
 
-// Known bug B9 in ISSUES.md: real rows have no `img2img` field, so the filter's
-// `!entry.img2img` check matches every image.
-it.failing('leaves img2img and inpainting out of text2img', async () => {
+it('leaves img2img and inpainting out of text2img', async () => {
   expect(fixtureNames(await filtered('text2img'))).toEqual(
     fixtureNames(rowsWithSource('prompt'))
   )

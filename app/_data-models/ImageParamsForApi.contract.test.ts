@@ -174,8 +174,7 @@ describe('requests sent to the AI Horde', () => {
     expect(request.source_mask).not.toContain('secret-mask')
   })
 
-  // Known bug: `=== (InPainting || OutPainting)` only ever compares InPainting.
-  it.failing('includes the source image for outpainting', () => {
+  it('includes the source image for outpainting', () => {
     const request = build({
       source_processing: SourceProcessing.OutPainting,
       source_image: 'abc',

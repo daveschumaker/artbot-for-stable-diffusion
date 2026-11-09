@@ -275,8 +275,7 @@ describe('/api/admin/update-settings', () => {
     expect(writeSettings).not.toHaveBeenCalled()
   })
 
-  // Known bug: a rejected request is reported as a success.
-  it.failing('reports failure without a valid token', async () => {
+  it('reports failure without a valid token', async () => {
     const { body } = await callRoute(updateSettings, {
       method: 'POST',
       ...authorized('bad-token'),
@@ -313,8 +312,7 @@ describe('/api/admin/showcase-publish', () => {
     expect(fetchMock).not.toHaveBeenCalled()
   })
 
-  // Known bug: the route never responds, so the request hangs.
-  it.failing('responds when the token is invalid', async () => {
+  it('responds when the token is invalid', async () => {
     const { responded } = await callRoute(showcasePublish, {
       method: 'POST',
       ...authorized('bad-token'),

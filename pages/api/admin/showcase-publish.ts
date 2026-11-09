@@ -21,6 +21,10 @@ export default async function handler(
 
   const hasAuth = await validateToken(authorization as string)
 
+  if (!hasAuth) {
+    return res.status(401).json({ success: false })
+  }
+
   if (hasAuth) {
     try {
       const resp = await fetch(
