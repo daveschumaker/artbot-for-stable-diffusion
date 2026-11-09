@@ -21,17 +21,19 @@ marker is removed, so remove it in the same change.
 - [x] **S2. High: `/api/img-from-url` was an open SSRF.** Fixed by
       `app/_server-api/fetchRemoteImage.ts`, which checks addresses when
       connecting and on every redirect, and caps download size.
-- [ ] **S3. Medium: admin login is weakly protected.**
-  - One round of SHA-256 (`app/_server-api/adminTools.ts:52`), no rate limit.
-- [ ] **S4. Medium: server messages render unsanitized HTML.**
-  - `app/_modules/ServerMessage/serverMessage.tsx:32`
-  - `app/_modules/HeaderNav/NotificationDropdown/index.tsx:38`
-- [ ] **S5. Medium: Docker setup.**
-  - No `.dockerignore`, so `COPY . /artbot` would put `.env` secrets in the image.
+- [x] **S3. Medium: admin login was weakly protected.** Added scrypt hashes and
+      rate limiting. Run `node x-build-scripts/hashAdminPassword.js` and replace
+      `ADMIN_PW_HASH` to stop using the old SHA-256 hash.
+- [x] **S4. Medium: server messages rendered unsanitized HTML.** Fixed.
+- [x] **S5. Medium: Docker could bake in `.env` secrets.** Added `.dockerignore`.
+      The image now builds the app itself. Not yet built with Docker.
 - [ ] **S6. High: other vulnerable dependencies.**
-  - `dompurify`, `sharp`, `nodemailer`, `express`, `body-parser`, `fabric`.
-  - 37 production advisories at last audit: 4 critical, 18 high. The critical
-    ones are all indirect: `fast-xml-parser`, `form-data`, `proxy-addr`, `tar`.
+  - Removed `express`, `body-parser` and the unused direct `dompurify`. Patched
+    `sharp`, `nodemailer` and `isomorphic-dompurify`.
+  - 13 production advisories remain: 1 critical, 3 high. `fabric` is U4. The
+    critical `tar` and high `@mapbox/node-pre-gyp` come through `canvas`, an
+    optional `fabric` dependency. `postcss` comes through `next` and
+    `styled-components`.
 
 ## Bugs
 
@@ -59,10 +61,11 @@ marker is removed, so remove it in the same change.
 
 ## Upgrades
 
-- [x] **U1. Next 15.5.29 and React 19.3.1.** Needs Node 18.18 or later.
+- [x] **U1. Next 15.5.29 and React 19.3.1.**
 - [x] **U2. Libraries moved to React 19 compatible versions.** `react-lazyload`
       and `react-gallery-carousel` are unmaintained and run through `overrides`.
-- [ ] **U3. Patch `dompurify`, `sharp` and `nodemailer`.**
+- [x] **U3. Patched `dompurify`, `sharp` and `nodemailer`.** Needs Node 20.19.5
+      or later.
 - [ ] **U4. Upgrade `fabric` 5 to 7 on its own.** High risk for the canvas code.
 - [ ] **U5. Upgrade Dexie last,** only with the upgrade tests passing.
 

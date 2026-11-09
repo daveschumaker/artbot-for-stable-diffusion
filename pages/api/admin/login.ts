@@ -1,9 +1,21 @@
 import { adminLogin, validateToken } from 'app/_server-api/adminTools'
 import type { NextApiRequest, NextApiResponse } from 'next'
+import {
+  clearLoginFailures,
+  isLoginBlocked,
+  recordLoginFailure
+} from 'app/_server-api/loginRateLimit'
 
 type Data = {
   success: boolean
   token?: string
+}
+
+const getClientAddress = (req: NextApiRequest) => {
+  const forwarded = req.headers['x-forwarded-for']
+  const [first] = String(forwarded ?? '').split(',')
+
+  return first.trim() || req.socket?.remoteAddress || 'unknown'
 }
 
 export default async function handler(
@@ -31,8 +43,27 @@ export default async function handler(
     })
   }
 
-  const data = JSON.parse(req.body)
-  const { success, token } = adminLogin(data)
+  const client = getClientAddress(req)
+
+  if (isLoginBlocked(client)) {
+    return res.status(429).json({ success: false })
+  }
+
+  let credentials
+
+  try {
+    credentials = JSON.parse(req.body)
+  } catch (err) {
+    return res.status(400).json({ success: false })
+  }
+
+  const { success, token } = adminLogin(credentials ?? {})
+
+  if (success) {
+    clearLoginFailures(client)
+  } else {
+    recordLoginFailure(client)
+  }
 
   res.send({
     success,
