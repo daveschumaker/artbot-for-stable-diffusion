@@ -17,7 +17,9 @@ const nextConfig = {
   productionBrowserSourceMaps: false,
   reactStrictMode: false,
   env: {
-    ARTBOT_STATUS_API: process.env.ARTBOT_STATUS_API
+    ARTBOT_STATUS_API: process.env.ARTBOT_STATUS_API,
+    // Fixed at build time. Browser code needs it too.
+    BASE_PATH: basePath
   },
   async redirects() {
     return [

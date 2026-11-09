@@ -1,3 +1,4 @@
+import { basePath } from 'BASE_PATH'
 interface InpaintingCanvasOptions {
   setInput: (data: Partial<DefaultPromptInput>) => void
 }
@@ -588,7 +589,7 @@ class InpaintingCanvas {
 
   setCheckerboardBackground(): Promise<void> {
     return new Promise((resolve) => {
-      const bgImgSrc = '/artbot/checkerboard.png'
+      const bgImgSrc = `${basePath}/checkerboard.png`
       const bgImg = new Image()
       bgImg.onload = () => {
         const pattern = this.imageCtx.createPattern(bgImg, 'repeat')

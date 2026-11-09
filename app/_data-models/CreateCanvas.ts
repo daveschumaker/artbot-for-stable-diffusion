@@ -1,3 +1,4 @@
+import { basePath } from 'BASE_PATH'
 import { fabric } from 'fabric'
 import {
   getCanvasStore,
@@ -329,7 +330,7 @@ class CreateCanvas {
     this.initCanvasEvents()
     this.updateCanvas()
 
-    const bgUrl = '/artbot/checkerboard.png'
+    const bgUrl = `${basePath}/checkerboard.png`
     this.canvas.setBackgroundColor(
       // @ts-ignore
       { source: bgUrl, repeat: 'repeat' },
