@@ -187,11 +187,7 @@ export const clearPendingJobsTable = async () => {
 export const allPendingJobs = async (status?: string) => {
   try {
     if (status) {
-      return await db?.pending
-        ?.where('jobStatus')
-        ?.equals(status)
-        ?.orderBy('id')
-        .toArray()
+      return await db?.pending?.where('jobStatus')?.equals(status)?.sortBy('id')
     } else {
       return await db?.pending?.orderBy('id')?.toArray()
     }
@@ -268,6 +264,11 @@ export const countCompletedJobs = async () => {
   return await db?.completed?.orderBy('timestamp').count()
 }
 
+const isText2Img = (entry: any) =>
+  !entry.img2img &&
+  (!entry.source_processing ||
+    entry.source_processing === SourceProcessing.Prompt)
+
 export const countFilterCompleted = async ({
   filterType = 'favorited',
   model = ''
@@ -294,11 +295,7 @@ export const countFilterCompleted = async ({
     }
 
     if (filterType === 'text2img') {
-      return (
-        !entry.img2img ||
-        entry.source_processing === '' ||
-        entry.source_processing === SourceProcessing.Prompt
-      )
+      return isText2Img(entry)
     }
 
     if (filterType === 'img2img') {
@@ -376,11 +373,7 @@ export const filterCompletedJobs = async ({
     }
 
     if (filterType === 'text2img') {
-      return (
-        !entry.img2img ||
-        entry.source_processing === '' ||
-        entry.source_processing === SourceProcessing.Prompt
-      )
+      return isText2Img(entry)
     }
 
     if (filterType === 'img2img') {

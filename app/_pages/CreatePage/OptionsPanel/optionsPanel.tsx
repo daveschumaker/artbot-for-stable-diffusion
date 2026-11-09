@@ -125,8 +125,8 @@ const OptionsPanel = ({ setErrors }: Props) => {
           />
         )}
       {activeNav === 'img2img' &&
-        input.source_processing !==
-          (SourceProcessing.InPainting || SourceProcessing.OutPainting) && (
+        input.source_processing !== SourceProcessing.InPainting &&
+        input.source_processing !== SourceProcessing.OutPainting && (
           <Img2ImgPanel
             input={input}
             setInput={setInput}

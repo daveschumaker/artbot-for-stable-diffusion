@@ -204,7 +204,7 @@ describe('gallery filters', () => {
     ['unfavorited', ['b', 'd']],
     ['img2img', ['b']],
     ['inpainting', ['c']],
-    ['text2img', ['a', 'c', 'd']]
+    ['text2img', ['a', 'd']]
   ])('counts and lists %s images', async (filterType, expected) => {
     expect(await countFilterCompleted({ filterType })).toBe(expected.length)
 
@@ -274,9 +274,7 @@ describe('pending jobs', () => {
     expect(jobIds(await allPendingJobs())).toEqual(['job-0', 'job-1'])
   })
 
-  // Known bug: Dexie collections have no orderBy, so this throws internally and
-  // the catch returns []. Remove `.failing` once allPendingJobs is fixed.
-  it.failing('filters jobs by status', async () => {
+  it('filters jobs by status', async () => {
     await seedPending([JobStatus.Waiting, JobStatus.Queued])
     expect(jobIds(await allPendingJobs(JobStatus.Queued))).toEqual(['job-1'])
   })

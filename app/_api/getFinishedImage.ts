@@ -166,6 +166,19 @@ export const getFinishedImage = async (
         }
       }
 
+      const hasValidImage = generationDetails.some(
+        (generation) => 'base64String' in generation
+      )
+
+      if (!hasValidImage) {
+        return {
+          success: false,
+          status: 'INVALID_IMAGE_FROM_API',
+          message:
+            'An error occurred while attempting to generate this image. Please try again.'
+        }
+      }
+
       return {
         success: true,
         jobId,

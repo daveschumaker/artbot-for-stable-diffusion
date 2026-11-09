@@ -22,10 +22,12 @@ export default async function handler(
   const { authorization } = req.headers
   const hasAuth = await validateToken(authorization as string)
 
-  if (!hasAuth || !req.body) {
-    return res.send({
-      success: true
-    })
+  if (!hasAuth) {
+    return res.status(401).json({ success: false })
+  }
+
+  if (!req.body) {
+    return res.status(400).json({ success: false })
   }
 
   if (hasAuth) {
