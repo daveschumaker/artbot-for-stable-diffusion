@@ -14,9 +14,6 @@ const nextConfig = {
     styledComponents: true
   },
   distDir: 'build',
-  images: {
-    domains: ['huggingface.co', 'raw.githubusercontent.com']
-  },
   productionBrowserSourceMaps: false,
   reactStrictMode: false,
   env: {
