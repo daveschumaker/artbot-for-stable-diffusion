@@ -16,16 +16,16 @@ marker is removed, so remove it in the same change.
 
 ## Security
 
-- [ ] **S1. Critical: Next.js 14.0.4 has unauthenticated RCE advisories.**
-  - Affects the Image Optimization API (AVIF and SVG). The allowed domains in
-    `next.config.js` both host user-uploaded files, so treat this as exposed.
-  - Fix: upgrade to Next 15.5.28 or later. The 14.2.35 version that `npm audit`
-    suggests is still inside the affected ranges.
-  - Stopgap: block `/_next/image` at the reverse proxy. The app doesn't import
-    `next/image`, so nothing should depend on it.
-- [ ] **S2. High: `/api/img-from-url` is an open SSRF.**
-  - `pages/api/img-from-url.ts:85` fetches any URL with no login or address check.
-  - Pinned: `app/_server-api/apiRoutes.test.ts`
+- [ ] **S1. Critical: Next.js has unauthenticated RCE advisories.**
+  - Affects the Image Optimization API (AVIF and SVG). Fixed only in Next
+    15.5.28 or later, so this stays open until U1.
+  - Mitigated on 2026-11-09: upgraded to 14.2.35, removed the remote image
+    domains, and `middleware.ts` returns 404 for `/_next/image`. The app
+    doesn't import `next/image`. Other Next advisories remain until U1.
+  - Remove `middleware.ts` after the upgrade.
+- [x] **S2. High: `/api/img-from-url` was an open SSRF.** Fixed by
+      `app/_server-api/fetchRemoteImage.ts`, which checks addresses when
+      connecting and on every redirect, and caps download size.
 - [ ] **S3. Medium: admin login is weakly protected.**
   - One round of SHA-256 (`app/_server-api/adminTools.ts:52`), no rate limit.
 - [ ] **S4. Medium: server messages render unsanitized HTML.**
@@ -33,7 +33,6 @@ marker is removed, so remove it in the same change.
   - `app/_modules/HeaderNav/NotificationDropdown/index.tsx:38`
 - [ ] **S5. Medium: Docker setup.**
   - No `.dockerignore`, so `COPY . /artbot` would put `.env` secrets in the image.
-  - The image uses end-of-life Node 18.16.
 - [ ] **S6. High: other vulnerable dependencies.**
   - `dompurify`, `sharp`, `nodemailer`, `express`, `body-parser`, `fabric`.
   - 37 production advisories at last audit: 5 critical, 17 high.
@@ -61,9 +60,7 @@ marker is removed, so remove it in the same change.
   - `=== (InPainting || OutPainting)` at
     `app/_data-models/ImageParamsForApi.ts:289` only ever compares `InPainting`.
   - Pinned: `app/_data-models/ImageParamsForApi.contract.test.ts`
-- [ ] **B5. Low: a non-image URL throws in `/api/img-from-url`.**
-  - `sizeOf` at `pages/api/img-from-url.ts:109` is unguarded.
-  - Pinned: `app/_server-api/apiRoutes.test.ts`
+- [x] **B5. Low: a non-image URL threw in `/api/img-from-url`.** Fixed with S2.
 - [ ] **B6. Low: `/api/admin/update-settings` reports success on bad auth.**
   - `pages/api/admin/update-settings.ts:27`. Nothing is written.
   - Pinned: `app/_server-api/apiRoutes.test.ts`

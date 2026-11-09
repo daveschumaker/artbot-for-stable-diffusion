@@ -1,7 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import sizeOf from 'buffer-image-size'
 import sharp from 'sharp'
-import ufs from 'app/_utils/server_fileSize'
+import {
+  fetchRemoteImage,
+  RemoteImageError
+} from 'app/_server-api/fetchRemoteImage'
 
 const MAX_FILESIZE = 10 * 1000000
 
@@ -57,6 +60,14 @@ const resizeImage = async (imgBuffer: any) => {
   }
 }
 
+const fetchErrorStatus = (err: unknown) => {
+  const code = err instanceof RemoteImageError ? err.code : 'FETCH_FAILED'
+
+  if (code === 'TOO_LARGE') return 'ERROR_IMAGE_SIZE'
+  if (code === 'FETCH_FAILED') return 'UNABLE_TO_FETCH_IMAGE'
+  return 'INVALID_IMAGE_URL'
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
@@ -67,52 +78,35 @@ export default async function handler(
 
   const { imageUrl, r2 = false } = req.body
 
+  let imgBuffer: Buffer
+  let imageType: string | null
+
   try {
-    const fileSize = await ufs(imageUrl)
-    if (fileSize > MAX_FILESIZE) {
-      return res.send({
-        success: false,
-        status: 'ERROR_IMAGE_SIZE'
-      })
+    const remoteImage = await fetchRemoteImage(imageUrl, {
+      maxBytes: MAX_FILESIZE
+    })
+    imgBuffer = remoteImage.body
+    imageType = remoteImage.contentType
+  } catch (err) {
+    return res.send({ success: false, status: fetchErrorStatus(err) })
+  }
+
+  let converted
+
+  try {
+    const dimensions = sizeOf(imgBuffer)
+    const shouldResize = dimensions.height > 1024 || dimensions.width > 1024
+
+    if (!r2 && shouldResize) {
+      converted = await resizeImage(imgBuffer)
+    } else {
+      converted = await getDataUrl(imgBuffer)
     }
   } catch (err) {
     return res.send({
       success: false,
-      status: 'UNABLE_TO_GET_IMAGE_SIZE'
-    })
-  }
-
-  const resp = await fetch(imageUrl)
-  const imageType = resp.headers.get('Content-Type')
-
-  let converted
-  let imgBuffer
-
-  try {
-    // @ts-ignore
-    const arrayBuffer = await resp.arrayBuffer()
-    const uint8Array = new Uint8Array(arrayBuffer)
-    imgBuffer = Buffer.from(uint8Array)
-  } catch (err) {
-    console.log(`--`)
-    console.log(new Date())
-    console.log(`Error: resp.buffer is missing`)
-    console.log(`Image URL:`, imageUrl)
-    console.log(err)
-
-    return res.send({
-      success: false,
       status: 'ERROR_RESIZING_REMOTE_IMAGE'
     })
-  }
-
-  var dimensions = sizeOf(imgBuffer)
-  const shouldResize = dimensions.height > 1024 || dimensions.width > 1024
-
-  if (!r2 && shouldResize) {
-    converted = await resizeImage(imgBuffer)
-  } else {
-    converted = await getDataUrl(imgBuffer)
   }
 
   // @ts-ignore

@@ -6,13 +6,6 @@ import * as crypto from 'crypto'
 import jwt from 'jsonwebtoken'
 import sharp from 'sharp'
 
-const mockFileSize = jest.fn()
-
-jest.mock('app/_utils/server_fileSize', () => ({
-  __esModule: true,
-  default: (...args: unknown[]) => mockFileSize(...args)
-}))
-
 const SECRET = 'test-secret'
 const SALT = 'test-salt'
 const PASSWORD = 'correct-password'
@@ -28,6 +21,7 @@ process.env.NEXT_SHORTLINK_SERVICE = 'http://shortlinks.test'
 
 // Loaded with require so the environment above is set before adminTools reads it.
 const adminTools = require('app/_server-api/adminTools')
+const remoteImage = require('app/_server-api/fetchRemoteImage')
 const imgFromUrl = require('pages/api/img-from-url').default
 const login = require('pages/api/admin/login').default
 const updateSettings = require('pages/api/admin/update-settings').default
@@ -68,8 +62,6 @@ const fetchMock = jest.fn()
 
 beforeEach(() => {
   fetchMock.mockReset()
-  mockFileSize.mockReset()
-  mockFileSize.mockResolvedValue(1000)
   global.fetch = fetchMock as any
   jest.spyOn(console, 'log').mockImplementation(() => {})
   jest.spyOn(console, 'error').mockImplementation(() => {})
@@ -87,16 +79,15 @@ describe('/api/img-from-url', () => {
       .png()
       .toBuffer()
 
-  const serveImage = (buffer: Buffer) => {
-    fetchMock.mockResolvedValue({
-      headers: { get: () => 'image/png' },
-      arrayBuffer: async () =>
-        buffer.buffer.slice(
-          buffer.byteOffset,
-          buffer.byteOffset + buffer.byteLength
-        )
-    })
-  }
+  const serveImage = (body: Buffer) =>
+    jest
+      .spyOn(remoteImage, 'fetchRemoteImage')
+      .mockResolvedValue({ body, contentType: 'image/png' })
+
+  const failFetchWith = (code: string) =>
+    jest
+      .spyOn(remoteImage, 'fetchRemoteImage')
+      .mockRejectedValue(new remoteImage.RemoteImageError(code))
 
   const post = (body: object) => callRoute(imgFromUrl, { method: 'POST', body })
 
@@ -139,48 +130,50 @@ describe('/api/img-from-url', () => {
     expect(body).toMatchObject({ success: true, width: 2048, height: 1024 })
   })
 
-  it('refuses images over the size limit without downloading them', async () => {
-    mockFileSize.mockResolvedValue(10 * 1000000 + 1)
+  it.each([
+    ['TOO_LARGE', 'ERROR_IMAGE_SIZE'],
+    ['FETCH_FAILED', 'UNABLE_TO_FETCH_IMAGE'],
+    ['BLOCKED_ADDRESS', 'INVALID_IMAGE_URL'],
+    ['INVALID_URL', 'INVALID_IMAGE_URL']
+  ])('reports %s as %s', async (code, status) => {
+    failFetchWith(code)
 
     const { body } = await post({ imageUrl: url })
 
-    expect(body).toEqual({ success: false, status: 'ERROR_IMAGE_SIZE' })
-    expect(fetchMock).not.toHaveBeenCalled()
+    expect(body).toEqual({ success: false, status })
   })
 
-  it('reports when the image size cannot be read', async () => {
-    mockFileSize.mockRejectedValue(new Error('nope'))
+  it('caps downloads at 10 MB', async () => {
+    const fetchImage = serveImage(await pngOfSize(8, 8))
 
-    const { body } = await post({ imageUrl: url })
+    await post({ imageUrl: url })
 
-    expect(body.status).toBe('UNABLE_TO_GET_IMAGE_SIZE')
+    expect(fetchImage).toHaveBeenCalledWith(url, { maxBytes: 10000000 })
   })
 
-  // Known vulnerability: the route fetches whatever URL it's given (SSRF).
-  // Remove `.failing` once private and non-HTTP addresses are rejected.
-  it.failing.each([
+  it.each([
     'http://127.0.0.1:3000/admin',
-    'http://localhost/internal',
     'http://169.254.169.254/latest/meta-data/',
     'http://10.0.0.5/private.png',
     'http://192.168.1.1/router.png',
     'http://[::1]/internal',
-    'file:///etc/passwd'
+    'file:///etc/passwd',
+    undefined
   ])('refuses to fetch %s', async (imageUrl) => {
-    serveImage(await pngOfSize(8, 8))
+    const { body } = await post({ imageUrl })
 
-    await post({ imageUrl })
-
-    expect(fetchMock).not.toHaveBeenCalled()
+    expect(body).toEqual({ success: false, status: 'INVALID_IMAGE_URL' })
   })
 
-  // Known bug: sizeOf throws on a non-image, leaving the request unhandled.
-  it.failing('reports a failure for a non-image response', async () => {
+  it('reports a failure for a non-image response', async () => {
     serveImage(Buffer.from('<html>not an image</html>'))
 
     const { body } = await post({ imageUrl: url })
 
-    expect(body.success).toBe(false)
+    expect(body).toEqual({
+      success: false,
+      status: 'ERROR_RESIZING_REMOTE_IMAGE'
+    })
   })
 })
 
