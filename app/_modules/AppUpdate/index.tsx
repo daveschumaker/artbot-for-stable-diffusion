@@ -1,5 +1,6 @@
 'use client'
 
+import { basePath } from 'BASE_PATH'
 import MaxWidth from 'app/_components/MaxWidth'
 import { useCallback, useEffect, useState } from 'react'
 import { useStore } from 'statery'
@@ -28,7 +29,7 @@ export default function AppUpdate() {
       }
 
       waitingForServerInfoRes = true
-      const res = await fetch('/artbot/api/server-info')
+      const res = await fetch(`${basePath}/api/server-info`)
       const data = await res.json()
       const { build, serverMessage, cachedNotification = {} } = data
 

@@ -547,7 +547,7 @@ const RatePage = () => {
           Otherwise, you may be subject to a rating timeout.
           <div style={{ marginTop: '8px' }}>
             <img
-              src="/artbot/image_rating.png"
+              src={`${basePath}/image_rating.png`}
               alt="Example of an image rating CAPTCHA"
             />
           </div>

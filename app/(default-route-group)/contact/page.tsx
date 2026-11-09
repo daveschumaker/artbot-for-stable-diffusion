@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     title: 'ArtBot - Contact Form',
     images: [
       {
-        url: '/artbot/robots_communicating.jpg'
+        url: `${basePath}/robots_communicating.jpg`
       }
     ]
   },
