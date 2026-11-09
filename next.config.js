@@ -29,7 +29,6 @@ const nextConfig = {
       }
     ]
   },
-  swcMinify: true,
   webpack: (config) => {
     config.externals.push({
       bufferutil: 'commonjs bufferutil',

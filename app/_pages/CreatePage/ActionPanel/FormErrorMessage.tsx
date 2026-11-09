@@ -14,7 +14,7 @@ function FormErrorMessage({ errors }: Props) {
         .map((key: string) => {
           if (!Errors[key])
             return (
-              <div className="mt-2 text-red-500 font-semibold">
+              <div key={key} className="mt-2 text-red-500 font-semibold">
                 Unknown error code: {key}
               </div>
             )

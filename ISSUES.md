@@ -8,21 +8,16 @@ marker is removed, so remove it in the same change.
 
 ## Suggested order
 
-1. Close the production security holes (S1, S2).
-2. Fix the bugs that affect users' libraries and queues (B1, B2).
-3. Commit to the Next 15 and React 19 upgrade (U1 to U3).
-4. Upgrade the riskier libraries one at a time (U4, U5).
-5. Build real batching and the v2 interface (F1, F2).
+1. Fix the remaining bugs (B3, B4, B6 to B9, B11) and security items (S3 to S6).
+2. Patch the remaining dependencies (U3).
+3. Upgrade the riskier libraries one at a time (U4, U5).
+4. Build real batching and the v2 interface (F1, F2).
 
 ## Security
 
-- [ ] **S1. Critical: Next.js has unauthenticated RCE advisories.**
-  - Affects the Image Optimization API (AVIF and SVG). Fixed only in Next
-    15.5.28 or later, so this stays open until U1.
-  - Mitigated on 2026-11-09: upgraded to 14.2.35, removed the remote image
-    domains, and `middleware.ts` returns 404 for `/_next/image`. The app
-    doesn't import `next/image`. Other Next advisories remain until U1.
-  - Remove `middleware.ts` after the upgrade.
+- [x] **S1. Critical: Next.js RCE advisories.** Fixed by upgrading to Next
+      15.5.29. `middleware.ts` still returns 404 for `/_next/image`, because
+      the app doesn't use it.
 - [x] **S2. High: `/api/img-from-url` was an open SSRF.** Fixed by
       `app/_server-api/fetchRemoteImage.ts`, which checks addresses when
       connecting and on every redirect, and caps download size.
@@ -35,7 +30,8 @@ marker is removed, so remove it in the same change.
   - No `.dockerignore`, so `COPY . /artbot` would put `.env` secrets in the image.
 - [ ] **S6. High: other vulnerable dependencies.**
   - `dompurify`, `sharp`, `nodemailer`, `express`, `body-parser`, `fabric`.
-  - 37 production advisories at last audit: 5 critical, 17 high.
+  - 37 production advisories at last audit: 4 critical, 18 high. The critical
+    ones are all indirect: `fast-xml-parser`, `form-data`, `proxy-addr`, `tar`.
 
 ## Bugs
 
@@ -77,14 +73,9 @@ marker is removed, so remove it in the same change.
 
 ## Upgrades
 
-- [ ] **U1. Next 15.5.29 and React 19, together.** The `app/` directory requires
-      React 19 on Next 15. Move to Node 22 or 24 at the same time.
-- [ ] **U2. Replace or update libraries without React 19 support.**
-  - `react-portal` also uses an API React 19 removed.
-  - `react-lazyload` (gallery), `react-select`, `react-swipeable`,
-    `react-textarea-autosize`, `react-gallery-carousel`, `react-snap-carousel`,
-    `@radix-ui/react-checkbox`, `@radix-ui/react-navigation-menu`,
-    `@tabler/icons-react`.
+- [x] **U1. Next 15.5.29 and React 19.3.1.** Needs Node 18.18 or later.
+- [x] **U2. Libraries moved to React 19 compatible versions.** `react-lazyload`
+      and `react-gallery-carousel` are unmaintained and run through `overrides`.
 - [ ] **U3. Patch `dompurify`, `sharp` and `nodemailer`.**
 - [ ] **U4. Upgrade `fabric` 5 to 7 on its own.** High risk for the canvas code.
 - [ ] **U5. Upgrade Dexie last,** only with the upgrade tests passing.
@@ -113,6 +104,10 @@ marker is removed, so remove it in the same change.
 
 ## Cleanup
 
+- [ ] Remove `AbTestModal` and `react-gallery-carousel`. The carousel relies on
+      `defaultProps`, which React 19 ignores on function components, and the
+      modal is only reachable for the retired `SDXL_beta` model.
+- [ ] Replace `react-lazyload`, which is unmaintained.
 - [ ] Remove the dead `useAllModels` branch: `app/_utils/pendingUtils.ts:194`
       clears the flag that line 262 checks.
 - [ ] Track down Jest's "worker failed to exit gracefully" warning.

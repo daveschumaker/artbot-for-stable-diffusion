@@ -147,12 +147,8 @@ const ChangelogPage = () => {
               h1: ({ ...props }) => (
                 <h2 className="pb-[8px] font-[700]" {...props} />
               ),
-              li: ({ ...props }) => {
-                return <StyledLi {...props} />
-              },
-              ul: ({ ...props }) => {
-                return <StyledUl {...props} />
-              }
+              li: ({ children }) => <StyledLi>{children}</StyledLi>,
+              ul: ({ children }) => <StyledUl>{children}</StyledUl>
             }}
           >
             {CHANGELOG}
