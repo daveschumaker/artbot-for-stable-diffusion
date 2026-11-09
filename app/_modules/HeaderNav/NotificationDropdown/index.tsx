@@ -1,3 +1,4 @@
+import { sanitize } from 'isomorphic-dompurify'
 import { useStore } from 'statery'
 import styles from './component.module.css'
 import { appInfoStore } from 'app/_store/appStore'
@@ -35,7 +36,7 @@ export default function NotificationDropdown({
     >
       <div className="font-mono text-[14px]" ref={contentRef}>
         <div className="font-[700] pb-1">{title}</div>
-        <div dangerouslySetInnerHTML={{ __html: content }} />
+        <div dangerouslySetInnerHTML={{ __html: sanitize(content) }} />
         <div style={{ fontSize: '12px', paddingTop: '8px' }}>
           Posted {new Date(timestamp).toLocaleDateString()}
         </div>

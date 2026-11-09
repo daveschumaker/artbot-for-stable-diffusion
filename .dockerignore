@@ -1,0 +1,11 @@
+# Secrets are supplied at runtime and must never be baked into an image.
+.env
+.env.*
+
+.git
+node_modules
+build
+__local_db
+test-results
+playwright-report
+coverage

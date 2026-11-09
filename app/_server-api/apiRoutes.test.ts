@@ -2,6 +2,7 @@
  * Tests for the Next API routes. They live outside pages/ because Next would
  * serve any file in that directory as a route.
  */
+import { execFileSync } from 'child_process'
 import * as crypto from 'crypto'
 import jwt from 'jsonwebtoken'
 import sharp from 'sharp'
@@ -21,6 +22,7 @@ process.env.NEXT_SHORTLINK_SERVICE = 'http://shortlinks.test'
 
 // Loaded with require so the environment above is set before adminTools reads it.
 const adminTools = require('app/_server-api/adminTools')
+const { resetLoginRateLimit } = require('app/_server-api/loginRateLimit')
 const remoteImage = require('app/_server-api/fetchRemoteImage')
 const imgFromUrl = require('pages/api/img-from-url').default
 const login = require('pages/api/admin/login').default
@@ -62,6 +64,7 @@ const fetchMock = jest.fn()
 
 beforeEach(() => {
   fetchMock.mockReset()
+  resetLoginRateLimit()
   global.fetch = fetchMock as any
   jest.spyOn(console, 'log').mockImplementation(() => {})
   jest.spyOn(console, 'error').mockImplementation(() => {})
@@ -223,6 +226,149 @@ describe('/api/admin/login', () => {
     })
 
     expect(body.success).toBe(false)
+  })
+})
+
+describe('admin login protection', () => {
+  const attempt = (
+    password: unknown,
+    client = '203.0.113.1',
+    username: unknown = 'admin'
+  ) =>
+    callRoute(login, {
+      method: 'POST',
+      headers: { 'x-forwarded-for': client },
+      body: JSON.stringify({ username, password })
+    })
+
+  const failFromClient = async (times: number, client = '203.0.113.1') => {
+    for (let i = 0; i < times; i++) {
+      await attempt('wrong', client)
+    }
+  }
+
+  it('allows four failed attempts', async () => {
+    await failFromClient(4)
+
+    expect((await attempt(PASSWORD)).body.success).toBe(true)
+  })
+
+  it('blocks a client after five failures, even with the right password', async () => {
+    await failFromClient(5)
+
+    const result = await attempt(PASSWORD)
+
+    expect(result.statusCode).toBe(429)
+    expect(result.body).toEqual({ success: false })
+  })
+
+  it('does not block other clients', async () => {
+    await failFromClient(5)
+
+    expect((await attempt(PASSWORD, '203.0.113.2')).body.success).toBe(true)
+  })
+
+  it('clears failures after a successful login', async () => {
+    await failFromClient(4)
+    await attempt(PASSWORD)
+    await failFromClient(4)
+
+    expect((await attempt(PASSWORD)).body.success).toBe(true)
+  })
+
+  it('limits guessing from rotating client addresses', async () => {
+    for (let i = 0; i < 50; i++) {
+      await attempt('wrong', `198.51.100.${i}`)
+    }
+
+    expect((await attempt(PASSWORD, '203.0.113.9')).statusCode).toBe(429)
+  })
+
+  it('unblocks after the window passes', async () => {
+    await failFromClient(5)
+    const now = Date.now()
+    jest.spyOn(Date, 'now').mockReturnValue(now + 16 * 60 * 1000)
+
+    expect((await attempt(PASSWORD)).body.success).toBe(true)
+  })
+
+  it('rejects a malformed request body', async () => {
+    const result = await callRoute(login, { method: 'POST', body: '{nope' })
+
+    expect(result.statusCode).toBe(400)
+  })
+
+  it.each([[{ a: 1 }], [null], [undefined], [123]])(
+    'rejects the non-string password %p',
+    async (password) => {
+      expect((await attempt(password)).body.success).toBe(false)
+    }
+  )
+
+  describe('when the admin account is not configured', () => {
+    const { ADMIN_USER, ADMIN_PW_HASH } = process.env
+
+    afterEach(() => {
+      process.env.ADMIN_USER = ADMIN_USER
+      process.env.ADMIN_PW_HASH = ADMIN_PW_HASH
+    })
+
+    it('refuses a login with no username', async () => {
+      delete process.env.ADMIN_USER
+
+      const result = await callRoute(login, {
+        method: 'POST',
+        body: JSON.stringify({ password: PASSWORD })
+      })
+
+      expect(result.body.success).toBe(false)
+    })
+
+    it('refuses every password when no hash is set', async () => {
+      delete process.env.ADMIN_PW_HASH
+
+      expect((await attempt('')).body.success).toBe(false)
+      expect((await attempt('undefined')).body.success).toBe(false)
+    })
+  })
+
+  describe('with a scrypt password hash', () => {
+    const legacyHash = process.env.ADMIN_PW_HASH
+    let scryptHash: string
+
+    beforeAll(() => {
+      scryptHash = execFileSync(
+        process.execPath,
+        ['x-build-scripts/hashAdminPassword.js'],
+        { input: `${PASSWORD}\n`, encoding: 'utf8' }
+      ).trim()
+    })
+
+    beforeEach(() => {
+      process.env.ADMIN_PW_HASH = scryptHash
+    })
+
+    afterEach(() => {
+      process.env.ADMIN_PW_HASH = legacyHash
+    })
+
+    it('generates a salted hash without a $ character', () => {
+      expect(scryptHash).toMatch(/^scrypt:[0-9a-f]{32}:[0-9a-f]{128}$/)
+    })
+
+    it('accepts the right password', async () => {
+      expect((await attempt(PASSWORD)).body.success).toBe(true)
+    })
+
+    it('rejects a wrong password', async () => {
+      expect((await attempt('wrong')).body.success).toBe(false)
+    })
+
+    it('rejects a truncated stored hash', async () => {
+      process.env.ADMIN_PW_HASH = 'scrypt:abc'
+
+      expect((await attempt(PASSWORD)).body.success).toBe(false)
+    })
   })
 })
 

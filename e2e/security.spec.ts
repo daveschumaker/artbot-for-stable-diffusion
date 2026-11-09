@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { mockBackend } from './helpers'
 
 const IMAGE_ENDPOINT = '/artbot/_next/image'
 
@@ -46,4 +47,31 @@ test('image import refuses internal addresses', async ({ request }) => {
       status: 'INVALID_IMAGE_URL'
     })
   }
+})
+
+test('server messages cannot run scripts', async ({ page }) => {
+  await mockBackend(page)
+  await page.route('**/artbot/api/server-info', (route) =>
+    route.fulfill({
+      json: {
+        success: true,
+        build: 'e2e',
+        serverMessage: {
+          title: 'Maintenance notice',
+          content:
+            'Read <a href="https://example.test/news">the news</a>' +
+            '<img src="x" onerror="window.__xss = true">' +
+            '<script>window.__xss = true</script>'
+        }
+      }
+    })
+  )
+
+  await page.goto('/artbot/about')
+
+  await expect(page.getByRole('link', { name: 'the news' })).toBeVisible({
+    timeout: 20000
+  })
+  await page.waitForTimeout(500)
+  expect(await page.evaluate(() => (window as any).__xss)).toBeUndefined()
 })

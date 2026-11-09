@@ -49,29 +49,59 @@ export const updateServerSettingsFile = async (data: any) => {
   }
 }
 
-export const hashPassword = (password: string, salt: string) => {
-  const hash = crypto.createHash('sha256')
-  hash.update(password + salt)
-  return hash.digest('hex')
+const safeEqual = (a: string, b: string) => {
+  const hashedA = crypto.createHash('sha256').update(a).digest()
+  const hashedB = crypto.createHash('sha256').update(b).digest()
+
+  return crypto.timingSafeEqual(hashedA, hashedB)
+}
+
+// New hashes come from x-build-scripts/hashAdminPassword.js. Older deployments
+// use a salted SHA-256 hash until ADMIN_PW_HASH is replaced.
+const verifyPassword = (password: string, storedHash: string) => {
+  if (storedHash.startsWith('scrypt:')) {
+    const [, salt, key] = storedHash.split(':')
+
+    if (!salt || !key) {
+      return false
+    }
+
+    return safeEqual(crypto.scryptSync(password, salt, 64).toString('hex'), key)
+  }
+
+  const legacyHash = crypto
+    .createHash('sha256')
+    .update(password + process.env.SALT)
+    .digest('hex')
+
+  return safeEqual(legacyHash, storedHash)
 }
 
 export const adminLogin = ({
   username,
   password
 }: {
-  username: string
-  password: string
+  username: unknown
+  password: unknown
 }) => {
-  if (process.env.ADMIN_USER !== username) {
+  const { ADMIN_USER, ADMIN_PW_HASH } = process.env
+
+  if (
+    !ADMIN_USER ||
+    !ADMIN_PW_HASH ||
+    typeof username !== 'string' ||
+    typeof password !== 'string'
+  ) {
     return {
       success: false
     }
   }
 
-  if (
-    hashPassword(password, process.env.SALT as string) ===
-    process.env.ADMIN_PW_HASH
-  ) {
+  // Both checks always run, so timing doesn't reveal which one failed.
+  const validUser = safeEqual(username, ADMIN_USER)
+  const validPassword = verifyPassword(password, ADMIN_PW_HASH)
+
+  if (validUser && validPassword) {
     // @ts-ignore
     const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: '6h' })
 
