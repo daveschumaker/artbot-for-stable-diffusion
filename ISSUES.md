@@ -39,18 +39,10 @@ marker is removed, so remove it in the same change.
 
 ## Bugs
 
-- [ ] **B1. High: older images crash the image detail page.**
-  - Rows with only a `model` string, or with no `source_image`, hit the error
-    screen. `db.ts` still handles the `model` shape, so such rows should exist
-    in real libraries.
-  - Not yet traced. `models[0].indexOf` at
-    `app/_data-models/CreateImageRequest.ts:148` is the likely `model` cause.
-  - Pinned (`model` case): `e2e/smoke.spec.ts`, `e2e/library.spec.ts`. The
-    `source_image` case needs a test.
-- [ ] **B2. High: one malformed job blocks the queue until reload.**
-  - `app/_api/createImage.ts:41-42` sets `isPending` and then builds params
-    outside the `try`.
-  - Pinned: `app/_controllers/jobLifecycle.test.ts`
+- [x] **B1. High: older images crashed the image detail page.** Fixed by a read
+      hook in `app/_db/dexie.ts` that fills in `models` and `source_image`.
+- [x] **B2. High: one malformed job blocked the queue until reload.** Fixed in
+      `app/_api/createImage.ts`. The job is now marked as failed.
 - [ ] **B3. Medium: an undecodable image reports success.**
   - The error is nested in `generations`, so the check at
     `app/_utils/imageCache.ts:522` never sees it. Nothing is saved and the job
@@ -76,11 +68,8 @@ marker is removed, so remove it in the same change.
     `app/_utils/db.ts:298` and `:380` is always true. Both the count and the
     list are affected.
   - Pinned: `app/_utils/db.library.test.ts`
-- [ ] **B10. High: "Upscale image" does nothing.**
-  - `upscaleImage` at `app/_controllers/imageDetailsCommon.ts:175` passes a
-    `DefaultPromptInput`, which has no `jobStatus`, so the job is saved but the
-    queue never sends it. Other flows build a `CreateImageRequest` first.
-  - Pinned: `e2e/sourceImages.spec.ts`
+- [x] **B10. High: "Upscale image" did nothing.** Fixed in
+      `app/_controllers/imageDetailsCommon.ts`.
 - [ ] **B11. Medium: `/upscale` shows the changelog.**
   - `app/(default-route-group)/upscale/page.tsx` renders `ChangelogPage`.
   - `app/_pages/UpscalePage/index.tsx` isn't finished: it sends upscalers as
