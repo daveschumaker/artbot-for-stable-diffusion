@@ -52,3 +52,7 @@ next-env.d.ts
 !/__local_db/_README.md
 
 .vscode
+
+# Playwright
+/test-results/
+/playwright-report/
