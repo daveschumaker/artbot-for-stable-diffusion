@@ -5,9 +5,12 @@
  */
 import { expect, Page, test } from '@playwright/test'
 import sharp from 'sharp'
-
-const MODEL = 'AlbedoBase XL (SDXL)'
-const CORS = { 'access-control-allow-origin': '*' }
+import {
+  expectImageToDisplay,
+  MODEL,
+  mockBackend,
+  trackPageErrors
+} from './helpers'
 
 let imageBytes: Buffer
 
@@ -18,117 +21,6 @@ test.beforeAll(async () => {
     .webp()
     .toBuffer()
 })
-
-const json = (body: unknown, status = 200) => ({
-  status,
-  headers: CORS,
-  contentType: 'application/json',
-  body: JSON.stringify(body)
-})
-
-const mockBackend = async (page: Page) => {
-  const horde = { submissions: [] as any[] }
-
-  // Later routes take priority. Nothing is allowed to reach a real service.
-  await page.route(
-    (url) => url.hostname !== 'localhost',
-    (route) => route.fulfill(json({}))
-  )
-  await page.route('**/artbot/api/**', (route) =>
-    route.fulfill(json({ success: true }))
-  )
-  await page.route('**/artbot/api/models/available', (route) =>
-    route.fulfill(
-      json({
-        success: true,
-        models: [
-          {
-            name: MODEL,
-            count: 5,
-            performance: 100000,
-            queued: 0,
-            eta: 5,
-            type: 'image'
-          }
-        ]
-      })
-    )
-  )
-  await page.route('**/artbot/api/models/details', (route) =>
-    route.fulfill(
-      json({
-        success: true,
-        models: {
-          [MODEL]: {
-            name: MODEL,
-            baseline: 'stable_diffusion_xl',
-            description: 'A test model',
-            nsfw: false,
-            trigger: [],
-            type: 'ckpt',
-            version: '1'
-          }
-        }
-      })
-    )
-  )
-  await page.route(/aihorde\.net\/api\/v2\/generate\/async/, (route) => {
-    horde.submissions.push(route.request().postDataJSON())
-    return route.fulfill(json({ id: 'e2e-job', kudos: 5 }, 202))
-  })
-  await page.route(/aihorde\.net\/api\/v2\/generate\/check\//, (route) =>
-    route.fulfill(
-      json({
-        done: true,
-        faulted: false,
-        finished: 1,
-        processing: 0,
-        waiting: 0,
-        wait_time: 0,
-        queue_position: 0,
-        is_possible: true,
-        kudos: 5
-      })
-    )
-  )
-  await page.route(/aihorde\.net\/api\/v2\/generate\/status\//, (route) =>
-    route.fulfill(
-      json({
-        done: true,
-        faulted: false,
-        kudos: 5,
-        shared: false,
-        generations: [
-          {
-            id: 'horde-image',
-            img: 'https://r2.example.test/image.webp',
-            seed: '1234',
-            model: MODEL,
-            censored: false,
-            worker_id: 'worker',
-            worker_name: 'worker'
-          }
-        ]
-      })
-    )
-  )
-  await page.route('https://r2.example.test/**', (route) =>
-    route.fulfill({
-      status: 200,
-      headers: CORS,
-      contentType: 'image/webp',
-      body: imageBytes
-    })
-  )
-
-  return horde
-}
-
-const trackPageErrors = (page: Page) => {
-  const errors: string[] = []
-  page.on('pageerror', (error) => errors.push(error.message))
-  return errors
-}
 
 const waitForDatabase = (page: Page) =>
   page.waitForFunction(() => Boolean((window as any)._artbotDb?.completed))
@@ -153,7 +45,8 @@ const seedLibrary = async (page: Page, count: number) => {
           height: 64,
           jobStatus: 'done',
           base64String: base64,
-          thumbnail: base64
+          thumbnail: base64,
+          source_image: ''
         })
       }
     },
@@ -198,7 +91,9 @@ test.describe('every page renders', () => {
 
       expect(response?.status()).toBeLessThan(400)
       await expect(page.getByText('Application error')).toHaveCount(0)
-      await expect(page.getByText('Something went wrong')).toHaveCount(0)
+      await expect(
+        page.getByText('An unexpected error has occurred')
+      ).toHaveCount(0)
       expect(errors).toEqual([])
     })
   }
@@ -211,13 +106,15 @@ test('creating an image takes it from prompt to gallery', async ({ page }) => {
   await page.goto('/artbot/create')
   await page.waitForLoadState('networkidle')
   await page.getByPlaceholder('Describe your image').fill('a cat in a hat')
-  await page.getByTitle('Create new image').click()
+  // The form has an action panel above and below it.
+  await page.getByTitle('Create new image').first().click()
 
-  await page.waitForFunction(
-    async () => (await (window as any)._artbotDb.completed.count()) === 1,
-    undefined,
-    { timeout: 30000 }
-  )
+  await expect
+    .poll(
+      () => page.evaluate(() => (window as any)._artbotDb.completed.count()),
+      { timeout: 30000 }
+    )
+    .toBe(1)
 
   expect(horde.submissions).toHaveLength(1)
   expect(horde.submissions[0].prompt).toContain('a cat in a hat')
@@ -228,8 +125,11 @@ test('creating an image takes it from prompt to gallery', async ({ page }) => {
   await expect(thumbnail).toBeVisible()
   await thumbnail.click()
 
-  await expect(page).toHaveURL(/\/image\/e2e-job/)
-  await expect(page.getByText('a cat in a hat').first()).toBeVisible()
+  // On desktop, a thumbnail opens the image in a modal.
+  await expectImageToDisplay(page, 'a cat in a hat')
+
+  await page.goto('/artbot/image/e2e-job')
+  await expectImageToDisplay(page, 'a cat in a hat')
   expect(errors).toEqual([])
 })
 
@@ -248,8 +148,31 @@ test('an existing library appears in the gallery', async ({ page }) => {
   }
 
   await page.goto('/artbot/image/seed-2')
-  await expect(page.getByText('seeded prompt 2').first()).toBeVisible()
+  await expectImageToDisplay(page, 'seeded prompt 2')
   expect(errors).toEqual([])
+})
+
+// Known bug: the detail page reads `models[0]` and crashes on older images that
+// only have a `model` string. Remove test.fail() once they display.
+test('an older image with a single model field opens', async ({ page }) => {
+  test.fail()
+  await mockBackend(page)
+
+  await page.goto('/artbot/images')
+  await seedLibrary(page, 1)
+  await page.evaluate(() =>
+    (window as any)._artbotDb.completed
+      .where('jobId')
+      .equals('seed-1')
+      .modify((row: any) => {
+        delete row.models
+        row.model = 'stable_diffusion'
+      })
+  )
+
+  await page.goto('/artbot/image/seed-1')
+
+  await expectImageToDisplay(page, 'seeded prompt 1')
 })
 
 test('the drawing canvas accepts input', async ({ page }) => {
