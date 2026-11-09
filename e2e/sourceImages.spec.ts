@@ -78,17 +78,17 @@ const openPage = async (page: Page, url: string) => {
 const openImg2Img = (page: Page) =>
   openPage(page, '/artbot/create?panel=img2img')
 
-const seedSavedImage = async (page: Page) => {
+const seedSavedImage = async (page: Page, image = savedImage) => {
   await page.goto('/artbot/images')
   await page.waitForFunction(() =>
     Boolean((window as any)._artbotDb?.completed)
   )
   await page.evaluate(
-    (image) => (window as any)._artbotDb.completed.add(image),
-    savedImage
+    (row) => (window as any)._artbotDb.completed.add(row),
+    image
   )
-  await page.goto(`/artbot/image/${savedImage.jobId}`)
-  await page.getByAltText(savedImage.prompt).first().waitFor()
+  await page.goto(`/artbot/image/${image.jobId}`)
+  await page.getByAltText(image.prompt).first().waitFor()
 }
 
 const chooseMenuItem = async (page: Page, name: string) => {
@@ -229,9 +229,18 @@ test.describe('actions on a saved image', () => {
     expect(request.models).toEqual(savedImage.models)
   })
 
-  // Known bug B10 in ISSUES.md. Remove test.fail() once upscaling works.
+  test('reroll works on an older image', async ({ page }) => {
+    const horde = await mockBackend(page)
+    const [olderImage] = library.legacy
+    await seedSavedImage(page, olderImage)
+
+    await page.locator('.tabler-icon-refresh').first().click()
+
+    const request = await expectSubmission(horde)
+    expect(request.models).toEqual([olderImage.model])
+  })
+
   test('upscale requests the upscaler', async ({ page }) => {
-    test.fail()
     const horde = await mockBackend(page)
     await seedSavedImage(page)
 

@@ -175,9 +175,7 @@ export const rerollImage = async (imageDetails: any) => {
 export const upscaleImage = async (imageDetails: any) => {
   const cleanParams = new UpscaleImageRequest(imageDetails)
   const defaultInput = CreateImageRequest.toDefaultPromptInput(cleanParams)
-  const res = await createImageJob(
-    defaultInput as unknown as CreateImageRequest
-  )
+  const res = await createImageJob(new CreateImageRequest(defaultInput as any))
 
   if (res?.success) {
     return {

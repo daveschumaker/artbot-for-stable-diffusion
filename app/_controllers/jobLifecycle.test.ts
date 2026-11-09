@@ -366,23 +366,26 @@ describe('image job lifecycle', () => {
       expect(horde.submissions).toHaveLength(2)
     })
 
-    // Known bug: createImage sets isPending before building params outside its
-    // try block, so a throw there blocks every later job until a page reload.
-    it.failing(
-      'can send another job after one has malformed params',
-      async () => {
-        await queueJobs({ numImages: 2 })
-        const [malformed, valid] = allCached()
+    it('can send another job after one has malformed params', async () => {
+      await queueJobs({ numImages: 2 })
+      const [malformed, valid] = allCached()
 
-        await app.imageCache.sendJobToApi({
-          ...malformed,
-          post_processing: null
-        })
-        await app.imageCache.sendJobToApi(valid)
+      const result = await app.imageCache.sendJobToApi({
+        ...malformed,
+        post_processing: null
+      })
+      expect(result).toMatchObject({
+        success: false,
+        status: 'UNKNOWN_ERROR'
+      })
+      expect(app.cache.getPendingJob(malformed.jobId).jobStatus).toBe(
+        JobStatus.Error
+      )
 
-        expect(horde.submissions).toHaveLength(1)
-      }
-    )
+      await app.imageCache.sendJobToApi(valid)
+
+      expect(horde.submissions).toHaveLength(1)
+    })
   })
 
   describe('polling', () => {

@@ -17,6 +17,16 @@ interface CreateImageResponse {
 
 let isPending = false
 
+// Malformed details are one reason to end up logging an error, so building
+// the logged params must not throw again.
+const paramsForErrorLog = (imageDetails: IArtBotImageDetails) => {
+  try {
+    return { ...new ImageParamsForApi(imageDetails, { hasError: true }) }
+  } catch {
+    return {}
+  }
+}
+
 export const createImage = async (
   imageDetails: IArtBotImageDetails
 ): Promise<CreateImageResponse> => {
@@ -39,9 +49,9 @@ export const createImage = async (
   }
 
   isPending = true
-  const imageParams = new ImageParamsForApi(imageDetails)
 
   try {
+    const imageParams = new ImageParamsForApi(imageDetails)
     const resp = await fetch(`${getApiHostServer()}/api/v2/generate/async`, {
       method: 'POST',
       body: JSON.stringify(imageParams),
@@ -215,9 +225,7 @@ export const createImage = async (
       event: 'UNKNOWN_ERROR',
       content: 'createImageApi',
       data: {
-        imageParams: {
-          ...new ImageParamsForApi(imageDetails, { hasError: true })
-        },
+        imageParams: paramsForErrorLog(imageDetails),
         // @ts-ignore
         errMsg: err?.message || ''
       }

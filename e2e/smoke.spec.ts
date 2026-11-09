@@ -152,10 +152,7 @@ test('an existing library appears in the gallery', async ({ page }) => {
   expect(errors).toEqual([])
 })
 
-// Known bug: the detail page reads `models[0]` and crashes on older images that
-// only have a `model` string. Remove test.fail() once they display.
 test('an older image with a single model field opens', async ({ page }) => {
-  test.fail()
   await mockBackend(page)
 
   await page.goto('/artbot/images')

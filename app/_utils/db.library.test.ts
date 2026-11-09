@@ -3,7 +3,7 @@
  * jobs (e2e/fixtures/library.json), rather than rows written by hand.
  */
 import 'fake-indexeddb/auto'
-import { db } from 'app/_db/dexie'
+import { db, MySubClassedDexie } from 'app/_db/dexie'
 import {
   _getImageDetails,
   countFilterCompleted,
@@ -41,6 +41,25 @@ it('stores every real row unchanged', async () => {
   for (const image of realImages) {
     const stored = await _getImageDetails(image.jobId)
     expect(stored).toEqual({ ...image, id: expect.any(Number) })
+  }
+})
+
+it('upgrades older rows when read, without rewriting them', async () => {
+  const [older] = library.legacy
+  await db.completed.add(older)
+
+  try {
+    const stored = await _getImageDetails(older.jobId)
+    expect(stored.models).toEqual([older.model])
+    expect(stored.source_image).toBe('')
+
+    const raw = new MySubClassedDexie()
+    const onDisk = await raw.table('completed').get({ jobId: older.jobId })
+    raw.close()
+    expect(onDisk.models).toBeUndefined()
+    expect(onDisk.source_image).toBeUndefined()
+  } finally {
+    await db.completed.where('jobId').equals(older.jobId).delete()
   }
 })
 

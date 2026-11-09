@@ -104,10 +104,8 @@ test('a failed job shows its error on the pending page', async ({ page }) => {
   await expectNoCrash(page)
 })
 
-// Known bug B1 in ISSUES.md. Remove test.fail() once older images display.
 for (const image of library.legacy) {
   test(`legacy image ${image.jobId} opens`, async ({ page }) => {
-    test.fail()
     await seed(page, { completed: [image] })
 
     await page.goto(`/artbot/image/${image.jobId}`)
