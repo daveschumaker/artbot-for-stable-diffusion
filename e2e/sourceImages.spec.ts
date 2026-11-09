@@ -227,6 +227,9 @@ test.describe('actions on a saved image', () => {
     const request = await expectSubmission(horde)
     expect(request.prompt).toContain(savedImage.prompt)
     expect(request.models).toEqual(savedImage.models)
+    await expect(
+      page.getByText('Re-rolling and requesting new image').first()
+    ).toBeVisible()
   })
 
   test('reroll works on an older image', async ({ page }) => {

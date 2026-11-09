@@ -5,6 +5,12 @@ export const metadata: Metadata = {
   title: 'Image Details Page - ArtBot for Stable Diffusion'
 }
 
-export default function Page({ params }: { params: { id: string } }) {
-  return <ImagePage id={params.id} />
+export default async function Page({
+  params
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { id } = await params
+
+  return <ImagePage id={id} />
 }

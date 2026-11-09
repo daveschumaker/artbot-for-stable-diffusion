@@ -39,7 +39,7 @@ const DropDownMenu = ({
   handleClose = () => {},
   position = ''
 }: Props) => {
-  const ref = useRef()
+  const ref = useRef(undefined)
   useOnClickOutside(ref, () => {
     setTimeout(() => {
       handleClose()

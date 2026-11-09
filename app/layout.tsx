@@ -57,7 +57,7 @@ export default async function RootLayout({
   children: ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -81,9 +81,9 @@ export default async function RootLayout({
         // This ensures that footer is always forced to bottom of page if there is extra room.
         style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}
       >
-        {/* AppInit uses useSearchParams, so the whole app renders on the client. */}
-        <Suspense fallback={null}>
-          <ModalProvider>
+        <ModalProvider>
+          <Suspense fallback={null}>
+            {/* AppInit uses useSearchParams, so static pages render on the client. This must stay inside ModalProvider: as a direct child of body it causes intermittent hydration errors. */}
             <div style={{ flex: 1, minHeight: '100vh' }}>
               <AppInit />
               <AppAnalytics />
@@ -94,8 +94,8 @@ export default async function RootLayout({
               {children}
             </div>
             <FooterV2 />
-          </ModalProvider>
-        </Suspense>
+          </Suspense>
+        </ModalProvider>
       </body>
     </html>
   )

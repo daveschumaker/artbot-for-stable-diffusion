@@ -28,7 +28,7 @@ const StyledDropdown = styled.div<DropdownContentProps>`
 
 export function DropdownContent(props: DropdownContentProps) {
   const { children, handleClose = () => {}, ...rest } = props
-  const ref = useRef()
+  const ref = useRef(undefined)
   useOnClickOutside(ref, () => {
     if (props.open) {
       handleClose()

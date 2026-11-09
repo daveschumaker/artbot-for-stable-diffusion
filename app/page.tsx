@@ -12,7 +12,9 @@ async function getPageData(searchParams: any) {
       const resp = await fetch(
         `${process.env.NEXT_SHORTLINK_SERVICE}/api/v1/shortlink/load/${i}`,
         {
-          method: 'GET'
+          method: 'GET',
+          // Shortlinks never change, and Next 15 stopped caching fetches by default.
+          cache: 'force-cache'
         }
       )
       const data = (await resp.json()) || {}
@@ -29,21 +31,20 @@ async function getPageData(searchParams: any) {
 }
 
 interface Props {
-  searchParams: { [key: string]: string | string[] | undefined }
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
-// THIS IS BROKEN IN NEXT.JS v13.4.10+
-// CAUSES PRODUCTION BUILDS TO BLOW UP.
-// DO NOT UPGRADE UNTIL FIXED
 export async function generateMetadata({ searchParams }: Props) {
-  const { i } = searchParams
+  const { i } = await searchParams
 
   try {
     if (i) {
       const resp = await fetch(
         `${process.env.NEXT_SHORTLINK_SERVICE}/api/v1/shortlink/load/${i}`,
         {
-          method: 'GET'
+          method: 'GET',
+          // Shortlinks never change, and Next 15 stopped caching fetches by default.
+          cache: 'force-cache'
         }
       )
 
@@ -87,11 +88,12 @@ export async function generateMetadata({ searchParams }: Props) {
   }
 }
 
-export default async function Page({ searchParams }: { searchParams: any }) {
-  const { i: id } = searchParams
+export default async function Page({ searchParams }: Props) {
+  const resolvedSearchParams = await searchParams
+  const { i: id } = resolvedSearchParams
 
   if (id) {
-    const { shortlinkImageParams } = await getPageData(searchParams)
+    const { shortlinkImageParams } = await getPageData(resolvedSearchParams)
 
     if (shortlinkImageParams) {
       return (
