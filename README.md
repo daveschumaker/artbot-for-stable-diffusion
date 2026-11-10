@@ -22,9 +22,9 @@ See it in action: [https://tinybots.net/artbot](https://tinybots.net/artbot)
 
 ## Intro
 
-ArtBot is an unofficial front-end web client designed for interacting with the [Stable Horde](https://aihorde.net/) distributed cluster -- a group of GPUs running Stable Diffusion whose processing time has been kindly donated by an enthusiastic community of volunteers.
+ArtBot is an unofficial front-end web client designed for interacting with the [AI Horde](https://aihorde.net/) (formerly Stable Horde) distributed cluster -- a group of GPUs running Stable Diffusion image generation models whose processing time has been kindly donated by an enthusiastic community of volunteers.
 
-ArtBot is built using [Next.js 13](https://nextjs.org/) and [Typescript](https://www.typescriptlang.org/). It with was created as a side project in order to experiment with various client-side technologies, such as IndexedDB and LocalStorage APIs. These APIs allow you to securely and privately store the AI generated images you've created with the cluster within your own browser.
+ArtBot is built using [Next.js 15](https://nextjs.org/) and [Typescript](https://www.typescriptlang.org/). It with was created as a side project in order to experiment with various client-side technologies, such as IndexedDB and LocalStorage APIs. These APIs allow you to securely and privately store the AI generated images you've created with the cluster within your own browser.
 
 The UI components are custom built using a combination of [Styled Components](https://styled-components.com/) and [Tailwind CSS](https://tailwindcss.com/), with more recent efforts strictly focused on using Tailwind CSS. The long term goal is to completely remove Styled Components from the code base.
 
@@ -97,6 +97,9 @@ Additionally, you can start and stop PM2 using:
 ```
 
 ## Troubleshooting
+
+For production-state regression and upgrade testing, see
+[Production-origin browser profiles](docs/browser-profiles.md).
 
 ### Windows issues
 
