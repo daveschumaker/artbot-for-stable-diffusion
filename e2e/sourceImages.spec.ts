@@ -170,6 +170,95 @@ test('a mask drawn on the canvas is sent for inpainting', async ({ page }) => {
   expect(errors).toEqual([])
 })
 
+const savedInput = (page: Page) =>
+  page.evaluate(async () => {
+    const row = await (window as any)._artbotDb.settings
+      .where({ name: 'promptInput' })
+      .first()
+    return row?.setting
+  })
+
+const drawMask = async (page: Page) => {
+  const canvas = page.locator('#canvas_mask')
+  await expect(canvas).toBeVisible()
+  const box = (await canvas.boundingBox())!
+  await page.mouse.move(box.x + box.width / 4, box.y + box.height / 2)
+  await page.mouse.down()
+  await page.mouse.move(box.x + (box.width * 3) / 4, box.y + box.height / 2, {
+    steps: 10
+  })
+  await page.mouse.up()
+}
+
+// The create page restores saved input on every load.
+const reloadCreatePage = async (page: Page) => {
+  await page.goto('/artbot/create')
+  await page.waitForLoadState('networkidle')
+  // Saved input is written 350ms after a change.
+  await page.waitForTimeout(1000)
+}
+
+test('saved img2img input is unchanged when the create page loads', async ({
+  page
+}) => {
+  const errors = trackPageErrors(page)
+  const horde = await mockBackend(page)
+  await openImg2Img(page)
+  await upload(page)
+  await page.getByPlaceholder('Describe your image').fill('a test prompt')
+  await expect
+    .poll(async () => (await savedInput(page))?.prompt)
+    .toBe('a test prompt')
+  const before = await savedInput(page)
+  expect(before.source_processing).toBe('img2img')
+  expect(before.source_image).toBeTruthy()
+
+  await reloadCreatePage(page)
+
+  expect(await savedInput(page)).toEqual(before)
+  await page.getByTitle('Create new image').first().click()
+  const request = await expectSubmission(horde)
+  expect(request.source_processing).toBe('img2img')
+  expect(request.source_mask).toBeUndefined()
+  expect(errors).toEqual([])
+})
+
+test('a drawn inpainting mask is unchanged when the create page loads', async ({
+  page
+}) => {
+  const errors = trackPageErrors(page)
+  const horde = await mockBackend(page)
+  await openImg2Img(page)
+  await upload(page)
+  await page.getByRole('button', { name: 'Use Inpaint' }).click()
+  await drawMask(page)
+  await page.getByPlaceholder('Describe your image').fill('a test prompt')
+  // A drawn mask is saved as source_mask. maskData stays empty.
+  await expect
+    .poll(async () => (await savedInput(page))?.source_mask)
+    .toBeTruthy()
+  await expect
+    .poll(async () => (await savedInput(page))?.prompt)
+    .toBe('a test prompt')
+  const before = await savedInput(page)
+  expect(before.maskData).toBe('')
+
+  await reloadCreatePage(page)
+
+  // The page marks input with a mask as inpainting. Nothing else changes.
+  expect(await savedInput(page)).toEqual({
+    ...before,
+    source_processing: 'inpainting'
+  })
+  await page.getByTitle('Create new image').first().click()
+  const request = await expectSubmission(horde)
+  expect(request.source_processing).toBe('inpainting')
+  const { channels } = await decode(request.source_mask).stats()
+  expect(channels[0].min).toBeLessThan(50)
+  expect(channels[0].max).toBeGreaterThan(200)
+  expect(errors).toEqual([])
+})
+
 test('ControlNet sends an uploaded image and control type', async ({
   page
 }) => {

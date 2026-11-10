@@ -602,10 +602,9 @@ class CreateCanvas {
     width: number
   ): Promise<string> {
     return new Promise((resolve) => {
-      // With no saved mask this has never resolved, so callers stop here. Fabric
-      // 7 throws on an undefined value where earlier versions ignored it.
+      // No saved mask. Resolves with an empty mask.
       if (!getCanvasStore().maskLayer) {
-        return
+        return resolve('')
       }
 
       let newMask = new Canvas(undefined, {
