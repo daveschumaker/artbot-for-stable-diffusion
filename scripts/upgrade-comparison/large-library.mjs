@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { mkdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { parseArgs } from 'node:util'
 import { chromium, expect } from '@playwright/test'
 import sharp from 'sharp'
 import { cloneBaseline, treeHash } from '../browser-profile/storage.mjs'
@@ -14,6 +15,12 @@ import { auditStorage } from '../browser-profile/audit.mjs'
 import { createHorde } from './horde.mjs'
 
 const repo = fileURLToPath(new URL('../../', import.meta.url))
+const { values } = parseArgs({
+  options: {
+    control: { type: 'string', default: 'http://127.0.0.1:3297' },
+    candidate: { type: 'string', default: 'http://127.0.0.1:3298' }
+  }
+})
 const root = path.join(repo, '__local_db/browser-profiles')
 const out = path.join(
   repo,
@@ -31,16 +38,16 @@ const results = {
   fixture: '43 frozen production records plus 957 synthetic 512px images',
   lanes: {}
 }
-for (const [name, port] of [
-  ['control', 3297],
-  ['candidate', 3298]
+for (const [name, target] of [
+  ['control', values.control],
+  ['candidate', values.candidate]
 ]) {
   const clone = await cloneBaseline(root, 'manual-workflows')
   const net = await startReplayNetwork({
     certDir: path.join(root, 'tls'),
-    target: `http://127.0.0.1:${port}`
+    target
   })
-  const result = (results.lanes[name] = { profile: clone.directory })
+  const result = (results.lanes[name] = { target, profile: clone.directory })
   let context
   try {
     context = await chromium.launchPersistentContext(clone.profile, {
