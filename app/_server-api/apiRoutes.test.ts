@@ -387,6 +387,26 @@ describe('token validation', () => {
   ])('rejects a token that %s', async (_name, token) => {
     expect(await adminTools.validateToken(token)).toBe(false)
   })
+
+  describe('when ADMIN_USER is not set', () => {
+    const { ADMIN_USER } = process.env
+
+    beforeEach(() => {
+      delete process.env.ADMIN_USER
+    })
+
+    afterEach(() => {
+      process.env.ADMIN_USER = ADMIN_USER
+    })
+
+    it.each([
+      ['has no username', jwt.sign({ role: 'admin' }, SECRET)],
+      ['has an empty username', jwt.sign({ username: '' }, SECRET)],
+      ['is a signed string', jwt.sign('admin', SECRET)]
+    ])('rejects a signed token that %s', async (_name, token) => {
+      expect(await adminTools.validateToken(token)).toBe(false)
+    })
+  })
 })
 
 describe('/api/admin/update-settings', () => {

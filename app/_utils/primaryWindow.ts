@@ -9,6 +9,8 @@ interface PrimaryWindow {
   timestamp: number
 }
 
+const PRIMARY_WINDOW_KEY = 'PrimaryWindow'
+
 let uuid: string
 let isPrimaryWindow = false
 
@@ -53,34 +55,46 @@ export const pageIsVisible = () => {
   )
 }
 
+// Another tab, a settings reset or the user can remove or overwrite the key.
+// Anything that isn't a valid entry counts as no primary window.
+const readPrimaryWindow = (): PrimaryWindow | null => {
+  try {
+    const value = JSON.parse(localStorage.getItem(PRIMARY_WINDOW_KEY) ?? '')
+
+    if (
+      value &&
+      typeof value.uuid === 'string' &&
+      typeof value.timestamp === 'number'
+    ) {
+      return value
+    }
+  } catch (err) {}
+
+  return null
+}
+
+const claimPrimaryWindow = () => {
+  const primaryWindow: PrimaryWindow = { uuid, timestamp: Date.now() }
+  localStorage.setItem(PRIMARY_WINDOW_KEY, JSON.stringify(primaryWindow))
+  isPrimaryWindow = true
+}
+
 export const initializePrimaryWindowOnLoad = () => {
-  // Step 1: Create or retrieve the UUID from local storage
   if (!uuid) {
     uuid = generateUUID()
   }
 
-  // Step 2: Check and store the object in localStorage
-  let primaryWindow: PrimaryWindow
-  const storedPrimaryWindow = localStorage.getItem('PrimaryWindow')
-  if (!storedPrimaryWindow) {
-    primaryWindow = {
-      uuid,
-      timestamp: Date.now()
-    }
-    localStorage.setItem('PrimaryWindow', JSON.stringify(primaryWindow))
-    isPrimaryWindow = true
+  if (!readPrimaryWindow()) {
+    claimPrimaryWindow()
   }
 
-  // Step 3: Update timestamp every 2.5 seconds
+  // Every 2.5 seconds, a focused tab takes over, and the primary tab keeps its
+  // claim fresh while it's allowed to run.
   setInterval(() => {
-    primaryWindow =
-      JSON.parse(localStorage.getItem('PrimaryWindow') as string) || {}
+    const primaryWindow = readPrimaryWindow()
 
-    if (primaryWindow && primaryWindow.uuid !== uuid && pageHasFocus()) {
-      primaryWindow.uuid = uuid
-      primaryWindow.timestamp = Date.now()
-      localStorage.setItem('PrimaryWindow', JSON.stringify(primaryWindow))
-      isPrimaryWindow = true
+    if (!primaryWindow || (primaryWindow.uuid !== uuid && pageHasFocus())) {
+      claimPrimaryWindow()
       return
     }
 
@@ -88,27 +102,23 @@ export const initializePrimaryWindowOnLoad = () => {
       pageIsVisible() || AppSettings.get('runInBackground') !== false
 
     if (primaryWindow.uuid === uuid && canUpdate) {
-      primaryWindow.timestamp = Date.now()
-      localStorage.setItem('PrimaryWindow', JSON.stringify(primaryWindow))
-      isPrimaryWindow = true
+      claimPrimaryWindow()
     } else {
       isPrimaryWindow = false
     }
   }, 2500)
 
-  // Step 4: Update the timestamp if it's been more than 10 seconds
+  // Every second, take over from a primary tab that stopped updating its claim
+  // more than 5 seconds ago.
   setInterval(() => {
-    // String(null) === 'null', which is what JSON.parse coerces null to anyway
-    primaryWindow = JSON.parse(String(localStorage.getItem('PrimaryWindow')))
-    const currentTime = Date.now()
+    const primaryWindow = readPrimaryWindow()
+
     if (
-      primaryWindow.timestamp + 5000 <= currentTime &&
-      primaryWindow.uuid !== uuid
+      !primaryWindow ||
+      (primaryWindow.uuid !== uuid &&
+        primaryWindow.timestamp + 5000 <= Date.now())
     ) {
-      primaryWindow.uuid = uuid
-      primaryWindow.timestamp = currentTime
-      localStorage.setItem('PrimaryWindow', JSON.stringify(primaryWindow))
-      isPrimaryWindow = true
+      claimPrimaryWindow()
     }
   }, 1000)
 }
