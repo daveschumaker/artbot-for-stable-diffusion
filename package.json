@@ -22,7 +22,13 @@
     "test": "jest",
     "test:e2e": "playwright test",
     "test:generate-library": "npx next build && node e2e/fixtures/generateLibrary.mjs",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "profile:capture": "node scripts/browser-profile/cli.mjs capture",
+    "profile:seal": "node scripts/browser-profile/cli.mjs seal",
+    "profile:inspect": "node scripts/browser-profile/cli.mjs inspect",
+    "profile:run": "node scripts/browser-profile/cli.mjs run",
+    "profile:list": "node scripts/browser-profile/cli.mjs list",
+    "test:profiles": "node --test scripts/browser-profile/profile.test.mjs"
   },
   "engines": {
     "npm": ">=9.0.0",
