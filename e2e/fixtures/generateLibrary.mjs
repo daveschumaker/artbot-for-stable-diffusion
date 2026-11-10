@@ -360,7 +360,12 @@ const toLegacyRow = (row, jobId) => {
 }
 
 const buildFixture = (completed) => {
-  const rows = completed.map(({ id, ...row }) => row)
+  // Table ids are dropped so rows can be added to any database.
+  const rows = completed.map((row) => {
+    const copy = { ...row }
+    delete copy.id
+    return copy
+  })
   const named = (name) => rows.find((row) => row.fixtureName === name)
   const favorites = ['model-deliberate', 'fixed-seed', 'upscaled']
 
