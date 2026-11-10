@@ -189,3 +189,20 @@ test('the drawing canvas accepts input', async ({ page }) => {
 
   expect(errors).toEqual([])
 })
+
+test('the old image count URL redirects to the counter under the base path', async ({
+  request
+}) => {
+  const response = await request.get('/artbot/api/image-count', {
+    maxRedirects: 0
+  })
+
+  expect(response.status()).toBe(301)
+  expect(response.headers().location).toBe('/artbot/api/status/counter/images')
+
+  // The counter answers from its own route: a count, or an error saying the
+  // status API isn't set up, but not a missing page.
+  const counter = await request.get(response.headers().location)
+  expect(counter.status()).not.toBe(404)
+  expect(counter.headers()['content-type']).toContain('application/json')
+})
