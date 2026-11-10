@@ -2,8 +2,6 @@ export enum CreatePageMode {
   EDIT = 'edit',
   LOAD_DRAWING = 'drawing',
   LOAD_MODEL = 'model',
-  SHARE = 'share',
-  SHORTLINK = 'i',
   PRESET = 'preset',
   PROMPT = 'prompt'
 }
@@ -11,14 +9,7 @@ export enum CreatePageMode {
 const queryParamsToOverrideUserInput: Array<string> = [
   'edit',
   'drawing',
-  'model',
-  'share',
-  'i'
-]
-
-const queryParamsSharedLinks: Array<string> = [
-  CreatePageMode.SHARE,
-  CreatePageMode.SHORTLINK
+  'model'
 ]
 
 export interface IQuery {
@@ -27,10 +18,6 @@ export interface IQuery {
 
 function isKeyInArray(query: IQuery, arr: string[]): boolean {
   return Object.keys(query).some((key) => arr.includes(key))
-}
-
-export const isSharedLink = (query: IQuery = {}) => {
-  return isKeyInArray(query, queryParamsSharedLinks) === true
 }
 
 export const shouldLoadUserInputCache = (query: IQuery = {}) => {

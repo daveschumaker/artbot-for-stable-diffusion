@@ -63,6 +63,30 @@ marker is removed, so remove it in the same change.
 - [x] **B14. Medium: "Use all models" created one image.** Removed the option.
       A value saved before the removal is ignored.
 
+## Removed features
+
+- Shareable links, shortlinks, the `/artbot?i=` shared image pages and the
+  community Showcase were removed on 2026-11-09. The shortlink service env vars
+  (`SHORTLINK_SERVICE`, `NEXT_SHORTLINK_SERVICE`) are no longer used.
+
+- [ ] **B15. Medium: an image with no image data crashes when it finishes.**
+  - `base64toBlob` returns `''` on failure, and `app/_utils/imageCache.ts` calls
+    `addOrUpdateExifData` on it outside the surrounding try, so polling throws.
+  - `downloadFile` in `app/_utils/imageUtils.ts` has the same problem, and also
+    passes `undefined` to `saveAs` for an unknown download format.
+- [ ] **B16. Medium: converting an image without EXIF data throws.** `writeMetadata`
+      in `app/_utils/blobUtils.ts` reads `exif.Exif[37510]` without checking it.
+      It affects `toPNG`, `toJPEG`, `toWebP` and `addOrUpdateExifData('')`.
+- [ ] **B17. Low: `app/_utils/primaryWindow.ts` throws every second** if the
+      `PrimaryWindow` key is missing from localStorage.
+- [ ] **B18. Low: smaller issues found while fixing types.**
+  - `UploadButton.tsx` passes `undefined` when the file picker is cancelled.
+  - `SortableWorkersTable` sorts React state in place.
+  - `WorkerBlocklist.tsx` and `allowWorkers.tsx` pass `width` to `MaxWidth`,
+    which ignores it. It was probably meant to be `max`.
+- [ ] **S7. Low: `validateToken` accepts a validly signed token with no username
+      when `ADMIN_USER` is unset.** `adminLogin` already refuses in that case.
+
 ## Upgrades
 
 - [x] **U1. Next 15.5.29 and React 19.3.1.**

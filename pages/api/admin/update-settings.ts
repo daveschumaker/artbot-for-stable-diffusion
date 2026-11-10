@@ -1,5 +1,3 @@
-// https://fb8a-137-184-35-72.ngrok-free.app/artbot/api/v1/shortlink/showcase/grK5Ohp0bPo
-
 import {
   updateServerSettingsFile,
   validateToken
@@ -8,7 +6,6 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 type Data = {
   success: boolean
-  shortlink?: any
 }
 
 export default async function handler(

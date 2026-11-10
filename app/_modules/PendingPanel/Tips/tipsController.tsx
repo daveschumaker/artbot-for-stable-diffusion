@@ -50,17 +50,6 @@ const tips = [
       `Share the love! Help spread the word about the AI Horde and ArtBot by sharing images you've generated on Reddit, Mastodon or wherever you consume your favorite internet content.`
   },
   {
-    id: 'showcase',
-    content: () => (
-      <div className="flex flex-row flex-wrap items-center">
-        Need inspiration? Check out the image showcase to see what other ArtBot
-        users have created and shared with the community.
-      </div>
-    ),
-    linkTitle: `View the showcase`,
-    linkUrl: `/showcase`
-  },
-  {
     id: 'worker',
     content:
       () => `Run a worker! Earn kudos (for faster image generations), help grow the AI

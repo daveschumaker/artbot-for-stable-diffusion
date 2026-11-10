@@ -27,7 +27,6 @@ import { deletePendingJob } from 'app/_controllers/pendingJobsCache'
 import { getRelatedImages } from 'app/_pages/ImagePage/image.controller'
 import { useModal } from '@ebay/nice-modal-react'
 import { showErrorToast, showSuccessToast } from 'app/_utils/notificationUtils'
-import ShortlinkButton from './ShortlinkButton'
 import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 import ConfirmationModal from '../ConfirmationModal'
 import {
@@ -472,9 +471,6 @@ const ImageOptionsWrapper = ({
               </MenuItem>
             </Menu>
           </div>
-          {imageDetails.source_processing === SourceProcessing.Prompt && (
-            <ShortlinkButton imageDetails={imageDetails} />
-          )}
           {imageDetails.tiling && (
             <div className={styles['button-icon']}>
               <Menu

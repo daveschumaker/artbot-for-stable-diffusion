@@ -18,7 +18,6 @@ process.env.ADMIN_PW_HASH = crypto
   .createHash('sha256')
   .update(PASSWORD + SALT)
   .digest('hex')
-process.env.NEXT_SHORTLINK_SERVICE = 'http://shortlinks.test'
 
 // Loaded with require so the environment above is set before adminTools reads it.
 const adminTools = require('app/_server-api/adminTools')
@@ -27,7 +26,6 @@ const remoteImage = require('app/_server-api/fetchRemoteImage')
 const imgFromUrl = require('pages/api/img-from-url').default
 const login = require('pages/api/admin/login').default
 const updateSettings = require('pages/api/admin/update-settings').default
-const showcasePublish = require('pages/api/admin/showcase-publish').default
 
 const callRoute = async (handler: any, request: any) => {
   const result: { statusCode: number; body?: any; responded: boolean } = {
@@ -429,42 +427,5 @@ describe('/api/admin/update-settings', () => {
     })
 
     expect(body.success).toBe(false)
-  })
-})
-
-describe('/api/admin/showcase-publish', () => {
-  it('publishes for an admin', async () => {
-    fetchMock.mockResolvedValue({ json: async () => ({ success: true }) })
-
-    const { body } = await callRoute(showcasePublish, {
-      method: 'POST',
-      ...authorized(),
-      query: { shortlink: 'abc' }
-    })
-
-    expect(body).toEqual({ success: true, shortlink: 'abc' })
-    expect(fetchMock).toHaveBeenCalledWith(
-      'http://shortlinks.test/api/v1/shortlink/showcase/abc'
-    )
-  })
-
-  it('does not publish without a valid token', async () => {
-    await callRoute(showcasePublish, {
-      method: 'POST',
-      ...authorized('bad-token'),
-      query: { shortlink: 'abc' }
-    })
-
-    expect(fetchMock).not.toHaveBeenCalled()
-  })
-
-  it('responds when the token is invalid', async () => {
-    const { responded } = await callRoute(showcasePublish, {
-      method: 'POST',
-      ...authorized('bad-token'),
-      query: { shortlink: 'abc' }
-    })
-
-    expect(responded).toBe(true)
   })
 })
