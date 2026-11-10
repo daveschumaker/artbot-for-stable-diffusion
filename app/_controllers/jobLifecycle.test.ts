@@ -212,6 +212,17 @@ describe('image job lifecycle', () => {
       ])
     })
 
+    it('ignores a "use all models" setting saved before it was removed', async () => {
+      await queueJobs({ useAllModels: true, numImages: 2 })
+
+      expect(allCached()).toHaveLength(2)
+      expect(allCached().map((job) => job.models)).toEqual([
+        ['Deliberate'],
+        ['Deliberate']
+      ])
+      expect(allCached().every((job) => job.useAllModels === false)).toBe(true)
+    })
+
     it('ignores a blank prompt', async () => {
       const result = await app.pendingUtils.createPendingJob(
         request({ prompt: '   ' })

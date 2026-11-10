@@ -10,8 +10,6 @@ import { DEFAULT_SAMPLER_ARRAY } from '_constants'
 import { isiOS, isSafariBrowser } from './appUtils'
 import { fetchCompletedJobs } from './db'
 import { basePath } from 'BASE_PATH'
-import ImageModels from 'app/_data-models/ImageModels'
-import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
 import ImageParamsForApi from 'app/_data-models/ImageParamsForApi'
 import { CreateImageJob } from '_types'
 interface OrientationLookup {
@@ -843,7 +841,6 @@ export const countImagesToGenerate = (imageParams: ICountImages) => {
     multiDenoise = '',
     multiGuidance = '',
     multiSamplers = [],
-    useAllModels = false,
     useFavoriteModels = false,
     useAllSamplers = false,
     useMultiClip = false,
@@ -941,14 +938,6 @@ export const countImagesToGenerate = (imageParams: ICountImages) => {
 
   if (models.length > 1) {
     imageCount = imageCount * models.length
-  }
-
-  if (useAllModels) {
-    const filteredModels = ImageModels.getValidModels({
-      input: imageParams as unknown as DefaultPromptInput
-    })
-    const modelsArray = filteredModels.map((obj) => obj.name)
-    imageCount = imageCount * modelsArray.length
   }
 
   if (useFavoriteModels) {

@@ -116,7 +116,6 @@ class CreateImageRequest {
     tis = [],
     triggers = [],
     upscaled = false,
-    useAllModels = false,
     useAllSamplers = false,
     useMultiClip = false,
     useMultiDenoise = false,
@@ -179,10 +178,6 @@ class CreateImageRequest {
       this.sampler = 'k_euler_a'
     }
 
-    if (this.sampler === 'dpmsolver' && useAllModels === true) {
-      this.sampler = 'k_euler_a'
-    }
-
     this.negative = String(negative)
     this.numImages = Number(numImages)
     this.parentJobId = String(parentJobId) || uuidv4()
@@ -231,7 +226,8 @@ class CreateImageRequest {
     this.multiSteps = []
     this.steps = Number(steps)
     this.triggers = [...triggers]
-    this.useAllModels = Boolean(useAllModels)
+    // "Use all models" was removed. Older saved input can still have it set.
+    this.useAllModels = false
     this.useAllSamplers = Boolean(useAllSamplers)
     this.useMultiClip = Boolean(useMultiClip)
     this.useMultiDenoise = Boolean(useMultiDenoise)

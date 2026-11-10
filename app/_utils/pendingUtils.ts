@@ -1,7 +1,7 @@
 import { MAX_IMAGES_PER_JOB } from '_constants'
 import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 import { logError, uuidv4 } from './appUtils'
-import { getModelVersion, validModelsArray } from './modelUtils'
+import { getModelVersion } from './modelUtils'
 import { modelStore } from 'app/_store/modelStore'
 import { SourceProcessing } from './promptUtils'
 import { userInfoStore } from 'app/_store/userStore'
@@ -259,89 +259,31 @@ export const createPendingJob = async (imageParams: CreateImageRequest) => {
     }
   }
 
-  if (imageParams.useAllModels) {
-    imageParams.numImages = 1
-    const models = validModelsArray({ imageParams })
+  const count = Array(Number(numImages)).fill(0)
 
-    for (const model of models) {
-      const { name: modelName } = model
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+  for (const _num of count) {
+    clonedParams = await cloneImageParams(imageParams)
+    clonedParams.modelVersion = getModelVersion(clonedParams.models[0])
 
-      // It doesn't make sense to include this in all models mode.
-      if (
-        modelName.indexOf('_inpainting') >= 0 ||
-        modelName === 'Stable Diffusion 2 Depth'
-      ) {
-        return
+    if (clonedParams.orientation === 'random') {
+      clonedParams = {
+        ...clonedParams,
+        ...CreateImageRequest.getRandomOrientation()
       }
-
-      clonedParams = await cloneImageParams(imageParams)
-      clonedParams.models = [modelName]
-
-      if (modelName === 'stable_diffusion_2.0') {
-        clonedParams.sampler = 'dpmsolver'
-      }
-
-      if (clonedParams.models[0] === 'random') {
-        clonedParams.models = [
-          CreateImageRequest.getRandomModel({ imageParams: clonedParams })
-        ]
-      }
-      clonedParams.modelVersion = getModelVersion(clonedParams.models[0])
-
-      if (AppSettings.get('modelAutokeywords')) {
-        clonedParams.prompt = addTriggerToPrompt({
-          prompt,
-          model: clonedParams.models[0]
-        })
-      }
-
-      if (clonedParams.orientation === 'random') {
-        clonedParams = {
-          ...clonedParams,
-          ...CreateImageRequest.getRandomOrientation()
-        }
-      }
-
-      if (clonedParams.sampler === 'random') {
-        clonedParams.sampler = CreateImageRequest.getRandomSampler({
-          steps: clonedParams.steps,
-          source_processing: clonedParams.source_processing
-        })
-      }
-
-      await addPendingJobToDexieDb(clonedParams)
     }
 
-    return {
-      success: true
-    }
-  } else {
-    const count = Array(Number(numImages)).fill(0)
-
-    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-    for (const _num of count) {
-      clonedParams = await cloneImageParams(imageParams)
-      clonedParams.modelVersion = getModelVersion(clonedParams.models[0])
-
-      if (clonedParams.orientation === 'random') {
-        clonedParams = {
-          ...clonedParams,
-          ...CreateImageRequest.getRandomOrientation()
-        }
-      }
-
-      if (clonedParams.sampler === 'random') {
-        clonedParams.sampler = CreateImageRequest.getRandomSampler({
-          steps: clonedParams.steps,
-          source_processing: clonedParams.source_processing
-        })
-      }
-
-      await addPendingJobToDexieDb(clonedParams)
+    if (clonedParams.sampler === 'random') {
+      clonedParams.sampler = CreateImageRequest.getRandomSampler({
+        steps: clonedParams.steps,
+        source_processing: clonedParams.source_processing
+      })
     }
 
-    return {
-      success: true
-    }
+    await addPendingJobToDexieDb(clonedParams)
+  }
+
+  return {
+    success: true
   }
 }

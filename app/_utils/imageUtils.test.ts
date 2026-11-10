@@ -1,4 +1,4 @@
-import { inferMimeTypeFromBase64 } from './imageUtils'
+import { countImagesToGenerate, inferMimeTypeFromBase64 } from './imageUtils'
 
 describe('inferMimeTypeFromBase64', () => {
   it('should identify jpeg images', () => {
@@ -32,5 +32,18 @@ describe('inferMimeTypeFromBase64', () => {
   it('should return unknown for non-image data', () => {
     const unknownBase64 = 'SGVsbG8sIHdvcmxkIQ==' // "Hello, world!"
     expect(inferMimeTypeFromBase64(unknownBase64)).toBe('unknown')
+  })
+})
+
+describe('countImagesToGenerate', () => {
+  it('ignores a "use all models" setting saved before it was removed', () => {
+    const count = countImagesToGenerate({
+      numImages: 2,
+      models: ['Deliberate'],
+      prompt: 'a cat',
+      useAllModels: true
+    } as any)
+
+    expect(count).toBe(2)
   })
 })
