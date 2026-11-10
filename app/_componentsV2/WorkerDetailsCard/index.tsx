@@ -54,7 +54,6 @@ export default function WorkerDetailsCard({
         }
       })
 
-      // @ts-ignore
       formatTeams.sort((a, b) => {
         // Sort by online status first (true values first)
         if (a.label < b.label) {
@@ -63,6 +62,7 @@ export default function WorkerDetailsCard({
         if (a.label > b.label) {
           return 1
         }
+        return 0
       })
 
       formatTeams.unshift({
@@ -103,7 +103,6 @@ export default function WorkerDetailsCard({
 
   const deleteWorker = async () => {
     await fetch(`${getApiHostServer()}/api/v2/workers/${id}`, {
-      // @ts-ignore
       headers: {
         apikey: AppSettings.get('apiKey'),
         'Content-Type': 'application/json',
@@ -120,7 +119,6 @@ export default function WorkerDetailsCard({
         name: workerName,
         team: workerTeam[0]
       }),
-      // @ts-ignore
       headers: {
         apikey: AppSettings.get('apiKey'),
         'Content-Type': 'application/json',
@@ -488,10 +486,10 @@ export default function WorkerDetailsCard({
                     onChange={(obj: any) => {
                       setWorkerTeam([obj.value, obj.label])
                     }}
-                    style={{ zIndex: 99 }}
                     value={{
-                      // @ts-ignore
-                      value: (workerTeam[0] as string | boolean) || null,
+                      // null is the "None" team option. The shared `Value`
+                      // type does not allow null yet, see _types/artbot.ts.
+                      value: (workerTeam[0] || null) as string | boolean,
                       label: (workerTeam[1] as string) || 'None'
                     }}
                   />

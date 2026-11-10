@@ -173,14 +173,16 @@ export const savePrompt = ({
     'numImages'
   ]
 
-  // @ts-ignore
   const filteredObject = Object.keys(promptDetails)
     .filter((key) => !keysToExclude.includes(key))
-    .reduce((acc, key) => {
-      // @ts-ignore
-      acc[key] = promptDetails[key]
-      return acc
-    }, {} as DefaultPromptInput)
+    .reduce(
+      (acc, key) => {
+        // key comes from Object.keys(promptDetails)
+        acc[key] = promptDetails[key as keyof SavePrompt]
+        return acc
+      },
+      {} as DefaultPromptInput & Record<string, unknown>
+    )
 
   filteredObject.numImages = 1
   PromptInputSettings.saveAllInput(filteredObject)

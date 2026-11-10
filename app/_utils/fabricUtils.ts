@@ -25,8 +25,7 @@ interface GetCanvasWidth {
 }
 
 export const getMaxValidCanvasWidth = () => {
-  let container = document.querySelector('#canvas-wrapper')
-  // @ts-ignore
+  let container = document.querySelector<HTMLElement>('#canvas-wrapper')
   let containerWidth = container?.offsetWidth || 512
   containerWidth =
     nearestWholeMultiple(containerWidth) > containerWidth

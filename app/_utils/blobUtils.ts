@@ -1,45 +1,79 @@
-// @ts-nocheck
 import * as exifLib from '@asc0910/exif-library'
+import type { IExif } from '@asc0910/exif-library'
 import { writeJPGMarker, writePNGtext, writeXMP } from 'image-metadata-editor'
 
 const SOFTWARE =
   'ArtBot - Create images with Stable Diffusion, utilizing the AI Horde'
 
+type BlobConversionCallback = (blob: Blob) => void
+
+/**
+ * Converts a blob to another image format, preserving exif data. Without a
+ * callback the converted blob is returned; with a callback the converted blob
+ * is passed to it and the promise resolves to undefined.
+ */
+interface BlobConverter {
+  (callback?: null): Promise<Blob>
+  (callback: BlobConversionCallback): Promise<undefined>
+}
+
+declare global {
+  interface Blob {
+    /** Added by initBlob() */
+    toPNG: BlobConverter
+    /** Added by initBlob() */
+    toWebP: BlobConverter
+    /** Added by initBlob() */
+    toJPEG: BlobConverter
+    /** Added by initBlob() */
+    addOrUpdateExifData(userComment: string): Promise<Blob>
+  }
+}
+
 export const initBlob = () => {
   if (!Blob.prototype.toPNG) {
-    Blob.prototype.toPNG = async function (callback: any) {
+    Blob.prototype.toPNG = async function (
+      this: Blob,
+      callback?: BlobConversionCallback | null
+    ) {
       // Converting through canvas will remove exif data
       // So extract exif first, and then add it back when creating new blob
       const exif = await getExifFromBlob(this)
       return await convertBlob(this, 'image/png', callback, exif)
-    }
+    } as BlobConverter
   }
 
   if (!Blob.prototype.toWebP) {
-    Blob.prototype.toWebP = async function (callback: any) {
+    Blob.prototype.toWebP = async function (
+      this: Blob,
+      callback?: BlobConversionCallback | null
+    ) {
       const exif = await getExifFromBlob(this)
       return await convertBlob(this, 'image/webp', callback, exif)
-    }
+    } as BlobConverter
   }
 
   if (!Blob.prototype.toJPEG) {
-    Blob.prototype.toJPEG = async function (callback: any) {
+    Blob.prototype.toJPEG = async function (
+      this: Blob,
+      callback?: BlobConversionCallback | null
+    ) {
       const exif = await getExifFromBlob(this)
       return await convertBlob(this, 'image/jpeg', callback, exif)
-    }
+    } as BlobConverter
   }
 
   if (!Blob.prototype.addOrUpdateExifData) {
     Blob.prototype.addOrUpdateExifData = async function (
       userComment: string
-    ): Blob {
+    ): Promise<Blob> {
       return await writeMetadata(this, mergeExifData({}, userComment))
     }
   }
 }
 
 function loadImage(src: string) {
-  return new Promise((resolve, reject) => {
+  return new Promise<HTMLImageElement>((resolve, reject) => {
     const image = new Image()
     image.onload = () => {
       resolve(image)
@@ -51,8 +85,9 @@ function loadImage(src: string) {
   })
 }
 
-async function writeMetadata(imageBlob: Blob, exif: object): Blob {
-  const userComment = exif.Exif[37510].replace('ASCII\0\0\0', '')
+async function writeMetadata(imageBlob: Blob, exif: IExif): Promise<Blob> {
+  // NOTE: throws if exif has no Exif IFD or no UserComment (37510) entry.
+  const userComment = (exif.Exif![37510] as string).replace('ASCII\0\0\0', '')
 
   // Write Exif
   const imageExifBlob = await addOrUpdateExifData(imageBlob, userComment)
@@ -98,9 +133,9 @@ async function writeMetadata(imageBlob: Blob, exif: object): Blob {
 async function convertBlob(
   blob: Blob,
   mimeType: string,
-  callback: (arg0: Blob) => void,
-  exif: any = {}
-): Blob {
+  callback: BlobConversionCallback | null | undefined,
+  exif: IExif = {}
+): Promise<Blob | undefined> {
   let convertedBlob: Blob
   if (blob.type !== mimeType) {
     const image = await loadImage(URL.createObjectURL(blob))
@@ -108,7 +143,8 @@ async function convertBlob(
     const ctx = canvas.getContext('2d')
     canvas.width = image.width
     canvas.height = image.height
-    ctx.drawImage(image, 0, 0)
+    // A freshly created canvas always provides a 2d context
+    ctx!.drawImage(image, 0, 0)
 
     convertedBlob = URI2Blob(canvas.toDataURL(mimeType, 1), mimeType)
   } else {
@@ -142,16 +178,16 @@ function URI2Blob(dataURI: string, mimeType: string): Blob {
   return new Blob([intArr], { type: mimeType })
 }
 
-async function getExifFromBlob(blob: Blob): object {
+async function getExifFromBlob(blob: Blob): Promise<IExif> {
   const bytes = await blobToBase64(blob)
-  let existing_exif = {}
+  let existing_exif: IExif = {}
   try {
     existing_exif = exifLib.load(bytes)
   } catch (e) {}
   return existing_exif
 }
 
-function str_to_utf8(str) {
+function str_to_utf8(str: string) {
   // Firstly, encode the string as UTF-8
   const utf8Encoded = encodeURIComponent(str)
 
@@ -159,7 +195,7 @@ function str_to_utf8(str) {
   const utf8Bytes = utf8Encoded.replace(
     /%([0-9A-F]{2})/g,
     function (match, p1) {
-      return String.fromCharCode('0x' + p1)
+      return String.fromCharCode(Number('0x' + p1))
     }
   )
 
@@ -167,7 +203,7 @@ function str_to_utf8(str) {
   return utf8Bytes
 }
 
-function mergeExifData(existingExif: object, userComment: string): object {
+function mergeExifData(existingExif: IExif, userComment: string): IExif {
   userComment = str_to_utf8(userComment)
 
   // 0th IFD
@@ -189,7 +225,10 @@ function mergeExifData(existingExif: object, userComment: string): object {
   return exifObj
 }
 
-async function addOrUpdateExifData(blob: Blob, userComment: string): Blob {
+async function addOrUpdateExifData(
+  blob: Blob,
+  userComment: string
+): Promise<Blob> {
   const imageBytes = await blobToBase64(blob)
   const newExif = await mergeExifData(await getExifFromBlob(blob), userComment)
   const exifbytes = exifLib.dump(newExif)

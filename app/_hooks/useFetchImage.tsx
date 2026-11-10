@@ -5,13 +5,14 @@ import { createImage } from 'app/_api/createImage'
 import { checkImageStatus } from 'app/_api/checkImageStatus'
 import { getFinishedImage } from 'app/_api/getFinishedImage'
 import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
+import { IArtBotImageDetails } from 'app/_data-models/ImageParamsForApi'
 import { CheckImage } from '_types'
 
 export const useFetchImage = (input: DefaultPromptInput) => {
   const [jobStatus, setJobStatus] = useState('requesting')
   const [jobId, setJobId] = useState('')
   const [jobDone, setJobDone] = useState(false)
-  const [waitTime, setWaitTime] = useState('...')
+  const [waitTime, setWaitTime] = useState<string | number | undefined>('...')
   const [pending, setPending] = useState(false)
   const [imageResult, setImageResult] = useState('')
 
@@ -46,11 +47,9 @@ export const useFetchImage = (input: DefaultPromptInput) => {
       getImage()
     } else if ((data?.queue_position ?? 0) > 0) {
       setJobStatus('queued')
-      // @ts-ignore
       setWaitTime(data.wait_time)
     } else if ((data?.processing ?? 0) === 1) {
       setJobStatus('processing')
-      // @ts-ignore
       setWaitTime(data.wait_time)
     }
   }, [getImage, jobDone, jobId])
@@ -61,14 +60,15 @@ export const useFetchImage = (input: DefaultPromptInput) => {
     }
 
     if (!pending) {
-      // @ts-ignore
       let imageParams = new CreateImageRequest(input)
       setPending(true)
 
-      // @ts-ignore
-      const data = (await createImage(imageParams)) || {}
+      // CreateImageRequest has no stylePreset, which ImageParamsForApi
+      // defaults to 'none'. IArtBotImageDetails marks it as required, so
+      // a direct cast is rejected. Making it optional there removes the cast.
+      const data =
+        (await createImage(imageParams as unknown as IArtBotImageDetails)) || {}
 
-      // @ts-ignore
       if (!data.success) {
         console.log(`Error: Unable to complete this image request.`)
         setPending(false)

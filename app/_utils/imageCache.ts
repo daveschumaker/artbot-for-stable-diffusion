@@ -123,7 +123,6 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
     updatePendingJobV2(imageParams)
 
     const data = await createNewImage(imageParams)
-    // @ts-ignore
     const { success, jobId, status, message = '' } = data || {}
 
     // Skip for now and try again soon...
@@ -181,10 +180,8 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
       } = jobDetailsFromApi
 
       if (detailsSuccess) {
-        //@ts-ignore
         if (!imageParams.initWaitTime) {
           imageParams.initWaitTime = wait_time
-          //@ts-ignore
         } else if (wait_time > imageParams.initWaitTime) {
           imageParams.initWaitTime = wait_time
         }
@@ -229,7 +226,6 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
       }
 
       if (imageParams.source_image) {
-        // @ts-ignore
         imageParams.has_source_image = true
       }
 
@@ -290,8 +286,7 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
       action: 'SEND_TO_API_ERROR',
       data: {
         imageParams: { ...imageParams },
-        // @ts-ignore
-        errMessage: err?.message || ''
+        errMessage: (err as Error | undefined)?.message || ''
       }
     })
 
@@ -570,8 +565,9 @@ export const checkCurrentJob = async (imageDetails: any) => {
             console.log(err)
             continue
           }
-          // @ts-ignore
-          let newBlob = await oldBlob?.addOrUpdateExifData(metaData)
+          // base64toBlob resolves to '' on failure, which is not a Blob and
+          // makes this call throw. That case is not handled yet.
+          let newBlob = await (oldBlob as Blob)?.addOrUpdateExifData(metaData)
           image.base64String = (await blobToBase64(newBlob)).split(',')[1]
 
           const jobWithImageDetails = {

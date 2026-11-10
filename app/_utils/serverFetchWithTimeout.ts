@@ -19,8 +19,10 @@ async function serverFetchWithTimeout(
   const response = await fetch(resource, {
     ...options,
 
-    // @ts-ignore
-    signal
+    // node-abort-controller's signal is a polyfill, not the DOM AbortSignal
+    // that fetch's typings expect. Node's fetch accepts it because it only
+    // checks for `aborted` and `addEventListener`.
+    signal: signal as unknown as AbortSignal
   })
   clearTimeout(id)
   return response

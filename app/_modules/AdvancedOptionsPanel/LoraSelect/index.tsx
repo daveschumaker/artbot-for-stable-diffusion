@@ -28,7 +28,7 @@ import { Embedding, ModelVersion } from '_types/civitai'
 
 // Temporary hard code names for common Loras
 // (mostly used in style presets):
-const getLoraName = (label: string = '', name: string = '') => {
+const getLoraName = (label: string = '', name: string | number = '') => {
   if (label) return label
 
   if (name === '216190' || name === '247778') {
@@ -88,12 +88,15 @@ const LoraSelect = () => {
     localStorage.setItem('recentLoras', JSON.stringify(newArray))
   }
 
-  const handleAddLora = (loraDetails: SavedLora, version?: ModelVersion) => {
+  // The search modal passes a CivitAI Embedding plus the chosen version;
+  // the favorites / recents modals pass an already saved LoRA and no version.
+  const handleAddLora = (
+    details: SavedLora | Embedding,
+    version?: ModelVersion
+  ) => {
+    let loraDetails = details as SavedLora
     if (version) {
-      loraDetails = handleConvertLora(
-        loraDetails as unknown as Embedding,
-        version
-      ) as SavedLora
+      loraDetails = handleConvertLora(details as Embedding, version)
     }
 
     const lorasToUpdate = [...input.loras]
@@ -128,13 +131,12 @@ const LoraSelect = () => {
   )
 
   const handleUpdate = useCallback(
-    (i: number, field: string, value: any) => {
+    (i: number, field: 'model' | 'clip', value: number) => {
       if (!i && i !== 0) {
         return
       }
 
       const lorasToUpdate = [...input.loras]
-      // @ts-ignore
       lorasToUpdate[Number(i)][field] = value
 
       setInput({ loras: [...lorasToUpdate] })
@@ -151,9 +153,7 @@ const LoraSelect = () => {
 
     input.loras.forEach((lora: SavedLora, i: number) => {
       // Need to cast input to correct type
-      // @ts-ignore
       const hasWords = lora?.trainedWords?.length > 0
-      // @ts-ignore
       const displayName = getLoraName(lora?.label, lora?.name)
 
       arr.push(
@@ -348,8 +348,7 @@ const LoraSelect = () => {
                       rowGap: '8px'
                     }}
                   >
-                    {// @ts-ignore
-                    lora?.trainedWords?.map((word: string, i: number) => {
+                    {lora?.trainedWords?.map((word: string, i: number) => {
                       // Split the word by comma and filter out any empty strings
                       const parts = word
                         .split(',')
@@ -449,12 +448,7 @@ const LoraSelect = () => {
               className={styles['lora-btn']}
               onClick={() => {
                 lorasModal.show({
-                  children: (
-                    <LoraSearchModal
-                      // @ts-ignore
-                      handleAddLora={handleAddLora}
-                    />
-                  ),
+                  children: <LoraSearchModal handleAddLora={handleAddLora} />,
                   label: 'Search LORAs'
                 })
               }}

@@ -294,8 +294,9 @@ export default function LoraSearchDetailsCard({
                     }
                   }}
                   options={versionOptions}
-                  onChange={(selectedModel: ModelVersion) => {
-                    // @ts-ignore
+                  onChange={(
+                    selectedModel: (typeof versionOptions)[number]
+                  ) => {
                     setVersion(embedding.modelVersions[selectedModel.idx])
                   }}
                   value={{

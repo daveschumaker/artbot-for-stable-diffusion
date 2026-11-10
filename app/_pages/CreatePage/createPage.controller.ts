@@ -114,11 +114,9 @@ export const handleCreateClick = async ({
   logDataForDebugging({
     name: 'index#handle_submit.CreateImageRequest',
 
-    // @ts-ignore
     data: new CreateImageRequest(inputToSubmit)
   })
 
-  // @ts-ignore
   await createImageJob(new CreateImageRequest(inputToSubmit))
 
   if (!AppSettings.get('stayOnCreate') && !disableRedirect) {

@@ -14,12 +14,15 @@ import SpinnerV2 from 'app/_components/Spinner'
 import Pagination from 'app/_components/Pagination'
 import CacheController from 'app/_data-models/CacheController'
 
-const debounce = (func: (str: string) => Promise<any>, delay: number) => {
-  let timerId: any
+const debounce = <A extends unknown[], R>(
+  func: (...args: A) => Promise<R>,
+  delay: number
+) => {
+  let timerId: ReturnType<typeof setTimeout> | undefined
 
-  return (...args: any) => {
+  return (...args: A) => {
     clearTimeout(timerId)
-    return new Promise((resolve) => {
+    return new Promise<R>((resolve) => {
       timerId = setTimeout(() => {
         resolve(func.apply(null, args))
       }, delay)
@@ -135,7 +138,6 @@ const searchRequest = async ({
   }
 }
 
-// @ts-ignore
 const debouncedSearchRequest = debounce(searchRequest, 500)
 
 const EmbeddingSearchModal = ({
@@ -179,8 +181,7 @@ const EmbeddingSearchModal = ({
       page: currentPage
     })
 
-    // @ts-ignore
-    const { items = [], metadata = {}, error } = result
+    const { items = [], metadata = {}, error } = result || {}
     if (result && !error) {
       setSearchResult(items as unknown as Embedding[])
       setTotalItems(metadata.totalItems)

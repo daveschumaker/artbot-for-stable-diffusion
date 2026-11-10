@@ -68,20 +68,16 @@ const ModelDetailsList = () => {
         if (componentState.favoriteModels[model]) {
           modelDetailsArray.push({
             ...modelDetails[model],
-            // @ts-ignore
             count: modelStats.count || 0,
             numImages: componentState?.imageCounts[model] || 0,
-            // @ts-ignore
             queued: modelStats?.queued || 0
           })
         }
       } else {
         modelDetailsArray.push({
           ...modelDetails[model],
-          // @ts-ignore
           count: modelStats.count || 0,
           numImages: componentState?.imageCounts[model] || 0,
-          // @ts-ignore
           queued: modelStats?.queued || 0
         })
       }

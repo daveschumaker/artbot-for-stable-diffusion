@@ -51,14 +51,12 @@ export default function Steps({ hideOptions = false }: StepsOptions) {
       >
         {input.useMultiSteps && (
           <Input
-            // @ts-ignore
             type="text"
             name="multiSteps"
             onChange={(e: any) => {
               setInput({ multiSteps: e.target.value })
             }}
             placeholder="16, 20, 25, 40"
-            // @ts-ignore
             value={input.multiSteps}
             width="100%"
           />

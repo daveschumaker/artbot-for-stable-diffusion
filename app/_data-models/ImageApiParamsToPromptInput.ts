@@ -33,8 +33,8 @@ class ImageApiParamsToPromptInput {
     const defaultState = new DefaultPromptInput()
 
     for (const [key, value] of Object.entries(defaultState)) {
-      // @ts-ignore
-      this[key] = value
+      ;(this as ImageApiParamsToPromptInput & Record<string, unknown>)[key] =
+        value
     }
 
     this.prompt = imageParams.prompt

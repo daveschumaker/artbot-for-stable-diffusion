@@ -33,11 +33,7 @@ export default function ImportDatabase() {
           </div>
         )}
       </SubSectionTitle>
-      <label
-        //@ts-ignore
-        for="file-upload"
-        className={styles.ImportButton}
-      >
+      <label htmlFor="file-upload" className={styles.ImportButton}>
         Import database
       </label>
       <input

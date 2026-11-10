@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { HordeWorkerDetails } from '_types/horde'
 import {
   IconLock,
   IconLockOpen,
@@ -46,7 +47,10 @@ const ImageOrientationOptions = () => {
     getAspectRatioDeviationColor
   } = useAspectRatio(input.width, input.height)
 
-  const [workerDetails] = useWorkerDetails()
+  // useWorkerDetails holds a worker record from /api/worker-details (AI Horde
+  // worker details), or false. Its own state is typed as `object | false`.
+  const [details] = useWorkerDetails()
+  const workerDetails = details as HordeWorkerDetails | false
   const [targetAspectRatio, setTargetAspectRatio] = useState(0)
   const [showOptions, setShowOptions] = useState(false)
   const [showCustomDimensions, setShowCustomDimensions] = useState(false)
@@ -215,15 +219,12 @@ const ImageOrientationOptions = () => {
   return (
     <OptionsRow>
       <OptionsRowLabel>Image orientation</OptionsRowLabel>
-      {
-        // @ts-ignore
-        workerDetails && totalPixels > workerDetails.max_pixels && (
-          <FlexRow className="gap-2 mb-2 text-red-600 text-[14px] font-[700]">
-            Warning: These dimensions exceed the max_pixels for your targeted
-            worker. Reduce resolution or remove targeted worker.
-          </FlexRow>
-        )
-      }
+      {workerDetails && totalPixels > workerDetails.max_pixels && (
+        <FlexRow className="gap-2 mb-2 text-red-600 text-[14px] font-[700]">
+          Warning: These dimensions exceed the max_pixels for your targeted
+          worker. Reduce resolution or remove targeted worker.
+        </FlexRow>
+      )}
       <FlexRow
         gap={4}
         style={{

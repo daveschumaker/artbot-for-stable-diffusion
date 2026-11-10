@@ -14,8 +14,7 @@ const HelpfulTipModal = ({
   closeModal = () => {}
 }: IProps) => {
   useEffect(() => {
-    // @ts-ignore
-    const handleKeyPress = (e) => {
+    const handleKeyPress = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         closeModal()
       }

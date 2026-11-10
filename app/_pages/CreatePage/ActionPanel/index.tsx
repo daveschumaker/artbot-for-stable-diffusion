@@ -140,7 +140,6 @@ const ActionPanel = forwardRef<HTMLDivElement, Props>(
                 <Button
                   title="Create new image"
                   onClick={handleSubmit}
-                  // @ts-ignore
                   disabled={
                     disableSubmit ||
                     pending ||

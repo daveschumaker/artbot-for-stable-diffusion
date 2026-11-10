@@ -44,7 +44,6 @@ export const uploadInpaint = async (imageDetails: any, options: any = {}) => {
   if (useSourceMask) {
     // TODO: Importing this causes Fabric to be built as part of
     // app chunk, doubling size of initial JS library. Find a way to split this out.
-    //@ts-ignore
     const CreateCanvas = (await import('app/_data-models/CreateCanvas')).default
 
     sourceMaskToUse = await CreateCanvas.getMaskForInput(
@@ -160,7 +159,6 @@ export const rerollImage = async (imageDetails: any) => {
   const rerollImageJob = new CreateImageRequest(transformJob)
   const res = await createPendingRerollJob(rerollImageJob)
 
-  // @ts-ignore
   if (res?.success) {
     return {
       success: true

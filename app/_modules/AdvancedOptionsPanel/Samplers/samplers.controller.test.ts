@@ -13,7 +13,6 @@ describe('samplers.controller.ts', () => {
 
     testCases.forEach((instance) => {
       test(instance.description, () => {
-        // @ts-ignore
         expect(samplerOptions(instance.input)).toStrictEqual(instance.result)
       })
     })

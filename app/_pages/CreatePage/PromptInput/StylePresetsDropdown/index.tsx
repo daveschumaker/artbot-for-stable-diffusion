@@ -6,6 +6,7 @@ import { IconArrowBarLeft, IconPlayerPlayFilled } from '@tabler/icons-react'
 import { Button } from 'app/_components/Button'
 import FlexRow from 'app/_components/FlexRow'
 import { handleUsePreset } from './presetController'
+import { HordePreset } from '_types/horde'
 
 function useDebounce(value: string, delay: number) {
   const [debouncedValue, setDebouncedValue] = useState(value)
@@ -47,19 +48,20 @@ export default function StylePresetsDropdown({
     const p = `[user prompt]`
     const np = input.negative ? `[negative user prompt]` : ''
 
-    for (const [key, presetDetails] of Object.entries(stylePresets)) {
+    for (const [key, presetDetails] of Object.entries<HordePreset>(
+      stylePresets
+    )) {
       if (debouncedFilter) {
         const filterLowercase = debouncedFilter.toLowerCase()
         if (
           !key.toLowerCase().includes(filterLowercase) &&
-          // @ts-ignore
-          !presetDetails.model.toLowerCase().includes(filterLowercase)
+          // every entry in stylePresets defines a model
+          !presetDetails.model!.toLowerCase().includes(filterLowercase)
         ) {
           continue
         }
       }
 
-      // @ts-ignore
       let modify = presetDetails.prompt.replace('{p}', p)
 
       if (!modify.includes('###') && np) {
@@ -73,12 +75,7 @@ export default function StylePresetsDropdown({
           <div>
             <strong>{key}</strong>
             {` / `}
-            <span className="text-xs">
-              {
-                // @ts-ignore
-                presetDetails.model
-              }
-            </span>
+            <span className="text-xs">{presetDetails.model}</span>
           </div>
           <FlexRow style={{ justifyContent: 'space-between' }}>
             <div className={styles['preset-description']}>{modify}</div>

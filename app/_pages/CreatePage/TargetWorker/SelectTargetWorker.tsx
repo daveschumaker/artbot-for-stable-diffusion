@@ -1,5 +1,5 @@
 import { IconArrowBarLeft } from '@tabler/icons-react'
-import { SelectOption } from '_types/artbot'
+import { SelectOption, Value } from '_types/artbot'
 import { fetchWorkers } from 'app/_api/fetchWorkers'
 import { Button } from 'app/_components/Button'
 import Select from 'app/_components/Select'
@@ -24,7 +24,6 @@ export default function SelectTargetWorker() {
       }
     })
 
-    // @ts-ignore
     filteredWorkers.sort((a, b) => {
       if (a.label < b.label) {
         return -1
@@ -32,6 +31,7 @@ export default function SelectTargetWorker() {
       if (a.label > b.label) {
         return 1
       }
+      return 0
     })
 
     setWorkers(filteredWorkers)
@@ -85,8 +85,9 @@ export default function SelectTargetWorker() {
           }}
           menuPortalTarget={document.querySelector('#worker-target-modal')}
           options={workers}
-          // @ts-ignore
-          value={selectedWorker}
+          // selectedWorker.value is null for "None"; the shared `Value` type
+          // does not allow null yet, see _types/artbot.ts.
+          value={selectedWorker as Value}
           styles={{
             menuPortal: (base: React.CSSProperties) => ({
               ...base,

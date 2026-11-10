@@ -18,6 +18,15 @@ import WorkerDetailsCard from 'app/_componentsV2/WorkerDetailsCard'
 interface HordeWorkerKeysForTable {
   kph: number
 }
+// Keys of HordeWorkerDetails whose values are primitives that can be compared
+type SortableHordeWorkerKeys = {
+  [K in keyof HordeWorkerDetails]-?: HordeWorkerDetails[K] extends
+    | string
+    | number
+    | boolean
+    ? K
+    : never
+}[keyof HordeWorkerDetails]
 type ExtendedHordeWorkerKeys =
   | keyof HordeWorkerDetails
   | keyof HordeWorkerKeysForTable
@@ -83,10 +92,9 @@ export default function SortableTable() {
   )
 
   const sortWorkers = useCallback(() => {
-    // @ts-ignore
     return workers.sort((a, b) => {
-      let aValue: number
-      let bValue: number
+      let aValue: string | number | boolean
+      let bValue: string | number | boolean
 
       if (sortBy === 'models') {
         aValue = a.models.length
@@ -95,11 +103,9 @@ export default function SortableTable() {
         aValue = a.uptime ? Math.floor(a.kudos_rewards / (a.uptime / 3600)) : 0
         bValue = b.uptime ? Math.floor(b.kudos_rewards / (b.uptime / 3600)) : 0
       } else {
-        // @ts-ignore
-        aValue = a[sortBy as keyof HordeWorkerDetails]
+        aValue = a[sortBy as SortableHordeWorkerKeys]
 
-        // @ts-ignore
-        bValue = b[sortBy as keyof HordeWorkerDetails]
+        bValue = b[sortBy as SortableHordeWorkerKeys]
       }
 
       if (aValue < bValue) {
@@ -108,6 +114,7 @@ export default function SortableTable() {
       if (aValue > bValue) {
         return sortOrder === 'asc' ? 1 : -1
       }
+      return 0
     })
   }, [sortBy, sortOrder, workers])
 

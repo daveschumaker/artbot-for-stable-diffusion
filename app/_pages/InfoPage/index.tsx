@@ -63,8 +63,10 @@ const InfoPage = () => {
           <div>
             Requests fulfilled (1 minute): ~
             {
-              // @ts-ignore
-              isNaN(requestsPerMinute) ? 'N/A' : Math.floor(requestsPerMinute)
+              // requestsPerMinute is the string 'N/A' until stats arrive.
+              typeof requestsPerMinute === 'string' || isNaN(requestsPerMinute)
+                ? 'N/A'
+                : Math.floor(requestsPerMinute)
             }
           </div>
         </div>

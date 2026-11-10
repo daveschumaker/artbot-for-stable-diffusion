@@ -7,7 +7,6 @@ import fetchMyWorkers from 'app/_api/fetchMyWorkers'
 import { setUserId } from 'app/_api/userInfo'
 import AppSettings from 'app/_data-models/AppSettings'
 
-// @ts-ignore
 import { trackNewSession } from './analytics'
 import { isAppActive } from './appUtils'
 import {

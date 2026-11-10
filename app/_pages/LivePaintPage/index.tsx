@@ -91,12 +91,12 @@ const LivePaint = () => {
 
     setInput(initInput)
 
-    const container = document.getElementById('live-paint-container')
-    const width = container?.offsetWidth
-    // @ts-ignore
+    // The container div is rendered unconditionally by this component, so it
+    // exists once this mount effect runs.
+    const container = document.getElementById('live-paint-container')!
+    const width = container.offsetWidth
     setPageWidth(width)
 
-    // @ts-ignore
     if (width < TWO_COLUMN_SIZE) {
       setIsSinglePanel(true)
     }

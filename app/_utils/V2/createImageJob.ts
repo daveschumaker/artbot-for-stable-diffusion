@@ -102,7 +102,7 @@ const isValidMulti = (
 const mergePendingJobArray = (
   existingArray: CreateImageRequest[],
   newItems: CreateImageRequest[],
-  fieldsToOverwrite: string[]
+  fieldsToOverwrite: Array<keyof CreateImageRequest>
 ): CreateImageRequest[] => {
   const newArray = []
   if (existingArray.length > 0) {
@@ -111,7 +111,6 @@ const mergePendingJobArray = (
         const mergedItem = {
           ...existingItem,
           ...Object.fromEntries(
-            // @ts-ignore
             fieldsToOverwrite.map((field) => [field, newItem[field]])
           )
         }
@@ -201,13 +200,9 @@ export const createImageJob = async (
   // an casting data to proper type
   try {
     if (pendingJobArray.length === 0) {
-      // @ts-ignore
       await createPendingJob(newImageRequest)
     } else {
-      const jobs = pendingJobArray.map((job) =>
-        // @ts-ignore
-        createPendingJob(job)
-      )
+      const jobs = pendingJobArray.map((job) => createPendingJob(job))
       await Promise.all(jobs)
       await sleep(100) // Assuming a delay is still needed between job creations
     }

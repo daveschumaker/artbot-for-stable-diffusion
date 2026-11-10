@@ -81,7 +81,7 @@ const CreatePage = ({ className }: any) => {
       setErrors,
       setInput,
       setPending,
-      disableRedirect: width && width > 1100
+      disableRedirect: !!width && width > 1100
     })
   }, [input, pending, router, setErrors, setInput, width])
 
@@ -145,8 +145,10 @@ const CreatePage = ({ className }: any) => {
 
         for (const key in json) {
           if (json.hasOwnProperty(key) && input.hasOwnProperty(key)) {
-            // @ts-ignore
-            input[key] = json[key]
+            // hasOwnProperty above guarantees key is a DefaultPromptInput field.
+            ;(input as Record<keyof DefaultPromptInput, unknown>)[
+              key as keyof DefaultPromptInput
+            ] = json[key]
           }
         }
 
@@ -182,14 +184,15 @@ const CreatePage = ({ className }: any) => {
     // Step 2. Check if drawing mode
     if (query[CreatePageMode.LOAD_DRAWING]) {
       initialState = null
-      // @ts-ignore
+      // loadEditPrompt types control_type as a plain string, but the saved
+      // value always comes from a DefaultPromptInput's CONTROL_TYPES field.
       initialState = {
         ...new DefaultPromptInput(),
         ...(loadEditPrompt() || {}),
         // These come last because saved prompt data has an empty source image.
         source_image: getBase64FromDraw().base64,
         source_processing: SourceProcessing.Img2Img
-      }
+      } as DefaultPromptInput
 
       logToConsole({
         data: initialState,
@@ -281,10 +284,15 @@ const CreatePage = ({ className }: any) => {
 
     // Step 4. Check for other query param states.
     // Step 4a. If query param is for loading a model, set model:
-    // @ts-ignore
-    if (initialState && query[CREATE_PAGE_PARAM.LoadModel]) {
-      // @ts-ignore
-      initialState.models = [query[CREATE_PAGE_PARAM.LoadModel] as string]
+    if (
+      initialState &&
+      query[CREATE_PAGE_PARAM.LoadModel as keyof CreatePageQueryParams]
+    ) {
+      initialState.models = [
+        query[
+          CREATE_PAGE_PARAM.LoadModel as keyof CreatePageQueryParams
+        ] as string
+      ]
 
       logToConsole({
         data: initialState,
@@ -294,8 +302,10 @@ const CreatePage = ({ className }: any) => {
     }
 
     // Step 4b. If query param is a prompt, set prompt:
-    // @ts-ignore
-    if (initialState && query[CREATE_PAGE_PARAM.Prompt]) {
+    if (
+      initialState &&
+      query[CREATE_PAGE_PARAM.Prompt as keyof CreatePageQueryParams]
+    ) {
       initialState.prompt = query[CreatePageMode.PROMPT] as string
 
       logToConsole({
@@ -322,8 +332,8 @@ const CreatePage = ({ className }: any) => {
         input: initialState as DefaultPromptInput
       })
 
-      // @ts-ignore
-      initialState = { ...initialState, ...presetInput }
+      // presetInput spreads a full DefaultPromptInput, so the merge is complete.
+      initialState = { ...initialState, ...presetInput } as DefaultPromptInput
     }
 
     // A newer load started while this one was waiting, so its result wins.

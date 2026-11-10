@@ -82,7 +82,7 @@ const ControlNetPage = () => {
   const handleImportDrawing = () => {
     const data = getBase64FromDraw()
 
-    const inputToLoad = {
+    const inputToLoad: Partial<DefaultPromptInput> = {
       height: nearestWholeMultiple(data.height),
       width: nearestWholeMultiple(data.width),
       orientationType: 'custom',
@@ -95,32 +95,26 @@ const ControlNetPage = () => {
     const importInput = getInputCache() || {}
 
     if (importInput.loadInputForControlNet && importInput.prompt) {
-      // @ts-ignore
       inputToLoad.prompt = importInput.prompt
     }
 
     if (importInput.loadInputForControlNet && importInput.negative) {
-      // @ts-ignore
       inputToLoad.negative = importInput.negative
     }
 
     if (importInput.loadInputForControlNet && importInput.models) {
-      // @ts-ignore
       inputToLoad.models = importInput.models
     }
 
     if (importInput.loadInputForControlNet && importInput.steps) {
-      // @ts-ignore
       inputToLoad.steps = importInput.steps
     }
 
     if (importInput.loadInputForControlNet && importInput.cfg_scale) {
-      // @ts-ignore
       inputToLoad.cfg_scale = importInput.cfg_scale
     }
 
     if (importInput.loadInputForControlNet && importInput.control_type) {
-      // @ts-ignore
       inputToLoad.control_type = importInput.control_type
     }
 
@@ -180,7 +174,6 @@ const ControlNetPage = () => {
 
     const inputToSubmit = { ...input }
 
-    // @ts-ignore
     await createImageJob(new CreateImageRequest(inputToSubmit))
 
     if (!AppSettings.get('stayOnCreate')) {

@@ -245,40 +245,28 @@ const SettingsPage = () => {
               >
                 <DropDownMenuItem
                   onClick={() => {
-                    router.push(
-                      //@ts-ignore
-                      `/settings`
-                    )
+                    router.push(`/settings`)
                   }}
                 >
                   AI Horde settings
                 </DropDownMenuItem>
                 <DropDownMenuItem
                   onClick={() => {
-                    router.push(
-                      //@ts-ignore
-                      `/settings?panel=workers`
-                    )
+                    router.push(`/settings?panel=workers`)
                   }}
                 >
                   Manage workers
                 </DropDownMenuItem>
                 <DropDownMenuItem
                   onClick={() => {
-                    router.push(
-                      //@ts-ignore
-                      `/settings?panel=prefs`
-                    )
+                    router.push(`/settings?panel=prefs`)
                   }}
                 >
                   ArtBot preferences
                 </DropDownMenuItem>
                 <DropDownMenuItem
                   onClick={() => {
-                    router.push(
-                      //@ts-ignore
-                      `/settings?panel=import-export`
-                    )
+                    router.push(`/settings?panel=import-export`)
                   }}
                 >
                   Import / Export

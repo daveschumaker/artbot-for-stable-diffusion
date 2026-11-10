@@ -58,10 +58,8 @@ const cloneImageParams = async (imageParams: CreateImageRequest) => {
 
     // TODO: Importing this causes Fabric to be built as part of
     // app chunk, doubling size of initial JS library. Find a way to split this out.
-    //@ts-ignore
     // const CreateCanvas = (await import('../models/CreateCanvas')).default
 
-    // @ts-ignore
     // clonedParams.source_mask = await CreateCanvas.invert(
     //   `data:image/webp;base64,${clonedParams.source_mask}`,
     //   true

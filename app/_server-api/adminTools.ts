@@ -4,9 +4,12 @@ import { promises as fs } from 'fs'
 import * as crypto from 'crypto'
 import os from 'os'
 import path from 'path'
-import jwt, { VerifyErrors } from 'jsonwebtoken'
+import jwt, { JwtPayload, VerifyErrors } from 'jsonwebtoken'
 
-const SECRET_KEY = process.env.SECRET
+// May be undefined when SECRET is not configured. It is passed to jsonwebtoken
+// as-is: jwt.sign then throws and jwt.verify reports an error, so admin auth
+// fails closed. The cast below only satisfies the typings.
+const SECRET_KEY = process.env.SECRET as jwt.Secret
 
 export const readServerSettingsFile = async () => {
   const isProd = process.env.NODE_ENV === 'production'
@@ -102,7 +105,6 @@ export const adminLogin = ({
   const validPassword = verifyPassword(password, ADMIN_PW_HASH)
 
   if (validUser && validPassword) {
-    // @ts-ignore
     const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: '6h' })
 
     return {
@@ -116,23 +118,21 @@ export const adminLogin = ({
   }
 }
 
-interface User {
-  username: string
-}
-
 export const validateToken = (token: string) => {
   return new Promise((resolve) => {
     if (!token) return resolve(false)
 
     jwt.verify(
       token,
-      // @ts-ignore
       SECRET_KEY,
-      // @ts-ignore
-      (err: VerifyErrors | null, user: User | undefined) => {
+      (err: VerifyErrors | null, decoded: JwtPayload | string | undefined) => {
         if (err) return resolve(false)
 
-        if (user?.username === process.env.ADMIN_USER) {
+        // A string payload carries no username claim.
+        const username: unknown =
+          typeof decoded === 'object' ? decoded.username : undefined
+
+        if (username === process.env.ADMIN_USER) {
           return resolve(true)
         }
 

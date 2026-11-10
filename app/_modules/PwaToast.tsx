@@ -52,8 +52,7 @@ const PwaToast = () => {
       return
     }
 
-    // @ts-ignore
-    const mobileSize = size?.width <= 640 || false
+    const mobileSize = (size?.width !== undefined && size.width <= 640) || false
 
     if (mobileSize) {
       setShowToast(true)

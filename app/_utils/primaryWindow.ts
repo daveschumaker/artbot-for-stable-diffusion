@@ -1,5 +1,9 @@
 import AppSettings from 'app/_data-models/AppSettings'
 
+interface DocumentWithWebkitVisibility extends Document {
+  webkitVisibilityState?: Document['visibilityState']
+}
+
 interface PrimaryWindow {
   uuid: string
   timestamp: number
@@ -35,16 +39,18 @@ export const pageIsVisible = () => {
     'hidden' in document
       ? 'visibilityState'
       : 'webkitHidden' in document
-      ? 'webkitVisibilityState'
-      : null
+        ? 'webkitVisibilityState'
+        : null
 
   if (!visibilityChangeProperty) {
     // Page Visibility API is not supported in this browser.
     return true // Assume the page is active.
   }
 
-  // @ts-ignore
-  return document[visibilityChangeProperty] === 'visible'
+  return (
+    (document as DocumentWithWebkitVisibility)[visibilityChangeProperty] ===
+    'visible'
+  )
 }
 
 export const initializePrimaryWindowOnLoad = () => {
@@ -54,10 +60,9 @@ export const initializePrimaryWindowOnLoad = () => {
   }
 
   // Step 2: Check and store the object in localStorage
-  // @ts-ignore
-  let primaryWindow: PrimaryWindow = localStorage.getItem('PrimaryWindow')
-  if (!primaryWindow) {
-    // @ts-ignore
+  let primaryWindow: PrimaryWindow
+  const storedPrimaryWindow = localStorage.getItem('PrimaryWindow')
+  if (!storedPrimaryWindow) {
     primaryWindow = {
       uuid,
       timestamp: Date.now()
@@ -93,8 +98,8 @@ export const initializePrimaryWindowOnLoad = () => {
 
   // Step 4: Update the timestamp if it's been more than 10 seconds
   setInterval(() => {
-    // @ts-ignore
-    primaryWindow = JSON.parse(localStorage.getItem('PrimaryWindow'))
+    // String(null) === 'null', which is what JSON.parse coerces null to anyway
+    primaryWindow = JSON.parse(String(localStorage.getItem('PrimaryWindow')))
     const currentTime = Date.now()
     if (
       primaryWindow.timestamp + 5000 <= currentTime &&

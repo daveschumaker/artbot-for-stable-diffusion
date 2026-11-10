@@ -63,7 +63,6 @@ const PendingPanelImageCard = React.memo(({ imageJob }: { imageJob: any }) => {
     e.stopPropagation()
     const job = getPendingJob(jobId)
 
-    // @ts-ignore
     job.favorited = updateFavorite
     setFavorited(updateFavorite)
     updatePendingJobV2(job)

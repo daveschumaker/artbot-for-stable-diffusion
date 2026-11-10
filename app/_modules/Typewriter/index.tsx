@@ -59,7 +59,7 @@ const images = [
   }
 ]
 
-function shuffleArray(array: any) {
+function shuffleArray<T>(array: T[]) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
     ;[array[i], array[j]] = [array[j], array[i]]
@@ -69,7 +69,7 @@ function shuffleArray(array: any) {
 shuffleArray(images)
 
 export default function PromptTypewriter() {
-  const [shuffled, setShuffled] = useState([])
+  const [shuffled, setShuffled] = useState<typeof images>([])
   const [isHidden, setIsHidden] = useState(true)
   const [promptIndex, setPromptIndex] = useState(0)
 
@@ -85,7 +85,6 @@ export default function PromptTypewriter() {
     shuffleArray(images)
     const update = [...images]
 
-    //@ts-ignore
     setShuffled(update)
   }, [])
 
@@ -98,7 +97,6 @@ export default function PromptTypewriter() {
       <div className={styles.TextWrapper}>
         <div style={{ paddingBottom: '24px' }}>
           <Typewriter
-            // @ts-ignore
             text={shuffled[promptIndex].prompt}
             onEraseDelay={() => {
               handleImageChange()
@@ -135,13 +133,7 @@ export default function PromptTypewriter() {
             right: 8
           }}
         >
-          created with{' '}
-          <strong>
-            {
-              // @ts-ignore
-              shuffled[promptIndex].model
-            }
-          </strong>
+          created with <strong>{shuffled[promptIndex].model}</strong>
         </div>
       </div>
       <div className={styles.ImageWrapper}>
@@ -150,7 +142,6 @@ export default function PromptTypewriter() {
           className={`${styles['fade-in-out']} ${
             isHidden ? styles.hidden : ''
           }`}
-          // @ts-ignore
           src={shuffled[promptIndex].file.src}
           style={{ borderRadius: '4px', width: '100%' }}
         />

@@ -54,7 +54,7 @@ const Uploader = (props: UploaderProps) => {
   const [errorMsg, setErrorMsg] = useState('')
   const [imgUrl, setImgUrl] = useState('')
 
-  const handleFileSelect = async (file: any) => {
+  const handleFileSelect = async (file: File) => {
     if (typeof window === 'undefined') {
       return
     }
@@ -62,17 +62,17 @@ const Uploader = (props: UploaderProps) => {
     const { readAndCompressImage } = await import('browser-image-resizer')
     let resizedImage = await readAndCompressImage(file, imgConfig)
 
-    let fullDataString
+    let fullDataString: string | undefined
 
     if (file) {
-      fullDataString = await getBase64(resizedImage)
+      // getBase64 uses FileReader.readAsDataURL, which always yields a string.
+      fullDataString = (await getBase64(resizedImage)) as string
     }
 
     if (!fullDataString) {
       return
     }
 
-    // @ts-ignore
     const [fileType, imgBase64String] = fullDataString.split(';base64,')
     const [, imageType] = fileType.split('data:')
 
@@ -100,7 +100,6 @@ const Uploader = (props: UploaderProps) => {
     })
     const data = await resp.json()
 
-    // @ts-ignore
     const { success, imageType, imgBase64String } = data
 
     if (!data || !success) {
@@ -134,11 +133,7 @@ const Uploader = (props: UploaderProps) => {
       <PageTitle>Upload image</PageTitle>
       <Section>
         <Label>From your device:</Label>
-        <UploadButton
-          // @ts-ignore
-          handleFile={handleFileSelect}
-          label="Choose file"
-        />
+        <UploadButton handleFile={handleFileSelect} label="Choose file" />
       </Section>
       <Section>
         <Label>From a URL:</Label>

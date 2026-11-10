@@ -89,12 +89,16 @@ export const handleUsePreset = ({
     cfg_scale: presetDetails.cfg_scale
       ? presetDetails.cfg_scale
       : new DefaultPromptInput().cfg_scale,
-    // @ts-ignore
+    // Preset loras / tis only carry the Horde fields (name, strengths, ...),
+    // not the full CivitAI details that SavedLora / AiHordeEmbedding describe.
+    // The LoRA UI falls back to placeholder labels for them (see
+    // getLoraName in AdvancedOptionsPanel/LoraSelect).
     loras: presetDetails.loras
-      ? presetDetails.loras
+      ? (presetDetails.loras as unknown as DefaultPromptInput['loras'])
       : new DefaultPromptInput().loras,
-    // @ts-ignore
-    tis: presetDetails.tis ? presetDetails.tis : new DefaultPromptInput().tis,
+    tis: presetDetails.tis
+      ? (presetDetails.tis as unknown as DefaultPromptInput['tis'])
+      : new DefaultPromptInput().tis,
     seed: input.seed,
     steps: presetDetails.steps
       ? presetDetails.steps

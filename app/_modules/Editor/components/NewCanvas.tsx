@@ -100,8 +100,8 @@ const NewCanvas = ({
             onClick={() => {
               if (orientationValue.height && orientationValue.width) {
                 // get width of canvas area
-                let container = document.querySelector('#canvas-wrapper')
-                // @ts-ignore
+                let container =
+                  document.querySelector<HTMLElement>('#canvas-wrapper')
                 const canvasWidth = container?.offsetWidth || 512
 
                 // Attempt to pin narrow margin to 512

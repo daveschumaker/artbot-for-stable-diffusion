@@ -21,10 +21,9 @@ export default function Tooltip({
     return null
   }
 
-  const style = {}
+  const style: React.CSSProperties = {}
 
   if (width) {
-    // @ts-ignore
     style.width = width
   }
 

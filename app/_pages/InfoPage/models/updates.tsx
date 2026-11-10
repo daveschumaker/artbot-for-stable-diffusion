@@ -28,8 +28,10 @@ const ModelUpdatesPage = () => {
   const getModelUpdates = async () => {
     try {
       let changeArray: Array<any> = []
-      // @ts-ignore
-      const data: IModelUpdatesResponse = await fetchModelUpdates()
+      const data: IModelUpdatesResponse | undefined = await fetchModelUpdates()
+      // fetchModelUpdates returns undefined while a request is in flight.
+      // (Destructuring it used to throw into the empty catch below.)
+      if (!data) return
       const { changes = [], timestamp } = data
 
       changes.forEach((change: any) => {

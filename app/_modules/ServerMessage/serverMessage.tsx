@@ -16,9 +16,7 @@ const ServerMessage = ({
 
   let timeDiff = 0
 
-  // @ts-ignore
   if (timestamp) {
-    // @ts-ignore
     timeDiff = Math.floor((Date.now() - timestamp) / 60000)
 
     if (timeDiff <= 1) {

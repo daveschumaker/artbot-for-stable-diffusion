@@ -1,5 +1,15 @@
 import AppSettings from 'app/_data-models/AppSettings'
 
+declare global {
+  interface Window {
+    /** Debug helpers registered by initWindowLogger() */
+    artbotExportLogs?: () => void
+    artbotDownloadLogs?: () => void
+    /** Set manually from the devtools console to enable all debug logs */
+    DEBUG_ALL_LOGS?: boolean
+  }
+}
+
 let logs: Array<any> = []
 
 export const initWindowLogger = () => {
@@ -7,14 +17,12 @@ export const initWindowLogger = () => {
     return
   }
 
-  // @ts-ignore
   window.artbotExportLogs = () => {
     console.log(`\n--`)
     console.log(`Exporting ArtBot Logs`)
     console.log(logs)
   }
 
-  // @ts-ignore
   window.artbotDownloadLogs = () => {
     const str = JSON.stringify(logs, null, 2)
     const filename = AppSettings.get('artbot_uuid') + '.txt'
@@ -59,9 +67,7 @@ export const logToConsole = ({
 
   if (
     localStorage.getItem(debugKey) === 'true' ||
-    // @ts-ignore
-    window[debugKey] === true ||
-    // @ts-ignore
+    (window as unknown as Record<string, unknown>)[debugKey] === true ||
     window['DEBUG_ALL_LOGS'] ||
     localStorage.getItem('DEBUG_ALL_LOGS') === 'true'
   ) {

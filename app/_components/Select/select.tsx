@@ -1,7 +1,7 @@
-import { CSSProperties, useId } from 'react'
-import Select, { OptionProps } from 'react-select'
+import { useId } from 'react'
+import Select, { StylesConfig } from 'react-select'
 
-import { SelectComponentProps } from '_types/artbot'
+import { SelectComponentProps, Value } from '_types/artbot'
 
 const SelectComponent = (props: SelectComponentProps) => {
   // Fixes a bunch of weird SSR related issues with react-select
@@ -10,12 +10,12 @@ const SelectComponent = (props: SelectComponentProps) => {
 
   const { ...rest } = props
 
-  const customStyles = {
-    container: (provided: CSSProperties) => ({
+  const customStyles: StylesConfig<Value, boolean> = {
+    container: (provided) => ({
       ...provided,
       width: '100%'
     }),
-    control: (provided: CSSProperties) => ({
+    control: (provided) => ({
       ...provided,
       backgroundColor: props.isDisabled ? '#adadad' : `var(--input-background)`,
       cursor: 'pointer',
@@ -33,7 +33,7 @@ const SelectComponent = (props: SelectComponentProps) => {
         // height: '30px'
       }
     }),
-    input: (provided: CSSProperties) => ({
+    input: (provided) => ({
       ...provided,
       color: `var(--input-text)`,
       // height: '40px',
@@ -53,7 +53,7 @@ const SelectComponent = (props: SelectComponentProps) => {
         padding: '0 2px'
       }
     }),
-    option: (provided: CSSProperties, state: OptionProps) => ({
+    option: (provided, state) => ({
       ...provided,
       backgroundColor: state.isFocused
         ? '#7e5a6c'
@@ -68,11 +68,11 @@ const SelectComponent = (props: SelectComponentProps) => {
       cursor: 'pointer'
       // marginBottom: '4px'
     }),
-    placeholder: (provided: CSSProperties) => ({
+    placeholder: (provided) => ({
       ...provided,
       color: '#9299a6'
     }),
-    clearIndicator: (provided: CSSProperties) => ({
+    clearIndicator: (provided) => ({
       ...provided
       // height: 'calc(var(--input-element-h) - 2px)',
       // '@media (min-width: 800px)': {
@@ -80,7 +80,7 @@ const SelectComponent = (props: SelectComponentProps) => {
       //   lineHeight: '28px'
       // }
     }),
-    dropdownIndicator: (provided: CSSProperties) => ({
+    dropdownIndicator: (provided) => ({
       ...provided
       // color: `var(--input-text)`,
       // height: 'calc(var(--input-element-h) - 2px)',
@@ -89,7 +89,7 @@ const SelectComponent = (props: SelectComponentProps) => {
       //   lineHeight: '28px'
       // }
     }),
-    singleValue: (provided: CSSProperties) => ({
+    singleValue: (provided) => ({
       ...provided,
       color: `var(--input-text)`,
       // height: '38px',
@@ -103,7 +103,7 @@ const SelectComponent = (props: SelectComponentProps) => {
         height: '28px'
       }
     }),
-    multiValue: (provided: CSSProperties) => ({
+    multiValue: (provided) => ({
       ...provided,
       backgroundColor: 'var(--main-color)',
       '@media (min-width: 800px)': {
@@ -128,7 +128,7 @@ const SelectComponent = (props: SelectComponentProps) => {
     //     lineHeight: '28px'
     //   }
     // }),
-    valueContainer: (provided: CSSProperties) => ({
+    valueContainer: (provided) => ({
       ...provided,
       // color: `var(--input-text)`,
       // columnGap: '4px',
@@ -150,7 +150,7 @@ const SelectComponent = (props: SelectComponentProps) => {
         //   bottom: 0
       }
     }),
-    menu: (provided: CSSProperties) => ({
+    menu: (provided) => ({
       ...provided,
       backgroundColor: `var(--input-background)`
       // color: `var(--input-text)`,
@@ -158,7 +158,7 @@ const SelectComponent = (props: SelectComponentProps) => {
       // zIndex: `var(--zIndex-overBase)`,
       // padding: '0 4px'
     }),
-    indicatorsContainer: (provided: CSSProperties) => ({
+    indicatorsContainer: (provided) => ({
       ...provided,
       //   position: 'absolute',
       //   right: '0px',
@@ -179,7 +179,6 @@ const SelectComponent = (props: SelectComponentProps) => {
       closeMenuOnSelect={props.isMulti ? false : true}
       menuPlacement={'auto' as any}
       {...rest}
-      //@ts-ignore
       styles={customStyles}
       placeholder="Select..."
     />

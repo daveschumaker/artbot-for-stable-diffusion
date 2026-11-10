@@ -30,10 +30,9 @@ export function Button(props: ButtonProps) {
     ...rest
   } = props
 
-  const s = { ...style, touchAction: 'manipulation' }
+  const s: React.CSSProperties = { ...style, touchAction: 'manipulation' }
 
   if (width) {
-    // @ts-ignore
     s.width = width
   }
 

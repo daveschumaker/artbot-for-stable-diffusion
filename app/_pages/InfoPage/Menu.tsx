@@ -53,30 +53,21 @@ const InfoPageMenuButton = ({ title = '' }) => {
         >
           <DropDownMenuItem
             onClick={() => {
-              router.push(
-                //@ts-ignore
-                `/info/models`
-              )
+              router.push(`/info/models`)
             }}
           >
             All models
           </DropDownMenuItem>
           <DropDownMenuItem
             onClick={() => {
-              router.push(
-                //@ts-ignore
-                `/info/models?show=favorite-models`
-              )
+              router.push(`/info/models?show=favorite-models`)
             }}
           >
             Favorite models
           </DropDownMenuItem>
           <DropDownMenuItem
             onClick={() => {
-              router.push(
-                //@ts-ignore
-                `/info/models/updates`
-              )
+              router.push(`/info/models/updates`)
             }}
           >
             Model updates
@@ -84,10 +75,7 @@ const InfoPageMenuButton = ({ title = '' }) => {
           <MenuSeparator />
           <DropDownMenuItem
             onClick={() => {
-              router.push(
-                //@ts-ignore
-                `/info/workers`
-              )
+              router.push(`/info/workers`)
             }}
           >
             All workers

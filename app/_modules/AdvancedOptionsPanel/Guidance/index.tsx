@@ -38,14 +38,12 @@ export default function Guidance({ hideOptions = false }: GuidanceProps) {
       >
         {input.useMultiGuidance && (
           <Input
-            // @ts-ignore
             type="text"
             name="multiGuidance"
             onChange={(e: any) => {
               setInput({ multiGuidance: e.target.value })
             }}
             placeholder="3,5,7,9"
-            // @ts-ignore
             value={input.multiGuidance}
             width="100%"
           />

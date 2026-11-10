@@ -61,28 +61,21 @@ export default function StyleTagsDropdown({
           </div>
         </div>
       )}
-      {tags.map(([section, elements]) => (
-        <div
-          // @ts-ignore
-          key={section}
-          className="mb-2 px-2"
-        >
+      {(tags as [string, string[]][]).map(([section, elements]) => (
+        <div key={section} className="mb-2 px-2">
           <h2 className="font-[700] mb-2">{section}</h2>
           <div style={{ wordBreak: 'break-all' }}>
-            {
-              // @ts-ignore
-              elements.map((element) => (
-                <div
-                  className={styles['tag']}
-                  key={element}
-                  onClick={() => {
-                    addTagClick(element)
-                  }}
-                >
-                  {element}
-                </div>
-              ))
-            }
+            {elements.map((element) => (
+              <div
+                className={styles['tag']}
+                key={element}
+                onClick={() => {
+                  addTagClick(element)
+                }}
+              >
+                {element}
+              </div>
+            ))}
           </div>
         </div>
       ))}

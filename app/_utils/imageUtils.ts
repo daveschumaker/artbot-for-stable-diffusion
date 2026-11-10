@@ -10,7 +10,10 @@ import { DEFAULT_SAMPLER_ARRAY } from '_constants'
 import { isiOS, isSafariBrowser } from './appUtils'
 import { fetchCompletedJobs } from './db'
 import { basePath } from 'BASE_PATH'
-import ImageParamsForApi from 'app/_data-models/ImageParamsForApi'
+import ImageParamsForApi, {
+  IApiParams,
+  IArtBotImageDetails
+} from 'app/_data-models/ImageParamsForApi'
 import { CreateImageJob } from '_types'
 interface OrientationLookup {
   [key: string]: ImageOrientation
@@ -204,12 +207,10 @@ export const getImageDimensions = (name: string = '', base64String: string) => {
     // Set up the onload function, which fires after the image has been loaded
     image.onload = function () {
       console.log(`${name} dimensions:`)
-      // @ts-ignore
-      console.log(`image w x h:`, this.width, this.height)
+      console.log(`image w x h:`, image.width, image.height)
 
       // Resolve the promise with an object containing the width and height
-      // @ts-ignore
-      resolve({ width: this.width, height: this.height })
+      resolve({ width: image.width, height: image.height })
     }
 
     // Set up the onerror function, which fires if there's an error loading the image
@@ -258,8 +259,9 @@ export const createNewImage = async (imageParams: CreateImageJob) => {
   }
 
   try {
-    // @ts-ignore
-    const data = await createImage(clonedParams)
+    // CreateImageJob.numImages is optional, IArtBotImageDetails.numImages is
+    // required but never read by createImage.
+    const data = await createImage(clonedParams as IArtBotImageDetails)
     const { jobId, success, message, status } = data
 
     if (success && jobId) {
@@ -343,11 +345,12 @@ export const createNewImage = async (imageParams: CreateImageJob) => {
 }
 
 export const getBase64 = (file: Blob) => {
-  return new Promise((resolve) => {
+  // readAsDataURL always produces a string result.
+  return new Promise<string>((resolve) => {
     let reader = new FileReader()
     reader.readAsDataURL(file)
     reader.onload = () => {
-      return resolve(reader.result)
+      return resolve(reader.result as string)
     }
   })
 }
@@ -398,7 +401,6 @@ export const imageDimensions = (fullDataString: string) => {
       })
     }
 
-    // @ts-ignore
     i.src = fullDataString
   })
 }
@@ -448,7 +450,6 @@ export const getImageFromUrl = async (imgUrl: string) => {
   })
   const data = await resp.json()
 
-  // @ts-ignore
   const { success, imageType, imgBase64String, height, width } = data
 
   if (!data || !success) {
@@ -596,7 +597,6 @@ export const blobToClipboard = async (base64String: string) => {
     const base64Response = await fetch(`data:image/png;base64,${base64String}`)
     const imgBlob = await base64Response.blob()
 
-    // @ts-ignore
     return await imgBlob.toPNG()
   }
 
@@ -660,7 +660,21 @@ export const downloadImages = async ({
         `_${imageId}.${fileType}`
     }
 
-    const imageData = {
+    const imageData: {
+      name: string
+      date: Date
+      prompt: string
+      negative_prompt: string
+      sampler: string
+      model: string
+      loras: unknown
+      height: number
+      width: number
+      steps: number
+      cfg_scale: number
+      seed: string
+      denoising_strength?: number
+    } = {
       name: filename,
       date: new Date(image.timestamp),
       prompt: image.prompt,
@@ -676,14 +690,13 @@ export const downloadImages = async ({
     }
 
     if (image.img2img || image.source_processing === SourceProcessing.Img2Img) {
-      // @ts-ignore
       imageData.denoising_strength = image.denoising_strength
     }
 
     fileDetails.push(imageData)
     let newBlob
 
-    let input
+    let input: Awaited<ReturnType<typeof base64toBlob>>
     try {
       input = await base64toBlob(image.base64String)
     } catch (err) {
@@ -698,17 +711,14 @@ export const downloadImages = async ({
       if (image.imageMimeType !== `image/${fileType}`) {
         if (input) {
           if (fileType === 'png') {
-            // @ts-ignore
             newBlob = await input?.toPNG()
           }
 
           if (fileType === 'jpg') {
-            // @ts-ignore
             newBlob = await input?.toJPEG()
           }
 
           if (fileType === 'webp') {
-            // @ts-ignore
             newBlob = await input?.toWebP()
           }
         }
@@ -784,21 +794,19 @@ export const downloadFile = async (image: any) => {
     let newBlob
 
     if (fileType === 'png') {
-      // @ts-ignore
-      newBlob = await input?.toPNG(null)
+      newBlob = await (input as Blob).toPNG(null)
     }
 
     if (fileType === 'jpg') {
-      // @ts-ignore
-      newBlob = await input?.toJPEG(null)
+      newBlob = await (input as Blob).toJPEG(null)
     }
 
     if (fileType === 'webp') {
-      // @ts-ignore
-      newBlob = await input?.toWebP(null)
+      newBlob = await (input as Blob).toWebP(null)
     }
 
-    saveAs(newBlob, filename)
+    // newBlob is undefined if imageDownloadFormat is not png, jpg or webp
+    saveAs(newBlob as Blob, filename)
   }
 }
 
@@ -859,8 +867,7 @@ export const countImagesToGenerate = (imageParams: ICountImages) => {
     let splitCount = 0
 
     splitClip.forEach((split) => {
-      // @ts-ignore
-      if (!isNaN(split) && split) {
+      if (!isNaN(Number(split)) && split) {
         splitCount++
       }
     })
@@ -875,8 +882,7 @@ export const countImagesToGenerate = (imageParams: ICountImages) => {
     let splitCount = 0
 
     splitDenoise.forEach((split) => {
-      // @ts-ignore
-      if (!isNaN(split) && split) {
+      if (!isNaN(Number(split)) && split) {
         splitCount++
       }
     })
@@ -899,8 +905,7 @@ export const countImagesToGenerate = (imageParams: ICountImages) => {
     let splitCount = 0
 
     splitSteps.forEach((split) => {
-      // @ts-ignore
-      if (!isNaN(split) && split) {
+      if (!isNaN(Number(split)) && split) {
         splitCount++
       }
     })
@@ -915,8 +920,7 @@ export const countImagesToGenerate = (imageParams: ICountImages) => {
     let splitCount = 0
 
     splitGuidance.forEach((split) => {
-      // @ts-ignore
-      if (!isNaN(split) && split) {
+      if (!isNaN(Number(split)) && split) {
         splitCount++
       }
     })
@@ -1101,77 +1105,54 @@ export const isBase64UrlImage = async (base64String: string) => {
 }
 
 export const cleanDataForApiRequestDisplay = (imageDetails: any) => {
-  // @ts-ignore
-  const params = new ImageParamsForApi(imageDetails)
-
-  // @ts-ignore
+  // The ImageParamsForApi constructor returns an IApiParams object. Fields are
+  // deleted below for display, so treat everything as optional.
+  const params: Partial<Omit<IApiParams, 'params'>> & {
+    params: Partial<IApiParams['params']>
+  } = new ImageParamsForApi(imageDetails) as unknown as IApiParams
 
   if (params.source_image) {
-    // @ts-ignore
     params.source_image = '[true]'
   }
 
-  // @ts-ignore
   if (params.source_mask) {
-    // @ts-ignore
     params.source_mask = '[true]'
   }
 
-  // @ts-ignore
   delete params.nsfw
-  // @ts-ignore
   delete params.censor_nsfw
-  // @ts-ignore
   delete params.trusted_workers
-  // @ts-ignore
   delete params.shared
-  // @ts-ignore
   delete params.slow_workers
-  // @ts-ignore
   delete params.r2
-  // @ts-ignore
   delete params.dry_run
 
   /*** Remove these as they are the default options ***/
-  // @ts-ignore
-  if (params.params.post_processing.length === 0) {
-    // @ts-ignore
+  if (params.params.post_processing?.length === 0) {
     delete params.params.post_processing
   }
 
-  // @ts-ignore
   if (params.params.clip_skip === 1) {
-    // @ts-ignore
     delete params.params.clip_skip
   }
 
-  // @ts-ignore
   if (params.params.n === 1) {
-    // @ts-ignore
     delete params.params.n
   }
 
-  // @ts-ignore
   if (!params.params.tiling) {
-    // @ts-ignore
     delete params.params.tiling
   }
 
-  // @ts-ignore
   if (params.replacement_filter) {
-    // @ts-ignore
     delete params.replacement_filter
   }
 
-  // @ts-ignore
   if (!params.params.return_control_map) {
-    // @ts-ignore
     delete params.params.return_control_map
   }
 
-  // @ts-ignore
   if (!params.params.image_is_control) {
-    // @ts-ignore
     delete params.params.image_is_control
   }
 

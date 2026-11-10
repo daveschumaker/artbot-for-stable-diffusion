@@ -198,14 +198,15 @@ export const createImage = async (
       success: true,
       jobId: id
     }
-  } catch (err) {
+  } catch (caught) {
     isPending = false
+    // fetch rejects with TypeError / DOMException, both of which carry
+    // `name` and `message`.
+    const err = caught as Error
 
     // Handles weird issue where Safari encodes API key using unicode text.
     if (
-      //@ts-ignore
       err.name === 'TypeError' &&
-      //@ts-ignore
       err.message.indexOf(`Header 'apikey' has invalid value`) >= 0
     ) {
       trackEvent({
@@ -226,7 +227,6 @@ export const createImage = async (
       content: 'createImageApi',
       data: {
         imageParams: paramsForErrorLog(imageDetails),
-        // @ts-ignore
         errMsg: err?.message || ''
       }
     })

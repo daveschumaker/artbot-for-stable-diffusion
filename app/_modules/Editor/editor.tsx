@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react'
+import type { Canvas } from 'fabric'
 import { useEffectOnce } from 'app/_hooks/useEffectOnce'
 import {
   getCanvasStore,
@@ -25,22 +26,21 @@ const Editor = ({
   toolbarAbsolute = false,
   toolbarDisableMenu = false
 }: EditorProps) => {
-  const canvas = useRef(null)
-  const [ref, setRef] = useState()
-  const [canvasState, setCanvasState] = useState(null)
+  // CreateCanvas.init returns undefined if fabric fails to create the canvas.
+  const canvas = useRef<Canvas | null | undefined>(null)
+  const [ref, setRef] = useState<CreateCanvas>()
+  const [canvasState, setCanvasState] = useState<CreateCanvas | null>(null)
 
   const initCanvas = (
     height: number,
     width: number,
     bgColor: string = '#ffffff'
   ) => {
-    // @ts-ignore
     canvas.current = CreateCanvas.init({
       canvasId,
       bgColor
     })
     const myCanvas = new CreateCanvas({
-      // @ts-ignore
       canvas: canvas.current,
       canvasId,
       canvasType,
@@ -56,14 +56,12 @@ const Editor = ({
       myCanvas.initDrawing()
     }
 
-    //@ts-ignore
     setRef(myCanvas)
 
     if (getCanvasStore().drawLayer || getCanvasStore().clonedCanvasObj) {
       myCanvas.restoreCanvas()
     }
 
-    // @ts-ignore
     setCanvasState(myCanvas)
     return myCanvas
   }
@@ -77,11 +75,9 @@ const Editor = ({
       return
     }
 
-    // @ts-ignore
     canvasState.clear()
 
     // Fabric's dispose is asynchronous, and the element can't be reused until it finishes.
-    // @ts-ignore
     await canvas?.current?.dispose()
     canvas.current = null
     resetSavedDrawingState()
@@ -96,8 +92,7 @@ const Editor = ({
     let width = 512
 
     if (canvasType === 'drawing') {
-      let container = document.querySelector('#canvas-wrapper')
-      // @ts-ignore
+      let container = document.querySelector<HTMLElement>('#canvas-wrapper')
       width = container?.offsetWidth || 512
 
       if (width > 1024) {
@@ -114,7 +109,6 @@ const Editor = ({
 
       myCanvas.unload()
 
-      // @ts-ignore
       canvas?.current?.dispose()
       canvas.current = null
     }
@@ -123,7 +117,6 @@ const Editor = ({
   return (
     <div className={editorClassName}>
       <ToolBar
-        // @ts-ignore
         canvas={ref}
         canvasType={canvasType}
         handleNewCanvas={handleNewCanvas}

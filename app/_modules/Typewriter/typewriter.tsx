@@ -7,7 +7,7 @@ interface TypewriterProps {
   eraseSpeed: number
   onEraseDelay: () => any
   onEraseDone: () => any
-  text: string
+  text: string | string[]
   typingDelay: number
 }
 function Typewriter({
@@ -19,9 +19,11 @@ function Typewriter({
   onEraseDone = () => {},
   onEraseDelay = () => {},
   ...otherProps
-}: Partial<TypewriterProps>) {
+}: Partial<Omit<TypewriterProps, 'text'>> & Pick<TypewriterProps, 'text'>) {
   const [currentText, setCurrentText] = React.useState('')
-  const [__timeout, set__Timeout] = React.useState(null)
+  const [__timeout, set__Timeout] = React.useState<ReturnType<
+    typeof setTimeout
+  > | null>(null)
   const [isTyping, setIsTyping] = React.useState(true)
   const [currentIndex, setCurrentIndex] = React.useState(0)
 
@@ -40,11 +42,9 @@ function Typewriter({
     if (isTyping) {
       if (currentText.length < rawText.length) {
         const randomSpeed = Math.floor(Math.random() * (60 - 25 + 1)) + 25
-        // @ts-ignore
         set__Timeout(setTimeout(type, randomSpeed))
       } else {
         setIsTyping(false)
-        // @ts-ignore
         set__Timeout(setTimeout(erase, eraseDelay))
       }
     } else {
@@ -58,7 +58,6 @@ function Typewriter({
           setTimeout(() => setCurrentIndex(index), typingDelay)
         }
       } else {
-        // @ts-ignore
         set__Timeout(setTimeout(erase, eraseSpeed))
       }
     }
@@ -80,15 +79,12 @@ function Typewriter({
   }, [currentIndex])
 
   function getRawText() {
-    // @ts-ignore
     return typeof text === 'string' ? [text] : [...text]
   }
 
   function startTyping() {
     const randomSpeed = Math.floor(Math.random() * (60 - 25 + 1)) + 25
-    // @ts-ignore
     set__Timeout(
-      // @ts-ignore
       setTimeout(() => {
         onEraseDelay()
         type()

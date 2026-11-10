@@ -280,6 +280,6 @@ export enum ControlTypes {
 }
 
 export interface Value {
-  value: string | boolean
+  value: string | boolean | null
   label: string
 }
