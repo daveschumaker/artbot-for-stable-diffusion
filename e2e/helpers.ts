@@ -3,6 +3,7 @@ import sharp from 'sharp'
 
 export const MODEL = 'AlbedoBase XL (SDXL)'
 export const STANDARD_MODEL = 'Deliberate'
+export const FALLBACK_MODEL = 'stable_diffusion'
 export const INPAINTING_MODEL = 'Deliberate Inpainting'
 export const CAPTION = 'a small blue square'
 
@@ -70,6 +71,7 @@ export const mockBackend = async (page: Page) => {
         models: [
           availableModel(MODEL),
           availableModel(STANDARD_MODEL),
+          availableModel(FALLBACK_MODEL),
           availableModel(INPAINTING_MODEL)
         ]
       })
@@ -82,6 +84,7 @@ export const mockBackend = async (page: Page) => {
         models: {
           [MODEL]: modelDetails(MODEL, 'stable_diffusion_xl'),
           [STANDARD_MODEL]: modelDetails(STANDARD_MODEL, 'stable diffusion 1'),
+          [FALLBACK_MODEL]: modelDetails(FALLBACK_MODEL, 'stable diffusion 1'),
           [INPAINTING_MODEL]: modelDetails(
             INPAINTING_MODEL,
             'stable diffusion 1'

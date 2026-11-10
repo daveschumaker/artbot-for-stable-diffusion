@@ -58,6 +58,7 @@ const CreatePage = ({ className }: any) => {
 
   const [build, setBuild] = useState(buildId)
   const [query, setQuery] = useState<CreatePageQueryParams>({})
+  const latestLoadId = useRef(0)
 
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -168,6 +169,8 @@ const CreatePage = ({ className }: any) => {
   }
 
   const handleInitLoad = useCallback(async () => {
+    const loadId = ++latestLoadId.current
+
     await updateLocalStorate()
 
     // Set initial state here as default. Will act as fallback in case none of the other options work.
@@ -192,10 +195,10 @@ const CreatePage = ({ className }: any) => {
       // @ts-ignore
       initialState = {
         ...new DefaultPromptInput(),
-        source_image: getBase64FromDraw().base64,
-        source_processing: SourceProcessing.Img2Img,
         ...(loadEditPrompt() || {}),
-        ...(PromptInputSettings.load() || {})
+        // These come last because saved prompt data has an empty source image.
+        source_image: getBase64FromDraw().base64,
+        source_processing: SourceProcessing.Img2Img
       }
 
       logToConsole({
@@ -331,6 +334,11 @@ const CreatePage = ({ className }: any) => {
 
       // @ts-ignore
       initialState = { ...initialState, ...presetInput }
+    }
+
+    // A newer load started while this one was waiting, so its result wins.
+    if (loadId !== latestLoadId.current) {
+      return
     }
 
     // Step 6. Set input
