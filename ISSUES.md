@@ -135,8 +135,12 @@ marker is removed, so remove it in the same change.
 
 ## Cleanup
 
-- [ ] `CreateCanvas.getMaskForInput` never resolves when there's no saved mask, so
-      the rest of `uploadInpaint` doesn't run on that path. Decide what it should do.
+- [x] `CreateCanvas.getMaskForInput` never resolved when there was no saved mask.
+      It now resolves with an empty mask. The create page passes `onlyWithMask`
+      to `uploadInpaint`, so saved input without a mask is left as it was.
+- [ ] The image page's source image modal is disabled
+      (`app/_modules/ImageDetails/index.tsx`). Its "Use for inpaint" button only
+      logs to the console. Fix or remove it.
 - [x] Removed `AbTestModal`, `react-gallery-carousel`, `react-snap-carousel` and
       the other `SDXL_beta` UI.
 - [x] Replaced `react-lazyload` with `app/_components/LazyLoad.tsx`. The gallery's

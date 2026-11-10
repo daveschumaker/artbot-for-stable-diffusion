@@ -28,11 +28,18 @@ export const copyEditPrompt = async (imageDetails: any) => {
 /**
  * Can be used to upload an existing image from your ArtBot library as a new inpainting image
  * or can be used to clone a previously used source_image and image mask.
+ * With no saved mask, the image loads without one, unless onlyWithMask is set:
+ * then only the canvas is restored and the saved input is left as it is.
  * @param imageDetails
  * @param options
  */
 export const uploadInpaint = async (imageDetails: any, options: any = {}) => {
-  const { clone = false, useSourceImg = false, useSourceMask = false } = options
+  const {
+    clone = false,
+    onlyWithMask = false,
+    useSourceImg = false,
+    useSourceMask = false
+  } = options
 
   if (clone) {
     storeCanvas('drawLayer', imageDetails.canvasData)
@@ -51,6 +58,10 @@ export const uploadInpaint = async (imageDetails: any, options: any = {}) => {
       imageDetails.height,
       imageDetails.width
     )
+  }
+
+  if (onlyWithMask && !sourceMaskToUse) {
+    return
   }
 
   const i2iBase64String = {

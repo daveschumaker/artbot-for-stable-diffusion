@@ -174,8 +174,10 @@ const CreatePage = ({ className }: any) => {
     initialState = { ...promptInput } as DefaultPromptInput
 
     if (initialState && initialState.source_image) {
+      // Saved input without a mask, such as img2img, is left as it is.
       uploadInpaint(initialState, {
         clone: true,
+        onlyWithMask: true,
         useSourceImg: true,
         useSourceMask: true
       })
