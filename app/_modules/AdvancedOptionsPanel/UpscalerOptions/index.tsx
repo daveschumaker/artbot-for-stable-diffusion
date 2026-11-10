@@ -3,15 +3,10 @@ import TooltipComponent from 'app/_components/TooltipComponent'
 import { useCallback } from 'react'
 import { useInput } from 'app/_modules/InputProvider/context'
 import FlexCol from 'app/_components/FlexCol'
+import Upscalers from 'app/_data-models/Upscalers'
 import styles from './component.module.css'
 
-export const UPSCALERS = [
-  'RealESRGAN_x2plus',
-  'RealESRGAN_x4plus',
-  'RealESRGAN_x4plus_anime_6B',
-  'NMKD_Siax',
-  '4x_AnimeSharp'
-]
+const UPSCALERS = Upscalers.upscalers
 
 const UpscalerOptions = () => {
   const { input, setInput } = useInput()
