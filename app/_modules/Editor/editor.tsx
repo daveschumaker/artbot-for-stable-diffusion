@@ -1,6 +1,10 @@
 import React, { useRef, useState } from 'react'
 import { useEffectOnce } from 'app/_hooks/useEffectOnce'
-import { getCanvasStore, resetSavedDrawingState } from 'app/_store/canvasStore'
+import {
+  getCanvasStore,
+  resetSavedDrawingState,
+  storeCanvas
+} from 'app/_store/canvasStore'
 import CreateCanvas from 'app/_data-models/CreateCanvas'
 import ToolBar from './components/toolbar'
 import { EditorProps } from '_types/props'
@@ -81,6 +85,8 @@ const Editor = ({
     await canvas?.current?.dispose()
     canvas.current = null
     resetSavedDrawingState()
+    storeCanvas('drawLayer', null)
+    storeCanvas('maskLayer', null)
 
     initCanvas(height, width, bgColor)
   }

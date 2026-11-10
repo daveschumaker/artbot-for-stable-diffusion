@@ -223,14 +223,8 @@ const ControlNetPage = () => {
     handleCacheInput(input)
   }, [input])
 
-  useEffect(() => {
-    if (searchParams?.get('drawing')) {
-      handleImportDrawing()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams])
-
-  // Set initial input for ControlNet
+  // Set initial input for ControlNet. This has to run before a drawing is
+  // imported below, because it resets the source image.
   useEffect(() => {
     const initialInput: DefaultPromptInput = {
       ...new DefaultPromptInput(),
@@ -241,6 +235,13 @@ const ControlNetPage = () => {
     setInput(initialInput)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    if (searchParams?.get('drawing')) {
+      handleImportDrawing()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams])
 
   const totalKudosCost = kudosCostV2({
     width: input.width,

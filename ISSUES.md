@@ -54,16 +54,11 @@ marker is removed, so remove it in the same change.
 - [x] **B11. Medium: `/upscale` showed the changelog.** Removed the route and the
       unfinished page. "Upscale image" in the image menu still works.
 
-- [ ] **B12. Medium: drawings can't be sent to img2img or ControlNet.**
-  - "Use for img2img" in `app/_modules/Editor/components/toolbar.tsx` routes to
-    `/?drawing=true`, which is now the home page. It should be `/create`.
-  - On `/controlnet?drawing=true`, the initial input effect in
-    `app/_pages/ControlNetPage/index.tsx` wipes the imported drawing.
-  - Pinned: `e2e/canvas.spec.ts`
-- [ ] **B13. Medium: "New canvas" leaves a broken canvas.**
-  - `handleNewCanvas` in `app/_modules/Editor/editor.tsx` clears the saved
-    drawing state but not `drawLayer`, so stale data is restored over it.
-  - Pinned: `e2e/canvas.spec.ts`
+- [x] **B12. Medium: drawings couldn't be sent to img2img or ControlNet.** Fixed
+      the route, the create page overwriting the drawing, and the order of the
+      ControlNet page's startup effects.
+- [x] **B13. Medium: "New canvas" left a broken canvas.** It now clears the saved
+      layers.
 
 ## Upgrades
 

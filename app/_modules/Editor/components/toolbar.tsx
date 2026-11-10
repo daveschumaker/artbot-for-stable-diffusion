@@ -366,7 +366,7 @@ const ToolBar = ({
                   height,
                   width
                 })
-                router.push('/?drawing=true')
+                router.push('/create?drawing=true')
               }}
             >
               <IconUpload size={20} />

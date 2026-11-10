@@ -7,6 +7,7 @@ import sharp from 'sharp'
 import {
   chooseStandardModel,
   createTestImage,
+  FALLBACK_MODEL,
   mockBackend,
   trackPageErrors
 } from './helpers'
@@ -39,13 +40,40 @@ const expectPixel = (
   matcher: (pixel: number[]) => boolean
 ) => expect.poll(async () => matcher(await pixelAt(page, x, y))).toBe(true)
 
+// The page can still be moving after a menu closes, which would make a stroke
+// land somewhere other than where it was measured.
+const settledCanvasBox = async (page: Page) => {
+  const canvas = page.locator(UPPER_CANVAS)
+  await expect
+    .poll(async () => {
+      // Repeated because the page can scroll again while a menu closes.
+      await canvas.evaluate((el) => el.scrollIntoView({ block: 'center' }))
+      const first = await canvas.boundingBox()
+      await page.waitForTimeout(100)
+      const second = await canvas.boundingBox()
+
+      if (!first || first.x !== second?.x || first.y !== second?.y) {
+        return false
+      }
+
+      // A closing menu can still be covering the canvas.
+      return page.evaluate(
+        ([x, y]) =>
+          document.elementFromPoint(x, y)?.classList.contains('upper-canvas'),
+        [first.x + 100, first.y + 100]
+      )
+    })
+    .toBe(true)
+
+  return (await canvas.boundingBox())!
+}
+
 const drawLine = async (
   page: Page,
   [fromX, fromY]: number[],
   [toX, toY]: number[]
 ) => {
-  await page.locator(UPPER_CANVAS).scrollIntoViewIfNeeded()
-  const box = (await page.locator(UPPER_CANVAS).boundingBox())!
+  const box = await settledCanvasBox(page)
   await page.mouse.move(box.x + fromX, box.y + fromY)
   await page.mouse.down()
   await page.mouse.move(box.x + toX, box.y + toY, { steps: 12 })
@@ -252,9 +280,7 @@ test.describe('the draw page', () => {
     await expectPixel(page, 200, 200, isDark)
   })
 
-  // Known bug B13 in ISSUES.md: stale state is restored over the new canvas.
   test('starts a new canvas and keeps drawing', async ({ page }) => {
-    test.fail()
     await drawStandardLine(page)
     await expectPixel(page, 200, 100, isDark)
 
@@ -271,9 +297,7 @@ test.describe('the draw page', () => {
     await expectPixel(page, 200, 200, isDark)
   })
 
-  // Known bug B12 in ISSUES.md: an initial state effect wipes the drawing.
   test('sends the drawing to ControlNet', async ({ page }) => {
-    test.fail()
     const horde = await mockBackend(page)
     await drawStandardLine(page)
     await expectPixel(page, 200, 100, isDark)
@@ -283,7 +307,7 @@ test.describe('the draw page', () => {
     await page.waitForLoadState('networkidle')
     await chooseStandardModel(page)
     await page.getByPlaceholder('Describe your image').fill('a drawing')
-    await page.getByTitle('Create new image').first().click({ timeout: 4000 })
+    await page.getByTitle('Create new image').first().click()
 
     await expect
       .poll(() => horde.submissions.length, { timeout: 10000 })
@@ -298,15 +322,33 @@ test.describe('the draw page', () => {
     )
   })
 
-  // Known bug B12 in ISSUES.md: this routes to the home page, not the create page.
   test('sends the drawing to img2img', async ({ page }) => {
-    test.fail()
+    const horde = await mockBackend(page)
     await drawStandardLine(page)
     await expectPixel(page, 200, 100, isDark)
 
     await chooseMenuItem(page, 'Use for img2img')
+    await expect(page).toHaveURL(/\/create\?drawing=true/)
+    // A drawing loads with the fallback model, which works for img2img.
+    await expect(
+      page.locator('div[class*="-control"]', { hasText: FALLBACK_MODEL })
+    ).toBeVisible()
+    await page.getByPlaceholder('Describe your image').fill('a drawing')
+    await page.getByTitle('Create new image').first().click()
 
-    await expect(page).toHaveURL(/\/create\?drawing=true/, { timeout: 3000 })
+    await expect
+      .poll(() => horde.submissions.length, { timeout: 10000 })
+      .toBe(1)
+    const [request] = horde.submissions
+
+    expect(request.source_processing).toBe('img2img')
+    expect(request.models).toEqual([FALLBACK_MODEL])
+    expect(isDark(await uploadedPixel(request.source_image, 200, 100))).toBe(
+      true
+    )
+    expect(isWhite(await uploadedPixel(request.source_image, 200, 160))).toBe(
+      true
+    )
   })
 })
 
