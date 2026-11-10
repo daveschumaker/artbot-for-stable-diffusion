@@ -42,6 +42,7 @@ const retryFetch = async <T>(
     try {
       return await func()
     } catch (e) {
+      if (i + 1 === maxRetries) break
       console.log(
         `Retrying in ${delay / 1000} seconds... (Attempt ${
           i + 1
@@ -96,8 +97,13 @@ export const fetchUserDetailsV2 = async (
     setUserInfo(userCache as any)
 
     return userCache
-  } catch (err) {
-    console.error(`Error: Unable to fetch user details from API: ${err}`)
+  } catch {
+    // Network outages (including isolated profile replay) are recoverable.
+    // Keep existing user state and retry on the next scheduled refresh. Avoid
+    // logging request URLs/headers, which can contain a user's API/shared key.
+    console.warn(
+      'Unable to refresh AI Horde user details; keeping existing user information.'
+    )
     return null
   } finally {
     isRequestInProgress = false
