@@ -85,17 +85,23 @@ function loadImage(src: string) {
   })
 }
 
+// Images saved by older versions, or imported, may have no EXIF data or no
+// prompt in it.
+const readUserComment = (exif: IExif) => {
+  const comment = exif.Exif?.[exifLib.TagNumbers.ExifIFD.UserComment]
+  return typeof comment === 'string' ? comment.replace('ASCII\0\0\0', '') : ''
+}
+
 async function writeMetadata(imageBlob: Blob, exif: IExif): Promise<Blob> {
-  // NOTE: throws if exif has no Exif IFD or no UserComment (37510) entry.
-  const userComment = (exif.Exif![37510] as string).replace('ASCII\0\0\0', '')
+  const userComment = readUserComment(exif)
 
   // Write Exif
   const imageExifBlob = await addOrUpdateExifData(imageBlob, userComment)
 
-  // Write XMP and Additional markers
+  // Write XMP and Additional markers. They only hold the prompt.
   if (
-    imageExifBlob.type === 'image/png' ||
-    imageExifBlob.type === 'image/jpeg'
+    userComment &&
+    (imageExifBlob.type === 'image/png' || imageExifBlob.type === 'image/jpeg')
   ) {
     const xmp = `<x:xmpmeta xmlns:x="adobe:ns:meta/"><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:exif="http://ns.adobe.com/exif/1.0/"><dc:title><rdf:Alt><rdf:li xml:lang="x-default"><![CDATA[${userComment}]]></rdf:li></rdf:Alt></dc:title><exif:UserComment><![CDATA[${userComment}]]></exif:UserComment></rdf:Description></rdf:RDF></x:xmpmeta>
 	`
@@ -114,12 +120,6 @@ async function writeMetadata(imageBlob: Blob, exif: IExif): Promise<Blob> {
         userComment
       )
       imageUint8Arr = await writePNGtext(imageUint8Arr, 'Software', SOFTWARE)
-
-      var exifBytes = exifLib.dump(exif)
-      const EXIF_CODE = 'Exif\x00\x00'
-      if (exifBytes.startsWith(EXIF_CODE)) {
-        exifBytes = exifBytes.slice(6)
-      }
     }
     if (imageExifBlob.type === 'image/jpeg') {
       imageUint8Arr = await writeJPGMarker(imageUint8Arr, userComment)

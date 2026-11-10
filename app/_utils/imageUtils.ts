@@ -2,6 +2,7 @@ import { createImage } from 'app/_api/createImage'
 import { trackEvent } from 'app/_api/telemetry'
 import { userInfoStore } from 'app/_store/userStore'
 import { initBlob } from './blobUtils'
+import { showErrorToast } from './notificationUtils'
 import { SourceProcessing } from './promptUtils'
 import { isValidHttpUrl } from './validationUtils'
 import { hasPromptMatrix, promptMatrix } from './promptUtils'
@@ -369,7 +370,10 @@ export const base64toBlobUrl = async (base64Data: string) => {
   }
 }
 
-export const base64toBlob = async (base64Data: string) => {
+// Resolves to null if the data can't be read as an image.
+export const base64toBlob = async (
+  base64Data: string
+): Promise<Blob | null> => {
   try {
     const base64str = `data:${inferMimeTypeFromBase64(
       base64Data
@@ -379,7 +383,7 @@ export const base64toBlob = async (base64Data: string) => {
 
     return blob
   } catch (err) {
-    return ''
+    return null
   }
 }
 
@@ -613,12 +617,59 @@ export const blobToClipboard = async (base64String: string) => {
       return false
     }
   } else {
-    // Only PNGs can be copied to the clipboard
-    const image: any = await base64toBlob(base64String)
-    const newBlob = await image.toPNG()
+    try {
+      // Only PNGs can be copied to the clipboard
+      const image = await base64toBlob(base64String)
+      if (!image) {
+        return false
+      }
 
-    navigator.clipboard.write([new ClipboardItem({ 'image/png': newBlob })])
-    return true
+      const newBlob = await image.toPNG()
+      await navigator.clipboard.write([
+        new ClipboardItem({ 'image/png': newBlob })
+      ])
+      return true
+    } catch (err) {
+      return false
+    }
+  }
+}
+
+const DOWNLOAD_FORMATS = {
+  jpg: { mimeType: 'image/jpeg', convert: (blob: Blob) => blob.toJPEG() },
+  png: { mimeType: 'image/png', convert: (blob: Blob) => blob.toPNG() },
+  webp: { mimeType: 'image/webp', convert: (blob: Blob) => blob.toWebP() }
+}
+
+type DownloadFormat = keyof typeof DOWNLOAD_FORMATS
+
+// Anything other than the formats in settings falls back to the default.
+const getDownloadFormat = (): DownloadFormat => {
+  const saved = AppSettings.get('imageDownloadFormat')
+  return saved in DOWNLOAD_FORMATS ? saved : 'jpg'
+}
+
+// Resolves to null if the image can't be read or converted.
+const toDownloadBlob = async (
+  base64String: string,
+  format: DownloadFormat
+): Promise<Blob | null> => {
+  const input = await base64toBlob(base64String)
+
+  if (!input) {
+    return null
+  }
+
+  // Blobs from base64toBlob are typed by their content, so this is reliable.
+  if (input.type === DOWNLOAD_FORMATS[format].mimeType) {
+    return input
+  }
+
+  try {
+    return await DOWNLOAD_FORMATS[format].convert(input)
+  } catch (err) {
+    console.log(`Error converting image to ${format}`, err)
+    return null
   }
 }
 export const downloadImages = async ({
@@ -646,7 +697,7 @@ export const downloadImages = async ({
       continue
     }
 
-    let fileType = AppSettings.get('imageDownloadFormat') || 'jpg'
+    const fileType = getDownloadFormat()
     let filename = `image_${imageId}.${fileType}`
 
     if (image.prompt) {
@@ -693,48 +744,19 @@ export const downloadImages = async ({
       imageData.denoising_strength = image.denoising_strength
     }
 
+    const newBlob = await toDownloadBlob(image.base64String, fileType)
+
+    if (!newBlob) {
+      console.log(`Error: unable to export image ${image.jobId}`)
+      continue
+    }
+
     fileDetails.push(imageData)
-    let newBlob
-
-    let input: Awaited<ReturnType<typeof base64toBlob>>
-    try {
-      input = await base64toBlob(image.base64String)
-    } catch (err) {
-      console.log(
-        `Error: Something unfortunate happened when attempting to convert base64string to file blob`
-      )
-      console.log(err)
-      continue
-    }
-
-    try {
-      if (image.imageMimeType !== `image/${fileType}`) {
-        if (input) {
-          if (fileType === 'png') {
-            newBlob = await input?.toPNG()
-          }
-
-          if (fileType === 'jpg') {
-            newBlob = await input?.toJPEG()
-          }
-
-          if (fileType === 'webp') {
-            newBlob = await input?.toWebP()
-          }
-        }
-      } else {
-        newBlob = input
-      }
-      fileArray.push({
-        name: filename,
-        lastModified: new Date(image.timestamp),
-        input: newBlob
-      })
-    } catch (err) {
-      console.log(`Error converting image to ${fileType}...`)
-      console.log(image.jobId)
-      continue
-    }
+    fileArray.push({
+      name: filename,
+      lastModified: new Date(image.timestamp),
+      input: newBlob
+    })
 
     callback({
       currentIndex
@@ -774,40 +796,26 @@ export const downloadImages = async ({
   link.remove()
 }
 
+// Resolves to false, after telling the user, if the image can't be downloaded.
 export const downloadFile = async (image: any) => {
   initBlob()
-  const fileType = AppSettings.get('imageDownloadFormat') || 'jpg'
-  const input = await base64toBlob(image.base64String)
-  const { saveAs } = (await import('file-saver')).default
+  const fileType = getDownloadFormat()
+  const blob = await toDownloadBlob(image.base64String, fileType)
 
+  if (!blob) {
+    showErrorToast({ message: 'Unable to download this image.' })
+    return false
+  }
+
+  const { saveAs } = (await import('file-saver')).default
   const filename =
     image.prompt
       .replace(/[^a-z0-9]/gi, '_')
       .toLowerCase()
       .slice(0, 124) + `.${fileType}`
 
-  //don't convert files that are already in the right format..........☹
-  if (image.imageMimeType == `image/${fileType}`) {
-    saveAs(input, filename)
-  } else {
-    // otherwise we'll convert if necessary
-    let newBlob
-
-    if (fileType === 'png') {
-      newBlob = await (input as Blob).toPNG(null)
-    }
-
-    if (fileType === 'jpg') {
-      newBlob = await (input as Blob).toJPEG(null)
-    }
-
-    if (fileType === 'webp') {
-      newBlob = await (input as Blob).toWebP(null)
-    }
-
-    // newBlob is undefined if imageDownloadFormat is not png, jpg or webp
-    saveAs(newBlob as Blob, filename)
-  }
+  saveAs(blob, filename)
+  return true
 }
 
 interface ICountImages {
