@@ -15,7 +15,8 @@ Module._resolveFilename = function (request, parent, ...rest) {
 
 const { TestEnvironment } = require('jest-environment-jsdom')
 
-// jsdom doesn't expose structuredClone, which fake-indexeddb requires.
+// jsdom doesn't expose structuredClone, which fake-indexeddb requires, or
+// TextEncoder and TextDecoder, which every supported browser has.
 class JsdomWithIndexedDb extends TestEnvironment {
   // The default "browser" condition selects Dexie's ESM build, which Jest can't load.
   customExportConditions = ['node', 'node-addons']
@@ -23,6 +24,8 @@ class JsdomWithIndexedDb extends TestEnvironment {
   async setup() {
     await super.setup()
     this.global.structuredClone = structuredClone
+    this.global.TextEncoder = TextEncoder
+    this.global.TextDecoder = TextDecoder
   }
 }
 

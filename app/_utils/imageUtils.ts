@@ -597,18 +597,23 @@ export const kudosCost = ({
 export const blobToClipboard = async (base64String: string) => {
   initBlob()
 
-  const makeImagePromiseForSafari = async () => {
-    const base64Response = await fetch(`data:image/png;base64,${base64String}`)
-    const imgBlob = await base64Response.blob()
+  const toPNG = async () => {
+    const image = await base64toBlob(base64String)
 
-    return await imgBlob.toPNG()
+    if (!image) {
+      throw new Error('Unable to read the image')
+    }
+
+    return await image.toPNG()
   }
 
   if (isiOS() || isSafariBrowser()) {
+    // Safari needs the clipboard write to start straight away, so it gets a
+    // promise of the image rather than the image.
     try {
-      navigator.clipboard.write([
+      await navigator.clipboard.write([
         new ClipboardItem({
-          'image/png': makeImagePromiseForSafari()
+          'image/png': toPNG()
         })
       ])
 
@@ -619,12 +624,7 @@ export const blobToClipboard = async (base64String: string) => {
   } else {
     try {
       // Only PNGs can be copied to the clipboard
-      const image = await base64toBlob(base64String)
-      if (!image) {
-        return false
-      }
-
-      const newBlob = await image.toPNG()
+      const newBlob = await toPNG()
       await navigator.clipboard.write([
         new ClipboardItem({ 'image/png': newBlob })
       ])

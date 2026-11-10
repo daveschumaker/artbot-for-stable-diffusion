@@ -23,10 +23,16 @@ export function UploadButton({
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // files is always a FileList (never null) on an <input type="file">
-    const fileUploaded = event.target.files![0]
+    const fileUploaded = event.target.files?.[0]
 
-    handleFile(fileUploaded)
+    // Browsers only fire "change" for a different file, so emptying the input
+    // lets the same file be picked again.
+    event.target.value = ''
+
+    // A cancelled picker can leave no file.
+    if (fileUploaded) {
+      handleFile(fileUploaded)
+    }
   }
 
   return (

@@ -76,23 +76,24 @@ marker is removed, so remove it in the same change.
       or copying such an image now works. A download that still fails shows an
       error, and an unknown download format falls back to JPG.
       `e2e/download.spec.ts` covers every format in a real browser.
-- [ ] **B19. Low: prompts with non-ASCII characters are mangled in image
-      metadata.** Checked in Chromium with `café naïve 東京`: the saved WebP holds
-      it double-encoded, and JPG and PNG downloads hold neither form.
-      `str_to_utf8` in `app/_utils/blobUtils.ts` encodes it before the EXIF
-      library does, and conversions encode it again.
-- [ ] **B20. Low, unverified: Safari's clipboard copy labels any image as PNG.**
-      `makeImagePromiseForSafari` in `app/_utils/imageUtils.ts` fetches the data
-      as `image/png`, so `toPNG` skips the conversion.
-- [ ] **B17. Low: `app/_utils/primaryWindow.ts` throws every second** if the
-      `PrimaryWindow` key is missing from localStorage.
-- [ ] **B18. Low: smaller issues found while fixing types.**
-  - `UploadButton.tsx` passes `undefined` when the file picker is cancelled.
-  - `SortableWorkersTable` sorts React state in place.
-  - `WorkerBlocklist.tsx` and `allowWorkers.tsx` pass `width` to `MaxWidth`,
-    which ignores it. It was probably meant to be `max`.
-- [ ] **S7. Low: `validateToken` accepts a validly signed token with no username
-      when `ADMIN_USER` is unset.** `adminLogin` already refuses in that case.
+- [x] **B19. Low: prompts with non-ASCII characters were mangled in image
+      metadata.** The prompt was UTF-8 encoded twice when an image finished,
+      and once more on every conversion. It's now encoded once, and prompts
+      stored by earlier versions are repaired when the image is converted.
+- [x] **B20. Low: Safari's clipboard copy reported success but copied
+      nothing.** It now copies a PNG, and says so when a copy fails.
+      Tested in Chromium with Safari's user agent, not in Safari itself.
+- [x] **B17. Low: `app/_utils/primaryWindow.ts` threw every second** if the
+      `PrimaryWindow` key was missing or invalid. The tab now claims the key.
+- [x] **B18. Low: smaller issues found while fixing types.**
+  - `UploadButton.tsx` no longer passes `undefined` when no file is chosen, and
+    the same file can now be chosen twice in a row.
+  - `SortableWorkersTable` sorted the array cached by `fetchWorkers`, which other
+    pages share. It now sorts a copy, in `sortWorkers.ts`.
+  - The worker search boxes in `WorkerBlocklist.tsx` and `allowWorkers.tsx`
+    are 480px wide again. They passed `width` to `MaxWidth`, which ignores it.
+- [x] **S7. Low: `validateToken` accepted a validly signed token with no
+      username when `ADMIN_USER` was unset.** It now refuses it.
 
 ## Upgrades
 
@@ -145,5 +146,6 @@ marker is removed, so remove it in the same change.
 - [x] Removed every `@ts-ignore`, `@ts-nocheck` and `@ts-expect-error` and fixed
       the 285 type errors they hid. The `@typescript-eslint/ban-ts-comment` lint
       rule blocks new ones.
+- [ ] `app/_components/FileUploader` isn't used anywhere. Remove it.
 - [ ] Reduce the remaining explicit `any` types.
 - [ ] Review the 35 `TODO` and `FIXME` comments in the code.

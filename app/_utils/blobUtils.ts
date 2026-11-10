@@ -67,7 +67,7 @@ export const initBlob = () => {
     Blob.prototype.addOrUpdateExifData = async function (
       userComment: string
     ): Promise<Blob> {
-      return await writeMetadata(this, mergeExifData({}, userComment))
+      return await writeMetadata(this, userComment)
     }
   }
 }
@@ -85,16 +85,54 @@ function loadImage(src: string) {
   })
 }
 
+// EXIF strings hold one byte per character, so the prompt is stored as its
+// UTF-8 bytes. Everywhere else in this file it's ordinary text.
+const encodeUtf8Bytes = (text: string) =>
+  Array.from(new TextEncoder().encode(text), (byte) =>
+    String.fromCharCode(byte)
+  ).join('')
+
+const decodeUtf8Bytes = (bytes: string) =>
+  new TextDecoder('utf-8', { fatal: true }).decode(
+    Uint8Array.from(bytes, (char) => char.charCodeAt(0))
+  )
+
+// Earlier versions encoded the prompt two or more times, so decoding repeats
+// while the result is still valid UTF-8. Text that was never encoded, or that
+// has characters outside one byte, is left as it is.
+const MAX_DECODES = 4
+const decodeComment = (comment: string) => {
+  let text = comment
+
+  for (let i = 0; i < MAX_DECODES && /^[\x00-\xff]*$/.test(text); i++) {
+    try {
+      const decoded = decodeUtf8Bytes(text)
+      if (decoded === text) break
+      text = decoded
+    } catch (err) {
+      break
+    }
+  }
+
+  return text
+}
+
 // Images saved by older versions, or imported, may have no EXIF data or no
 // prompt in it.
 const readUserComment = (exif: IExif) => {
   const comment = exif.Exif?.[exifLib.TagNumbers.ExifIFD.UserComment]
-  return typeof comment === 'string' ? comment.replace('ASCII\0\0\0', '') : ''
+
+  if (typeof comment !== 'string') {
+    return ''
+  }
+
+  return decodeComment(comment.replace('ASCII\0\0\0', ''))
 }
 
-async function writeMetadata(imageBlob: Blob, exif: IExif): Promise<Blob> {
-  const userComment = readUserComment(exif)
-
+async function writeMetadata(
+  imageBlob: Blob,
+  userComment: string
+): Promise<Blob> {
   // Write Exif
   const imageExifBlob = await addOrUpdateExifData(imageBlob, userComment)
 
@@ -151,7 +189,7 @@ async function convertBlob(
     convertedBlob = blob
   }
 
-  const result = await writeMetadata(convertedBlob, exif)
+  const result = await writeMetadata(convertedBlob, readUserComment(exif))
 
   if (callback) {
     callback(result)
@@ -187,24 +225,8 @@ async function getExifFromBlob(blob: Blob): Promise<IExif> {
   return existing_exif
 }
 
-function str_to_utf8(str: string) {
-  // Firstly, encode the string as UTF-8
-  const utf8Encoded = encodeURIComponent(str)
-
-  // Secondly, replace any URI special characters with their UTF-8 equivalents
-  const utf8Bytes = utf8Encoded.replace(
-    /%([0-9A-F]{2})/g,
-    function (match, p1) {
-      return String.fromCharCode(Number('0x' + p1))
-    }
-  )
-
-  // Finally, encode the UTF-8 byte sequence to Base64
-  return utf8Bytes
-}
-
 function mergeExifData(existingExif: IExif, userComment: string): IExif {
-  userComment = str_to_utf8(userComment)
+  userComment = encodeUtf8Bytes(userComment)
 
   // 0th IFD
   const zeroth = {
