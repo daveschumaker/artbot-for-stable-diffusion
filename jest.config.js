@@ -6,7 +6,7 @@ module.exports = {
     '<rootDir>/e2e/'
   ],
   transform: {
-    '\\.tsx?$': ['ts-jest', {}]
+    '\\.tsx?$': ['ts-jest', { tsconfig: { jsx: 'react-jsx' } }]
   },
   transformIgnorePatterns: ['[/\\\\]node_modules[/\\\\](?!lodash-es/).*\\.js$']
 }
