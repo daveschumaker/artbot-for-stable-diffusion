@@ -1,5 +1,20 @@
 import { basePath } from 'BASE_PATH'
-import { fabric } from 'fabric'
+import {
+  Canvas,
+  Circle,
+  Color,
+  FabricImage,
+  FabricObject,
+  Group,
+  Path,
+  Pattern,
+  PencilBrush,
+  Rect,
+  TPointerEventInfo,
+  config,
+  filters,
+  util
+} from 'fabric'
 import {
   getCanvasStore,
   getI2IString,
@@ -15,13 +30,18 @@ import { nearestWholeMultiple } from 'app/_utils/imageUtils'
 import { SourceProcessing } from 'app/_utils/promptUtils'
 import CanvasSettings from './CanvasSettings'
 
-fabric.Object.NUM_FRACTION_DIGITS = 15
+config.configure({ NUM_FRACTION_DIGITS: 15 })
+
+// Fabric 7 positions objects by their center by default. This code relies on
+// left and top being the top-left corner.
+FabricObject.ownDefaults.originX = 'left'
+FabricObject.ownDefaults.originY = 'top'
 
 export let hoveredColor: string = '#ffffff'
 
 interface IParams {
   bgColor: string
-  canvas: fabric.Canvas
+  canvas: Canvas
   canvasId?: string
   canvasType?: string
   height?: number
@@ -31,9 +51,9 @@ interface IParams {
 
 class CreateCanvas {
   bgColor: string
-  canvas: fabric.Canvas | null
+  canvas: Canvas | null
   canvasType: string
-  brushPreview: fabric.Circle | null
+  brushPreview: Circle | null
   brushSettings: {
     color: string
     eraseColor: string
@@ -42,8 +62,8 @@ class CreateCanvas {
   }
   canvasId: string
   canvasScale: number
-  drawLayer: fabric.Group
-  imageLayer: fabric.Group | null
+  drawLayer: Group
+  imageLayer: Group | null
   isMouseDown: boolean
   erasing: boolean
   height: number
@@ -51,7 +71,7 @@ class CreateCanvas {
   redoHistory: Array<any>
   undoHistory: Array<any>
   historyIndex: number
-  maskLayer: fabric.Canvas | null
+  maskLayer: Canvas | null
   setInput: (data: any) => void
   width: number
   maskPathColor: string
@@ -107,17 +127,7 @@ class CreateCanvas {
     this.colorPickerCallback = () => {}
   }
 
-  static asyncClone = async (object: any) => {
-    return new Promise(function (resolve, reject) {
-      try {
-        object.clone(function (cloned_object: any) {
-          resolve(cloned_object)
-        })
-      } catch (error) {
-        reject(error)
-      }
-    })
-  }
+  static asyncClone = (object: any): Promise<any> => object.clone()
 
   static init = ({
     bgColor = 'white',
@@ -130,13 +140,18 @@ class CreateCanvas {
     canvasId?: string
   } = {}) => {
     try {
-      return new fabric.Canvas(canvasId, {
+      const canvas = new Canvas(canvasId, {
         backgroundColor: bgColor,
         // renderOnAddRemove: true,
         isDrawingMode: false,
         height,
         width: getMaxValidCanvasWidth()
       })
+
+      // Fabric no longer creates a default brush.
+      canvas.freeDrawingBrush = new PencilBrush(canvas)
+
+      return canvas
     } catch (e) {
       console.log(`e?`, e)
     }
@@ -155,21 +170,19 @@ class CreateCanvas {
       this.width = getSavedDrawingState().canvasWidth
 
       this.canvas.remove(this.drawLayer)
-      this.drawLayer = fabric.util.object.clone(
-        getSavedDrawingState().savedDrawingState
-      )
+      this.drawLayer = getSavedDrawingState().savedDrawingState
       this.canvas.add(this.drawLayer)
 
-      this.canvas.setHeight(getSavedDrawingState().canvasHeight)
-      this.canvas.setWidth(getSavedDrawingState().canvasWidth)
+      this.canvas.setDimensions({
+        height: getSavedDrawingState().canvasHeight,
+        width: getSavedDrawingState().canvasWidth
+      })
 
       if (getSavedDrawingState().savedDrawingBaseImage) {
-        this.imageLayer = fabric.util.object.clone(
-          getSavedDrawingState().savedDrawingBaseImage
-        )
+        this.imageLayer = getSavedDrawingState().savedDrawingBaseImage
 
         if (this.imageLayer) {
-          this.canvas.insertAt(this.imageLayer, 0, false)
+          this.canvas.insertAt(0, this.imageLayer)
         }
       }
 
@@ -182,10 +195,9 @@ class CreateCanvas {
     const { height, width } = getCanvasStore()
     this.height = height
     this.width = width
-    this.canvas.setHeight(height)
-    this.canvas.setWidth(width)
+    this.canvas.setDimensions({ height: height, width: width })
 
-    this.canvas.loadFromJSON(getCanvasStore().drawLayer, () => {
+    this.canvas.loadFromJSON(getCanvasStore().drawLayer).then(() => {
       if (!this.canvas) {
         return
       }
@@ -199,17 +211,19 @@ class CreateCanvas {
 
       if (getCanvasStore().maskLayer) {
         this.createMaskLayer()
-        this.maskLayer?.loadFromJSON(getCanvasStore().maskLayer, () => {
+        this.maskLayer?.loadFromJSON(getCanvasStore().maskLayer).then(() => {
           if (!this.maskLayer) {
             return
           }
 
-          this.maskLayer.setHeight(this.height)
-          this.maskLayer.setWidth(this.width)
+          this.maskLayer.setDimensions({
+            height: this.height,
+            width: this.width
+          })
 
           this.setInput({
             source_mask: this.maskLayer
-              .toDataURL({ format: 'webp' })
+              .toDataURL({ format: 'webp', multiplier: 1 })
               .split(',')[1]
           })
 
@@ -225,15 +239,13 @@ class CreateCanvas {
   static invert = async (
     base64String: string,
     returnString: boolean = false
-  ): Promise<fabric.Canvas | string> => {
+  ): Promise<Canvas | string> => {
     return new Promise((resolve) => {
-      fabric.Image.fromURL(base64String, (image) => {
+      FabricImage.fromURL(base64String).then((image) => {
         if (!image) {
           return
         }
-
-        //@ts-ignore
-        image.filters.push(new fabric.Image.filters.Invert())
+        image.filters.push(new filters.Invert())
 
         // Main filter
         //@ts-ignore
@@ -247,7 +259,7 @@ class CreateCanvas {
         // //@ts-ignore
         // image.filters.push(new fabric.Image.filters.Contrast({ contrast: 1 }))
 
-        const invertedCanvas = new fabric.Canvas(null, {
+        const invertedCanvas = new Canvas(undefined, {
           height: image.height,
           width: image.width
         })
@@ -258,7 +270,7 @@ class CreateCanvas {
 
         if (returnString) {
           const dataString = invertedCanvas
-            .toDataURL({ format: 'webp' })
+            .toDataURL({ format: 'webp', multiplier: 1 })
             .split(',')[1]
           resolve(dataString)
         } else {
@@ -273,7 +285,7 @@ class CreateCanvas {
       return
     }
 
-    this.brushPreview = new fabric.Circle({
+    this.brushPreview = new Circle({
       radius: this.brushSettings.width,
       left: 0,
       originX: 'center',
@@ -286,7 +298,7 @@ class CreateCanvas {
     })
 
     const objects = this.canvas.getObjects()
-    this.canvas?.insertAt(this.brushPreview, objects.length, false)
+    this.canvas?.insertAt(objects.length, this.brushPreview)
 
     // this.canvas?.add(this.brushPreview)
   }
@@ -296,8 +308,7 @@ class CreateCanvas {
       return
     }
 
-    this.canvas.setHeight(this.height)
-    this.canvas.setWidth(this.width)
+    this.canvas.setDimensions({ height: this.height, width: this.width })
 
     // Cloning initPaint behavior
     this.canvas.isDrawingMode = true
@@ -331,11 +342,14 @@ class CreateCanvas {
     this.updateCanvas()
 
     const bgUrl = `${basePath}/checkerboard.png`
-    this.canvas.setBackgroundColor(
-      // @ts-ignore
-      { source: bgUrl, repeat: 'repeat' },
-      this.canvas.renderAll.bind(this.canvas)
-    )
+    util.loadImage(bgUrl).then((source) => {
+      if (!this.canvas) {
+        return
+      }
+
+      this.canvas.backgroundColor = new Pattern({ source, repeat: 'repeat' })
+      this.canvas.renderAll()
+    })
 
     this.updateBrush({
       width: CanvasSettings.get('brushSize') || 20
@@ -392,7 +406,9 @@ class CreateCanvas {
     }
 
     return {
-      base64: this?.canvas?.toDataURL({ format: 'webp' }).split(',')[1],
+      base64: this?.canvas
+        ?.toDataURL({ format: 'webp', multiplier: 1 })
+        .split(',')[1],
       height: this.height,
       width: this.width
     }
@@ -438,15 +454,10 @@ class CreateCanvas {
         undo: [...this.undoHistory],
         redo: [...this.redoHistory]
       })
-      saveDrawingState(
-        fabric.util.object.clone(this.drawLayer),
-        this.height,
-        this.width,
-        baseImage
-      )
+      saveDrawingState(this.drawLayer, this.height, this.width, baseImage)
 
       data.source_image = this?.canvas
-        ?.toDataURL({ format: 'webp' })
+        ?.toDataURL({ format: 'webp', multiplier: 1 })
         .split(',')[1]
     }
 
@@ -460,13 +471,13 @@ class CreateCanvas {
 
       // This works for img2img / img2img mask / inpainting.
       data.source_image = this?.imageLayer
-        ?.toDataURL({ format: 'webp' })
+        ?.toDataURL({ format: 'webp', multiplier: 1 })
         .split(',')[1]
     }
 
     if (this.maskLayer) {
       data.source_mask = this.maskLayer
-        .toDataURL({ format: 'webp' })
+        .toDataURL({ format: 'webp', multiplier: 1 })
         .split(',')[1]
 
       data.maskData = this.maskLayer.toObject()
@@ -518,14 +529,13 @@ class CreateCanvas {
   }
 
   createMaskLayer() {
-    this.maskLayer = new fabric.Canvas(null, {
+    this.maskLayer = new Canvas(undefined, {
       backgroundColor: this.maskBackgroundColor,
       isDrawingMode: false
     })
 
     this.maskLayer.selection = false
-    this.maskLayer.setHeight(this.height)
-    this.maskLayer.setWidth(this.width)
+    this.maskLayer.setDimensions({ height: this.height, width: this.width })
   }
 
   download = (base64Data: string, fileName = 'test') => {
@@ -584,20 +594,27 @@ class CreateCanvas {
     width: number
   ): Promise<string> {
     return new Promise((resolve) => {
-      let newMask = new fabric.Canvas(null, {
+      // With no saved mask this has never resolved, so callers stop here. Fabric
+      // 7 throws on an undefined value where earlier versions ignored it.
+      if (!getCanvasStore().maskLayer) {
+        return
+      }
+
+      let newMask = new Canvas(undefined, {
         backgroundColor: 'black',
         isDrawingMode: false
       })
 
-      newMask.loadFromJSON(getCanvasStore().maskLayer, () => {
+      newMask.loadFromJSON(getCanvasStore().maskLayer).then(() => {
         if (!newMask) {
           return
         }
 
-        newMask.setHeight(height)
-        newMask.setWidth(width)
+        newMask.setDimensions({ height: height, width: width })
 
-        resolve(newMask.toDataURL({ format: 'webp' }).split(',')[1])
+        resolve(
+          newMask.toDataURL({ format: 'webp', multiplier: 1 }).split(',')[1]
+        )
       })
     })
   }
@@ -612,7 +629,7 @@ class CreateCanvas {
       const canvas = this.canvas
       const fullDataString = getI2IString().base64String
 
-      fabric.Image.fromURL(fullDataString, (image) => {
+      FabricImage.fromURL(fullDataString).then((image) => {
         // const innerWidth = window.innerWidth
         // const containerWidth = getPanelWidth(innerWidth)
         const containerWidth = getMaxValidCanvasWidth()
@@ -652,8 +669,7 @@ class CreateCanvas {
             : nearestWholeMultiple(newHeight)
         this.width = newWidth
 
-        canvas.setHeight(this.height)
-        canvas.setWidth(this.width)
+        canvas.setDimensions({ height: this.height, width: this.width })
 
         this.imageLayer = this.makeNewLayer({
           image,
@@ -661,22 +677,24 @@ class CreateCanvas {
           layerWidth: this.width
         })
 
-        canvas.insertAt(this.imageLayer, 0, false)
+        canvas.insertAt(0, this.imageLayer)
 
         // Import mask layer, if available, otherwise create mask layer.
         let source_mask = ''
         if (getCanvasStore().maskLayer) {
           this.createMaskLayer()
-          this.maskLayer?.loadFromJSON(getCanvasStore().maskLayer, () => {
+          this.maskLayer?.loadFromJSON(getCanvasStore().maskLayer).then(() => {
             if (!this.maskLayer) {
               return
             }
 
-            this.maskLayer.setHeight(this.height)
-            this.maskLayer.setWidth(this.width)
+            this.maskLayer.setDimensions({
+              height: this.height,
+              width: this.width
+            })
 
             source_mask = this.maskLayer
-              .toDataURL({ format: 'webp' })
+              .toDataURL({ format: 'webp', multiplier: 1 })
               .split(',')[1]
           })
         } else {
@@ -694,7 +712,7 @@ class CreateCanvas {
           height: this.height,
           width: this.width,
           source_image: this?.imageLayer
-            ?.toDataURL({ format: 'webp' })
+            ?.toDataURL({ format: 'webp', multiplier: 1 })
             .split(',')[1],
           source_mask
         })
@@ -714,7 +732,7 @@ class CreateCanvas {
   }: any) {
     const newLayer =
       image ||
-      new fabric.Rect({
+      new Rect({
         width: layerWidth,
         height: layerHeight,
         left: 0,
@@ -724,7 +742,7 @@ class CreateCanvas {
         selectable: false
       })
 
-    const newGroup = new fabric.Group([newLayer], {
+    const newGroup = new Group([newLayer], {
       // selectable: image ? true : false, // Outpainting stuff
       selectable: false,
       absolutePositioned: absolute,
@@ -740,8 +758,9 @@ class CreateCanvas {
     }
 
     this.canvasScale = value
-    this.imageLayer.scale(parseFloat(value)).setCoords()
-    this.imageLayer.viewportCenter()
+    this.imageLayer.scale(parseFloat(value))
+    this.imageLayer.setCoords()
+    this.canvas.viewportCenterObject(this.imageLayer)
     this.canvas.requestRenderAll()
 
     this.autoSave()
@@ -778,12 +797,12 @@ class CreateCanvas {
     }
   }, 500)
 
-  onMouseMove = (event: fabric.IEvent<Event>) => {
+  onMouseMove = (event: TPointerEventInfo) => {
     if (!this.canvas || !this.brushPreview || !this.canvas.isDrawingMode) {
       return
     }
 
-    const pointer = this.canvas.getPointer(event.e)
+    const pointer = this.canvas.getScenePoint(event.e)
     this.brushPreview.left = pointer.x
     this.brushPreview.top = pointer.y
     this.brushPreview.opacity = 0.5
@@ -832,9 +851,7 @@ class CreateCanvas {
     newPath.path.selectable = false
     newPath.path.opacity = 1
 
-    newPath.drawPath = (await CreateCanvas.asyncClone(
-      newPath.path
-    )) as fabric.Path
+    newPath.drawPath = (await CreateCanvas.asyncClone(newPath.path)) as Path
 
     if ((undoAction && newPath.erasing) || (!undoAction && this.erasing)) {
       newPath.drawPath.globalCompositeOperation = 'destination-out'
@@ -843,9 +860,7 @@ class CreateCanvas {
     }
 
     if (this.maskLayer && this.canvasType === 'inpainting') {
-      newPath.maskPath = (await CreateCanvas.asyncClone(
-        newPath.path
-      )) as fabric.Path
+      newPath.maskPath = (await CreateCanvas.asyncClone(newPath.path)) as Path
 
       if ((undoAction && newPath.erasing) || (!undoAction && this.erasing)) {
         newPath.maskPath.stroke =
@@ -857,7 +872,7 @@ class CreateCanvas {
       this.maskLayer.add(newPath.maskPath)
     }
 
-    this.drawLayer.addWithUpdate(newPath.drawPath)
+    this.drawLayer.add(newPath.drawPath)
     this.canvas.remove(newPath.path)
     this.updateCanvas()
 
@@ -886,7 +901,10 @@ class CreateCanvas {
     }
 
     if (this.canvasType === 'drawing') {
-      this.download(this.canvas.toDataURL({ format: 'png' }), this.canvasId)
+      this.download(
+        this.canvas.toDataURL({ format: 'png', multiplier: 1 }),
+        this.canvasId
+      )
       return
     }
 
@@ -896,24 +914,40 @@ class CreateCanvas {
     }
 
     if (this.imageLayer) {
-      data.image = this.imageLayer.toDataURL({ format: 'webp' }).split(',')[1]
-      this.download(this.imageLayer.toDataURL({ format: 'webp' }), 'image')
+      data.image = this.imageLayer
+        .toDataURL({ format: 'webp', multiplier: 1 })
+        .split(',')[1]
+      this.download(
+        this.imageLayer.toDataURL({ format: 'webp', multiplier: 1 }),
+        'image'
+      )
     }
 
     if (this.canvas) {
-      this.download(this.canvas.toDataURL({ format: 'webp' }), this.canvasId)
+      this.download(
+        this.canvas.toDataURL({ format: 'webp', multiplier: 1 }),
+        this.canvasId
+      )
     }
 
     if (this.maskLayer) {
       if (inverted) {
         // @ts-ignore
-        const inverted: fabric.Canvas = await CreateCanvas.invert(
-          this.maskLayer.toDataURL({ format: 'webp' })
+        const inverted: Canvas = await CreateCanvas.invert(
+          this.maskLayer.toDataURL({ format: 'webp', multiplier: 1 })
         )
-        this.download(inverted.toDataURL({ format: 'webp' }), 'mask')
+        this.download(
+          inverted.toDataURL({ format: 'webp', multiplier: 1 }),
+          'mask'
+        )
       } else {
-        data.mask = this.canvas.toDataURL({ format: 'webp' }).split(',')[1]
-        this.download(this.maskLayer.toDataURL({ format: 'webp' }), 'mask')
+        data.mask = this.canvas
+          .toDataURL({ format: 'webp', multiplier: 1 })
+          .split(',')[1]
+        this.download(
+          this.maskLayer.toDataURL({ format: 'webp', multiplier: 1 }),
+          'mask'
+        )
       }
     }
 
@@ -960,8 +994,7 @@ class CreateCanvas {
 
     document.removeEventListener('keyup', this.handleKeyInput)
 
-    // @ts-ignore
-    this.canvas.__eventListeners = {}
+    this.canvas.off()
   }
 
   updateBrush = ({
@@ -992,7 +1025,7 @@ class CreateCanvas {
     }
 
     this.canvas.freeDrawingCursor = 'crosshair'
-    const brush = this.canvas.freeDrawingBrush
+    const brush = this.canvas.freeDrawingBrush!
     brush.color = erasing
       ? this.brushSettings.eraseColor
       : this.brushSettings.color
@@ -1045,9 +1078,8 @@ class CreateCanvas {
       return
     }
 
-    // @ts-ignore
-    const canvasContext = this.canvas.getContext('2d')
-    const mousePointer = this.canvas.getPointer(e.e)
+    const canvasContext = this.canvas.getContext()
+    const mousePointer = this.canvas.getScenePoint(e.e)
     // @ts-ignore
     const x = parseInt(mousePointer.x)
     // @ts-ignore
@@ -1067,7 +1099,7 @@ class CreateCanvas {
       this.brushPreview.set('stroke', hoveredColor)
     }
 
-    return new fabric.Color(
+    return new Color(
       `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`
     ).toHex()
   }

@@ -8,9 +8,9 @@ import { expect, Page, test } from '@playwright/test'
 import sharp from 'sharp'
 import {
   CAPTION,
+  chooseStandardModel,
   createTestImage,
   expectNoCrash,
-  MODEL,
   mockBackend,
   trackPageErrors
 } from './helpers'
@@ -55,18 +55,6 @@ const submit = async (page: Page) => {
 const expectSubmission = async (horde: { submissions: any[] }) => {
   await expect.poll(() => horde.submissions.length, { timeout: 10000 }).toBe(1)
   return horde.submissions[0]
-}
-
-// The default model is SDXL, which needs 1024px images and can't use ControlNet.
-const chooseStandardModel = async (page: Page) => {
-  await page
-    .locator('div[class*="-control"]', { hasText: MODEL })
-    .first()
-    .click()
-  await page
-    .locator('div[class*="-option"]', { hasText: /^Deliberate \(/ })
-    .first()
-    .click()
 }
 
 const openPage = async (page: Page, url: string) => {

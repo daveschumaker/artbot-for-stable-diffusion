@@ -64,7 +64,11 @@ const Editor = ({
     return myCanvas
   }
 
-  const handleNewCanvas = (height: number, width: number, bgColor: string) => {
+  const handleNewCanvas = async (
+    height: number,
+    width: number,
+    bgColor: string
+  ) => {
     if (!canvas.current || !canvasState) {
       return
     }
@@ -72,8 +76,9 @@ const Editor = ({
     // @ts-ignore
     canvasState.clear()
 
+    // Fabric's dispose is asynchronous, and the element can't be reused until it finishes.
     // @ts-ignore
-    canvas?.current?.dispose()
+    await canvas?.current?.dispose()
     canvas.current = null
     resetSavedDrawingState()
 
