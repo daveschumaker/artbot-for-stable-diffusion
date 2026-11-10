@@ -57,7 +57,6 @@
     "dotenv": "16.3.1",
     "fabric": "7.4.0",
     "file-saver": "2.0.5",
-    "image-metadata-editor": "^2023.2.3",
     "is-mobile": "4.0.0",
     "isomorphic-dompurify": "2.36.0",
     "jsonwebtoken": "9.0.2",

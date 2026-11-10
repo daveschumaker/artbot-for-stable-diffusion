@@ -1,6 +1,11 @@
 import * as exifLib from '@asc0910/exif-library'
 import type { IExif } from '@asc0910/exif-library'
-import { writeJPGMarker, writePNGtext, writeXMP } from 'image-metadata-editor'
+import {
+  toCdata,
+  writeJPGMarker,
+  writePNGtext,
+  writeXMP
+} from './imageMetadata'
 
 const SOFTWARE =
   'ArtBot - Create images with Stable Diffusion, utilizing the AI Horde'
@@ -141,26 +146,32 @@ async function writeMetadata(
     userComment &&
     (imageExifBlob.type === 'image/png' || imageExifBlob.type === 'image/jpeg')
   ) {
-    const xmp = `<x:xmpmeta xmlns:x="adobe:ns:meta/"><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:exif="http://ns.adobe.com/exif/1.0/"><dc:title><rdf:Alt><rdf:li xml:lang="x-default"><![CDATA[${userComment}]]></rdf:li></rdf:Alt></dc:title><exif:UserComment><![CDATA[${userComment}]]></exif:UserComment></rdf:Description></rdf:RDF></x:xmpmeta>
+    const xmp = `<x:xmpmeta xmlns:x="adobe:ns:meta/"><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:exif="http://ns.adobe.com/exif/1.0/"><dc:title><rdf:Alt><rdf:li xml:lang="x-default">${toCdata(userComment)}</rdf:li></rdf:Alt></dc:title><exif:UserComment>${toCdata(userComment)}</exif:UserComment></rdf:Description></rdf:RDF></x:xmpmeta>
 	`
-    let imageUint8Arr = await writeXMP(imageExifBlob, xmp)
+    const bytes = new Uint8Array(await imageExifBlob.arrayBuffer())
+    let imageUint8Arr: Uint8Array
+
     if (imageExifBlob.type === 'image/png') {
+      imageUint8Arr = writeXMP(bytes, xmp)
       // https://exiftool.org/TagNames/PNG.html#TextualData
-      imageUint8Arr = await writePNGtext(
-        imageUint8Arr,
-        'parameters',
-        userComment
-      )
-      imageUint8Arr = await writePNGtext(imageUint8Arr, 'Comment', userComment)
-      imageUint8Arr = await writePNGtext(
-        imageUint8Arr,
-        'Description',
-        userComment
-      )
-      imageUint8Arr = await writePNGtext(imageUint8Arr, 'Software', SOFTWARE)
-    }
-    if (imageExifBlob.type === 'image/jpeg') {
-      imageUint8Arr = await writeJPGMarker(imageUint8Arr, userComment)
+      imageUint8Arr = writePNGtext(imageUint8Arr, 'parameters', userComment)
+      imageUint8Arr = writePNGtext(imageUint8Arr, 'Comment', userComment)
+      imageUint8Arr = writePNGtext(imageUint8Arr, 'Description', userComment)
+      imageUint8Arr = writePNGtext(imageUint8Arr, 'Software', SOFTWARE)
+    } else {
+      // A JPEG segment holds at most 64 KB, so a prompt too long for one is
+      // left out of it. It is still in the EXIF data.
+      imageUint8Arr = bytes
+      for (const write of [
+        (jpeg: Uint8Array) => writeXMP(jpeg, xmp),
+        (jpeg: Uint8Array) => writeJPGMarker(jpeg, userComment)
+      ]) {
+        try {
+          imageUint8Arr = write(imageUint8Arr)
+        } catch (err) {
+          if (!(err instanceof RangeError)) throw err
+        }
+      }
     }
 
     return new Blob([imageUint8Arr], { type: imageExifBlob.type })

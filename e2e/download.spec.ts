@@ -233,6 +233,116 @@ for (const { setting } of FORMATS) {
   })
 }
 
+// The PNG text chunks and JPEG segments that a download carries, by name.
+const pngTextChunks = (png: Buffer) => {
+  const text: Record<string, string> = {}
+  for (let pos = 8; pos < png.length; ) {
+    const length = png.readUInt32BE(pos)
+    if (png.toString('latin1', pos + 4, pos + 8) === 'tEXt') {
+      const data = png.toString('utf8', pos + 8, pos + 8 + length)
+      const split = data.indexOf('\0')
+      text[data.slice(0, split)] = data.slice(split + 1)
+    }
+    pos += length + 12
+  }
+  return text
+}
+
+const XMP_NAMESPACE = 'http://ns.adobe.com/xap/1.0/\0'
+
+const jpegTextSegments = (jpeg: Buffer) => {
+  const text: { comment?: string; xmp?: string } = {}
+  // Stop at the start of scan, where image data begins.
+  for (let pos = 2; jpeg[pos] === 0xff && jpeg[pos + 1] !== 0xda; ) {
+    const length = jpeg.readUInt16BE(pos + 2)
+    const data = jpeg.toString('utf8', pos + 4, pos + 2 + length)
+    if (jpeg[pos + 1] === 0xfe) text.comment = data
+    if (jpeg[pos + 1] === 0xe1 && data.startsWith(XMP_NAMESPACE)) {
+      text.xmp = data.slice(XMP_NAMESPACE.length)
+    }
+    pos += 2 + length
+  }
+  return text
+}
+
+// Reads the prompt back out of the XMP with the browser's XML parser, which
+// rejects anything that isn't well-formed.
+const promptsInXmp = (page: Page, xmp: string) =>
+  page.evaluate((xmp) => {
+    const doc = new DOMParser().parseFromString(xmp, 'application/xml')
+    if (doc.getElementsByTagName('parsererror').length) return null
+    const ns = {
+      dc: 'http://purl.org/dc/elements/1.1/',
+      exif: 'http://ns.adobe.com/exif/1.0/'
+    }
+    return {
+      title: doc.getElementsByTagNameNS(ns.dc, 'title')[0]?.textContent,
+      comment: doc.getElementsByTagNameNS(ns.exif, 'UserComment')[0]
+        ?.textContent
+    }
+  }, xmp)
+
+// "]]>" would end the XMP's CDATA section early if it weren't escaped.
+const XML_PROMPT = 'a <castle> & a moat ]]> at dawn'
+
+test('a png download carries the prompt in its text chunks and XMP', async ({
+  page
+}) => {
+  const errors = trackPageErrors(page)
+  await mockBackend(page)
+  await useDownloadFormat(page, 'png')
+  await generateImage(page, XML_PROMPT)
+
+  const text = pngTextChunks(
+    await readDownload(
+      await downloadFromDetailsPage(page, 'e2e-job', XML_PROMPT)
+    )
+  )
+
+  // The EXIF library also stores EXIF in a keyless tEXt chunk, so only these
+  // chunks are checked.
+  expect(Object.keys(text)).toEqual(
+    expect.arrayContaining([
+      'Comment',
+      'Description',
+      'Software',
+      'XML:com.adobe.xmp',
+      'parameters'
+    ])
+  )
+  expect(text.parameters).toContain(XML_PROMPT)
+  expect(text.Comment).toBe(text.parameters)
+  expect(text.Description).toBe(text.parameters)
+  expect(text.Software).toMatch(/^ArtBot/)
+  expect(await promptsInXmp(page, text['XML:com.adobe.xmp'])).toEqual({
+    title: text.parameters,
+    comment: text.parameters
+  })
+  expect(errors).toEqual([])
+})
+
+test('a jpg download carries the prompt in its comment and XMP', async ({
+  page
+}) => {
+  const errors = trackPageErrors(page)
+  await mockBackend(page)
+  await useDownloadFormat(page, 'jpg')
+  await generateImage(page, XML_PROMPT)
+
+  const text = jpegTextSegments(
+    await readDownload(
+      await downloadFromDetailsPage(page, 'e2e-job', XML_PROMPT)
+    )
+  )
+
+  expect(text.comment).toContain(XML_PROMPT)
+  expect(await promptsInXmp(page, text.xmp!)).toEqual({
+    title: text.comment,
+    comment: text.comment
+  })
+  expect(errors).toEqual([])
+})
+
 // Earlier versions stored the prompt UTF-8 encoded twice.
 test('a prompt that an earlier version encoded twice is repaired on download', async ({
   page
