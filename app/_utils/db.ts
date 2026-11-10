@@ -1,4 +1,5 @@
 import memoize from 'memoizee'
+import Dexie from 'dexie'
 import type { ExportProgress } from 'dexie-export-import/dist/export'
 
 import { db } from 'app/_db/dexie'
@@ -18,9 +19,79 @@ interface ThumbnailProgress {
   state?: string
 }
 
+// The streaming importer can stop at EOF before the root JSON object closes.
+// Check framing before any writes, without reading a large backup into memory.
+const assertCompleteBackup = async (blob: Blob) => {
+  const reader = blob.stream().getReader()
+  const decoder = new TextDecoder('utf-8', { fatal: true })
+  const incomplete = new Error('Expected a complete database export')
+  let depth = 0
+  let started = false
+  let closed = false
+  let inString = false
+  let escaped = false
+
+  try {
+    while (true) {
+      const { value, done } = await reader.read()
+      for (const char of decoder.decode(value, { stream: !done })) {
+        if (inString) {
+          if (escaped) escaped = false
+          else if (char === '\\') escaped = true
+          else if (char === '"') inString = false
+          continue
+        }
+        if (/\s/.test(char)) continue
+        if (closed || (!started && char !== '{')) throw incomplete
+        started = true
+        if (char === '"') inString = true
+        else if (char === '{' || char === '[') depth++
+        else if (char === '}' || char === ']') {
+          depth--
+          closed = depth === 0 && char === '}'
+        }
+      }
+      if (done) break
+    }
+    if (!closed) throw incomplete
+  } finally {
+    await reader.cancel().catch(() => {})
+    reader.releaseLock()
+  }
+}
+
 export const dbImport = async (blob: Blob) => {
-  const { importDB } = await import('dexie-export-import')
-  await importDB(blob)
+  await assertCompleteBackup(blob)
+  const { importInto } = await import('dexie-export-import')
+  let cleared = false
+  const clearing: Promise<unknown>[] = []
+  await importInto(db, blob, {
+    filter: () => {
+      if (!cleared) {
+        const transaction = Dexie.currentTransaction
+        if (!transaction)
+          throw new Error('Database import requires a transaction')
+        // clearTablesBeforeImport in this library version runs before its
+        // transaction. Enqueue clears from the first row callback,
+        // inside that transaction and before the first insert. Streaming and
+        // Blob reads remain owned by the importer; any failure rolls back both.
+        for (const table of db.tables) {
+          const clear = transaction.table(table.name).clear()
+          clear.catch(() => transaction.abort())
+          clearing.push(clear)
+        }
+        cleared = true
+      }
+      return true
+    }
+  })
+  await Dexie.Promise.all(clearing)
+  // A valid empty backup never invokes the row callback. Validate it through
+  // the importer first, then replace the current data with one atomic clear.
+  if (!cleared)
+    await db.transaction('rw', db.tables, () =>
+      Dexie.Promise.all(db.tables.map((table) => table.clear()))
+    )
   return true
 }
 

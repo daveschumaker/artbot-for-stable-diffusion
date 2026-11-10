@@ -206,9 +206,22 @@ test('saved img2img input is unchanged when the create page loads', async ({
   await openImg2Img(page)
   await upload(page)
   await page.getByPlaceholder('Describe your image').fill('a test prompt')
+  // Reading the file and resizing it can finish after the prompt's save.
+  // Wait for both parts of the input before taking the pre-reload snapshot.
   await expect
-    .poll(async () => (await savedInput(page))?.prompt)
-    .toBe('a test prompt')
+    .poll(async () => {
+      const input = await savedInput(page)
+      return {
+        prompt: input?.prompt,
+        processing: input?.source_processing,
+        hasSource: Boolean(input?.source_image)
+      }
+    })
+    .toEqual({
+      prompt: 'a test prompt',
+      processing: 'img2img',
+      hasSource: true
+    })
   const before = await savedInput(page)
   expect(before.source_processing).toBe('img2img')
   expect(before.source_image).toBeTruthy()

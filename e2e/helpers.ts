@@ -55,7 +55,9 @@ export const mockBackend = async (page: Page) => {
 
   // Later routes take priority. Nothing is allowed to reach a real service.
   await page.route(
-    (url) => url.hostname !== 'localhost',
+    (url) =>
+      ['http:', 'https:'].includes(url.protocol) &&
+      url.hostname !== 'localhost',
     (route) => route.fulfill(json({}))
   )
   await page.route('**/artbot/api/**', (route) =>
@@ -175,6 +177,18 @@ export const trackPageErrors = (page: Page) => {
   const errors: string[] = []
   page.on('pageerror', (error) => errors.push(error.message))
   return errors
+}
+
+// Only for fixture setup before replacing the document. Firefox can keep the
+// networkidle signal busy after Blob-backed fixtures render. Tests assert the
+// actual UI and stored data after navigation instead of waiting on that signal.
+export const finishFixtureSetup = async (page: Page) => {
+  const browserName = page.context().browser()?.browserType().name()
+  const firefox =
+    browserName === 'firefox' ||
+    (!browserName &&
+      (await page.evaluate(() => navigator.userAgent.includes('Firefox/'))))
+  if (!firefox) await page.waitForLoadState('networkidle')
 }
 
 export const expectImageToDisplay = async (page: Page, prompt: string) => {

@@ -22,8 +22,18 @@ const pixelAt = (page: Page, x: number, y: number) =>
   page.evaluate(
     ({ selector, x, y }) => {
       const canvas = document.querySelector(selector) as HTMLCanvasElement
+      const bounds = canvas.getBoundingClientRect()
+      // Fabric scales the backing store on Retina displays. Test coordinates
+      // describe pointer positions in CSS pixels, including in real WebKit.
       return Array.from(
-        canvas.getContext('2d')!.getImageData(x, y, 1, 1).data
+        canvas
+          .getContext('2d')!
+          .getImageData(
+            Math.round((x * canvas.width) / bounds.width),
+            Math.round((y * canvas.height) / bounds.height),
+            1,
+            1
+          ).data
       ) as number[]
     },
     { selector: LOWER_CANVAS, x, y }

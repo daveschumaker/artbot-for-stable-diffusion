@@ -1,7 +1,7 @@
 // Runs on a script-free page at the production origin, using native IndexedDB.
 // Never opens ArtBot/Dexie, so inspecting a legacy database cannot upgrade it.
-export async function auditStorage(page) {
-  return page.evaluate(async () => {
+export async function auditStorage(page, { recordDigests = false } = {}) {
+  const audit = async ({ recordDigests }) => {
     const digest = async (bytes) =>
       Array.from(
         new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)),
@@ -105,6 +105,7 @@ export async function auditStorage(page) {
           }
           let lastKey
           let chain = ''
+          const records = []
           const workflows = new Map()
           const batchGroups = new Map()
           while (true) {
@@ -168,16 +169,20 @@ export async function auditStorage(page) {
                 count: (workflows.get(key)?.count ?? 0) + 1
               })
             }
-            chain = await hash([
-              chain,
-              await encode(cursor.key),
-              await encode(cursor.value)
-            ])
+            const encodedKey = await encode(cursor.key)
+            const encodedValue = await encode(cursor.value)
+            chain = await hash([chain, encodedKey, encodedValue])
+            if (recordDigests)
+              records.push({
+                keySha256: await hash(encodedKey),
+                sha256: await hash(encodedValue)
+              })
             entry.rows++
           }
           stores.push({
             ...entry,
             sha256: chain || (await hash([])),
+            ...(recordDigests ? { recordDigests: records } : {}),
             ...(workflows.size ? { workflows: [...workflows.values()] } : {}),
             ...(batchGroups.size
               ? {
@@ -201,11 +206,25 @@ export async function auditStorage(page) {
     return {
       origin: location.origin,
       databases,
-      localStorage: { keys: storage.length, sha256: await hash(storage) },
+      localStorage: {
+        keys: storage.length,
+        sha256: await hash(storage),
+        ...(recordDigests
+          ? {
+              entries: await Promise.all(
+                storage.map(async ([key, value]) => ({
+                  key,
+                  sha256: await hash(value)
+                }))
+              )
+            }
+          : {})
+      },
       cacheNames: (await caches.keys()).sort(),
       serviceWorkers: (await navigator.serviceWorker.getRegistrations()).map(
         (r) => ({ scope: r.scope, scriptURL: r.active?.scriptURL ?? null })
       )
     }
-  })
+  }
+  return page.evaluate(audit, { recordDigests })
 }

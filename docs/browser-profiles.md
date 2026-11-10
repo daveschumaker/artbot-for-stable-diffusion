@@ -175,3 +175,6 @@ immutability, overwrite refusal and browser-version mismatch refusal.
 
 Prerequisites: macOS or Linux, installed npm dependencies, the matching Playwright Chromium
 (`npx playwright install chromium` if missing), and `openssl` on PATH.
+
+For production-build A/B, interruption, rollback and cross-engine checks, see
+[the upgrade regression workflow](upgrade-regression.md).

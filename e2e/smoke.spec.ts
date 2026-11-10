@@ -7,6 +7,7 @@ import { expect, Page, test } from '@playwright/test'
 import sharp from 'sharp'
 import {
   expectImageToDisplay,
+  finishFixtureSetup,
   MODEL,
   mockBackend,
   trackPageErrors
@@ -52,6 +53,7 @@ const seedLibrary = async (page: Page, count: number) => {
     },
     { base64: imageBytes.toString('base64'), count, model: MODEL }
   )
+  await finishFixtureSetup(page)
 }
 
 test.describe('every page renders', () => {
