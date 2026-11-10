@@ -1,110 +1,75 @@
 # Known Issues and Upgrade Plan
 
-Last updated: 2026-11-09
+Last updated: 2026-11-10
 
-Issues marked "Pinned" have a test that documents the bug using `it.failing` or
-`test.fail()`. Once a bug is fixed, that test will report a failure until the
-marker is removed, so remove it in the same change.
+Open items only. Finished work is in the git history.
 
 ## Suggested order
 
-1. Fix the remaining bugs (B3, B4, B6 to B9, B11) and security items (S3 to S6).
-2. Patch the remaining dependencies (U3).
-3. Upgrade the riskier libraries one at a time (U4, U5).
+1. Fix the remaining security item and bugs (S8, B21, B22).
+2. Update the tooling (U6 to U8), then Next 16 (U9).
+3. Test against a real production library (R3), then upgrade Dexie (U5).
 4. Build real batching and the v2 interface (F1, F2).
+
+## Before release
+
+- [ ] **R1. Write a CHANGELOG entry.** The last one is from 2025-08-18. Tell
+      users what was removed: shareable links, shortlinks, the `/artbot?i=`
+      shared image pages, the community Showcase, "Use all models" and the
+      `/upscale` page.
+- [ ] **R2. Remove the shortlink env vars from the server.**
+      `SHORTLINK_SERVICE` and `NEXT_SHORTLINK_SERVICE` are no longer used.
+- [ ] **R3. Run the branch against a profile captured from production**
+      (`docs/browser-profiles.md`) before switching users over.
+- [ ] **R4. Replace `ADMIN_PW_HASH` with a scrypt hash.** Run
+      `node x-build-scripts/hashAdminPassword.js`. The old SHA-256 hash still
+      works until then.
 
 ## Security
 
-- [x] **S1. Critical: Next.js RCE advisories.** Fixed by upgrading to Next
-      15.5.29. `middleware.ts` still returns 404 for `/_next/image`, because
-      the app doesn't use it.
-- [x] **S2. High: `/api/img-from-url` was an open SSRF.** Fixed by
-      `app/_server-api/fetchRemoteImage.ts`, which checks addresses when
-      connecting and on every redirect, and caps download size.
-- [x] **S3. Medium: admin login was weakly protected.** Added scrypt hashes and
-      rate limiting. Run `node x-build-scripts/hashAdminPassword.js` and replace
-      `ADMIN_PW_HASH` to stop using the old SHA-256 hash.
-- [x] **S4. Medium: server messages rendered unsanitized HTML.** Fixed.
-- [x] **S5. Medium: Docker could bake in `.env` secrets.** Added `.dockerignore`.
-      The image now builds the app itself. Not yet built with Docker.
-- [x] **S6. High: other vulnerable dependencies.** Removed, patched or upgraded.
-      0 critical and 0 high production advisories remain, and 7 moderate or low.
+- [ ] **S8. Moderate: `image-metadata-editor` depends on a vulnerable
+      `fast-xml-parser`** (below 5.7.0, GHSA-gh4j-gqv2-49f6). It was last
+      published in November 2023. `app/_utils/blobUtils.ts` uses it to write the
+      prompt into XMP and PNG text. Replace it, or force a fixed
+      `fast-xml-parser` through `overrides`, and check that
+      `e2e/download.spec.ts` still passes.
+- [ ] **S9. Low: confirm what error reports should contain.** `logError` in
+      `app/_utils/appUtils.ts` sends the user's Horde username and full page URL
+      to `/api/log-error`, which forwards them with the user agent to
+      `STATUS_API`.
 
 ## Bugs
 
-- [x] **B1. High: older images crashed the image detail page.** Fixed by a read
-      hook in `app/_db/dexie.ts` that fills in `models` and `source_image`.
-- [x] **B2. High: one malformed job blocked the queue until reload.** Fixed in
-      `app/_api/createImage.ts`. The job is now marked as failed.
-- [x] **B3. Medium: an undecodable image reported success.** The job is now
-      marked as failed.
-- [x] **B4. Medium: outpainting requests left out the source image.** Fixed in
-      `app/_data-models/ImageParamsForApi.ts`.
-- [x] **B5. Low: a non-image URL threw in `/api/img-from-url`.** Fixed with S2.
-- [x] **B6. Low: `/api/admin/update-settings` reported success on bad auth.**
-      It now returns 401.
-- [x] **B7. Low: `/api/admin/showcase-publish` hung on bad auth.** It now
-      returns 401.
-- [x] **B8. Low: `allPendingJobs(status)` always returned nothing.** Fixed in
-      `app/_utils/db.ts`.
-- [x] **B9. Medium: the text2img gallery filter showed every image.** Fixed in
-      `app/_utils/db.ts`.
-- [x] **B10. High: "Upscale image" did nothing.** Fixed in
-      `app/_controllers/imageDetailsCommon.ts`.
-- [x] **B11. Medium: `/upscale` showed the changelog.** Removed the route and the
-      unfinished page. "Upscale image" in the image menu still works.
+- [ ] **B21. Medium, unverified: the feedback form may be dropping
+      submissions.** `pages/api/telemetry.ts` posts them to
+      `http://localhost:4001/api/v1/artbot/feedback` and always reports
+      success. Check on the server whether anything still listens there.
+- [ ] **B22. Low: `/api/image-count` redirects to a 404.**
+      `pages/api/image-count.ts` sets `Location: /api/status/counter/images`
+      without the `/artbot` base path.
 
-- [x] **B12. Medium: drawings couldn't be sent to img2img or ControlNet.** Fixed
-      the route, the create page overwriting the drawing, and the order of the
-      ControlNet page's startup effects.
-- [x] **B13. Medium: "New canvas" left a broken canvas.** It now clears the saved
-      layers.
+## Dead code
 
-- [x] **B14. Medium: "Use all models" created one image.** Removed the option.
-      A value saved before the removal is ignored.
-
-## Removed features
-
-- Shareable links, shortlinks, the `/artbot?i=` shared image pages and the
-  community Showcase were removed on 2026-11-09. The shortlink service env vars
-  (`SHORTLINK_SERVICE`, `NEXT_SHORTLINK_SERVICE`) are no longer used.
-
-- [x] **B15. Medium: an image whose prompt couldn't be written into it crashed
-      polling.** The image is now saved without the prompt. `base64toBlob`
-      resolves to `null` on failure, and every caller handles it.
-- [x] **B16. Medium: converting an image without EXIF data threw.** Downloading
-      or copying such an image now works. A download that still fails shows an
-      error, and an unknown download format falls back to JPG.
-      `e2e/download.spec.ts` covers every format in a real browser.
-- [x] **B19. Low: prompts with non-ASCII characters were mangled in image
-      metadata.** The prompt was UTF-8 encoded twice when an image finished,
-      and once more on every conversion. It's now encoded once, and prompts
-      stored by earlier versions are repaired when the image is converted.
-- [x] **B20. Low: Safari's clipboard copy reported success but copied
-      nothing.** It now copies a PNG, and says so when a copy fails.
-      Tested in Chromium with Safari's user agent, not in Safari itself.
-- [x] **B17. Low: `app/_utils/primaryWindow.ts` threw every second** if the
-      `PrimaryWindow` key was missing or invalid. The tab now claims the key.
-- [x] **B18. Low: smaller issues found while fixing types.**
-  - `UploadButton.tsx` no longer passes `undefined` when no file is chosen, and
-    the same file can now be chosen twice in a row.
-  - `SortableWorkersTable` sorted the array cached by `fetchWorkers`, which other
-    pages share. It now sorts a copy, in `sortWorkers.ts`.
-  - The worker search boxes in `WorkerBlocklist.tsx` and `allowWorkers.tsx`
-    are 480px wide again. They passed `width` to `MaxWidth`, which ignores it.
-- [x] **S7. Low: `validateToken` accepted a validly signed token with no
-      username when `ADMIN_USER` was unset.** It now refuses it.
+- [ ] **C7. Fix or remove the image page's source image modal.** Opening it is
+      commented out in `app/_modules/ImageDetails/index.tsx`, and its "Use for
+      inpaint" button only logs to the console.
 
 ## Upgrades
 
-- [x] **U1. Next 15.5.29 and React 19.3.1.**
-- [x] **U2. Libraries moved to React 19 compatible versions.** `react-lazyload`
-      and `react-gallery-carousel` are unmaintained and run through `overrides`.
-- [x] **U3. Patched `dompurify`, `sharp` and `nodemailer`.** Needs Node 20.19.5
-      or later.
-- [x] **U4. Upgraded `fabric` 5 to 7.4.0.** Removed the unreachable
-      `PainterCanvas`, `PainterPanel` and `Editor/controller.ts`.
-- [ ] **U5. Upgrade Dexie last,** only with the upgrade tests passing.
+- [ ] **U5. Upgrade Dexie last,** only after R3 and with the upgrade tests
+      passing.
+- [ ] **U6. Move to ESLint 9.** ESLint 8.56 stopped getting updates in October
+      2024, and `next lint` is deprecated in Next 15.5 and removed in Next 16.
+      Switch to the `eslint` command with a flat config, and keep the
+      `@typescript-eslint/ban-ts-comment` rule.
+- [ ] **U7. Upgrade husky 8 to 9.** `husky install` is deprecated. The
+      `prepare` script becomes `husky`.
+- [ ] **U8. Upgrade TypeScript 5.3.3.** It also stops `knip` from running,
+      which would catch unused files and dependencies automatically.
+- [ ] **U9. Upgrade to Next 16** after U6 to U8.
+- [ ] **U10. Remove styled-components** from the 26 files that still use it,
+      in favour of Tailwind, then drop `compiler.styledComponents` from
+      `next.config.js`. Its maintainers have put it in maintenance mode.
 
 ## Features
 
@@ -129,27 +94,21 @@ marker is removed, so remove it in the same change.
       there are derived from new ones. Add a real export from an old library.
 - [ ] Nothing in the UI sets outpainting yet, so it can only be tested at the
       request level. Add library and UI tests if it gets an entry point.
-- [ ] Add a real upscale of an existing image once B10 is fixed.
-- [ ] Run the new CI workflow on GitHub. It's unverified on Linux.
+- [ ] Upscaling is only tested up to the request it sends
+      (`e2e/sourceImages.spec.ts`). Add a test that follows the upscaled image
+      into the library.
+- [ ] The Docker image has never been built.
+- [ ] The CI workflow (`.github/workflows/test.yml`) has never run, so it's
+      unverified on Linux.
 - [ ] Refresh `test-utils/hordeApiSchema.json` when the Horde API changes.
 
 ## Cleanup
 
-- [x] `CreateCanvas.getMaskForInput` never resolved when there was no saved mask.
-      It now resolves with an empty mask. The create page passes `onlyWithMask`
-      to `uploadInpaint`, so saved input without a mask is left as it was.
-- [ ] The image page's source image modal is disabled
-      (`app/_modules/ImageDetails/index.tsx`). Its "Use for inpaint" button only
-      logs to the console. Fix or remove it.
-- [x] Removed `AbTestModal`, `react-gallery-carousel`, `react-snap-carousel` and
-      the other `SDXL_beta` UI.
-- [x] Replaced `react-lazyload` with `app/_components/LazyLoad.tsx`. The gallery's
-      layout puts every placeholder in view at first, so tiles were never really
-      lazy-loaded, before or after.
-- [ ] Track down Jest's "worker failed to exit gracefully" warning.
-- [x] Removed every `@ts-ignore`, `@ts-nocheck` and `@ts-expect-error` and fixed
-      the 285 type errors they hid. The `@typescript-eslint/ban-ts-comment` lint
-      rule blocks new ones.
-- [ ] `app/_components/FileUploader` isn't used anywhere. Remove it.
+- [ ] Update the Client-Agent contact in `clientHeader`
+      (`app/_utils/appUtils.ts`). `(discord)rockbandit#4910` uses a Discord
+      tag format that Discord retired in 2023.
+- [ ] Jest's "worker failed to exit gracefully" warning hasn't appeared in
+      three full runs since the 30-second timer in
+      `app/_server-api/counters.ts` was removed. Close this if it stays gone.
 - [ ] Reduce the remaining explicit `any` types.
-- [ ] Review the 35 `TODO` and `FIXME` comments in the code.
+- [ ] Review the 36 `TODO` and `FIXME` comments in the code.
