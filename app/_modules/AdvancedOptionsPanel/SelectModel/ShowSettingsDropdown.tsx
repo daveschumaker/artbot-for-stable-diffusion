@@ -2,7 +2,6 @@ import FlexRow from 'app/_components/FlexRow'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import Checkbox from 'app/_components/Checkbox'
-import { useAvailableModels } from 'app/_hooks/useAvailableModels'
 import AppSettings from 'app/_data-models/AppSettings'
 import { useEffect, useState } from 'react'
 import { useInput } from 'app/_modules/InputProvider/context'
@@ -19,7 +18,6 @@ export default function ShowSettingsDropDown({
   showMultiModel
 }: Props) {
   const { input, setInput } = useInput()
-  const [, filteredModels] = useAvailableModels({ input })
 
   const [favoriteModelsCount, setFavoriteModelsCount] = useState(0)
   const [autoKeyword, setAutoKeyword] = useState(false)
@@ -47,14 +45,6 @@ export default function ShowSettingsDropDown({
           padding: '8px 0'
         }}
       >
-        <Checkbox
-          label={`Use all models? (${filteredModels.length})`}
-          checked={input.useAllModels}
-          onChange={(bool) => {
-            setInput({ useAllModels: bool, useFavoriteModels: false })
-            setShowMultiModel(false)
-          }}
-        />
         <Checkbox
           label={`Use favorite models? (${favoriteModelsCount})`}
           checked={input.useFavoriteModels}

@@ -137,11 +137,6 @@ const SelectModel = ({
   let selectValue: any = modelsValue
   let selectDisabled = disabled
 
-  if (input.useAllModels) {
-    selectDisabled = true
-    selectValue = { label: 'Use all models', value: '' }
-  }
-
   if (input.useFavoriteModels) {
     selectDisabled = true
     selectValue = { label: 'Use favorite models', value: '' }

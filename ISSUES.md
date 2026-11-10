@@ -60,6 +60,9 @@ marker is removed, so remove it in the same change.
 - [x] **B13. Medium: "New canvas" left a broken canvas.** It now clears the saved
       layers.
 
+- [x] **B14. Medium: "Use all models" created one image.** Removed the option.
+      A value saved before the removal is ignored.
+
 ## Upgrades
 
 - [x] **U1. Next 15.5.29 and React 19.3.1.**
@@ -102,12 +105,11 @@ marker is removed, so remove it in the same change.
 
 - [ ] `CreateCanvas.getMaskForInput` never resolves when there's no saved mask, so
       the rest of `uploadInpaint` doesn't run on that path. Decide what it should do.
-- [ ] Remove `AbTestModal` and `react-gallery-carousel`. The carousel relies on
-      `defaultProps`, which React 19 ignores on function components, and the
-      modal is only reachable for the retired `SDXL_beta` model.
-- [ ] Replace `react-lazyload`, which is unmaintained.
-- [ ] Remove the dead `useAllModels` branch: `app/_utils/pendingUtils.ts:194`
-      clears the flag that line 262 checks.
+- [x] Removed `AbTestModal`, `react-gallery-carousel`, `react-snap-carousel` and
+      the other `SDXL_beta` UI.
+- [x] Replaced `react-lazyload` with `app/_components/LazyLoad.tsx`. The gallery's
+      layout puts every placeholder in view at first, so tiles were never really
+      lazy-loaded, before or after.
 - [ ] Track down Jest's "worker failed to exit gracefully" warning.
 - [ ] Reduce the 882 `any` and `@ts-ignore` uses.
 - [ ] Review the 35 `TODO` and `FIXME` comments in the code.

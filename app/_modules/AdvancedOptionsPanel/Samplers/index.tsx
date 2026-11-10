@@ -30,7 +30,6 @@ const Samplers = ({
   const showAllSamplersInput =
     input.source_processing !== SourceProcessing.Img2Img &&
     input.source_processing !== SourceProcessing.InPainting &&
-    !input.useAllModels &&
     !input.useFavoriteModels &&
     !showMultiModel &&
     !hideShowAllSamplers
