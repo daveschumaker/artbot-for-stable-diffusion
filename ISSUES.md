@@ -6,9 +6,10 @@ Open items only. Finished work is in the git history.
 
 ## Suggested order
 
-1. Fix the remaining security item and bugs (S8, B21, B22).
+1. Check the feedback form on the server (B21).
 2. Update the tooling (U6 to U8), then Next 16 (U9).
-3. Test against a real production library (R3), then upgrade Dexie (U5).
+3. Re-run the production comparison on the final code (R3), then upgrade
+   Dexie (U5).
 4. Build real batching and the v2 interface (F1, F2).
 
 ## Before release
@@ -19,20 +20,17 @@ Open items only. Finished work is in the git history.
       `/upscale` page.
 - [ ] **R2. Remove the shortlink env vars from the server.**
       `SHORTLINK_SERVICE` and `NEXT_SHORTLINK_SERVICE` are no longer used.
-- [ ] **R3. Run the branch against a profile captured from production**
-      (`docs/browser-profiles.md`) before switching users over.
+- [ ] **R3. Re-run the production comparison on the code you release.**
+      `docs/upgrade-regression.md` compares the deployed version with this
+      branch using a profile captured from production, including rollback and a
+      1,000-image library. It has passed, but rerun it after any change to
+      the database, queue or image code.
 - [ ] **R4. Replace `ADMIN_PW_HASH` with a scrypt hash.** Run
       `node x-build-scripts/hashAdminPassword.js`. The old SHA-256 hash still
       works until then.
 
 ## Security
 
-- [ ] **S8. Moderate: `image-metadata-editor` depends on a vulnerable
-      `fast-xml-parser`** (below 5.7.0, GHSA-gh4j-gqv2-49f6). It was last
-      published in November 2023. `app/_utils/blobUtils.ts` uses it to write the
-      prompt into XMP and PNG text. Replace it, or force a fixed
-      `fast-xml-parser` through `overrides`, and check that
-      `e2e/download.spec.ts` still passes.
 - [ ] **S9. Low: confirm what error reports should contain.** `logError` in
       `app/_utils/appUtils.ts` sends the user's Horde username and full page URL
       to `/api/log-error`, which forwards them with the user agent to
@@ -44,9 +42,6 @@ Open items only. Finished work is in the git history.
       submissions.** `pages/api/telemetry.ts` posts them to
       `http://localhost:4001/api/v1/artbot/feedback` and always reports
       success. Check on the server whether anything still listens there.
-- [ ] **B22. Low: `/api/image-count` redirects to a 404.**
-      `pages/api/image-count.ts` sets `Location: /api/status/counter/images`
-      without the `/artbot` base path.
 
 ## Dead code
 
@@ -70,6 +65,10 @@ Open items only. Finished work is in the git history.
 - [ ] **U10. Remove styled-components** from the 26 files that still use it,
       in favour of Tailwind, then drop `compiler.styledComponents` from
       `next.config.js`. Its maintainers have put it in maintenance mode.
+- [ ] **U11. Update the dev tooling's vulnerable dependencies.** `npm audit`
+      reports 10 (7 low, 3 moderate) in `deepmerge`, `micromatch` and `yaml`,
+      pulled in by Jest 29 and lint-staged 15. None of them ship to users:
+      `npm audit --omit=dev` reports none.
 
 ## Features
 
@@ -88,7 +87,6 @@ Open items only. Finished work is in the git history.
 
 ## Test gaps
 
-- [ ] Backup import and export (`dbImport`, `dbExport`) have no tests.
 - [ ] The schema upgrade tests still use hand-built rows. Real rows from
       `e2e/fixtures/library.json` cover queries and the browser, but older rows
       there are derived from new ones. Add a real export from an old library.
@@ -103,6 +101,11 @@ Open items only. Finished work is in the git history.
 - [ ] Refresh `test-utils/hordeApiSchema.json` when the Horde API changes.
 
 ## Cleanup
+
+- [ ] PNG downloads store their EXIF in a `tEXt` chunk with no keyword,
+      instead of the standard `eXIf` chunk. `@asc0910/exif-library` writes it
+      this way. Readers that only look for `eXIf` won't find the prompt there,
+      though the `parameters` and XMP chunks still carry it.
 
 - [ ] Update the Client-Agent contact in `clientHeader`
       (`app/_utils/appUtils.ts`). `(discord)rockbandit#4910` uses a Discord
