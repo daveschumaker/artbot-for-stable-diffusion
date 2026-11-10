@@ -2,7 +2,7 @@ import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react'
 import styled from 'styled-components'
 
 interface INavButtonProps {
-  action: string
+  $action: string
 }
 
 const NextPrevButton = styled.div<INavButtonProps>`
@@ -25,7 +25,7 @@ const NextPrevButton = styled.div<INavButtonProps>`
   box-shadow: 2px 2px 4px 1px rgba(0, 0, 0, 0.75);
 
   ${(props) =>
-    props.action === 'NEXT'
+    props.$action === 'NEXT'
       ? `
     right: 8px;
   `
@@ -48,7 +48,7 @@ interface IProps {
 
 const ImageNavButton = ({ action, handleOnClick = () => {} }: IProps) => {
   return (
-    <NextPrevButton action={action} onClick={handleOnClick}>
+    <NextPrevButton $action={action} onClick={handleOnClick}>
       {action === 'NEXT' ? (
         <IconChevronRight stroke="#000000" />
       ) : (
