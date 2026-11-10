@@ -4,7 +4,7 @@ import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { useState } from 'react'
 import { dbImport } from 'app/_utils/db'
 import styles from './component.module.css'
-import { showSuccessToast } from 'app/_utils/notificationUtils'
+import { showErrorToast, showSuccessToast } from 'app/_utils/notificationUtils'
 
 export default function ImportDatabase() {
   const [done, setDone] = useState(false)
@@ -42,16 +42,25 @@ export default function ImportDatabase() {
         accept=".json"
         onChange={async (event) => {
           if (!event) return
-          if (!event.target || !event.target.files) return
+          if (!event.target || !event.target.files?.length) return
 
           setLoading(true)
+          setDone(false)
           const file = event.target.files[0]
           const blob = new Blob([file], { type: file.type })
-          await dbImport(blob)
-          showSuccessToast({ message: 'ArtBot database imported!' })
-
-          setLoading(false)
-          setDone(true)
+          try {
+            await dbImport(blob)
+            showSuccessToast({ message: 'ArtBot database imported!' })
+            setDone(true)
+          } catch {
+            showErrorToast({
+              message:
+                'Unable to import this database. Your existing data has been kept.'
+            })
+          } finally {
+            setLoading(false)
+            event.target.value = ''
+          }
         }}
       />
     </Section>

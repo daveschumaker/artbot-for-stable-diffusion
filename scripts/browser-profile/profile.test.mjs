@@ -130,7 +130,7 @@ test(
         })
         await navigator.serviceWorker.ready
       })
-      const before = await auditStorage(page)
+      const before = await auditStorage(page, { recordDigests: true })
       t.diagnostic('Seeded and audited source profile')
       assert.equal(before.databases[0].stores[0].blobs, 2)
       assert.equal(before.databases[0].stores[0].blobBytes, 2 * 1024 * 1024 + 6)
@@ -159,7 +159,7 @@ test(
         })
         contexts.push(context)
         const p = await openProbe(context, network)
-        assert.deepEqual(await auditStorage(p), before)
+        assert.deepEqual(await auditStorage(p, { recordDigests: true }), before)
         t.diagnostic(`Clone ${scenario} matches source audit`)
         const persisted = await p.evaluate(async () => {
           const cache = await caches.open('artbot-proof')
@@ -181,6 +181,11 @@ test(
           return { cached, nextId }
         })
         assert.deepEqual(persisted, { cached: 'cached bytes', nextId: 101 })
+        const afterInsert = await auditStorage(p, { recordDigests: true })
+        const original = before.databases[0].stores[0].recordDigests
+        const current = afterInsert.databases[0].stores[0].recordDigests
+        assert.equal(current.length, original.length + 1)
+        assert.deepEqual(current.slice(0, original.length), original)
         await p.goto(`${ORIGIN}/artbot/from-worker`)
         assert.equal(await p.locator('body').innerText(), 'persisted worker')
         assert.equal(

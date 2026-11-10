@@ -7,6 +7,7 @@ import { expect, Page, test } from '@playwright/test'
 import {
   createTestImage,
   expectImageToDisplay,
+  finishFixtureSetup,
   mockBackend,
   trackPageErrors
 } from './helpers'
@@ -27,8 +28,14 @@ const useDownloadFormat = (page: Page, format: string) =>
     )
   }, format)
 
-const waitForDatabase = (page: Page) =>
-  page.waitForFunction(() => Boolean((window as any)._artbotDb?.completed))
+const waitForDatabase = async (page: Page) => {
+  await page.waitForFunction(() =>
+    Boolean((window as any)._artbotDb?.completed)
+  )
+  // The next step navigates to the fixture image. Finish initial prefetches
+  // before replacing the document, including in WebKit.
+  await finishFixtureSetup(page)
+}
 
 const downloadFromDetailsPage = async (
   page: Page,

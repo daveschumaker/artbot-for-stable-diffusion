@@ -80,10 +80,14 @@ export const updateAppConfig = () => {
 export const appLastActive = async () => {
   const WAIT_TIME_SEC = 1800 // 30 minutes.
   const lastActiveTime = localStorage.getItem('ArtBotLastActive')
+  let currentTime = Math.floor(Date.now() / 1000)
+
+  // A navigation can happen before the first heartbeat. Publish this visit
+  // immediately so the next page cannot treat newly queued work as stale.
+  localStorage.setItem('ArtBotLastActive', String(currentTime))
 
   await deleteInvalidPendingJobs()
 
-  let currentTime = Math.floor(Date.now() / 1000)
   if (lastActiveTime && currentTime - Number(lastActiveTime) > WAIT_TIME_SEC) {
     try {
       await deleteDoneFromPending()

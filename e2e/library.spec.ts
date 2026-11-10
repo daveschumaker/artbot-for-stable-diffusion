@@ -5,7 +5,11 @@
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { expect, Page, test } from '@playwright/test'
-import { expectImageToDisplay, expectNoCrash } from './helpers'
+import {
+  expectImageToDisplay,
+  expectNoCrash,
+  finishFixtureSetup
+} from './helpers'
 
 const library = JSON.parse(
   readFileSync(path.join(__dirname, 'fixtures/library.json'), 'utf8')
@@ -18,7 +22,9 @@ const errorJob = library.pending.find(
 
 const blockNetwork = async (page: Page) => {
   await page.route(
-    (url) => url.hostname !== 'localhost',
+    (url) =>
+      ['http:', 'https:'].includes(url.protocol) &&
+      url.hostname !== 'localhost',
     (route) =>
       route.fulfill({
         status: 200,
@@ -44,6 +50,7 @@ const seed = async (
     await db.completed.bulkAdd(completed)
     await db.pending.bulkAdd(pending)
   }, tables)
+  await finishFixtureSetup(page)
 }
 
 test.beforeEach(async ({ page }) => {
