@@ -383,6 +383,24 @@ export const addCompletedJobToDb = async ({
   }
 }
 
+// Resolves to null if the prompt can't be written into the image. The image is
+// still worth saving without it.
+const withPromptMetadata = async (base64String: string, metaData: string) => {
+  try {
+    const blob = await base64toBlob(base64String)
+
+    if (!blob) {
+      return null
+    }
+
+    const stamped = await blob.addOrUpdateExifData(metaData)
+    return (await blobToBase64(stamped)).split(',')[1]
+  } catch (err) {
+    console.log('Unable to write the prompt into the image:', err)
+    return null
+  }
+}
+
 export const checkCurrentJob = async (imageDetails: any) => {
   let jobDetails: any = Object.assign({}, imageDetails)
 
@@ -555,20 +573,10 @@ export const checkCurrentJob = async (imageDetails: any) => {
             (job.negative ? `Negative prompt: ${job.negative}\n` : ``) +
             `Steps: ${job.steps}, Sampler: ${job.sampler}, CFG scale: ${job.cfg_scale}, Seed: ${image.seed}` +
             `, Size: ${job.width}x${job.height}, model: ${job.models}`
-          let oldBlob
-          try {
-            oldBlob = await base64toBlob(image.base64String)
-          } catch (err) {
-            console.log(
-              `Error: Something unfortunate happened when attempting to convert base64string to file blob`
-            )
-            console.log(err)
-            continue
+          const stamped = await withPromptMetadata(image.base64String, metaData)
+          if (stamped) {
+            image.base64String = stamped
           }
-          // base64toBlob resolves to '' on failure, which is not a Blob and
-          // makes this call throw. That case is not handled yet.
-          let newBlob = await (oldBlob as Blob)?.addOrUpdateExifData(metaData)
-          image.base64String = (await blobToBase64(newBlob)).split(',')[1]
 
           const jobWithImageDetails = {
             ...job,

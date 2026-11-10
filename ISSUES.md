@@ -69,14 +69,21 @@ marker is removed, so remove it in the same change.
   community Showcase were removed on 2026-11-09. The shortlink service env vars
   (`SHORTLINK_SERVICE`, `NEXT_SHORTLINK_SERVICE`) are no longer used.
 
-- [ ] **B15. Medium: an image with no image data crashes when it finishes.**
-  - `base64toBlob` returns `''` on failure, and `app/_utils/imageCache.ts` calls
-    `addOrUpdateExifData` on it outside the surrounding try, so polling throws.
-  - `downloadFile` in `app/_utils/imageUtils.ts` has the same problem, and also
-    passes `undefined` to `saveAs` for an unknown download format.
-- [ ] **B16. Medium: converting an image without EXIF data throws.** `writeMetadata`
-      in `app/_utils/blobUtils.ts` reads `exif.Exif[37510]` without checking it.
-      It affects `toPNG`, `toJPEG`, `toWebP` and `addOrUpdateExifData('')`.
+- [x] **B15. Medium: an image whose prompt couldn't be written into it crashed
+      polling.** The image is now saved without the prompt. `base64toBlob`
+      resolves to `null` on failure, and every caller handles it.
+- [x] **B16. Medium: converting an image without EXIF data threw.** Downloading
+      or copying such an image now works. A download that still fails shows an
+      error, and an unknown download format falls back to JPG.
+      `e2e/download.spec.ts` covers every format in a real browser.
+- [ ] **B19. Low: prompts with non-ASCII characters are mangled in image
+      metadata.** Checked in Chromium with `café naïve 東京`: the saved WebP holds
+      it double-encoded, and JPG and PNG downloads hold neither form.
+      `str_to_utf8` in `app/_utils/blobUtils.ts` encodes it before the EXIF
+      library does, and conversions encode it again.
+- [ ] **B20. Low, unverified: Safari's clipboard copy labels any image as PNG.**
+      `makeImagePromiseForSafari` in `app/_utils/imageUtils.ts` fetches the data
+      as `image/png`, so `toPNG` skips the conversion.
 - [ ] **B17. Low: `app/_utils/primaryWindow.ts` throws every second** if the
       `PrimaryWindow` key is missing from localStorage.
 - [ ] **B18. Low: smaller issues found while fixing types.**

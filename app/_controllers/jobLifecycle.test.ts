@@ -609,5 +609,45 @@ describe('image job lifecycle', () => {
       })
       expect(app.cache.getPendingJob('horde-1').jobStatus).toBe(JobStatus.Error)
     })
+
+    // Metadata is a nice-to-have. The user has already spent kudos on the image.
+    describe('when the prompt cannot be written into the image', () => {
+      const imageUtils = () => require('app/_utils/imageUtils')
+
+      it.each([
+        [
+          'the image cannot be read as a blob',
+          () => jest.spyOn(imageUtils(), 'base64toBlob').mockResolvedValue(null)
+        ],
+        [
+          'writing the metadata throws',
+          () =>
+            jest.spyOn(imageUtils(), 'base64toBlob').mockResolvedValue({
+              addOrUpdateExifData: async () => {
+                throw new TypeError('no EXIF data')
+              }
+            })
+        ]
+      ])('saves the original image when %s', async (_name, breakStamping) => {
+        await submitJob()
+        horde.finishJob()
+        breakStamping()
+
+        const result = await poll()
+
+        expect(result).toEqual({
+          success: true,
+          jobId: 'horde-1',
+          newImage: true
+        })
+        expect(await app.database._getImageDetails('horde-1')).toMatchObject({
+          base64String: 'RAW',
+          jobStatus: JobStatus.Done
+        })
+        expect(app.cache.getPendingJob('horde-1').jobStatus).toBe(
+          JobStatus.Done
+        )
+      })
+    })
   })
 })
