@@ -144,7 +144,7 @@ export default function AllowWorkers() {
             </div>
           )
         })}
-      <MaxWidth>
+      <MaxWidth max="480px">
         <div className="text-sm font-bold pb-2">
           Search by worker name or worker ID:
         </div>

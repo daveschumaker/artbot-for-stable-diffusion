@@ -1,5 +1,5 @@
 import { formatSeconds } from 'app/_utils/helperUtils'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import styles from './sortableWorkersTable.module.css'
 import { fetchWorkers } from 'app/_api/fetchWorkers'
 import {
@@ -14,27 +14,12 @@ import Linker from 'app/_components/Linker'
 import { HordeWorkerDetails } from '_types/horde'
 import NiceModal from '@ebay/nice-modal-react'
 import WorkerDetailsCard from 'app/_componentsV2/WorkerDetailsCard'
-
-interface HordeWorkerKeysForTable {
-  kph: number
-}
-// Keys of HordeWorkerDetails whose values are primitives that can be compared
-type SortableHordeWorkerKeys = {
-  [K in keyof HordeWorkerDetails]-?: HordeWorkerDetails[K] extends
-    | string
-    | number
-    | boolean
-    ? K
-    : never
-}[keyof HordeWorkerDetails]
-type ExtendedHordeWorkerKeys =
-  | keyof HordeWorkerDetails
-  | keyof HordeWorkerKeysForTable
+import { sortWorkers, WorkerSortKey, WorkerSortOrder } from './sortWorkers'
 
 export default function SortableTable() {
   // const [loading, setLoading] = useState(true)
-  const [sortOrder, setSortOrder] = useState('dsc')
-  const [sortBy, setSortBy] = useState<ExtendedHordeWorkerKeys>('kph')
+  const [sortOrder, setSortOrder] = useState<WorkerSortOrder>('dsc')
+  const [sortBy, setSortBy] = useState<WorkerSortKey>('kph')
   const [workers, setWorkers] = useState<HordeWorkerDetails[]>([])
 
   const fetchWorkersFromApi = async () => {
@@ -47,8 +32,6 @@ export default function SortableTable() {
   useEffect(() => {
     fetchWorkersFromApi()
   }, [])
-
-  console.log(`workers`, workers)
 
   const badgeColor = (worker: HordeWorkerDetails) => {
     if (worker.maintenance_mode) {
@@ -65,7 +48,7 @@ export default function SortableTable() {
   }
 
   const handleHeaderClick = useCallback(
-    (key: ExtendedHordeWorkerKeys) => {
+    (key: WorkerSortKey) => {
       if (sortBy !== key) {
         setSortBy(key)
         setSortOrder('asc')
@@ -91,32 +74,10 @@ export default function SortableTable() {
     [sortBy, sortOrder]
   )
 
-  const sortWorkers = useCallback(() => {
-    return workers.sort((a, b) => {
-      let aValue: string | number | boolean
-      let bValue: string | number | boolean
-
-      if (sortBy === 'models') {
-        aValue = a.models.length
-        bValue = b.models.length
-      } else if (sortBy === 'kph') {
-        aValue = a.uptime ? Math.floor(a.kudos_rewards / (a.uptime / 3600)) : 0
-        bValue = b.uptime ? Math.floor(b.kudos_rewards / (b.uptime / 3600)) : 0
-      } else {
-        aValue = a[sortBy as SortableHordeWorkerKeys]
-
-        bValue = b[sortBy as SortableHordeWorkerKeys]
-      }
-
-      if (aValue < bValue) {
-        return sortOrder === 'asc' ? -1 : 1
-      }
-      if (aValue > bValue) {
-        return sortOrder === 'asc' ? 1 : -1
-      }
-      return 0
-    })
-  }, [sortBy, sortOrder, workers])
+  const sortedWorkers = useMemo(
+    () => sortWorkers(workers, sortBy, sortOrder),
+    [sortBy, sortOrder, workers]
+  )
 
   if (workers.length === 0) return null
 
@@ -266,7 +227,7 @@ export default function SortableTable() {
               </tr>
             </thead>
             <tbody>
-              {sortWorkers().map((row, i) => {
+              {sortedWorkers.map((row, i) => {
                 if (!row) return null
 
                 const kph = row.uptime
@@ -276,7 +237,7 @@ export default function SortableTable() {
                 return (
                   <tr
                     className="hover:bg-[#dbdbdb] hover:text-black"
-                    key={i}
+                    key={row.id}
                     style={{ lineHeight: '28px' }}
                   >
                     <td>{i + 1}</td>
