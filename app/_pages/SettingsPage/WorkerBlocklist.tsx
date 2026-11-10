@@ -34,7 +34,6 @@ export default function AllowWorkers() {
       }
     })
 
-    // @ts-ignore
     filteredWorkers.sort((a, b) => {
       if (a.label < b.label) {
         return -1
@@ -42,6 +41,7 @@ export default function AllowWorkers() {
       if (a.label > b.label) {
         return 1
       }
+      return 0
     })
 
     setWorkers(filteredWorkers)
@@ -144,10 +144,7 @@ export default function AllowWorkers() {
             </div>
           )
         })}
-      <MaxWidth
-        // @ts-ignore
-        width="480px"
-      >
+      <MaxWidth>
         <div className="text-sm font-bold pb-2">
           Search by worker name or worker ID:
         </div>
@@ -165,7 +162,6 @@ export default function AllowWorkers() {
               }
             }}
             options={workers}
-            // @ts-ignore
             value={selectedWorker}
           />
           <Button

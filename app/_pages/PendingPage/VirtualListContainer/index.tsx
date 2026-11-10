@@ -48,12 +48,9 @@ export default function VirtualListContainer({
           handleCloseClick={() => {
             onClosePanel(job.jobId)
           }}
-          //@ts-ignore
           onImageClick={handleShowModalClick}
           // onHideClick={}
-          //@ts-ignore
           jobDetails={job}
-          //@ts-ignore
           jobId={job.jobId}
         />
       </>
@@ -69,9 +66,10 @@ export default function VirtualListContainer({
     const calcListHeight = () => {
       const windowWidth = window.innerWidth
       const windowHeight = window.innerHeight
-      const container = document.getElementById('pending_virtual_list')
-      // @ts-ignore
-      const { top } = container?.getBoundingClientRect()
+      // #pending_virtual_list is this component's own root element, which is
+      // always mounted while this effect and its resize listener are active.
+      const container = document.getElementById('pending_virtual_list')!
+      const { top } = container.getBoundingClientRect()
       const absoluteTop = window.pageYOffset + top
 
       const newHeight = windowHeight - absoluteTop

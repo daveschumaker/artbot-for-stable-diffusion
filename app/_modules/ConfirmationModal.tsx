@@ -11,8 +11,7 @@ const ConfirmationModal = ({
   const modal = useModal()
 
   useEffect(() => {
-    // @ts-ignore
-    const handleKeyPress = (e) => {
+    const handleKeyPress = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         closeModal()
         modal.remove()

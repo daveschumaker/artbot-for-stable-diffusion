@@ -21,6 +21,7 @@
         "args": "after-used",
         "ignoreRestSiblings": false
       }
-    ]
+    ],
+    "@typescript-eslint/ban-ts-comment": "error"
   }
 }

@@ -6,7 +6,6 @@ export default function useContentHeight() {
 
   useEffect(() => {
     if (contentRef.current) {
-      // @ts-ignore
       const contentHeight = contentRef.current.offsetHeight
       setHeight(contentHeight)
     }

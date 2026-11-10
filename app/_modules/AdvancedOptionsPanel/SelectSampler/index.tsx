@@ -7,11 +7,17 @@ import Checkbox from 'app/_components/Checkbox'
 import Samplers from 'app/_data-models/Samplers'
 import { useState } from 'react'
 import { SourceProcessing } from '_types/horde'
+import { Value } from '_types'
 import { useInput } from 'app/_modules/InputProvider/context'
 import DefaultPromptInput from 'app/_data-models/DefaultPromptInput'
 import styles from './selectSampler.module.css'
 import OptionsRow from 'app/_modules/AdvancedOptionsPanelV2/OptionsRow'
 import OptionsRowLabel from 'app/_modules/AdvancedOptionsPanelV2/OptionsRowLabel'
+
+interface SamplerOption {
+  value: string
+  label: string
+}
 
 interface SelectSamplerProps {
   hideOptions?: boolean
@@ -44,20 +50,24 @@ export default function SelectSampler({
                 model: input.models[0],
                 isImg2Img: input.source_image
               })}
-              onChange={(obj: { value: string; label: string }) => {
+              onChange={(obj: SamplerOption | SamplerOption[]) => {
+                // isMulti mirrors input.useMultiSamplers, so react-select
+                // passes an array exactly when useMultiSamplers is set.
                 if (input.useMultiSamplers) {
-                  // @ts-ignore
-                  const updateObject = obj.map((sampler) => sampler.value)
+                  const updateObject = (obj as SamplerOption[]).map(
+                    (sampler) => sampler.value
+                  )
                   setInput({ multiSamplers: updateObject })
                 } else {
-                  setInput({ sampler: obj.value })
+                  setInput({ sampler: (obj as SamplerOption).value })
                 }
               }}
               isMulti={input.useMultiSamplers}
-              // @ts-ignore
               value={
                 input.useMultiSamplers
-                  ? multiSamplerOptions
+                  ? // A multi-select takes an array. The shared Select `value`
+                    // prop is typed as a single Value (see _types/index.ts).
+                    (multiSamplerOptions as unknown as Value)
                   : input.useAllSamplers
                     ? { label: 'Use all samplers', value: '' }
                     : Samplers.dropdownValue(input.sampler)

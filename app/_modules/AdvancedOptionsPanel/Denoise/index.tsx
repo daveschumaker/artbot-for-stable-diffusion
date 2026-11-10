@@ -53,14 +53,12 @@ export default function Denoise({ hideOptions = false }: DenoiseOptions) {
       >
         {input.useMultiDenoise && (
           <Input
-            // @ts-ignore
             type="text"
             name="multiDenoise"
             onChange={(e: any) => {
               setInput({ multiDenoise: e.target.value })
             }}
             placeholder="0.2, 0.25, 0.3"
-            // @ts-ignore
             value={input.multiDenoise}
             width="100%"
           />

@@ -135,5 +135,8 @@ marker is removed, so remove it in the same change.
       layout puts every placeholder in view at first, so tiles were never really
       lazy-loaded, before or after.
 - [ ] Track down Jest's "worker failed to exit gracefully" warning.
-- [ ] Reduce the 882 `any` and `@ts-ignore` uses.
+- [x] Removed every `@ts-ignore`, `@ts-nocheck` and `@ts-expect-error` and fixed
+      the 285 type errors they hid. The `@typescript-eslint/ban-ts-comment` lint
+      rule blocks new ones.
+- [ ] Reduce the remaining explicit `any` types.
 - [ ] Review the 35 `TODO` and `FIXME` comments in the code.

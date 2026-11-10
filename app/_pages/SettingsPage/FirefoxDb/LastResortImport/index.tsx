@@ -5,14 +5,13 @@ import { useState } from 'react'
 import { addCompletedJobToDexie, getImageDetails } from 'app/_utils/db'
 import { UploadButton } from 'app/_modules/UploadButton'
 
-// @ts-ignore
-function readFileAsText(file) {
-  return new Promise((resolve, reject) => {
+function readFileAsText(file: Blob) {
+  return new Promise<string>((resolve, reject) => {
     const reader = new FileReader()
 
-    reader.onload = (event) => {
-      // @ts-ignore
-      const content = event.target.result
+    reader.onload = () => {
+      // event.target is this reader; readAsText() always produces a string result
+      const content = reader.result as string
       resolve(content)
     }
 
@@ -24,11 +23,9 @@ function readFileAsText(file) {
   })
 }
 
-// @ts-ignore
-async function parseJSONFromFile(file) {
+async function parseJSONFromFile(file: Blob) {
   try {
     const fileContent = await readFileAsText(file)
-    // @ts-ignore
     const jsonData = JSON.parse(fileContent)
     return jsonData
   } catch (error) {
@@ -40,7 +37,7 @@ async function parseJSONFromFile(file) {
 export default function LastResortImport() {
   const [loading, setLoading] = useState(false)
 
-  const handleFileSelect = async (file: any) => {
+  const handleFileSelect = async (file: File) => {
     setLoading(true)
     try {
       const jsonData = await parseJSONFromFile(file)
@@ -73,7 +70,6 @@ export default function LastResortImport() {
       <FlexRow>
         <UploadButton
           accept="application/JSON"
-          // @ts-ignore
           handleFile={handleFileSelect}
           label="Choose file"
         />

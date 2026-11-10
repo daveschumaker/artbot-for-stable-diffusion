@@ -1,7 +1,10 @@
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 
-// @ts-ignore
-export const useDebouncedEffect = (effect, deps, delay) => {
+export const useDebouncedEffect = (
+  effect: () => void,
+  deps: React.DependencyList | null | undefined,
+  delay: number
+) => {
   useEffect(() => {
     const handler = setTimeout(() => effect(), delay)
 

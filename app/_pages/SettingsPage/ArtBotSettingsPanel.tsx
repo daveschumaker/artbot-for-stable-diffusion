@@ -18,7 +18,7 @@ import { db } from 'app/_db/dexie'
 
 const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
   const [processType, setProcessType] = useState<string | null>(null)
-  const [processState, setProcessState] = useState('')
+  const [processState, setProcessState] = useState<string | undefined>('')
   const [totalToProcess, setTotalToProcess] = useState(0)
   const [currentProcessIdx, setCurrentProcessIdx] = useState(0)
 
@@ -275,12 +275,20 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
           <Button
             onClick={() => {
               setProcessType('thumbnails')
-              // @ts-ignore
-              generateThumbnails(({ total, current, state }) => {
+              const onProgress = ({
+                total,
+                current,
+                state
+              }: {
+                total: number
+                current: number
+                state?: string
+              }) => {
                 setTotalToProcess(total)
                 setCurrentProcessIdx(current)
                 setProcessState(state)
-              })
+              }
+              generateThumbnails(onProgress)
             }}
           >
             Generate thumbnails
@@ -298,8 +306,8 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
         <MaxWidth style={{ maxWidth: '240px' }}>
           <Button
             onClick={() => {
-              //@ts-ignore
-              window.artbotDownloadLogs()
+              // registered by initWindowLogger() during app initialization
+              window.artbotDownloadLogs!()
             }}
           >
             Download

@@ -21,6 +21,7 @@ import {
 declare global {
   interface Window {
     DEBUG_PENDING_JOBS?: boolean
+    DEBUG_PENDING_CACHE?: () => Promise<void>
   }
 }
 
@@ -29,6 +30,7 @@ interface IPendingJob {
   jobId?: string | undefined
   errorMessage?: string
   jobStatus: JobStatus
+  favorited?: boolean
 }
 
 interface IPendingJobs {
@@ -63,7 +65,6 @@ const DEBUG_PENDING_CACHE = async () => {
 
 export const initLoadPendingJobsFromDb = async () => {
   if (typeof window !== 'undefined') {
-    // @ts-ignore
     window.DEBUG_PENDING_CACHE = DEBUG_PENDING_CACHE
   }
 

@@ -7,11 +7,19 @@ import { Button } from 'app/_components/Button'
 import { useState } from 'react'
 import { Value } from '_types'
 import { sleep } from 'app/_utils/sleep'
+import type { MySubClassedDexie } from 'app/_db/dexie'
+
+declare global {
+  interface Window {
+    /** Set by app/_db/dexie.ts (and app/_utils/db.ts) when they load. */
+    _artbotDb?: MySubClassedDexie
+  }
+}
 
 async function downloadDbAsJson(chunkSize: number) {
   // Fetch the array from the database (replace this with your database query)
-  // @ts-ignore
-  const arr = await window._artbotDb.completed.toArray()
+  // AppInit imports app/_utils/db, which assigns window._artbotDb on load.
+  const arr = await window._artbotDb!.completed.toArray()
 
   // If 'arr' is not an array or empty, handle the error
   if (!Array.isArray(arr) || arr.length === 0) {

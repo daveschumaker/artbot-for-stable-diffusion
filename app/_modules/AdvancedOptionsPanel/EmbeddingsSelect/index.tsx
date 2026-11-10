@@ -53,8 +53,11 @@ export default function EmbeddingsSelect() {
       }
 
       const tisToUpdate = [...input.tis]
-      // @ts-ignore
-      tisToUpdate[Number(i)][key] = value
+      // key is a field name chosen by EmbeddingSettingsCard (e.g. 'strength')
+      ;(
+        tisToUpdate[Number(i)] as AiHordeEmbedding &
+          Record<string, number | string>
+      )[key] = value
 
       setInput({ tis: [...tisToUpdate] })
     },

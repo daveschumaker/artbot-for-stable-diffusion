@@ -323,6 +323,6 @@ export interface UserStore {
 }
 
 export interface Value {
-  value: string | boolean
+  value: string | boolean | null
   label: string
 }

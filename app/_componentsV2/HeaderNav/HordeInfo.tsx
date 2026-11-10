@@ -147,7 +147,6 @@ export default function HordeInfo({
         name: worker.name,
         team: worker.team?.id ?? ''
       }),
-      // @ts-ignore
       headers: {
         apikey: AppSettings.get('apiKey'),
         'Content-Type': 'application/json',

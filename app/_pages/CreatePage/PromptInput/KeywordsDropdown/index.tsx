@@ -19,7 +19,7 @@ export default function KeywordsDropdown({
   setInput,
   handleChildSizeChange = () => {}
 }: Props) {
-  const ref = useRef(null)
+  const ref = useRef<HTMLDivElement>(null)
 
   const { modelDetails } = useStore(modelStore)
   const [validLoras, setValidLoras] = useState<string[]>([])
@@ -96,7 +96,6 @@ export default function KeywordsDropdown({
     setUsedKeywords(matchingTags)
 
     if (ref.current) {
-      // @ts-ignore
       const { height, width } = ref?.current?.getBoundingClientRect()
       handleChildSizeChange({ height, width })
     }
@@ -130,54 +129,40 @@ export default function KeywordsDropdown({
           </div>
         )}
         {validModels.map((model) => (
-          <div
-            // @ts-ignore
-            key={model}
-            className="mb-2 px-2"
-          >
+          <div key={model} className="mb-2 px-2">
             <h2 className="font-[700] mb-2">{model}</h2>
             <div style={{ wordBreak: 'break-all' }}>
-              {
-                // @ts-ignore
-                modelKeywords[model].length >= 1 &&
-                  modelKeywords[model].map((element) => (
-                    <div
-                      className={styles['tag']}
-                      key={element}
-                      onClick={() => {
-                        addTagClick(element)
-                      }}
-                    >
-                      {element}
-                    </div>
-                  ))
-              }
+              {modelKeywords[model].length >= 1 &&
+                modelKeywords[model].map((element) => (
+                  <div
+                    className={styles['tag']}
+                    key={element}
+                    onClick={() => {
+                      addTagClick(element)
+                    }}
+                  >
+                    {element}
+                  </div>
+                ))}
             </div>
           </div>
         ))}
         {validLoras.map((lora) => (
-          <div
-            // @ts-ignore
-            key={lora}
-            className="mb-2 px-2"
-          >
+          <div key={lora} className="mb-2 px-2">
             <h2 className="font-[700] mb-2">{lora}</h2>
             <div style={{ wordBreak: 'break-all' }}>
-              {
-                // @ts-ignore
-                loraKeywords[lora].length >= 1 &&
-                  loraKeywords[lora].map((element) => (
-                    <div
-                      className={styles['tag']}
-                      key={element}
-                      onClick={() => {
-                        addTagClick(element)
-                      }}
-                    >
-                      {element}
-                    </div>
-                  ))
-              }
+              {loraKeywords[lora].length >= 1 &&
+                loraKeywords[lora].map((element) => (
+                  <div
+                    className={styles['tag']}
+                    key={element}
+                    onClick={() => {
+                      addTagClick(element)
+                    }}
+                  >
+                    {element}
+                  </div>
+                ))}
             </div>
           </div>
         ))}

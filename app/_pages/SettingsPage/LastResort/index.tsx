@@ -7,6 +7,7 @@ import { useState } from 'react'
 import Select from 'app/_components/Select'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import Section from 'app/_components/Section'
+import { Value } from '_types'
 
 export default function LastResort() {
   const [chunkSize, setChunkSize] = useState({ value: 250, label: 250 })
@@ -34,8 +35,9 @@ export default function LastResort() {
             setChunkSize(option)
           }}
           inputMode="none"
-          // @ts-ignore
-          value={chunkSize}
+          // Numeric options. The shared `Value` type only allows string /
+          // boolean values and string labels (see _types/index.ts).
+          value={chunkSize as unknown as Value}
           width="180px"
         />
       </Section>

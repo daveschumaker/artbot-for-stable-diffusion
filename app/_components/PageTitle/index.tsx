@@ -6,14 +6,13 @@ export default function PageTitle({
   children,
   style
 }: {
-  as?: string
+  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'div' | 'span' | 'p'
   children: ReactNode
   style?: CSSProperties
 }) {
   const Element = as
 
   return (
-    // @ts-ignore
     <Element className={styles.pageTitle} style={style}>
       {children}
     </Element>

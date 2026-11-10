@@ -85,11 +85,9 @@ const RelatedImages = ({
   const [showImageModal] = useRelatedImageModal()
 
   let imageColumns = 2
-  // @ts-ignore
-  if (size?.width > 1280) {
+  if ((size?.width ?? 0) > 1280) {
     imageColumns = 4
-    // @ts-ignore
-  } else if (size?.width > 800) {
+  } else if ((size?.width ?? 0) > 800) {
     imageColumns = 3
   }
 
@@ -118,8 +116,7 @@ const RelatedImages = ({
   // }, [parentJobId, updateRelatedImages])
 
   const handleImageClick = useCallback(
-    // @ts-ignore
-    ({ e, id, jobId }) => {
+    ({ e, id, jobId }: { e: React.MouseEvent; id: string; jobId: string }) => {
       let newArray: Array<string> = [...componentState.deleteSelection]
       if (componentState.deleteMode) {
         const index = newArray.indexOf(id)
@@ -134,7 +131,6 @@ const RelatedImages = ({
 
         onModalOpen(true)
 
-        // @ts-ignore
         showImageModal({
           jobId,
           images
@@ -283,7 +279,6 @@ const RelatedImages = ({
                     <LinkEl
                       href={`/image/${image.jobId}`}
                       passHref
-                      // @ts-ignore
                       onClick={(e) =>
                         handleImageClick({
                           e,

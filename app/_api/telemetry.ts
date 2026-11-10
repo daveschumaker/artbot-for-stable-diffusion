@@ -2,6 +2,13 @@ import { basePath } from 'BASE_PATH'
 import AppSettings from 'app/_data-models/AppSettings'
 import { logToConsole } from 'app/_utils/debugTools'
 
+declare global {
+  interface Window {
+    /** Google Analytics gtag.js, present only when the GA script loaded. */
+    gtag?: (command: string, ...args: unknown[]) => void
+  }
+}
+
 interface Params {
   action: string
   params: any
@@ -12,9 +19,7 @@ export const trackGaEvent = ({ action, params }: Params) => {
     return
   }
 
-  // @ts-ignore
   if (window.gtag) {
-    // @ts-ignore
     window.gtag('event', action, params)
   }
 }
@@ -46,7 +51,6 @@ export const trackEvent = async (obj: any = {}) => {
   //   return
   // }
 
-  // @ts-ignore
   // const { event } = obj
 
   // if (event === 'FEEDBACK_FORM') {

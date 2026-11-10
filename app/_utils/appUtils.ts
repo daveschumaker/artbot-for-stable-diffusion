@@ -51,13 +51,22 @@ export const isAppActive = () => {
   return false
 }
 
+// Non-standard browser APIs that are not part of lib.dom.d.ts
+interface NavigatorWithStandalone extends Navigator {
+  standalone?: boolean // iOS Safari
+}
+
+interface DocumentWithVendorFullscreen extends Document {
+  mozCancelFullScreen?: () => Promise<void> // Firefox
+  webkitExitFullscreen?: () => Promise<void> // Safari
+}
+
 export const isInstalledPwa = () => {
   if (typeof window === 'undefined') {
     return false
   }
 
-  // @ts-ignore
-  if (window?.navigator?.standalone) {
+  if ((window?.navigator as NavigatorWithStandalone | undefined)?.standalone) {
     // Installed on iOS
     return true
   } else if (window?.matchMedia('(display-mode: standalone)')?.matches) {
@@ -163,16 +172,13 @@ export const enterFullScreen = (element: any) => {
 }
 
 export const exitFullscreen = () => {
-  if (document.exitFullscreen) {
-    document.exitFullscreen()
-    // @ts-ignore
-  } else if (document.mozCancelFullScreen) {
-    // @ts-ignore
-    document.mozCancelFullScreen()
-    // @ts-ignore
-  } else if (document.webkitExitFullscreen) {
-    // @ts-ignore
-    document.webkitExitFullscreen()
+  const doc = document as DocumentWithVendorFullscreen
+  if (doc.exitFullscreen) {
+    doc.exitFullscreen()
+  } else if (doc.mozCancelFullScreen) {
+    doc.mozCancelFullScreen()
+  } else if (doc.webkitExitFullscreen) {
+    doc.webkitExitFullscreen()
   }
 }
 

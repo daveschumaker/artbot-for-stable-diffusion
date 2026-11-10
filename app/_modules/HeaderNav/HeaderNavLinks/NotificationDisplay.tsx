@@ -7,12 +7,14 @@ import { useEffect, useState } from 'react'
 import AppSettings from 'app/_data-models/AppSettings'
 import { usePathname } from 'next/navigation'
 
+type AppNotification = (typeof appInfoStore.state)['notification']
+
 export default function NotificationDisplay() {
   const pathname = usePathname()
   const [isLoaded, setIsLoaded] = useState(false)
 
-  const { notification = {} } = useStore(appInfoStore)
-  // @ts-ignore
+  const { notification = {} as Partial<AppNotification> } =
+    useStore(appInfoStore)
   const { title, content, timestamp = 0 } = notification
   const [viewed, setViewed] = useState(true)
 

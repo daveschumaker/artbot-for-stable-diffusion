@@ -1,4 +1,5 @@
 import memoize from 'memoizee'
+import type { ExportProgress } from 'dexie-export-import/dist/export'
 
 import { db } from 'app/_db/dexie'
 import {
@@ -11,14 +12,29 @@ import { SourceProcessing } from './promptUtils'
 import { deletePendingJobs } from 'app/_controllers/pendingJobsCache'
 import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 
+interface ThumbnailProgress {
+  total: number
+  current: number
+  state?: string
+}
+
 export const dbImport = async (blob: Blob) => {
   const { importDB } = await import('dexie-export-import')
   await importDB(blob)
   return true
 }
 
-export const dbExport = async (progressCallback?: () => any) => {
+export const dbExport = async (
+  onProgress?: (progress: ExportProgress) => void
+) => {
   const { exportDB } = await import('dexie-export-import')
+  // Dexie's type wants a boolean, but it ignores the return value.
+  const progressCallback = onProgress
+    ? (progress: ExportProgress) => {
+        onProgress(progress)
+        return false
+      }
+    : undefined
   const blob = await exportDB(db, { prettyJson: true, progressCallback })
   return blob
 }
@@ -63,7 +79,9 @@ export const getJobImagesFromDexie = async (jobId: string) => {
   return await db.images.where('jobId').equals(jobId).toArray()
 }
 
-export const generateThumbnails = async (cb = ({}: {}) => {}) => {
+export const generateThumbnails = async (
+  cb: (progress: ThumbnailProgress) => void = () => {}
+) => {
   let total = await countCompletedJobs()
   let current = 0
 
@@ -348,7 +366,6 @@ export const filterCompletedJobs = async ({
   let imageIndex = 1
 
   const filterFunc = (entry: any) => {
-    // @ts-ignore
     callback(imageIndex)
     imageIndex++
 
@@ -489,8 +506,10 @@ export const updatePendingJobInDexieByJobId = async (
   }
 }
 
-// @ts-ignore
-export const updateCompletedJob = async (tableId: number, updatedObject) => {
+export const updateCompletedJob = async (
+  tableId: number,
+  updatedObject: object
+) => {
   db.completed.update(tableId, updatedObject)
 }
 
@@ -511,8 +530,8 @@ export const addPendingJobToDexie = async (jobDetails: CreateImageRequest) => {
   const jobExists = await getPendingJobDetails(jobDetails.jobId)
 
   if (!jobExists) {
-    // @ts-ignore
-    delete jobDetails.id
+    // Let Dexie assign a new auto-increment id.
+    delete (jobDetails as { id?: number }).id
 
     const info = await db.pending.add(jobDetails)
     return info
@@ -522,7 +541,6 @@ export const addPendingJobToDexie = async (jobDetails: CreateImageRequest) => {
   }
 }
 
-// @ts-ignore
 export const updatePendingJobInDexie = async (
   tableId: number,
   updatedObject: any
@@ -642,7 +660,6 @@ export const initDb = () => {
 
 declare const window: any
 if (typeof window !== 'undefined') {
-  // @ts-ignore
   window._artbotDb = db
   window._artbotDb.getImageDetails = getImageDetails
   window._artbotDb.imageCount = imageCount

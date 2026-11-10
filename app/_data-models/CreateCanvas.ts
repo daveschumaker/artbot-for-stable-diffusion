@@ -41,7 +41,8 @@ export let hoveredColor: string = '#ffffff'
 
 interface IParams {
   bgColor: string
-  canvas: Canvas
+  // CreateCanvas.init returns undefined if fabric fails to create the canvas.
+  canvas: Canvas | undefined
   canvasId?: string
   canvasType?: string
   height?: number
@@ -51,7 +52,7 @@ interface IParams {
 
 class CreateCanvas {
   bgColor: string
-  canvas: Canvas | null
+  canvas: Canvas | null | undefined
   canvasType: string
   brushPreview: Circle | null
   brushSettings: {
@@ -162,24 +163,30 @@ class CreateCanvas {
       return
     }
 
-    if (this.canvasType === 'drawing' && getSavedDrawingState()) {
+    // The saved drawing state only changes through saveDrawingState and
+    // resetSavedDrawingState, neither of which runs during this block, so one
+    // read is equivalent to re-reading it for every field.
+    const savedDrawing =
+      this.canvasType === 'drawing' ? getSavedDrawingState() : false
+
+    if (savedDrawing) {
       this.undoHistory = [...getSavedHistoryState().undo]
       this.redoHistory = [...getSavedHistoryState().redo]
 
-      this.height = getSavedDrawingState().canvasHeight
-      this.width = getSavedDrawingState().canvasWidth
+      this.height = savedDrawing.canvasHeight
+      this.width = savedDrawing.canvasWidth
 
       this.canvas.remove(this.drawLayer)
-      this.drawLayer = getSavedDrawingState().savedDrawingState
+      this.drawLayer = savedDrawing.savedDrawingState
       this.canvas.add(this.drawLayer)
 
       this.canvas.setDimensions({
-        height: getSavedDrawingState().canvasHeight,
-        width: getSavedDrawingState().canvasWidth
+        height: savedDrawing.canvasHeight,
+        width: savedDrawing.canvasWidth
       })
 
-      if (getSavedDrawingState().savedDrawingBaseImage) {
-        this.imageLayer = getSavedDrawingState().savedDrawingBaseImage
+      if (savedDrawing.savedDrawingBaseImage) {
+        this.imageLayer = savedDrawing.savedDrawingBaseImage
 
         if (this.imageLayer) {
           this.canvas.insertAt(0, this.imageLayer)
@@ -204,10 +211,10 @@ class CreateCanvas {
 
       const objects = this.canvas.getObjects()
 
-      // @ts-ignore
-      this.drawLayer = objects[1]
-      // @ts-ignore
-      this.brushPreview = objects[2]
+      // The saved JSON is built by this class: index 1 is the draw layer group
+      // and index 2 is the brush preview circle.
+      this.drawLayer = objects[1] as Group
+      this.brushPreview = objects[2] as Circle
 
       if (getCanvasStore().maskLayer) {
         this.createMaskLayer()
@@ -248,7 +255,6 @@ class CreateCanvas {
         image.filters.push(new filters.Invert())
 
         // Main filter
-        //@ts-ignore
         // image.filters.push(new fabric.Image.filters.BlackWhite())
 
         // // Remove minor gray tones ( #000, #FFF only )
@@ -420,8 +426,10 @@ class CreateCanvas {
     }
 
     // Temporarily clone and remove brush layer on autosave so brush outline isn't saved to canvas
-    //@ts-ignore
-    this.canvas.remove(this.brushPreview)
+    // canvas.remove is a no-op for a null brushPreview.
+    if (this.brushPreview) {
+      this.canvas.remove(this.brushPreview)
+    }
 
     // TODO: Save imageLayer and maskLayer to image job for later look ups! (And to selectively toggle mask)
     const data = {
@@ -636,7 +644,6 @@ class CreateCanvas {
         let newHeight = image.height || 512
         let newWidth = containerWidth
 
-        // @ts-ignore
         if (image?.width > containerWidth && image.width >= image.height) {
           newHeight = getCanvasHeight({
             baseHeight: image.height,
@@ -645,8 +652,6 @@ class CreateCanvas {
           })
 
           image.scaleToWidth(containerWidth)
-
-          // @ts-ignore
         } else if (image.height > image.width && image.width > containerWidth) {
           newHeight = getCanvasHeight({
             baseHeight: image.height,
@@ -932,10 +937,10 @@ class CreateCanvas {
 
     if (this.maskLayer) {
       if (inverted) {
-        // @ts-ignore
-        const inverted: Canvas = await CreateCanvas.invert(
+        // invert resolves to a Canvas when returnString is not set.
+        const inverted = (await CreateCanvas.invert(
           this.maskLayer.toDataURL({ format: 'webp', multiplier: 1 })
-        )
+        )) as Canvas
         this.download(
           inverted.toDataURL({ format: 'webp', multiplier: 1 }),
           'mask'
@@ -1080,10 +1085,8 @@ class CreateCanvas {
 
     const canvasContext = this.canvas.getContext()
     const mousePointer = this.canvas.getScenePoint(e.e)
-    // @ts-ignore
-    const x = parseInt(mousePointer.x)
-    // @ts-ignore
-    const y = parseInt(mousePointer.y)
+    const x = parseInt(String(mousePointer.x))
+    const y = parseInt(String(mousePointer.y))
     // get the color array for the pixel under the mouse
     const pixel = canvasContext.getImageData(x, y, 1, 1).data
     const color = {

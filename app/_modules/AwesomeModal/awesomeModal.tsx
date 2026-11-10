@@ -15,6 +15,13 @@ import TooltipComponent from 'app/_components/TooltipComponent'
 import useLockedBody from 'app/_hooks/useLockedBody'
 import { debounce } from 'app/_utils/debounce'
 
+/** Props injected into each child of the modal. */
+interface ModalChildProps {
+  handleClose?: () => void
+  modalHeight?: number
+  style?: CSSProperties
+}
+
 interface Props {
   children?: React.ReactNode
   className?: string
@@ -152,16 +159,13 @@ function AwesomeModal({
           id="modal_content"
           style={{
             overflowY: 'auto',
-            // @ts-ignore
             maxHeight: !label ? maxHeight - 38 : maxHeight - 56
           }}
         >
           {React.Children.map(children, (child) => {
-            if (React.isValidElement(child)) {
+            if (React.isValidElement<ModalChildProps>(child)) {
               return React.cloneElement(child, {
-                // @ts-ignore
                 handleClose: onClose,
-                // @ts-ignore
                 modalHeight: maxHeight - 72,
                 style: {
                   paddingBottom: !label ? '38px' : 0

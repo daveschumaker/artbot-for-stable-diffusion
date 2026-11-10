@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useState } from 'react'
 import { fetchRelatedImages } from 'app/_utils/db'
 import ImageSquare from 'app/_modules/ImageSquare'
+import { JobImageDetails } from '_types'
 
 const RelatedImages = ({ jobId }: { jobId: string }) => {
-  const [images, setImages] = useState([])
+  const [images, setImages] = useState<
+    Array<JobImageDetails & { jobId: string }>
+  >([])
 
   const fetchImages = useCallback(async () => {
     if (!jobId) {
@@ -24,7 +27,6 @@ const RelatedImages = ({ jobId }: { jobId: string }) => {
         images.map((image, i) => {
           return (
             <ImageSquare
-              // @ts-ignore
               key={`${image.jobId}_${i}`}
               imageDetails={image}
               size={80}

@@ -68,14 +68,15 @@ let savedHistory: ISavedHistory = {
   redo: []
 }
 
-export const getSavedDrawingState = (): {
+export interface SavedDrawingState {
   savedDrawingState: any
   canvasHeight: number
   canvasWidth: number
   savedDrawingBaseImage?: any
-} => {
+}
+
+export const getSavedDrawingState = (): SavedDrawingState | false => {
   if (savedDrawingState === null || !savedDrawingState) {
-    // @ts-ignore
     return false
   }
 

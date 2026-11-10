@@ -151,7 +151,6 @@ const InterrogatePage = () => {
       })
       const data = await resp.json()
 
-      // @ts-ignore
       const { success, imageType, imgBase64String } = data
 
       if (success) {

@@ -75,7 +75,9 @@ const ToolBar = ({
   handleNewCanvas,
   handleRemoveClick
 }: {
-  canvas: CreateCanvas
+  // Undefined until the Editor's mount effect creates the canvas. Event
+  // handlers only run after that effect, so they use a non-null assertion.
+  canvas: CreateCanvas | undefined
   canvasType?: string
   toolbarClassName?: string
   handleNewCanvas: any
@@ -140,7 +142,7 @@ const ToolBar = ({
       width: data.width
     })
 
-    canvas.importImage()
+    canvas!.importImage()
     setShowMainMenu(false)
     setShowUploadModal(false)
   }
@@ -252,7 +254,7 @@ const ToolBar = ({
                 if (activeBrush !== 'picker') {
                   setActiveBrush('picker')
                   canvas?.setDrawingMode(true)
-                  canvas.colorPicker(true, (colorString: string) => {
+                  canvas!.colorPicker(true, (colorString: string) => {
                     CanvasSettings.set('brushColor', colorString)
                     setColor(colorString)
                     setActiveBrush('paint')
@@ -261,7 +263,7 @@ const ToolBar = ({
                     canvas?.updateBrush({ color: colorString })
                   })
                 } else {
-                  canvas.colorPicker(false)
+                  canvas!.colorPicker(false)
                   setActiveBrush('paint')
                 }
               }}
@@ -341,7 +343,7 @@ const ToolBar = ({
             <DropDownItem
               handleClick={() => {
                 const data: { base64: string; height: number; width: number } =
-                  canvas.exportToDataUrl()
+                  canvas!.exportToDataUrl()
                 const { base64 = '', height = 512, width = 512 } = data
 
                 setBase64FromDraw({
@@ -358,7 +360,7 @@ const ToolBar = ({
             <DropDownItem
               handleClick={() => {
                 const data: { base64: string; height: number; width: number } =
-                  canvas.exportToDataUrl()
+                  canvas!.exportToDataUrl()
                 const { base64 = '', height = 512, width = 512 } = data
 
                 setBase64FromDraw({
@@ -375,7 +377,7 @@ const ToolBar = ({
             <div className="w-full pt-[4px] mb-[4px] border-b-[1px] border-b-slate-300 h-[3px] flex flex-row" />
             <DropDownItem
               handleClick={() => {
-                canvas.saveToDisk()
+                canvas!.saveToDisk()
               }}
             >
               <IconDownload size={20} />
@@ -400,7 +402,7 @@ const ToolBar = ({
                 })
 
                 setShowMainMenu(false)
-                canvas.importImage()
+                canvas!.importImage()
               }}
             >
               <PhotoCheck size={20} />

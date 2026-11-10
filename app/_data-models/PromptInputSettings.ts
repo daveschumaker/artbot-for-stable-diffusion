@@ -10,7 +10,10 @@ class PromptInputSettingsClass {
   updateSavedInput_NON_DEBOUNCED = async (
     input: DefaultPromptInput = {} as DefaultPromptInput
   ) => {
-    const clonedInput = Object.assign({}, input)
+    const clonedInput: Record<string, unknown> = Object.assign<
+      Record<string, unknown>,
+      DefaultPromptInput
+    >({}, input)
 
     // Clone to prompt input settings
     const keysToExclude = [
@@ -24,8 +27,7 @@ class PromptInputSettingsClass {
 
     const filteredObject = Object.keys(clonedInput)
       .filter((key) => !keysToExclude.includes(key))
-      .reduce((acc, key) => {
-        // @ts-ignore
+      .reduce<Record<string, unknown>>((acc, key) => {
         acc[key] = clonedInput[key]
         return acc
       }, {})

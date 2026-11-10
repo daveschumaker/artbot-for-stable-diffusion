@@ -316,10 +316,7 @@ const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
             slower.
           </div>
         </SubSectionTitle>
-        <MaxWidth
-          // @ts-ignore
-          width="240px"
-        >
+        <MaxWidth>
           <Select
             isSearchable={false}
             onChange={(obj: any) => handleUpdateSelect('useTrusted', obj)}

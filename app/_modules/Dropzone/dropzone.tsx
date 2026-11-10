@@ -36,17 +36,18 @@ export default function Dropzone(props: UploaderProps) {
         const { readAndCompressImage } = await import('browser-image-resizer')
         let resizedImage = await readAndCompressImage(acceptedFile, imgConfig)
 
-        let fullDataString
+        let fullDataString: string | undefined
 
         if (resizedImage) {
-          fullDataString = await getBase64(resizedImage)
+          // getBase64 uses FileReader.readAsDataURL, which always yields a
+          // string.
+          fullDataString = (await getBase64(resizedImage)) as string
         }
 
         if (!fullDataString) {
           return
         }
 
-        // @ts-ignore
         const [fileType, imgBase64String] = fullDataString.split(';base64,')
         const [, imageType] = fileType.split('data:')
 
@@ -60,9 +61,7 @@ export default function Dropzone(props: UploaderProps) {
           handleUpload({
             imageType,
             source_image: croppedBase64,
-            //@ts-ignore
             height: nearestWholeMultiple(croppedHeight),
-            //@ts-ignore
             width: nearestWholeMultiple(croppedWidth)
           })
         } catch (error) {

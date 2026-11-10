@@ -61,7 +61,6 @@ const HordeDropdown = () => {
           name: workers[workerId].name,
           team: workers[workerId].team?.id ?? ''
         }),
-        // @ts-ignore
         headers: {
           apikey: AppSettings.get('apiKey'),
           'Content-Type': 'application/json',

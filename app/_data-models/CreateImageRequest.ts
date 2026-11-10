@@ -388,10 +388,11 @@ class CreateImageRequest {
       useXyPlot: false,
       width: imageDetails.width,
 
-      // @ts-ignore
-      workflow: imageDetails.workflow,
-      // @ts-ignore
-      extra_texts: imageDetails.extra_texts
+      // Records loaded from IndexedDB can lack these fields, so they can be
+      // undefined here even though DefaultPromptInput declares them required.
+      // The value is passed through unchanged.
+      workflow: imageDetails.workflow as DefaultPromptInput['workflow'],
+      extra_texts: imageDetails.extra_texts as DefaultPromptInput['extra_texts']
     }
 
     return promptInput

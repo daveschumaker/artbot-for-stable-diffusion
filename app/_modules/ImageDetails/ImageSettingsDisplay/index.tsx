@@ -16,10 +16,13 @@ import { arrayHasValue } from 'app/_utils/validationUtils'
 import FlexRow from 'app/_components/FlexRow'
 import { showSuccessToast } from 'app/_utils/notificationUtils'
 
+// Images created by older versions of ArtBot stored a single `model` string.
+type ImageDetailsWithLegacyModel = CreateImageRequest & { model?: string }
+
 export default function ImageSettingsDisplay({
   imageDetails
 }: {
-  imageDetails: CreateImageRequest
+  imageDetails: ImageDetailsWithLegacyModel
 }) {
   const [showRequestParams, setShowRequestParams] = useState(false)
 
@@ -38,7 +41,6 @@ export default function ImageSettingsDisplay({
   }
 
   const modelName =
-    // @ts-ignore // imageDetails.model is deprecated. Old instances of ArtBot may still use this.
     imageDetails && (imageDetails?.models[0] || imageDetails?.model)
   const isImg2Img =
     imageDetails.source_processing === SourceProcessing.Img2Img ||
@@ -290,7 +292,6 @@ export default function ImageSettingsDisplay({
             )}
           </div>
           {/* {
-              // @ts-ignore
               size.width >= 800 && isModal && (
                 <div className="w-[154px]">
                   <AdContainer id="cardbonads_img_modal" />

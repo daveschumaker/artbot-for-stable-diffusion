@@ -5,6 +5,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useEffectOnce } from 'app/_hooks/useEffectOnce'
 import AppSettings from 'app/_data-models/AppSettings'
 import { JobStatus } from '_types'
+import CreateImageRequest from 'app/_data-models/CreateImageRequest'
 import {
   deleteDoneFromPending,
   deletePendingJobFromDb,
@@ -39,7 +40,7 @@ const PendingPage = () => {
   const [showFilterDropdown, setShowFilterDropdown] = useState(false)
   const [showSettingsDropdown, setShowSettingsDropdown] = useState(false)
 
-  const [pendingImages, setPendingImages] = useState([])
+  const [pendingImages, setPendingImages] = useState<CreateImageRequest[]>([])
   const [pendingJobUpdateTimestamp] = useState(0)
   const [initLoad, setInitLoad] = useState(true)
 
@@ -51,7 +52,6 @@ const PendingPage = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      // @ts-ignore
       setPendingImages(getAllPendingJobs())
       setInitLoad(false)
     }, 250)
@@ -156,7 +156,6 @@ const PendingPage = () => {
    * but never removed from pending items table, resulting in all sorts of errors.
    */
   const verifyImagesExist = useCallback(async () => {
-    // @ts-ignore
     if (typeof window !== 'undefined' && window.DEBUG_PENDING_JOBS) {
       console.log(`pendingPage#verifyImagesExist`)
     }

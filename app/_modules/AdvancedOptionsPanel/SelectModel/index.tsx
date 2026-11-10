@@ -177,7 +177,6 @@ const SelectModel = ({
           isDisabled={selectDisabled}
           isMulti={showMultiModel}
           isSearchable={true}
-          // @ts-ignore
           formatOptionLabel={(option, { context }) => {
             if (context === 'menu') {
               return (

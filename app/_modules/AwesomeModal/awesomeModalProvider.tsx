@@ -13,10 +13,13 @@ interface ContentHeightContextType {
   maxModalHeight: number | string
 }
 
-// @ts-ignore
-export const ContentHeight = createContext<ContentHeightContextType>({})
+// The default value is an empty object, so outside of a provider every field
+// is undefined.
+export const ContentHeight = createContext<Partial<ContentHeightContextType>>(
+  {}
+)
 
-export const useContentHeight = (): ContentHeightContextType => {
+export const useContentHeight = (): Partial<ContentHeightContextType> => {
   const context = useContext(ContentHeight)
   if (!context) {
     throw new Error(

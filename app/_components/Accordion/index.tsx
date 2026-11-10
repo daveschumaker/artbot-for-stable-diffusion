@@ -1,5 +1,11 @@
 import React, { Children, useState } from 'react'
 
+/** Props injected into each child item (e.g. AccordionItem). */
+interface AccordionChildProps {
+  isOpen?: boolean
+  onClick?: () => void
+}
+
 const Accordion = ({
   children,
   forceOpen
@@ -16,9 +22,8 @@ const Accordion = ({
   return (
     <div className="accordion">
       {Children.map(children, (child, index) => {
-        if (React.isValidElement(child)) {
+        if (React.isValidElement<AccordionChildProps>(child)) {
           return React.cloneElement(child, {
-            //@ts-ignore
             isOpen: forceOpen || activeIndex === index,
             onClick: () => handleItemClick(index)
           })

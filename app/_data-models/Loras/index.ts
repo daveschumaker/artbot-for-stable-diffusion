@@ -18,6 +18,7 @@ export interface LoraModelVersion {
     downloadCount: number
   }
   files: Array<{
+    name: string
     sizeKB: number
   }>
 }
@@ -81,7 +82,6 @@ class Loras {
 
         const { files } = model
         const sizeKb = files[0].sizeKB
-        // @ts-ignore
         const loraName = model.files[0].name.split('.')[0]
 
         totalSizeKb += sizeKb

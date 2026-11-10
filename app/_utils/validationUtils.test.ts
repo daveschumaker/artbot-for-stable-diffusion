@@ -58,8 +58,11 @@ describe('validationUtils', () => {
 
     testCases.forEach((instance) => {
       test(instance.description, () => {
-        // @ts-ignore
-        expect(hasSourceImg(instance.input)).toBe(instance.result)
+        // Some cases deliberately pass malformed input to exercise the
+        // runtime type check.
+        expect(
+          hasSourceImg(instance.input as Parameters<typeof hasSourceImg>[0])
+        ).toBe(instance.result)
       })
     })
   })
@@ -90,7 +93,6 @@ describe('validationUtils', () => {
 
     testCases.forEach((instance) => {
       test(instance.description, () => {
-        // @ts-ignore
         expect(validSampler(instance.sampler)).toBe(instance.result)
       })
     })
@@ -122,7 +124,6 @@ describe('validationUtils', () => {
 
     testCases.forEach((instance) => {
       test(instance.description, () => {
-        // @ts-ignore
         expect(isValidHttpUrl(instance.string)).toBe(instance.result)
       })
     })

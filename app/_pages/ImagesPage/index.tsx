@@ -53,6 +53,18 @@ import ImageSquare from 'app/_modules/ImageSquare'
 import Pagination from 'app/_components/Pagination'
 import Image from './Image'
 
+// parseQueryString returns booleans for "true" / "false" values. URLSearchParams
+// stringifies every value, so convert explicitly to match its accepted type.
+const toSearchParamsInit = (
+  query: Record<string, string | boolean>
+): Record<string, string> => {
+  const result: Record<string, string> = {}
+  for (const [key, value] of Object.entries(query)) {
+    result[key] = String(value)
+  }
+  return result
+}
+
 const MenuSeparator = styled.div`
   width: 100%;
   border-bottom: 1px solid ${(props) => props.theme.navLinkActive};
@@ -298,8 +310,9 @@ const ImagesPage = () => {
           parseQueryString(window?.location?.search)
         )
         newQuery.offset = String(count - LIMIT)
-        //@ts-ignore
-        router.push(`?${new URLSearchParams(newQuery).toString()}`)
+        router.push(
+          `?${new URLSearchParams(toSearchParamsInit(newQuery)).toString()}`
+        )
         return
       }
 
@@ -321,8 +334,9 @@ const ImagesPage = () => {
           parseQueryString(window?.location?.search)
         )
         delete newQuery.offset
-        //@ts-ignore
-        router.push(`?${new URLSearchParams(newQuery).toString()}`)
+        router.push(
+          `?${new URLSearchParams(toSearchParamsInit(newQuery)).toString()}`
+        )
         return
       }
 
@@ -354,8 +368,9 @@ const ImagesPage = () => {
         parseQueryString(window?.location?.search)
       )
       newQuery.offset = newNum
-      //@ts-ignore
-      router.push(`?${new URLSearchParams(newQuery).toString()}`)
+      router.push(
+        `?${new URLSearchParams(toSearchParamsInit(newQuery)).toString()}`
+      )
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [componentState.offset, componentState.totalImages, setComponentState]
@@ -390,11 +405,9 @@ const ImagesPage = () => {
       : componentState.offset + LIMIT
 
   let imageColumns = 2
-  // @ts-ignore
-  if (size?.width > 1280) {
+  if ((size?.width ?? 0) > 1280) {
     imageColumns = 4
-    // @ts-ignore
-  } else if (size?.width > 800) {
+  } else if ((size?.width ?? 0) > 800) {
     imageColumns = 3
   }
 
@@ -414,7 +427,6 @@ const ImagesPage = () => {
         e.preventDefault()
         e.stopPropagation()
 
-        // @ts-ignore
         showImageModal({
           images: componentState.images,
           jobId
@@ -562,22 +574,22 @@ const ImagesPage = () => {
   }, [setComponentState])
 
   useEffect(() => {
-    const updateObject = {
+    const updateObject: {
+      isLoading: boolean
+      filterMode?: string | null
+      offset?: number
+      sortMode?: string | null
+    } = {
       isLoading: true
     }
 
-    // @ts-ignore
     if (searchParams?.get('model')) updateObject.filterMode = 'model'
     if (searchParams?.get('filter'))
-      // @ts-ignore
       updateObject.filterMode = searchParams?.get('filter')
     if (searchParams?.get('offset'))
-      // @ts-ignore
       updateObject.offset = Number(searchParams?.get('offset'))
-    //@ts-ignore
     if (!searchParams?.get('offset')) updateObject.offset = 0
     if (searchParams?.get('sort'))
-      // @ts-ignore
       updateObject.sortMode = searchParams?.get('sort')
 
     setComponentState(updateObject)
@@ -633,8 +645,9 @@ const ImagesPage = () => {
         parseQueryString(window?.location?.search)
       )
       newQuery.offset = String(newOffset)
-      //@ts-ignore
-      router.push(`?${new URLSearchParams(newQuery).toString()}`)
+      router.push(
+        `?${new URLSearchParams(toSearchParamsInit(newQuery)).toString()}`
+      )
     },
     [LIMIT, componentState.totalImages, router, setComponentState]
   )
@@ -735,8 +748,7 @@ const ImagesPage = () => {
                     delete newQuery.filter
                     delete newQuery.model
                     router.push(
-                      //@ts-ignore
-                      `?${new URLSearchParams(newQuery).toString()}`
+                      `?${new URLSearchParams(toSearchParamsInit(newQuery)).toString()}`
                     )
                   }}
                 >
@@ -755,8 +767,7 @@ const ImagesPage = () => {
                     )
                     newQuery.filter = 'favorited'
                     router.push(
-                      //@ts-ignore
-                      `?${new URLSearchParams(newQuery).toString()}`
+                      `?${new URLSearchParams(toSearchParamsInit(newQuery)).toString()}`
                     )
                   }}
                 >
@@ -775,8 +786,7 @@ const ImagesPage = () => {
                     )
                     newQuery.filter = 'unfavorited'
                     router.push(
-                      //@ts-ignore
-                      `?${new URLSearchParams(newQuery).toString()}`
+                      `?${new URLSearchParams(toSearchParamsInit(newQuery)).toString()}`
                     )
                   }}
                 >
@@ -795,8 +805,7 @@ const ImagesPage = () => {
                     )
                     newQuery.filter = 'upscaled'
                     router.push(
-                      //@ts-ignore
-                      `?${new URLSearchParams(newQuery).toString()}`
+                      `?${new URLSearchParams(toSearchParamsInit(newQuery)).toString()}`
                     )
                   }}
                 >
@@ -816,8 +825,7 @@ const ImagesPage = () => {
                     )
                     newQuery.filter = 'text2img'
                     router.push(
-                      //@ts-ignore
-                      `?${new URLSearchParams(newQuery).toString()}`
+                      `?${new URLSearchParams(toSearchParamsInit(newQuery)).toString()}`
                     )
                   }}
                 >
@@ -836,8 +844,7 @@ const ImagesPage = () => {
                     )
                     newQuery.filter = 'img2img'
                     router.push(
-                      //@ts-ignore
-                      `?${new URLSearchParams(newQuery).toString()}`
+                      `?${new URLSearchParams(toSearchParamsInit(newQuery)).toString()}`
                     )
                   }}
                 >
@@ -856,8 +863,7 @@ const ImagesPage = () => {
                     )
                     newQuery.filter = 'inpainting'
                     router.push(
-                      //@ts-ignore
-                      `?${new URLSearchParams(newQuery).toString()}`
+                      `?${new URLSearchParams(toSearchParamsInit(newQuery)).toString()}`
                     )
                   }}
                 >
@@ -937,8 +943,9 @@ const ImagesPage = () => {
                     parseQueryString(window?.location?.search)
                   )
                   delete newQuery.sort
-                  //@ts-ignore
-                  router.push(`?${new URLSearchParams(newQuery).toString()}`)
+                  router.push(
+                    `?${new URLSearchParams(toSearchParamsInit(newQuery)).toString()}`
+                  )
 
                   trackEvent({
                     event: `MENU_CLICK`,
@@ -963,8 +970,9 @@ const ImagesPage = () => {
                     parseQueryString(window?.location?.search)
                   )
                   newQuery.sort = 'old'
-                  //@ts-ignore
-                  router.push(`?${new URLSearchParams(newQuery).toString()}`)
+                  router.push(
+                    `?${new URLSearchParams(toSearchParamsInit(newQuery)).toString()}`
+                  )
 
                   trackEvent({
                     event: `MENU_CLICK`,
@@ -1113,7 +1121,6 @@ const ImagesPage = () => {
                         <LinkEl
                           href={`/image/${image.jobId}`}
                           passHref
-                          //@ts-ignore
                           onClick={(e) =>
                             handleImageClick(e, image.id, image.jobId)
                           }
@@ -1198,7 +1205,6 @@ const ImagesPage = () => {
                         <LinkEl
                           href={`/image/${image.jobId}`}
                           passHref
-                          //@ts-ignore
                           onClick={(e) =>
                             handleImageClick(e, image.id, image.jobId)
                           }

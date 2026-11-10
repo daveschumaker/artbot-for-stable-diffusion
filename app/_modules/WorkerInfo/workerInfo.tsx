@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { useState } from 'react'
+import { HTMLAttributes, useState } from 'react'
 import styled from 'styled-components'
 import AppSettings from 'app/_data-models/AppSettings'
 import { setWorker } from 'app/_store/userStore'
@@ -20,6 +20,14 @@ import {
   IconPoint
 } from '@tabler/icons-react'
 import { fetchUserDetailsV2 } from 'app/_api/fetchUserDetailsV2'
+
+// React's typings omit the `name` attribute on anchors.
+declare module 'react' {
+  interface AnchorHTMLAttributes<T> extends HTMLAttributes<T> {
+    /** Obsolete in HTML5 but still honored for #fragment navigation. */
+    name?: string | undefined
+  }
+}
 
 const WorkerTitle = styled.div`
   align-items: center;
@@ -99,7 +107,6 @@ const WorkerInfo = ({
         name: worker.name,
         team: worker.team?.id ?? ''
       }),
-      // @ts-ignore
       headers: {
         apikey: AppSettings.get('apiKey'),
         'Content-Type': 'application/json',
@@ -131,10 +138,7 @@ const WorkerInfo = ({
       >
         <div>
           <WorkerTitle>
-            <a
-              // @ts-ignore
-              name={worker.id}
-            />
+            <a name={worker.id} />
             <IconPoint size={28} fill={statusColor} stroke={statusColor} />
             <strong>{worker.name}</strong>
           </WorkerTitle>

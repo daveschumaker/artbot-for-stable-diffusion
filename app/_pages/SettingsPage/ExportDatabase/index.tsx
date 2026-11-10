@@ -1,5 +1,6 @@
 import SpinnerV2 from 'app/_components/Spinner'
 import { Button } from 'app/_components/Button'
+import type { ExportProgress } from 'dexie-export-import/dist/export'
 import Section from 'app/_components/Section'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { useState } from 'react'
@@ -30,14 +31,16 @@ export default function ExportDatabase() {
       <div className="flex flex-row">
         <Button
           onClick={async () => {
-            //@ts-ignore
-            function progressCallback({ completedRows, totalRows }) {
+            function progressCallback({
+              completedRows,
+              totalRows
+            }: ExportProgress) {
               setProgress(completedRows)
-              setTotalRows(totalRows)
+              // Dexie counts rows before its first progress call.
+              setTotalRows(totalRows as number)
             }
 
             setLoading(true)
-            //@ts-ignore
             const blob = await dbExport(progressCallback)
             downloadBlob(blob, `artbot-db_${formatDate()}.json`)
             showSuccessToast({ message: 'ArtBot database downloaded!' })

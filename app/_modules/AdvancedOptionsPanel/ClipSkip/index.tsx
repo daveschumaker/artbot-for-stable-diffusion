@@ -33,14 +33,12 @@ export default function ClipSkip({ hideOptions = false }: ClipSkipOptions) {
       <FlexRow style={{ columnGap: '7px', position: 'relative' }}>
         {input.useMultiClip && (
           <Input
-            // @ts-ignore
             type="text"
             name="multiClip"
             onChange={(e: any) => {
               setInput({ multiClip: e.target.value })
             }}
             placeholder="3,5,7,9"
-            // @ts-ignore
             value={input.multiClip}
             width="100%"
           />

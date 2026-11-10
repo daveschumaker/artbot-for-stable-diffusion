@@ -6,15 +6,15 @@ import Linker from 'app/_components/Linker'
 
 interface Tip {
   id: string
-  content: React.ReactNode | string | null | undefined
-  linkTitle: string
-  linkUrl: string
+  content: () => React.ReactNode
+  linkTitle?: string
+  linkUrl?: string
 }
 const PendingTips = React.memo(() => {
-  const [tip, setTip] = useState<Tip>()
+  const [tip, setTip] = useState<Tip | false>()
 
   useEffect(() => {
-    setTip(getRandomTip() as any)
+    setTip(getRandomTip())
   }, [])
 
   if (!tip) return null
@@ -31,12 +31,7 @@ const PendingTips = React.memo(() => {
         />
         ArtBot tip:
       </div>
-      <div className="text-xs">
-        {
-          // @ts-ignore
-          tip.content()
-        }
-      </div>
+      <div className="text-xs">{tip.content()}</div>
       {tip.linkTitle && (
         <div className="text-xs mt-2">
           <Linker href={tip.linkUrl}>{tip.linkTitle}</Linker>

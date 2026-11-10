@@ -12,6 +12,10 @@ type Data = {
   success: boolean
   base64String?: string
   status?: string
+  imageType?: string | null
+  imgBase64String?: string
+  height?: number
+  width?: number
 }
 
 const getDataUrl = async (imgBuffer: any) => {
@@ -109,13 +113,11 @@ export default async function handler(
     })
   }
 
-  // @ts-ignore
   const { success, base64String, height, width } = converted
 
   if (success) {
     return res.send({
       success,
-      // @ts-ignore
       imageType,
       imgBase64String: base64String,
       height,

@@ -317,7 +317,6 @@ const PendingItem = memo(
                 <div className="flex flex-row gap-2">
                   <Button
                     title="Copy and re-edit prompt"
-                    // @ts-ignore
                     onClick={() => handleCopyPromptClick(jobDetails)}
                   >
                     <IconCopy />
@@ -355,7 +354,6 @@ const PendingItem = memo(
                   ) : null}
                   <Button
                     title="Copy and re-edit prompt"
-                    // @ts-ignore
                     onClick={() => handleCopyPromptClick(jobDetails)}
                   >
                     <IconCopy />
