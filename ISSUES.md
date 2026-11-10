@@ -27,13 +27,8 @@ marker is removed, so remove it in the same change.
 - [x] **S4. Medium: server messages rendered unsanitized HTML.** Fixed.
 - [x] **S5. Medium: Docker could bake in `.env` secrets.** Added `.dockerignore`.
       The image now builds the app itself. Not yet built with Docker.
-- [ ] **S6. High: other vulnerable dependencies.**
-  - Removed `express`, `body-parser` and the unused direct `dompurify`. Patched
-    `sharp`, `nodemailer` and `isomorphic-dompurify`.
-  - 13 production advisories remain: 1 critical, 3 high. `fabric` is U4. The
-    critical `tar` and high `@mapbox/node-pre-gyp` come through `canvas`, an
-    optional `fabric` dependency. `postcss` comes through `next` and
-    `styled-components`.
+- [x] **S6. High: other vulnerable dependencies.** Removed, patched or upgraded.
+      0 critical and 0 high production advisories remain, and 7 moderate or low.
 
 ## Bugs
 
@@ -59,6 +54,17 @@ marker is removed, so remove it in the same change.
 - [x] **B11. Medium: `/upscale` showed the changelog.** Removed the route and the
       unfinished page. "Upscale image" in the image menu still works.
 
+- [ ] **B12. Medium: drawings can't be sent to img2img or ControlNet.**
+  - "Use for img2img" in `app/_modules/Editor/components/toolbar.tsx` routes to
+    `/?drawing=true`, which is now the home page. It should be `/create`.
+  - On `/controlnet?drawing=true`, the initial input effect in
+    `app/_pages/ControlNetPage/index.tsx` wipes the imported drawing.
+  - Pinned: `e2e/canvas.spec.ts`
+- [ ] **B13. Medium: "New canvas" leaves a broken canvas.**
+  - `handleNewCanvas` in `app/_modules/Editor/editor.tsx` clears the saved
+    drawing state but not `drawLayer`, so stale data is restored over it.
+  - Pinned: `e2e/canvas.spec.ts`
+
 ## Upgrades
 
 - [x] **U1. Next 15.5.29 and React 19.3.1.**
@@ -66,7 +72,8 @@ marker is removed, so remove it in the same change.
       and `react-gallery-carousel` are unmaintained and run through `overrides`.
 - [x] **U3. Patched `dompurify`, `sharp` and `nodemailer`.** Needs Node 20.19.5
       or later.
-- [ ] **U4. Upgrade `fabric` 5 to 7 on its own.** High risk for the canvas code.
+- [x] **U4. Upgraded `fabric` 5 to 7.4.0.** Removed the unreachable
+      `PainterCanvas`, `PainterPanel` and `Editor/controller.ts`.
 - [ ] **U5. Upgrade Dexie last,** only with the upgrade tests passing.
 
 ## Features
@@ -98,6 +105,8 @@ marker is removed, so remove it in the same change.
 
 ## Cleanup
 
+- [ ] `CreateCanvas.getMaskForInput` never resolves when there's no saved mask, so
+      the rest of `uploadInpaint` doesn't run on that path. Decide what it should do.
 - [ ] Remove `AbTestModal` and `react-gallery-carousel`. The carousel relies on
       `defaultProps`, which React 19 ignores on function components, and the
       modal is only reachable for the retired `SDXL_beta` model.
@@ -107,5 +116,3 @@ marker is removed, so remove it in the same change.
 - [ ] Track down Jest's "worker failed to exit gracefully" warning.
 - [ ] Reduce the 882 `any` and `@ts-ignore` uses.
 - [ ] Review the 35 `TODO` and `FIXME` comments in the code.
-- [ ] Remove `canvas` from local `node_modules` or reinstall it. It has no
-      native binary on Node 24 and nothing needs it.

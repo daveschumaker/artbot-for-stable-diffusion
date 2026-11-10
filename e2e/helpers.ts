@@ -184,3 +184,15 @@ export const expectImageToDisplay = async (page: Page, prompt: string) => {
 
 export const expectNoCrash = (page: Page) =>
   expect(page.getByText('An unexpected error has occurred')).toHaveCount(0)
+
+// The default model is SDXL, which needs 1024px images and can't use ControlNet.
+export const chooseStandardModel = async (page: Page) => {
+  await page
+    .locator('div[class*="-control"]', { hasText: MODEL })
+    .first()
+    .click()
+  await page
+    .locator('div[class*="-option"]', { hasText: /^Deliberate \(/ })
+    .first()
+    .click()
+}
