@@ -69,6 +69,7 @@ node scripts/upgrade-comparison/compare.mjs --no-op-only
 node scripts/upgrade-comparison/compare.mjs --lane candidate
 node scripts/upgrade-comparison/compare.mjs --batch-only --reload-only --lane candidate
 node scripts/upgrade-comparison/large-library.mjs
+# Both scripts take --control and --candidate URLs to test other servers.
 node scripts/upgrade-comparison/rollback.mjs /absolute/path/to/comparison/report.json
 ```
 
