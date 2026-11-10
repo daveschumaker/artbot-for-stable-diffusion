@@ -20,8 +20,6 @@ class ImageJob {
   modelVersion?: string
   orientationType?: string
   preset: string[]
-  shortlink?: string
-  showcaseRequested?: boolean
   useXyPlot?: boolean
 
   // AI Horde image creation parameters

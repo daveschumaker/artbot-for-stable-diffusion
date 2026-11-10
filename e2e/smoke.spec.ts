@@ -76,8 +76,7 @@ test.describe('every page renders', () => {
     'privacy',
     'profile',
     'rate',
-    'settings',
-    'showcase'
+    'settings'
   ]
 
   for (const route of routes) {

@@ -149,11 +149,6 @@ export default function FooterV2() {
               AI Horde <IconExternalLink size={18} stroke={1} />
             </FlexRow>
           </Link>
-          <div>
-            <Link className={styles.LinkWrapper} href="/showcase">
-              Image showcase
-            </Link>
-          </div>
         </div>
         <div className={styles.Section}>
           <div className={styles.SectionTitle}>

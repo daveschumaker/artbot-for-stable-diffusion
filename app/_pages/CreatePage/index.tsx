@@ -8,8 +8,6 @@ import PageTitle from 'app/_components/PageTitle'
 import { loadEditPrompt, SourceProcessing } from 'app/_utils/promptUtils'
 import { getBase64FromDraw } from 'app/_store/canvasStore'
 import { getDefaultPrompt } from 'app/_utils/db'
-import CreateImageRequest from 'app/_data-models/CreateImageRequest'
-import ShareLinkDetails from 'app/_data-models/ShareableLink'
 import { useStore } from 'statery'
 import { appInfoStore } from 'app/_store/appStore'
 import { countImagesToGenerate } from 'app/_utils/imageUtils'
@@ -72,16 +70,8 @@ const CreatePage = ({ className }: any) => {
   const watchBuild = useCallback(() => {
     if (!build) {
       setBuild(buildId)
-      return
     }
-
-    if (buildId !== build) {
-      const imageParams = new CreateImageRequest(input)
-      // @ts-ignore
-      const shareLinkDetails = ShareLinkDetails.encode(imageParams)
-      localStorage.setItem('reloadPrompt', shareLinkDetails)
-    }
-  }, [build, buildId, input])
+  }, [build, buildId])
 
   const handleSubmit = useCallback(() => {
     handleCreateClick({
@@ -366,7 +356,6 @@ const CreatePage = ({ className }: any) => {
   useEffect(() => {
     setQuery({
       drawing: searchParams?.get('drawing'),
-      i: searchParams?.get('i'),
       model: searchParams?.get('model'),
       preset: searchParams?.get('preset'),
       prompt: searchParams?.get('prompt')
