@@ -5,7 +5,7 @@
   },
   "extends": "next/core-web-vitals",
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["@eslint-community/eslint-comments", "@typescript-eslint"],
   "rules": {
     "@typescript-eslint/no-unused-vars": "warn",
     "no-undef": [
@@ -22,6 +22,18 @@
         "ignoreRestSiblings": false
       }
     ],
-    "@typescript-eslint/ban-ts-comment": "error"
+    "@typescript-eslint/ban-ts-comment": [
+      "error",
+      {
+        "ts-expect-error": true,
+        "ts-ignore": true,
+        "ts-nocheck": true,
+        "ts-check": false
+      }
+    ],
+    "@eslint-community/eslint-comments/no-restricted-disable": [
+      "error",
+      "@typescript-eslint/ban-ts-comment"
+    ]
   }
 }
