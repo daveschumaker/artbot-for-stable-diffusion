@@ -132,7 +132,9 @@ export const validateToken = (token: string) => {
         const username: unknown =
           typeof decoded === 'object' ? decoded.username : undefined
 
-        if (username === process.env.ADMIN_USER) {
+        // Without ADMIN_USER, a token with no username would match undefined.
+        const { ADMIN_USER } = process.env
+        if (ADMIN_USER && username === ADMIN_USER) {
           return resolve(true)
         }
 
