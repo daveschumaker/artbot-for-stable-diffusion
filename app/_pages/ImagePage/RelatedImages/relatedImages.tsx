@@ -3,7 +3,7 @@ import useScrollToLocation from 'app/_hooks/useScrollToLocation'
 import Link from 'next/link'
 import React from 'react'
 import { useCallback } from 'react'
-import LazyLoad from 'react-lazyload'
+import LazyLoad from 'app/_components/LazyLoad'
 import styled from 'styled-components'
 import { trackEvent } from 'app/_api/telemetry'
 import useComponentState from 'app/_hooks/useComponentState'
@@ -278,7 +278,7 @@ const RelatedImages = ({
               seed: number
             }) => {
               return (
-                <LazyLoad key={image.jobId} once>
+                <LazyLoad key={image.jobId}>
                   <div className="relative">
                     <LinkEl
                       href={`/image/${image.jobId}`}

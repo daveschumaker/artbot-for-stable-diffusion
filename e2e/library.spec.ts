@@ -65,6 +65,24 @@ test('the gallery shows every image in a real library', async ({ page }) => {
   await expectNoCrash(page)
 })
 
+// Every tile starts as a placeholder, and the gallery's layout puts them all in
+// view at first, so in practice they all render straight away.
+test('the gallery renders every tile at a normal window size', async ({
+  page
+}) => {
+  await page.setViewportSize({ width: 1280, height: 720 })
+  await seed(page, { completed: realImages })
+  await page.reload()
+
+  const tiles = page.locator('a[href^="/artbot/image/"]')
+  await expect(tiles).toHaveCount(realImages.length)
+  await expect(page.locator('[data-lazy-placeholder]')).toHaveCount(0)
+
+  await page.mouse.wheel(0, 4000)
+  await expect(tiles.last()).toBeVisible()
+  await expectNoCrash(page)
+})
+
 for (const image of realImages) {
   test(`${image.fixtureName} opens and displays`, async ({ page }) => {
     const errors: string[] = []

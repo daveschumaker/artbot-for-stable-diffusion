@@ -6,7 +6,7 @@ import Head from 'next/head'
 import React, { useCallback, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import LazyLoad from 'react-lazyload'
+import LazyLoad from 'app/_components/LazyLoad'
 import styled from 'styled-components'
 
 import useGalleryImageModal from 'app/_pages/ImagesPage/useGalleryImageModal'
@@ -1108,7 +1108,7 @@ const ImagesPage = () => {
                   models: Array<string>
                 }) => {
                   return (
-                    <LazyLoad key={image.jobId} once>
+                    <LazyLoad key={image.jobId}>
                       <div className="relative">
                         <LinkEl
                           href={`/image/${image.jobId}`}
@@ -1193,7 +1193,7 @@ const ImagesPage = () => {
                   models: Array<string>
                 }) => {
                   return (
-                    <LazyLoad key={image.jobId} once>
+                    <LazyLoad key={image.jobId}>
                       <div className="relative">
                         <LinkEl
                           href={`/image/${image.jobId}`}

@@ -22,11 +22,9 @@ import {
 import styles from './pendingItem.module.css'
 import clsx from 'clsx'
 import ImageThumbnail from './ImageThumbnail'
-import TooltipComponent from 'app/_components/TooltipComponent'
 import {
   IconAlertTriangle,
   IconCopy,
-  IconInfoHexagon,
   IconTrash,
   IconX
 } from '@tabler/icons-react'
@@ -166,24 +164,6 @@ const PendingItem = memo(
             />
             <div className="flex flex-col flex-grow">
               <div className={clsx('flex-grow', styles.Prompt)}>
-                {jobDetails.models[0].includes('SDXL_beta') && (
-                  <div
-                    style={{
-                      display: 'flex',
-                      fontWeight: 700
-                    }}
-                  >
-                    <IconInfoHexagon style={{ marginRight: '8px' }} />
-                    SDXL beta{' '}
-                    <TooltipComponent tooltipId="sdxl-beta-tooltip">
-                      SDXL is currently in beta and provided by Stability.ai in
-                      order to refine future image models. Please select one of
-                      the following two images to choose as the best image for
-                      this particular generation. You will be rewarded 15 kudos
-                      for each rating.
-                    </TooltipComponent>
-                  </div>
-                )}
                 {jobDetails.upscaled && <div>[ UPSCALING ]</div>}
                 <div
                   className="italic"
