@@ -1,6 +1,6 @@
 # Known Issues and Upgrade Plan
 
-Last updated: 2026-11-10
+Last updated: 2026-11-11
 
 Open items only. Finished work is in the git history.
 
@@ -11,10 +11,9 @@ Open items only. Finished work is in the git history.
 
 ## Before release
 
-- [ ] **R1. Write a CHANGELOG entry.** The last one is from 2025-08-18. Tell
-      users what was removed: shareable links, shortlinks, the `/artbot?i=`
-      shared image pages, the community Showcase, "Use all models" and the
-      `/upscale` page.
+- [ ] **R1. Date the CHANGELOG entry.** The upgrade entry at the top of
+      `CHANGELOG.md` is dated 2026.11.11. Change the heading to the release
+      date. Each date must appear only once, since it's the entry's link.
 - [ ] **R2. Remove the shortlink env vars from the server.**
       `SHORTLINK_SERVICE` and `NEXT_SHORTLINK_SERVICE` are no longer used.
 - [ ] **R3. Re-run the production comparison on the code you release.**
@@ -127,9 +126,6 @@ None open.
       this way. Readers that only look for `eXIf` won't find the prompt there,
       though the `parameters` and XMP chunks still carry it.
 
-- [ ] Update the Client-Agent contact in `clientHeader`
-      (`app/_utils/appUtils.ts`). `(discord)rockbandit#4910` uses a Discord
-      tag format that Discord retired in 2023.
 - [ ] Jest's "worker failed to exit gracefully" warning hasn't appeared in
       three full runs since the 30-second timer in
       `app/_server-api/counters.ts` was removed. Close this if it stays gone.
