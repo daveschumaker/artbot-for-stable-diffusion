@@ -8,8 +8,7 @@ import { trackNewSession } from './analytics'
 import {
   deleteDoneFromPending,
   deleteInvalidPendingJobs,
-  deleteQueuedFromPending,
-  deleteRequestedFromPending
+  deleteQueuedFromPending
 } from './db'
 import { initWindowLogger } from './debugTools'
 import { loadAuthToken } from './authUtils'
@@ -86,10 +85,8 @@ const appLastActive = async () => {
       await deleteDoneFromPending()
       await deleteQueuedFromPending()
       await deleteInvalidPendingJobs()
-      await deleteRequestedFromPending()
       deletePendingJobs(JobStatus.Done)
       deletePendingJobs(JobStatus.Queued)
-      deletePendingJobs(JobStatus.Requested)
     } catch (err) {
       console.log(`An error occurred while clearing out stale pending items.`)
     }

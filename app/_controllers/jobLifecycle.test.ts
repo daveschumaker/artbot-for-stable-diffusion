@@ -311,6 +311,35 @@ describe('image job lifecycle', () => {
       expect(app.cache.getAllPendingJobs(JobStatus.Waiting)).toHaveLength(1)
     })
 
+    // A long database export holds a read transaction, which blocks the claim.
+    // Passes keep running every 1.1 seconds meanwhile.
+    it('never claims a job twice while its claim is blocked', async () => {
+      await queueJobs({ numImages: 3 })
+      const Dexie = require('dexie').default
+      const claims = jest.spyOn(app.database, 'claimPendingJobForSubmission')
+
+      let finishExport!: () => void
+      const exportDone = new Promise<void>((resolve) => {
+        finishExport = resolve
+      })
+      const exporting = app.dexie.transaction('r', app.dexie.pending, () =>
+        Dexie.waitFor(exportDone)
+      )
+
+      const firstPass = app.controller.createImageJobs()
+      await waitFor(() => expect(claims).toHaveBeenCalledTimes(1))
+      // The cache still says Waiting, so this pass must skip the job that
+      // is being claimed and move on to the others.
+      const secondPass = app.controller.createImageJobs()
+
+      finishExport()
+      await Promise.all([exporting, firstPass, secondPass])
+
+      const claimedIds = claims.mock.calls.map(([id]) => id)
+      expect(new Set(claimedIds).size).toBe(claimedIds.length)
+      expect(horde.submissions).toHaveLength(3)
+    })
+
     it('stops sending once the concurrency limit is reached', async () => {
       await queueJobs({ numImages: 7 })
 

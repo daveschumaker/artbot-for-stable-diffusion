@@ -8,6 +8,7 @@ Older entries: [2024](changelog/2024.md), [2023](changelog/2023.md), [2022](chan
 - Removed: The "Use all models" option. It only ever created one image.
 - Removed: The unfinished upscale page and the old SDXL beta image rating.
 - Fix: Switching browser tabs while images were queued could send, or save, the same image twice.
+- Fix: Reloading the page while an image request was being sent left it stuck on "Image requested", or quietly deleted it later. It's now marked as failed, with a note to retry it if the image doesn't appear.
 - Fix: Exporting your database (Settings → Import / Export) now reads one image at a time, so large libraries are less likely to run out of memory, especially on phones. If an export fails, you now see an error instead of a stuck button.
 - Fix: Changing the image filter while on a later page of your library could show an empty page.
 - Fix: Prompts with non-English characters were garbled in the metadata of downloaded images. Older images are repaired when you download them.

@@ -1,6 +1,6 @@
 import {
   initLoadPendingJobsFromDb,
-  syncPendingJobsFromDb,
+  refreshPendingJobFromDb,
   deletePendingJobs,
   deletePendingJob,
   getPendingJob,
@@ -11,12 +11,17 @@ import {
   updatePendingJobId,
   updateAllPendingJobsV2
 } from './pendingJobsCache'
-import { allPendingJobs, deletePendingJobFromDb } from 'app/_utils/db'
+import {
+  allPendingJobs,
+  deletePendingJobFromDb,
+  getPendingJobById
+} from 'app/_utils/db'
 import { JobStatus } from '_types'
 
 jest.mock('app/_utils/db', () => ({
   allPendingJobs: jest.fn(),
   deletePendingJobFromDb: jest.fn(),
+  getPendingJobById: jest.fn(),
   updatePendingJobInDexie: jest.fn()
 }))
 
@@ -39,24 +44,61 @@ describe('Pending Jobs Tests', () => {
     expect(getPendingJob('123')).toEqual(mockJob)
   })
 
-  it('syncs pending jobs from DB', async () => {
-    ;(allPendingJobs as jest.Mock).mockResolvedValue([mockJob])
-    await syncPendingJobsFromDb()
-    expect(getPendingJob('123')).toEqual(mockJob)
-  })
+  describe('refreshPendingJobFromDb, after another tab claims a job', () => {
+    const otherJob = { id: 2, jobId: 'other', jobStatus: JobStatus.Queued }
+    const getRow = getPendingJobById as jest.Mock
 
-  it('replaces stale cache entries after another tab submits or deletes a job', async () => {
-    await deletePendingJobs()
-    setPendingJob(mockJob)
-    setPendingJob({ ...mockJob, id: 2, jobId: 'deleted-job' })
-    const updated = {
-      ...mockJob,
-      jobId: 'horde-job',
-      jobStatus: JobStatus.Queued
-    }
-    ;(allPendingJobs as jest.Mock).mockResolvedValue([updated])
-    await syncPendingJobsFromDb()
-    expect(getAllPendingJobs()).toEqual([updated])
+    beforeEach(async () => {
+      await deletePendingJobs()
+      setPendingJob(mockJob)
+      setPendingJob(otherJob)
+      getRow.mockReset()
+    })
+
+    it('replaces the stale entry with the submitted job', async () => {
+      const submitted = {
+        ...mockJob,
+        jobId: 'horde-job',
+        jobStatus: JobStatus.Queued
+      }
+      getRow.mockResolvedValue(submitted)
+
+      await refreshPendingJobFromDb(mockJob.id, mockJob.jobId)
+
+      expect(getPendingJob('123')).toBeUndefined()
+      expect(getPendingJob('horde-job')).toEqual(submitted)
+    })
+
+    it('drops a job another tab deleted', async () => {
+      getRow.mockResolvedValue(undefined)
+
+      await refreshPendingJobFromDb(mockJob.id, mockJob.jobId)
+
+      expect(getPendingJob('123')).toBeUndefined()
+    })
+
+    it('leaves every other job as it is', async () => {
+      // An update to another job that lands while the row is being read
+      // must survive. Replacing the whole cache used to undo it.
+      getRow.mockImplementation(async () => {
+        setPendingJob({ ...otherJob, jobStatus: JobStatus.Processing })
+        return { ...mockJob, jobStatus: JobStatus.Requested }
+      })
+
+      await refreshPendingJobFromDb(mockJob.id, mockJob.jobId)
+
+      expect(getPendingJob('other').jobStatus).toBe(JobStatus.Processing)
+      expect(getAllPendingJobs()).toHaveLength(2)
+    })
+
+    it('changes nothing if the database read fails', async () => {
+      getRow.mockRejectedValue(new Error('Transaction aborted'))
+
+      await refreshPendingJobFromDb(mockJob.id, mockJob.jobId)
+
+      expect(getPendingJob('123')).toEqual(mockJob)
+      expect(getAllPendingJobs()).toHaveLength(2)
+    })
   })
 
   it('deletes a specific pending job', async () => {
