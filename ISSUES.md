@@ -7,7 +7,7 @@ Open items only. Finished work is in the git history.
 ## Suggested order
 
 1. Check the feedback form on the server (B21).
-2. Upgrade to Next 16 (U9).
+2. Fix the worker toggles (B23, B24).
 3. Re-run the production comparison on the final code (R3), then upgrade
    Dexie (U5).
 4. Build real batching and the v2 interface (F1, F2).
@@ -43,6 +43,18 @@ Open items only. Finished work is in the git history.
       `http://localhost:4001/api/v1/artbot/feedback` and always reports
       success. Check on the server whether anything still listens there.
 
+- [ ] **B23. Low: pausing a worker from the header menu can leave it on
+      "loading".** `handleWorkerChange` in
+      `app/_modules/HeaderNav/HordeDropdown/index.tsx` changes
+      `newWorkerState` after the request and passes the same object to
+      `setWorkerState` again, so React skips the update. Build a new object
+      instead.
+- [ ] **B24. Low: the worker page's loading state is set on the wrong
+      object.** `handleWorkerChange` in `app/_modules/WorkerInfo/workerInfo.tsx`
+      changes the `loadingWorkerStatus` prop instead of its copy, so the state
+      it sets never shows the worker as loading. It also changes `workers[id]`
+      through a shallow copy that is never used.
+
 ## Dead code
 
 - [ ] **C7. Fix or remove the image page's source image modal.** Opening it is
@@ -53,8 +65,6 @@ Open items only. Finished work is in the git history.
 
 - [ ] **U5. Upgrade Dexie last,** only after R3 and with the upgrade tests
       passing.
-- [ ] **U9. Upgrade to Next 16.** Its `eslint-config-next` exports a flat
-      config, so `eslint.config.mjs` can drop `FlatCompat`.
 - [ ] **U10. Remove styled-components** from the 26 files that still use it,
       in favour of Tailwind, then drop `compiler.styledComponents` from
       `next.config.js`. Its maintainers have put it in maintenance mode.
@@ -62,7 +72,9 @@ Open items only. Finished work is in the git history.
       low severity, in every version from 4.2.0, pulled in by Jest's
       `jest-config`, which Jest 30 still uses. It never ships to users.
 - [ ] **U12. TypeScript 6, then 7.** This is on 5.9. TypeScript 6 deprecates
-      `moduleResolution: "node"` and `baseUrl`, which `tsconfig.json` uses.
+      `baseUrl`, which `tsconfig.json` uses for imports like `app/...` and
+      `_types/...`. (Next 16 already switched `moduleResolution` to
+      `bundler`.)
       TypeScript 7 is the native compiler, which `ts-jest` doesn't support yet.
 - [ ] **U13. Drop the `minimatch` override** in `package.json` once
       typescript-eslint depends on a fixed version (11.0.1 or later) itself.
@@ -93,8 +105,6 @@ Open items only. Finished work is in the git history.
       (`e2e/sourceImages.spec.ts`). Add a test that follows the upscaled image
       into the library.
 - [ ] The Docker image has never been built.
-- [ ] The CI workflow (`.github/workflows/test.yml`) has never run, so it's
-      unverified on Linux.
 - [ ] Refresh `test-utils/hordeApiSchema.json` when the Horde API changes.
 
 ## Cleanup
@@ -110,6 +120,11 @@ Open items only. Finished work is in the git history.
 - [ ] Jest's "worker failed to exit gracefully" warning hasn't appeared in
       three full runs since the 30-second timer in
       `app/_server-api/counters.ts` was removed. Close this if it stays gone.
+- [ ] Review the React Compiler lint rules. `eslint-plugin-react-hooks` 7
+      adds them, and `eslint.config.mjs` turns them off. They report about 85
+      existing patterns, mostly `set-state-in-effect` (70 in 55 files). Fix
+      them before turning the React Compiler on, or turn individual rules
+      back on as code is cleaned up.
 - [ ] Reduce the remaining explicit `any` types.
 - [ ] Remove the unused exports `npx knip` reports, about 40 exports and
       several exported types. Check each one, since knip doesn't see the
