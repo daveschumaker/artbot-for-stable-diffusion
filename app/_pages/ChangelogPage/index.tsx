@@ -1,162 +1,120 @@
-'use client'
-
-import React, { useState } from 'react'
-import Head from 'next/head'
+import { ComponentProps } from 'react'
+import Link from 'next/link'
+import ReactMarkdown from 'react-markdown'
 import PageTitle from 'app/_components/PageTitle'
-import Linker from 'app/_components/Linker'
-import FeedbackForm from 'app/_modules/FeedbackForm'
-import { useEffectOnce } from 'app/_hooks/useEffectOnce'
-import { trackEvent } from 'app/_api/telemetry'
-import Section from 'app/_components/Section'
+import CHANGELOG from '../../../CHANGELOG.md'
+import CHANGELOG_2024 from '../../../changelog/2024.md'
+import CHANGELOG_2023 from '../../../changelog/2023.md'
+import CHANGELOG_2022 from '../../../changelog/2022.md'
+import ChangelogContact from './ChangelogContact'
+import OpenLinkedEntry from './OpenLinkedEntry'
+import {
+  ChangelogEntry,
+  formatEntryDate,
+  groupByYear,
+  parseChangelog
+} from './parseChangelog'
 import styles from './changelog.module.css'
 
-import ReactMarkdown from 'react-markdown'
-import CHANGELOG from '../../../CHANGELOG.md'
-import clsx from 'clsx'
-import Modal from 'app/_modules/Modal'
+// CHANGELOG.md holds recent entries. Older years are archived in changelog/.
+const YEARS = groupByYear(
+  [CHANGELOG, CHANGELOG_2024, CHANGELOG_2023, CHANGELOG_2022].flatMap(
+    parseChangelog
+  )
+)
 
-export const StyledUl = ({
-  children,
-  depth
-}: {
-  children: React.ReactNode
-  depth?: number
-}) => {
+const MarkdownLink = ({ href = '', children }: ComponentProps<'a'>) => {
+  // Site paths go through next/link, which adds the /artbot base path.
+  if (href.startsWith('/')) {
+    return (
+      <Link className={styles.link} href={href}>
+        {children}
+      </Link>
+    )
+  }
+
+  let sameSite = false
+  try {
+    sameSite = ['tinybots.net', 'localhost'].includes(new URL(href).hostname)
+  } catch {
+    // Not an absolute URL, such as a #fragment.
+    sameSite = true
+  }
+
   return (
-    <ul
-      className={clsx(styles['styled-ul'], {
-        [styles['styled-ul-depth-1']]: depth === 1
-      })}
+    <a
+      className={styles.link}
+      href={href}
+      {...(sameSite ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
     >
       {children}
-    </ul>
+    </a>
   )
 }
 
-export const StyledLi = ({ children }: { children: React.ReactNode }) => {
-  return <li className={styles['styled-li']}>{children}</li>
-}
-
-export const AddedInfo = ({ children }: { children: React.ReactNode }) => {
-  return <div className={styles['more-info']}>{children}</div>
-}
-
-const ModifiedLinker = (props: any) => {
-  const elementProps = { ...props }
-
-  const isInternalUrl = (url: string) => {
-    try {
-      const parsedUrl = new URL(url)
-      return (
-        parsedUrl.hostname === 'localhost' ||
-        parsedUrl.hostname === 'tinybots.net'
-      )
-    } catch (err) {
-      return true
-    }
-  }
-
-  if (!isInternalUrl(props.href)) {
-    elementProps.target = '_blank'
-    elementProps.rel = 'noopener noreferrer'
-  }
-
-  return <Linker {...elementProps} />
-}
-
-const LinkButton = ({
-  children,
-  onClick = () => {}
-}: {
-  children: React.ReactNode
-  onClick: () => void
-}) => {
-  return (
-    <div className={styles['link-btn']} onClick={onClick}>
-      {children}
+const Entry = ({ entry }: { entry: ChangelogEntry }) => (
+  <article className={styles.entry} id={entry.id}>
+    <h3 className={styles['entry-date']}>
+      <a className={styles.anchor} href={`#${entry.id}`}>
+        {formatEntryDate(entry.date)}
+      </a>
+    </h3>
+    <div className={styles['entry-body']}>
+      <ReactMarkdown
+        components={{
+          a: MarkdownLink,
+          code: ({ children }) => <code className="text-sm">{children}</code>,
+          li: ({ children }) => (
+            <li className={styles['styled-li']}>{children}</li>
+          ),
+          ul: ({ children }) => (
+            <ul className={styles['styled-ul']}>{children}</ul>
+          )
+        }}
+      >
+        {entry.body}
+      </ReactMarkdown>
     </div>
-  )
-}
+  </article>
+)
 
-/** TEMPLATE
+const updates = (count: number) => `${count} update${count === 1 ? '' : 's'}`
 
-<Section>
-  <SubSectionTitle>2023.05.01</SubSectionTitle>
-  <StyledUl>
-    <StyledLi>test</StyledLi>
-  </StyledUl>
-</Section>
-
-<AddedInfo> exists for further explanation
-*/
-
-const ChangelogPage = () => {
-  const [showFeedback, setShowFeedback] = useState(false)
-
-  useEffectOnce(() => {
-    trackEvent({
-      event: 'PAGE_VIEW',
-      context: '/pages/changelog'
-    })
-  })
-
+export default function ChangelogPage() {
   return (
     <div className="mb-4">
-      {showFeedback && (
-        <Modal
-          handleClose={() => setShowFeedback(false)}
-          style={{ height: '520px' }}
-          visible={showFeedback}
-        >
-          <FeedbackForm />
-        </Modal>
-      )}
-      <Head>
-        <title>Changelog - ArtBot for Stable Diffusion</title>
-        <meta name="twitter:title" content="ArtBot - Changelog" />
-      </Head>
+      <OpenLinkedEntry />
       <PageTitle>Changelog</PageTitle>
       <div className="mb-4">
         The latest happenings on ArtBot. Have a feature request or bug report?{' '}
-        <LinkButton onClick={() => setShowFeedback(true)}>
-          Contact me!
-        </LinkButton>
+        <ChangelogContact />
       </div>
-      {/* <Panel>
-        <SubSectionTitle>Ongoing issues:</SubSectionTitle>
-        <StyledUl>
-          <StyledLi>
-            2022.12.24 - Bulk downloads using the export option are a bit buggy.
-            I believe this is due to browser and device memory limitations.
-            I&apos;m investigating ways to make the downloads easier (perhaps
-            breaking them up into a series of files that you would have to
-            manually download). In the meantime, you can optionally download 100
-            images at a time on from the{' '}
-            <Linker href="/images">images page</Linker> or groups of your
-            favorite images. (I know that some of you have thousands of images
-            and this is not ideal at the moment.)
-          </StyledLi>
-        </StyledUl>
-      </Panel> */}
-      <div className="px-1">
-        <Section>
-          <ReactMarkdown
-            components={{
-              a: ({ ...props }) => <ModifiedLinker {...props} />,
-              code: ({ ...props }) => <code className="text-sm" {...props} />,
-              h1: ({ ...props }) => (
-                <h2 className="pb-[8px] font-[700]" {...props} />
-              ),
-              li: ({ children }) => <StyledLi>{children}</StyledLi>,
-              ul: ({ children }) => <StyledUl>{children}</StyledUl>
-            }}
-          >
-            {CHANGELOG}
-          </ReactMarkdown>
-        </Section>
-      </div>
+      <nav aria-label="Changelog years" className={styles['year-nav']}>
+        {YEARS.map(({ year }) => (
+          <a className={styles['year-link']} href={`#year-${year}`} key={year}>
+            {year}
+          </a>
+        ))}
+      </nav>
+      {YEARS.map(({ year, entries }, index) => (
+        // The newest year starts open. Older years open on demand.
+        <details
+          className={styles.year}
+          id={`year-${year}`}
+          key={year}
+          open={index === 0}
+        >
+          <summary className={styles['year-summary']}>
+            <h2 className={styles['year-title']}>{year}</h2>
+            <span className={styles['year-count']}>
+              {updates(entries.length)}
+            </span>
+          </summary>
+          {entries.map((entry) => (
+            <Entry entry={entry} key={entry.id} />
+          ))}
+        </details>
+      ))}
     </div>
   )
 }
-
-export default ChangelogPage
