@@ -16,16 +16,44 @@ Open items only. Finished work is in the git history.
       date. Each date must appear only once, since it's the entry's link.
 - [ ] **R2. Remove the shortlink env vars from the server.**
       `SHORTLINK_SERVICE` and `NEXT_SHORTLINK_SERVICE` are no longer used.
-- [ ] **R3. Re-run the production comparison on the code you release.**
-      `docs/upgrade-regression.md` compares the deployed version with this
-      branch using a profile captured from production, including rollback and a
-      1,000-image library. It has passed, but rerun it after any change to
-      the database, queue or image code.
-      React Query now loads models, user details and workers at startup, so
-      this is due again.
+- [ ] **R3. Run the production comparison on the exact release commit.**
+      `docs/upgrade-regression.md` has `compare.mjs`, `rollback.mjs`,
+      `gallery.mjs` and `large-library.mjs`. The last recorded run
+      (`docs/next16-validation.md`) used commit 38aee4ba, before the Dexie 4
+      upgrade. Since then, rollback to the deployed Dexie 3 site has only been
+      tested with fake-indexeddb and the legacy-backup restore, never with a
+      real browser profile. React Query, TypeScript 6, the dead-code removal
+      and the queue fixes also came after it.
 - [ ] **R4. Replace `ADMIN_PW_HASH` with a scrypt hash.** Run
       `node x-build-scripts/hashAdminPassword.js`. The old SHA-256 hash still
       works until then.
+- [ ] **R5. Run ArtBot on Node 24 under PM2.** Next 16, sharp and
+      isomorphic-dompurify need Node 20.19.5 or later, and `next start` exits
+      at once on the server's Node 18. Production's other apps stay on 18.
+  - Install exactly the version `ecosystem.config.js` names
+    (`/root/.nvm/versions/node/v24.22.2/bin/node`), and check that path
+    exists. A different patch version breaks the path.
+  - The PM2 apps were set up with `script: 'npm'`. `pm2 restart` keeps that,
+    so run `npm run pm2:stop-prod`, then `npm run pm2:start-prod`, then
+    `pm2 save`. Check `pm2 describe horde-js` shows the v24 interpreter.
+  - Never run `npm run start` on the server: it uses the default Node 18.
+  - Check the release tarball has `node_modules/@img/sharp-linux-x64` and the
+    Linux libvips package.
+- [ ] **R6. Write down and try the rollback.** Keep the previous release
+      directory and its `ecosystem.config.js` (`script: 'npm'`, Node 18).
+      Rolling back means `pm2 delete horde-js`, starting the old one, and
+      `pm2 save`.
+- [ ] **R7. Check the real API routes after deploying.** The e2e tests mock
+      every `/artbot/api/*` request in the browser, so these handlers never
+      run for real in tests: `server-info`, `models/available`,
+      `models/details`, `models/updates`, `horde-performance` and
+      `worker-details`. Request each one once the release is up.
+- [ ] **R8. Beta releases.** The gitignored `x-build-scripts/release.sh`
+      always uploads `artbot.tar.gz`, while `build.sh` names the beta build
+      `artbot-beta.tar.gz`, so a beta release uploads the production build.
+      `/root/artbot-beta/data` must exist. Beta's feedback form posts to the
+      same hard-coded feedback service as production
+      (`pages/api/telemetry.ts`).
 
 ## Security
 
@@ -33,10 +61,40 @@ Open items only. Finished work is in the git history.
       `app/_utils/appUtils.ts` sends the user's Horde username and full page URL
       to `/api/log-error`, which forwards them with the user agent to
       `STATUS_API`.
+- [ ] **S10. Medium: anyone can lock the admin out.** `loginRateLimit.ts`
+      blocks every login after 50 failures in 15 minutes, from any client.
+      The per-client limit uses the first `X-Forwarded-For` entry, which the
+      client controls behind nginx. Key on the address nginx sets
+      (`X-Real-IP` or the last hop), and drop or soften the global cap.
+- [ ] **S11. Medium: `/api/img-from-url` can be made to process huge
+      images.** It's unauthenticated and unthrottled. With `r2=true` it runs
+      sharp at full size on any image up to 10 MB, which can be about
+      16k x 16k pixels. Reject large dimensions before sharp runs, pass
+      `limitInputPixels`, and add a per-IP rate limit.
+- [ ] **S12. Low: the SSRF check allows `::/96` addresses** such as
+      `[::127.0.0.1]`. Linux doesn't route them to IPv4 loopback, so this is
+      defence in depth: block `::/96` in `fetchRemoteImage.ts`.
 
 ## Bugs
 
-None open.
+- [ ] **B25. A failed save of a finished image is reported as a success.**
+      `addCompletedJobToDexie` catches every error, so the pending job is
+      marked done and the image is lost, for example when storage is full.
+      Quota detection also matches the message text, not the error name.
+- [ ] **B26. Exports aren't an exact copy of stored rows.** The export reads
+      through Dexie's reading hook, so old rows are exported with filled-in
+      `models` and `source_image` values, and a restore stores those.
+- [ ] **B27. Nothing in memory is refreshed after an import.** The pending
+      cache and the memoized `getImageDetails` keep old data, and an
+      in-flight job can update an imported pending row that reuses its id.
+- [ ] **B28. The completed-table reading hook throws on a missing row.**
+      With Dexie 4, `db.completed.get(id)` for an id that doesn't exist
+      rejects. No current code does this. Add `if (!row) return row` to
+      `normalizeCompletedRow` in `app/_db/dexie.ts`.
+- [ ] **B29. Suspected: a restored drawing may lose its imported image.**
+      `CreateCanvas` saves the live fabric objects, and `canvas.dispose()`
+      clears a fabric 7 image's element. Paths survive, so the existing test
+      passes. Upload an image on the draw page, draw, leave and come back.
 
 ## Dead code
 
@@ -50,7 +108,7 @@ None open.
 
 ## Upgrades
 
-- [ ] **U10. Remove styled-components** from the 26 files that still use it,
+- [ ] **U10. Remove styled-components** from the 15 files that still use it,
       in favour of Tailwind, then drop `compiler.styledComponents` from
       `next.config.js`. Its maintainers have put it in maintenance mode.
 - [ ] **U11. Watch for a fixed `deepmerge`.** It's the only advisory left:
@@ -60,7 +118,9 @@ None open.
       the native compiler, which typescript-eslint (8.72 supports up to 6.0)
       and `ts-jest` (up to 6.x) don't support yet.
 - [ ] **U13. Drop the `minimatch` override** in `package.json` once
-      typescript-eslint depends on a fixed version (11.0.1 or later) itself.
+      typescript-eslint's `typescript-estree` depends on a fixed version
+      itself. The override forces `^11.0.7` where it asks for `^10.2.2`, a
+      major version apart. Lint passes with it.
 
 ## Features
 
@@ -120,7 +180,17 @@ None open.
 - [ ] Upscaling is only tested up to the request it sends
       (`e2e/sourceImages.spec.ts`). Add a test that follows the upscaled image
       into the library.
-- [ ] The Docker image has never been built.
+- [ ] The bulk zip export (`downloadImages`) has no test.
+- [ ] The inpainting mask canvas, and loading fabric 5 `canvasData` saved by
+      older versions, have no tests.
+- [ ] Several e2e tests wait a fixed time: `civitaiSearch.spec.ts` (the
+      stale-search test), `queueMultiTab.spec.ts`, `settings.spec.ts`,
+      `security.spec.ts` and `sourceImages.spec.ts`. Wait for the event
+      instead.
+- [ ] Playwright reuses whatever answers on its port, which can be a dev
+      server instead of a production build.
+- [ ] The Docker image has never been built, and its `next build` skips the
+      `update:build-id` step that creates `build_info.json`.
 - [ ] Refresh `test-utils/hordeApiSchema.json` when the Horde API changes.
 
 ## Cleanup
@@ -129,14 +199,20 @@ None open.
       instead of the standard `eXIf` chunk. `@asc0910/exif-library` writes it
       this way. Readers that only look for `eXIf` won't find the prompt there,
       though the `parameters` and XMP chunks still carry it.
-
 - [ ] Jest's "worker failed to exit gracefully" warning hasn't appeared in
       three full runs since the 30-second timer in
       `app/_server-api/counters.ts` was removed. Close this if it stays gone.
 - [ ] Review the React Compiler lint rules. `eslint-plugin-react-hooks` 7
-      adds them, and `eslint.config.mjs` turns them off. They report about 85
-      existing patterns, mostly `set-state-in-effect` (70 in 55 files). Fix
-      them before turning the React Compiler on, or turn individual rules
-      back on as code is cleaned up.
+      adds them, and `eslint.config.mjs` turns them all off. Turned on, they
+      report `set-state-in-effect` 57 times, `preserve-manual-memoization` 8,
+      `refs` 3 and `purity` 2. The others report nothing and could be turned
+      back on now.
+- [ ] Lint warnings never block a commit. Add `--max-warnings=0` to the lint
+      script and lint-staged.
+- [ ] `.husky/post-merge` runs `npm install`, which can rewrite
+      `package-lock.json`, and nothing reinstalls after `pull --rebase` or
+      switching branches. Use `npm ci`, and add `post-checkout`.
+- [ ] `.github/workflows/test.yml` is left from an early commit. Delete it if
+      it isn't wanted.
 - [ ] Reduce the remaining explicit `any` types.
-- [ ] Review the 36 `TODO` and `FIXME` comments in the code.
+- [ ] Review the 26 `TODO` and `FIXME` comments in the code.

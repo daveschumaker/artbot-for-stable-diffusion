@@ -15,7 +15,7 @@ See it in action: [https://tinybots.net/artbot](https://tinybots.net/artbot)
   - [Development](#development)
   - [Production](#production)
 - [Troubleshooting](#troubleshooting)
-  - [Windows issues](#windows-issues)
+  - [Windows](#windows)
   - [Other issues](#other-issues)
 - [Contributions](#contributions)
 - [License](#license)
@@ -24,7 +24,7 @@ See it in action: [https://tinybots.net/artbot](https://tinybots.net/artbot)
 
 ArtBot is an unofficial front-end web client designed for interacting with the [AI Horde](https://aihorde.net/) (formerly Stable Horde) distributed cluster -- a group of GPUs running Stable Diffusion image generation models whose processing time has been kindly donated by an enthusiastic community of volunteers.
 
-ArtBot is built using [Next.js 15](https://nextjs.org/) and [Typescript](https://www.typescriptlang.org/). It with was created as a side project in order to experiment with various client-side technologies, such as IndexedDB and LocalStorage APIs. These APIs allow you to securely and privately store the AI generated images you've created with the cluster within your own browser.
+ArtBot is built using [Next.js 16](https://nextjs.org/) and [Typescript](https://www.typescriptlang.org/). It with was created as a side project in order to experiment with various client-side technologies, such as IndexedDB and LocalStorage APIs. These APIs allow you to securely and privately store the AI generated images you've created with the cluster within your own browser.
 
 The UI components are custom built using a combination of [Styled Components](https://styled-components.com/) and [Tailwind CSS](https://tailwindcss.com/), with more recent efforts strictly focused on using Tailwind CSS. The long term goal is to completely remove Styled Components from the code base.
 
@@ -34,7 +34,7 @@ ArtBot makes use of icons from [Tabler](https://tabler-icons.io/).
 
 ### Requirements
 
-- node `>= 18.0.0`
+- node `>= 20.19.5` (development and validation use Node 24)
 - npm `>= 9.0.0`
 
 Most of these steps should be applicable to Linux / MacOS / Windows environments.
@@ -44,8 +44,8 @@ Installing various versions of Node.js on your machine can be tricky. I am a big
 Using `nvm`, you can install Node like this:
 
 ```bash
-> nvm install v18.16.0
-> nvm alias default node
+> nvm install 24
+> nvm use 24
 ```
 
 ### Installing
@@ -60,15 +60,11 @@ Once you have your Node.js environment setup, you can clone this repository and 
 
 ### Environmental variables
 
-A `postinstall` script will automatically run that creates a blank `.env` file in the root of the project folder. You don't need to add anything to it, but it's presence is required by the `dotenv` package.
-
-While not required, the code base references a few environmental variables in various places. These are generally endpoints for messaging, telemetry services that I run, or local data storage related to model counts and image generation totals.
+A `.env` file in the root of the project is optional. The code base references a few environmental variables in various places. These are generally endpoints for messaging, telemetry services that I run, or local data storage related to model counts and image generation totals.
 
 ## Usage
 
 ### Development
-
-**IMPORTANT:** Attempting to run the app this way on a Windows machine will not work. This is due to passing environment variables to the web app with the `npm` scripts. See the [troubleshooting](#troubleshooting) section for more information.
 
 Alright, you should now be able to run the ArtBot web app! To run in development mode (which uses NextJS's hot reloading feature -- where you can see updates live on the site as you make changes)
 
@@ -87,33 +83,27 @@ If you want to run this in a production type of environment, you'll first need t
 > npm run start
 ```
 
-On TinyBots, my web server for hosting ArtBot, I use [PM2](https://pm2.keymetrics.io/) in order to persist the application and automatically restart after crashes or reboots. You can modify PM2 related settings inside [ecosystem.config.js](ecosystem.config.js).
+`npm run start` uses whichever Node is first on your `PATH`, and Next.js 16 won't start on Node 18.
 
-Additionally, you can start and stop PM2 using:
+On TinyBots, my web server for hosting ArtBot, I use [PM2](https://pm2.keymetrics.io/) in order to persist the application and automatically restart after crashes or reboots. [ecosystem.config.js](ecosystem.config.js) runs ArtBot with its own Node (`interpreter`), separate from the server's default Node used by other apps. That exact Node version must be installed on the server.
+
+Start and stop it with:
 
 ```bash
 > npm run pm2:start-prod
 > npm run pm2:stop-prod
 ```
 
+`pm2 restart` keeps an app's old interpreter and script. After changing either in `ecosystem.config.js`, stop and start the app, then run `pm2 save`.
+
 ## Troubleshooting
 
 For production-state regression and upgrade testing, see
 [Production-origin browser profiles](docs/browser-profiles.md).
 
-### Windows issues
+### Windows
 
-As mentioned earlier, attempting to use `npm run dev` or `npm run start` within a Windows environment will result in an error. One possible solution to this is to remove the environment variable. In the case of `npm run dev`, that would look like this.
-
-- Open `package.json`
-- Change the `scripts/dev` line to remove `PORT=3000` from the script:
-
-```bash
-> npm run update:build-id && node server.js
-```
-
-- Save `package.json` and attempt to run again: `> npm run dev`
-- It should now work (the web app will default in port 3000, which is automatically set inside [server.js](server.js)
+The npm scripts set environment variables inline (for example `NODE_ENV=production next start`), which Windows `cmd` doesn't support. Use WSL, or run the underlying command in a shell that does.
 
 ### Other issues
 
