@@ -72,7 +72,7 @@ export const createImageJobs = async () => {
     return
   }
 
-  if (!isAppCurrentlyActive) {
+  if (!isAppActive()) {
     logDebug(`App is not active`)
     return
   }

@@ -80,11 +80,11 @@ export const syncPendingJobsFromDb = async () => {
   const jobs = await allPendingJobs()
   logDebug('syncPendingJobsFromDb', jobs)
 
+  const current: IPendingJobs = {}
   jobs.forEach((job: any) => {
-    if (!pendingJobs[job.jobId]) {
-      pendingJobs[job.jobId] = job
-    }
+    current[job.jobId] = job
   })
+  pendingJobs = current
 }
 
 export const deletePendingJobs = async (status?: any) => {

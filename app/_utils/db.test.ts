@@ -13,6 +13,7 @@ import {
   addPendingJobToDexie,
   allPendingJobs,
   bulkDeleteImages,
+  claimPendingJobForSubmission,
   countCompletedJobs,
   countFilterCompleted,
   deleteAllPendingErrors,
@@ -111,6 +112,16 @@ afterAll(() => {
 
 describe('completed images', () => {
   beforeEach(seedCompleted)
+
+  it('saves one completed record when two tabs finish the same job', async () => {
+    await Promise.all([
+      addCompletedJobToDexie({ jobId: 'shared-result', prompt: 'one result' }),
+      addCompletedJobToDexie({ jobId: 'shared-result', prompt: 'one result' })
+    ])
+    expect(
+      await db.completed.where('jobId').equals('shared-result').count()
+    ).toBe(1)
+  })
 
   it('counts and lists all images', async () => {
     expect(await countCompletedJobs()).toBe(4)
@@ -249,6 +260,19 @@ describe('gallery filters', () => {
 })
 
 describe('pending jobs', () => {
+  it('lets only one tab claim a waiting job and rejects stale job ids', async () => {
+    const id = await db.pending.add({
+      jobId: 'shared-job',
+      jobStatus: JobStatus.Waiting
+    })
+    expect(await claimPendingJobForSubmission(id, 'old-job')).toBeNull()
+    const claims = await Promise.all([
+      claimPendingJobForSubmission(id, 'shared-job'),
+      claimPendingJobForSubmission(id, 'shared-job')
+    ])
+    expect(claims.filter(Boolean)).toHaveLength(1)
+    expect((await db.pending.get(id)).jobStatus).toBe(JobStatus.Requested)
+  })
   it('adds a new job without carrying over its table id', async () => {
     await addPendingJobToDexie({ id: 999, jobId: 'new' } as any)
 

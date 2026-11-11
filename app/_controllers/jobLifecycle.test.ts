@@ -381,10 +381,11 @@ describe('image job lifecycle', () => {
       await queueJobs({ numImages: 2 })
       const [malformed, valid] = allCached()
 
-      const result = await app.imageCache.sendJobToApi({
-        ...malformed,
+      // Submission now reads the authoritative record while claiming it.
+      await app.dexie.pending.update(malformed.id, {
         post_processing: null
       })
+      const result = await app.imageCache.sendJobToApi(malformed)
       expect(result).toMatchObject({
         success: false,
         status: 'UNKNOWN_ERROR'
