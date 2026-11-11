@@ -1,12 +1,10 @@
 import { defineConfig, devices } from '@playwright/test'
 
-const PORT = 3199
+const PORT = Number(process.env.E2E_PORT || 3199)
 const start = `npx next start -p ${PORT}`
 
 // E2E_SKIP_BUILD reuses an existing production build for faster local runs.
-const command = process.env.E2E_SKIP_BUILD
-  ? start
-  : `npx next build && ${start}`
+const command = process.env.E2E_SKIP_BUILD ? start : `npm run build && ${start}`
 
 export default defineConfig({
   testDir: './e2e',
@@ -19,11 +17,19 @@ export default defineConfig({
     baseURL: `http://localhost:${PORT}`,
     trace: 'retain-on-failure'
   },
-  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+  projects: [
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    ...(process.env.E2E_ALL_BROWSERS
+      ? [
+          { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
+          { name: 'webkit', use: { ...devices['Desktop Safari'] } }
+        ]
+      : [])
+  ],
   webServer: {
     command,
     url: `http://localhost:${PORT}/artbot/create`,
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: !process.env.CI && !process.env.E2E_PORT,
     timeout: 300000
   }
 })
