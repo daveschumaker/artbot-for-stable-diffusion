@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { useSwipeable } from 'react-swipeable'
 
 import { setNewImageReady, setShowImageReadyToast } from 'app/_store/appStore'

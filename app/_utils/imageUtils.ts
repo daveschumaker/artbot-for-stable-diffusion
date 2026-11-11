@@ -939,8 +939,8 @@ export const countImagesToGenerate = (imageParams: ICountImages) => {
   }
 
   if (hasPromptMatrix(prompt) || hasPromptMatrix(negative)) {
-    const matrixPrompts = [...promptMatrix(prompt)] || ['']
-    const matrixNegative = [...promptMatrix(negative)] || ['']
+    const matrixPrompts = [...promptMatrix(prompt)]
+    const matrixNegative = [...promptMatrix(negative)]
 
     const promptLength = matrixPrompts.length > 0 ? matrixPrompts.length : 1
     const negLength = matrixNegative.length > 0 ? matrixNegative.length : 1

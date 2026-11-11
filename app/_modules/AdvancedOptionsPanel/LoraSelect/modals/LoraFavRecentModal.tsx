@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import React, { useState } from 'react'
 import Input from 'app/_components/Input'

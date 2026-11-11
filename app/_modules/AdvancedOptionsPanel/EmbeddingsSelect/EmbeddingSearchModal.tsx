@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Embedding } from '_types/civitai'

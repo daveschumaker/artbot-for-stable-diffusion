@@ -85,7 +85,6 @@ export const createImage = async (
     if (
       message === 'Only Trusted users are allowed to perform this operation'
     ) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
       trackEvent({
         event: 'ERROR',
         action: 'UNTRUSTED_IP',

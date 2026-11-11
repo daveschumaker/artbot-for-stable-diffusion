@@ -1,6 +1,5 @@
 'use client'
 
-/* eslint-disable @next/next/no-img-element */
 import { useSwipeable } from 'react-swipeable'
 import Head from 'next/head'
 import React, { useCallback, useEffect } from 'react'
@@ -211,7 +210,6 @@ const ImagesPage = () => {
     }
     await getImageCount()
     setComponentState({ images: data, isLoading: false })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     LIMIT,
     componentState.filterMode,

@@ -11,11 +11,6 @@ import {
   writeXMP
 } from './imageMetadata'
 
-// zlib.crc32 is in Node 20.15 and later. The installed @types/node predates it.
-const zlibCrc32 = (
-  zlib as unknown as { crc32: (data: Uint8Array | string) => number }
-).crc32
-
 const image = async (format: 'png' | 'jpeg') =>
   new Uint8Array(
     await sharp({
@@ -39,7 +34,7 @@ const pngChunks = (png: Uint8Array): PngChunk[] => {
     chunks.push({
       type,
       data,
-      crcValid: crc === zlibCrc32(buf.subarray(pos + 4, pos + 8 + length))
+      crcValid: crc === zlib.crc32(buf.subarray(pos + 4, pos + 8 + length))
     })
     pos += length + 12
   }
@@ -76,7 +71,7 @@ const jpegSegments = (jpeg: Uint8Array): JpegSegment[] => {
 describe('crc32', () => {
   it('matches zlib', () => {
     for (const text of ['', 'tEXtparameters', 'x'.repeat(10000)]) {
-      expect(crc32(new TextEncoder().encode(text))).toBe(zlibCrc32(text))
+      expect(crc32(new TextEncoder().encode(text))).toBe(zlib.crc32(text))
     }
   })
 })
