@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { mockBackend } from './helpers'
+import { finishFixtureSetup, mockBackend } from './helpers'
 
 // This drives the real app through the browser and Horde API boundary. No
 // internal controller mocks: the pending records are the persistence contract.
@@ -163,7 +163,8 @@ test('canceling an acknowledged request survives a reload', async ({
     .poll(() => page.evaluate(() => (window as any)._artbotDb.pending.count()))
     .toBe(0)
   await page.reload()
-  await page.waitForLoadState('networkidle')
+  await finishFixtureSetup(page)
+  await page.waitForFunction(() => Boolean((window as any)._artbotDb?.pending))
   expect(
     await page.evaluate(() => (window as any)._artbotDb.pending.count())
   ).toBe(0)
