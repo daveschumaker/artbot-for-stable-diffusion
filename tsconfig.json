@@ -1,6 +1,18 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "paths": {
+      "app/*": ["./app/*"],
+      "pages/*": ["./pages/*"],
+      "_types": ["./_types"],
+      "_types/*": ["./_types/*"],
+      "_constants": ["./_constants"],
+      "_constants/*": ["./_constants/*"],
+      "BASE_PATH": ["./BASE_PATH.js"],
+      "e2e/*": ["./e2e/*"],
+      "test-utils/*": ["./test-utils/*"]
+    },
+    // TypeScript 6 no longer includes every installed @types package.
+    "types": ["node", "jest"],
     "target": "es6",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
