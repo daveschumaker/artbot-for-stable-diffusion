@@ -6,7 +6,7 @@ Open items only. Finished work is in the git history.
 
 ## Suggested order
 
-1. Build real batching (F1).
+1. Land the upgrade branch first. F1 (batching) is on hold until then.
 2. Remove styled-components (U10), then match the v2 interface (F2).
 
 ## Before release
@@ -61,12 +61,45 @@ None open.
 
 ## Features
 
-- [ ] **F1. Real batching.**
-  - `n` is hardcoded to 1 (`app/_data-models/ImageParamsForApi.ts:168`) and
-    `app/_utils/pendingUtils.ts` queues one job per image. The Horde accepts up
-    to 20.
-  - `checkCurrentJob` keeps only the first two images a job returns, so this
-    must change first. A test in `jobLifecycle.test.ts` documents it.
+- [ ] **F1. Real batching.** On hold until the upgrade branch lands.
+  - Today v1 sends `n: 1` (`app/_data-models/ImageParamsForApi.ts:168`), and
+    `app/_utils/pendingUtils.ts` makes one pending row per image (up to
+    `MAX_IMAGES_PER_JOB`, 200). The Horde accepts up to 20 images per request.
+  - `checkCurrentJob` in `app/_utils/imageCache.ts` treats a second generation
+    as an SDXL_beta companion and returns after it, so a job keeps at most two
+    images. `jobLifecycle.test.ts` documents this.
+  - **How v2 (`artbot-haidra`) does it.** It uses a separate database with
+    different tables:
+    - `imageRequests` holds the settings.
+    - `hordeJobs` has one row per Horde request, with `images_requested`,
+      `images_completed` and `images_failed`.
+    - `imageFiles` has one row per image, keyed by the Horde generation id.
+    - Favourites have their own table.
+  - When a v2 job finishes, it reads the status once and downloads every
+    generation. Then, in one write transaction, it skips images already
+    saved, adds the new ones and updates the counts. Censored or failed images
+    count as failed. Each job has its own queue, so two downloads of the same
+    job can't overlap.
+  - **v1 probably doesn't need a schema change.** v1 already stores one
+    completed row per image, grouped by `parentJobId`. A pending row could
+    stand for one Horde request of up to 20 images, using the existing
+    `numImages` field. Each completed image would then need its own `jobId`,
+    for example the generation id. Image pages look images up by `jobId`, and
+    `addCompletedJobToDexie` skips a `jobId` it has already saved, so
+    reusing the Horde job id would drop every image after the first. Using
+    existing fields and indexes means no new `db.version()`, which keeps
+    rollback safe (see `docs/upgrade-regression.md`).
+  - **Rollback risk.** Completed rows stay readable by the deployed site. A
+    pending batch that is still running during a rollback would be treated
+    as a single image, so it would keep at most two images. That only
+    affects jobs running at that moment.
+  - **What has to change:**
+    - Split each request into chunks of up to 20 per model.
+    - Save every generation in `checkCurrentJob` and give up the SDXL_beta
+      special case.
+    - The pending page's progress and the cancel and retry actions.
+    - Splitting kudos per image.
+    - The duplicate check in `addCompletedJobToDexie`.
   - `origin/feat-batch` is unfinished work from March 2024. Use it for ideas.
 - [ ] **F2. Match the v2 interface.**
 - [ ] **F3. Upscale any uploaded image.**
