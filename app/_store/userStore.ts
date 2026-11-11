@@ -18,6 +18,12 @@ export interface IWorker {
   threads: number
   trusted: boolean
   performance: string
+  // Shown in the worker settings panel.
+  info?: string
+  lora?: boolean
+  nsfw?: boolean
+  painting?: boolean
+  'post-processing'?: boolean
 }
 
 interface ITeam {

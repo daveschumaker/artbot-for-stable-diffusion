@@ -19,7 +19,8 @@ Older entries: [2024](changelog/2024.md), [2023](changelog/2023.md), [2022](chan
 - Fix: Drawings sent to img2img or ControlNet were overwritten by saved settings.
 - Fix: Upscale jobs were never sent, and a malformed job could block the rest of your queue.
 - Fix: The feedback form said your message was sent even when it wasn't.
-- Fix: Pausing a worker from the header menu could get stuck on "loading", including when the request to the AI Horde failed.
+- Fix: Pausing a worker from the header menu or the worker settings page could get stuck on "loading", including when the request to the AI Horde failed or when two workers were paused at once.
+- Fix: The worker settings page lost each worker's description and its inpainting, NSFW, LoRA and post-processing details after about a minute.
 - Fix: With more than one shared API key, only the last key's name and kudos were shown.
 - Fix: Editing a shared API key's kudos also renamed the key to "TestFlight1".
 - Fix: After logging in, your kudos and workers didn't refresh until you reloaded the page.

@@ -9,6 +9,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import AppSettings from 'app/_data-models/AppSettings'
 import { userInfoStore } from 'app/_store/userStore'
 import { modelStore } from 'app/_store/modelStore'
+import { queryClient } from 'app/_api/queryClient'
 import GlobalDataSync from '.'
 
 let appActive = true
@@ -61,6 +62,8 @@ describe('GlobalDataSync', () => {
 
   beforeEach(() => {
     jest.useFakeTimers()
+    // fetchUserDetailsV2 uses the app's shared client. Start each test clean.
+    queryClient.clear()
     appActive = true
     localStorage.clear()
     AppSettings.saveAll({ v: '1' } as any)
@@ -89,7 +92,7 @@ describe('GlobalDataSync', () => {
     // No API key, so no user lookup.
     expect(count('/api/v2/find_user')).toBe(0)
     // The query functions update the stores the app reads.
-    expect(modelStore.state.availableModels).toBeDefined()
+    expect(modelStore.state.modelDetails).toHaveProperty('Deliberate')
     unmount()
   })
 
@@ -118,6 +121,21 @@ describe('GlobalDataSync', () => {
 
     expect(count('/api/models/available')).toBe(1)
     expect(count('/api/v2/status/performance')).toBe(1)
+    unmount()
+  })
+
+  // During a login, loggedIn turns true before the key is saved.
+  it('does not log the user out while the key is still being saved', async () => {
+    const { unmount } = renderSync()
+    await advance(0)
+
+    act(() => {
+      userInfoStore.set({ loggedIn: true })
+    })
+    await advance(0)
+
+    expect(count('/api/v2/find_user')).toBe(0)
+    expect(userInfoStore.state.loggedIn).toBe(true)
     unmount()
   })
 

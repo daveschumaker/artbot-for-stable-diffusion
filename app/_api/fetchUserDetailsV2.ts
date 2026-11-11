@@ -41,10 +41,20 @@ const fetchUser = async (
   return user
 }
 
+// Query keys are kept in memory and show up in debugging tools, so they
+// identify the key by a short hash rather than holding the key itself.
+const keyHash = (apiKey: string) => {
+  let hash = 2166136261
+  for (let i = 0; i < apiKey.length; i++) {
+    hash = Math.imul(hash ^ apiKey.charCodeAt(i), 16777619)
+  }
+  return (hash >>> 0).toString(36)
+}
+
 /** The AI Horde user (or shared key) for an API key. Updates userStore. */
 const userDetailsQuery = (apiKey: string) =>
   queryOptions({
-    queryKey: ['horde', 'user', apiKey],
+    queryKey: ['horde', 'user', keyHash(apiKey)],
     queryFn: ({ signal }) => fetchUser(apiKey, signal),
     staleTime: 30 * 1000,
     retry: MAX_RETRIES - 1,
@@ -65,6 +75,14 @@ export const fetchUserDetailsV2 = async (
   if (!apiKey) {
     setLoggedInState(false)
     return null
+  }
+
+  if (fresh) {
+    // A lookup already in flight started before the change being refreshed
+    // for, and would return the old details.
+    await queryClient.cancelQueries({
+      queryKey: userDetailsQuery(apiKey).queryKey
+    })
   }
 
   try {
