@@ -1,4 +1,5 @@
 'use client'
+import { libraryStorage } from 'app/_backup/platform'
 
 import { useSwipeable } from 'react-swipeable'
 import Head from 'next/head'
@@ -192,7 +193,7 @@ const ImagesPage = () => {
 
     const offset = componentState.offset
     let data
-    const sort = localStorage.getItem('imagePageSort') || 'new'
+    const sort = libraryStorage.getItem('imagePageSort') || 'new'
 
     if (componentState.filterMode === 'all') {
       data = await fetchCompletedJobs({ limit: LIMIT, offset, sort })
@@ -233,7 +234,7 @@ const ImagesPage = () => {
 
   //   const offset = Number(searchParams?.get('offset')) || 0
   //   let data
-  //   const sort = localStorage.getItem('imagePageSort') || 'new'
+  //   const sort = libraryStorage.getItem('imagePageSort') || 'new'
 
   //   if (componentState.filterMode === 'all') {
   //     data = await fetchCompletedJobs({ limit: LIMIT, offset, sort })
@@ -289,7 +290,7 @@ const ImagesPage = () => {
 
       if (btn === 'last') {
         const count = await countCompletedJobs()
-        const sort = localStorage.getItem('imagePageSort') || 'new'
+        const sort = libraryStorage.getItem('imagePageSort') || 'new'
         const data = await fetchCompletedJobs({
           limit: LIMIT,
           offset: count - LIMIT,
@@ -314,7 +315,7 @@ const ImagesPage = () => {
       }
 
       if (btn === 'first') {
-        const sort = localStorage.getItem('imagePageSort') || 'new'
+        const sort = libraryStorage.getItem('imagePageSort') || 'new'
         const data = await fetchCompletedJobs({
           limit: LIMIT,
           offset: 0,
@@ -377,9 +378,9 @@ const ImagesPage = () => {
     fetchImages()
     getImageCount()
 
-    if (localStorage.getItem('showLayout')) {
+    if (libraryStorage.getItem('showLayout')) {
       setComponentState({
-        layoutMode: localStorage.getItem('showLayout') || 'layout'
+        layoutMode: libraryStorage.getItem('showLayout') || 'layout'
       })
     }
   }, [fetchImages, getImageCount, setComponentState])
@@ -563,7 +564,7 @@ const ImagesPage = () => {
   })
 
   useEffect(() => {
-    if (localStorage.getItem('imagePageSort') === 'old') {
+    if (libraryStorage.getItem('imagePageSort') === 'old') {
       setComponentState({ sortMode: 'old' })
     } else {
       setComponentState({ sortMode: 'new' })
@@ -747,7 +748,9 @@ const ImagesPage = () => {
                     delete newQuery.model
                     delete newQuery.offset
                     router.push(
-                      `?${new URLSearchParams(toSearchParamsInit(newQuery)).toString()}`
+                      `?${new URLSearchParams(
+                        toSearchParamsInit(newQuery)
+                      ).toString()}`
                     )
                   }}
                 >
@@ -768,7 +771,9 @@ const ImagesPage = () => {
                     newQuery.filter = 'favorited'
                     delete newQuery.offset
                     router.push(
-                      `?${new URLSearchParams(toSearchParamsInit(newQuery)).toString()}`
+                      `?${new URLSearchParams(
+                        toSearchParamsInit(newQuery)
+                      ).toString()}`
                     )
                   }}
                 >
@@ -789,7 +794,9 @@ const ImagesPage = () => {
                     newQuery.filter = 'unfavorited'
                     delete newQuery.offset
                     router.push(
-                      `?${new URLSearchParams(toSearchParamsInit(newQuery)).toString()}`
+                      `?${new URLSearchParams(
+                        toSearchParamsInit(newQuery)
+                      ).toString()}`
                     )
                   }}
                 >
@@ -810,7 +817,9 @@ const ImagesPage = () => {
                     newQuery.filter = 'upscaled'
                     delete newQuery.offset
                     router.push(
-                      `?${new URLSearchParams(toSearchParamsInit(newQuery)).toString()}`
+                      `?${new URLSearchParams(
+                        toSearchParamsInit(newQuery)
+                      ).toString()}`
                     )
                   }}
                 >
@@ -832,7 +841,9 @@ const ImagesPage = () => {
                     newQuery.filter = 'text2img'
                     delete newQuery.offset
                     router.push(
-                      `?${new URLSearchParams(toSearchParamsInit(newQuery)).toString()}`
+                      `?${new URLSearchParams(
+                        toSearchParamsInit(newQuery)
+                      ).toString()}`
                     )
                   }}
                 >
@@ -853,7 +864,9 @@ const ImagesPage = () => {
                     newQuery.filter = 'img2img'
                     delete newQuery.offset
                     router.push(
-                      `?${new URLSearchParams(toSearchParamsInit(newQuery)).toString()}`
+                      `?${new URLSearchParams(
+                        toSearchParamsInit(newQuery)
+                      ).toString()}`
                     )
                   }}
                 >
@@ -874,7 +887,9 @@ const ImagesPage = () => {
                     newQuery.filter = 'inpainting'
                     delete newQuery.offset
                     router.push(
-                      `?${new URLSearchParams(toSearchParamsInit(newQuery)).toString()}`
+                      `?${new URLSearchParams(
+                        toSearchParamsInit(newQuery)
+                      ).toString()}`
                     )
                   }}
                 >
@@ -914,7 +929,7 @@ const ImagesPage = () => {
                   setComponentState({
                     layoutMode: 'grid'
                   })
-                  localStorage.setItem('showLayout', 'grid')
+                  libraryStorage.setItem('showLayout', 'grid')
                   trackEvent({
                     event: `MENU_CLICK`,
                     action: 'grid_view',
@@ -929,7 +944,7 @@ const ImagesPage = () => {
                   setComponentState({
                     layoutMode: 'layout'
                   })
-                  localStorage.setItem('showLayout', 'layout')
+                  libraryStorage.setItem('showLayout', 'layout')
                   trackEvent({
                     event: `MENU_CLICK`,
                     action: 'layout_view',
@@ -946,7 +961,7 @@ const ImagesPage = () => {
                     isLoading: true,
                     sortMode: 'new'
                   })
-                  localStorage.setItem('imagePageSort', 'new')
+                  libraryStorage.setItem('imagePageSort', 'new')
                   fetchImages()
 
                   const newQuery = Object.assign(
@@ -955,7 +970,9 @@ const ImagesPage = () => {
                   )
                   delete newQuery.sort
                   router.push(
-                    `?${new URLSearchParams(toSearchParamsInit(newQuery)).toString()}`
+                    `?${new URLSearchParams(
+                      toSearchParamsInit(newQuery)
+                    ).toString()}`
                   )
 
                   trackEvent({
@@ -973,7 +990,7 @@ const ImagesPage = () => {
                     isLoading: true,
                     sortMode: 'old'
                   })
-                  localStorage.setItem('imagePageSort', 'old')
+                  libraryStorage.setItem('imagePageSort', 'old')
                   fetchImages()
 
                   const newQuery = Object.assign(
@@ -982,7 +999,9 @@ const ImagesPage = () => {
                   )
                   newQuery.sort = 'old'
                   router.push(
-                    `?${new URLSearchParams(toSearchParamsInit(newQuery)).toString()}`
+                    `?${new URLSearchParams(
+                      toSearchParamsInit(newQuery)
+                    ).toString()}`
                   )
 
                   trackEvent({

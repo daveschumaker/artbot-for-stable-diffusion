@@ -1,3 +1,4 @@
+import { libraryStorage } from 'app/_backup/platform'
 /* eslint-disable @next/next/no-img-element */
 import {
   IconDownload,
@@ -18,7 +19,7 @@ import { Embedding } from '_types/civitai'
 import { handleSaveRecentEmbedding } from './saveRecentEmbeddings'
 
 const isFavorite = (tiId: string) => {
-  let existingArray = localStorage.getItem('favoriteEmbeddings')
+  let existingArray = libraryStorage.getItem('favoriteEmbeddings')
 
   if (!existingArray) {
     return false
@@ -154,7 +155,7 @@ export default function EmbeddingDetailsCard({
 
   const handleFavorite = (ti: any) => {
     // Check if the local storage already has an array stored
-    let existingArray = localStorage.getItem('favoriteEmbeddings')
+    let existingArray = libraryStorage.getItem('favoriteEmbeddings')
     let newArray
 
     if (existingArray) {
@@ -182,7 +183,7 @@ export default function EmbeddingDetailsCard({
     }
 
     // Store the updated array back in the local storage
-    localStorage.setItem('favoriteEmbeddings', JSON.stringify(newArray))
+    libraryStorage.setItem('favoriteEmbeddings', JSON.stringify(newArray))
   }
 
   return (

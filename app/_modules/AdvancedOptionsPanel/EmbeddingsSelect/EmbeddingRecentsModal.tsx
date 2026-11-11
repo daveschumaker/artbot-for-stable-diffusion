@@ -1,3 +1,4 @@
+import { libraryStorage } from 'app/_backup/platform'
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import React, { useState } from 'react'
 import { Embedding } from '_types/civitai'
@@ -11,7 +12,7 @@ import AppSettings from 'app/_data-models/AppSettings'
 import FlexCol from 'app/_components/FlexCol'
 
 const loadFromLocalStorage = () => {
-  let existingArray = localStorage.getItem('recentEmbeddings')
+  let existingArray = libraryStorage.getItem('recentEmbeddings')
 
   if (existingArray) {
     try {

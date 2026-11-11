@@ -9,6 +9,10 @@ import { JobStatus } from '_types'
 
 const mockImages = { isValid: true }
 
+jest.mock('app/_utils/analytics', () => ({
+  trackNewSession: jest.fn(async () => {})
+}))
+
 jest.mock('app/_api/telemetry', () => ({
   trackEvent: jest.fn(),
   trackGaEvent: jest.fn()
@@ -187,6 +191,47 @@ describe('image job lifecycle', () => {
 
   afterEach(() => {
     app.dexie.close()
+  })
+
+  it('does not write startup defaults after a backup begins during initialization', async () => {
+    let finish!: () => void
+    require('app/_utils/analytics').trackNewSession.mockReturnValueOnce(
+      new Promise<void>((resolve) => {
+        finish = resolve
+      })
+    )
+    const { initAppSettings } = require('app/_utils/initArtBotAppSettings')
+    const initializing = initAppSettings()
+    localStorage.setItem(
+      'ArtBotLibrarySelection:operation',
+      JSON.stringify({ expires: Date.now() + 30000 })
+    )
+    finish()
+    try {
+      await expect(initializing).resolves.toBeUndefined()
+    } finally {
+      localStorage.removeItem('ArtBotLibrarySelection:operation')
+    }
+  })
+
+  it('recovers a claim that ages out after a quick reload without resubmitting it', async () => {
+    await app.dexie.pending.add({
+      jobId: 'interrupted',
+      jobStatus: JobStatus.Requested,
+      requestedAt: Date.now()
+    })
+    await app.cache.initLoadPendingJobsFromDb()
+    await app.controller.fetchPendingImageJobs()
+    const clock = jest.spyOn(Date, 'now').mockReturnValue(Date.now() + 180000)
+    try {
+      await app.controller.fetchPendingImageJobs()
+      expect(app.cache.getPendingJob('interrupted').jobStatus).toBe(
+        JobStatus.Error
+      )
+      expect(horde.submissions).toHaveLength(0)
+    } finally {
+      clock.mockRestore()
+    }
   })
 
   describe('queueing', () => {
@@ -495,12 +540,14 @@ describe('image job lifecycle', () => {
       )
     })
 
-    it('fails a job when browser storage is full', async () => {
+    it('retains a queued job when browser storage is full', async () => {
       await submitJob()
       app.appStore.setStorageQuotaLimit(true)
 
       expect(await poll()).toEqual({ success: false })
-      expect(app.cache.getPendingJob('horde-1').jobStatus).toBe(JobStatus.Error)
+      expect(app.cache.getPendingJob('horde-1').jobStatus).toBe(
+        JobStatus.Queued
+      )
     })
   })
 
@@ -536,6 +583,27 @@ describe('image job lifecycle', () => {
         worker_name: 'worker-name'
       })
       expect(app.cache.getPendingJob('horde-1').jobStatus).toBe(JobStatus.Done)
+    })
+
+    it('retains and saves a finished result after a failed durable write', async () => {
+      await submitJob()
+      horde.finishJob()
+      const write = jest
+        .spyOn(app.dexie.completed, 'put')
+        .mockRejectedValueOnce(
+          new DOMException('Storage full', 'QuotaExceededError')
+        )
+      expect(await poll()).toEqual({ success: false })
+      write.mockRestore()
+      expect(app.cache.getPendingJob('horde-1').jobStatus).toBe(
+        JobStatus.Queued
+      )
+      expect(await app.dexie.completed.count()).toBe(0)
+      app.appStore.setStorageQuotaLimit(false)
+      await poll()
+      expect(await app.dexie.completed.count()).toBe(1)
+      expect(app.cache.getPendingJob('horde-1').jobStatus).toBe(JobStatus.Done)
+      expect(horde.submissions).toHaveLength(1)
     })
 
     it('flags that a new image is ready', async () => {

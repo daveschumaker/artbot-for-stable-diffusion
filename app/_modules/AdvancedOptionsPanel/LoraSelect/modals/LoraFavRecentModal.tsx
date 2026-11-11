@@ -1,3 +1,4 @@
+import { libraryStorage } from 'app/_backup/platform'
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import React, { useState } from 'react'
 import Input from 'app/_components/Input'
@@ -13,9 +14,9 @@ const loadFromLocalStorage = (filterType = 'favorites') => {
   let existingArray
 
   if (filterType === 'favorites') {
-    existingArray = localStorage.getItem('favoriteLoras')
+    existingArray = libraryStorage.getItem('favoriteLoras')
   } else if ((filterType = 'recents')) {
-    existingArray = localStorage.getItem('recentLoras')
+    existingArray = libraryStorage.getItem('recentLoras')
   }
 
   if (existingArray) {

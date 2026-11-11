@@ -142,7 +142,7 @@ cleanup against newly submitted work. Record this visit immediately on startup,
 while retaining the previous marker for the existing cleanup decision. The
 activity and queued-reload tests protect that behavior.
 
-The old full-database import added rows into an existing database, causing primary-key conflicts. Replacement now clears all tables inside the importer's transaction, using its first row callback; invalid imports roll back the clears and writes together. A valid empty backup is validated before an atomic clear. The importer still streams Blob reads. Before opening the replacement transaction, a streamed framing check rejects a truncated export; the library can otherwise accept an incomplete file as a successful partial import. Avoid the library version's `clearTablesBeforeImport` option here: it clears data before opening the import transaction. The positive restore, duplicate-key failure, and truncated-file tests protect these paths.
+The old full-database import added rows into an existing database, causing primary-key conflicts. Imports now write to a separate candidate database, audit its native records, then select it. Invalid or truncated input leaves the existing library selected and intact; the previous library remains available for rollback. Legacy Dexie JSON is parsed in bounded chunks, waiting for each chunk's fingerprint work before reading more. See [recoverable backups](backup-design.md) for the selection journal, preference recovery, saved-file verification and restore tests.
 
 The API is described in the [Dexie import/export documentation](https://dexie.org/docs/ExportImport/dexie-export-import).
 
@@ -165,9 +165,8 @@ that `VersionError`.
 `e2e/fixtures/legacy-backup.json` is a backup made by the deployed build's own
 **Download database** button, written by `e2e/fixtures/makeLegacyBackup.mjs`.
 An e2e test restores it and compares every stored row natively, including a
-nested Blob and an id gap. 4.4.2 still runs `clearTablesBeforeImport` before
-its transaction, so the import keeps clearing tables from the first row
-callback.
+nested Blob and an id gap. Imports use a separate candidate database rather
+than the library's nontransactional `clearTablesBeforeImport` option.
 
 Where the browser supports IndexedDB 3 (`getAllRecords`), Dexie 4 calls
 `getAll({ query, count, direction })` instead of `getAll(query, count)`.
@@ -202,7 +201,8 @@ case tests explicit user recovery; the profile restart case interrupts polling
 only after every POST is acknowledged. Do not claim automatic exactly-once
 submission across an ambiguous network failure.
 
-Remaining separate scenarios include full storage/quota exhaustion, installed
+Backup tests exercise injected storage failures and real localStorage quota
+exhaustion. Remaining separate scenarios include full-device storage exhaustion, installed
 PWA/service-worker upgrades, actual mobile Safari and clipboard, much larger
 full-resolution libraries, and long-idle queues under the existing 30-minute
 cleanup policy. A passing matrix is evidence for these cases and artifacts,

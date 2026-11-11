@@ -1,4 +1,5 @@
 'use client'
+import { libraryStorage } from 'app/_backup/platform'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -103,7 +104,7 @@ const CreatePage = ({ className }: any) => {
       negative: defaultPrompt.prompt || ''
     })
 
-    localStorage.removeItem('img2img_base64')
+    libraryStorage.removeItem('img2img_base64')
     setInput(newDefaultState)
   }
 
@@ -131,7 +132,7 @@ const CreatePage = ({ className }: any) => {
   }, [watchBuild])
 
   const updateLocalStorate = async () => {
-    const data = localStorage.getItem('PromptInputSettings')
+    const data = libraryStorage.getItem('PromptInputSettings')
 
     if (data) {
       try {
@@ -152,7 +153,7 @@ const CreatePage = ({ className }: any) => {
         }
 
         await PromptInputSettings.updateSavedInput_NON_DEBOUNCED(input)
-        localStorage.removeItem('PromptInputSettings')
+        libraryStorage.removeItem('PromptInputSettings')
       } catch (err) {
         console.log(`Error occurred while migrating PromptInputSettings`, err)
       }

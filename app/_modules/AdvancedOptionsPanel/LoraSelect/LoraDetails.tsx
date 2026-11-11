@@ -1,3 +1,4 @@
+import { libraryStorage } from 'app/_backup/platform'
 /* eslint-disable @next/next/no-img-element */
 import DOMPurify from 'isomorphic-dompurify'
 import { IconDownload, IconHeart, IconHeartFilled } from '@tabler/icons-react'
@@ -9,7 +10,7 @@ import AccordionItem from 'app/_components/AccordionItem'
 import { SavedLora } from '_types/artbot'
 
 const isFavorite = (loraName: string) => {
-  let existingArray = localStorage.getItem('favoriteLoras')
+  let existingArray = libraryStorage.getItem('favoriteLoras')
 
   if (!existingArray) {
     return false
@@ -43,7 +44,7 @@ const LoraDetails = ({
   )
   const handleFavorite = (loraDetails: any) => {
     // Check if the local storage already has an array stored
-    let existingArray = localStorage.getItem('favoriteLoras')
+    let existingArray = libraryStorage.getItem('favoriteLoras')
     let newArray
 
     if (existingArray) {
@@ -71,7 +72,7 @@ const LoraDetails = ({
     }
 
     // Store the updated array back in the local storage
-    localStorage.setItem('favoriteLoras', JSON.stringify(newArray))
+    libraryStorage.setItem('favoriteLoras', JSON.stringify(newArray))
   }
 
   return (

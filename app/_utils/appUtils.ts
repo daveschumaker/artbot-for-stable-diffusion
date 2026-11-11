@@ -1,6 +1,7 @@
 import { basePath } from 'BASE_PATH'
 import { HORDE_DEV, HORDE_PROD } from '_constants'
 import AppSettings from 'app/_data-models/AppSettings'
+import { backupBusy, restoredJobsPaused } from 'app/_backup/platform'
 import {
   pageHasFocus,
   pageIsPrimaryWindow,
@@ -22,6 +23,7 @@ export const clientHeader = () => {
 }
 
 export const isAppActive = () => {
+  if (backupBusy() || restoredJobsPaused()) return false
   if (typeof window === 'undefined') {
     return true
   }
@@ -122,7 +124,8 @@ export const downloadBlob = (blob: Blob, fileName: string) => {
   link.click()
 
   document.body.removeChild(link)
-  URL.revokeObjectURL(url)
+  // Leave time for Safari's download/Files handoff to consume the Blob URL.
+  setTimeout(() => URL.revokeObjectURL(url), 60000)
 }
 
 ///////

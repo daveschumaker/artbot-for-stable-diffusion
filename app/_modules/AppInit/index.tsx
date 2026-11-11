@@ -18,6 +18,8 @@ import { showSuccessToast } from 'app/_utils/notificationUtils'
 import NiceModal from '@ebay/nice-modal-react'
 import Modal from 'app/_componentsV2/Modal'
 import { initLoadPendingJobsFromDb } from 'app/_controllers/pendingJobsCache'
+import BackupActivityGuard from './BackupActivityGuard'
+import { backupBusy } from 'app/_backup/platform'
 
 NiceModal.register('confirmation-modal', Modal)
 NiceModal.register('lockedToWorker-modal', Modal)
@@ -66,8 +68,27 @@ export default function AppInit() {
   }
 
   useEffectOnce(() => {
-    init()
+    let stopped = false
+    let timer: ReturnType<typeof setTimeout> | undefined
+    const start = () => {
+      if (stopped) return
+      if (backupBusy()) {
+        timer = setTimeout(start, 250)
+        return
+      }
+      init()
+    }
+    start()
+    return () => {
+      stopped = true
+      clearTimeout(timer)
+    }
   })
 
-  return <AppTheme />
+  return (
+    <>
+      <AppTheme />
+      <BackupActivityGuard />
+    </>
+  )
 }

@@ -1,3 +1,4 @@
+import { libraryStorage } from 'app/_backup/platform'
 import React, { useEffect } from 'react'
 // import Switch from 'react-switch'
 
@@ -136,7 +137,7 @@ const AdvancedOptionsPanel = () => {
                           source_mask: '',
                           source_processing: SourceProcessing.Prompt
                         })
-                        localStorage.removeItem('img2img_base64')
+                        libraryStorage.removeItem('img2img_base64')
                       }}
                       style={{ maxWidth: '50%' }}
                     >

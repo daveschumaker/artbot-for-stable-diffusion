@@ -7,6 +7,12 @@ Older entries: [2024](changelog/2024.md), [2023](changelog/2023.md), [2022](chan
 - Removed: Shared image pages (`/artbot?i=...`) and the community Showcase.
 - Removed: The "Use all models" option. It only ever created one image.
 - Removed: The unfinished upscale page and the old SDXL beta image rating.
+- Fix: Restoring backups with large saved input settings no longer needs two copies of those settings in browser localStorage. Interrupted preference activation recovers before the library opens.
+- Fix: Legacy backup imports finish verifying each read before loading more data, preventing image verification work from accumulating across the whole archive.
+- Fix: A failed image save could be marked complete without storing the image. The acknowledged request is now retained so saving can recover without a new generation.
+- Fix: Uploaded drawing backgrounds disappeared after navigating away and returning.
+- Fix: Switching back to a recently used account could leave another account's details on screen.
+- Fix: Compatibility backups made after restoring a library now use the database name expected by older ArtBot versions.
 - Fix: Switching browser tabs while images were queued could send, or save, the same image twice.
 - Fix: Reloading the page while an image request was being sent left it stuck on "Image requested", or quietly deleted it later. It's now marked as failed, with a note to retry it if the image doesn't appear.
 - Fix: Exporting your database (Settings → Import / Export) now reads one image at a time, so large libraries are less likely to run out of memory, especially on phones. If an export fails, you now see an error instead of a stuck button.
@@ -28,7 +34,7 @@ Older entries: [2024](changelog/2024.md), [2023](changelog/2023.md), [2022](chan
 - Fix: Typing a new LoRA or embedding search while another was loading could leave the old results on screen.
 - Fix: The base model filters (SDXL, Pony, Flux and so on) in the embedding search were ignored. They now filter results, as they do for LoRAs.
 - Fix: Searches containing `&` or `#`, empty searches and CivitAI errors now show the right results or messages. Repeat searches load instantly from a cache.
-- Security fixes for the server and its dependencies.
+- Security fixes for the server and its dependencies. Login failures are limited per client without locking everyone out, and URL image imports now enforce dimension, request-rate and concurrency limits.
 
 # 2025.08.18
 

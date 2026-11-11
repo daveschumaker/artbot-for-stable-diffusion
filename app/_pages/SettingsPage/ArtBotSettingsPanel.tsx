@@ -1,3 +1,4 @@
+import { libraryStorage } from 'app/_backup/platform'
 import Section from 'app/_components/Section'
 import AlertDialogBox from 'app/_components/AlertDialogBox'
 import PageTitle from 'app/_components/PageTitle'
@@ -40,7 +41,7 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
           title="Are you sure you want to reset your preferences?"
           message="This option will reset all user settings found on this settings page. (e.g., API key, image download preferences, stored input values, etc). Your images will be safe. However, please save your API key before continuing."
           onConfirmClick={() => {
-            localStorage.clear()
+            libraryStorage.clear()
             window.location.reload()
           }}
           closeModal={() => {
@@ -65,7 +66,7 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
               ]}
               isSearchable={false}
               onChange={(obj: any) => {
-                localStorage.setItem('theme', obj.value)
+                libraryStorage.setItem('theme', obj.value)
                 handleUpdateSelect('theme', obj)
                 updateTheme(obj.value)
               }}
@@ -357,7 +358,7 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
           <Button
             theme="secondary"
             onClick={() => {
-              localStorage.removeItem('PromptInputSettings')
+              libraryStorage.removeItem('PromptInputSettings')
               // A full page load, so nothing keeps the cleared settings.
               // eslint-disable-next-line @next/next/no-location-assign-relative-destination
               window.location.assign(`${window.location.origin}${basePath}`)

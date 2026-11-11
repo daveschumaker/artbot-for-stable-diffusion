@@ -1,9 +1,10 @@
+import { libraryStorage } from 'app/_backup/platform'
 import { MAX_TI_CACHE } from '_constants'
 import { Embedding } from '_types/civitai'
 
 export const handleSaveRecentEmbedding = (embedding: Embedding) => {
   // Check if the local storage already has an array stored
-  let existingArray = localStorage.getItem('recentEmbeddings')
+  let existingArray = libraryStorage.getItem('recentEmbeddings')
   let newArray
 
   if (existingArray) {
@@ -32,5 +33,5 @@ export const handleSaveRecentEmbedding = (embedding: Embedding) => {
   }
 
   // Store the updated array back in the local storage
-  localStorage.setItem('recentEmbeddings', JSON.stringify(newArray))
+  libraryStorage.setItem('recentEmbeddings', JSON.stringify(newArray))
 }

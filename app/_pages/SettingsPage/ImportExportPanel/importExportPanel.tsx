@@ -12,8 +12,6 @@ import SpinnerV2 from 'app/_components/Spinner'
 import { IconChevronRight } from '@tabler/icons-react'
 import ExportDatabase from 'app/_pages/SettingsPage/ExportDatabase'
 import ImportDatabase from 'app/_pages/SettingsPage/ImportDatabase'
-import LastResortExport from 'app/_pages/SettingsPage/FirefoxDb/LastResortExport'
-import LastResortImport from 'app/_pages/SettingsPage/FirefoxDb/LastResortImport'
 import DevExportImport from '../_DevExportImport'
 
 const Section = styled.div`
@@ -142,6 +140,10 @@ const ImportExportPanel = () => {
             ? `(${componentState.totalImages} images)`
             : null}
           <div className="block text-xs mb-2 mt-2 w-full">
+            Image archives are for viewing and sharing. Use the complete backup
+            above to preserve database tables, source images and preferences.
+          </div>
+          <div className="block text-xs mb-2 mt-2 w-full">
             Create a series of zip files that includes a JSON files with image
             generation parameters, as well as all ArtBot images stored within
             your browser cache. Depending on your device and the number of
@@ -188,10 +190,6 @@ const ImportExportPanel = () => {
             <ul>{renderImageList()}</ul>
           </Section>
         </SubSectionTitle>
-      </Section>
-      <Section>
-        <LastResortExport />
-        <LastResortImport />
       </Section>
       {process.env.NEXT_PUBLIC_ENVIRONMENT === 'development' && (
         <Section>

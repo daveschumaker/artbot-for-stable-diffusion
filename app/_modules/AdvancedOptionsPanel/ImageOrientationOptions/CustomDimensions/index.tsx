@@ -1,3 +1,4 @@
+import { libraryStorage } from 'app/_backup/platform'
 import {
   IconCheck,
   IconEdit,
@@ -32,7 +33,7 @@ export default function CustomDimensions({ handleClose, setInput }: Props) {
 
   const loadValues = () => {
     try {
-      const jsonString = localStorage.getItem(key)
+      const jsonString = libraryStorage.getItem(key)
       if (!jsonString) return
 
       const arrayOfArrays = JSON.parse(jsonString)
@@ -46,7 +47,7 @@ export default function CustomDimensions({ handleClose, setInput }: Props) {
     setCustomValues(copyArray)
 
     const jsonString = JSON.stringify(copyArray)
-    localStorage.setItem(key, jsonString)
+    libraryStorage.setItem(key, jsonString)
   }, [customValues, height, idx, name, width])
 
   const deleteValue = useCallback(
@@ -56,7 +57,7 @@ export default function CustomDimensions({ handleClose, setInput }: Props) {
       setCustomValues(copyArray)
 
       const jsonString = JSON.stringify(copyArray)
-      localStorage.setItem(key, jsonString)
+      libraryStorage.setItem(key, jsonString)
     },
     [customValues]
   )

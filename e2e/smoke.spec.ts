@@ -120,6 +120,7 @@ test('creating an image takes it from prompt to gallery', async ({ page }) => {
   expect(horde.submissions[0].prompt).toContain('a cat in a hat')
   expect(horde.submissions[0].models).toEqual([MODEL])
 
+  await finishFixtureSetup(page)
   await page.goto('/artbot/images')
   const thumbnail = page.locator('a[href="/artbot/image/e2e-job"]').first()
   await expect(thumbnail).toBeVisible()
@@ -128,6 +129,7 @@ test('creating an image takes it from prompt to gallery', async ({ page }) => {
   // On desktop, a thumbnail opens the image in a modal.
   await expectImageToDisplay(page, 'a cat in a hat')
 
+  await finishFixtureSetup(page)
   await page.goto('/artbot/image/e2e-job')
   await expectImageToDisplay(page, 'a cat in a hat')
   expect(errors).toEqual([])

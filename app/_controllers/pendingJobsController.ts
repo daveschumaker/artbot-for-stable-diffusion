@@ -12,7 +12,8 @@ import {
   MAX_CONCURRENT_JOBS_USER,
   POLL_COMPLETED_JOBS_INTERVAL
 } from '_constants'
-import { getAllPendingJobs } from './pendingJobsCache'
+import { getAllPendingJobs, refreshPendingJobFromDb } from './pendingJobsCache'
+import { failStaleRequestedJobs } from 'app/_utils/db'
 import AppSettings from 'app/_data-models/AppSettings'
 import { userInfoStore } from 'app/_store/userStore'
 
@@ -42,7 +43,19 @@ const getProcessingOrQueuedJobs = (jobs: any[]): any[] => {
   )
 }
 
+let lastRecovery = 0
 export const fetchPendingImageJobs = async () => {
+  if (Date.now() - lastRecovery > 10000 && isAppActive()) {
+    lastRecovery = Date.now()
+    try {
+      if (await failStaleRequestedJobs(isSubmittingJob)) {
+        for (const job of getAllPendingJobs(JobStatus.Requested))
+          await refreshPendingJobFromDb(job.id, job.jobId)
+      }
+    } catch (error) {
+      logDebug('Claim recovery deferred', error)
+    }
+  }
   pendingJobs = [...getAllPendingJobs()]
 }
 
@@ -50,7 +63,8 @@ const checkMultiPendingJobs = async () => {
   if (
     typeof window === 'undefined' ||
     pendingJobs.length === 0 ||
-    !isAppCurrentlyActive
+    !isAppCurrentlyActive ||
+    !isAppActive()
   ) {
     return
   }

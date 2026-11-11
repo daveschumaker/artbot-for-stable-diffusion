@@ -1,3 +1,9 @@
+import {
+  assertLibraryWritable,
+  readPreferences,
+  writePreferences
+} from 'app/_backup/platform'
+
 interface IAppSettingsParams {
   allowNsfwImages: boolean
   apiKey: string
@@ -45,12 +51,9 @@ class AppSettings {
     return data[item]
   }
 
-  static load() {
+  static load(): Record<string, any> {
     try {
-      const string = localStorage.getItem('appConfig') || ''
-      const data = JSON.parse(string)
-
-      return data
+      return readPreferences()
     } catch (err) {
       return {}
     }
@@ -67,15 +70,10 @@ class AppSettings {
     this.save(key, val)
   }
 
-  static saveAll(params: IAppSettingsParams) {
-    try {
-      // Save version in case we update settings params at a later time.
-      const data = { v: '1', ...params }
-      const string = JSON.stringify(data)
-      localStorage.setItem('appConfig', string)
-    } catch (err) {
-      localStorage.setItem('appConfig', '{}')
-    }
+  static saveAll(params: Record<string, any>) {
+    assertLibraryWritable()
+    // Failed writes must never replace existing settings with an empty object.
+    writePreferences({ v: '1', ...params })
   }
 }
 

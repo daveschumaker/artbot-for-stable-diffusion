@@ -1,4 +1,5 @@
 'use client'
+import { libraryStorage } from 'app/_backup/platform'
 
 /* eslint-disable @next/next/no-img-element */
 import { useCallback, useEffect, useState } from 'react'
@@ -76,7 +77,7 @@ const ControlNetPage = () => {
     const { source_image, ...inputParams } = params
 
     const string = JSON.stringify(inputParams)
-    localStorage.setItem('controlnetPageInput', string)
+    libraryStorage.setItem('controlnetPageInput', string)
   }
 
   const handleImportDrawing = () => {
@@ -190,7 +191,7 @@ const ControlNetPage = () => {
   }, [input, pending, router, setErrors, totalImagesRequested])
 
   useEffectOnce(() => {
-    const string = localStorage.getItem('controlnetPageInput')
+    const string = libraryStorage.getItem('controlnetPageInput')
     const cached = string ? JSON.parse(string) : {}
     const updateObj = Object.assign(
       {},

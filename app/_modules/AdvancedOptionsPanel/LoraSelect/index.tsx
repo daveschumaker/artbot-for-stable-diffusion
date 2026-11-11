@@ -1,4 +1,5 @@
 'use client'
+import { libraryStorage } from 'app/_backup/platform'
 
 import React, { useCallback } from 'react'
 import Section from 'app/_components/Section'
@@ -56,7 +57,7 @@ const LoraSelect = () => {
 
   const handleSaveRecent = (loraDetails: any) => {
     // Check if the local storage already has an array stored
-    let existingArray = localStorage.getItem('recentLoras')
+    let existingArray = libraryStorage.getItem('recentLoras')
     let newArray
 
     if (existingArray) {
@@ -85,7 +86,7 @@ const LoraSelect = () => {
     }
 
     // Store the updated array back in the local storage
-    localStorage.setItem('recentLoras', JSON.stringify(newArray))
+    libraryStorage.setItem('recentLoras', JSON.stringify(newArray))
   }
 
   // The search modal passes a CivitAI Embedding plus the chosen version;

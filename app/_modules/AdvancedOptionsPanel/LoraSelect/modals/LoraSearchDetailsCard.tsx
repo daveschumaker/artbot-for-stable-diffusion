@@ -1,3 +1,4 @@
+import { libraryStorage } from 'app/_backup/platform'
 /* eslint-disable @next/next/no-img-element */
 import {
   IconDownload,
@@ -19,7 +20,7 @@ import { handleConvertLora } from '../loraUtils'
 import Select from 'app/_components/Select'
 
 const isFavorite = (tiId: string) => {
-  let existingArray = localStorage.getItem('favoriteEmbeddings')
+  let existingArray = libraryStorage.getItem('favoriteEmbeddings')
 
   if (!existingArray) {
     return false
@@ -53,7 +54,7 @@ export default function LoraSearchDetailsCard({
     const loraDetails = handleConvertLora(embedding, loraVersion)
 
     // Check if the local storage already has an array stored
-    let existingArray = localStorage.getItem('favoriteLoras')
+    let existingArray = libraryStorage.getItem('favoriteLoras')
     let newArray
 
     if (existingArray) {
@@ -81,7 +82,7 @@ export default function LoraSearchDetailsCard({
     }
 
     // Store the updated array back in the local storage
-    localStorage.setItem('favoriteLoras', JSON.stringify(newArray))
+    libraryStorage.setItem('favoriteLoras', JSON.stringify(newArray))
   }
 
   const versionOptions = embedding.modelVersions.map((model, idx) => {
