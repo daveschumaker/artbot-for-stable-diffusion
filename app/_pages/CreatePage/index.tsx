@@ -399,9 +399,7 @@ const CreatePage = ({ className }: any) => {
 
     // Cleanup
     return () => {
-      if (actionPanelRef.current) {
-        observer.unobserve(actionPanelRef.current)
-      }
+      observer.disconnect()
     }
   }, [width])
 
