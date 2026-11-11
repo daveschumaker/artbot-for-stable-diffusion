@@ -6,12 +6,6 @@ const plural = (diff: number, bucket: number) => {
   }
 }
 
-export const kilobytesToGigabytes = (kilobytes: number) => {
-  const bytesInGigabyte = 1024 * 1024
-  const gigabytes = kilobytes / bytesInGigabyte
-  return gigabytes
-}
-
 export const nearestWholeMultiple = (input: number, X = 64) => {
   let output = Math.round(input / X)
   if (output === 0 && input > 0) {

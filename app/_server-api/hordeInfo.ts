@@ -12,7 +12,7 @@ import { clientHeader } from 'app/_utils/appUtils'
 
 let perf = {}
 
-export const fetchHordePerformance = async () => {
+const fetchHordePerformance = async () => {
   const __DEV__ = process.env.NODE_ENV !== 'production'
 
   try {

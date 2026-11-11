@@ -77,5 +77,3 @@ export const getRandomTip = () => {
 
   return tips[randomIndex]
 }
-
-export default tips

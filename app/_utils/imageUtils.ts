@@ -72,12 +72,6 @@ export const cropToNearest64 = (base64str: string) => {
   })
 }
 
-export const uploadImageConfig = {
-  quality: 0.9,
-  maxWidth: 1024,
-  maxHeight: 1024
-}
-
 export const randomSampler = (steps: number, isImg2Img: boolean) => {
   const loggedIn = userInfoStore.state.loggedIn
 
@@ -387,51 +381,6 @@ export const base64toBlob = async (
   }
 }
 
-export const imageDimensions = (fullDataString: string) => {
-  if (
-    fullDataString.indexOf('data:image/') !== 0 &&
-    !fullDataString.includes('data:image/webp;base64,')
-  ) {
-    fullDataString = `data:image/webp;base64,` + fullDataString
-  }
-
-  return new Promise((resolve) => {
-    var i = new Image()
-
-    i.onload = function () {
-      resolve({
-        height: i.height,
-        width: i.width
-      })
-    }
-
-    i.src = fullDataString
-  })
-}
-
-export const imgUrlToDataUrl = (url: string) => {
-  return new Promise((resolve) => {
-    try {
-      var xhr = new XMLHttpRequest()
-      xhr.onload = function () {
-        var reader = new FileReader()
-        reader.onloadend = function () {
-          resolve(xhr.response)
-        }
-        reader.readAsDataURL(xhr.response)
-      }
-      xhr.onerror = function () {
-        resolve(false)
-      }
-      xhr.open('GET', url)
-      xhr.responseType = 'blob'
-      xhr.send()
-    } catch (err) {
-      resolve(false)
-    }
-  })
-}
-
 export const getImageFromUrl = async (imgUrl: string) => {
   const validUrl = isValidHttpUrl(imgUrl)
 
@@ -545,53 +494,6 @@ export const modifyPromptForStylePreset = ({
   }
 
   return stylePresetPrompt
-}
-
-export const kudosCost = ({
-  width,
-  height,
-  steps,
-  numImages,
-  postProcessors,
-  sampler,
-  control_type,
-  prompt = '',
-  negativePrompt = ''
-}: {
-  width: number
-  height: number
-  steps: number
-  numImages: number
-  postProcessors: Array<string>
-  sampler: string
-  control_type: string
-  prompt: string
-  negativePrompt: string
-}): number => {
-  const combinePrompts = `${prompt} ${negativePrompt}`
-  const numWeights = combinePrompts.match(/\(.+?\)/g) || []
-
-  const result =
-    Math.pow((width as number) * (height as number) - 64 * 64, 1.75) /
-    Math.pow(1024 * 1024 - 64 * 64, 1.75)
-
-  let kudos =
-    0.1232 * (steps as number) + result * (0.1232 * (steps as number) * 8.75)
-
-  const processingCost =
-    kudos *
-    numImages *
-    (/dpm_2|dpm_2_a|k_heun/.test(sampler) ? 2 : 1) *
-    (1 + (postProcessors.includes('RealESRGAN_x4plus') ? 0.2 * 1 + 0.3 : 0))
-
-  const weightedCost = numWeights.length * numImages
-  const totalCost = processingCost + weightedCost
-
-  if (!control_type) {
-    return Math.round(totalCost)
-  } else {
-    return Math.round(totalCost * 3)
-  }
 }
 
 export const blobToClipboard = async (base64String: string) => {
@@ -975,10 +877,7 @@ export const countImagesToGenerate = (imageParams: ICountImages) => {
   return imageCount
 }
 
-export const dataUrlToFile = (
-  dataUrl: string,
-  filename: string
-): File | undefined => {
+const dataUrlToFile = (dataUrl: string, filename: string): File | undefined => {
   dataUrl = `data:image/webp;base64,` + dataUrl
   const arr = dataUrl.split(',')
   if (arr.length < 2) {

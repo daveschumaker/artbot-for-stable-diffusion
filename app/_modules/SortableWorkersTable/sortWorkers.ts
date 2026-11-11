@@ -13,7 +13,7 @@ type SortableHordeWorkerKeys = {
 export type WorkerSortKey = keyof HordeWorkerDetails | 'kph'
 export type WorkerSortOrder = 'asc' | 'dsc'
 
-export const kudosPerHour = (worker: HordeWorkerDetails) =>
+const kudosPerHour = (worker: HordeWorkerDetails) =>
   worker.uptime ? Math.floor(worker.kudos_rewards / (worker.uptime / 3600)) : 0
 
 const sortValue = (worker: HordeWorkerDetails, sortBy: WorkerSortKey) => {

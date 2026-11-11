@@ -12,7 +12,7 @@ import { clientHeader } from 'app/_utils/appUtils'
 
 let workerDetailsCache: any[] = []
 
-export const fetchWorkerDetails = async () => {
+const fetchWorkerDetails = async () => {
   const __DEV__ = process.env.NODE_ENV !== 'production'
 
   try {

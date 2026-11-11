@@ -26,8 +26,8 @@ const APP1_MARKER = [0xff, 0xe1]
 const startsWith = (bytes: Uint8Array, signature: number[]) =>
   signature.every((byte, i) => bytes[i] === byte)
 
-export const isPng = (bytes: Uint8Array) => startsWith(bytes, PNG_SIGNATURE)
-export const isJpeg = (bytes: Uint8Array) => startsWith(bytes, JPEG_SIGNATURE)
+const isPng = (bytes: Uint8Array) => startsWith(bytes, PNG_SIGNATURE)
+const isJpeg = (bytes: Uint8Array) => startsWith(bytes, JPEG_SIGNATURE)
 
 let crcTable: Uint32Array | undefined
 

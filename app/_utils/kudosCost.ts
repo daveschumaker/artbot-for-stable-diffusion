@@ -69,7 +69,7 @@ export const kudosCostV2 = ({
   return Math.round(kudos)
 }
 
-export const getAccurateSteps = (
+const getAccurateSteps = (
   steps: number,
   samplerName: string,
   hasSourceImage: boolean,

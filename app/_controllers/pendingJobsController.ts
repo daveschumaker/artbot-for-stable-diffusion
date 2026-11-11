@@ -38,13 +38,11 @@ const getProcessingOrQueuedJobs = (jobs: any[]): any[] => {
   )
 }
 
-export const getPendingJobsFromCache = () => [...pendingJobs]
-
 export const fetchPendingImageJobs = async () => {
   pendingJobs = [...getAllPendingJobs()]
 }
 
-export const checkMultiPendingJobs = async () => {
+const checkMultiPendingJobs = async () => {
   if (
     typeof window === 'undefined' ||
     pendingJobs.length === 0 ||
@@ -62,6 +60,7 @@ export const checkMultiPendingJobs = async () => {
   }
 }
 
+/** @public jobLifecycle.test.ts loads this module with require(). */
 export const createImageJobs = async () => {
   if (typeof window === 'undefined' || pendingJobs.length === 0) {
     return
@@ -102,7 +101,7 @@ export const createImageJobs = async () => {
   }
 }
 
-export const updatePendingJobs = async () => {
+const updatePendingJobs = async () => {
   await fetchPendingImageJobs()
   await sleep(100)
   while (true) {
@@ -111,7 +110,7 @@ export const updatePendingJobs = async () => {
   }
 }
 
-export const createPendingJobInterval = async () => {
+const createPendingJobInterval = async () => {
   await fetchPendingImageJobs()
   createImageJobs()
   await sleep(1100)
@@ -123,7 +122,7 @@ export const createPendingJobInterval = async () => {
   }
 }
 
-export const pendingJobCheckInterval = async () => {
+const pendingJobCheckInterval = async () => {
   while (true) {
     await checkMultiPendingJobs()
     await sleep(POLL_COMPLETED_JOBS_INTERVAL)

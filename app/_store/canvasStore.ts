@@ -39,14 +39,6 @@ export const getI2IString = () => {
   return i2iBase64String
 }
 
-export const clearI2IString = () => {
-  i2iBase64String = {
-    base64String: '',
-    height: 0,
-    width: 0
-  }
-}
-
 // Restore canvas image + mask data from image
 export const cloneFromImage = (canvasObj: ICanvas) => {
   clonedCanvasObj = canvasObj

@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import styles from './overlay.module.css'
 import { CSSProperties } from 'react'
 
-export interface IOverlayProps {
+interface IOverlayProps {
   className?: string
   blurBackground?: boolean
   disableBackground?: boolean

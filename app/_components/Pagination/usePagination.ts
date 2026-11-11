@@ -67,5 +67,3 @@ export const usePagination = ({
 
   return paginationRange
 }
-
-export default usePagination

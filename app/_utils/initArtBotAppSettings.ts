@@ -21,7 +21,7 @@ import { fetchUserDetailsV2 } from 'app/_api/fetchUserDetailsV2'
 import { client_fetchModelDetailsV2 } from 'app/_api/client_fetchModelDetailsV2'
 import { client_fetchModelsAvailableV2 } from 'app/_api/client_fetchModelsAvailableV2'
 
-export const updateShowGrid = () => {
+const updateShowGrid = () => {
   if (localStorage.getItem('showGrid') === 'true') {
     localStorage.setItem('showLayout', 'grid')
   } else if (localStorage.getItem('showGrid') === 'false') {
@@ -31,7 +31,7 @@ export const updateShowGrid = () => {
   localStorage.removeItem('showGrid')
 }
 
-export const updateAppConfig = () => {
+const updateAppConfig = () => {
   if (AppSettings.get('v')) {
     return
   }
@@ -77,7 +77,7 @@ export const updateAppConfig = () => {
 
 // Track time of last visit so we can potentially clean up pending items database.
 // If the user is returning to ArtBot after 30 minutes, clear out the pending items queue for performance reasons.
-export const appLastActive = async () => {
+const appLastActive = async () => {
   const WAIT_TIME_SEC = 1800 // 30 minutes.
   const lastActiveTime = localStorage.getItem('ArtBotLastActive')
   let currentTime = Math.floor(Date.now() / 1000)
@@ -110,7 +110,7 @@ export const appLastActive = async () => {
 
 // Use to fix any issues related to local storage values
 // due to bad decisions on my part.
-export const fixLocalStorage = async () => {}
+const fixLocalStorage = async () => {}
 
 export const initAppSettings = async () => {
   if (typeof window === 'undefined') {

@@ -2,9 +2,9 @@ import { expect, Page } from '@playwright/test'
 import sharp from 'sharp'
 
 export const MODEL = 'AlbedoBase XL (SDXL)'
-export const STANDARD_MODEL = 'Deliberate'
+const STANDARD_MODEL = 'Deliberate'
 export const FALLBACK_MODEL = 'stable_diffusion'
-export const INPAINTING_MODEL = 'Deliberate Inpainting'
+const INPAINTING_MODEL = 'Deliberate Inpainting'
 export const CAPTION = 'a small blue square'
 
 const CORS = { 'access-control-allow-origin': '*' }

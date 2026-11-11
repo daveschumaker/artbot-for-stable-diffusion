@@ -62,7 +62,7 @@ const _fetchMyWorkers = async () => {
     }
   }
 }
-export const fetchMyWorkers = memoizee(_fetchMyWorkers, {
+const fetchMyWorkers = memoizee(_fetchMyWorkers, {
   maxAge: 5000
 })
 

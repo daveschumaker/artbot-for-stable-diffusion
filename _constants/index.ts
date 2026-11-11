@@ -1,11 +1,7 @@
 import AppSettings from 'app/_data-models/AppSettings'
 import { IOrientation } from '_types'
-
-export const ANON_API_KEY = '0000000000'
 export const HORDE_PROD = 'https://aihorde.net'
 export const HORDE_DEV = 'https://dev.aihorde.net'
-export const RATING_API = 'https://ratings.aihorde.net'
-export const FOOTER_HEIGHT_PX = 62
 export const CREATE_NEW_JOB_INTERVAL = 1500 // ms between new job requests
 export const RATE_IMAGE_CUTOFF_SEC = 900
 export const MAX_CONCURRENT_JOBS_ANON = AppSettings.get('maxConcurrency') || 5
@@ -65,22 +61,6 @@ export const CONTROL_TYPE_ARRAY = [
 
 export const MODEL_LIMITED_BY_WORKERS = 3
 
-interface IQualityMap {
-  [key: number]: number
-}
-
-// Stable Horde API does something silly where you rate image quality from best (0) to worst (5).
-// Meanwhile, you rate images aesthetically from worst (1) to best (10). Lining these up is confusing
-// and counter-intuitive.
-export const RATING_QUALITY_MAP: IQualityMap = {
-  1: 5,
-  2: 4,
-  3: 3,
-  4: 2,
-  5: 1,
-  6: 0
-}
-
 export const ORIENTATION_OPTIONS: Array<IOrientation> = [
   {
     value: 'landscape-16x9',
@@ -101,12 +81,3 @@ export const ORIENTATION_OPTIONS: Array<IOrientation> = [
   { value: 'custom', label: 'Custom' },
   { value: 'random', label: 'Random!' }
 ]
-
-export const zIndex = {
-  DEFAULT: 1,
-  OVER_BASE: 2, // e.g., Makes <Select /> menu dropdown appear above other select components
-  NAV_BAR: 25,
-  MODAL: 3,
-  SLIDING_PANEL: 4,
-  OVERLAY: 30
-}
