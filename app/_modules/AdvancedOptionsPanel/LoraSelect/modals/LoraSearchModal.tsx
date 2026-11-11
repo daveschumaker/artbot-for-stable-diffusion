@@ -1,5 +1,5 @@
 import DropdownOptions from 'app/_modules/DropdownOptions'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Embedding, ModelVersion } from '_types/civitai'
 import FlexCol from 'app/_components/FlexCol'
 import Input from 'app/_components/Input'
@@ -10,120 +10,13 @@ import Checkbox from 'app/_components/Checkbox'
 import LoraSearchDetailsCard from './LoraSearchDetailsCard'
 import AppSettings from 'app/_data-models/AppSettings'
 import SpinnerV2 from 'app/_components/Spinner'
-import Pagination from 'app/_components/Pagination'
-import CacheController from 'app/_data-models/CacheController'
-import { buildCivitaiQuery, buildCivitaiCacheKey } from '../loraUtils'
-
-const debounce = <A extends unknown[], R>(
-  func: (...args: A) => Promise<R>,
-  delay: number
-) => {
-  let timerId: ReturnType<typeof setTimeout> | undefined
-
-  return (...args: A) => {
-    clearTimeout(timerId)
-    return new Promise<R>((resolve) => {
-      timerId = setTimeout(() => {
-        resolve(func.apply(null, args))
-      }, delay)
-    })
-  }
-}
-
-const LIMIT = 20
-
-const cache = new CacheController()
-
-let pendingRequest = false
-// API reference: https://github.com/civitai/civitai/wiki/REST-API-Reference
-const searchRequest = async ({
-  input,
-  page = 1,
-  nsfw = false,
-  sdxl = false,
-  sd15 = false,
-  sd21 = false,
-  illu = false,
-  noob = false,
-  flux = false,
-  pony = false
-}: {
-  input?: string
-  page?: number
-  nsfw?: boolean
-  sdxl?: boolean
-  sd15?: boolean
-  sd21?: boolean
-  illu?: boolean
-  noob?: boolean
-  flux?: boolean
-  pony?: boolean
-}) => {
-  try {
-    if (pendingRequest) return false
-
-    pendingRequest = true
-
-    const controller = new AbortController()
-    const signal = controller.signal
-
-    const searchParams = {
-      input,
-      page,
-      nsfw,
-      sdxl,
-      sd15,
-      sd21,
-      illu,
-      noob,
-      flux,
-      pony
-    }
-
-    const searchKey = buildCivitaiQuery(searchParams)
-    const cacheKey = buildCivitaiCacheKey(searchParams)
-
-    if (cache.get(cacheKey)) {
-      const data = cache.get(cacheKey)
-
-      const { items = [], metadata = {} } = data
-      pendingRequest = false
-      return { items, metadata }
-    }
-
-    const timeout = setTimeout(() => {
-      controller.abort()
-      pendingRequest = false
-      console.error('Request timed out')
-    }, 15000) // Change the timeout duration as needed
-
-    const response = await fetch(
-      `https://civitai.com/api/v1/models?types=LORA&types=LoCon&sort=Highest%20Rated&${searchKey}`,
-      { signal }
-    )
-    clearTimeout(timeout)
-
-    const data = await response.json()
-    cache.set(cacheKey, data)
-
-    const { items = [], metadata = {} } = data
-    pendingRequest = false
-    return { items, metadata }
-  } catch (error) {
-    console.error('Error fetching models:', error)
-    pendingRequest = false
-    return { items: [], metadata: {}, error: true }
-  }
-}
-
-const debouncedSearchRequest = debounce(searchRequest, 500)
+import { useCivitaiSearch } from 'app/_hooks/useCivitaiSearch'
 
 const LoraSearchModal = ({
   handleClose = () => {},
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   handleAddLora = (lora: Embedding, version: ModelVersion) => {}
 }) => {
-  const [hasError, setHasError] = useState<string | boolean>(false)
   const [showOptionsMenu, setShowOptionsMenu] = useState(false)
   const [showNsfw, setShowNsfw] = useState(AppSettings.get('civitaiShowNsfw'))
   const [showSDXL, setShowSDXL] = useState(AppSettings.get('civitaiShowSDXL'))
@@ -133,118 +26,23 @@ const LoraSearchModal = ({
   const [showFlux, setShowFlux] = useState(AppSettings.get('civitaiShowFlux'))
   const [showNoob, setShowNoob] = useState(AppSettings.get('civitaiShowNoob'))
   const [showIllu, setShowIllu] = useState(AppSettings.get('civitaiShowIllu'))
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalItems, setTotalItems] = useState(-1) // Setting 0 here causes brief flash between loading finished and totalItems populated
-  const [totalPages, setTotalPages] = useState(0)
-  const [loading, setLoading] = useState(false)
-  const [searchResult, setSearchResult] = useState<Embedding[] | null>(null)
   const [input, setInput] = useState<string>('')
 
-  const debouncedFetchModels = useCallback(async () => {
-    setLoading(true)
-
-    const result = await debouncedSearchRequest({
-      input,
-      nsfw: showNsfw,
-      sdxl: showSDXL,
-      sd15: showSD15,
-      sd21: showSD21,
-      pony: showPony,
-      noob: showNoob,
-      illu: showIllu,
-      flux: showFlux,
-      page: currentPage
-    })
-
-    const { items = [], metadata = {}, error } = result || {}
-    if (result && !error) {
-      setSearchResult(items as unknown as Embedding[])
-      setTotalItems(metadata.totalItems)
-      setTotalPages(metadata.totalPages)
-    } else if (error) {
-      setHasError('Unable to load data from CivitAI, please try again shortly.')
-    }
-    setLoading(false)
-  }, [
+  const search = useCivitaiSearch('lora', {
     input,
-    showNsfw,
-    showSDXL,
-    showSD15,
-    showSD21,
-    showPony,
-    showNoob,
-    showIllu,
-    showFlux,
-    currentPage
-  ])
+    nsfw: !!showNsfw,
+    sd15: !!showSD15,
+    sd21: !!showSD21,
+    sdxl: !!showSDXL,
+    pony: !!showPony,
+    flux: !!showFlux,
+    noob: !!showNoob,
+    illu: !!showIllu
+  })
 
-  const fetchModels = useCallback(async () => {
-    setLoading(true)
-    const result = await searchRequest({
-      input,
-      page: 1,
-      nsfw: showNsfw,
-      sdxl: showSDXL,
-      sd15: showSD15,
-      sd21: showSD21,
-      pony: showPony,
-      noob: showNoob,
-      illu: showIllu,
-      flux: showFlux
-    })
-
-    // Happens due to _dev_ environment firing calls twice
-    if (result === false) return
-
-    const { items = [], metadata = {} } = result
-    setSearchResult(items)
-    setTotalItems(metadata.totalItems)
-    setTotalPages(metadata.totalPages)
-
-    setLoading(false)
-  }, [
-    input,
-    showNsfw,
-    showSDXL,
-    showSD15,
-    showSD21,
-    showPony,
-    showNoob,
-    showIllu,
-    showFlux
-  ])
-
-  const handleInputChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setCurrentPage(1)
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value)
   }
-
-  const handlePageClick = (page: number) => {
-    setCurrentPage(page)
-  }
-
-  useEffect(() => {
-    fetchModels()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  useEffect(() => {
-    debouncedFetchModels()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    currentPage,
-    input,
-    showNsfw,
-    showSDXL,
-    showSD15,
-    showSD21,
-    showPony,
-    showNoob,
-    showIllu,
-    showFlux
-  ])
 
   return (
     <div id="lora-search-modal">
@@ -302,7 +100,6 @@ const LoraSearchModal = ({
                     onChange={(bool: boolean) => {
                       AppSettings.set('civitaiShowNsfw', bool)
                       setShowNsfw(bool)
-                      setCurrentPage(1) // Reset to page 1 when filter changes
                     }}
                   />
                 </div>
@@ -313,7 +110,6 @@ const LoraSearchModal = ({
                     onChange={(bool: boolean) => {
                       AppSettings.set('civitaiShowSDXL', bool)
                       setShowSDXL(bool)
-                      setCurrentPage(1) // Reset to page 1 when filter changes
                     }}
                   />
                 </div>
@@ -324,7 +120,6 @@ const LoraSearchModal = ({
                     onChange={(bool: boolean) => {
                       AppSettings.set('civitaiShowSD15', bool)
                       setShowSD15(bool)
-                      setCurrentPage(1) // Reset to page 1 when filter changes
                     }}
                   />
                 </div>
@@ -335,7 +130,6 @@ const LoraSearchModal = ({
                     onChange={(bool: boolean) => {
                       AppSettings.set('civitaiShowSD21', bool)
                       setShowSD21(bool)
-                      setCurrentPage(1) // Reset to page 1 when filter changes
                     }}
                   />
                 </div>
@@ -346,7 +140,6 @@ const LoraSearchModal = ({
                     onChange={(bool: boolean) => {
                       AppSettings.set('civitaiShowPony', bool)
                       setShowPony(bool)
-                      setCurrentPage(1) // Reset to page 1 when filter changes
                     }}
                   />
                 </div>
@@ -357,7 +150,6 @@ const LoraSearchModal = ({
                     onChange={(bool: boolean) => {
                       AppSettings.set('civitaiShowNoob', bool)
                       setShowNoob(bool)
-                      setCurrentPage(1) // Reset to page 1 when filter changes
                     }}
                   />
                 </div>
@@ -368,7 +160,6 @@ const LoraSearchModal = ({
                     onChange={(bool: boolean) => {
                       AppSettings.set('civitaiShowIllu', bool)
                       setShowIllu(bool)
-                      setCurrentPage(1) // Reset to page 1 when filter changes
                     }}
                   />
                 </div>
@@ -379,7 +170,6 @@ const LoraSearchModal = ({
                     onChange={(bool: boolean) => {
                       AppSettings.set('civitaiShowFlux', bool)
                       setShowFlux(bool)
-                      setCurrentPage(1) // Reset to page 1 when filter changes
                     }}
                   />
                 </div>
@@ -406,24 +196,19 @@ const LoraSearchModal = ({
               overflow: 'auto'
             }}
           >
-            {!hasError && (
+            {search.isError && (
               <div style={{ fontWeight: 400, marginTop: '8px' }}>
-                {hasError}
+                Unable to load data from CivitAI, please try again shortly.
               </div>
             )}
-            {!loading && totalItems === 0 && (
-              <div style={{ fontWeight: 400, marginTop: '8px' }}>
-                No matches found. Please try a different search.
-              </div>
-            )}
-            {totalPages >= 1 && totalItems > 0 && (
-              <div
-                style={{ fontSize: '12px', fontWeight: 400, marginTop: '4px' }}
-              >
-                Page {currentPage} of {totalPages} ({totalItems} results)
-              </div>
-            )}
-            {(loading || !Array.isArray(searchResult)) && (
+            {!search.isSearching &&
+              !search.isError &&
+              search.items.length === 0 && (
+                <div style={{ fontWeight: 400, marginTop: '8px' }}>
+                  No matches found. Please try a different search.
+                </div>
+              )}
+            {search.isSearching && (
               <FlexCol
                 gap={12}
                 style={{
@@ -438,9 +223,8 @@ const LoraSearchModal = ({
                 </div>
               </FlexCol>
             )}
-            {!loading &&
-              Array.isArray(searchResult) &&
-              searchResult.map((item) => {
+            {!search.isSearching &&
+              search.items.map((item) => {
                 return (
                   <LoraSearchDetailsCard
                     key={`ti_${item.id}`}
@@ -450,19 +234,19 @@ const LoraSearchModal = ({
                   />
                 )
               })}
+            {!search.isSearching && search.hasMore && (
+              <div className={styles.LoadMore}>
+                <Button
+                  disabled={search.isLoadingMore}
+                  onClick={() => search.loadMore()}
+                >
+                  {search.isLoadingMore ? 'Loading...' : 'Load more'}
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </FlexCol>
-      {totalPages > 1 && (
-        <div className={styles.Pagination}>
-          <Pagination
-            currentPage={currentPage}
-            totalCount={totalItems}
-            pageSize={LIMIT}
-            onPageChange={handlePageClick}
-          />
-        </div>
-      )}
     </div>
   )
 }

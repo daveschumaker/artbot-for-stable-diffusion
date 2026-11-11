@@ -16,31 +16,9 @@
   }
 }
 
-.Pagination {
-  background-color: var(--modal-background);
+.LoadMore {
   display: flex;
-  flex-direction: row;
-  position: absolute;
-  bottom: 0;
-  left: 8px;
-  right: 8px;
   justify-content: center;
-  gap: 6px;
-  padding: 8px;
-}
-
-.PageLi {
-  font-size: 16px;
-  text-align: center;
-  width: 30px;
-}
-
-.Previous {
-  position: absolute;
-  left: 8px;
-}
-
-.Next {
-  position: absolute;
-  right: 8px;
+  padding: 8px 0 16px;
+  width: 100%;
 }
