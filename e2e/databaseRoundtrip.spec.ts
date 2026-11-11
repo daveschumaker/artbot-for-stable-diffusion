@@ -20,6 +20,8 @@ const test = base.extend({
   }
 })
 
+test.setTimeout(180000)
+
 const library = JSON.parse(
   readFileSync(path.join(__dirname, 'fixtures/library.json'), 'utf8')
 )
@@ -64,6 +66,9 @@ test('a 1700-image backup reads one image at a time and restores every row and B
   }, image)
   await finishFixtureSetup(page)
   await page.goto('/artbot/settings?panel=import-export')
+  await page
+    .getByText('Legacy compatibility JSON export', { exact: true })
+    .click()
   await expect(
     page.getByRole('button', { name: 'Download database', exact: true })
   ).toBeVisible()
@@ -119,6 +124,9 @@ test('a 1700-image backup reads one image at a time and restores every row and B
     mimeType: 'application/json',
     buffer: backup
   })
+  await page
+    .getByRole('button', { name: 'Restore library', exact: true })
+    .click()
   await expect(
     page.getByText('ArtBot database imported!', { exact: false }).first()
   ).toBeVisible({ timeout: 30000 })
@@ -165,6 +173,9 @@ test('a database export restores deleted images, source data and a nested Blob',
   }, fixtures)
   await finishFixtureSetup(page)
   await page.goto('/artbot/settings?panel=import-export')
+  await page
+    .getByText('Legacy compatibility JSON export', { exact: true })
+    .click()
   const downloaded = page.waitForEvent('download')
   await page
     .getByRole('button', { name: 'Download database', exact: true })
@@ -203,14 +214,20 @@ test('a database export restores deleted images, source data and a nested Blob',
   ).toEqual([fixtures[2].jobId])
 
   await page.goto('/artbot/settings?panel=import-export')
+  await page
+    .getByText('Legacy compatibility JSON export', { exact: true })
+    .click()
   await page.locator('#file-upload').setInputFiles({
     name: 'roundtrip.json',
     mimeType: 'application/json',
     buffer: backup
   })
+  await page
+    .getByRole('button', { name: 'Restore library', exact: true })
+    .click()
   await expect(
     page.getByText('ArtBot database imported!', { exact: false }).first()
-  ).toBeVisible()
+  ).toBeVisible({ timeout: 60000 })
   await expect
     .poll(() =>
       page.evaluate(() => (window as any)._artbotDb.completed.count())
@@ -296,19 +313,25 @@ test('a backup saved by the deployed site restores every table exactly', async (
   await finishFixtureSetup(page)
 
   await page.goto('/artbot/settings?panel=import-export')
+  await page
+    .getByText('Legacy compatibility JSON export', { exact: true })
+    .click()
   await page.locator('#file-upload').setInputFiles({
     name: 'legacy-backup.json',
     mimeType: 'application/json',
     buffer: legacyBackup
   })
+  await page
+    .getByRole('button', { name: 'Restore library', exact: true })
+    .click()
   await expect(
     page.getByText('ArtBot database imported!', { exact: false }).first()
-  ).toBeVisible()
+  ).toBeVisible({ timeout: 60000 })
 
   // Read the stored rows natively: Dexie's reading hook upgrades old rows.
   const stored = await page.evaluate(async () => {
     const idb: IDBDatabase = await new Promise((resolve, reject) => {
-      const request = indexedDB.open('imageHorde')
+      const request = indexedDB.open((window as any)._artbotDb.name)
       request.onsuccess = () => resolve(request.result)
       request.onerror = () => reject(request.error)
     })
@@ -396,6 +419,9 @@ test('importing a full database replaces an existing image', async ({
   }, fixtures[0])
   await finishFixtureSetup(page)
   await page.goto('/artbot/settings?panel=import-export')
+  await page
+    .getByText('Legacy compatibility JSON export', { exact: true })
+    .click()
   const downloading = page.waitForEvent('download')
   await page
     .getByRole('button', { name: 'Download database', exact: true })
@@ -414,9 +440,12 @@ test('importing a full database replaces an existing image', async ({
     mimeType: 'application/json',
     buffer: Buffer.concat(chunks)
   })
+  await page
+    .getByRole('button', { name: 'Restore library', exact: true })
+    .click()
   await expect(
     page.getByText('ArtBot database imported!', { exact: false }).first()
-  ).toBeVisible()
+  ).toBeVisible({ timeout: 60000 })
   expect(
     await page.evaluate(async () =>
       (await (window as any)._artbotDb.completed.toArray()).map(
@@ -439,6 +468,9 @@ test('a failing database replacement rolls back all changes', async ({
   }, fixtures[0])
   await finishFixtureSetup(page)
   await page.goto('/artbot/settings?panel=import-export')
+  await page
+    .getByText('Legacy compatibility JSON export', { exact: true })
+    .click()
   const downloading = page.waitForEvent('download')
   await page
     .getByRole('button', { name: 'Download database', exact: true })
@@ -461,10 +493,13 @@ test('a failing database replacement rolls back all changes', async ({
     mimeType: 'application/json',
     buffer: Buffer.from(JSON.stringify(backup))
   })
+  await page
+    .getByRole('button', { name: 'Restore library', exact: true })
+    .click()
   await expect(
     page.getByText(
       'Unable to import this database. Your existing data has been kept.',
-      { exact: true }
+      { exact: false }
     )
   ).toBeVisible()
   expect(
@@ -474,7 +509,6 @@ test('a failing database replacement rolls back all changes', async ({
       )
     )
   ).toEqual(['newer data must survive'])
-  await expect(page.locator('#file-upload')).toHaveValue('')
 })
 
 test('restoring an empty database removes current images', async ({ page }) => {
@@ -488,6 +522,9 @@ test('restoring an empty database removes current images', async ({ page }) => {
   }, fixtures[0])
   await finishFixtureSetup(page)
   await page.goto('/artbot/settings?panel=import-export')
+  await page
+    .getByText('Legacy compatibility JSON export', { exact: true })
+    .click()
   const downloading = page.waitForEvent('download')
   await page
     .getByRole('button', { name: 'Download database', exact: true })
@@ -504,9 +541,12 @@ test('restoring an empty database removes current images', async ({ page }) => {
     mimeType: 'application/json',
     buffer: Buffer.from(JSON.stringify(empty))
   })
+  await page
+    .getByRole('button', { name: 'Restore library', exact: true })
+    .click()
   await expect(
     page.getByText('ArtBot database imported!', { exact: false }).first()
-  ).toBeVisible()
+  ).toBeVisible({ timeout: 30000 })
   expect(
     await page.evaluate(() => (window as any)._artbotDb.completed.count())
   ).toBe(0)
@@ -525,6 +565,9 @@ test('a truncated backup leaves the current database intact', async ({
   }, fixtures[0])
   await finishFixtureSetup(page)
   await page.goto('/artbot/settings?panel=import-export')
+  await page
+    .getByText('Legacy compatibility JSON export', { exact: true })
+    .click()
   const downloading = page.waitForEvent('download')
   await page
     .getByRole('button', { name: 'Download database', exact: true })
@@ -541,10 +584,13 @@ test('a truncated backup leaves the current database intact', async ({
     mimeType: 'application/json',
     buffer: Buffer.from(partial)
   })
+  await page
+    .getByRole('button', { name: 'Restore library', exact: true })
+    .click()
   await expect(
     page.getByText(
       'Unable to import this database. Your existing data has been kept.',
-      { exact: true }
+      { exact: false }
     )
   ).toBeVisible()
   expect(

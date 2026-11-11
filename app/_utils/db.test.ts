@@ -463,3 +463,22 @@ describe('prompts', () => {
     expect(both.map((row: any) => row.prompt)).toEqual(['two', 'one'])
   })
 })
+
+it('propagates a failed completed-image commit so the job can be retried', async () => {
+  const failure = new DOMException('Storage full', 'QuotaExceededError')
+  const write = jest.spyOn(db.completed, 'put').mockRejectedValueOnce(failure)
+  try {
+    await expect(
+      addCompletedJobToDexie({ jobId: 'not-saved' })
+    ).rejects.toMatchObject({ name: 'QuotaExceededError' })
+    expect(await db.completed.where('jobId').equals('not-saved').count()).toBe(
+      0
+    )
+  } finally {
+    write.mockRestore()
+  }
+})
+
+it('returns undefined when a completed-image primary key is absent', async () => {
+  await expect(db.completed.get(999999)).resolves.toBeUndefined()
+})

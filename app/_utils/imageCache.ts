@@ -346,7 +346,7 @@ const addCompletedJobToDb = async ({
     })
 
     // Storage is full.
-    if (err.message && err.message.includes('QuotaExceededError')) {
+    if (err.name === 'QuotaExceededError') {
       logError({
         path: window.location.href,
         errorMessage: [
@@ -418,13 +418,8 @@ export const checkCurrentJob = async (imageDetails: any) => {
   const checkJobResult = await checkImageJob(jobId)
 
   if (appInfoStore.state.storageQuotaLimit) {
-    updatePendingJobV2(
-      Object.assign({}, jobDetails, {
-        jobStatus: JobStatus.Error,
-        errorMessage:
-          'Your browser has informed ArtBot that its storage quota has been exceeded. Please remove some older images and try again shortly.'
-      })
-    )
+    // Keep the acknowledged Horde job queued for saving after space is freed.
+    // Marking it failed would route Retry through a new paid submission.
     return { success: false }
   }
 
@@ -630,6 +625,7 @@ export const checkCurrentJob = async (imageDetails: any) => {
             jobDetails: jobWithImageDetails
           })
 
+          if (!result.success) return { success: false }
           if (result.success) {
             updatePendingJobV2(
               Object.assign({}, jobWithImageDetails, {

@@ -1,3 +1,4 @@
+import { backupBusy, libraryStorage } from 'app/_backup/platform'
 interface IControllerParams {
   name: string
   version?: number
@@ -19,13 +20,13 @@ class LocalStorageController {
       return
     }
 
-    if (!this.load()) {
-      localStorage.setItem(this.localStorageKey, '')
+    if (!this.load() && !backupBusy()) {
+      libraryStorage.setItem(this.localStorageKey, '')
     }
   }
 
   clear() {
-    localStorage.setItem(this.localStorageKey, '')
+    libraryStorage.setItem(this.localStorageKey, '')
   }
 
   delete(key: string) {
@@ -62,7 +63,7 @@ class LocalStorageController {
     }
 
     try {
-      const string = localStorage.getItem(this.localStorageKey) || ''
+      const string = libraryStorage.getItem(this.localStorageKey) || ''
 
       if (!string) {
         return
@@ -104,12 +105,12 @@ class LocalStorageController {
       // Save version in case we update params at a later time.
       const data = { v: this.version, ...params }
       const string = JSON.stringify(data)
-      localStorage.setItem(this.localStorageKey, string)
+      libraryStorage.setItem(this.localStorageKey, string)
     } catch (err) {
       console.warn(
         `Error attempting to write to locale storage for key of "${this.localStorageKey}"`
       )
-      localStorage.setItem(this.localStorageKey, '{}')
+      // Retain the last saved value if the write fails.
     }
   }
 

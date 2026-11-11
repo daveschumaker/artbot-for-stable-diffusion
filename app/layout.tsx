@@ -14,6 +14,7 @@ import FooterV2 from './_components/FooterV2'
 import { HeaderNav } from './_componentsV2/HeaderNav'
 import ModalProvider from './_modules/ModalProvider'
 import QueryProvider from './_providers/QueryProvider'
+import LibraryRecovery from './_providers/LibraryRecovery'
 import GlobalDataSync from './_modules/GlobalDataSync'
 
 export const metadata: Metadata = {
@@ -65,11 +66,13 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               try {
-                if (localStorage.theme === 'light') {
+                const library = JSON.parse(localStorage.getItem('ArtBotLibrarySelection') || 'null');
+                const theme = library?.appConfig?.theme || JSON.parse(localStorage.getItem('appConfig') || '{}').theme || (library?.localPreferences ? library.localPreferences.theme : localStorage.theme);
+                if (theme === 'light') {
                   document.documentElement.setAttribute('data-theme', 'light');
-                } else if (localStorage.theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                } else if (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
                   document.documentElement.setAttribute('data-theme', 'dark');
-                } else if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                } else if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                   document.documentElement.setAttribute('data-theme', 'dark');
                 } else {
                   document.documentElement.setAttribute('data-theme', 'light');
@@ -83,24 +86,26 @@ export default async function RootLayout({
         // This ensures that footer is always forced to bottom of page if there is extra room.
         style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}
       >
-        <QueryProvider>
-          <ModalProvider>
-            <Suspense fallback={null}>
-              {/* AppInit uses useSearchParams, so static pages render on the client. This must stay inside ModalProvider: as a direct child of body it causes intermittent hydration errors. */}
-              <div style={{ flex: 1, minHeight: '100vh' }}>
-                <AppInit />
-                <GlobalDataSync />
-                <AppAnalytics />
-                <PollController />
-                <HeaderNav />
-                <ToastContainer />
-                <SlidingMenu />
-                {children}
-              </div>
-              <FooterV2 />
-            </Suspense>
-          </ModalProvider>
-        </QueryProvider>
+        <LibraryRecovery>
+          <QueryProvider>
+            <ModalProvider>
+              <Suspense fallback={null}>
+                {/* AppInit uses useSearchParams, so static pages render on the client. This must stay inside ModalProvider: as a direct child of body it causes intermittent hydration errors. */}
+                <div style={{ flex: 1, minHeight: '100vh' }}>
+                  <AppInit />
+                  <GlobalDataSync />
+                  <AppAnalytics />
+                  <PollController />
+                  <HeaderNav />
+                  <ToastContainer />
+                  <SlidingMenu />
+                  {children}
+                </div>
+                <FooterV2 />
+              </Suspense>
+            </ModalProvider>
+          </QueryProvider>
+        </LibraryRecovery>
       </body>
     </html>
   )

@@ -45,16 +45,42 @@ test.describe('the last resort JSON import', () => {
     const errors = trackPageErrors(page)
     await mockBackend(page)
     await page.goto('/artbot/settings?panel=import-export')
-    const input = page.locator('input[type="file"][accept="application/JSON"]')
     const count = () =>
       page.evaluate(() => (window as any)._artbotDb.completed.count())
 
-    await input.setInputFiles(file)
-    await expect.poll(count).toBe(1)
+    for (let attempt = 0; attempt < 2; attempt++) {
+      await page
+        .getByLabel('Choose backup files', { exact: true })
+        .setInputFiles(file)
+      await page
+        .getByRole('button', { name: 'Restore library', exact: true })
+        .click()
+      await expect(
+        page.getByText('ArtBot database imported!', { exact: false })
+      ).toBeVisible()
+      await expect.poll(count).toBe(1)
+    }
 
     // Browsers only fire "change" for a different file, so the input must be
     // emptied after each one.
-    await expect(input).toHaveValue('')
+    await expect(
+      page.getByLabel('Choose backup files', { exact: true })
+    ).toHaveValue('')
+
+    await page
+      .getByText('Legacy compatibility JSON export', { exact: true })
+      .click()
+    const downloading = page.waitForEvent('download')
+    await page
+      .getByRole('button', { name: 'Download database', exact: true })
+      .click()
+    const download = await downloading
+    const chunks: Buffer[] = []
+    for await (const chunk of await download.createReadStream())
+      chunks.push(chunk)
+    expect(JSON.parse(Buffer.concat(chunks).toString()).data.databaseName).toBe(
+      'imageHorde'
+    )
 
     expect(errors).toEqual([])
   })
@@ -67,7 +93,7 @@ test.describe('the last resort JSON import', () => {
     })
     await mockBackend(page)
     await page.goto('/artbot/settings?panel=import-export')
-    const input = page.locator('input[type="file"][accept="application/JSON"]')
+    const input = page.getByLabel('Choose backup files', { exact: true })
 
     await input.setInputFiles([])
     await page.waitForTimeout(500)

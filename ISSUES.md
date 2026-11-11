@@ -61,40 +61,6 @@ Open items only. Finished work is in the git history.
       `app/_utils/appUtils.ts` sends the user's Horde username and full page URL
       to `/api/log-error`, which forwards them with the user agent to
       `STATUS_API`.
-- [ ] **S10. Medium: anyone can lock the admin out.** `loginRateLimit.ts`
-      blocks every login after 50 failures in 15 minutes, from any client.
-      The per-client limit uses the first `X-Forwarded-For` entry, which the
-      client controls behind nginx. Key on the address nginx sets
-      (`X-Real-IP` or the last hop), and drop or soften the global cap.
-- [ ] **S11. Medium: `/api/img-from-url` can be made to process huge
-      images.** It's unauthenticated and unthrottled. With `r2=true` it runs
-      sharp at full size on any image up to 10 MB, which can be about
-      16k x 16k pixels. Reject large dimensions before sharp runs, pass
-      `limitInputPixels`, and add a per-IP rate limit.
-- [ ] **S12. Low: the SSRF check allows `::/96` addresses** such as
-      `[::127.0.0.1]`. Linux doesn't route them to IPv4 loopback, so this is
-      defence in depth: block `::/96` in `fetchRemoteImage.ts`.
-
-## Bugs
-
-- [ ] **B25. A failed save of a finished image is reported as a success.**
-      `addCompletedJobToDexie` catches every error, so the pending job is
-      marked done and the image is lost, for example when storage is full.
-      Quota detection also matches the message text, not the error name.
-- [ ] **B26. Exports aren't an exact copy of stored rows.** The export reads
-      through Dexie's reading hook, so old rows are exported with filled-in
-      `models` and `source_image` values, and a restore stores those.
-- [ ] **B27. Nothing in memory is refreshed after an import.** The pending
-      cache and the memoized `getImageDetails` keep old data, and an
-      in-flight job can update an imported pending row that reuses its id.
-- [ ] **B28. The completed-table reading hook throws on a missing row.**
-      With Dexie 4, `db.completed.get(id)` for an id that doesn't exist
-      rejects. No current code does this. Add `if (!row) return row` to
-      `normalizeCompletedRow` in `app/_db/dexie.ts`.
-- [ ] **B29. Suspected: a restored drawing may lose its imported image.**
-      `CreateCanvas` saves the live fabric objects, and `canvas.dispose()`
-      clears a fabric 7 image's element. Paths survive, so the existing test
-      passes. Upload an image on the draw page, draw, leave and come back.
 
 ## Dead code
 

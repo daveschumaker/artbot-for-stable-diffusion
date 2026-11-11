@@ -1,3 +1,4 @@
+import { restoredJobsPaused } from 'app/_backup/platform'
 /**
  * pendingJobsCache
  *
@@ -72,7 +73,7 @@ export const initLoadPendingJobsFromDb = async () => {
 
   // Before loading, so the cache never shows these as still in progress.
   try {
-    await failStaleRequestedJobs()
+    if (!restoredJobsPaused()) await failStaleRequestedJobs()
   } catch (err) {
     logDebug('failStaleRequestedJobs failed', err)
   }

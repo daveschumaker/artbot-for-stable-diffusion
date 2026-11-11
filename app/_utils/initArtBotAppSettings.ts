@@ -1,3 +1,4 @@
+import { libraryStorage, restoredJobsPaused } from 'app/_backup/platform'
 import { deletePendingJobs } from 'app/_controllers/pendingJobsCache'
 import { setLoggedInState } from 'app/_store/userStore'
 import { JobStatus } from '_types'
@@ -15,9 +16,9 @@ import { loadAuthToken } from './authUtils'
 
 const updateShowGrid = () => {
   if (localStorage.getItem('showGrid') === 'true') {
-    localStorage.setItem('showLayout', 'grid')
+    libraryStorage.setItem('showLayout', 'grid')
   } else if (localStorage.getItem('showGrid') === 'false') {
-    localStorage.setItem('showLayout', 'list')
+    libraryStorage.setItem('showLayout', 'list')
   }
 
   localStorage.removeItem('showGrid')
@@ -78,24 +79,29 @@ const appLastActive = async () => {
   // immediately so the next page cannot treat newly queued work as stale.
   localStorage.setItem('ArtBotLastActive', String(currentTime))
 
-  await deleteInvalidPendingJobs()
-
-  if (lastActiveTime && currentTime - Number(lastActiveTime) > WAIT_TIME_SEC) {
-    try {
-      await deleteDoneFromPending()
-      await deleteQueuedFromPending()
-      await deleteInvalidPendingJobs()
-      deletePendingJobs(JobStatus.Done)
-      deletePendingJobs(JobStatus.Queued)
-    } catch (err) {
-      console.log(`An error occurred while clearing out stale pending items.`)
-    }
-  }
-
   setInterval(() => {
     currentTime = Math.floor(Date.now() / 1000)
     localStorage.setItem('ArtBotLastActive', String(currentTime))
   }, 5000)
+
+  if (!restoredJobsPaused()) {
+    await deleteInvalidPendingJobs()
+
+    if (
+      lastActiveTime &&
+      currentTime - Number(lastActiveTime) > WAIT_TIME_SEC
+    ) {
+      try {
+        await deleteDoneFromPending()
+        await deleteQueuedFromPending()
+        await deleteInvalidPendingJobs()
+        deletePendingJobs(JobStatus.Done)
+        deletePendingJobs(JobStatus.Queued)
+      } catch (err) {
+        console.log(`An error occurred while clearing out stale pending items.`)
+      }
+    }
+  }
 }
 
 // Use to fix any issues related to local storage values
@@ -115,13 +121,11 @@ export const initAppSettings = async () => {
   updateShowGrid()
   loadAuthToken()
 
-  await trackNewSession()
-
   const apikey = AppSettings.get('apiKey') || ''
 
   if (!apikey) {
     AppSettings.set('shareImagesExternally', true)
-  } else {
+  } else if (apikey) {
     setLoggedInState(true)
   }
 
@@ -130,5 +134,9 @@ export const initAppSettings = async () => {
   // GlobalDataSync loads and refreshes models, Horde performance, user
   // details and the user's workers.
   setUserId()
-  appLastActive()
+  // A backup can acquire its write fence while async cleanup is reading rows.
+  // Leave cleanup for the next visit in that case; never reject initialization.
+  appLastActive().catch(() => {})
+  // Finish synchronous preference initialization before yielding to telemetry.
+  await trackNewSession()
 }

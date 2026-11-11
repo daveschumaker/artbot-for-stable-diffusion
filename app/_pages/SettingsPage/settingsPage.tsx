@@ -13,7 +13,6 @@ import fetchMyWorkers from 'app/_api/fetchMyWorkers'
 import Linker from 'app/_components/Linker'
 import MenuButton from 'app/_components/MenuButton'
 import AppSettings from 'app/_data-models/AppSettings'
-import { useEffectOnce } from 'app/_hooks/useEffectOnce'
 import AiHordeSettingsPanel from './AiHordeSettingsPanel'
 import WorkerSettingsPanel from './WorkerSettingsPanel'
 import ArtBotSettingsPanel from './ArtBotSettingsPanel'
@@ -91,18 +90,14 @@ const SettingsPage = () => {
     stayOnCreate: false,
     showOptionsMenu: false,
     showResetConfirmation: false,
-    shareImagesExternally: AppSettings.get('shareImagesExternally'),
+    shareImagesExternally:
+      !AppSettings.get('apiKey') || AppSettings.get('shareImagesExternally'),
     useBeta: false,
     useWorkerId: '',
     useTrusted: true,
     imageDownloadFormat: 'jpg',
     slow_workers: true
   })
-
-  const handleSwitchSelect = (key: string, value: boolean) => {
-    AppSettings.save(key, value)
-    setComponentState({ [key]: value })
-  }
 
   useEffect(() => {
     const updateObj: any = {}
@@ -133,7 +128,7 @@ const SettingsPage = () => {
       AppSettings.get('slow_workers') === false ? false : true
     updateObj.disableSnowflakes = AppSettings.get('disableSnowflakes') || false
     updateObj.shareImagesExternally =
-      AppSettings.get('shareImagesExternally') || false
+      !updateObj.apiKey || AppSettings.get('shareImagesExternally') || false
     updateObj.imageDownloadFormat =
       AppSettings.get('imageDownloadFormat') || 'jpg'
 
@@ -153,16 +148,6 @@ const SettingsPage = () => {
       fetchMyWorkers()
     }
   }, [worker_ids, searchParams])
-
-  useEffectOnce(() => {
-    setTimeout(() => {
-      const apiKey = AppSettings.get('apiKey')
-
-      if (!apiKey) {
-        handleSwitchSelect('shareImagesExternally', true)
-      }
-    }, 250)
-  })
 
   return (
     <div className="pb-[88px]">
