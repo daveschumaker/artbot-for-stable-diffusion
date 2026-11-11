@@ -74,6 +74,19 @@ const config = [
         '@typescript-eslint/ban-ts-comment'
       ]
     }
+  },
+  // Scripts and config files run in Node, not the browser.
+  {
+    files: [
+      '**/*.cjs',
+      'scripts/**',
+      'x-build-scripts/**',
+      'e2e/fixtures/**/*.mjs',
+      '*.config.{js,mjs,ts}',
+      '.lintstagedrc.js',
+      'BASE_PATH.js'
+    ],
+    languageOptions: { globals: { ...globals.node } }
   }
 ]
 
