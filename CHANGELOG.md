@@ -19,6 +19,10 @@ Older entries: [2024](changelog/2024.md), [2023](changelog/2023.md), [2022](chan
 - Fix: Upscale jobs were never sent, and a malformed job could block the rest of your queue.
 - Fix: The feedback form said your message was sent even when it wasn't.
 - Fix: Pausing a worker from the header menu could get stuck on "loading".
+- Fix: LoRA and embedding searches only ever showed the first 20 results from CivitAI. A "Load more" button now fetches the rest.
+- Fix: Typing a new LoRA or embedding search while another was loading could leave the old results on screen.
+- Fix: The base model filters (SDXL, Pony, Flux and so on) in the embedding search were ignored. They now filter results, as they do for LoRAs.
+- Fix: Searches containing `&` or `#`, empty searches and CivitAI errors now show the right results or messages. Repeat searches load instantly from a cache.
 - Security fixes for the server and its dependencies.
 
 # 2025.08.18
