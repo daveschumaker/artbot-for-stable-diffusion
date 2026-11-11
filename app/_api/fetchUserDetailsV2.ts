@@ -36,8 +36,6 @@ const fetchUser = async (
   const data = await response.json()
 
   const user = { ...data, sharedKey: isSharedKey }
-  setLoggedInState(true)
-  setUserInfo(user as any)
   return user
 }
 
@@ -51,7 +49,7 @@ const keyHash = (apiKey: string) => {
   return (hash >>> 0).toString(36)
 }
 
-/** The AI Horde user (or shared key) for an API key. Updates userStore. */
+/** The AI Horde user (or shared key) cached separately for each API key. */
 const userDetailsQuery = (apiKey: string) =>
   queryOptions({
     queryKey: ['horde', 'user', keyHash(apiKey)],
@@ -60,6 +58,8 @@ const userDetailsQuery = (apiKey: string) =>
     retry: MAX_RETRIES - 1,
     retryDelay: RETRY_DELAY
   })
+
+let latestApiKey = ''
 
 /**
  * Loads the user's details into userStore and returns them. Uses details
@@ -72,6 +72,7 @@ export const fetchUserDetailsV2 = async (
   maxRetries: number = MAX_RETRIES,
   { fresh = false }: { fresh?: boolean } = {}
 ): Promise<UserCacheType | null> => {
+  latestApiKey = apiKey
   if (!apiKey) {
     setLoggedInState(false)
     return null
@@ -86,11 +87,15 @@ export const fetchUserDetailsV2 = async (
   }
 
   try {
-    return await queryClient.query({
+    const user = await queryClient.query({
       ...userDetailsQuery(apiKey),
       retry: maxRetries - 1,
       ...(fresh ? { staleTime: 0 } : {})
     })
+    if (apiKey !== latestApiKey) return null
+    setLoggedInState(true)
+    setUserInfo(user as any)
+    return user
   } catch {
     // Network outages (including isolated profile replay) are recoverable.
     // Keep existing user state and retry on the next scheduled refresh. Avoid
