@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { useCallback, useEffect, useState } from 'react'
 import NiceModal, { useModal } from '@ebay/nice-modal-react'
 

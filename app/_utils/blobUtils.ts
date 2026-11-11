@@ -149,7 +149,7 @@ async function writeMetadata(
     const xmp = `<x:xmpmeta xmlns:x="adobe:ns:meta/"><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:exif="http://ns.adobe.com/exif/1.0/"><dc:title><rdf:Alt><rdf:li xml:lang="x-default">${toCdata(userComment)}</rdf:li></rdf:Alt></dc:title><exif:UserComment>${toCdata(userComment)}</exif:UserComment></rdf:Description></rdf:RDF></x:xmpmeta>
 	`
     const bytes = new Uint8Array(await imageExifBlob.arrayBuffer())
-    let imageUint8Arr: Uint8Array
+    let imageUint8Arr: Uint8Array<ArrayBuffer>
 
     if (imageExifBlob.type === 'image/png') {
       imageUint8Arr = writeXMP(bytes, xmp)
@@ -163,8 +163,8 @@ async function writeMetadata(
       // left out of it. It is still in the EXIF data.
       imageUint8Arr = bytes
       for (const write of [
-        (jpeg: Uint8Array) => writeXMP(jpeg, xmp),
-        (jpeg: Uint8Array) => writeJPGMarker(jpeg, userComment)
+        (jpeg: Uint8Array<ArrayBuffer>) => writeXMP(jpeg, xmp),
+        (jpeg: Uint8Array<ArrayBuffer>) => writeJPGMarker(jpeg, userComment)
       ]) {
         try {
           imageUint8Arr = write(imageUint8Arr)

@@ -103,7 +103,7 @@ test('a database export restores deleted images, source data and a nested Blob',
     )
     .toBe(3)
   const restored = await page.evaluate(async () => {
-    const digest = async (bytes: ArrayBuffer | Uint8Array) =>
+    const digest = async (bytes: ArrayBuffer | Uint8Array<ArrayBuffer>) =>
       Array.from(
         new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)),
         (n) => n.toString(16).padStart(2, '0')
