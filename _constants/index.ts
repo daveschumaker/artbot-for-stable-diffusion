@@ -21,9 +21,7 @@ export const CREATE_PAGE_PARAM = {
   Edit: 'edit',
   LoadDrawing: 'drawing',
   LoadModel: 'model',
-  Prompt: 'prompt',
-  Share: 'share',
-  Shortlink: 'i'
+  Prompt: 'prompt'
 }
 
 export enum DEXIE_JOB_ID {
