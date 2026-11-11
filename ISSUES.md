@@ -7,7 +7,7 @@ Open items only. Finished work is in the git history.
 ## Suggested order
 
 1. Check the feedback form on the server (B21).
-2. Update the tooling (U6 to U8), then Next 16 (U9).
+2. Upgrade to Next 16 (U9).
 3. Re-run the production comparison on the final code (R3), then upgrade
    Dexie (U5).
 4. Build real batching and the v2 interface (F1, F2).
@@ -53,22 +53,19 @@ Open items only. Finished work is in the git history.
 
 - [ ] **U5. Upgrade Dexie last,** only after R3 and with the upgrade tests
       passing.
-- [ ] **U6. Move to ESLint 9.** ESLint 8.56 stopped getting updates in October
-      2024, and `next lint` is deprecated in Next 15.5 and removed in Next 16.
-      Switch to the `eslint` command with a flat config, and keep the
-      `@typescript-eslint/ban-ts-comment` rule.
-- [ ] **U7. Upgrade husky 8 to 9.** `husky install` is deprecated. The
-      `prepare` script becomes `husky`.
-- [ ] **U8. Upgrade TypeScript 5.3.3.** It also stops `knip` from running,
-      which would catch unused files and dependencies automatically.
-- [ ] **U9. Upgrade to Next 16** after U6 to U8.
+- [ ] **U9. Upgrade to Next 16.** Its `eslint-config-next` exports a flat
+      config, so `eslint.config.mjs` can drop `FlatCompat`.
 - [ ] **U10. Remove styled-components** from the 26 files that still use it,
       in favour of Tailwind, then drop `compiler.styledComponents` from
       `next.config.js`. Its maintainers have put it in maintenance mode.
-- [ ] **U11. Update the dev tooling's vulnerable dependencies.** `npm audit`
-      reports 10 (7 low, 3 moderate) in `deepmerge`, `micromatch` and `yaml`,
-      pulled in by Jest 29 and lint-staged 15. None of them ship to users:
-      `npm audit --omit=dev` reports none.
+- [ ] **U11. Watch for a fixed `deepmerge`.** It's the only advisory left:
+      low severity, in every version from 4.2.0, pulled in by Jest's
+      `jest-config`, which Jest 30 still uses. It never ships to users.
+- [ ] **U12. TypeScript 6, then 7.** This is on 5.9. TypeScript 6 deprecates
+      `moduleResolution: "node"` and `baseUrl`, which `tsconfig.json` uses.
+      TypeScript 7 is the native compiler, which `ts-jest` doesn't support yet.
+- [ ] **U13. Drop the `minimatch` override** in `package.json` once
+      typescript-eslint depends on a fixed version (11.0.1 or later) itself.
 
 ## Features
 
@@ -114,4 +111,8 @@ Open items only. Finished work is in the git history.
       three full runs since the 30-second timer in
       `app/_server-api/counters.ts` was removed. Close this if it stays gone.
 - [ ] Reduce the remaining explicit `any` types.
+- [ ] Remove the unused exports `npx knip` reports, about 40 exports and
+      several exported types. Check each one, since knip doesn't see the
+      scripts or the files Jest loads by name. Its unused files and
+      dependencies are false positives now.
 - [ ] Review the 36 `TODO` and `FIXME` comments in the code.
