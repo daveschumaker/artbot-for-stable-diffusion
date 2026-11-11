@@ -147,6 +147,7 @@ test('an existing library appears in the gallery', async ({ page }) => {
     ).toBeVisible()
   }
 
+  await finishFixtureSetup(page)
   await page.goto('/artbot/image/seed-2')
   await expectImageToDisplay(page, 'seeded prompt 2')
   expect(errors).toEqual([])

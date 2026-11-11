@@ -83,8 +83,17 @@ const drawLine = async (
   [fromX, fromY]: number[],
   [toX, toY]: number[]
 ) => {
-  const box = await settledCanvasBox(page)
-  await page.mouse.move(box.x + fromX, box.y + fromY)
+  // Hovering can finish a model menu's focus change and scroll the page.
+  // Recheck the target after hovering, before pressing at measured coordinates.
+  let box = await settledCanvasBox(page)
+  await expect
+    .poll(async () => {
+      box = await settledCanvasBox(page)
+      await page.mouse.move(box.x + fromX, box.y + fromY)
+      const after = await page.locator(UPPER_CANVAS).boundingBox()
+      return after?.x === box.x && after?.y === box.y
+    })
+    .toBe(true)
   await page.mouse.down()
   await page.mouse.move(box.x + toX, box.y + toY, { steps: 12 })
   await page.mouse.up()
