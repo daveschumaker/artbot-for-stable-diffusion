@@ -6,11 +6,9 @@ Open items only. Finished work is in the git history.
 
 ## Suggested order
 
-1. Check the feedback form on the server (B21).
-2. Fix the worker toggles (B23, B24).
-3. Re-run the production comparison on the final code (R3), then upgrade
+1. Re-run the production comparison on the final code (R3), then upgrade
    Dexie (U5).
-4. Build real batching and the v2 interface (F1, F2).
+2. Build real batching and the v2 interface (F1, F2).
 
 ## Before release
 
@@ -38,22 +36,7 @@ Open items only. Finished work is in the git history.
 
 ## Bugs
 
-- [ ] **B21. Medium, unverified: the feedback form may be dropping
-      submissions.** `pages/api/telemetry.ts` posts them to
-      `http://localhost:4001/api/v1/artbot/feedback` and always reports
-      success. Check on the server whether anything still listens there.
-
-- [ ] **B23. Low: pausing a worker from the header menu can leave it on
-      "loading".** `handleWorkerChange` in
-      `app/_modules/HeaderNav/HordeDropdown/index.tsx` changes
-      `newWorkerState` after the request and passes the same object to
-      `setWorkerState` again, so React skips the update. Build a new object
-      instead.
-- [ ] **B24. Low: the worker page's loading state is set on the wrong
-      object.** `handleWorkerChange` in `app/_modules/WorkerInfo/workerInfo.tsx`
-      changes the `loadingWorkerStatus` prop instead of its copy, so the state
-      it sets never shows the worker as loading. It also changes `workers[id]`
-      through a shallow copy that is never used.
+None open.
 
 ## Dead code
 
