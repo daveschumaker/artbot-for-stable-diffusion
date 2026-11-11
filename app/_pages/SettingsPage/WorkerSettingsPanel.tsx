@@ -7,7 +7,7 @@ import { userInfoStore } from 'app/_store/userStore'
 import { IconExternalLink } from '@tabler/icons-react'
 import WorkerInfo from 'app/_modules/WorkerInfo'
 
-const WorkerSettingsPanel = ({ componentState, setComponentState }: any) => {
+const WorkerSettingsPanel = ({ componentState }: any) => {
   const userStore = useStore(userInfoStore)
   const { workers, worker_ids = [] } = userStore
 
@@ -55,13 +55,7 @@ const WorkerSettingsPanel = ({ componentState, setComponentState }: any) => {
             const worker = workers[key]
 
             return (
-              <WorkerInfo
-                key={worker.id}
-                loadingWorkerStatus={componentState.loadingWorkerStatus}
-                setComponentState={setComponentState}
-                worker={worker}
-                workers={workers}
-              />
+              <WorkerInfo key={worker.id} worker={worker} workers={workers} />
             )
           })}
         </Section>
