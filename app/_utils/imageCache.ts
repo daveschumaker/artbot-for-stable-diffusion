@@ -18,6 +18,7 @@ import {
 import {
   addCompletedJobToDexie,
   addImageToDexie,
+  claimPendingJobForSubmission,
   deletePendingJobFromDb,
   getImageDetails,
   updateAllPendingJobs
@@ -33,6 +34,8 @@ import { logToConsole } from './debugTools'
 import {
   deletePendingJob,
   getAllPendingJobs,
+  setPendingJob,
+  syncPendingJobsFromDb,
   updateAllPendingJobsV2,
   updatePendingJobId,
   updatePendingJobV2
@@ -119,8 +122,16 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
   }
 
   try {
-    imageParams.jobStatus = JobStatus.Requested
-    updatePendingJobV2(imageParams)
+    const claimed = await claimPendingJobForSubmission(
+      imageParams.id,
+      imageParams.jobId
+    )
+    if (!claimed) {
+      await syncPendingJobsFromDb()
+      return
+    }
+    imageParams = claimed
+    setPendingJob(imageParams)
 
     const data = await createNewImage(imageParams)
     const { success, jobId, status, message = '' } = data || {}

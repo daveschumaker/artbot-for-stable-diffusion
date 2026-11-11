@@ -584,9 +584,30 @@ export const updateCompletedJob = async (
   db.completed.update(tableId, updatedObject)
 }
 
+export const claimPendingJobForSubmission = async (id: number, jobId: string) =>
+  db.transaction('rw', db.pending, async () => {
+    const current = await db.pending.get(id)
+    if (
+      !current ||
+      current.jobId !== jobId ||
+      current.jobStatus !== JobStatus.Waiting
+    ) {
+      return null
+    }
+    const claimed = { ...current, jobStatus: JobStatus.Requested }
+    await db.pending.put(claimed)
+    return claimed
+  })
+
 export const addCompletedJobToDexie = async (imageDetails = {}) => {
   try {
-    await db.completed.put(Object.assign({}, imageDetails))
+    await db.transaction('rw', db.completed, async () => {
+      const jobId = (imageDetails as { jobId?: string }).jobId
+      if (jobId && (await db.completed.where('jobId').equals(jobId).first())) {
+        return
+      }
+      await db.completed.put(Object.assign({}, imageDetails))
+    })
   } catch (err: any) {
     console.log(`Uh oh! An error occurred!`)
     console.log(err.message)

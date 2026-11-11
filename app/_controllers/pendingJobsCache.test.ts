@@ -27,7 +27,8 @@ const mockJob = {
 }
 
 describe('Pending Jobs Tests', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
+    await deletePendingJobs()
     ;(allPendingJobs as jest.Mock).mockClear()
     ;(deletePendingJobFromDb as jest.Mock).mockClear()
   })
@@ -42,6 +43,20 @@ describe('Pending Jobs Tests', () => {
     ;(allPendingJobs as jest.Mock).mockResolvedValue([mockJob])
     await syncPendingJobsFromDb()
     expect(getPendingJob('123')).toEqual(mockJob)
+  })
+
+  it('replaces stale cache entries after another tab submits or deletes a job', async () => {
+    await deletePendingJobs()
+    setPendingJob(mockJob)
+    setPendingJob({ ...mockJob, id: 2, jobId: 'deleted-job' })
+    const updated = {
+      ...mockJob,
+      jobId: 'horde-job',
+      jobStatus: JobStatus.Queued
+    }
+    ;(allPendingJobs as jest.Mock).mockResolvedValue([updated])
+    await syncPendingJobsFromDb()
+    expect(getAllPendingJobs()).toEqual([updated])
   })
 
   it('deletes a specific pending job', async () => {
