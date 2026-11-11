@@ -60,11 +60,8 @@ export const trackEvent = async (obj: any = {}) => {
   //   }
   // }
 
-  // Only track new image counts
-  if (
-    obj.event === 'IMAGE_RECEIVED_FROM_API' ||
-    obj.event === 'FEEDBACK_FORM'
-  ) {
+  // Only track new image counts. Feedback goes through sendFeedback.
+  if (obj.event === 'IMAGE_RECEIVED_FROM_API') {
     try {
       await fetch(`${basePath}/api/telemetry`, {
         method: 'POST',
@@ -80,5 +77,34 @@ export const trackEvent = async (obj: any = {}) => {
         success: true
       }
     }
+  }
+}
+
+/**
+ * Sends the feedback form. Resolves to whether the message reached the
+ * feedback service, so the form only reports success when it did.
+ */
+export const sendFeedback = async (data: Record<string, unknown>) => {
+  // The same extra fields trackEvent adds.
+  const useBeta = AppSettings.get('useBeta')
+  const extra = {
+    ...(useBeta ? { useBeta } : {}),
+    artbot_uuid: AppSettings.get('artbot_uuid')
+  }
+
+  try {
+    const res = await fetch(`${basePath}/api/telemetry`, {
+      method: 'POST',
+      body: JSON.stringify({
+        event: 'FEEDBACK_FORM',
+        data: { ...data, ...extra }
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    return res.ok
+  } catch (err) {
+    return false
   }
 }
