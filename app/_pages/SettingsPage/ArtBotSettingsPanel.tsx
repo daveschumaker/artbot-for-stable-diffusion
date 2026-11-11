@@ -358,6 +358,8 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
             theme="secondary"
             onClick={() => {
               localStorage.removeItem('PromptInputSettings')
+              // A full page load, so nothing keeps the cleared settings.
+              // eslint-disable-next-line @next/next/no-location-assign-relative-destination
               window.location.assign(`${window.location.origin}${basePath}`)
             }}
           >
@@ -385,6 +387,8 @@ const ArtBotSettingsPanel = ({ componentState, setComponentState }: any) => {
             onClick={async () => {
               await db.pending.clear()
               deletePendingJobs()
+              // A full page load, so nothing keeps the cleared jobs.
+              // eslint-disable-next-line @next/next/no-location-assign-relative-destination
               window.location.assign(
                 `${window.location.origin}${basePath}/pending`
               )

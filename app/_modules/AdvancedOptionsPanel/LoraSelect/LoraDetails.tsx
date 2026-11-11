@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { sanitize } from 'isomorphic-dompurify'
+import DOMPurify from 'isomorphic-dompurify'
 import { IconDownload, IconHeart, IconHeartFilled } from '@tabler/icons-react'
 import { Button } from 'app/_components/Button'
 import Panel from 'app/_components/Panel'
@@ -157,7 +157,7 @@ const LoraDetails = ({
                     <div className="flex flex-col gap-0 mb-2">
                       <div
                         dangerouslySetInnerHTML={{
-                          __html: sanitize(loraDetails.description)
+                          __html: DOMPurify.sanitize(loraDetails.description)
                         }}
                         style={{ fontSize: '14px' }}
                       />

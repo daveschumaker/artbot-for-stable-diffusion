@@ -3,14 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "analyze:prod": "ANALYZE=true NODE_ENV=production npm run build",
-    "analyze:dev": "ANALYZE=true npm run dev",
     "dev": "npm run update:build-id && next dev",
     "build": "npm run update:build-id && next build",
     "build:prod": "npm run clean && npm ci && npm run build && npm run install:prod",
     "clean": "rm -rf node_modules",
     "install:prod": "npm install --no-save --os=linux --cpu=x64 --libc=glibc",
-    "lint": "eslint app pages e2e _types _constants middleware.ts declarations.d.ts playwright.config.ts",
+    "lint": "eslint app pages e2e _types _constants proxy.ts declarations.d.ts playwright.config.ts",
     "pm2:start-prod": "pm2 start ecosystem.config.js --only horde-js",
     "pm2:stop-prod": "pm2 delete ecosystem.config.js --only horde-js",
     "pm2:start-beta": "pm2 start ecosystem.config.js --only artbot-beta",
@@ -28,7 +26,8 @@
     "profile:inspect": "node scripts/browser-profile/cli.mjs inspect",
     "profile:run": "node scripts/browser-profile/cli.mjs run",
     "profile:list": "node scripts/browser-profile/cli.mjs list",
-    "test:profiles": "node --test scripts/browser-profile/profile.test.mjs"
+    "test:profiles": "node --test scripts/browser-profile/profile.test.mjs",
+    "analyze": "next analyze"
   },
   "engines": {
     "npm": ">=9.0.0",
@@ -43,7 +42,6 @@
   "dependencies": {
     "@asc0910/exif-library": "github:asc0910/exif-library",
     "@ebay/nice-modal-react": "1.2.13",
-    "@next/bundle-analyzer": "15.5.29",
     "@radix-ui/react-checkbox": "1.4.1",
     "@radix-ui/react-navigation-menu": "1.4.1",
     "@szhsin/react-menu": "4.5.2",
@@ -63,7 +61,7 @@
     "isomorphic-dompurify": "2.36.0",
     "jsonwebtoken": "9.0.2",
     "memoizee": "0.4.15",
-    "next": "15.5.29",
+    "next": "16.4.6",
     "node-localstorage": "2.2.1",
     "react": "19.3.1",
     "react-colorful": "5.6.1",
@@ -103,8 +101,9 @@
     "autoprefixer": "10.4.16",
     "daisyui": "^4.4.24",
     "eslint": "9.39.5",
-    "eslint-config-next": "15.5.29",
+    "eslint-config-next": "16.4.6",
     "fake-indexeddb": "6.0.0",
+    "globals": "17.14.0",
     "husky": "9.1.7",
     "jest": "29.7.0",
     "jest-environment-jsdom": "29.7.0",

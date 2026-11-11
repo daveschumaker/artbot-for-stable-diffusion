@@ -6,6 +6,8 @@ const ServerUpdateComponent = ({}) => {
     trackEvent({
       event: 'SERVER_UPDATE_CHANGELOG_CLICK'
     })
+    // A full page load, so the new build is fetched.
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
     window.location.assign(`${baseHost}${basePath}/changelog`)
   }
 

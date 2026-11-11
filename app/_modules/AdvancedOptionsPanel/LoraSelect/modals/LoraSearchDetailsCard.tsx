@@ -12,7 +12,7 @@ import FlexRow from 'app/_components/FlexRow'
 import Panel from 'app/_components/Panel'
 import { Button } from 'app/_components/Button'
 import Linker from 'app/_components/Linker'
-import { sanitize } from 'isomorphic-dompurify'
+import DOMPurify from 'isomorphic-dompurify'
 import { useCallback, useState } from 'react'
 import { Embedding, ModelVersion } from '_types/civitai'
 import { handleConvertLora } from '../loraUtils'
@@ -348,7 +348,7 @@ export default function LoraSearchDetailsCard({
               >
                 <div
                   dangerouslySetInnerHTML={{
-                    __html: sanitize(embedding.description)
+                    __html: DOMPurify.sanitize(embedding.description)
                   }}
                   style={{
                     backgroundColor: '#ababab',

@@ -175,6 +175,8 @@ const WorkerInfoPage = () => {
                     showModelClick={() => {
                       if (componentState.showModelsForWorkerId !== worker.id) {
                         setComponentState({ showModelsForWorkerId: worker.id })
+                        // Jumps to the worker's anchor on this page.
+                        // eslint-disable-next-line @next/next/no-location-assign-relative-destination
                         window.location.href = `#${worker.id}`
                       } else {
                         setComponentState({ showModelsForWorkerId: '' })

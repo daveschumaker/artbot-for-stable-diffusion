@@ -6,4 +6,4 @@ export const config = {
   matcher: '/_next/image'
 }
 
-export const middleware = () => new NextResponse(null, { status: 404 })
+export const proxy = () => new NextResponse(null, { status: 404 })

@@ -1,46 +1,56 @@
-// ESLint 9 flat config. eslint-config-next 15 only ships the older eslintrc
-// format, so FlatCompat translates it, along with the rules that used to live
-// in .eslintrc.json. Next 16's eslint-config-next exports a flat config that
-// can replace FlatCompat.
-import { dirname } from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { FlatCompat } from '@eslint/eslintrc'
+import comments from '@eslint-community/eslint-plugin-eslint-comments'
+import nextVitals from 'eslint-config-next/core-web-vitals'
+import globals from 'globals'
 
-const compat = new FlatCompat({
-  baseDirectory: dirname(fileURLToPath(import.meta.url))
-})
+// Next registers the typescript-eslint plugin and parser for .ts and .tsx
+// files only. ArtBot has always used them for every file, so the same
+// instances are reused here. A second copy under the same name would conflict.
+const nextTypescript = nextVitals.find(
+  (config) => config.name === 'next/typescript'
+)
+const typescriptPlugin = nextTypescript.plugins['@typescript-eslint']
+const typescriptParser = nextTypescript.languageOptions.parser
+
+// eslint-plugin-react-hooks 7 adds rules for the React Compiler, which ArtBot
+// doesn't use. They flag about 85 existing patterns, so they stay off until
+// that's reviewed (see ISSUES.md). Only the two classic hooks rules run.
+const reactHooks = nextVitals.find((config) => config.name === 'next').plugins[
+  'react-hooks'
+]
+const CLASSIC_HOOKS_RULES = ['rules-of-hooks', 'exhaustive-deps']
+const compilerRulesOff = Object.fromEntries(
+  Object.keys(reactHooks.rules)
+    .filter((rule) => !CLASSIC_HOOKS_RULES.includes(rule))
+    .map((rule) => [`react-hooks/${rule}`, 'off'])
+)
 
 const config = [
   {
     ignores: [
-      '.next/**',
-      'build/**',
       'node_modules/**',
       'public/**',
       'test-results/**',
       'playwright-report/**',
-      '__local_db/**',
-      'next-env.d.ts'
+      '__local_db/**'
     ]
   },
-  ...compat.config({
-    env: {
-      browser: true,
-      jest: true
+  ...nextVitals,
+  {
+    files: ['**/*.{js,jsx,mjs,cjs}'],
+    plugins: { '@typescript-eslint': typescriptPlugin }
+  },
+  {
+    plugins: { '@eslint-community/eslint-comments': comments },
+    languageOptions: {
+      parser: typescriptParser,
+      globals: { ...globals.browser, ...globals.jest }
     },
-    extends: 'next/core-web-vitals',
-    parser: '@typescript-eslint/parser',
-    plugins: ['@eslint-community/eslint-comments', '@typescript-eslint'],
     rules: {
+      ...compilerRulesOff,
       // ESLint 9 and typescript-eslint 8 started checking caught errors by
       // default. 'none' keeps the earlier behaviour.
       '@typescript-eslint/no-unused-vars': ['warn', { caughtErrors: 'none' }],
-      'no-undef': [
-        'error',
-        {
-          typeof: true
-        }
-      ],
+      'no-undef': ['error', { typeof: true }],
       'no-unused-vars': [
         'error',
         {
@@ -64,7 +74,7 @@ const config = [
         '@typescript-eslint/ban-ts-comment'
       ]
     }
-  })
+  }
 ]
 
 export default config
