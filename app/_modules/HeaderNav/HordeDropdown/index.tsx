@@ -35,46 +35,45 @@ const HordeDropdown = () => {
   const [workerState, setWorkerState] = useState(initialWorkerState)
 
   const handleWorkerChange = async ({ workerId }: { workerId: string }) => {
-    const newWorkerState = Object.assign({}, workerState)
-    let tempNewState
-    if (workerState[workerId] === 'active') {
-      newWorkerState[workerId] = 'loading'
-      tempNewState = 'paused'
-    }
+    const previousState = workerState[workerId]
+    const nextState = previousState === 'active' ? 'paused' : 'active'
 
-    if (workerState[workerId] === 'paused') {
-      newWorkerState[workerId] = 'loading'
-      tempNewState = 'active'
-    }
+    // Each update builds a new object, so React always re-renders.
+    const setStateFor = (state: string) =>
+      setWorkerState((current: any) => ({ ...current, [workerId]: state }))
 
-    if (workerState[workerId] === 'offline') {
-      newWorkerState[workerId] = 'loading'
-      tempNewState = 'active'
-    }
-    setWorkerState(newWorkerState)
+    setStateFor('loading')
 
-    const workerStatus = await fetch(
-      `${getApiHostServer()}/api/v2/workers/${workerId}`,
-      {
-        body: JSON.stringify({
-          maintenance: tempNewState === 'paused' ? true : false,
-          name: workers[workerId].name,
-          team: workers[workerId].team?.id ?? ''
-        }),
-        headers: {
-          apikey: AppSettings.get('apiKey'),
-          'Content-Type': 'application/json',
-          'Client-Agent': clientHeader()
-        },
-        method: 'PUT'
+    try {
+      const workerStatus = await fetch(
+        `${getApiHostServer()}/api/v2/workers/${workerId}`,
+        {
+          body: JSON.stringify({
+            maintenance: nextState === 'paused',
+            name: workers[workerId].name,
+            team: workers[workerId].team?.id ?? ''
+          }),
+          headers: {
+            apikey: AppSettings.get('apiKey'),
+            'Content-Type': 'application/json',
+            'Client-Agent': clientHeader()
+          },
+          method: 'PUT'
+        }
+      )
+
+      await workerStatus.json()
+
+      if (!workerStatus.ok) {
+        throw new Error(`Worker update failed: ${workerStatus.status}`)
       }
-    )
 
-    await workerStatus.json()
-    await sleep(2500)
-
-    newWorkerState[workerId] = tempNewState
-    setWorkerState(newWorkerState)
+      await sleep(2500)
+      setStateFor(nextState)
+    } catch (err) {
+      // The worker didn't change, so show it as it was.
+      setStateFor(previousState)
+    }
 
     await fetchMyWorkers()
   }
