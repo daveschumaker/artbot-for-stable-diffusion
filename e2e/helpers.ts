@@ -63,9 +63,6 @@ export const mockBackend = async (page: Page) => {
   await page.route('**/artbot/api/**', (route) =>
     route.fulfill(json({ success: true }))
   )
-  await page.route(/\/artbot\/api\/showcase/, (route) =>
-    route.fulfill(json([]))
-  )
   await page.route('**/artbot/api/models/available', (route) =>
     route.fulfill(
       json({

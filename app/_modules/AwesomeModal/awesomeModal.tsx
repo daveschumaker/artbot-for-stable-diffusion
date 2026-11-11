@@ -144,7 +144,7 @@ function AwesomeModal({
           <div className={styles.ModalLabel}>
             {label}
             {tooltip && (
-              <TooltipComponent tooltipId="sdxl-beta-tooltip-modal">
+              <TooltipComponent tooltipId="awesome-modal-tooltip">
                 {tooltip}
               </TooltipComponent>
             )}

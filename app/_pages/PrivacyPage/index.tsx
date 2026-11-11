@@ -63,19 +63,8 @@ const PrivacyPage = () => {
         local storage.
       </div>
       <div className="pb-2">
-        The only exception to the above statements are when you click the &apos;
-        <em>share</em>&apos; button on an image. This requires calling a
-        specific ArtBot endpoint in order to save the data and make it available
-        for others. In this case, all data used to create an image (except for
-        the API key) is stored within an ArtBot specific database. Shared images
-        are hosted on Amazon S3.
-      </div>
-      <div className="pb-2">
-        No one else has access to this database and usernames are not shown when
-        an image is publicly shared. Keep in mind that the link to a shared
-        image is a public link, so anyone with the URL will have access to this
-        image. You can see an example of a shared image{' '}
-        <Linker href="https://tinybots.net/artbot?i=82kg83K26w7">here</Linker>.
+        ArtBot no longer has a share button, so it doesn&apos;t upload or host
+        the images you create.
       </div>
       <div className="pb-2 font-[700]">User telemetry</div>
       <div className="pb-2">
