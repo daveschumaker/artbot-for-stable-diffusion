@@ -133,8 +133,4 @@ None open.
       them before turning the React Compiler on, or turn individual rules
       back on as code is cleaned up.
 - [ ] Reduce the remaining explicit `any` types.
-- [ ] Remove the unused exports `npx knip` reports, about 40 exports and
-      several exported types. Check each one, since knip doesn't see the
-      scripts or the files Jest loads by name. Its unused files and
-      dependencies are false positives now.
 - [ ] Review the 36 `TODO` and `FIXME` comments in the code.
