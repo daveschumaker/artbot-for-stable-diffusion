@@ -73,14 +73,25 @@ test('a 1700-image backup reads one image at a time and restores every row and B
       IDBObjectStore.prototype.getAll = original
     }
     ;(window as any).exportReadSizes = []
-    IDBObjectStore.prototype.getAll = function (query, count) {
+    IDBObjectStore.prototype.getAll = function (
+      this: IDBObjectStore,
+      ...args: any[]
+    ) {
       if (this.name === 'completed') {
+        // Dexie 4 passes one options object, getAll({ query, count }), where
+        // the browser supports it, and getAll(query, count) otherwise.
+        const [first, second] = args
+        const usesOptions =
+          first !== null &&
+          typeof first === 'object' &&
+          !(first instanceof IDBKeyRange)
+        const count = usesOptions ? first.count : second
         ;(window as any).exportReadSizes.push(count)
         if (count !== 1)
           throw new Error('Export attempted to read a whole image batch')
       }
-      return original.call(this, query, count)
-    }
+      return (original as any).apply(this, args)
+    } as any
   })
   const downloadEvent = page.waitForEvent('download', { timeout: 30000 })
   await page
@@ -260,6 +271,116 @@ test('a database export restores deleted images, source data and a nested Blob',
     size: 1024 * 1024,
     sha256: sha(Buffer.alloc(1024 * 1024, 137))
   })
+})
+
+// Made by the deployed site (Dexie 3, dexie-export-import 4.0.7) with
+// e2e/fixtures/makeLegacyBackup.mjs. It stands in for backups users saved.
+const legacyBackup = readFileSync(
+  path.join(__dirname, 'fixtures/legacy-backup.json')
+)
+const LEGACY_BLOB_SHA = sha(
+  Buffer.from(Uint8Array.from({ length: 4096 }, (_, i) => (i * 37) % 256))
+)
+
+test('a backup saved by the deployed site restores every table exactly', async ({
+  page
+}) => {
+  await mockBackend(page)
+  await page.goto('/artbot/images')
+  await page.waitForFunction(() =>
+    Boolean((window as any)._artbotDb?.completed)
+  )
+  await page.evaluate(async (row) => {
+    await (window as any)._artbotDb.completed.add(row)
+  }, fixtures[0])
+  await finishFixtureSetup(page)
+
+  await page.goto('/artbot/settings?panel=import-export')
+  await page.locator('#file-upload').setInputFiles({
+    name: 'legacy-backup.json',
+    mimeType: 'application/json',
+    buffer: legacyBackup
+  })
+  await expect(
+    page.getByText('ArtBot database imported!', { exact: false }).first()
+  ).toBeVisible()
+
+  // Read the stored rows natively: Dexie's reading hook upgrades old rows.
+  const stored = await page.evaluate(async () => {
+    const idb: IDBDatabase = await new Promise((resolve, reject) => {
+      const request = indexedDB.open('imageHorde')
+      request.onsuccess = () => resolve(request.result)
+      request.onerror = () => reject(request.error)
+    })
+    const names = Array.from(idb.objectStoreNames)
+    const transaction = idb.transaction(names, 'readonly')
+    const tables: Record<string, any[]> = {}
+    for (const name of names) {
+      tables[name] = await new Promise((resolve, reject) => {
+        const request = transaction.objectStore(name).getAll()
+        request.onsuccess = () => resolve(request.result)
+        request.onerror = () => reject(request.error)
+      })
+    }
+    let blob = null
+    for (const row of tables.completed) {
+      if (row.payload instanceof Blob) {
+        const digest = await crypto.subtle.digest(
+          'SHA-256',
+          await row.payload.arrayBuffer()
+        )
+        blob = {
+          jobId: row.jobId,
+          type: row.payload.type,
+          sha256: Array.from(new Uint8Array(digest), (n) =>
+            n.toString(16).padStart(2, '0')
+          ).join('')
+        }
+        delete row.payload
+      }
+    }
+    const version = idb.version
+    idb.close()
+    return { version, tables, blob }
+  })
+
+  // The new site still uses the deployed site's database version.
+  expect(stored.version).toBe(60)
+  const exported = JSON.parse(legacyBackup.toString())
+  const expected = Object.fromEntries(
+    exported.data.data.map((table: any) => [
+      table.tableName,
+      // The Blob and its type tag are checked separately.
+      table.rows.map((row: any) => {
+        const copy = { ...row }
+        delete copy.$types
+        delete copy.payload
+        return copy
+      })
+    ])
+  )
+  // The existing image was replaced, not merged.
+  expect(stored.tables).toEqual(expected)
+  expect(stored.blob).toEqual({
+    jobId: 'img2img-with-blob',
+    type: 'application/octet-stream',
+    sha256: LEGACY_BLOB_SHA
+  })
+
+  // New images continue after the restored ids, and the oldest row still
+  // opens in the app.
+  expect(
+    await page.evaluate(() =>
+      (window as any)._artbotDb.completed.add({
+        jobId: 'after-restore',
+        timestamp: 1800000000000
+      })
+    )
+  ).toBe(6)
+  await page.goto('/artbot/image/legacy-model-string')
+  await expect(
+    page.getByText('a lighthouse in fog', { exact: false }).first()
+  ).toBeVisible()
 })
 
 test('importing a full database replaces an existing image', async ({
