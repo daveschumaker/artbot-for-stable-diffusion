@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { expect, test as base } from '@playwright/test'
-import { mockBackend, finishFixtureSetup } from './helpers'
+import { mockBackend, finishFixtureSetup, createTestImage } from './helpers'
 
 // Native Blob storage failed in this WebKit revision's ephemeral contexts.
 // Exercise on-disk storage, as used by normal browser profiles.
@@ -31,6 +31,109 @@ const fixtures = ['img2img', 'inpainting', 'tiling'].map((name) => {
 })
 const sha = (value: string | Buffer) =>
   createHash('sha256').update(value).digest('hex')
+
+test('a 1700-image backup reads one image at a time and restores every row and Blob', async ({
+  page
+}) => {
+  test.setTimeout(120000)
+  await mockBackend(page)
+  await page.goto('/artbot/images')
+  await page.waitForFunction(() =>
+    Boolean((window as any)._artbotDb?.completed)
+  )
+  const image = (await createTestImage()).toString('base64')
+  await page.evaluate(async (base64) => {
+    const rows = Array.from({ length: 1700 }, (_, index) => ({
+      jobId: `large-backup-${index}`,
+      timestamp: 1700000000000 + index,
+      prompt: `backup image ${index}`,
+      base64String: base64,
+      thumbnail: base64,
+      width: 64,
+      height: 64,
+      favorited: index % 2 === 0,
+      ...(index === 0
+        ? {
+            payload: new Blob([new Uint8Array(1024 * 1024).fill(137)], {
+              type: 'application/octet-stream'
+            })
+          }
+        : {})
+    }))
+    await (window as any)._artbotDb.completed.bulkAdd(rows)
+  }, image)
+  await finishFixtureSetup(page)
+  await page.goto('/artbot/settings?panel=import-export')
+  await expect(
+    page.getByRole('button', { name: 'Download database', exact: true })
+  ).toBeVisible()
+  await page.evaluate(() => {
+    const original = IDBObjectStore.prototype.getAll
+    ;(window as any).restoreExportReads = () => {
+      IDBObjectStore.prototype.getAll = original
+    }
+    ;(window as any).exportReadSizes = []
+    IDBObjectStore.prototype.getAll = function (query, count) {
+      if (this.name === 'completed') {
+        ;(window as any).exportReadSizes.push(count)
+        if (count !== 1)
+          throw new Error('Export attempted to read a whole image batch')
+      }
+      return original.call(this, query, count)
+    }
+  })
+  const downloadEvent = page.waitForEvent('download', { timeout: 30000 })
+  await page
+    .getByRole('button', { name: 'Download database', exact: true })
+    .click()
+  const download = await downloadEvent
+  const chunks: Buffer[] = []
+  for await (const chunk of await download.createReadStream())
+    chunks.push(chunk)
+  const backup = Buffer.concat(chunks)
+  const exported = JSON.parse(backup.toString())
+  expect(
+    exported.data.data.find((table: any) => table.tableName === 'completed')
+      .rows
+  ).toHaveLength(1700)
+  const reads = await page.evaluate(() => {
+    ;(window as any).restoreExportReads()
+    return (window as any).exportReadSizes
+  })
+  expect(reads.length).toBeGreaterThanOrEqual(1700)
+  expect(reads.every((size: number) => size === 1)).toBe(true)
+  await page.evaluate(() => (window as any)._artbotDb.completed.clear())
+  await page.locator('#file-upload').setInputFiles({
+    name: 'large-backup.json',
+    mimeType: 'application/json',
+    buffer: backup
+  })
+  await expect(
+    page.getByText('ArtBot database imported!', { exact: false }).first()
+  ).toBeVisible({ timeout: 30000 })
+  const restored = await page.evaluate(async () => {
+    const rows = await (window as any)._artbotDb.completed.toArray()
+    const first = rows.find((row: any) => row.jobId === 'large-backup-0')
+    const digest = await crypto.subtle.digest(
+      'SHA-256',
+      await first.payload.arrayBuffer()
+    )
+    return {
+      count: rows.length,
+      unique: new Set(rows.map((row: any) => row.jobId)).size,
+      favorites: rows.filter((row: any) => row.favorited).length,
+      blobSha: Array.from(new Uint8Array(digest))
+        .map((x) => x.toString(16).padStart(2, '0'))
+        .join('')
+    }
+  })
+  expect(restored).toEqual({
+    count: 1700,
+    unique: 1700,
+    favorites: 850,
+    blobSha: sha(Buffer.alloc(1024 * 1024, 137))
+  })
+})
 
 test('a database export restores deleted images, source data and a nested Blob', async ({
   page
