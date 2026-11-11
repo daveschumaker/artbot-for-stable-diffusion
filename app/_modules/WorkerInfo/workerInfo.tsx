@@ -65,14 +65,10 @@ const ExpandModels = styled(Row)`
   cursor: pointer;
 `
 
-const WorkerInfo = ({
-  editable,
-  loadingWorkerStatus,
-  setComponentState,
-  worker,
-  workers
-}: any) => {
+const WorkerInfo = ({ editable, worker, workers }: any) => {
   const [showModels, setShowModels] = useState(false)
+  // Each worker tracks its own update, so changing two at once works.
+  const [updating, setUpdating] = useState(false)
 
   let statusColor = 'green'
   if (worker.online && worker.maintenance_mode) {
@@ -84,10 +80,7 @@ const WorkerInfo = ({
   const handleWorkerChange = async ({ state }: any) => {
     const { id } = worker
 
-    // New objects each time: the props and the parent's state stay unchanged.
-    setComponentState({
-      loadingWorkerStatus: { ...loadingWorkerStatus, [id]: true }
-    })
+    setUpdating(true)
 
     // TODO: Handle and make visible any errors.
     // Optimistically set worker state.
@@ -123,9 +116,7 @@ const WorkerInfo = ({
       })
       await fetchMyWorkers({ fresh: true })
     } finally {
-      setComponentState({
-        loadingWorkerStatus: { ...loadingWorkerStatus, [id]: false }
-      })
+      setUpdating(false)
     }
   }
 
@@ -280,14 +271,14 @@ const WorkerInfo = ({
             {worker.online && !worker.maintenance_mode && (
               <Button
                 theme="secondary"
-                disabled={loadingWorkerStatus[worker.id]}
+                disabled={updating}
                 onClick={() => {
                   handleWorkerChange({
                     state: 'pause'
                   })
                 }}
               >
-                {loadingWorkerStatus[worker.id] ? (
+                {updating ? (
                   'Updating...'
                 ) : (
                   <>
@@ -298,14 +289,14 @@ const WorkerInfo = ({
             )}
             {worker.online && worker.maintenance_mode && (
               <Button
-                disabled={loadingWorkerStatus[worker.id]}
+                disabled={updating}
                 onClick={() => {
                   handleWorkerChange({
                     state: 'start'
                   })
                 }}
               >
-                {loadingWorkerStatus[worker.id] ? (
+                {updating ? (
                   'Updating...'
                 ) : (
                   <>

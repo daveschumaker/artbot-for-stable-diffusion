@@ -78,7 +78,6 @@ const SettingsPage = () => {
     disableNewImageNotification: false,
     disableSnowflakes: false,
     enableGallerySwipe: true,
-    loadingWorkerStatus: {},
     panel: 'stableHorde',
     runInBackground: false,
     saveInputOnCreate: false, // DEPRECATE
@@ -284,10 +283,7 @@ const SettingsPage = () => {
             />
           )}
           {searchParams?.get('panel') === 'workers' && (
-            <WorkerSettingsPanel
-              componentState={componentState}
-              setComponentState={setComponentState}
-            />
+            <WorkerSettingsPanel componentState={componentState} />
           )}
           {searchParams?.get('panel') === 'prefs' && (
             <ArtBotSettingsPanel
