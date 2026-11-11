@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import { mkdir, mkdtemp, readFile, writeFile } from 'node:fs/promises'
 import { parseArgs } from 'node:util'
 import { chromium, expect } from '@playwright/test'
 import {
@@ -38,12 +38,11 @@ assert.ok(
 )
 assert.ok(['all', 'control', 'candidate'].includes(values.lane), 'Invalid lane')
 const root = path.join(repo, '__local_db/browser-profiles')
-const directory = path.join(
-  repo,
-  '__local_db/upgrade-comparison/results',
-  new Date().toISOString().replace(/[:.]/g, '-')
+const resultsRoot = path.join(repo, '__local_db/upgrade-comparison/results')
+await mkdir(resultsRoot, { recursive: true })
+const directory = await mkdtemp(
+  path.join(resultsRoot, `${new Date().toISOString().replace(/[:.]/g, '-')}-`)
 )
-await mkdir(directory, { recursive: true })
 const report = {
   started: new Date().toISOString(),
   baseline: values.baseline,
