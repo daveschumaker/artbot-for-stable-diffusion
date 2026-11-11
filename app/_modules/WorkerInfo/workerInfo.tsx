@@ -20,6 +20,7 @@ import {
   IconPoint
 } from '@tabler/icons-react'
 import { fetchUserDetailsV2 } from 'app/_api/fetchUserDetailsV2'
+import fetchMyWorkers from 'app/_api/fetchMyWorkers'
 
 // React's typings omit the `name` attribute on anchors.
 declare module 'react' {
@@ -82,45 +83,48 @@ const WorkerInfo = ({
 
   const handleWorkerChange = async ({ state }: any) => {
     const { id } = worker
-    const updateWorkerLoadingState = { ...loadingWorkerStatus }
-    loadingWorkerStatus[id] = true
 
-    const optimisticWorkerData = { ...workers }
-    optimisticWorkerData[id].maintenance_mode = state === 'pause' ? true : false
-
+    // New objects each time: the props and the parent's state stay unchanged.
     setComponentState({
-      loadingWorkerStatus: { ...updateWorkerLoadingState }
+      loadingWorkerStatus: { ...loadingWorkerStatus, [id]: true }
     })
-
-    const workerDetails = { ...workers[id] }
 
     // TODO: Handle and make visible any errors.
     // Optimistically set worker state.
     setWorker({
-      ...workerDetails,
-      maintenance_mode: state === 'pause' ? true : false
+      ...workers[id],
+      maintenance_mode: state === 'pause'
     })
 
-    await fetch(`${getApiHostServer()}/api/v2/workers/${id}`, {
-      body: JSON.stringify({
-        maintenance: state === 'pause' ? true : false,
-        name: worker.name,
-        team: worker.team?.id ?? ''
-      }),
-      headers: {
-        apikey: AppSettings.get('apiKey'),
-        'Content-Type': 'application/json',
-        'Client-Agent': clientHeader()
-      },
-      method: 'PUT'
-    })
+    try {
+      await fetch(`${getApiHostServer()}/api/v2/workers/${id}`, {
+        body: JSON.stringify({
+          maintenance: state === 'pause',
+          name: worker.name,
+          team: worker.team?.id ?? ''
+        }),
+        headers: {
+          apikey: AppSettings.get('apiKey'),
+          'Content-Type': 'application/json',
+          'Client-Agent': clientHeader()
+        },
+        method: 'PUT'
+      })
 
-    await sleep(1000)
+      await sleep(1000)
+    } catch (err) {
+      // The update didn't go through. The refresh below shows the worker as
+      // it really is, replacing the optimistic state.
+    }
 
-    await fetchUserDetailsV2(AppSettings.get('apiKey'))
-
-    loadingWorkerStatus[id] = false
-    setComponentState({ loadingWorkerStatus: { ...updateWorkerLoadingState } })
+    try {
+      await fetchUserDetailsV2(AppSettings.get('apiKey'))
+      await fetchMyWorkers()
+    } finally {
+      setComponentState({
+        loadingWorkerStatus: { ...loadingWorkerStatus, [id]: false }
+      })
+    }
   }
 
   return (
