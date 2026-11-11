@@ -1,6 +1,9 @@
 import { updateImageCount } from 'app/_server-api/counters'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
+// A separate service on the same server stores feedback form messages.
+const FEEDBACK_SERVICE = 'http://localhost:4001/api/v1/artbot/feedback'
+
 type Data = {
   status: string
   build?: string
@@ -18,22 +21,26 @@ export default async function handler(
   data.useragent = req.headers['user-agent']
 
   if (data.event === 'FEEDBACK_FORM') {
+    // The form tells the user whether their message was sent, so a failure
+    // here has to reach it.
     try {
-      await fetch(`http://localhost:4001/api/v1/artbot/feedback`, {
+      const feedback = await fetch(FEEDBACK_SERVICE, {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
           'Content-Type': 'application/json'
         }
       })
+
+      if (!feedback.ok) {
+        return res.status(502).json({ status: 'not ok' })
+      }
+
       return res.send({
         status: 'ok'
       })
     } catch (err) {
-      // eh, it's okay if nothing happens.
-      return res.send({
-        status: 'ok'
-      })
+      return res.status(502).json({ status: 'not ok' })
     }
   }
 

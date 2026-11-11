@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { trackEvent } from 'app/_api/telemetry'
+import { sendFeedback } from 'app/_api/telemetry'
 import { imageCount } from 'app/_utils/db'
 import { Button } from 'app/_components/Button'
 import SectionTitle from 'app/_components/SectionTitle'
@@ -24,27 +24,31 @@ const FeedbackForm = ({
 }: {
   isContactPage?: boolean
 }) => {
-  const [feedbackSent, setFeedbackSent] = useState(false)
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'failed'>(
+    'idle'
+  )
+  const feedbackSent = status === 'sent'
   const [contactInput, setContactInput] = useState('')
   const [inputText, setInputText] = useState('')
 
   const handleSubmit = async () => {
-    if (feedbackSent) {
+    if (status === 'sending' || status === 'sent') {
       return
     }
+
+    setStatus('sending')
     const totalImages = await imageCount()
 
-    setFeedbackSent(true)
-    trackEvent({
-      event: 'FEEDBACK_FORM',
-      data: {
-        contact: contactInput,
-        stablehorde_username: userInfoStore.state.username || '',
-        kudos: userInfoStore.state.kudos,
-        input: inputText,
-        totalImages
-      }
+    const sent = await sendFeedback({
+      contact: contactInput,
+      stablehorde_username: userInfoStore.state.username || '',
+      kudos: userInfoStore.state.kudos,
+      input: inputText,
+      totalImages
     })
+
+    // On failure the message stays in the form, so it can be sent again.
+    setStatus(sent ? 'sent' : 'failed')
   }
 
   return (
@@ -83,9 +87,21 @@ const FeedbackForm = ({
             </div>
           </div>
         )}
+        {status === 'failed' && (
+          <div role="alert" className="text-red-500 mb-[8px]">
+            Your message couldn&apos;t be sent. Please try again.
+          </div>
+        )}
         <FlexRow style={{ justifyContent: 'flex-end' }}>
-          <Button onClick={handleSubmit} disabled={feedbackSent}>
-            {feedbackSent ? 'Message sent!' : 'Send Message'}
+          <Button
+            onClick={handleSubmit}
+            disabled={status === 'sending' || status === 'sent'}
+          >
+            {status === 'sent'
+              ? 'Message sent!'
+              : status === 'sending'
+                ? 'Sending...'
+                : 'Send Message'}
           </Button>
         </FlexRow>
       </Wrapper>
