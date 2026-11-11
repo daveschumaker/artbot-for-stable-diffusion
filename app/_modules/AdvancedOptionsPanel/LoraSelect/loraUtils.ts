@@ -1,6 +1,6 @@
 import { SavedLora } from '_types/artbot'
 import { Embedding, ModelVersion } from '_types/civitai'
-import { sanitize } from 'isomorphic-dompurify'
+import DOMPurify from 'isomorphic-dompurify'
 
 interface CivitAiSearchParams {
   input?: string
@@ -109,7 +109,9 @@ export const handleConvertLora = (
     label: lora.name,
     versionLabel: version.name,
     versionId: version.id as number,
-    description: sanitize(version.description || lora.description || ''),
+    description: DOMPurify.sanitize(
+      version.description || lora.description || ''
+    ),
     baseModel: version.baseModel,
     trainedWords: version.trainedWords,
     image:

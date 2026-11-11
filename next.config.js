@@ -1,9 +1,5 @@
 /** @type {import('next').NextConfig} */
 
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true'
-})
-
 const { basePath } = require('./BASE_PATH.js')
 
 const nextConfig = {
@@ -31,20 +27,18 @@ const nextConfig = {
       }
     ]
   },
-  webpack: (config) => {
-    config.externals.push({
-      bufferutil: 'commonjs bufferutil',
-      canvas: 'commonjs canvas',
-      sharp: 'commonjs sharp',
-      'utf-8-validate': 'commonjs utf-8-validate'
-    })
-    config.module.rules.push({
-      test: /\.md$/,
-      use: 'raw-loader'
-    })
-
-    return config
+  // Native modules that optional dependencies of fabric, jsdom and ws load on
+  // the server. They're required at runtime instead of bundled.
+  serverExternalPackages: ['bufferutil', 'canvas', 'sharp', 'utf-8-validate'],
+  turbopack: {
+    rules: {
+      // The changelog page imports CHANGELOG.md as a string.
+      '*.md': {
+        loaders: ['raw-loader'],
+        as: '*.js'
+      }
+    }
   }
 }
 
-module.exports = withBundleAnalyzer(nextConfig)
+module.exports = nextConfig

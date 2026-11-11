@@ -1,4 +1,4 @@
-import { sanitize } from 'isomorphic-dompurify'
+import DOMPurify from 'isomorphic-dompurify'
 import Panel from 'app/_components/Panel'
 
 const ServerMessage = ({
@@ -28,7 +28,9 @@ const ServerMessage = ({
     <div className="mt-2 mb-4">
       <Panel>
         <div className="font-[700] mb-2">{title}</div>
-        <div dangerouslySetInnerHTML={{ __html: sanitize(content) }} />
+        <div
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
+        />
         {timeDiff > 0 ? (
           <div className="mt-2 text-xs italic">
             Posted ~{timeDiff} minute{timeDiff !== 1 ? 's' : ''} ago
