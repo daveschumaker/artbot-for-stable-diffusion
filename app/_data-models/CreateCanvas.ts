@@ -999,6 +999,12 @@ class CreateCanvas {
     document.removeEventListener('keyup', this.handleKeyInput)
 
     this.canvas.off()
+    // These layers belong to the saved drawing after navigation. Detach them
+    // before Canvas.dispose() destroys their image elements.
+    if (this.canvasType === 'drawing') {
+      this.canvas.remove(this.drawLayer)
+      if (this.imageLayer) this.canvas.remove(this.imageLayer)
+    }
   }
 
   updateBrush = ({
