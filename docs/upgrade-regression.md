@@ -71,6 +71,9 @@ node scripts/upgrade-comparison/compare.mjs --batch-only --reload-only --lane ca
 node scripts/upgrade-comparison/large-library.mjs
 # Both scripts take --control and --candidate URLs to test other servers.
 node scripts/upgrade-comparison/rollback.mjs /absolute/path/to/comparison/report.json
+# Expanded production-generated corpus, including favorites and partial pages:
+node scripts/upgrade-comparison/gallery.mjs --candidate http://127.0.0.1:3298
+node scripts/upgrade-comparison/compare.mjs --baseline production-pagination-favorites --expected-images 245 --lane candidate
 ```
 
 Rollback copies the **closed** candidate profile after a successful ten-image
@@ -85,6 +88,21 @@ Reports and failure screenshots go under the ignored, private
 `__local_db/upgrade-comparison/results/`. Record digests contain no raw prompts,
 API keys, source images or localStorage values. Do not publish profile folders;
 they contain the user's actual credentials and image library.
+
+The expanded `production-pagination-favorites` baseline contains 245 real
+production-generated images and 60 favorites. At 50 images per page that is five
+gallery pages (last page 45), two favorite pages (last page 10), and four
+unfavorited pages (last page 35). It retains the original uploaded-image,
+ControlNet, mask, canvas and batch cases, plus three Depth ControlNet dog
+tributes. The original JPEG and successful renders are kept privately beside
+the snapshot. There are no active jobs; failed legacy/worker requests remain as
+error fixtures. Extra outputs were retained after the legacy site's two-tab
+submission bug appeared during capture.
+
+`gallery.mjs` visits every page of all three views in both builds, compares the
+actual displayed IDs with IndexedDB and checks that browsing changed no saved
+image or favorite bytes. It always uses disposable clones and verifies the
+sealed profile's hash. Re-capture under a new name when extending a baseline.
 
 ## Fresh-state browser coverage
 
@@ -127,6 +145,29 @@ activity and queued-reload tests protect that behavior.
 The old full-database import added rows into an existing database, causing primary-key conflicts. Replacement now clears all tables inside the importer's transaction, using its first row callback; invalid imports roll back the clears and writes together. A valid empty backup is validated before an atomic clear. The importer still streams Blob reads. Before opening the replacement transaction, a streamed framing check rejects a truncated export; the library can otherwise accept an incomplete file as a successful partial import. Avoid the library version's `clearTablesBeforeImport` option here: it clears data before opening the import transaction. The positive restore, duplicate-key failure, and truncated-file tests protect these paths.
 
 The API is described in the [Dexie import/export documentation](https://dexie.org/docs/ExportImport/dexie-export-import).
+
+Further tests now cover favorite/unfavorite persistence, filter changes from a
+last page, next/previous navigation, partial last pages and page reloads. Filter
+changes reset both the URL offset and the state used by the query; using the
+old URL offset while navigation is pending can otherwise return an empty page.
+Masonry DOM order is column-based, so tests compare page membership without
+assuming a row-based DOM order.
+
+Switching tabs while work is still waiting exposed duplicate submissions.
+Submission now claims a waiting record in an IndexedDB readwrite transaction,
+checks its current job ID, and refreshes stale caches from the database. Saving
+completed results also checks for an existing job inside its write transaction.
+The browser test switches focus during a held batch and requires exactly ten
+submissions and ten saved results. This prevents overlapping live-tab claims;
+it does not promise exactly-once recovery after an unacknowledged network POST.
+
+Database export now reads one image row per chunk, rather than the library's
+2,000-row default. The 1,700-row export/restore test rejects larger native reads
+and verifies all IDs, 850 favorites and a nested 1 MB Blob. Its images are small
+fixtures, so this is a bounded-read correctness check, not a phone memory
+benchmark. Export failures release the button and preserve the database. See
+[the iPhone PWA guide](pwa-regression.md) before attempting to back up an existing
+phone installation; actual-device backup and lifecycle testing are separate.
 
 An outage during an unacknowledged POST is different from interrupted polling:
 the service may have accepted the work before the connection failed. The HTTP 503
