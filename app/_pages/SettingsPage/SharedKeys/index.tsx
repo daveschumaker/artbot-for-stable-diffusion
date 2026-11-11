@@ -39,6 +39,8 @@ const sharedKeyQuery = (key: string) => ({
 // in the meantime, including after leaving the page and coming back.
 const createdKeyIds = new Set<string>()
 const deletedKeyIds = new Set<string>()
+// Whose changes those are. Another login starts with empty lists.
+let changesOwner: string | undefined
 
 const SharedKeys = () => {
   const queryClient = useQueryClient()
@@ -54,7 +56,18 @@ const SharedKeys = () => {
   const [, setKeyChanges] = useState(0)
 
   const userStore = useStore(userInfoStore)
-  const { loggedIn, sharedKey = false, sharedkey_ids = [] } = userStore
+  const {
+    loggedIn,
+    sharedKey = false,
+    sharedkey_ids = [],
+    username
+  } = userStore
+
+  if (username && username !== changesOwner) {
+    createdKeyIds.clear()
+    deletedKeyIds.clear()
+    changesOwner = username
+  }
 
   const keyIds = Array.from(
     new Set([...sharedkey_ids, ...Array.from(createdKeyIds)])
