@@ -6,7 +6,7 @@ import SubSectionTitle from 'app/_components/SubSectionTitle'
 import { useState } from 'react'
 import { downloadBlob, formatDate } from 'app/_utils/appUtils'
 import { dbExport } from 'app/_utils/db'
-import { showSuccessToast } from 'app/_utils/notificationUtils'
+import { showErrorToast, showSuccessToast } from 'app/_utils/notificationUtils'
 
 export default function ExportDatabase() {
   const [loading, setLoading] = useState(false)
@@ -30,6 +30,7 @@ export default function ExportDatabase() {
       </SubSectionTitle>
       <div className="flex flex-row">
         <Button
+          disabled={loading}
           onClick={async () => {
             function progressCallback({
               completedRows,
@@ -41,11 +42,20 @@ export default function ExportDatabase() {
             }
 
             setLoading(true)
-            const blob = await dbExport(progressCallback)
-            downloadBlob(blob, `artbot-db_${formatDate()}.json`)
-            showSuccessToast({ message: 'ArtBot database downloaded!' })
-
-            setLoading(false)
+            setProgress(0)
+            setTotalRows(0)
+            try {
+              const blob = await dbExport(progressCallback)
+              downloadBlob(blob, `artbot-db_${formatDate()}.json`)
+              showSuccessToast({ message: 'ArtBot database exported!' })
+            } catch (err) {
+              showErrorToast({
+                message:
+                  'Unable to export the database. Your data has not been changed.'
+              })
+            } finally {
+              setLoading(false)
+            }
           }}
         >
           Download database

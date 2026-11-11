@@ -106,7 +106,13 @@ export const dbExport = async (
         return false
       }
     : undefined
-  const blob = await exportDB(db, { prettyJson: true, progressCallback })
+  // A row can contain several full-size images. The default 2,000-row chunk
+  // can exhaust mobile Safari's memory before it can release the JSON buffer.
+  const blob = await exportDB(db, {
+    numRowsPerChunk: 1,
+    prettyJson: false,
+    progressCallback
+  })
   return blob
 }
 
