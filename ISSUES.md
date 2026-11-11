@@ -50,11 +50,13 @@ None open.
 - [ ] **U11. Watch for a fixed `deepmerge`.** It's the only advisory left:
       low severity, in every version from 4.2.0, pulled in by Jest's
       `jest-config`, which Jest 30 still uses. It never ships to users.
-- [ ] **U12. TypeScript 6, then 7.** This is on 5.9. TypeScript 6 deprecates
-      `baseUrl`, which `tsconfig.json` uses for imports like `app/...` and
-      `_types/...`. (Next 16 already switched `moduleResolution` to
-      `bundler`.)
-      TypeScript 7 is the native compiler, which `ts-jest` doesn't support yet.
+- [ ] **U12. TypeScript 6, then 7.** This is on 5.9. `tsconfig.json` is
+      ready: it uses `paths` instead of the deprecated `baseUrl` and lists
+      its global `types`, and TypeScript 6.0.3 type-checks the project with
+      no errors. To upgrade, also move `ts-jest` from 29.1.1 to 29.4 or
+      later, since 29.1 only supports TypeScript below 6. typescript-eslint
+      8.72 already supports 6.0. TypeScript 7 is the native compiler, which
+      typescript-eslint and `ts-jest` don't support yet.
 - [ ] **U13. Drop the `minimatch` override** in `package.json` once
       typescript-eslint depends on a fixed version (11.0.1 or later) itself.
 
