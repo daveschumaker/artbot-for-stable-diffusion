@@ -14,7 +14,8 @@ export default function TargetWorker() {
 
   useEffect(() => {
     // Load the worker list early, so the picker opens with it ready.
-    queryClient.prefetchQuery(imageWorkersQuery)
+    // A failure here is fine: the picker loads the list again when opened.
+    queryClient.query(imageWorkersQuery).catch(() => {})
   }, [queryClient])
 
   useEffect(() => {

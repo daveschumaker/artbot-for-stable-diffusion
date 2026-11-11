@@ -1,17 +1,16 @@
 'use client'
 
 import Head from 'next/head'
-import React, { useCallback, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useStore } from 'statery'
 import styled from 'styled-components'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 import useComponentState from 'app/_hooks/useComponentState'
 import PageTitle from 'app/_components/PageTitle'
-import { IWorkers, setWorkers, userInfoStore } from 'app/_store/userStore'
+import { userInfoStore } from 'app/_store/userStore'
+import fetchMyWorkers from 'app/_api/fetchMyWorkers'
 import Linker from 'app/_components/Linker'
-import { sleep } from 'app/_utils/sleep'
-import { clientHeader, getApiHostServer } from 'app/_utils/appUtils'
 import MenuButton from 'app/_components/MenuButton'
 import AppSettings from 'app/_data-models/AppSettings'
 import { useEffectOnce } from 'app/_hooks/useEffectOnce'
@@ -149,36 +148,12 @@ const SettingsPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const fetchWorkerData = useCallback(async () => {
-    if (Array.isArray(worker_ids)) {
-      let workerInfo: IWorkers = {}
-
-      for (const idx in worker_ids) {
-        const workerRes = await fetch(
-          `${getApiHostServer()}/api/v2/workers/${worker_ids[idx]}`,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'Client-Agent': clientHeader()
-            }
-          }
-        )
-        const workerData = await workerRes.json()
-        const { id } = workerData
-        workerInfo[id] = { ...workerData }
-
-        await sleep(500)
-      }
-
-      setWorkers(workerInfo)
-    }
-  }, [worker_ids])
-
+  // The workers panel shows the user's workers from userStore.
   useEffect(() => {
     if (searchParams?.get('panel') === 'workers') {
-      fetchWorkerData()
+      fetchMyWorkers()
     }
-  }, [fetchWorkerData, searchParams])
+  }, [worker_ids, searchParams])
 
   useEffectOnce(() => {
     setTimeout(() => {

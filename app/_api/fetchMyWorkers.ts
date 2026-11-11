@@ -1,69 +1,56 @@
-import memoizee from 'memoizee'
-import { IWorker, setWorkers, userInfoStore } from 'app/_store/userStore'
-import { clientHeader, getApiHostServer } from 'app/_utils/appUtils'
+import { HordeWorkerDetails } from '_types/horde'
+import { workerQuery } from 'app/_api/horde/workers'
+import {
+  IWorker,
+  IWorkers,
+  setWorkers,
+  userInfoStore
+} from 'app/_store/userStore'
+import { queryClient } from './queryClient'
 
-const _fetchMyWorkers = async () => {
+// The fields the worker settings panel and menus read.
+const toStoreWorker = (worker: HordeWorkerDetails): IWorker => ({
+  id: worker.id,
+  kudos_rewards: worker.kudos_rewards,
+  maintenance_mode: worker.maintenance_mode,
+  max_pixels: worker.max_pixels,
+  models: worker.models,
+  name: worker.name,
+  online: worker.online,
+  performance: worker.performance,
+  requests_fulfilled: worker.requests_fulfilled,
+  team: worker.team,
+  threads: worker.threads,
+  trusted: worker.trusted,
+  uptime: worker.uptime
+})
+
+/**
+ * Loads the user's workers into userStore. It shares each worker's cached
+ * query with the header menu and worker cards. Pass `fresh` after changing
+ * a worker, so the result reflects the change.
+ */
+const fetchMyWorkers = async ({ fresh = false }: { fresh?: boolean } = {}) => {
   const { worker_ids } = userInfoStore.state
 
   if (!worker_ids || worker_ids.length === 0) {
     return
   }
 
-  let workerInfo: { [key: string]: IWorker } = {}
-  for (const idx in worker_ids) {
-    try {
-      const workerRes = await fetch(
-        `${getApiHostServer()}/api/v2/workers/${worker_ids[idx]}`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Client-Agent': clientHeader()
-          }
-        }
-      )
+  const results = await Promise.all(
+    worker_ids.map((id: string) =>
+      queryClient
+        .query({ ...workerQuery(id), ...(fresh ? { staleTime: 0 } : {}) })
+        // A worker that fails to load is left out, as before.
+        .catch(() => null)
+    )
+  )
 
-      const workerData = await workerRes.json()
-
-      const {
-        id,
-        kudos_rewards,
-        maintenance_mode,
-        max_pixels,
-        models,
-        name,
-        online,
-        performance,
-        requests_fulfilled,
-        team,
-        threads,
-        trusted,
-        uptime
-      } = workerData
-
-      workerInfo[id] = {
-        id,
-        kudos_rewards,
-        maintenance_mode,
-        max_pixels,
-        models,
-        name,
-        online,
-        performance,
-        requests_fulfilled,
-        team,
-        threads,
-        trusted,
-        uptime
-      }
-
-      setWorkers(workerInfo)
-    } catch (err) {
-      // Ignore if error occurs
-    }
+  const workers: IWorkers = {}
+  for (const worker of results) {
+    if (worker) workers[worker.id] = toStoreWorker(worker)
   }
+  setWorkers(workers)
 }
-const fetchMyWorkers = memoizee(_fetchMyWorkers, {
-  maxAge: 5000
-})
 
 export default fetchMyWorkers

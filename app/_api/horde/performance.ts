@@ -1,4 +1,5 @@
 import { queryOptions } from '@tanstack/react-query'
+import { setHordePerformance } from 'app/_store/appStore'
 import { clientHeader } from 'app/_utils/appUtils'
 
 export interface HordePerformance {
@@ -23,10 +24,13 @@ const fetchHordePerformance = async (
     signal
   })
   if (!res.ok) throw new Error(`Unable to fetch performance: ${res.status}`)
-  return res.json()
+  const performance = await res.json()
+  // The header and other store readers show the same numbers.
+  setHordePerformance(performance)
+  return performance
 }
 
-/** The AI Horde's queue and worker totals. */
+/** The AI Horde's queue and worker totals. Updates appInfoStore. */
 export const hordePerformanceQuery = queryOptions({
   queryKey: ['horde', 'performance'],
   queryFn: ({ signal }) => fetchHordePerformance(signal),
