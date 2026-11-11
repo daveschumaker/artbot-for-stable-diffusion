@@ -21,6 +21,8 @@ Open items only. Finished work is in the git history.
       branch using a profile captured from production, including rollback and a
       1,000-image library. It has passed, but rerun it after any change to
       the database, queue or image code.
+      React Query now loads models, user details and workers at startup, so
+      this is due again.
 - [ ] **R4. Replace `ADMIN_PW_HASH` with a scrypt hash.** Run
       `node x-build-scripts/hashAdminPassword.js`. The old SHA-256 hash still
       works until then.
@@ -41,6 +43,10 @@ None open.
 - [ ] **C7. Fix or remove the image page's source image modal.** Opening it is
       commented out in `app/_modules/ImageDetails/index.tsx`, and its "Use for
       inpaint" button only logs to the console.
+- [ ] **C8. Retire the V1 header.** `app/_modules/HeaderNav`, including
+      `HordeDropdown`, is only rendered by `pages/404.tsx`. Every other page
+      uses `app/_componentsV2/HeaderNav`. Give the 404 page the V2 header,
+      then delete the V1 one and its tests.
 
 ## Upgrades
 
