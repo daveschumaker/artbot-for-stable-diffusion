@@ -41,7 +41,12 @@ export default function GlobalDataSync() {
   // such as by the login itself, are reused.
   useQuery({
     queryKey: ['artbot', 'sync', 'user'],
-    queryFn: () => fetchUserDetailsV2(AppSettings.get('apiKey') || ''),
+    queryFn: () => {
+      const apiKey = AppSettings.get('apiKey')
+      // During a login, loggedIn turns true before the key is saved. An
+      // empty key would log the user out, so wait for the next refresh.
+      return apiKey ? fetchUserDetailsV2(apiKey) : null
+    },
     ...refresh,
     enabled: Boolean(loggedIn)
   })

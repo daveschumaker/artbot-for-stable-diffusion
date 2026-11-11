@@ -55,6 +55,7 @@ const fetchWorker = async (
 ): Promise<HordeWorkerDetails | null> => {
   const res = await fetch(`${getApiHostServer()}/api/v2/workers/${id}`, {
     cache: 'no-store',
+    headers: { 'Client-Agent': clientHeader() },
     signal
   })
   if (res.status === 404) return null
@@ -72,6 +73,7 @@ export const workerQuery = (id: string) =>
 const fetchTeams = async (signal?: AbortSignal): Promise<SelectOption[]> => {
   const res = await fetch(`${getApiHostServer()}/api/v2/teams`, {
     cache: 'no-store',
+    headers: { 'Client-Agent': clientHeader() },
     signal
   })
   if (!res.ok) throw new Error(`Unable to fetch teams: ${res.status}`)

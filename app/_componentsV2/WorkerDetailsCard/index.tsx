@@ -47,9 +47,12 @@ export default function WorkerDetailsCard({
   ])
   const [editMode, setEditMode] = useState<string | boolean>(false)
 
-  // Fill the edit fields from the worker, including after a save reloads it.
+  // Fill the edit fields once per worker. Background refreshes replace the
+  // worker object every minute and must not overwrite what's being typed.
+  const filledFor = useRef<string | null>(null)
   useEffect(() => {
-    if (!worker) return
+    if (!worker || filledFor.current === worker.id) return
+    filledFor.current = worker.id
     setWorkerInfo(worker.info)
     setWorkerName(worker.name)
     setWorkerTeam([worker.team.id, worker.team.name])
@@ -139,7 +142,8 @@ export default function WorkerDetailsCard({
     return <div>No worker found...</div>
   }
 
-  if (isError) {
+  // A failed refresh keeps the last loaded worker on screen.
+  if (isError && !worker) {
     return <div>Unable to load this worker. Please try again shortly.</div>
   }
 
