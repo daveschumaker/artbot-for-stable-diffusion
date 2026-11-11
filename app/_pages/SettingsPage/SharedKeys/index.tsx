@@ -67,7 +67,9 @@ const SharedKeys = () => {
     keyIds.map((key, i) => [key, detailQueries[i]?.data])
   )
 
-  const refreshUserDetails = () => fetchUserDetailsV2(AppSettings.get('apiKey'))
+  // Fresh details, so the key list reflects the change just made.
+  const refreshUserDetails = () =>
+    fetchUserDetailsV2(AppSettings.get('apiKey'), undefined, { fresh: true })
 
   const handleCopyKeyClick = (key: string) => {
     const hostname =

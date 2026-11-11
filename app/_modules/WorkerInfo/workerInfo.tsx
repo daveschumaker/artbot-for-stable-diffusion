@@ -118,8 +118,10 @@ const WorkerInfo = ({
     }
 
     try {
-      await fetchUserDetailsV2(AppSettings.get('apiKey'))
-      await fetchMyWorkers()
+      await fetchUserDetailsV2(AppSettings.get('apiKey'), undefined, {
+        fresh: true
+      })
+      await fetchMyWorkers({ fresh: true })
     } finally {
       setComponentState({
         loadingWorkerStatus: { ...loadingWorkerStatus, [id]: false }

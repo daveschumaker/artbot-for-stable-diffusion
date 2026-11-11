@@ -75,7 +75,7 @@ const HordeDropdown = () => {
       setStateFor(previousState)
     }
 
-    await fetchMyWorkers()
+    await fetchMyWorkers({ fresh: true })
   }
 
   const {

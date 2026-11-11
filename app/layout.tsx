@@ -14,6 +14,7 @@ import FooterV2 from './_components/FooterV2'
 import { HeaderNav } from './_componentsV2/HeaderNav'
 import ModalProvider from './_modules/ModalProvider'
 import QueryProvider from './_providers/QueryProvider'
+import GlobalDataSync from './_modules/GlobalDataSync'
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseHost),
@@ -88,6 +89,7 @@ export default async function RootLayout({
               {/* AppInit uses useSearchParams, so static pages render on the client. This must stay inside ModalProvider: as a direct child of body it causes intermittent hydration errors. */}
               <div style={{ flex: 1, minHeight: '100vh' }}>
                 <AppInit />
+                <GlobalDataSync />
                 <AppAnalytics />
                 <PollController />
                 <HeaderNav />

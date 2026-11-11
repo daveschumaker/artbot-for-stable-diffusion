@@ -1,5 +1,7 @@
+import { queryOptions } from '@tanstack/react-query'
 import { setLoggedInState, setUserInfo } from 'app/_store/userStore'
 import { clientHeader, getApiHostServer, isUuid } from 'app/_utils/appUtils'
+import { queryClient } from './queryClient'
 
 interface UserCacheType {
   kudos?: number
@@ -12,66 +14,13 @@ interface UserCacheType {
   [key: string]: any // for additional unexpected fields
 }
 
-let userCache: UserCacheType | null = null
-let lastFetchTime: number = 0
-let isRequestInProgress: boolean = false
-
 const MAX_RETRIES: number = 2
 const RETRY_DELAY: number = 5000 // 5 seconds
 
-// Define types for your API response here
-type ApiResponse = Record<string, any>
-
-// Fetch data from the API
-const fetchData = async (
-  url: string,
-  headers: Record<string, string>
-): Promise<ApiResponse> => {
-  const response = await fetch(url, { headers })
-  if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
-  return response.json()
-}
-
-// Retry logic
-const retryFetch = async <T>(
-  func: () => Promise<T>,
-  maxRetries: number,
-  delay: number
-): Promise<T> => {
-  for (let i = 0; i < maxRetries; i++) {
-    try {
-      return await func()
-    } catch (e) {
-      if (i + 1 === maxRetries) break
-      console.log(
-        `Retrying in ${delay / 1000} seconds... (Attempt ${
-          i + 1
-        } of ${maxRetries})`
-      )
-      await new Promise((resolve) => setTimeout(resolve, delay))
-    }
-  }
-  throw new Error('Max retries reached')
-}
-
-export const fetchUserDetailsV2 = async (
+const fetchUser = async (
   apiKey: string,
-  maxRetries: number = MAX_RETRIES
-): Promise<UserCacheType | null> => {
-  const currentTime: number = new Date().getTime()
-
-  if (
-    (currentTime - lastFetchTime < 30000 && userCache) ||
-    isRequestInProgress
-  ) {
-    return userCache
-  }
-
-  if (!apiKey) {
-    setLoggedInState(false)
-    return null
-  }
-
+  signal?: AbortSignal
+): Promise<UserCacheType> => {
   const isSharedKey: boolean = isUuid(apiKey)
   const endpoint: string = isSharedKey
     ? `/api/v2/sharedkeys/${apiKey}`
@@ -79,24 +28,51 @@ export const fetchUserDetailsV2 = async (
   const headers: Record<string, string> = { 'Client-Agent': clientHeader() }
   if (!isSharedKey) headers['apikey'] = apiKey
 
+  const response = await fetch(`${getApiHostServer()}${endpoint}`, {
+    headers,
+    signal
+  })
+  if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
+  const data = await response.json()
+
+  const user = { ...data, sharedKey: isSharedKey }
+  setLoggedInState(true)
+  setUserInfo(user as any)
+  return user
+}
+
+/** The AI Horde user (or shared key) for an API key. Updates userStore. */
+const userDetailsQuery = (apiKey: string) =>
+  queryOptions({
+    queryKey: ['horde', 'user', apiKey],
+    queryFn: ({ signal }) => fetchUser(apiKey, signal),
+    staleTime: 30 * 1000,
+    retry: MAX_RETRIES - 1,
+    retryDelay: RETRY_DELAY
+  })
+
+/**
+ * Loads the user's details into userStore and returns them. Uses details
+ * from the last 30 seconds unless `fresh` is set, for example after
+ * creating a shared key. Returns null if the Horde can't be reached, keeping
+ * the user information already loaded.
+ */
+export const fetchUserDetailsV2 = async (
+  apiKey: string,
+  maxRetries: number = MAX_RETRIES,
+  { fresh = false }: { fresh?: boolean } = {}
+): Promise<UserCacheType | null> => {
+  if (!apiKey) {
+    setLoggedInState(false)
+    return null
+  }
+
   try {
-    isRequestInProgress = true
-    const data: ApiResponse = await retryFetch(
-      () => fetchData(`${getApiHostServer()}${endpoint}`, headers),
-      maxRetries,
-      RETRY_DELAY
-    )
-
-    userCache = {
-      ...data,
-      sharedKey: isSharedKey
-    }
-    lastFetchTime = currentTime
-
-    setLoggedInState(true)
-    setUserInfo(userCache as any)
-
-    return userCache
+    return await queryClient.query({
+      ...userDetailsQuery(apiKey),
+      retry: maxRetries - 1,
+      ...(fresh ? { staleTime: 0 } : {})
+    })
   } catch {
     // Network outages (including isolated profile replay) are recoverable.
     // Keep existing user state and retry on the next scheduled refresh. Avoid
@@ -105,7 +81,5 @@ export const fetchUserDetailsV2 = async (
       'Unable to refresh AI Horde user details; keeping existing user information.'
     )
     return null
-  } finally {
-    isRequestInProgress = false
   }
 }

@@ -1,14 +1,10 @@
 import { deletePendingJobs } from 'app/_controllers/pendingJobsCache'
 import { setLoggedInState } from 'app/_store/userStore'
 import { JobStatus } from '_types'
-// import { buildModelAvailability } from 'app/_api/fetchAvailableModels'
-import { fetchHordePerformance } from 'app/_api/fetchHordePerformance'
-import fetchMyWorkers from 'app/_api/fetchMyWorkers'
 import { setUserId } from 'app/_api/userInfo'
 import AppSettings from 'app/_data-models/AppSettings'
 
 import { trackNewSession } from './analytics'
-import { isAppActive } from './appUtils'
 import {
   deleteDoneFromPending,
   deleteInvalidPendingJobs,
@@ -17,9 +13,6 @@ import {
 } from './db'
 import { initWindowLogger } from './debugTools'
 import { loadAuthToken } from './authUtils'
-import { fetchUserDetailsV2 } from 'app/_api/fetchUserDetailsV2'
-import { client_fetchModelDetailsV2 } from 'app/_api/client_fetchModelDetailsV2'
-import { client_fetchModelsAvailableV2 } from 'app/_api/client_fetchModelsAvailableV2'
 
 const updateShowGrid = () => {
   if (localStorage.getItem('showGrid') === 'true') {
@@ -137,36 +130,8 @@ export const initAppSettings = async () => {
 
   initWindowLogger()
   fixLocalStorage()
-  fetchHordePerformance()
-  fetchUserDetailsV2(apikey)
-  // fetchUserDetails(apikey)
-
-  // buildModelAvailability()
-  client_fetchModelDetailsV2()
-  client_fetchModelsAvailableV2()
-
+  // GlobalDataSync loads and refreshes models, Horde performance, user
+  // details and the user's workers.
   setUserId()
-  fetchMyWorkers()
   appLastActive()
-
-  setInterval(async () => {
-    if (!isAppActive()) {
-      return
-    }
-
-    // buildModelAvailability()
-    client_fetchModelDetailsV2()
-    client_fetchModelsAvailableV2()
-
-    fetchHordePerformance()
-  }, 60000)
-
-  setInterval(async () => {
-    if (!isAppActive()) {
-      return
-    }
-
-    await fetchUserDetailsV2(apikey)
-    await fetchMyWorkers()
-  }, 60000)
 }
