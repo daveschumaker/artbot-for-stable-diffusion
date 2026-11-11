@@ -48,6 +48,59 @@ describe('user details during a network outage', () => {
     expect(Date.now() - start).toBe(5000)
   })
 
+  it('applies a cached profile after switching accounts', async () => {
+    const { fetchUserDetailsV2 } = await import('./fetchUserDetailsV2')
+    const { setUserInfo } = await import('app/_store/userStore')
+    ;(fetch as jest.Mock).mockImplementation(async (_url, options) => ({
+      ok: true,
+      json: async () => ({ username: options.headers.apikey })
+    }))
+    await fetchUserDetailsV2('account-a')
+    await fetchUserDetailsV2('account-b')
+    await fetchUserDetailsV2('account-a')
+    expect(fetch).toHaveBeenCalledTimes(2)
+    expect(setUserInfo).toHaveBeenLastCalledWith(
+      expect.objectContaining({ username: 'account-a' })
+    )
+  })
+
+  it('does not apply a late lookup from the account just switched away from', async () => {
+    const { fetchUserDetailsV2 } = await import('./fetchUserDetailsV2')
+    const { setUserInfo } = await import('app/_store/userStore')
+    let release!: (response: unknown) => void
+    ;(fetch as jest.Mock).mockImplementation(async (_url, options) => {
+      if (options.headers.apikey === 'account-a')
+        return new Promise((resolve) => {
+          release = resolve
+        })
+      return { ok: true, json: async () => ({ username: 'account-b' }) }
+    })
+    const older = fetchUserDetailsV2('account-a')
+    await fetchUserDetailsV2('account-b')
+    release({ ok: true, json: async () => ({ username: 'account-a' }) })
+    await expect(older).resolves.toBeNull()
+    expect(setUserInfo).toHaveBeenLastCalledWith(
+      expect.objectContaining({ username: 'account-b' })
+    )
+  })
+
+  it('deduplicates concurrent lookups of the same account without rejecting either caller', async () => {
+    const { fetchUserDetailsV2 } = await import('./fetchUserDetailsV2')
+    ;(fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: async () => ({ username: 'same-account' })
+    })
+    const users = await Promise.all([
+      fetchUserDetailsV2('same-key'),
+      fetchUserDetailsV2('same-key')
+    ])
+    expect(users.map((user) => user?.username)).toEqual([
+      'same-account',
+      'same-account'
+    ])
+    expect(fetch).toHaveBeenCalledTimes(1)
+  })
+
   it('can recover on a later successful request', async () => {
     const { fetchUserDetailsV2 } = await import('./fetchUserDetailsV2')
     const failed = fetchUserDetailsV2('test-only-key')
