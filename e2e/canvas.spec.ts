@@ -268,6 +268,12 @@ test.describe('the draw page', () => {
 
     await expectPixel(page, 160, 100, isDark)
     await expectPixel(page, 160, 200, isBlue)
+    await page.locator('a[href="/artbot/pending"]').first().click()
+    await expect(page).toHaveURL(/\/pending/)
+    await page.goBack()
+    await expect(page.locator(UPPER_CANVAS)).toBeVisible()
+    await expectPixel(page, 160, 200, isBlue)
+    await expectPixel(page, 160, 100, isDark)
   })
 
   test('restores a drawing after navigating away', async ({ page }) => {
