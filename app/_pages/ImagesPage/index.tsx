@@ -191,7 +191,7 @@ const ImagesPage = () => {
       return
     }
 
-    const offset = Number(searchParams?.get('offset')) || 0
+    const offset = componentState.offset
     let data
     const sort = localStorage.getItem('imagePageSort') || 'new'
 
@@ -213,6 +213,7 @@ const ImagesPage = () => {
   }, [
     LIMIT,
     componentState.filterMode,
+    componentState.offset,
     componentState.updateTimestamp,
     getImageCount,
     searchParams,
@@ -736,6 +737,7 @@ const ImagesPage = () => {
                   onClick={() => {
                     setComponentState({
                       filterMode: 'all',
+                      offset: 0,
                       isLoading: componentState.filterMode !== 'all'
                     })
 
@@ -745,6 +747,7 @@ const ImagesPage = () => {
                     )
                     delete newQuery.filter
                     delete newQuery.model
+                    delete newQuery.offset
                     router.push(
                       `?${new URLSearchParams(toSearchParamsInit(newQuery)).toString()}`
                     )
@@ -756,6 +759,7 @@ const ImagesPage = () => {
                   onClick={() => {
                     setComponentState({
                       filterMode: 'favorited',
+                      offset: 0,
                       isLoading: componentState.filterMode !== 'favorited'
                     })
 
@@ -764,6 +768,7 @@ const ImagesPage = () => {
                       parseQueryString(window?.location?.search)
                     )
                     newQuery.filter = 'favorited'
+                    delete newQuery.offset
                     router.push(
                       `?${new URLSearchParams(toSearchParamsInit(newQuery)).toString()}`
                     )
@@ -775,6 +780,7 @@ const ImagesPage = () => {
                   onClick={() => {
                     setComponentState({
                       filterMode: 'unfavorited',
+                      offset: 0,
                       isLoading: componentState.filterMode !== 'unfavorited'
                     })
 
@@ -783,6 +789,7 @@ const ImagesPage = () => {
                       parseQueryString(window?.location?.search)
                     )
                     newQuery.filter = 'unfavorited'
+                    delete newQuery.offset
                     router.push(
                       `?${new URLSearchParams(toSearchParamsInit(newQuery)).toString()}`
                     )
@@ -794,6 +801,7 @@ const ImagesPage = () => {
                   onClick={() => {
                     setComponentState({
                       filterMode: 'upscaled',
+                      offset: 0,
                       isLoading: componentState.filterMode !== 'upscaled'
                     })
 
@@ -802,6 +810,7 @@ const ImagesPage = () => {
                       parseQueryString(window?.location?.search)
                     )
                     newQuery.filter = 'upscaled'
+                    delete newQuery.offset
                     router.push(
                       `?${new URLSearchParams(toSearchParamsInit(newQuery)).toString()}`
                     )
@@ -814,6 +823,7 @@ const ImagesPage = () => {
                   onClick={() => {
                     setComponentState({
                       filterMode: 'text2img',
+                      offset: 0,
                       isLoading: componentState.filterMode !== 'text2img'
                     })
 
@@ -822,6 +832,7 @@ const ImagesPage = () => {
                       parseQueryString(window?.location?.search)
                     )
                     newQuery.filter = 'text2img'
+                    delete newQuery.offset
                     router.push(
                       `?${new URLSearchParams(toSearchParamsInit(newQuery)).toString()}`
                     )
@@ -833,6 +844,7 @@ const ImagesPage = () => {
                   onClick={() => {
                     setComponentState({
                       filterMode: 'img2img',
+                      offset: 0,
                       isLoading: componentState.filterMode !== 'img2img'
                     })
 
@@ -841,6 +853,7 @@ const ImagesPage = () => {
                       parseQueryString(window?.location?.search)
                     )
                     newQuery.filter = 'img2img'
+                    delete newQuery.offset
                     router.push(
                       `?${new URLSearchParams(toSearchParamsInit(newQuery)).toString()}`
                     )
@@ -852,6 +865,7 @@ const ImagesPage = () => {
                   onClick={() => {
                     setComponentState({
                       filterMode: 'inpainting',
+                      offset: 0,
                       isLoading: componentState.filterMode !== 'inpainting'
                     })
 
@@ -860,6 +874,7 @@ const ImagesPage = () => {
                       parseQueryString(window?.location?.search)
                     )
                     newQuery.filter = 'inpainting'
+                    delete newQuery.offset
                     router.push(
                       `?${new URLSearchParams(toSearchParamsInit(newQuery)).toString()}`
                     )
