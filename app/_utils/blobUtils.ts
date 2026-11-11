@@ -160,7 +160,7 @@ async function writeMetadata(
       imageUint8Arr = writePNGtext(imageUint8Arr, 'Software', SOFTWARE)
     } else {
       // A JPEG segment holds at most 64 KB, so a prompt too long for one is
-      // left out of it. It is still in the EXIF data.
+      // left out of it, as it is from the EXIF data.
       imageUint8Arr = bytes
       for (const write of [
         (jpeg: Uint8Array<ArrayBuffer>) => writeXMP(jpeg, xmp),
@@ -258,10 +258,22 @@ function mergeExifData(existingExif: IExif, userComment: string): IExif {
   return exifObj
 }
 
+// A JPEG keeps its EXIF data in one segment of at most 64 KB. Leave room for
+// the other tags.
+const MAX_JPEG_EXIF_COMMENT_BYTES = 60000
+
 async function addOrUpdateExifData(
   blob: Blob,
   userComment: string
 ): Promise<Blob> {
+  if (
+    blob.type === 'image/jpeg' &&
+    encodeUtf8Bytes(userComment).length > MAX_JPEG_EXIF_COMMENT_BYTES
+  ) {
+    // Too long for a JPEG: writing it would fail, so it's left out.
+    userComment = ''
+  }
+
   const imageBytes = await blobToBase64(blob)
   const newExif = await mergeExifData(await getExifFromBlob(blob), userComment)
   const exifbytes = exifLib.dump(newExif)
