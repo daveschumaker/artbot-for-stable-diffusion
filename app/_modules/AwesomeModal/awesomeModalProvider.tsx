@@ -1,11 +1,5 @@
 import { useWindowSize } from 'app/_hooks/useWindowSize'
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState
-} from 'react'
+import React, { createContext, useCallback, useEffect, useState } from 'react'
 
 interface ContentHeightContextType {
   contentHeight: number
@@ -15,19 +9,7 @@ interface ContentHeightContextType {
 
 // The default value is an empty object, so outside of a provider every field
 // is undefined.
-export const ContentHeight = createContext<Partial<ContentHeightContextType>>(
-  {}
-)
-
-export const useContentHeight = (): Partial<ContentHeightContextType> => {
-  const context = useContext(ContentHeight)
-  if (!context) {
-    throw new Error(
-      'useContentHeight must be used within a ContentHeightProvider'
-    )
-  }
-  return context
-}
+const ContentHeight = createContext<Partial<ContentHeightContextType>>({})
 
 export const ContentHeightProvider = ({
   children

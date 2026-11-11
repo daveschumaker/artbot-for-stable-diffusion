@@ -1,22 +1,14 @@
 import { MAX_IMAGES_PER_JOB } from '_constants'
 import CreateImageRequest from 'app/_data-models/CreateImageRequest'
-import { logError, uuidv4 } from './appUtils'
+import { uuidv4 } from './appUtils'
 import { getModelVersion } from './modelUtils'
 import { modelStore } from 'app/_store/modelStore'
 import { SourceProcessing } from './promptUtils'
-import { userInfoStore } from 'app/_store/userStore'
-import { toast, ToastOptions } from 'react-toastify'
-import { logToConsole } from './debugTools'
-import {
-  deletePendingJob,
-  setPendingJob
-} from 'app/_controllers/pendingJobsCache'
+import { setPendingJob } from 'app/_controllers/pendingJobsCache'
 import AppSettings from 'app/_data-models/AppSettings'
 import { addPendingJobToDexie } from './db'
 
-export const addPendingJobToDexieDb = async (
-  imageParams: CreateImageRequest
-) => {
+const addPendingJobToDexieDb = async (imageParams: CreateImageRequest) => {
   // Create a temporary uuid for easier lookups.
   // Will be replaced later when job is accepted
   // by API
@@ -76,7 +68,7 @@ export const createPendingRerollJob = async (
   return await addPendingJobToDexieDb(clonedParams)
 }
 
-export const addTriggerToPrompt = ({
+const addTriggerToPrompt = ({
   prompt,
   model
 }: {
@@ -98,86 +90,6 @@ export const addTriggerToPrompt = ({
   }
 
   return prompt
-}
-
-const toastObject: ToastOptions = {
-  pauseOnFocusLoss: false,
-  position: 'top-center',
-  autoClose: 2500,
-  hideProgressBar: false,
-  closeOnClick: true,
-  pauseOnHover: false,
-  draggable: false,
-  progress: undefined,
-  theme: 'light'
-}
-
-export const addPendingJobToDb = async ({
-  clonedParams,
-  errorCount = 0
-}: {
-  clonedParams: any
-  errorCount: number
-}) => {
-  // Handle an interesting race condition that sometimes happens with Dexie
-  // "QuoteExceeded" error but not really.
-  // https://dexie.org/docs/DexieErrors/Dexie.QuotaExceededError
-  try {
-    if (errorCount >= 5) {
-      toast.error(
-        'Unable to add pending image request to browser database. Please reload the web app and try again.',
-        toastObject
-      )
-      return { success: false }
-    }
-
-    await addPendingJobToDexieDb(clonedParams)
-
-    logToConsole({
-      data: clonedParams,
-      name: 'pendingUtils.addPendingJobToDb.success',
-      debugKey: 'ADD_PENDING_JOB_TO_DB'
-    })
-  } catch (err: any) {
-    errorCount++
-
-    logToConsole({
-      data: err,
-      name: 'pendingUtils.addPendingJobToDb.error',
-      debugKey: 'ADD_PENDING_JOB_TO_DB'
-    })
-
-    if (err.message && err.message.includes('QuotaExceededError')) {
-      // Handle a strange error the happens for... some reason?
-      // https://dexie.org/docs/DexieErrors/Dexie.QuotaExceededError
-
-      logError({
-        path: window.location.href,
-        errorMessage: [
-          'pendingUtils.addPendingJobToDb.errorCountExceeded',
-          'Unable to add completed item to db'
-        ].join('\n'),
-        errorInfo: err?.message,
-        errorType: 'client-side',
-        username: userInfoStore.state.username
-      })
-
-      deletePendingJob(clonedParams.jobId)
-    } else {
-      logError({
-        path: window.location.href,
-        errorMessage: [
-          'pendingUtils.addPendingJobToDb',
-          'Unable to add completed item to db'
-        ].join('\n'),
-        errorInfo: err?.message,
-        errorType: 'client-side',
-        username: userInfoStore.state.username
-      })
-
-      deletePendingJob(clonedParams.jobId)
-    }
-  }
 }
 
 export const createPendingJob = async (imageParams: CreateImageRequest) => {

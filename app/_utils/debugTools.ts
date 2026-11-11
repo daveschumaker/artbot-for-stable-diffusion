@@ -78,10 +78,6 @@ export const logToConsole = ({
   }
 }
 
-export const getAllLogs = () => {
-  return logs
-}
-
 export const logDataForDebugging = ({
   name,
   data

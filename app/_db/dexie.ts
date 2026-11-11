@@ -75,7 +75,7 @@ export class MySubClassedDexie extends Dexie {
 
 // Early versions of ArtBot saved a single `model` string and no `source_image`.
 // Rows are upgraded as they're read, so stored images are never rewritten.
-export const normalizeCompletedRow = (row: any) => {
+const normalizeCompletedRow = (row: any) => {
   if (Array.isArray(row.models) && row.source_image !== undefined) {
     return row
   }

@@ -24,16 +24,11 @@ import {
   updateAllPendingJobs
 } from './db'
 import { createNewImage } from './imageUtils'
-import {
-  CREATE_NEW_JOB_INTERVAL,
-  MAX_CONCURRENT_JOBS_ANON,
-  MAX_CONCURRENT_JOBS_USER
-} from '_constants'
+import { CREATE_NEW_JOB_INTERVAL } from '_constants'
 import { isAppActive, logError, uuidv4 } from './appUtils'
 import { logToConsole } from './debugTools'
 import {
   deletePendingJob,
-  getAllPendingJobs,
   setPendingJob,
   syncPendingJobsFromDb,
   updateAllPendingJobsV2,
@@ -43,17 +38,11 @@ import {
 import { base64toBlob } from './imageUtils'
 import { initBlob, blobToBase64 } from './blobUtils'
 
-export const initIndexedDb = () => {}
-
 // Dynamically change fetch interval
 // (e.g., in cases where there are too many parallel requests)
 let FETCH_INTERVAL_SEC = CREATE_NEW_JOB_INTERVAL
 
-// Limit max jobs for anon users. If user is logged in,
-// let them run more jobs at once.
-let MAX_JOBS = MAX_CONCURRENT_JOBS_ANON
-
-export const checkImageJob = async (jobId: string): Promise<CheckImage> => {
+const checkImageJob = async (jobId: string): Promise<CheckImage> => {
   if (!jobId || !jobId?.trim()) {
     return {
       success: false,
@@ -87,31 +76,6 @@ export const checkImageJob = async (jobId: string): Promise<CheckImage> => {
     return {
       success: false,
       status: 'SOME_ERROR'
-    }
-  }
-}
-
-export const createMultiImageJob = async () => {
-  if (typeof window === 'undefined') {
-    return
-  }
-
-  if (!isAppActive()) {
-    return
-  }
-
-  if (userInfoStore.state.loggedIn) {
-    MAX_JOBS = MAX_CONCURRENT_JOBS_USER
-  }
-
-  const queuedCount = (await getAllPendingJobs(JobStatus.Processing)) || []
-
-  if (queuedCount.length < MAX_JOBS) {
-    const pendingJobs = (await getAllPendingJobs(JobStatus.Waiting)) || []
-    const [nextJobParams] = pendingJobs
-
-    if (nextJobParams) {
-      await sendJobToApi(nextJobParams)
     }
   }
 }
@@ -308,7 +272,7 @@ export const sendJobToApi = async (imageParams: CreateImageJob) => {
   }
 }
 
-export const getImage = async (jobId: string) => {
+const getImage = async (jobId: string) => {
   if (!jobId || !jobId?.trim()) {
     return {
       success: false,
@@ -321,7 +285,7 @@ export const getImage = async (jobId: string) => {
   return data
 }
 
-export const addCompletedJobToDb = async ({
+const addCompletedJobToDb = async ({
   jobDetails
 }: {
   jobDetails: any

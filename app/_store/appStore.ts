@@ -106,18 +106,6 @@ export const setImageDetailsModalOpen = (val: boolean = false) => {
   }))
 }
 
-export const setClusterSettings = (obj: any) => {
-  appInfoStore.set(() => ({
-    clusterSettings: obj
-  }))
-}
-
-export const setServerMessage = (obj: any) => {
-  appInfoStore.set(() => ({
-    serverMessage: { ...obj }
-  }))
-}
-
 export const setNotification = (obj: any) => {
   // Prevent un-neccesary rerenders. This might not be needed?
   if (
@@ -150,27 +138,9 @@ export const setShowAppMenu = (val: boolean = false) => {
   }))
 }
 
-export const setShowBetaOption = (val: boolean) => {
-  appInfoStore.set(() => ({
-    showBetaOption: val
-  }))
-}
-
 export const setBuildId = (id: string) => {
   appInfoStore.set(() => ({
     buildId: id
-  }))
-}
-
-export const setHordeStatus = (val: boolean) => {
-  appInfoStore.set(() => ({
-    stableHordeApiOnline: val
-  }))
-}
-
-export const setIndexDbSupport = (bool: boolean) => {
-  appInfoStore.set(() => ({
-    indexDbSupport: bool
   }))
 }
 

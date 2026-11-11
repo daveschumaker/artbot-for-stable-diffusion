@@ -275,10 +275,6 @@ export const deleteStalePending = async () => {
     ?.delete()
 }
 
-export const clearPendingJobsTable = async () => {
-  return await db.pending.clear()
-}
-
 export const allPendingJobs = async (status?: string) => {
   try {
     if (status) {
@@ -306,10 +302,6 @@ export const fetchFirstCompletedJob = async () => {
 export const _allCompletedJobs = async () => {
   return await db?.completed?.orderBy('id')?.toArray()
 }
-
-export const allCompletedJobs = memoize(_allCompletedJobs, {
-  maxAge: 10000
-})
 
 export const deleteDoneFromPending = async () => {
   const pendingJobs = (await allPendingJobs()) || []
@@ -571,18 +563,6 @@ export const getPendingJobDetails = async (jobId: string) => {
   return await db.pending.where('jobId').equals(jobId).first()
 }
 
-export const updatePendingJobInDexieByJobId = async (
-  jobId: string,
-  updatedObject: any
-) => {
-  const pendingJob = await getPendingJobDetails(jobId)
-  const updated = Object.assign({}, pendingJob, updatedObject)
-
-  if (jobId) {
-    db.pending.update(pendingJob.id, updated)
-  }
-}
-
 export const updateCompletedJob = async (
   tableId: number,
   updatedObject: object
@@ -704,10 +684,6 @@ export const deleteAllPendingJobs = async () => {
 
   deletePendingJobs(JobStatus.Queued)
   deletePendingJobs(JobStatus.Waiting)
-}
-
-export const getImageDetailsById = async (id: number) => {
-  return await db.completed.where('id').equals(id).first()
 }
 
 export const _getImageDetails = async (jobId: string) => {

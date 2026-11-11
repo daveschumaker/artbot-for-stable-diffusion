@@ -1,11 +1,3 @@
-export enum ErrorTypes {
-  // FIXED_SEED = 'FIXED_SEED',
-  // INPAINT_MISSING_SOURCE_MASK = 'INPAINT_MISSING_SOURCE_MASK',
-  PROMPT_EMPTY = 'PROMPT_EMPTY',
-  SOURCE_IMAGE_EMPTY = 'SOURCE_IMAGE_EMPTY',
-  UNCOMPATIBLE_LORA = 'UNCOMPATIBLE_LORA'
-}
-
 interface IErrors {
   [key: string]: { text: string; className: string; blocksCreation: boolean }
 }

@@ -13,7 +13,7 @@ function sortAlphabetically(obj: any) {
 
 // Via: https://github.com/Haidra-Org/AI-Horde-Styles
 // TODO: Automatically import and update
-export const stableHordeStyles: { [key: string]: HordePreset } = {
+const stableHordeStyles: { [key: string]: HordePreset } = {
   sdxl: {
     prompt: '{p}{np}',
     model: 'SDXL 1.0',

@@ -26,7 +26,6 @@ import useComponentState from 'app/_hooks/useComponentState'
 import { downloadImages } from 'app/_utils/imageUtils'
 import { useEffectOnce } from 'app/_hooks/useEffectOnce'
 import AppSettings from 'app/_data-models/AppSettings'
-import { setFilteredItemsArray } from 'app/_store/filteredImagesCache'
 import { useStore } from 'statery'
 import { appInfoStore, setImageDetailsModalOpen } from 'app/_store/appStore'
 import TooltipComponent from 'app/_components/TooltipComponent'
@@ -206,7 +205,6 @@ const ImagesPage = () => {
         model: searchParams?.get('model') as string,
         callback: (i) => setComponentState({ currentFilterImageIndex: i })
       })
-      setFilteredItemsArray(data)
     }
     await getImageCount()
     setComponentState({ images: data, isLoading: false })

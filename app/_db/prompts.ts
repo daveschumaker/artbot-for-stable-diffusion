@@ -1,29 +1,8 @@
-import { setUnsupportedBrowser } from 'app/_store/appStore'
 import { db } from './dexie'
 import { PromptHistoryDetails, PromptTypes } from '_types/artbot'
 
 export const deletePromptFromHistory = async (id: number) => {
   await db.prompts.bulkDelete([id])
-}
-
-export const getDefaultPrompt = async () => {
-  try {
-    return (
-      (await db?.prompts
-        ?.where({ promptType: 'default' })
-        .limit(1)
-        ?.toArray()) || []
-    )
-  } catch (err: any) {
-    if (
-      err.message.indexOf(
-        'A mutation operation was attempted on a database that did not allow mutations'
-      ) >= 0
-    ) {
-      setUnsupportedBrowser(true)
-    }
-    return []
-  }
 }
 
 export const getPrompts = async ({

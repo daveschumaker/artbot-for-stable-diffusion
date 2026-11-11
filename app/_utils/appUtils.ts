@@ -56,11 +56,6 @@ interface NavigatorWithStandalone extends Navigator {
   standalone?: boolean // iOS Safari
 }
 
-interface DocumentWithVendorFullscreen extends Document {
-  mozCancelFullScreen?: () => Promise<void> // Firefox
-  webkitExitFullscreen?: () => Promise<void> // Safari
-}
-
 export const isInstalledPwa = () => {
   if (typeof window === 'undefined') {
     return false
@@ -159,29 +154,6 @@ export const isiOS = () => {
   )
 }
 
-export const enterFullScreen = (element: any) => {
-  if (element.requestFullscreen) {
-    element.requestFullscreen()
-  } else if (element.mozRequestFullScreen) {
-    element.mozRequestFullScreen() // Firefox
-  } else if (element.webkitRequestFullscreen) {
-    element.webkitRequestFullscreen() // Safari
-  } else if (element.msRequestFullscreen) {
-    element.msRequestFullscreen() // IE/Edge
-  }
-}
-
-export const exitFullscreen = () => {
-  const doc = document as DocumentWithVendorFullscreen
-  if (doc.exitFullscreen) {
-    doc.exitFullscreen()
-  } else if (doc.mozCancelFullScreen) {
-    doc.mozCancelFullScreen()
-  } else if (doc.webkitExitFullscreen) {
-    doc.webkitExitFullscreen()
-  }
-}
-
 export const formatDate = () => {
   const currentDate = new Date()
 
@@ -215,20 +187,4 @@ export const parseQueryString = (
   }
 
   return result
-}
-
-export const debounce = (
-  func: (str: string) => Promise<any>,
-  delay: number
-) => {
-  let timerId: any
-
-  return (...args: any) => {
-    clearTimeout(timerId)
-    return new Promise((resolve) => {
-      timerId = setTimeout(() => {
-        resolve(func.apply(null, args))
-      }, delay)
-    })
-  }
 }

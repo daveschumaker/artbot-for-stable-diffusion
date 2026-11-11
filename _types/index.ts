@@ -3,18 +3,6 @@ import { Dispatch } from 'react'
 import { TextualInversion } from './horde'
 import { SavedLora } from './artbot'
 
-export enum ArtBotJobTypes {
-  Text2Img = 'Text2Img',
-  Img2Img = 'Img2Img',
-  Drawing = 'Drawing',
-  Inpainting = 'Inpainting',
-  Upscale = 'Upscale',
-  Reroll = 'Reroll',
-  CopyPrompt = 'CopiedPrompt',
-  SharedPrompt = 'SharedPrompt',
-  Variation = 'Variation'
-}
-
 export interface CheckImage {
   success: boolean
   status?: string
@@ -82,63 +70,10 @@ export interface CreateImageJob {
   }>
 }
 
-export interface NewRating {
-  dataset_id: string
-  id: string
-  url: string
-}
-
-interface ImageOrientation {
-  label: string
-  orientation: string
-  height: number
-  width: number
-}
-
-export interface OrientationLookup {
-  [key: string]: ImageOrientation
-}
-
 export interface JobImageDetails {
   base64String: string
   thumbnail?: string
   prompt?: string
-}
-
-export interface CreatePendingJob {
-  id?: number
-  timestamp: number
-  jobStatus?: JobStatus
-  errorMessage?: string
-  groupJobId: string
-  jobId?: string
-  prompt: string
-  img2img?: boolean
-  numImages: number
-  orientationType: string
-  orientation: string
-  karras: boolean
-  height: number
-  width: number
-  parentJobId: string
-  jobTimestamp: number
-  models: Array<string>
-  cfg_scale: number
-  steps: number
-  sampler: string
-  jobStartTimestamp: number
-
-  source_processing?: string
-  has_source_mask?: boolean
-  has_source_image?: boolean
-  post_processing: Array<string>
-  useAllModels?: boolean
-}
-
-export interface DiffusionModel {
-  name: string
-  count: number
-  performance: number
 }
 
 export interface SelectPropsComponent {
@@ -168,12 +103,7 @@ export interface GenerateResponse {
 
 export type SetInput = Dispatch<Partial<DefaultPromptInput>>
 
-export interface GetSetPromptInput {
-  input: DefaultPromptInput
-  setInput: SetInput
-}
-
-export interface AiHordeGeneration {
+interface AiHordeGeneration {
   censored: boolean
   id: string
   img: string
@@ -231,26 +161,10 @@ export interface ICanvas {
   width: any
 }
 
-export enum ImageMimeType {
-  Png = 'image/png',
-  WebP = 'image/webp'
-}
-
 export interface ImageSize {
   orientation: string
   height: number
   width: number
-}
-
-export interface KeypressEvent {
-  keyCode: number
-  preventDefault: () => {}
-  shiftKey: boolean
-}
-
-export interface ModelDetails {
-  name: string
-  count?: number
 }
 export interface IOrientation {
   value: string
@@ -264,19 +178,6 @@ export enum PromptTypes {
   Negative = 'negative',
   PromptFavorite = 'promptFavorite',
   PromptHistory = 'promptHistory'
-}
-
-export enum ControlTypes {
-  None = '',
-  Canny = 'canny',
-  Hed = 'hed',
-  Depth = 'depth',
-  Normal = 'normal',
-  Openpose = 'openpose',
-  Seg = 'seg',
-  Scribble = 'scribble',
-  FakeScribbles = 'fakescribbles',
-  Hough = 'hough'
 }
 
 export interface Value {

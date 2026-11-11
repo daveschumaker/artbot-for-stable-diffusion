@@ -26,7 +26,7 @@ const apiCooldown = (timeoutMs: number = 15000) => {
   }, timeoutMs)
 }
 
-export const fetchImageFromUrl = async (imgUrl: string) => {
+const fetchImageFromUrl = async (imgUrl: string) => {
   try {
     if (!isValidHttpUrl(imgUrl)) return false
 

@@ -1,11 +1,9 @@
 import UpscaleImageRequest from 'app/_data-models/UpscaleImageRequest'
 import {
-  clearI2IString,
   cloneFromImage,
   setI2iUploaded,
   storeCanvas
 } from 'app/_store/canvasStore'
-import { downloadFile } from 'app/_utils/imageUtils'
 import { setImageForInterrogation } from 'app/_utils/interrogateUtils'
 import { createPendingRerollJob } from 'app/_utils/pendingUtils'
 import {
@@ -113,54 +111,6 @@ export const uploadInpaint = async (imageDetails: any, options: any = {}) => {
     canvasData: clone ? imageDetails.canvasData : null,
     maskData: clone ? imageDetails.maskData : null
   })
-}
-
-export const uploadImg2Img = (imageDetails: any, options: any = {}) => {
-  clearI2IString()
-  const { useSourceImg = false } = options
-
-  // If used for img2img request, invalidate any inpainting model since we aren't passing along source_mask
-  if (
-    imageDetails?.models[0] &&
-    imageDetails?.models[0].includes('_inpainting')
-  ) {
-    imageDetails.models[0] = 'stable_diffusion'
-  }
-
-  let sampler = imageDetails.sampler
-  if (!Samplers.validSamplersForImg2Img().includes(sampler)) {
-    sampler = 'k_dpm_2'
-  }
-
-  savePrompt({
-    imageType: imageDetails.imageType,
-    prompt: imageDetails.prompt,
-    sampler,
-    steps: imageDetails.steps,
-    orientation: imageDetails.orientation,
-    karras: imageDetails.karras,
-    hires: imageDetails.hires,
-    clipskip: imageDetails.clipskip,
-    height: imageDetails.height,
-    width: imageDetails.width,
-    cfg_scale: imageDetails.cfg_scale,
-    parentJobId: imageDetails.parentJobId,
-    negative: imageDetails.negative,
-    source_image: useSourceImg
-      ? imageDetails.source_image
-      : imageDetails.base64String,
-    source_processing: SourceProcessing.Img2Img,
-    source_mask: '',
-    denoising_strength: imageDetails.denoising_strength,
-    control_type: imageDetails.control_type,
-    models: imageDetails?.models[0]
-      ? imageDetails.models
-      : [imageDetails.model || 'stable_diffusion']
-  })
-}
-
-export const downloadImage = async (imageDetails: any) => {
-  downloadFile(imageDetails)
 }
 
 export const rerollImage = async (imageDetails: any) => {

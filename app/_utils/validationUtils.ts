@@ -34,18 +34,6 @@ export const maxSteps = ({
   return anonMaxSteps[sampler]
 }
 
-interface IHasMask {
-  source_mask: string
-}
-
-export const hasMask = (input: IHasMask) => {
-  if (input.source_mask) {
-    return true
-  }
-
-  return false
-}
-
 interface IHasImg {
   source_image: string
 }

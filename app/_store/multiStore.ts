@@ -1,6 +1,6 @@
 import { makeStore } from 'statery'
 
-export enum WindowState {
+enum WindowState {
   main,
   sub
 }
@@ -10,7 +10,7 @@ interface MultiStore {
   otherAvailablePagesFound: boolean
 }
 
-export function ping(): boolean {
+function ping(): boolean {
   if (multiStore.state.windowState == WindowState.main) {
     localStorage[LocalStorageEvents.Ping] = Date.now()
     return true
@@ -61,7 +61,7 @@ export const enablePingChecker = () => {
   }, 1000)
 }
 
-export const enablePingSender = () => {
+const enablePingSender = () => {
   if (pingSender == null) {
     pingSender = setInterval(() => {
       if (!ping()) {
@@ -103,12 +103,6 @@ export const multiStore = makeStore<MultiStore>({
   otherAvailablePagesFound: false
 })
 
-export const isMainWindow = () => {
+const isMainWindow = () => {
   return multiStore.state.windowState == WindowState.main
-}
-
-export const setWindowState = (state: WindowState) => {
-  multiStore.set(() => ({
-    windowState: state
-  }))
 }
