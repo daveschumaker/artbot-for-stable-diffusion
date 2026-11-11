@@ -376,6 +376,11 @@ const withPromptMetadata = async (base64String: string, metaData: string) => {
   }
 }
 
+// When each finished job's image first failed to download, by Horde job id.
+const imageDownloadFailures = new Map<string, number>()
+// How long to keep retrying a finished image that won't download.
+const IMAGE_DOWNLOAD_RETRY_MS = 2 * 60 * 1000
+
 export const checkCurrentJob = async (imageDetails: any) => {
   let jobDetails: any = Object.assign({}, imageDetails)
 
@@ -509,6 +514,20 @@ export const checkCurrentJob = async (imageDetails: any) => {
       'status' in imgDetailsFromApi &&
       imgDetailsFromApi.status === 'INVALID_IMAGE_FROM_API'
     ) {
+      // The image is finished on the Horde, but no copy could be downloaded.
+      // That's usually a network blip, so keep polling for a while before
+      // giving up. Retrying from scratch would spend the user's kudos again.
+      const firstFailure = imageDownloadFailures.get(jobId) ?? Date.now()
+      imageDownloadFailures.set(jobId, firstFailure)
+
+      if (Date.now() - firstFailure < IMAGE_DOWNLOAD_RETRY_MS) {
+        return {
+          success: false,
+          status: 'IMAGE_DOWNLOAD_RETRY'
+        }
+      }
+
+      imageDownloadFailures.delete(jobId)
       updatePendingJobV2(
         Object.assign({}, imageDetails, {
           jobStatus: JobStatus.Error,
@@ -521,6 +540,8 @@ export const checkCurrentJob = async (imageDetails: any) => {
         status: 'INVALID_IMAGE_FROM_API'
       }
     }
+
+    imageDownloadFailures.delete(jobId)
 
     if (
       imageDetails &&

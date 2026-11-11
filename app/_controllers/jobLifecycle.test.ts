@@ -597,17 +597,44 @@ describe('image job lifecycle', () => {
       )
     })
 
-    it('fails a job whose image cannot be decoded', async () => {
+    // A finished image that won't download is usually a network blip.
+    // Failing it would make the user pay for the image again.
+    it('keeps a finished job whose image fails to download, then saves it', async () => {
       await submitJob()
       horde.finishJob()
       mockImages.isValid = false
 
-      const result = await poll()
-
-      expect(result).toEqual({
+      expect(await poll()).toEqual({
         success: false,
-        status: 'INVALID_IMAGE_FROM_API'
+        status: 'IMAGE_DOWNLOAD_RETRY'
       })
+      expect(app.cache.getPendingJob('horde-1').jobStatus).not.toBe(
+        JobStatus.Error
+      )
+
+      mockImages.isValid = true
+      expect(await poll()).toMatchObject({ success: true, newImage: true })
+      expect(await app.database._getImageDetails('horde-1')).toBeTruthy()
+    })
+
+    it('fails a job whose image still cannot be downloaded after two minutes', async () => {
+      await submitJob()
+      horde.finishJob()
+      mockImages.isValid = false
+      expect((await poll()).status).toBe('IMAGE_DOWNLOAD_RETRY')
+
+      const realNow = Date.now.bind(Date)
+      const later = jest
+        .spyOn(Date, 'now')
+        .mockImplementation(() => realNow() + 2 * 60 * 1000 + 1000)
+      try {
+        expect(await poll()).toEqual({
+          success: false,
+          status: 'INVALID_IMAGE_FROM_API'
+        })
+      } finally {
+        later.mockRestore()
+      }
       expect(app.cache.getPendingJob('horde-1').jobStatus).toBe(JobStatus.Error)
     })
 
