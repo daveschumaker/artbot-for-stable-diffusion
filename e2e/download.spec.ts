@@ -343,40 +343,48 @@ test('a jpg download carries the prompt in its comment and XMP', async ({
   expect(errors).toEqual([])
 })
 
-// Earlier versions stored the prompt UTF-8 encoded twice.
-test('a prompt that an earlier version encoded twice is repaired on download', async ({
-  page
-}) => {
-  const errors = trackPageErrors(page)
-  await mockBackend(page)
-  await useDownloadFormat(page, 'png')
+// Earlier versions stored the prompt UTF-8 encoded twice. Stored images are
+// usually WebP, so downloading as WebP needs no conversion but still needs
+// the repair.
+for (const [stored, format] of [
+  ['jpeg', 'png'],
+  ['webp', 'webp'],
+  ['jpeg', 'jpg']
+] as const) {
+  test(`a prompt that an earlier version encoded twice is repaired on download (${stored} to ${format})`, async ({
+    page
+  }) => {
+    const errors = trackPageErrors(page)
+    await mockBackend(page)
+    await useDownloadFormat(page, format)
 
-  const jpeg = await createTestImage('jpeg', 8, 8)
-  const exif = exifLib.dump({
-    '0th': { 305: 'ArtBot' },
-    Exif: { 37510: 'ASCII\0\0\0' + doubleEncoded('café').toString('latin1') }
+    const image = await createTestImage(stored, 8, 8)
+    const exif = exifLib.dump({
+      '0th': { 305: 'ArtBot' },
+      Exif: { 37510: 'ASCII\0\0\0' + doubleEncoded('café').toString('latin1') }
+    })
+    const legacy = Buffer.from(
+      exifLib.insert(exif, image.toString('latin1')),
+      'latin1'
+    )
+    expect(legacy.includes(doubleEncoded('café'))).toBe(true)
+
+    await seedImage(page, {
+      jobId: 'legacy',
+      prompt: 'café',
+      imageMimeType: `image/${stored}`,
+      base64String: legacy.toString('base64')
+    })
+
+    const file = await readDownload(
+      await downloadFromDetailsPage(page, 'legacy', 'café')
+    )
+
+    expect(file.includes(utf8('café'))).toBe(true)
+    expect(file.includes(doubleEncoded('café'))).toBe(false)
+    expect(errors).toEqual([])
   })
-  const legacy = Buffer.from(
-    exifLib.insert(exif, jpeg.toString('latin1')),
-    'latin1'
-  )
-  expect(legacy.includes(doubleEncoded('café'))).toBe(true)
-
-  await seedImage(page, {
-    jobId: 'legacy',
-    prompt: 'café',
-    imageMimeType: 'image/jpeg',
-    base64String: legacy.toString('base64')
-  })
-
-  const file = await readDownload(
-    await downloadFromDetailsPage(page, 'legacy', 'café')
-  )
-
-  expect(file.includes(utf8('café'))).toBe(true)
-  expect(file.includes(doubleEncoded('café'))).toBe(false)
-  expect(errors).toEqual([])
-})
+}
 
 // Only Safari takes the clipboard path that hands over a promise of the image.
 for (const browser of ['Chrome', 'Safari']) {

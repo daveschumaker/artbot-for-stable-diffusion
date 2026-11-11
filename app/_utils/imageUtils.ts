@@ -562,16 +562,17 @@ const toDownloadBlob = async (
     return null
   }
 
+  // Always go through the converter, even when the image is already in this
+  // format: it also repairs prompts that earlier versions encoded twice.
   // Blobs from base64toBlob are typed by their content, so this is reliable.
-  if (input.type === DOWNLOAD_FORMATS[format].mimeType) {
-    return input
-  }
+  const sameFormat = input.type === DOWNLOAD_FORMATS[format].mimeType
 
   try {
     return await DOWNLOAD_FORMATS[format].convert(input)
   } catch (err) {
     console.log(`Error converting image to ${format}`, err)
-    return null
+    // The stored image is still a valid download, just without the repair.
+    return sameFormat ? input : null
   }
 }
 export const downloadImages = async ({
