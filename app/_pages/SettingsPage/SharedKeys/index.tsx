@@ -5,7 +5,8 @@ import Input from 'app/_components/Input'
 import Section from 'app/_components/Section'
 import SubSectionTitle from 'app/_components/SubSectionTitle'
 import AppSettings from 'app/_data-models/AppSettings'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useState } from 'react'
+import { useQueries, useQueryClient } from '@tanstack/react-query'
 import { useStore } from 'statery'
 import { userInfoStore } from 'app/_store/userStore'
 import { clientHeader } from 'app/_utils/appUtils'
@@ -15,10 +16,32 @@ import InteractiveModal from 'app/_components/InteractiveModal/interactiveModal'
 import styles from './sharedKeys.module.css'
 import { fetchUserDetailsV2 } from 'app/_api/fetchUserDetailsV2'
 
-const cacheKeyIds: Array<string> = []
-const cacheKeyDetails: any = {}
+const SHARED_KEYS_API = 'https://aihorde.net/api/v2/sharedkeys'
+
+const sharedKeyQuery = (key: string) => ({
+  queryKey: ['horde', 'sharedkey', key],
+  queryFn: async ({ signal }: { signal: AbortSignal }) => {
+    const resp = await fetch(`${SHARED_KEYS_API}/${key}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Client-Agent': clientHeader()
+      },
+      signal
+    })
+    if (!resp.ok) throw new Error(`Unable to fetch shared key: ${resp.status}`)
+    return resp.json()
+  },
+  staleTime: 60 * 1000
+})
+
+// The Horde can take a while to list a new key in the user's details, or to
+// drop a deleted one. Remember this session's changes so the list is right
+// in the meantime, including after leaving the page and coming back.
+const createdKeyIds = new Set<string>()
+const deletedKeyIds = new Set<string>()
 
 const SharedKeys = () => {
+  const queryClient = useQueryClient()
   const [inputKeyName, setInputKeyName] = useState('')
   const [inputKeyKudos, setInputKeyKudos] = useState('')
 
@@ -27,21 +50,24 @@ const SharedKeys = () => {
   )
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState<string | boolean>(false)
-
-  const [keyIds, setKeyIds] = useState<Array<string>>([])
-  const [keyDetails, setKeyDetails] = useState<any>({})
+  // Re-renders the list after this session's created and deleted keys change.
+  const [, setKeyChanges] = useState(0)
 
   const userStore = useStore(userInfoStore)
   const { loggedIn, sharedKey = false, sharedkey_ids = [] } = userStore
 
-  // Handle cache issues with AI Horde backend.
-  // Populate keyIds if needed.
-  useEffect(() => {
-    if (sharedkey_ids.length > 0) {
-      setKeyIds([...sharedkey_ids])
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const keyIds = Array.from(
+    new Set([...sharedkey_ids, ...Array.from(createdKeyIds)])
+  ).filter((key) => !deletedKeyIds.has(key))
+
+  const detailQueries = useQueries({
+    queries: keyIds.map((key) => sharedKeyQuery(key))
+  })
+  const keyDetails: Record<string, any> = Object.fromEntries(
+    keyIds.map((key, i) => [key, detailQueries[i]?.data])
+  )
+
+  const refreshUserDetails = () => fetchUserDetailsV2(AppSettings.get('apiKey'))
 
   const handleCopyKeyClick = (key: string) => {
     const hostname =
@@ -60,14 +86,12 @@ const SharedKeys = () => {
 
   const handleCreateKeyClick = async () => {
     try {
-      const data = {
-        name: String(inputKeyName),
-        kudos: Number(inputKeyKudos)
-      }
-
-      const resp = await fetch(`https://aihorde.net/api/v2/sharedkeys`, {
+      const resp = await fetch(SHARED_KEYS_API, {
         method: 'PUT',
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          name: String(inputKeyName),
+          kudos: Number(inputKeyKudos)
+        }),
         headers: {
           apikey: AppSettings.get('apiKey'),
           'Content-Type': 'application/json',
@@ -76,33 +100,25 @@ const SharedKeys = () => {
       })
 
       const details = await resp.json()
-      console.log(`details`, details)
 
       if (details.id) {
-        cacheKeyIds.push(details.id)
-        cacheKeyDetails[details.id] = details
-
-        const updateKeyIds = [...keyIds]
-        updateKeyIds.push(details.id)
-        setKeyIds(updateKeyIds)
-
-        const updateKeyDetails = Object.assign({}, keyDetails)
-        updateKeyDetails[details.id] = details
-        setKeyDetails(updateKeyDetails)
-
+        createdKeyIds.add(details.id)
+        queryClient.setQueryData(sharedKeyQuery(details.id).queryKey, details)
+        setKeyChanges((n) => n + 1)
         handleCopyKeyClick(details.id)
       }
 
-      await fetchUserDetailsV2(AppSettings.get('apiKey'))
-      setShowCreateModal(false)
+      await refreshUserDetails()
     } catch (err) {
+      console.log(`Error creating shared key:`, err)
+    } finally {
       setShowCreateModal(false)
     }
   }
 
   const handleDeleteKey = async (key: string | boolean) => {
     try {
-      const resp = await fetch(`https://aihorde.net/api/v2/sharedkeys/${key}`, {
+      const resp = await fetch(`${SHARED_KEYS_API}/${key}`, {
         method: 'DELETE',
         headers: {
           apikey: AppSettings.get('apiKey'),
@@ -114,30 +130,25 @@ const SharedKeys = () => {
       const details = await resp.json()
 
       if (details.message === 'OK') {
-        updateAllKeyDetails()
-
-        const updatedKeyIds = keyIds.filter((item) => item !== key)
-        setKeyIds(updatedKeyIds)
-
-        const updatedKeyDetails = Object.assign({}, keyDetails)
-        delete updatedKeyDetails[key as string]
-        setKeyDetails(updatedKeyDetails)
+        deletedKeyIds.add(key as string)
+        createdKeyIds.delete(key as string)
+        queryClient.removeQueries({
+          queryKey: sharedKeyQuery(key as string).queryKey
+        })
+        setKeyChanges((n) => n + 1)
+        await refreshUserDetails()
       }
     } catch (err) {
-      // ignore me
+      console.log(`Error deleting shared key:`, err)
     }
   }
 
   const handleUpdateKey = async (key: string | boolean) => {
-    const data = {
-      name: 'TestFlight1',
-      kudos: Number(inputKeyKudos)
-    }
-
     try {
-      const resp = await fetch(`https://aihorde.net/api/v2/sharedkeys/${key}`, {
+      // Only the kudos limit is editable. The name stays as it is.
+      const resp = await fetch(`${SHARED_KEYS_API}/${key}`, {
         method: 'PATCH',
-        body: JSON.stringify(data),
+        body: JSON.stringify({ kudos: Number(inputKeyKudos) }),
         headers: {
           apikey: AppSettings.get('apiKey'),
           'Content-Type': 'application/json',
@@ -148,62 +159,14 @@ const SharedKeys = () => {
       const details = await resp.json()
 
       if (details.id) {
-        const updateKeyDetails = Object.assign({}, keyDetails)
-        updateKeyDetails[details.id] = details
-        setKeyDetails(updateKeyDetails)
+        queryClient.setQueryData(sharedKeyQuery(details.id).queryKey, details)
       }
-
-      setShowEditModal(false)
     } catch (err) {
       console.log(`Error updating shared key:`, err)
+    } finally {
       setShowEditModal(false)
     }
   }
-
-  const fetchKeyDetails = async (key: string) => {
-    try {
-      const resp = await fetch(`https://aihorde.net/api/v2/sharedkeys/${key}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Client-Agent': clientHeader()
-        }
-      })
-
-      const details = await resp.json()
-
-      return details
-    } catch (err) {
-      // ignore me
-    }
-  }
-
-  const updateState = useCallback(
-    (key: string, obj: object) => {
-      const updateKeys = Object.assign({}, keyDetails)
-      updateKeys[key] = obj
-      console.log(`obj`, obj)
-
-      setKeyDetails(updateKeys)
-    },
-    [keyDetails]
-  )
-
-  const updateAllKeyDetails = useCallback(async () => {
-    for (const key of keyIds) {
-      const details = await fetchKeyDetails(key)
-      updateState(key, details)
-    }
-
-    // Ignore updateState, otherwise we trigger an infinite loop.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [keyIds])
-
-  useEffect(() => {
-    if (keyIds.length > 0) {
-      updateAllKeyDetails()
-    }
-  }, [keyIds, updateAllKeyDetails])
 
   if (!loggedIn || sharedKey) {
     return null

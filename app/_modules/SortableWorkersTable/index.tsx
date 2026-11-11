@@ -1,7 +1,7 @@
 import { formatSeconds } from 'app/_utils/helperUtils'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import styles from './sortableWorkersTable.module.css'
-import { fetchWorkers } from 'app/_api/fetchWorkers'
+import { useImageWorkers } from 'app/_api/horde/workers'
 import {
   IconArrowNarrowDown,
   IconArrowNarrowUp,
@@ -16,22 +16,14 @@ import NiceModal from '@ebay/nice-modal-react'
 import WorkerDetailsCard from 'app/_componentsV2/WorkerDetailsCard'
 import { sortWorkers, WorkerSortKey, WorkerSortOrder } from './sortWorkers'
 
+// A stable empty list, so the sorted list isn't recomputed every render.
+const NO_WORKERS: HordeWorkerDetails[] = []
+
 export default function SortableTable() {
   // const [loading, setLoading] = useState(true)
   const [sortOrder, setSortOrder] = useState<WorkerSortOrder>('dsc')
   const [sortBy, setSortBy] = useState<WorkerSortKey>('kph')
-  const [workers, setWorkers] = useState<HordeWorkerDetails[]>([])
-
-  const fetchWorkersFromApi = async () => {
-    const data = await fetchWorkers()
-
-    // setLoading(false)
-    setWorkers(data)
-  }
-
-  useEffect(() => {
-    fetchWorkersFromApi()
-  }, [])
+  const { data: workers = NO_WORKERS } = useImageWorkers()
 
   const badgeColor = (worker: HordeWorkerDetails) => {
     if (worker.maintenance_mode) {

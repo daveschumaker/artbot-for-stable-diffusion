@@ -1,8 +1,8 @@
 'use client'
 
 import Head from 'next/head'
-import { useEffect, useState } from 'react'
-import { fetchModelUpdates } from 'app/_api/fetchModelUpdates'
+import { useMemo } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import Linker from 'app/_components/Linker'
 import PageTitle from 'app/_components/PageTitle'
 import { relativeTimeSec } from 'app/_utils/numberUtils'
@@ -22,40 +22,35 @@ interface IModelUpdate {
   status: string
 }
 
+const fetchModelUpdates = async (
+  signal?: AbortSignal
+): Promise<IModelUpdatesResponse> => {
+  const res = await fetch(`${basePath}/api/models/updates`, { signal })
+  if (!res.ok) throw new Error(`Unable to fetch model updates: ${res.status}`)
+  return res.json()
+}
+
 const ModelUpdatesPage = () => {
-  const [updates, setUpdates] = useState<any>([])
+  const { data } = useQuery({
+    queryKey: ['artbot', 'model-updates'],
+    queryFn: ({ signal }) => fetchModelUpdates(signal),
+    staleTime: 5 * 60 * 1000
+  })
 
-  const getModelUpdates = async () => {
-    try {
-      let changeArray: Array<any> = []
-      const data: IModelUpdatesResponse | undefined = await fetchModelUpdates()
-      // fetchModelUpdates returns undefined while a request is in flight.
-      // (Destructuring it used to throw into the empty catch below.)
-      if (!data) return
-      const { changes = [], timestamp } = data
-
-      changes.forEach((change: any) => {
-        if (change) {
-          changeArray.push({
-            modelName: change.modelName,
-            timeAgo: relativeTimeSec({
-              now: timestamp,
-              compare: change.timestamp
-            }),
-            version: change.version,
-            status: change.status
-          })
-        }
-      })
-
-      changeArray.reverse()
-      setUpdates(changeArray)
-    } catch (err) {}
-  }
-
-  useEffect(() => {
-    getModelUpdates()
-  }, [])
+  // Newest first, with each change's age measured from the server's clock.
+  const updates = useMemo(() => {
+    if (!data?.success) return []
+    const { changes = [], timestamp } = data
+    return changes
+      .filter(Boolean)
+      .map((change: any) => ({
+        modelName: change.modelName,
+        timeAgo: relativeTimeSec({ now: timestamp, compare: change.timestamp }),
+        version: change.version,
+        status: change.status
+      }))
+      .reverse()
+  }, [data])
 
   const renderUpdates = () => {
     let changeArray: any = []

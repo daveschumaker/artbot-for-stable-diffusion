@@ -4,16 +4,18 @@ import { Button } from 'app/_components/Button'
 import Modal from 'app/_componentsV2/Modal'
 import SelectTargetWorker from './SelectTargetWorker'
 import { useEffect } from 'react'
-import { fetchWorkers } from 'app/_api/fetchWorkers'
+import { useQueryClient } from '@tanstack/react-query'
+import { imageWorkersQuery } from 'app/_api/horde/workers'
 import { setForceSelectedWorker } from 'app/_store/appStore'
 
 export default function TargetWorker() {
   const targetWorkerModal = useModal(Modal)
+  const queryClient = useQueryClient()
 
   useEffect(() => {
-    // Only doing this to attempt to prefetch workers on initial page load.
-    fetchWorkers()
-  }, [])
+    // Load the worker list early, so the picker opens with it ready.
+    queryClient.prefetchQuery(imageWorkersQuery)
+  }, [queryClient])
 
   useEffect(() => {
     const worker = sessionStorage.getItem('forceSelectedWorker')
