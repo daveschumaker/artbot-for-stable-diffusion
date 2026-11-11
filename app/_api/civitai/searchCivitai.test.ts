@@ -106,10 +106,10 @@ describe('searchCivitai', () => {
   it('cancels the request when React Query cancels the search', async () => {
     let requestSignal: AbortSignal | undefined
     global.fetch = jest.fn(
-      (_url: string, init: RequestInit) =>
+      (_url: string, init: Parameters<typeof fetch>[1]) =>
         new Promise((_resolve, reject) => {
-          requestSignal = init.signal!
-          init.signal!.addEventListener('abort', () =>
+          requestSignal = init!.signal!
+          init!.signal!.addEventListener('abort', () =>
             reject(new DOMException('Aborted', 'AbortError'))
           )
         })
