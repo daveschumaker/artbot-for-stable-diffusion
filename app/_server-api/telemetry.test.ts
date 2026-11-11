@@ -3,7 +3,7 @@
  * report the feedback service's failures instead of always answering ok.
  */
 import type { NextApiRequest, NextApiResponse } from 'next'
-import handler from './telemetry'
+import handler from 'pages/api/telemetry'
 
 // Keep a local .env out of the test.
 jest.mock('dotenv', () => ({ config: jest.fn() }))
