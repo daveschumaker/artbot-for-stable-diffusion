@@ -1,0 +1,16 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": [
+    "scripts/**/*.{mjs,cjs,ts}",
+    "e2e/fixtures/*.mjs",
+    "x-build-scripts/*.js",
+    "ecosystem.config.js",
+    "test-utils/jsdomWithIndexedDb.js"
+  ],
+  "ignore": ["__local_db/**", "public/**"],
+  "ignoreBinaries": ["pm2", "openssl"],
+  "ignoreUnresolved": ["./test-utils/jsdomWithIndexedDb.js"],
+  "rules": {
+    "enumMembers": "off"
+  }
+}
