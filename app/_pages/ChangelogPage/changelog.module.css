@@ -1,11 +1,113 @@
+.link {
+  color: var(--link-text);
+}
+
+.link:hover {
+  color: var(--link-active);
+}
+
+.link-btn {
+  display: inline;
+  cursor: pointer;
+  color: var(--link-text);
+  font-weight: 600;
+}
+
+.link-btn:hover {
+  color: var(--link-active);
+}
+
+.year-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.year-link {
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 2px 12px;
+}
+
+.year-link:hover {
+  border-color: var(--main-color);
+  color: var(--main-color);
+}
+
+.year {
+  border-top: 1px solid var(--highlight);
+  padding: 12px 4px;
+  scroll-margin-top: calc(var(--headerNav-height) + 8px);
+}
+
+.year-summary {
+  align-items: baseline;
+  cursor: pointer;
+  display: flex;
+  gap: 12px;
+  list-style: none;
+}
+
+.year-summary::-webkit-details-marker {
+  display: none;
+}
+
+.year-summary::before {
+  content: '▸';
+  display: inline-block;
+  transition: transform 0.15s;
+}
+
+.year[open] > .year-summary::before {
+  transform: rotate(90deg);
+}
+
+.year-title {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.year-count {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.entry {
+  margin-top: 16px;
+  scroll-margin-top: calc(var(--headerNav-height) + 8px);
+}
+
+.entry-date {
+  font-weight: 700;
+  padding-bottom: 8px;
+}
+
+.anchor:hover {
+  color: var(--main-color);
+}
+
+.anchor:hover::after {
+  content: ' #';
+  opacity: 0.6;
+}
+
+.entry:target .entry-date {
+  color: var(--main-color);
+}
+
+.entry-body {
+  overflow-wrap: anywhere;
+}
+
 .styled-ul {
   margin-left: 8px;
 }
 
-.styled-ul-depth-1 {
+.styled-ul .styled-ul {
   margin-top: 8px;
-  font-size: 12px;
-  list-style-type: none;
 }
 
 .styled-li {
@@ -13,25 +115,4 @@
   list-style: square;
   margin-left: 16px;
   margin-bottom: 8px;
-}
-
-.more-info {
-  border-left: 2px solid #344c50;
-  font-size: 14px;
-  line-height: 24px;
-  margin-top: 8px;
-  margin-bottom: 8px;
-  margin-left: 16px;
-  padding-left: 8px;
-}
-
-.link-btn {
-  display: inline-block;
-  cursor: pointer;
-  color: #17cfbb;
-  font-weight: 600;
-}
-
-.link-btn:hover {
-  color: #5eedde;
 }
