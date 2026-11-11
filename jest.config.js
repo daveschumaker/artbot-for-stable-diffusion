@@ -12,7 +12,11 @@ module.exports = {
   // Local data, including copies of the repo for upgrade comparisons.
   modulePathIgnorePatterns: ['<rootDir>/__local_db/'],
   transform: {
-    '\\.tsx?$': ['ts-jest', { tsconfig: { jsx: 'react-jsx' } }]
+    // ts-jest compiles each file, and TypeScript 6 needs rootDir to do that.
+    '\\.tsx?$': [
+      'ts-jest',
+      { tsconfig: { jsx: 'react-jsx', rootDir: __dirname } }
+    ]
   },
   transformIgnorePatterns: ['[/\\\\]node_modules[/\\\\](?!lodash-es/).*\\.js$']
 }

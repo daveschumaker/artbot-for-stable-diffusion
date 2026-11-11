@@ -18,6 +18,7 @@
     "start": "NODE_ENV=production next start",
     "update:build-id": "node ./x-build-scripts/updateBuildId.js",
     "test": "jest",
+    "typecheck": "tsc --noEmit",
     "test:e2e": "playwright test",
     "test:generate-library": "npx next build && node e2e/fixtures/generateLibrary.mjs",
     "prepare": "husky",
@@ -113,7 +114,7 @@
     "prettier": "3.1.1",
     "raw-loader": "4.0.2",
     "tailwindcss": "3.4.0",
-    "ts-jest": "29.1.1",
-    "typescript": "5.9.3"
+    "ts-jest": "29.4.15",
+    "typescript": "6.0.3"
   }
 }
