@@ -17,6 +17,7 @@ jobs:
           cache: npm
       # Don't add --ignore-scripts: a GitHub dependency compiles itself on install.
       - run: npm ci
+      - run: npm run update:build-id
       - run: npx tsc --noEmit --incremental false
       - run: npm run lint
       - run: npx jest --ci
@@ -31,6 +32,7 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      - run: npm run update:build-id
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
       - uses: actions/upload-artifact@v4
