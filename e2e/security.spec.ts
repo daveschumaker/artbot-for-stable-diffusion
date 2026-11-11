@@ -3,6 +3,12 @@ import { mockBackend } from './helpers'
 
 const IMAGE_ENDPOINT = '/artbot/_next/image'
 
+test('unit test files are not published as API routes', async ({ request }) => {
+  const response = await request.get('/artbot/api/telemetry.test')
+
+  expect(response.status()).toBe(404)
+})
+
 test.describe('the image optimization endpoint is disabled', () => {
   for (const url of [
     '/artbot/favicon.ico',
