@@ -6,9 +6,8 @@ Open items only. Finished work is in the git history.
 
 ## Suggested order
 
-1. Re-run the production comparison on the final code (R3), then upgrade
-   Dexie (U5).
-2. Build real batching and the v2 interface (F1, F2).
+1. Build real batching (F1).
+2. Remove styled-components (U10), then match the v2 interface (F2).
 
 ## Before release
 
@@ -46,8 +45,6 @@ None open.
 
 ## Upgrades
 
-- [ ] **U5. Upgrade Dexie last,** only after R3 and with the upgrade tests
-      passing.
 - [ ] **U10. Remove styled-components** from the 26 files that still use it,
       in favour of Tailwind, then drop `compiler.styledComponents` from
       `next.config.js`. Its maintainers have put it in maintenance mode.

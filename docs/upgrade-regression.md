@@ -146,6 +146,33 @@ The old full-database import added rows into an existing database, causing prima
 
 The API is described in the [Dexie import/export documentation](https://dexie.org/docs/ExportImport/dexie-export-import).
 
+### Dexie 4
+
+This branch uses Dexie 4.4.7 and dexie-export-import 4.4.2. The deployed site
+uses Dexie 3.2.4 and 4.0.7. Both Dexie versions store `version(6)` as native
+IndexedDB version 60. Dexie 4 also compares the installed schema with the
+declared one when it opens. If a declared table or index is missing, it logs
+`Dexie SchemaDiff` and raises the native version to 61. Dexie 3 then requests
+version 60, gets a `VersionError` and can't open the library. That breaks a
+rollback, so **any schema change must still add a new `db.version()`**.
+
+The migration tests build every historical schema with Dexie 3.2.4 (the
+`dexie3` dev dependency). They then check that the current code keeps native
+version 60 without a SchemaDiff, and that Dexie 3 can reopen the database
+afterwards. Adding an index without a version bump fails four of them with
+that `VersionError`.
+
+`e2e/fixtures/legacy-backup.json` is a backup made by the deployed build's own
+**Download database** button, written by `e2e/fixtures/makeLegacyBackup.mjs`.
+An e2e test restores it and compares every stored row natively, including a
+nested Blob and an id gap. 4.4.2 still runs `clearTablesBeforeImport` before
+its transaction, so the import keeps clearing tables from the first row
+callback.
+
+Where the browser supports IndexedDB 3 (`getAllRecords`), Dexie 4 calls
+`getAll({ query, count, direction })` instead of `getAll(query, count)`.
+Tests that check read sizes must handle both forms.
+
 Further tests now cover favorite/unfavorite persistence, filter changes from a
 last page, next/previous navigation, partial last pages and page reloads. Filter
 changes reset both the URL offset and the state used by the query; using the
