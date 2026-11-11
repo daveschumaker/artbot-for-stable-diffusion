@@ -1,3 +1,9 @@
+import { getClientAddress } from 'app/_server-api/clientAddress'
+import {
+  acquireImageImport,
+  IMAGE_IMPORT_MAX_DIMENSION,
+  IMAGE_IMPORT_MAX_PIXELS
+} from 'app/_server-api/imageImportLimits'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import sizeOf from 'buffer-image-size'
 import sharp from 'sharp'
@@ -20,7 +26,10 @@ type Data = {
 
 const getDataUrl = async (imgBuffer: any) => {
   try {
-    const { data, info } = await sharp(imgBuffer).toBuffer({
+    const { data, info } = await sharp(imgBuffer, {
+      limitInputPixels: IMAGE_IMPORT_MAX_PIXELS,
+      sequentialRead: true
+    }).toBuffer({
       resolveWithObject: true
     })
     const pngString = await data.toString('base64')
@@ -41,7 +50,10 @@ const getDataUrl = async (imgBuffer: any) => {
 
 const resizeImage = async (imgBuffer: any) => {
   try {
-    const { data, info } = await sharp(imgBuffer)
+    const { data, info } = await sharp(imgBuffer, {
+      limitInputPixels: IMAGE_IMPORT_MAX_PIXELS,
+      sequentialRead: true
+    })
       .resize({
         width: 1024,
         height: 1024,
@@ -80,53 +92,72 @@ export default async function handler(
     return res.status(400).json({ success: false })
   }
 
-  const { imageUrl, r2 = false } = req.body
-
-  let imgBuffer: Buffer
-  let imageType: string | null
-
-  try {
-    const remoteImage = await fetchRemoteImage(imageUrl, {
-      maxBytes: MAX_FILESIZE
-    })
-    imgBuffer = remoteImage.body
-    imageType = remoteImage.contentType
-  } catch (err) {
-    return res.send({ success: false, status: fetchErrorStatus(err) })
+  const release = acquireImageImport(getClientAddress(req))
+  if (!release) {
+    res.setHeader('Retry-After', '60')
+    return res.status(429).json({ success: false, status: 'RATE_LIMITED' })
   }
-
-  let converted
-
   try {
-    const dimensions = sizeOf(imgBuffer)
-    const shouldResize = dimensions.height > 1024 || dimensions.width > 1024
+    const { imageUrl, r2 = false } = req.body || {}
 
-    if (!r2 && shouldResize) {
-      converted = await resizeImage(imgBuffer)
-    } else {
-      converted = await getDataUrl(imgBuffer)
+    let imgBuffer: Buffer
+    let imageType: string | null
+
+    try {
+      const remoteImage = await fetchRemoteImage(imageUrl, {
+        maxBytes: MAX_FILESIZE
+      })
+      imgBuffer = remoteImage.body
+      imageType = remoteImage.contentType
+    } catch (err) {
+      return res.send({ success: false, status: fetchErrorStatus(err) })
     }
-  } catch (err) {
-    return res.send({
-      success: false,
-      status: 'ERROR_RESIZING_REMOTE_IMAGE'
-    })
-  }
 
-  const { success, base64String, height, width } = converted
+    let converted
 
-  if (success) {
-    return res.send({
-      success,
-      imageType,
-      imgBase64String: base64String,
-      height,
-      width
-    })
-  } else {
-    res.send({
-      success: false,
-      status: 'ERROR_RESIZING_REMOTE_IMAGE'
-    })
+    try {
+      const dimensions = sizeOf(imgBuffer)
+      if (
+        !Number.isSafeInteger(dimensions.width) ||
+        !Number.isSafeInteger(dimensions.height) ||
+        dimensions.width <= 0 ||
+        dimensions.height <= 0 ||
+        dimensions.width > IMAGE_IMPORT_MAX_DIMENSION ||
+        dimensions.height > IMAGE_IMPORT_MAX_DIMENSION ||
+        dimensions.width * dimensions.height > IMAGE_IMPORT_MAX_PIXELS
+      )
+        return res.send({ success: false, status: 'ERROR_IMAGE_SIZE' })
+      const shouldResize = dimensions.height > 1024 || dimensions.width > 1024
+
+      if (!r2 && shouldResize) {
+        converted = await resizeImage(imgBuffer)
+      } else {
+        converted = await getDataUrl(imgBuffer)
+      }
+    } catch (err) {
+      return res.send({
+        success: false,
+        status: 'ERROR_RESIZING_REMOTE_IMAGE'
+      })
+    }
+
+    const { success, base64String, height, width } = converted
+
+    if (success) {
+      return res.send({
+        success,
+        imageType,
+        imgBase64String: base64String,
+        height,
+        width
+      })
+    } else {
+      res.send({
+        success: false,
+        status: 'ERROR_RESIZING_REMOTE_IMAGE'
+      })
+    }
+  } finally {
+    release()
   }
 }

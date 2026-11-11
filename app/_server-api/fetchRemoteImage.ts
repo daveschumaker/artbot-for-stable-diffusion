@@ -47,7 +47,7 @@ const BLOCKED_IPV4_SUBNETS: Array<[string, number]> = [
 ]
 
 const BLOCKED_IPV6_SUBNETS: Array<[string, number]> = [
-  ['::', 128],
+  ['::', 96],
   ['::1', 128],
   ['64:ff9b::', 96],
   ['2001:db8::', 32],

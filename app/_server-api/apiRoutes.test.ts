@@ -21,6 +21,7 @@ process.env.ADMIN_PW_HASH = crypto
 
 // Loaded with require so the environment above is set before adminTools reads it.
 const adminTools = require('app/_server-api/adminTools')
+const { resetImageImportLimits } = require('app/_server-api/imageImportLimits')
 const { resetLoginRateLimit } = require('app/_server-api/loginRateLimit')
 const remoteImage = require('app/_server-api/fetchRemoteImage')
 const imgFromUrl = require('pages/api/img-from-url').default
@@ -40,6 +41,7 @@ const callRoute = async (handler: any, request: any) => {
   }
 
   const res = {
+    setHeader: jest.fn(),
     status(code: number) {
       result.statusCode = code
       return res
@@ -63,6 +65,7 @@ const fetchMock = jest.fn()
 beforeEach(() => {
   fetchMock.mockReset()
   resetLoginRateLimit()
+  resetImageImportLimits()
   global.fetch = fetchMock as any
   jest.spyOn(console, 'log').mockImplementation(() => {})
   jest.spyOn(console, 'error').mockImplementation(() => {})
@@ -166,6 +169,56 @@ describe('/api/img-from-url', () => {
     expect(body).toEqual({ success: false, status: 'INVALID_IMAGE_URL' })
   })
 
+  it('rejects oversized dimensions before invoking sharp even for R2 imports', async () => {
+    const png = await pngOfSize(8, 8)
+    png.writeUInt32BE(16384, 16)
+    png.writeUInt32BE(16384, 20)
+    serveImage(png)
+    expect((await post({ imageUrl: url, r2: true })).body).toEqual({
+      success: false,
+      status: 'ERROR_IMAGE_SIZE'
+    })
+  })
+
+  it('limits repeated imports per client before starting another download', async () => {
+    const fetchImage = failFetchWith('FETCH_FAILED')
+    for (let i = 0; i < 30; i++) await post({ imageUrl: url })
+    const throttled = await post({ imageUrl: url })
+    expect(throttled.statusCode).toBe(429)
+    expect(fetchImage).toHaveBeenCalledTimes(30)
+    expect(
+      (
+        await callRoute(imgFromUrl, {
+          method: 'POST',
+          body: { imageUrl: url },
+          socket: { remoteAddress: '203.0.113.2' }
+        })
+      ).statusCode
+    ).toBe(200)
+    jest.spyOn(Date, 'now').mockReturnValue(Date.now() + 61000)
+    expect((await post({ imageUrl: url })).statusCode).toBe(200)
+  })
+
+  it('caps active downloads and releases capacity after errors', async () => {
+    const release: ((error: Error) => void)[] = []
+    const fetchImage = jest
+      .spyOn(remoteImage, 'fetchRemoteImage')
+      .mockImplementation(
+        () =>
+          new Promise((_resolve, reject) => {
+            release.push(reject)
+          })
+      )
+    const one = post({ imageUrl: url })
+    const two = post({ imageUrl: url })
+    expect((await post({ imageUrl: url })).statusCode).toBe(429)
+    expect(fetchImage).toHaveBeenCalledTimes(2)
+    release.forEach((reject) => reject(new Error('Download failed')))
+    await Promise.all([one, two])
+    fetchImage.mockRejectedValue(new Error('Download failed'))
+    expect((await post({ imageUrl: url })).statusCode).toBe(200)
+  })
+
   it('reports a failure for a non-image response', async () => {
     serveImage(Buffer.from('<html>not an image</html>'))
 
@@ -236,6 +289,7 @@ describe('admin login protection', () => {
     callRoute(login, {
       method: 'POST',
       headers: { 'x-forwarded-for': client },
+      socket: { remoteAddress: '127.0.0.1' },
       body: JSON.stringify({ username, password })
     })
 
@@ -274,12 +328,55 @@ describe('admin login protection', () => {
     expect((await attempt(PASSWORD)).body.success).toBe(true)
   })
 
-  it('limits guessing from rotating client addresses', async () => {
+  it('keeps an unrelated administrator usable after failures from many clients', async () => {
     for (let i = 0; i < 50; i++) {
       await attempt('wrong', `198.51.100.${i}`)
     }
 
-    expect((await attempt(PASSWORD, '203.0.113.9')).statusCode).toBe(429)
+    expect((await attempt(PASSWORD, '203.0.113.9')).body.success).toBe(true)
+  })
+
+  it('does not trust forwarding headers on a direct public connection', async () => {
+    const direct = (password: string, index: number) =>
+      callRoute(login, {
+        method: 'POST',
+        socket: { remoteAddress: '203.0.113.8' },
+        headers: {
+          'x-forwarded-for': `198.51.100.${index}`,
+          'x-real-ip': `198.51.100.${index}`
+        },
+        body: JSON.stringify({ username: 'admin', password })
+      })
+    for (let i = 0; i < 5; i++) await direct('wrong', i)
+    expect((await direct(PASSWORD, 99)).statusCode).toBe(429)
+  })
+
+  it('keys proxy requests on its last forwarded hop, ignoring a spoofed prefix', async () => {
+    const proxied = (password: string, index: number) =>
+      callRoute(login, {
+        method: 'POST',
+        socket: { remoteAddress: '::ffff:127.0.0.1' },
+        headers: { 'x-forwarded-for': `198.51.100.${index}, 203.0.113.8` },
+        body: JSON.stringify({ username: 'admin', password })
+      })
+    for (let i = 0; i < 5; i++) await proxied('wrong', i)
+    expect((await proxied(PASSWORD, 99)).statusCode).toBe(429)
+  })
+
+  it('ignores a forged real-IP header when nginx appends the actual client', async () => {
+    const proxied = (password: string, real: string, prefix: number) =>
+      callRoute(login, {
+        method: 'POST',
+        socket: { remoteAddress: '127.0.0.1' },
+        headers: {
+          'x-real-ip': `198.51.100.${prefix}`,
+          'x-forwarded-for': `198.51.100.${prefix}, ${real}`
+        },
+        body: JSON.stringify({ username: 'admin', password })
+      })
+    for (let i = 0; i < 5; i++) await proxied('wrong', '203.0.113.8', i)
+    expect((await proxied(PASSWORD, '203.0.113.8', 99)).statusCode).toBe(429)
+    expect((await proxied(PASSWORD, '203.0.113.9', 99)).body.success).toBe(true)
   })
 
   it('unblocks after the window passes', async () => {

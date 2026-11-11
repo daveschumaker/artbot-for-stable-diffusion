@@ -1,3 +1,4 @@
+import { getClientAddress } from 'app/_server-api/clientAddress'
 import { adminLogin, validateToken } from 'app/_server-api/adminTools'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import {
@@ -9,13 +10,6 @@ import {
 type Data = {
   success: boolean
   token?: string
-}
-
-const getClientAddress = (req: NextApiRequest) => {
-  const forwarded = req.headers['x-forwarded-for']
-  const [first] = String(forwarded ?? '').split(',')
-
-  return first.trim() || req.socket?.remoteAddress || 'unknown'
 }
 
 export default async function handler(
