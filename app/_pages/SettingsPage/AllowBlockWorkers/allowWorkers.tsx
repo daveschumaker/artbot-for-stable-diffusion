@@ -1,6 +1,6 @@
 import { IconPlus, IconTrash } from '@tabler/icons-react'
 import { SelectOption } from '_types/artbot'
-import { fetchWorkers } from 'app/_api/fetchWorkers'
+import { useImageWorkerOptions } from 'app/_api/horde/workers'
 import { Button } from 'app/_components/Button'
 import Linker from 'app/_components/Linker'
 import MaxWidth from 'app/_components/MaxWidth'
@@ -24,29 +24,7 @@ export default function AllowWorkers() {
     label: 'None',
     value: null
   })
-  const [workers, setWorkers] = useState<SelectOption[]>([])
-
-  const fetchWorkersFromApi = async () => {
-    const data = await fetchWorkers()
-    const filteredWorkers = data.map((worker = {}) => {
-      return {
-        label: worker.name,
-        value: worker.id
-      }
-    })
-
-    filteredWorkers.sort((a, b) => {
-      if (a.label < b.label) {
-        return -1
-      }
-      if (a.label > b.label) {
-        return 1
-      }
-      return 0
-    })
-
-    setWorkers(filteredWorkers)
-  }
+  const workers = useImageWorkerOptions()
 
   const handleAddWorker = (workerObj: SelectOption) => {
     const updatedWorkers = [...allowedWorkers]
@@ -82,8 +60,6 @@ export default function AllowWorkers() {
   }
 
   useEffect(() => {
-    fetchWorkersFromApi()
-
     const allowedList = AppSettings.get('allowedWorkers') || []
     setAllowedWorkers(allowedList)
 

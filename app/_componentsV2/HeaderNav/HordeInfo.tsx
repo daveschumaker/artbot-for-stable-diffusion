@@ -1,6 +1,8 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
+import { useQueries, useQueryClient } from '@tanstack/react-query'
+import { invalidateWorker, workerQuery } from 'app/_api/horde/workers'
 import { useRouter } from 'next/navigation'
 import { useStore } from 'statery'
 
@@ -31,7 +33,32 @@ export default function HordeInfo({
   const appStore = useStore(appInfoStore)
   const userStore = useStore(userInfoStore) || {}
   const { worker_ids = [] } = userStore
-  const [workersDetails, setWorkersDetails] = useState<HordeWorkerDetails[]>([])
+  const queryClient = useQueryClient()
+  // Workers with a pause or restart in progress.
+  const [changing, setChanging] = useState<Record<string, boolean>>({})
+  const workerQueries = useQueries({
+    queries: (worker_ids || []).map((id) => workerQuery(id))
+  })
+
+  // Reload the user's workers, for example after editing one.
+  const refreshWorkers = () =>
+    (worker_ids || []).forEach((id) =>
+      queryClient.invalidateQueries({ queryKey: workerQuery(id).queryKey })
+    )
+
+  // Online workers first, then by requests fulfilled. Unknown ids (null) and
+  // failed lookups are left out.
+  const workersDetails: HordeWorkerDetails[] = workerQueries
+    .map((query) => query.data)
+    .filter((worker): worker is HordeWorkerDetails => Boolean(worker))
+    .map((worker) =>
+      changing[worker.id] ? { ...worker, loading: true } : worker
+    )
+    .sort((a, b) => {
+      if (a.online && !b.online) return -1
+      if (!a.online && b.online) return 1
+      return b.requests_fulfilled - a.requests_fulfilled
+    })
 
   const getWorkerState = (worker: HordeWorkerDetails) => {
     if (worker.online && !worker.maintenance_mode) {
@@ -51,63 +78,6 @@ export default function HordeInfo({
     }
   }
 
-  const fetchWorkerDetails = async (workerId: string) => {
-    try {
-      const res = await fetch(
-        `${getApiHostServer()}/api/v2/workers/${workerId}`,
-        {
-          cache: 'no-store'
-        }
-      )
-      const workerDetails = await res.json()
-
-      if (res.status === 404) {
-        return {
-          notFound: true
-        }
-      }
-
-      return workerDetails
-    } catch (err) {
-      console.log(`Error: Unable to fetch worker details`)
-      console.log(err)
-      return {
-        notFound: true
-      }
-    }
-  }
-
-  const fetchAllWorkersDetails = useCallback(async () => {
-    try {
-      if (!worker_ids) return
-
-      // Create an array to hold all the fetch promises
-      const fetchPromises = worker_ids.map((id) => fetchWorkerDetails(id))
-
-      // Use Promise.all to wait for all fetches to complete
-      let results = await Promise.all(fetchPromises)
-      results = results.filter((result) => !result.notFound)
-
-      // Sort the results first by online status and then by requests_fulfilled
-      results = results.sort((a, b) => {
-        // Sort by online status first (true values first)
-        if (a.online && !b.online) {
-          return -1
-        }
-        if (!a.online && b.online) {
-          return 1
-        }
-        // If online status is the same, then sort by requests_fulfilled (higher values first)
-        return b.requests_fulfilled - a.requests_fulfilled
-      })
-
-      // Update the state with all the worker details
-      setWorkersDetails(results)
-    } catch (error) {
-      console.error('Failed to fetch worker details:', error)
-    }
-  }, [worker_ids])
-
   const handleWorkerChange = async ({ workerId }: { workerId: string }) => {
     const worker = workersDetails.find((worker) => worker.id === workerId)
 
@@ -121,12 +91,7 @@ export default function HordeInfo({
       return
     }
 
-    // Set the loading state for the specific worker
-    setWorkersDetails((prevDetails) =>
-      prevDetails.map((worker: HordeWorkerDetails) =>
-        worker.id === workerId ? { ...worker, loading: true } : worker
-      )
-    )
+    setChanging((current) => ({ ...current, [workerId]: true }))
 
     let tempNewState
     if (workerState === 'active') {
@@ -141,22 +106,33 @@ export default function HordeInfo({
       tempNewState = 'active'
     }
 
-    await fetch(`${getApiHostServer()}/api/v2/workers/${workerId}`, {
-      body: JSON.stringify({
-        maintenance: tempNewState === 'paused' ? true : false,
-        name: worker.name,
-        team: worker.team?.id ?? ''
-      }),
-      headers: {
-        apikey: AppSettings.get('apiKey'),
-        'Content-Type': 'application/json',
-        'Client-Agent': clientHeader()
-      },
-      method: 'PUT'
-    })
-
-    await sleep(10000)
-    await fetchAllWorkersDetails()
+    try {
+      const res = await fetch(
+        `${getApiHostServer()}/api/v2/workers/${workerId}`,
+        {
+          body: JSON.stringify({
+            maintenance: tempNewState === 'paused' ? true : false,
+            name: worker.name,
+            team: worker.team?.id ?? ''
+          }),
+          headers: {
+            apikey: AppSettings.get('apiKey'),
+            'Content-Type': 'application/json',
+            'Client-Agent': clientHeader()
+          },
+          method: 'PUT'
+        }
+      )
+      if (!res.ok) throw new Error(`Worker update failed: ${res.status}`)
+      // The Horde takes a few seconds to report the new state.
+      await sleep(10000)
+    } catch (err) {
+      console.error('Unable to update worker', err)
+    } finally {
+      // Show the worker as the Horde reports it, whether or not this worked.
+      await invalidateWorker(queryClient, workerId)
+      setChanging((current) => ({ ...current, [workerId]: false }))
+    }
   }
 
   const {
@@ -253,7 +229,7 @@ export default function HordeInfo({
                         className="btn"
                         onClick={() => {
                           NiceModal.remove('workerDetails-modal')
-                          fetchAllWorkersDetails()
+                          refreshWorkers()
                         }}
                       >
                         OK
@@ -261,7 +237,7 @@ export default function HordeInfo({
                     </div>
                   ),
                   content: <WorkerDetailsCard edit id={worker.id} />,
-                  handleClose: fetchAllWorkersDetails,
+                  handleClose: refreshWorkers,
                   maxWidth: 'max-w-[480px]',
                   title: 'Worker Details'
                 })
@@ -293,11 +269,6 @@ export default function HordeInfo({
       </div>
     )
   }
-
-  useEffect(() => {
-    // Call the function to fetch worker details
-    fetchAllWorkersDetails()
-  }, [fetchAllWorkersDetails, worker_ids])
 
   return (
     <div>

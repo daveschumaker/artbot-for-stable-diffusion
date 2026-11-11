@@ -4,34 +4,23 @@ import Head from 'next/head'
 import Select from 'app/_components/Select'
 import PageTitle from 'app/_components/PageTitle'
 import useComponentState from 'app/_hooks/useComponentState'
-import { useEffectOnce } from 'app/_hooks/useEffectOnce'
 import SpinnerV2 from 'app/_components/Spinner'
 import styles from './workers.module.css'
 import Row from 'app/_modules/Row'
 import InfoPageMenuButton from '../Menu'
 import WorkerInfo from 'app/_modules/WorkerInfo'
-import { fetchWorkers } from 'app/_api/fetchWorkers'
+import { useImageWorkers } from 'app/_api/horde/workers'
 
 const WorkerInfoPage = () => {
   const [componentState, setComponentState] = useComponentState({
     showModelsForWorkerId: '',
-    isLoading: true,
     showOptionsMenu: false,
-    sort: 'requests_fulfilled',
-    workers: []
+    sort: 'requests_fulfilled'
   })
+  const { data: workers = [], isPending: isLoading } = useImageWorkers()
 
-  const fetchWorkersFromApi = async () => {
-    const workers = await fetchWorkers()
-
-    setComponentState({ workers, isLoading: false })
-  }
-
-  useEffectOnce(() => {
-    fetchWorkersFromApi()
-  })
-
-  const sortedWorkers = componentState.workers.sort((a: any, b: any) => {
+  // Sort a copy: the cached list is shared with other components.
+  const sortedWorkers = [...workers].sort((a: any, b: any) => {
     if (componentState.sort === 'models') {
       const aCount = a.models.length
       const bCount = b.models.length
@@ -149,8 +138,7 @@ const WorkerInfoPage = () => {
 
       <>
         <Row className="mb-2 justify-between">
-          Workers online:{' '}
-          {componentState.isLoading ? '...' : componentState.workers.length}
+          Workers online: {isLoading ? '...' : workers.length}
           <div className="flex flex-row gap-2 items-center">
             Sort:
             <Select
@@ -162,8 +150,8 @@ const WorkerInfoPage = () => {
             />
           </div>
         </Row>
-        {componentState.isLoading && <SpinnerV2 />}
-        {!componentState.isLoading && (
+        {isLoading && <SpinnerV2 />}
+        {!isLoading && (
           <div className={styles.wrapper}>
             {sortedWorkers?.map((worker: any, i: number) => {
               return (

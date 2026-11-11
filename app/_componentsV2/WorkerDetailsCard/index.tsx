@@ -15,6 +15,12 @@ import { clientHeader, getApiHostServer } from 'app/_utils/appUtils'
 import { formatSeconds } from 'app/_utils/helperUtils'
 import { showSuccessToast } from 'app/_utils/notificationUtils'
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import {
+  invalidateWorker,
+  teamsQuery,
+  workerQuery
+} from 'app/_api/horde/workers'
 
 export default function WorkerDetailsCard({
   edit = false,
@@ -27,11 +33,12 @@ export default function WorkerDetailsCard({
   // worker: HordeWorkerDetails
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null)
-  const [teams, setTeams] = useState<Array<{ label: string; value: string }>>(
-    []
-  )
-  const [notFound, setNotFound] = useState(false)
-  const [worker, setWorker] = useState<HordeWorkerDetails>()
+  const queryClient = useQueryClient()
+  const { data: workerData, isError } = useQuery(workerQuery(id))
+  const { data: teams = [] } = useQuery({ ...teamsQuery, enabled: edit })
+  // The worker query resolves to null when the Horde doesn't know the id.
+  const notFound = workerData === null
+  const worker = workerData ?? undefined
   const [workerInfo, setWorkerInfo] = useState('')
   const [workerName, setWorkerName] = useState('')
   const [workerTeam, setWorkerTeam] = useState<Array<string | null>>([
@@ -40,66 +47,13 @@ export default function WorkerDetailsCard({
   ])
   const [editMode, setEditMode] = useState<string | boolean>(false)
 
-  const fetchTeams = async () => {
-    const res = await fetch(`${getApiHostServer()}/api/v2/teams`, {
-      cache: 'no-store'
-    })
-    const details = await res.json()
-
-    if (Array.isArray(details)) {
-      const formatTeams = details.map((team) => {
-        return {
-          label: team.name,
-          value: team.id
-        }
-      })
-
-      formatTeams.sort((a, b) => {
-        // Sort by online status first (true values first)
-        if (a.label < b.label) {
-          return -1
-        }
-        if (a.label > b.label) {
-          return 1
-        }
-        return 0
-      })
-
-      formatTeams.unshift({
-        label: 'None',
-        value: null
-      })
-
-      setTeams(formatTeams)
-    }
-  }
-
-  const fetchWorkerDetails = async (workerId: string) => {
-    const res = await fetch(
-      `${getApiHostServer()}/api/v2/workers/${workerId}`,
-      {
-        cache: 'no-store'
-      }
-    )
-    const details = await res.json()
-
-    if (res.status === 404) {
-      setNotFound(true)
-    }
-
-    setWorker(details)
-    setWorkerInfo(details.info)
-    setWorkerName(details.name)
-    setWorkerTeam([details.team.id, details.team.name])
-  }
-
+  // Fill the edit fields from the worker, including after a save reloads it.
   useEffect(() => {
-    fetchWorkerDetails(id)
-
-    if (edit) {
-      fetchTeams()
-    }
-  }, [edit, id])
+    if (!worker) return
+    setWorkerInfo(worker.info)
+    setWorkerName(worker.name)
+    setWorkerTeam([worker.team.id, worker.team.name])
+  }, [worker])
 
   const deleteWorker = async () => {
     await fetch(`${getApiHostServer()}/api/v2/workers/${id}`, {
@@ -110,6 +64,7 @@ export default function WorkerDetailsCard({
       },
       method: 'DELETE'
     })
+    await invalidateWorker(queryClient, id)
   }
 
   const updateWorkerDescription = async () => {
@@ -126,10 +81,12 @@ export default function WorkerDetailsCard({
       },
       method: 'PUT'
     })
+    await invalidateWorker(queryClient, id)
   }
 
   const sortedModels =
-    worker?.models?.sort((a: string = '', b: string = '') => {
+    // Sort a copy: the worker object is shared through the query cache.
+    [...(worker?.models ?? [])].sort((a: string = '', b: string = '') => {
       if (a.toLowerCase() < b.toLowerCase()) {
         return -1
       }
@@ -137,7 +94,7 @@ export default function WorkerDetailsCard({
         return 1
       }
       return 0
-    }) ?? []
+    })
 
   const getWorkerState = (worker: HordeWorkerDetails) => {
     if (worker.online && !worker.maintenance_mode) {
@@ -180,6 +137,10 @@ export default function WorkerDetailsCard({
 
   if (notFound) {
     return <div>No worker found...</div>
+  }
+
+  if (isError) {
+    return <div>Unable to load this worker. Please try again shortly.</div>
   }
 
   if (!worker) {

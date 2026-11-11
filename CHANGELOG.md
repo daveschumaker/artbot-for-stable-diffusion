@@ -18,7 +18,9 @@ Older entries: [2024](changelog/2024.md), [2023](changelog/2023.md), [2022](chan
 - Fix: Drawings sent to img2img or ControlNet were overwritten by saved settings.
 - Fix: Upscale jobs were never sent, and a malformed job could block the rest of your queue.
 - Fix: The feedback form said your message was sent even when it wasn't.
-- Fix: Pausing a worker from the header menu could get stuck on "loading".
+- Fix: Pausing a worker from the header menu could get stuck on "loading", including when the request to the AI Horde failed.
+- Fix: With more than one shared API key, only the last key's name and kudos were shown.
+- Fix: Editing a shared API key's kudos also renamed the key to "TestFlight1".
 - Fix: LoRA and embedding searches only ever showed the first 20 results from CivitAI. A "Load more" button now fetches the rest.
 - Fix: Typing a new LoRA or embedding search while another was loading could leave the old results on screen.
 - Fix: The base model filters (SDXL, Pony, Flux and so on) in the embedding search were ignored. They now filter results, as they do for LoRAs.

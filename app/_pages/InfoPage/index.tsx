@@ -1,33 +1,15 @@
 'use client'
 
 import Head from 'next/head'
-import { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { hordePerformanceQuery } from 'app/_api/horde/performance'
 import Linker from 'app/_components/Linker'
 import PageTitle from 'app/_components/PageTitle'
 import Row from 'app/_modules/Row'
 import SortableTable from 'app/_modules/SortableWorkersTable'
 
-interface IPerfStats {
-  queued_requests: number
-  queued_megapixelsteps: number
-  past_minute_megapixelsteps: number
-  worker_count: number
-  thread_count: number
-}
-
 const InfoPage = () => {
-  const [perfStats, setPerfStats] = useState<IPerfStats | null>(null)
-
-  const fetchPerfStats = async () => {
-    const res = await fetch('https://aihorde.net/api/v2/status/performance')
-    const data = await res.json()
-
-    setPerfStats(data)
-  }
-
-  useEffect(() => {
-    fetchPerfStats()
-  }, [])
+  const perfStats = useQuery(hordePerformanceQuery).data ?? null
 
   let stepsPerRequest: string | number = 'N/A'
   let requestsPerMinute: string | number = 'N/A'

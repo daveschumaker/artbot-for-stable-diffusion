@@ -1,6 +1,6 @@
 import { IconArrowBarLeft } from '@tabler/icons-react'
 import { SelectOption, Value } from '_types/artbot'
-import { fetchWorkers } from 'app/_api/fetchWorkers'
+import { useImageWorkerOptions } from 'app/_api/horde/workers'
 import { Button } from 'app/_components/Button'
 import Select from 'app/_components/Select'
 import { setForceSelectedWorker } from 'app/_store/appStore'
@@ -13,33 +13,7 @@ export default function SelectTargetWorker() {
     value: null
   })
 
-  const [workers, setWorkers] = useState<SelectOption[]>([])
-
-  const fetchWorkersFromApi = async () => {
-    const data = await fetchWorkers()
-    const filteredWorkers = data.map((worker = {}) => {
-      return {
-        label: worker.name,
-        value: worker.id
-      }
-    })
-
-    filteredWorkers.sort((a, b) => {
-      if (a.label < b.label) {
-        return -1
-      }
-      if (a.label > b.label) {
-        return 1
-      }
-      return 0
-    })
-
-    setWorkers(filteredWorkers)
-  }
-
-  useEffect(() => {
-    fetchWorkersFromApi()
-  }, [])
+  const workers = useImageWorkerOptions()
 
   useEffect(() => {
     const worker = sessionStorage.getItem('forceSelectedWorker')

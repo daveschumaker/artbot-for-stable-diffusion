@@ -1,39 +1,24 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { basePath } from 'BASE_PATH'
 
+const fetchImageCount = async (signal?: AbortSignal) => {
+  const res = await fetch(`${basePath}/api/status/counter/images`, { signal })
+  if (!res.ok) throw new Error(`Unable to fetch image count: ${res.status}`)
+  const data = await res.json()
+  return data.totalCount ? Number(data.totalCount) : null
+}
+
 export default function TotalImagesGenerated() {
-  const [totalImages, setTotalImages] = useState<number | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const { data: totalImages } = useQuery({
+    queryKey: ['artbot', 'image-count'],
+    queryFn: ({ signal }) => fetchImageCount(signal),
+    // A live counter. React Query pauses this while the tab is hidden.
+    refetchInterval: 2000
+  })
 
-  const fetchImageCount = async () => {
-    try {
-      const res = await fetch(`${basePath}/api/status/counter/images`)
-      const data = await res.json()
-      if (data.totalCount) {
-        setTotalImages(Number(data.totalCount))
-        setIsLoading(false)
-      }
-    } catch (error) {
-      console.error('Failed to fetch image count:', error)
-      setIsLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    // Initial fetch
-    fetchImageCount()
-
-    // Poll every 2 seconds
-    const interval = setInterval(() => {
-      fetchImageCount()
-    }, 2000)
-
-    return () => clearInterval(interval)
-  }, [])
-
-  if (isLoading || totalImages === null) {
+  if (totalImages == null) {
     return null
   }
 
