@@ -6,9 +6,15 @@
  * SCHEMA_HISTORY is deliberately a frozen copy rather than an import from
  * dexie.ts: it records what is already on users' machines. If you add a schema
  * version, append it here. Never edit an existing entry.
+ *
+ * Every library on users' machines was created by Dexie 3, so the old
+ * databases are built with Dexie 3.2.4 (the `dexie3` dev dependency). The
+ * deployed site still runs Dexie 3, so these tests also reopen each upgraded
+ * database with it, as a rollback would.
  */
 import 'fake-indexeddb/auto'
 import Dexie from 'dexie'
+import Dexie3 from 'dexie3'
 import { MySubClassedDexie } from './dexie'
 
 const DB_NAME = 'imageHorde'
@@ -142,7 +148,7 @@ const SEED_ROWS: Record<string, any[]> = {
 
 // Index columns that didn't exist yet at a version are simply unindexed fields.
 const seedDatabaseAt = async (version: number) => {
-  const legacy = new Dexie(DB_NAME)
+  const legacy = new Dexie3(DB_NAME)
   legacy.version(version).stores(SCHEMA_HISTORY[version])
   await legacy.open()
 
@@ -153,6 +159,29 @@ const seedDatabaseAt = async (version: number) => {
   legacy.close()
   return Object.keys(SCHEMA_HISTORY[version])
 }
+
+// The deployed site: Dexie 3 with every schema version declared.
+const openWithDeployedSite = async () => {
+  const deployed = new Dexie3(DB_NAME)
+  for (const version of VERSIONS) {
+    deployed.version(version).stores(SCHEMA_HISTORY[version])
+  }
+  await deployed.open()
+  return deployed
+}
+
+// Dexie stores version(n) as native IndexedDB version n * 10. Dexie 4 raises
+// it above that when the installed schema lacks a declared table or index,
+// and Dexie 3 then can't open the database at all.
+const nativeVersion = () =>
+  new Promise<number>((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME)
+    request.onsuccess = () => {
+      resolve(request.result.version)
+      request.result.close()
+    }
+    request.onerror = () => reject(request.error)
+  })
 
 const describeSchema = (db: Dexie) =>
   Object.fromEntries(
@@ -178,14 +207,20 @@ const normalizeDeclaredSchema = (schema: Record<string, string>) =>
 
 describe('IndexedDB upgrades', () => {
   let db: MySubClassedDexie
+  let warn: jest.SpyInstance
+
+  const schemaDiffWarnings = () =>
+    warn.mock.calls.filter((args) => String(args[0]).includes('SchemaDiff'))
 
   beforeEach(async () => {
     await Dexie.delete(DB_NAME)
     db = new MySubClassedDexie()
+    warn = jest.spyOn(console, 'warn')
   })
 
   afterEach(() => {
     db.close()
+    warn.mockRestore()
   })
 
   describe.each(VERSIONS)('from schema version %i', (version) => {
@@ -260,6 +295,56 @@ describe('IndexedDB upgrades', () => {
 
       expect(newId).toBe(3)
     })
+
+    it('upgrades to the native version the deployed site opens', async () => {
+      expect(await nativeVersion()).toBe(CURRENT_VERSION * 10)
+      expect(schemaDiffWarnings()).toEqual([])
+    })
+
+    it('can still be opened by the deployed site afterwards', async () => {
+      await db.table('completed').add({
+        jobId: 'after-upgrade',
+        timestamp: 1800000000000
+      })
+      db.close()
+
+      const deployed = await openWithDeployedSite()
+      expect(deployed.verno).toBe(CURRENT_VERSION)
+      const completed = await deployed
+        .table('completed')
+        .orderBy(':id')
+        .toArray()
+      expect(completed.map((row) => row.jobId)).toEqual([
+        'legacy-job',
+        'child-job',
+        'after-upgrade'
+      ])
+      for (const name of seededTables.filter(
+        (table) => table !== 'completed'
+      )) {
+        expect(await deployed.table(name).toArray()).toEqual(SEED_ROWS[name])
+      }
+      deployed.close()
+
+      // And back to the new site again.
+      const reopened = new MySubClassedDexie()
+      await reopened.open()
+      expect(await reopened.table('completed').count()).toBe(3)
+      reopened.close()
+      expect(await nativeVersion()).toBe(CURRENT_VERSION * 10)
+      expect(schemaDiffWarnings()).toEqual([])
+    })
+  })
+
+  it('opens a library the deployed site created, without changing it', async () => {
+    const deployed = await openWithDeployedSite()
+    await deployed.table('completed').bulkPut(SEED_ROWS.completed)
+    deployed.close()
+
+    await db.open()
+    expect(await db.table('completed').count()).toBe(2)
+    expect(await nativeVersion()).toBe(CURRENT_VERSION * 10)
+    expect(schemaDiffWarnings()).toEqual([])
   })
 
   it('creates the current schema for a brand new user', async () => {
