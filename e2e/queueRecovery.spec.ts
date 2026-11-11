@@ -191,3 +191,44 @@ test('opening the app refreshes activity immediately, before the periodic heartb
     await page.evaluate(() => Number(localStorage.getItem('ArtBotLastActive')))
   ).toBeGreaterThanOrEqual(started)
 })
+
+test('a request interrupted by a reload is marked failed, not left waiting', async ({
+  page
+}) => {
+  await mockBackend(page)
+  await page.goto('/artbot/pending')
+  await page.waitForFunction(() => Boolean((window as any)._artbotDb?.pending))
+  // A tab claimed this job, then was reloaded before the Horde answered.
+  // Nothing would ever send or poll it again.
+  await page.evaluate(() =>
+    (window as any)._artbotDb.pending.add({
+      jobId: 'interrupted-job',
+      timestamp: Date.now() - 10 * 60 * 1000,
+      requestedAt: Date.now() - 10 * 60 * 1000,
+      jobStatus: 'requested',
+      prompt: 'an interrupted request',
+      models: ['Deliberate'],
+      numImages: 1
+    })
+  )
+  await finishFixtureSetup(page)
+
+  await page.reload()
+
+  await expect(
+    page.getByText("couldn't confirm this request reached the AI Horde", {
+      exact: false
+    })
+  ).toBeVisible()
+  expect(
+    await page.evaluate(
+      async () =>
+        (
+          await (window as any)._artbotDb.pending
+            .where('jobId')
+            .equals('interrupted-job')
+            .first()
+        ).jobStatus
+    )
+  ).toBe('error')
+})

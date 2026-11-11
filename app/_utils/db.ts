@@ -323,16 +323,6 @@ export const deleteQueuedFromPending = async () => {
   await db.pending.bulkDelete(ids)
 }
 
-export const deleteRequestedFromPending = async () => {
-  const pendingJobs = (await allPendingJobs()) || []
-  const done = pendingJobs.filter((job: { jobStatus: JobStatus }) => {
-    return job.jobStatus === JobStatus.Requested
-  })
-
-  const ids = done.map((job: any) => job.id)
-  await db.pending.bulkDelete(ids)
-}
-
 export const deleteInvalidPendingJobs = async () => {
   const pendingJobs = (await allPendingJobs()) || []
   const done = pendingJobs.filter((job: { jobStatus: JobStatus }) => {
@@ -570,6 +560,38 @@ export const updateCompletedJob = async (
   db.completed.update(tableId, updatedObject)
 }
 
+// A claim older than this belongs to a tab that was reloaded or closed while
+// sending the request. Live requests finish well within it.
+const STALE_CLAIM_MS = 2 * 60 * 1000
+
+/**
+ * Marks jobs left "Requested" by a reload or closed tab as failed. Nothing will
+ * send or poll them again. Resending could charge the user twice if the Horde
+ * did get the request, so the user decides whether to retry. Rows from older
+ * versions have no claim time and count as stale.
+ */
+export const failStaleRequestedJobs = async () => {
+  const cutoff = Date.now() - STALE_CLAIM_MS
+  return db.transaction('rw', db.pending, async () => {
+    const stale = await db.pending
+      .where('jobStatus')
+      .equals(JobStatus.Requested)
+      .filter((job: any) => (job.requestedAt ?? 0) < cutoff)
+      .toArray()
+    for (const job of stale) {
+      await db.pending.update(job.id, {
+        jobStatus: JobStatus.Error,
+        errorMessage:
+          "ArtBot couldn't confirm this request reached the AI Horde. If the image doesn't appear in your library, retry it."
+      })
+    }
+    return stale.length
+  })
+}
+
+/** One pending row by table id. Unlike allPendingJobs, errors aren't hidden. */
+export const getPendingJobById = (id: number) => db.pending.get(id)
+
 export const claimPendingJobForSubmission = async (id: number, jobId: string) =>
   db.transaction('rw', db.pending, async () => {
     const current = await db.pending.get(id)
@@ -580,7 +602,12 @@ export const claimPendingJobForSubmission = async (id: number, jobId: string) =>
     ) {
       return null
     }
-    const claimed = { ...current, jobStatus: JobStatus.Requested }
+    const claimed = {
+      ...current,
+      jobStatus: JobStatus.Requested,
+      // When this tab took it. See failStaleRequestedJobs.
+      requestedAt: Date.now()
+    }
     await db.pending.put(claimed)
     return claimed
   })

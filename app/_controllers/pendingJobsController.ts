@@ -1,7 +1,11 @@
 import { appInfoStore } from 'app/_store/appStore'
 import { JobStatus } from '_types'
 import { isAppActive } from 'app/_utils/appUtils'
-import { checkCurrentJob, sendJobToApi } from 'app/_utils/imageCache'
+import {
+  checkCurrentJob,
+  isSubmittingJob,
+  sendJobToApi
+} from 'app/_utils/imageCache'
 import { sleep } from 'app/_utils/sleep'
 import {
   MAX_CONCURRENT_JOBS_ANON,
@@ -85,8 +89,10 @@ export const createImageJobs = async () => {
   logDebug(`createImageJobs / processingOrQueued:`, processingOrQueued)
 
   if (processingOrQueued.length < MAX_JOBS) {
+    // Skip jobs an earlier, still-running pass is sending.
     const [jobOne, jobTwo] = pendingJobs.filter(
-      (job: any) => job.jobStatus === JobStatus.Waiting
+      (job: any) =>
+        job.jobStatus === JobStatus.Waiting && !isSubmittingJob(job.id)
     )
 
     if (jobOne) {

@@ -14,6 +14,7 @@ import {
   allPendingJobs,
   bulkDeleteImages,
   claimPendingJobForSubmission,
+  failStaleRequestedJobs,
   countCompletedJobs,
   countFilterCompleted,
   deleteAllPendingErrors,
@@ -25,7 +26,6 @@ import {
   deleteInvalidPendingJobs,
   deletePendingJobFromDb,
   deleteQueuedFromPending,
-  deleteRequestedFromPending,
   deleteStalePending,
   fetchCompletedJobs,
   fetchCompletedJobsById,
@@ -260,6 +260,59 @@ describe('gallery filters', () => {
 })
 
 describe('pending jobs', () => {
+  it('records when a job was claimed', async () => {
+    const id = await db.pending.add({
+      jobId: 'job',
+      jobStatus: JobStatus.Waiting
+    })
+    const before = Date.now()
+
+    await claimPendingJobForSubmission(id, 'job')
+
+    expect((await db.pending.get(id)).requestedAt).toBeGreaterThanOrEqual(
+      before
+    )
+  })
+
+  // A reload or closed tab can leave a job "Requested". Nothing sends or
+  // polls it again, so it would sit there for good.
+  it('marks abandoned claims as failed, and only those', async () => {
+    const minutesAgo = (minutes: number) => Date.now() - minutes * 60 * 1000
+    const [abandoned, fromOldVersion, inProgress, queued] =
+      await db.pending.bulkAdd(
+        [
+          {
+            jobId: 'a',
+            jobStatus: JobStatus.Requested,
+            requestedAt: minutesAgo(5)
+          },
+          // Older versions didn't record a claim time.
+          { jobId: 'b', jobStatus: JobStatus.Requested },
+          // Another tab is sending this one right now.
+          {
+            jobId: 'c',
+            jobStatus: JobStatus.Requested,
+            requestedAt: minutesAgo(0.5)
+          },
+          { jobId: 'd', jobStatus: JobStatus.Queued }
+        ],
+        { allKeys: true }
+      )
+
+    expect(await failStaleRequestedJobs()).toBe(2)
+
+    for (const id of [abandoned, fromOldVersion]) {
+      expect(await db.pending.get(id)).toMatchObject({
+        jobStatus: JobStatus.Error,
+        errorMessage: expect.stringContaining("couldn't confirm")
+      })
+    }
+    expect((await db.pending.get(inProgress)).jobStatus).toBe(
+      JobStatus.Requested
+    )
+    expect((await db.pending.get(queued)).jobStatus).toBe(JobStatus.Queued)
+  })
+
   it('lets only one tab claim a waiting job and rejects stale job ids', async () => {
     const id = await db.pending.add({
       jobId: 'shared-job',
@@ -305,8 +358,7 @@ describe('pending jobs', () => {
 
   it.each([
     ['done', deleteDoneFromPending, JobStatus.Done],
-    ['queued', deleteQueuedFromPending, JobStatus.Queued],
-    ['requested', deleteRequestedFromPending, JobStatus.Requested]
+    ['queued', deleteQueuedFromPending, JobStatus.Queued]
   ])('deletes only %s jobs', async (_name, deleteJobs, status) => {
     await seedPending([status, JobStatus.Processing])
 

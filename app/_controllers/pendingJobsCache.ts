@@ -15,6 +15,8 @@ import { JobStatus } from '_types'
 import {
   allPendingJobs,
   deletePendingJobFromDb,
+  failStaleRequestedJobs,
+  getPendingJobById,
   updatePendingJobInDexie
 } from 'app/_utils/db'
 
@@ -68,6 +70,13 @@ export const initLoadPendingJobsFromDb = async () => {
     window.DEBUG_PENDING_CACHE = DEBUG_PENDING_CACHE
   }
 
+  // Before loading, so the cache never shows these as still in progress.
+  try {
+    await failStaleRequestedJobs()
+  } catch (err) {
+    logDebug('failStaleRequestedJobs failed', err)
+  }
+
   const jobs = await allPendingJobs()
   logDebug('initLoadPendingJobsFromDb', jobs)
 
@@ -76,15 +85,30 @@ export const initLoadPendingJobsFromDb = async () => {
   })
 }
 
-export const syncPendingJobsFromDb = async () => {
-  const jobs = await allPendingJobs()
-  logDebug('syncPendingJobsFromDb', jobs)
+/**
+ * Refreshes one job from the database, for example after another tab claimed
+ * it. Only this job's entry changes: replacing the whole cache could undo
+ * updates that land while the database is being read. If the read fails,
+ * the cache is left as it is.
+ */
+export const refreshPendingJobFromDb = async (
+  id: number,
+  cachedJobId: string
+) => {
+  let row: IPendingJob | undefined
+  try {
+    row = await getPendingJobById(id)
+  } catch (err) {
+    logDebug('refreshPendingJobFromDb failed', err)
+    return
+  }
 
-  const current: IPendingJobs = {}
-  jobs.forEach((job: any) => {
-    current[job.jobId] = job
-  })
-  pendingJobs = current
+  if (cachedJobId && (!row || row.jobId !== cachedJobId)) {
+    delete pendingJobs[cachedJobId]
+  }
+  if (row?.jobId) {
+    pendingJobs[row.jobId] = cloneDeep(row)
+  }
 }
 
 export const deletePendingJobs = async (status?: any) => {

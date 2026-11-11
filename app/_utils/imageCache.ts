@@ -30,7 +30,7 @@ import { logToConsole } from './debugTools'
 import {
   deletePendingJob,
   setPendingJob,
-  syncPendingJobsFromDb,
+  refreshPendingJobFromDb,
   updateAllPendingJobsV2,
   updatePendingJobId,
   updatePendingJobV2
@@ -80,18 +80,39 @@ const checkImageJob = async (jobId: string): Promise<CheckImage> => {
   }
 }
 
+// Jobs this tab is claiming or submitting, by table id.
+const submittingJobIds = new Set<number>()
+
+/** Whether this tab is already claiming or submitting the job. */
+export const isSubmittingJob = (id: number) => submittingJobIds.has(id)
+
+/**
+ * Claims a waiting job and sends it to the Horde. A job this tab is already
+ * claiming or sending is skipped, so overlapping passes of the job loop don't
+ * pile up claims, for example behind a long database export.
+ */
 export const sendJobToApi = async (imageParams: CreateImageJob) => {
-  if (!imageParams) {
+  if (!imageParams || submittingJobIds.has(imageParams.id)) {
     return
   }
 
+  submittingJobIds.add(imageParams.id)
+  try {
+    return await submitJob(imageParams)
+  } finally {
+    submittingJobIds.delete(imageParams.id)
+  }
+}
+
+const submitJob = async (imageParams: CreateImageJob) => {
   try {
     const claimed = await claimPendingJobForSubmission(
       imageParams.id,
       imageParams.jobId
     )
     if (!claimed) {
-      await syncPendingJobsFromDb()
+      // Another tab has it, or it was deleted. Refresh only this job.
+      await refreshPendingJobFromDb(imageParams.id, imageParams.jobId)
       return
     }
     imageParams = claimed
