@@ -1,6 +1,12 @@
 # PWA backup handoff
 
 The backup format remains version 1 and the image library schema is unchanged.
+The home-page reminder is **local-test-only and off by default**. It never
+appears on the production hostname, even if a test flag is present. On a local
+hostname or private LAN IP, open `/artbot?backup_lab=1` to opt in; this setting
+persists for later launches. Use `?backup_lab=0` to disable it. Settings backup
+progress remains available normally.
+
 This follow-up makes it easier to finish saving a prepared backup when iPhone
 Files recreates the app document. It does not establish physical iPhone acceptance.
 
@@ -12,7 +18,7 @@ Files recreates the app document. It does not establish physical iPhone acceptan
 3. Under **Verify saved backup**, select a few saved files or the whole set.
    Each successful batch records which files match this preparation's exact names,
    sizes and checksums. Failed or cancelled batches do not advance verification.
-4. If ArtBot returns to its home page, choose **Continue backup**. The link selects
+4. In the opted-in local test app, if ArtBot returns to its home page, choose **Continue backup**. The link selects
    the exact preparation. Verified-file counts survive a full browser restart.
 5. When every saved file has been checked, the engine audits record graphs,
    fingerprints, table counts and preferences before recording completion.

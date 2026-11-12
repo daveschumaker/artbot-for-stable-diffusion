@@ -5,6 +5,31 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { HANDOFF_EVENT, HANDOFF_KEY } from 'app/_backup/platform'
 
+// Deliberately local-only, including when running a local production build.
+const localHost = (host: string) => {
+  if (
+    host === 'localhost' ||
+    host === '[::1]' ||
+    host.endsWith('.localhost') ||
+    host.endsWith('.local')
+  )
+    return true
+  const parts = host.split('.')
+  if (
+    parts.length !== 4 ||
+    parts.some((p) => !/^\d+$/.test(p) || Number(p) > 255)
+  )
+    return false
+  const [a, b] = parts.map(Number)
+  return (
+    a === 127 ||
+    a === 10 ||
+    (a === 192 && b === 168) ||
+    (a === 172 && b >= 16 && b <= 31) ||
+    (a === 169 && b === 254)
+  )
+}
+
 type Hint = { id: string; state: string; verified: number; total: number }
 
 export default function BackupReminder() {
@@ -13,6 +38,19 @@ export default function BackupReminder() {
   useEffect(() => {
     const update = () => {
       try {
+        if (!localHost(window.location.hostname.toLowerCase())) {
+          setHint(null)
+          return
+        }
+        const optIn = new URLSearchParams(window.location.search).get(
+          'backup_lab'
+        )
+        if (optIn === '1') localStorage.setItem('ArtBotBackupLab', '1')
+        if (optIn === '0') localStorage.removeItem('ArtBotBackupLab')
+        if (localStorage.getItem('ArtBotBackupLab') !== '1') {
+          setHint(null)
+          return
+        }
         const value = JSON.parse(localStorage.getItem(HANDOFF_KEY) || 'null')
         setHint(
           value &&

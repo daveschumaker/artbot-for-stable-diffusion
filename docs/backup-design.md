@@ -42,8 +42,8 @@ not reproduce browser counters, cookies, keychains or installed-app lifecycle.
 
 ## Saving across PWA restarts
 
-Prepared backups support saved-file verification in separate batches. A home-page
-**Continue backup** link returns to the exact preparation after Files recreates
+Prepared backups support saved-file verification in separate batches. An opt-in local-test home-page
+**Continue backup** link (disabled on production) returns to the exact preparation after Files recreates
 the app document. Save requests and verified saved copies remain distinct.
 See [the PWA handoff workflow](pwa-backup-handoff.md) for durability, compatibility
 coverage and the remaining physical-device acceptance checks.

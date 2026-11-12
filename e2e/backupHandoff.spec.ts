@@ -17,6 +17,8 @@ test('saved-file batches survive cold reopen and the home page leads back to the
   const errors: string[][] = []
   const setup = async () => {
     const page = await context.newPage()
+    // The reminder is an opt-in lab feature on local origins only.
+    await page.addInitScript(() => localStorage.setItem('ArtBotBackupLab', '1'))
     errors.push(trackPageErrors(page))
     await mockBackend(page)
     return page
