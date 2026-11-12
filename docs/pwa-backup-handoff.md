@@ -81,3 +81,10 @@ multipart, preferences, interruption, restore/rollback, device-probe and manifes
 checks in three engines. Private reports and screenshots are under
 `__local_db/pwa-backup-handoff/` and the ignored upgrade-comparison artifacts.
 No original phone library or sealed baseline is modified by these tests.
+
+Linux WebKit CI exposed an existing fixture race: a synthetic requested job had
+no claim timestamp and was legitimately marked stale before export. Its saved
+archive already contained that error state. The test now freezes a valid claim
+time during export, then advances the clock three minutes before restore. This
+keeps the source fixture stable while testing stale restored-job quarantine
+explicitly; production cleanup and restore behavior are unchanged.

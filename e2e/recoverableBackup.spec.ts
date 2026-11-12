@@ -28,6 +28,8 @@ test('saved multipart files verify and restore binary source data, preferences a
         : 240000
   )
   const backend = await mockBackend(page)
+  const fixtureTime = Date.now()
+  await page.clock.setFixedTime(fixtureTime)
   await page.goto('/artbot/images')
   await page.waitForFunction(() => !!(window as any)._artbotDb)
   const bytesPerRow = Number(
@@ -81,6 +83,8 @@ test('saved multipart files verify and restore binary source data, preferences a
       {
         jobId: 'remember-requested',
         jobStatus: 'requested',
+        // A live claim must survive startup cleanup until it is snapshotted.
+        requestedAt: Date.now(),
         timestamp: 1700000000000,
         prompt: 'keep requested state',
         params: {}
@@ -152,6 +156,9 @@ test('saved multipart files verify and restore binary source data, preferences a
         ? 300000
         : 120000
   })
+  // After export, make the saved claim stale. A restored library must keep it
+  // quarantined rather than running ordinary stale-claim cleanup on reopen.
+  await page.clock.setFixedTime(fixtureTime + 3 * 60 * 1000)
   await page
     .getByLabel('Choose backup files', { exact: true })
     .setInputFiles(paths.slice(0, -1))
