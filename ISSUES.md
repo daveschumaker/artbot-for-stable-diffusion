@@ -69,9 +69,6 @@ Open items only. Finished work is in the git history.
 - [ ] **U10. Remove styled-components** from the 15 files that still use it,
       in favour of Tailwind, then drop `compiler.styledComponents` from
       `next.config.js`. Its maintainers have put it in maintenance mode.
-- [ ] **U11. Watch for a fixed `deepmerge`.** It's the only advisory left:
-      low severity, in every version from 4.2.0, pulled in by Jest's
-      `jest-config`, which Jest 30 still uses. It never ships to users.
 - [ ] **U12. TypeScript 7.** This is on TypeScript 6.0.3. TypeScript 7 is
       the native compiler, which typescript-eslint (8.72 supports up to 6.0)
       and `ts-jest` (up to 6.x) don't support yet.
@@ -147,10 +144,6 @@ Open items only. Finished work is in the git history.
       instead.
 - [ ] Playwright reuses whatever answers on its port, which can be a dev
       server instead of a production build.
-- [ ] Confirm a passing Linux Docker CI run. The image now uses `npm run build`
-      to generate fresh build metadata. CI builds the image, exercises sharp,
-      starts the production server and checks its reported build ID. A local
-      Node build does not establish that the Linux container passes.
 - [ ] Refresh `test-utils/hordeApiSchema.json` when the Horde API changes.
 
 ## Cleanup
