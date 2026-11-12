@@ -66,9 +66,24 @@ storage, Files interaction and installed-app lifecycle behavior. The original
 phone installation and sealed baselines remain intact. Physical Files and installed-PWA update checks remain pending at the user's
 request. See [backup acceptance checks](backup-design.md#physical-iphone-checks).
 
-The dependency audit reports one low-severity `deepmerge` advisory in the Jest
-tooling chain (seven affected package entries), with no moderate, high or
-critical findings. See ISSUES U11. No audit-driven dependency downgrade is applied.
+The dependency audit still reports the Jest/deepmerge chain (seven low-severity
+package entries), but its CVE was officially rejected on 2026-11-02 because the
+report does not describe a security vulnerability. The npm/GitHub advisory
+metadata has not caught up. See [the dependency audit record](dependency-audit.md)
+for the primary rejection record and the remaining scanner output.
+
+The Linux Docker job passed on PR head `c5c4dc65`, including image build, native
+sharp and production startup/build metadata. The first browser CI job stopped
+before tests because `ubuntu-latest` selected unsupported Ubuntu 26.04. Its runner
+is now pinned to Ubuntu 24.04, supported by the installed Playwright 1.58.2.
+
+The toolchain compatibility bounds were checked against applicable locked
+dependency engines on Linux x64, macOS arm64 and Windows x64. A fresh macOS
+installation using Node 20.19.5 and npm 9.0.0 passes installation, type checking,
+lint, all 539 Jest tests and the production build. All 539 tests also pass with
+Node 22.13.0. README and both package manifests now declare
+`^20.19.5 || ^22.13.0 || >=24.0.0` and npm `>=9.0.0`. Node 24 LTS remains the
+recommended environment; Node 20 is an end-of-life compatibility floor.
 
 ## Release handoff
 
