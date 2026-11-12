@@ -142,7 +142,8 @@ and traces must stay outside Git.
 
 ## Physical iPhone checks
 
-Validation recorded on 2026-11-11:
+Validation recorded on 2026-11-11 (see [the PR validation record](pr-validation.md)
+for the later review fixes and full matrix):
 
 - 132 focused unit/integration tests, type checking, targeted lint and a production
   Next.js 16 build passed.
