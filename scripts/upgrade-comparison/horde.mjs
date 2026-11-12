@@ -19,7 +19,7 @@ const json = (body, status = 200) => ({
 
 // External-service boundary only. State survives browser restarts; no real API
 // requests or credentials are written to disk. Local application assets pass on.
-export function createHorde() {
+export function createHorde({ basePath = '/artbot' } = {}) {
   const jobs = new Map()
   const submissions = []
   let released = false
@@ -27,11 +27,15 @@ export function createHorde() {
   let outage = false
   let maxActive = 0
   const cancellations = []
+  const interrogations = []
+  const urlImports = []
   const unexpected = new Set()
   return {
     jobs,
     submissions,
     cancellations,
+    interrogations,
+    urlImports,
     unexpected,
     release() {
       released = true
@@ -57,7 +61,7 @@ export function createHorde() {
         if (!['http:', 'https:'].includes(url.protocol)) return route.continue()
         if (url.hostname === 'tinybots.net') {
           if (
-            !url.pathname.startsWith('/artbot/api/') ||
+            !url.pathname.startsWith(`${basePath}/api/`) ||
             url.pathname.endsWith('/server-info')
           )
             return route.continue()
@@ -98,6 +102,28 @@ export function createHorde() {
                 )
               })
             )
+          if (url.pathname.endsWith('/img-from-url')) {
+            urlImports.push(req.postDataJSON())
+            const bytes = await sharp({
+              create: {
+                width: 256,
+                height: 256,
+                channels: 3,
+                background: 'blue'
+              }
+            })
+              .webp()
+              .toBuffer()
+            return route.fulfill(
+              json({
+                success: true,
+                imageType: 'image/webp',
+                imgBase64String: bytes.toString('base64'),
+                height: 256,
+                width: 256
+              })
+            )
+          }
           return route.fulfill(
             json(url.pathname.includes('showcase') ? [] : { success: true })
           )
@@ -139,6 +165,26 @@ export function createHorde() {
               }
             })
           const endpoint = url.pathname
+          if (
+            endpoint.endsWith('/interrogate/async') &&
+            req.method() === 'POST'
+          ) {
+            interrogations.push(req.postDataJSON())
+            return route.fulfill(json({ id: 'snapshot-interrogation' }, 202))
+          }
+          if (endpoint.includes('/interrogate/status/'))
+            return route.fulfill(
+              json({
+                state: 'done',
+                forms: [
+                  {
+                    form: 'caption',
+                    state: 'done',
+                    result: { caption: 'a snapshot test image' }
+                  }
+                ]
+              })
+            )
           if (
             endpoint.includes('/find_user') ||
             endpoint.includes('/sharedkeys/')
