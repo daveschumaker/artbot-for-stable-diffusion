@@ -10,3 +10,5 @@ __local_db
 test-results
 playwright-report
 coverage
+docs/private
+.claude
