@@ -4,7 +4,7 @@ Older entries: [2024](changelog/2024.md), [2023](changelog/2023.md), [2022](chan
 
 - A big round of housekeeping! ArtBot has been running on years-old foundations, so this update brings everything up to date: Next.js 16, React 19 and a newer version of the database library that stores your images. Your existing images, favorites and settings carry over as they are, and older backups still import.
 - New: Recoverable backups in Settings. Save a large library in smaller parts, verify the saved files, resume interrupted preparation or restore, and return to the previous library. Preferences can be included; API keys are excluded unless you choose to include them.
-- Removed: Shareable links and shortlinks. Links shared before this update no longer open.
+- Removed: Shareable links and shortlinks. The sharing service was discontinued due to abuse. Links shared before this update no longer open.
 - Removed: Shared image pages (`/artbot?i=...`) and the community Showcase.
 - Removed: The "Use all models" option. It only ever created one image.
 - Removed: The unfinished upscale page and the old SDXL beta image rating.
