@@ -75,7 +75,7 @@ for the primary rejection record and the remaining scanner output.
 The Linux Docker job passed on PR head `c5c4dc65`, including image build, native
 sharp and production startup/build metadata. The first browser CI job stopped
 before tests because `ubuntu-latest` selected unsupported Ubuntu 26.04. Its runner
-is now pinned to Ubuntu 24.04, supported by the installed Playwright 1.58.2.
+was pinned to Ubuntu 24.04, supported by Playwright 1.58.2 at that checkpoint.
 
 The project now standardizes on Node **26.13.1 LTS** (Lithium), with bundled
 npm **11.20.0**. The README, engine constraints, `.nvmrc`, Docker image, CI and
@@ -98,3 +98,24 @@ and for the exact artifact selected for deployment. Keep the original phone
 installation unchanged until its independently verified backup and the physical
 acceptance checks are current. Batching, interface redesign and removal of
 styled-components remain separate work.
+
+## Node 26 browser installer correction
+
+The later browser job on `9e4ed15b` hit its 30-minute timeout after downloading
+Chromium to 100%, before any tests ran. A fresh-cache install on Node 26.13.1
+reproduced the stall at ZIP extraction. This is the upstream
+[Playwright installer hang](https://github.com/microsoft/playwright/issues/40724),
+fixed by its [vendored yauzl lifecycle correction](https://github.com/microsoft/playwright/pull/40747).
+
+Pin `@playwright/test` and its locked runner/core packages to **1.60.0**, which
+includes that fix. Keep the application and tests on Node 26.13.1. The browser
+installation step now has its own five-minute timeout and `pw:install` diagnostic
+logging so an extraction failure cannot consume the full E2E job without context.
+Browser revisions change with the package; install this lockfile's browsers
+before rerunning tests. Earlier 1.58.2 browser measurements remain historical
+results, not measurements of the new Chromium revision.
+
+The isolated fresh-cache installer check completed in **4.5 seconds** with
+Playwright 1.60.0 on Node 26.13.1; the same install command with 1.58.2 stalled
+at extraction and was terminated after 45 seconds. Browser installation remains
+part of the Linux E2E job, so CI verifies the real download/extraction path.

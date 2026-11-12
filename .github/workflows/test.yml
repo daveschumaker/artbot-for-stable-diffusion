@@ -23,7 +23,7 @@ jobs:
       - run: npx jest --ci
 
   e2e:
-    # Playwright 1.58.2 supports Ubuntu 24.04, not the 26.04 latest runner.
+    # Pin the supported runner instead of following ubuntu-latest changes.
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
@@ -34,7 +34,11 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run update:build-id
-      - run: npx playwright install --with-deps chromium
+      - name: Install Chromium and system dependencies
+        timeout-minutes: 5
+        env:
+          DEBUG: pw:install
+        run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
       - uses: actions/upload-artifact@v4
         if: failure()
