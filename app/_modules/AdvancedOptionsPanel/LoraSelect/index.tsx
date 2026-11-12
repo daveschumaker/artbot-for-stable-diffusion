@@ -1,4 +1,5 @@
 'use client'
+import dynamic from 'next/dynamic'
 import { libraryStorage } from 'app/_backup/platform'
 
 import React, { useCallback } from 'react'
@@ -18,15 +19,22 @@ import FlexRow from 'app/_components/FlexRow'
 import Slider from 'app/_components/Slider'
 import { useModal } from '@ebay/nice-modal-react'
 import AwesomeModalWrapper from 'app/_modules/AwesomeModal'
-import LoraSearchModal from './modals/LoraSearchModal'
 import { handleConvertLora } from './loraUtils'
-import LoraFavRecentModal from './modals/LoraFavRecentModal'
 import { useInput } from 'app/_modules/InputProvider/context'
 import clsx from 'clsx'
 import { SavedLora } from '_types/artbot'
 import { MAX_LORA_CACHE } from '_constants'
 import { Embedding, ModelVersion } from '_types/civitai'
 
+const LoraSearchModal = dynamic(() => import('./modals/LoraSearchModal'), {
+  loading: () => <div role="status">Loading…</div>
+})
+const LoraFavRecentModal = dynamic(
+  () => import('./modals/LoraFavRecentModal'),
+  {
+    loading: () => <div role="status">Loading…</div>
+  }
+)
 // Temporary hard code names for common Loras
 // (mostly used in style presets):
 const getLoraName = (label: string = '', name: string | number = '') => {

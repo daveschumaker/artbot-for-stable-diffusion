@@ -35,7 +35,6 @@ import { Button } from 'app/_components/Button'
 import { IconAlertTriangle, IconArrowBarToUp } from '@tabler/icons-react'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import { CREATE_PAGE_PARAM } from '_constants'
-import { handleUsePreset } from './PromptInput/StylePresetsDropdown/presetController'
 import AdvancedOptionsPanelV2 from 'app/_modules/AdvancedOptionsPanelV2'
 import TargetWorker from './TargetWorker'
 
@@ -329,6 +328,9 @@ const CreatePage = ({ className }: any) => {
 
     // Step 6. Handle preset query param
     if (query[CreatePageMode.PRESET]) {
+      const { handleUsePreset } = await import(
+        './PromptInput/StylePresetsDropdown/presetController'
+      )
       const presetInput = handleUsePreset({
         key: query[CreatePageMode.PRESET],
         input: initialState as DefaultPromptInput

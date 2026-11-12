@@ -29,7 +29,11 @@ const lines = [
   `Legacy build **${report.builds.legacy}**; beta build **${report.builds.beta}**.`,
   `${report.rounds} paired rounds, Chromium ${report.browser}, ${report.viewport.width} × ${report.viewport.height}, no CPU/network throttling.`,
   '',
-  'The same sealed profiles are copied for both lanes. HTTP cache is cleared before the first load; a repeat load uses the native browser cache. Other persisted profile state, including browser code caches, is retained. Fixed service fixtures isolate application assets and browser work from live Horde/model API latency. Browser traffic passes through a local read-only relay; response bodies are unchanged. The separate direct-HTTP measurements below include a new TLS connection.',
+  `The same sealed profiles are copied for both lanes. HTTP cache is cleared before the first load; a repeat load uses the native browser cache. Other persisted profile state, including browser code caches, is retained. Fixed service fixtures isolate application assets and browser work from live Horde/model API latency. Response bodies are unchanged. ${
+    report.localArtifacts
+      ? 'Both lanes use local production artifacts; legacy labels the before artifact and beta labels the candidate. Direct HTTP measurements use new loopback connections.'
+      : 'Browser traffic passes through a local read-only relay. Direct HTTP measurements include a new TLS connection.'
+  }`,
   '',
   'These are desktop lab medians, not field percentiles or iPhone results. They compare two whole releases and do not isolate the effect of Node alone.',
   '',
