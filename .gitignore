@@ -57,3 +57,6 @@ next-env.d.ts
 /test-results/
 /playwright-report/
 .claude/
+
+# Machine-specific deployment notes and operational details.
+/docs/private/
