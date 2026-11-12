@@ -16,14 +16,6 @@ Open items only. Finished work is in the git history.
       date. Each date must appear only once, since it's the entry's link.
 - [ ] **R2. Remove the shortlink env vars from the server.**
       `SHORTLINK_SERVICE` and `NEXT_SHORTLINK_SERVICE` are no longer used.
-- [ ] **R3. Run the production comparison on the exact release commit.**
-      `docs/upgrade-regression.md` has `compare.mjs`, `rollback.mjs`,
-      `gallery.mjs` and `large-library.mjs`. The last recorded run
-      (`docs/next16-validation.md`) used commit 38aee4ba, before the Dexie 4
-      upgrade. Since then, rollback to the deployed Dexie 3 site has only been
-      tested with fake-indexeddb and the legacy-backup restore, never with a
-      real browser profile. React Query, TypeScript 6, the dead-code removal
-      and the queue fixes also came after it.
 - [ ] **R4. Replace `ADMIN_PW_HASH` with a scrypt hash.** Run
       `node x-build-scripts/hashAdminPassword.js`. The old SHA-256 hash still
       works until then.

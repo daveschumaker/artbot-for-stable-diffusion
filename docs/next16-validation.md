@@ -1,5 +1,10 @@
 # Next 16 validation — 2026-11-10
 
+Historical checkpoint. See [the PR validation record](pr-validation.md) for the
+later Dexie 4, backup and queue changes. The phone's complete archive was recovered
+and independently restore-verified on 2026-11-11; the phone paragraph below
+describes this earlier checkpoint only.
+
 Validated Next **16.4.6**, React **19.3.1**, Node **24.16.0**, source commit
 `38aee4ba` plus the working changes described below. The isolated Turbopack
 production build is `202611102001`, Next build ID `2qzXbxbS7qzpx5FwycJxB`, served
