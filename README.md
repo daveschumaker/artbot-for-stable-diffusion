@@ -34,8 +34,16 @@ ArtBot makes use of icons from [Tabler](https://tabler-icons.io/).
 
 ### Requirements
 
-- node `>= 20.19.5` (development and validation use Node 24)
-- npm `>= 9.0.0`
+- Node.js **24 LTS recommended**, matching Docker, CI and the production PM2
+  configuration. The dependency compatibility range is
+  `^20.19.5 || ^22.13.0 || >=24.0.0` (Node 21, Node 23 and earlier 22.x releases
+  are incompatible with the locked dependencies).
+- npm **9.0.0 or later**. Use `npm ci` with the committed version-3 lockfile.
+  Validation uses npm 11 bundled with Node 24.
+
+Node 20 is a legacy compatibility floor and reached end of life on 2026-04-30;
+use Node 24 LTS for new development and deployments. See the
+[Node.js release schedule](https://github.com/nodejs/Release#release-schedule).
 
 Most of these steps should be applicable to Linux / MacOS / Windows environments.
 
@@ -55,7 +63,7 @@ Once you have your Node.js environment setup, you can clone this repository and 
 ```bash
 > git clone https://github.com/daveschumaker/artbot-for-stable-diffusion
 > cd artbot-for-stable-diffusion
-> npm install
+> npm ci
 ```
 
 ### Environmental variables
