@@ -34,16 +34,14 @@ ArtBot makes use of icons from [Tabler](https://tabler-icons.io/).
 
 ### Requirements
 
-- Node.js **24 LTS recommended**, matching Docker, CI and the production PM2
-  configuration. The dependency compatibility range is
-  `^20.19.5 || ^22.13.0 || >=24.0.0` (Node 21, Node 23 and earlier 22.x releases
-  are incompatible with the locked dependencies).
-- npm **9.0.0 or later**. Use `npm ci` with the committed version-3 lockfile.
-  Validation uses npm 11 bundled with Node 24.
+- Node.js **26.13.1 LTS** (Lithium), pinned in `.nvmrc`, Docker, CI and the
+  production PM2 configuration. The supported engine range is `^26.13.1`.
+- npm **11.20.0 or later**; Node 26.13.1 bundles npm 11.20.0. Use `npm ci` with
+  the committed version-3 lockfile.
 
-Node 20 is a legacy compatibility floor and reached end of life on 2026-04-30;
-use Node 24 LTS for new development and deployments. See the
-[Node.js release schedule](https://github.com/nodejs/Release#release-schedule).
+This is the [current LTS release](https://nodejs.org/en/download) as of
+2026-11-11. Keep the pinned development, CI, container and PM2 versions aligned
+when updating the runtime.
 
 Most of these steps should be applicable to Linux / MacOS / Windows environments.
 
@@ -52,8 +50,8 @@ Installing various versions of Node.js on your machine can be tricky. I am a big
 Using `nvm`, you can install Node like this:
 
 ```bash
-> nvm install 24
-> nvm use 24
+> nvm install
+> nvm use
 ```
 
 ### Installing

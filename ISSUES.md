@@ -19,15 +19,15 @@ Open items only. Finished work is in the git history.
 - [ ] **R4. Replace `ADMIN_PW_HASH` with a scrypt hash.** Run
       `node x-build-scripts/hashAdminPassword.js`. The old SHA-256 hash still
       works until then.
-- [ ] **R5. Run ArtBot on Node 24 under PM2.** Next 16, sharp and
-      isomorphic-dompurify need Node 20.19.5 or later, and `next start` exits
-      at once on the server's Node 18. Production's other apps stay on 18.
+- [ ] **R5. Run ArtBot on Node 26.13.1 LTS under PM2.** Install the project's
+      pinned runtime before deploying. `next start` cannot run on the server's
+      default Node 18. Production's other apps stay on 18.
   - Install exactly the version `ecosystem.config.js` names
-    (`/root/.nvm/versions/node/v24.22.2/bin/node`), and check that path
+    (`/root/.nvm/versions/node/v26.13.1/bin/node`), and check that path
     exists. A different patch version breaks the path.
   - The PM2 apps were set up with `script: 'npm'`. `pm2 restart` keeps that,
     so run `npm run pm2:stop-prod`, then `npm run pm2:start-prod`, then
-    `pm2 save`. Check `pm2 describe horde-js` shows the v24 interpreter.
+    `pm2 save`. Check `pm2 describe horde-js` shows the v26.13.1 interpreter.
   - Never run `npm run start` on the server: it uses the default Node 18.
   - Check the release tarball has `node_modules/@img/sharp-linux-x64` and the
     Linux libvips package.

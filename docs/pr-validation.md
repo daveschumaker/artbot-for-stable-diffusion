@@ -77,19 +77,19 @@ sharp and production startup/build metadata. The first browser CI job stopped
 before tests because `ubuntu-latest` selected unsupported Ubuntu 26.04. Its runner
 is now pinned to Ubuntu 24.04, supported by the installed Playwright 1.58.2.
 
-The toolchain compatibility bounds were checked against applicable locked
-dependency engines on Linux x64, macOS arm64 and Windows x64. A fresh macOS
-installation using Node 20.19.5 and npm 9.0.0 passes installation, type checking,
-lint, all 539 Jest tests and the production build. All 539 tests also pass with
-Node 22.13.0. README and both package manifests now declare
-`^20.19.5 || ^22.13.0 || >=24.0.0` and npm `>=9.0.0`. Node 24 LTS remains the
-recommended environment; Node 20 is an end-of-life compatibility floor.
+The project now standardizes on Node **26.13.1 LTS** (Lithium), with bundled
+npm **11.20.0**. The README, engine constraints, `.nvmrc`, Docker image, CI and
+PM2 interpreter all name that runtime, and Node typings are updated to major 26.
+Under this pair, type checking, lint and all 539 Jest tests pass. A clean-source
+install and production build for `/artbot-beta` also pass. Earlier Node 24
+artifact evidence above remains a historical checkpoint; Linux deployment and
+browser checks of the Node 26 artifact are recorded separately.
 
 ## Release handoff
 
 [The deployment checklist](release-checklist.md) covers the release date,
 shortlink environment cleanup, admin scrypt hash rotation, trusted-proxy header
-configuration, Linux sharp dependencies, the Node 24 PM2 interpreter, real
+configuration, Linux sharp dependencies, the Node 26 PM2 interpreter, real
 upstream route checks and rollback. Those production operations have not run.
 The local browser-profile rollback does not establish a production PM2 rollback.
 
