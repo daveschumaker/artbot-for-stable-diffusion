@@ -43,8 +43,9 @@ remain untouched by validation; use disposable profile clones.
 - URL image imports allow 30 requests/minute/client, two active requests/process,
   10 MB encoded input, an 8,192-pixel side and at most 64 million input pixels.
   Limits include the R2/full-size path. Generation downloads go directly to R2.
-- Verify the Node 24 interpreter path in ecosystem.config.js exists on the server,
-  and Linux sharp/libvips packages are present in the release artifact.
+- Install the pinned Node 26.13.1 LTS runtime and verify the exact interpreter
+  path in ecosystem.config.js exists on the server. Confirm npm is at least
+  11.20.0 and Linux sharp/libvips packages are present in the release artifact.
 - Keep the old release and its original ecosystem.config.js. Replace only the
   ArtBot PM2 process using the documented stop/start scripts; verify the new
   interpreter and save PM2 state. Other applications retain their current Node.

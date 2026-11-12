@@ -1,6 +1,6 @@
 // ArtBot needs a newer Node than the other apps on the server, so it runs on its
 // own copy. Starting Next directly stops PM2 from using its own Node version.
-const interpreter = '/root/.nvm/versions/node/v24.22.2/bin/node'
+const interpreter = '/root/.nvm/versions/node/v26.13.1/bin/node'
 const script = 'node_modules/next/dist/bin/next'
 
 module.exports = {

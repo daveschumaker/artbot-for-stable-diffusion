@@ -1,4 +1,4 @@
-FROM node:24
+FROM node:26.13.1
 WORKDIR /artbot
 COPY . /artbot
 RUN npm ci
