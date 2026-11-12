@@ -74,6 +74,16 @@ JSON did not contain these preferences, so its restore retains current settings.
 Compatibility JSON remains readable by older ArtBot versions, but its one large
 file is an optional desktop workflow and does not solve mobile save-memory limits.
 
+Downgrading server code is separate from **Return to previous library**. The
+deployed legacy build always opens `imageHorde` and ignores the selected restored
+database and restored-job quarantine. Newer images in a restored library remain
+retained but are not automatically visible to that build. Before downgrading,
+follow [the staged-library handoff](release-checklist.md#downgrading-after-a-staged-library-restore):
+verify saved backups, settle pending requests, and test compatibility JSON in a
+fresh legacy profile if its newer contents need to be accessible there. Do not
+import over the original populated library or delete browser storage to force
+the handoff. Compatibility JSON does not carry localStorage preferences.
+
 Restore selects an audited candidate only after its committed native rows match
 the input. No existing image library is cleared. Preference snapshots live in
 IndexedDB rather than inflating the selection record. Activation replaces the
