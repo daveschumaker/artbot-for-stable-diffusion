@@ -22,6 +22,8 @@ const { values } = parseArgs({
   options: {
     control: { type: 'string', default: 'http://127.0.0.1:3297' },
     candidate: { type: 'string', default: 'http://127.0.0.1:3298' },
+    'control-path': { type: 'string', default: '/artbot' },
+    'candidate-path': { type: 'string', default: '/artbot' },
     baseline: { type: 'string', default: 'manual-workflows' },
     'expected-images': { type: 'string', default: '43' },
     'no-op-only': { type: 'boolean', default: false },
@@ -30,6 +32,11 @@ const { values } = parseArgs({
     lane: { type: 'string', default: 'all' }
   }
 })
+for (const key of ['control-path', 'candidate-path'])
+  assert.ok(
+    ['/artbot', '/artbot-beta'].includes(values[key]),
+    'Invalid app path'
+  )
 process.umask(0o077)
 const initialCount = Number(values['expected-images'])
 assert.ok(
@@ -111,8 +118,8 @@ function settingsUnchanged(before, after) {
   )
 }
 const completed = (audit) => stores(audit).get('imageHorde/completed')
-async function ready(page, route = 'images') {
-  const response = await page.goto(`${ORIGIN}/artbot/${route}`, {
+async function ready(page, route = 'images', appPath = '/artbot') {
+  const response = await page.goto(`${ORIGIN}${appPath}/${route}`, {
     waitUntil: 'domcontentloaded'
   })
   assert.ok(response.status() < 400, `App returned ${response.status()}`)
@@ -150,8 +157,9 @@ async function launch(profile, network, backend, errors) {
   return context
 }
 async function lane(name, target) {
+  const appPath = values[name + '-path']
   const run = await cloneBaseline(root, values.baseline)
-  const backend = createHorde()
+  const backend = createHorde({ basePath: appPath })
   const errors = []
   const result = (report.lanes[name] = {
     target,
@@ -167,7 +175,7 @@ async function lane(name, target) {
   try {
     // A real Next production server must expose its build marker. The test never
     // starts/reuses a dev server; callers own two isolated production processes.
-    const build = await fetch(`${target}/artbot/api/server-info`).then((r) =>
+    const build = await fetch(`${target}${appPath}/api/server-info`).then((r) =>
       r.json()
     )
     result.server = build
@@ -192,11 +200,11 @@ async function lane(name, target) {
     )
     for (let cycle = 1; cycle <= (values['batch-only'] ? 0 : 2); cycle++) {
       const page = await context.newPage()
-      await ready(page)
+      await ready(page, 'images', appPath)
       await expect(
-        page.locator('a[href*="/artbot/image/"]').first()
+        page.locator(`a[href*="${appPath}/image/"]`).first()
       ).toBeVisible()
-      await page.locator('a[href*="/artbot/image/"]').first().click()
+      await page.locator(`a[href*="${appPath}/image/"]`).first().click()
       const image = page.locator('img').filter({ visible: true }).last()
       // Modal routes differ across releases; any visible decoded image proves
       // that the old library can render, while the full byte audit covers all43.
@@ -240,7 +248,7 @@ async function lane(name, target) {
     }
     if (!values['no-op-only']) {
       const page = await context.newPage()
-      await ready(page, 'create')
+      await ready(page, 'create', appPath)
       // Make reset completion observable even if the saved prompt was empty.
       // Nothing is submitted until the real scenario prompt is filled below.
       await page
@@ -274,7 +282,7 @@ async function lane(name, target) {
       console.log(
         `${name}: batch submitted; ${JSON.stringify(backend.summary())}`
       )
-      await page.goto(`${ORIGIN}/artbot/pending`)
+      await page.goto(`${ORIGIN}${appPath}/pending`)
       await page.reload()
       await page.waitForFunction(() => Boolean(window._artbotDb?.pending))
       await expect
@@ -309,9 +317,9 @@ async function lane(name, target) {
       backend.setOutage(false)
       context = await launch(run.profile, network, backend, errors)
       const primary = await context.newPage()
-      await ready(primary, 'pending')
+      await ready(primary, 'pending', appPath)
       const second = await context.newPage()
-      await ready(second, 'pending')
+      await ready(second, 'pending', appPath)
       await second.bringToFront()
       await primary.close()
       backend.release()
@@ -406,7 +414,9 @@ async function lane(name, target) {
     await save()
   }
   console.log(
-    `${name}: ${result.status}${result.failure ? `: ${result.failure.split('\n')[0]}` : ''}`
+    `${name}: ${result.status}${
+      result.failure ? `: ${result.failure.split('\n')[0]}` : ''
+    }`
   )
 }
 for (const name of ['control', 'candidate'].filter(

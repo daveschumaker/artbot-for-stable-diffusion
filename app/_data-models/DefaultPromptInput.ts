@@ -53,7 +53,14 @@ class DefaultPromptInput {
   extra_texts: Array<{ text: string; reference: string }> | null = null
 
   constructor(params: Partial<DefaultPromptInput> = {}) {
-    Object.assign(this, params)
+    // Historical IndexedDB rows can contain explicit undefined properties.
+    // Keep defaults for those fields without rewriting the saved record.
+    Object.assign(
+      this,
+      Object.fromEntries(
+        Object.entries(params).filter(([, value]) => value !== undefined)
+      )
+    )
   }
 }
 

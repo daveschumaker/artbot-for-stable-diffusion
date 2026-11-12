@@ -18,9 +18,16 @@ const repo = fileURLToPath(new URL('../../', import.meta.url))
 const { values } = parseArgs({
   options: {
     control: { type: 'string', default: 'http://127.0.0.1:3297' },
-    candidate: { type: 'string', default: 'http://127.0.0.1:3298' }
+    candidate: { type: 'string', default: 'http://127.0.0.1:3298' },
+    'control-path': { type: 'string', default: '/artbot' },
+    'candidate-path': { type: 'string', default: '/artbot' }
   }
 })
+for (const key of ['control-path', 'candidate-path'])
+  assert.ok(
+    ['/artbot', '/artbot-beta'].includes(values[key]),
+    'Invalid app path'
+  )
 const root = path.join(repo, '__local_db/browser-profiles')
 const out = path.join(
   repo,
@@ -42,6 +49,7 @@ for (const [name, target] of [
   ['control', values.control],
   ['candidate', values.candidate]
 ]) {
+  const appPath = values[name + '-path']
   const clone = await cloneBaseline(root, 'manual-workflows')
   const net = await startReplayNetwork({
     certDir: path.join(root, 'tls'),
@@ -56,7 +64,7 @@ for (const [name, target] of [
       viewport: { width: 1440, height: 1000 },
       ...net.launchOptions
     })
-    await createHorde().install(context)
+    await createHorde({ basePath: appPath }).install(context)
     const p = await openProbe(context, net)
     const before = await auditStorage(p, { recordDigests: true })
     await p.evaluate(async (base64) => {
@@ -95,14 +103,14 @@ for (const [name, target] of [
       }
     }, bytes.toString('base64'))
     const start = performance.now()
-    await p.goto(`${ORIGIN}/artbot/images`)
+    await p.goto(`${ORIGIN}${appPath}/images`)
     await expect(
       p
         .locator('strong')
         .filter({ hasText: /^1000$/ })
         .first()
     ).toBeVisible()
-    const tile = p.locator('a[href="/artbot/image/scale-957"]').first()
+    const tile = p.locator(`a[href="${appPath}/image/scale-957"]`).first()
     await expect(tile).toBeVisible()
     await expect
       .poll(() => tile.locator('img').evaluate((img) => img.naturalWidth))
@@ -113,7 +121,7 @@ for (const [name, target] of [
       p.getByAltText('large library fixture 957').first()
     ).toBeVisible()
     const detailStart = performance.now()
-    await p.goto(`${ORIGIN}/artbot/image/scale-1`)
+    await p.goto(`${ORIGIN}${appPath}/image/scale-1`)
     await expect
       .poll(() =>
         p

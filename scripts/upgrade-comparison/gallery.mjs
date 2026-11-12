@@ -18,19 +18,27 @@ const { values } = parseArgs({
   options: {
     baseline: { type: 'string', default: 'production-pagination-favorites' },
     control: { type: 'string', default: 'http://127.0.0.1:3297' },
-    candidate: { type: 'string', default: 'http://127.0.0.1:3298' }
+    candidate: { type: 'string', default: 'http://127.0.0.1:3298' },
+    'control-path': { type: 'string', default: '/artbot' },
+    'candidate-path': { type: 'string', default: '/artbot' }
   }
 })
 process.umask(0o077)
 const resultsRoot = path.join(repo, '__local_db/upgrade-comparison/results')
 await mkdir(resultsRoot, { recursive: true })
 const out = await mkdtemp(path.join(resultsRoot, 'gallery-'))
+for (const key of ['control-path', 'candidate-path'])
+  assert.ok(
+    ['/artbot', '/artbot-beta'].includes(values[key]),
+    'Invalid app path'
+  )
 const root = path.join(repo, '__local_db/browser-profiles')
 const result = { baseline: values.baseline, lanes: {} }
 for (const [name, target] of [
   ['control', values.control],
   ['candidate', values.candidate]
 ]) {
+  const appPath = values[name + '-path']
   const run = await cloneBaseline(root, values.baseline)
   const network = await startReplayNetwork({
     certDir: path.join(root, 'tls'),
@@ -45,7 +53,7 @@ for (const [name, target] of [
       viewport: { width: 1440, height: 1000 },
       ...network.launchOptions
     })
-    await createHorde().install(context)
+    await createHorde({ basePath: appPath }).install(context)
     const probe = await openProbe(context, network)
     const before = await auditStorage(probe, { recordDigests: true })
     const rows = await probe.evaluate(async () => {
@@ -82,7 +90,7 @@ for (const [name, target] of [
       expect
         .poll(() =>
           page
-            .locator('a[href^="/artbot/image/"]')
+            .locator(`a[href^="${appPath}/image/"]`)
             .evaluateAll((es) =>
               es.map((e) => e.getAttribute('href').split('/').pop()).sort()
             )
@@ -96,7 +104,9 @@ for (const [name, target] of [
       )
       assert.ok(expected.length > 50, `Baseline needs multiple ${filter} pages`)
       await page.goto(
-        `${ORIGIN}/artbot/images${filter === 'all' ? '' : '?filter=' + filter}`
+        `${ORIGIN}${appPath}/images${
+          filter === 'all' ? '' : '?filter=' + filter
+        }`
       )
       const seen = []
       lane.pages[filter] = []
@@ -114,7 +124,7 @@ for (const [name, target] of [
         const slice = expected.slice((number - 1) * 50, number * 50)
         await expectRows(slice)
         const ids = await page
-          .locator('a[href^="/artbot/image/"]')
+          .locator(`a[href^="${appPath}/image/"]`)
           .evaluateAll((es) =>
             es.map((e) => e.getAttribute('href').split('/').pop())
           )

@@ -4,6 +4,11 @@ Use two isolated **production builds** and fresh copies of the same sealed
 Chromium profile. This supplements the normal end-to-end suite with the state
 real users accumulated on `https://tinybots.net/artbot`.
 
+For a deployed `/artbot-beta` artifact, use the read-only relay, per-lane base
+paths and workflow runner described in [the beta validation runbook](beta-validation-2026-11-11.md).
+The [paired performance report](beta-performance-2026-11-11.md) records the
+controlled legacy/beta measurements and their limits.
+
 The first comparison uses the user-confirmed deployed control `1bd51aae`
 (production reported build `202508182305`) and the `manual-workflows` baseline:
 43 completed images, six old errors and two old completed pending records.
