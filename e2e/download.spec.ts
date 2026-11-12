@@ -42,6 +42,9 @@ const downloadFromDetailsPage = async (
   jobId: string,
   prompt: string
 ) => {
+  // Saving can finish before the previous page's thumbnail fetch. Let that
+  // fixture settle before a full navigation tears down its document in WebKit.
+  await finishFixtureSetup(page)
   await page.goto(`/artbot/image/${jobId}`)
   await expectImageToDisplay(page, prompt)
   const download = page.waitForEvent('download', { timeout: 10000 })
