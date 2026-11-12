@@ -26,15 +26,23 @@ const jobIds = (page: Page) =>
   )
 const pagination = (page: Page) =>
   page.locator('ul[class*="PaginationWrapper"]').first()
-const expectRows = (page: Page, rows: typeof images) =>
-  expect
+const expectRows = async (page: Page, rows: typeof images) => {
+  let observed: (string | undefined)[] = []
+  await expect
     // Masonry groups the DOM by column. Compare page membership independently
     // of that layout, while still rejecting duplicates or missing records.
-    .poll(async () => (await jobIds(page)).sort())
+    .poll(async () => {
+      observed = (await jobIds(page)).sort()
+      return observed
+    })
     .toEqual(rows.map((row) => row.jobId).sort())
+  // Count the observation we asserted. A route's loading render can remove
+  // the tiles between this assertion and a second independent DOM read.
+  return observed
+}
 const showPage = async (page: Page, number: number, rows: typeof images) => {
   await pagination(page).getByText(String(number), { exact: true }).click()
-  await expectRows(page, rows.slice((number - 1) * 50, number * 50))
+  return expectRows(page, rows.slice((number - 1) * 50, number * 50))
 }
 const filter = async (page: Page, label: string) => {
   await page.getByTitle('Filter images', { exact: true }).click()
@@ -76,10 +84,9 @@ test.beforeEach(async ({ page }) => {
 test('pagination visits every image once and preserves a partial last page on reload', async ({
   page
 }) => {
-  const seen = await jobIds(page)
+  const seen = await expectRows(page, newest.slice(0, 50))
   for (const number of [2, 3, 4]) {
-    await showPage(page, number, newest)
-    seen.push(...(await jobIds(page)))
+    seen.push(...(await showPage(page, number, newest)))
   }
   expect(new Set(seen).size).toBe(175)
   await pagination(page).locator('.tabler-icon-chevron-left').click()

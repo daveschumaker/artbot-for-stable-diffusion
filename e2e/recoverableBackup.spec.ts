@@ -182,9 +182,9 @@ test('saved multipart files verify and restore binary source data, preferences a
         ? 300000
         : 120000
   })
-  await expect
-    .poll(() => other.evaluate(() => (window as any)._artbotDb?.name))
-    .toMatch(/^artbot-restored-/)
+  await other.waitForFunction(() =>
+    /^artbot-restored-/.test((window as any)._artbotDb?.name || '')
+  )
   const restored = await page.evaluate(async () => {
     const db = (window as any)._artbotDb
     const raw: IDBDatabase = await new Promise((resolve, reject) => {
@@ -251,10 +251,13 @@ test('saved multipart files verify and restore binary source data, preferences a
   await expect(
     page.getByRole('button', { name: 'Resume restored requests' })
   ).toBeVisible()
-  await page.getByRole('button', { name: 'Return to previous library' }).click()
-  await expect
-    .poll(() => page.evaluate(() => (window as any)._artbotDb?.name))
-    .toBe('imageHorde')
+  await Promise.all([
+    page.waitForEvent('domcontentloaded'),
+    page.getByRole('button', { name: 'Return to previous library' }).click()
+  ])
+  await page.waitForFunction(
+    () => (window as any)._artbotDb?.name === 'imageHorde'
+  )
   expect(
     await page.evaluate(() => (window as any)._artbotDb.completed.count())
   ).toBe(rows)

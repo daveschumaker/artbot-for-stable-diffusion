@@ -188,10 +188,13 @@ test('a saved 3 MB input restores within native localStorage quota, survives reo
   expect(await page.evaluate(() => localStorage.getItem('showLayout'))).toBe(
     'grid'
   )
-  await page.getByRole('button', { name: 'Return to previous library' }).click()
-  await expect
-    .poll(() => page.evaluate(() => (window as any)._artbotDb?.name))
-    .toBe('imageHorde')
+  await Promise.all([
+    page.waitForEvent('domcontentloaded'),
+    page.getByRole('button', { name: 'Return to previous library' }).click()
+  ])
+  await page.waitForFunction(
+    () => (window as any)._artbotDb?.name === 'imageHorde'
+  )
   expect(await page.evaluate(() => localStorage.getItem('showLayout'))).toBe(
     'layout'
   )

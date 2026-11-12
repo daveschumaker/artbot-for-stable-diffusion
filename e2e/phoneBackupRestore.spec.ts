@@ -108,10 +108,13 @@ test('the verified 1721-image phone archive restores through Settings into a fre
     masks: 15,
     withoutHordeID: 753
   })
-  await page.getByRole('button', { name: 'Return to previous library' }).click()
-  await expect
-    .poll(() => page.evaluate(() => (window as any)._artbotDb?.name))
-    .toBe('imageHorde')
+  await Promise.all([
+    page.waitForEvent('domcontentloaded'),
+    page.getByRole('button', { name: 'Return to previous library' }).click()
+  ])
+  await page.waitForFunction(
+    () => (window as any)._artbotDb?.name === 'imageHorde'
+  )
   expect(
     await page.evaluate(() => (window as any)._artbotDb.completed.count())
   ).toBe(0)
