@@ -18,6 +18,9 @@ remain untouched by validation; use disposable profile clones.
   credentials, manifests with private paths and screenshots out of Git.
 - Run the [backup regression commands](backup-design.md#repeatable-verification),
   including interruption recovery, native localStorage quota and Blob fidelity.
+- Require the Linux `docker` CI job to pass. It builds from the Docker context
+  without host `build_info.json`, exercises native sharp, starts the image and
+  compares `/artbot/api/server-info` with the metadata generated inside it.
 - Complete the [physical device matrix](backup-design.md#physical-iphone-checks)
   on a disposable HTTPS installation with a distinct origin. Preserve the original
   Home Screen app. Desktop WebKit and the injected synthetic engine probe do not
@@ -59,6 +62,74 @@ If rollback is required, delete only the horde-js PM2 process, start the retaine
 old release with its original ecosystem.config.js and save PM2 state. Verify the
 old build and image library. Do not delete browser storage or backup catalogs.
 Keep the candidate and recovery artifacts for diagnosis.
+
+### Downgrading after a staged library restore
+
+The deployed legacy build (`1bd51aae`, Dexie 3) always opens `imageHorde`.
+The new build can instead select an audited `artbot-restored-*` database using
+`ArtBotLibrarySelection`. Legacy code does not read that selection or the backup
+catalog. A code downgrade therefore shows the original `imageHorde` library;
+it does not merge or display images saved in a selected restored library.
+Those restored records remain in browser storage. An older-looking gallery
+after downgrade is not evidence that the restored database was deleted.
+
+Choose the recovery path before switching server code:
+
+1. Keep the candidate available, stop new submissions and let active jobs settle.
+   Close other ArtBot windows, including legacy windows, during the handoff.
+   Confirm there are no runnable pending requests before exporting for legacy
+   import. Legacy code does not honor restored-request quarantine; importing
+   pending requests there can submit them again and spend credits twice. If jobs
+   cannot be settled, retain the candidate and its profile to finish recovery.
+2. In the selected library, prepare a multipart backup, save every part and its
+   manifest outside browser storage, and verify those saved copies. Preserve
+   preferences separately for the legacy handoff: compatibility JSON includes
+   database records, not localStorage settings or credentials. Keep backups and
+   any credentials private. For desktop validation, retain a fully closed copy
+   of the browser profile as well.
+3. To return to the original library, use **Return to previous library** while
+   the candidate is still available, then verify that the intended images and
+   favorites are present. This switches selection; it does not copy newer images
+   back. After multiple restores, the previous library may itself be another
+   restored database. Confirm the active database is `imageHorde` before assuming
+   that legacy code will show the same library. The desktop Inspector expression
+   `window._artbotDb.name` reads its identity without changing it.
+4. If the restored library's newer contents must be usable in legacy code,
+   export them **before** switching back: Settings → Import / Export → **Legacy
+   compatibility JSON export** → **Download database**. Save the actual file
+   outside browser storage. Its database header is `imageHorde`, even when its
+   source was a selected restored database. It is one large file and can exceed
+   mobile memory limits; a multipart backup cannot be imported by legacy code.
+   If compatibility export fails, keep the multipart backup and candidate
+   profile and finish the handoff on a suitable desktop before downgrading.
+5. Verify that saved JSON using the retained legacy build in a **fresh disposable
+   browser profile**, with external generation requests blocked. Import through
+   its Settings page, reopen the app, and compare all store counts, image IDs,
+   favorites, source/mask/canvas values and Blob/binary bytes with the exported
+   source. Confirm representative images render. The legacy importer does not
+   safely replace a populated database; do not test it over the original library.
+6. Retain both profiles and all saved backups through the code rollback. A
+   verified legacy import in a fresh profile provides access to the newer
+   contents there; it does not update the original installation automatically.
+   If the same installed app must display those newer contents, postpone the
+   downgrade until that migration is independently verified. Do not clear website
+   data, delete or rename databases, or edit selection/catalog records to force it.
+
+The 255-image rollback regression verifies reopening the canonical `imageHorde`
+library with unchanged bytes and native database versions. It does not establish
+legacy support for selected restored libraries, preference recovery, pending-job
+quarantine or a physical Home Screen installation. Keep the original phone app
+intact; its Files and installed-app acceptance checks remain separate.
+
+A disposable desktop rehearsal on 2026-11-11 checked both paths using candidate
+`02b7b472` and the actual legacy build `1bd51aae`. The same-profile code downgrade
+displayed the one original canonical image and retained the separate four-image
+restored database byte-for-byte. Its saved compatibility JSON then imported
+through legacy Settings in a fresh profile. All nine store schemas, native
+versions, counts and record digests matched, including source/mask/canvas data,
+a nested Blob and typed binary; the post-restore image rendered after reopen.
+These synthetic fixtures establish the desktop handoff, not mobile export-memory
+or physical installed-app acceptance.
 
 ## PR contents
 
