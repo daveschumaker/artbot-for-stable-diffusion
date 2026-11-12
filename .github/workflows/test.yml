@@ -41,3 +41,51 @@ jobs:
           name: playwright-traces
           path: test-results/
           retention-days: 7
+
+  docker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image from clean source
+        run: docker build --tag artbot:ci .
+      - name: Check native image processing
+        run: |
+          docker run --rm --entrypoint node artbot:ci -e '
+            require("sharp")({
+              create: { width: 8, height: 8, channels: 3, background: "blue" }
+            }).png().toBuffer().then(bytes => {
+              if (!bytes.length) throw new Error("No PNG output")
+            }).catch(error => { console.error(error); process.exit(1) })
+          '
+      - name: Check production startup and generated build metadata
+        run: |
+          docker run --detach --name artbot-ci artbot:ci
+          docker exec -i artbot-ci node --input-type=module <<'JS'
+          import assert from 'node:assert/strict'
+          import { readFileSync } from 'node:fs'
+          import { setTimeout } from 'node:timers/promises'
+          const expected = JSON.parse(readFileSync('build_info.json', 'utf8')).build
+          assert.match(expected, /^\d{12}$/)
+          let lastError
+          for (let attempt = 0; attempt < 30; attempt++) {
+            try {
+              const response = await fetch('http://127.0.0.1:3000/artbot/api/server-info', {
+                signal: AbortSignal.timeout(2000)
+              })
+              assert.equal(response.status, 200)
+              assert.equal((await response.json()).build, expected)
+              process.exit(0)
+            } catch (error) {
+              lastError = error
+              await setTimeout(1000)
+            }
+          }
+          throw lastError
+          JS
+      - name: Show failed container logs
+        if: failure()
+        run: docker logs artbot-ci
+      - name: Remove test container
+        if: always()
+        run: docker rm --force artbot-ci || true

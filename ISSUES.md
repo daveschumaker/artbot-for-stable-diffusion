@@ -147,8 +147,10 @@ Open items only. Finished work is in the git history.
       instead.
 - [ ] Playwright reuses whatever answers on its port, which can be a dev
       server instead of a production build.
-- [ ] The Docker image has never been built, and its `next build` skips the
-      `update:build-id` step that creates `build_info.json`.
+- [ ] Confirm a passing Linux Docker CI run. The image now uses `npm run build`
+      to generate fresh build metadata. CI builds the image, exercises sharp,
+      starts the production server and checks its reported build ID. A local
+      Node build does not establish that the Linux container passes.
 - [ ] Refresh `test-utils/hordeApiSchema.json` when the Horde API changes.
 
 ## Cleanup

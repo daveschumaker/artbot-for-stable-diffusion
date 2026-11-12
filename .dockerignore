@@ -5,6 +5,7 @@
 .git
 node_modules
 build
+build_info.json
 __local_db
 test-results
 playwright-report
