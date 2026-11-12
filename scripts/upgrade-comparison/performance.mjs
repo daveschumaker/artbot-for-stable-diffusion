@@ -24,9 +24,18 @@ const { values } = parseArgs({
     resume: { type: 'string' },
     'beta-build': { type: 'string', default: '202611111801' },
     'legacy-build': { type: 'string', default: '202508182305' },
-    quick: { type: 'boolean', default: false }
+    quick: { type: 'boolean', default: false },
+    'legacy-origin': { type: 'string' },
+    'beta-origin': { type: 'string' }
   }
 })
+// Optional local artifacts let the same paired protocol measure an optimization
+// without deploying it. Both must be explicit loopback origins.
+const local = !!(values['legacy-origin'] || values['beta-origin'])
+if (local) {
+  for (const key of ['legacy-origin', 'beta-origin'])
+    assert.match(values[key] || '', /^http:\/\/(?:localhost|127\.0\.0\.1):\d+$/)
+}
 const rounds = Number(values.rounds)
 assert.ok(Number.isInteger(rounds) && rounds >= 1 && rounds <= 10)
 for (const key of ['beta-build', 'legacy-build'])
@@ -45,12 +54,14 @@ const root = path.join(repo, '__local_db/browser-profiles')
 const lanes = [
   {
     name: 'legacy',
-    basePath: '/artbot',
+    basePath: local ? '/artbot-beta' : '/artbot',
+    origin: values['legacy-origin'] || ORIGIN,
     expectedBuild: values['legacy-build']
   },
   {
     name: 'beta',
     basePath: '/artbot-beta',
+    origin: values['beta-origin'] || ORIGIN,
     expectedBuild: values['beta-build']
   }
 ]
@@ -58,11 +69,13 @@ const report = {
   started: new Date().toISOString(),
   node: process.version,
   rounds,
+  localArtifacts: local,
   viewport: { width: 1440, height: 1000 },
   networkThrottling: false,
   cpuThrottling: false,
-  transport:
-    'Public HTTPS through a local read-only relay and isolated HTTPS profile gateway; asset bodies are unchanged and uncached by the relay.',
+  transport: local
+    ? 'Paired local production artifacts through the isolated HTTPS profile gateway; legacy is the before artifact and beta is the candidate.'
+    : 'Public HTTPS through a local read-only relay and isolated HTTPS profile gateway; asset bodies are unchanged and uncached by the relay.',
   limitations: [
     'Desktop lab samples, not field percentiles or iPhone measurements.',
     'Cold browser cache does not mean cold CDN or server cache.',
@@ -155,8 +168,12 @@ async function httpSample(lane, route) {
       connection: 'new TLS connection',
       bytes: 0
     }
-    const request = https.get(
-      `${ORIGIN}${lane.basePath}/${route}`,
+    const transport = lane.origin.startsWith('http:') ? http : https
+    result.connection = local
+      ? 'new loopback HTTP connection'
+      : 'new TLS connection'
+    const request = transport.get(
+      `${lane.origin}${lane.basePath}/${route}`,
       { agent: false, headers: { 'accept-encoding': 'gzip, br' } },
       (response) => {
         result.ttfbMs = performance.now() - started
@@ -453,7 +470,7 @@ async function run(lane, scenario, round) {
   const clone = await cloneBaseline(root, scenario.baseline)
   const network = await startReplayNetwork({
     certDir: path.join(root, 'tls'),
-    target
+    target: local ? lane.origin : target
   })
   let context
   try {
@@ -584,7 +601,7 @@ async function run(lane, scenario, round) {
 try {
   for (const lane of lanes) {
     const info = await (
-      await fetch(`${ORIGIN}${lane.basePath}/api/server-info`)
+      await fetch(`${lane.origin}${lane.basePath}/api/server-info`)
     ).json()
     assert.equal(
       info.build,

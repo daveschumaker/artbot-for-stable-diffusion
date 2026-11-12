@@ -1,5 +1,4 @@
 import memoize from 'memoizee'
-import { appBackup } from 'app/_backup'
 import type { ExportProgress } from 'dexie-export-import/dist/export'
 
 import { db } from 'app/_db/dexie'
@@ -21,6 +20,7 @@ interface ThumbnailProgress {
 
 // Compatibility entry points share the staged recovery engine with Settings.
 export const dbImport = async (blob: Blob) => {
+  const { appBackup } = await import('app/_backup')
   const report = await appBackup().restore([blob])
   db.close()
   return report
@@ -28,7 +28,10 @@ export const dbImport = async (blob: Blob) => {
 
 export const dbExport = async (
   onProgress?: (progress: ExportProgress) => void
-) => appBackup().exportCompatibility(onProgress)
+) => {
+  const { appBackup } = await import('app/_backup')
+  return appBackup().exportCompatibility(onProgress)
+}
 
 export const addImageToDexie = async ({
   base64String,

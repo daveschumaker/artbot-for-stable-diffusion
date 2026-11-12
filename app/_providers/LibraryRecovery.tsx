@@ -1,14 +1,20 @@
 'use client'
 import { ReactNode, useEffect, useState } from 'react'
-import { appBackup } from 'app/_backup'
+import { browserStorage, SELECTION_KEY } from 'app/_backup/platform'
 
 export default function LibraryRecovery({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false)
   const [error, setError] = useState('')
   useEffect(() => {
     let stopped = false
-    appBackup()
-      .recoverPreferences()
+    // Ordinary startup needs only the journal check. An interrupted restore
+    // still runs the manager's cross-tab recovery fence before rendering.
+    const recover = async () => {
+      if (!browserStorage()?.getItem(`${SELECTION_KEY}:transition`)) return
+      const { appBackup } = await import('app/_backup')
+      await appBackup().recoverPreferences()
+    }
+    recover()
       .then(() => {
         if (!stopped) setReady(true)
       })

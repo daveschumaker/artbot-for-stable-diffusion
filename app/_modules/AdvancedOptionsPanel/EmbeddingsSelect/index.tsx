@@ -1,13 +1,11 @@
+import dynamic from 'next/dynamic'
 import { IconHeart, IconHistory, IconPlus } from '@tabler/icons-react'
 import FlexRow from 'app/_components/FlexRow'
 import { Button } from 'app/_components/Button'
 import { useCallback } from 'react'
-import EmbeddingSearchModal from './EmbeddingSearchModal'
 import EmbeddingSettingsCard from './EmbeddingSettingsCard'
 import FlexCol from 'app/_components/FlexCol'
 import { AiHordeEmbedding } from '_types/artbot'
-import EmbeddingFavoritesModal from './EmbeddingFavoritesModal'
-import EmbeddingRecentsModal from './EmbeddingRecentsModal'
 import { InjectTi } from '_types/horde'
 import { useModal } from '@ebay/nice-modal-react'
 import AwesomeModalWrapper from 'app/_modules/AwesomeModal'
@@ -15,6 +13,19 @@ import { useInput } from 'app/_modules/InputProvider/context'
 import styles from './component.module.css'
 
 // Search / display TI / Textual Inversion Embeddings from Civitai
+const EmbeddingSearchModal = dynamic(() => import('./EmbeddingSearchModal'), {
+  loading: () => <div role="status">Loading…</div>
+})
+const EmbeddingFavoritesModal = dynamic(
+  () => import('./EmbeddingFavoritesModal'),
+  {
+    loading: () => <div role="status">Loading…</div>
+  }
+)
+const EmbeddingRecentsModal = dynamic(() => import('./EmbeddingRecentsModal'), {
+  loading: () => <div role="status">Loading…</div>
+})
+
 export default function EmbeddingsSelect() {
   const { input, setInput } = useInput()
   const embeddingsModal = useModal(AwesomeModalWrapper)

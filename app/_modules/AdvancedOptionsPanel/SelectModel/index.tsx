@@ -10,8 +10,7 @@ import AppSettings from 'app/_data-models/AppSettings'
 import { useStore } from 'statery'
 import { modelStore } from 'app/_store/modelStore'
 import TooltipComponent from 'app/_components/TooltipComponent'
-import ModelsInfoModal from 'app/_modules/ModelsInfoModal'
-import { useModal } from '@ebay/nice-modal-react'
+import NiceModal from '@ebay/nice-modal-react'
 import ShowSettingsDropDown from './ShowSettingsDropdown'
 import ImageModels from 'app/_data-models/ImageModels'
 import { useInput } from 'app/_modules/InputProvider/context'
@@ -29,7 +28,6 @@ const SelectModel = ({
   hideOptions = false
 }: SelectModelProps) => {
   const { input, setInput } = useInput()
-  const modelsInfoModal = useModal(ModelsInfoModal)
   const [modelsOptions] = useAvailableModels({ input })
 
   const { modelDetails } = useStore(modelStore)
@@ -205,11 +203,13 @@ const SelectModel = ({
         <div className="flex flew-row gap-[8px]">
           <Button
             className={styles['options-btn']}
-            onClick={() =>
-              modelsInfoModal.show({
-                input
-              })
-            }
+            aria-label="Browse model details"
+            onClick={async () => {
+              const { default: ModelsInfoModal } = await import(
+                'app/_modules/ModelsInfoModal'
+              )
+              NiceModal.show(ModelsInfoModal, { input })
+            }}
           >
             <IconList stroke={1.5} />
           </Button>

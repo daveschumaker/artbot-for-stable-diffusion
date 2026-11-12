@@ -1,3 +1,4 @@
+import dynamic from 'next/dynamic'
 import {
   IconArrowBackUp,
   IconArrowBarLeft,
@@ -16,7 +17,6 @@ import { Button } from 'app/_components/Button'
 import { useEffect, useState } from 'react'
 import DropdownOptions from 'app/_modules/DropdownOptions'
 import StyleTagsDropdown from './StyleTagsDropdown'
-import StylePresetsDropdown from './StylePresetsDropdown'
 import { useModal } from '@ebay/nice-modal-react'
 import PromptHistoryModal from './PromptHistoryModal'
 import NegativePromptLibraryModal from './NegativePromptLibraryModal'
@@ -29,6 +29,10 @@ import { hasKeywords } from './KeywordsDropdown/keywordsController'
 import AppSettings from 'app/_data-models/AppSettings'
 import TextArea from 'app/_components/TextArea'
 import { useInput } from 'app/_modules/InputProvider/context'
+
+const StylePresetsDropdown = dynamic(() => import('./StylePresetsDropdown'), {
+  loading: () => <div role="status">Loading…</div>
+})
 
 export default function PromptInput() {
   const { input, setInput } = useInput()
