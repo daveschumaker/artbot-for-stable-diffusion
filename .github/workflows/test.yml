@@ -47,6 +47,40 @@ jobs:
           path: test-results/
           retention-days: 7
 
+  backup-browsers:
+    name: Backup (${{ matrix.browser }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 26.13.1
+          cache: npm
+      - run: npm ci
+      - name: Install backup-test browser
+        timeout-minutes: 5
+        env:
+          DEBUG: pw:install
+        run: npx playwright install --with-deps ${{ matrix.browser }}
+      - name: Test saved files, interruption, restore and rollback
+        env:
+          E2E_ALL_BROWSERS: '1'
+        run: >-
+          npx playwright test e2e/backupHandoff.spec.ts
+          e2e/recoverableBackup.spec.ts e2e/libraryRecovery.spec.ts
+          e2e/databaseRoundtrip.spec.ts --project=${{ matrix.browser }} --workers=2
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: backup-traces-${{ matrix.browser }}
+          path: test-results/
+          retention-days: 7
+
   docker:
     runs-on: ubuntu-latest
     timeout-minutes: 20

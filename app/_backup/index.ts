@@ -2,6 +2,7 @@ import { BackupManager } from './manager'
 import { browserStorage } from './platform'
 import { appInfoStore } from 'app/_store/appStore'
 export type {
+  BackupHandoff,
   Progress,
   PrepareOptions,
   RestoreOptions,

@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 import ContentWrapper from 'app/_components/ContentWrapper'
 import MobileFooter from 'app/_modules/MobileFooter'
+import BackupReminder from 'app/_modules/BackupReminder'
 import AppUpdate from 'app/_modules/AppUpdate'
 
 export default function RootLayout({
@@ -16,6 +17,7 @@ export default function RootLayout({
         <div className="flex flex-row w-full gap-4">
           <div className="w-full">
             <AppUpdate />
+            <BackupReminder />
             {children}
           </div>
         </div>

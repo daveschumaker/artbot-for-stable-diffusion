@@ -1,4 +1,5 @@
 import 'fake-indexeddb/auto'
+import frozenV1 from '../../e2e/fixtures/backup-v1.json'
 import { BackupManager } from './manager'
 import { readPreferences } from './platform'
 
@@ -687,4 +688,140 @@ it('honors pause after preference snapshots are durable but before publishing a 
   } finally {
     writer.mockRestore()
   }
+})
+
+it('retains saved-file verification across batches and reopen without marking an incomplete backup verified', async () => {
+  const job = await manager.prepare({ maxPartBytes: 4096, chunkBytes: 512 })
+  const files = await manager.files(job.id)
+  await manager.noteSaveRequested(job.id, files[0].name)
+  let progress = await manager.verifySavedFiles(job.id, [files[0]])
+  expect(progress.files[0]).toMatchObject({ requested: true, verified: true })
+  expect(progress.complete).toBe(false)
+  expect(storage.getItem('ArtBotLibrarySelection:lastVerified')).toBeNull()
+  const options = {
+    storage,
+    defaultDatabase: source.name,
+    catalogName: manager.catalog.name
+  }
+  await manager.close()
+  manager = new BackupManager(options)
+  progress = await manager.handoff(job.id)
+  expect(progress.files[0].verified).toBe(true)
+  expect(progress.complete).toBe(false)
+  const corrupt = new File(['bad'], files[1].name)
+  await expect(manager.verifySavedFiles(job.id, [corrupt])).rejects.toThrow(
+    /damaged/
+  )
+  expect((await manager.handoff(job.id)).files[1].verified).toBe(false)
+  progress = await manager.verifySavedFiles(job.id, files.slice(1))
+  expect(progress.complete).toBe(true)
+  expect(progress.files.every((f) => f.verified)).toBe(true)
+  expect(
+    JSON.parse(storage.getItem('ArtBotLibrarySelection:lastVerified')!).id
+  ).toBe(job.id)
+  expect(
+    await request(
+      source.transaction('completed').objectStore('completed').count()
+    )
+  ).toBe(1)
+})
+
+it('rejects a mixed damaged batch atomically, and preserves progress when paused or localStorage is full', async () => {
+  const job = await manager.prepare({ maxPartBytes: 4096, chunkBytes: 512 })
+  const files = await manager.files(job.id)
+  await expect(
+    manager.verifySavedFiles(job.id, [
+      files[0],
+      new File(['bad'], files[1].name)
+    ])
+  ).rejects.toThrow(/damaged/)
+  expect(
+    (await manager.handoff(job.id)).files.some((file) => file.verified)
+  ).toBe(false)
+  const controller = new AbortController()
+  controller.abort()
+  await expect(
+    manager.verifySavedFiles(job.id, files, controller.signal)
+  ).rejects.toMatchObject({ name: 'AbortError' })
+  expect((await manager.handoff(job.id)).complete).toBe(false)
+  storage.setItem = () => {
+    throw new DOMException('Full', 'QuotaExceededError')
+  }
+  const result = await manager.verifySavedFiles(job.id, files)
+  expect(result.complete).toBe(true)
+  expect(result.verificationRecorded).toBe(false)
+  expect(
+    (await manager.handoff(job.id)).files.every((file) => file.verified)
+  ).toBe(true)
+})
+
+it('restores the frozen v1 artifact with native binary data and unknown fields intact', async () => {
+  const files = frozenV1.files.map(
+    (file) =>
+      new File(
+        [new Uint8Array(Buffer.from(file.base64, 'base64'))],
+        file.name,
+        { type: file.type }
+      )
+  )
+  const result = await manager.restore(files)
+  expect(result.verified).toBe(true)
+  const database = await request(indexedDB.open(result.database))
+  try {
+    const row: any = await request(
+      database.transaction('completed').objectStore('completed').get(7)
+    )
+    expect(row.prompt).toBe('synthetic golden dog')
+    expect(row.favorited).toBe(true)
+    expect(row.when).toEqual(new Date('2020-01-02T00:00:00Z'))
+    expect(row).toHaveProperty('optional', undefined)
+    expect(row.nested).toEqual({ keep: 'unknown field' })
+    expect(
+      Array.from(new Uint8Array(await row.source_image.arrayBuffer()))
+    ).toEqual([0, 17, 255])
+    expect(
+      Array.from(new Uint8Array(await row.source_mask.arrayBuffer()))
+    ).toEqual([4, 9])
+  } finally {
+    database.close()
+  }
+  expect(
+    await request(
+      source.transaction('completed').objectStore('completed').get(1)
+    )
+  ).toMatchObject({ prompt: 'keep me' })
+})
+
+it('does not lose a concurrent full-set verification when a slower batch finishes', async () => {
+  const job = await manager.prepare({ maxPartBytes: 4096, chunkBytes: 512 })
+  const files = await manager.files(job.id)
+  let release!: () => void
+  let started!: () => void
+  const waiting = new Promise<void>((resolve) => {
+    started = resolve
+  })
+  const gate = new Promise<void>((resolve) => {
+    release = resolve
+  })
+  class DelayedFile extends File {
+    async arrayBuffer() {
+      started()
+      await gate
+      return super.arrayBuffer()
+    }
+  }
+  const batch = manager.verifySavedFiles(job.id, [
+    new DelayedFile([files[0]], files[0].name)
+  ])
+  await waiting
+  try {
+    await manager.verify(files)
+  } finally {
+    release()
+  }
+  await batch
+  expect((await manager.handoff(job.id)).complete).toBe(true)
+  expect(
+    (await manager.handoff(job.id)).files.every((file) => file.verified)
+  ).toBe(true)
 })

@@ -10,7 +10,8 @@ import {
   readLocalPreferences,
   Selection,
   SELECTION_KEY,
-  backupWindowId
+  backupWindowId,
+  HANDOFF_EVENT
 } from './platform'
 import {
   createDatabase,
@@ -64,6 +65,13 @@ export interface PrepareOptions {
   includeCredentials?: boolean
   signal?: AbortSignal
   onProgress?: (progress: Progress) => void
+}
+export interface BackupHandoff {
+  id: string
+  complete: boolean
+  records: number
+  files: { name: string; requested: boolean; verified: boolean }[]
+  verificationRecorded?: boolean
 }
 const credentialPreference = (key: string) =>
   /(?:api[_-]?key|shared[_-]?key|(?:access|refresh|user)[_-]?token|password|secret|credential|^key$|^token$)/i.test(
@@ -134,7 +142,8 @@ export class BackupManager {
   }
   private async exclusive<T>(
     label: string,
-    action: () => Promise<T>
+    action: () => Promise<T>,
+    options: { readOnlySource?: boolean } = {}
   ): Promise<T> {
     const token = crypto.randomUUID(),
       key = `${this.selectionKey}:operation`,
@@ -168,14 +177,16 @@ export class BackupManager {
           if (current?.token !== token) return
           current.expires = Date.now() + 30000
           await locks.put(current)
-          mirror()
+          if (!options.readOnlySource) mirror()
         })
         .catch(() => {
           /* The next fenced operation checks the durable lease. */
         })
     }, 5000)
     try {
-      mirror()
+      // Saved-file verification reads immutable preparation data. Its catalog
+      // lease protects cleanup, without requiring space for a source-write hint.
+      if (!options.readOnlySource) mirror()
       await recoverPreferenceTransition(this.storage, this.selectionKey)
       return await action()
     } finally {
@@ -323,6 +334,7 @@ export class BackupManager {
         })
       try {
         await this.catalog.table('jobs').put(job)
+        this.publishHandoff(job)
         for (; job.tableIndex < schema.stores.length; job.tableIndex++) {
           const table = schema.stores[job.tableIndex]
           for await (const row of records(source, table.name, job.lastKey)) {
@@ -500,6 +512,7 @@ export class BackupManager {
         job.manifest = manifest
         job.status = 'complete'
         await this.catalog.table('jobs').put(job)
+        this.publishHandoff(job)
         return job
       } catch (e) {
         // The in-memory cursor may be ahead of a failed transaction. Only the
@@ -527,40 +540,237 @@ export class BackupManager {
       source.close()
     }
   }
-  async files(id: string): Promise<File[]> {
+  private handoffStatus(job: any): BackupHandoff {
+    const names = [
+      `artbot-${job.id}.manifest.json`,
+      ...job.manifest.parts.map((p: Manifest['parts'][number]) => p.name)
+    ]
+    return {
+      id: job.id,
+      records: job.records,
+      complete: !!job.delivery?.verifiedAt,
+      files: names.map((name) => ({
+        name,
+        requested: !!job.delivery?.requested?.includes(name),
+        verified: !!job.delivery?.verified?.includes(name)
+      }))
+    }
+  }
+  private publishHandoff(job: any) {
+    // The small hint makes unfinished work discoverable without loading the engine
+    // on every route. The catalog remains the authority for actual verification.
+    try {
+      const status =
+        job.status === 'complete' ? this.handoffStatus(job) : undefined
+      this.storage.setItem(
+        `${this.selectionKey}:handoff`,
+        JSON.stringify({
+          id: job.id,
+          state: status?.complete
+            ? 'verified'
+            : status
+              ? 'saving'
+              : 'preparing',
+          verified: status?.files.filter((f) => f.verified).length || 0,
+          total: status?.files.length || 0
+        })
+      )
+      if (typeof window !== 'undefined')
+        window.dispatchEvent(new Event(HANDOFF_EVENT))
+    } catch {
+      // Storage estimates and the home-page hint are advisory. Prepared data and
+      // progress remain durable in the catalog even when localStorage is full.
+    }
+  }
+  private async preparedJob(id: string) {
     const job = await this.catalog.table('jobs').get(id)
     if (!job?.manifest || job.status !== 'complete')
       throw new Error('Backup preparation is incomplete')
-    const result = [
-      new File(
-        [JSON.stringify(job.manifest, null, 2)],
-        `artbot-${id}.manifest.json`,
-        { type: 'application/json' }
-      )
-    ]
-    for (const part of job.manifest.parts) {
-      const metadata = await this.catalog.table('parts').get([id, part.index]),
-        blobs: Blob[] = []
-      let previous = -1,
-        row: any
-      for (const ref of metadata.slices) {
-        if (previous !== ref.ordinal) {
-          row = await this.catalog.table('records').get([id, ref.ordinal])
-          previous = ref.ordinal
+    return job
+  }
+  async handoff(id: string): Promise<BackupHandoff> {
+    return this.handoffStatus(await this.preparedJob(id))
+  }
+  async noteSaveRequested(id: string, name: string) {
+    const saved = await this.catalog.transaction(
+      'rw',
+      this.catalog.table('jobs'),
+      async () => {
+        const job = await this.preparedJob(id)
+        if (!this.handoffStatus(job).files.some((f) => f.name === name))
+          throw new Error('Unknown backup file')
+        job.delivery = {
+          ...job.delivery,
+          requested: [...new Set([...(job.delivery?.requested || []), name])]
         }
-        blobs.push(row.lines[ref.line])
+        await this.catalog.table('jobs').put(job)
+        return job
       }
-      result.push(
-        new File(blobs, part.name, { type: 'application/octet-stream' })
-      )
+    )
+    this.publishHandoff(saved)
+  }
+  async file(id: string, name: string): Promise<File> {
+    return this.preparedFile(await this.preparedJob(id), name)
+  }
+  private async preparedFile(job: any, name: string): Promise<File> {
+    const id = job.id
+    if (name === `artbot-${id}.manifest.json`)
+      return new File([JSON.stringify(job.manifest, null, 2)], name, {
+        type: 'application/json'
+      })
+    const part = (job.manifest as Manifest).parts.find((p) => p.name === name)
+    if (!part) throw new Error('Unknown backup file')
+    const metadata = await this.catalog.table('parts').get([id, part.index]),
+      blobs: Blob[] = []
+    if (!metadata) throw new Error('The local preparation is missing a part')
+    let previous = -1,
+      row: any
+    for (const ref of metadata.slices) {
+      if (previous !== ref.ordinal) {
+        row = await this.catalog.table('records').get([id, ref.ordinal])
+        previous = ref.ordinal
+      }
+      if (!row?.lines?.[ref.line])
+        throw new Error('The local preparation is incomplete')
+      blobs.push(row.lines[ref.line])
     }
-    return result
+    return new File(blobs, name, { type: 'application/octet-stream' })
+  }
+  async files(id: string): Promise<File[]> {
+    const job = await this.preparedJob(id),
+      status = this.handoffStatus(job),
+      files: File[] = []
+    for (const entry of status.files)
+      files.push(await this.preparedFile(job, entry.name))
+    return files
+  }
+  async verifySavedFiles(
+    id: string,
+    files: File[],
+    signal?: AbortSignal
+  ): Promise<BackupHandoff> {
+    return this.exclusive(
+      'Verifying saved backup files',
+      async () => {
+        const job = await this.preparedJob(id),
+          status = this.handoffStatus(job)
+        if (
+          !files.length ||
+          new Set(files.map((f) => f.name)).size !== files.length
+        )
+          throw new Error('Choose unique saved backup files')
+        const checked: string[] = []
+        for (const file of files) {
+          checkCancelled(signal)
+          const expected = (job.manifest as Manifest).parts.find(
+            (p) => p.name === file.name
+          )
+          const manifest =
+            file.name === status.files[0].name
+              ? await this.preparedFile(job, file.name)
+              : undefined
+          if (!expected && !manifest)
+            throw new Error(
+              'These files belong to a different backup. Choose files from this prepared set.'
+            )
+          const expectedSize = expected?.size ?? manifest!.size
+          const expectedHash =
+            expected?.sha256 ?? (await sha(await manifest!.arrayBuffer()))
+          if (
+            file.size !== expectedSize ||
+            (await sha(await file.arrayBuffer())) !== expectedHash
+          )
+            throw new Error(`Missing or damaged backup file: ${file.name}`)
+          checked.push(file.name)
+        }
+        checkCancelled(signal)
+        job.delivery = {
+          ...job.delivery,
+          verified: [
+            ...new Set([...(job.delivery?.verified || []), ...checked])
+          ]
+        }
+        if (status.files.every((f) => job.delivery.verified.includes(f.name))) {
+          // Saved copies match the prepared bytes; still audit the complete graph,
+          // table counts and fingerprints before recording successful verification.
+          for await (const row of bundleRecords(
+            {
+              manifest: job.manifest,
+              files: { get: (name) => this.preparedFile(job, name) }
+            },
+            signal
+          ))
+            void row
+          checkCancelled(signal)
+          job.delivery.verifiedAt = new Date().toISOString()
+        }
+        await this.checkLease()
+        await this.catalog.transaction(
+          'rw',
+          this.catalog.table('jobs'),
+          async () => {
+            const latest = await this.preparedJob(id)
+            job.delivery = {
+              ...latest.delivery,
+              ...job.delivery,
+              requested: latest.delivery?.requested || [],
+              verified: [
+                ...new Set([
+                  ...(latest.delivery?.verified || []),
+                  ...job.delivery.verified
+                ])
+              ],
+              verifiedAt: job.delivery.verifiedAt || latest.delivery?.verifiedAt
+            }
+            await this.catalog
+              .table('jobs')
+              .update(id, { delivery: job.delivery })
+          }
+        )
+        this.publishHandoff(job)
+        let verificationRecorded = true
+        if (job.delivery.verifiedAt) {
+          try {
+            this.storage.setItem(
+              `${this.selectionKey}:lastVerified`,
+              JSON.stringify({ id, time: Date.now(), records: job.records })
+            )
+          } catch {
+            verificationRecorded = false
+          }
+        }
+        return { ...this.handoffStatus(job), verificationRecorded }
+      },
+      { readOnlySource: true }
+    )
   }
   async verify(files: Blob[], signal?: AbortSignal) {
     const bundle = await inspectBundle(files, signal)
     let preferences: any
     for await (const row of bundleRecords(bundle, signal))
       if (row.table === '@preferences') preferences = row.value
+    const prepared = await this.catalog.table('jobs').get(bundle.manifest.id)
+    if (
+      prepared?.status === 'complete' &&
+      (await hashJSON(prepared.manifest)) === (await hashJSON(bundle.manifest))
+    ) {
+      const saved = await this.catalog.transaction(
+        'rw',
+        this.catalog.table('jobs'),
+        async () => {
+          const latest = await this.catalog.table('jobs').get(prepared.id)
+          if (!latest) return
+          latest.delivery = {
+            ...latest.delivery,
+            verified: this.handoffStatus(latest).files.map((f) => f.name),
+            verifiedAt: new Date().toISOString()
+          }
+          await this.catalog.table('jobs').put(latest)
+          return latest
+        }
+      )
+      if (saved) this.publishHandoff(saved)
+    }
     let verificationRecorded = true
     try {
       this.storage.setItem(
@@ -595,6 +805,16 @@ export class BackupManager {
           await this.catalog.table('jobs').delete(id)
         }
       )
+      try {
+        const key = `${this.selectionKey}:handoff`
+        if (JSON.parse(this.storage.getItem(key) || 'null')?.id === id) {
+          this.storage.removeItem(key)
+          if (typeof window !== 'undefined')
+            window.dispatchEvent(new Event(HANDOFF_EVENT))
+        }
+      } catch {
+        /* The catalog remains authoritative. */
+      }
     })
   }
   async discardAttempt(id: string) {

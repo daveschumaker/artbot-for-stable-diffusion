@@ -153,8 +153,13 @@ export async function inspectBundle(files: Blob[], signal?: AbortSignal) {
   }
   return { manifest: m, files: named }
 }
+// Prepared backups may read one part on demand instead of retaining every File.
+export interface BackupBundle {
+  manifest: Manifest
+  files: { get(name: string): Blob | undefined | Promise<Blob | undefined> }
+}
 export async function* bundleRecords(
-  bundle: Awaited<ReturnType<typeof inspectBundle>>,
+  bundle: BackupBundle,
   signal?: AbortSignal
 ) {
   const decoder = new RecordDecoder(),
@@ -165,7 +170,7 @@ export async function* bundleRecords(
     preferenceRecords = 0
   for (const part of bundle.manifest.parts) {
     for await (const line of jsonLines(
-      bundle.files.get(part.name)!,
+      (await bundle.files.get(part.name))!,
       bundle.manifest.maxPartBytes,
       signal
     )) {

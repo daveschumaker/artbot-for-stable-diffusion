@@ -8,11 +8,14 @@ import {
   storageStatus,
   withScreenAwake
 } from 'app/_backup'
-import type { Progress } from 'app/_backup'
+import { useSearchParams } from 'next/navigation'
+import type { BackupHandoff, Progress } from 'app/_backup'
 import { downloadBlob } from 'app/_utils/appUtils'
 
 const size = (bytes: number) => `${(bytes / 1048576).toFixed(1)} MB`
 export default function ExportDatabase() {
+  const selectedId = useSearchParams()?.get('backup')
+  const [handoff, setHandoff] = useState<BackupHandoff | null>(null)
   const [busy, setBusy] = useState(false),
     [message, setMessage] = useState('')
   const [jobs, setJobs] = useState<any[]>([]),
@@ -25,6 +28,7 @@ export default function ExportDatabase() {
   const [limit, setLimit] = useState(8),
     [keys, setKeys] = useState(false)
   const [fileJob, setFileJob] = useState<{
+    id: string
     createdAt: string
     includeCredentials: boolean
   } | null>(null)
@@ -32,6 +36,7 @@ export default function ExportDatabase() {
   const refresh = async () => {
     setJobs(await appBackup().preparations())
     setCapacity(await storageStatus())
+    if (fileJob) setHandoff(await appBackup().handoff(fileJob.id))
     const saved = localStorage.getItem('ArtBotLibrarySelection:lastVerified')
     if (saved) {
       const result = JSON.parse(saved)
@@ -46,14 +51,22 @@ export default function ExportDatabase() {
     let stopped = false
     refresh()
       .then(async () => {
-        const latest = (await appBackup().preparations())
-          .filter((job) => job.status === 'complete')
-          .sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0]
-        if (!latest) return
+        const preparations = await appBackup().preparations()
+        const latest = selectedId
+          ? preparations.find((job) => job.id === selectedId)
+          : preparations
+              .filter((job) => job.status === 'complete')
+              .sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0]
+        if (!latest || latest.status !== 'complete') return
         const savedFiles = await appBackup().files(latest.id)
+        const progress = await appBackup().handoff(latest.id)
         if (!stopped) {
           setFiles(savedFiles)
           setFileJob(latest)
+          setHandoff(progress)
+          setRequested(
+            progress.files.filter((f) => f.requested).map((f) => f.name)
+          )
           setMessage(
             'Recovered prepared backup. Save the remaining files, then verify the saved copies.'
           )
@@ -66,7 +79,9 @@ export default function ExportDatabase() {
       stopped = true
       abort.current?.abort()
     }
-  }, [])
+    // Each link can select a different durable preparation.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedId])
   const run = async (action: (signal: AbortSignal) => Promise<void>) => {
     const controller = new AbortController()
     abort.current = controller
@@ -81,7 +96,7 @@ export default function ExportDatabase() {
     } catch (e) {
       setMessage(
         (e as Error).name === 'AbortError'
-          ? 'Paused. Resume preparation below; keep this window visible.'
+          ? 'Paused. Your preparation and verified-file progress are kept. Keep this window visible and try again.'
           : (e as Error).message
       )
     } finally {
@@ -110,6 +125,7 @@ export default function ExportDatabase() {
       })
       setFiles(await appBackup().files(job.id))
       setFileJob(job)
+      setHandoff(await appBackup().handoff(job.id))
       setMessage(
         'Prepared locally. Save the manifest and every part, then select the saved files to verify them.'
       )
@@ -117,6 +133,9 @@ export default function ExportDatabase() {
   return (
     <Section>
       <h3 className="font-bold mb-2">Back up this library</h3>
+      <p className="font-bold text-sm mb-2">
+        1. Prepare → 2. Save to Files → 3. Verify saved copies
+      </p>
       <p className="text-sm mb-2">
         Includes all database tables, source images, masks, favorites and saved
         preferences. Keep ArtBot visible while preparing. Interrupted
@@ -189,7 +208,10 @@ export default function ExportDatabase() {
         {message}
       </p>
       {jobs.length > 0 && (
-        <details className="my-3">
+        <details
+          className="my-3"
+          open={jobs.some((job) => job.status !== 'complete')}
+        >
           <summary>Saved preparations ({jobs.length})</summary>
           {jobs.map((job) => (
             <div
@@ -207,7 +229,13 @@ export default function ExportDatabase() {
                     run(async () => {
                       setFiles(await appBackup().files(job.id))
                       setFileJob(job)
-                      setRequested([])
+                      const progress = await appBackup().handoff(job.id)
+                      setHandoff(progress)
+                      setRequested(
+                        progress.files
+                          .filter((f) => f.requested)
+                          .map((f) => f.name)
+                      )
                       setMessage(
                         'Save all listed files, then verify the saved copies.'
                       )
@@ -227,6 +255,8 @@ export default function ExportDatabase() {
                   run(async () => {
                     await appBackup().discardPreparation(job.id)
                     setFiles([])
+                    setFileJob(null)
+                    setHandoff(null)
                     setMessage(
                       'Local preparation removed. Saved files and the image library are unchanged.'
                     )
@@ -253,12 +283,29 @@ export default function ExportDatabase() {
             requested means the browser was asked to save; verify the actual
             saved copies below.
           </p>
+          {handoff && (
+            <p role="status" className="font-bold my-2">
+              {handoff.files.filter((f) => f.verified).length} of{' '}
+              {handoff.files.length} saved files verified
+              {handoff.complete
+                ? ' — backup verified.'
+                : '. You can verify a few files at a time; progress survives reopening ArtBot.'}
+            </p>
+          )}
           <ul>
             {files.map((file) => (
               <li className="my-2" key={file.name}>
                 <Button
                   disabled={busy}
                   onClick={() => {
+                    if (fileJob)
+                      void appBackup()
+                        .noteSaveRequested(fileJob.id, file.name)
+                        .catch(() =>
+                          setMessage(
+                            'Save requested, but its progress could not be recorded. Verify the saved copy below.'
+                          )
+                        )
                     downloadBlob(file, file.name)
                     setRequested((old) => [...old, file.name])
                   }}
@@ -275,6 +322,10 @@ export default function ExportDatabase() {
                       disabled={busy}
                       onClick={async () => {
                         try {
+                          if (fileJob)
+                            void appBackup()
+                              .noteSaveRequested(fileJob.id, file.name)
+                              .catch(() => {})
                           await navigator.share({
                             files: [file],
                             title: 'ArtBot backup'
@@ -297,7 +348,12 @@ export default function ExportDatabase() {
                         : `part ${files.indexOf(file)}`}
                     </Button>
                   )}
-                {requested.includes(file.name) && 'Download requested'}
+                {handoff?.files.find((f) => f.name === file.name)?.verified
+                  ? 'Saved copy verified'
+                  : (requested.includes(file.name) ||
+                      handoff?.files.find((f) => f.name === file.name)
+                        ?.requested) &&
+                    'Save requested (not verified)'}
               </li>
             ))}
           </ul>
@@ -318,6 +374,11 @@ export default function ExportDatabase() {
                       await file
                         .stream()
                         .pipeTo(await handle.createWritable(), { signal })
+                      if (fileJob)
+                        await appBackup().noteSaveRequested(
+                          fileJob.id,
+                          file.name
+                        )
                     }
                     setMessage(
                       'Files written to the selected folder. Select those saved copies below to verify them.'
@@ -338,7 +399,7 @@ export default function ExportDatabase() {
         </div>
       )}
       <label className="block my-3">
-        Verify saved backup (manifest and all parts)
+        Verify saved backup (choose some or all saved files)
         <input
           aria-label="Verify saved backup"
           type="file"
@@ -349,9 +410,45 @@ export default function ExportDatabase() {
             e.target.value = ''
             if (selected.length)
               run(async (signal) => {
+                if (
+                  fileJob &&
+                  handoff &&
+                  selected.every((file) =>
+                    handoff.files.some((entry) => entry.name === file.name)
+                  )
+                ) {
+                  const progress = await appBackup().verifySavedFiles(
+                    fileJob.id,
+                    selected,
+                    signal
+                  )
+                  setHandoff(progress)
+                  setMessage(
+                    progress.complete
+                      ? `Saved backup verified: ${progress.records} records, ${
+                          progress.files.length - 1
+                        } parts. Keep these files outside browser storage.${
+                          progress.verificationRecorded
+                            ? ''
+                            : ' The local verification timestamp could not be saved.'
+                        }`
+                      : `Verified ${
+                          progress.files.filter((file) => file.verified).length
+                        } of ${
+                          progress.files.length
+                        } saved files. Select another batch to continue.`
+                  )
+                  return
+                }
                 const manifest = await appBackup().verify(selected, signal)
                 setMessage(
-                  `Saved backup verified: ${manifest.records} records, ${manifest.parts.length} parts. Keep these files outside browser storage.${manifest.verificationRecorded ? '' : ' The local verification timestamp could not be saved.'}`
+                  `Saved backup verified: ${manifest.records} records, ${
+                    manifest.parts.length
+                  } parts. Keep these files outside browser storage.${
+                    manifest.verificationRecorded
+                      ? ''
+                      : ' The local verification timestamp could not be saved.'
+                  }`
                 )
               })
           }}
