@@ -726,6 +726,38 @@ it('retains saved-file verification across batches and reopen without marking an
   ).toBe(1)
 })
 
+it('preserves the library and verified progress when Files returns zero bytes, then accepts a valid reselection', async () => {
+  const job = await manager.prepare({ maxPartBytes: 4096, chunkBytes: 512 })
+  const files = await manager.files(job.id)
+  await manager.verifySavedFiles(job.id, [files[0]])
+  const before = await manager.handoff(job.id)
+  const unavailable = files.map((file, index) =>
+    index === 1 ? new File([], file.name) : file
+  )
+  for (const action of [
+    () => manager.verifySavedFiles(job.id, unavailable),
+    () => manager.verify(unavailable),
+    () => manager.restore(unavailable)
+  ]) {
+    await expect(action()).rejects.toThrow(/empty or unavailable/)
+    expect(await manager.handoff(job.id)).toEqual(before)
+    expect(manager.activeDatabase).toBe(source.name)
+    expect(storage.getItem('ArtBotLibrarySelection:lastVerified')).toBeNull()
+    expect(await manager.restoreAttempts()).toEqual([])
+  }
+  expect(
+    (await manager.verifySavedFiles(job.id, files.slice(1))).complete
+  ).toBe(true)
+  await manager.restore(files)
+  await manager.rollback()
+  expect(manager.activeDatabase).toBe(source.name)
+  expect(
+    await request(
+      source.transaction('completed').objectStore('completed').count()
+    )
+  ).toBe(1)
+})
+
 it('rejects a mixed damaged batch atomically, and preserves progress when paused or localStorage is full', async () => {
   const job = await manager.prepare({ maxPartBytes: 4096, chunkBytes: 512 })
   const files = await manager.files(job.id)

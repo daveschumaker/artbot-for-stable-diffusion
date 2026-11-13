@@ -72,6 +72,8 @@ jobs:
           E2E_ALL_BROWSERS: '1'
         run: >-
           npx playwright test e2e/backupHandoff.spec.ts
+          e2e/backupPage.spec.ts
+          e2e/freshBackupRestore.spec.ts
           e2e/recoverableBackup.spec.ts e2e/libraryRecovery.spec.ts
           e2e/databaseRoundtrip.spec.ts --project=${{ matrix.browser }} --workers=2
       - uses: actions/upload-artifact@v4

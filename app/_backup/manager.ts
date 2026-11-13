@@ -30,7 +30,8 @@ import {
   Manifest
 } from './format'
 import { compatibilityExport, importLegacyDexie } from './legacyDexie'
-import { assertHeadroom, storageStatus } from './storage'
+import { assertHeadroom, storageStatus, restoreSpaceRequired } from './storage'
+import { assertBackupFilesAvailable } from './errors'
 
 export interface BackupOptions {
   storage: Storage
@@ -65,6 +66,21 @@ export interface PrepareOptions {
   includeCredentials?: boolean
   signal?: AbortSignal
   onProgress?: (progress: Progress) => void
+}
+export interface BackupInventory {
+  id: string
+  createdAt: string
+  records: number
+  images: number
+  includeCredentials: boolean
+  files: {
+    name: string
+    size: number
+    label: string
+    requested: boolean
+    verified: boolean
+  }[]
+  complete: boolean
 }
 export interface BackupHandoff {
   id: string
@@ -636,6 +652,30 @@ export class BackupManager {
     }
     return new File(blobs, name, { type: 'application/octet-stream' })
   }
+  async inventory(id: string): Promise<BackupInventory> {
+    const job = await this.preparedJob(id)
+    const status = this.handoffStatus(job)
+    return {
+      id,
+      createdAt: job.createdAt,
+      records: job.records,
+      images:
+        job.manifest.tables.find(
+          (table: Manifest['tables'][number]) => table.name === 'completed'
+        )?.count || 0,
+      includeCredentials: job.manifest.credentialsIncluded === true,
+      complete: status.complete,
+      files: status.files.map((entry, index) => ({
+        ...entry,
+        size:
+          index === 0
+            ? new TextEncoder().encode(JSON.stringify(job.manifest, null, 2))
+                .byteLength
+            : job.manifest.parts[index - 1].size,
+        label: index === 0 ? 'manifest' : 'part ' + index
+      }))
+    }
+  }
   async files(id: string): Promise<File[]> {
     const job = await this.preparedJob(id),
       status = this.handoffStatus(job),
@@ -649,6 +689,7 @@ export class BackupManager {
     files: File[],
     signal?: AbortSignal
   ): Promise<BackupHandoff> {
+    assertBackupFilesAvailable(files)
     return this.exclusive(
       'Verifying saved backup files',
       async () => {
@@ -852,9 +893,9 @@ export class BackupManager {
     files: Blob[],
     options: RestoreOptions
   ): Promise<RestoreReport> {
+    assertBackupFilesAvailable(files)
     await assertHeadroom(
-      files.reduce((bytes, file) => bytes + file.size, 0) * 1.5 +
-        32 * 1024 * 1024
+      restoreSpaceRequired(files.reduce((bytes, file) => bytes + file.size, 0))
     )
     if (files.some((f) => (f as File).name?.endsWith('.manifest.json')))
       return this.restoreBundle(files, options)

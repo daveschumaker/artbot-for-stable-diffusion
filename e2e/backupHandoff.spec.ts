@@ -1,3 +1,8 @@
+import {
+  chooseVerificationFiles,
+  backupEntries,
+  selectBackupFile
+} from './backupUi'
 import { expect, test, Page } from '@playwright/test'
 import { finishFixtureSetup, mockBackend, trackPageErrors } from './helpers'
 
@@ -24,9 +29,13 @@ test('saved-file batches survive cold reopen and the home page leads back to the
     return page
   }
   const save = async (page: Page, name: RegExp) => {
+    const label = name.source.includes('manifest')
+      ? 'manifest'
+      : 'part ' + name.source.match(/part (\d+)/)![1]
+    const button = await selectBackupFile(page, label)
     const [download] = await Promise.all([
       page.waitForEvent('download'),
-      page.getByRole('button', { name }).click()
+      button.click()
     ])
     const path = info.outputPath(download.suggestedFilename())
     await download.saveAs(path)
@@ -54,14 +63,10 @@ test('saved-file batches survive cold reopen and the home page leads back to the
     await expect(
       page.getByText('Prepared locally.', { exact: false })
     ).toBeVisible({ timeout: 90000 })
-    const fileCount = await page
-      .getByRole('button', { name: /^Save (manifest|part \d+)/ })
-      .count()
+    const fileCount = await backupEntries(page).count()
     expect(fileCount).toBeGreaterThan(2)
     const paths = [await save(page, /^Save manifest \(/)]
-    await page
-      .getByLabel('Verify saved backup', { exact: true })
-      .setInputFiles(paths)
+    await chooseVerificationFiles(page, paths)
     await expect(
       page.getByText(`Verified 1 of ${fileCount} saved files.`, {
         exact: false
@@ -76,9 +81,7 @@ test('saved-file batches survive cold reopen and the home page leads back to the
       path: info.outputPath('partial-verification.png'),
       fullPage: true
     })
-    const originalNames = await page
-      .getByRole('button', { name: /^Save (manifest|part \d+)/ })
-      .allTextContents()
+    const originalNames = await backupEntries(page).allTextContents()
     await finishFixtureSetup(page)
     await context.close()
     context = await playwright[browserName].launchPersistentContext(profile, {
@@ -108,17 +111,11 @@ test('saved-file batches survive cold reopen and the home page leads back to the
     await expect(
       page.getByText(`1 of ${fileCount} saved files verified`, { exact: false })
     ).toBeVisible()
-    expect(
-      await page
-        .getByRole('button', { name: /^Save (manifest|part \d+)/ })
-        .allTextContents()
-    ).toEqual(originalNames)
+    expect(await backupEntries(page).allTextContents()).toEqual(originalNames)
     for (let i = 1; i < fileCount; i++) {
       const path = await save(page, new RegExp(`^Save part ${i} \\(`))
       paths.push(path)
-      await page
-        .getByLabel('Verify saved backup', { exact: true })
-        .setInputFiles(path)
+      await chooseVerificationFiles(page, path)
       if (i < fileCount - 1)
         await expect(
           page.getByText(`Verified ${i + 1} of ${fileCount} saved files.`, {

@@ -50,6 +50,14 @@ coverage and the remaining physical-device acceptance checks.
 
 ## User workflow
 
+Settings guides preparation, saving and verification as separate stages. The
+inventory API reads manifest metadata; the page retains the small manifest or
+one selected data-part File. Load a part, then use a separate save/share tap to
+preserve native user activation. Restore previews the manifest and file inventory
+before enabling restore, without recording verification or replacing the engine's
+independent content checks. A shared page operation gate prevents overlapping
+backup, restore and image ZIP actions; cross-window exclusion stays in the engine.
+
 In Settings → Import / Export, choose **Prepare backup**. The default maximum
 part size is 8 MiB; 32 and 64 MiB are available. Save the manifest and **every**
 part into the same folder outside browser storage. On supported desktop browsers,
@@ -136,12 +144,17 @@ npm run typecheck
 npm run build
 E2E_PORT=34761 E2E_SKIP_BUILD=1 E2E_ALL_BROWSERS=1 npx playwright test \
   e2e/databaseRoundtrip.spec.ts e2e/recoverableBackup.spec.ts \
+  e2e/freshBackupRestore.spec.ts \
   e2e/deviceBackupProbe.spec.ts e2e/libraryRecovery.spec.ts --workers=3
 ```
 
 Use a free port; an explicit `E2E_PORT` refuses to reuse another server. Browser
 checks use isolated persistent profiles because ephemeral desktop WebKit Blob
 storage has failed independently of ArtBot. No Horde requests are sent.
+For native Files and recovery on a separate fresh installed PWA, use the
+[two-simulator runner](../scripts/ios-pwa/README.md). `npm run test:ios` builds an
+isolated artifact and automates setup, export, partial verification/relaunch,
+external-file transfer, fresh verification/restore, relaunch, rollback and cleanup.
 The multipart test defaults to 36 MiB of binary payloads, not thousands of tiny
 thumbnails. For a gigabyte-scale run:
 

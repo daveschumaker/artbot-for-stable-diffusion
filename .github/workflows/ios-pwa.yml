@@ -1,0 +1,43 @@
+name: Native iOS PWA backup
+
+# Run this before backup releases. Desktop fresh-install coverage also runs in
+# the normal PR browser matrix; native iOS uses its own macOS runner.
+on:
+  workflow_dispatch:
+
+jobs:
+  native-backup:
+    runs-on: macos-26
+    timeout-minutes: 40
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 26.13.1
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            scripts/ios-pwa/package-lock.json
+      - run: npm ci
+      - name: Install pinned Appium and XCUITest tools
+        timeout-minutes: 5
+        run: npm ci --prefix scripts/ios-pwa
+      - name: Native Files export and independent installed-PWA recovery
+        run: npm run test:ios -- --runtime com.apple.CoreSimulator.SimRuntime.iOS-26-5
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-ios-pwa-results
+          path: |
+            __local_db/ios-pwa-runs/**/report.json
+            __local_db/ios-pwa-runs/**/expected.json
+            __local_db/ios-pwa-runs/**/appium.log
+            __local_db/ios-pwa-runs/**/build.log
+            __local_db/ios-pwa-runs/**/application.log
+            __local_db/ios-pwa-runs/**/source/*.png
+            __local_db/ios-pwa-runs/**/source/*.xml
+            __local_db/ios-pwa-runs/**/destination/*.png
+            __local_db/ios-pwa-runs/**/destination/*.xml
+          retention-days: 7

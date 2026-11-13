@@ -8,7 +8,7 @@ import { isValidHttpUrl } from './validationUtils'
 import { hasPromptMatrix, promptMatrix } from './promptUtils'
 import AppSettings from 'app/_data-models/AppSettings'
 import { DEFAULT_SAMPLER_ARRAY } from '_constants'
-import { isiOS, isSafariBrowser } from './appUtils'
+import { isiOS, isSafariBrowser, downloadBlob } from './appUtils'
 import { fetchCompletedJobs } from './db'
 import { basePath } from 'BASE_PATH'
 import ImageParamsForApi, {
@@ -692,11 +692,7 @@ export const downloadImages = async ({
 
   callback({ done: true })
   const blob = await downloadZip([jsonDetails, ...fileArray]).blob()
-  const link = document.createElement('a')
-  link.href = URL.createObjectURL(blob)
-  link.download = zipFilename
-  link.click()
-  link.remove()
+  downloadBlob(blob, zipFilename)
 }
 
 // Resolves to false, after telling the user, if the image can't be downloaded.

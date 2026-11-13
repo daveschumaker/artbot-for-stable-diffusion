@@ -2,46 +2,64 @@
 import { useEffect, useRef, useState } from 'react'
 import Section from 'app/_components/Section'
 import { Button } from 'app/_components/Button'
-import { appBackup, withScreenAwake } from 'app/_backup'
+import { appBackup, previewBackup, withScreenAwake } from 'app/_backup'
+import type { RestorePreview } from 'app/_backup'
 import { selection } from 'app/_backup/platform'
 import { db } from 'app/_db/dexie'
+import { backupErrorMessage } from 'app/_backup/errors'
+import { useBackupOperation } from '../BackupOperations'
 
+const size = (bytes: number) =>
+  bytes >= 1073741824
+    ? (bytes / 1073741824).toFixed(1) + ' GB'
+    : (bytes / 1048576).toFixed(1) + ' MB'
 export default function ImportDatabase() {
-  const [files, setFiles] = useState<File[]>([]),
-    [busy, setBusy] = useState(false)
-  const [message, setMessage] = useState(''),
-    [attempts, setAttempts] = useState<any[]>([])
-  const [resumeId, setResumeId] = useState(''),
-    [keys, setKeys] = useState(false),
-    [hasKeys, setHasKeys] = useState(false)
-  const [canRollback, setCanRollback] = useState(false),
-    [activeId, setActiveId] = useState('')
+  const operation = useBackupOperation()
+  const [files, setFiles] = useState<File[]>([])
+  const [busy, setBusy] = useState(false)
+  const [preview, setPreview] = useState<RestorePreview | null>(null)
+  const [previewError, setPreviewError] = useState('')
+  const [message, setMessage] = useState('')
+  const [attempts, setAttempts] = useState<any[]>([])
+  const [resumeId, setResumeId] = useState('')
+  const [keys, setKeys] = useState(false)
+  const [canRollback, setCanRollback] = useState(false)
+  const [activeId, setActiveId] = useState('')
   const abort = useRef<AbortController | null>(null)
+  const generation = useRef(0)
+  const disabled = busy || !!operation.active
   const refresh = async () => {
     setAttempts(await appBackup().restoreAttempts())
     setCanRollback(!!selection()?.restoreId)
     setActiveId(selection()?.restoreId || '')
   }
   useEffect(() => {
-    refresh()
+    void refresh()
       .then(async () => {
         if (selection()?.restoreId) {
           const report = (await appBackup().restoreAttempts()).find(
             (a) => a.id === selection()?.restoreId
           )
           setMessage(
-            `ArtBot database imported! ${
-              report?.recovered ?? 0
-            } records restored, ${
-              report?.duplicates ?? 0
-            } duplicates skipped. The restored library was verified. Your previous library is retained below.`
+            'ArtBot database imported! ' +
+              (report?.recovered ?? 0) +
+              ' records restored, ' +
+              (report?.duplicates ?? 0) +
+              ' duplicates skipped. The restored library was verified. Your previous library is retained below.'
           )
         }
       })
-      .catch((e) => setMessage(e.message))
-    return () => abort.current?.abort()
+      .catch((error) => setMessage(backupErrorMessage(error)))
+    return () => {
+      abort.current?.abort()
+    }
   }, [])
-  const run = async (action: (signal: AbortSignal) => Promise<void>) => {
+  const run = async (
+    action: (signal: AbortSignal) => Promise<void>,
+    label = 'Restoring library'
+  ) => {
+    const release = operation.begin(label)
+    if (!release) return
     const controller = new AbortController()
     abort.current = controller
     setBusy(true)
@@ -51,70 +69,211 @@ export default function ImportDatabase() {
     document.addEventListener('visibilitychange', hidden)
     try {
       await withScreenAwake(() => action(controller.signal))
-    } catch (e) {
+    } catch (error) {
       setMessage(
-        `Unable to import this database. Your existing data has been kept. ${
-          (e as Error).message
-        }. Multipart restores can resume; legacy JSON restores restart safely.`
+        'Unable to import this database. Your existing data has been kept. ' +
+          backupErrorMessage(error) +
+          '. Multipart restores can resume; legacy JSON restores restart safely.'
       )
     } finally {
       document.removeEventListener('visibilitychange', hidden)
-      setBusy(false)
       abort.current = null
       await refresh().catch(() => {})
+      setBusy(false)
+      release()
     }
   }
+  const inspect = async (selected: File[]) => {
+    const release = operation.begin('Checking selected backup')
+    if (!release) return
+    const token = ++generation.current
+    const controller = new AbortController()
+    abort.current = controller
+    setBusy(true)
+    setFiles(selected)
+    setPreview(null)
+    setPreviewError('')
+    setKeys(false)
+    setMessage('Checking selected backup files…')
+    try {
+      const result = await previewBackup(selected, controller.signal)
+      if (token !== generation.current) return
+      setPreview(result)
+      setMessage(
+        result.issues.length
+          ? 'Unable to import this database. Your existing data has been kept. ' +
+              result.issues.join(' ')
+          : 'File list ready. File contents will be checked independently during restore.'
+      )
+    } catch (error) {
+      if (token !== generation.current) return
+      const detail = backupErrorMessage(error)
+      setPreviewError(detail)
+      setMessage(
+        'Unable to import this database. Your existing data has been kept. ' +
+          detail
+      )
+    } finally {
+      if (token === generation.current) {
+        abort.current = null
+        setBusy(false)
+      }
+      release()
+    }
+  }
+  const clearSelection = () => {
+    generation.current++
+    setFiles([])
+    setPreview(null)
+    setPreviewError('')
+    setKeys(false)
+    setMessage('')
+  }
+  const ready = !!preview && !preview.issues.length && !previewError
   return (
     <Section>
-      <h3 className="font-bold mb-2">Restore a library</h3>
-      <p className="text-sm mb-2">
-        Select a backup manifest and every part, or one legacy JSON file. ArtBot
-        builds and verifies a separate library before opening it. Your current
-        library stays available for rollback. Raw legacy image arrays merge into
-        a staged copy and report duplicates.
+      <h3 id="restore-library" className="font-bold text-xl mb-2 scroll-mt-24">
+        Restore a library
+      </h3>
+      <p className="text-sm mb-3">
+        Choose a complete backup to open as a separate library. Your current
+        library stays available for rollback, and restored image requests stay
+        paused.
       </p>
-      <p className="text-sm mb-2">
-        Allow room for both libraries. Restored image requests stay paused until
-        you choose to resume them.
-      </p>
-      <label htmlFor="file-upload">Choose backup files</label>
+      <label htmlFor="file-upload" className="text-sm font-bold">
+        Choose backup files
+      </label>
       <input
         id="file-upload"
         aria-label="Choose backup files"
-        className="block my-2"
+        className="block my-3 max-w-full"
         type="file"
         multiple
-        disabled={busy}
-        onChange={async (e) => {
-          const selected = [...(e.target.files || [])]
-          setFiles(selected)
-          setHasKeys(false)
-          setKeys(false)
-          const manifest = selected.find((file) =>
-            file.name.endsWith('.manifest.json')
-          )
-          try {
-            if (manifest && manifest.size <= 1048576)
-              setHasKeys(
-                JSON.parse(await manifest.text()).credentialsIncluded === true
-              )
-          } catch {
-            setMessage('The manifest is unreadable. Choose a complete backup.')
-          }
+        disabled={disabled}
+        onClick={(e) => {
+          e.currentTarget.value = ''
+          clearSelection()
+        }}
+        onChange={(e) => {
+          const selected = [...(e.currentTarget.files || [])]
+          if (selected.length) void inspect(selected)
         }}
       />
       {!!files.length && (
-        <p className="text-sm">
-          {files.length} files selected
-          {resumeId ? ' to resume the chosen restore' : ''}.
-        </p>
+        <div
+          role="region"
+          aria-label="Restore preview"
+          data-backup-preflight={
+            busy ? 'checking' : ready ? 'ready' : 'blocked'
+          }
+          className="rounded-lg border border-gray-300 dark:border-gray-700 p-4 my-4 text-sm"
+        >
+          <h4 className="font-bold mb-3">Selected backup</h4>
+          <p>
+            {files.length} files selected
+            {resumeId ? ' to resume the chosen restore' : ''}.
+          </p>
+          {!preview && !previewError && <p>Reading the file list…</p>}
+          {previewError && <p className="my-2">{previewError}</p>}
+          {previewError ? (
+            <Button
+              disabled={disabled}
+              onClick={() => document.getElementById('file-upload')?.click()}
+            >
+              Choose backup files again
+            </Button>
+          ) : (
+            !!preview?.issues.length && (
+              <Button disabled={disabled} onClick={() => void inspect(files)}>
+                Check files again
+              </Button>
+            )
+          )}
+          {preview && (
+            <>
+              <dl className="grid grid-cols-2 gap-2 my-3">
+                <dt>Format</dt>
+                <dd>
+                  {preview.format === 'multipart'
+                    ? 'ArtBot backup v1'
+                    : 'Legacy JSON'}
+                </dd>
+                <dt>Created</dt>
+                <dd>
+                  {preview.createdAt &&
+                  Number.isFinite(Date.parse(preview.createdAt))
+                    ? new Date(preview.createdAt).toLocaleString()
+                    : 'Not recorded'}
+                </dd>
+                <dt>Images</dt>
+                <dd>{preview.images ?? 'Counted during restore'}</dd>
+                {preview.records !== undefined && (
+                  <>
+                    <dt>Total records</dt>
+                    <dd>{preview.records}</dd>
+                  </>
+                )}
+                {preview.format === 'multipart' && (
+                  <>
+                    <dt>Parts selected</dt>
+                    <dd>
+                      {preview.selectedParts} of {preview.parts}
+                    </dd>
+                  </>
+                )}
+                <dt>Estimated space needed</dt>
+                <dd>{size(preview.required)}</dd>
+                <dt>Estimated space available</dt>
+                <dd>
+                  {preview.available === undefined
+                    ? 'Unavailable'
+                    : size(preview.available)}
+                </dd>
+                <dt>API keys</dt>
+                <dd>
+                  {preview.credentials
+                    ? 'Included; restoring them is optional'
+                    : preview.format === 'legacy'
+                      ? 'This device keeps its keys'
+                      : 'Excluded from this backup'}
+                </dd>
+              </dl>
+              {!!preview.missing.length && (
+                <div className="my-3">
+                  <p className="font-bold">
+                    Missing {preview.missing.length} backup parts:
+                  </p>
+                  <ul className="list-disc pl-5 break-all">
+                    {preview.missing.map((name) => (
+                      <li key={name}>{name}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {!!preview.issues.length && (
+                <ul className="my-3 list-disc pl-5">
+                  {preview.issues.map((issue) => (
+                    <li key={issue}>{issue}</li>
+                  ))}
+                </ul>
+              )}
+              {ready && (
+                <p className="my-3">
+                  File list complete. Checksums and all records are checked
+                  during restore before the new library opens. Allow room for
+                  both libraries.
+                </p>
+              )}
+            </>
+          )}
+        </div>
       )}
-      {hasKeys && (
-        <label className="block my-2">
+      {preview?.credentials && (
+        <label className="block text-sm my-3">
           <input
             type="checkbox"
             checked={keys}
-            disabled={busy}
+            disabled={disabled}
             onChange={(e) => setKeys(e.target.checked)}
           />{' '}
           Restore API keys from this private backup (otherwise keep this
@@ -122,9 +281,9 @@ export default function ImportDatabase() {
         </label>
       )}
       <Button
-        disabled={busy || !files.length}
+        disabled={disabled || !ready}
         onClick={() =>
-          run(async (signal) => {
+          void run(async (signal) => {
             setMessage('Checking backup files…')
             await appBackup().restore(files, {
               resumeId: resumeId || undefined,
@@ -132,9 +291,11 @@ export default function ImportDatabase() {
               signal,
               onProgress: (p) =>
                 setMessage(
-                  `${p.phase}: ${p.records}${
-                    p.total ? ` / ${p.total}` : ''
-                  } records`
+                  p.phase +
+                    ': ' +
+                    p.records +
+                    (p.total ? ' / ' + p.total : '') +
+                    ' records'
                 )
             })
             db.close()
@@ -147,21 +308,38 @@ export default function ImportDatabase() {
       {busy && (
         <Button onClick={() => abort.current?.abort()}>Pause restore</Button>
       )}
-      <p role="status" className="text-sm my-3">
+      <p role="status" aria-label="Restore status" className="text-sm my-3">
         {message}
       </p>
       {canRollback && (
+        <div className="my-4 rounded-lg border border-gray-300 dark:border-gray-700 p-4">
+          <h4 className="font-bold mb-2">Your previous library is available</h4>
+          <p className="text-sm mb-3">
+            Return to the library and preferences you used before this restore.
+          </p>
+          <Button
+            disabled={disabled}
+            onClick={() =>
+              void run(async () => {
+                await appBackup().rollback()
+                db.close()
+                window.location.reload()
+              }, 'Returning to previous library')
+            }
+          >
+            Return to previous library
+          </Button>
+        </div>
+      )}
+      {resumeId && (
         <Button
-          disabled={busy}
-          onClick={() =>
-            run(async () => {
-              await appBackup().rollback()
-              db.close()
-              window.location.reload()
-            })
-          }
+          disabled={disabled}
+          onClick={() => {
+            setResumeId('')
+            clearSelection()
+          }}
         >
-          Return to previous library
+          Cancel resume selection
         </Button>
       )}
       {attempts.some(
@@ -169,8 +347,15 @@ export default function ImportDatabase() {
           a.id !== activeId &&
           ['paused', 'failed', 'staging', 'verified'].includes(a.status)
       ) && (
-        <details className="my-3">
-          <summary>Incomplete restores</summary>
+        <details
+          className="my-4"
+          open={attempts.some(
+            (a) => a.id !== activeId && a.status === 'paused'
+          )}
+        >
+          <summary className="font-bold cursor-pointer">
+            Unfinished restores and cleanup
+          </summary>
           {attempts
             .filter(
               (a) =>
@@ -178,17 +363,17 @@ export default function ImportDatabase() {
                 ['paused', 'failed', 'staging', 'verified'].includes(a.status)
             )
             .map((a) => (
-              <div key={a.id} className="my-2 text-sm flex flex-wrap gap-2">
+              <div key={a.id} className="my-3 text-sm flex flex-wrap gap-2">
                 <span>
                   {new Date(a.createdAt).toLocaleString()} · {a.status} ·{' '}
                   {a.error}
                 </span>
                 {a.format === 'multipart' && a.status !== 'failed' && (
                   <Button
-                    disabled={busy}
+                    disabled={disabled}
                     onClick={() => {
                       setResumeId(a.id)
-                      setFiles([])
+                      clearSelection()
                       setMessage(
                         'Choose the same manifest and all parts, then resume restore.'
                       )
@@ -198,15 +383,15 @@ export default function ImportDatabase() {
                   </Button>
                 )}
                 <Button
-                  disabled={busy}
+                  disabled={disabled}
                   onClick={() =>
-                    run(async () => {
+                    void run(async () => {
                       await appBackup().discardAttempt(a.id)
+                      setResumeId('')
                       setMessage(
                         'Incomplete candidate removed. Your current library was kept.'
                       )
-                      setResumeId('')
-                    })
+                    }, 'Removing incomplete restore')
                   }
                 >
                   Remove incomplete restore

@@ -1,4 +1,5 @@
 import { blobChunks } from './streams'
+import { assertBackupFilesAvailable } from './errors'
 import { RecordDecoder, sha, hashJSON } from './codec'
 import type { DatabaseSchema } from './native'
 import { PERSISTENT_KEYS } from './platform'
@@ -47,20 +48,12 @@ export async function* jsonLines(
   if (buffer) throw new Error('Incomplete backup part')
 }
 
-export async function inspectBundle(files: Blob[], signal?: AbortSignal) {
-  const named = new Map<string, Blob>()
-  for (const file of files) {
-    const name = (file as File).name
-    if (!name || named.has(name))
-      throw new Error('Backup files must have unique filenames')
-    named.set(name, file)
-  }
-  const manifests = files.filter((f) =>
-    (f as File).name.endsWith('.manifest.json')
-  )
-  if (manifests.length !== 1 || manifests[0].size > 1024 * 1024)
+export async function readBackupManifest(file: Blob, signal?: AbortSignal) {
+  checkCancelled(signal)
+  assertBackupFilesAvailable([file])
+  if (file.size > 1024 * 1024)
     throw new Error('Select one complete backup manifest and all its parts')
-  const m: Manifest = JSON.parse(await manifests[0].text())
+  const m: Manifest = JSON.parse(await file.text())
   if (
     m.format !== 'artbot-backup' ||
     m.version !== 1 ||
@@ -132,13 +125,33 @@ export async function inspectBundle(files: Blob[], signal?: AbortSignal) {
   )
     throw new Error('Invalid backup manifest')
   if (
-    m.parts.length !== files.length - 1 ||
     new Set(m.parts.map((p) => p.name)).size !== m.parts.length ||
     new Set(m.tables.map((t) => t.name)).size !== m.tables.length
   )
     throw new Error('Missing, duplicate or unexpected backup files')
   if (!/^[a-f0-9]{64}$/.test(m.preferencesDigest))
     throw new Error('Invalid preferences digest')
+  checkCancelled(signal)
+  return m
+}
+
+export async function inspectBundle(files: Blob[], signal?: AbortSignal) {
+  assertBackupFilesAvailable(files)
+  const named = new Map<string, Blob>()
+  for (const file of files) {
+    const name = (file as File).name
+    if (!name || named.has(name))
+      throw new Error('Backup files must have unique filenames')
+    named.set(name, file)
+  }
+  const manifests = files.filter((f) =>
+    (f as File).name.endsWith('.manifest.json')
+  )
+  if (manifests.length !== 1 || manifests[0].size > 1024 * 1024)
+    throw new Error('Select one complete backup manifest and all its parts')
+  const m = await readBackupManifest(manifests[0], signal)
+  if (m.parts.length !== files.length - 1)
+    throw new Error('Missing, duplicate or unexpected backup files')
   for (const [i, part] of m.parts.entries()) {
     checkCancelled(signal)
     const file = named.get(part.name)
