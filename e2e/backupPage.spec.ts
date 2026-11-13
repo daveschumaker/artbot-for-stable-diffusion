@@ -194,10 +194,20 @@ test('zero-byte Files selections preserve the library and verification timestamp
     page.getByRole('status', { name: 'Restore status' })
   ).toContainText('ArtBot database imported!')
   expect((await current()).name).not.toBe(before.name)
+  // Keep the post-rollback document uninitialized briefly, as on a slower
+  // hosted runner. Audits must wait for the new database connection.
+  await page.route('**/_next/static/chunks/**', async (route) => {
+    await new Promise((resolve) => setTimeout(resolve, 300))
+    await route.continue()
+  })
   await page
     .getByRole('button', { name: 'Return to previous library', exact: true })
     .click()
-  await expect.poll(async () => (await current()).name).toBe(before.name)
+  await page.waitForFunction((name) => {
+    const database = (window as any)._artbotDb
+    return database?.name === name && database.isOpen()
+  }, before.name)
+  expect((await current()).name).toBe(before.name)
   expect((await current()).images).toBe(before.images)
 })
 
