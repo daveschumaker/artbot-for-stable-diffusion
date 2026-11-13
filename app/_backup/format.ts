@@ -29,7 +29,8 @@ export function checkCancelled(signal?: AbortSignal) {
 export async function* jsonLines(
   file: Blob,
   limit: number,
-  signal?: AbortSignal
+  signal?: AbortSignal,
+  onLine?: (bytes: number) => void
 ) {
   const decoder = new TextDecoder('utf-8', { fatal: true })
   let buffer = ''
@@ -40,7 +41,10 @@ export async function* jsonLines(
       if (index > limit) throw new Error('Backup record metadata is too large')
       const line = buffer.slice(0, index)
       buffer = buffer.slice(index + 1)
-      if (line) yield JSON.parse(line)
+      if (line) {
+        onLine?.(new TextEncoder().encode(line).byteLength + 1)
+        yield JSON.parse(line)
+      }
     }
     if (buffer.length > limit) throw new Error('Backup line is too large')
   }
@@ -180,16 +184,22 @@ export async function* bundleRecords(
   for (const table of bundle.manifest.tables)
     counts.set(table.name, { count: 0, digest: '' })
   let total = 0,
-    preferenceRecords = 0
+    preferenceRecords = 0,
+    recordBytes = 0
   for (const part of bundle.manifest.parts) {
     for await (const line of jsonLines(
       (await bundle.files.get(part.name))!,
       bundle.manifest.maxPartBytes,
-      signal
+      signal,
+      (bytes) => {
+        recordBytes += bytes
+      }
     )) {
       checkCancelled(signal)
       const row = await decoder.accept(line)
       if (!row) continue
+      const bytes = recordBytes
+      recordBytes = 0
       if (row.table === '@preferences') {
         if (
           ++preferenceRecords !== 1 ||
@@ -208,7 +218,7 @@ export async function* bundleRecords(
           )
         )
           throw new Error('Invalid saved preferences')
-        yield row
+        yield { ...row, bytes }
         continue
       }
       indexedDB.cmp(row.key, row.key)
@@ -217,7 +227,7 @@ export async function* bundleRecords(
       state.count++
       state.digest = await hashJSON([state.digest, row.fingerprint])
       total++
-      yield row
+      yield { ...row, bytes }
     }
   }
   decoder.finish()

@@ -26,6 +26,17 @@ export class UnavailableNativeFiles extends Error {
     this.files = files
   }
 }
+export class IncompleteNativeFiles extends Error {
+  constructor(expected, received) {
+    const missing = expected.filter((name) => !received.includes(name))
+    super('Native Files omitted selected files: ' + missing.join(', '))
+    this.name = 'IncompleteNativeFiles'
+    this.expected = expected
+    this.received = received
+    this.missing = missing
+    this.files = missing
+  }
+}
 
 export class Driver {
   constructor(server, artifacts, origin) {
@@ -446,11 +457,35 @@ export class Driver {
       'Files picker dismissed',
       async () => !(await this.exists(inside))
     )
-    await this.waitWeb(
-      'native FileList matches the requested files',
-      "return JSON.stringify([...document.querySelector('input[aria-label=\"'+arguments[0]+'\"]').files].map(file=>file.name).sort())===JSON.stringify(arguments[1])",
-      [input, [...names].sort()]
-    )
+    try {
+      await this.waitWeb(
+        'native FileList matches the requested files',
+        "return JSON.stringify([...document.querySelector('input[aria-label=\"'+arguments[0]+'\"]').files].map(file=>file.name).sort())===JSON.stringify(arguments[1])",
+        [input, [...names].sort()]
+      )
+    } catch (error) {
+      // A provider can omit a checked document entirely. Keep waiting above
+      // for asynchronous delivery; classify only a nonempty strict subset.
+      // Wrong/duplicate names and empty selections remain hard failures.
+      const delivered = await this.web(
+        "return [...document.querySelector('input[aria-label=\"'+arguments[0]+'\"]').files].map(file=>({name:file.name,size:file.size}))",
+        [input]
+      )
+      const received = delivered.map((file) => file.name)
+      if (
+        received.length > 0 &&
+        received.length < names.length &&
+        new Set(received).size === received.length &&
+        received.every((name) => names.includes(name))
+      ) {
+        const unavailable = delivered
+          .filter((file) => file.size === 0)
+          .map((file) => file.name)
+        if (unavailable.length) throw new UnavailableNativeFiles(unavailable)
+        throw new IncompleteNativeFiles(names, received)
+      }
+      throw error
+    }
     // Every native fixture is nonempty. Fail at the file-delivery boundary if
     // the provider supplies an unavailable file, rather than timing out later
     // waiting for a restore button that preview correctly keeps disabled.

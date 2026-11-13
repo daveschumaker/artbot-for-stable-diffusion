@@ -21,6 +21,7 @@ jobs:
             package-lock.json
             scripts/ios-pwa/package-lock.json
       - run: npm ci
+      - run: npm run test:ios:driver
       - name: Install pinned Appium and XCUITest tools
         timeout-minutes: 5
         run: npm ci --prefix scripts/ios-pwa

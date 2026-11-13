@@ -180,9 +180,10 @@ export default function ExportDatabase() {
     if (!release) return
     setBusy(true)
     const file = ready.file
+    let request: Promise<void> | undefined
     try {
       // No awaited database read before share: iOS needs this user gesture.
-      void appBackup()
+      request = appBackup()
         .noteSaveRequested(inventory.id, file.name)
         .catch(() => {})
       if (share) {
@@ -197,6 +198,12 @@ export default function ExportDatabase() {
         )
       }
     } catch (error) {
+      if ((error as Error).name === 'AbortError') {
+        await request
+        await appBackup()
+          .noteSaveCancelled(inventory.id, file.name)
+          .catch(() => {})
+      }
       setMessage(
         (error as Error).name === 'AbortError'
           ? 'Share cancelled. This file still needs a saved copy and verification.'
@@ -581,7 +588,7 @@ export default function ExportDatabase() {
               >
                 <span>
                   {new Date(job.createdAt).toLocaleString()} · {job.records}{' '}
-                  records · {job.status}
+                  records · {job.status} · {size(job.bytes || 0)} prepared
                 </span>
                 {job.status === 'complete' && (
                   <Button

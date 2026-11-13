@@ -101,14 +101,21 @@ Browser-side DOM access navigates and waits for a replacement Settings document
 with an open application database and ready file controls; it cannot satisfy that wait using the previous page's
 DOM. Saving and file selection use native dialogs. Each picker selection is checked against the exact
 requested filenames after native dismissal and asynchronous delivery. Every
-native fixture is nonempty, so zero-byte selections fail immediately at that
-boundary instead of timing out on a correctly disabled Restore button. Only that
-recognized error can enter the bounded UI recovery path: require reselection
-guidance in the affected panel, independently audit unchanged library/progress,
-then choose the files afresh. A second unavailable selection follows the displayed
-close/reopen guidance; a third fails. `providerRecoveries` records each event.
-Restore itself is never retried by this mechanism and all checksum checks remain
-mandatory. Native
+native fixture is nonempty. Zero-byte deliveries fail at the file boundary.
+A provider can also omit a checked document entirely: a recorded native picker
+showed all three files checked while its web FileList contained only the two
+readable parts. After waiting for asynchronous delivery, the adapter classifies
+only a nonempty strict subset as `IncompleteNativeFiles`; unexpected/duplicate
+names and empty selections remain hard failures.
+
+These two recognized delivery failures may enter the bounded UI recovery path:
+require the affected panel's unavailable-file or incomplete-set guidance, audit
+unchanged library/progress independently, then select the saved set afresh.
+A second delivery failure closes/reopens the app; a third fails the run.
+`providerRecoveries` records the failure kind, missing/received names when
+available, and each unchanged-state audit. Restore itself is never retried by
+this mechanism, every successful selection must deliver the complete requested
+FileList, and all checksum checks remain mandatory. Native
 selection screenshots are retained to distinguish picker/provider problems from
 verifier errors. The runner loads one prepared file before its separate share
 tap, and accepts missing-file rejection in the restore preview while requiring

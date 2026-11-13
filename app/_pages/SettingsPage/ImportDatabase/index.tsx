@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Section from 'app/_components/Section'
 import { Button } from 'app/_components/Button'
-import { appBackup, previewBackup, withScreenAwake } from 'app/_backup'
+import { appBackup, withScreenAwake } from 'app/_backup'
 import type { RestorePreview } from 'app/_backup'
 import { selection } from 'app/_backup/platform'
 import { db } from 'app/_db/dexie'
@@ -25,11 +25,15 @@ export default function ImportDatabase() {
   const [keys, setKeys] = useState(false)
   const [canRollback, setCanRollback] = useState(false)
   const [activeId, setActiveId] = useState('')
+  const [libraries, setLibraries] = useState<
+    Awaited<ReturnType<ReturnType<typeof appBackup>['retainedLibraries']>>
+  >([])
   const abort = useRef<AbortController | null>(null)
   const generation = useRef(0)
   const disabled = busy || !!operation.active
   const refresh = async () => {
     setAttempts(await appBackup().restoreAttempts())
+    setLibraries(await appBackup().retainedLibraries())
     setCanRollback(!!selection()?.restoreId)
     setActiveId(selection()?.restoreId || '')
   }
@@ -96,7 +100,10 @@ export default function ImportDatabase() {
     setKeys(false)
     setMessage('Checking selected backup files…')
     try {
-      const result = await previewBackup(selected, controller.signal)
+      const result = await appBackup().previewRestore(selected, {
+        signal: controller.signal,
+        resumeId: resumeId || undefined
+      })
       if (token !== generation.current) return
       setPreview(result)
       setMessage(
@@ -223,6 +230,12 @@ export default function ImportDatabase() {
                 )}
                 <dt>Estimated space needed</dt>
                 <dd>{size(preview.required)}</dd>
+                {preview.stagedBytes > 0 && (
+                  <>
+                    <dt>Already staged</dt>
+                    <dd>{size(preview.stagedBytes)}</dd>
+                  </>
+                )}
                 <dt>Estimated space available</dt>
                 <dd>
                   {preview.available === undefined
@@ -341,6 +354,50 @@ export default function ImportDatabase() {
         >
           Cancel resume selection
         </Button>
+      )}
+      {libraries.length > 0 && (
+        <details className="my-4">
+          <summary className="font-bold cursor-pointer">
+            Retained libraries ({libraries.length})
+          </summary>
+          <p className="text-sm my-3">
+            Previous libraries use additional browser storage. Libraries needed
+            by an active or recoverable restore are protected. Deleting a
+            retained library permanently removes its browser copy; keep a
+            verified external backup.
+          </p>
+          {libraries.map((library) => (
+            <div key={library.id} className="my-3 text-sm">
+              <p>
+                {new Date(library.createdAt).toLocaleString()} ·{' '}
+                {library.records} restored records
+                {library.bytes !== undefined
+                  ? ` · ${size(library.bytes)} backup payload`
+                  : ''}
+                {library.protected ? ' · Protected for recovery' : ''}
+              </p>
+              <Button
+                disabled={disabled || library.protected}
+                onClick={() => {
+                  if (
+                    !window.confirm(
+                      'Permanently delete this retained library? Its browser copy cannot be recovered. Keep a verified external backup first.'
+                    )
+                  )
+                    return
+                  void run(async () => {
+                    await appBackup().discardRetainedLibrary(library.id)
+                    setMessage(
+                      'Retained library removed. The active library and its rollback history were kept.'
+                    )
+                  }, 'Removing retained library')
+                }}
+              >
+                Delete retained library
+              </Button>
+            </div>
+          ))}
+        </details>
       )}
       {attempts.some(
         (a) =>

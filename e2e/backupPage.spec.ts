@@ -393,3 +393,319 @@ test('folder export streams a complete saved set sequentially without claiming v
     await page.evaluate(() => (window as any)._artbotDb.completed.count())
   ).toBe(1)
 })
+
+test('cancelled native sharing keeps the same file as the next save action', async ({
+  page
+}) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'canShare', {
+      configurable: true,
+      value: () => true
+    })
+    Object.defineProperty(navigator, 'share', {
+      configurable: true,
+      value: async () => {
+        throw new DOMException('Cancelled', 'AbortError')
+      }
+    })
+  })
+  await openLibrary(page)
+  await page
+    .getByRole('button', { name: 'Prepare backup', exact: true })
+    .click()
+  await expect(
+    page.getByText('Prepared locally.', { exact: false })
+  ).toBeVisible()
+  await page
+    .getByRole('button', { name: 'Share/save manifest', exact: true })
+    .click()
+  await expect(
+    page.getByRole('status', { name: 'Backup status' })
+  ).toContainText('Share cancelled')
+  await expect(
+    page.getByRole('region', { name: 'Backup file checklist' })
+  ).toContainText('Next: select and save manifest.')
+  await expect(
+    page.getByRole('status', { name: 'Saved-file verification progress' })
+  ).toContainText('0 of')
+})
+
+test('direct ZIP output streams images sequentially, reports skips, and can be cancelled', async ({
+  page
+}) => {
+  await page.addInitScript(() => {
+    ;(window as any).__zipReceipts = []
+    ;(window as any).showSaveFilePicker = async () => ({
+      createWritable: async () => {
+        const receipt = { bytes: 0, closed: false, aborted: false }
+        ;(window as any).__zipReceipts.push(receipt)
+        return new WritableStream({
+          async write(chunk) {
+            receipt.bytes += chunk.byteLength
+            if ((window as any).__slowZip)
+              await new Promise((resolve) => setTimeout(resolve, 200))
+          },
+          close() {
+            receipt.closed = true
+          },
+          abort() {
+            receipt.aborted = true
+          }
+        })
+      }
+    })
+  })
+  await openLibrary(page)
+  const image = (await createTestImage('png')).toString('base64')
+  await page.evaluate(async (image) => {
+    const table = (window as any)._artbotDb.completed
+    await table.clear()
+    await table.bulkAdd([
+      { jobId: 'first', prompt: 'first', timestamp: 1, base64String: image },
+      { jobId: 'missing', prompt: 'missing', timestamp: 2 },
+      { jobId: 'last', prompt: 'last', timestamp: 3, base64String: image }
+    ])
+  }, image)
+  // Reload to refresh the visible count, then observe the real table at its API boundary.
+  await page.reload()
+  await page.waitForFunction(() => (window as any)._artbotDb?.isOpen())
+  await page.evaluate(() => {
+    ;(window as any).__zipReads = []
+    const table = (window as any)._artbotDb.completed
+    const get = table.get.bind(table)
+    table.get = async (...args: any[]) => {
+      const row = await get(...args)
+      ;(window as any).__zipReads.push(row.jobId)
+      return row
+    }
+    table.toArray = () => {
+      throw new Error('ZIP must not materialize the image table')
+    }
+  })
+  await page.getByText('Download images', { exact: true }).click()
+  await page
+    .getByRole('button', { name: 'Save ZIP directly (1 - 3)', exact: true })
+    .click()
+  await expect(
+    page.getByRole('status', { name: 'Image download status' })
+  ).toContainText('2 images included; 1 skipped')
+  expect(await page.evaluate(() => (window as any).__zipReads)).toEqual([
+    'first',
+    'missing',
+    'last'
+  ])
+  expect(
+    await page.evaluate(() => (window as any).__zipReceipts[0])
+  ).toMatchObject({ closed: true, aborted: false })
+  await page.evaluate(() => {
+    ;(window as any).__slowZip = true
+  })
+  await page
+    .getByRole('button', { name: 'Save ZIP directly (1 - 3)', exact: true })
+    .click()
+  await page
+    .getByRole('button', { name: 'Cancel image ZIP', exact: true })
+    .click()
+  await expect(
+    page.getByRole('status', { name: 'Image download status' })
+  ).toContainText('cancelled')
+  await expect(
+    page.getByRole('button', { name: 'Prepare backup', exact: true })
+  ).toBeEnabled()
+  expect(
+    await page.evaluate(() => (window as any).__zipReceipts[1])
+  ).toMatchObject({ closed: false, aborted: true })
+})
+
+const frozenFiles = () => {
+  const fixture = JSON.parse(
+    readFileSync(path.join(__dirname, 'fixtures/backup-v1.json'), 'utf8')
+  )
+  return fixture.files.map((file: any) => ({
+    name: file.name,
+    mimeType: 'application/octet-stream',
+    buffer: Buffer.from(file.base64, 'base64')
+  }))
+}
+
+test('restore preview and activation credit a committed checkpoint when only remaining storage fits', async ({
+  page
+}) => {
+  await openLibrary(page)
+  const files = frozenFiles()
+  await chooseRestoreFiles(page, files)
+  await page.evaluate(() => {
+    const set = Storage.prototype.setItem
+    Storage.prototype.setItem = function (key, value) {
+      if (key === 'ArtBotLibrarySelection') {
+        Storage.prototype.setItem = set
+        throw new DOMException(
+          'Simulated selection quota',
+          'QuotaExceededError'
+        )
+      }
+      return set.call(this, key, value)
+    }
+  })
+  await page
+    .getByRole('button', { name: 'Restore library', exact: true })
+    .click()
+  await expect(
+    page.getByRole('status', { name: 'Restore status' })
+  ).toContainText('Unable to import')
+  expect(await page.evaluate(() => (window as any)._artbotDb.name)).toBe(
+    'imageHorde'
+  )
+  await page.evaluate(
+    async (total) => {
+      const request = <T>(request: IDBRequest<T>) =>
+        new Promise<T>((resolve, reject) => {
+          request.onsuccess = () => resolve(request.result)
+          request.onerror = () => reject(request.error)
+        })
+      const database = await request(indexedDB.open('ArtBotBackupCatalog'))
+      const attempts: any[] = await request(
+        database.transaction('restores').objectStore('restores').getAll()
+      )
+      database.close()
+      const attempt = attempts.find((attempt) => attempt.status === 'verified')
+      if (!attempt?.stagedBytes) throw new Error('No committed checkpoint')
+      const usage = 1024 * 1024 * 1024
+      const available =
+        32 * 1024 * 1024 + 1.5 * (total - attempt.stagedBytes / 2)
+      Object.defineProperty(navigator, 'storage', {
+        configurable: true,
+        value: {
+          estimate: async () => ({ usage, quota: usage + available }),
+          persisted: async () => false
+        }
+      })
+    },
+    files.reduce((bytes: number, file: any) => bytes + file.buffer.length, 0)
+  )
+  await page
+    .getByText('Unfinished restores and cleanup', { exact: true })
+    .click()
+  await page
+    .getByRole('button', { name: 'Choose files to resume', exact: true })
+    .click()
+  await chooseRestoreFiles(page, files)
+  const preview = page.getByRole('region', { name: 'Restore preview' })
+  await expect(preview).toContainText('Already staged')
+  await expect(preview).not.toContainText('Not enough estimated storage')
+  await page
+    .getByRole('button', { name: 'Resume restore', exact: true })
+    .click()
+  await page.waitForFunction(() => {
+    const database = (window as any)._artbotDb
+    return database?.isOpen() && database.name !== 'imageHorde'
+  })
+  await page
+    .getByRole('button', { name: 'Return to previous library', exact: true })
+    .click()
+  await page.waitForFunction(
+    () =>
+      (window as any)._artbotDb?.isOpen() &&
+      (window as any)._artbotDb.name === 'imageHorde'
+  )
+  expect(
+    await page.evaluate(() => (window as any)._artbotDb.completed.count())
+  ).toBe(1)
+})
+
+test('retained-library cleanup confirms deletion and preserves the active library and its recovery chain', async ({
+  page
+}) => {
+  await openLibrary(page)
+  for (let index = 0; index < 2; index++) {
+    const before = await page.evaluate(() => (window as any)._artbotDb.name)
+    await chooseRestoreFiles(page, frozenFiles())
+    await page
+      .getByRole('button', { name: 'Restore library', exact: true })
+      .click()
+    await page.waitForFunction((name) => {
+      const database = (window as any)._artbotDb
+      return database?.isOpen() && database.name !== name
+    }, before)
+  }
+  for (let index = 0; index < 2; index++) {
+    const before = await page.evaluate(() => (window as any)._artbotDb.name)
+    await page
+      .getByRole('button', { name: 'Return to previous library', exact: true })
+      .click()
+    await page.waitForFunction((name) => {
+      const database = (window as any)._artbotDb
+      return database?.isOpen() && database.name !== name
+    }, before)
+  }
+  await page.getByText('Retained libraries (2)', { exact: true }).click()
+  await expect(
+    page.getByRole('button', {
+      name: 'Delete retained library',
+      disabled: true
+    })
+  ).toHaveCount(1)
+  const removable = page.getByRole('button', {
+    name: 'Delete retained library',
+    disabled: false
+  })
+  await expect(removable).toHaveCount(1)
+  page.once('dialog', (dialog) => dialog.dismiss())
+  await removable.click()
+  await expect(
+    page.getByText('Retained libraries (2)', { exact: true })
+  ).toBeVisible()
+  page.once('dialog', (dialog) => dialog.accept())
+  await removable.click()
+  await expect(
+    page.getByText('Retained libraries (1)', { exact: true })
+  ).toBeVisible()
+  expect(await page.evaluate(() => (window as any)._artbotDb.name)).toBe(
+    'imageHorde'
+  )
+  expect(
+    await page.evaluate(() => (window as any)._artbotDb.completed.count())
+  ).toBe(1)
+})
+
+test('a failed gallery ZIP closes its progress dialog and preserves the selection for retry', async ({
+  page
+}) => {
+  await openLibrary(page)
+  const image = (await createTestImage('png')).toString('base64')
+  await page.evaluate(async (image) => {
+    const table = (window as any)._artbotDb.completed
+    await table.clear()
+    await table.bulkAdd(
+      [1, 2].map((index) => ({
+        jobId: `zip-gallery-${index}`,
+        prompt: `ZIP gallery ${index}`,
+        timestamp: index,
+        width: 64,
+        height: 64,
+        base64String: image,
+        thumbnail: image
+      }))
+    )
+  }, image)
+  await page.goto('/artbot/images')
+  await expect(page.locator('a[href^="/artbot/image/"]')).toHaveCount(2)
+  await page.getByTitle('Select Images', { exact: true }).click()
+  await page.getByText('[ select all ]', { exact: true }).click()
+  await expect(page.getByText('selected (2)', { exact: true })).toBeVisible()
+  await page.evaluate(() => {
+    const fetch = window.fetch.bind(window)
+    window.fetch = (input, init) =>
+      String(input).startsWith('data:')
+        ? Promise.reject(new Error('Synthetic unreadable image bytes'))
+        : fetch(input, init)
+  })
+  await page.getByText('[ download ]', { exact: true }).click()
+  await expect(
+    page.getByRole('alert').filter({ hasText: 'Unable to download images.' })
+  ).toBeVisible()
+  await expect(
+    page.getByText('Downloading images', { exact: true })
+  ).toHaveCount(0)
+  await expect(page.getByText('selected (2)', { exact: true })).toBeVisible()
+})

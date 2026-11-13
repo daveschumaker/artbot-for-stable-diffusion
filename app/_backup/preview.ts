@@ -13,6 +13,7 @@ export interface RestorePreview {
   missing: string[]
   issues: string[]
   required: number
+  stagedBytes: number
   available?: number
 }
 
@@ -20,7 +21,8 @@ export interface RestorePreview {
 // checked by restore before activation. Never parse a whole legacy archive here.
 export async function previewBackup(
   files: File[],
-  signal?: AbortSignal
+  signal?: AbortSignal,
+  stagedBytes = 0
 ): Promise<RestorePreview> {
   checkCancelled(signal)
   assertBackupFilesAvailable(files)
@@ -35,6 +37,7 @@ export async function previewBackup(
     missing: [],
     issues: [],
     required: restoreSpaceRequired(bytes),
+    stagedBytes,
     available:
       status.usage !== undefined && status.quota !== undefined
         ? Math.max(0, status.quota - status.usage)
@@ -60,8 +63,12 @@ export async function previewBackup(
       .map((part) => part.name)
     result.selectedParts = result.parts - result.missing.length
     result.required = restoreSpaceRequired(
-      manifests[0].size +
-        manifest.parts.reduce((sum, part) => sum + part.size, 0)
+      Math.max(
+        0,
+        manifests[0].size +
+          manifest.parts.reduce((sum, part) => sum + part.size, 0) -
+          stagedBytes
+      )
     )
     if (
       named.size !== files.length ||

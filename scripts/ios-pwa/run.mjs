@@ -4,7 +4,11 @@ import { mkdir, mkdtemp, readFile, writeFile, copyFile } from 'node:fs/promises'
 import path from 'node:path'
 import { parseArgs } from 'node:util'
 import { createHash } from 'node:crypto'
-import { Driver, UnavailableNativeFiles } from './driver.mjs'
+import {
+  Driver,
+  UnavailableNativeFiles,
+  IncompleteNativeFiles
+} from './driver.mjs'
 import { receiveExternalFile } from './externalFiles.mjs'
 import {
   repo,
@@ -218,17 +222,30 @@ const chooseFiles = async (input, folder, names) => {
       }
       return
     } catch (error) {
-      if (!(error instanceof UnavailableNativeFiles)) throw error
+      if (
+        !(error instanceof UnavailableNativeFiles) &&
+        !(error instanceof IncompleteNativeFiles)
+      )
+        throw error
       const heading =
         input === 'Verify saved backup'
           ? 'Back up this library'
           : 'Restore a library'
       await driver.waitWeb(
         'unavailable-file guidance in the affected panel',
-        statusHas(heading, [
-          'empty or unavailable',
-          'A selected backup file could not be read.'
-        ])
+        statusHas(
+          heading,
+          error instanceof IncompleteNativeFiles
+            ? [
+                'Select one complete backup manifest and all its parts',
+                'Select the backup manifest and every listed part',
+                'Missing, duplicate or unexpected backup files.'
+              ]
+            : [
+                'empty or unavailable',
+                'A selected backup file could not be read.'
+              ]
+        )
       )
       const after = await driver.audit(auditLibrary)
       assert.deepEqual(
@@ -241,6 +258,9 @@ const chooseFiles = async (input, folder, names) => {
         input,
         folder,
         files: error.files,
+        kind: error.name,
+        expected: error.expected,
+        received: error.received,
         attempt: attempt + 1,
         libraryPreserved: true,
         verificationPreserved: true,
@@ -256,7 +276,7 @@ const chooseFiles = async (input, folder, names) => {
       await persist()
       if (attempt === 2) throw error
       console.log(
-        '[iOS PWA] Unavailable native files rejected safely; following the displayed reselection guidance'
+        '[iOS PWA] Native file-delivery failure rejected safely; selecting the complete saved set again'
       )
       if (attempt === 1) {
         await driver.reopen()

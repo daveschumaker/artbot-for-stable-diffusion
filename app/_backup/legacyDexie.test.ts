@@ -49,9 +49,9 @@ it('finishes fingerprint work before reading further legacy import chunks', asyn
   ])
   let active = 0,
     peak = 0
-  const actual = codec.encodeRecord
+  const actual = codec.fingerprintRecord
   const encoder = jest
-    .spyOn(codec, 'encodeRecord')
+    .spyOn(codec, 'fingerprintRecord')
     .mockImplementation(async (...args) => {
       const large = args[0] === 'completed' && !!(args[2] as any)?.base64String
       if (large) peak = Math.max(peak, ++active)

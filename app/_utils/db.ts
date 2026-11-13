@@ -432,6 +432,18 @@ export const fetchCompletedJobs = async ({
   }
 }
 
+// Read only primary keys up front; hold one image record at a time while exporting.
+export async function* iterateCompletedJobs({
+  offset = 0,
+  limit = 100,
+  sort = 'new'
+} = {}) {
+  let collection = db.completed.orderBy('timestamp')
+  if (sort !== 'old') collection = collection.reverse()
+  const keys = await collection.offset(offset).limit(limit).primaryKeys()
+  for (const key of keys) yield await db.completed.get(key)
+}
+
 export const fetchCompletedJobsById = async (ids = []) => {
   return await db?.completed
     .where('jobId')

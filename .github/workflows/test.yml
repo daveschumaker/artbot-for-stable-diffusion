@@ -21,6 +21,7 @@ jobs:
       - run: npx tsc --noEmit --incremental false
       - run: npm run lint
       - run: npx jest --ci
+      - run: npm run test:ios:driver
 
   e2e:
     # Pin the supported runner instead of following ubuntu-latest changes.
@@ -41,7 +42,7 @@ jobs:
         run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
       - uses: actions/upload-artifact@v4
-        if: failure()
+        if: always()
         with:
           name: playwright-traces
           path: test-results/
@@ -76,11 +77,21 @@ jobs:
           e2e/freshBackupRestore.spec.ts
           e2e/recoverableBackup.spec.ts e2e/libraryRecovery.spec.ts
           e2e/databaseRoundtrip.spec.ts --project=${{ matrix.browser }} --workers=2
+      - name: Repeat WebKit cold-reopen handoff without retries
+        if: matrix.browser == 'webkit'
+        env:
+          E2E_ALL_BROWSERS: '1'
+          E2E_SKIP_BUILD: '1'
+        run: >-
+          npx playwright test e2e/backupHandoff.spec.ts --project=webkit
+          --repeat-each=3 --retries=0 --workers=2 --output=webkit-handoff-results
       - uses: actions/upload-artifact@v4
-        if: failure()
+        if: always()
         with:
           name: backup-traces-${{ matrix.browser }}
-          path: test-results/
+          path: |
+            test-results/
+            webkit-handoff-results/
           retention-days: 7
 
   docker:

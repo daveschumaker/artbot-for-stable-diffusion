@@ -20,11 +20,39 @@ test('saved-file batches survive cold reopen and the home page leads back to the
     viewport
   })
   const errors: string[][] = []
+  const network: unknown[] = []
   const setup = async () => {
     const page = await context.newPage()
     // The reminder is an opt-in lab feature on local origins only.
     await page.addInitScript(() => localStorage.setItem('ArtBotBackupLab', '1'))
     errors.push(trackPageErrors(page))
+    page.on('requestfailed', (request) =>
+      network.push({
+        event: 'requestfailed',
+        time: Date.now(),
+        url: request.url(),
+        navigation: request.isNavigationRequest(),
+        type: request.resourceType(),
+        error: request.failure()?.errorText
+      })
+    )
+    page.on('pageerror', (error) =>
+      network.push({
+        event: 'pageerror',
+        time: Date.now(),
+        url: page.url(),
+        message: error.message,
+        stack: error.stack
+      })
+    )
+    page.on('framenavigated', (frame) => {
+      if (frame === page.mainFrame())
+        network.push({
+          event: 'navigation',
+          time: Date.now(),
+          url: frame.url()
+        })
+    })
     await mockBackend(page)
     return page
   }
@@ -174,6 +202,10 @@ test('saved-file batches survive cold reopen and the home page leads back to the
     ).toBe(1)
     expect(errors.flat()).toEqual([])
   } finally {
+    await info.attach('handoff-network-diagnostics', {
+      contentType: 'application/json',
+      body: Buffer.from(JSON.stringify(network, null, 2))
+    })
     await context.close()
   }
 })

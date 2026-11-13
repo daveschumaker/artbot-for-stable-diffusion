@@ -124,7 +124,10 @@ estimates are advisory. Quota errors leave the current library selected and the
 last durable checkpoint available; make space or remove an incomplete attempt
 before retrying. Removing a preparation does not delete downloaded copies or
 images. Previous libraries are retained for recovery and are not automatically
-pruned. Rollback removes no library. Storage eviction, Clear Website Data or
+pruned. Settings can explicitly remove an unreferenced retained library after
+confirmation; the engine protects the active/default library and libraries
+referenced by recoverable restores. Displayed backup payload sizes are not
+physical database disk measurements. Rollback removes no library. Storage eviction, Clear Website Data or
 removing an installed app can remove all browser-resident copies together.
 
 Keep the source idle and close older ArtBot windows while preparing. The new

@@ -22,13 +22,15 @@ import {
   request
 } from './native'
 import { legacyRows } from './legacy'
-import { encodeRecord, hashJSON, sha } from './codec'
+import { encodeRecord, fingerprintRecord, hashJSON, sha } from './codec'
 import {
   bundleRecords,
   checkCancelled,
   inspectBundle,
+  readBackupManifest,
   Manifest
 } from './format'
+import { previewBackup } from './preview'
 import { compatibilityExport, importLegacyDexie } from './legacyDexie'
 import { assertHeadroom, storageStatus, restoreSpaceRequired } from './storage'
 import { assertBackupFilesAvailable } from './errors'
@@ -278,11 +280,6 @@ export class BackupManager {
     )
   }
   private async prepareSnapshot(options: PrepareOptions): Promise<any> {
-    const capacity = await storageStatus()
-    await assertHeadroom(
-      (capacity.usage || 0) * 1.5 +
-        (options.maxPartBytes || 32 * 1024 * 1024) * 2
-    )
     const source = await openExisting(this.activeDatabase)
     try {
       const schema = await describe(source)
@@ -301,6 +298,13 @@ export class BackupManager {
           'The source library changed or this preparation is already complete. Start a new backup.'
         )
       }
+      const capacity = await storageStatus()
+      await assertHeadroom(
+        job
+          ? job.maxPartBytes * 2
+          : (capacity.usage || 0) * 1.5 +
+              (options.maxPartBytes || 32 * 1024 * 1024) * 2
+      )
       if (!job) {
         const maxPartBytes = options.maxPartBytes || 32 * 1024 * 1024,
           chunkBytes = options.chunkBytes || 128 * 1024
@@ -360,13 +364,18 @@ export class BackupManager {
               table.name,
               row.key,
               row.value,
-              job.chunkBytes
+              job.chunkBytes,
+              options.signal
             )
             if (encoded.lines.some((b) => b.size > job.maxPartBytes))
               throw new Error(
                 'A record has too much metadata for this part size. Choose a larger part size.'
               )
             const ordinal = job.records
+            // Existing checkpoints already occupy origin storage. Reserve only
+            // the next durable write and bounded part workspace on resume.
+            if (options.resumeId)
+              await assertHeadroom(encoded.bytes * 1.5 + job.maxPartBytes * 2)
             job.records++
             job.bytes += encoded.bytes
             job.lastKey = row.key
@@ -428,14 +437,13 @@ export class BackupManager {
               .get([job.id, ordinal++])
             if (
               !expected ||
-              (
-                await encodeRecord(
-                  table.name,
-                  row.key,
-                  row.value,
-                  job.chunkBytes
-                )
-              ).fingerprint !== expected.fingerprint
+              (await fingerprintRecord(
+                table.name,
+                row.key,
+                row.value,
+                job.chunkBytes,
+                options.signal
+              )) !== expected.fingerprint
             )
               throw new Error(
                 'The library changed during preparation. Start a new backup.'
@@ -454,7 +462,8 @@ export class BackupManager {
             appConfig: job.preferences,
             localPreferences: job.localPreferences
           },
-          job.chunkBytes
+          job.chunkBytes,
+          options.signal
         )
         if (preferences.lines.some((line) => line.size > job.maxPartBytes))
           throw new Error(
@@ -608,6 +617,16 @@ export class BackupManager {
     return this.handoffStatus(await this.preparedJob(id))
   }
   async noteSaveRequested(id: string, name: string) {
+    return this.recordSaveRequest(id, name, true)
+  }
+  async noteSaveCancelled(id: string, name: string) {
+    return this.recordSaveRequest(id, name, false)
+  }
+  private async recordSaveRequest(
+    id: string,
+    name: string,
+    requested: boolean
+  ) {
     const saved = await this.catalog.transaction(
       'rw',
       this.catalog.table('jobs'),
@@ -617,7 +636,11 @@ export class BackupManager {
           throw new Error('Unknown backup file')
         job.delivery = {
           ...job.delivery,
-          requested: [...new Set([...(job.delivery?.requested || []), name])]
+          requested: requested
+            ? [...new Set([...(job.delivery?.requested || []), name])]
+            : (job.delivery?.requested || []).filter(
+                (file: string) => file !== name
+              )
         }
         await this.catalog.table('jobs').put(job)
         return job
@@ -876,6 +899,44 @@ export class BackupManager {
       await this.catalog.table('restores').delete(id)
     })
   }
+  async retainedLibraries() {
+    const attempts = await this.restoreAttempts()
+    const active = this.activeDatabase
+    return attempts
+      .filter((attempt) => attempt.status === 'retained')
+      .map((attempt) => ({
+        id: attempt.id,
+        name: attempt.name,
+        createdAt: attempt.createdAt,
+        records: attempt.recovered || 0,
+        bytes: attempt.stagedBytes as number | undefined,
+        protected:
+          attempt.name === active ||
+          attempt.name === this.defaultDatabase ||
+          attempts.some(
+            (other) =>
+              other.id !== attempt.id && other.before?.name === attempt.name
+          )
+      }))
+  }
+  async discardRetainedLibrary(id: string) {
+    return this.exclusive('Removing a retained library', async () => {
+      const library = (await this.retainedLibraries()).find(
+        (item) => item.id === id
+      )
+      if (
+        !library ||
+        library.protected ||
+        library.name !== `artbot-restored-${id}`
+      )
+        throw new Error(
+          'This library is active or required for recovery and cannot be removed'
+        )
+      await this.checkLease()
+      await Dexie.delete(library.name)
+      await this.catalog.table('restores').delete(id)
+    })
+  }
   async exportCompatibility(onProgress?: (progress: any) => void) {
     return this.exclusive('Exporting compatibility JSON', () =>
       compatibilityExport(this.activeDatabase, onProgress)
@@ -889,16 +950,49 @@ export class BackupManager {
       this.restoreFiles(files, options)
     )
   }
+  private async resumableAttempt(manifest: Manifest, id?: string) {
+    if (!id) return undefined
+    const previous = await this.catalog.table('restores').get(id)
+    if (
+      !previous ||
+      previous.manifestHash !== (await hashJSON(manifest)) ||
+      previous.before.name !== this.activeDatabase ||
+      !['paused', 'staging', 'verified'].includes(previous.status)
+    )
+      throw new Error(
+        'This restore cannot be resumed with these files and the current library'
+      )
+    this.assertSelection(previous.before)
+    const total = manifest.parts.reduce((bytes, part) => bytes + part.size, 0)
+    if (
+      !Number.isSafeInteger(previous.stagedBytes) ||
+      previous.stagedBytes < 0 ||
+      previous.stagedBytes > total
+    )
+      previous.stagedBytes = 0
+    return previous
+  }
+  async previewRestore(files: File[], options: RestoreOptions = {}) {
+    const file = files.find((file) => file.name.endsWith('.manifest.json'))
+    const attempt =
+      options.resumeId && file
+        ? await this.resumableAttempt(
+            await readBackupManifest(file, options.signal),
+            options.resumeId
+          )
+        : undefined
+    return previewBackup(files, options.signal, attempt?.stagedBytes || 0)
+  }
   private async restoreFiles(
     files: Blob[],
     options: RestoreOptions
   ): Promise<RestoreReport> {
     assertBackupFilesAvailable(files)
+    if (files.some((f) => (f as File).name?.endsWith('.manifest.json')))
+      return this.restoreBundle(files, options)
     await assertHeadroom(
       restoreSpaceRequired(files.reduce((bytes, file) => bytes + file.size, 0))
     )
-    if (files.some((f) => (f as File).name?.endsWith('.manifest.json')))
-      return this.restoreBundle(files, options)
     if (files.length !== 1) throw new Error('Select one legacy recovery file')
     if ((await files[0].slice(0, 256).text()).trimStart().startsWith('{'))
       return this.restoreDexie(files[0], options)
@@ -932,8 +1026,14 @@ export class BackupManager {
           checkCancelled(options.signal)
           await this.checkLease()
           values.set(
-            (await encodeRecord('key', row.key, null)).fingerprint,
-            (await encodeRecord(table, row.key, row.value)).fingerprint
+            await fingerprintRecord('key', row.key, null),
+            await fingerprintRecord(
+              table,
+              row.key,
+              row.value,
+              undefined,
+              options.signal
+            )
           )
           await putRecord(target, table, row.value, row.key)
         }
@@ -1004,16 +1104,26 @@ export class BackupManager {
           .objectStore('completed').keyPath
         if (typeof keyPath === 'string' && !keyPath.includes('.'))
           row[keyPath] = key
-        const fingerprint = (await encodeRecord('completed', key, row))
-          .fingerprint
+        const fingerprint = await fingerprintRecord(
+          'completed',
+          key,
+          row,
+          undefined,
+          options.signal
+        )
         if (
-          (await encodeRecord('completed', key, saved)).fingerprint !==
-          fingerprint
+          (await fingerprintRecord(
+            'completed',
+            key,
+            saved,
+            undefined,
+            options.signal
+          )) !== fingerprint
         )
           throw new Error('Legacy image verification failed')
         expected
           .get('completed')!
-          .set((await encodeRecord('key', key, null)).fingerprint, fingerprint)
+          .set(await fingerprintRecord('key', key, null), fingerprint)
         recovered++
         options.onProgress?.({
           phase: 'recovering legacy images',
@@ -1033,9 +1143,14 @@ export class BackupManager {
             await this.checkLease()
             count++
             if (
-              values.get(
-                (await encodeRecord('key', row.key, null)).fingerprint
-              ) !== (await encodeRecord(table, row.key, row.value)).fingerprint
+              values.get(await fingerprintRecord('key', row.key, null)) !==
+              (await fingerprintRecord(
+                table,
+                row.key,
+                row.value,
+                undefined,
+                options.signal
+              ))
             )
               throw new Error('Library changed during legacy recovery')
           }
@@ -1086,20 +1201,19 @@ export class BackupManager {
   ): Promise<RestoreReport> {
     const bundle = await inspectBundle(files, options.signal)
     const manifestHash = await hashJSON(bundle.manifest)
-    const previous = options.resumeId
-      ? await this.catalog.table('restores').get(options.resumeId)
-      : undefined
-    if (
-      options.resumeId &&
-      (!previous ||
-        previous.manifestHash !== manifestHash ||
-        previous.before.name !== this.activeDatabase ||
-        !['paused', 'staging', 'verified'].includes(previous.status))
+    const previous = await this.resumableAttempt(
+      bundle.manifest,
+      options.resumeId
     )
-      throw new Error(
-        'This restore cannot be resumed with these files and the current library'
+    await assertHeadroom(
+      restoreSpaceRequired(
+        Math.max(
+          0,
+          files.reduce((bytes, file) => bytes + file.size, 0) -
+            (previous?.stagedBytes || 0)
+        )
       )
-    if (previous) this.assertSelection(previous.before)
+    )
     const id = previous?.id || crypto.randomUUID(),
       name = previous?.name || `artbot-restored-${id}`
     const before: Selection = this.captureSelection()
@@ -1110,13 +1224,15 @@ export class BackupManager {
       manifestHash,
       status: 'staging',
       createdAt: previous?.createdAt || Date.now(),
-      format: 'multipart'
+      format: 'multipart',
+      stagedBytes: previous?.stagedBytes || 0
     })
     const target = previous
       ? await openExisting(name)
       : await createDatabase(name, bundle.manifest.schema)
     try {
-      let recovered = 0
+      let recovered = 0,
+        stagedBytes = 0
       let savedPreferences:
         | {
             appConfig: Record<string, unknown>
@@ -1136,14 +1252,13 @@ export class BackupManager {
             target.transaction(row.table).objectStore(row.table).get(row.key)
           )
           if (
-            (
-              await encodeRecord(
-                row.table,
-                row.key,
-                existingValue,
-                bundle.manifest.chunkBytes
-              )
-            ).fingerprint !== row.fingerprint
+            (await fingerprintRecord(
+              row.table,
+              row.key,
+              existingValue,
+              bundle.manifest.chunkBytes,
+              options.signal
+            )) !== row.fingerprint
           )
             throw new Error('The partial restore changed; start a new restore')
         } else {
@@ -1157,6 +1272,13 @@ export class BackupManager {
             throw new Error('Restored primary key mismatch')
         }
         recovered++
+        stagedBytes += row.bytes
+        // Publish credit only after the native row has committed (or its
+        // existing fingerprint matched). A crash before this update undercredits
+        // the next resume; it never credits a write that did not finish.
+        await this.catalog.table('restores').update(id, {
+          stagedBytes: Math.max(previous?.stagedBytes || 0, stagedBytes)
+        })
         options.onProgress?.({
           phase: 'restoring',
           records: recovered,
@@ -1174,14 +1296,13 @@ export class BackupManager {
           state.count++
           state.digest = await hashJSON([
             state.digest,
-            (
-              await encodeRecord(
-                table.name,
-                row.key,
-                row.value,
-                bundle.manifest.chunkBytes
-              )
-            ).fingerprint
+            await fingerprintRecord(
+              table.name,
+              row.key,
+              row.value,
+              bundle.manifest.chunkBytes,
+              options.signal
+            )
           ])
         }
         if (state.count !== table.count || state.digest !== table.digest)

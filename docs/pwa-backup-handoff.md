@@ -74,6 +74,47 @@ This does not promise a particular memory ceiling or eliminate many-file saving.
   first and last images. ZIP downloads use the common Blob URL cleanup path.
   Footer links do not prefetch unrelated routes during this work.
 
+## Large libraries, remaining work and cleanup
+
+Resuming preparation uses the preparation's saved part limit, reserves bounded
+part workspace and checks headroom before each additional record write. It does
+not reserve another complete copy of origin storage that already includes the
+checkpoint. New preparations retain their conservative initial estimate.
+
+Multipart restore records serialized input bytes only after each native record
+commits or an existing record's fingerprint matches. Preview and restore credit
+that checkpoint only for the same manifest and source selection. Rechecking
+earlier rows cannot reduce committed credit. Older checkpoints without byte
+metadata retain the full estimate. Space estimates remain advisory; a real quota
+error still leaves the selected library intact and the candidate recoverable.
+
+Integrity audits use the same graph and digest algorithm as the v1 writer, but
+do not construct serialized backup Blobs or base64 strings for binary payloads.
+They still reread the source and committed candidate independently. Large-payload
+audits check cancellation between chunks. On this Mac, an alternating five-sample
+comparison with the preceding commit's encoder and an 8 MiB source measured
+median fingerprint time of 129 ms versus 1,073 ms, with matching fingerprints and
+zero serialized Blob allocations versus 72. This is a synthetic desktop result,
+not physical-iPhone memory or throughput acceptance.
+
+Advanced preparation management shows prepared byte counts. Retained-library
+management shows restored record counts and, where recorded, serialized backup
+payload sizes; these are not physical database disk measurements. Deletion
+requires confirmation and the engine refuses to delete the active/default
+library or a library referenced by another recoverable restore. Cleanup is
+explicit, never automatic, and rollback itself removes no library.
+
+Cancelled native sharing removes that file's save-request hint after the pending
+request is recorded, returning next-file guidance to the cancelled file without
+changing verified-copy progress. Saved and verified copies remain distinct.
+
+Image ZIP export reads primary keys first and one image at a time, converts each
+image only when the ZIP stream requests it, and reports included/skipped counts.
+On browsers exposing a native file destination, **Save ZIP directly** streams to
+that destination. Other browsers still materialize one final ZIP Blob for the
+download. Cancellation, backgrounding and unmount stop ZIP work; cancellation
+does not mark that range complete. ZIPs do not replace a complete library backup.
+
 ## Regression coverage
 
 - Manager tests cover reopen between batches, corruption, atomic rejection,
@@ -102,6 +143,16 @@ This does not promise a particular memory ceiling or eliminate many-file saving.
 - CI runs the focused handoff, multipart, startup recovery and database roundtrip
   suites in Chromium, Firefox and WebKit, in addition to the existing full
   Chromium suite. Browser installation is pinned by the package lockfile.
+- Storage tests cover committed-byte credit, pausing during revalidation,
+  insufficient remaining space, and the actual resume preview/activation UI.
+  Cleanup tests protect rollback dependencies and exercise rejected/confirmed
+  deletion. Browser checks also exercise sharing cancellation and sequential ZIP
+  streaming, skip reporting and cancellation through simulated platform APIs.
+- Failed-attempt traces are uploaded even when a retry succeeds. The cold-reopen
+  test attaches navigation, failed-request and page-error diagnostics; CI also
+  repeats it three times in WebKit with retries disabled. Eight local WebKit
+  control repetitions passed without retries; the earlier Linux prefetch
+  access-control error has not been reproduced locally and is not claimed fixed.
 
 ## iOS Simulator verification
 
@@ -270,3 +321,18 @@ and saved-file verification. These wait for enabled controls, preventing tests
 from assigning files into an input while the page operation gate disables it.
 This corrected a Firefox fixture failure without changing timeouts or weakening
 restore, checksum or page-error assertions.
+
+## Incomplete native delivery
+
+A later source/destination run saved and independently audited all three files,
+but the destination Files provider delivered only two parts after showing all
+three documents checked in the native picker. The verifier rejected the missing
+manifest and the destination stayed empty; no verification timestamp advanced.
+The native adapter now distinguishes that nonempty strict-subset delivery from
+zero-byte files, waits for asynchronous completion before classifying it, and
+requires the corresponding incomplete-set guidance plus unchanged-state audits
+before bounded reselection. Unexpected/duplicate names and empty selections are
+not retried. Complete file delivery, actual checksum checks, fresh restore and
+rollback remain required. Six Node adapter tests cover the delivery boundary
+without requiring Appium or an iOS runtime; they are simulated transport checks,
+not native device evidence.

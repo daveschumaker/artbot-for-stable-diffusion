@@ -857,3 +857,186 @@ it('does not lose a concurrent full-set verification when a slower batch finishe
     (await manager.handoff(job.id)).files.every((file) => file.verified)
   ).toBe(true)
 })
+
+describe('resume storage estimates', () => {
+  const MiB = 1024 * 1024
+  let descriptor: PropertyDescriptor | undefined
+  beforeEach(() => {
+    descriptor = Object.getOwnPropertyDescriptor(globalThis, 'navigator')
+  })
+  afterEach(() => {
+    if (descriptor) Object.defineProperty(globalThis, 'navigator', descriptor)
+    else Reflect.deleteProperty(globalThis, 'navigator')
+  })
+  const capacity = (available: number) => {
+    Object.defineProperty(globalThis, 'navigator', {
+      configurable: true,
+      value: {
+        storage: {
+          estimate: async () => ({
+            usage: 1024 * MiB,
+            quota: 1024 * MiB + available
+          })
+        }
+      }
+    })
+  }
+  it('finishes a checkpointed preparation without reserving another full source copy', async () => {
+    const controller = new AbortController()
+    await expect(
+      manager.prepare({
+        maxPartBytes: MiB,
+        signal: controller.signal,
+        onProgress: () => controller.abort()
+      })
+    ).rejects.toMatchObject({ name: 'AbortError' })
+    const [paused] = await manager.preparations()
+    capacity(4 * MiB)
+    const complete = await manager.prepare({ resumeId: paused.id })
+    expect(complete.status).toBe('complete')
+    expect(
+      (await manager.verify(await manager.files(complete.id))).records
+    ).toBe(1)
+  })
+  it('credits only committed restore bytes in both preview and engine', async () => {
+    await request(
+      source
+        .transaction('completed', 'readwrite')
+        .objectStore('completed')
+        .put({ id: 2, payload: new Blob([new Uint8Array(3 * MiB).fill(79)]) })
+    )
+    const job = await manager.prepare({ maxPartBytes: MiB })
+    const files = await manager.files(job.id)
+    const controller = new AbortController()
+    await expect(
+      manager.restore(files, {
+        signal: controller.signal,
+        onProgress: (p) => {
+          if (p.records === 2) controller.abort()
+        }
+      })
+    ).rejects.toMatchObject({ name: 'AbortError' })
+    const [attempt] = await manager.restoreAttempts()
+    capacity(34 * MiB)
+    const preview = await manager.previewRestore(files, {
+      resumeId: attempt.id
+    })
+    expect(preview.issues).toEqual([])
+    expect(preview.required).toBeLessThan(34 * MiB)
+    expect(
+      (await manager.restore(files, { resumeId: attempt.id })).verified
+    ).toBe(true)
+    await manager.rollback()
+    expect(manager.activeDatabase).toBe(source.name)
+  })
+  it('continues to block a resume when even its remaining work cannot fit', async () => {
+    const controller = new AbortController()
+    await expect(
+      manager.prepare({
+        maxPartBytes: MiB,
+        signal: controller.signal,
+        onProgress: () => controller.abort()
+      })
+    ).rejects.toMatchObject({ name: 'AbortError' })
+    const [paused] = await manager.preparations()
+    capacity(0)
+    await expect(manager.prepare({ resumeId: paused.id })).rejects.toThrow(
+      /storage/
+    )
+    expect(manager.activeDatabase).toBe(source.name)
+  })
+})
+
+it('returns a cancelled share to needs-saving without changing verified copies', async () => {
+  const job = await manager.prepare()
+  const inventory = await manager.inventory(job.id)
+  const manifest = inventory.files[0].name
+  await manager.noteSaveRequested(job.id, manifest)
+  expect((await manager.handoff(job.id)).files[0].requested).toBe(true)
+  await manager.noteSaveCancelled(job.id, manifest)
+  expect((await manager.handoff(job.id)).files[0]).toMatchObject({
+    requested: false,
+    verified: false
+  })
+  await manager.verifySavedFiles(job.id, [await manager.file(job.id, manifest)])
+  await manager.noteSaveCancelled(job.id, manifest)
+  expect((await manager.handoff(job.id)).files[0].verified).toBe(true)
+})
+
+it('removes only unreferenced retained libraries and protects active and complete rollback chains', async () => {
+  const job = await manager.prepare()
+  const files = await manager.files(job.id)
+  const first = await manager.restore(files)
+  const second = await manager.restore(files)
+  await expect(manager.discardRetainedLibrary(first.id)).rejects.toThrow(
+    /recovery/
+  )
+  await expect(manager.discardRetainedLibrary(second.id)).rejects.toThrow(
+    /recovery/
+  )
+  await manager.rollback()
+  await expect(manager.discardRetainedLibrary(first.id)).rejects.toThrow(
+    /recovery/
+  )
+  await manager.rollback()
+  const retained = await manager.retainedLibraries()
+  expect(retained.find((library) => library.id === first.id)?.protected).toBe(
+    true
+  )
+  expect(retained.find((library) => library.id === second.id)?.protected).toBe(
+    false
+  )
+  await manager.discardRetainedLibrary(second.id)
+  await manager.discardRetainedLibrary(first.id)
+  expect(await manager.retainedLibraries()).toEqual([])
+  expect(manager.activeDatabase).toBe(source.name)
+  expect(
+    await request(
+      source.transaction('completed').objectStore('completed').count()
+    )
+  ).toBe(1)
+  const names = (await indexedDB.databases()).map((database) => database.name)
+  expect(names).not.toContain(first.database)
+  expect(names).not.toContain(second.database)
+  expect((await manager.inventory(job.id)).id).toBe(job.id)
+})
+
+it('keeps committed storage credit when a resumed restore is paused while rechecking earlier rows', async () => {
+  await request(
+    source
+      .transaction('completed', 'readwrite')
+      .objectStore('completed')
+      .put({ id: 2, payload: new Blob([new Uint8Array(1024 * 1024)]) })
+  )
+  await request(
+    source
+      .transaction('completed', 'readwrite')
+      .objectStore('completed')
+      .put({ id: 3, prompt: 'remaining' })
+  )
+  const job = await manager.prepare()
+  const files = await manager.files(job.id)
+  const first = new AbortController()
+  await expect(
+    manager.restore(files, {
+      signal: first.signal,
+      onProgress: (p) => {
+        if (p.records === 2) first.abort()
+      }
+    })
+  ).rejects.toMatchObject({ name: 'AbortError' })
+  const [checkpoint] = await manager.restoreAttempts()
+  expect(checkpoint.stagedBytes).toBeGreaterThan(1024 * 1024)
+  const second = new AbortController()
+  await expect(
+    manager.restore(files, {
+      resumeId: checkpoint.id,
+      signal: second.signal,
+      onProgress: () => second.abort()
+    })
+  ).rejects.toMatchObject({ name: 'AbortError' })
+  expect((await manager.restoreAttempts())[0].stagedBytes).toBe(
+    checkpoint.stagedBytes
+  )
+  expect(manager.activeDatabase).toBe(source.name)
+})
