@@ -7,7 +7,7 @@ import PageTitle from 'app/_components/PageTitle'
 import { Button } from 'app/_components/Button'
 import ExportDatabase from '../ExportDatabase'
 import ImportDatabase from '../ImportDatabase'
-import { BackupOperations, useBackupOperation } from '../BackupOperations'
+import { useBackupOperation } from '../BackupOperations'
 import DevExportImport from '../_DevExportImport'
 import { withScreenAwake } from 'app/_backup'
 
@@ -160,27 +160,25 @@ function ImageDownloads() {
 }
 export default function ImportExportPanel() {
   return (
-    <BackupOperations>
-      <div className="space-y-8 pb-24">
-        <PageTitle as="h2">Import / Export Data</PageTitle>
-        <nav
-          aria-label="Backup and restore sections"
-          className="flex flex-wrap gap-4 text-sm font-bold text-teal-600 dark:text-teal-400"
-        >
-          <a href="#backup-library">Back up</a>
-          <a href="#restore-library">Restore</a>
-          <a href="#download-images">Image ZIPs</a>
-        </nav>
-        <ExportDatabase />
-        <ImportDatabase />
-        <ImageDownloads />
-        {process.env.NEXT_PUBLIC_ENVIRONMENT === 'development' && (
-          <details>
-            <summary>Developer tools</summary>
-            <DevExportImport />
-          </details>
-        )}
-      </div>
-    </BackupOperations>
+    <div className="space-y-8 pb-24">
+      <PageTitle as="h2">Import / Export Data</PageTitle>
+      <nav
+        aria-label="Backup and restore sections"
+        className="flex flex-wrap gap-4 text-sm font-bold text-teal-600 dark:text-teal-400"
+      >
+        <a href="#backup-library">Back up</a>
+        <a href="#restore-library">Restore</a>
+        <a href="#download-images">Image ZIPs</a>
+      </nav>
+      <ExportDatabase />
+      <ImportDatabase />
+      <ImageDownloads />
+      {process.env.NEXT_PUBLIC_ENVIRONMENT === 'development' && (
+        <details>
+          <summary>Developer tools</summary>
+          <DevExportImport />
+        </details>
+      )}
+    </div>
   )
 }

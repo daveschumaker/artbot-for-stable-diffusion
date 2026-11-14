@@ -76,7 +76,9 @@ jobs:
           e2e/backupPage.spec.ts
           e2e/freshBackupRestore.spec.ts
           e2e/recoverableBackup.spec.ts e2e/libraryRecovery.spec.ts
-          e2e/databaseRoundtrip.spec.ts --project=${{ matrix.browser }} --workers=2
+          e2e/databaseRoundtrip.spec.ts e2e/settingsExperience.spec.ts
+          e2e/settings.spec.ts e2e/hordeLookups.spec.ts
+          --project=${{ matrix.browser }} --workers=2
       - name: Repeat WebKit cold-reopen handoff without retries
         if: matrix.browser == 'webkit'
         env:

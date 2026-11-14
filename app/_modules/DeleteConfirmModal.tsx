@@ -6,16 +6,19 @@ interface IProps {
   deleteButtonText?: string
   onConfirmClick: () => void
   closeModal: () => void
+  disabled?: boolean
 }
 
 const DeleteConfirmModal = ({
   children = null,
   deleteButtonText = 'Delete',
   onConfirmClick = () => {},
-  closeModal = () => {}
+  closeModal = () => {},
+  disabled = false
 }: IProps) => {
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
+      if (disabled) return
       if (e.key === 'Escape') {
         closeModal()
       }
@@ -26,9 +29,7 @@ const DeleteConfirmModal = ({
     }
     window.addEventListener('keydown', handleKeyPress)
     return () => window.removeEventListener('keydown', handleKeyPress)
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [disabled, closeModal, onConfirmClick])
 
   return (
     <>
@@ -68,6 +69,7 @@ const DeleteConfirmModal = ({
           <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
             <button
               type="button"
+              disabled={disabled}
               className="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
               onClick={onConfirmClick}
             >
@@ -75,6 +77,7 @@ const DeleteConfirmModal = ({
             </button>
             <button
               type="button"
+              disabled={disabled}
               className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
               onClick={closeModal}
             >

@@ -14,7 +14,7 @@ const library = JSON.parse(
 test('the worker search boxes are at most 480px wide', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 })
   await mockBackend(page)
-  await page.goto('/artbot/settings')
+  await page.goto('/artbot/settings?panel=generation')
 
   const labels = page.getByText('Search by worker name or worker ID:')
   await expect(labels.first()).toBeVisible()

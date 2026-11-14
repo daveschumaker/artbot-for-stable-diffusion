@@ -271,6 +271,32 @@ export class BackupManager {
   async preparations() {
     return this.catalog.table('jobs').toArray()
   }
+  // Maintenance uses native writes under the same durable fence as backups.
+  // Checkpoint after asynchronous work and immediately before each write.
+  async maintainLibrary<T>(
+    label: string,
+    action: (
+      database: IDBDatabase,
+      checkpoint: () => Promise<void>
+    ) => Promise<T>,
+    signal?: AbortSignal
+  ) {
+    return this.exclusive(label, async () => {
+      const before = this.captureSelection()
+      const checkpoint = async () => {
+        checkCancelled(signal)
+        await this.checkLease()
+        this.assertSelection(before)
+      }
+      await checkpoint()
+      const database = await openExisting(before.name)
+      try {
+        return await action(database, checkpoint)
+      } finally {
+        database.close()
+      }
+    })
+  }
   async restoreAttempts() {
     return this.catalog.table('restores').toArray()
   }
