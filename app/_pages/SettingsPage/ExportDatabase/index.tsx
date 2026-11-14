@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Button } from 'app/_components/Button'
 import Section from 'app/_components/Section'
+import styles from './exportDatabase.module.css'
 import {
   appBackup,
   requestPersistence,
@@ -267,255 +268,292 @@ export default function ExportDatabase() {
   )
   const step = !inventory ? 1 : next ? 2 : 3
   return (
-    <Section>
-      <h3 id="backup-library" className="font-bold text-xl mb-2 scroll-mt-24">
+    <Section className={styles.backup}>
+      <h3 id="backup-library" className={styles.title}>
         Back up this library
       </h3>
-      <p className="text-sm mb-3">
-        Keep your images, uploaded sources, masks, favorites and preferences
-        together in one restorable backup. Keep ArtBot visible while it works.
+      <p className={styles.intro}>
+        Save your images, sources, masks, favorites and preferences together.
       </p>
-      <ol
-        aria-label="Backup steps"
-        className="grid grid-cols-3 gap-2 my-4 text-sm"
-      >
-        {['Prepare', 'Save files', 'Verify copies'].map((label, index) => (
+      <ol aria-label="Backup steps" className={styles.stepper}>
+        {['Prepare', 'Save files', 'Verify'].map((label, index) => (
           <li
             key={label}
             aria-current={
               step === index + 1 && !inventory?.complete ? 'step' : undefined
             }
-            className={
-              'rounded-lg border p-3 ' +
-              (step === index + 1
-                ? 'border-teal-500 font-bold'
-                : 'border-gray-300 dark:border-gray-700')
+            data-complete={
+              inventory?.complete || step > index + 1 ? true : undefined
             }
           >
-            <a
-              href={'#backup-' + ['prepare', 'save', 'verify'][index]}
-              className="block"
-            >
-              {index + 1}. {label}
+            <a href={'#backup-' + ['prepare', 'save', 'verify'][index]}>
+              <span className={styles.stepNumber} aria-hidden="true">
+                {index + 1}
+              </span>
+              <span>{label}</span>
             </a>
           </li>
         ))}
       </ol>
-      <div className="rounded-lg border border-gray-300 dark:border-gray-700 p-4 mb-4">
-        <h4 id="backup-prepare" className="font-bold mb-2 scroll-mt-24">
-          1. Prepare a backup
-        </h4>
-        <p className="text-sm mb-3">
-          Interrupted preparation can resume. Preparing alone does not create an
-          external saved copy.
-        </p>
-        <Button disabled={disabled} onClick={() => void prepare()}>
-          Prepare backup
-        </Button>
-        {jobs
-          .filter((job) => job.status !== 'complete')
-          .map((job) => (
-            <div key={job.id} className="my-3 text-sm">
-              <span>
-                {new Date(job.createdAt).toLocaleString()} · {job.status} ·{' '}
-                {job.records} records{' '}
-              </span>
-              <Button disabled={disabled} onClick={() => void prepare(job.id)}>
-                Resume preparation
-              </Button>
-            </div>
-          ))}
-      </div>
-      <p role="status" aria-label="Backup status" className="my-3 text-sm">
+      <p role="status" aria-label="Backup status" className={styles.status}>
         {message}
       </p>
       {busy && abort.current && (
         <Button onClick={() => abort.current?.abort()}>Pause operation</Button>
       )}
-      {inventory && (
+      <div className={styles.workflow}>
         <div
-          role="region"
-          aria-label="Backup file checklist"
-          className="rounded-lg border border-gray-300 dark:border-gray-700 p-4 my-4"
+          className={styles.stage}
+          data-active={step === 1 && !inventory?.complete ? true : undefined}
         >
-          <h4 id="backup-save" className="font-bold mb-2 scroll-mt-24">
-            2. Save every file into one folder
+          <h4 id="backup-prepare" className={styles.stageTitle}>
+            1. Prepare a backup
           </h4>
-          <p className="text-sm">
-            {inventory.images} images · {inventory.records} total records ·{' '}
-            {inventory.files.length} files ·{' '}
-            {size(inventory.files.reduce((sum, entry) => sum + entry.size, 0))}
+          <p className={styles.description}>
+            {inventory
+              ? 'Your backup is prepared. Continue with the files below.'
+              : 'Keep ArtBot visible. If interrupted, you can resume.'}
           </p>
-          <p className="text-sm my-2">
-            Prepared {new Date(inventory.createdAt).toLocaleString()}.{' '}
-            {inventory.includeCredentials
-              ? 'This prepared backup includes API keys. Keep it private.'
-              : 'API keys are excluded from this prepared backup.'}
-          </p>
-          <p className="text-sm font-bold my-2">
-            {inventory.complete
-              ? 'All saved copies verified.'
-              : next
-                ? 'Next: select and save ' + next.label + '.'
-                : 'Next: verify the copies saved to Files.'}
-          </p>
-          {next && next.name !== current?.name && (
-            <Button disabled={disabled} onClick={() => selectFile(next.name)}>
-              Load next file: {next.label}
-            </Button>
-          )}
-          {ready && current && (
-            <div className="rounded-lg bg-gray-100 dark:bg-gray-800 p-3 mt-3">
-              <p className="font-bold mb-1 capitalize">
-                Selected: {current.label}
-              </p>
-              <p className="text-xs break-all mb-3">{ready.file.name}</p>
-              <div className="flex flex-wrap gap-2">
+          <Button
+            className={
+              inventory ? styles.secondaryButton : styles.primaryButton
+            }
+            disabled={disabled}
+            onClick={() => void prepare()}
+          >
+            Prepare backup
+          </Button>
+          {jobs
+            .filter((job) => job.status !== 'complete')
+            .map((job) => (
+              <div key={job.id} className="my-3 text-sm">
+                <span>
+                  {new Date(job.createdAt).toLocaleString()} · {job.status} ·{' '}
+                  {job.records} records{' '}
+                </span>
                 <Button
                   disabled={disabled}
-                  onClick={() => void saveFile(false)}
+                  onClick={() => void prepare(job.id)}
                 >
-                  Save {current.label} ({size(current.size)})
+                  Resume preparation
                 </Button>
-                {typeof navigator !== 'undefined' &&
-                  navigator.canShare?.({ files: [ready.file] }) && (
+              </div>
+            ))}
+        </div>
+        <div
+          className={styles.stage}
+          data-active={step === 2 ? true : undefined}
+        >
+          <h4 id="backup-save" className={styles.stageTitle}>
+            2. Save every file into one folder
+          </h4>
+          {!inventory && (
+            <p className={styles.placeholder}>
+              Prepare a backup first. Your files will appear here.
+            </p>
+          )}
+          {inventory && (
+            <div role="region" aria-label="Backup file checklist">
+              <p className="text-sm">
+                {inventory.images} images · {inventory.records} total records ·{' '}
+                {inventory.files.length} files ·{' '}
+                {size(
+                  inventory.files.reduce((sum, entry) => sum + entry.size, 0)
+                )}
+              </p>
+              <p className={styles.description}>
+                Prepared {new Date(inventory.createdAt).toLocaleString()}.{' '}
+                {inventory.includeCredentials
+                  ? 'This prepared backup includes API keys. Keep it private.'
+                  : 'API keys are excluded from this prepared backup.'}
+              </p>
+              <p className={styles.nextAction}>
+                {inventory.complete
+                  ? 'All saved copies verified.'
+                  : next
+                    ? 'Next: select and save ' + next.label + '.'
+                    : 'Next: verify the copies saved to Files.'}
+              </p>
+              {next && next.name !== current?.name && (
+                <Button
+                  disabled={disabled}
+                  onClick={() => selectFile(next.name)}
+                >
+                  Load next file: {next.label}
+                </Button>
+              )}
+              {ready && current && (
+                <div className={styles.selectedFile}>
+                  <p className="font-bold mb-1 capitalize">
+                    Selected: {current.label}
+                  </p>
+                  <p className="text-xs break-all mb-3">{ready.file.name}</p>
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      className={styles.primaryButton}
+                      disabled={disabled}
+                      onClick={() => void saveFile(false)}
+                    >
+                      Save {current.label} ({size(current.size)})
+                    </Button>
+                    {typeof navigator !== 'undefined' &&
+                      navigator.canShare?.({ files: [ready.file] }) && (
+                        <Button
+                          disabled={disabled}
+                          onClick={() => void saveFile(true)}
+                        >
+                          Share/save {current.label}
+                        </Button>
+                      )}
+                  </div>
+                </div>
+              )}
+              <p className={styles.description}>
+                Save the manifest and every part. A save request still needs
+                verification in step 3.
+              </p>
+              <details className="my-3" open={inventory.files.length <= 5}>
+                <summary className="font-bold cursor-pointer py-2">
+                  All backup files
+                </summary>
+                <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+                  {inventory.files.map((entry) => (
+                    <li
+                      key={entry.name}
+                      data-backup-file-name={entry.name}
+                      data-backup-file-label={entry.label}
+                      className="py-3 flex flex-wrap gap-2 items-center"
+                    >
+                      <span className="font-bold capitalize">
+                        {entry.label}
+                      </span>
+                      <span className="text-sm">{size(entry.size)}</span>
+                      <span className="text-sm flex-1">
+                        {entry.verified
+                          ? 'Saved copy verified'
+                          : entry.requested
+                            ? 'Save requested (not verified)'
+                            : 'Needs saving'}
+                      </span>
+                      <Button
+                        disabled={disabled || current?.name === entry.name}
+                        onClick={() => selectFile(entry.name)}
+                      >
+                        Select {entry.label}
+                      </Button>
+                    </li>
+                  ))}
+                </ul>
+              </details>
+              {typeof window !== 'undefined' &&
+                'showDirectoryPicker' in window && (
+                  <div className="mt-3">
                     <Button
                       disabled={disabled}
-                      onClick={() => void saveFile(true)}
+                      onClick={() => void saveFolder()}
                     >
-                      Share/save {current.label}
+                      Save all to a folder
                     </Button>
-                  )}
-              </div>
-            </div>
-          )}
-          <details className="my-3" open={inventory.files.length <= 5}>
-            <summary className="font-bold cursor-pointer py-2">
-              All backup files
-            </summary>
-            <ul className="divide-y divide-gray-200 dark:divide-gray-700">
-              {inventory.files.map((entry) => (
-                <li
-                  key={entry.name}
-                  data-backup-file-name={entry.name}
-                  data-backup-file-label={entry.label}
-                  className="py-3 flex flex-wrap gap-2 items-center"
-                >
-                  <span className="font-bold capitalize">{entry.label}</span>
-                  <span className="text-sm">{size(entry.size)}</span>
-                  <span className="text-sm flex-1">
-                    {entry.verified
-                      ? 'Saved copy verified'
-                      : entry.requested
-                        ? 'Save requested (not verified)'
-                        : 'Needs saving'}
-                  </span>
-                  <Button
-                    disabled={disabled || current?.name === entry.name}
-                    onClick={() => selectFile(entry.name)}
-                  >
-                    Select {entry.label}
-                  </Button>
-                </li>
-              ))}
-            </ul>
-          </details>
-          {typeof window !== 'undefined' && 'showDirectoryPicker' in window && (
-            <div className="mt-3">
-              <Button disabled={disabled} onClick={() => void saveFolder()}>
-                Save all to a folder
-              </Button>
+                  </div>
+                )}
             </div>
           )}
         </div>
-      )}
-      <div className="rounded-lg border border-gray-300 dark:border-gray-700 p-4 my-4">
-        <h4 id="backup-verify" className="font-bold mb-2 scroll-mt-24">
-          3. Verify the saved copies
-        </h4>
-        {inventory && (
-          <p
-            role="status"
-            aria-label="Saved-file verification progress"
-            className="font-bold text-sm mb-2"
-          >
-            {verified} of {inventory.files.length} saved files verified
-            {inventory.complete
-              ? ' — backup verified.'
-              : '. You can verify a few files at a time; progress survives reopening ArtBot.'}
+        <div
+          className={styles.stage}
+          data-active={step === 3 && !inventory?.complete ? true : undefined}
+        >
+          <h4 id="backup-verify" className={styles.stageTitle}>
+            3. Verify the saved copies
+          </h4>
+          {inventory && (
+            <p
+              role="status"
+              aria-label="Saved-file verification progress"
+              className="font-bold text-sm mb-2"
+            >
+              {verified} of {inventory.files.length} saved files verified
+              {inventory.complete
+                ? ' — backup verified.'
+                : '. Progress is kept if you leave.'}
+            </p>
+          )}
+          <p className={styles.description}>
+            {inventory
+              ? 'Choose your saved copies from Files or Downloads. You can check a few files at a time.'
+              : 'Already have a saved backup? Choose its files to check them.'}
           </p>
-        )}
-        <p className="text-sm mb-3">
-          Choose copies from Files or Downloads. A save request does not prove a
-          file was saved. Check some files now and continue later, or select a
-          complete external backup.
-        </p>
-        <label className="block text-sm">
-          Verify saved backup (choose some or all saved files)
-          <input
-            aria-label="Verify saved backup"
-            type="file"
-            multiple
-            className="block my-2 max-w-full"
-            disabled={disabled}
-            onClick={(e) => {
-              e.currentTarget.value = ''
-            }}
-            onChange={(e) => {
-              const selected = [...(e.currentTarget.files || [])]
-              if (selected.length)
-                void run(async (signal) => {
-                  if (
-                    inventory &&
-                    selected.every((file) =>
-                      inventory.files.some((entry) => entry.name === file.name)
-                    )
-                  ) {
-                    const result = await appBackup().verifySavedFiles(
-                      inventory.id,
-                      selected,
-                      signal
-                    )
-                    setInventory(await appBackup().inventory(inventory.id))
-                    setMessage(
-                      result.complete
-                        ? 'Saved backup verified: ' +
-                            result.records +
-                            ' records, ' +
-                            (result.files.length - 1) +
-                            ' parts. Keep these files outside browser storage.' +
-                            (result.verificationRecorded
-                              ? ''
-                              : ' The local verification timestamp could not be saved.')
-                        : 'Verified ' +
-                            result.files.filter((file) => file.verified)
-                              .length +
-                            ' of ' +
-                            result.files.length +
-                            ' saved files. Select another batch to continue.'
-                    )
-                  } else {
-                    const result = await appBackup().verify(selected, signal)
-                    setMessage(
-                      'Saved backup verified: ' +
-                        result.records +
-                        ' records, ' +
-                        result.parts.length +
-                        ' parts. Keep these files outside browser storage.' +
-                        (result.verificationRecorded
-                          ? ''
-                          : ' The local verification timestamp could not be saved.')
-                    )
-                  }
-                }, 'Verifying saved files')
-            }}
-          />
-        </label>
-        <p className="text-xs mt-3">
-          Last saved-file verification: {lastVerified || 'none on this device'}.
-          This records when those copies were checked; later changes in Files
-          are not monitored.
-        </p>
+          <label className={styles.fileLabel}>
+            <span className="sr-only">Verify saved backup</span>
+            <input
+              aria-label="Verify saved backup"
+              type="file"
+              multiple
+              className={styles.fileInput}
+              disabled={disabled}
+              onClick={(e) => {
+                e.currentTarget.value = ''
+              }}
+              onChange={(e) => {
+                const selected = [...(e.currentTarget.files || [])]
+                if (selected.length)
+                  void run(async (signal) => {
+                    if (
+                      inventory &&
+                      selected.every((file) =>
+                        inventory.files.some(
+                          (entry) => entry.name === file.name
+                        )
+                      )
+                    ) {
+                      const result = await appBackup().verifySavedFiles(
+                        inventory.id,
+                        selected,
+                        signal
+                      )
+                      setInventory(await appBackup().inventory(inventory.id))
+                      setMessage(
+                        result.complete
+                          ? 'Saved backup verified: ' +
+                              result.records +
+                              ' records, ' +
+                              (result.files.length - 1) +
+                              ' parts. Keep these files outside browser storage.' +
+                              (result.verificationRecorded
+                                ? ''
+                                : ' The local verification timestamp could not be saved.')
+                          : 'Verified ' +
+                              result.files.filter((file) => file.verified)
+                                .length +
+                              ' of ' +
+                              result.files.length +
+                              ' saved files. Select another batch to continue.'
+                      )
+                    } else {
+                      const result = await appBackup().verify(selected, signal)
+                      setMessage(
+                        'Saved backup verified: ' +
+                          result.records +
+                          ' records, ' +
+                          result.parts.length +
+                          ' parts. Keep these files outside browser storage.' +
+                          (result.verificationRecorded
+                            ? ''
+                            : ' The local verification timestamp could not be saved.')
+                      )
+                    }
+                  }, 'Verifying saved files')
+              }}
+            />
+          </label>
+          <p className={styles.verificationNote}>
+            {lastVerified
+              ? 'Last checked: ' +
+                lastVerified +
+                '. Files are not monitored after this check.'
+              : 'No saved copies checked on this device yet.'}
+          </p>
+        </div>
       </div>
       <details className="my-4">
         <summary className="font-bold cursor-pointer">

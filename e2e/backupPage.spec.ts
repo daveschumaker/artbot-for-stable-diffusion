@@ -35,6 +35,65 @@ async function openLibrary(page: Page, bytes = 32) {
   await page.goto('/artbot/settings?panel=import-export')
 }
 
+test('backup presents every step in order before preparation and keeps the save step on reopen', async ({
+  page
+}, info) => {
+  await page.emulateMedia({ colorScheme: 'dark' })
+  await openLibrary(page)
+  const workflow = page
+    .getByRole('heading', { name: 'Back up this library', exact: true })
+    .locator('..')
+  await expect(workflow.locator('h4')).toHaveText([
+    '1. Prepare a backup',
+    '2. Save every file into one folder',
+    '3. Verify the saved copies'
+  ])
+  await expect(page.locator('#backup-save')).toBeVisible()
+  await expect(
+    page.getByText('Prepare a backup first. Your files will appear here.')
+  ).toBeVisible()
+  await expect(
+    page.getByLabel('Verify saved backup', { exact: true })
+  ).toBeEnabled()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+  await page.getByRole('link', { name: 'Back up', exact: true }).click()
+  const headingBox = await page.locator('#backup-library').boundingBox()
+  const headerBox = await page.getByRole('banner').boundingBox()
+  expect(headingBox!.y).toBeGreaterThanOrEqual(headerBox!.y + headerBox!.height)
+  await page.screenshot({
+    path: info.outputPath('backup-fresh-mobile-dark.png'),
+    fullPage: false
+  })
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth
+    )
+  ).toBe(true)
+  await page
+    .getByRole('button', { name: 'Prepare backup', exact: true })
+    .click()
+  await expect(
+    page.getByRole('region', { name: 'Backup file checklist' })
+  ).toBeVisible({ timeout: 90000 })
+  await expect(workflow.locator('h4')).toHaveText([
+    '1. Prepare a backup',
+    '2. Save every file into one folder',
+    '3. Verify the saved copies'
+  ])
+  await page.reload()
+  await expect(
+    page.getByRole('region', { name: 'Backup file checklist' })
+  ).toBeVisible()
+  await expect(
+    page.getByText('Prepare a backup first. Your files will appear here.')
+  ).toHaveCount(0)
+  await page.getByRole('link', { name: 'Back up', exact: true }).click()
+  await page.screenshot({
+    path: info.outputPath('backup-prepared-mobile-dark.png'),
+    fullPage: false
+  })
+})
+
 test('backup inventory opens without constructing data parts and loads only the selected part', async ({
   page
 }, info) => {
