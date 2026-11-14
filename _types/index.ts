@@ -77,6 +77,7 @@ export interface JobImageDetails {
 }
 
 export interface SelectPropsComponent {
+  inputId?: string
   className?: string
   formatOptionLabel?: (option: any, { context }: { context: any }) => any
   inputMode?: string

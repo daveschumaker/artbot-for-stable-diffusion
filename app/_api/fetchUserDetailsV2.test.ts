@@ -48,6 +48,24 @@ describe('user details during a network outage', () => {
     expect(Date.now() - start).toBe(5000)
   })
 
+  it('validates without publishing an account, then publishes the saved login without refetching', async () => {
+    const { validateApiKey, publishValidatedUser, fetchUserDetailsV2 } =
+      await import('./fetchUserDetailsV2')
+    const { setUserInfo } = await import('app/_store/userStore')
+    ;(fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: async () => ({ username: 'validated-account' })
+    })
+    const user = await validateApiKey('new-account-key')
+    expect(setUserInfo).not.toHaveBeenCalled()
+    publishValidatedUser('new-account-key', user)
+    await fetchUserDetailsV2('new-account-key')
+    expect(fetch).toHaveBeenCalledTimes(1)
+    expect(setUserInfo).toHaveBeenLastCalledWith(
+      expect.objectContaining({ username: 'validated-account' })
+    )
+  })
+
   it('applies a cached profile after switching accounts', async () => {
     const { fetchUserDetailsV2 } = await import('./fetchUserDetailsV2')
     const { setUserInfo } = await import('app/_store/userStore')

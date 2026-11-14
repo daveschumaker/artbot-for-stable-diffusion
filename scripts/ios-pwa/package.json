@@ -1,0 +1,12 @@
+{
+  "name": "artbot-ios-pwa-tests",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "^26.13.1"
+  },
+  "dependencies": {
+    "appium": "3.9.0",
+    "appium-xcuitest-driver": "12.22.8"
+  }
+}

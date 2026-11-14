@@ -1,9 +1,8 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useId } from 'react'
 import Section from 'app/_components/Section'
 import TextTooltipRow from 'app/_components/TextTooltipRow'
 import TooltipComponent from 'app/_components/TooltipComponent'
 import FlexRow from 'app/_components/FlexRow'
-import { generateRandomString } from 'app/_utils/appUtils'
 import Switch from 'app/_components/Switch'
 
 interface Props {
@@ -23,23 +22,27 @@ const InputSwitchV2 = ({
   moreInfoLink = null,
   tooltip
 }: Props) => {
-  const [tooltipId, setTooltipId] = useState<string | null>(null)
-
-  useEffect(() => {
-    setTooltipId(generateRandomString())
-  }, [label])
+  const tooltipId = useId()
+  const labelId = useId()
+  const descriptionId = useId()
+  const inputId = useId()
 
   return (
     <Section>
       <FlexRow gap={8}>
         <Switch
+          id={inputId}
           checked={checked ? true : false}
           disabled={disabled}
           onChange={handleSwitchToggle}
+          labelledBy={labelId}
+          describedBy={moreInfoLink ? descriptionId : undefined}
         />
         <div style={{ fontSize: '12px' }}>
           <TextTooltipRow>
-            {label}
+            <label id={labelId} htmlFor={inputId}>
+              {label}
+            </label>
             {tooltip && tooltipId && (
               <TooltipComponent tooltipId={tooltipId}>
                 {tooltip}
@@ -47,7 +50,9 @@ const InputSwitchV2 = ({
             )}
           </TextTooltipRow>
           {moreInfoLink && (
-            <div className="mt-1 mb-2 text-xs">{moreInfoLink}</div>
+            <div id={descriptionId} className="mt-1 mb-2 text-xs">
+              {moreInfoLink}
+            </div>
           )}
         </div>
       </FlexRow>

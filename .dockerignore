@@ -4,6 +4,7 @@
 
 .git
 node_modules
+scripts/ios-pwa/node_modules
 build
 build_info.json
 __local_db

@@ -2,12 +2,15 @@
 import PageTitle from 'app/_components/PageTitle'
 import ExportDatabase from '../ExportDatabase'
 import ImportDatabase from '../ImportDatabase'
+import { BackupOperations } from '../BackupOperations'
 export default function LastResort() {
   return (
-    <div>
-      <PageTitle>Backup / Recovery</PageTitle>
-      <ImportDatabase />
-      <ExportDatabase />
-    </div>
+    <BackupOperations>
+      <div>
+        <PageTitle>Backup / Recovery</PageTitle>
+        <ExportDatabase />
+        <ImportDatabase />
+      </div>
+    </BackupOperations>
   )
 }

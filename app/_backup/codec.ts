@@ -58,8 +58,33 @@ export async function encodeRecord(
   table: string,
   key: IDBValidKey,
   value: unknown,
-  chunkBytes = 128 * 1024
+  chunkBytes = 128 * 1024,
+  signal?: AbortSignal
 ) {
+  return encodeGraph(table, key, value, chunkBytes, true, signal)
+}
+export async function fingerprintRecord(
+  table: string,
+  key: IDBValidKey,
+  value: unknown,
+  chunkBytes = 128 * 1024,
+  signal?: AbortSignal
+) {
+  return (await encodeGraph(table, key, value, chunkBytes, false, signal))
+    .fingerprint
+}
+async function encodeGraph(
+  table: string,
+  key: IDBValidKey,
+  value: unknown,
+  chunkBytes: number,
+  retainLines: boolean,
+  signal?: AbortSignal
+) {
+  const checkCancelled = () => {
+    if (signal?.aborted)
+      throw new DOMException('Backup operation paused', 'AbortError')
+  }
   const nodes: Node[] = [],
     seen = new Map<object, number>(),
     lines: Blob[] = []
@@ -72,7 +97,7 @@ export async function encodeRecord(
     let offset = 0
     let windowStart = 0,
       windowEnd = 0,
-      window: Uint8Array | undefined
+      window: Uint8Array<ArrayBuffer> | undefined
     const isBlob = tag(value) === 'Blob' || tag(value) === 'File'
     const size =
       typeof value === 'string'
@@ -81,7 +106,9 @@ export async function encodeRecord(
           ? (value as Blob).size
           : (value as ArrayBuffer).byteLength
     while (offset < size) {
+      checkCancelled()
       let data: string
+      let binary: Uint8Array<ArrayBuffer> | undefined
       if (typeof value === 'string') {
         let end = Math.min(
           size,
@@ -92,7 +119,7 @@ export async function encodeRecord(
         offset = end
       } else {
         const end = Math.min(size, offset + chunkBytes)
-        let bytes: Uint8Array
+        let bytes: Uint8Array<ArrayBuffer>
         if (isBlob) {
           if (!window || offset < windowStart || end > windowEnd) {
             windowStart = offset
@@ -107,11 +134,12 @@ export async function encodeRecord(
           bytes = window.subarray(offset - windowStart, end - windowStart)
         } else
           bytes = new Uint8Array(value as ArrayBuffer, offset, end - offset)
-        data = base64(bytes)
+        binary = bytes
+        data = retainLines ? base64(bytes) : ''
         offset = end
       }
       const hash =
-        encoding === 'text' ? await hashJSON(data) : await sha(unbase64(data))
+        encoding === 'text' ? await hashJSON(data) : await sha(binary!)
       const line: Chunk = {
         kind: 'chunk',
         payload: id,
@@ -122,11 +150,12 @@ export async function encodeRecord(
       }
       meta.chunks++
       meta.digest = await hashJSON([meta.digest, hash])
-      lines.push(new Blob([JSON.stringify(line) + '\n']))
+      if (retainLines) lines.push(new Blob([JSON.stringify(line) + '\n']))
     }
     return id
   }
   async function encode(v: any): Promise<Atom> {
+    checkCancelled()
     if (v === null) return { primitive: 'null' }
     if (v === undefined) return { primitive: 'undefined' }
     if (typeof v === 'boolean') return { primitive: 'boolean', value: v }
@@ -197,7 +226,9 @@ export async function encodeRecord(
     return { ref }
   }
   const root = await encode([key, value])
+  checkCancelled()
   const fingerprint = await hashJSON({ root, nodes, payloads })
+  checkCancelled()
   const footer: EncodedRecord = {
     kind: 'record',
     table,
@@ -206,7 +237,7 @@ export async function encodeRecord(
     payloads,
     fingerprint
   }
-  lines.push(new Blob([JSON.stringify(footer) + '\n']))
+  if (retainLines) lines.push(new Blob([JSON.stringify(footer) + '\n']))
   return {
     lines,
     fingerprint,

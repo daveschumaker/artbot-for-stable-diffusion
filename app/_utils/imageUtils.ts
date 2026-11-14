@@ -8,8 +8,8 @@ import { isValidHttpUrl } from './validationUtils'
 import { hasPromptMatrix, promptMatrix } from './promptUtils'
 import AppSettings from 'app/_data-models/AppSettings'
 import { DEFAULT_SAMPLER_ARRAY } from '_constants'
-import { isiOS, isSafariBrowser } from './appUtils'
-import { fetchCompletedJobs } from './db'
+import { isiOS, isSafariBrowser, downloadBlob } from './appUtils'
+import { iterateCompletedJobs } from './db'
 import { basePath } from 'BASE_PATH'
 import ImageParamsForApi, {
   IApiParams,
@@ -580,104 +580,121 @@ export const downloadImages = async ({
   offset = 0,
   limit = 0,
   sort = '',
-  callback = () => {}
+  callback = () => {},
+  signal,
+  writable
 }: any) => {
-  if (offset >= 0 && limit > 0) {
-    imageArray = await fetchCompletedJobs({ offset, limit, sort })
-  }
-
   initBlob()
 
   const { downloadZip } = await import('client-zip')
   const fileDetails: any = []
-  const fileArray: any = []
-
-  let currentIndex = offset
-  for (const imageId in imageArray) {
-    const image: any = imageArray[imageId]
-
-    if (!image || !image.base64String) {
-      continue
-    }
-
-    const fileType = getDownloadFormat()
-    let filename = `image_${imageId}.${fileType}`
-
-    if (image.prompt) {
-      filename =
-        image.id +
-        '_' +
-        image.prompt
-          .replace(/[^a-z0-9]/gi, '_')
-          .toLowerCase()
-          .slice(0, 125) +
-        `_${imageId}.${fileType}`
-    }
-
-    const imageData: {
-      name: string
-      date: Date
-      prompt: string
-      negative_prompt: string
-      sampler: string
-      model: string
-      loras: unknown
-      height: number
-      width: number
-      steps: number
-      cfg_scale: number
-      seed: string
-      denoising_strength?: number
-    } = {
-      name: filename,
-      date: new Date(image.timestamp),
-      prompt: image.prompt,
-      negative_prompt: image.negative,
-      sampler: image.sampler,
-      model: image.models ? image.models[0] : image.model || 'stable_diffusion',
-      loras: image.loras,
-      height: image.height,
-      width: image.width,
-      steps: Number(image.steps),
-      cfg_scale: Number(image.cfg_scale),
-      seed: image.seed
-    }
-
-    if (image.img2img || image.source_processing === SourceProcessing.Img2Img) {
-      imageData.denoising_strength = image.denoising_strength
-    }
-
-    const newBlob = await toDownloadBlob(image.base64String, fileType)
-
-    if (!newBlob) {
-      console.log(`Error: unable to export image ${image.jobId}`)
-      continue
-    }
-
-    fileDetails.push(imageData)
-    fileArray.push({
-      name: filename,
-      lastModified: new Date(image.timestamp),
-      input: newBlob
-    })
-
-    callback({
-      currentIndex
-    })
-
-    currentIndex++
+  let included = 0,
+    skipped = 0
+  const checkCancelled = () => {
+    if (signal?.aborted)
+      throw new DOMException('Image ZIP cancelled', 'AbortError')
   }
+  const rows =
+    offset >= 0 && limit > 0
+      ? iterateCompletedJobs({ offset, limit, sort })
+      : imageArray
+  async function* entries() {
+    let currentIndex = offset
+    for await (const image of rows) {
+      checkCancelled()
+      const imageId = currentIndex++
 
-  if (fileArray.length === 0) {
-    console.log(`Error: No image files found within zip file. Aborting.`)
-    callback({ done: true, error: true })
-    return
-  }
+      if (!image || !image.base64String) {
+        skipped++
+        callback({ currentIndex: imageId, included, skipped })
+        continue
+      }
 
-  const jsonDetails = {
-    name: '_image_details.json',
-    lastModified: new Date(),
-    input: JSON.stringify(fileDetails, null, 2)
+      const fileType = getDownloadFormat()
+      let filename = `image_${imageId}.${fileType}`
+
+      if (image.prompt) {
+        filename =
+          image.id +
+          '_' +
+          image.prompt
+            .replace(/[^a-z0-9]/gi, '_')
+            .toLowerCase()
+            .slice(0, 125) +
+          `_${imageId}.${fileType}`
+      }
+
+      const imageData: {
+        name: string
+        date: Date
+        prompt: string
+        negative_prompt: string
+        sampler: string
+        model: string
+        loras: unknown
+        height: number
+        width: number
+        steps: number
+        cfg_scale: number
+        seed: string
+        denoising_strength?: number
+      } = {
+        name: filename,
+        date: new Date(image.timestamp),
+        prompt: image.prompt,
+        negative_prompt: image.negative,
+        sampler: image.sampler,
+        model: image.models
+          ? image.models[0]
+          : image.model || 'stable_diffusion',
+        loras: image.loras,
+        height: image.height,
+        width: image.width,
+        steps: Number(image.steps),
+        cfg_scale: Number(image.cfg_scale),
+        seed: image.seed
+      }
+
+      if (
+        image.img2img ||
+        image.source_processing === SourceProcessing.Img2Img
+      ) {
+        imageData.denoising_strength = image.denoising_strength
+      }
+
+      let newBlob: Blob | null | undefined
+      try {
+        newBlob = await toDownloadBlob(image.base64String, fileType)
+      } catch (error) {
+        checkCancelled()
+        skipped++
+        callback({ currentIndex: imageId, included, skipped })
+        continue
+      }
+      checkCancelled()
+      if (!newBlob) {
+        skipped++
+        callback({ currentIndex: imageId, included, skipped })
+        continue
+      }
+
+      fileDetails.push(imageData)
+      included++
+      callback({ currentIndex: imageId, included, skipped })
+      yield {
+        name: filename,
+        lastModified: new Date(image.timestamp),
+        input: newBlob
+      }
+    }
+
+    if (!included)
+      throw new Error('No image files could be included in this ZIP.')
+    yield {
+      name: '_image_details.json',
+      lastModified: new Date(),
+      input: JSON.stringify(fileDetails, null, 2)
+    }
   }
 
   const date = new Date()
@@ -690,13 +707,20 @@ export const downloadImages = async ({
     }-${dateString}.zip`
   }
 
-  callback({ done: true })
-  const blob = await downloadZip([jsonDetails, ...fileArray]).blob()
-  const link = document.createElement('a')
-  link.href = URL.createObjectURL(blob)
-  link.download = zipFilename
-  link.click()
-  link.remove()
+  const stream = downloadZip(entries()).body!
+  if (writable) await stream.pipeTo(writable, { signal })
+  else {
+    // Unsupported file destinations still need one final ZIP Blob, but no
+    // longer retain the source batch and every converted image alongside it.
+    const readable = signal
+      ? stream.pipeThrough(new TransformStream(), { signal })
+      : stream
+    const blob = await new Response(readable).blob()
+    checkCancelled()
+    downloadBlob(blob, zipFilename)
+  }
+  callback({ done: true, included, skipped })
+  return { included, skipped }
 }
 
 // Resolves to false, after telling the user, if the image can't be downloaded.

@@ -2,6 +2,8 @@ import { BackupManager } from './manager'
 import { browserStorage } from './platform'
 import { appInfoStore } from 'app/_store/appStore'
 export type {
+  BackupHandoff,
+  BackupInventory,
   Progress,
   PrepareOptions,
   RestoreOptions,
@@ -19,3 +21,6 @@ export function appBackup() {
   })
   return instance
 }
+
+export { previewBackup } from './preview'
+export type { RestorePreview } from './preview'

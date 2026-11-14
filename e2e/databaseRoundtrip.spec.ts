@@ -1,3 +1,4 @@
+import { openBackupOptions, chooseRestoreFiles } from './backupUi'
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
@@ -66,6 +67,7 @@ test('a 1700-image backup reads one image at a time and restores every row and B
   }, image)
   await finishFixtureSetup(page)
   await page.goto('/artbot/settings?panel=import-export')
+  await openBackupOptions(page)
   await page
     .getByText('Legacy compatibility JSON export', { exact: true })
     .click()
@@ -119,7 +121,7 @@ test('a 1700-image backup reads one image at a time and restores every row and B
   expect(reads.length).toBeGreaterThanOrEqual(1700)
   expect(reads.every((size: number) => size === 1)).toBe(true)
   await page.evaluate(() => (window as any)._artbotDb.completed.clear())
-  await page.locator('#file-upload').setInputFiles({
+  await chooseRestoreFiles(page, {
     name: 'large-backup.json',
     mimeType: 'application/json',
     buffer: backup
@@ -173,6 +175,7 @@ test('a database export restores deleted images, source data and a nested Blob',
   }, fixtures)
   await finishFixtureSetup(page)
   await page.goto('/artbot/settings?panel=import-export')
+  await openBackupOptions(page)
   await page
     .getByText('Legacy compatibility JSON export', { exact: true })
     .click()
@@ -214,10 +217,11 @@ test('a database export restores deleted images, source data and a nested Blob',
   ).toEqual([fixtures[2].jobId])
 
   await page.goto('/artbot/settings?panel=import-export')
+  await openBackupOptions(page)
   await page
     .getByText('Legacy compatibility JSON export', { exact: true })
     .click()
-  await page.locator('#file-upload').setInputFiles({
+  await chooseRestoreFiles(page, {
     name: 'roundtrip.json',
     mimeType: 'application/json',
     buffer: backup
@@ -313,10 +317,11 @@ test('a backup saved by the deployed site restores every table exactly', async (
   await finishFixtureSetup(page)
 
   await page.goto('/artbot/settings?panel=import-export')
+  await openBackupOptions(page)
   await page
     .getByText('Legacy compatibility JSON export', { exact: true })
     .click()
-  await page.locator('#file-upload').setInputFiles({
+  await chooseRestoreFiles(page, {
     name: 'legacy-backup.json',
     mimeType: 'application/json',
     buffer: legacyBackup
@@ -419,6 +424,7 @@ test('importing a full database replaces an existing image', async ({
   }, fixtures[0])
   await finishFixtureSetup(page)
   await page.goto('/artbot/settings?panel=import-export')
+  await openBackupOptions(page)
   await page
     .getByText('Legacy compatibility JSON export', { exact: true })
     .click()
@@ -435,7 +441,7 @@ test('importing a full database replaces an existing image', async ({
       .toCollection()
       .modify({ prompt: 'changed after export' })
   })
-  await page.locator('#file-upload').setInputFiles({
+  await chooseRestoreFiles(page, {
     name: 'replace.json',
     mimeType: 'application/json',
     buffer: Buffer.concat(chunks)
@@ -468,6 +474,7 @@ test('a failing database replacement rolls back all changes', async ({
   }, fixtures[0])
   await finishFixtureSetup(page)
   await page.goto('/artbot/settings?panel=import-export')
+  await openBackupOptions(page)
   await page
     .getByText('Legacy compatibility JSON export', { exact: true })
     .click()
@@ -488,7 +495,7 @@ test('a failing database replacement rolls back all changes', async ({
       .toCollection()
       .modify({ prompt: 'newer data must survive' })
   })
-  await page.locator('#file-upload').setInputFiles({
+  await chooseRestoreFiles(page, {
     name: 'invalid-duplicate-keys.json',
     mimeType: 'application/json',
     buffer: Buffer.from(JSON.stringify(backup))
@@ -522,6 +529,7 @@ test('restoring an empty database removes current images', async ({ page }) => {
   }, fixtures[0])
   await finishFixtureSetup(page)
   await page.goto('/artbot/settings?panel=import-export')
+  await openBackupOptions(page)
   await page
     .getByText('Legacy compatibility JSON export', { exact: true })
     .click()
@@ -536,7 +544,7 @@ test('restoring an empty database removes current images', async ({ page }) => {
   const empty = JSON.parse(Buffer.concat(chunks).toString())
   for (const table of empty.data.data) table.rows = []
   for (const table of empty.data.tables) table.rowCount = 0
-  await page.locator('#file-upload').setInputFiles({
+  await chooseRestoreFiles(page, {
     name: 'empty.json',
     mimeType: 'application/json',
     buffer: Buffer.from(JSON.stringify(empty))
@@ -565,6 +573,7 @@ test('a truncated backup leaves the current database intact', async ({
   }, fixtures[0])
   await finishFixtureSetup(page)
   await page.goto('/artbot/settings?panel=import-export')
+  await openBackupOptions(page)
   await page
     .getByText('Legacy compatibility JSON export', { exact: true })
     .click()
@@ -579,7 +588,7 @@ test('a truncated backup leaves the current database intact', async ({
   const backup = Buffer.concat(chunks).toString()
   const firstRows = /"rows"\s*:\s*\[/.exec(backup)!
   const partial = backup.slice(0, firstRows.index + firstRows[0].length)
-  await page.locator('#file-upload').setInputFiles({
+  await chooseRestoreFiles(page, {
     name: 'truncated.json',
     mimeType: 'application/json',
     buffer: Buffer.from(partial)

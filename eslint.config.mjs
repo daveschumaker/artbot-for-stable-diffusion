@@ -27,7 +27,7 @@ const compilerRulesOff = Object.fromEntries(
 const config = [
   {
     ignores: [
-      'node_modules/**',
+      '**/node_modules/**',
       'public/**',
       'test-results/**',
       'playwright-report/**',

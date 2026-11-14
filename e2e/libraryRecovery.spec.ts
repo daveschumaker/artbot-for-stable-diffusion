@@ -1,3 +1,4 @@
+import { backupEntries, selectBackupFile, chooseRestoreFiles } from './backupUi'
 import { expect, test as base } from '@playwright/test'
 import {
   mockBackend,
@@ -23,9 +24,9 @@ const test = base.extend({
 })
 
 for (const committed of [false, true]) {
-  test(`startup repairs ${committed ? 'committed' : 'uncommitted'} library preferences before rendering`, async ({
-    page
-  }) => {
+  test(`startup repairs ${
+    committed ? 'committed' : 'uncommitted'
+  } library preferences before rendering`, async ({ page }) => {
     const errors = trackPageErrors(page)
     await mockBackend(page)
     await page.goto('/artbot/settings?panel=import-export')
@@ -144,22 +145,21 @@ test('a saved 3 MB input restores within native localStorage quota, survives reo
   await expect(
     page.getByText('Prepared locally.', { exact: false })
   ).toBeVisible({ timeout: 60000 })
-  const buttons = page.getByRole('button', {
-    name: /^Save (manifest|part \d+)/
-  })
+  const labels = await backupEntries(page).evaluateAll((nodes) =>
+    nodes.map((node) => node.getAttribute('data-backup-file-label')!)
+  )
   const paths: string[] = []
-  for (let i = 0; i < (await buttons.count()); i++) {
+  for (let i = 0; i < labels.length; i++) {
+    const save = await selectBackupFile(page, labels[i])
     const downloading = page.waitForEvent('download')
-    await buttons.nth(i).click()
+    await save.click()
     const download = await downloading
     const file = info.outputPath(download.suggestedFilename())
     await download.saveAs(file)
     paths.push(file)
   }
   await page.evaluate(() => localStorage.setItem('showLayout', 'layout'))
-  await page
-    .getByLabel('Choose backup files', { exact: true })
-    .setInputFiles(paths)
+  await chooseRestoreFiles(page, paths)
   await page
     .getByRole('button', { name: 'Restore library', exact: true })
     .click()

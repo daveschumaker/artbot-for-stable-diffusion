@@ -17,7 +17,7 @@ interface UserCacheType {
 const MAX_RETRIES: number = 2
 const RETRY_DELAY: number = 5000 // 5 seconds
 
-const fetchUser = async (
+export const validateApiKey = async (
   apiKey: string,
   signal?: AbortSignal
 ): Promise<UserCacheType> => {
@@ -53,13 +53,21 @@ const keyHash = (apiKey: string) => {
 const userDetailsQuery = (apiKey: string) =>
   queryOptions({
     queryKey: ['horde', 'user', keyHash(apiKey)],
-    queryFn: ({ signal }) => fetchUser(apiKey, signal),
+    queryFn: ({ signal }) => validateApiKey(apiKey, signal),
     staleTime: 30 * 1000,
     retry: MAX_RETRIES - 1,
     retryDelay: RETRY_DELAY
   })
 
 let latestApiKey = ''
+// Login validates without changing the active account. Publish only after the
+// credential is saved; populate the shared cache without another HTTP request.
+export function publishValidatedUser(apiKey: string, user: UserCacheType) {
+  latestApiKey = apiKey
+  queryClient.setQueryData(userDetailsQuery(apiKey).queryKey, user)
+  setLoggedInState(true)
+  setUserInfo(user as any)
+}
 
 /**
  * Loads the user's details into userStore and returns them. Uses details

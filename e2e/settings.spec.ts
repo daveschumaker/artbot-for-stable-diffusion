@@ -5,6 +5,7 @@ import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { expect, test } from '@playwright/test'
 import { mockBackend, trackPageErrors } from './helpers'
+import { chooseRestoreFiles, openBackupOptions } from './backupUi'
 
 const library = JSON.parse(
   readFileSync(path.join(__dirname, 'fixtures/library.json'), 'utf8')
@@ -13,7 +14,7 @@ const library = JSON.parse(
 test('the worker search boxes are at most 480px wide', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 })
   await mockBackend(page)
-  await page.goto('/artbot/settings')
+  await page.goto('/artbot/settings?panel=generation')
 
   const labels = page.getByText('Search by worker name or worker ID:')
   await expect(labels.first()).toBeVisible()
@@ -49,24 +50,24 @@ test.describe('the last resort JSON import', () => {
       page.evaluate(() => (window as any)._artbotDb.completed.count())
 
     for (let attempt = 0; attempt < 2; attempt++) {
-      await page
-        .getByLabel('Choose backup files', { exact: true })
-        .setInputFiles(file)
+      await chooseRestoreFiles(page, file)
       await page
         .getByRole('button', { name: 'Restore library', exact: true })
         .click()
       await expect(
         page.getByText('ArtBot database imported!', { exact: false })
       ).toBeVisible()
+      await page.waitForFunction(() => (window as any)._artbotDb?.isOpen())
       await expect.poll(count).toBe(1)
     }
 
-    // Browsers only fire "change" for a different file, so the input must be
-    // emptied after each one.
+    // A successful restore reloads the page. The fresh picker must still
+    // accept the same external file on the next attempt.
     await expect(
       page.getByLabel('Choose backup files', { exact: true })
     ).toHaveValue('')
 
+    await openBackupOptions(page)
     await page
       .getByText('Legacy compatibility JSON export', { exact: true })
       .click()
