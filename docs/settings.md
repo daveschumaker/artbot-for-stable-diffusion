@@ -31,6 +31,10 @@ Panels load independently; fixed-choice fields use native selects.
 - Same-window saves publish a change event only after storage succeeds. Settings
   listens for storage events from other windows and rereads after subscribing,
   closing the initial-render/subscription race.
+- Anonymous startup sets the sharing default only when it is not already true.
+  Rewriting the same value on every new tab used to publish a stale preferences
+  object over a concurrent Settings save. Startup must leave already initialized
+  preferences alone.
 - API-key drafts survive switching sections. Validation does not publish a new
   account. The key is saved before user details are published into the shared
   cache; no second validation request is needed. Pending, failed and timed-out
@@ -78,6 +82,13 @@ and saved backups. Debug-log failure is reported without leaving a stuck action.
   physical-device low-storage acceptance.
 - Normal PR CI runs the Settings experience, existing Settings/Horde lookups and
   backup suites in Chromium, Firefox and WebKit, alongside full Chromium coverage.
+- The cross-tab test starts from non-default saved preferences, waits for both
+  panels to render them, then checks each save status, durable preference object
+  and receiving panel before the next edit. Both directions use real browser
+  storage events; no synthetic event or reload substitutes for synchronization.
+  Settings experience tests disable retries. Chromium CI additionally runs the
+  targeted case 30 times with one worker and zero retries, retaining failure
+  traces under `settings-sync-results/`.
 - Native Files/PWA checks remain in the [iOS runner](../scripts/ios-pwa/README.md).
   The [physical-device matrix](backup-design.md#physical-iphone-checks) remains
   separate from desktop, simulator and mocked-fault coverage.

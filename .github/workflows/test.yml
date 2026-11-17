@@ -87,6 +87,14 @@ jobs:
         run: >-
           npx playwright test e2e/backupHandoff.spec.ts --project=webkit
           --repeat-each=3 --retries=0 --workers=2 --output=webkit-handoff-results
+      - name: Repeat Chromium Settings cross-tab sync without retries
+        if: matrix.browser == 'chromium'
+        env:
+          E2E_SKIP_BUILD: '1'
+        run: >-
+          npx playwright test e2e/settingsExperience.spec.ts --project=chromium
+          --grep 'settings persist, synchronize between tabs'
+          --workers=1 --retries=0 --repeat-each=30 --output=settings-sync-results
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -94,6 +102,7 @@ jobs:
           path: |
             test-results/
             webkit-handoff-results/
+            settings-sync-results/
           retention-days: 7
 
   docker:

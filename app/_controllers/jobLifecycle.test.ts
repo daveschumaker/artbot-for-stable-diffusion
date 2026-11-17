@@ -214,6 +214,38 @@ describe('image job lifecycle', () => {
     }
   })
 
+  it('still initializes anonymous sharing when it is unset', async () => {
+    const { initAppSettings } = require('app/_utils/initArtBotAppSettings')
+    await initAppSettings()
+    const AppSettings = require('app/_data-models/AppSettings').default
+    expect(AppSettings.get('shareImagesExternally')).toBe(true)
+  })
+
+  it('does not republish existing preferences during another tab startup', async () => {
+    const AppSettings = require('app/_data-models/AppSettings').default
+    AppSettings.saveAll({
+      v: '1',
+      artbot_uuid: 'existing-user',
+      shareImagesExternally: true,
+      imageDownloadFormat: 'webp',
+      extraLegacy: { keep: true }
+    })
+    const writes = jest.spyOn(Storage.prototype, 'setItem')
+    const { initAppSettings } = require('app/_utils/initArtBotAppSettings')
+    try {
+      await initAppSettings()
+      expect(writes.mock.calls.filter(([key]) => key === 'appConfig')).toEqual(
+        []
+      )
+      expect(AppSettings.load()).toMatchObject({
+        imageDownloadFormat: 'webp',
+        extraLegacy: { keep: true }
+      })
+    } finally {
+      writes.mockRestore()
+    }
+  })
+
   it('recovers a claim that ages out after a quick reload without resubmitting it', async () => {
     await app.dexie.pending.add({
       jobId: 'interrupted',

@@ -123,7 +123,9 @@ export const initAppSettings = async () => {
 
   const apikey = AppSettings.get('apiKey') || ''
 
-  if (!apikey) {
+  // Opening another anonymous tab must not republish an unchanged preferences
+  // object: that read-modify-write can overwrite a concurrent Settings save.
+  if (!apikey && AppSettings.get('shareImagesExternally') !== true) {
     AppSettings.set('shareImagesExternally', true)
   } else if (apikey) {
     setLoggedInState(true)

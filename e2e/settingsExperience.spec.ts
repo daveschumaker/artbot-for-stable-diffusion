@@ -1,6 +1,9 @@
 import { expect, test, Page } from '@playwright/test'
 import { mockBackend, createTestImage, finishFixtureSetup } from './helpers'
 
+// A retry would hide persistence or cross-window delivery failures.
+test.describe.configure({ retries: 0 })
+
 const account = {
   username: 'settings-tester#1',
   kudos: 100,
@@ -83,7 +86,12 @@ test('settings persist, synchronize between tabs and preserve unknown stored fie
     if (!localStorage.getItem('appConfig'))
       localStorage.setItem(
         'appConfig',
-        JSON.stringify({ v: '1', extraLegacy: { keep: true } })
+        JSON.stringify({
+          v: '1',
+          imageDownloadFormat: 'png',
+          imagesPerPage: 100,
+          extraLegacy: { keep: true }
+        })
       )
   })
   await page.goto('/artbot/settings?panel=prefs')
@@ -91,19 +99,63 @@ test('settings persist, synchronize between tabs and preserve unknown stored fie
   await setup(other)
   await other.goto('/artbot/settings?panel=prefs')
   try {
+    // Non-default values show that both panels have read persisted preferences;
+    // the server/default select values alone are not an application-ready signal.
+    for (const tab of [page, other]) {
+      await expect(
+        tab.getByLabel('Preferred image format', { exact: true })
+      ).toHaveValue('png')
+      await expect(
+        tab.getByLabel('Images per page', { exact: true })
+      ).toHaveValue('100')
+    }
+    const persisted = (tab: Page) =>
+      tab.evaluate(() => JSON.parse(localStorage.getItem('appConfig')!))
     await page
       .getByLabel('Preferred image format', { exact: true })
       .selectOption('webp')
     await expect(
+      page.getByRole('status', { name: 'Settings save status', exact: true })
+    ).toHaveText('Saved on this device.')
+    await expect
+      .poll(() => persisted(page))
+      .toMatchObject({
+        imageDownloadFormat: 'webp',
+        imagesPerPage: 100,
+        extraLegacy: { keep: true }
+      })
+    await expect(
+      page.getByLabel('Preferred image format', { exact: true })
+    ).toHaveValue('webp')
+    await expect(
       other.getByLabel('Preferred image format', { exact: true })
     ).toHaveValue('webp')
+    await expect(
+      other.getByRole('status', { name: 'Settings save status', exact: true })
+    ).toHaveText('Settings updated from another window.')
     await other
       .getByLabel('Images per page', { exact: true })
       .selectOption('25')
     await expect(
+      other.getByRole('status', { name: 'Settings save status', exact: true })
+    ).toHaveText('Saved on this device.')
+    await expect
+      .poll(() => persisted(other))
+      .toMatchObject({
+        imageDownloadFormat: 'webp',
+        imagesPerPage: 25,
+        extraLegacy: { keep: true }
+      })
+    await expect(
       page.getByLabel('Images per page', { exact: true })
     ).toHaveValue('25')
+    await expect(
+      page.getByRole('status', { name: 'Settings save status', exact: true })
+    ).toHaveText('Settings updated from another window.')
     await page.reload()
+    await expect(
+      page.getByLabel('Preferred image format', { exact: true })
+    ).toHaveValue('webp')
     await expect(
       page.getByLabel('Images per page', { exact: true })
     ).toHaveValue('25')
