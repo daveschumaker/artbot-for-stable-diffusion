@@ -24,6 +24,7 @@ jest.mock('app/_components/InteractiveModal/interactiveModal', () => ({
 
 describe('SharedKeys', () => {
   const originalFetch = global.fetch
+  let owner = 0
 
   beforeEach(() => {
     Object.assign(navigator, {
@@ -38,7 +39,7 @@ describe('SharedKeys', () => {
     userInfoStore.set({
       loggedIn: true,
       sharedKey: false,
-      username: 'alice#1',
+      username: `alice-${++owner}#1`,
       sharedkey_ids: []
     })
   })
@@ -71,5 +72,81 @@ describe('SharedKeys', () => {
     expect(
       screen.getByText('You currently have no shared API keys.')
     ).toBeTruthy()
+  })
+  it('keeps a failed create dialog and its entered values available for retry', async () => {
+    global.fetch = jest.fn(async () => ({
+      ok: false,
+      status: 503,
+      json: async () => ({ message: 'Unavailable' })
+    })) as unknown as typeof fetch
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <SharedKeys />
+      </QueryClientProvider>
+    )
+    fireEvent.click(screen.getByText('Create key'))
+    fireEvent.change(document.querySelector('#inputKeyName')!, {
+      target: { value: 'Keep this name' }
+    })
+    await act(async () => {
+      fireEvent.click(screen.getByText('Create'))
+    })
+    expect(screen.getByText('Create shared API key')).toBeTruthy()
+    expect(
+      (document.querySelector('#inputKeyName') as HTMLInputElement).value
+    ).toBe('Keep this name')
+    expect(screen.getByRole('alert').textContent).toContain('HTTP 503')
+    expect((screen.getByText('Create') as HTMLButtonElement).disabled).toBe(
+      false
+    )
+  })
+  it('sends only one mutation while its first request is pending', async () => {
+    let finish!: (response: any) => void
+    global.fetch = jest.fn(
+      () =>
+        new Promise((resolve) => {
+          finish = resolve
+        })
+    ) as typeof fetch
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <SharedKeys />
+      </QueryClientProvider>
+    )
+    fireEvent.click(screen.getByText('Create key'))
+    fireEvent.change(document.querySelector('#inputKeyName')!, {
+      target: { value: 'Once' }
+    })
+    await act(async () => {
+      fireEvent.click(screen.getByText('Create'))
+      fireEvent.click(screen.getByText('Create'))
+    })
+    expect(global.fetch).toHaveBeenCalledTimes(1)
+    expect((screen.getByText('Create') as HTMLButtonElement).disabled).toBe(
+      true
+    )
+    await act(async () => {
+      finish({ ok: false, status: 429 })
+    })
+    expect(screen.getByRole('alert').textContent).toContain('HTTP 429')
+  })
+  it('keeps a created key available when clipboard permission is denied', async () => {
+    Object.assign(navigator, {
+      clipboard: { writeText: jest.fn().mockRejectedValue(new Error('Denied')) }
+    })
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <SharedKeys />
+      </QueryClientProvider>
+    )
+    fireEvent.click(screen.getByText('Create key'))
+    fireEvent.change(document.querySelector('#inputKeyName')!, {
+      target: { value: 'Friends' }
+    })
+    await act(async () => {
+      fireEvent.click(screen.getByText('Create'))
+    })
+    expect(await screen.findByText('key-from-a')).toBeTruthy()
+    expect(screen.getByRole('alert').textContent).toContain('not copied')
   })
 })

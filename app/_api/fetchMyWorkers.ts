@@ -60,7 +60,7 @@ const fetchMyWorkers = async ({ fresh = false }: { fresh?: boolean } = {}) => {
   const { worker_ids, workers: previous = {} } = userInfoStore.state
 
   if (!worker_ids || worker_ids.length === 0) {
-    return
+    return { failed: 0 }
   }
 
   const results = await Promise.all(
@@ -78,7 +78,12 @@ const fetchMyWorkers = async ({ fresh = false }: { fresh?: boolean } = {}) => {
     }
     // null: the Horde no longer has this worker, so it's left out.
   })
-  setWorkers(workers)
+  if (
+    JSON.stringify(userInfoStore.state.worker_ids) ===
+    JSON.stringify(worker_ids)
+  )
+    setWorkers(workers)
+  return { failed: results.filter((worker) => worker === undefined).length }
 }
 
 export default fetchMyWorkers

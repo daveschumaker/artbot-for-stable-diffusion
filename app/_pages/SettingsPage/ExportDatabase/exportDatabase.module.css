@@ -1,0 +1,185 @@
+.backup {
+  --backup-line: #d7dddf;
+  --backup-muted: #56616a;
+  --backup-accent: #0f766e;
+  --backup-surface: #f0faf8;
+  max-width: 52rem;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+:global([data-theme='dark']) .backup {
+  --backup-line: #3c474c;
+  --backup-muted: #b5bfc4;
+  --backup-accent: #2dd4bf;
+  --backup-surface: #20312e;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 700;
+  scroll-margin-top: 112px;
+}
+
+.intro {
+  margin: 6px 0 12px;
+  color: var(--backup-muted);
+}
+
+.stepper {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 16px 0;
+  list-style: none;
+  padding: 0;
+}
+
+.stepper li {
+  color: var(--backup-muted);
+  border-bottom: 2px solid var(--backup-line);
+}
+
+.stepper li[aria-current],
+.stepper li[data-complete] {
+  color: var(--backup-accent);
+  border-color: var(--backup-accent);
+  font-weight: 600;
+}
+
+.stepper a {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding-bottom: 6px;
+  font-size: 13px;
+}
+
+.stepNumber {
+  display: grid;
+  place-items: center;
+  flex: 0 0 24px;
+  height: 24px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-size: 12px;
+}
+
+.workflow {
+  overflow-wrap: anywhere;
+  border: 1px solid var(--backup-line);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.stage {
+  padding: 18px;
+}
+
+.stage + .stage {
+  border-top: 1px solid var(--backup-line);
+}
+
+.stage[data-active] {
+  background: var(--backup-surface);
+}
+
+.stageTitle {
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 650;
+  scroll-margin-top: 112px;
+}
+
+.description,
+.placeholder {
+  margin: 6px 0 12px;
+  color: var(--backup-muted);
+}
+
+.placeholder {
+  margin-bottom: 0;
+}
+
+.nextAction {
+  margin: 14px 0 8px;
+  font-weight: 650;
+}
+
+.selectedFile {
+  margin: 12px 0;
+  padding: 14px;
+  border: 1px solid var(--backup-line);
+  border-radius: 8px;
+}
+
+.backup .primaryButton,
+.backup .secondaryButton {
+  min-height: 44px;
+  padding: 8px 14px;
+  border-radius: 7px;
+  font-weight: 600;
+}
+
+.backup .primaryButton:not(:disabled) {
+  background: #0f766e;
+  border-color: #0f766e;
+  color: #fff;
+}
+
+.backup .primaryButton:not(:disabled):hover {
+  background: #115e59;
+}
+
+.backup .secondaryButton:not(:disabled) {
+  background: transparent;
+  border-color: var(--backup-line);
+  color: inherit;
+}
+
+.fileLabel {
+  display: block;
+}
+
+.fileInput {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  font-size: 13px;
+  color: var(--backup-muted);
+}
+
+.fileInput::file-selector-button {
+  min-height: 44px;
+  margin-right: 10px;
+  padding: 8px 12px;
+  border: 1px solid var(--backup-line);
+  border-radius: 7px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.fileInput:focus-visible,
+.backup button:focus-visible,
+.stepper a:focus-visible {
+  outline: 2px solid var(--backup-accent);
+  outline-offset: 3px;
+}
+
+.verificationNote {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--backup-muted);
+}
+
+.status:not(:empty) {
+  margin: 12px 0;
+  padding: 12px;
+  border-left: 3px solid var(--backup-accent);
+  background: var(--backup-surface);
+}

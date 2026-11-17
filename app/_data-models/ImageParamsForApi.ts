@@ -1,3 +1,4 @@
+import { settingsValues } from './settingsSchema'
 import { SavedLora } from '_types/artbot'
 import { modifyPromptForStylePreset } from 'app/_utils/imageUtils'
 import { SourceProcessing } from 'app/_utils/promptUtils'
@@ -94,20 +95,18 @@ interface IOptions {
 
 class ImageParamsForApi {
   constructor(imageDetails: IArtBotImageDetails, options: IOptions = {}) {
-    const useTrusted =
-      typeof AppSettings.get('useTrusted') === 'undefined'
-        ? true
-        : AppSettings.get('useTrusted')
-    const allowNsfw = AppSettings.get('allowNsfwImages') || false
+    const preferences = settingsValues(AppSettings.load())
+    const useTrusted = preferences.useTrusted
+    const allowNsfw = preferences.allowNsfwImages
 
     // Temporarily (?) disabled as rating of user generated AI images is no longer supported by the AI Horde
     // const shareImage = AppSettings.get('shareImagesExternally') || false
     const shareImage = false
 
-    const useAllowedWorkers = AppSettings.get('useAllowedWorkers') || false
-    const useBlockedWorkers = AppSettings.get('useBlockedWorkers') || false
-    const allowedWorkers = AppSettings.get('allowedWorkers') || []
-    const blockedWorkers = AppSettings.get('blockedWorkers') || []
+    const useAllowedWorkers = preferences.useAllowedWorkers
+    const useBlockedWorkers = preferences.useBlockedWorkers
+    const allowedWorkers = preferences.allowedWorkers
+    const blockedWorkers = preferences.blockedWorkers
 
     const {
       cfg_scale,
@@ -175,7 +174,7 @@ class ImageParamsForApi {
       replacement_filter,
       worker_blacklist: false,
       shared: shareImage,
-      slow_workers: AppSettings.get('slow_workers') === false ? false : true,
+      slow_workers: preferences.slow_workers,
       dry_run
     }
 

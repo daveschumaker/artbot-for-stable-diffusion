@@ -1,5 +1,5 @@
 'use client'
-
+import { useEffect, useRef, useState, type ChangeEvent } from 'react'
 import PageTitle from 'app/_components/PageTitle'
 import Section from 'app/_components/Section'
 import { useStore } from 'statery'
@@ -11,17 +11,21 @@ import TooltipComponent from 'app/_components/TooltipComponent'
 import MaxWidth from 'app/_components/MaxWidth'
 import Input from 'app/_components/Input'
 import { Button } from 'app/_components/Button'
-import Select from 'app/_components/Select'
-import AppSettings from 'app/_data-models/AppSettings'
-import React from 'react'
 import SharedKeys from './SharedKeys'
-import WorkerBlocklist from './WorkerBlocklist'
-import InputSwitchV2 from 'app/_modules/AdvancedOptionsPanel/InputSwitchV2'
-import { handleApiKeyLogin } from 'app/_utils/hordeUtils'
 import { IconEye } from '@tabler/icons-react'
-import AllowWorkers from './AllowBlockWorkers/allowWorkers'
-
-const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
+import {
+  validateApiKey,
+  publishValidatedUser,
+  fetchUserDetailsV2
+} from 'app/_api/fetchUserDetailsV2'
+import { useSettings } from './SettingsContext'
+const AiHordeSettingsPanel = () => {
+  const {
+    values,
+    save,
+    apiKeyDraft: draft,
+    setApiKeyDraft: setDraft
+  } = useSettings()
   const userStore = useStore(userInfoStore)
   const {
     kudos_details,
@@ -32,39 +36,68 @@ const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
     sharedKey = false,
     worker_ids = []
   } = userStore
-
-  const handleApiInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setComponentState({ apiKey: e.target.value })
-  }
-
-  const handleSaveApiKey = async () => {
+  const [showKey, setShowKey] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState('')
+  const [message, setMessage] = useState('')
+  const request = useRef<AbortController | null>(null)
+  useEffect(() => {
+    request.current?.abort()
+    request.current = null
+    setBusy(false)
+  }, [values.apiKey])
+  useEffect(() => () => request.current?.abort(), [])
+  const login = async () => {
+    if (request.current || !draft.trim()) return
+    const controller = new AbortController()
+    request.current = controller
+    setBusy(true)
+    setError('')
+    setMessage('')
+    const key = draft.trim()
+    let timedOut = false
+    const timeout = setTimeout(() => {
+      timedOut = true
+      controller.abort()
+    }, 30000)
     try {
-      const data = await handleApiKeyLogin(componentState.apiKey)
-      const { success } = data
-
-      if (success === true) {
-        setComponentState({ apiErrorMsg: '' })
-      } else if (success === false) {
-        setComponentState({ apiErrorMsg: 'Error: Unable to load API key.' })
-        handleSwitchSelect('shareImagesExternally', true)
+      const user = await validateApiKey(key, controller.signal)
+      if (controller.signal.aborted) return
+      if (!user.username)
+        throw new Error('The server did not recognize this API key.')
+      if (save('apiKey', key)) {
+        // Update the cached-publisher fence only after durable credential saving.
+        publishValidatedUser(key, user)
+        setMessage('API key saved on this device.')
       }
-    } catch (err) {
-      setComponentState({ apiErrorMsg: 'Error: Unable to load API key.' })
-      handleSwitchSelect('shareImagesExternally', true)
+    } catch (error) {
+      if (timedOut)
+        setError(
+          'API key verification timed out. Your saved key was kept. Try again when the connection is available.'
+        )
+      else if (!controller.signal.aborted)
+        setError(
+          'Unable to verify API key. Check the key and connection, then try again. ' +
+            (error as Error).message
+        )
+    } finally {
+      clearTimeout(timeout)
+      if (request.current === controller) {
+        request.current = null
+        setBusy(false)
+      }
     }
   }
-
-  const handleSwitchSelect = (key: string, value: boolean) => {
-    AppSettings.save(key, value)
-    setComponentState({ [key]: value })
+  const logout = () => {
+    request.current?.abort()
+    request.current = null
+    if (save('apiKey', '')) {
+      void fetchUserDetailsV2('')
+      unsetUserInfo()
+      setDraft('')
+      setMessage('Logged out on this device.')
+    }
   }
-
-  const handleUpdateSelect = (key: string, obj: any) => {
-    const { value } = obj
-    AppSettings.save(key, value)
-    setComponentState({ [key]: value })
-  }
-
   return (
     <>
       <Section pb={12}>
@@ -123,7 +156,7 @@ const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
               Images you&apos;ve requested
             </div>
             <div className={styles['user-info-wrapper-details']}>
-              {records.request.image.toLocaleString()}
+              {(records.request?.image ?? 0).toLocaleString()}
             </div>
           </div>
           <div className={styles['user-info-wrapper']}>
@@ -131,7 +164,7 @@ const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
               Images generated from your workers
             </div>
             <div className={styles['user-info-wrapper-details']}>
-              {records.fulfillment.image.toLocaleString()}
+              {(records.fulfillment?.image ?? 0).toLocaleString()}
             </div>
           </div>
           <div className={styles['user-info-wrapper']}>
@@ -147,7 +180,9 @@ const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
       <Section pb={12}>
         <SubSectionTitle>
           <TextTooltipRow>
-            <strong>API key</strong>
+            <label htmlFor="account-api-key" className="font-bold">
+              API key
+            </label>
             <TooltipComponent tooltipId="api-key-tooltip">
               Leave blank for anonymous access. An API key gives higher priority
               access to the AI Horde distributed cluster, resulting in shorter
@@ -170,49 +205,49 @@ const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
               LocalStorage.
             </div>
           )}
-          {componentState.apiErrorMsg && (
-            <div className="flex flex-row gap-2 font-bold text-red-500">
-              {componentState.apiErrorMsg}
+          {error && (
+            <div
+              role="alert"
+              className="flex flex-row gap-2 font-bold text-red-500"
+            >
+              {error}
             </div>
           )}
         </SubSectionTitle>
         <MaxWidth style={{ maxWidth: '480px' }}>
           <div className="flex flex-row gap-2">
             <Input
-              type={componentState.showApiKey ? 'text' : 'password'}
-              name="steps"
-              onChange={handleApiInput}
-              value={componentState.apiKey}
-            />
-            <Button
-              onClick={() => {
-                if (componentState.showApiKey) {
-                  setComponentState({ showApiKey: false })
-                } else {
-                  setComponentState({ showApiKey: true })
+              type={showKey ? 'text' : 'password'}
+              id="account-api-key"
+              name="apiKey"
+              disabled={busy}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  event.preventDefault()
+                  void login()
                 }
               }}
+              onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                setDraft(event.target.value)
+              }
+              value={draft}
+            />
+            <Button
+              title={showKey ? 'Hide API key' : 'Show API key'}
+              onClick={() => setShowKey(!showKey)}
             >
               <IconEye />
             </Button>
           </div>
           <div className="flex justify-start gap-2 mt-2">
-            <Button
-              theme="secondary"
-              onClick={() => {
-                unsetUserInfo()
-                setComponentState({ apiKey: '' })
-                AppSettings.save('apiKey', '')
-              }}
-            >
+            <Button theme="secondary" disabled={busy} onClick={logout}>
               Log out
             </Button>
             <Button
-              onClick={() => {
-                handleSaveApiKey()
-              }}
+              disabled={busy || !draft.trim()}
+              onClick={() => void login()}
             >
-              Save
+              {busy ? 'Checking API key…' : 'Save API key'}
             </Button>
           </div>
         </MaxWidth>
@@ -222,141 +257,11 @@ const AiHordeSettingsPanel = ({ componentState, setComponentState }: any) => {
           <SharedKeys />
         </Section>
       )}
-      {/* <Section pb={12}>
-        <InputSwitchV2
-          label={<strong>Share images with LAION?</strong>}
-          disabled={!componentState.apiKey}
-          handleSwitchToggle={() => {
-            if (componentState.shareImagesExternally) {
-              handleSwitchSelect('shareImagesExternally', false)
-            } else {
-              handleSwitchSelect('shareImagesExternally', true)
-            }
-          }}
-          checked={componentState.shareImagesExternally}
-        />
-        <div
-          style={{ fontSize: '12px', maxWidth: '512px', paddingLeft: '64px' }}
-        >
-          Automatically and anonymously share images with LAION (the non-profit
-          that helped to train Stable Diffusion) for use in aesthetic training
-          in order to improve future models. See{' '}
-          <Linker
-            href="https://discord.com/channels/781145214752129095/1107628882783391744"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            this announcement
-          </Linker>{' '}
-          on Discord for more information.{' '}
-          <strong>
-            NOTE: This option is automatically enabled for users without a valid
-            API key.
-          </strong>
-        </div>
-      </Section> */}
-      <Section pb={12}>
-        <InputSwitchV2
-          label={<strong>Allow NSFW images?</strong>}
-          handleSwitchToggle={() => {
-            if (componentState.allowNsfwImages) {
-              handleSwitchSelect('allowNsfwImages', false)
-            } else {
-              handleSwitchSelect('allowNsfwImages', true)
-            }
-          }}
-          checked={componentState.allowNsfwImages}
-        />
-        <div
-          style={{ fontSize: '12px', maxWidth: '512px', paddingLeft: '64px' }}
-        >
-          Workers attempt to block NSFW queries. Images flagged by NSFW filter
-          will be blacked out.
-        </div>
-      </Section>
-      <Section pb={12}>
-        <SubSectionTitle>
-          <strong>Max concurrency</strong>
-        </SubSectionTitle>
-        <div style={{ fontSize: '12px', paddingBottom: '8px' }}>
-          Maximum number of concurrent job requests that ArtBot will send to the
-          AI Horde.
-        </div>
-        <MaxWidth style={{ maxWidth: '240px' }}>
-          <div className="flex flex-row gap-2 items-center">
-            <Select
-              options={[
-                { value: 1, label: 1 },
-                { value: 3, label: 3 },
-                { value: 5, label: 5 },
-                { value: 10, label: 10 },
-                { value: 15, label: 15 },
-                { value: 20, label: 20 },
-                { value: 25, label: 25 },
-                { value: 30, label: 30 }
-              ]}
-              isSearchable={false}
-              onChange={(obj: any) => {
-                handleUpdateSelect('maxConcurrency', obj)
-              }}
-              value={{
-                value: componentState.maxConcurrency,
-                label: componentState.maxConcurrency
-              }}
-            />
-          </div>
-        </MaxWidth>
-      </Section>
-      <Section pb={12}>
-        <SubSectionTitle>
-          <strong>Worker type</strong>
-          <div className="block w-full mt-2 mb-2 text-xs">
-            Request images from all workers or trusted only. Potential risk if
-            untrusted worker is a troll. Trusted is safer, but potentially
-            slower.
-          </div>
-        </SubSectionTitle>
-        <MaxWidth>
-          <Select
-            isSearchable={false}
-            onChange={(obj: any) => handleUpdateSelect('useTrusted', obj)}
-            options={[
-              { value: false, label: 'All Workers' },
-              { value: true, label: 'Trusted Only' }
-            ]}
-            value={
-              componentState.useTrusted
-                ? { value: true, label: 'Trusted Only' }
-                : { value: false, label: 'All Workers' }
-            }
-          />
-        </MaxWidth>
-      </Section>
-      <Section pb={12}>
-        <InputSwitchV2
-          label={<strong>Allow slow workers?</strong>}
-          handleSwitchToggle={() => {
-            if (componentState.slow_workers) {
-              handleSwitchSelect('slow_workers', false)
-            } else {
-              handleSwitchSelect('slow_workers', true)
-            }
-          }}
-          checked={componentState.slow_workers !== false}
-        />
-        <div
-          style={{ fontSize: '12px', maxWidth: '512px', paddingLeft: '64px' }}
-        >
-          Allow slower workers to pick up your requests. Disabling this incurs
-          an extra kudos cost.
-        </div>
-      </Section>
-      <Section pb={12}>
-        <WorkerBlocklist />
-      </Section>
-      <AllowWorkers />
+      <p role="status" aria-label="API key status" className="text-sm my-3">
+        {message ||
+          'API key edits require Save API key. Other preferences save automatically.'}
+      </p>
     </>
   )
 }
-
 export default AiHordeSettingsPanel

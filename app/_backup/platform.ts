@@ -1,4 +1,6 @@
 export const SELECTION_KEY = 'ArtBotLibrarySelection'
+export const HANDOFF_EVENT = 'artbot-backup-handoff'
+export const HANDOFF_KEY = `${SELECTION_KEY}:handoff`
 export const OPERATION_KEY = `${SELECTION_KEY}:operation`
 export interface Selection {
   name: string

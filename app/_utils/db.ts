@@ -7,7 +7,6 @@ import {
   setUnsupportedBrowser
 } from 'app/_store/appStore'
 import { JobStatus } from '_types'
-import { generateBase64Thumbnail } from './imageUtils'
 import { SourceProcessing } from './promptUtils'
 import { deletePendingJobs } from 'app/_controllers/pendingJobsCache'
 import CreateImageRequest from 'app/_data-models/CreateImageRequest'
@@ -74,55 +73,14 @@ export const getJobImagesFromDexie = async (jobId: string) => {
 }
 
 export const generateThumbnails = async (
-  cb: (progress: ThumbnailProgress) => void = () => {}
+  cb: (progress: ThumbnailProgress) => void = () => {},
+  signal?: AbortSignal
 ) => {
-  let total = await countCompletedJobs()
-  let current = 0
-
-  cb({
-    total,
-    current
-  })
-
-  let imageIds: Array<number> = []
-
-  await db.completed.each((record: any) => {
-    current++
-
-    if (!record.thumbnail) {
-      imageIds.push(record.id)
-    }
-
-    cb({
-      total,
-      current,
-      state: 'Analyzing'
-    })
-  })
-
-  current = 0
-  total = imageIds.length
-  for (const id in imageIds) {
-    current++
-    cb({
-      total,
-      current,
-      state: 'Processing'
-    })
-    const record = await db.completed.where('id').equals(imageIds[id]).first()
-
-    if (record.thumbnail) {
-      continue
-    } else {
-      const thumbnail = await generateBase64Thumbnail(
-        record.base64String,
-        record.jobId
-      )
-
-      console.log(`Updating thumbnail for image id: ${record.id}`)
-      await db.completed.where('id').equals(imageIds[id]).modify({ thumbnail })
-    }
-  }
+  const [{ appBackup }, { rebuildThumbnails }] = await Promise.all([
+    import('app/_backup'),
+    import('app/_db/maintenance')
+  ])
+  return rebuildThumbnails(appBackup(), { onProgress: cb, signal })
 }
 
 export const setDefaultPrompt = async (prompt: string) => {
@@ -430,6 +388,18 @@ export const fetchCompletedJobs = async ({
       .limit(limit)
       .toArray()
   }
+}
+
+// Read only primary keys up front; hold one image record at a time while exporting.
+export async function* iterateCompletedJobs({
+  offset = 0,
+  limit = 100,
+  sort = 'new'
+} = {}) {
+  let collection = db.completed.orderBy('timestamp')
+  if (sort !== 'old') collection = collection.reverse()
+  const keys = await collection.offset(offset).limit(limit).primaryKeys()
+  for (const key of keys) yield await db.completed.get(key)
 }
 
 export const fetchCompletedJobsById = async (ids = []) => {

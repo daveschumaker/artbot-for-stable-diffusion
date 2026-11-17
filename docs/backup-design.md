@@ -40,7 +40,23 @@ recovery/merge input: stage a copy of the existing library, merge without requir
 use raw native records, bypassing application reading hooks. Logical backups do
 not reproduce browser counters, cookies, keychains or installed-app lifecycle.
 
+## Saving across PWA restarts
+
+Prepared backups support saved-file verification in separate batches. An opt-in local-test home-page
+**Continue backup** link (disabled on production) returns to the exact preparation after Files recreates
+the app document. Save requests and verified saved copies remain distinct.
+See [the PWA handoff workflow](pwa-backup-handoff.md) for durability, compatibility
+coverage and the remaining physical-device acceptance checks.
+
 ## User workflow
+
+Settings guides preparation, saving and verification as separate stages. The
+inventory API reads manifest metadata; the page retains the small manifest or
+one selected data-part File. Load a part, then use a separate save/share tap to
+preserve native user activation. Restore previews the manifest and file inventory
+before enabling restore, without recording verification or replacing the engine's
+independent content checks. A shared page operation gate prevents overlapping
+backup, restore and image ZIP actions; cross-window exclusion stays in the engine.
 
 In Settings → Import / Export, choose **Prepare backup**. The default maximum
 part size is 8 MiB; 32 and 64 MiB are available. Save the manifest and **every**
@@ -108,7 +124,10 @@ estimates are advisory. Quota errors leave the current library selected and the
 last durable checkpoint available; make space or remove an incomplete attempt
 before retrying. Removing a preparation does not delete downloaded copies or
 images. Previous libraries are retained for recovery and are not automatically
-pruned. Rollback removes no library. Storage eviction, Clear Website Data or
+pruned. Settings can explicitly remove an unreferenced retained library after
+confirmation; the engine protects the active/default library and libraries
+referenced by recoverable restores. Displayed backup payload sizes are not
+physical database disk measurements. Rollback removes no library. Storage eviction, Clear Website Data or
 removing an installed app can remove all browser-resident copies together.
 
 Keep the source idle and close older ArtBot windows while preparing. The new
@@ -128,12 +147,17 @@ npm run typecheck
 npm run build
 E2E_PORT=34761 E2E_SKIP_BUILD=1 E2E_ALL_BROWSERS=1 npx playwright test \
   e2e/databaseRoundtrip.spec.ts e2e/recoverableBackup.spec.ts \
+  e2e/freshBackupRestore.spec.ts \
   e2e/deviceBackupProbe.spec.ts e2e/libraryRecovery.spec.ts --workers=3
 ```
 
 Use a free port; an explicit `E2E_PORT` refuses to reuse another server. Browser
 checks use isolated persistent profiles because ephemeral desktop WebKit Blob
 storage has failed independently of ArtBot. No Horde requests are sent.
+For native Files and recovery on a separate fresh installed PWA, use the
+[two-simulator runner](../scripts/ios-pwa/README.md). `npm run test:ios` builds an
+isolated artifact and automates setup, export, partial verification/relaunch,
+external-file transfer, fresh verification/restore, relaunch, rollback and cleanup.
 The multipart test defaults to 36 MiB of binary payloads, not thousands of tiny
 thumbnails. For a gigabyte-scale run:
 

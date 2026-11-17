@@ -1,8 +1,13 @@
+import { SETTINGS_DEFAULTS, settingsValues } from './settingsSchema'
 import {
   assertLibraryWritable,
+  browserStorage,
+  selection,
   readPreferences,
   writePreferences
 } from 'app/_backup/platform'
+
+export const SETTINGS_EVENT = 'artbot-settings-changed'
 
 interface IAppSettingsParams {
   allowNsfwImages: boolean
@@ -40,7 +45,7 @@ class AppSettings {
   }
 
   static delete(key: string) {
-    const data = this.load()
+    const data = this.readForUpdate()
     delete data[key]
     this.saveAll(data)
   }
@@ -48,7 +53,9 @@ class AppSettings {
   static get(item: string) {
     const data = this.load()
 
-    return data[item]
+    return Object.hasOwn(SETTINGS_DEFAULTS, item)
+      ? settingsValues(data)[item as keyof typeof SETTINGS_DEFAULTS]
+      : data[item]
   }
 
   static load(): Record<string, any> {
@@ -60,7 +67,7 @@ class AppSettings {
   }
 
   static save(key: string, val: any) {
-    const data = this.load()
+    const data = this.readForUpdate()
     data[key] = val
     this.saveAll(data)
   }
@@ -70,10 +77,25 @@ class AppSettings {
     this.save(key, val)
   }
 
+  static readForUpdate(): Record<string, any> {
+    const storage = browserStorage()
+    if (!storage) throw new Error('Browser storage is unavailable')
+    const selected = selection(storage)
+    if (selected?.appConfig) return selected.appConfig
+    const data = JSON.parse(storage.getItem('appConfig') || '{}')
+    if (!data || typeof data !== 'object' || Array.isArray(data))
+      throw new Error(
+        'Stored settings could not be read. Restore a backup before changing them.'
+      )
+    return data
+  }
+
   static saveAll(params: Record<string, any>) {
     assertLibraryWritable()
     // Failed writes must never replace existing settings with an empty object.
     writePreferences({ v: '1', ...params })
+    if (typeof window !== 'undefined')
+      window.dispatchEvent(new Event(SETTINGS_EVENT))
   }
 }
 

@@ -19,6 +19,8 @@
     "test": "jest",
     "typecheck": "tsc --noEmit",
     "test:e2e": "playwright test",
+    "test:ios": "node scripts/ios-pwa/run.mjs",
+    "test:ios:driver": "node --test scripts/ios-pwa/driver.test.mjs",
     "test:generate-library": "npx next build && node e2e/fixtures/generateLibrary.mjs",
     "prepare": "husky",
     "profile:capture": "node scripts/browser-profile/cli.mjs capture",

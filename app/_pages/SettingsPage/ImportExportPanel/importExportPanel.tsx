@@ -1,203 +1,184 @@
-import styled from 'styled-components'
-import useComponentState from 'app/_hooks/useComponentState'
+'use client'
+import { useEffect, useRef, useState } from 'react'
 import { useEffectOnce } from 'app/_hooks/useEffectOnce'
-import { initBlob } from 'app/_utils/blobUtils'
 import { countCompletedJobs } from 'app/_utils/db'
 import { downloadImages } from 'app/_utils/imageUtils'
 import PageTitle from 'app/_components/PageTitle'
-import Select from 'app/_components/Select'
-import MaxWidth from 'app/_components/MaxWidth'
-import { useState } from 'react'
-import SpinnerV2 from 'app/_components/Spinner'
-import { IconChevronRight } from '@tabler/icons-react'
-import ExportDatabase from 'app/_pages/SettingsPage/ExportDatabase'
-import ImportDatabase from 'app/_pages/SettingsPage/ImportDatabase'
+import { Button } from 'app/_components/Button'
+import ExportDatabase from '../ExportDatabase'
+import ImportDatabase from '../ImportDatabase'
+import { useBackupOperation } from '../BackupOperations'
 import DevExportImport from '../_DevExportImport'
+import { withScreenAwake } from 'app/_backup'
 
-const Section = styled.div`
-  padding-top: 16px;
-
-  &:first-child {
-    padding-top: 0;
-  }
-`
-
-const SubSectionTitle = styled.div`
-  padding-bottom: 8px;
-`
-
-const ImportExportPanel = () => {
-  const [componentState, setComponentState] = useComponentState({
-    filesPerZip: { value: 250, label: 250 },
-    totalImages: 0,
-    currentImage: 0,
-    processingDownloads: false
+function ImageDownloads() {
+  const operation = useBackupOperation()
+  const [total, setTotal] = useState(0)
+  const [perZip, setPerZip] = useState(25)
+  const [status, setStatus] = useState('')
+  const [completed, setCompleted] = useState<number[]>([])
+  const [working, setWorking] = useState(false)
+  const abort = useRef<AbortController | null>(null)
+  useEffect(() => () => abort.current?.abort(), [])
+  useEffectOnce(() => {
+    void countCompletedJobs()
+      .then(setTotal)
+      .catch(() => {})
   })
-  const [fileStatus, setFileStatus] = useState<any>({})
-
-  const getImageCount = async () => {
-    const count = await countCompletedJobs()
-    setComponentState({ totalImages: count })
+  const download = async (offset: number, limit: number, direct = false) => {
+    const release = operation.begin('Building image ZIP')
+    if (!release) return
+    setStatus('Preparing image ZIP…')
+    const controller = new AbortController()
+    abort.current = controller
+    setWorking(true)
+    const hidden = () => {
+      if (document.hidden) controller.abort()
+    }
+    let writable: WritableStream<Uint8Array> | undefined
+    try {
+      // Invoke the native picker from the click, before any image reads/imports.
+      const handle = direct
+        ? await (window as any).showSaveFilePicker({
+            suggestedName: `artbot-images-${offset + 1}-${offset + limit}.zip`,
+            types: [
+              {
+                description: 'Image ZIP',
+                accept: { 'application/zip': ['.zip'] }
+              }
+            ]
+          })
+        : undefined
+      writable = handle ? await handle.createWritable() : undefined
+      document.addEventListener('visibilitychange', hidden)
+      const result = await withScreenAwake(() =>
+        downloadImages({
+          offset,
+          limit,
+          sort: 'old',
+          signal: controller.signal,
+          writable,
+          callback: ({ currentIndex }: any) => {
+            if (currentIndex !== undefined)
+              setStatus(
+                'Processing image ' + (currentIndex + 1) + ' of ' + total + '…'
+              )
+          }
+        })
+      )
+      setCompleted((old) => [...new Set([...old, offset])])
+      setStatus(
+        `${direct ? 'Image ZIP saved.' : 'Image ZIP download requested.'} ${
+          result.included
+        } images included; ${
+          result.skipped
+        } skipped. Keep a complete backup as well if you need to restore ArtBot.`
+      )
+    } catch (error) {
+      await writable?.abort().catch(() => {})
+      setStatus(
+        (error as Error).name === 'AbortError'
+          ? 'Image ZIP cancelled. Retry this ZIP when ArtBot is visible.'
+          : 'Unable to download this ZIP. ' + (error as Error).message
+      )
+    } finally {
+      document.removeEventListener('visibilitychange', hidden)
+      abort.current = null
+      setWorking(false)
+      release()
+    }
   }
-
-  const renderImageList = () => {
-    const { totalImages, filesPerZip } = componentState
-    const bucketSize = filesPerZip.value
-
-    const numBuckets = Math.ceil(totalImages / bucketSize)
-    const numberRanges = []
-
-    for (let i = 0; i < numBuckets; i++) {
-      const startNum = i * bucketSize + 1
-      const endNum = Math.min((i + 1) * bucketSize, totalImages)
-      numberRanges.push(
-        <li
-          key={`files-to-download-${startNum}-${endNum}`}
-          className="flex flex-row items-center text-sm font-[700] cursor-pointer mb-2 gap-2"
-          style={{
-            color:
-              componentState.processingDownloads || fileStatus[i] === 'done'
-                ? 'gray'
-                : '#14b8a6',
-            cursor:
-              componentState.processingDownloads || fileStatus[i] === 'done'
-                ? 'unset'
-                : 'pointer'
+  return (
+    <details
+      id="download-images"
+      className="scroll-mt-24 rounded-lg border border-gray-300 dark:border-gray-700 p-4"
+    >
+      <summary className="font-bold cursor-pointer">Download images</summary>
+      <p className="text-sm my-3">
+        {total} images. ZIP archives contain generated images and generation
+        parameters for viewing or sharing. They do not replace the complete
+        library backup above.
+      </p>
+      <p className="text-sm my-3">
+        Smaller ZIPs use less working memory. Start with a smaller batch on an
+        iPhone.
+      </p>
+      <label className="text-sm">
+        Images per ZIP{' '}
+        <select
+          aria-label="Images per ZIP"
+          value={perZip}
+          disabled={!!operation.active}
+          onChange={(event) => {
+            setPerZip(Number(event.target.value))
+            setCompleted([])
           }}
         >
-          <IconChevronRight />
-          <div
-            onClick={async () => {
-              if (
-                fileStatus[i] === 'loading' ||
-                fileStatus[i] === 'done' ||
-                componentState.processingDownloads
-              ) {
-                return
-              }
-              setComponentState({
-                processingDownloads: true
-              })
-              setFileStatus(
-                Object.assign({}, fileStatus, {
-                  [i]: 'loading'
-                })
-              )
-              await downloadImages({
-                offset: startNum,
-                limit: bucketSize - 1,
-                sort: 'old',
-                callback: ({ currentIndex, done }: any) => {
-                  if (done) {
-                    setComponentState({
-                      processingDownloads: false
-                    })
-                    setFileStatus(
-                      Object.assign({}, fileStatus, {
-                        [i]: 'done'
-                      })
-                    )
-                    setComponentState({ currentImage: 0 })
-                    return
-                  }
-
-                  setComponentState({ currentImage: currentIndex })
-                }
-              })
-            }}
-          >
-            Download images ({startNum} - {endNum})
-          </div>
-          {fileStatus[i] === 'loading' && <SpinnerV2 size={20} />}
-          {fileStatus[i] === 'loading' && (
-            <div className="font-[200] text-xs">
-              (Processing image... {componentState.currentImage})
-            </div>
-          )}
-          {fileStatus[i] === 'done' && <div>✅</div>}
-        </li>
-      )
-    }
-
-    return numberRanges
-  }
-
-  useEffectOnce(() => {
-    initBlob()
-
-    getImageCount()
-  })
-
+          {[25, 50, 100, 250, 500, 750].map((value) => (
+            <option key={value} value={value}>
+              {value}
+            </option>
+          ))}
+        </select>
+      </label>
+      <ul className="my-3 space-y-2">
+        {Array.from({ length: Math.ceil(total / perZip) }, (_, index) => {
+          const offset = index * perZip
+          const limit = Math.min(perZip, total - offset)
+          return (
+            <li key={offset} className="flex gap-2 items-center">
+              <Button
+                disabled={!!operation.active}
+                onClick={() => void download(offset, limit)}
+              >
+                Download images ({offset + 1} - {offset + limit})
+              </Button>
+              {typeof window !== 'undefined' &&
+                'showSaveFilePicker' in window && (
+                  <Button
+                    disabled={!!operation.active}
+                    onClick={() => void download(offset, limit, true)}
+                  >
+                    Save ZIP directly ({offset + 1} - {offset + limit})
+                  </Button>
+                )}
+              {completed.includes(offset) && (
+                <span className="text-xs">Download requested</span>
+              )}
+            </li>
+          )
+        })}
+      </ul>
+      {working && (
+        <Button onClick={() => abort.current?.abort()}>Cancel image ZIP</Button>
+      )}
+      <p role="status" aria-label="Image download status" className="text-sm">
+        {status}
+      </p>
+    </details>
+  )
+}
+export default function ImportExportPanel() {
   return (
-    <div>
+    <div className="space-y-8 pb-24">
       <PageTitle as="h2">Import / Export Data</PageTitle>
-      <ImportDatabase />
+      <nav
+        aria-label="Backup and restore sections"
+        className="flex flex-wrap gap-4 text-sm font-bold text-teal-600 dark:text-teal-400"
+      >
+        <a href="#backup-library">Back up</a>
+        <a href="#restore-library">Restore</a>
+        <a href="#download-images">Image ZIPs</a>
+      </nav>
       <ExportDatabase />
-      <Section>
-        <SubSectionTitle>
-          <strong>Download all images </strong>
-          {componentState.totalImages > 0
-            ? `(${componentState.totalImages} images)`
-            : null}
-          <div className="block text-xs mb-2 mt-2 w-full">
-            Image archives are for viewing and sharing. Use the complete backup
-            above to preserve database tables, source images and preferences.
-          </div>
-          <div className="block text-xs mb-2 mt-2 w-full">
-            Create a series of zip files that includes a JSON files with image
-            generation parameters, as well as all ArtBot images stored within
-            your browser cache. Depending on your device and the number of
-            images you&apos;re downloading, this could take a bit of time to
-            generate.
-          </div>
-          <div className="block text-xs mb-2 w-full">
-            Due to browser memory limitations when attempting build and stream a
-            zip file containing potentially thousands of images at once, ArtBot
-            is currently unable to offer a single bulk downloadable file.
-            Ideally, this will change in the future (either with native browser
-            APIs or third party libraries). If you have some ideas related to
-            this, please get in touch!
-          </div>
-          <div className="block text-xs mb-2 w-full">
-            The dropdown below gives you some additional options in instances
-            where you encounter browser memory errors when attempting to bulk
-            download images.
-          </div>
-          <Section>
-            <MaxWidth style={{ maxWidth: '240px' }}>
-              <div className="flex flex-row gap-2 items-center">
-                Images per file:
-                <Select
-                  options={[
-                    { value: 25, label: 25 },
-                    { value: 50, label: 50 },
-                    { value: 100, label: 100 },
-                    { value: 250, label: 250 },
-                    { value: 500, label: 500 },
-                    { value: 750, label: 750 }
-                  ]}
-                  onChange={(option: any) => {
-                    setComponentState({ filesPerZip: option })
-                  }}
-                  inputMode="none"
-                  value={componentState.filesPerZip}
-                />
-              </div>
-            </MaxWidth>
-          </Section>
-          <Section>
-            <div className="text-xs mb-2">(Sorted by oldest images first)</div>
-            <ul>{renderImageList()}</ul>
-          </Section>
-        </SubSectionTitle>
-      </Section>
+      <ImportDatabase />
+      <ImageDownloads />
       {process.env.NEXT_PUBLIC_ENVIRONMENT === 'development' && (
-        <Section>
+        <details>
+          <summary>Developer tools</summary>
           <DevExportImport />
-        </Section>
+        </details>
       )}
     </div>
   )
 }
-
-export default ImportExportPanel

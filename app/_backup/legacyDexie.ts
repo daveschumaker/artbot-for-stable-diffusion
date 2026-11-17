@@ -2,7 +2,7 @@ import { blobChunks } from './streams'
 import { legacyImportStream } from './legacyStream'
 import Dexie from 'dexie'
 import { DATABASE_VERSION } from '../_db/version'
-import { encodeRecord } from './codec'
+import { fingerprintRecord } from './codec'
 import { openExisting, records } from './native'
 import { checkCancelled } from './format'
 export async function assertCompleteJSON(file: Blob, signal?: AbortSignal) {
@@ -101,10 +101,14 @@ export async function importLegacyDexie(
             : pathValue(value, primary))
         indexedDB.cmp(actualKey, actualKey)
         const task = (async () => {
-          const keyHash = (await encodeRecord('key', actualKey, undefined))
-            .fingerprint
-          const fingerprint = (await encodeRecord(table, actualKey, value))
-            .fingerprint
+          const keyHash = await fingerprintRecord('key', actualKey, undefined)
+          const fingerprint = await fingerprintRecord(
+            table,
+            actualKey,
+            value,
+            undefined,
+            signal
+          )
           const map = expected.get(table)!
           if (map.has(keyHash))
             throw new Error('Duplicate primary key in database export')
@@ -134,11 +138,16 @@ export async function importLegacyDexie(
       let actualCount = 0
       for await (const row of records(db, t.name)) {
         checkCancelled(signal)
-        const keyHash = (await encodeRecord('key', row.key, undefined))
-          .fingerprint
+        const keyHash = await fingerprintRecord('key', row.key, undefined)
         if (
           expected.get(t.name)?.get(keyHash) !==
-          (await encodeRecord(t.name, row.key, row.value)).fingerprint
+          (await fingerprintRecord(
+            t.name,
+            row.key,
+            row.value,
+            undefined,
+            signal
+          ))
         )
           throw new Error(`Restored data verification failed for ${t.name}`)
         actualCount++

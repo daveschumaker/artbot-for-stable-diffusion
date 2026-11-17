@@ -5,11 +5,13 @@ import FlexRow from 'app/_components/FlexRow'
 import PromptTypewriter from 'app/_modules/Typewriter'
 import styles from './component.module.css'
 import HomePageContentWrapper from 'app/_components/HomePageContentWrapper'
+import BackupReminder from 'app/_modules/BackupReminder'
 import { basePath } from 'BASE_PATH'
 
 export default function HomePage() {
   return (
     <HomePageContentWrapper>
+      <BackupReminder />
       <FlexRow style={{ justifyContent: 'center', width: '100%' }}>
         <h1 className={styles.HeroTitle}>
           Welcome to{' '}

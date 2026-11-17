@@ -1,3 +1,5 @@
+export const restoreSpaceRequired = (bytes: number) =>
+  bytes * 1.5 + 32 * 1024 * 1024
 /* global StorageEstimate */
 export async function storageStatus() {
   const supported = typeof navigator !== 'undefined' && !!navigator.storage

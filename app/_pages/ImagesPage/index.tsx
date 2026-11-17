@@ -25,6 +25,7 @@ import { useWindowSize } from 'app/_hooks/useWindowSize'
 import MenuButton from 'app/_components/MenuButton'
 import useComponentState from 'app/_hooks/useComponentState'
 import { downloadImages } from 'app/_utils/imageUtils'
+import { showErrorToast } from 'app/_utils/notificationUtils'
 import { useEffectOnce } from 'app/_hooks/useEffectOnce'
 import AppSettings from 'app/_data-models/AppSettings'
 import { useStore } from 'statery'
@@ -459,9 +460,16 @@ const ImagesPage = () => {
       })
     })
 
-    await downloadImages({ imageArray: imagesToDownload })
-
-    setComponentState({ showDownloadModal: false })
+    try {
+      await downloadImages({ imageArray: imagesToDownload })
+    } catch (error) {
+      showErrorToast({
+        message: 'Unable to download images. ' + (error as Error).message
+      })
+      return
+    } finally {
+      setComponentState({ showDownloadModal: false })
+    }
     trackEvent({
       event: 'BULK_FILE_DOWNLOAD',
       context: '/pages/images',

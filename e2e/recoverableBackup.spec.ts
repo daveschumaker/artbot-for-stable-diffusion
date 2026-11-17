@@ -1,3 +1,11 @@
+import {
+  backupEntries,
+  chooseVerificationFiles,
+  chooseRestoreFiles,
+  selectBackupFile,
+  openBackupOptions,
+  restoreRejected
+} from './backupUi'
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { expect, test as base } from '@playwright/test'
@@ -28,6 +36,8 @@ test('saved multipart files verify and restore binary source data, preferences a
         : 240000
   )
   const backend = await mockBackend(page)
+  const fixtureTime = Date.now()
+  await page.clock.setFixedTime(fixtureTime)
   await page.goto('/artbot/images')
   await page.waitForFunction(() => !!(window as any)._artbotDb)
   const bytesPerRow = Number(
@@ -81,6 +91,8 @@ test('saved multipart files verify and restore binary source data, preferences a
       {
         jobId: 'remember-requested',
         jobStatus: 'requested',
+        // A live claim must survive startup cleanup until it is snapshotted.
+        requestedAt: Date.now(),
         timestamp: 1700000000000,
         prompt: 'keep requested state',
         params: {}
@@ -110,13 +122,14 @@ test('saved multipart files verify and restore binary source data, preferences a
     path: info.outputPath('backup-settings.png'),
     fullPage: true
   })
-  const downloads = page.getByRole('button', {
-    name: /^Save (manifest|part \d+)/
-  })
+  const labels = await backupEntries(page).evaluateAll((nodes) =>
+    nodes.map((node) => node.getAttribute('data-backup-file-label')!)
+  )
   const paths: string[] = []
-  for (let i = 0; i < (await downloads.count()); i++) {
+  for (let i = 0; i < labels.length; i++) {
+    const save = await selectBackupFile(page, labels[i])
     const downloading = page.waitForEvent('download')
-    await downloads.nth(i).click()
+    await save.click()
     const file = await downloading
     const path = info.outputPath(file.suggestedFilename())
     await file.saveAs(path)
@@ -140,9 +153,7 @@ test('saved multipart files verify and restore binary source data, preferences a
       manifest.parts[i - 1].sha256
     )
   }
-  await page
-    .getByLabel('Verify saved backup', { exact: true })
-    .setInputFiles(paths)
+  await chooseVerificationFiles(page, paths)
   await expect(
     page.getByText('Saved backup verified:', { exact: false })
   ).toBeVisible({
@@ -152,24 +163,18 @@ test('saved multipart files verify and restore binary source data, preferences a
         ? 300000
         : 120000
   })
-  await page
-    .getByLabel('Choose backup files', { exact: true })
-    .setInputFiles(paths.slice(0, -1))
-  await page
-    .getByRole('button', { name: 'Restore library', exact: true })
-    .click()
-  await expect(
-    page.getByText('Your existing data has been kept.', { exact: false })
-  ).toBeVisible()
+  // After export, make the saved claim stale. A restored library must keep it
+  // quarantined rather than running ordinary stale-claim cleanup on reopen.
+  await page.clock.setFixedTime(fixtureTime + 3 * 60 * 1000)
+  await chooseRestoreFiles(page, paths.slice(0, -1))
+  await restoreRejected(page, 'Missing, duplicate or unexpected backup files')
   expect(await page.evaluate(() => (window as any)._artbotDb.name)).toBe(
     'imageHorde'
   )
   const other = await context.newPage()
   await mockBackend(other)
   await other.goto('/artbot/settings?panel=import-export')
-  await page
-    .getByLabel('Choose backup files', { exact: true })
-    .setInputFiles(paths)
+  await chooseRestoreFiles(page, paths)
   await page
     .getByRole('button', { name: 'Restore library', exact: true })
     .click()
@@ -279,6 +284,7 @@ test('a reopened private preparation still discloses credentials independently o
   )
   await finishFixtureSetup(page)
   await page.goto('/artbot/settings?panel=import-export')
+  await openBackupOptions(page)
   await page.getByRole('checkbox', { name: /Include API keys/ }).check()
   await page
     .getByRole('button', { name: 'Prepare backup', exact: true })
@@ -290,6 +296,7 @@ test('a reopened private preparation still discloses credentials independently o
   await expect(
     page.getByText('This prepared backup includes API keys.', { exact: false })
   ).toBeVisible({ timeout: 30000 })
+  await openBackupOptions(page)
   await expect(
     page.getByRole('checkbox', { name: /Include API keys/ })
   ).not.toBeChecked()

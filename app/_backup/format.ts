@@ -1,4 +1,5 @@
 import { blobChunks } from './streams'
+import { assertBackupFilesAvailable } from './errors'
 import { RecordDecoder, sha, hashJSON } from './codec'
 import type { DatabaseSchema } from './native'
 import { PERSISTENT_KEYS } from './platform'
@@ -28,7 +29,8 @@ export function checkCancelled(signal?: AbortSignal) {
 export async function* jsonLines(
   file: Blob,
   limit: number,
-  signal?: AbortSignal
+  signal?: AbortSignal,
+  onLine?: (bytes: number) => void
 ) {
   const decoder = new TextDecoder('utf-8', { fatal: true })
   let buffer = ''
@@ -39,7 +41,10 @@ export async function* jsonLines(
       if (index > limit) throw new Error('Backup record metadata is too large')
       const line = buffer.slice(0, index)
       buffer = buffer.slice(index + 1)
-      if (line) yield JSON.parse(line)
+      if (line) {
+        onLine?.(new TextEncoder().encode(line).byteLength + 1)
+        yield JSON.parse(line)
+      }
     }
     if (buffer.length > limit) throw new Error('Backup line is too large')
   }
@@ -47,20 +52,12 @@ export async function* jsonLines(
   if (buffer) throw new Error('Incomplete backup part')
 }
 
-export async function inspectBundle(files: Blob[], signal?: AbortSignal) {
-  const named = new Map<string, Blob>()
-  for (const file of files) {
-    const name = (file as File).name
-    if (!name || named.has(name))
-      throw new Error('Backup files must have unique filenames')
-    named.set(name, file)
-  }
-  const manifests = files.filter((f) =>
-    (f as File).name.endsWith('.manifest.json')
-  )
-  if (manifests.length !== 1 || manifests[0].size > 1024 * 1024)
+export async function readBackupManifest(file: Blob, signal?: AbortSignal) {
+  checkCancelled(signal)
+  assertBackupFilesAvailable([file])
+  if (file.size > 1024 * 1024)
     throw new Error('Select one complete backup manifest and all its parts')
-  const m: Manifest = JSON.parse(await manifests[0].text())
+  const m: Manifest = JSON.parse(await file.text())
   if (
     m.format !== 'artbot-backup' ||
     m.version !== 1 ||
@@ -132,13 +129,33 @@ export async function inspectBundle(files: Blob[], signal?: AbortSignal) {
   )
     throw new Error('Invalid backup manifest')
   if (
-    m.parts.length !== files.length - 1 ||
     new Set(m.parts.map((p) => p.name)).size !== m.parts.length ||
     new Set(m.tables.map((t) => t.name)).size !== m.tables.length
   )
     throw new Error('Missing, duplicate or unexpected backup files')
   if (!/^[a-f0-9]{64}$/.test(m.preferencesDigest))
     throw new Error('Invalid preferences digest')
+  checkCancelled(signal)
+  return m
+}
+
+export async function inspectBundle(files: Blob[], signal?: AbortSignal) {
+  assertBackupFilesAvailable(files)
+  const named = new Map<string, Blob>()
+  for (const file of files) {
+    const name = (file as File).name
+    if (!name || named.has(name))
+      throw new Error('Backup files must have unique filenames')
+    named.set(name, file)
+  }
+  const manifests = files.filter((f) =>
+    (f as File).name.endsWith('.manifest.json')
+  )
+  if (manifests.length !== 1 || manifests[0].size > 1024 * 1024)
+    throw new Error('Select one complete backup manifest and all its parts')
+  const m = await readBackupManifest(manifests[0], signal)
+  if (m.parts.length !== files.length - 1)
+    throw new Error('Missing, duplicate or unexpected backup files')
   for (const [i, part] of m.parts.entries()) {
     checkCancelled(signal)
     const file = named.get(part.name)
@@ -153,8 +170,13 @@ export async function inspectBundle(files: Blob[], signal?: AbortSignal) {
   }
   return { manifest: m, files: named }
 }
+// Prepared backups may read one part on demand instead of retaining every File.
+export interface BackupBundle {
+  manifest: Manifest
+  files: { get(name: string): Blob | undefined | Promise<Blob | undefined> }
+}
 export async function* bundleRecords(
-  bundle: Awaited<ReturnType<typeof inspectBundle>>,
+  bundle: BackupBundle,
   signal?: AbortSignal
 ) {
   const decoder = new RecordDecoder(),
@@ -162,16 +184,22 @@ export async function* bundleRecords(
   for (const table of bundle.manifest.tables)
     counts.set(table.name, { count: 0, digest: '' })
   let total = 0,
-    preferenceRecords = 0
+    preferenceRecords = 0,
+    recordBytes = 0
   for (const part of bundle.manifest.parts) {
     for await (const line of jsonLines(
-      bundle.files.get(part.name)!,
+      (await bundle.files.get(part.name))!,
       bundle.manifest.maxPartBytes,
-      signal
+      signal,
+      (bytes) => {
+        recordBytes += bytes
+      }
     )) {
       checkCancelled(signal)
       const row = await decoder.accept(line)
       if (!row) continue
+      const bytes = recordBytes
+      recordBytes = 0
       if (row.table === '@preferences') {
         if (
           ++preferenceRecords !== 1 ||
@@ -190,7 +218,7 @@ export async function* bundleRecords(
           )
         )
           throw new Error('Invalid saved preferences')
-        yield row
+        yield { ...row, bytes }
         continue
       }
       indexedDB.cmp(row.key, row.key)
@@ -199,7 +227,7 @@ export async function* bundleRecords(
       state.count++
       state.digest = await hashJSON([state.digest, row.fingerprint])
       total++
-      yield row
+      yield { ...row, bytes }
     }
   }
   decoder.finish()

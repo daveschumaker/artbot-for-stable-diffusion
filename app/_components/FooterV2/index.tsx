@@ -22,6 +22,8 @@ export default function FooterV2() {
 
   const isHomePage = pathname === '/'
 
+  // Secondary footer navigation must not load dozens of unrelated routes
+  // while the user is saving or restoring a large library.
   return (
     <div className={clsx(styles.Footer, isHomePage && styles.NoPadding)}>
       <div className={styles.SectionsWrapper}>
@@ -31,27 +33,40 @@ export default function FooterV2() {
             Creation Tools
           </div>
           <div>
-            <Link className={styles.LinkWrapper} href="/create">
+            <Link
+              prefetch={false}
+              className={styles.LinkWrapper}
+              href="/create"
+            >
               Create new image
             </Link>
           </div>
           <div>
-            <Link className={styles.LinkWrapper} href="/controlnet">
+            <Link
+              prefetch={false}
+              className={styles.LinkWrapper}
+              href="/controlnet"
+            >
               ControlNet
             </Link>
           </div>
           <div>
-            <Link className={styles.LinkWrapper} href="/draw">
+            <Link prefetch={false} className={styles.LinkWrapper} href="/draw">
               Draw
             </Link>
           </div>
           <div>
-            <Link className={styles.LinkWrapper} href="/create?panel=img2img">
+            <Link
+              prefetch={false}
+              className={styles.LinkWrapper}
+              href="/create?panel=img2img"
+            >
               Image-to-image
             </Link>
           </div>
           <div>
             <Link
+              prefetch={false}
               className={styles.LinkWrapper}
               href="/create?panel=inpainting"
             >
@@ -59,7 +74,11 @@ export default function FooterV2() {
             </Link>
           </div>
           <div>
-            <Link className={styles.LinkWrapper} href="/live-paint">
+            <Link
+              prefetch={false}
+              className={styles.LinkWrapper}
+              href="/live-paint"
+            >
               Live paint
             </Link>
           </div>
@@ -70,12 +89,20 @@ export default function FooterV2() {
             Image gallery
           </div>
           <div>
-            <Link className={styles.LinkWrapper} href="/pending">
+            <Link
+              prefetch={false}
+              className={styles.LinkWrapper}
+              href="/pending"
+            >
               Pending images
             </Link>
           </div>
           <div>
-            <Link className={styles.LinkWrapper} href="/images">
+            <Link
+              prefetch={false}
+              className={styles.LinkWrapper}
+              href="/images"
+            >
               View image gallery
             </Link>
           </div>
@@ -86,17 +113,29 @@ export default function FooterV2() {
             General info
           </div>
           <div>
-            <Link className={styles.LinkWrapper} href="/info/models">
+            <Link
+              prefetch={false}
+              className={styles.LinkWrapper}
+              href="/info/models"
+            >
               Model details
             </Link>
           </div>
           <div>
-            <Link className={styles.LinkWrapper} href="/info/models/updates">
+            <Link
+              prefetch={false}
+              className={styles.LinkWrapper}
+              href="/info/models/updates"
+            >
               Model updates
             </Link>
           </div>
           <div>
-            <Link className={styles.LinkWrapper} href="/info/workers">
+            <Link
+              prefetch={false}
+              className={styles.LinkWrapper}
+              href="/info/workers"
+            >
               Worker details
             </Link>
           </div>
@@ -108,6 +147,7 @@ export default function FooterV2() {
           </div>
           <div>
             <Link
+              prefetch={false}
               className={styles.LinkWrapper}
               href="/settings?panel=import-export"
             >
@@ -115,22 +155,34 @@ export default function FooterV2() {
             </Link>
           </div>
           <div>
-            <Link className={styles.LinkWrapper} href="/interrogate">
+            <Link
+              prefetch={false}
+              className={styles.LinkWrapper}
+              href="/interrogate"
+            >
               Interrogate image
             </Link>
           </div>
           <div>
-            <Link className={styles.LinkWrapper} href="/settings?panel=worker">
+            <Link
+              prefetch={false}
+              className={styles.LinkWrapper}
+              href="/settings?panel=worker"
+            >
               Manage workers
             </Link>
           </div>
           <div>
-            <Link className={styles.LinkWrapper} href="/rate">
+            <Link prefetch={false} className={styles.LinkWrapper} href="/rate">
               Rate images
             </Link>
           </div>
           <div>
-            <Link className={styles.LinkWrapper} href="/profile">
+            <Link
+              prefetch={false}
+              className={styles.LinkWrapper}
+              href="/profile"
+            >
               User profile
             </Link>
           </div>
@@ -141,6 +193,7 @@ export default function FooterV2() {
             Community
           </div>
           <Link
+            prefetch={false}
             href="https://aihorde.net"
             target="_blank"
             rel="noopener noreferrer"
@@ -156,7 +209,7 @@ export default function FooterV2() {
             Resources
           </div>
           <div>
-            <Link className={styles.LinkWrapper} href="/faq">
+            <Link prefetch={false} className={styles.LinkWrapper} href="/faq">
               FAQ
             </Link>
           </div>
@@ -168,6 +221,7 @@ export default function FooterV2() {
           </div>
           <div>
             <Link
+              prefetch={false}
               href="https://discord.com/channels/781145214752129095/1107628882783391744"
               target="_blank"
               rel="noopener noreferrer"
@@ -180,6 +234,7 @@ export default function FooterV2() {
           </div>
           <div>
             <Link
+              prefetch={false}
               href="https://github.com/daveschumaker/artbot-for-stable-diffusion/issues"
               target="_blank"
               rel="noopener noreferrer"
@@ -191,6 +246,7 @@ export default function FooterV2() {
           </div>
           <div>
             <Link
+              prefetch={false}
               href="https://mastodon.world/@davely"
               target="_blank"
               rel="noopener noreferrer"
@@ -201,7 +257,11 @@ export default function FooterV2() {
             </Link>
           </div>
           <div>
-            <Link className={styles.LinkWrapper} href="/contact">
+            <Link
+              prefetch={false}
+              className={styles.LinkWrapper}
+              href="/contact"
+            >
               Send message
             </Link>
           </div>
@@ -212,22 +272,31 @@ export default function FooterV2() {
             ArtBot
           </div>
           <div>
-            <Link className={styles.LinkWrapper} href="/about">
+            <Link prefetch={false} className={styles.LinkWrapper} href="/about">
               About
             </Link>
           </div>
           <div>
-            <Link className={styles.LinkWrapper} href="/changelog">
+            <Link
+              prefetch={false}
+              className={styles.LinkWrapper}
+              href="/changelog"
+            >
               Changelog
             </Link>
           </div>
           <div>
-            <Link className={styles.LinkWrapper} href="/contributors">
+            <Link
+              prefetch={false}
+              className={styles.LinkWrapper}
+              href="/contributors"
+            >
               Contributors
             </Link>
           </div>
           <div>
             <Link
+              prefetch={false}
               href="https://github.com/daveschumaker/artbot-for-stable-diffusion"
               target="_blank"
               rel="noopener noreferrer"
@@ -239,17 +308,29 @@ export default function FooterV2() {
             </Link>
           </div>
           <div>
-            <Link className={styles.LinkWrapper} href="/settings?panel=prefs">
+            <Link
+              prefetch={false}
+              className={styles.LinkWrapper}
+              href="/settings?panel=prefs"
+            >
               Preferences
             </Link>
           </div>
           <div>
-            <Link className={styles.LinkWrapper} href="/privacy">
+            <Link
+              prefetch={false}
+              className={styles.LinkWrapper}
+              href="/privacy"
+            >
               Privacy policy
             </Link>
           </div>
           <div>
-            <Link className={styles.LinkWrapper} href="/settings">
+            <Link
+              prefetch={false}
+              className={styles.LinkWrapper}
+              href="/settings"
+            >
               Settings
             </Link>
           </div>
